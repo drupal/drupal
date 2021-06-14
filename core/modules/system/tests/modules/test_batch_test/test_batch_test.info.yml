@@ -1,0 +1,7 @@
+name: 'Test install batch test'
+type: module
+description: 'Support module for functional tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test

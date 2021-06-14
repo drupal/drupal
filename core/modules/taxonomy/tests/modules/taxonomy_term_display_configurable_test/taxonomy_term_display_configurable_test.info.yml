@@ -1,0 +1,5 @@
+name: 'Taxonomy term configurable display module tests'
+type: module
+description: 'Support module for taxonomy_term \Drupal\Core\Field\BaseFieldDefinition::setDisplayConfigurable() testing.'
+package: Testing
+version: VERSION

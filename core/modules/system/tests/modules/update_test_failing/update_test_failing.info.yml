@@ -1,0 +1,5 @@
+name: 'Update test failing'
+type: module
+description: 'Support module for update testing when an update hook is failing.'
+package: Testing
+version: VERSION

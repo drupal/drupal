@@ -1,0 +1,326 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Locale module.
+ */
+
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_install().
+ */
+function locale_install() {
+  // Create the interface translations directory and ensure it's writable.
+  if (!$directory = \Drupal::config('locale.settings')->get('translation.path')) {
+    $site_path = \Drupal::getContainer()->getParameter('site.path');
+    $directory = $site_path . '/files/translations';
+    \Drupal::configFactory()->getEditable('locale.settings')->set('translation.path', $directory)->save();
+  }
+  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function locale_uninstall() {
+  $config = \Drupal::config('locale.settings');
+  // Delete all JavaScript translation files.
+  $locale_js_directory = 'public://' . $config->get('javascript.directory');
+
+  if (is_dir($locale_js_directory)) {
+    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    foreach ($locale_javascripts as $langcode => $file_suffix) {
+      if (!empty($file_suffix)) {
+        try {
+          $file_system->delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
+        }
+        catch (FileException $e) {
+          // Ignore and continue.
+        }
+      }
+    }
+    // Delete the JavaScript translations directory if empty.
+    if (is_dir($locale_js_directory)) {
+      if (!$file_system->scanDirectory($locale_js_directory, '/.*/')) {
+        $file_system->rmdir($locale_js_directory);
+      }
+    }
+  }
+
+  // Clear variables.
+  \Drupal::state()->delete('system.javascript_parsed');
+  \Drupal::state()->delete('locale.translation.plurals');
+  \Drupal::state()->delete('locale.translation.javascript');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function locale_schema() {
+  $schema['locales_source'] = [
+    'description' => 'List of English source strings.',
+    'fields' => [
+      'lid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this string.',
+      ],
+      'source' => [
+        'type' => 'text',
+        'mysql_type' => 'blob',
+        'not null' => TRUE,
+        'description' => 'The original string in English.',
+      ],
+      'context' => [
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The context this string applies to.',
+      ],
+      'version' => [
+        'type' => 'varchar_ascii',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'none',
+        'description' => 'Version of Drupal where the string was last used (for locales optimization).',
+      ],
+    ],
+    'primary key' => ['lid'],
+    'indexes' => [
+      'source_context' => [['source', 30], 'context'],
+    ],
+  ];
+
+  $schema['locales_target'] = [
+    'description' => 'Stores translated versions of strings.',
+    'fields' => [
+      'lid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Source string ID. References {locales_source}.lid.',
+      ],
+      'translation' => [
+        'type' => 'text',
+        'mysql_type' => 'blob',
+        'not null' => TRUE,
+        'description' => 'Translation string value in this language.',
+      ],
+      'language' => [
+        'type' => 'varchar_ascii',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language code. References {language}.langcode.',
+      ],
+      'customized' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        // LOCALE_NOT_CUSTOMIZED
+        'default' => 0,
+        'description' => 'Boolean indicating whether the translation is custom to this site.',
+      ],
+    ],
+    'primary key' => ['language', 'lid'],
+    'foreign keys' => [
+      'locales_source' => [
+        'table' => 'locales_source',
+        'columns' => ['lid' => 'lid'],
+      ],
+    ],
+    'indexes' => [
+      'lid' => ['lid'],
+    ],
+  ];
+
+  $schema['locales_location'] = [
+    'description' => 'Location information for source strings.',
+    'fields' => [
+      'lid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this location.',
+      ],
+      'sid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this string.',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The location type (file, config, path, etc).',
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Type dependent location information (file name, path, etc).',
+      ],
+      'version' => [
+        'type' => 'varchar_ascii',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'none',
+        'description' => 'Version of Drupal where the location was found.',
+      ],
+    ],
+    'primary key' => ['lid'],
+    'foreign keys' => [
+      'locales_source' => [
+        'table' => 'locales_source',
+        'columns' => ['sid' => 'lid'],
+      ],
+    ],
+    'indexes' => [
+      'string_type' => ['sid', 'type'],
+    ],
+  ];
+
+  $schema['locale_file'] = [
+    'description' => 'File import status information for interface translation files.',
+    'fields' => [
+      'project' => [
+        'type' => 'varchar_ascii',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'A unique short name to identify the project the file belongs to.',
+      ],
+      'langcode' => [
+        'type' => 'varchar_ascii',
+        'length' => '12',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language code of this translation. References {language}.langcode.',
+      ],
+      'filename' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Filename of the imported file.',
+      ],
+      'version' => [
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Version tag of the imported file.',
+      ],
+      'uri' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'URI of the remote file, the resulting local file or the locally imported file.',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the imported file.',
+      ],
+      'last_checked' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
+      ],
+    ],
+    'primary key' => ['project', 'langcode'],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function locale_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+    $available_updates = [];
+    $untranslated = [];
+    $languages = locale_translatable_language_list();
+
+    if ($languages) {
+      // Determine the status of the translation updates per language.
+      $status = locale_translation_get_status();
+      if ($status) {
+        foreach ($status as $project) {
+          foreach ($project as $langcode => $project_info) {
+            if (empty($project_info->type)) {
+              $untranslated[$langcode] = $languages[$langcode]->getName();
+            }
+            elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
+              $available_updates[$langcode] = $languages[$langcode]->getName();
+            }
+          }
+        }
+
+        if ($available_updates || $untranslated) {
+          if ($available_updates) {
+            $requirements['locale_translation'] = [
+              'title' => t('Translation update status'),
+              'value' => Link::fromTextAndUrl(t('Updates available'), Url::fromRoute('locale.translate_status'))->toString(),
+              'severity' => REQUIREMENT_WARNING,
+              'description' => t('Updates available for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => implode(', ', $available_updates), ':updates' => Url::fromRoute('locale.translate_status')->toString()]),
+            ];
+          }
+          else {
+            $requirements['locale_translation'] = [
+              'title' => t('Translation update status'),
+              'value' => t('Missing translations'),
+              'severity' => REQUIREMENT_INFO,
+              'description' => t('Missing translations for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => implode(', ', $untranslated), ':updates' => Url::fromRoute('locale.translate_status')->toString()]),
+            ];
+          }
+        }
+        else {
+          $requirements['locale_translation'] = [
+            'title' => t('Translation update status'),
+            'value' => t('Up to date'),
+            'severity' => REQUIREMENT_OK,
+          ];
+        }
+      }
+      else {
+        $requirements['locale_translation'] = [
+          'title' => t('Translation update status'),
+          'value' => Link::fromTextAndUrl(t('Can not determine status'), Url::fromRoute('locale.translate_status'))->toString(),
+          'severity' => REQUIREMENT_WARNING,
+          'description' => t('No translation status is available. See the <a href=":updates">Available translation updates</a> page for more information.', [':updates' => Url::fromRoute('locale.translate_status')->toString()]),
+        ];
+      }
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Delete an unnecessary index on the locales_location table.
+ */
+function locale_update_9101() {
+  $schema = \Drupal::database()->schema();
+  $table = 'locales_location';
+  if ($schema->indexExists($table, 'string_id')) {
+    $schema->dropIndex($table, 'string_id');
+  }
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function locale_update_last_removed() {
+  return 8800;
+}

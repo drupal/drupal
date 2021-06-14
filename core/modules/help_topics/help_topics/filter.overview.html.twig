@@ -1,0 +1,40 @@
+---
+label: 'Managing text filters and text formats'
+related:
+  - core.security
+  - core.content_structure
+  - field_ui.manage_form
+  - field_ui.manage_display
+  - field_ui.add_field
+---
+{% set content_url = render_var(url('filter.admin_overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure text formats on the site.{% endtrans %}</p>
+<h2>{% trans %}What are text filters and text formats?{% endtrans %}</h2>
+<p>{% trans %}A text filter is a processing step that can be applied to text, either to transform it in some way (such as converting URLs in the text into HTML links), or to defend against potentially-dangerous input from site users. A text format is an ordered sequence of text filters. Text filters are provided by modules; text formats are managed by the core Filter module.{% endtrans %}</p>
+<p>{% trans %}Text fields that have "formatted" in the field type name, such as <em>Text (formatted)</em>, use text formats. Users choose the text format when editing the field text; when the field text is shown on the site, it is processed by the chosen text format. Administrators can configure text formats and assign permissions for who can use each format. If the core Text Editor module is enabled, administrators can also associate visual editors with text formats.{% endtrans %}</p>
+<h2>{% trans %}What text filters are available?{% endtrans %}</h2>
+<p>{% trans %}Some of the more commonly used text filters are:{% endtrans %}</p>
+<dl>
+  <dt>{% trans %}Limit allowed HTML tags and correct faulty HTML{% endtrans %}</dt>
+  <dd>{% trans %}Limits which HTML tags can be used; useful both for site security and enforcing site design.{% endtrans %}</dd>
+  <dt>{% trans %}Convert line breaks into HTML{% endtrans %}</dt>
+  <dd>{% trans %}Line breaks in HTML source are displayed as horizontal spaces. This filter converts line breaks into HTML paragraph and line break tags.{% endtrans %}</dd>
+  <dt>{% trans %}Convert URLs into links{% endtrans %}</dt>
+  <dd>{% trans %}Takes plain URLs in text and turns them into HTML links.{% endtrans %}</dd>
+  <dt>{% trans %}Restrict images to this site{% endtrans %}</dt>
+  <dd>{% trans %}For text formats that allow HTML image tags, restricts images to URLs within this site.{% endtrans %}</dd>
+</dl>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Content Authoring</em> &gt; <a href="{{ content_url }}"><em>Text formats and editors</em></a>. If you do not have the core Text Editor module installed, the menu link and page title will instead be <em>Text formats</em>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Configure</em> to configure an existing text format, or <em>+ Add text format</em> to create a new text format.{% endtrans %}</li>
+  <li>{% trans %}Enter the desired <em>Name</em> for the text format.{% endtrans %}</li>
+  <li>{% trans %}Check the <em>Roles</em> that can use this text format. Some HTML tags allow users to embed malicious links or scripts in text. To ensure security, anonymous and untrusted users should only have access to text formats that restrict them to either plain text or a safe set of HTML tags. <strong>Improper text format configuration is a security risk.</strong>{% endtrans %}</li>
+  <li>{% trans %}If the core Text Editor module is installed, see the related topic to connect a text editor to this text format.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Enabled filters</em>, check the text filters that you want to use.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Filter processing order</em>, drag the filters to the correct order. Choose the order carefully; for example, if you have a filter that results in a particular HTML tag being added to the text, that should run after a filter that restricts HTML tags, to avoid deleting the new tags the first filter added.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Filter settings</em>, verify and adjust the settings for each active filter that has configuration options.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save configuration</em>, which will return you to the <em>Text formats and editors</em> page.{% endtrans %}</li>
+  <li>{% trans %}Repeat these steps if you have additional text formats to configure.{% endtrans %}</li>
+</ol>

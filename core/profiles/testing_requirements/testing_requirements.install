@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for test profile.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function testing_requirements_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'install') {
+    $requirements['testing_requirements'] = [
+      'title' => t('Testing requirements'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('Testing requirements failed requirements.'),
+    ];
+  }
+
+  return $requirements;
+}

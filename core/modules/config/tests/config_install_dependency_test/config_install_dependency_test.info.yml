@@ -1,0 +1,4 @@
+name: 'Config install dependency test'
+type: module
+package: Testing
+version: VERSION

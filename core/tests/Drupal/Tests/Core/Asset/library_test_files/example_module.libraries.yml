@@ -1,0 +1,6 @@
+example:
+  version: VERSION
+  css:
+    theme:
+      css/example.css: {}
+      css/example2.css: {}

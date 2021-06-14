@@ -1,0 +1,3 @@
+<script>
+alert('SimpleTest PHP was executed!');
+</script>

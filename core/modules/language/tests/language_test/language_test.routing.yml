@@ -1,0 +1,33 @@
+language_test.l_active_class:
+  path: '/language_test/type-link-active-class'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::typeLinkActiveClass'
+  requirements:
+    _access: 'TRUE'
+
+language_test.subrequest:
+  path: '/language_test/subrequest'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::testSubRequest'
+  requirements:
+    _access: 'TRUE'
+
+language_test.entity_using_original_language:
+  path: '/admin/language_test/entity_using_original_language/{configurable_language}'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::testEntity'
+  requirements:
+    _access: 'TRUE'
+
+language_test.entity_using_current_language:
+  path: '/admin/language_test/entity_using_current_language/{configurable_language}'
+  defaults:
+    _controller: '\Drupal\language_test\Controller\LanguageTestController::testEntity'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      configurable_language:
+        type: entity:configurable_language
+        # Force load in the interface text language selected for page.
+        with_config_overrides: TRUE

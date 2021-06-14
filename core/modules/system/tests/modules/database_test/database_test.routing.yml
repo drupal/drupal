@@ -1,0 +1,34 @@
+database_test.pager_query_even:
+  path: '/database_test/pager_query_even/{limit}'
+  defaults:
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::pagerQueryEven'
+  requirements:
+    _access: 'TRUE'
+
+database_test.pager_query_odd:
+  path: '/database_test/pager_query_odd/{limit}'
+  defaults:
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::pagerQueryOdd'
+  requirements:
+    _access: 'TRUE'
+
+database_test.tablesort:
+  path: '/database_test/tablesort'
+  defaults:
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::testTablesort'
+  requirements:
+    _access: 'TRUE'
+
+database_test.tablesort_first:
+  path: '/database_test/tablesort_first'
+  defaults:
+    _controller: '\Drupal\database_test\Controller\DatabaseTestController::testTablesortFirst'
+  requirements:
+    _access: 'TRUE'
+
+database_test.tablesort_default_sort:
+  path: '/database_test/tablesort_default_sort'
+  defaults:
+    _form: '\Drupal\database_test\Form\DatabaseTestForm'
+  requirements:
+    _access: 'TRUE'

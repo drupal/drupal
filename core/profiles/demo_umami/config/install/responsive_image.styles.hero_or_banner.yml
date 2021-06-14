@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.large_21_9
+    - image.style.large_21_9_2x
+    - image.style.medium_21_9
+    - image.style.small_21_9
+id: hero_or_banner
+label: 'Hero or Banner'
+image_style_mappings:
+  -
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: 100vw
+      sizes_image_styles:
+        - large_21_9
+        - large_21_9_2x
+        - medium_21_9
+        - small_21_9
+breakpoint_group: responsive_image
+fallback_image_style: small_21_9

@@ -1,0 +1,5 @@
+name: 'Views Test RSS'
+type: module
+description: 'Provides hooks to alter RSS output for testing purposes.'
+package: Testing
+version: VERSION

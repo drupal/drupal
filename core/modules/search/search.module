@@ -1,0 +1,587 @@
+<?php
+
+/**
+ * @file
+ * Enables site-wide keyword searching.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\search\SearchTextProcessorInterface;
+
+/**
+ * Matches all 'N' Unicode character classes (numbers)
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\search\SearchTextProcessorInterface::PREG_CLASS_NUMBERS instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ */
+define('PREG_CLASS_NUMBERS', SearchTextProcessorInterface::PREG_CLASS_NUMBERS);
+
+/**
+ * Matches all 'P' Unicode character classes (punctuation)
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\search\SearchTextProcessorInterface::PREG_CLASS_PUNCTUATION
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ */
+define('PREG_CLASS_PUNCTUATION', SearchTextProcessorInterface::PREG_CLASS_PUNCTUATION);
+
+/**
+ * Matches CJK (Chinese, Japanese, Korean) letter-like characters.
+ *
+ * This list is derived from the "East Asian Scripts" section of
+ * http://www.unicode.org/charts/index.html, as well as a comment on
+ * http://unicode.org/reports/tr11/tr11-11.html listing some character
+ * ranges that are reserved for additional CJK ideographs.
+ *
+ * The character ranges do not include numbers, punctuation, or symbols, since
+ * these are handled separately in search. Note that radicals and strokes are
+ * considered symbols. (See
+ * http://www.unicode.org/Public/UNIDATA/extracted/DerivedGeneralCategory.txt)
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\search\SearchTextProcessorInterface::PREG_CLASS_CJK instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ */
+define('PREG_CLASS_CJK', SearchTextProcessorInterface::PREG_CLASS_CJK);
+
+/**
+ * Implements hook_help().
+ */
+function search_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.search':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Search module provides the ability to set up search pages based on plugins provided by other modules. In Drupal core, there are two page-type plugins: the Content page type provides keyword searching for content managed by the Node module, and the Users page type provides keyword searching for registered users. Contributed modules may provide other page-type plugins. For more information, see the <a href=":search-module">online documentation for the Search module</a>.', [':search-module' => 'https://www.drupal.org/documentation/modules/search']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuring search pages') . '</dt>';
+      $output .= '<dd>' . t('To configure search pages, visit the <a href=":search-settings">Search pages page</a>. In the Search pages section, you can add a new search page, edit the configuration of existing search pages, enable and disable search pages, and choose the default search page. Each enabled search page has a URL path starting with <em>search</em>, and each will appear as a tab or local task link on the <a href=":search-url">search page</a>; you can configure the text that is shown in the tab. In addition, some search page plugins have additional settings that you can configure for each search page.', [':search-settings' => Url::fromRoute('entity.search_page.collection')->toString(), ':search-url' => Url::fromRoute('search.view')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Managing the search index') . '</dt>';
+      $output .= '<dd>' . t('Some search page plugins, such as the core Content search page, index searchable text using the Drupal core search index, and will not work unless content is indexed. Indexing is done during <em>cron</em> runs, so it requires a <a href=":cron">cron maintenance task</a> to be set up. There are also several settings affecting indexing that can be configured on the <a href=":search-settings">Search pages page</a>: the number of items to index per cron run, the minimum word length to index, and how to handle Chinese, Japanese, and Korean characters.', [':cron' => Url::fromRoute('system.cron_settings')->toString(), ':search-settings' => Url::fromRoute('entity.search_page.collection')->toString()]) . '</dd>';
+      $output .= '<dd>' . t('Modules providing search page plugins generally ensure that content-related actions on your site (creating, editing, or deleting content and comments) automatically cause affected content items to be marked for indexing or reindexing at the next cron run. When content is marked for reindexing, the previous content remains in the index until cron runs, at which time it is replaced by the new content. However, there are some actions related to the structure of your site that do not cause affected content to be marked for reindexing. Examples of structure-related actions that affect content include deleting or editing taxonomy terms, enabling or disabling modules that add text to content (such as Taxonomy, Comment, and field-providing modules), and modifying the fields or display parameters of your content types. If you take one of these actions and you want to ensure that the search index is updated to reflect your changed site structure, you can mark all content for reindexing by clicking the "Re-index site" button on the <a href=":search-settings">Search pages page</a>. If you have a lot of content on your site, it may take several cron runs for the content to be reindexed.', [':search-settings' => Url::fromRoute('entity.search_page.collection')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Displaying the Search block') . '</dt>';
+      $output .= '<dd>' . t('The Search module includes a block, which can be enabled and configured on the <a href=":blocks">Block layout page</a>, if you have the Block module enabled; the default block title is Search, and it is the Search form block in the Forms category, if you wish to add another instance. The block is available to users with the <a href=":search_permission">Use search</a> permission, and it performs a search using the configured default search page.', [':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#', ':search_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-search'])->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Searching your site') . '</dt>';
+      $output .= '<dd>' . t('Users with <a href=":search_permission">Use search</a> permission can use the Search block and <a href=":search">Search page</a>. Users with the <a href=":node_permission">View published content</a> permission can use configured search pages of type <em>Content</em> to search for content containing exact keywords; in addition, users with <a href=":search_permission">Use advanced search</a> permission can use more complex search filtering. Users with the <a href=":user_permission">View user information</a> permission can use configured search pages of type <em>Users</em> to search for active users containing the keyword anywhere in the username, and users with the <a href=":user_permission">Administer users</a> permission can search for active and blocked users, by email address or username keyword.', [':search' => Url::fromRoute('search.view')->toString(), ':search_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-search'])->toString(), ':node_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-node'])->toString(), ':user_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-user'])->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Extending the Search module') . '</dt>';
+      $output .= '<dd>' . t('By default, the Search module only supports exact keyword matching in content searches. You can modify this behavior by installing a language-specific stemming module for your language (such as <a href=":porterstemmer_url">Porter Stemmer</a> for American English), which allows words such as walk, walking, and walked to be matched in the Search module. Another approach is to use a third-party search technology with stemming or partial word matching features built in, such as <a href=":solr_url">Apache Solr</a> or <a href=":sphinx_url">Sphinx</a>. There are also contributed modules that provide additional search pages. These and other <a href=":contrib-search">search-related contributed modules</a> can be downloaded by visiting Drupal.org.', [':contrib-search' => 'https://www.drupal.org/project/project_module?f[2]=im_vid_3%3A105', ':porterstemmer_url' => 'https://www.drupal.org/project/porterstemmer', ':solr_url' => 'https://www.drupal.org/project/apachesolr', ':sphinx_url' => 'https://www.drupal.org/project/sphinx']) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function search_theme() {
+  return [
+    'search_result' => [
+      'variables' => ['result' => NULL, 'plugin_id' => NULL],
+      'file' => 'search.pages.inc',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function search_theme_suggestions_search_result(array $variables) {
+  return ['search_result__' . $variables['plugin_id']];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block templates.
+ */
+function search_preprocess_block(&$variables) {
+  if ($variables['plugin_id'] == 'search_form_block') {
+    $variables['attributes']['role'] = 'search';
+  }
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Fires updateIndex() in the plugins for all indexable active search pages,
+ * and cleans up dirty words.
+ */
+function search_cron() {
+  /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
+  $search_page_repository = \Drupal::service('search.search_page_repository');
+  foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+    $entity->getPlugin()->updateIndex();
+  }
+}
+
+/**
+ * Simplifies and preprocesses text for searching.
+ *
+ * Processing steps:
+ * - Entities are decoded.
+ * - Text is lower-cased and diacritics (accents) are removed.
+ * - hook_search_preprocess() is invoked.
+ * - CJK (Chinese, Japanese, Korean) characters are processed, depending on
+ *   the search settings.
+ * - Punctuation is processed (removed or replaced with spaces, depending on
+ *   where it is; see code for details).
+ * - Words are truncated to 50 characters maximum.
+ *
+ * @param string $text
+ *   Text to simplify.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
+ *
+ * @return string
+ *   Simplified and processed text.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\search\SearchTextProcessorInterface::analyze() instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ * @see hook_search_preprocess()
+ */
+function search_simplify($text, $langcode = NULL) {
+  @trigger_error('search_simplify() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\search\SearchTextProcessorInterface::analyze() instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
+  return \Drupal::service('search.text_processor')->analyze($text, $langcode);
+}
+
+/**
+ * Splits CJK (Chinese, Japanese, Korean) text into tokens.
+ *
+ * The Search module matches exact words, where a word is defined to be a
+ * sequence of characters delimited by spaces or punctuation. CJK languages are
+ * written in long strings of characters, though, not split up into words. So
+ * in order to allow search matching, we split up CJK text into tokens
+ * consisting of consecutive, overlapping sequences of characters whose length
+ * is equal to the 'minimum_word_size' variable. This tokenizing is only done
+ * if the 'overlap_cjk' variable is TRUE.
+ *
+ * @param array $matches
+ *   This function is a callback for preg_replace_callback(), which is called
+ *   from search_simplify(). So, $matches is an array of regular expression
+ *   matches, which means that $matches[0] contains the matched text -- a
+ *   string of CJK characters to tokenize.
+ *
+ * @return string
+ *   Tokenized text, starting and ending with a space character.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a
+ *   custom implementation of SearchTextProcessorInterface instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ */
+function search_expand_cjk($matches) {
+  @trigger_error('search_expand_cjk() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a custom implementation of SearchTextProcessorInterface instead. instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
+  $min = \Drupal::config('search.settings')->get('index.minimum_word_size');
+  $str = $matches[0];
+  $length = mb_strlen($str);
+  // If the text is shorter than the minimum word size, don't tokenize it.
+  if ($length <= $min) {
+    return ' ' . $str . ' ';
+  }
+  $tokens = ' ';
+  // Build a FIFO queue of characters.
+  $chars = [];
+  for ($i = 0; $i < $length; $i++) {
+    // Add the next character off the beginning of the string to the queue.
+    $current = mb_substr($str, 0, 1);
+    $str = substr($str, strlen($current));
+    $chars[] = $current;
+    if ($i >= $min - 1) {
+      // Make a token of $min characters, and add it to the token string.
+      $tokens .= implode('', $chars) . ' ';
+      // Shift out the first character in the queue.
+      array_shift($chars);
+    }
+  }
+  return $tokens;
+}
+
+/**
+ * Simplifies and splits a string into words for indexing.
+ *
+ * @param string $text
+ *   Text to process.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
+ *
+ * @return array
+ *   Array of words in the simplified, preprocessed text.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a
+ *   \Drupal\search\SearchTextProcessorInterface::process() instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ * @see search_simplify()
+ */
+function search_index_split($text, $langcode = NULL) {
+  @trigger_error('search_index_split() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\search\SearchTextProcessorInterface::process() instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
+  return \Drupal::service('search.text_processor')->process($text, $langcode);
+}
+
+/**
+ * Invokes hook_search_preprocess() to simplify text.
+ *
+ * @param string $text
+ *   Text to preprocess, passed by reference and altered in place.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a
+ *   custom implementation of SearchTextProcessor instead.
+ *
+ * @see https://www.drupal.org/node/3078162
+ */
+function search_invoke_preprocess(&$text, $langcode = NULL) {
+  @trigger_error('search_invoke_preprocess() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a custom implementation of SearchTextProcessorInterface instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
+  foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
+    $text = \Drupal::moduleHandler()->invoke($module, 'search_preprocess', [$text, $langcode]);
+  }
+}
+
+/**
+ * @defgroup search Search interface
+ * @{
+ * The Drupal search interface manages a global search mechanism.
+ *
+ * Modules may plug into this system to provide searches of different types of
+ * data. Most of the system is handled by the Search module, so this must be
+ * enabled for all of the search features to work.
+ *
+ * There are two ways to interact with the search system:
+ * - Specifically for searching nodes, you can implement
+ *   hook_node_update_index() and hook_node_search_result(). However, note that
+ *   the search system already indexes all visible output of a node; i.e.,
+ *   everything displayed normally during node viewing. This is
+ *   usually sufficient. You should only use this mechanism if you want
+ *   additional, non-visible data to be indexed.
+ * - Define a plugin implementing \Drupal\search\Plugin\SearchInterface and
+ *   annotated as \Drupal\search\Annotation\SearchPlugin. This will create a
+ *   search page type that users can use to set up one or more search pages.
+ *   Each of these corresponds to a tab on the /search page, which can be
+ *   used to perform searches. You will also need to implement the execute()
+ *   method from the interface to perform the search. A base class is provided
+ *   in \Drupal\search\Plugin\SearchPluginBase. For more information about
+ *   plugins, see the @link plugin_api Plugin API topic. @endlink
+ *
+ * If your module needs to provide a more complicated search form, then you
+ * need to implement it yourself. In that case, you may wish to define it as a
+ * local task (tab) under the /search page (e.g. /search/mymodule) so that users
+ * can easily find it.
+ *
+ * @see plugin_api
+ * @see annotation
+ */
+
+/**
+ * Returns snippets from a piece of text, with search keywords highlighted.
+ *
+ * Used for formatting search results. All HTML tags will be stripped from
+ * $text.
+ *
+ * @param string $keys
+ *   A string containing a search query.
+ * @param string $text
+ *   The text to extract fragments from.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
+ *
+ * @return array
+ *   A render array containing HTML for the excerpt.
+ */
+function search_excerpt($keys, $text, $langcode = NULL) {
+  // We highlight around non-indexable or CJK characters.
+  $boundary_character = '[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . ']';
+  $preceded_by_boundary = '(?<=' . $boundary_character . ')';
+  $followed_by_boundary = '(?=' . $boundary_character . ')';
+
+  // Extract positive keywords and phrases.
+  preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' ' . $keys, $matches);
+  $keys = array_merge($matches[2], $matches[3]);
+
+  // Prepare text by stripping HTML tags and decoding HTML entities.
+  $text = strip_tags(str_replace(['<', '>'], [' <', '> '], $text));
+  $text = Html::decodeEntities($text);
+  $text_length = strlen($text);
+
+  // Make a list of unique keywords that are actually found in the text,
+  // which could be items in $keys or replacements that are equivalent through
+  // \Drupal\search\SearchTextProcessorInterface::analyze().
+  $temp_keys = [];
+  foreach ($keys as $key) {
+    $key = _search_find_match_with_simplify($key, $text, $boundary_character, $langcode);
+    if (isset($key)) {
+      // Quote slashes so they can be used in regular expressions.
+      $temp_keys[] = preg_quote($key, '/');
+    }
+  }
+  // Several keywords could have simplified down to the same thing, so pick
+  // out the unique ones.
+  $keys = array_unique($temp_keys);
+
+  // Extract fragments of about 60 characters around keywords, bounded by word
+  // boundary characters. Try to reach 256 characters, using second occurrences
+  // if necessary.
+  $ranges = [];
+  $length = 0;
+  $look_start = [];
+  $remaining_keys = $keys;
+
+  while ($length < 256 && !empty($remaining_keys)) {
+    $found_keys = [];
+    foreach ($remaining_keys as $key) {
+      if ($length >= 256) {
+        break;
+      }
+
+      // Remember where we last found $key, in case we are coming through a
+      // second time.
+      if (!isset($look_start[$key])) {
+        $look_start[$key] = 0;
+      }
+
+      // See if we can find $key after where we found it the last time. Since
+      // we are requiring a match on a word boundary, make sure $text starts
+      // and ends with a space.
+      $matches = [];
+      if (preg_match('/' . $preceded_by_boundary . $key . $followed_by_boundary . '/iu', ' ' . $text . ' ', $matches, PREG_OFFSET_CAPTURE, $look_start[$key])) {
+        $found_position = $matches[0][1];
+        $look_start[$key] = $found_position + 1;
+        // Keep track of which keys we found this time, in case we need to
+        // pass through again to find more text.
+        $found_keys[] = $key;
+
+        // Locate a space before and after this match, leaving about 60
+        // characters of context on each end.
+        $before = strpos(' ' . $text, ' ', max(0, $found_position - 61));
+        if ($before !== FALSE && $before <= $found_position) {
+          if ($text_length > $found_position + 60) {
+            $after = strrpos(substr($text, 0, $found_position + 60), ' ', $found_position);
+          }
+          else {
+            $after = $text_length;
+          }
+          if ($after !== FALSE && $after > $found_position) {
+            // Account for the spaces we added.
+            $before = max($before - 1, 0);
+            if ($before < $after) {
+              // Save this range.
+              $ranges[$before] = $after;
+              $length += $after - $before;
+            }
+          }
+        }
+      }
+    }
+    // Next time through this loop, only look for keys we found this time,
+    // if any.
+    $remaining_keys = $found_keys;
+  }
+
+  if (empty($ranges)) {
+    // We didn't find any keyword matches, so just return the first part of the
+    // text. We also need to re-encode any HTML special characters that we
+    // entity-decoded above.
+    return [
+      '#plain_text' => Unicode::truncate($text, 256, TRUE, TRUE),
+    ];
+  }
+
+  // Sort the text ranges by starting position.
+  ksort($ranges);
+
+  // Collapse overlapping text ranges into one. The sorting makes it O(n).
+  $new_ranges = [];
+  $max_end = 0;
+  foreach ($ranges as $this_from => $this_to) {
+    $max_end = max($max_end, $this_to);
+    if (!isset($working_from)) {
+      // This is the first time through this loop: initialize.
+      $working_from = $this_from;
+      $working_to = $this_to;
+      continue;
+    }
+    if ($this_from <= $working_to) {
+      // The ranges overlap: combine them.
+      $working_to = max($working_to, $this_to);
+    }
+    else {
+      // The ranges do not overlap: save the working range and start a new one.
+      $new_ranges[$working_from] = $working_to;
+      $working_from = $this_from;
+      $working_to = $this_to;
+    }
+  }
+  // Save the remaining working range.
+  $new_ranges[$working_from] = $working_to;
+
+  // Fetch text within the combined ranges we found.
+  $out = [];
+  foreach ($new_ranges as $from => $to) {
+    $out[] = substr($text, $from, $to - $from);
+  }
+
+  // Combine the text chunks with "…" separators. The "…" needs to be
+  // translated. Let translators have the … separator text as one chunk.
+  $ellipses = explode('@excerpt', t('… @excerpt … @excerpt …'));
+  $text = (isset($new_ranges[0]) ? '' : $ellipses[0]) . implode($ellipses[1], $out) . (($max_end < strlen($text) - 1) ? $ellipses[2] : '');
+  $text = Html::escape($text);
+
+  // Highlight keywords. Must be done at once to prevent conflicts ('strong'
+  // and '<strong>').
+  $text = trim(preg_replace('/' . $preceded_by_boundary . '(?:' . implode('|', $keys) . ')' . $followed_by_boundary . '/iu', '<strong>\0</strong>', ' ' . $text . ' '));
+  return [
+    '#markup' => $text,
+    '#allowed_tags' => ['strong'],
+  ];
+}
+
+/**
+ * @} End of "defgroup search".
+ */
+
+/**
+ * Finds an appropriate keyword in text.
+ *
+ * @param string $key
+ *   The keyword to find.
+ * @param string $text
+ *   The text to search for the keyword.
+ * @param string $boundary
+ *   Regular expression for the boundary character class (characters that
+ *   indicate spaces between words).
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
+ *
+ * @return string|null
+ *   A segment of $text that is between word boundary characters that either
+ *   matches $key directly, or matches $key when both this text segment and
+ *   $key are processed by
+ *   \Drupal\search\SearchTextProcessorInterface::analyze(). If a matching text
+ *   segment is not located, NULL is returned.
+ */
+function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NULL) {
+  $preceded_by_boundary = '(?<=' . $boundary . ')';
+  $followed_by_boundary = '(?=' . $boundary . ')';
+
+  // See if $key appears as-is. When testing, make sure $text starts/ends with
+  // a space, because we require $key to be surrounded by word boundary
+  // characters.
+  $temp = trim($key);
+  if ($temp == '') {
+    return NULL;
+  }
+  if (preg_match('/' . $preceded_by_boundary . preg_quote($temp, '/') . $followed_by_boundary . '/iu', ' ' . $text . ' ')) {
+    return $temp;
+  }
+
+  // See if there is a match after lower-casing and removing diacritics in
+  // both, which should preserve the string length.
+  $new_text = mb_strtolower($text);
+  $new_text = \Drupal::service('transliteration')->removeDiacritics($new_text);
+  $new_key = mb_strtolower($temp);
+  $new_key = \Drupal::service('transliteration')->removeDiacritics($new_key);
+  if (preg_match('/' . $preceded_by_boundary . preg_quote($new_key, '/') . $followed_by_boundary . '/u', ' ' . $new_text . ' ')) {
+    $position = mb_strpos($new_text, $new_key);
+    return mb_substr($text, $position, mb_strlen($new_key));
+  }
+
+  // Run both text and key through text processor.
+  /** @var \Drupal\search\SearchTextProcessorInterface $text_processor */
+  $text_processor = \Drupal::service('search.text_processor');
+  $simplified_key = trim($text_processor->analyze($key, $langcode));
+  $simplified_text = trim($text_processor->analyze($text, $langcode));
+  if ($simplified_key == '' || $simplified_text == '' || strpos($simplified_text, $simplified_key) === FALSE) {
+    // The simplified keyword and text do not match at all, or are empty.
+    return NULL;
+  }
+
+  // Split $text into words, keeping track of where the word boundaries are.
+  $words = preg_split('/' . $boundary . '+/u', $text, NULL, PREG_SPLIT_OFFSET_CAPTURE);
+  // Add an entry pointing to the end of the string, for the loop below.
+  $words[] = ['', strlen($text)];
+
+  // Using a binary search, find the earliest possible ending position in
+  // $text where it will still match the keyword after applying
+  // \Drupal\search\SearchTextProcessorInterface::analyze().
+  $start_index = 0;
+  $start_pos = $words[$start_index][1];
+  $min_end_index = 1;
+  $max_end_index = count($words) - 1;
+  while ($max_end_index > $min_end_index) {
+    // Check the index half way between min and max. See if we ended there,
+    // if we would still have a match.
+    $proposed_end_index = floor(($max_end_index + $min_end_index) / 2);
+    $proposed_end_pos = $words[$proposed_end_index][1];
+    // Since the split was done with preg_split(), the positions are byte counts
+    // not character counts, so use substr() not mb_substr() here.
+    $trial_text = trim($text_processor->analyze(substr($text, $start_pos, $proposed_end_pos - $start_pos), $langcode));
+    if (strpos($trial_text, $simplified_key) !== FALSE) {
+      // The proposed endpoint is fine, text still matches.
+      $max_end_index = $proposed_end_index;
+    }
+    else {
+      // The proposed endpoint index is too early, so the earliest possible
+      // OK ending point would be the next index.
+      $min_end_index = $proposed_end_index + 1;
+    }
+  }
+
+  // Now do the same for the starting position: using a binary search, find the
+  // latest possible starting position in $text where it will still match the
+  // keyword after applying
+  // \Drupal\search\SearchTextProcessorInterface::analyze().
+  $end_index = $min_end_index;
+  $end_pos = $words[$end_index][1];
+  $min_start_index = 0;
+  $max_start_index = $end_index - 1;
+  while ($max_start_index > $min_start_index) {
+    // Check the index half way between min and max. See if we started there,
+    // if we would still have a match.
+    $proposed_start_index = ceil(($max_start_index + $min_start_index) / 2);
+    $proposed_start_pos = $words[$proposed_start_index][1];
+    // Since the split was done with preg_split(), the positions are byte counts
+    // not character counts, so use substr() not mb_substr() here.
+    $trial_text = trim($text_processor->analyze(substr($text, $proposed_start_pos, $end_pos - $proposed_start_pos), $langcode));
+    if (strpos($trial_text, $simplified_key) !== FALSE) {
+      // The proposed start point is fine, text still matches.
+      $min_start_index = $proposed_start_index;
+    }
+    else {
+      // The proposed start point index is too late, so the latest possible
+      // OK starting point would be the previous index.
+      $max_start_index = $proposed_start_index - 1;
+    }
+  }
+  $start_index = $max_start_index;
+
+  // Return the matching text. We need to use substr() here and not the
+  // mb_substr() function, because the indices in $words came from preg_split(),
+  // so they are Unicode-safe byte positions, not character positions.
+  return trim(substr($text, $words[$start_index][1], $words[$end_index][1] - $words[$start_index][1]));
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the search_block_form form.
+ *
+ * Since the exposed form is a GET form, we don't want it to send the form
+ * tokens. However, you cannot make this happen in the form builder function
+ * itself, because the tokens are added to the form after the builder function
+ * is called. So, we have to do it in a form_alter.
+ *
+ * @see \Drupal\search\Form\SearchBlockForm
+ */
+function search_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
+  $form['form_build_id']['#access'] = FALSE;
+  $form['form_token']['#access'] = FALSE;
+  $form['form_id']['#access'] = FALSE;
+}

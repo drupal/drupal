@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Breadcrumbs.
+ */
+
+@import "../base/variables.pcss.css";
+
+.breadcrumb {
+  padding: 0;
+  color: var(--color-text);
+  font-size: 0.79rem;
+}
+
+.breadcrumb__list,
+[dir="rtl"] .breadcrumb__list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.breadcrumb__item,
+.breadcrumb__link {
+  display: inline;
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+  padding: 0 0.75rem;
+  content: url(../../images/icons/currentColor/arrow-breadcrumb.svg);
+}
+
+[dir="rtl"] .breadcrumb__item + .breadcrumb__item::before {
+  content: url(../../images/icons/currentColor/arrow-breadcrumb-rtl.svg);
+}
+
+.breadcrumb__link:hover,
+.breadcrumb__link:focus {
+  text-decoration: none;
+}

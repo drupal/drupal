@@ -1,0 +1,99 @@
+# Schema for the configuration files of the node module.
+
+node.settings:
+  type: config_object
+  label: 'Node settings'
+  mapping:
+    use_admin_theme:
+      type: boolean
+      label: 'Use administration theme when editing or creating content'
+
+node.type.*:
+  type: config_entity
+  label: 'Content type'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    type:
+      type: string
+      label: 'Machine-readable name'
+    description:
+      type: text
+      label: 'Description'
+    help:
+      type: text
+      label: 'Explanation or submission guidelines'
+    new_revision:
+      type: boolean
+      label: 'Whether a new revision should be created by default'
+    preview_mode:
+      type: integer
+      label: 'Preview before submitting'
+    display_submitted:
+      type: boolean
+      label: 'Display setting for author and date Submitted by post information'
+
+# Plugin \Drupal\node\Plugin\Search\NodeSearch
+search.plugin.node_search:
+  type: mapping
+  label: 'Content search'
+  mapping:
+    rankings:
+      type: sequence
+      label: 'Content ranking'
+      orderby: key
+      sequence:
+        type: integer
+        label: 'Influence'
+
+action.configuration.node_assign_owner_action:
+  type: mapping
+  label: 'Change the author of content configuration'
+  mapping:
+    owner_uid:
+      type: text
+      label: 'Username'
+
+action.configuration.node_unpromote_action:
+  type: action_configuration_default
+  label: 'Demote selected content from front page configuration'
+
+action.configuration.node_promote_action:
+  type: action_configuration_default
+  label: 'Promote selected content from front page configuration'
+
+action.configuration.node_make_sticky_action:
+  type: action_configuration_default
+  label: 'Make selected content sticky configuration'
+
+action.configuration.node_make_unsticky_action:
+  type: action_configuration_default
+  label: 'Make selected content unsticky configuration'
+
+action.configuration.node_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish content containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
+
+block.settings.node_syndicate_block:
+  type: block_settings
+  label: 'Syndicate block'
+  mapping:
+    block_count:
+      type: integer
+      label: 'Block count'
+
+condition.plugin.node_type:
+  type: condition.plugin
+  mapping:
+    bundles:
+      type: sequence
+      sequence:
+        type: string

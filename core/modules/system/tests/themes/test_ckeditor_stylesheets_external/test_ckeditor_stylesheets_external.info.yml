@@ -1,0 +1,7 @@
+name: Test external CKEditor stylesheets
+type: theme
+description: 'A theme that uses an external CKEditor stylesheet.'
+version: VERSION
+base theme: false
+ckeditor_stylesheets:
+  - https://fonts.googleapis.com/css?family=Open+Sans

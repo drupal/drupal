@@ -1,0 +1,50 @@
+/**
+ * @file
+ * Entity meta.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --size-entity-meta-spacing: var(--space-xs);
+}
+
+.entity-meta__header {
+  padding: calc(var(--space-m) - var(--size-entity-meta-spacing)) var(--space-m) calc(var(--space-l) - var(--size-entity-meta-spacing));
+  color: var(--color-fg);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--details-accordion-border-size-radius);
+  background-color: var(--color-bg);
+}
+
+@media screen and (min-width: 48em) {
+  .entity-meta__header {
+    padding: calc(var(--space-l) - var(--size-entity-meta-spacing)) var(--space-l) var(--space-l);
+  }
+}
+
+.entity-meta__header .form-item {
+  margin-top: var(--size-entity-meta-spacing);
+  margin-bottom: var(--size-entity-meta-spacing);
+}
+
+.entity-meta__title {
+  margin: 0.25em 0;
+  text-shadow: 0 1px 0 #fff;
+  font-size: 1.231em;
+  font-weight: bold;
+}
+
+.entity-meta__revision {
+  margin-top: var(--space-l);
+}
+
+.entity-meta__header .form-type--item .form-item__label {
+  display: inline-block;
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+.entity-meta__header .form-type--item .form-item__label::after {
+  content: ":";
+}

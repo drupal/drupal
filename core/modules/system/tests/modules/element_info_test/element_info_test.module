@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Element info test.
+ */
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function element_info_test_element_info_alter(array &$info) {
+  $info['number'] += ['#pre_render' => []];
+  /* @see \Drupal\KernelTests\Core\Render\Element\WeightTest::testProcessWeightSelectMax() */
+  $info['number']['#pre_render'][] = 'element_info_test_element_pre_render';
+}
+
+/**
+ * Implements hook_element_plugin_alter().
+ */
+function element_info_test_element_plugin_alter(array &$definitions) {
+  if (\Drupal::state()->get('hook_element_plugin_alter:remove_weight', FALSE)) {
+    unset($definitions['weight']);
+  }
+}
+
+/**
+ * {@inheritdoc}
+ *
+ * @see \Drupal\KernelTests\Core\Render\Element\WeightTest::testProcessWeightSelectMax()
+ */
+function element_info_test_element_pre_render(array $element) {
+  return $element;
+}

@@ -1,0 +1,34 @@
+editor.filter_xss:
+  path: '/editor/filter_xss/{filter_format}'
+  defaults:
+    _controller: '\Drupal\editor\EditorController::filterXss'
+  requirements:
+    _entity_access: 'filter_format.use'
+
+editor.field_untransformed_text:
+  path: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  defaults:
+    _controller: '\Drupal\editor\EditorController::getUntransformedText'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+  requirements:
+    _permission: 'access in-place editing'
+    _access_quickedit_entity_field: 'TRUE'
+
+editor.image_dialog:
+  path: '/editor/dialog/image/{editor}'
+  defaults:
+    _form: '\Drupal\editor\Form\EditorImageDialog'
+    _title: 'Upload image'
+  requirements:
+    _entity_access: 'editor.use'
+
+editor.link_dialog:
+  path: '/editor/dialog/link/{editor}'
+  defaults:
+    _form: '\Drupal\editor\Form\EditorLinkDialog'
+    _title: 'Add link'
+  requirements:
+    _entity_access: 'editor.use'

@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for this module.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function pager_test_preprocess_pager(&$variables) {
+  // Nothing to do if there is only one page.
+  $element = $variables['pager']['#element'];
+  /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
+  $pager_manager = \Drupal::service('pager.manager');
+  $pager = $pager_manager->getPager($element);
+
+  // Nothing to do if there is no pager.
+  if (!isset($pager)) {
+    return;
+  }
+
+  // Nothing to do if there is only one page.
+  if ($pager->getTotalPages() <= 1) {
+    return;
+  }
+
+  foreach ($variables['items']['pages'] as $index => &$pager_item) {
+    $pager_item['attributes']['pager-test'] = 'yes';
+  }
+  unset($pager_item);
+
+  foreach (['first', 'previous', 'next', 'last'] as $special_pager_item) {
+    if (isset($variables['items'][$special_pager_item])) {
+      $variables['items'][$special_pager_item]['attributes']['pager-test'] = $special_pager_item;
+    }
+  }
+}

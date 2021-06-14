@@ -1,0 +1,41 @@
+/**
+ * @file
+ * RSS feed.
+ */
+
+@import "../base/variables.pcss.css";
+
+.feed-icon {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color--gray-25);
+
+  &:hover {
+    color: var(--color--blue-50);
+  }
+}
+
+.feed-icon__label {
+  flex-shrink: 0;
+  letter-spacing: 0.08em;
+  font-size: var(--font-size-xxs);
+  font-weight: 600;
+}
+
+.feed-icon__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--sp1-5);
+  height: var(--sp1-5);
+  margin-inline-start: var(--sp0-5);
+  color: var(--color--white);
+  background-color: var(--color--blue-50);
+
+  & svg {
+    vertical-align: top;
+    fill: currentColor;
+  }
+}

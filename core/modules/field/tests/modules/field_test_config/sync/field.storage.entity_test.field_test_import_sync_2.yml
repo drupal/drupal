@@ -1,0 +1,21 @@
+id: entity_test.field_test_import_sync_2
+uuid: 2165d9aa-9a0c-41a1-be02-2a49f3405c00
+langcode: en
+field_name: field_test_import_sync_2
+entity_type: entity_test
+type: text
+settings:
+  max_length: '255'
+module: text
+locked: '0'
+cardinality: '1'
+translatable: '0'
+indexes:
+  format:
+    - format
+dependencies:
+  module:
+    - entity_test
+    - text
+persist_with_no_fields: false
+custom_storage: false

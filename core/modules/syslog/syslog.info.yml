@@ -1,0 +1,6 @@
+name: Syslog
+type: module
+description: 'Logs and records system events to syslog.'
+package: Core
+version: VERSION
+configure: system.logging_settings

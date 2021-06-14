@@ -1,0 +1,106 @@
+{#
+/**
+ * @file
+ * Olivero's theme implementation for comments.
+ *
+ * Available variables:
+ * - author: Comment author. Can be a link or plain text.
+ * - content: The content-related items for the comment display. Use
+ *   {{ content }} to print them all, or print a subset such as
+ *   {{ content.field_example }}. Use the following code to temporarily suppress
+ *   the printing of a given child element:
+ *   @code
+ *   {{ content|without('field_example') }}
+ *   @endcode
+ * - created: Formatted date and time for when the comment was created.
+ *   Preprocess functions can reformat it by calling DateFormatter::format()
+ *   with the desired parameters on the 'comment.created' variable.
+ * - changed: Formatted date and time for when the comment was last changed.
+ *   Preprocess functions can reformat it by calling DateFormatter::format()
+ *   with the desired parameters on the 'comment.changed' variable.
+ * - permalink: Comment permalink.
+ * - submitted: Submission information created from author and created
+ *   during template_preprocess_comment().
+ * - user_picture: The comment author's profile picture.
+ * - status: Comment status. Possible values are:
+ *   unpublished, published, or preview.
+ * - title: Comment title, linked to the comment.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class may contain one or more of the following classes:
+ *   - comment: The current template type; e.g., 'theming hook'.
+ *   - by-anonymous: Comment by an unregistered user.
+ *   - by-{entity-type}-author: Comment by the author of the parent entity,
+ *     eg. by-node-author.
+ *   - preview: When previewing a new or edited comment.
+ *   The following applies only to viewers who are registered users:
+ *   - unpublished: An unpublished comment visible only to administrators.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: List of classes for the styling of the comment content.
+ * - threaded: A flag indicating whether the comments are threaded or not.
+ *
+ * These variables are provided to give context about the parent comment (if
+ * any):
+ * - parent_comment: Full parent comment entity (if any).
+ * - parent_author: Equivalent to author for the parent comment.
+ * - parent_created: Equivalent to created for the parent comment.
+ * - parent_changed: Equivalent to changed for the parent comment.
+ * - parent_title: Equivalent to title for the parent comment.
+ * - parent_permalink: Equivalent to permalink for the parent comment.
+ * - parent: A text string of parent comment submission information created from
+ *   'parent_author' and 'parent_created' during template_preprocess_comment().
+ *   This information is presented to help screen readers follow lengthy
+ *   discussion threads. You can hide this from sighted users using the class
+ *   visually-hidden.
+ *
+ * These two variables are provided for context:
+ * - comment: Full comment object.
+ * - entity: Entity the comments are attached to.
+ *
+ * @see template_preprocess_comment()
+ */
+#}
+{%
+  set classes = [
+    'comment',
+    'js-comment',
+    not parent_comment ? 'comment--level-1',
+    status != 'published' ? 'comment--' ~ status,
+    comment.owner.anonymous ? 'by-anonymous',
+    author_id and author_id == commented_entity.getOwnerId() ? 'by-' ~ commented_entity.getEntityTypeId() ~ '-author',
+  ]
+%}
+{{ attach_library('olivero/comments') }}
+<article {{ attributes.addClass(classes).setAttribute('role', 'article') }}>
+  <div class="comment__picture-wrapper">
+    <div class="comment__picture">
+      {{ user_picture }}
+    </div>
+  </div>
+  <div class="comment__text-wrapper">
+    <footer class="comment__meta">
+      <p class="comment__author">{{ author }}</p>
+      <p class="comment__time">{{ created }}</p>
+      {#
+        Indicate the semantic relationship between parent and child comments
+        for accessibility. The list is difficult to navigate in a screen
+        reader without this information.
+       #}
+      {% if parent %}
+        <p class="visually-hidden">{{ parent }}</p>
+      {% endif %}
+    </footer>
+    <div{{ content_attributes.addClass('comment__content') }}>
+      {% if title %}
+        {{ title_prefix }}
+        <h3{{ title_attributes }}>{{ title }}</h3>
+        {{ title_suffix }}
+      {% endif %}
+      {{ content }}
+    </div>
+  </div>
+</article>

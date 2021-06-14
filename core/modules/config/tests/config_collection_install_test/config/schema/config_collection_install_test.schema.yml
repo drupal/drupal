@@ -1,0 +1,7 @@
+config_collection_install_test.test:
+  type: config_object
+  label: 'Collection test'
+  mapping:
+    collection:
+      type: string
+      label: 'Collection'

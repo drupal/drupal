@@ -1,0 +1,9 @@
+q[example="public class foo\
+{\
+    private int x;\
+\
+    foo(int x) {\
+        this.x = x;\
+    }\
+\
+}"]{color:red}q[style*="quotes: none"]{quotes:none;}q[style*='quotes: none']{quotes:none;}q:after{content:": colon & escaped double \" quotes \".";}q:after{content:' (brackets & escaped single \' quotes \') ';}q:after{content:"I'm Quote";}

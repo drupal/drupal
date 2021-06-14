@@ -1,0 +1,5 @@
+name: 'Disable user toolbar'
+type: module
+description: 'Support module for testing toolbar without user toolbar'
+package: Testing
+version: VERSION

@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Test module for help.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function help_topics_test_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.help_topics_test':
+      return 'Some kind of non-empty output for testing';
+  }
+}
+
+/**
+ * Implements hook_help_topics_info_alter().
+ */
+function help_topics_test_help_topics_info_alter(array &$info) {
+  $info['help_topics_test.test']['top_level'] = \Drupal::state()->get('help_topics_test.test:top_level', TRUE);
+}

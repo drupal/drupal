@@ -1,0 +1,130 @@
+/**
+ * @file
+ * Override of misc/vertical-tabs.css.
+ */
+
+.vertical-tabs {
+  position: relative;
+  margin: 10px 0;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  background: #e6e5e1;
+}
+.vertical-tabs__menu {
+  float: left; /* LTR */
+  width: 240px;
+  margin: 0 -100% -1px 0; /* LTR */
+  padding: 0;
+  list-style-type: none;
+  border-bottom: 1px solid #ccc;
+  line-height: 1;
+}
+[dir="rtl"] .vertical-tabs__menu {
+  float: right;
+  margin: 0 0 -1px -100%;
+}
+.vertical-tabs__menu-item {
+  position: relative;
+}
+.vertical-tabs__menu-item.is-selected {
+  z-index: 1;
+  overflow-x: hidden;
+  width: 100%;
+  border-right: 1px solid #fcfcfa; /* LTR */
+  border-bottom: 1px solid #b3b2ad;
+  box-shadow: 0 5px 5px -5px hsla(0, 0%, 0%, 0.3);
+}
+.vertical-tabs__menu-item.last {
+  border-bottom: none;
+}
+.vertical-tabs__menu-item.first a {
+  border-top-left-radius: 4px; /* LTR */
+}
+[dir="rtl"] .vertical-tabs__menu-item.first a {
+  border-top-left-radius: 0;
+  border-top-right-radius: 4px;
+}
+[dir="rtl"] .vertical-tabs__menu-item.is-selected {
+  border-right: none;
+  border-left: 1px solid #fcfcfa;
+}
+.vertical-tabs__menu-item:focus,
+.vertical-tabs__menu-item:active {
+  z-index: 2;
+}
+.vertical-tabs__menu-item a {
+  display: block;
+  padding: 10px 15px 15px;
+  text-decoration: none;
+  border-bottom: 1px solid #b3b2ad;
+  background-color: #f2f2f0;
+  text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
+}
+.vertical-tabs__menu-item:last-child a {
+  border-bottom: 0;
+}
+.vertical-tabs__menu-item.is-selected a,
+.vertical-tabs__menu-item a:hover,
+.vertical-tabs__menu-item a:focus {
+  background: #fcfcfa;
+  text-shadow: none;
+}
+.vertical-tabs__menu-item a:focus {
+  outline: none;
+}
+.vertical-tabs__menu-item a:focus .vertical-tabs__menu-item-title {
+  text-decoration: underline;
+}
+.vertical-tabs__menu-item a:active .vertical-tabs__menu-item-title,
+.vertical-tabs__menu-item.is-selected a:focus .vertical-tabs__menu-item-title {
+  text-decoration: none;
+}
+.vertical-tabs__menu-item.is-selected a {
+  padding-left: 11px; /* LTR */
+  text-decoration: none;
+  color: #004f80;
+  border-bottom: none;
+}
+[dir=rtl] .vertical-tabs__menu-item.is-selected a {
+  padding-right: 11px;
+  padding-left: 15px;
+}
+.vertical-tabs__menu-item.is-selected a:hover,
+.vertical-tabs__menu-item.is-selected a:focus {
+  color: #007ecc;
+}
+[data-vertical-tabs-panes] {
+  background-color: #fcfcfa;
+}
+.vertical-tabs__panes {
+  margin: 0 0 0 240px; /* LTR */
+  padding: 10px 15px 10px 15px;
+  border-left: 1px solid #a6a5a1; /* LTR */
+  border-top-right-radius: 4px; /* LTR */
+  border-bottom-right-radius: 4px; /* LTR */
+}
+[dir="rtl"] .vertical-tabs__panes {
+  margin: 0 240px 0 0;
+  border-right: 1px solid #a6a5a1;
+  border-left: none;
+  border-radius: 4px 0 0 4px;
+}
+.vertical-tabs__panes:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+.vertical-tabs__pane {
+  margin: 0;
+  padding: 0;
+  color: #595959;
+  border: 0;
+}
+.vertical-tabs__menu-item-summary {
+  display: block;
+  padding-top: 0.4em;
+  color: #666;
+}
+.vertical-tabs__pane > summary {
+  display: none;
+}

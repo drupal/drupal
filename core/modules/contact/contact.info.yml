@@ -1,0 +1,6 @@
+name: Contact
+type: module
+description: 'Provides site-wide contact forms and forms to contact individual users.'
+package: Core
+version: VERSION
+configure: entity.contact_form.collection

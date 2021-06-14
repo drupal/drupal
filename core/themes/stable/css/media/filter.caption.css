@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Caption filter: default styling for displaying Media Embed captions.
+ */
+
+.caption .media .field,
+.caption .media .field * {
+  float: none;
+  margin: unset;
+}
+
+/* Undo margin added to figure in core/assets/vendor/normalize-css/normalize.css */
+figure.caption-drupal-media.align-center {
+  margin-right: auto;
+  margin-left: auto;
+}

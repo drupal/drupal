@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block
+id: block-layout
+label: 'Block Layout Page'
+module: block
+routes:
+  - route_name: block.admin_display
+tips:
+  block-layout:
+    id: block-layout
+    plugin: text
+    label: 'Block Layout'
+    body: 'Blocks are boxes of content rendered into an area, or region, of a web page that can be displayed in regions (such as footer or sidebar) on your page.'
+    weight: 1
+  place-block:
+    id: place-block
+    plugin: text
+    label: 'Place Blocks'
+    body: 'Any custom or contributed block can be added to a particular region by clicking on a button Place block. A new block can also be created by clicking on Place Block'
+    weight: 2
+    selector: '.button--small'
+  block-region:
+    id: block-region
+    plugin: text
+    label: 'Block Region'
+    body: 'Assign or change the region of a block by clicking here. A dropdown list with all the regions will appear.You can place one block in multiple regions.'
+    weight: 3
+    selector: '.block-region-select'
+  configure-block:
+    id: configure-block
+    plugin: text
+    label: 'Configure Block'
+    body: 'By Clicking on "Configure" you can go ahead and edit the contents of the block, deal with the visibility settings and even change the placement of where it is on your theme.'
+    weight: 4
+    selector: '.dropbutton-widget'
+  custom-block-library:
+    id: custom-block-library
+    plugin: text
+    label: 'Custom Block Library'
+    body: 'The block management screen also has an another tab on the top which is used to add Custom blocks. The name of the tab is "Custom block library". This tab ultimately provides a link to add custom blocks.'
+    weight: 5

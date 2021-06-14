@@ -1,0 +1,5 @@
+# Workspaces extension relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.2.
+activate-form:
+  uri: https://drupal.org/link-relations/activate-form
+  description: A form where a workspace can be activated.

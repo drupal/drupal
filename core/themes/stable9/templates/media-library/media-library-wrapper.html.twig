@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Theme override of a container used to wrap the media library's
+ * modal dialog interface.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - menu: The menu of available media types to choose from.
+ * - content: The form to add new media items, followed by the grid or table of
+ *   existing media items to choose from.
+ *
+ * @see template_preprocess_media_library_wrapper()
+ */
+#}
+<div{{ attributes }}>
+  {{ menu }}
+  {{ content }}
+</div>

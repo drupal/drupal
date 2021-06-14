@@ -1,0 +1,5 @@
+media_library.settings:
+  title: 'Media Library settings'
+  parent: system.admin_config_media
+  description: 'Manage Media Library settings.'
+  route_name: media_library.settings

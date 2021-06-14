@@ -1,0 +1,5 @@
+name: 'Theme test theme-settings.php'
+type: theme
+description: 'Test theme that extends theme settings options via theme-settings.php file'
+version: VERSION
+base theme: false

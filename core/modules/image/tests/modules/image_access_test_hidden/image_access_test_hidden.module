@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Image field access for hidden fields.
+ */
+
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Access\AccessResult;
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function image_access_test_hidden_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getName() == 'field_image' && $operation == 'edit') {
+    return AccessResult::forbidden();
+  }
+  return AccessResult::neutral();
+}

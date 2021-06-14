@@ -1,0 +1,3 @@
+    - image.style.max_650x650
+    - image.style.max_325x325
+fallback_image_style: max_325x325

@@ -1,0 +1,8 @@
+name: 'Requirements 2 Test'
+type: module
+description: 'Tests that a module is not installed when the one it depends on fails hook_requirements(''install).'
+dependencies:
+  - drupal:requirements1_test
+  - drupal:comment
+package: Testing
+version: VERSION

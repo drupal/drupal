@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - aggregator
+id: aggregator_feed.aggregator_feed.default
+targetEntityType: aggregator_feed
+bundle: aggregator_feed
+mode: default
+content:
+  checked:
+    type: timestamp_ago
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+    label: inline
+  description:
+    weight: 3
+    region: content
+  feed_icon:
+    weight: 5
+    region: content
+  image:
+    weight: 2
+    region: content
+  items:
+    weight: 0
+    region: content
+  link:
+    type: uri_link
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+    label: inline
+hidden:
+  more_link: true

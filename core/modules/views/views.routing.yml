@@ -1,0 +1,9 @@
+views.ajax:
+  path: '/views/ajax'
+  defaults:
+    _controller: '\Drupal\views\Controller\ViewAjaxController::ajaxView'
+  requirements:
+    _access: 'TRUE'
+
+route_callbacks:
+  - 'views.route_subscriber:routes'

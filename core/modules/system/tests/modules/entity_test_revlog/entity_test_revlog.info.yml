@@ -1,0 +1,5 @@
+name: 'Entity test revision log'
+type: module
+description: 'Provides two entity types with revision logging capabilities.'
+package: Testing
+version: VERSION

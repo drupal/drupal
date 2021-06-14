@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.square
+label: Square
+targetEntityType: media
+cache: true

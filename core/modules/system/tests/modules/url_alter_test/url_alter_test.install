@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for test module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function url_alter_test_install() {
+  // Set the weight of this module to one higher than forum.module.
+  module_set_weight('url_alter_test', 2);
+}

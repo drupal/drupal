@@ -1,0 +1,36 @@
+id: statistics_node_translation_counter
+label: Node translation counter
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Content
+  - Multilingual
+source:
+  plugin: node_counter
+process:
+  nid:
+    -
+      plugin: migration_lookup
+      migration:
+        - d6_node_translation
+        - d7_node_translation
+      source: nid
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: extract
+      index:
+        - 0
+  totalcount: totalcount
+  daycount: daycount
+  timestamp: timestamp
+destination:
+  plugin: node_counter
+migration_dependencies:
+  required:
+    - language
+    - statistics_node_counter
+  optional:
+    - d6_node_translation
+    - d7_node_translation

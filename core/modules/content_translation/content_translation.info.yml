@@ -1,0 +1,8 @@
+name: 'Content Translation'
+type: module
+description: 'Allows users to translate content.'
+dependencies:
+  - drupal:language
+package: Multilingual
+version: VERSION
+configure: language.content_settings_page

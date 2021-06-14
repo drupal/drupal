@@ -1,0 +1,5 @@
+name: 'Deprecation test'
+type: module
+description: 'Support module for testing deprecation behaviors.'
+package: Testing
+version: VERSION

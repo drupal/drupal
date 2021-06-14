@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a summary of an image rotate effect.
+ *
+ * Available variables:
+ * - data: The current configuration for this resize effect, including:
+ *   - degrees: Degrees to rotate the image, positive values will rotate the
+ *     image clockwise, negative values counter-clockwise.
+ *   - bgcolor: The hex background color of the new areas created as consequence
+ *     of rotation.
+ *   - random: If the rotation angle is randomized.
+ * - effect: The effect information, including:
+ *   - id: The effect identifier.
+ *   - label: The effect name.
+ *   - description: The effect description.
+ *
+ * @ingroup themeable
+ */
+#}
+{% if data.random %}
+  {% set degrees = data.degrees|abs %}
+  {% trans %}
+    random between -{{ degrees }}° and {{ degrees }}°
+  {% endtrans %}
+{% else %}
+  {{ data.degrees }}°
+{% endif %}

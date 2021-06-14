@@ -1,0 +1,92 @@
+drupal.ckeditor:
+  version: VERSION
+  js:
+    js/ckeditor.js: {}
+    js/ckeditor.off-canvas-css-reset.js: {}
+  css:
+    state:
+      css/ckeditor.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.debounce
+    - core/drupal.displace
+    - core/ckeditor
+    - editor/drupal.editor
+
+drupal.ckeditor.plugins.drupalimagecaption:
+  version: VERSION
+  css:
+    component:
+      css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css: {}
+  dependencies:
+    - filter/caption
+
+drupal.ckeditor.plugins.language:
+  version: VERSION
+  css:
+    component:
+      css/plugins/language/ckeditor.language.css: {}
+
+drupal.ckeditor.admin:
+  version: VERSION
+  js:
+    # Core.
+    js/ckeditor.admin.js: {}
+    # Models.
+    js/models/Model.js: {}
+    # Views.
+    js/views/AuralView.js: {}
+    js/views/KeyboardView.js: {}
+    js/views/ControllerView.js: {}
+    js/views/VisualView.js: {}
+  css:
+    theme:
+      css/ckeditor.admin.css: {}
+      /core/assets/vendor/ckeditor/skins/moono-lisa/editor.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/backbone
+    - core/drupal.dialog
+    - core/drupal.announce
+    - core/ckeditor
+    - core/sortable
+    - editor/drupal.editor.admin
+    # Ensure to run after core/drupal.vertical-tabs.
+    - core/drupal.vertical-tabs
+
+drupal.ckeditor.drupalimage.admin:
+  version: VERSION
+  js:
+    js/ckeditor.drupalimage.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.vertical-tabs
+    - core/drupalSettings
+
+drupal.ckeditor.stylescombo.admin:
+  version: VERSION
+  js:
+    js/ckeditor.stylescombo.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.vertical-tabs
+    - core/drupalSettings
+    # Ensure to run after ckeditor/drupal.ckeditor.admin.
+    - ckeditor/drupal.ckeditor.admin
+
+drupal.ckeditor.language.admin:
+  version: VERSION
+  js:
+    js/ckeditor.language.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.vertical-tabs

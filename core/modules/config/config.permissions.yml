@@ -1,0 +1,9 @@
+synchronize configuration:
+  title: 'Synchronize configuration'
+  restrict access: true
+export configuration:
+  title: 'Export configuration'
+  restrict access: true
+import configuration:
+  title: 'Import configuration'
+  restrict access: true

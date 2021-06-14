@@ -1,0 +1,20 @@
+id: d7_system_performance
+label: Drupal 7 performance configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - preprocess_css
+    - preprocess_js
+    - cache_lifetime
+    - page_compression
+  source_module: system
+process:
+  'css/preprocess': preprocess_css
+  'js/preprocess': preprocess_js
+  'cache/page/max_age': cache_lifetime
+destination:
+  plugin: config
+  config_name: system.performance

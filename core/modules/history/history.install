@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for History module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function history_schema() {
+  $schema['history'] = [
+    'description' => 'A record of which {users} have read which {node}s.',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid that read the {node} nid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'nid' => [
+        'description' => 'The {node}.nid that was read.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'timestamp' => [
+        'description' => 'The Unix timestamp at which the read occurred.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['uid', 'nid'],
+    'indexes' => [
+      'nid' => ['nid'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function history_update_last_removed() {
+  return 8101;
+}

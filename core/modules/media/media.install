@@ -1,0 +1,181 @@
+<?php
+
+/**
+ * @file
+ * Install, uninstall and update hooks for Media module.
+ */
+
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Url;
+use Drupal\media\Entity\MediaType;
+use Drupal\media\MediaTypeInterface;
+use Drupal\media\Plugin\media\Source\OEmbedInterface;
+use Drupal\user\RoleInterface;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_install().
+ */
+function media_install() {
+  $source = drupal_get_path('module', 'media') . '/images/icons';
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  $files = $file_system->scanDirectory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
+  foreach ($files as $file) {
+    // When reinstalling the media module we don't want to copy the icons when
+    // they already exist. The icons could be replaced (by a contrib module or
+    // manually), so we don't want to replace the existing files. Removing the
+    // files when we uninstall could also be a problem if the files are
+    // referenced somewhere else. Since showing an error that it was not
+    // possible to copy the files is also confusing, we silently do nothing.
+    if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
+      try {
+        $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
+      }
+      catch (FileException $e) {
+        // Ignore and continue.
+      }
+
+    }
+  }
+
+  // Grant the "view media" permission to all users by default.
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view media']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view media']);
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function media_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install') {
+    $destination = 'public://media-icons/generic';
+    \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $is_writable = is_writable($destination);
+    $is_directory = is_dir($destination);
+    if (!$is_writable || !$is_directory) {
+      if (!$is_directory) {
+        $error = t('The directory %directory does not exist.', ['%directory' => $destination]);
+      }
+      else {
+        $error = t('The directory %directory is not writable.', ['%directory' => $destination]);
+      }
+      $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', [':handbook_url' => 'https://www.drupal.org/server-permissions']);
+      if (!empty($error)) {
+        $description = $error . ' ' . $description;
+        $requirements['media']['description'] = $description;
+        $requirements['media']['severity'] = REQUIREMENT_ERROR;
+      }
+    }
+
+    // Prevent installation if the 1.x branch of the contrib module is enabled.
+    if (\Drupal::moduleHandler()->moduleExists('media_entity')) {
+      $info = \Drupal::service('extension.list.module')->getExtensionInfo('media_entity');
+      if (version_compare($info['version'], '8.x-2') < 0) {
+        $requirements['media_module_incompatibility'] = [
+          'title' => t('Media'),
+          'description' => t('The Media module is not compatible with contrib <a href=":url">Media Entity</a> 1.x branch. Please check the 2.x branch of that module for an upgrade path.', [
+            ':url' => 'https://drupal.org/project/media_entity',
+          ]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+  }
+  elseif ($phase === 'runtime') {
+    // Check that oEmbed content is served in an iframe on a different domain,
+    // and complain if it isn't.
+    $domain = \Drupal::config('media.settings')->get('iframe_domain');
+
+    if (!\Drupal::service('media.oembed.iframe_url_helper')->isSecure($domain)) {
+      // Find all media types which use a source plugin that implements
+      // OEmbedInterface.
+      $media_types = \Drupal::entityTypeManager()
+        ->getStorage('media_type')
+        ->loadMultiple();
+
+      $oembed_types = array_filter($media_types, function (MediaTypeInterface $media_type) {
+        return $media_type->getSource() instanceof OEmbedInterface;
+      });
+
+      if ($oembed_types) {
+        // @todo Potentially allow site administrators to suppress this warning
+        // permanently. See https://www.drupal.org/project/drupal/issues/2962753
+        // for more information.
+        $requirements['media_insecure_iframe'] = [
+          'title' => t('Media'),
+          'description' => t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url">You can specify a different domain for serving oEmbed content here</a>.', [
+            ':url' => Url::fromRoute('media.settings')->setAbsolute()->toString(),
+          ]),
+          'severity' => REQUIREMENT_WARNING,
+        ];
+      }
+    }
+
+    // When a new media type with an image source is created we're configuring
+    // the default entity view display using the 'large' image style.
+    // Unfortunately, if a site builder has deleted the 'large' image style,
+    // we need some other image style to use, but at this point, we can't
+    // really know the site builder's intentions. So rather than do something
+    // surprising, we're leaving the embedded media without an image style and
+    // adding a warning that the site builder might want to add an image style.
+    // @see Drupal\media\Plugin\media\Source\Image::prepareViewDisplay
+    $module_handler = \Drupal::service('module_handler');
+    foreach (MediaType::loadMultiple() as $type) {
+      // Load the default display.
+      $display = \Drupal::service('entity_display.repository')
+        ->getViewDisplay('media', $type->id());
+
+      $source_field_definition = $type->getSource()->getSourceFieldDefinition($type);
+      if (empty($source_field_definition) || !is_a($source_field_definition->getItemDefinition()->getClass(), ImageItem::class, TRUE)) {
+        continue;
+      }
+
+      $component = $display->getComponent($source_field_definition->getName());
+      if (empty($component) || $component['type'] !== 'image' || !empty($component['settings']['image_style'])) {
+        continue;
+      }
+
+      $action_item = '';
+      if ($module_handler->moduleExists('field_ui') && \Drupal::currentUser()->hasPermission('administer media display')) {
+        $url = Url::fromRoute('entity.entity_view_display.media.default', [
+          'media_type' => $type->id(),
+        ])->toString();
+        $action_item = new TranslatableMarkup('If you would like to change this, <a href=":display">add an image style to the %field_name field</a>.',
+          [
+            '%field_name' => $source_field_definition->label(),
+            ':display' => $url,
+          ]);
+      }
+      $requirements['media_default_image_style_' . $type->id()] = [
+        'title' => t('Media'),
+        'description' => new TranslatableMarkup('The default display for the %type media type is not currently using an image style on the %field_name field. Not using an image style can lead to much larger file downloads. @action_item',
+          [
+            '%field_name' => $source_field_definition->label(),
+            '@action_item' => $action_item,
+            '%type' => $type->label(),
+          ]
+        ),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function media_update_last_removed() {
+  return 8700;
+}

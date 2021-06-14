@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Theme override for each "box" on the display query edit screen.
+ *
+ * Available variables:
+ * - attributes: HTML attributes to apply to the container element.
+ * - actions: Action links such as "Add", "And/Or, Rearrange" for the content.
+ * - title: The title of the bucket, e.g. "Fields", "Filter Criteria", etc.
+ * - content: Content items such as fields or settings in this container.
+ * - name: The name of the bucket, e.g. "Fields", "Filter Criteria", etc.
+ * - overridden: A boolean indicating the setting has been overridden from the
+ *   default.
+ *
+ * @see template_preprocess_views_ui_display_tab_bucket()
+ */
+#}
+{%
+  set classes = [
+    'views-ui-display-tab-bucket',
+    name ? name|clean_class,
+    overridden ? 'overridden',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if title -%}
+    <h3 class="views-ui-display-tab-bucket__title">{{ title }}</h3>
+  {%- endif %}
+  {% if actions -%}
+    {{ actions }}
+  {%- endif %}
+  {{ content }}
+</div>

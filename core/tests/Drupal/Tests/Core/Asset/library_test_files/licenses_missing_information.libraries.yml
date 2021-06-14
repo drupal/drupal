@@ -1,0 +1,9 @@
+# No license information for a 3rd party library (it has the 'remote' key).
+no-license-info-but-remote:
+  version: 1.0
+  remote: https://url-to-remote
+  js:
+    no-license-info-but-remote.js: {}
+  css:
+    base:
+      no-license-info-but-remote.css: {}

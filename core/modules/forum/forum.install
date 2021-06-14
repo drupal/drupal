@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Forum module.
+ */
+
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function forum_install($is_syncing) {
+  // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
+  module_set_weight('forum', 1);
+  // Do not allow to delete the forum's node type machine name.
+  $locked = \Drupal::state()->get('node.type.locked');
+  $locked['forum'] = 'forum';
+  \Drupal::state()->set('node.type.locked', $locked);
+
+  if (!$is_syncing) {
+    // Create a default forum so forum posts can be created.
+    $term = Term::create([
+      'name' => t('General discussion'),
+      'description' => '',
+      'parent' => [0],
+      'vid' => 'forums',
+      'forum_container' => 0,
+    ]);
+    $term->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function forum_uninstall() {
+  if ($field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums')) {
+    $field_storage->delete();
+  }
+
+  if ($field_storage = FieldStorageConfig::loadByName('node', 'comment_forum')) {
+    $field_storage->delete();
+  }
+
+  if ($field_storage = FieldStorageConfig::loadByName('taxonomy_term', 'forum_container')) {
+    $field_storage->delete();
+  }
+
+  // Purge field data now to allow taxonomy and options module to be uninstalled
+  // if this is the only field remaining.
+  field_purge_batch(10);
+  // Allow to delete a forum's node type.
+  $locked = \Drupal::state()->get('node.type.locked');
+  unset($locked['forum']);
+  \Drupal::state()->set('node.type.locked', $locked);
+}
+
+/**
+ * Implements hook_schema().
+ */
+function forum_schema() {
+  $schema['forum'] = [
+    'description' => 'Stores the relationship of nodes to forum terms.',
+    'fields' => [
+      'nid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid of the node.',
+      ],
+      'vid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: The {node}.vid of the node.',
+      ],
+      'tid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {taxonomy_term_data}.tid of the forum term assigned to the node.',
+      ],
+    ],
+    'indexes' => [
+      'forum_topic' => ['nid', 'tid'],
+      'tid' => ['tid'],
+    ],
+    'primary key' => ['vid'],
+    'foreign keys' => [
+      'forum_node' => [
+        'table' => 'node',
+        'columns' => [
+          'nid' => 'nid',
+          'vid' => 'vid',
+        ],
+      ],
+    ],
+  ];
+
+  $schema['forum_index'] = [
+    'description' => 'Maintains denormalized information about node/term relationships.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {node}.nid this record tracks.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'title' => [
+        'description' => 'The node title.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'tid' => [
+         'description' => 'The term ID.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+      ],
+      'sticky' => [
+        'description' => 'Boolean indicating whether the node is sticky.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ],
+      'created' => [
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'last_comment_timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
+      ],
+      'comment_count' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The total number of comments on this node.',
+      ],
+    ],
+    'indexes' => [
+      'forum_topics' => ['nid', 'tid', 'sticky', 'last_comment_timestamp'],
+      'created' => ['created'],
+      'last_comment_timestamp' => ['last_comment_timestamp'],
+    ],
+    'foreign keys' => [
+      'tracked_node' => [
+        'table' => 'node',
+        'columns' => ['nid' => 'nid'],
+      ],
+      'term' => [
+        'table' => 'taxonomy_term_data',
+        'columns' => [
+          'tid' => 'tid',
+        ],
+      ],
+    ],
+  ];
+
+  return $schema;
+}

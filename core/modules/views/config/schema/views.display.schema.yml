@@ -1,0 +1,139 @@
+# Schema for the views display plugins.
+
+views.display.default:
+  type: views_display
+  label: 'Default display options'
+
+views_display_path:
+  type: views_display
+  mapping:
+    path:
+      type: string
+      label: 'Page path'
+    route_name:
+      type: string
+      label: 'Route name'
+
+views.display.page:
+  type: views_display_path
+  label: 'Page display options'
+  mapping:
+    menu:
+      type: mapping
+      label: 'Menu'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        title:
+          type: text
+          label: 'Title'
+        description:
+          type: text
+          label: 'Description'
+        weight:
+          type: integer
+          label: 'Weight'
+        enabled:
+          type: boolean
+          label: 'Enabled'
+        expanded:
+          type: boolean
+          label: 'Expanded'
+        menu_name:
+          type: string
+          label: 'Menu name'
+        parent:
+          type: string
+          label: 'Parent'
+        context:
+          type: string
+          label: 'Context'
+    tab_options:
+      type: mapping
+      label: 'Tab options'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        title:
+          type: text
+          label: 'Title'
+        description:
+          type: text
+          label: 'Description'
+        weight:
+          type: integer
+          label: 'Weight'
+        menu_name:
+          type: string
+          label: 'Menu name'
+
+views.display.block:
+  type: views_display
+  label: 'Block display options'
+  mapping:
+    block_description:
+      type: label
+      label: 'Block name'
+    block_category:
+      type: text
+      label: 'Block category'
+    block_hide_empty:
+      type: boolean
+      label: 'Hide block if no result/empty text'
+    allow:
+      type: mapping
+      label: 'Allow'
+      mapping:
+        items_per_page:
+         type: boolean
+         label: 'Items per page'
+
+views.display.feed:
+  type: views_display_path
+  label: 'Feed display options'
+  mapping:
+    sitename_title:
+      type: boolean
+      label: 'Use the site name for the title'
+    displays:
+      type: sequence
+      label: 'The feed icon will be available only to the selected displays.'
+      sequence:
+        type: string
+        label: 'Display'
+
+views.display.embed:
+  type: views_display
+  label: 'Embed display options'
+
+views.display.attachment:
+  type: views_display
+  label: 'Attachment display options'
+  mapping:
+    displays:
+      type: sequence
+      label: 'Attach to'
+      sequence:
+        type: string
+        label: 'Display'
+    attachment_position:
+      type: string
+      label: 'Attachment position'
+    inherit_arguments:
+      type: boolean
+      label: 'Inherit contextual filters'
+    inherit_exposed_filters:
+      type: boolean
+      label: 'Inherit exposed filters'
+    inherit_pager:
+      type: boolean
+      label: 'Inherit pager'
+    render_pager:
+      type: boolean
+      label: 'Render pager'
+
+views.display.entity_reference:
+  type: views_display
+  label: 'Entity Reference'

@@ -1,0 +1,156 @@
+# Schema for the views style plugins.
+
+views.style.*:
+  type: views_style
+  label: 'Default style'
+
+views.style.default:
+  type: views_style
+  label: 'Unformatted list'
+
+views.style.html_list:
+  type: views_style
+  label: 'HTML List'
+  mapping:
+    type:
+      type:  string
+      label: 'List type'
+    wrapper_class:
+      type: string
+      label: 'Wrapper class'
+    class:
+      type: string
+      label: 'List class'
+
+views.style.grid:
+  type: views_style
+  label: 'Grid'
+  mapping:
+    columns:
+      type:  integer
+      label: 'Number of columns'
+    automatic_width:
+      type: boolean
+      label: 'Automatic width'
+    alignment:
+      type: string
+      label: 'Alignment'
+    row_class_custom:
+      type: string
+      label: 'Custom row classes'
+    row_class_default:
+      type: boolean
+      label: 'Default views row classes'
+    col_class_custom:
+      type: string
+      label: 'Custom column classes'
+    col_class_default:
+      type: boolean
+      label: 'Default views column classes'
+
+views.style.table:
+  type: views_style
+  label: 'Table'
+  mapping:
+    columns:
+      type: sequence
+      label: 'Columns'
+      sequence:
+        type: string
+        label: 'Columns name'
+    default:
+      type: string
+      label: 'Default sort'
+    info:
+      type: sequence
+      label: 'Columns info'
+      sequence:
+        type: mapping
+        label:  'Column info'
+        mapping:
+          sortable:
+            type: boolean
+            label: 'Sortable'
+          default_sort_order:
+            type: string
+            label: 'Default order'
+          align:
+            type: string
+            label: 'Align'
+          separator:
+            type: string
+            label: 'Separator'
+          empty_column:
+            type: boolean
+            label: 'Hide empty columns'
+          responsive:
+            type: string
+            label: 'Responsive'
+    override:
+      type: boolean
+      label: 'Override normal sorting if click sorting is used'
+    sticky:
+      type: boolean
+      label: 'Enable Drupal style "sticky" table headers (JavaScript)'
+    summary:
+      type: label
+      label: 'Summary title'
+    order:
+      type: string
+      label: 'Default order'
+    empty_table:
+      type: boolean
+      label: 'Show the empty text in the table'
+    caption:
+      type: label
+      label: 'Caption for the table'
+    description:
+      type: text
+      label: 'Table description'
+
+views.style.default_summary:
+  type: views_style
+  label: 'Summary options'
+  mapping:
+    base_path:
+      type: string
+      label: 'Base path'
+    count:
+      type: boolean
+      label: 'Display record count with link'
+    override:
+      type: boolean
+      label: 'Override number of items to display'
+    items_per_page:
+      type: integer
+      label: 'Items to display'
+
+views.style.rss:
+  type: views_style
+  label: 'RSS Feed'
+  mapping:
+    description:
+      type: label
+      label: 'RSS description'
+
+views.style.unformatted_summary:
+  type: views.style.default_summary
+  label: 'Unformatted'
+  mapping:
+    inline:
+      type: boolean
+      label: 'Display items inline'
+    separator:
+      type: string
+      label: 'Separator'
+
+views.style.entity_reference:
+  type: views_style
+  label: 'Entity Reference list'
+  mapping:
+    search_fields:
+      type: sequence
+      label: 'Search fields'
+      sequence:
+        type: string
+        label: 'Search field'

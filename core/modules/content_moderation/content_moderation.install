@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Content Moderation module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function content_moderation_update_last_removed() {
+  return 8700;
+}

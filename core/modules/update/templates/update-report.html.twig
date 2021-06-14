@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the project status report.
+ *
+ * Available variables:
+ * - last_checked: Themed last time update data was checked.
+ * - no_updates_message: Message when there are no project updates.
+ * - project_types: A list of project types.
+ *   - label: The project type label.
+ *   - table: The project status table.
+ *
+ * @see template_preprocess_update_report()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ last_checked }}
+
+{% for project_type in project_types %}
+  <h3>{{ project_type.label }}</h3>
+  {{ project_type.table }}
+{% else %}
+  <p>{{ no_updates_message }}</p>
+{% endfor %}

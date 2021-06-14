@@ -1,0 +1,7 @@
+name: Migrate Drupal
+type: module
+description: 'Contains migrations from older Drupal versions.'
+package: Migration
+version: VERSION
+dependencies:
+  - drupal:migrate

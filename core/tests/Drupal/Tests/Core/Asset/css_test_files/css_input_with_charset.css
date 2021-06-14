@@ -1,0 +1,4 @@
+@charset "iso-8859-15";
+.charset-test {
+  content: "¤";
+}

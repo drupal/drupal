@@ -1,0 +1,97 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_view_embed
+label: 'Test view embed'
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      row:
+        type: fields
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  embed_1:
+    display_options: {  }
+    display_plugin: embed
+    display_title: Embedded
+    id: embed_1
+    position: 1
+  embed_2:
+    display_options:
+      defaults:
+        filters: false
+        exposed_form: false
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      filters:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Id
+            description: ''
+            identifier: id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+    display_plugin: embed
+    display_title: Embedded
+    id: embed_2
+    position: 2

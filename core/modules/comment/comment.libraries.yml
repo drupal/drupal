@@ -1,0 +1,38 @@
+drupal.comment:
+  version: VERSION
+  js:
+    comment-entity-form.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form
+
+drupal.comment-by-viewer:
+  version: VERSION
+  js:
+    js/comment-by-viewer.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+drupal.comment-new-indicator:
+  version: VERSION
+  js:
+    js/comment-new-indicator.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - history/api
+    - core/drupal.displace
+
+drupal.node-new-comments-link:
+  version: VERSION
+  js:
+    js/node-new-comments-link.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - history/api

@@ -1,0 +1,7 @@
+js_deprecation_test.deprecation:
+  path: '/js_deprecation_test'
+  defaults:
+    _controller: '\Drupal\js_deprecation_test\Controller\JsDeprecationTestController::jsDeprecationTest'
+    _title: 'JsDeprecationTest'
+  requirements:
+    _access: 'TRUE'

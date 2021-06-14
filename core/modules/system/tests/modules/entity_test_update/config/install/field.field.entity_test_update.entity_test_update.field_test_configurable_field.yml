@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.entity_test_update.field_test_configurable_field
+  module:
+    - entity_test_update
+id: entity_test_update.entity_test_update.field_test_configurable_field
+field_name: field_test_configurable_field
+entity_type: entity_test_update
+bundle: entity_test_update
+label: 'Test configurable field'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value1: {  }
+default_value_callback: ''
+settings: {  }
+field_type: multi_value_test

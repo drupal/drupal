@@ -1,0 +1,12 @@
+name: Forum
+type: module
+description: 'Provides discussion forums.'
+dependencies:
+  - drupal:node
+  - drupal:history
+  - drupal:taxonomy
+  - drupal:comment
+  - drupal:options
+package: Core
+version: VERSION
+configure: forum.overview

@@ -1,0 +1,16 @@
+{
+  "name": "drupal/core-utility",
+  "description": "Mostly static utility classes for string, xss, array, image, and other commonly needed manipulations.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.3.0",
+    "drupal/core-render": "^8.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Utility\\": ""
+    }
+  }
+}

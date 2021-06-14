@@ -1,0 +1,56 @@
+id: d7_taxonomy_term_translation
+label: Taxonomy terms
+migration_tags:
+  - Drupal 7
+  - Content
+  - Multilingual
+source:
+  plugin: d7_taxonomy_term_translation
+  translations: true
+process:
+  skip:
+    -
+      plugin: static_map
+      source: i18n_mode
+      default_value: 0
+      map:
+        1: 0
+        2: 2
+        4: 4
+    -
+      plugin: skip_on_empty
+      method: row
+  # If you are using this file to build a custom migration consider removing
+  # the tid field to allow incremental migrations.
+  tid: tid
+  langcode: language
+  vid:
+    plugin: migration_lookup
+    migration: d7_taxonomy_vocabulary
+    source: vid
+  name: name
+  'description/value': description
+  'description/format': format
+  weight: weight
+  # Only attempt to stub real (non-zero) parents.
+  parent_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: parent
+    -
+      plugin: migration_lookup
+      migration: d7_taxonomy_term
+  parent:
+    plugin: default_value
+    default_value: 0
+    source: '@parent_id'
+  changed: timestamp
+destination:
+  plugin: entity:taxonomy_term
+  destination_module: content_translation
+  translations: true
+migration_dependencies:
+  required:
+    - language
+    - d7_taxonomy_term

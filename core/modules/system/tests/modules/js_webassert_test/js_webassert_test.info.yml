@@ -1,0 +1,5 @@
+name: 'JS WebAssert test module'
+type: module
+description: 'Module for the JSWebAssert test.'
+package: Testing
+version: VERSION

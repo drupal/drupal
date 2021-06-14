@@ -1,0 +1,423 @@
+# Schema for Configuration files of the entity module.
+
+core.entity_view_mode.*.*:
+  type: config_entity
+  label: 'Entity view mode settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'The human-readable name of the view mode'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    cache:
+      type: boolean
+      label: 'Cached'
+
+core.entity_form_mode.*.*:
+  type: config_entity
+  label: 'Entity form mode settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    cache:
+      type: boolean
+      label: 'Cache'
+
+# Overview configuration information for view mode or form mode displays.
+core.entity_view_display.*.*.*:
+  type: config_entity
+  label: 'Entity display'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    mode:
+      type: string
+      label: 'View or form mode machine name'
+    content:
+      type: sequence
+      label: 'Field formatters'
+      sequence:
+        type: field_formatter.entity_view_display
+    hidden:
+      type: sequence
+      label: 'Field display setting'
+      sequence:
+        type: boolean
+        label: 'Value'
+
+field_formatter:
+  type: mapping
+  label: 'Field formatter'
+  mapping:
+    type:
+      type: string
+      label: 'Format type machine name'
+    label:
+       type: string
+       label: 'Label setting machine name'
+    settings:
+      type: field.formatter.settings.[%parent.type]
+      label: 'Settings'
+    third_party_settings:
+       type: sequence
+       label: 'Third party settings'
+       sequence:
+         type: field.formatter.third_party.[%key]
+
+field_formatter.entity_view_display:
+  type: field_formatter
+  mapping:
+    weight:
+      type: integer
+      label: 'Weight'
+    region:
+      type: string
+      label: 'Region'
+
+# Overview configuration information for form mode displays.
+core.entity_form_display.*.*.*:
+  type: config_entity
+  label: 'Entity form display'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    mode:
+      type: string
+      label: 'View or form mode machine name'
+    status:
+      type: boolean
+      label: 'Enabled'
+    content:
+      type: sequence
+      label: 'Field widgets'
+      sequence:
+        type: mapping
+        label: 'Field widget'
+        mapping:
+          type:
+            type: string
+            label: 'Widget type machine name'
+          weight:
+            type: integer
+            label: 'Weight'
+          region:
+            type: string
+            label: 'Region'
+          settings:
+            type: field.widget.settings.[%parent.type]
+            label: 'Settings'
+          third_party_settings:
+            type: sequence
+            label: 'Third party settings'
+            sequence:
+              type: field.widget.third_party.[%key]
+    hidden:
+      type: sequence
+      label: 'Hidden'
+      sequence:
+        type: boolean
+        label: 'Component'
+
+# Default schema for entity display field with undefined type.
+field.formatter.settings.*:
+  type: mapping
+
+# Default schema for entity form display field with undefined type.
+field.widget.settings.*:
+  type: mapping
+
+field.widget.settings.string_textfield:
+  type: mapping
+  label: 'Text field display format settings'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.string_textarea:
+  type: mapping
+  label: 'Textarea display format settings'
+  mapping:
+    rows:
+      type: integer
+      label: 'Rows'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.uri:
+  type: mapping
+  label: 'URI field'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of URI field'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.email_default:
+  type: mapping
+  label: 'Email field display format settings'
+  mapping:
+    placeholder:
+      type: label
+      label: 'Placeholder'
+    size:
+      type: integer
+      label: 'Size of email field'
+
+field.widget.settings.datetime_timestamp:
+  type: mapping
+  label: 'Datetime timestamp display format settings'
+
+field.widget.settings.boolean_checkbox:
+  type: mapping
+  label: 'Boolean checkbox display format settings'
+  mapping:
+    display_label:
+      type: boolean
+      label: 'Display label'
+
+field.widget.settings.hidden:
+  type: mapping
+  label: '- Hidden - format settings'
+
+field.widget.settings.number:
+  type: mapping
+  label: 'Number default display format settings'
+  mapping:
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.checkbox:
+  type: mapping
+  label: 'Single on/off checkbox format settings'
+  mapping:
+    display_label:
+      type: boolean
+      label: 'Use field label instead of the "On value" as label'
+
+field.widget.settings.entity_reference_autocomplete_tags:
+  type: mapping
+  label: 'Entity reference autocomplete (Tags style) display format settings'
+  mapping:
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    match_limit:
+      type: integer
+      label: 'Maximum number of autocomplete suggestions.'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.entity_reference_autocomplete:
+  type: mapping
+  label: 'Entity reference autocomplete display format settings'
+  mapping:
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    match_limit:
+      type: integer
+      label: 'Maximum number of autocomplete suggestions.'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.formatter.settings.boolean:
+  type: mapping
+  mapping:
+    format:
+      type: string
+      label: 'Output format'
+    format_custom_false:
+      type: label
+      label: 'Custom output for FALSE'
+    format_custom_true:
+      type: label
+      label: 'Custom output for TRUE'
+
+field.formatter.settings.string:
+  type: mapping
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to the entity'
+
+field.formatter.settings.language:
+  type: field.formatter.settings.string
+  mapping:
+    native_language:
+      type: boolean
+      label: 'Display in native language'
+
+field.formatter.settings.number_decimal:
+  type: mapping
+  label: 'Number decimal display format settings'
+  mapping:
+    thousand_separator:
+      type: string
+      label: 'Thousand marker'
+    decimal_separator:
+      type: string
+      label: 'Decimal marker'
+    scale:
+      type: integer
+      label: 'Scale'
+    prefix_suffix:
+      type: boolean
+      label: 'Display prefix and suffix.'
+
+field.formatter.settings.number_integer:
+  type: mapping
+  label: 'Number integer display format settings'
+  mapping:
+    thousand_separator:
+      type: string
+      label: 'Thousand marker'
+    prefix_suffix:
+      type: boolean
+      label: 'Display prefix and suffix.'
+
+field.formatter.settings.number_unformatted:
+  type: mapping
+  label: 'Number unformatted display format settings'
+
+field.formatter.settings.uri_link:
+  type: mapping
+  label: 'URI as link display format settings'
+
+field.formatter.settings.timestamp:
+  type: mapping
+  label: 'Timestamp display format settings'
+  mapping:
+    date_format:
+      type: string
+      label: 'Date format'
+    custom_date_format:
+      type: string
+      label: 'Custom date format'
+    timezone:
+      type: string
+      label: 'Time zone'
+
+field.formatter.settings.timestamp_ago:
+  type: mapping
+  label: 'Timestamp ago display format settings'
+  mapping:
+    future_format:
+      type: string
+      label: 'Future format'
+    past_format:
+      type: string
+      label: 'Past format'
+    granularity:
+      type: integer
+      label: 'Granularity'
+
+field.formatter.settings.entity_reference_entity_view:
+  type: mapping
+  label: 'Entity reference rendered entity display format settings'
+  mapping:
+    view_mode:
+      type: string
+      label: 'View mode'
+    link:
+      type: boolean
+      label: 'Show links'
+
+field.formatter.settings.entity_reference_entity_id:
+  type: mapping
+  label: 'Entity reference entity ID display format settings'
+
+field.formatter.settings.entity_reference_label:
+  type: mapping
+  label: 'Entity reference label display format settings'
+  mapping:
+    link:
+      type: boolean
+      label: 'Link label to the referenced entity'
+
+block.settings.field_block:*:*:*:
+  type: block_settings
+  mapping:
+    formatter:
+      type: field_formatter
+
+block.settings.extra_field_block:*:*:*:
+  type: block_settings
+  mapping:
+    formatter:
+      type: field_formatter
+
+# Schema for entity actions.
+action.configuration.entity:*:*:
+  type: action_configuration_default
+  label: 'Entity action'
+
+action.configuration.action_send_email_action:
+  type: mapping
+  label: 'Send email configuration'
+  mapping:
+    recipient:
+      type: string
+      label: 'Recipient'
+    subject:
+      type: label
+      label: 'Subject'
+    message:
+      type: text
+      label: 'Message'
+
+action.configuration.action_goto_action:
+  type: mapping
+  label: 'Redirect to URL configuration'
+  mapping:
+    url:
+      type: string
+      label: 'URL'
+
+action.configuration.action_message_action:
+  type: mapping
+  label: 'Display a message to the user configuration'
+  mapping:
+    message:
+      type: text
+      label: 'Message'

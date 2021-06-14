@@ -1,0 +1,32 @@
+services:
+  content_translation.synchronizer:
+    class: Drupal\content_translation\FieldTranslationSynchronizer
+    arguments: ['@entity_type.manager', '@plugin.manager.field.field_type']
+
+  content_translation.subscriber:
+    class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
+    arguments: ['@content_translation.manager']
+    tags:
+      - { name: event_subscriber }
+
+  content_translation.delete_access:
+    class: Drupal\content_translation\Access\ContentTranslationDeleteAccess
+    arguments: ['@entity_type.manager', '@content_translation.manager']
+    tags:
+      - { name: access_check, applies_to: _access_content_translation_delete }
+
+  content_translation.overview_access:
+    class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: access_check, applies_to: _access_content_translation_overview }
+
+  content_translation.manage_access:
+    class: Drupal\content_translation\Access\ContentTranslationManageAccessCheck
+    arguments: ['@entity_type.manager', '@language_manager']
+    tags:
+      - { name: access_check, applies_to: _access_content_translation_manage }
+
+  content_translation.manager:
+    class: Drupal\content_translation\ContentTranslationManager
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']

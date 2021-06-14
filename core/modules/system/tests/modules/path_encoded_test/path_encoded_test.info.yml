@@ -1,0 +1,5 @@
+name: 'Path encoded character test'
+type: module
+description: 'Support module for testing path aliases on a route with encoded characters in the path.'
+package: Testing
+version: VERSION

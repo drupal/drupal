@@ -1,0 +1,15 @@
+pager_test.multiple_pagers:
+  path: '/pager-test/multiple-pagers'
+  defaults:
+    _title: 'Page using multiple pagers for testing'
+    _controller: '\Drupal\pager_test\Controller\PagerTestController::multiplePagers'
+  requirements:
+    _access: 'TRUE'
+
+pager_test.query_parameters:
+  path: '/pager-test/query-parameters'
+  defaults:
+    _title: 'Pager using query parameters for testing'
+    _controller: '\Drupal\pager_test\Controller\PagerTestController::queryParameters'
+  requirements:
+    _access: 'TRUE'

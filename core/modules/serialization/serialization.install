@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Update functions for the Serialization module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function serialization_update_last_removed() {
+  return 8401;
+}

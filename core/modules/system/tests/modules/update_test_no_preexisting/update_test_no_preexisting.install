@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_test_no_preexisting module.
+ */
+
+/**
+ * Dummy update_test_no_preexisting update 8001.
+ */
+function update_test_no_preexisting_update_8001() {
+  \Drupal::state()->set('update_test_no_preexisting_update_8001', TRUE);
+}

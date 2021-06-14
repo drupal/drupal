@@ -1,0 +1,23 @@
+administer entity_test content:
+  title: 'Administer entity_test content'
+  description: 'Manage entity_test content'
+view test entity:
+  title: 'View test entities'
+view test entity translations:
+  title: 'View translations of test entities'
+view unpublished test entity translations:
+  title: 'View unpublished translations of test entities'
+view test entity field:
+  title: 'View test entity field'
+administer entity_test_with_bundle content:
+  title: 'administer entity_test_with_bundle content'
+  description: 'administer entity_test_with_bundle content'
+administer entity_test_bundle content:
+  title: 'administer entity_test_bundle content'
+view all entity_test_query_access entities:
+  title: 'view all entity_test_query_access entities'
+edit own entity_test content:
+  title: 'Edit own entity_test content'
+
+permission_callbacks:
+  - \Drupal\entity_test\EntityTestPermissions::entityTestBundlePermissions

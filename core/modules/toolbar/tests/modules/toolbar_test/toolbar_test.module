@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * A dummy module to test API interaction with the Toolbar module.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_toolbar().
+ */
+function toolbar_test_toolbar() {
+
+  $items['testing'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Test tab'),
+      '#url' => Url::fromRoute('<front>'),
+      '#options' => [
+        'attributes' => [
+          'id' => 'toolbar-tab-testing',
+          'title' => t('Test tab'),
+        ],
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Test tray'),
+      '#wrapper_attributes' => [
+        'id' => 'toolbar-tray-testing',
+      ],
+      'content' => [
+        '#theme' => 'item_list',
+        '#items' => [
+          Link::fromTextAndUrl(t('link 1'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 1 title']]))->toRenderable(),
+          Link::fromTextAndUrl(t('link 2'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 2 title']]))->toRenderable(),
+          Link::fromTextAndUrl(t('link 3'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 3 title']]))->toRenderable(),
+        ],
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
+    '#weight' => 50,
+  ];
+
+  return $items;
+}

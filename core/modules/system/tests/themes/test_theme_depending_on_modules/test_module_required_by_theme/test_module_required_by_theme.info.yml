@@ -1,0 +1,4 @@
+name: Test Module Required by Theme
+type: module
+package: Testing
+version: VERSION

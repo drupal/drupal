@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the JavaScript deprecation tests.
+ */
+
+/**
+ * Implements hook_js_settings_alter().
+ */
+function js_deprecation_test_js_settings_alter(&$settings) {
+  $settings['suppressDeprecationErrors'] = FALSE;
+}

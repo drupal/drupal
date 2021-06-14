@@ -1,0 +1,22 @@
+id: d7_aggregator_feed
+label: Aggregator feeds
+audit: true
+migration_tags:
+  - Drupal 7
+  - Content
+source:
+  plugin: aggregator_feed
+process:
+  fid: fid
+  title: title
+  url: url
+  refresh: refresh
+  checked: checked
+  queued: queued
+  link: link
+  description: description
+  image: image
+  etag: etag
+  modified: modified
+destination:
+  plugin: entity:aggregator_feed

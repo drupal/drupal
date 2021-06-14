@@ -1,0 +1,7 @@
+name: "Custom Block module tests"
+type: module
+description: "Support module for custom block related testing."
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:block_content

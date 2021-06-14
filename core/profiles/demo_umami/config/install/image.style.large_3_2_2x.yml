@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: large_3_2_2x
+label: 'Large 3:2 2x (1536x1024)'
+effects:
+  f0d332fd-0884-4f29-9f3c-befd244a63b4:
+    uuid: f0d332fd-0884-4f29-9f3c-befd244a63b4
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      anchor: center-center
+      width: 1536
+      height: 1024

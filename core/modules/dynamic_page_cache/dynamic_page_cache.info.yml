@@ -1,0 +1,5 @@
+name: 'Internal Dynamic Page Cache'
+type: module
+description: 'Caches pages, including those with dynamic content, for all users.'
+package: Core
+version: VERSION

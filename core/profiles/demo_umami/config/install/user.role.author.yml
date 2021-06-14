@@ -1,0 +1,42 @@
+langcode: en
+status: true
+dependencies: {  }
+id: author
+label: Author
+weight: 3
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access contextual links'
+  - 'access files overview'
+  - 'access in-place editing'
+  - 'access toolbar'
+  - 'cancel account'
+  - 'change own username'
+  - 'create article content'
+  - 'create page content'
+  - 'create recipe content'
+  - 'create terms in recipe_category'
+  - 'create terms in tags'
+  - 'create url aliases'
+  - 'delete article revisions'
+  - 'delete own article content'
+  - 'delete own page content'
+  - 'delete own recipe content'
+  - 'delete page revisions'
+  - 'delete recipe revisions'
+  - 'delete terms in recipe_category'
+  - 'delete terms in tags'
+  - 'edit own article content'
+  - 'edit own page content'
+  - 'edit own recipe content'
+  - 'edit terms in recipe_category'
+  - 'edit terms in tags'
+  - 'use editorial transition create_new_draft'
+  - 'view all revisions'
+  - 'view article revisions'
+  - 'view latest version'
+  - 'view own unpublished content'
+  - 'view page revisions'
+  - 'view recipe revisions'
+  - 'view the administration theme'

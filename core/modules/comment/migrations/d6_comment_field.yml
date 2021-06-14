@@ -1,0 +1,27 @@
+id: d6_comment_field
+label: Comment field configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: comment_type
+  constants:
+    entity_type: node
+    type: comment
+process:
+  entity_type: 'constants/entity_type'
+  field_name:
+    -
+      plugin: migration_lookup
+      source: type
+      migration: d6_comment_type
+    -
+      plugin: skip_on_empty
+      method: row
+  type: 'constants/type'
+  'settings/comment_type': '@field_name'
+destination:
+  plugin: entity:field_storage_config
+migration_dependencies:
+  required:
+    - d6_comment_type

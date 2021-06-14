@@ -1,0 +1,407 @@
+<?php
+
+/**
+ * @file
+ * Test module for the Entity CRUD API.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_create().
+ */
+function entity_crud_hook_test_entity_create(EntityInterface $entity) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->getEntityTypeId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for block entities.
+ */
+function entity_crud_hook_test_block_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for comment entities.
+ */
+function entity_crud_hook_test_comment_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for file entities.
+ */
+function entity_crud_hook_test_file_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for node entities.
+ */
+function entity_crud_hook_test_node_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create() for user entities.
+ */
+function entity_crud_hook_test_user_create() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function entity_crud_hook_test_entity_presave(EntityInterface $entity) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->getEntityTypeId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for block entities.
+ */
+function entity_crud_hook_test_block_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for comment entities.
+ */
+function entity_crud_hook_test_comment_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for file entities.
+ */
+function entity_crud_hook_test_file_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
+ */
+function entity_crud_hook_test_node_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for user entities.
+ */
+function entity_crud_hook_test_user_presave() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function entity_crud_hook_test_entity_insert(EntityInterface $entity) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->getEntityTypeId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for block entities.
+ */
+function entity_crud_hook_test_block_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for comment entities.
+ */
+function entity_crud_hook_test_comment_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for file entities.
+ */
+function entity_crud_hook_test_file_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
+ */
+function entity_crud_hook_test_node_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for user entities.
+ */
+function entity_crud_hook_test_user_insert() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_entity_preload().
+ */
+function entity_crud_hook_test_entity_preload(array $entities, $type) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_entity_load().
+ */
+function entity_crud_hook_test_entity_load(array $entities, $type) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for block entities.
+ */
+function entity_crud_hook_test_block_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for comment entities.
+ */
+function entity_crud_hook_test_comment_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for file entities.
+ */
+function entity_crud_hook_test_file_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for node entities.
+ */
+function entity_crud_hook_test_node_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for user entities.
+ */
+function entity_crud_hook_test_user_load() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function entity_crud_hook_test_entity_update(EntityInterface $entity) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->getEntityTypeId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for block entities.
+ */
+function entity_crud_hook_test_block_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for comment entities.
+ */
+function entity_crud_hook_test_comment_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for file entities.
+ */
+function entity_crud_hook_test_file_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for node entities.
+ */
+function entity_crud_hook_test_node_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for user entities.
+ */
+function entity_crud_hook_test_user_update() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function entity_crud_hook_test_entity_predelete(EntityInterface $entity) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->getEntityTypeId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for block entities.
+ */
+function entity_crud_hook_test_block_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for comment entities.
+ */
+function entity_crud_hook_test_comment_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for file entities.
+ */
+function entity_crud_hook_test_file_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
+ */
+function entity_crud_hook_test_node_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function entity_crud_hook_test_user_predelete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function entity_crud_hook_test_entity_delete(EntityInterface $entity) {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->getEntityTypeId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for block entities.
+ */
+function entity_crud_hook_test_block_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for comment entities.
+ */
+function entity_crud_hook_test_comment_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for file entities.
+ */
+function entity_crud_hook_test_file_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for node entities.
+ */
+function entity_crud_hook_test_node_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for taxonomy_term entities.
+ */
+function entity_crud_hook_test_taxonomy_term_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for taxonomy_vocabulary entities.
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for user entities.
+ */
+function entity_crud_hook_test_user_delete() {
+  $GLOBALS['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}

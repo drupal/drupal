@@ -1,0 +1,4 @@
+block_configure:
+  title: 'Configure block'
+  route_name: 'entity.block.edit_form'
+  group: 'block'

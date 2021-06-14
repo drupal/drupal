@@ -1,0 +1,16 @@
+services:
+  plugin.manager.aggregator.fetcher:
+    class: Drupal\aggregator\Plugin\AggregatorPluginManager
+    arguments: [fetcher, '@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.aggregator.parser:
+    class: Drupal\aggregator\Plugin\AggregatorPluginManager
+    arguments: [parser, '@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.aggregator.processor:
+    class: Drupal\aggregator\Plugin\AggregatorPluginManager
+    arguments: [processor, '@container.namespaces', '@cache.discovery', '@module_handler']
+  aggregator.items.importer:
+    class: Drupal\aggregator\ItemsImporter
+    arguments: ['@config.factory', '@plugin.manager.aggregator.fetcher', '@plugin.manager.aggregator.parser', '@plugin.manager.aggregator.processor', '@logger.channel.aggregator']
+  logger.channel.aggregator:
+    parent: logger.channel_base
+    arguments: ['aggregator']

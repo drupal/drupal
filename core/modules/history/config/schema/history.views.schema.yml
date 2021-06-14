@@ -1,0 +1,13 @@
+# Schema for the views plugins of the History module.
+
+views.field.history_user_timestamp:
+  type: views.field.node
+  label: 'History user'
+  mapping:
+    comments:
+      type: boolean
+      label: 'Check for new comments as well'
+
+views.filter.history_user_timestamp:
+  type: views_filter
+  label: 'History user'

@@ -1,0 +1,147 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - views_test_data
+  content:
+    - StaticTest
+id: test_page_display_route
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_route_without_arguments
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0
+  page_2:
+    display_options:
+      defaults:
+        arguments: false
+      arguments:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      path: test_route_with_argument
+    display_plugin: page
+    display_title: Page
+    id: page_2
+    position: 0
+  page_3:
+    display_options:
+      defaults:
+        arguments: false
+      arguments:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      path: test_route_with_argument/%/suffix
+    display_plugin: page
+    display_title: Page
+    id: page_3
+    position: 0
+  page_4:
+    display_options:
+      defaults:
+        arguments: false
+      arguments:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id_2:
+          field: id
+          id: id_2
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      path: test_route_with_argument/%/suffix
+    display_plugin: page
+    display_title: Page
+    id: page_4
+    position: 0
+  page_5:
+    display_options:
+      defaults:
+        arguments: false
+      arguments:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id_2:
+          field: id
+          id: id_2
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      path: test_route_with_argument
+    display_plugin: page
+    display_title: Page
+    id: page_5
+    position: 0
+  page_6:
+    display_options:
+      defaults:
+        arguments: false
+      arguments:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id_2:
+          field: id
+          id: id_2
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      path: test_route_with_argument/%/%
+    display_plugin: page
+    display_title: Page
+    id: page_6
+    position: 0
+  page_7:
+    display_options:
+      defaults:
+        access: false
+      access:
+        type: test_static
+      path: test_route_arguments_access
+    display_plugin: page
+    display_title: Page
+    id: page_7
+    position: 0

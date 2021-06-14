@@ -1,0 +1,60 @@
+id: d7_language_content_comment_settings
+label: Drupal 7 language content comment settings
+migration_tags:
+  - Drupal 7
+  - Configuration
+  - Multilingual
+source:
+  plugin: d7_language_content_settings
+  constants:
+    target_type: comment
+    id_prefix: comment_node_
+    label_suffix: comment
+process:
+  target_bundle:
+    -
+      plugin: concat
+      source:
+        - constants/id_prefix
+        - type
+    -
+      plugin: static_map
+      bypass: true
+      # The Forum module provides its own comment type (comment_forum), which we
+      # want to reuse if it exists.
+      map:
+        comment_node_forum: comment_forum
+  target_entity_type_id: constants/target_type
+  default_langcode:
+    -
+      plugin: static_map
+      source: language_content_type
+      map:
+        0: site_default
+        1: current_interface
+        2: current_interface
+        4: current_interface
+      default_value: NULL
+    -
+      plugin: skip_on_empty
+      method: row
+  language_alterable:
+    plugin: static_map
+    source: language_content_type
+    map:
+      0: false
+      1: true
+      2: true
+      4: true
+  third_party_settings/content_translation/enabled:
+    plugin: content_translation_enabled_setting
+    source:
+      - language_content_type
+      - entity_translation_entity_types
+      - constants/target_type
+destination:
+  plugin: entity:language_content_settings
+migration_dependencies:
+  required:
+    - language
+    - d7_comment_type

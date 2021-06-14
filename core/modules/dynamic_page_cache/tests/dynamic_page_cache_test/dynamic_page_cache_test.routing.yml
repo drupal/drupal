@@ -1,0 +1,75 @@
+dynamic_page_cache_test.response:
+  path: '/dynamic-page-cache-test/response'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::response'
+  requirements:
+    _access: 'TRUE'
+
+dynamic_page_cache_test.response.admin:
+  path: '/dynamic-page-cache-test/response/admin'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::response'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _admin_route: TRUE
+
+dynamic_page_cache_test.cacheable_response:
+  path: '/dynamic-page-cache-test/cacheable-response'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::cacheableResponse'
+  requirements:
+    _access: 'TRUE'
+
+dynamic_page_cache_test.cacheable_response.admin:
+  path: '/dynamic-page-cache-test/cacheable-response/admin'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::cacheableResponse'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _admin_route: TRUE
+
+dynamic_page_cache_test.html:
+  path: '/dynamic-page-cache-test/html'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::html'
+  requirements:
+    _access: 'TRUE'
+
+dynamic_page_cache_test.html.admin:
+  path: '/dynamic-page-cache-test/html/admin'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::html'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _admin_route: TRUE
+
+dynamic_page_cache_test.html.with_cache_contexts:
+  path: '/dynamic-page-cache-test/html/with-cache-contexts'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::htmlWithCacheContexts'
+  requirements:
+    _access: 'TRUE'
+
+dynamic_page_cache_test.html.uncacheable.max_age:
+  path: '/dynamic-page-cache-test/html/uncacheable/max-age'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::htmlUncacheableMaxAge'
+  requirements:
+    _access: 'TRUE'
+
+dynamic_page_cache_test.html.uncacheable.contexts:
+  path: '/dynamic-page-cache-test/html/uncacheable/contexts'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::htmlUncacheableContexts'
+  requirements:
+    _access: 'TRUE'
+
+dynamic_page_cache_test.html.uncacheable.tags:
+  path: '/dynamic-page-cache-test/html/uncacheable/tags'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::htmlUncacheableTags'
+  requirements:
+    _access: 'TRUE'

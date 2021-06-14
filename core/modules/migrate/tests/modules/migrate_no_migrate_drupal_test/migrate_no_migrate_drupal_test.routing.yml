@@ -1,0 +1,7 @@
+migrate_no_migrate_drupal_test.execute:
+  path: '/migrate_no_migrate_drupal_test/execute'
+  defaults:
+    _controller: '\Drupal\migrate_no_migrate_drupal_test\Controller\ExecuteMigration::execute'
+    _title: 'Execute'
+  requirements:
+    _access: 'TRUE'

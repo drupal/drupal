@@ -1,0 +1,5 @@
+name: 'Module installer config test'
+description: 'Support module for tests that require a failed module install.'
+type: module
+package: Testing
+version: VERSION

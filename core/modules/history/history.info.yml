@@ -1,0 +1,7 @@
+name: History
+type: module
+description: 'Records which user has read which content.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:node

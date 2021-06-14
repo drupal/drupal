@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Aggregator tests.
+ */
+
+/**
+ * Implements hook_aggregator_fetcher_info_alter().
+ */
+function aggregator_test_aggregator_fetcher_info_alter(array &$info) {
+  $info['aggregator_test_fetcher']['definition_altered'] = TRUE;
+}
+
+/**
+ * Implements hook_aggregator_parser_info_alter().
+ */
+function aggregator_test_aggregator_parser_info_alter(array &$info) {
+  $info['aggregator_test_parser']['definition_altered'] = TRUE;
+}
+
+/**
+ * Implements hook_aggregator_processor_info_alter().
+ */
+function aggregator_test_aggregator_processor_info_alter(array &$info) {
+  $info['aggregator_test_processor']['definition_altered'] = TRUE;
+}

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+id: comment_publish_action
+label: 'Publish comment'
+type: comment
+plugin: entity:publish_action:comment
+configuration: {  }

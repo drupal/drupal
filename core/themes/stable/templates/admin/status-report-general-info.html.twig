@@ -1,0 +1,81 @@
+{#
+/**
+ * @file
+ * Theme override for the status report general info.
+ *
+ * Available variables:
+ * - drupal: The status of Drupal installation:
+ *   - value: The current status of Drupal installation.
+ *   - description: The description for current status of Drupal installation.
+ * - cron: The status of cron:
+ *   - value: The current status of cron.
+ *   - description: The description for current status of cron.
+ *   - cron.run_cron: An array to render a button for running cron.
+ * - database_system: The status of database system:
+ *   - value: The current status of database system.
+ *   - description: The description for current status of cron.
+ * - database_system_version: The info about current database version:
+ *   - value: The current version of database.
+ *   - description: The description for current version of database.
+ * - php: The current version of PHP:
+ *   - value: The status of currently installed PHP version.
+ *   - description: The description for current installed PHP version.
+ * - php_memory_limit: The info about current PHP memory limit:
+ *   - value: The status of currently set PHP memory limit.
+ *   - description: The description for currently set PHP memory limit.
+ * - webserver: The info about currently installed web server:
+ *   - value: The status of currently installed web server.
+ *   - description: The description for the status of currently installed web
+ *     server.
+ */
+#}
+
+<h2>{{ 'General System Information'|t }}</h2>
+<div class="system-status-general-info__item">
+  <h3 class="system-status-general-info__item-title">{{ 'Drupal Version'|t }}</h3>
+  {{ drupal.value }}
+  {% if drupal.description %}
+    {{ drupal.description }}
+  {% endif %}
+</div>
+<div class="system-status-general-info__item">
+  <h3 class="system-status-general-info__item-title">{{ 'Last Cron Run'|t }}</h3>
+  {{ cron.value }}
+  {% if cron.run_cron %}
+    {{ cron.run_cron }}
+  {% endif %}
+  {% if cron.description %}
+    {{ cron.description }}
+  {% endif %}
+</div>
+<div class="system-status-general-info__item">
+  <h3 class="system-status-general-info__item-title">{{ 'Web Server'|t }}</h3>
+  {{ webserver.value }}
+  {% if webserver.description %}
+    {{ webserver.description }}
+  {% endif %}
+</div>
+<div class="system-status-general-info__item">
+  <h3 class="system-status-general-info__item-title">{{ 'PHP'|t }}</h3>
+  <h4>{{ 'Version'|t }}</h4>{{ php.value }}
+  {% if php.description %}
+    {{ php.description }}
+  {% endif %}
+
+  <h4>{{ 'Memory limit'|t }}</h4>{{ php_memory_limit.value }}
+  {% if php_memory_limit.description %}
+    {{ php_memory_limit.description }}
+  {% endif %}
+</div>
+<div class="system-status-general-info__item">
+  <h3 class="system-status-general-info__item-title">{{ 'Database'|t }}</h3>
+  <h4>{{ 'Version'|t }}</h4>{{ database_system_version.value }}
+  {% if database_system_version.description %}
+    {{ database_system_version.description }}
+  {% endif %}
+
+  <h4>{{ 'System'|t }}</h4>{{ database_system.value }}
+  {% if database_system.description %}
+    {{ database_system.description }}
+  {% endif %}
+</div>

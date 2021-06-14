@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Add hooks for tests to use.
+ */
+
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function test_subtheme_views_pre_render(ViewExecutable $view) {
+  // We append the function name to the title for test to check for.
+  $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
+}
+
+/**
+ * Implements hook_views_post_render().
+ */
+function test_subtheme_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  // We append the function name to the title for test to check for.
+  $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
+  if ($view->id() == 'test_page_display') {
+    $output['#rows'][0]['#title'] = t('%total_rows items found.', ['%total_rows' => $view->total_rows]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_test_template_test templates.
+ */
+function test_subtheme_preprocess_theme_test_template_test(&$variables) {
+}

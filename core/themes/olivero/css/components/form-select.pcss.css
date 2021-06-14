@@ -1,0 +1,86 @@
+/**
+ * @file
+ * Select input elements.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --form-element-select-icon: url("../../images/chevron-down.svg");
+}
+
+select {
+  max-width: 100%;
+  height: var(--sp3);
+  padding-block: 0;
+  padding-inline-start: var(--sp);
+  padding-inline-end: var(--sp3);
+  color: var(--color--gray-0);
+  border: 1px solid var(--color--gray-30);
+  border-radius: var(--border-radius);
+  background-color: var(--color--white);
+  background-image: var(--form-element-select-icon);
+  background-repeat: no-repeat;
+  background-position: right var(--sp) center; /* LTR */
+  font-family: inherit;
+  font-size: inherit;
+  appearance: none;
+
+  &:focus {
+    border: solid 2px var(--color--blue-50);
+    outline: solid 2px var(--color--blue-50);
+
+    @supports (outline-style: double) {
+      border-width: 1px;
+      outline-width: 6px;
+      outline-style: double;
+      outline-offset: -1px;
+    }
+  }
+
+  /* Disables border of select specifically for ms browser */
+  &::-ms-expand {
+    display: none;
+  }
+
+  &[disabled] {
+    color: var(--color--gray-30);
+    background-color: var(--color--gray-90);
+  }
+
+  &.error {
+    border: solid 2px var(--color--red);
+
+    &:focus {
+      outline-color: var(--color--red);
+    }
+  }
+
+  &[multiple] {
+    height: auto;
+    padding: var(--sp0-5);
+    background-image: none;
+    line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
+
+    & option {
+      padding: var(--sp0-5);
+    }
+  }
+
+  &.form-element--small {
+    height: var(--sp2-5);
+  }
+
+  /* Necessary for IE11 to show chevron. */
+  @media screen and (-ms-high-contrast: active) {
+    background-image: var(--form-element-select-icon);
+
+    &[multiple] {
+      background-image: none;
+    }
+  }
+}
+
+[dir="rtl"] select {
+  background-position: left var(--sp) center;
+}

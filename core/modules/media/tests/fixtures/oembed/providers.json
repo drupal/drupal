@@ -1,0 +1,106 @@
+[
+  {
+    "provider_name": "Vimeo",
+    "provider_url": "https:\/\/vimeo.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "https:\/\/vimeo.com\/*",
+          "https:\/\/vimeo.com\/album\/*\/video\/*",
+          "https:\/\/vimeo.com\/channels\/*\/*",
+          "https:\/\/vimeo.com\/groups\/*\/videos\/*",
+          "https:\/\/vimeo.com\/ondemand\/*\/*",
+          "https:\/\/player.vimeo.com\/video\/*"
+        ],
+        "url": "https:\/\/vimeo.com\/api\/oembed.{format}",
+        "discovery": true
+      }
+    ]
+  },
+  {
+    "provider_name": "Twitter",
+    "provider_url": "http:\/\/www.twitter.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "https:\/\/twitter.com\/*\/status\/*",
+          "https:\/\/*.twitter.com\/*\/status\/*"
+        ],
+        "url": "https:\/\/publish.twitter.com\/oembed"
+
+      }
+    ]
+  },
+  {
+    "provider_name": "CollegeHumor",
+    "provider_url": "http:\/\/www.collegehumor.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "http:\/\/www.collegehumor.com\/video\/*"
+        ],
+        "url": "http:\/\/www.collegehumor.com\/oembed.{format}",
+        "discovery": true
+      }
+    ]
+  },
+  {
+    "provider_name": "Flickr",
+    "provider_url": "http:\/\/www.flickr.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "http:\/\/*.flickr.com\/photos\/*",
+          "http:\/\/flic.kr\/p\/*"
+        ],
+        "url": "http:\/\/www.flickr.com\/services\/oembed\/",
+        "discovery": true
+      }
+    ]
+  },
+  {
+    "provider_name": "YouTube",
+    "provider_url": "https://www.youtube.com/",
+    "endpoints": [
+      {
+        "schemes": [
+          "https://*.youtube.com/watch*",
+          "https://*.youtube.com/v/*\"",
+          "https://youtu.be/*"
+        ],
+        "url": "https://www.youtube.com/oembed",
+        "discovery": true
+      }
+    ]
+  },
+  {
+    "provider_name": "Facebook",
+    "provider_url": "https:\/\/www.facebook.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "https:\/\/www.facebook.com\/*\/posts\/*",
+          "https:\/\/www.facebook.com\/photos\/*",
+          "https:\/\/www.facebook.com\/*\/photos\/*",
+          "https:\/\/www.facebook.com\/photo.php*",
+          "https:\/\/www.facebook.com\/photo.php",
+          "https:\/\/www.facebook.com\/*\/activity\/*",
+          "https:\/\/www.facebook.com\/permalink.php",
+          "https:\/\/www.facebook.com\/media\/set?set=*",
+          "https:\/\/www.facebook.com\/questions\/*",
+          "https:\/\/www.facebook.com\/notes\/*\/*\/*"
+        ],
+        "url": "https:\/\/www.facebook.com\/plugins\/post\/oembed.json",
+        "discovery": true
+      },
+      {
+        "schemes": [
+          "https:\/\/www.facebook.com\/*\/videos\/*",
+          "https:\/\/www.facebook.com\/video.php"
+        ],
+        "url": "https:\/\/www.facebook.com\/plugins\/video\/oembed.json",
+        "discovery": true
+      }
+    ]
+  }
+]

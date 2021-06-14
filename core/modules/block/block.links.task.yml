@@ -1,0 +1,15 @@
+entity.block.edit_form:
+  title: 'Configure block'
+  route_name: entity.block.edit_form
+  base_route: entity.block.edit_form
+
+# Per theme block layout pages.
+block.admin_display:
+  title: 'Block layout'
+  route_name: block.admin_display
+  base_route: block.admin_display
+block.admin_display_theme:
+  title: 'Block layout'
+  route_name: block.admin_display_theme
+  parent_id: block.admin_display
+  deriver: 'Drupal\block\Plugin\Derivative\ThemeLocalTask'

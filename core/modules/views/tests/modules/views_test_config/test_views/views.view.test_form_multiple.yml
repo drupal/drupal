@@ -1,0 +1,129 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_form_multiple
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      pager:
+        options:
+          id: 0
+          items_per_page: 10
+          offset: 0
+        type: full
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            id: id
+            field_form_button_test: field_form_button_test
+          info:
+            field_form_button_test:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: '-1'
+          empty_table: false
+      row:
+        type: fields
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        field_form_button_test:
+          id: field_form_button_test
+          table: views_test_data
+          field: field_form_button_test
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Field form button test'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: field_form_button_test
+      arguments:
+        'null':
+          default_action: default
+          default_argument_type: fixed
+          field: 'null'
+          id: 'null'
+          must_not_be: false
+          table: views
+          plugin_id: 'null'

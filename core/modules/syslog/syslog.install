@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the syslog module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function syslog_install() {
+  // The default facility setting depends on the operating system, so it needs
+  // to be set dynamically during installation.
+  \Drupal::configFactory()->getEditable('syslog.settings')->set('facility', defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER)->save();
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function syslog_update_last_removed() {
+  return 8400;
+}

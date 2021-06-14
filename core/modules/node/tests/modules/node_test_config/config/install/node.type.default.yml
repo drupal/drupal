@@ -1,0 +1,9 @@
+type: default
+name: Default
+description: 'Default description.'
+help: ''
+new_revision: true
+display_submitted: true
+preview_mode: 1
+status: true
+langcode: en

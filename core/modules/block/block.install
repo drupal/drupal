@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Block.
+ */
+
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_install().
+ */
+function block_install() {
+  // Because the Block module upon installation unconditionally overrides all
+  // HTML output by selecting a different page display variant, we must
+  // invalidate all cached HTML output.
+  Cache::invalidateTags(['rendered']);
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function block_update_last_removed() {
+  return 8003;
+}

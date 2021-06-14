@@ -1,0 +1,42 @@
+id: d6_user_profile_field_instance_translation
+label: User profile field instance configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+  - Multilingual
+source:
+  plugin: d6_profile_field_translation
+  constants:
+    entity_type: user
+    bundle: user
+process:
+  langcode: language
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  field_name:
+    -
+      plugin: migration_lookup
+      migration: user_profile_field
+      source: fid
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: extract
+      index:
+        - 1
+  property:
+    plugin: static_map
+    source: property
+    map:
+      title: label
+      options: options
+      explanation: description
+  translation: translation
+destination:
+  plugin: entity:field_config
+  translations: true
+migration_dependencies:
+  required:
+    - language
+    - user_profile_field_instance

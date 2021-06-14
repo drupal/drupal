@@ -1,0 +1,50 @@
+---
+label: 'Managing and deploying configuration'
+top_level: true
+related:
+- config.export_full
+- config.import_full
+- config.export_single
+- config.import_single
+---
+<h2>{% trans %}What is the configuration system?{% endtrans %}</h2>
+<p>{% trans %}The configuration system provides the ability for administrators to customize the site, and to move and synchronize configuration changes between development sites and the live site. It does this in 2 ways:{% endtrans %}</p>
+<ol>
+  <li>{% trans %}Providing storage for configuration{% endtrans %}</li>
+  <li>{% trans %}Providing a process in which configuration changes can be imported and exported between instances of the same site; for example, from "dev" to "staging" to "live"{% endtrans %}</li>
+</ol>
+<h2>{% trans %}What is configuration data?{% endtrans %}</h2>
+<p>{% trans %}Configuration data describes settings that define how your site behaves or is displayed. For example, when a site administrator updates settings using an administrative form, these settings are stored as configuration data. Configuration data describes settings as simple as a site name and as complex as a view or image style.{% endtrans %}</p>
+<h2>{% trans %}What kinds of configuration are there?{% endtrans %}</h2>
+<dl>
+  <dt>{% trans %}Active configuration{% endtrans %}</dt>
+  <dd>{% trans %}Active configuration is the current working configuration of a site. Storage of active configuration is defined by the site, and resides in the database by default.{% endtrans %}</dd>
+  <dt>{% trans %}Simple configuration{% endtrans %}</dt>
+  <dd>{% trans %}A simple configuration item is a group of settings, such as the settings for a module or theme. Each simple configuration item has its own unique structure.{% endtrans %}</dd>
+  <dt>{% trans %}Configuration entities{% endtrans %}</dt>
+  <dd>{% trans %}Configuration entities are user-defined configuration items grouped by type, such as views, image styles, and content types. Each configuration entity within a type has a similar structure.{% endtrans %}</dd>
+  <dt>{% trans %}Default configuration{% endtrans %}</dt>
+  <dd>{% trans %}Default configuration can be defined by a module, theme, or installation profile in its <em>config/install</em> or <em>config/optional</em> directories. Configuration is provided in YAML files (file extension .yml); YAML is a human-readable data serialization standard that is used by the core software for several purposes. Once the default configuration has been imported into the site's active configuration (through installing the extension), that configuration is owned by the site, not the extension. This means that future updates of the extension will not override the site's active configuration for that extension.{% endtrans %}</dd>
+</dl>
+<h2>{% trans %}What is configuration synchronization?{% endtrans %}</h2>
+<p>{% trans %}Configuration synchronization is the process of exporting and importing configuration to keep configuration synchronized between different versions of a site; for example, between a development site and the live site.{% endtrans %}</p>
+<p>{% trans %}Each site has unique identifier, also called a <em>UUID</em>, which identifies the site to the system in any instance of the site, as long as the site instances have been reproduced as clones (cloning is when the codebase and database are copied to create a new site instance). When site instances are cloned, a "dev" instance of the site has the same UUID as the "live" instance. When site instances share the same UUID, configuration can be exported from one instance to another.{% endtrans %}</p>
+<p>{% trans %}The following list contains terms and concepts related to configuration synchronization:{% endtrans %}</p>
+<dl>
+  <dt>{% trans %}Exported configuration{% endtrans %}</dt>
+  <dd>{% trans %}When configuration is exported, the active configuration is exported as a set of files in YAML format. When using the <em>Configuration synchronization</em> administrative UI, configuration can be exported as a full-export or single-item archive. This archive can then be imported into the destination site instance.{% endtrans %}</dd>
+  <dt>{% trans %}Imported configuration{% endtrans %}</dt>
+  <dd>{% trans %}Imported configuration is configuration that has been exported from another instance of the site (the "source") and is now being imported into another site instance (the "destination"), thereby updating its active configuration to match the imported configuration data set.{% endtrans %}</dd>
+  <dt>{% trans %}Configuration sync directory{% endtrans %}</dt>
+  <dd>{% trans %}The configuration sync directory location is set in the site's <em>settings.php</em> file. When configuration is exported, the active configuration is exported and described in YAML files which are stored in the configuration sync directory. After the first export, the system compares the site's active configuration with the configuration data in the sync directory and will only export active configuration items that are different than their counterparts in the sync directory.{% endtrans %}</dd>
+</dl>
+<h2>{% trans %}Managing configuration overview{% endtrans %}</h2>
+<p>{% trans %}Configuration management tasks, such as exporting or importing configuration and synchronizing configuration, can be done either through the administrative UI provided by the core Configuration Manager module or a command-line interface (CLI) tool. Defining a configuration sync directory path other than the default value requires read/write access to the site's <em>settings.php</em> file.{% endtrans %}</p>
+<p>{% trans %}Most modules and themes also provide settings forms for updating the configuration they provide. See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/8/configuration-management/workflow-using-drush">Configuration management: Workflow using Drush</a>{% endtrans %}</li>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/understanding-data.html">Concept: Types of Data article in the Drupal User Guide</a>{% endtrans %}</li>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/install-dev-sites.html">Concept: Development Sites article in the Drupal User Guide</a>{% endtrans %}</li>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/install-dev-making.html">Making a Development Site article in the Drupal User Guide</a>{% endtrans %}</li>
+</ul>

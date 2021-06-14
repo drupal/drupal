@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Styles for the Media Library UI.
+ */
+
+@import "../base/variables.pcss.css";
+
+.media-library-selected-count {
+  margin: 0 var(--space-l);
+}

@@ -1,0 +1,5 @@
+name: module handler test module
+type: module
+description: 'Test module enabled by default in module handler unit tests.'
+package: Testing
+version: VERSION

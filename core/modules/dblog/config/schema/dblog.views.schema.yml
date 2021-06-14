@@ -1,0 +1,17 @@
+# Schema for the views plugins of the Database Logging module.
+
+views.field.dblog_message:
+  type: views_field
+  label: 'Log event message'
+  mapping:
+    replace_variables:
+      type: boolean
+      label: 'Replace variables'
+
+views.field.dblog_operations:
+  type: views_field
+  label: 'Operation link markup'
+
+views.filter.dblog_types:
+  type: 'views.filter.in_operator'
+  label: 'Types'

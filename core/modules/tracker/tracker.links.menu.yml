@@ -1,0 +1,3 @@
+tracker.page:
+  title: 'Recent content'
+  route_name: tracker.page

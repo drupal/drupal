@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme override for a summary of an image resize effect.
+ *
+ * Available variables:
+ * - data: The current configuration for this resize effect, including:
+ *   - width: The width of the resized image.
+ *   - height: The height of the resized image.
+ * - effect: The effect information, including:
+ *   - id: The effect identifier.
+ *   - label: The effect name.
+ *   - description: The effect description.
+ */
+#}
+{% if data.width and data.height -%}
+  {{ data.width }}×{{ data.height }}
+{%- else -%}
+  {% if data.width %}
+    {% trans %}
+      width {{ data.width }}
+    {% endtrans %}
+  {% elseif data.height %}
+    {% trans %}
+      height {{ data.height }}
+    {% endtrans %}
+  {% endif %}
+{%- endif %}

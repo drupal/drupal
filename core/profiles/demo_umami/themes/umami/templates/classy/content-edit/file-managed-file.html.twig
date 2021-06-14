@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Theme override to display a file form widget.
+ *
+ * Available variables:
+ * - element: Form element for the file upload.
+ * - attributes: HTML attributes for the containing element.
+ *
+ * @see template_preprocess_file_managed_file()
+ */
+#}
+{{ attach_library('umami/classy.file') }}
+{%
+  set classes = [
+    'js-form-managed-file',
+    'form-managed-file',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ element }}
+</div>

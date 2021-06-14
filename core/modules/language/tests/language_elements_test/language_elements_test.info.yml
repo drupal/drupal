@@ -1,0 +1,7 @@
+name: 'Language form elements test'
+type: module
+description: 'Support module for the language form elements tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test

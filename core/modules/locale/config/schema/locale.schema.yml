@@ -1,0 +1,47 @@
+# Schema for the configuration files of the Locale module.
+
+locale.settings:
+  type: config_object
+  label: 'Translate interface settings'
+  mapping:
+    cache_strings:
+      type: boolean
+      label: 'Cache strings'
+    translate_english:
+      type: boolean
+      label: 'Enable English translation'
+    javascript:
+      type: mapping
+      label: 'JavaScript settings'
+      mapping:
+        directory:
+          type: string
+          label: 'Translation directory'
+    translation:
+      type: mapping
+      label: 'Translation settings'
+      mapping:
+        use_source:
+          type: string
+          label: 'Translation source'
+        default_filename:
+          type: string
+          label: 'Default translation filename pattern'
+        default_server_pattern:
+          type: string
+          label: 'Default translation server pattern'
+        overwrite_customized:
+          type: boolean
+          label: 'Overwrite customized translations'
+        overwrite_not_customized:
+          type: boolean
+          label: 'Overwrite non customized translations'
+        update_interval_days:
+          type: integer
+          label: 'Check for updates'
+        path:
+          type: string
+          label: 'Interface translations directory'
+        import_enabled:
+          type: boolean
+          label: 'Import enabled'

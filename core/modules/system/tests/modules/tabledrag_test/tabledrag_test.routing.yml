@@ -1,0 +1,15 @@
+tabledrag_test.test_form:
+  path: '/tabledrag_test'
+  defaults:
+    _form: '\Drupal\tabledrag_test\Form\TableDragTestForm'
+    _title: 'Draggable table test'
+  requirements:
+    _access: 'TRUE'
+
+tabledrag_test.nested_tabledrag_test_form:
+  path: '/tabledrag_test_nested'
+  defaults:
+    _form: '\Drupal\tabledrag_test\Form\NestedTableDragTestForm'
+    _title: 'Nested draggable table test'
+  requirements:
+    _access: 'TRUE'

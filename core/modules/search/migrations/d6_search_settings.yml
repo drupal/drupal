@@ -1,0 +1,22 @@
+id: d6_search_settings
+label: Search configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: variable
+  constants:
+    status: true
+  variables:
+    - minimum_word_size
+    - overlap_cjk
+    - search_cron_limit
+  source_module: search
+process:
+  'index/minimum_word_size': minimum_word_size
+  'index/overlap_cjk': overlap_cjk
+  'index/cron_limit': search_cron_limit
+  logging: 'constants/status'
+destination:
+  plugin: config
+  config_name: search.settings

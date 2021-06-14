@@ -1,0 +1,36 @@
+# Schema for the configuration files of the Taxonomy module.
+
+taxonomy.settings:
+  type: config_object
+  label: 'Taxonomy settings'
+  mapping:
+    maintain_index_table:
+      type: boolean
+      label: 'Maintain index table'
+    override_selector:
+      type: boolean
+      label: 'Override selector'
+    terms_per_page_admin:
+      type: integer
+      label: 'Number of terms per page'
+
+taxonomy.vocabulary.*:
+  type: config_entity
+  label: 'Vocabulary'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    vid:
+      type: string
+      label: 'Machine name'
+    description:
+      type: label
+      label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
+
+field.formatter.settings.entity_reference_rss_category:
+  type: mapping
+  label: 'Taxonomy format settings'

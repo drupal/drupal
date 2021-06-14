@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Footer regions.
+ */
+
+@import "../base/variables.pcss.css";
+
+.site-footer {
+  position: relative; /* stack above left social bar */
+  color: var(--color--gray-50);
+
+  /* @todo - #0c0d0e and #171e23 aren't currently variables */
+  background: linear-gradient(180deg, #0c0d0e 0%, #171e23 100%);
+
+  & .menu {
+    margin-inline-start: 0;
+    list-style: none;
+
+    & ul {
+      margin-inline-start: var(--sp);
+    }
+
+    & li {
+      margin-block-end: var(--sp0-5);
+    }
+  }
+
+  & a {
+    color: inherit;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+@media (--nav) {
+  body:not(.is-always-mobile-nav) .site-footer {
+    border-inline-start: solid var(--content-left) var(--color--black);
+  }
+}

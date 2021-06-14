@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ * @see claro_preprocess_input()
+ */
+#}
+{% apply spaceless %}
+{% if autocomplete_message %}
+  <div class="claro-autocomplete">
+    <input{{ attributes }}/>
+    <div class="claro-autocomplete__message hidden" data-drupal-selector="autocomplete-message">{{ autocomplete_message }}</div>
+  </div>
+  {{ children }}
+{% else %}
+  <input{{ attributes }}/>{{ children }}
+{% endif %}
+{% endapply %}

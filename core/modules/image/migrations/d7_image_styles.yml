@@ -1,0 +1,19 @@
+id: d7_image_styles
+label: Image styles
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_image_styles
+process:
+  name: name
+  label: label
+  effects:
+    plugin: sub_process
+    source: effects
+    process:
+      id: name
+      weight: weight
+      data: data
+destination:
+  plugin: entity:image_style

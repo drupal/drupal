@@ -1,0 +1,117 @@
+langcode: und
+status: true
+dependencies: {  }
+id: test_field_field_complex_test
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      fields:
+        id:
+          id: id
+          table: entity_test
+          field: id
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: id
+        field_test_multiple:
+          id: field_test_multiple
+          table: entity_test__field_test_multiple
+          field: field_test_multiple
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: field_test_multiple
+          delta_limit: 0
+          group_rows: true
+        field_test_multiple_1:
+          id: field_test_multiple_1
+          table: entity_test__field_test_multiple
+          field: field_test_multiple
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: field_test_multiple
+          delta_limit: 1
+          group_rows: true
+        field_test_multiple_2:
+          id: field_test_multiple_2
+          table: entity_test__field_test_multiple
+          field: field_test_multiple
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: field_test_multiple
+          delta_limit: 0
+          delta_offset: 1
+          group_rows: true
+        timezone:
+          id: timezone
+          table: users_field_data
+          field: timezone
+          plugin_id: field
+          relationship: user_id
+          alter: {}
+        created:
+          id: created
+          table: users_field_data
+          field: created
+          relationship: user_id
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'Y'
+            timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: field
+        created_1:
+          id: created_1
+          table: users_field_data
+          field: created
+          relationship: user_id
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'H:i:s'
+            timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: field
+        created_2:
+          id: created_2
+          table: users_field_data
+          field: created
+          relationship: user_id
+          type: timestamp
+          settings:
+            date_format: fallback
+            custom_date_format: ''
+            timezone: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: field
+      relationships:
+        user_id:
+          table: entity_test
+          field: user_id
+          id: user_id
+          plugin_id: standard
+      sorts:
+        id:
+          id: id
+          table: entity_test
+          field: id
+          plugin_id: standard
+          order: asc
+      style:
+        type: html_list
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

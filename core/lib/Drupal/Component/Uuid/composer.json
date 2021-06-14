@@ -1,0 +1,19 @@
+{
+  "name": "drupal/core-uuid",
+  "description": "UUID generation and validation.",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/drupal",
+    "irc": "irc://irc.freenode.net/drupal-contribute",
+    "source": "https://www.drupal.org/project/drupal/git-instructions"
+  },
+  "require": {
+    "php": ">=7.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Uuid\\": ""
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * For testing theme suggestions.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function layout_builder_theme_suggestions_test_theme() {
+  // It is necessary to explicitly register the template via hook_theme()
+  // because it is added via a module, not a theme.
+  return [
+    'field__node__body__bundle_with_section_field__default' => [
+      'base hook' => 'field',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for the list of layouts.
+ */
+function layout_builder_theme_suggestions_test_preprocess_item_list__layouts(&$variables) {
+  foreach (array_keys($variables['items']) as $layout_id) {
+    if (isset($variables['items'][$layout_id]['value']['#title']['icon'])) {
+      $variables['items'][$layout_id]['value']['#title']['icon'] = ['#markup' => __FUNCTION__];
+    }
+  }
+}

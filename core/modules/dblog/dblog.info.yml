@@ -1,0 +1,6 @@
+name: 'Database Logging'
+type: module
+description: 'Logs system events in the database.'
+package: Core
+version: VERSION
+configure: system.logging_settings

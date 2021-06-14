@@ -1,0 +1,80 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_node_revision_vid
+label: null
+module: views
+description: ''
+tag: ''
+base_table: node_field_revision
+base_field: nid
+display:
+  default:
+    display_options:
+      relationships:
+        vid:
+          id: vid
+          table: node_field_revision
+          field: vid
+          required: true
+          plugin_id: standard
+      fields:
+        vid:
+          id: vid
+          table: node_field_revision
+          field: vid
+          plugin_id: field
+          entity_type: node
+          entity_field: vid
+        nid_1:
+          id: nid_1
+          table: node_field_revision
+          field: nid
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: vid
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+        langcode:
+          id: langcode
+          table: node_field_revision
+          field: langcode
+          entity_type: node
+          entity_field: langcode
+          plugin_id: field
+      arguments:
+        nid:
+          id: nid
+          table: node_field_revision
+          field: nid
+          plugin_id: node_nid
+          entity_type: node
+          entity_field: nid
+      display_extenders: {  }
+      sorts:
+        langcode:
+          id: langcode
+          table: node_field_revision
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: node
+          entity_field: langcode
+          plugin_id: standard
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Visual styles for collapsible fieldsets.
+ */
+
+.collapse-processed > summary {
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+}
+.collapse-processed > summary:before {
+  float: left; /* LTR */
+  width: 1em;
+  height: 1em;
+  content: "";
+  background: url(../../../../misc/menu-expanded.png) 0 100% no-repeat; /* LTR */
+}
+[dir="rtl"] .collapse-processed > summary:before {
+  float: right;
+  background-position: 100% 100%;
+}
+.collapse-processed:not([open]) > summary:before {
+  -ms-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  background-position: 25% 35%; /* LTR */
+}
+[dir="rtl"] .collapse-processed:not([open]) > summary:before {
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  background-position: 75% 35%;
+}

@@ -1,0 +1,10 @@
+services:
+  entity_test.definition.subscriber:
+    class: Drupal\entity_test\EntityTestDefinitionSubscriber
+    arguments: ['@state', '@entity.last_installed_schema.repository', '@entity_type.manager', '@entity_field.manager']
+    tags:
+      - { name: event_subscriber }
+  cache_context.entity_test_view_grants:
+    class: Drupal\entity_test\Cache\EntityTestViewGrantsCacheContext
+    tags:
+      - { name: cache.context }

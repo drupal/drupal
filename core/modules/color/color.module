@@ -1,0 +1,845 @@
+<?php
+
+/**
+ * @file
+ * Allows users to change the color scheme of themes.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Color;
+use Drupal\Component\Utility\Environment;
+use Drupal\Core\Asset\CssOptimizer;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\Element\Textfield;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\color\ColorSystemBrandingBlockAlter;
+
+/**
+ * Implements hook_help().
+ */
+function color_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.color':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to change the color scheme (color of links, backgrounds, text, and other theme elements) of compatible themes. For more information, see the <a href=":color_do">online documentation for the Color module</a>.', [':color_do' => 'https://www.drupal.org/documentation/modules/color']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Changing colors') . '</dt>';
+      $output .= '<dd><p>' . t('To change the color settings, select the <em>Settings</em> link for your theme on the <a href=":appearance">Appearance</a> page. If the color picker does not appear then the theme is not compatible with the Color module.', [':appearance' => Url::fromRoute('system.themes_page')->toString()]) . '</p>';
+      $output .= '<p>' . t("The Color module saves a modified copy of the theme's specified stylesheets in the files directory. If you make any manual changes to your theme's stylesheet, <em>you must save your color settings again, even if you haven't changed the colors</em>. This step is required because the module stylesheets in the files directory need to be recreated to reflect your changes.") . '</p></dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function color_theme() {
+  return [
+    'color_scheme_form' => [
+      'render element' => 'form',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function color_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
+  $build_info = $form_state->getBuildInfo();
+  if (isset($build_info['args'][0]) && ($theme = $build_info['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
+    $form['color'] = [
+      '#type' => 'details',
+      '#title' => t('Color scheme'),
+      '#open' => TRUE,
+      '#weight' => -1,
+      '#attributes' => ['id' => 'color_scheme_form'],
+      '#theme' => 'color_scheme_form',
+    ];
+    $form['color'] += color_scheme_form($form, $form_state, $theme);
+    $form['#validate'][] = 'color_scheme_form_validate';
+    // Ensure color submission happens first so we can unset extra values.
+    array_unshift($form['#submit'], 'color_scheme_form_submit');
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ *
+ * Replaces style sheets declared in libraries with color-altered style sheets.
+ */
+function color_library_info_alter(&$libraries, $extension) {
+  $themes = array_keys(\Drupal::service('theme_handler')->listInfo());
+  if (in_array($extension, $themes)) {
+    $color_paths = \Drupal::config('color.theme.' . $extension)->get('stylesheets');
+    if (!empty($color_paths)) {
+      foreach (array_keys($libraries) as $name) {
+        if (isset($libraries[$name]['css'])) {
+          // Override stylesheets.
+          foreach ($libraries[$name]['css'] as $category => $css_assets) {
+            foreach ($css_assets as $path => $metadata) {
+              // Loop over the path array with recolored CSS files to find matching
+              // paths which could replace the non-recolored paths.
+              foreach ($color_paths as $color_path) {
+                // Color module currently requires unique file names to be used,
+                // which allows us to compare different file paths.
+                /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+                $file_system = \Drupal::service('file_system');
+                if ($file_system->basename($path) == $file_system->basename($color_path)) {
+                  // Replace the path to the new css file.
+                  // This keeps the order of the stylesheets intact.
+                  $index = array_search($path, array_keys($libraries[$name]['css'][$category]));
+                  $preceding_css_assets = array_slice($libraries[$name]['css'][$category], 0, $index);
+                  $succeeding_css_assets = array_slice($libraries[$name]['css'][$category], $index + 1);
+                  $libraries[$name]['css'][$category] = array_merge(
+                    $preceding_css_assets,
+                    [$color_path => $metadata],
+                    $succeeding_css_assets
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
+ */
+function color_block_view_system_branding_block_alter(array &$build, BlockPluginInterface $block) {
+  $build['#pre_render'][] = [ColorSystemBrandingBlockAlter::class, 'preRender'];
+}
+
+/**
+ * Retrieves the Color module information for a particular theme.
+ */
+function color_get_info($theme) {
+  static $theme_info = [];
+
+  if (isset($theme_info[$theme])) {
+    return $theme_info[$theme];
+  }
+
+  $path = drupal_get_path('theme', $theme);
+  $file = \Drupal::root() . '/' . $path . '/color/color.inc';
+  if ($path && file_exists($file)) {
+    include $file;
+    // Add in default values.
+    $info += [
+      // CSS files (excluding @import) to rewrite with new color scheme.
+      'css' => [],
+      // Files to copy.
+      'copy' => [],
+      // Gradient definitions.
+      'gradients' => [],
+      // Color areas to fill (x, y, width, height).
+      'fill' => [],
+      // Coordinates of all the theme slices (x, y, width, height) with their
+      // filename as used in the stylesheet.
+      'slices' => [],
+      // Reference color used for blending.
+      'blend_target' => '#ffffff',
+    ];
+    $theme_info[$theme] = $info;
+    return $info;
+  }
+}
+
+/**
+ * Retrieves the color palette for a particular theme.
+ */
+function color_get_palette($theme, $default = FALSE) {
+  // Fetch and expand default palette.
+  $info = color_get_info($theme);
+  $palette = $info['schemes']['default']['colors'];
+
+  if ($default) {
+    return $palette;
+  }
+
+  // Load variable.
+  // @todo Default color config should be moved to yaml in the theme.
+  // Getting a mutable override-free object because this function is only used
+  // in forms. Color configuration is used to write CSS to the file system
+  // making configuration overrides pointless.
+  return \Drupal::configFactory()->getEditable('color.theme.' . $theme)->get('palette') ?: $palette;
+}
+
+/**
+ * Form constructor for the color configuration form for a particular theme.
+ *
+ * @param $theme
+ *   The machine name of the theme whose color settings are being configured.
+ *
+ * @see color_scheme_form_validate()
+ * @see color_scheme_form_submit()
+ */
+function color_scheme_form($complete_form, FormStateInterface $form_state, $theme) {
+  $info = color_get_info($theme);
+
+  $info['schemes'][''] = ['title' => t('Custom'), 'colors' => []];
+  $color_sets = [];
+  $schemes = [];
+  foreach ($info['schemes'] as $key => $scheme) {
+    $color_sets[$key] = $scheme['title'];
+    $schemes[$key] = $scheme['colors'];
+    $schemes[$key] += $info['schemes']['default']['colors'];
+  }
+
+  // See if we're using a predefined scheme.
+  // Note: we use the original theme when the default scheme is chosen.
+  // Note: we use configuration without overrides since this information is used
+  // in a form and therefore without doing this would bleed overrides into
+  // active configuration. Furthermore, color configuration is used to write
+  // CSS to the file system making configuration overrides pointless.
+  $current_scheme = \Drupal::configFactory()->getEditable('color.theme.' . $theme)->get('palette');
+  foreach ($schemes as $key => $scheme) {
+    if ($current_scheme == $scheme) {
+      $scheme_name = $key;
+      break;
+    }
+  }
+  if (empty($scheme_name)) {
+    if (empty($current_scheme)) {
+      $scheme_name = 'default';
+    }
+    else {
+      $scheme_name = '';
+    }
+  }
+
+  // Add scheme selector.
+  $default_palette = color_get_palette($theme, TRUE);
+  $form['scheme'] = [
+    '#type' => 'select',
+    '#title' => t('Color set'),
+    '#options' => $color_sets,
+    '#default_value' => $scheme_name,
+    '#attached' => [
+      'library' => [
+        'color/drupal.color',
+        'color/admin',
+      ],
+      // Add custom JavaScript.
+      'drupalSettings' => [
+        'color' => [
+          'reference' => $default_palette,
+          'schemes' => $schemes,
+        ],
+        'gradients' => $info['gradients'],
+      ],
+    ],
+  ];
+
+  // Add palette fields. Use the configuration if available.
+  $palette = $current_scheme ?: $default_palette;
+  $names = $info['fields'];
+  $form['palette']['#tree'] = TRUE;
+  foreach ($palette as $name => $value) {
+    if (isset($names[$name])) {
+      $form['palette'][$name] = [
+        '#type' => 'textfield',
+        '#title' => $names[$name],
+        '#value_callback' => 'color_palette_color_value',
+        '#default_value' => $value,
+        '#size' => 8,
+        '#attributes' => ['dir' => LanguageInterface::DIRECTION_LTR],
+      ];
+    }
+  }
+  $form['theme'] = ['#type' => 'value', '#value' => $theme];
+  if (isset($info['#attached'])) {
+    $form['#attached'] = $info['#attached'];
+    unset($info['#attached']);
+  }
+  $form['info'] = ['#type' => 'value', '#value' => $info];
+
+  return $form;
+}
+
+/**
+ * Prepares variables for color scheme form templates.
+ *
+ * Default template: color-scheme-form.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ */
+function template_preprocess_color_scheme_form(&$variables) {
+  $form = &$variables['form'];
+
+  $theme = $form['theme']['#value'];
+  $info = $form['info']['#value'];
+
+  if (isset($info['preview_library'])) {
+    $form['scheme']['#attached']['library'][] = $info['preview_library'];
+  }
+
+  // Attempt to load preview HTML if the theme provides it.
+  $preview_html_path = \Drupal::root() . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');
+  $variables['html_preview']['#markup'] = file_get_contents($preview_html_path);
+}
+
+/**
+ * Determines the value for a palette color field.
+ *
+ * @param array $element
+ *   The form element whose value is being populated.
+ * @param string|bool $input
+ *   The incoming input to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
+ * @return string
+ *   The data that will appear in the $form_state->getValues() collection for this
+ *   element. Return nothing to use the default.
+ */
+function color_palette_color_value($element, $input, FormStateInterface $form_state) {
+  // If we suspect a possible cross-site request forgery attack, only accept
+  // hexadecimal CSS color strings from user input, to avoid problems when this
+  // value is used in the JavaScript preview.
+  if ($input !== FALSE) {
+    // Start with the provided value for this textfield, and validate that if
+    // necessary, falling back on the default value.
+    $value = Textfield::valueCallback($element, $input, $form_state);
+    $complete_form = $form_state->getCompleteForm();
+    if (!$value || !isset($complete_form['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $complete_form['#token'])) {
+      return $value;
+    }
+    else {
+      return $element['#default_value'];
+    }
+  }
+}
+
+/**
+ * Determines if a hexadecimal CSS color string is valid.
+ *
+ * @param string $color
+ *   The string to check.
+ *
+ * @return bool
+ *   TRUE if the string is a valid hexadecimal CSS color string, or FALSE if it
+ *   isn't.
+ */
+function color_valid_hexadecimal_string($color) {
+  return (bool) preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color);
+}
+
+/**
+ * Form validation handler for color_scheme_form().
+ *
+ * @see color_scheme_form_submit()
+ */
+function color_scheme_form_validate($form, FormStateInterface $form_state) {
+  // Only accept hexadecimal CSS color strings to avoid XSS upon use.
+  foreach ($form_state->getValue('palette') as $key => $color) {
+    if (!color_valid_hexadecimal_string($color)) {
+      $form_state->setErrorByName('palette][' . $key, t('You must enter a valid hexadecimal color value for %name.', ['%name' => $form['color']['palette'][$key]['#title']]));
+    }
+  }
+}
+
+/**
+ * Form submission handler for color_scheme_form().
+ *
+ * @see color_scheme_form_validate()
+ */
+function color_scheme_form_submit($form, FormStateInterface $form_state) {
+
+  // Avoid color settings spilling over to theme settings.
+  $color_settings = ['theme', 'palette', 'scheme'];
+  if ($form_state->hasValue('info')) {
+    $color_settings[] = 'info';
+  }
+  foreach ($color_settings as $setting_name) {
+    ${$setting_name} = $form_state->getValue($setting_name);
+    $form_state->unsetValue($setting_name);
+  }
+  if (!isset($info)) {
+    return;
+  }
+
+  $config = \Drupal::configFactory()->getEditable('color.theme.' . $theme);
+
+  // Resolve palette.
+  if ($scheme != '') {
+    foreach ($palette as $key => $color) {
+      if (isset($info['schemes'][$scheme]['colors'][$key])) {
+        $palette[$key] = $info['schemes'][$scheme]['colors'][$key];
+      }
+    }
+    $palette += $info['schemes']['default']['colors'];
+  }
+
+  // Make sure enough memory is available.
+  if (isset($info['base_image'])) {
+    // Fetch source image dimensions.
+    $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
+    list($width, $height) = getimagesize($source);
+
+    // We need at least a copy of the source and a target buffer of the same
+    // size (both at 32bpp).
+    $required = $width * $height * 8;
+    // We intend to prevent color scheme changes if there isn't enough memory
+    // available.  memory_get_usage(TRUE) returns a more accurate number than
+    // memory_get_usage(), therefore we won't inadvertently reject a color
+    // scheme change based on a faulty memory calculation.
+    $usage = memory_get_usage(TRUE);
+    $memory_limit = ini_get('memory_limit');
+    $size = Bytes::toNumber($memory_limit);
+    if (!Environment::checkMemoryLimit($usage + $required, $memory_limit)) {
+      \Drupal::messenger()->addError(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="http://php.net/manual/ini.core.php#ini.sect.resource-limits">PHP documentation</a> for more information.', ['%size' => format_size($usage + $required - $size)]));
+      return;
+    }
+  }
+
+  $file_system = \Drupal::service('file_system');
+  // Delete old files.
+  $files = $config->get('files');
+  if (isset($files)) {
+    foreach ($files as $file) {
+      @$file_system->unlink($file);
+    }
+  }
+  if (isset($file) && $file = dirname($file)) {
+    @\Drupal::service('file_system')->rmdir($file);
+  }
+
+  // No change in color config, use the standard theme from color.inc.
+  if (implode(',', color_get_palette($theme, TRUE)) == implode(',', $palette)) {
+    $config->delete();
+    return;
+  }
+
+  // Prepare target locations for generated files.
+  $id = $theme . '-' . substr(hash('sha256', serialize($palette) . microtime()), 0, 8);
+  $paths['color'] = 'public://color';
+  $paths['target'] = $paths['color'] . '/' . $id;
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  foreach ($paths as $path) {
+    $file_system->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+  }
+  $paths['target'] = $paths['target'] . '/';
+  $paths['id'] = $id;
+  $paths['source'] = drupal_get_path('theme', $theme) . '/';
+  $paths['files'] = $paths['map'] = [];
+
+  // Save palette and logo location.
+  $config
+    ->set('palette', $palette)
+    ->set('logo', $paths['target'] . 'logo.svg')
+    ->save();
+
+  // Copy over neutral images.
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  foreach ($info['copy'] as $file) {
+    $base = $file_system->basename($file);
+    $source = $paths['source'] . $file;
+    try {
+      $filepath = $file_system->copy($source, $paths['target'] . $base);
+    }
+    catch (FileException $e) {
+      $filepath = FALSE;
+    }
+    $paths['map'][$file] = $base;
+    $paths['files'][] = $filepath;
+  }
+
+  // Render new images, if image has been provided.
+  if (isset($info['base_image'])) {
+    _color_render_images($theme, $info, $paths, $palette);
+  }
+
+  // Rewrite theme stylesheets.
+  $css = [];
+  foreach ($info['css'] as $stylesheet) {
+    // Build a temporary array with CSS files.
+    $files = [];
+    if (file_exists($paths['source'] . $stylesheet)) {
+      $files[] = $stylesheet;
+    }
+
+    foreach ($files as $file) {
+      $css_optimizer = new CssOptimizer();
+      // Aggregate @imports recursively for each configured top level CSS file
+      // without optimization. Aggregation and optimization will be
+      // handled by drupal_build_css_cache() only.
+      $style = $css_optimizer->loadFile($paths['source'] . $file, FALSE);
+
+      // Return the path to where this CSS file originated from, stripping
+      // off the name of the file at the end of the path.
+      $css_optimizer->rewriteFileURIBasePath = base_path() . dirname($paths['source'] . $file) . '/';
+
+      // Prefix all paths within this CSS file, ignoring absolute paths.
+      $style = preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', [$css_optimizer, 'rewriteFileURI'], $style);
+
+      // Rewrite stylesheet with new colors.
+      $style = _color_rewrite_stylesheet($theme, $info, $paths, $palette, $style);
+      $base_file = $file_system->basename($file);
+      $css[] = $paths['target'] . $base_file;
+      _color_save_stylesheet($paths['target'] . $base_file, $style, $paths);
+    }
+  }
+
+  // Maintain list of files.
+  $config
+    ->set('stylesheets', $css)
+    ->set('files', $paths['files'])
+    ->save();
+}
+
+/**
+ * Rewrites the stylesheet to match the colors in the palette.
+ */
+function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
+  // Prepare color conversion table.
+  $conversion = $palette;
+  foreach ($conversion as $k => $v) {
+    $v = mb_strtolower($v);
+    $conversion[$k] = Color::normalizeHexLength($v);
+  }
+  $default = color_get_palette($theme, TRUE);
+
+  // Split off the "Don't touch" section of the stylesheet.
+  $split = "Color Module: Don't touch";
+  if (strpos($style, $split) !== FALSE) {
+    list($style, $fixed) = explode($split, $style);
+  }
+
+  // Find all colors in the stylesheet and the chunks in between.
+  $style = preg_split('/(#[0-9a-f]{6}|#[0-9a-f]{3})/i', $style, -1, PREG_SPLIT_DELIM_CAPTURE);
+  $is_color = FALSE;
+  $output = '';
+  $base = 'base';
+
+  // Iterate over all the parts.
+  foreach ($style as $chunk) {
+    if ($is_color) {
+      $chunk = mb_strtolower($chunk);
+      $chunk = Color::normalizeHexLength($chunk);
+      // Check if this is one of the colors in the default palette.
+      if ($key = array_search($chunk, $default)) {
+        $chunk = $conversion[$key];
+      }
+      // Not a pre-set color. Extrapolate from the base.
+      else {
+        $chunk = _color_shift($palette[$base], $default[$base], $chunk, $info['blend_target']);
+      }
+    }
+    else {
+      // Determine the most suitable base color for the next color.
+
+      // 'a' declarations. Use link.
+      if (preg_match('@[^a-z0-9_-](a)[^a-z0-9_-][^/{]*{[^{]+$@i', $chunk)) {
+        $base = 'link';
+      }
+      // 'color:' styles. Use text.
+      elseif (preg_match('/(?<!-)color[^{:]*:[^{#]*$/i', $chunk)) {
+        $base = 'text';
+      }
+      // Reset back to base.
+      else {
+        $base = 'base';
+      }
+    }
+    $output .= $chunk;
+    $is_color = !$is_color;
+  }
+  // Append fixed colors segment.
+  if (isset($fixed)) {
+    $output .= $fixed;
+  }
+
+  // Replace paths to images.
+  foreach ($paths['map'] as $before => $after) {
+    $before = base_path() . $paths['source'] . $before;
+    $before = preg_replace('`(^|/)(?!../)([^/]+)/../`', '$1', $before);
+    $output = str_replace($before, $after, $output);
+  }
+
+  return $output;
+}
+
+/**
+ * Saves the rewritten stylesheet to disk.
+ */
+function _color_save_stylesheet($file, $style, &$paths) {
+  $filepath = \Drupal::service('file_system')->saveData($style, $file, FileSystemInterface::EXISTS_REPLACE);
+  $paths['files'][] = $filepath;
+
+  // Set standard file permissions for webserver-generated files.
+  \Drupal::service('file_system')->chmod($file);
+}
+
+/**
+ * Renders images that match a given palette.
+ */
+function _color_render_images($theme, &$info, &$paths, $palette) {
+  // Prepare template image.
+  $source = $paths['source'] . '/' . $info['base_image'];
+  $source = imagecreatefrompng($source);
+  $width = imagesx($source);
+  $height = imagesy($source);
+
+  // Prepare target buffer.
+  $target = imagecreatetruecolor($width, $height);
+  imagealphablending($target, TRUE);
+
+  // Fill regions of solid color.
+  foreach ($info['fill'] as $color => $fill) {
+    imagefilledrectangle($target, $fill[0], $fill[1], $fill[0] + $fill[2], $fill[1] + $fill[3], _color_gd($target, $palette[$color]));
+  }
+
+  // Render gradients.
+  foreach ($info['gradients'] as $gradient) {
+    // Get direction of the gradient.
+    if (isset($gradient['direction']) && $gradient['direction'] == 'horizontal') {
+      // Horizontal gradient.
+      for ($x = 0; $x < $gradient['dimension'][2]; $x++) {
+        $color = _color_blend($target, $palette[$gradient['colors'][0]], $palette[$gradient['colors'][1]], $x / ($gradient['dimension'][2] - 1));
+        imagefilledrectangle($target, ($gradient['dimension'][0] + $x), $gradient['dimension'][1], ($gradient['dimension'][0] + $x + 1), ($gradient['dimension'][1] + $gradient['dimension'][3]), $color);
+      }
+    }
+    else {
+      // Vertical gradient.
+      for ($y = 0; $y < $gradient['dimension'][3]; $y++) {
+        $color = _color_blend($target, $palette[$gradient['colors'][0]], $palette[$gradient['colors'][1]], $y / ($gradient['dimension'][3] - 1));
+        imagefilledrectangle($target, $gradient['dimension'][0], $gradient['dimension'][1] + $y, $gradient['dimension'][0] + $gradient['dimension'][2], $gradient['dimension'][1] + $y + 1, $color);
+      }
+    }
+  }
+
+  // Blend over template.
+  imagecopy($target, $source, 0, 0, 0, 0, $width, $height);
+
+  // Clean up template image.
+  imagedestroy($source);
+
+  // Cut out slices.
+  foreach ($info['slices'] as $file => $coord) {
+    list($x, $y, $width, $height) = $coord;
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $base = $file_system->basename($file);
+    $image = $file_system->realpath($paths['target'] . $base);
+
+    // Cut out slice.
+    if ($file == 'screenshot.png') {
+      $slice = imagecreatetruecolor(150, 90);
+      imagecopyresampled($slice, $target, 0, 0, $x, $y, 150, 90, $width, $height);
+      \Drupal::configFactory()->getEditable('color.theme.' . $theme)
+        ->set('screenshot', $image)
+        ->save();
+    }
+    else {
+      $slice = imagecreatetruecolor($width, $height);
+      imagecopy($slice, $target, 0, 0, $x, $y, $width, $height);
+    }
+
+    // Save image.
+    imagepng($slice, $image);
+    imagedestroy($slice);
+    $paths['files'][] = $image;
+
+    // Set standard file permissions for webserver-generated files.
+    $file_system->chmod($image);
+
+    // Build before/after map of image paths.
+    $paths['map'][$file] = $base;
+  }
+
+  // Clean up target buffer.
+  imagedestroy($target);
+}
+
+/**
+ * Shifts a given color, using a reference pair and a target blend color.
+ *
+ * Note: this function is significantly different from the JS version, as it
+ * is written to match the blended images perfectly.
+ *
+ * Constraint: if (ref2 == target + (ref1 - target) * delta) for some fraction
+ * delta then (return == target + (given - target) * delta).
+ *
+ * Loose constraint: Preserve relative positions in saturation and luminance
+ * space.
+ */
+function _color_shift($given, $ref1, $ref2, $target) {
+  // We assume that ref2 is a blend of ref1 and target and find
+  // delta based on the length of the difference vectors.
+
+  // delta = 1 - |ref2 - ref1| / |white - ref1|
+  $target = _color_unpack($target, TRUE);
+  $ref1 = _color_unpack($ref1, TRUE);
+  $ref2 = _color_unpack($ref2, TRUE);
+  $numerator = 0;
+  $denominator = 0;
+  for ($i = 0; $i < 3; ++$i) {
+    $numerator += ($ref2[$i] - $ref1[$i]) * ($ref2[$i] - $ref1[$i]);
+    $denominator += ($target[$i] - $ref1[$i]) * ($target[$i] - $ref1[$i]);
+  }
+  $delta = ($denominator > 0) ? (1 - sqrt($numerator / $denominator)) : 0;
+
+  // Calculate the color that ref2 would be if the assumption was true.
+  for ($i = 0; $i < 3; ++$i) {
+    $ref3[$i] = $target[$i] + ($ref1[$i] - $target[$i]) * $delta;
+  }
+
+  // If the assumption is not true, there is a difference between ref2 and ref3.
+  // We measure this in HSL space. Notation: x' = hsl(x).
+  $ref2 = _color_rgb2hsl($ref2);
+  $ref3 = _color_rgb2hsl($ref3);
+  for ($i = 0; $i < 3; ++$i) {
+    $shift[$i] = $ref2[$i] - $ref3[$i];
+  }
+
+  // Take the given color, and blend it towards the target.
+  $given = _color_unpack($given, TRUE);
+  for ($i = 0; $i < 3; ++$i) {
+    $result[$i] = $target[$i] + ($given[$i] - $target[$i]) * $delta;
+  }
+
+  // Finally, we apply the extra shift in HSL space.
+  // Note: if ref2 is a pure blend of ref1 and target, then |shift| = 0.
+  $result = _color_rgb2hsl($result);
+  for ($i = 0; $i < 3; ++$i) {
+    $result[$i] = min(1, max(0, $result[$i] + $shift[$i]));
+  }
+  $result = _color_hsl2rgb($result);
+
+  // Return hex color.
+  return _color_pack($result, TRUE);
+}
+
+/**
+ * Converts a hex triplet into a GD color.
+ */
+function _color_gd($img, $hex) {
+  $c = array_merge([$img], _color_unpack($hex));
+  return call_user_func_array('imagecolorallocate', $c);
+}
+
+/**
+ * Blends two hex colors and returns the GD color.
+ */
+function _color_blend($img, $hex1, $hex2, $alpha) {
+  $in1 = _color_unpack($hex1);
+  $in2 = _color_unpack($hex2);
+  $out = [$img];
+  for ($i = 0; $i < 3; ++$i) {
+    $out[] = $in1[$i] + ($in2[$i] - $in1[$i]) * $alpha;
+  }
+
+  return call_user_func_array('imagecolorallocate', $out);
+}
+
+/**
+ * Converts a hex color into an RGB triplet.
+ */
+function _color_unpack($hex, $normalize = FALSE) {
+  $hex = substr($hex, 1);
+  if (strlen($hex) == 3) {
+    $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+  }
+  $c = hexdec($hex);
+  for ($i = 16; $i >= 0; $i -= 8) {
+    $out[] = (($c >> $i) & 0xFF) / ($normalize ? 255 : 1);
+  }
+
+  return $out;
+}
+
+/**
+ * Converts an RGB triplet to a hex color.
+ */
+function _color_pack($rgb, $normalize = FALSE) {
+  $out = 0;
+  foreach ($rgb as $k => $v) {
+    $out |= (($v * ($normalize ? 255 : 1)) << (16 - $k * 8));
+  }
+
+  return '#' . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
+}
+
+/**
+ * Converts an HSL triplet into RGB.
+ */
+function _color_hsl2rgb($hsl) {
+  $h = $hsl[0];
+  $s = $hsl[1];
+  $l = $hsl[2];
+  $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l * $s;
+  $m1 = $l * 2 - $m2;
+
+  return [
+    _color_hue2rgb($m1, $m2, $h + 0.33333),
+    _color_hue2rgb($m1, $m2, $h),
+    _color_hue2rgb($m1, $m2, $h - 0.33333),
+  ];
+}
+
+/**
+ * Helper function for _color_hsl2rgb().
+ */
+function _color_hue2rgb($m1, $m2, $h) {
+  $h = ($h < 0) ? $h + 1 : (($h > 1) ? $h - 1 : $h);
+  if ($h * 6 < 1) {
+    return $m1 + ($m2 - $m1) * $h * 6;
+  }
+  if ($h * 2 < 1) {
+    return $m2;
+  }
+  if ($h * 3 < 2) {
+    return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
+  }
+
+  return $m1;
+}
+
+/**
+ * Converts an RGB triplet to HSL.
+ */
+function _color_rgb2hsl($rgb) {
+  $r = $rgb[0];
+  $g = $rgb[1];
+  $b = $rgb[2];
+  $min = min($r, min($g, $b));
+  $max = max($r, max($g, $b));
+  $delta = $max - $min;
+  $l = ($min + $max) / 2;
+  $s = 0;
+
+  if ($l > 0 && $l < 1) {
+    $s = $delta / ($l < 0.5 ? (2 * $l) : (2 - 2 * $l));
+  }
+
+  $h = 0;
+  if ($delta > 0) {
+    if ($max == $r && $max != $g) {
+      $h += ($g - $b) / $delta;
+    }
+    if ($max == $g && $max != $b) {
+      $h += (2 + ($b - $r) / $delta);
+    }
+    if ($max == $b && $max != $r) {
+      $h += (4 + ($r - $g) / $delta);
+    }
+    $h /= 6;
+  }
+
+  return [$h, $s, $l];
+}

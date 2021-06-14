@@ -1,0 +1,8 @@
+name: 'Content moderation test local task'
+type: module
+description: 'Provides a local task for testing.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:content_moderation
+  - drupal:node

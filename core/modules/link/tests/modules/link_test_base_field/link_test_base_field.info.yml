@@ -1,0 +1,7 @@
+name: Link test base field
+description: Tests link field as an optional base field
+type: module
+hidden: true
+dependencies:
+  - drupal:link
+  - drupal:entity_test

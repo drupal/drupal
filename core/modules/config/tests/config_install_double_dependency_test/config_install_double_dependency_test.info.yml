@@ -1,0 +1,4 @@
+name: 'Config install double dependency test'
+type: module
+package: Testing
+version: VERSION

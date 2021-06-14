@@ -1,0 +1,58 @@
+# Migrates all revisions and all revision translations.
+id: d6_node_complete
+label: Node Complete
+audit: true
+migration_tags:
+  - Drupal 6
+  - Content
+class: Drupal\node\Plugin\migrate\D6NodeTranslation
+deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
+source:
+  plugin: d6_node_complete
+process:
+  # If you are using this file to build a custom migration consider removing
+  # the nid and vid fields to allow incremental migrations.
+  # In D6, nodes always have a tnid, but it's zero for untranslated nodes.
+  # We normalize it to equal the nid in that case.
+  # @see \Drupal\node\Plugin\migrate\source\d6\Node::prepareRow().
+  nid: tnid
+  vid: vid
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: "und"
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: timestamp
+  promote: promote
+  sticky: sticky
+  'body/format':
+    plugin: migration_lookup
+    migration: d6_filter_format
+    source: format
+  'body/value': body
+  'body/summary': teaser
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  #  unmapped d6 fields.
+  #  translate
+  #  moderate
+  #  comment
+destination:
+  plugin: entity_complete:node
+  translations: true
+migration_dependencies:
+  required:
+    - d6_user
+    - d6_node_type
+    - d6_node_settings
+    - d6_filter_format
+    - language
+  optional:
+    - d6_field_instance_widget_settings
+    - d6_field_formatter_settings
+    - d6_upload_field_instance

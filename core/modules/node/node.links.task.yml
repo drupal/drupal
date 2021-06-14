@@ -1,0 +1,26 @@
+entity.node.canonical:
+  route_name: entity.node.canonical
+  base_route: entity.node.canonical
+  title: 'View'
+entity.node.edit_form:
+  route_name: entity.node.edit_form
+  base_route: entity.node.canonical
+  title: Edit
+entity.node.delete_form:
+  route_name: entity.node.delete_form
+  base_route: entity.node.canonical
+  title: Delete
+  weight: 10
+entity.node.version_history:
+  route_name: entity.node.version_history
+  base_route: entity.node.canonical
+  title: 'Revisions'
+  weight: 20
+entity.node_type.edit_form:
+  title: 'Edit'
+  route_name: entity.node_type.edit_form
+  base_route: entity.node_type.edit_form
+entity.node_type.collection:
+  title: List
+  route_name: entity.node_type.collection
+  base_route: entity.node_type.collection

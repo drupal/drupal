@@ -1,0 +1,15 @@
+{
+  "name": "fixtures/project-with-empty-scaffold-path",
+  "extra": {
+    "drupal-scaffold": {
+      "locations": {
+        "web-root": "./"
+      },
+      "file-mapping": {
+        "[web-root]/my-error": {
+            "path": ""
+        }
+      }
+    }
+  }
+}

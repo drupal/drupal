@@ -1,0 +1,522 @@
+system.401:
+  path: '/system/401'
+  defaults:
+    _controller: '\Drupal\system\Controller\Http4xxController:on401'
+    _title: 'Unauthorized'
+  requirements:
+    _access: 'TRUE'
+
+system.403:
+  path: '/system/403'
+  defaults:
+    _controller: '\Drupal\system\Controller\Http4xxController:on403'
+    _title: 'Access denied'
+  requirements:
+    _access: 'TRUE'
+
+system.404:
+  path: '/system/404'
+  defaults:
+    _controller: '\Drupal\system\Controller\Http4xxController:on404'
+    _title: 'Page not found'
+  requirements:
+    _access: 'TRUE'
+
+system.4xx:
+  path: '/system/4xx'
+  defaults:
+    _controller: '\Drupal\system\Controller\Http4xxController:on4xx'
+    _title: 'Client error'
+  requirements:
+    _access: 'TRUE'
+
+system.admin:
+  path: '/admin'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Administration'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_structure:
+  path: '/admin/structure'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Structure'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_reports:
+  path: '/admin/reports'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Reports'
+  requirements:
+    _permission: 'access site reports'
+
+system.admin_config_media:
+  path: '/admin/config/media'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Media'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_services:
+  path: '/admin/config/services'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Web services'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_development:
+  path: '/admin/config/development'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Development'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_regional:
+  path: '/admin/config/regional'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Regional and language'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_search:
+  path: '/admin/config/search'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Search and metadata'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_system:
+  path: '/admin/config/system'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'System'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_ui:
+  path: '/admin/config/user-interface'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'User interface'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_workflow:
+  path: '/admin/config/workflow'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Workflow'
+  requirements:
+    _permission: 'access administration pages'
+
+system.admin_config_content:
+  path: '/admin/config/content'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Content authoring'
+  requirements:
+    _permission: 'access administration pages'
+
+system.cron:
+  path: '/cron/{key}'
+  defaults:
+    _controller: '\Drupal\system\CronController::run'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access_system_cron: 'TRUE'
+
+system.admin_compact_page:
+  path: '/admin/compact/{mode}'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::compactPage'
+    mode: 'off'
+  requirements:
+    _permission: 'access administration pages'
+
+system.machine_name_transliterate:
+  path: '/machine_name/transliterate'
+  defaults:
+    _controller: '\Drupal\system\MachineNameController::transliterate'
+  requirements:
+    _permission: 'access content'
+
+system.site_information_settings:
+  path: '/admin/config/system/site-information'
+  defaults:
+    _form: '\Drupal\system\Form\SiteInformationForm'
+    _title: 'Basic site settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.cron_settings:
+  path: '/admin/config/system/cron'
+  defaults:
+    _form: '\Drupal\system\Form\CronForm'
+    _title: 'Cron'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.logging_settings:
+  path: '/admin/config/development/logging'
+  defaults:
+    _form: '\Drupal\system\Form\LoggingForm'
+    _title: 'Logging and errors'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.performance_settings:
+  path: '/admin/config/development/performance'
+  defaults:
+    _form: '\Drupal\system\Form\PerformanceForm'
+    _title: 'Performance'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.file_system_settings:
+  path: '/admin/config/media/file-system'
+  defaults:
+    _form: '\Drupal\system\Form\FileSystemForm'
+    _title: 'File system'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.rss_feeds_settings:
+  path: '/admin/config/services/rss-publishing'
+  defaults:
+    _form: '\Drupal\system\Form\RssFeedsForm'
+    _title: 'RSS publishing'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.regional_settings:
+  path: '/admin/config/regional/settings'
+  defaults:
+    _form: '\Drupal\system\Form\RegionalForm'
+    _title: 'Regional settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.image_toolkit_settings:
+  path: '/admin/config/media/image-toolkit'
+  defaults:
+    _form: '\Drupal\system\Form\ImageToolkitForm'
+    _title: 'Image toolkit'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.site_maintenance_mode:
+  path: '/admin/config/development/maintenance'
+  defaults:
+    _form: '\Drupal\system\Form\SiteMaintenanceModeForm'
+    _title: 'Maintenance mode'
+  requirements:
+    _permission: 'administer site configuration+administer software updates'
+
+system.run_cron:
+  path: '/admin/reports/status/run-cron'
+  defaults:
+    _controller: '\Drupal\system\CronController::runManually'
+  options:
+    no_cache: TRUE
+  requirements:
+    _permission: 'administer site configuration'
+    _csrf_token: 'TRUE'
+
+entity.date_format.collection:
+  path: '/admin/config/regional/date-time'
+  defaults:
+    _entity_list: 'date_format'
+    _title: 'Date and time formats'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.date_format_add:
+  path: '/admin/config/regional/date-time/formats/add'
+  defaults:
+    _entity_form: 'date_format.add'
+    _title: 'Add date format'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.date_format.edit_form:
+  path: '/admin/config/regional/date-time/formats/manage/{date_format}'
+  defaults:
+    _entity_form: 'date_format.edit'
+    _title: 'Edit date format'
+  requirements:
+    _entity_access: 'date_format.update'
+
+entity.date_format.delete_form:
+  path: '/admin/config/regional/date-time/formats/manage/{date_format}/delete'
+  defaults:
+    _entity_form: 'date_format.delete'
+    _title: 'Delete date format'
+  requirements:
+    _entity_access: 'date_format.delete'
+
+system.modules_list:
+  path: '/admin/modules'
+  defaults:
+    _title: 'Extend'
+    _title_context: 'With components'
+    _form: '\Drupal\system\Form\ModulesListForm'
+  requirements:
+    _permission: 'administer modules'
+
+system.modules_list_confirm:
+  path: '/admin/modules/list/confirm'
+  defaults:
+    _form: '\Drupal\system\Form\ModulesListConfirmForm'
+    _title: 'Some required modules must be enabled'
+  requirements:
+    _permission: 'administer modules'
+
+system.modules_list_experimental_confirm:
+  path: '/admin/modules/list/confirm-experimental'
+  defaults:
+    _form: '\Drupal\system\Form\ModulesListExperimentalConfirmForm'
+    _title: 'Experimental modules'
+  requirements:
+    _permission: 'administer modules'
+
+system.theme_uninstall:
+  path: '/admin/appearance/uninstall'
+  defaults:
+    _controller: '\Drupal\system\Controller\ThemeController::uninstall'
+  requirements:
+    _permission: 'administer themes'
+    _csrf_token: 'TRUE'
+
+system.theme_install:
+  path: '/admin/appearance/install'
+  defaults:
+    _controller: '\Drupal\system\Controller\ThemeController::install'
+  requirements:
+    _permission: 'administer themes'
+    _csrf_token: 'TRUE'
+
+system.status:
+  path: '/admin/reports/status'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemInfoController::status'
+    _title: 'Status report'
+  requirements:
+    _permission: 'administer site configuration'
+
+system.php:
+  path: '/admin/reports/status/php'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemInfoController::php'
+  requirements:
+    _permission: 'administer site configuration'
+  # This page should not be treated as administrative since it outputs its own
+  # content (outside of any administration theme).
+  options:
+    _admin_route: FALSE
+
+system.admin_index:
+  path: '/admin/index'
+  defaults:
+    _controller: '\Drupal\system\Controller\AdminController::index'
+    _title: 'Administration'
+  requirements:
+    _permission: 'access administration pages'
+
+system.files:
+  path: '/system/files/{scheme}'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    scheme: private
+  requirements:
+    _access: 'TRUE'
+
+system.private_file_download:
+  path: '/system/files/{filepath}'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+  requirements:
+    # Permissive regex to allow slashes in filepath see
+    # http://symfony.com/doc/current/cookbook/routing/slash_in_parameter.html
+    filepath: .+
+    _access: 'TRUE'
+
+system.temporary:
+  path: '/system/temporary'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    scheme: temporary
+  requirements:
+    _access: 'TRUE'
+
+system.themes_page:
+  path: '/admin/appearance'
+  defaults:
+    _title: 'Appearance'
+    _controller: '\Drupal\system\Controller\SystemController::themesPage'
+  requirements:
+    _permission: 'administer themes'
+
+system.theme_set_default:
+  path: '/admin/appearance/default'
+  defaults:
+    _title: 'Set as default theme'
+    _controller: '\Drupal\system\Controller\ThemeController::setDefaultTheme'
+  requirements:
+    _permission: 'administer themes'
+    _csrf_token: 'TRUE'
+
+system.theme_settings:
+  path: '/admin/appearance/settings'
+  defaults:
+    _form: '\Drupal\system\Form\ThemeSettingsForm'
+    _title: 'Appearance settings'
+  requirements:
+    _permission: 'administer themes'
+
+system.theme_settings_theme:
+  path: '/admin/appearance/settings/{theme}'
+  defaults:
+    _form: '\Drupal\system\Form\ThemeSettingsForm'
+    _title_callback: 'theme_handler:getName'
+  requirements:
+    _permission: 'administer themes'
+
+'<front>':
+  path: '/'
+  defaults:
+    _title: Home
+  requirements:
+    _access: 'TRUE'
+
+'<none>':
+  path: ''
+  options:
+    _no_path: TRUE
+  requirements:
+    _access: 'TRUE'
+
+'<nolink>':
+  path: ''
+  options:
+    _no_path: TRUE
+  requirements:
+    _access: 'TRUE'
+
+'<button>':
+  path: ''
+  options:
+    _no_path: TRUE
+  requirements:
+    _access: 'TRUE'
+
+'<current>':
+  path: '<current>'
+
+system.modules_uninstall:
+  path: '/admin/modules/uninstall'
+  defaults:
+    _form: '\Drupal\system\Form\ModulesUninstallForm'
+    _title: 'Uninstall'
+  requirements:
+    _permission: 'administer modules'
+
+system.modules_uninstall_confirm:
+  path: '/admin/modules/uninstall/confirm'
+  defaults:
+    _form: '\Drupal\system\Form\ModulesUninstallConfirmForm'
+    _title: 'Confirm uninstall'
+  requirements:
+    _permission: 'administer modules'
+
+system.prepare_modules_entity_uninstall:
+  path: '/admin/modules/uninstall/entity/{entity_type_id}'
+  defaults:
+    _form: '\Drupal\system\Form\PrepareModulesEntityUninstallForm'
+    _title_callback: '\Drupal\system\Form\PrepareModulesEntityUninstallForm::formTitle'
+  requirements:
+    _permission: 'administer modules'
+
+system.timezone:
+  path: '/system/timezone/{abbreviation}/{offset}/{is_daylight_saving_time}'
+  defaults:
+    _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
+    abbreviation: ''
+    offset: -1
+    is_daylight_saving_time: NULL
+  requirements:
+    _access: 'TRUE'
+
+system.admin_config:
+  path: '/admin/config'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::overview'
+    link_id: 'system.admin_config'
+    _title: 'Configuration'
+  requirements:
+    _permission: 'access administration pages'
+
+system.batch_page.html:
+  path: '/batch'
+  defaults:
+    _controller: '\Drupal\system\Controller\BatchController::batchPage'
+    _title_callback: '\Drupal\system\Controller\BatchController::batchPageTitle'
+  requirements:
+    _access: 'TRUE'
+    _format: 'html'
+  options:
+    _admin_route: TRUE
+
+system.batch_page.json:
+  path: '/batch'
+  defaults:
+    _controller: '\Drupal\system\Controller\BatchController::batchPage'
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+  options:
+    _admin_route: TRUE
+
+# Note: This route just exists for generating URLs, the dedicated
+# front controller is used if the URL is accessed.
+system.db_update:
+  path: '/update.php/{op}'
+  defaults:
+    op: 'info'
+  requirements:
+    _access_system_update: 'TRUE'
+  options:
+    default_url_options:
+      path_processing: FALSE
+
+system.admin_content:
+  path: '/admin/content'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::overview'
+    link_id: 'system.admin_content'
+    _title: 'Content'
+  requirements:
+    _permission: 'access administration pages'
+
+system.entity_autocomplete:
+  path: '/entity_reference_autocomplete/{target_type}/{selection_handler}/{selection_settings_key}'
+  defaults:
+    _controller: '\Drupal\system\Controller\EntityAutocompleteController::handleAutocomplete'
+  requirements:
+    _access: 'TRUE'
+
+system.csrftoken:
+  path: '/session/token'
+  defaults:
+    _controller: '\Drupal\system\Controller\CsrfTokenController::csrfToken'
+  requirements:
+    _access: 'TRUE'

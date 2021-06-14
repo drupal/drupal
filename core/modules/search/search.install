@@ -1,0 +1,156 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Search module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function search_schema() {
+  $schema['search_dataset'] = [
+    'description' => 'Stores items that will be searched.',
+    'fields' => [
+      'sid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Search item ID, e.g. node ID for nodes.',
+      ],
+      'langcode' => [
+        'type' => 'varchar_ascii',
+        'length' => '12',
+        'not null' => TRUE,
+        'description' => 'The {languages}.langcode of the item variant.',
+        'default' => '',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'Type of item, e.g. node.',
+      ],
+      'data' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'List of space-separated words from the item.',
+      ],
+      'reindex' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Set to force node reindexing.',
+      ],
+    ],
+    'primary key' => ['sid', 'langcode', 'type'],
+  ];
+
+  $schema['search_index'] = [
+    'description' => 'Stores the search index, associating words, items and scores.',
+    'fields' => [
+      'word' => [
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The {search_total}.word that is associated with the search item.',
+      ],
+      'sid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {search_dataset}.sid of the searchable item to which the word belongs.',
+      ],
+      'langcode' => [
+        'type' => 'varchar_ascii',
+        'length' => '12',
+        'not null' => TRUE,
+        'description' => 'The {languages}.langcode of the item variant.',
+        'default' => '',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',
+      ],
+      'score' => [
+        'type' => 'float',
+        'not null' => FALSE,
+        'description' => 'The numeric score of the word, higher being more important.',
+      ],
+    ],
+    'indexes' => [
+      'sid_type' => ['sid', 'langcode', 'type'],
+    ],
+    'foreign keys' => [
+      'search_dataset' => [
+        'table' => 'search_dataset',
+        'columns' => [
+          'sid' => 'sid',
+          'langcode' => 'langcode',
+          'type' => 'type',
+        ],
+      ],
+    ],
+    'primary key' => ['word', 'sid', 'langcode', 'type'],
+  ];
+
+  $schema['search_total'] = [
+    'description' => 'Stores search totals for words.',
+    'fields' => [
+      'word' => [
+        'description' => 'Primary Key: Unique word in the search index.',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'count' => [
+        'description' => "The count of the word in the index using Zipf's law to equalize the probability distribution.",
+        'type' => 'float',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['word'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * For the Status Report, return information about search index status.
+ */
+function search_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $remaining = 0;
+    $total = 0;
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+      $status = $entity->getPlugin()->indexStatus();
+      $remaining += $status['remaining'];
+      $total += $status['total'];
+    }
+
+    $done = $total - $remaining;
+    // Use floor() to calculate the percentage, so if it is not quite 100%, it
+    // will show as 99%, to indicate "almost done".
+    $percent = ($total > 0 ? floor(100 * $done / $total) : 100);
+    $requirements['search_status'] = [
+      'title' => t('Search index progress'),
+      'value' => t('@percent% (@remaining remaining)', ['@percent' => $percent, '@remaining' => $remaining]),
+      'severity' => REQUIREMENT_INFO,
+    ];
+  }
+
+  return $requirements;
+}

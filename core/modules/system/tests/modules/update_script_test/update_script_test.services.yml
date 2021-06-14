@@ -1,0 +1,6 @@
+services:
+  update_script_test.broken_path_processor:
+    class: Drupal\update_script_test\PathProcessor\BrokenInboundPathProcessor
+    arguments: ['@state']
+    tags:
+      - { name: path_processor_inbound, priority: 1000 }

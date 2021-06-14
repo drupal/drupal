@@ -1,0 +1,7 @@
+name: Token test
+type: module
+package: Testing
+version: VERSION
+dependencies:
+ - drupal:user
+ - drupal:node

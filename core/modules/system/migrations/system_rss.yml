@@ -1,0 +1,16 @@
+id: system_rss
+label: RSS configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - feed_item_length
+  source_module: system
+process:
+  'items/view_mode': feed_item_length
+destination:
+  plugin: config
+  config_name: system.rss

@@ -1,0 +1,73 @@
+
+/**
+ * @file
+ * Styling for the shortcut module.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  /**
+  * Shortcut action.
+  */
+  --shortcut-bg-color: var(--color-davysgray);
+  --shortcut-border-radius-size: var(--base-border-radius);
+  --shortcut-padding-size: calc(0.5 * var(--space-xs)) var(--space-m);
+  --shortcut-icon-size: var(--space-l);
+}
+
+/**
+ * Add/remove links.
+ */
+.shortcut-action {
+  display: inline-block;
+  margin-left: var(--space-xs); /* LTR */
+}
+[dir="rtl"] .shortcut-action {
+  margin-right: var(--space-xs);
+}
+.shortcut-action__message {
+  display: inline-block;
+  margin-left: var(--space-s); /* LTR */
+  padding: var(--shortcut-padding-size);
+  transition: var(--transition);
+  transform: translateY(calc(-1 * var(--space-xs)));
+  vertical-align: top;
+  opacity: 0;
+  color: var(--color-white);
+  border-radius: var(--shortcut-border-radius-size);
+  background: var(--shortcut-bg-color);
+  font-size: var(--font-size-label);
+  backface-visibility: hidden;
+}
+[dir="rtl"] .shortcut-action__message {
+  margin-right: var(--space-s);
+  margin-left: 0;
+}
+.shortcut-action:hover .shortcut-action__message,
+.shortcut-action:focus .shortcut-action__message {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.shortcut-action__icon {
+  display: inline-block;
+  width: var(--shortcut-icon-size);
+  height: var(--shortcut-icon-size);
+  vertical-align: -0.0625rem;
+  background: transparent url(../../images/shortcut/favstar.svg) left top / calc(var(--shortcut-icon-size) * 4) var(--shortcut-icon-size) no-repeat;
+}
+[dir="rtl"] .shortcut-action__icon {
+  background-image: url(../../images/shortcut/favstar-rtl.svg);
+}
+.shortcut-action--add:hover .shortcut-action__icon,
+.shortcut-action--add:focus .shortcut-action__icon {
+  background-position: calc(-1 * var(--shortcut-icon-size)) top;
+}
+.shortcut-action--remove .shortcut-action__icon {
+  background-position: calc(-2 * var(--shortcut-icon-size)) top;
+}
+.shortcut-action--remove:focus .shortcut-action__icon,
+.shortcut-action--remove:hover .shortcut-action__icon {
+  background-position: calc(-3 * var(--shortcut-icon-size)) top;
+}

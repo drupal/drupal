@@ -1,0 +1,468 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Seven theme.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\media\MediaForm;
+use Drupal\views\Form\ViewsForm;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function seven_preprocess_html(&$variables) {
+  // If on a node add or edit page, add a node-layout class.
+  $path_args = explode('/', \Drupal::request()->getPathInfo());
+  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
+        $variables['attributes']['class'][] = 'node-form-layout';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
+ *
+ * Use preprocess hook to set #attached to child elements
+ * because they will be processed by Twig and drupal_render will
+ * be invoked.
+ */
+function seven_preprocess_menu_local_tasks(&$variables) {
+  if (!empty($variables['primary'])) {
+    $variables['primary']['#attached'] = [
+      'library' => [
+        'seven/drupal.nav-tabs',
+      ],
+    ];
+  }
+  elseif (!empty($variables['secondary'])) {
+    $variables['secondary']['#attached'] = [
+      'library' => [
+        'seven/drupal.nav-tabs',
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-task templates.
+ */
+function seven_preprocess_menu_local_task(&$variables) {
+  $variables['attributes']['class'][] = 'tabs__tab';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for list of available node type templates.
+ */
+function seven_preprocess_node_add_list(&$variables) {
+  if (!empty($variables['content'])) {
+    /** @var \Drupal\node\NodeTypeInterface $type */
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->id()]['label'] = $type->label();
+      $variables['types'][$type->id()]['url'] = Url::fromRoute('node.add', ['node_type' => $type->id()])->toString();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block content add list templates.
+ *
+ * Displays the list of available custom block types for creation, adding
+ * separate variables for the label and url.
+ */
+function seven_preprocess_block_content_add_list(&$variables) {
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->id()]['label'] = $type->label();
+      $options = ['query' => \Drupal::request()->query->all()];
+      $variables['types'][$type->id()]['url'] = Url::fromRoute('block_content.add_form', ['block_content_type' => $type->id()], $options)->toString();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block() for block content.
+ *
+ * Disables contextual links for all blocks except for layout builder blocks.
+ */
+function seven_preprocess_block(&$variables) {
+  if (isset($variables['title_suffix']['contextual_links']) && !isset($variables['elements']['#contextual_links']['layout_builder_block'])) {
+    unset($variables['title_suffix']['contextual_links']);
+    unset($variables['elements']['#contextual_links']);
+
+    $variables['attributes']['class'] = array_diff($variables['attributes']['class'], ['contextual-region']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block admin page templates.
+ */
+function seven_preprocess_admin_block_content(&$variables) {
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $key => $item) {
+      $variables['content'][$key]['url'] = $item['url']->toString();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-action templates.
+ */
+function seven_preprocess_menu_local_action(array &$variables) {
+  $variables['link']['#options']['attributes']['class'][] = 'button--primary';
+  $variables['link']['#options']['attributes']['class'][] = 'button--small';
+
+  // We require Modernizr's touch test for button styling.
+  $variables['#attached']['library'][] = 'core/modernizr';
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function seven_element_info_alter(&$type) {
+  // We require Modernizr for button styling.
+  if (isset($type['button'])) {
+    $type['button']['#attached']['library'][] = 'core/modernizr';
+  }
+}
+
+/**
+ * Implements hook_preprocess_install_page().
+ */
+function seven_preprocess_install_page(&$variables) {
+  // Seven has custom styling for the install page.
+  $variables['#attached']['library'][] = 'seven/install-page';
+}
+
+/**
+ * Implements hook_preprocess_maintenance_page().
+ */
+function seven_preprocess_maintenance_page(&$variables) {
+  // Seven has custom styling for the maintenance page.
+  $variables['#attached']['library'][] = 'seven/maintenance-page';
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
+ *
+ * Changes vertical tabs to container.
+ */
+function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#theme'] = ['node_edit_form'];
+  $form['#attached']['library'][] = 'seven/node-form';
+
+  $form['advanced']['#type'] = 'container';
+  $form['meta']['#type'] = 'container';
+  $form['meta']['#access'] = TRUE;
+  $form['meta']['changed']['#wrapper_attributes']['class'][] = 'container-inline';
+  $form['meta']['author']['#wrapper_attributes']['class'][] = 'container-inline';
+
+  $form['revision_information']['#type'] = 'container';
+  $form['revision_information']['#group'] = 'meta';
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
+ */
+function seven_form_media_form_alter(&$form, FormStateInterface $form_state) {
+  // Only attach CSS from core if this form comes from Media core, and not from
+  // the contrib Media Entity 1.x branch.
+  if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
+    // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
+    // introduces a footer region to these forms which will allow for us to
+    // display a top border over the published checkbox by defining a
+    // media-edit-form.html.twig template the same way node does.
+    $form['#attached']['library'][] = 'seven/media-form';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_content_settings_form().
+ */
+function seven_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['#attached']['library'][] = 'seven/layout_builder_content_translation_admin';
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields().
+ *
+ * This targets each rendered media item in the grid display of the media
+ * library's modal dialog.
+ */
+function seven_preprocess_views_view_fields__media_library(array &$variables) {
+  // Add classes to media rendered entity field so it can be targeted for
+  // styling. Adding this class in a template is very difficult to do.
+  if (isset($variables['fields']['rendered_entity']->wrapper_attributes)) {
+    $variables['fields']['rendered_entity']->wrapper_attributes->addClass('media-library-item__click-to-select-trigger');
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function seven_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
+    if (isset($form['header'])) {
+      $form['header']['#attributes']['class'][] = 'media-library-views-form__header';
+      $form['header']['media_bulk_form']['#attributes']['class'][] = 'media-library-views-form__bulk_form';
+    }
+    $form['actions']['submit']['#attributes']['class'] = ['media-library-select'];
+
+    // This conditional exists because the media-library-views-form class is
+    // currently added by Classy, but Seven will eventually not use Classy as a
+    // base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_form_alter()
+    if (!isset($form['#attributes']['class']) || !in_array('media-library-views-form', $form['#attributes']['class'])) {
+      $form['#attributes']['class'][] = 'media-library-views-form';
+    }
+  }
+  // Add after build to add a CSS class to the form actions.
+  if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
+    $form['actions']['#attributes']['class'][] = 'media-library-view--form-actions';
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function seven_form_media_library_add_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['#attributes']['class'][] = 'media-library-add-form';
+  $form['#attached']['library'][] = 'seven/media_library';
+
+  // If there are unsaved media items, apply styling classes to various parts
+  // of the form.
+  if (isset($form['media'])) {
+    $form['#attributes']['class'][] = 'media-library-add-form--with-input';
+
+    // Put a wrapper around the informational message above the unsaved media
+    // items.
+    $form['description']['#template'] = '<p class="media-library-add-form__description">{{ text }}</p>';
+  }
+  else {
+    $form['#attributes']['class'][] = 'media-library-add-form--without-input';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function seven_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state) {
+  $form['#attributes']['class'][] = 'media-library-add-form--upload';
+
+  if (isset($form['container'])) {
+    $form['container']['#attributes']['class'][] = 'media-library-add-form__input-wrapper';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function seven_form_media_library_add_form_oembed_alter(array &$form, FormStateInterface $form_state) {
+  $form['#attributes']['class'][] = 'media-library-add-form--oembed';
+
+  // If no media items have been added yet, add a couple of styling classes
+  // to the initial URL form.
+  if (isset($form['container'])) {
+    $form['container']['#attributes']['class'][] = 'media-library-add-form__input-wrapper';
+    $form['container']['url']['#attributes']['class'][] = 'media-library-add-form-oembed-url';
+    $form['container']['submit']['#attributes']['class'][] = 'media-library-add-form-oembed-submit';
+  }
+}
+
+/**
+ * Implements hook_preprocess_item_list__media_library_add_form_media_list().
+ *
+ * This targets each new, unsaved media item added to the media library, before
+ * they are saved.
+ */
+function seven_preprocess_item_list__media_library_add_form_media_list(array &$variables) {
+  foreach ($variables['items'] as &$item) {
+    $item['value']['preview']['#attributes']['class'][] = 'media-library-add-form__preview';
+    $item['value']['fields']['#attributes']['class'][] = 'media-library-add-form__fields';
+    $item['value']['remove_button']['#attributes']['class'][] = 'media-library-add-form__remove-button';
+
+    // #source_field_name is set by AddFormBase::buildEntityFormElement()
+    // to help themes and form_alter hooks identify the source field.
+    $fields = &$item['value']['fields'];
+    $source_field_name = $fields['#source_field_name'];
+    if (isset($fields[$source_field_name])) {
+      $fields[$source_field_name]['#attributes']['class'][] = 'media-library-add-form__source-field';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_media_library_item__widget().
+ *
+ * This targets each media item selected in an entity reference field.
+ */
+function seven_preprocess_media_library_item__widget(array &$variables) {
+  $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
+}
+
+/**
+ * Implements hook_preprocess_media_library_item__small().
+ *
+ * This targets each pre-selected media item selected when adding new media in
+ * the modal media library dialog.
+ */
+function seven_preprocess_media_library_item__small(array &$variables) {
+  $variables['content']['select']['#attributes']['class'][] = 'media-library-item__click-to-select-checkbox';
+}
+
+/**
+ * @todo Remove this when https://www.drupal.org/project/drupal/issues/2999549
+ * lands.
+ *
+ * @see \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::formElement()
+ */
+function seven_preprocess_fieldset__media_library_widget(array &$variables) {
+  if (isset($variables['prefix']['weight_toggle'])) {
+    $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'media-library-widget__toggle-weight';
+  }
+  if (isset($variables['suffix']['open_button'])) {
+    $variables['suffix']['open_button']['#attributes']['class'][] = 'media-library-open-button';
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function seven_views_pre_render(ViewExecutable $view) {
+  $add_classes = function (&$option, array $classes_to_add) {
+    $classes = preg_split('/\s+/', $option);
+    $classes = array_filter($classes);
+    $classes = array_merge($classes, $classes_to_add);
+    $option = implode(' ', array_unique($classes));
+  };
+
+  if ($view->id() === 'media_library') {
+    if ($view->display_handler->options['defaults']['css_class']) {
+      $add_classes($view->displayHandlers->get('default')->options['css_class'], ['media-library-view']);
+    }
+    else {
+      $add_classes($view->display_handler->options['css_class'], ['media-library-view']);
+    }
+
+    if ($view->current_display === 'page') {
+      if (array_key_exists('media_bulk_form', $view->field)) {
+        $add_classes($view->field['media_bulk_form']->options['element_class'], ['media-library-item__click-to-select-checkbox']);
+      }
+      if (array_key_exists('rendered_entity', $view->field)) {
+        $add_classes($view->field['rendered_entity']->options['element_class'], ['media-library-item__content']);
+      }
+      if (array_key_exists('edit_media', $view->field)) {
+        $add_classes($view->field['edit_media']->options['alter']['link_class'], ['media-library-item__edit']);
+      }
+      if (array_key_exists('delete_media', $view->field)) {
+        $add_classes($view->field['delete_media']->options['alter']['link_class'], ['media-library-item__remove']);
+      }
+    }
+    elseif (strpos($view->current_display, 'widget') === 0) {
+      if (array_key_exists('rendered_entity', $view->field)) {
+        $add_classes($view->field['rendered_entity']->options['element_class'], ['media-library-item__content']);
+      }
+      if (array_key_exists('media_library_select_form', $view->field)) {
+        $add_classes($view->field['media_library_select_form']->options['element_wrapper_class'], ['media-library-item__click-to-select-checkbox']);
+      }
+
+      if ($view->display_handler->options['defaults']['css_class']) {
+        $add_classes($view->displayHandlers->get('default')->options['css_class'], ['media-library-view--widget']);
+      }
+      else {
+        $add_classes($view->display_handler->options['css_class'], ['media-library-view--widget']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_links__media_library_menu().
+ *
+ * This targets the menu of available media types in the media library's modal
+ * dialog.
+ *
+ * @todo Do this in the relevant template once
+ *   https://www.drupal.org/project/drupal/issues/3088856 is resolved.
+ * @todo revisit in https://drupal.org/node/3110132
+ */
+function seven_preprocess_links__media_library_menu(array &$variables) {
+  foreach ($variables['links'] as &$link) {
+    // This conditional exists because the media-library-menu__link class is
+    // currently added by Classy, but Seven will eventually not use Classy as a
+    // base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_preprocess_links__media_library_menu()
+    if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
+      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_image_widget().
+ */
+function seven_preprocess_image_widget(array &$variables) {
+  $data = &$variables['data'];
+
+  // This prevents image widget templates from rendering preview container HTML
+  // to users that do not have permission to access these previews.
+  // @todo revisit in https://drupal.org/node/953034
+  // @todo revisit in https://drupal.org/node/3114318
+  if (isset($data['preview']['#access']) && $data['preview']['#access'] === FALSE) {
+    unset($data['preview']);
+  }
+
+  // @todo Revisit everything in this conditional in
+  //   https://drupal.org/node/3117430
+  if (!empty($variables['element']['fids']['#value'])) {
+    $file = reset($variables['element']['#files']);
+    $data["file_{$file->id()}"]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
+  }
+}
+
+/**
+ * Prepares variables for update version templates.
+ *
+ * Default template: update-version.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - version: An array of information about the release version.
+ */
+function seven_preprocess_update_version(array &$variables) {
+  $variables['#attached']['library'][] = 'seven/update-report';
+}
+
+/**
+ * Implements template_preprocess_links().
+ *
+ * This makes it so array keys of #links items are added as a class. This
+ * functionality was removed in Drupal 8.1, but still necessary in some
+ * instances.
+ *
+ * @todo remove in https://drupal.org/node/3120962
+ */
+function seven_preprocess_links(&$variables) {
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
+  }
+}

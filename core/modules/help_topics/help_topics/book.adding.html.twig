@@ -1,0 +1,20 @@
+---
+label: 'Adding content to a book'
+related:
+  - book.about
+  - book.configuring
+  - book.creating
+  - book.organizing
+---
+{% set node_add = render_var(url('node.add_page')) %}
+{% set config = render_var(url('help.help_topic', {'id': 'book.configuring'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Add a page to an existing book.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Content</em> &gt; <a href="{{ node_add }}"><em>Add content</em></a> &gt; <em>Book page</em>. If you have configured additional content types that can be added to books, you can substitute a different content type for <em>Book page</em> (see the <a href="{{ config }}">Configuring books</a> topic for more information).{% endtrans %}</li>
+  <li>{% trans %}Enter a title for the page and some text for the body of the page.{% endtrans %}</li>
+  <li>{% trans %}In the vertical tabs area, click <em>Book Outline</em>. Select the book you want to add the page to in the <em>Book</em> select list. If you want to insert this page into the book hierarchy, also select the desired parent page in the <em>Parent item</em> select list.{% endtrans %}</li>
+  <li>{% trans %}Select the desired weight for the page in the <em>Weight</em> select list (pages with the same parent item are ordered from lowest to highest weight).{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em> to add the page to the book.{% endtrans %}</li>
+</ol>

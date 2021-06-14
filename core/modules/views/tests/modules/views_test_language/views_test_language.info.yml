@@ -1,0 +1,8 @@
+name: 'Views Test Language'
+type: module
+description: 'Test module for Views.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:views
+  - drupal:language

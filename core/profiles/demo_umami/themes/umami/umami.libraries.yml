@@ -1,0 +1,245 @@
+global:
+  version: VERSION
+  css:
+    base:
+      css/base.css: {}
+    component:
+      css/components/blocks/banner/banner.css: {}
+      css/components/blocks/branding/branding.css: {}
+      css/components/blocks/disclaimer/disclaimer.css: {}
+      css/components/blocks/help/help.css: {}
+      css/components/blocks/page-title/page-title.css: {}
+      css/components/blocks/footer-promo/footer-promo.css: {}
+      css/components/blocks/language-switcher/language-switcher.css: {}
+      css/components/blocks/search/search.css: {}
+      css/components/blocks/search/search-results.css: {}
+      css/components/blocks/articles-aside/articles-aside.css: {}
+      css/components/forms/contact.css: {}
+      css/components/forms/content-moderation.css: {}
+      css/components/content/node.css: {}
+      css/components/content/full/node-full.css: {}
+      css/components/content-types/recipe/recipe.css: {}
+      css/components/fields/field.css: {}
+      css/components/fields/ingredients.css: {}
+      css/components/fields/label-items.css: {}
+      css/components/fields/recipe-instruction.css: {}
+      css/components/fields/summary.css: {}
+      css/components/forms/buttons.css: {}
+      css/components/forms/container-inline.module.css: {}
+      css/components/views/promoted-items.css: {}
+      css/components/views/frontpage.css: {}
+      css/components/navigation/menu-footer/menu-footer.css: {}
+      css/components/navigation/menu-main/menu-main.css: {}
+      css/components/navigation/menu-account/menu-account.css: {}
+      css/components/navigation/skip-link/skip-link.css: {}
+      css/components/navigation/tabs/tabs.css: {}
+      css/components/navigation/toolbar/toolbar.css: {}
+      css/components/navigation/breadcrumbs/breadcrumbs.css: {}
+      css/components/regions/bottom/bottom.css: {}
+      css/components/regions/footer/footer.css: {}
+      css/components/regions/header/header.css: {}
+      css/components/regions/highlighted/highlighted.css: {}
+      css/components/regions/pre-header/pre-header.css: {}
+      css/components/regions/tabs/tabs.css: {}
+      css/components/toolbar/toolbar.css: {}
+      css/components/layout_builder/layout-builder.css: {}
+    layout:
+      css/layout/grid-2.css: {}
+      css/layout/grid-3.css: {}
+      css/layout/grid-4.css: {}
+      css/layout/layout.css: {}
+  js:
+    js/components/navigation/menu-main/menu-main.js: {}
+  dependencies:
+    - umami/demo-umami-tour
+
+messages:
+  css:
+    component:
+      css/components/messages/messages.css: { weight: -10 }
+
+more-link:
+  css:
+    theme:
+      css/components/navigation/more-link/more-link.css: { weight: -10 }
+
+quicklinks:
+  css:
+    theme:
+      css/components/blocks/quicklinks/quicklinks.css: {}
+
+recipe-collections:
+  css:
+    theme:
+      css/components/blocks/recipe-collections/recipe-collections.css: {}
+
+two-columns:
+  css:
+    layout:
+      css/layout/layout-2-col.css: {}
+
+user:
+  version: VERSION
+  css:
+    component:
+      css/components/user/user.css: { weight: -10 }
+
+webfonts-open-sans:
+  remote: https://fonts.google.com
+  license:
+    name: Apache License, Version 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+    gpl-compatible: false
+  css:
+    theme:
+      'https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i': { type: external, minified: true }
+
+webfonts-scope-one:
+  remote: https://fonts.google.com
+  license:
+    name: SIL Open Font License, Version 1.1
+    url: http://scripts.sil.org/OFL_web
+    gpl-compatible: false
+  css:
+    theme:
+      'https://fonts.googleapis.com/css?family=Scope+One': { type: external, minified: true }
+
+view-mode-card:
+  css:
+    theme:
+      css/components/content/card/card.css: {}
+  dependencies:
+    - umami/more-link
+
+view-mode-card-common:
+  css:
+    theme:
+      css/components/content/card/card.css: {}
+      css/components/content/card-common/card-common.css: {}
+  dependencies:
+    - umami/more-link
+
+view-mode-card-common-alt:
+  css:
+    theme:
+      css/components/content/card/card.css: {}
+      css/components/content/card-common-alt/card-common-alt.css: {}
+  dependencies:
+    - umami/more-link
+
+demo-umami-tour:
+  css:
+   theme:
+      css/components/tour/tour.theme.css: {}
+  dependencies:
+    - seven/tour-styling
+
+oneplusfourgrid_section:
+  css:
+    theme:
+      layouts/oneplusfourgrid_section/oneplusfourgrid_section.css: {}
+
+filter:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.admin.css: {}
+
+classy.base:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/action-links.css: { weight: -10 }
+      css/classy/components/breadcrumb.css: { weight: -10 }
+      css/classy/components/button.css: { weight: -10 }
+      css/classy/components/collapse-processed.css: { weight: -10 }
+      css/classy/components/container-inline.css: { weight: -10 }
+      css/classy/components/details.css: { weight: -10 }
+      css/classy/components/exposed-filters.css: { weight: -10 }
+      css/classy/components/field.css: { weight: -10 }
+      css/classy/components/form.css: { weight: -10 }
+      css/classy/components/icons.css: { weight: -10 }
+      css/classy/components/inline-form.css: { weight: -10 }
+      css/classy/components/item-list.css: { weight: -10 }
+      css/classy/components/link.css: { weight: -10 }
+      css/classy/components/links.css: { weight: -10 }
+      css/classy/components/menu.css: { weight: -10 }
+      css/classy/components/more-link.css: { weight: -10 }
+      css/classy/components/pager.css: { weight: -10 }
+      css/classy/components/tabledrag.css: { weight: -10 }
+      css/classy/components/tableselect.css: { weight: -10 }
+      css/classy/components/tablesort.css: { weight: -10 }
+      css/classy/components/tabs.css: { weight: -10 }
+      css/classy/components/textarea.css: { weight: -10 }
+      css/classy/components/ui-dialog.css: { weight: -10 }
+
+classy.book-navigation:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/book-navigation.css: {}
+
+classy.dialog:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/dialog.css: { weight: -10 }
+
+classy.dropbutton:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/dropbutton.css: { weight: -10 }
+
+classy.file:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/file.css: { weight: -10 }
+
+classy.forum:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/forum.css: { weight: -10 }
+
+classy.indented:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/indented.css: {}
+
+classy.media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/classy/media_embed_ckeditor.theme.js: {}
+
+classy.media_embed_error:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/media-embed-error.css: {}
+
+classy.media_library:
+  version: VERSION
+  css:
+    layout:
+      css/classy/layout/media-library.css: {}
+
+classy.node:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/node.css: { weight: -10 }
+
+classy.progress:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/progress.css: { weight: -10 }
+
+classy.search-results:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/search-results.css: {}

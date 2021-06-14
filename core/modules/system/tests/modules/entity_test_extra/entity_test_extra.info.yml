@@ -1,0 +1,7 @@
+name: 'Entity test extra'
+type: module
+description: 'Provides extra fields for entity test entity types.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test

@@ -1,0 +1,105 @@
+# Schema for the configuration files of the Comment module.
+comment.settings:
+  type: config_object
+  label: 'Comment settings'
+  mapping:
+    log_ip_addresses:
+      type: boolean
+      label: 'Whether to log IP addresses with comments or not.'
+
+field.formatter.settings.comment_default:
+  type: mapping
+  label: 'Comment display format settings'
+  mapping:
+    view_mode:
+      type: string
+      label: 'The comment entity view mode to be used in this formatter'
+    pager_id:
+      type: integer
+      label: 'Pager ID'
+
+field.widget.settings.comment_default:
+  type: mapping
+  label: 'Comment display format settings'
+
+action.configuration.comment_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish comment containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
+
+comment.type.*:
+  type: config_entity
+  label: 'Comment type settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    target_entity_type_id:
+      type: string
+      label: 'Target Entity Type ID'
+    description:
+      type: text
+      label: 'Description'
+
+field.storage_settings.comment:
+  type: mapping
+  label: 'Comment settings'
+  mapping:
+    comment_type:
+      label: 'Comment type'
+      type: string
+
+field.value.comment:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    status:
+      type: integer
+      label: 'Comment status'
+    cid:
+      type: integer
+      label: 'Last comment ID'
+    last_comment_timestamp:
+      type: integer
+      label: 'Last comment timestamp'
+    last_comment_name:
+      type: integer
+      label: 'Last comment name'
+    last_comment_uid:
+      type: integer
+      label: 'Last comment user ID'
+    comment_count:
+      type: integer
+      label: 'Number of comments'
+
+field.field_settings.comment:
+  type: mapping
+  label: 'Comment settings'
+  mapping:
+    default_mode:
+      type: integer
+      label: 'Threading'
+    per_page:
+      type: integer
+      label: 'Comments per page'
+    anonymous:
+      type: integer
+      label: 'Mode'
+    form_location:
+      type: boolean
+      label: 'Allow comment title'
+    preview:
+      type: integer
+      label: 'Preview comment'
+
+field.formatter.settings.comment_permalink:
+  type: field.formatter.settings.string

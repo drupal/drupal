@@ -1,0 +1,18 @@
+---
+label: 'Installing a theme and setting default themes'
+related:
+  - core.appearance
+  - system.theme_uninstall
+---
+{% set themes_url = render_var(url('system.themes_page')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Install a core theme, or a contributed theme that has already been downloaded. Choose the default themes to use for the site and for administrative pages.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <a href="{{ themes_url }}"><em>Appearance</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Locate the themes that you want to use as the site default theme and for administrative pages.{% endtrans %}</li>
+  <li>{% trans %}For each of these themes, if the theme is in the <em>Uninstalled themes</em> section, click the <em>Install</em> link to install the theme. Wait for the theme to be installed (translations might be downloaded). You should be returned to the <em>Appearance</em> page.{% endtrans %}</li>
+  <li>{% trans %}Locate the theme that you want to be your default theme, which should now be in the <em>Installed themes</em> section. If it is not already labeled as the <em>default theme</em>, click the <em>Set as default</em> link.{% endtrans %}</li>
+  <li>{% trans %}At the bottom of the page, select the <em>Administration theme</em> that you want to use on administrative pages. Click <em>Save configuration</em> if you selected a new theme.{% endtrans %}</li>
+  <li>{% trans %}If you changed the default theme for your site, visit the site home page or another page on the non-administration part of your site and verify that the site is using the new theme. If you changed the administration theme, verify that the new theme is used on administrative pages.{% endtrans %}</li>
+</ol>

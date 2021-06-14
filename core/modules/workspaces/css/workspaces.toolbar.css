@@ -1,0 +1,296 @@
+/**
+ * @file
+ * Styling for Workspaces module's toolbar tab.
+ */
+
+/**
+ * @todo Remove this after https://www.drupal.org/project/drupal/issues/2986056
+ *  has been solved.
+ */
+.workspaces-dialog #drupal-off-canvas * {
+  background: initial;
+}
+.workspaces-dialog #drupal-off-canvas {
+  background: #444;
+}
+
+/* Tab appearance. */
+.toolbar .toolbar-bar .workspaces-toolbar-tab {
+  color: #000;
+  background-color: #e09600;
+}
+.toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
+  background-color: #81c071;
+}
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: left;
+}
+
+@media (min-width: 16.5em) {
+  .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: right;
+  }
+  [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: left;
+  }
+}
+
+.toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: inherit;
+}
+[dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  text-align: right;
+}
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  width: auto;
+  text-align: initial;
+}
+
+.toolbar .toolbar-icon-workspace:before {
+  background-image: url("../icons/000000/workspaces.svg");
+}
+
+/* Off canvas dialog */
+.workspaces-dialog.ui-dialog-off-canvas a:focus {
+  outline: none;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas #drupal-off-canvas,
+.workspaces-dialog.ui-dialog-off-canvas {
+  padding: 0;
+  background: #333;
+}
+
+.workspaces-dialog.ui-widget.ui-widget-content {
+  height: 100% !important;
+  border: 0;
+  line-height: 20px;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  visibility: hidden;
+  padding: 0;
+  border: 0;
+  line-height: 0;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+  top: 1em;
+  right: 0.5em;
+}
+
+.workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar .ui-button {
+  z-index: 101;
+  visibility: visible;
+}
+
+#drupal-off-canvas .active-workspace {
+  position: relative;
+  width: 100%;
+  min-height: 70px;
+  padding: 20px;
+  background-color: #444;
+}
+
+#drupal-off-canvas .active-workspace__title {
+  font-size: 0.8125rem;
+  font-weight: bold;
+}
+
+#drupal-off-canvas .active-workspace__label {
+  padding: 0.9em 3.2rem 1em;
+}
+
+#drupal-off-canvas .active-workspace__label span {
+  color: #fff;
+  font-size: 1.285em;
+  font-weight: bold;
+}
+
+#drupal-off-canvas .active-workspace__manage {
+  display: block;
+  white-space: nowrap;
+  outline-color: currentColor;
+  font-size: 0.9286em;
+}
+
+#drupal-off-canvas .active-workspace__button {
+  padding: 5px 22px;
+  color: #fff;
+  border: solid 1px #1e5c90;
+  border-radius: 20px;
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+#drupal-off-canvas .active-workspace__button:hover {
+  text-decoration: none;
+}
+
+#drupal-off-canvas .all-workspaces {
+  display: inline-block;
+  padding: 20px;
+}
+
+#drupal-off-canvas .workspaces__list h3 {
+  padding-left: 20px;
+  font-size: 0.8125rem;
+}
+
+[dir="rtl"] #drupal-off-canvas .workspaces__list h3 {
+  padding: 0 20px 0;
+}
+
+#drupal-off-canvas .workspaces ul {
+  display: block;
+}
+
+#drupal-off-canvas .workspaces li {
+  flex: 1;
+  margin-bottom: 1px;
+}
+
+#drupal-off-canvas .workspaces__item {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  height: 73px;
+  margin-right: 1px;
+  padding: 20px 0 0 50px;
+  color: #fff;
+  background-color: #555;
+  font-size: 0.929em;
+  font-weight: bold;
+}
+
+[dir=rtl] #drupal-off-canvas .workspaces__item {
+  padding: 20px 50px 0 0;
+}
+
+#drupal-off-canvas .workspaces__item:hover,
+#drupal-off-canvas .workspaces__item:focus {
+  background-color: #666;
+}
+
+#drupal-off-canvas .active-workspace__label:before,
+#drupal-off-canvas .workspaces__item:before {
+  position: absolute;
+  left: 20px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  content: "";
+  background: url("../icons/f0a100/ws_icon.svg") center center no-repeat;
+  background-size: 100% auto;
+}
+
+#drupal-off-canvas .active-workspace--default .active-workspace__label:before,
+#drupal-off-canvas .workspaces__item--default:before {
+  background-image: url("../icons/81c071/ws_icon.svg");
+}
+
+[dir=rtl] #drupal-off-canvas .active-workspace__label:before,
+[dir=rtl] #drupal-off-canvas .workspaces__item:before {
+  right: 20px;
+  left: initial;
+}
+
+#drupal-off-canvas .active-workspace__label:before {
+  left: 20px;
+  width: 40px;
+  height: 40px;
+}
+
+@media all and (max-width: 766px) {
+  .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    width: auto;
+    max-width: 8em;
+  }
+
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    overflow: hidden;
+    padding-right: 1.3333em;
+    padding-left: 2.75em; /* LTR */
+    white-space: nowrap;
+    text-indent: 0;
+    text-overflow: ellipsis;
+  }
+  [dir=rtl] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    padding-right: 2.75em;
+    padding-left: 1.3333em;
+  }
+
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+    left: 0.6667em; /* LTR */
+    width: 20px;
+    background-size: 100% auto;
+  }
+  [dir=rtl] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+    right: 0.6667em;
+    left: auto;
+  }
+}
+
+@media all and (min-width: 767px) {
+  .workspaces-dialog.ui-widget.ui-widget-content {
+    height: 161px !important;
+  }
+
+  /* The extra div is added by Drupal.theme.ajaxWrapperMultipleRootElements
+   * because we are inserting multiple root elements. */
+  .workspaces-dialog #drupal-off-canvas > div {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+  }
+
+  #drupal-off-canvas .active-workspace {
+    flex-basis: 200px;
+    flex-grow: 2;
+    box-sizing: content-box;
+    min-height: 140px;
+    padding: 20px 40px 0;
+  }
+
+  #drupal-off-canvas .active-workspace__label:before {
+    left: 40px;
+  }
+
+  [dir=rtl] #drupal-off-canvas .active-workspace__label:before {
+    right: 40px;
+    left: initial;
+  }
+
+  #drupal-off-canvas .workspaces {
+    position: relative;
+    flex-grow: 8;
+  }
+
+  #drupal-off-canvas .all-workspaces {
+    position: absolute;
+    top: 9px;
+    right: 20px;
+    padding: 0;
+  }
+
+  [dir=rtl] #drupal-off-canvas .all-workspaces {
+    right: initial;
+    left: 20px;
+  }
+
+  #drupal-off-canvas .workspaces ul {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #drupal-off-canvas .workspaces li {
+    margin-bottom: 0;
+  }
+}

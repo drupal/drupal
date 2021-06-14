@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function twig_theme_test_theme($existing, $type, $theme, $path) {
+  $items['twig_theme_test_filter'] = [
+    'variables' => ['quote' => [], 'attributes' => []],
+    'template' => 'twig_theme_test.filter',
+  ];
+  $items['twig_theme_test_php_variables'] = [
+    'template' => 'twig_theme_test.php_variables',
+  ];
+  $items['twig_theme_test_trans'] = [
+    'variables' => [],
+    'template' => 'twig_theme_test.trans',
+  ];
+  $items['twig_theme_test_placeholder_outside_trans'] = [
+    'variables' => ['var' => ''],
+    'template' => 'twig_theme_test.placeholder_outside_trans',
+  ];
+  $items['twig_namespace_test'] = [
+    'variables' => [],
+    'template' => 'twig_namespace_test',
+  ];
+  $items['twig_registry_loader_test'] = [
+    'variables' => [],
+  ];
+  $items['twig_registry_loader_test_include'] = [
+    'variables' => [],
+  ];
+  $items['twig_registry_loader_test_extend'] = [
+    'variables' => [],
+  ];
+  $items['twig_raw_test'] = [
+    'variables' => ['script' => ''],
+  ];
+  $items['twig_autoescape_test'] = [
+    'variables' => ['script' => ''],
+  ];
+  $items['twig_theme_test_url_generator'] = [
+    'variables' => [],
+    'template' => 'twig_theme_test.url_generator',
+  ];
+  $items['twig_theme_test_link_generator'] = [
+    'variables' => [
+      'test_url' => NULL,
+      'test_url_attribute' => NULL,
+      'attributes' => [],
+    ],
+    'template' => 'twig_theme_test.link_generator',
+  ];
+  $items['twig_theme_test_url_to_string'] = [
+    'variables' => ['test_url' => NULL],
+    'template' => 'twig_theme_test.url_to_string',
+  ];
+  $items['twig_theme_test_file_url'] = [
+    'variables' => [],
+    'template' => 'twig_theme_test.file_url',
+  ];
+  $items['twig_theme_test_attach_library'] = [
+    'variables' => [],
+    'template' => 'twig_theme_test.attach_library',
+  ];
+  $items['twig_theme_test_renderable'] = [
+    'variables' => [
+      'renderable' => NULL,
+    ],
+    'template' => 'twig_theme_test.renderable',
+  ];
+  $items['twig_theme_test_embed_tag'] = [
+    'variables' => [],
+    'template' => 'twig_theme_test.embed_tag',
+  ];
+  return $items;
+}
+
+/**
+ * Helper function to test PHP variables in the Twig engine.
+ */
+function _test_theme_twig_php_values() {
+  // Prefix each variable with "twig_" so that Twig doesn't get confused
+  // between a variable and a primitive. Arrays are not tested since they should
+  // be a Drupal render array.
+  return [
+    'twig_null' => [
+      'value' => NULL,
+      'expected' => '',
+    ],
+    'twig_bool_false' => [
+      'value' => FALSE,
+      'expected' => '',
+    ],
+    'twig_bool_true' => [
+      'value' => TRUE,
+      'expected' => '1',
+    ],
+    'twig_int' => [
+      'value' => 1,
+      'expected' => '1',
+    ],
+    'twig_int_0' => [
+      'value' => 0,
+      'expected' => '0',
+    ],
+    'twig_float' => [
+      'value' => 122.34343,
+      'expected' => '122.34343',
+    ],
+    'twig_string' => [
+      'value' => 'Hello world!',
+      'expected' => 'Hello world!',
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_status_messages().
+ */
+function twig_theme_test_preprocess_status_messages(&$variables) {
+  $variables['attributes']['class'][] = 'custom-test-messages-class';
+}

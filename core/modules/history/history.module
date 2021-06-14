@@ -1,0 +1,184 @@
+<?php
+
+/**
+ * @file
+ * Records which users have read which content.
+ *
+ * @todo
+ * - Generic helper for _forum_user_last_visit() + history_read().
+ * - Generic helper for node_mark().
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\UserInterface;
+
+/**
+ * Entities changed before this time are always shown as read.
+ *
+ * Entities changed within this time may be marked as new, updated, or read,
+ * depending on their state for the current user. Defaults to 30 days ago.
+ */
+define('HISTORY_READ_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
+
+/**
+ * Implements hook_help().
+ */
+function history_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.history':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The History module keeps track of which content a user has read. It marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed it. History records that are older than one month are removed during cron, which means that content older than one month is always considered <em>read</em>. The History module does not have a user interface but it provides a filter to <a href=":views-help">Views</a> to show new or updated content. For more information, see the <a href=":url">online documentation for the History module</a>.', [':views-help' => (\Drupal::moduleHandler()->moduleExists('views')) ? Url::fromRoute('help.page', ['name' => 'views'])->toString() : '#', ':url' => 'https://www.drupal.org/documentation/modules/history']) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Retrieves the timestamp for the current user's last view of a specified node.
+ *
+ * @param int $nid
+ *   A node ID.
+ *
+ * @return int
+ *   If a node has been previously viewed by the user, the timestamp in seconds
+ *   of when the last view occurred; otherwise, zero.
+ */
+function history_read($nid) {
+  $history = history_read_multiple([$nid]);
+  return $history[$nid];
+}
+
+/**
+ * Retrieves the last viewed timestamp for each of the passed node IDs.
+ *
+ * @param array $nids
+ *   An array of node IDs.
+ *
+ * @return array
+ *   Array of timestamps keyed by node ID. If a node has been previously viewed
+ *   by the user, the timestamp in seconds of when the last view occurred;
+ *   otherwise, zero.
+ */
+function history_read_multiple($nids) {
+  $history = &drupal_static(__FUNCTION__, []);
+
+  $return = [];
+
+  $nodes_to_read = [];
+  foreach ($nids as $nid) {
+    if (isset($history[$nid])) {
+      $return[$nid] = $history[$nid];
+    }
+    else {
+      // Initialize value if current user has not viewed the node.
+      $nodes_to_read[$nid] = 0;
+    }
+  }
+
+  if (empty($nodes_to_read)) {
+    return $return;
+  }
+
+  $result = \Drupal::database()->query('SELECT [nid], [timestamp] FROM {history} WHERE [uid] = :uid AND [nid] IN ( :nids[] )', [
+    ':uid' => \Drupal::currentUser()->id(),
+    ':nids[]' => array_keys($nodes_to_read),
+  ]);
+  foreach ($result as $row) {
+    $nodes_to_read[$row->nid] = (int) $row->timestamp;
+  }
+  $history += $nodes_to_read;
+
+  return $return + $nodes_to_read;
+}
+
+/**
+ * Updates 'last viewed' timestamp of the specified entity for the current user.
+ *
+ * @param $nid
+ *   The node ID that has been read.
+ * @param $account
+ *   (optional) The user account to update the history for. Defaults to the
+ *   current user.
+ */
+function history_write($nid, $account = NULL) {
+
+  if (!isset($account)) {
+    $account = \Drupal::currentUser();
+  }
+
+  if ($account->isAuthenticated()) {
+    \Drupal::database()->merge('history')
+      ->keys([
+        'uid' => $account->id(),
+        'nid' => $nid,
+      ])
+      ->fields(['timestamp' => REQUEST_TIME])
+      ->execute();
+    // Update static cache.
+    $history = &drupal_static('history_read_multiple', []);
+    $history[$nid] = REQUEST_TIME;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function history_cron() {
+  \Drupal::database()->delete('history')
+    ->condition('timestamp', HISTORY_READ_LIMIT, '<')
+    ->execute();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter() for node entities.
+ */
+function history_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
+  if ($node->isNew() || isset($node->in_preview)) {
+    return;
+  }
+  // Update the history table, stating that this user viewed this node.
+  if ($display->getOriginalMode() === 'full') {
+    $build['#cache']['contexts'][] = 'user.roles:authenticated';
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      // When the window's "load" event is triggered, mark the node as read.
+      // This still allows for Drupal behaviors (which are triggered on the
+      // "DOMContentReady" event) to add "new" and "updated" indicators.
+      $build['#attached']['library'][] = 'history/mark-as-read';
+      $build['#attached']['drupalSettings']['history']['nodesToMarkAsRead'][$node->id()] = TRUE;
+    }
+  }
+
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for node entities.
+ */
+function history_node_delete(EntityInterface $node) {
+  \Drupal::database()->delete('history')
+    ->condition('nid', $node->id())
+    ->execute();
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function history_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+      \Drupal::database()->delete('history')
+        ->condition('uid', $account->id())
+        ->execute();
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for user entities.
+ */
+function history_user_delete($account) {
+  \Drupal::database()->delete('history')
+    ->condition('uid', $account->id())
+    ->execute();
+}

@@ -1,0 +1,179 @@
+/**
+ * @file
+ * Header Search Narrow Block.
+ */
+
+@import "../base/variables.pcss.css";
+
+.block-search-narrow {
+  margin-inline: calc(-1 * var(--sp));
+  margin-block-end: var(--sp2);
+  background: var(--color--black);
+
+  & .search-block-form {
+    display: flex;
+  }
+
+  & .form-item {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  & .form-actions {
+    margin: 0;
+  }
+
+  & input[type="search"] {
+    width: calc(100% + var(--sp2));
+    height: calc(3 * var(--sp));
+    padding-block: 0;
+    padding-inline-start: var(--sp);
+    padding-inline-end: var(--sp);
+    transition: background-size 0.4s;
+    color: var(--color--white);
+    border: solid 1px transparent;
+    background-color: transparent;
+    background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
+    background-repeat: no-repeat;
+    background-position: bottom left; /* LTR */
+    background-size: 0% 5px;
+    box-shadow: none;
+    font-family: serif;
+    font-size: 16px;
+    -webkit-appearance: none;
+
+    &::-ms-clear {
+      width: 40px;
+      opacity: 0.5;
+    }
+
+    &:focus {
+      outline: solid 4px transparent;
+      outline-offset: -4px;
+      background-size: 100% 5px;
+
+      /*
+        We normally indicate focus by animating background-image width. This isn't
+        available in IE11 when in Windows high contrast mode.
+      */
+      @media screen and (-ms-high-contrast: active) {
+        border-bottom-width: 5px;
+      }
+    }
+
+    @media (--md) {
+      padding-block: var(--sp2);
+      padding-inline-start: var(--sp2);
+      padding-inline-end: var(--sp2);
+    }
+  }
+
+  & .search-form__submit {
+    position: relative;
+    overflow: hidden;
+    align-self: stretch;
+    width: var(--sp3);
+    height: auto;
+    margin-block: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    cursor: pointer;
+    border-color: transparent;
+    background-color: transparent;
+
+    /*
+      When in Windows high contrast mode, FF will will not output either background
+      images or SVGs that are nested directly within a <button> element, so we add a <span>.
+    */
+    & .icon--search {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      display: block;
+      width: 100%; /* Width of the SVG background image. */
+      height: 100%;
+      pointer-events: none;
+      background-image: url("../../images/search--white.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: auto;
+
+      &:after {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        width: 100%;
+        height: 0;
+        content: "";
+        transition: transform 0.2s;
+        transform: scaleX(0);
+        transform-origin: left; /* LTR */
+        border-block-start: solid 5px var(--color--blue-50);
+      }
+    }
+
+    &:focus {
+      outline: solid 4px transparent;
+      outline-offset: -4px;
+      box-shadow: none;
+
+      & span:after {
+        transform: scaleX(1);
+      }
+
+      @media screen and (-ms-high-contrast: active) {
+        border-bottom-width: var(--sp0-5);
+
+        & span:after {
+          content: none;
+        }
+      }
+    }
+
+    @media (--md) {
+      width: 80px;
+    }
+
+    @media screen and (-ms-high-contrast: active) {
+      /* IE11's high contrast show will not show the background image, so we show the text. */
+      & .visually-hidden {
+        position: static;
+        overflow: visible;
+        clip: auto;
+        width: auto;
+        height: auto;
+        text-align: center;
+      }
+
+      /* Edge's high contrast does show the background image, so we hide it. */
+      & .icon--search {
+        display: none;
+      }
+    }
+  }
+
+  /* 500px is the width of the primary nav at mobile. */
+  @media (min-width: 500px) {
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+  }
+}
+
+body:not(.is-always-mobile-nav) .block-search-narrow {
+  @media (--nav) {
+    display: none;
+  }
+}
+
+[dir="rtl"] .block-search-narrow {
+  & input[type="search"] {
+    background-position: bottom right;
+  }
+
+  & .search-form__submit .icon--search:after {
+    transform-origin: right;
+  }
+}

@@ -1,0 +1,44 @@
+id: d6_user_picture_file
+label: User pictures
+migration_tags:
+  - Drupal 6
+  - Content
+source:
+  plugin: d6_user_picture_file
+  constants:
+    is_public: true
+    # source_base_path must be set by the tool configuring this migration. It
+    # represents the fully qualified path relative to which URIs in the files
+    # table are specified, and must end with a /.
+    source_base_path: ''
+process:
+  filename: filename
+  uid: uid
+  source_full_path:
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constants/source_base_path
+        - picture
+    -
+      plugin: urlencode
+  destination_full_path:
+    plugin: file_uri
+    source:
+      - picture
+      - file_directory_path
+      - temp_directory_path
+      - 'constants/is_public'
+  uri:
+    plugin: file_copy
+    source:
+      - '@source_full_path'
+      - '@destination_full_path'
+destination:
+  plugin: entity:file
+migration_dependencies:
+  # Every migration that references a file by Drupal 6 fid should specify d6_file as an
+  # optional dependency.
+  optional:
+    - d6_file

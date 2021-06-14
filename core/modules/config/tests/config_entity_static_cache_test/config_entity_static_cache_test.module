@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Provides configuration entity static cache test helpers.
+ */
+
+use Drupal\Component\Utility\Random;
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for 'static_cache_test_config_test'.
+ */
+function config_entity_static_cache_test_config_test_load($entities) {
+  static $random;
+  if (!$random) {
+    $random = new Random();
+  }
+  foreach ($entities as $entity) {
+    // Add a random stamp for every load(), so that during tests, we can tell
+    // if an entity was retrieved from cache (unchanged stamp) or reloaded.
+    $entity->_loadStamp = $random->string(8, TRUE);
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function config_entity_static_cache_test_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  $entity_types['config_test']->set('static_cache', TRUE);
+}

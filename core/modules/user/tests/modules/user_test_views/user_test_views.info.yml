@@ -1,0 +1,8 @@
+name: 'User test views'
+type: module
+description: 'Provides default views for views user tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:user
+  - drupal:views

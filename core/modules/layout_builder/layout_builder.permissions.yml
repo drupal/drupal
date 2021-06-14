@@ -1,0 +1,9 @@
+configure any layout:
+  title: 'Configure any layout'
+  restrict access: true
+create and edit custom blocks:
+  title: 'Create and edit custom blocks'
+  description: 'Manage the single-use blocks within the Layout Builder'
+
+permission_callbacks:
+  - \Drupal\layout_builder\LayoutBuilderOverridesPermissions::permissions

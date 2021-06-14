@@ -1,0 +1,69 @@
+# Schema for the configuration files of the Tour module.
+
+tour.tour.*:
+  type: config_entity
+  label: 'Tour settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    module:
+      type: string
+      label: 'Providing module'
+    routes:
+      type: sequence
+      label: 'Route settings'
+      sequence:
+        type: route
+        label: 'Route'
+    tips:
+      type: sequence
+      label: 'Tips'
+      sequence:
+        type: tour.tip.[plugin]
+        label: 'Tour tip'
+
+tour.tip:
+  type: mapping
+  label: 'Tour tip'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    plugin:
+      type: string
+      label: 'Plugin'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+    location:
+      deprecated: "The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position'. The value must be a valid placement accepted by PopperJS. See https://www.drupal.org/node/3204093"
+      type: string
+      label: 'Location'
+    position:
+      type: string
+      label: 'Position'
+    selector:
+      type: string
+      label: 'Selector'
+    attributes:
+      deprecated: "The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093"
+      type: sequence
+      label: 'Attributes'
+      sequence:
+        type: string
+        label: 'Attribute'
+
+tour.tip.text:
+  type: tour.tip
+  label: 'Textual tour tip'
+  mapping:
+    body:
+      type: text
+      label: 'Body'

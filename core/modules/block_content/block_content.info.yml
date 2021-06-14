@@ -1,0 +1,10 @@
+name: 'Custom Block'
+type: module
+description: 'Allows the creation of custom blocks and block types.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:block
+  - drupal:text
+  - drupal:user
+configure: entity.block_content.collection

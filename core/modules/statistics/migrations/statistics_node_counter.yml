@@ -1,0 +1,32 @@
+id: statistics_node_counter
+label: Node counter
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Content
+source:
+  plugin: node_counter
+process:
+  nid:
+    -
+      plugin: migration_lookup
+      migration:
+        - d6_node_complete
+        - d7_node_complete
+        - d6_node
+        - d7_node
+      source: nid
+    -
+      plugin: node_complete_node_lookup
+    -
+      plugin: skip_on_empty
+      method: row
+  totalcount: totalcount
+  daycount: daycount
+  timestamp: timestamp
+destination:
+  plugin: node_counter
+migration_dependencies:
+  optional:
+    - d6_node
+    - d7_node

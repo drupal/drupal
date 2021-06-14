@@ -1,0 +1,45 @@
+id: d7_language_types
+label: Language types
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - language_types
+    - language_negotiation_language
+    - language_negotiation_language_content
+    - language_negotiation_language_url
+    - locale_language_providers_weight_language
+    - locale_language_providers_weight_language_content
+    - locale_language_providers_weight_language_url
+  source_module: locale
+process:
+  all:
+    plugin: language_types
+    source: language_types
+  configurable:
+    plugin: language_types
+    source: language_types
+    filter_configurable: true
+  negotiation/language_content:
+    plugin: language_negotiation
+    source:
+      - language_negotiation_language_content
+      - locale_language_providers_weight_language_content
+  negotiation/language_url:
+    plugin: language_negotiation
+    source:
+      - language_negotiation_language_url
+      - locale_language_providers_weight_language_url
+  negotiation/language_interface:
+    plugin: language_negotiation
+    source:
+      - language_negotiation_language
+      - locale_language_providers_weight_language
+destination:
+  plugin: config
+  config_name: language.types
+migration_dependencies:
+  required:
+    - language

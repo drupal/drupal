@@ -1,0 +1,232 @@
+:root {
+  /*
+   * Color Palette.
+   */
+  --color-absolutezero: #003cc5;
+  --color-white: #fff;
+  --color-text: #222330;
+  --color-text-light: var(--color-grayblue);
+  --color-whitesmoke: #f3f4f9;
+  --color-whitesmoke-light: #fafbfd;
+  --color-whitesmoke-o-40: rgba(243, 244, 249, 0.4);
+  /* Secondary. */
+  --color-lightdiamond: #dedfe4;
+  --color-lightgray: #d4d4d8;
+  --color-lightgray-o-80: rgba(212, 212, 218, 0.8);
+  --color-grayblue: #8e929c;
+  --color-oldsilver: #82828c;
+  --color-davysgray: #545560;
+  --color-maximumred: #d72222;
+  --color-sunglow: #ffd23f;
+  --color-sunglow-shaded: #977405;
+  --color-lightninggreen: #26a769;
+  --color-focus: var(--color-lightninggreen);
+  /* Variations. */
+  --color-lightgray-hover: #c2c3ca; /* 5% darker than base. */
+  --color-lightgray-active: #adaeb3; /* 10% darker than base. */
+  --color-absolutezero-hover: #0036b1; /* 10% darker than base. */
+  --color-absolutezero-active: #00339a; /* 20% darker than base. */
+  --color-maximumred-hover: #c11f1f; /* 5% darker than base. */
+  --color-maximumred-active: #ab1b1b; /* 10% darker than base. */
+  --color-bgblue-hover: #f0f5fd; /* 5% darker than base. */
+  --color-bgblue-active: #e6ecf8; /* 10% darker than base. */
+  --color-bgred-hover: #fdf5f5; /* 5% darker than base. */
+  --color-bgred-active: #fceded; /* 10% darker than base. */
+  /*
+   * Base.
+   */
+  --color-fg: var(--color-text);
+  --color-bg: var(--color-white);
+  --color-link: var(--color-absolutezero);
+  --color-link-hover: var(--color-absolutezero-hover);
+  --color-link-active: var(--color-absolutezero-active);
+  --color-divider: rgba(142, 146, 156, 0.5);
+  /*
+   * Typography.
+   */
+  --font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --line-height: 1.5;
+  --line-height-heading: 1.3;
+  --line-height-form-label: calc(18rem / 16); /* 18px */
+  --font-size-base: 1rem; /* 1rem = 16px if font root is 100% ands browser defaults are used. */
+  --font-size-h1: 2.027rem; /* ~32px */
+  --font-size-h2: 1.802rem; /* ~29px */
+  --font-size-h3: 1.602rem; /* ~26px */
+  --font-size-h4: 1.424rem; /* ~23px */
+  --font-size-h5: 1.266rem; /* ~20px */
+  --font-size-h6: 1.125rem; /* 18px */
+  --font-size-s: 0.889rem; /* ~14px */
+  --font-size-xs: 0.79rem; /* ~13px */
+  --font-size-xxs: 0.702rem; /* ~11px */
+  --font-size-label: var(--font-size-s);
+  --font-size-description: var(--font-size-xs);
+  /**
+   * Spaces.
+   */
+  --space-xl: 3rem; /* 3 * 16px = 48px */
+  --space-l: 1.5rem; /* 1.5 * 16px = 24px */
+  --space-m: 1rem; /* 1 * 16px = 16px */
+  --space-s: 0.75rem; /* 0.75 * 16px = 12px */
+  --space-xs: 0.5rem; /* 0.5 * 16px = 8px */
+  /*
+   * Common.
+   */
+  --speed-transition: 0.2s;
+  --transition: all var(--speed-transition) ease-out;
+  --base-border-radius: 2px;
+  --focus-border-size: 3px;
+  --focus-border-offset-size: 2px;
+  --outline-size: 2px;
+  --focus-outline: var(--outline-size) dotted transparent;
+  --focus-box-shadow: 0 0 0 var(--focus-border-offset-size) var(--color-white), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size)) var(--color-focus);
+  /**
+   * Shadows.
+   */
+  --shadow-z3: 0 14px 30px rgba(0, 0, 0, 0.1);
+  /*
+   * Inputs.
+   */
+  --input-fg-color: var(--color-fg);
+  --input-bg-color: var(--color-bg);
+  --input-fg-color--description: var(--color-davysgray);
+  --input-fg-color--placeholder: var(--color-grayblue);
+  --input-border-color: var(--color-grayblue);
+  --input--hover-border-color: var(--color-text);
+  --input--focus-border-color: var(--color-absolutezero);
+  --input--focus-shadow-color: rgba(0, 74, 220, 0.3); /* Absolute zero with opacity. */
+  --input--error-color: var(--color-maximumred);
+  --input--error-border-color: var(--color-maximumred);
+  --input--disabled-color: rgba(84, 85, 96, 0.6); /* Davy's gray with 0.6 opacity. */
+  --input--disabled-fg-color: var(--color-oldsilver);
+  --input--disabled-bg-color: #f2f2f3; /* Light gray with 0.3 opacity on white bg. */
+  --input--disabled-border-color: #bababf; /* Old silver with 0.5 opacity on white bg. */
+  --input--disabled-border-opacity: 0.5;
+  --input-border-radius-size: 0.125rem; /* (1/8)em ~ 2px */
+  --input-border-size: 1px; /* (1/16)em ~ 1px */
+  --input--error-border-size: 2px;
+  --input-padding-vertical: calc(var(--space-s) - var(--input-border-size));
+  --input-padding-horizontal: calc(var(--space-m) - var(--input-border-size));
+  --input-font-size: var(--font-size-base);
+  --input-line-height: var(--space-l);
+  --input-padding-vertical--small: calc(var(--space-xs) - (var(--input-border-size) * 2));
+  --input-padding-horizontal--small: calc(var(--space-m) - var(--input-border-size));
+  --input-font-size--small: var(--font-size-xs);
+  --input-line-height--small: 1.3125rem;
+  --input--extrasmall-padding-vertical: calc(0.15rem - var(--input-border-size));
+  --input--extrasmall-padding-horizontal: calc(var(--space-xs) - var(--input-border-size));
+  --input--extrasmall-font-size: var(--font-size-s);
+  --input--extrasmall-line-height: calc(var(--space-m) + 0.2rem); /* Font size is too big to use 1rem for extrasmall line-height */
+  --input--required-mark-size: 0.4375rem; /* 7px inside the form element label. */
+  --input--label-spacing: 1.6875rem; /* 8px with the checkbox width of 19px */
+  /*
+   * Details.
+   */
+  --details-bg-color: rgba(243, 244, 249, 0.4);
+  --details-border-color: var(--color-lightdiamond);
+  --details-summary-shadow-color: var(--color-focus);
+  --details-summary-focus-border-size: var(--focus-border-size);
+  --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));
+  --details-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --details-border-size: 1px;
+  --details-border-size-radius: 2px;
+  --details-accordion-border-size-radius: var(--base-border-radius);
+  --details-spread-box-shadow-radius: 2px;
+  --details-bg-color-transition-duration: 0.12s;
+  --details-box-shadow-transition-duration: 0.2s;
+  --details-transform-transition-duration: 0.12s;
+  --details-line-height: 1.295rem;
+  /**
+   * Buttons.
+   */
+  --button--focus-border-color: #5a8bed;
+  --button-border-radius-size: var(--base-border-radius);
+  --button-fg-color: var(--color-text);
+  --button-bg-color: var(--color-lightgray);
+  --button--hover-bg-color: var(--color-lightgray-hover);
+  --button--active-bg-color: var(--color-lightgray-active);
+  --button--disabled-bg-color: #ebebed;
+  --button--disabled-fg-color: var(--color-grayblue);
+  --button-fg-color--primary: var(--color-white);
+  --button-bg-color--primary: var(--color-absolutezero);
+  --button--hover-bg-color--primary: var(--color-absolutezero-hover);
+  --button--active-bg-color--primary: var(--color-absolutezero-active);
+  --button--focus-bg-color--primary: var(--button-bg-color--primary);
+  --button--disabled-bg-color--primary: var(--color-lightgray);
+  --button--disabled-fg-color--primary: var(--color-oldsilver);
+  --button-fg-color--danger: var(--color-white);
+  --button-bg-color--danger: var(--color-maximumred);
+  --button--hover-bg-color--danger: var(--color-maximumred-hover);
+  --button--active-bg-color--danger: var(--color-maximumred-active);
+  /**
+   * jQuery.UI dropdown.
+   */
+  --jui-dropdown-fg-color: var(--color-davysgray);
+  --jui-dropdown-bg-color: var(--color-white);
+  --jui-dropdown--active-fg-color: var(--color-white);
+  --jui-dropdown--active-bg-color: var(--color-absolutezero);
+  --jui-dropdown-border-color: rgba(216, 217, 224, 0.8); /* Light gray with 0.8 opacity. */
+  --jui-dropdown-shadow-color: rgba(34, 35, 48, 0.1); /* Text color with 0.1 opacity. */
+  /**
+   * jQuery.UI dialog.
+   */
+  --jui-dialog-title-color: var(--color-white);
+  --jui-dialog-title-bg-color: var(--color-text);
+  --jui-dialog-title-font-size: var(--font-size-h4);
+  --jui-dialog-close-button-size: calc(var(--space-m) * 2);
+  --jui-dialog-close-button-border-radius: 50%;
+  --jui-dialog-close-button-reserved-space: calc(var(--space-m) * 4);
+  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m) * 3);
+  --jui-dialog-border-radius: 4px;
+  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m) / -4) var(--color-text);
+  --jui-dialog--focus-outline: 2px dotted transparent;
+  --jui-dialog--focus-box-shadow: 0 0 0 3px var(--color-focus);
+  --jui-dialog-z-index: 1260;
+  --jui-dialog-off-canvas-z-index: 501;
+  /**
+   * Progress bar.
+   */
+  --progress-bar-border-size: 1px;
+  --progress-bar-small-size: calc(var(--space-xs) - (2 * var(--progress-bar-border-size)));
+  --progress-bar-small-size-radius: var(--space-xs);
+  --progress-bar-spacing-size: var(--space-xs);
+  --progress-bar-transition: width 0.5s ease-out;
+  --progress-bar-label-color: var(--color-text);
+  --progress-bar-description-color: var(--color-davysgray);
+  --progress-bar-description-font-size: var(--font-size-xs);
+  --progress-track-border-color: var(--color-grayblue);
+  --progress-track-bg-color: var(--color-lightgray);
+  /**
+   * Tabledrag icon size.
+   */
+  --tabledrag-handle-icon-size: calc(17rem / 16); /* 17px */
+  /**
+   * Ajax progress.
+   */
+  --ajax-progress-margin-horizontal: var(--space-s);
+  /**
+   * Breadcrumb.
+   */
+  --breadcrumb-height: 1.25rem;
+  /**
+    * Vertical Tabs.
+    */
+  --vertical-tabs-margin-vertical: var(--space-s);
+  --vertical-tabs-border-radius: var(--details-accordion-border-size-radius);
+  --vertical-tabs-shadow: var(--details-box-shadow);
+  --vertical-tabs-border-color: var(--details-border-color);
+  --vertical-tabs-border-size: 1px;
+  --vertical-tabs-border: var(--vertical-tabs-border-size) solid var(--vertical-tabs-border-color);
+  --vertical-tabs-menu-item-shadow-extraspace: 0.5rem;
+  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -2);
+  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size) * -1);
+  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
+  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
+  --vertical-tabs-menu-separator-color: var(--color-lightgray);
+  --vertical-tabs-menu-separator-size: 1px;
+  --vertical-tabs-menu-width: 20em;
+  --vertical-tabs-pane-width: calc(100% - var(--vertical-tabs-menu-width));
+  --vertical-tabs-menu-link-focus-border-size: var(--details-summary-focus-border-size);
+  --vertical-tabs-menu-link--active-border-size: 4px;
+  --vertical-tabs-menu-link--active-border-color: var(--color-absolutezero);
+  --vertical-tabs-menu--z-index: 0;
+}

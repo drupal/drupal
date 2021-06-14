@@ -1,0 +1,64 @@
+All Drupal code is Copyright 2001 - 2020 by the original authors.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program as the file LICENSE.txt; if not, please see
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+Drupal is a registered trademark of Dries Buytaert.
+
+Drupal includes works under other copyright notices and distributed
+according to the terms of the GNU General Public License or a compatible
+license, including:
+
+JavaScript
+
+  Farbtastic - Copyright (c) 2010 Matt Farina
+
+  HTML5 Shiv - Copyright (c) 2014  Alexander Farkas, Jonathan Neal, Paul Irish,
+    and John-David Dalton
+
+  jQuery - Copyright (c) 2011 John Resig
+
+  jQuery Bgiframe - Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
+
+  jQuery BBQ - Copyright (c) 2010 "Cowboy" Ben Alman
+
+  jQuery Cookie - Copyright (c) 2014 Klaus Hartl
+
+  jQuery Form - Copyright (c) 2017 Kevin Morris
+
+  jQuery Globalize - Copyright (c) 2012 Software Freedom Conservancy, Inc.
+
+  jQuery Mousewheel - Copyright OpenJS Foundation and other contributors
+    (https://openjsf.org/)
+
+  jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer,
+    Paul McLanahan
+
+  jQuery Once - Copyright (c) 2009 Konstantin Käfer
+
+  jQuery UI - Copyright (c) 2015 by the authors and other contributors
+    (http://jqueryui.com/about)
+
+  Sizzle.js - Copyright (c) 2016 JS Foundation and other contributors
+    (https://js.foundation)
+
+PHP
+
+  Drupal depends on numerous PHP Composer packages. All Composer packages
+    retain the copyright of the authors.
+
+Brand materials
+
+  Drupal brand materials under core/misc/logo have a dedicated license. See
+  core/misc/logo/LICENSE.txt.

@@ -1,0 +1,5 @@
+name: 'Node module empty access tests'
+type: module
+description: 'Support module for node permission testing. Provides empty grants hook implementations.'
+package: Testing
+version: VERSION

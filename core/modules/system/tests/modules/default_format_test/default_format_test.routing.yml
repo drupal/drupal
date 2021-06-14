@@ -1,0 +1,28 @@
+default_format_test.machine:
+  path: '/default_format_test/machine'
+  defaults:
+    # Same controller + method!
+    _controller: '\Drupal\default_format_test\DefaultFormatTestController::content'
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
+default_format_test.human:
+  path: '/default_format_test/human'
+  defaults:
+    # Same controller + method!
+    _controller: '\Drupal\default_format_test\DefaultFormatTestController::content'
+  requirements:
+    _access: 'TRUE'
+    _format: 'html'
+
+# Route definition identical to default_format_test.machine, only different name.
+# @see \Drupal\FunctionalTests\Routing\DefaultFormatTest::testMultiple
+default_format_test.machine.alias:
+  path: '/default_format_test/machine'
+  defaults:
+    # Same controller + method!
+    _controller: '\Drupal\default_format_test\DefaultFormatTestController::content'
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'

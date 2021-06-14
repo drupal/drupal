@@ -1,0 +1,29 @@
+---
+label: 'Optimizing site performance'
+top_level: true
+---
+<h2>{% trans %}What is site performance?{% endtrans %}</h2>
+<p>{% trans %}Site performance, in this context, refers to speed factors such as the page load time and the response time after a user action on a page.{% endtrans %}</p>
+<h2>{% trans %}What is caching?{% endtrans %}</h2>
+<p>{% trans %}Caching is saving already-rendered HTML output and other calculated data for later use the first time it is needed. This saves time, because the next time the same data is needed it can be quickly retrieved instead of recalculated. Automatic caching systems also include mechanisms to delete cached calculations or mark them as no longer valid when the underlying data changes. To facilitate that, cached data has a <em>lifetime</em>, which is the maximum time before the data will be deleted from the cache (forcing recalculation).{% endtrans %}</p>
+<h2>{% trans %}What is file aggregation?{% endtrans %}</h2>
+<p>{% trans %}Aggregation is when CSS and JavaScript files are merged together and compressed into a format that is much smaller than the original. This allows for faster transmission and faster rendering on the other end.{% endtrans %}</p>
+<h2>{% trans %}What can I do to improve my site's performance?{% endtrans %}</h2>
+<p>{% trans %}The following Drupal core modules and mechanisms can improve your site's performance:{% endtrans %}</p>
+<dl>
+  <dt>{% trans %}Internal Page Cache module{% endtrans %}</dt>
+  <dd>{% trans %}Caches pages requested by users who are not logged in (anonymous users). Do not use if your site needs to send different output to different anonymous users.{% endtrans %}</dd>
+  <dt>{% trans %}Internal Dynamic Page Cache module{% endtrans %}</dt>
+  <dd>{% trans %}Caches data for both authenticated and anonymous users, with non-cacheable data in the page converted to placeholders and calculated when the page is requested.{% endtrans %}</dd>
+  <dt>{% trans %}Big Pipe module{% endtrans %}</dt>
+  <dd>{% trans %}Changes the way pages are sent to users, so that cacheable parts are sent out first with placeholders, and the uncacheable or personalized parts of the page are streamed afterwards. This allows the browser to render the bulk of the page quickly and fill in the details later.{% endtrans %}</dd>
+  <dt>{% trans %}Performance page settings{% endtrans %}</dt>
+  <dd>{% trans %}In the <em>Manage</em> administrative menu, if you navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Performance</em>, you will find a setting for the maximum cache lifetime, as well as the ability to turn on CSS and JavaScript file aggregation.{% endtrans %}</dd>
+</dl>
+
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/documentation/modules/internal_page_cache">{% trans %}Online documentation for the Internal Page Cache module{% endtrans %}</a></li>
+  <li><a href="https://www.drupal.org/documentation/modules/dynamic_page_cache">{% trans %}Online documentation for the Internal Dynamic Page Cache module{% endtrans %}</a></li>
+  <li><a href="https://www.drupal.org/documentation/modules/big_pipe">{% trans %}Online documentation for the BigPipe module{% endtrans %}</a></li>
+</ul>

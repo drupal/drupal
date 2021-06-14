@@ -1,0 +1,8 @@
+name: Menu UI
+type: module
+description: 'Allows administrators to customize the site navigation menu.'
+package: Core
+version: VERSION
+configure: entity.menu.collection
+dependencies:
+  - drupal:menu_link_content

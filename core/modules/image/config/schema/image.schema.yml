@@ -1,0 +1,163 @@
+# Schema for configuration files of the Image module.
+
+image.style.*:
+  type: config_entity
+  label: 'Image style'
+  mapping:
+    name:
+      type: string
+    label:
+      type: label
+      label: 'Label'
+    effects:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+          data:
+            type: image.effect.[%parent.id]
+          weight:
+            type: integer
+          uuid:
+            type: uuid
+
+image.effect.*:
+  type: mapping
+  label: 'Effect settings'
+
+image.effect.image_crop:
+  type: image_size
+  label: 'Image crop'
+  mapping:
+    anchor:
+      label: 'Anchor'
+      type: string
+
+image.effect.image_convert:
+  type: mapping
+  label: 'Convert'
+  mapping:
+    extension:
+      label: 'Extension'
+      type: string
+
+image.effect.image_resize:
+  type: image_size
+  label: 'Image resize'
+
+image.effect.image_rotate:
+  type: mapping
+  label: 'Image rotate'
+  mapping:
+    degrees:
+      type: integer
+      label: 'Rotation angle'
+    bgcolor:
+      label: 'Background color'
+      type: color_hex
+    random:
+      type: boolean
+      label: 'Randomize'
+
+image.effect.image_scale:
+  type: image_size
+  label: 'Image scale'
+  mapping:
+    upscale:
+      type: boolean
+      label: 'Upscale'
+
+# The image desaturate effect has no settings.
+image.effect.image_desaturate:
+  type: sequence
+
+image.effect.image_scale_and_crop:
+  type: image_size
+  label: 'Image scale and crop'
+  mapping:
+    anchor:
+      label: 'Anchor'
+      type: string
+
+image.settings:
+  type: config_object
+  mapping:
+    preview_image:
+      type: string
+      label: 'Preview image'
+    allow_insecure_derivatives:
+      type: boolean
+      label: 'Allow insecure image derivatives'
+    suppress_itok_output:
+      type: boolean
+      label: 'Suppress the itok query string for image derivatives'
+
+field.storage_settings.image:
+  type: field.storage_settings.file
+  label: 'Image settings'
+  mapping:
+    default_image:
+      type: field_default_image
+      label: 'Default value'
+
+field.field_settings.image:
+  type: base_file_field_field_settings
+  label: 'Image settings'
+  mapping:
+    max_resolution:
+      type: string
+      label: 'Maximum image resolution'
+    min_resolution:
+      type: string
+      label: 'Minimum image resolution'
+    alt_field:
+      type: boolean
+      label: 'Enable Alt field'
+    alt_field_required:
+      type: boolean
+      label: 'Alt field required'
+    title_field:
+      type: boolean
+      label: 'Enable Title field'
+    title_field_required:
+      type: boolean
+      label: 'Title field required'
+    default_image:
+      type: field_default_image
+      label: 'Default value'
+
+field.value.image:
+  type: field_default_image
+  label: 'Default value'
+
+field.formatter.settings.image:
+  type: mapping
+  label: 'Image field display format settings'
+  mapping:
+    image_link:
+      type: string
+      label: 'Link image to'
+    image_style:
+      type: string
+      label: 'Image style'
+
+field.formatter.settings.image_url:
+  type: mapping
+  label: 'Image URL formatter settings'
+  mapping:
+    image_style:
+      type: string
+      label: 'Image style'
+
+field.widget.settings.image_image:
+  type: mapping
+  label: 'Image field display format settings'
+  mapping:
+    progress_indicator:
+      type: string
+      label: 'Progress indicator'
+    preview_image_style:
+      type: string
+      label: 'Preview image style'

@@ -1,0 +1,6 @@
+name: Language
+type: module
+description: 'Allows users to configure available languages.'
+package: Multilingual
+version: VERSION
+configure: entity.configurable_language.collection

@@ -1,0 +1,8 @@
+name: 'Migrate No Migrate Drupal Test'
+type: module
+description: Provides fixture for testing without migrate_drupal.
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:migrate
+  - drupal:node

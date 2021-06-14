@@ -1,0 +1,69 @@
+{#
+/**
+ * @file
+ * Theme override to display a book tree.
+ *
+ * Returns HTML for a wrapper for a book sub-tree.
+ *
+ * Available variables:
+ * - items: A nested list of book items. Each book item contains:
+ *   - attributes: HTML attributes for the book item.
+ *   - below: The book item child items.
+ *   - title: The book link title.
+ *   - url: The book link URL, instance of \Drupal\Core\Url.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     book tree.
+ *   - is_collapsed: TRUE if the link has children within the current book tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ */
+#}
+{% import _self as book_tree %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see https://twig.symfony.com/doc/1.x/tags/macro.html
+#}
+{{ book_tree.book_links(items, attributes, 0) }}
+
+{% macro book_links(items, attributes, menu_level) %}
+  {% import _self as book_tree %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul{{ attributes.addClass('book-navigation__menu menu', 'menu--level-' ~ (menu_level + 1)) }}>
+    {% else %}
+      <ul class='menu menu--level-{{ menu_level + 1 }}'>
+    {% endif %}
+    {% for item in items %}
+      {%
+        set item_classes = [
+          'book-navigation__item',
+          'menu-item',
+          'menu__item--level-' ~ (menu_level + 1),
+          item.is_expanded ? 'menu-item--expanded',
+          item.is_collapsed ? 'menu-item--collapsed',
+          item.in_active_trail ? 'menu-item--active-trail',
+        ]
+      %}
+      {% set link_classes = [
+          'book-navigation__link',
+          'menu__link',
+          'menu__link--link',
+          'menu__link--level-' ~ (menu_level + 1),
+          item.in_active_trail ? 'menu__link--active-trail',
+          item.below ? 'menu__link--has-children',
+        ]
+      %}
+      <li{{ item.attributes.addClass(item_classes) }}>
+        {{ link(item.title, item.url, {
+          'class': link_classes
+          })
+        }}
+        {% if item.below %}
+          {{ book_tree.book_links(item.below, attributes, menu_level + 1) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

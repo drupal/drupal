@@ -1,0 +1,4 @@
+entity.path_alias.collection:
+  title: List
+  route_name: entity.path_alias.collection
+  base_route: entity.path_alias.collection

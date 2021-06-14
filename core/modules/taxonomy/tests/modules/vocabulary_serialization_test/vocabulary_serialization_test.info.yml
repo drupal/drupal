@@ -1,0 +1,6 @@
+name: 'Vocabulary serialization test'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:taxonomy

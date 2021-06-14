@@ -1,0 +1,134 @@
+<?php
+
+namespace Drupal\KernelTests\Core\Menu;
+
+use Drupal\Core\Menu\MenuLinkTreeElement;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\Core\Menu\MenuLinkMock;
+
+/**
+ * Tests the menu link tree.
+ *
+ * @group Menu
+ *
+ * @see \Drupal\Core\Menu\MenuLinkTree
+ */
+class MenuLinkTreeTest extends KernelTestBase {
+
+  /**
+   * The tested menu link tree.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkTree
+   */
+  protected $linkTree;
+
+  /**
+   * The menu link plugin manager.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
+   */
+  protected $menuLinkManager;
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'system',
+    'menu_test',
+    'menu_link_content',
+    'field',
+    'link',
+    'user',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('menu_link_content');
+
+    $this->linkTree = $this->container->get('menu.link_tree');
+    $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
+  }
+
+  /**
+   * Tests deleting all the links in a menu.
+   */
+  public function testDeleteLinksInMenu() {
+    \Drupal::entityTypeManager()->getStorage('menu')->create(['id' => 'menu1'])->save();
+    \Drupal::entityTypeManager()->getStorage('menu')->create(['id' => 'menu2'])->save();
+
+    \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
+    \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
+    \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu2', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
+
+    $output = $this->linkTree->load('menu1', new MenuTreeParameters());
+    $this->assertCount(2, $output);
+    $output = $this->linkTree->load('menu2', new MenuTreeParameters());
+    $this->assertCount(1, $output);
+
+    $this->menuLinkManager->deleteLinksInMenu('menu1');
+
+    $output = $this->linkTree->load('menu1', new MenuTreeParameters());
+    $this->assertCount(0, $output);
+
+    $output = $this->linkTree->load('menu2', new MenuTreeParameters());
+    $this->assertCount(1, $output);
+  }
+
+  /**
+   * Tests creating links with an expected tree structure.
+   */
+  public function testCreateLinksInMenu() {
+    // This creates a tree with the following structure:
+    // - 1
+    // - 2
+    //   - 3
+    //     - 4
+    // - 5
+    //   - 7
+    // - 6
+    // - 8
+    // With link 6 being the only external link.
+
+    $links = [
+      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '']),
+      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => ['foo' => 'bar']]),
+      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'route_parameters' => ['baz' => 'qux']]),
+      4 => MenuLinkMock::create(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3']),
+      5 => MenuLinkMock::create(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'foofoo', 'parent' => '']),
+      6 => MenuLinkMock::create(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'barbar', 'parent' => '']),
+      7 => MenuLinkMock::create(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'bazbaz', 'parent' => '']),
+      8 => MenuLinkMock::create(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'quxqux', 'parent' => '']),
+    ];
+    foreach ($links as $instance) {
+      $this->menuLinkManager->addDefinition($instance->getPluginId(), $instance->getPluginDefinition());
+    }
+    $parameters = new MenuTreeParameters();
+    $tree = $this->linkTree->load('mock', $parameters);
+
+    $count = function (array $tree) {
+      $sum = function ($carry, MenuLinkTreeElement $item) {
+        return $carry + $item->count();
+      };
+      return array_reduce($tree, $sum);
+    };
+
+    $this->assertEquals(8, $count($tree));
+    $parameters = new MenuTreeParameters();
+    $parameters->setRoot('test.example2');
+    $tree = $this->linkTree->load($instance->getMenuName(), $parameters);
+    $top_link = reset($tree);
+    $this->assertCount(1, $top_link->subtree);
+    $child = reset($top_link->subtree);
+    $this->assertEquals($links[3]->getPluginId(), $child->link->getPluginId());
+    $height = $this->linkTree->getSubtreeHeight('test.example2');
+    $this->assertEquals(3, $height);
+  }
+
+}

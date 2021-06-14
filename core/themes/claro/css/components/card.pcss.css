@@ -1,0 +1,161 @@
+/**
+ * @file
+ * Card.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --card-bg-color: var(--color-white);
+  --card-border-size: 1px;
+  --card-border-color: var(--color-lightgray-o-80);
+  --card-border-radius-size: var(--base-border-radius);
+  --card-image-border-radius-size: calc(var(--card-border-radius-size) - var(--card-border-size));
+  --card-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-items: flex-start;
+  padding: 0;
+  border: var(--card-border-size) solid var(--card-border-color);
+  border-radius: var(--card-border-radius-size);
+  background-color: var(--card-bg-color);
+  box-shadow: var(--card-box-shadow);
+}
+
+/* 588px theme screenshot width */
+@media screen and (min-width: 36.75rem) {
+  .card--horizontal {
+    flex-direction: row;
+  }
+
+  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
+    flex-direction: column;
+  }
+}
+
+/* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
+@media screen and (min-width: 53.75rem) {
+  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
+    flex-direction: row;
+  }
+}
+
+/**
+ * Card image.
+ */
+.card__image {
+  overflow: hidden;
+  border-radius: var(--card-image-border-radius-size) var(--card-image-border-radius-size) 0 0;
+  line-height: 0;
+}
+
+@media screen and (min-width: 36.75rem) {
+  .card--horizontal .card__image {
+    flex-basis: 35%;
+    border-radius: var(--card-image-border-radius-size) 0 0 var(--card-image-border-radius-size); /* LTR */
+  }
+  [dir="rtl"] .card--horizontal .card__image {
+    border-radius: 0 var(--card-image-border-radius-size) var(--card-image-border-radius-size) 0;
+  }
+}
+
+/* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
+@media screen and (max-width: 53.75rem) {
+  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__image {
+    flex-basis: auto;
+  }
+}
+
+@media screen and (min-width: 85.375rem) {
+  .card--horizontal .card__image {
+    flex-basis: 45%;
+  }
+
+  /* .card--vertical .card__image {
+    flex-basis: auto;
+  } */
+}
+
+/**
+ * Card content.
+ */
+.card__content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: var(--space-l);
+}
+
+@media screen and (min-width: 36.75rem) {
+  .card--horizontal .card__content-wrapper {
+    flex-basis: 65%;
+  }
+
+  /* Card content with image. */
+  .card--horizontal .card__image ~ .card__content-wrapper {
+    padding-left: var(--space-m);
+  }
+  [dir="rtl"] .card--horizontal .card__image ~ .card__content-wrapper {
+    padding-right: var(--space-m);
+    padding-left: var(--space-l);
+  }
+}
+
+@media screen and (max-width: 53.75rem) {
+  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__content-wrapper {
+    flex-basis: auto;
+  }
+}
+
+@media screen and (min-width: 85.375rem) {
+  .card--horizontal .card__content-wrapper {
+    flex-basis: 55%;
+  }
+}
+
+/**
+ * Card content.
+ */
+.card__content {
+  flex-grow: 1;
+}
+
+/**
+ * Card content items (title, description).
+ */
+.card__content-item {
+  margin-top: 0;
+  margin-bottom: var(--space-m);
+}
+.card__content-item:last-child {
+  margin-bottom: 0;
+}
+
+/**
+ * Card footer.
+ */
+.card__footer {
+  /**
+   * Without specifying flex-shrink, IE11 will increase footer height if an
+   * interactive element inside is hovered or focused.
+   */
+  flex-shrink: 0;
+  order: 100;
+  margin-top: var(--space-l);
+}
+
+.card__footer .action-links,
+[dir="rtl"] .card__footer .action-links {
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] .card__footer .action-links {
+  text-align: left;
+}

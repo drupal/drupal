@@ -1,0 +1,95 @@
+{#
+/**
+ * @file
+ * Theme override for a form element.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - errors: (optional) Any errors for this form element, may not be set.
+ * - prefix: (optional) The form element prefix, may not be set.
+ * - suffix: (optional) The form element suffix, may not be set.
+ * - required: The required marker, or empty if the associated form element is
+ *   not required.
+ * - type: The type of the element.
+ * - name: The name of the element.
+ * - label: A rendered label element.
+ * - label_display: Label display setting. It can have these values:
+ *   - before: The label is output before the element. This is the default.
+ *     The label includes the #title and the required marker, if #required.
+ *   - after: The label is output after the element. For example, this is used
+ *     for radio and checkbox #type elements. If the #title is empty but the
+ *     field is #required, the label will contain only the required marker.
+ *   - invisible: Labels are critical for screen readers to enable them to
+ *     properly navigate through forms but can be visually distracting. This
+ *     property hides the label for everyone except screen readers.
+ *   - attribute: Set the title attribute on the element to create a tooltip but
+ *     output no label element. This is supported only for checkboxes and radios
+ *     in \Drupal\Core\Render\Element\CompositeFormElementTrait::preRenderCompositeFormElement().
+ *     It is used where a visual label is not needed, such as a table of
+ *     checkboxes where the row and column provide the context. The tooltip will
+ *     include the title and required marker.
+ * - description: (optional) A list of description properties containing:
+ *    - content: A description of the form element, may not be set.
+ *    - attributes: (optional) A list of HTML attributes to apply to the
+ *      description content wrapper. Will only be set when description is set.
+ * - description_display: Description display setting. It can have these values:
+ *   - before: The description is output before the element.
+ *   - after: The description is output after the element. This is the default
+ *     value.
+ *   - invisible: The description is output after the element, hidden visually
+ *     but available to screen readers.
+ * - disabled: True if the element is disabled.
+ * - title_display: Title display setting.
+ *
+ * @see template_preprocess_form_element()
+ */
+#}
+{%
+  set classes = [
+    'js-form-item',
+    'form-item',
+    'js-form-type-' ~ type|clean_class,
+    'form-type-' ~ type|clean_class,
+    'js-form-item-' ~ name|clean_class,
+    'form-item-' ~ name|clean_class,
+    title_display not in ['after', 'before'] ? 'form-no-label',
+    disabled == 'disabled' ? 'form-disabled',
+    errors ? 'form-item--error',
+  ]
+%}
+{%
+  set description_classes = [
+    'description',
+    description_display == 'invisible' ? 'visually-hidden',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if label_display in ['before', 'invisible'] %}
+    {{ label }}
+  {% endif %}
+  {% if prefix is not empty %}
+    <span class="field-prefix">{{ prefix }}</span>
+  {% endif %}
+  {% if description_display == 'before' and description.content %}
+    <div{{ description.attributes }}>
+      {{ description.content }}
+    </div>
+  {% endif %}
+  {{ children }}
+  {% if suffix is not empty %}
+    <span class="field-suffix">{{ suffix }}</span>
+  {% endif %}
+  {% if label_display == 'after' %}
+    {{ label }}
+  {% endif %}
+  {% if errors %}
+    <div class="form-item--error-message">
+      <strong>{{ errors }}</strong>
+    </div>
+  {% endif %}
+  {% if description_display in ['after', 'invisible'] and description.content %}
+    <div{{ description.attributes.addClass(description_classes) }}>
+      {{ description.content }}
+    </div>
+  {% endif %}
+</div>

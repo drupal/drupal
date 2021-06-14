@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Umami theme.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\search\SearchPageInterface;
+use Drupal\views\Form\ViewsForm;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ *
+ * Adds body classes if certain regions have content.
+ */
+function umami_preprocess_html(&$variables) {
+  // Add a sidebar class if the sidebar has content in it.
+  if (!empty($variables['page']['sidebar'])) {
+    $variables['attributes']['class'][] = 'two-columns';
+    $variables['#attached']['library'][] = 'umami/two-columns';
+  }
+  else {
+    $variables['attributes']['class'][] = 'one-column';
+  }
+}
+
+/**
+ * Implements hook_preprocess_field().
+ */
+function umami_preprocess_field(&$variables, $hook) {
+  $element = $variables['element'];
+  // Add class to label and items fields to be styled using the meta styles.
+  if (isset($element['#field_name'])) {
+    if (
+      $element['#field_name'] == 'field_recipe_category' ||
+      $element['#field_name'] == 'field_tags' ||
+      $element['#field_name'] == 'field_difficulty') {
+      $variables['attributes']['class'] = 'label-items';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function umami_preprocess_block(&$variables) {
+  $variables['title_attributes']['class'][] = 'block__title';
+  // Add a class indicating the custom block bundle.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    $variables['attributes']['class'][] = Html::getClass('block-type-' . $variables['elements']['content']['#block_content']->bundle());
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for block templates.
+ */
+function umami_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  // Block suggestions for custom block bundles.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    array_splice($suggestions, 1, 0, 'block__bundle__' . $variables['elements']['content']['#block_content']->bundle());
+  }
+}
+
+/**
+ * Implements hook_preprocess_breadcrumb().
+ */
+function umami_preprocess_breadcrumb(&$variables) {
+  // We are creating a variable for the Current Page Title, to allow us to print
+  // it after the breadcrumbs loop has run.
+  $route_match = \Drupal::routeMatch();
+  // Search page titles aren't resolved using the title_resolver service - it
+  // will always return 'Search' instead of 'Search for [term]', which would
+  // give us a breadcrumb of Home >> Search >> Search.
+  // @todo Revisit after https://www.drupal.org/project/drupal/issues/2359901
+  // @todo Revisit after https://www.drupal.org/project/drupal/issues/2403359
+  $entity = $route_match->getParameter('entity');
+  if ($entity instanceof SearchPageInterface) {
+    $variables['current_page_title'] = $entity->getPlugin()->suggestedTitle();
+  }
+  else {
+    $variables['current_page_title'] = \Drupal::service('title_resolver')->getTitle(\Drupal::request(), $route_match->getRouteObject());
+  }
+  // Since we are printing the 'Current Page Title', add the URL cache context.
+  // If we don't, then we might end up with something like
+  // "Home > Articles" on the Recipes page, which should read "Home > Recipes".
+  $variables['#cache']['contexts'][] = 'url';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function umami_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
+  $form['keys']['#attributes']['placeholder'] = t('Search by keyword, ingredient, dish');
+}
+
+/**
+ * Implements hook_preprocess_links__media_library_menu().
+ *
+ * This targets the menu of available media types in the media library's modal
+ * dialog.
+ *
+ * @todo Do this in the relevant template once
+ *   https://www.drupal.org/project/drupal/issues/3088856 is resolved.
+ */
+function umami_preprocess_links__media_library_menu(array &$variables) {
+  foreach ($variables['links'] as &$link) {
+    // This conditional exists because the media-library-menu__link class is
+    // currently added by Classy, but Umami will eventually not use Classy as a
+    // base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_preprocess_links__media_library_menu()
+    if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
+      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @todo revisit in https://drupal.org/node/3110132
+ */
+function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+
+  if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
+    // The conditional below exists because the media-library-views-form class
+    // is currently added by Classy, but Umami will eventually not use Classy as
+    // a base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_form_alter()
+    if (!isset($form['#attributes']['class']) || !in_array('media-library-views-form', $form['#attributes']['class'])) {
+      $form['#attributes']['class'][] = 'media-library-views-form';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_image_widget().
+ *
+ * @todo Revisit in https://drupal.org/node/3117430
+ */
+function umami_preprocess_image_widget(&$variables) {
+  if (!empty($variables['element']['fids']['#value'])) {
+    $file = reset($variables['element']['#files']);
+    $variables['data']["file_{$file->id()}"]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
+  }
+}
+
+/**
+ * Implements template_preprocess_links().
+ *
+ * This makes it so array keys of #links items are added as a class. This
+ * functionality was removed in Drupal 8.1, but still necessary in some
+ * instances.
+ *
+ * @todo remove in https://drupal.org/node/3120962
+ */
+function umami_preprocess_links(&$variables) {
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
+  }
+}

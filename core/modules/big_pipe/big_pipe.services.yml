@@ -1,0 +1,24 @@
+services:
+  html_response.big_pipe_subscriber:
+    class: Drupal\big_pipe\EventSubscriber\HtmlResponseBigPipeSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@big_pipe']
+  placeholder_strategy.big_pipe:
+    class: Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
+    arguments: ['@session_configuration', '@request_stack', '@current_route_match']
+    tags:
+      - { name: placeholder_strategy, priority: 0 }
+  big_pipe:
+    class: Drupal\big_pipe\Render\BigPipe
+    arguments: ['@renderer', '@session', '@request_stack', '@http_kernel', '@event_dispatcher', '@config.factory']
+  html_response.attachments_processor.big_pipe:
+    public: false
+    class: \Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor
+    decorates: html_response.attachments_processor
+    arguments: ['@html_response.attachments_processor.big_pipe.inner', '@asset.resolver', '@config.factory', '@asset.css.collection_renderer', '@asset.js.collection_renderer', '@request_stack', '@renderer', '@module_handler']
+
+  route_subscriber.no_big_pipe:
+    class: Drupal\big_pipe\EventSubscriber\NoBigPipeRouteAlterSubscriber
+    tags:
+      - { name: event_subscriber }

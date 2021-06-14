@@ -1,0 +1,106 @@
+entity.entity_test.canonical:
+  path: '/entity_test/{entity_test}'
+  defaults:
+    _entity_view: 'entity_test.full'
+    _title: 'Test full view mode'
+  requirements:
+    _entity_access: 'entity_test.view'
+
+entity.entity_test.render_options:
+  path: '/entity_test_converter/{foo}'
+  options:
+    parameters:
+      foo:
+        type: 'entity:entity_test'
+  defaults:
+    _entity_view: 'entity_test.full'
+  requirements:
+    _entity_access: 'foo.view'
+
+entity.entity_test.render_no_view_mode:
+  path: '/entity_test_no_view_mode/{entity_test}'
+  defaults:
+    _entity_view: 'entity_test'
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test.collection_referencing_entities:
+  path: '/entity_test/list/{entity_reference_field_name}/{referenced_entity_type}/{referenced_entity_id}'
+  defaults:
+    _controller: '\Drupal\entity_test\Controller\EntityTestController::listReferencingEntities'
+    _title: 'List entity_test entities referencing the given entity'
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test.collection_labels_alphabetically:
+  path: '/entity_test/list_labels_alphabetically/{entity_type_id}'
+  defaults:
+    _controller: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesAlphabetically'
+    _title: 'List labels of entities of the given entity type alphabetically'
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test.collection_empty:
+  path: '/entity_test/list_empty/{entity_type_id}'
+  defaults:
+    _controller: '\Drupal\entity_test\Controller\EntityTestController::listEntitiesEmpty'
+    _title: 'Empty list of entities of the given entity type, empty because no entities match the query'
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test.collection:
+  path: '/entity_test/list'
+  defaults:
+    _entity_list: entity_test
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test_rev.revision:
+  path: '/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::viewRevision'
+  options:
+    parameters:
+      entity_test_rev:
+        type: entity:entity_test_rev
+      entity_test_rev_revision:
+        type: entity_revision:entity_test_rev
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test_mulrev.revision:
+  path: '/entity_test_mulrev/{entity_test_mulrev}/revision/{entity_test_mulrev_revision}/view'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::viewRevision'
+  options:
+    parameters:
+      entity_test_mulrev:
+        type: entity:entity_test_mulrev
+      entity_test_mulrev_revision:
+        type: entity_revision:entity_test_mulrev
+  requirements:
+    _access: 'TRUE'
+
+entity.block.test_operation:
+  path: '/admin/structure/block/manage/{block}/test_operation'
+  defaults:
+    _entity_view: 'entity_test'
+  requirements:
+    _access: 'TRUE'
+
+entity.user_role.test_operation:
+  path: '/admin/people/roles/manage/{user_role}/test_operation'
+  defaults:
+    _entity_view: 'entity_test'
+  requirements:
+    _access: 'TRUE'
+
+entity.entity_test_view_builder.canonical:
+  path: '/entity_test_view_builder/{entity_test_view_builder}'
+  defaults:
+    _entity_view: 'entity_test_view_builder'
+  requirements:
+    _access: 'TRUE'
+
+route_callbacks:
+  - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'

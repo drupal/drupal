@@ -1,0 +1,5 @@
+name: 'Error test'
+type: module
+description: 'Support module for error and exception testing.'
+package: Testing
+version: VERSION

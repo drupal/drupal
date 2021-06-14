@@ -1,0 +1,11 @@
+id: d7_blocked_ips
+label: Blocked IPs
+migration_tags:
+  - Drupal 7
+  - Content
+source:
+  plugin: d7_blocked_ips
+process:
+  ip: ip
+destination:
+  plugin: blocked_ip

@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for the Workflows module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function workflows_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.workflows':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Workflows module provides a UI and an API for creating workflows content. This lets site admins define workflows and their states, and then define transitions between those states. For more information, see the <a href=":workflow">online documentation for the Workflows module</a>.', [':workflow' => 'https://www.drupal.org/documentation/modules/workflows']) . '</p>';
+      $output .= '<h4>' . t('Workflow') . '</h4>';
+      $output .= '<p>' . t('A collection of states and transitions between those states.') . '</p>';
+      $output .= '<h4>' . t('State') . '</h4>';
+      $output .= '<p>' . t('A particular condition that something is in at a specific time. The usage of the state is determined by a module that harnesses the Workflows module. For example, Content Moderation allows a state to be used for moderation of content by assigning a given state to a content item.') . '</p>';
+      $output .= '<h4>' . t('Transition') . '</h4>';
+      $output .= '<p>' . t('The process of changing from one state to another. A transition can occur from multiple states, but only to one state.') . '</p>';
+      return $output;
+  }
+}

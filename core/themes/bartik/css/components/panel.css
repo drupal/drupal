@@ -1,0 +1,21 @@
+/**
+ * @file
+ * Panel styling. Panels are used to visually group items together.
+ */
+
+.panel {
+  margin: 10px 0;
+  padding: 0 5px 5px;
+  border: 1px solid #ccc;
+  background: #fbfbfb;
+}
+.panel__title {
+  margin: 16px 7px;
+}
+.panel__content {
+  padding: 0 4px 2px 8px; /* LTR */
+}
+[dir="rtl"] .panel__content {
+  padding-right: 8px;
+  padding-left: 4px;
+}

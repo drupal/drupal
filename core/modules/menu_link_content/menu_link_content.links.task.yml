@@ -1,0 +1,4 @@
+entity.menu_link_content.canonical:
+  route_name: entity.menu_link_content.canonical
+  base_route: entity.menu_link_content.canonical
+  title: Edit

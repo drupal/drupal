@@ -1,0 +1,57 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_area_messages
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      empty:
+        title:
+          field: title
+          id: title
+          table: views
+          plugin_id: title
+          title: test_title_empty
+      header:
+        messages:
+          id: messages
+          table: views
+          field: messages
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          plugin_id: messages
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

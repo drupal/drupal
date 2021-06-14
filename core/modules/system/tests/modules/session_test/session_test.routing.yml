@@ -1,0 +1,163 @@
+session_test.get:
+  path: '/session-test/get'
+  defaults:
+    _title: 'Session value'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::get'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+session_test.get_from_session_object:
+  path: '/session-test/get-from-session-object'
+  defaults:
+    _title: 'Session value'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getFromSessionObject'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+session_test.id:
+  path: '/session-test/id'
+  defaults:
+    _title: 'Session ID'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getId'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.id_from_cookie:
+  path: '/session-test/id-from-cookie'
+  defaults:
+    _title: 'Session ID from cookie'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getIdFromCookie'
+  requirements:
+    _access: 'TRUE'
+
+session_test.set:
+  path: '/session-test/set/{test_value}'
+  defaults:
+    _title: 'Set session value'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::set'
+  options:
+    no_cache: TRUE
+    converters:
+      test_value: '\s+'
+  requirements:
+    _access: 'TRUE'
+
+session_test.no_set:
+  path: '/session-test/no-set/{test_value}'
+  defaults:
+    _title: 'Set session value but do not save session'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::noSet'
+  options:
+    no_cache: TRUE
+    converters:
+      test_value: '\s+'
+  requirements:
+    _access: 'TRUE'
+
+session_test.set_message:
+  path: '/session-test/set-message'
+  defaults:
+    _title: 'Set message'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setMessage'
+  requirements:
+    _access: 'TRUE'
+
+session_test.set_message_but_do_not_save:
+  path: '/session-test/set-message-but-do-not-save'
+  defaults:
+    _title: 'Set message but do not save session'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setMessageButDoNotSave'
+  requirements:
+    _access: 'TRUE'
+
+session_test.is_logged_in:
+  path: '/session-test/is-logged-in'
+  defaults:
+    _title: 'Check if user is logged in'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::isLoggedIn'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+session_test.form:
+  path: '/session-test/form'
+  defaults:
+    _form: '\Drupal\session_test\Form\SessionTestForm'
+    _title: 'Test form'
+  requirements:
+    _access: 'TRUE'
+
+session_test.trace_handler:
+  path: '/session-test/trace-handler'
+  defaults:
+    _title: 'Returns the trace recorded by test proxy session handlers as JSON'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::traceHandler'
+  requirements:
+    _access: 'TRUE'
+
+session_test.get_session_basic_auth:
+  path: '/session-test/get-session'
+  defaults:
+    _title: 'Get session information using basic authentication'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
+  options:
+    no_cache: TRUE
+    _auth: ['basic_auth']
+  requirements:
+    _permission: 'administer site configuration'
+
+session_test.get_session_no_auth:
+  path: '/session-test/get-session-no-auth'
+  defaults:
+    _title: 'Get session information'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.set_session:
+  path: '/session-test/set-session/{test_value}'
+  defaults:
+    _title: 'Set a session value using basic authentication'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setSession'
+  options:
+    no_cache: TRUE
+    _auth: ['basic_auth']
+    converters:
+      test_value: '\s+'
+  requirements:
+    _permission: 'administer site configuration'
+
+session_test.set_bag_flag:
+  path: '/session-test/set-bag-flag'
+  defaults:
+    _title: 'Sets the test flag in the session test bag'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setSessionBagFlag'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.clear_bag_flag:
+  path: '/session-test/clear-bag-flag'
+  defaults:
+    _title: 'Clears the test flag in the session test bag'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::clearSessionBagFlag'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.has_bag_flag:
+  path: '/session-test/has-bag-flag'
+  defaults:
+    _title: 'Prints a message if the flag in the session bag is set'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::hasSessionBagFlag'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'

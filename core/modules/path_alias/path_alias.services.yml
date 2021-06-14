@@ -1,0 +1,25 @@
+services:
+  path_alias.subscriber:
+    class: Drupal\path_alias\EventSubscriber\PathAliasSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@path_alias.manager', '@path.current']
+  path_alias.path_processor:
+    class: Drupal\path_alias\PathProcessor\AliasPathProcessor
+    tags:
+      - { name: path_processor_inbound, priority: 100 }
+      - { name: path_processor_outbound, priority: 300 }
+    arguments: ['@path_alias.manager']
+  path_alias.manager:
+    class: Drupal\path_alias\AliasManager
+    arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager', '@cache.data']
+  path_alias.repository:
+    class: Drupal\path_alias\AliasRepository
+    arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
+  path_alias.whitelist:
+    class: Drupal\path_alias\AliasWhitelist
+    tags:
+      - { name: needs_destruction }
+    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path_alias.repository']

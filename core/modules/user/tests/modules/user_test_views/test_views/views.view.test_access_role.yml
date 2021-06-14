@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_access_role
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      fields:
+        id:
+          id: id
+          field: id
+          table: views_test_data
+          plugin_id: numeric
+      access:
+        type: role
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test-role
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 1

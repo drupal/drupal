@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Ban module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ban_schema() {
+  $schema['ban_ip'] = [
+    'description' => 'Stores banned IP addresses.',
+    'fields' => [
+      'iid' => [
+        'description' => 'Primary Key: unique ID for IP addresses.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'ip' => [
+        'description' => 'IP address',
+        'type' => 'varchar_ascii',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'indexes' => [
+      'ip' => ['ip'],
+    ],
+    'primary key' => ['iid'],
+  ];
+  return $schema;
+}

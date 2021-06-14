@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * @file
+ * Add hooks for tests to use.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_test_template_test templates.
+ */
+function test_subsubtheme_preprocess_theme_test_template_test(&$variables) {
+}

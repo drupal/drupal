@@ -1,0 +1,39 @@
+services:
+  book.breadcrumb:
+    class: Drupal\book\BookBreadcrumbBuilder
+    arguments: ['@entity_type.manager', '@current_user', '@entity.repository', '@language_manager']
+    tags:
+      - { name: breadcrumb_builder, priority: 701 }
+  book.manager:
+    class: Drupal\book\BookManager
+    arguments: ['@entity_type.manager', '@string_translation', '@config.factory', '@book.outline_storage', '@renderer', '@language_manager', '@entity.repository']
+  book.outline:
+    class: Drupal\book\BookOutline
+    arguments: ['@book.manager']
+  book.export:
+    class: Drupal\book\BookExport
+    arguments: ['@entity_type.manager', '@book.manager', '@entity.repository']
+  book.outline_storage:
+    class: Drupal\book\BookOutlineStorage
+    arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
+  access_check.book.removable:
+    class: Drupal\book\Access\BookNodeIsRemovableAccessCheck
+    arguments: ['@book.manager']
+    tags:
+      - { name: access_check, applies_to: _access_book_removable }
+  cache_context.route.book_navigation:
+    class: Drupal\book\Cache\BookNavigationCacheContext
+    arguments: ['@current_route_match']
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - { name: cache.context}
+
+  book.uninstall_validator:
+    class: Drupal\book\BookUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@book.outline_storage', '@entity_type.manager', '@string_translation']
+    lazy: true

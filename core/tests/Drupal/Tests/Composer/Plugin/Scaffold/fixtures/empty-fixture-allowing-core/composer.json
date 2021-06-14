@@ -1,0 +1,13 @@
+{
+  "name": "fixtures/empty-fixture-allowing-core",
+  "extra": {
+    "drupal-scaffold": {
+      "allowed-packages": [
+        "fixtures/drupal-core-fixture"
+      ],
+      "locations": {
+        "web-root": "./"
+      }
+    }
+  }
+}

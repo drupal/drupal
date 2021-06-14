@@ -1,0 +1,5 @@
+name: 'Layout Builder defaults test'
+type: module
+description: 'Support module for testing layout building defaults.'
+package: Testing
+version: VERSION

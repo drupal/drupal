@@ -1,0 +1,7 @@
+name: 'Views Test Formatter'
+type: module
+description: 'Provides test field formatters.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:views

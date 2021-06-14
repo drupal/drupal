@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for testing the JSON:API module.
+ *
+ * @see: https://www.drupal.org/project/drupal/issues/3072076.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_entity_presave().
+ */
+function jsonapi_test_non_cacheable_methods_entity_presave(EntityInterface $entity) {
+  Url::fromRoute('<front>')->toString();
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function jsonapi_test_non_cacheable_methods_entity_predelete(EntityInterface $entity) {
+  Url::fromRoute('<front>')->toString();
+}

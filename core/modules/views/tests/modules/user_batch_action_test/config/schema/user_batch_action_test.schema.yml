@@ -1,0 +1,3 @@
+action.configuration.user_batch_action_test_action:
+  type: action_configuration_default
+  label: 'Process user in batch'

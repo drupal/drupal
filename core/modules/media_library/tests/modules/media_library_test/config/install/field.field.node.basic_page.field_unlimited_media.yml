@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_unlimited_media
+    - media.type.type_one
+    - node.type.basic_page
+id: node.basic_page.field_unlimited_media
+field_name: field_unlimited_media
+entity_type: node
+bundle: basic_page
+label: 'Unlimited media'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      type_one: type_one
+      type_three: type_three
+      type_five: type_five
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: audio
+field_type: entity_reference

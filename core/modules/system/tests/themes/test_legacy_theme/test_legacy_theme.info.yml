@@ -1,0 +1,16 @@
+name: 'Test legacy theme'
+type: theme
+description: 'Test theme to test deprecated functionality.'
+version: VERSION
+package: Testing
+base theme: test_theme
+
+libraries-override:
+  theme_test/deprecated_library:
+    css:
+      base:
+        css/foo.css: css/bar.css
+
+libraries-extend:
+  theme_test/another_deprecated_library:
+    - test_legacy_theme/library

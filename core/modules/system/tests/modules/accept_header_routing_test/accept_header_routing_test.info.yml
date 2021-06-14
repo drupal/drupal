@@ -1,0 +1,4 @@
+name: Accept header based routing test
+type: module
+package: Testing
+version: VERSION

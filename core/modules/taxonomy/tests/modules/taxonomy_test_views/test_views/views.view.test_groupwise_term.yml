@@ -1,0 +1,82 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+    - user
+id: test_groupwise_term
+label: test_groupwise
+module: views
+description: ''
+tag: default
+base_table: taxonomy_term_field_data
+base_field: tid
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          field: name
+          id: name
+          table: taxonomy_term_field_data
+          plugin_id: term_name
+          type: string
+          settings:
+            link_to_entity: true
+          convert_spaces: false
+          entity_type: taxonomy_term
+          entity_field: name
+        nid:
+          field: nid
+          id: nid
+          relationship: tid_representative
+          table: node_field_data
+          plugin_id: node
+          entity_type: node
+          entity_field: nid
+      pager:
+        options:
+          items_per_page: 10
+        type: full
+      query:
+        type: views_query
+      relationships:
+        tid_representative:
+          admin_label: 'Representative node'
+          field: tid_representative
+          group_type: group
+          id: tid_representative
+          relationship: none
+          required: false
+          subquery_namespace: ''
+          subquery_order: DESC
+          subquery_regenerate: true
+          subquery_sort: node_field_data.nid
+          subquery_view: ''
+          table: taxonomy_term_field_data
+          plugin_id: groupwise_max
+      row:
+        type: fields
+      sorts:
+        tid:
+          field: tid
+          id: tid
+          order: DESC
+          table: taxonomy_term_field_data
+          plugin_id: standard
+          entity_type: taxonomy_term
+          entity_field: tid
+      style:
+        type: default
+      title: test_groupwise
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

@@ -1,0 +1,33 @@
+drupal.filter.admin:
+  version: VERSION
+  js:
+    filter.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.form
+
+drupal.filter.filter_html.admin:
+  version: VERSION
+  js:
+    filter.filter_html.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/underscore
+
+drupal.filter:
+  version: VERSION
+  js:
+    filter.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+caption:
+  version: VERSION
+  css:
+    component:
+      css/filter.caption.css: {}

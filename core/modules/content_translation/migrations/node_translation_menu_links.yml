@@ -1,0 +1,125 @@
+id: node_translation_menu_links
+label: Node Translations Menu links
+audit: true
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Content
+  - Multilingual
+source:
+  plugin: menu_link
+  constants:
+    entity_prefix: 'entity:'
+    node_prefix: 'node/'
+process:
+  id: mlid
+  title: link_title
+  description: description
+  menu_name:
+    -
+      plugin: migration_lookup
+      # The menu migration is in the system module.
+      migration:
+        - d6_menu
+        - d7_menu
+      source: menu_name
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: static_map
+      map:
+        management: admin
+      bypass: true
+  # In this process pipeline, given a menu link path that might be for a
+  # translated node which has been merged with the default language node, we are
+  # trying to determine the new node ID, that is the ID of the default language
+  # node.
+  new_nid:
+    -
+      # If the path is of the form "node/<ID>" and is not routed, we will get
+      # back a URI of the form "base:node/<ID>".
+      plugin: link_uri
+      source: link_path
+      validate_route: false
+    -
+      # Isolate the node ID.
+      plugin: explode
+      delimiter: 'base:node/'
+    -
+      # Extract the node ID.
+      plugin: extract
+      default: false
+      index:
+        - 1
+    -
+      # Skip row if node ID is empty.
+      plugin: skip_on_empty
+      method: row
+    -
+      # With the old node ID in hand, lookup in the d6_node_translation or
+      # d7_node_translation mapping tables to find the new node ID.
+      plugin: migration_lookup
+      migration:
+        - d6_node_complete
+        - d7_node_complete
+        - d6_node_translation
+        - d7_node_translation
+      no_stub: true
+    -
+      # Skip row if the new node ID is empty.
+      plugin: skip_on_empty
+      method: row
+    -
+      # Extract the node ID. The migration lookup will return an array with two
+      # items, the new node ID and the translation langcode. We need the node ID
+      # which is at index 0.
+      plugin: extract
+      index:
+        - 0
+  # This will be used in the "link/uri" and "route" processes below.
+  link_path:
+    plugin: concat
+    source:
+      - 'constants/node_prefix'
+      - '@new_nid'
+  link/uri:
+    plugin: concat
+    source:
+      - 'constants/entity_prefix'
+      - '@link_path'
+  link/options: options
+  route:
+    plugin: route
+    source:
+      - '@link_path'
+      - options
+  route_name: '@route/route_name'
+  route_parameters: '@route/route_parameters'
+  url: '@route/url'
+  options: '@route/options'
+  external: external
+  weight: weight
+  expanded: expanded
+  enabled: enabled
+  parent:
+    plugin: menu_link_parent
+    source:
+      - plid
+      - '@menu_name'
+      - parent_link_path
+  changed: updated
+destination:
+  plugin: entity:menu_link_content
+  default_bundle: menu_link_content
+  no_stub: true
+migration_dependencies:
+  required:
+    - language
+  optional:
+    - d6_menu
+    - d6_menu_links
+    - d6_node_translation
+    - d7_menu
+    - d7_menu_links
+    - d7_node_translation

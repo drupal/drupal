@@ -1,0 +1,40 @@
+/**
+ * @file
+ * Fixes for core/assets/vendor/normalize-css/normalize.css since version 8.0.1.
+ */
+
+/**
+ * Add SVG styling for IE that was mistakenly removed from normalize.css in
+ * 8.0.0.
+ */
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/**
+ * Prevent regression due to normalize.css no longer hiding the cancel search
+ * button in 8.0.0.
+ * @todo Remove this rule in https://drupal.org/node/3114878
+ */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/**
+ * Prevent IE11 and Edge <summary> elements from being displayed as list-item.
+ * due to a rule added in normalize.css 5.0.0. For browsers that support
+ * <summary>, this is the correct styling. For IE11 and Edge, which do not
+ * support this element, this results in an unwanted list-item bullet.
+ */
+/* Target IE11 */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  summary {
+    display: block;
+  }
+}
+/* Target Edge */
+@supports (-ms-ime-align:auto) {
+  summary {
+    display: block;
+  }
+}

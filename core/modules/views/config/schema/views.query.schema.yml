@@ -1,0 +1,24 @@
+# Schema for the views query.
+
+views.query.views_query:
+  type: views_query
+  label: 'Views query'
+  mapping:
+    query_comment:
+      type: string
+      label: 'Query comment'
+    disable_sql_rewrite:
+      type: boolean
+      label: 'Disable SQL rewriting'
+    distinct:
+      type: boolean
+      label: 'Distinct'
+    replica:
+      type: boolean
+      label: 'Use Replica Server'
+    query_tags:
+      type: sequence
+      label: 'Query Tags'
+      sequence:
+        type: string
+        label: 'Tag'

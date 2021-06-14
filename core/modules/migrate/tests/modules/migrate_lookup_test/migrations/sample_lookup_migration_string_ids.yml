@@ -1,0 +1,20 @@
+id: sample_lookup_migration_string_ids
+label: Sample Lookup Migration with string ids
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: node1
+      nid: 10
+      title: Node 10
+    - id: node2
+      nid: 11
+      title: Node 11
+  ids:
+    id:
+      type: string
+process:
+  nid: nid
+  title: title
+destination:
+  default_bundle: node_lookup
+  plugin: entity:node

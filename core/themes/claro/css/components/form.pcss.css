@@ -1,0 +1,227 @@
+/**
+ * @file
+ * Main form and form item styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+::placeholder {
+  color: var(--input-fg-color--placeholder);
+}
+/* IE 10 and 11 needs this set as important. */
+:-ms-input-placeholder {
+  color: var(--input-fg-color--placeholder) !important;
+}
+
+/**
+ * General form item.
+ */
+.form-item {
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-l);
+}
+/**
+ * When a table row or a container-inline has a single form item, prevent it
+ * from adding unnecessary extra spacing.
+ * If it has multiple form items, allow spacing between them, overriding Classy.
+ */
+tr .form-item,
+.container-inline .form-item {
+  margin-top: var(--space-s);
+  margin-bottom: var(--space-s);
+}
+
+/**
+ * Form element label.
+ */
+.form-item__label {
+  display: table;
+  margin-top: calc(var(--space-xs) / 2); /* 4px */
+  margin-bottom: calc(var(--space-xs) / 2); /* 4px */
+  font-size: var(--font-size-s); /* ~14px */
+  font-weight: bold;
+  line-height: var(--line-height-form-label);
+}
+.form-item__label--multiple-value-form {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+.form-item__label[for] {
+  cursor: pointer;
+}
+.form-item__label.option {
+  display: inline;
+  font-weight: normal;
+}
+/* Label states. */
+.form-item__label.has-error {
+  color: var(--input--error-color);
+}
+.form-item__label.option.has-error {
+  color: inherit;
+}
+.form-item__label.is-disabled {
+  cursor: default; /* @todo ...or auto? */
+  color: var(--input--disabled-fg-color);
+}
+.form-item__label.form-required::after,
+.fieldset__label.form-required::after {
+  display: inline-block;
+  margin-right: 0.15em;
+  margin-left: 0.15em;
+  content: "*";
+  color: var(--color-maximumred);
+  font-size: 0.875rem;
+}
+
+/**
+ * Form item description.
+ */
+.form-item__description {
+  margin-top: calc(6rem / 16); /* 6px */
+  margin-bottom: calc(6rem / 16); /* 6px */
+  color: var(--input-fg-color--description);
+  font-size: var(--font-size-xs); /* ~13px */
+  line-height: calc(17rem / 16); /* 17px */
+}
+/* Description states. */
+.form-item__description.is-disabled {
+  color: var(--input--disabled-fg-color);
+}
+
+/**
+ * Error message (Inline form errors).
+ */
+.form-item__error-message {
+  margin-top: calc(6rem / 16); /* 6px */
+  margin-bottom: calc(6rem / 16); /* 6px */
+  color: var(--input--error-color);
+  font-size: var(--font-size-xs); /* ~13px */
+  font-weight: normal;
+  line-height: calc(17rem / 16); /* 17px */
+}
+
+.form-item__prefix.is-disabled,
+.form-item__suffix.is-disabled {
+  color: var(--input--disabled-fg-color);
+}
+
+/* Add some spacing so that the focus ring and suffix don't overlap. */
+@media screen and (min-width: 601px) {
+  .form-item__suffix {
+    margin-left: var(--space-xs); /* LTR */
+  }
+
+  [dir="rtl"] .form-item__suffix {
+    margin-right: var(--space-xs);
+    margin-left: 0;
+  }
+}
+
+/**
+ * Form actions.
+ */
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+.form-actions .button,
+.form-actions .action-link {
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+.form-actions .ajax-progress--throbber {
+  align-self: center;
+}
+
+/**
+ * Password module.
+ *
+ * @legacy
+ * @todo These should be in a standalone component file.
+ */
+.confirm-parent,
+.password-parent {
+  overflow: visible;
+  width: auto;
+}
+
+.form-item-options-group-info-identifier,
+.form-item-pass .description {
+  clear: both;
+}
+
+/**
+ * Custom label placement for editor filter format select.
+ */
+.form-item--editor-format {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+}
+
+.form-item--editor-format .form-item__label,
+.form-item--editor-format .form-item__prefix,
+.form-item--editor-format .form-item__suffix,
+.form-item--editor-format .form-element--editor-format {
+  min-width: 1px;
+}
+
+.form-item--editor-format .form-item__label,
+.form-item--editor-format .form-item__prefix,
+.form-item--editor-format .form-item__suffix {
+  margin-right: var(--space-xs); /* LTR */
+}
+[dir="rtl"] .form-item--editor-format .form-item__label,
+[dir="rtl"] .form-item--editor-format .form-item__prefix,
+[dir="rtl"] .form-item--editor-format .form-item__suffix {
+  margin-right: 0;
+  margin-left: var(--space-xs);
+}
+
+.form-item--editor-format .form-item__description,
+.form-item--editor-format .form-item__error-message {
+  flex: 0 1 100%;
+  min-width: 1px;
+}
+
+/**
+ * Improve form element usability on narrow devices.
+ *
+ * @legacy
+ */
+@media screen and (max-width: 600px) {
+  .password-strength {
+    width: 100%;
+  }
+  div.form-item div.password-suggestions {
+    float: none;
+  }
+}
+
+/**
+ * Prevent regression due to explicit line-heights applied to these elements in
+ * normalize.css 7.0.0.
+ */
+button {
+  line-height: 1.125rem;
+}
+input,
+optgroup {
+  line-height: 1.5rem;
+}
+
+/**
+ * Prevent regression due to -webkit-appearance being set to button in
+ * normalize.css 4.1.0.
+ */
+::-webkit-file-upload-button {
+  -webkit-appearance: push-button;
+}

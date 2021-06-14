@@ -1,0 +1,91 @@
+# The name of the menu changes during the course of the test. Using a $_GET.
+menu_test.menu_name_test:
+  title: 'Test menu_name router item'
+  route_name: menu_test.menu_name_test
+  menu_name: original
+# This item uses SystemController::systemAdminMenuBlockPage() to list child
+# items.
+menu_test.menu_callback_description:
+  title: 'Menu item title'
+  description: 'Menu item description parent'
+  route_name: menu_test.callback_description
+# This item tests the description key.
+menu_test.menu_callback_description.description-plain:
+  title: 'Menu item with a regular description'
+  description: 'Menu item description text'
+  route_name: menu_test.callback_description_plain
+  parent: menu_test.menu_callback_description
+menu_test.menu_no_title_callback:
+  title: 'A title with @placeholder'
+  route_name: menu_test.menu_no_title_callback
+# Hierarchical tests.
+menu_test.hierarchy_parent:
+  title: 'Parent menu router'
+  route_name: menu_test.hierarchy_parent
+menu_test.hierarchy_parent.child:
+  title: 'Child menu router'
+  route_name: menu_test.hierarchy_parent_child
+  parent: menu_test.hierarchy_parent
+menu_test.hierarchy_parent.child2.child:
+  title: 'Unattached subchild router'
+  route_name: menu_test.hierarchy_parent_child2
+  parent: menu_test.hierarchy_parent.child
+# Path containing "exotic" characters.
+menu_test.exotic_path:
+  title: '"Exotic" path'
+  route_name: menu_test.exotic_path
+  # "Special" ASCII characters. Characters that look like a percent-escaped
+  # string. Characters from various non-ASCII alphabets.
+  # cSpell:disable-next-line
+  route_parameters: { exotic: ' -._~!$''"()*@[]?&+%#,;=:%23%25%26%2B%2F%3Féøïвβ中國書۞' }
+# Hidden tests; base parents.
+# Same structure as in Menu and Block modules. Since those structures can
+# change, we need to simulate our own in here.
+menu_test:
+  title: 'Menu test root'
+  route_name: menu_test.menu_test
+# Hidden tests; one dynamic argument.
+menu_test.hidden:
+  title: 'Hidden test root'
+  route_name: menu_test.hidden
+  parent: menu_test
+menu_test.hidden.menu:
+  title: Menus
+  route_name: menu_test.hidden_menu
+  parent: menu_test.hidden
+# Hidden tests; two dynamic arguments.
+menu_test.hidden.block:
+  title: Blocks
+  route_name: menu_test.hidden_block
+  parent: menu_test.hidden
+menu_test.menu-title-test.case1:
+  title: 'Example title - Case 1'
+  route_name: menu_test.title_test_case1
+menu_test.menu-title-test.case2:
+  title: 'Example title'
+  route_name: menu_test.title_test_case2
+menu_test.menu-title-test.case3:
+  title: 'Bike sheds full of blue smurfs'
+  route_name: menu_test.title_test_case3
+menu_test.context:
+  title: ''
+  route_name: menu_test.context
+
+menu_test.parent:
+  title: 'Test menu_name parent'
+  route_name: menu_test.menu_name_test
+  menu_name: test
+
+menu_test.child:
+  title: 'Test menu_name child'
+  route_name: menu_test.menu_name_test
+  parent: menu_test.parent
+
+menu_test.unsafe:
+  route_name: menu_test.menu_name_test
+  deriver: '\Drupal\menu_test\Plugin\Derivative\MenuLinkTestWithUnsafeTitle'
+
+menu_test.access_check:
+  title: 'Test custom route access check'
+  route_name: menu_test.router_test_session
+  menu_name: account

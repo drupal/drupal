@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the modules uninstall page.
+ *
+ * Available variables:
+ * - form: The modules uninstall form.
+ * - modules: Contains multiple module instances. Each module contains:
+ *   - attributes: Attributes on the row.
+ *   - module_name: The name of the module.
+ *   - checkbox: A checkbox for uninstalling the module.
+ *   - checkbox_id: A unique identifier for interacting with the checkbox
+ *     element.
+ *   - name: The human-readable name of the module.
+ *   - description: The description of the module.
+ *   - disabled_reasons: (optional) A list of reasons why this module cannot be
+ *     uninstalled.
+ *
+ * @see template_preprocess_system_modules_uninstall()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ form.filters }}
+
+<table class="responsive-enabled">
+  <thead>
+    <tr>
+      <th>{{ 'Uninstall'|t }}</th>
+      <th>{{ 'Name'|t }}</th>
+      <th>{{ 'Description'|t }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for module in modules %}
+      {% set zebra = cycle(['odd', 'even'], loop.index0) -%}
+      <tr{{ module.attributes.addClass(zebra) }}>
+        <td align="center">
+          {{- module.checkbox -}}
+        </td>
+        <td>
+          <label for="{{ module.checkbox_id }}" class="module-name table-filter-text-source">{{ module.name }}</label>
+        </td>
+        <td class="description">
+          <span class="text module-description">{{ module.description }}</span>
+          {% if module.reasons_count > 0 %}
+            <div class="admin-requirements">
+              {%- trans -%}
+                The following reason prevents {{ module.module_name }} from being uninstalled:
+              {%- plural module.reasons_count -%}
+                The following reasons prevent {{ module.module_name }} from being uninstalled:
+              {%- endtrans %}
+              <div class="item-list">
+                <ul>
+                  {%- for reason in module.validation_reasons -%}
+                    <li>{{ reason }}</li>
+                  {%- endfor -%}
+                  {%- if module.required_by -%}
+                    <li>{{ 'Required by: @module-list'|t({'@module-list': module.required_by|safe_join(', ') }) }}</li>
+                  {%- endif -%}
+                </ul>
+              </div>
+            </div>
+          {% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr class="odd">
+        <td colspan="3" class="empty message">{{ 'No modules are available to uninstall.'|t }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ form|without('filters', 'modules', 'uninstall') }}

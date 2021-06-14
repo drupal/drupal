@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for the Statistics module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function statistics_uninstall() {
+  // Remove states.
+  \Drupal::state()->delete('statistics.node_counter_scale');
+  \Drupal::state()->delete('statistics.day_timestamp');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function statistics_schema() {
+  $schema['node_counter'] = [
+    'description' => 'Access statistics for {node}s.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {node}.nid for these statistics.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'totalcount' => [
+        'description' => 'The total number of times the {node} has been viewed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
+      ],
+      'daycount' => [
+        'description' => 'The total number of times the {node} has been viewed today.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+      'timestamp' => [
+        'description' => 'The most recent time the {node} has been viewed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['nid'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function statistics_update_last_removed() {
+  return 8300;
+}

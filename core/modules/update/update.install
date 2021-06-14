@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Update Manager module.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\update\ProjectSecurityData;
+use Drupal\update\ProjectSecurityRequirement;
+use Drupal\update\UpdateFetcherInterface;
+use Drupal\update\UpdateManagerInterface;
+
+/**
+ * Implements hook_requirements().
+ *
+ * Describes the status of the site regarding available updates. If
+ * there is no update data, only one record will be returned, indicating that
+ * the status of core can't be determined. If data is available, there will be
+ * two records: one for core, and another for all of contrib (assuming there
+ * are any contributed modules or themes enabled on the site). In addition to
+ * the fields expected by hook_requirements ('value', 'severity', and
+ * optionally 'description'), this array will contain a 'reason' attribute,
+ * which is an integer constant to indicate why the given status is being
+ * returned (UPDATE_NOT_SECURE, UPDATE_NOT_CURRENT, or UPDATE_UNKNOWN). This
+ * is used for generating the appropriate email notification messages during
+ * update_cron(), and might be useful for other modules that invoke
+ * update_requirements() to find out if the site is up to date or not.
+ *
+ * @see _update_message_text()
+ * @see _update_cron_notify()
+ * @see \Drupal\update\UpdateManagerInterface
+ */
+function update_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+    if ($available = update_get_available(FALSE)) {
+      module_load_include('inc', 'update', 'update.compare');
+      $data = update_calculate_project_data($available);
+      // First, populate the requirements for core:
+      $requirements['update_core'] = _update_requirement_check($data['drupal'], 'core');
+      if (!empty($available['drupal']['releases'])) {
+        $security_data = ProjectSecurityData::createFromProjectDataAndReleases($data['drupal'], $available['drupal']['releases'])->getCoverageInfo();
+        if ($core_coverage_requirement = ProjectSecurityRequirement::createFromProjectDataAndSecurityCoverageInfo($data['drupal'], $security_data)->getRequirement()) {
+          $requirements['coverage_core'] = $core_coverage_requirement;
+        }
+      }
+
+      // We don't want to check drupal a second time.
+      unset($data['drupal']);
+      if (!empty($data)) {
+        // Now, sort our $data array based on each project's status. The
+        // status constants are numbered in the right order of precedence, so
+        // we just need to make sure the projects are sorted in ascending
+        // order of status, and we can look at the first project we find.
+        uasort($data, '_update_project_status_sort');
+        $first_project = reset($data);
+        $requirements['update_contrib'] = _update_requirement_check($first_project, 'contrib');
+      }
+    }
+    else {
+      $requirements['update_core']['title'] = t('Drupal core update status');
+      $requirements['update_core']['value'] = t('No update data available');
+      $requirements['update_core']['severity'] = REQUIREMENT_WARNING;
+      $requirements['update_core']['reason'] = UpdateFetcherInterface::UNKNOWN;
+      $requirements['update_core']['description'] = _update_no_data();
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function update_install() {
+  $queue = \Drupal::queue('update_fetch_tasks', TRUE);
+  $queue->createQueue();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function update_uninstall() {
+  \Drupal::state()->delete('update.last_check');
+  \Drupal::state()->delete('update.last_email_notification');
+
+  $queue = \Drupal::queue('update_fetch_tasks');
+  $queue->deleteQueue();
+}
+
+/**
+ * Fills in the requirements array.
+ *
+ * This is shared for both core and contrib to generate the right elements in
+ * the array for hook_requirements().
+ *
+ * @param $project
+ *   Array of information about the project we're testing as returned by
+ *   update_calculate_project_data().
+ * @param $type
+ *   What kind of project this is ('core' or 'contrib').
+ *
+ * @return
+ *   An array to be included in the nested $requirements array.
+ *
+ * @see hook_requirements()
+ * @see update_requirements()
+ * @see update_calculate_project_data()
+ */
+function _update_requirement_check($project, $type) {
+  $requirement = [];
+  if ($type == 'core') {
+    $requirement['title'] = t('Drupal core update status');
+  }
+  else {
+    $requirement['title'] = t('Module and theme update status');
+  }
+  $status = $project['status'];
+  if ($status != UpdateManagerInterface::CURRENT) {
+    $requirement['reason'] = $status;
+    $requirement['severity'] = REQUIREMENT_ERROR;
+    // When updates are available, append the available updates link to the
+    // message from _update_message_text(), and format the two translated
+    // strings together in a single paragraph.
+    $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
+    if (!in_array($status, [UpdateFetcherInterface::UNKNOWN, UpdateFetcherInterface::NOT_CHECKED, UpdateFetcherInterface::NOT_FETCHED, UpdateFetcherInterface::FETCH_PENDING])) {
+      if (_update_manager_access()) {
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information and to install your missing updates.', [':available_updates' => Url::fromRoute('update.report_update')->toString()])];
+      }
+      else {
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => Url::fromRoute('update.status')->toString()])];
+      }
+    }
+  }
+  switch ($status) {
+    case UpdateManagerInterface::NOT_SECURE:
+      $requirement_label = t('Not secure!');
+      break;
+
+    case UpdateManagerInterface::REVOKED:
+      $requirement_label = t('Revoked!');
+      break;
+
+    case UpdateManagerInterface::NOT_SUPPORTED:
+      $requirement_label = t('Unsupported release');
+      break;
+
+    case UpdateManagerInterface::NOT_CURRENT:
+      $requirement_label = t('Out of date');
+      $requirement['severity'] = REQUIREMENT_WARNING;
+      break;
+
+    case UpdateFetcherInterface::UNKNOWN:
+    case UpdateFetcherInterface::NOT_CHECKED:
+    case UpdateFetcherInterface::NOT_FETCHED:
+    case UpdateFetcherInterface::FETCH_PENDING:
+      $requirement_label = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
+      $requirement['severity'] = REQUIREMENT_WARNING;
+      break;
+
+    default:
+      $requirement_label = t('Up to date');
+  }
+  if ($status != UpdateManagerInterface::CURRENT && $type == 'core' && isset($project['recommended'])) {
+    $requirement_label .= ' ' . t('(version @version available)', ['@version' => $project['recommended']]);
+  }
+  $requirement['value'] = Link::fromTextAndUrl($requirement_label, Url::fromRoute(_update_manager_access() ? 'update.report_update' : 'update.status'))->toString();
+  return $requirement;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function update_update_last_removed() {
+  return 8001;
+}

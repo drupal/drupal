@@ -1,0 +1,30 @@
+---
+label: 'Managing media'
+top_level: true
+related:
+  - core.content_structure
+  - field_ui.add_field
+  - field_ui.reference_field
+  - field_ui.manage_form
+  - breakpoint.overview
+---
+{% set structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+<h2>{% trans %}What are media items?{% endtrans %}</h2>
+<p>{% trans %}Core media items include audio, images, documents, and videos. You can add other media types, such as social media posts, through the use of contributed modules. Media items may be files located in your site's file system, or remote items referenced by a URL. Media items are content entities, and they are divided into media types (which are entity sub-types); media types can have fields. See the <a href="{{ structure }}">Managing content structure</a> topic for more information on content entities and fields.{% endtrans %}</p>
+<h2>{% trans %}What is the media library?{% endtrans %}</h2>
+<p>{% trans %}The media library is a visual user interface for managing and reusing media items. Add media items to content using Media reference fields and the Media library field widget.{% endtrans %}</p>
+<h2>{% trans %}What is an image style?{% endtrans %}</h2>
+<p>{% trans %}An image style is a set of processing steps, known as <em>effects</em>, that can be applied to images. Examples of effects include scaling and cropping images to different sizes. Responsive image styles can associate image styles with your theme's size breakpoints. This allows serving images sized for the browser width.{% endtrans %}</p>
+<h2>{% trans %}Overview of managing media{% endtrans %}</h2>
+<p>{% trans %}The following modules provide media-related functionality:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}Media items and media types are managed by the core Media module.{% endtrans %}</li>
+  <li>{% trans %}The core Media module provides a Media reference field to add media to content entities. The core File and Image modules also provide reference fields. It is recommended to use the Media reference field because it is more versatile.{% endtrans %}</li>
+  <li>{% trans %}The core Media Library module provides the media library and the Media library field widget. With this module installed, the Media library field widget becomes the default widget for editing Media reference fields.{% endtrans %}</li>
+  <li>{% trans %}The core Image module provides a user interface for defining image styles. The core Responsive Image module provides responsive image styles. Using the core Breakpoint module, and a breakpoint-enabled theme, these responsive styles can serve images sized for the browser.{% endtrans %}</li>
+</ul>
+<p>{% trans %}See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/8/core/modules/media">Media module</a>{% endtrans %}</li>
+</ul>

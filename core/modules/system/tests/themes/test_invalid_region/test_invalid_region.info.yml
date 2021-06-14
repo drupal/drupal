@@ -1,0 +1,7 @@
+name: 'Theme test with missing content region'
+type: theme
+base theme: stable
+description: 'Test theme which has a non-existent content region.'
+version: VERSION
+regions:
+  - foo: Foo

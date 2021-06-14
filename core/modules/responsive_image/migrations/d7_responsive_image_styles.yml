@@ -1,0 +1,21 @@
+id: d7_responsive_image_styles
+label: Responsive Image Styles
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_responsive_image_styles
+process:
+  id: machine_name
+  label: label
+  image_style_mappings:
+    plugin: image_style_mappings
+    source:
+     - mapping
+     - breakpoint_group
+  breakpoint_group: breakpoint_group
+destination:
+  plugin: entity:responsive_image_style
+migration_dependencies:
+  required:
+    - d7_image_styles

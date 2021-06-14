@@ -1,0 +1,8 @@
+dblog.view_logs:
+  title: 'View'
+  route_name: dblog.overview
+  base_route: dblog.overview
+dblog.clear_logs:
+  title: 'Delete'
+  route_name: dblog.confirm
+  base_route: dblog.overview

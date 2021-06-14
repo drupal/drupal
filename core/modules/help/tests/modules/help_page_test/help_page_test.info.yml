@@ -1,0 +1,6 @@
+name: 'Help Page Test'
+type: module
+description: 'Module to test the help page.'
+package: Testing
+version: VERSION
+hidden: true

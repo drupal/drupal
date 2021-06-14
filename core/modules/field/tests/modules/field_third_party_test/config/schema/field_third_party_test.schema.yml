@@ -1,0 +1,15 @@
+field.formatter.third_party.field_third_party_test:
+  type: mapping
+  label: 'field_third_party_test third party formatter settings'
+  mapping:
+    field_test_field_formatter_third_party_settings_form:
+      type: string
+      label: field_test_field_formatter_third_party_settings_form
+
+field.widget.third_party.field_third_party_test:
+  type: mapping
+  label: 'field_third_party_test third party widget settings'
+  mapping:
+    field_test_widget_third_party_settings_form:
+      type: string
+      label: field_test_widget_third_party_settings_form

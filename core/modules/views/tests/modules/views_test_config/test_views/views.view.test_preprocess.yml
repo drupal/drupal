@@ -1,0 +1,70 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_preprocess
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      sorts:
+        id:
+          table: entity_test
+          id: id
+          field: id
+          plugin_id: standard
+          entity_type: entity_test
+          entity_field: id
+          order: desc
+      pager:
+        type: full
+        options:
+          items_per_page: 5
+      style:
+        type: default
+      row:
+        type: 'entity:entity_test'
+      css_class: 'entity-test__default'
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  display_2:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      sorts:
+        id:
+          table: entity_test
+          id: id
+          field: id
+          plugin_id: standard
+          entity_type: entity_test
+          entity_field: id
+          order: desc
+      pager:
+        type: full
+        options:
+          items_per_page: 5
+      style:
+        type: default
+      row:
+        type: 'entity:entity_test'
+      css_class: 'entity-test__default and_another-class'
+    display_plugin: default
+    display_title: Alternate
+    id: display_2

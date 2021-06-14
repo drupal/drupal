@@ -1,0 +1,191 @@
+# Schema for the views filter plugins.
+
+views.filter.*:
+  type: views_filter
+  label: 'Default filter'
+
+views.filter.boolean:
+  type: views_filter
+  label: 'Boolean'
+
+views_filter_boolean_string:
+  type: views_filter
+  label: 'Boolean string'
+
+views.filter.broken:
+  type: views_filter
+  label: 'Broken'
+
+views.filter.bundle:
+  type: views.filter.in_operator
+  label: 'Bundle'
+
+views.filter.combine:
+  type: views.filter.string
+  label: 'Combine'
+  mapping:
+    fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: string
+        label: 'Field'
+
+views.filter_value.groupby_numeric:
+  type: views.filter_value.numeric
+  label: 'Group by numeric'
+
+views.filter.in_operator:
+  type: views_filter
+  label: 'IN operator'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: string
+        label: 'Value'
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        reduce:
+          type: boolean
+          label: 'Reduce'
+    group_info:
+      mapping:
+        group_items:
+          sequence:
+            type: views.filter.group_item.in_operator
+            label: 'Group item'
+
+views.filter.string:
+  type: views_filter
+  label: 'String'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        required:
+          type: boolean
+          label: 'Required'
+        placeholder:
+          type: label
+          label: 'Placeholder'
+    value:
+      type: string
+      label: 'Value'
+
+views.filter.numeric:
+  type: views_filter
+  label: 'Numeric'
+  mapping:
+    expose:
+      type: mapping
+      label: 'Exposed'
+      mapping:
+        min_placeholder:
+          type: label
+          label: 'Min placeholder'
+        max_placeholder:
+          type: label
+          label: 'Max placeholder'
+        placeholder:
+          type: label
+          label: 'Placeholder'
+
+views.filter_value.numeric:
+  type: mapping
+  label: 'Numeric'
+  mapping:
+    min:
+      type: string
+      label: 'Min'
+    max:
+      type: string
+      label: 'And max'
+    value:
+      type: string
+      label: 'Value'
+
+views.filter_value.*:
+  type: string
+  label: 'Filter value'
+
+views.filter_value.equality:
+  type: string
+  label: 'Equality'
+
+views.filter.many_to_one:
+  type: views.filter.in_operator
+  label: 'Many to one'
+  mapping:
+    reduce_duplicates:
+      type: boolean
+      label: 'Reduce duplicate'
+
+views.filter.standard:
+  type: views_filter
+  label: 'Standard'
+
+# Schema for the views group items.
+views.filter.group_item.*:
+  type: views_filter_group_item
+  label: 'Group item'
+
+views.filter.group_item.boolean:
+  type: views_filter_group_item
+  mapping:
+    value:
+      type: views.filter_value.string
+
+views.filter.group_item.in_operator:
+  type: views_filter_group_item
+  mapping:
+    value:
+      type: views.filter_value.in_operator
+
+# Schema for the views filter value.
+views.filter_value.string:
+  type: string
+
+views.filter_value.boolean:
+  type: string
+
+views.filter_value.combine:
+  type: string
+
+views.filter.language:
+  type: views.filter.in_operator
+  label: 'Language'
+
+views.filter.latest_revision:
+  type: views_filter
+  label: 'Latest revision'
+
+views.filter_value.date:
+  type: views.filter_value.numeric
+  label: 'Date'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+
+views.filter.date:
+  type: views.filter.numeric
+  label: 'Date'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+
+views.filter_value.in_operator:
+  type: sequence
+  label: 'Values'
+  sequence:
+    type: string
+    label: 'Value'

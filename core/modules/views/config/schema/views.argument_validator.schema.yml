@@ -1,0 +1,41 @@
+# Schema for the views argument validators.
+
+views.argument_validator.none:
+  type: sequence
+  label: 'Basic validation'
+  sequence:
+    type: string
+
+views.argument_validator.php:
+  type: mapping
+  label: 'PHP Code'
+  mapping:
+    code:
+      type: string
+      label: 'PHP validate code'
+
+views.argument_validator.*:
+  type: mapping
+  label: 'Default argument validator'
+
+views.argument_validator_entity:
+  type: mapping
+  mapping:
+    bundles:
+      type: sequence
+      label: 'Bundles'
+      sequence:
+        type: string
+        label: 'Bundle'
+    access:
+      type: boolean
+      label: 'Access'
+    operation:
+      type: string
+      label: 'Access operation to check'
+    multiple:
+      type: integer
+      label: 'Multiple arguments'
+
+views.argument_validator.entity:*:
+  type: views.argument_validator_entity

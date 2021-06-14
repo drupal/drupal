@@ -1,0 +1,6 @@
+update_script_test.database_updates_menu_item:
+  path: '/update-script-test/database-updates-menu-item'
+  defaults:
+    _controller: '\Drupal\update_script_test\Controller\UpdateScriptTestController::databaseUpdatesMenuItem'
+  requirements:
+    _access: 'TRUE'

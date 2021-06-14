@@ -1,0 +1,15 @@
+tabbable_test_page:
+  path: '/tabbable-shim-test'
+  defaults:
+    _controller: '\Drupal\tabbable_shim_test\Controller\TabbableShimTestController::build'
+    _title: 'Tabbable testing'
+  requirements:
+    _access: 'TRUE'
+
+tabbable_dialog_integration_test_page:
+  path: '/tabbable-shim-dialog-integration-test'
+  defaults:
+    _controller: '\Drupal\tabbable_shim_test\Controller\TabbableShimDialogIntegrationTestController::build'
+    _title: 'Tabbable dialog integration testing'
+  requirements:
+    _access: 'TRUE'

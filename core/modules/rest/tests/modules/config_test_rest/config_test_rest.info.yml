@@ -1,0 +1,6 @@
+name: 'Configuration test REST'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:config_test

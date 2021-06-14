@@ -1,0 +1,5 @@
+name: 'Image access test for hidden fields'
+type: module
+description: 'Provides an entity field access hook implementation to set an image field as hidden.'
+package: Testing
+version: VERSION

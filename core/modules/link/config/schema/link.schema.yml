@@ -1,0 +1,92 @@
+# Schema for the configuration files of the Link module.
+
+field.formatter.settings.link:
+  type: mapping
+  label: 'Link format settings'
+  mapping:
+    trim_length:
+      type: integer
+      label: 'Trim link text length'
+    url_only:
+      type: boolean
+      label: 'URL only'
+    url_plain:
+      type: boolean
+      label: 'Show URL as plain text'
+    rel:
+      type: string
+      label: 'Add rel="nofollow" to links'
+    target:
+      type: string
+      label: 'Open link in new window'
+
+field.formatter.settings.link_separate:
+  type: field.formatter.settings.link
+  label: 'Link format settings'
+
+field.widget.settings.link_default:
+  type: mapping
+  label: 'Link format settings'
+  mapping:
+    placeholder_url:
+      type: string
+      label: 'Placeholder for URL'
+    placeholder_title:
+      type: label
+      label: 'Placeholder for link text'
+
+field.storage_settings.link:
+  type: mapping
+  label: 'Link settings'
+
+field.field_settings.link:
+  type: mapping
+  label: 'Link settings'
+  mapping:
+    title:
+      type: integer
+      label: 'Allow link text'
+    link_type:
+      type: integer
+      label: 'Allowed link type'
+
+field.value.link:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    attributes:
+      type: mapping
+      label: 'Link attributes'
+      mapping:
+        title:
+          type: label
+          label: 'Link text'
+    uri:
+      type: string
+      label: 'URL'
+    title:
+      type: label
+      label: 'Link text'
+    options:
+      type: mapping
+      label: 'Link options'
+      mapping:
+        query:
+          type: sequence
+          label: 'URL query key value pairs'
+          sequence:
+            type: string
+        fragment:
+          type: string
+          label: 'URL fragment'
+        absolute:
+          type: boolean
+          label: 'Whether to force the output to be an absolute link (beginning with http: or https:)'
+        https:
+          type: boolean
+          label: 'Whether to force this URL to point to a secure location (beginning with https:)'
+        attributes:
+          type: sequence
+          label: 'Link attributes'
+          sequence:
+            type: string

@@ -1,0 +1,5 @@
+name: 'Plugin Test Support'
+type: module
+description: 'Test that plugins can provide plugins and provide namespace discovery for plugin test implementations.'
+package: Testing
+version: VERSION

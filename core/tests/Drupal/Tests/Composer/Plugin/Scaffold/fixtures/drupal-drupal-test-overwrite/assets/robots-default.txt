@@ -1,0 +1,1 @@
+# robots.txt fixture scaffolded from "file-mappings" in drupal-drupal-test-overwrite composer.json fixture.

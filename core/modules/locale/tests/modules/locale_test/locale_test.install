@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the locale_test module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function locale_test_uninstall() {
+  // Clear variables.
+  \Drupal::state()->delete('locale.test_system_info_alter');
+  \Drupal::state()->delete('locale.test_projects_alter');
+}

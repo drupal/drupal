@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.medium_8_7
+    - field.field.media.image.field_media_image
+    - image.style.medium_8_7
+    - media.type.image
+  module:
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.image.medium_8_7
+targetEntityType: media
+bundle: image
+mode: medium_8_7
+content:
+  field_media_image:
+    label: visually_hidden
+    settings:
+      image_style: medium_8_7
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    weight: 1
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

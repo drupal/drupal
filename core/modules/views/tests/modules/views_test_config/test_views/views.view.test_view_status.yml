@@ -1,0 +1,16 @@
+langcode: en
+status: false
+dependencies: {  }
+id: test_view_status
+label: test_view_status
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: null

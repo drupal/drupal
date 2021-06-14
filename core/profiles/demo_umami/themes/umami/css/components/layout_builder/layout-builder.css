@@ -1,0 +1,15 @@
+/**
+ * @file
+ * This file is used to style the layout builder.
+ */
+
+.layout-builder__message--defaults .messages,
+.layout-builder__message--overrides .messages {
+  background-image: none;
+}
+.layout-builder__message--defaults .messages__content {
+  background-image: url("../../../../../../../misc/icons/73b355/globe.svg");
+}
+.layout-builder__message--overrides .messages__content {
+  background-image: url("../../../../../../../misc/icons/73b355/location.svg");
+}

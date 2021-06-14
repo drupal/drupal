@@ -1,0 +1,8 @@
+name: Test features
+type: theme
+base theme: stable
+description: 'Test theme to test theme settings with limited features.'
+features:
+  - node_user_picture
+  - comment_user_picture
+  - comment_user_verification

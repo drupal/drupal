@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.type_one.field_media_test
+    - image.style.thumbnail
+    - media.type.type_one
+  module:
+    - image
+    - user
+id: media.type_one.media_library
+targetEntityType: media
+bundle: type_one
+mode: media_library
+content:
+  field_media_test:
+    label: above
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+    type: string
+    weight: 6
+    region: content
+  thumbnail:
+    type: image
+    weight: 5
+    label: hidden
+    settings:
+      image_style: thumbnail
+      image_link: ''
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  name: true
+  uid: true

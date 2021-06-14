@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for testing the JSON:API module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_jsonapi_entity_field_field_access().
+ */
+function jsonapi_test_field_filter_access_jsonapi_entity_field_filter_access(FieldDefinitionInterface $field_definition, AccountInterface $account) {
+  if ($field_definition->getName() === 'spotlight') {
+    return AccessResult::forbiddenIf(!$account->hasPermission('filter by spotlight field'))->cachePerPermissions();
+  }
+  if ($field_definition->getName() === 'field_test_text') {
+    return AccessResult::allowedIf($field_definition->getTargetEntityTypeId() === 'entity_test_with_bundle');
+  }
+  return AccessResult::neutral();
+}

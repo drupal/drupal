@@ -1,0 +1,71 @@
+id: d6_block_translation
+label: Block translations
+migration_tags:
+  - Drupal 6
+  - Configuration
+  - Multilingual
+source:
+  plugin: d6_block_translation
+  constants:
+    dest_label: 'settings/label'
+process:
+  langcode: language
+  property: constants/dest_label
+  translation: title
+  id:
+    -
+      plugin: migration_lookup
+      migration: d6_block
+      source:
+        - module
+        - delta
+    -
+      plugin: skip_on_empty
+      method: row
+  plugin:
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - module
+        - delta
+      map:
+        book:
+          0: book_navigation
+        comment:
+          0: views_block:comments_recent-block_1
+        forum:
+          0: forum_active_block
+          1: forum_new_block
+        locale:
+          0: language_block
+        node:
+          0: node_syndicate_block
+        search:
+          0: search_form_block
+        statistics:
+          0: statistics_popular_block
+        system:
+          0: system_powered_by_block
+        user:
+          0: user_login_block
+          1: system_menu_block:tools
+          2: views_block:who_s_new-block_1
+          3: views_block:who_s_online-who_s_online_block
+    -
+      plugin: block_plugin_id
+    -
+      plugin: skip_on_empty
+      method: row
+  theme:
+    plugin: block_theme
+    source:
+      - theme
+      - default_theme
+      - admin_theme
+destination:
+  plugin: entity:block
+migration_dependencies:
+  required:
+    - d6_block
+    - language

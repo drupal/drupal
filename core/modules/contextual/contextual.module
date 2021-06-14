@@ -1,0 +1,223 @@
+<?php
+
+/**
+ * @file
+ * Adds contextual links to perform actions related to elements on a page.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_toolbar().
+ */
+function contextual_toolbar() {
+  $items = [];
+  $items['contextual'] = [
+    '#cache' => [
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
+
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+    return $items;
+  }
+
+  $items['contextual'] += [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'html_tag',
+      '#tag' => 'button',
+      '#value' => t('Edit'),
+      '#attributes' => [
+        'class' => ['toolbar-icon', 'toolbar-icon-edit'],
+        'aria-pressed' => 'false',
+        'type' => 'button',
+      ],
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['hidden', 'contextual-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'contextual/drupal.contextual-toolbar',
+      ],
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Adds the drupal.contextual-links library to the page for any user who has the
+ * 'access contextual links' permission.
+ *
+ * @see contextual_preprocess()
+ */
+function contextual_page_attachments(array &$page) {
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+    return;
+  }
+
+  $page['#attached']['library'][] = 'contextual/drupal.contextual-links';
+}
+
+/**
+ * Implements hook_help().
+ */
+function contextual_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.contextual':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Contextual links module gives users with the <em>Use contextual links</em> permission quick access to tasks associated with certain areas of pages on your site. For example, a menu displayed as a block has links to edit the menu and configure the block. For more information, see the <a href=":contextual">online documentation for the Contextual Links module</a>.', [':contextual' => 'https://www.drupal.org/documentation/modules/contextual']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Displaying contextual links') . '</dt>';
+      $output .= '<dd>';
+      $output .= t('Contextual links for an area on a page are displayed using a contextual links button. There are two ways to make the contextual links button visible:');
+      $output .= '<ol>';
+      $sample_picture = [
+        '#theme' => 'image',
+        '#uri' => 'core/misc/icons/bebebe/pencil.svg',
+        '#alt' => t('contextual links button'),
+      ];
+      $sample_picture = \Drupal::service('renderer')->render($sample_picture);
+      $output .= '<li>' . t('Hovering over the area of interest will temporarily make the contextual links button visible (which looks like a pencil in most themes, and is normally displayed in the upper right corner of the area). The icon typically looks like this: @picture', ['@picture' => $sample_picture]) . '</li>';
+      $output .= '<li>' . t('If you have the <a href=":toolbar">Toolbar module</a> enabled, clicking the contextual links button in the toolbar (which looks like a pencil) will make all contextual links buttons on the page visible. Clicking this button again will toggle them to invisible.', [':toolbar' => (\Drupal::moduleHandler()->moduleExists('toolbar')) ? Url::fromRoute('help.page', ['name' => 'toolbar'])->toString() : '#']) . '</li>';
+      $output .= '</ol>';
+      $output .= t('Once the contextual links button for the area of interest is visible, click the button to display the links.');
+      $output .= '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_preprocess().
+ *
+ * @see contextual_pre_render_placeholder()
+ * @see contextual_page_attachments()
+ * @see \Drupal\contextual\ContextualController::render()
+ */
+function contextual_preprocess(&$variables, $hook, $info) {
+  $variables['#cache']['contexts'][] = 'user.permissions';
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+    return;
+  }
+
+  // Determine the primary theme function argument.
+  if (!empty($info['variables'])) {
+    $keys = array_keys($info['variables']);
+    $key = $keys[0];
+  }
+  elseif (!empty($info['render element'])) {
+    $key = $info['render element'];
+  }
+  if (!empty($key) && isset($variables[$key])) {
+    $element = $variables[$key];
+  }
+
+  if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
+    // Mark this element as potentially having contextual links attached to it.
+    $variables['attributes']['class'][] = 'contextual-region';
+
+    // Renders a contextual links placeholder unconditionally, thus not breaking
+    // the render cache. Although the empty placeholder is rendered for all
+    // users, contextual_page_attachments() only adds the asset library for
+    // users with the 'access contextual links' permission, thus preventing
+    // unnecessary HTTP requests for users without that permission.
+    $variables['title_suffix']['contextual_links'] = [
+      '#type' => 'contextual_links_placeholder',
+      '#id' => _contextual_links_to_id($element['#contextual_links']),
+    ];
+  }
+}
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ *
+ * @see \Drupal\contextual\Plugin\views\field\ContextualLinks::render()
+ */
+function contextual_contextual_links_view_alter(&$element, $items) {
+  if (isset($element['#contextual_links']['contextual'])) {
+    $encoded_links = $element['#contextual_links']['contextual']['metadata']['contextual-views-field-links'];
+    $element['#links'] = Json::decode(rawurldecode($encoded_links));
+  }
+}
+
+/**
+ * Serializes #contextual_links property value array to a string.
+ *
+ * Examples:
+ *  - node:node=1:langcode=en
+ *  - views_ui_edit:view=frontpage:location=page&view_name=frontpage&view_display_id=page_1&langcode=en
+ *  - menu:menu=tools:langcode=en|block:block=bartik.tools:langcode=en
+ *
+ * So, expressed in a pattern:
+ *  <group>:<route parameters>:<metadata>
+ *
+ * The route parameters and options are encoded as query strings.
+ *
+ * @param array $contextual_links
+ *   The $element['#contextual_links'] value for some render element.
+ *
+ * @return string
+ *   A serialized representation of a #contextual_links property value array for
+ *   use in a data- attribute.
+ */
+function _contextual_links_to_id($contextual_links) {
+  $ids = [];
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
+  foreach ($contextual_links as $group => $args) {
+    $route_parameters = UrlHelper::buildQuery($args['route_parameters']);
+    $args += ['metadata' => []];
+    // Add the current URL language to metadata so a different ID will be
+    // computed when URLs vary by language. This allows to store different
+    // language-aware contextual links on the client side.
+    $args['metadata'] += ['langcode' => $langcode];
+    $metadata = UrlHelper::buildQuery($args['metadata']);
+    $ids[] = "{$group}:{$route_parameters}:{$metadata}";
+  }
+  return implode('|', $ids);
+}
+
+/**
+ * Unserializes the result of _contextual_links_to_id().
+ *
+ * Note that $id is user input. Before calling this method the ID should be
+ * checked against the token stored in the 'data-contextual-token' attribute
+ * which is passed via the 'tokens' request parameter to
+ * \Drupal\contextual\ContextualController::render().
+ *
+ * @param string $id
+ *   A serialized representation of a #contextual_links property value array.
+ *
+ * @return array
+ *   The value for a #contextual_links property.
+ *
+ * @see _contextual_links_to_id()
+ * @see \Drupal\contextual\ContextualController::render()
+ */
+function _contextual_id_to_links($id) {
+  $contextual_links = [];
+  $contexts = explode('|', $id);
+  foreach ($contexts as $context) {
+    list($group, $route_parameters_raw, $metadata_raw) = explode(':', $context);
+    parse_str($route_parameters_raw, $route_parameters);
+    $metadata = [];
+    parse_str($metadata_raw, $metadata);
+    $contextual_links[$group] = [
+      'route_parameters' => $route_parameters,
+      'metadata' => $metadata,
+    ];
+  }
+  return $contextual_links;
+}

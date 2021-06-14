@@ -1,0 +1,138 @@
+<?php
+
+/**
+ * @file
+ * Defines selection, check box and radio button widgets for text and numeric fields.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\FieldStorageConfigInterface;
+
+/**
+ * Implements hook_help().
+ */
+function options_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.options':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Options module allows you to create fields where data values are selected from a fixed list of options. Usually these items are entered through a select list, checkboxes, or radio buttons. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":options_do">online documentation for the Options module</a>.', [':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(), ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#', ':options_do' => 'https://www.drupal.org/documentation/modules/options']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing and displaying list fields') . '</dt>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the list fields can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', [':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#']) . '</dd>';
+      $output .= '<dt>' . t('Defining option keys and labels') . '</dt>';
+      $output .= '<dd>' . t('When you define the list options you can define a key and a label for each option in the list. The label will be shown to the users while the key gets stored in the database.') . '</dd>';
+      $output .= '<dt>' . t('Choosing list field type') . '</dt>';
+      $output .= '<dd>' . t('There are three types of list fields, which store different types of data: <em>float</em>, <em>integer</em> or, <em>text</em>. The <em>float</em> type allows storing approximate decimal values. The <em>integer</em> type allows storing whole numbers, such as years (for example, 2012) or values (for example, 1, 2, 5, 305). The <em>text</em> list field type allows storing text values. No matter which type of list field you choose, you can define whatever labels you wish for data entry.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
+ */
+function options_field_storage_config_update(FieldStorageConfigInterface $field_storage) {
+  drupal_static_reset('options_allowed_values');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_storage_config'.
+ */
+function options_field_storage_config_delete(FieldStorageConfigInterface $field_storage) {
+  drupal_static_reset('options_allowed_values');
+}
+
+/**
+ * Returns the array of allowed values for a list field.
+ *
+ * The strings are not safe for output. Keys and values of the array should be
+ * sanitized through \Drupal\Core\Field\FieldFilteredMarkup before being
+ * displayed.
+ *
+ * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
+ *   The field storage definition.
+ * @param \Drupal\Core\Entity\FieldableEntityInterface|null $entity
+ *   (optional) The specific entity when this function is called from the
+ *   context of a specific field on a specific entity. This allows custom
+ *   'allowed_values_function' callbacks to either restrict the values or
+ *   customize the labels for particular bundles and entities. NULL when
+ *   there is not a specific entity available, such as for Views filters.
+ *
+ * @return array
+ *   The array of allowed values. Keys of the array are the raw stored values
+ *   (number or text), values of the array are the display labels.
+ *
+ * @see callback_allowed_values_function()
+ */
+function options_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
+  $allowed_values = &drupal_static(__FUNCTION__, []);
+
+  $cache_keys = [$definition->getTargetEntityTypeId(), $definition->getName()];
+  if ($entity) {
+    $cache_keys[] = 'entity';
+  }
+  $cache_id = implode(':', $cache_keys);
+
+  if (!isset($allowed_values[$cache_id])) {
+    $function = $definition->getSetting('allowed_values_function');
+    // If $cacheable is FALSE, then the allowed values are not statically
+    // cached. See options_test_dynamic_values_callback() for an example of
+    // generating dynamic and uncached values.
+    $cacheable = TRUE;
+    if (!empty($function)) {
+      $values = $function($definition, $entity, $cacheable);
+    }
+    else {
+      $values = $definition->getSetting('allowed_values');
+    }
+
+    if ($cacheable) {
+      $allowed_values[$cache_id] = $values;
+    }
+    else {
+      return $values;
+    }
+  }
+
+  return $allowed_values[$cache_id];
+}
+
+/**
+ * Implements hook_field_storage_config_update_forbid().
+ */
+function options_field_storage_config_update_forbid(FieldStorageConfigInterface $field_storage, FieldStorageConfigInterface $prior_field_storage) {
+  if ($field_storage->getTypeProvider() == 'options' && $field_storage->hasData()) {
+    // Forbid any update that removes allowed values with actual data.
+    $allowed_values = $field_storage->getSetting('allowed_values');
+    $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
+    $lost_keys = array_keys(array_diff_key($prior_allowed_values, $allowed_values));
+    if (_options_values_in_use($field_storage->getTargetEntityTypeId(), $field_storage->getName(), $lost_keys)) {
+      throw new FieldStorageDefinitionUpdateForbiddenException("A list field '{$field_storage->getName()}' with existing data cannot have its keys changed.");
+    }
+  }
+}
+
+/**
+ * Checks if a list of values are being used in actual field values.
+ */
+function _options_values_in_use($entity_type, $field_name, $values) {
+  if ($values) {
+    $result = \Drupal::entityQuery($entity_type)
+      ->condition($field_name . '.value', $values, 'IN')
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+    if ($result) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}

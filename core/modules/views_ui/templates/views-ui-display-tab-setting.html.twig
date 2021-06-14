@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Default theme implementation for Views UI display tab settings.
+ *
+ * Template for each row inside the "boxes" on the display query edit screen.
+ *
+ * Available variables:
+ * - attributes: HTML attributes such as class for the container.
+ * - description: The description or label for this setting.
+ * - settings_links: A list of links for this setting.
+ * - defaulted: A boolean indicating the setting is in its default state.
+ * - overridden: A boolean indicating the setting has been overridden from the
+ *   default.
+ *
+ * @see template_preprocess_views_ui_display_tab_setting()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'views-display-setting',
+    'clearfix',
+    'views-ui-display-tab-setting',
+    defaulted ? 'defaulted',
+    overridden ? 'overridden',
+]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if description -%}
+    <span class="label">{{ description }}</span>
+  {%- endif %}
+  {% if settings_links %}
+    {{ settings_links|safe_join('<span class="label">&nbsp;|&nbsp;</span>') }}
+  {% endif %}
+</div>

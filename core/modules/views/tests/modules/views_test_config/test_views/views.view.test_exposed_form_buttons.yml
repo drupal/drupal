@@ -1,0 +1,59 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_exposed_form_buttons
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        options:
+          reset_button: true
+        type: basic
+      filters:
+        type:
+          expose:
+            identifier: type
+            label: 'Content: Type'
+            operator_id: type_op
+            reduce: false
+            description: 'Exposed description'
+          exposed: true
+          field: type
+          id: type
+          table: node_field_data
+          plugin_id: in_operator
+          entity_type: node
+          entity_field: type
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_exposed_form_buttons
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

@@ -1,0 +1,4 @@
+name: 'BBB Update test'
+type: module
+description: 'Support module for update module testing.'
+package: Testing

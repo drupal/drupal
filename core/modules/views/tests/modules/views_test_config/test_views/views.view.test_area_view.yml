@@ -1,0 +1,48 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_area_view
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      header:
+        view:
+          field: view
+          id: view
+          table: views
+          view_to_insert: 'test_simple_argument:default'
+          inherit_arguments: true
+          plugin_id: view
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

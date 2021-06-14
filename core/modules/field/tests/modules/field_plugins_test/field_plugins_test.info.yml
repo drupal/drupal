@@ -1,0 +1,7 @@
+name: 'Field Plugins Test'
+type: module
+description: 'Support module for the field and entity display tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:text

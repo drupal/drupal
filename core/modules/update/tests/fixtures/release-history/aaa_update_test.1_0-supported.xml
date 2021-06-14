@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>AAA Update test</title>
+<short_name>aaa_update_test</short_name>
+<dc:creator>Drupal</dc:creator>
+<supported_branches>8.x-1.,8.x-2.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/aaa_update_test</link>
+  <terms>
+   <term><name>Projects</name><value>Modules</value></term>
+  </terms>
+<releases>
+  <release>
+    <name>aaa_update_test 8.x-2.0</name>
+    <version>8.x-2.0</version>
+    <status>published</status>
+    <release_link>http://example.com/aaa_update_test-8-x-2-0-release</release_link>
+    <download_link>http://example.com/aaa_update_test-8.x-2.0.tar.gz</download_link>
+    <date>1250422521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>aaa_update_test 8.x-2.0-beta1</name>
+    <version>8.x-2.0-beta1</version>
+    <status>published</status>
+    <release_link>http://example.com/aaa_update_test-8-x-2-0-beta1-release</release_link>
+    <download_link>http://example.com/aaa_update_test-8.x-2.0-beta1.tar.gz</download_link>
+    <date>1250422521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>aaa_update_test 8.x-2.0-alpha1</name>
+    <version>8.x-2.0-alpha1</version>
+    <status>published</status>
+    <release_link>http://example.com/aaa_update_test-8-x-2-0-alpha1-release</release_link>
+    <download_link>http://example.com/aaa_update_test-8.x-2.0-alpha1.tar.gz</download_link>
+    <date>1250422521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>aaa_update_test 8.x-1.1</name>
+    <version>8.x-1.1</version>
+    <status>published</status>
+    <release_link>http://example.com/aaa_update_test-8-x-1-1-release</release_link>
+    <download_link>http://example.com/aaa_update_test-8.x-1.1.tar.gz</download_link>
+    <date>1250404525</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+      <term><name>Release type</name><value>Unsupported</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>aaa_update_test 8.x-1.0</name>
+    <version>8.x-1.0</version>
+    <status>unpublished</status>
+    <release_link>http://example.com/aaa_update_test-8-x-1-0-release</release_link>
+    <download_link>http://example.com/aaa_update_test-8.x-1.0.tar.gz</download_link>
+    <date>1250404521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+</releases>
+</project>

@@ -1,0 +1,6 @@
+services:
+  serializer.normalizer.boolean.datatype.emoji:
+    class: Drupal\test_datatype_boolean_emoji_normalizer\Normalizer\BooleanNormalizer
+    tags:
+      # The priority must be higher than serializer.normalizer.primitive_data.
+      - { name: normalizer , priority: 1000 }

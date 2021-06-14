@@ -1,0 +1,30 @@
+tour_test.1:
+  path: '/tour-test-1'
+  defaults:
+    _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _access: 'TRUE'
+
+tour_test.1_action:
+  path: '/tour-test-1/action'
+  defaults:
+    _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
+  requirements:
+    _access: 'TRUE'
+
+tour_test.2:
+  path: '/tour-test-2/subpath'
+  defaults:
+    _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest2'
+  requirements:
+    _access: 'TRUE'
+
+tour_test.3:
+  path: '/tour-test-3/{locale}'
+  defaults:
+    locale: 'foo'
+    _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
+  requirements:
+    _access: 'TRUE'

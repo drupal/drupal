@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.disclaimer_block
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: block_content.disclaimer_block
+target_entity_type_id: block_content
+target_bundle: disclaimer_block
+default_langcode: site_default
+language_alterable: true

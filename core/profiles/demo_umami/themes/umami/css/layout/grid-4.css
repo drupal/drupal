@@ -1,0 +1,35 @@
+/**
+ * @file
+ * This file is used to create a 4 column grid layout.
+ */
+
+.grid--4 .views-row {
+  margin-bottom: 28px;
+}
+/* Small */
+@media screen and (min-width: 30em) { /* 480px */
+  .grid--4 {
+    overflow-x: hidden;
+  }
+  .grid--4 .view-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -14px;
+  }
+  .grid--4 .views-row {
+    display: flex;
+    flex-basis: calc(50% - 28px);
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin: 0 14px 28px;
+    padding: 0;
+  }
+}
+/* Large */
+@media screen and (min-width: 60em) { /* 960px */
+  .grid--4 .views-row {
+    flex-basis: calc(25% - 28px);
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+}

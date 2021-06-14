@@ -1,0 +1,180 @@
+# cspell:ignore imagefield optionwidgets
+id: d6_field_instance_option_translation
+label: Field instance option configuration translation
+migration_tags:
+  - Drupal 6
+  - Configuration
+  - Multilingual
+source:
+  plugin: d6_field_instance_option_translation
+  skip_count: true
+  constants:
+    entity_type: node
+    property: settings
+process:
+  # We skip field types that don't exist because they weren't migrated by the
+  # field migration.
+  field_type_exists:
+    -
+      plugin: migration_lookup
+      migration: d6_field
+      source:
+        - objectid
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: skip_on_empty
+      method: row
+  # Use the process from d6_field to determine the field type.
+  type:
+    plugin: field_type
+    source:
+      - type
+      - widget_type
+    map:
+      userreference:
+        userreference_select: entity_reference
+        userreference_buttons: entity_reference
+        userreference_autocomplete: entity_reference
+      nodereference:
+        nodereference_select: entity_reference
+      number_integer:
+        number: integer
+        optionwidgets_select: list_integer
+        optionwidgets_buttons: list_integer
+        optionwidgets_onoff: boolean
+      number_decimal:
+        number: decimal
+        optionwidgets_select: list_float
+        optionwidgets_buttons: list_float
+        optionwidgets_onoff: boolean
+      number_float:
+        number: float
+        optionwidgets_select: list_float
+        optionwidgets_buttons: list_float
+        optionwidgets_onoff: boolean
+      email:
+        email_textfield: email
+      filefield:
+        imagefield_widget: image
+        filefield_widget: file
+      fr_phone:
+        phone_textfield: telephone
+      be_phone:
+        phone_textfield: telephone
+      it_phone:
+        phone_textfield: telephone
+      el_phone:
+        phone_textfield: telephone
+      ch_phone:
+        phone_textfield: telephone
+      ca_phone:
+        phone_textfield: telephone
+      cr_phone:
+        phone_textfield: telephone
+      pa_phone:
+        phone_textfield: telephone
+      gb_phone:
+        phone_textfield: telephone
+      ru_phone:
+        phone_textfield: telephone
+      ua_phone:
+        phone_textfield: telephone
+      es_phone:
+        phone_textfield: telephone
+      au_phone:
+        phone_textfield: telephone
+      cs_phone:
+        phone_textfield: telephone
+      hu_phone:
+        phone_textfield: telephone
+      pl_phone:
+        phone_textfield: telephone
+      nl_phone:
+        phone_textfield: telephone
+      se_phone:
+        phone_textfield: telephone
+      za_phone:
+        phone_textfield: telephone
+      il_phone:
+        phone_textfield: telephone
+      nz_phone:
+        phone_textfield: telephone
+      br_phone:
+        phone_textfield: telephone
+      cl_phone:
+        phone_textfield: telephone
+      cn_phone:
+        phone_textfield: telephone
+      hk_phone:
+        phone_textfield: telephone
+      mo_phone:
+        phone_textfield: telephone
+      ph_phone:
+        phone_textfield: telephone
+      sg_phone:
+        phone_textfield: telephone
+      jo_phone:
+        phone_textfield: telephone
+      eg_phone:
+        phone_textfield: telephone
+      pk_phone:
+        phone_textfield: telephone
+      int_phone:
+        phone_textfield: telephone
+  boolean_type:
+    -
+      plugin: static_map
+      source: '@type'
+      map:
+        boolean: boolean
+      default_value: false
+    -
+      plugin: skip_on_empty
+      method: row
+  bundle:
+    -
+      plugin: migration_lookup
+      migration: d6_node_type
+      source: type_name
+    -
+      plugin: skip_on_empty
+      method: row
+  langcode:
+    plugin: skip_on_empty
+    source: language
+    method: row
+  field_name: objectid
+  entity_type: 'constants/entity_type'
+  results:
+    plugin: d6_field_instance_option_translation
+    source:
+      - '@type'
+      - global_settings
+  translation:
+    -
+      plugin: extract
+      source: '@results'
+      index: [1]
+    -
+      plugin: skip_on_empty
+      method: row
+  property:
+    -
+      plugin: extract
+      source: '@results'
+      index: [0]
+    -
+      plugin: skip_on_empty
+      method: row
+destination:
+  plugin: entity:field_config
+  translations: true
+migration_dependencies:
+  required:
+    - d6_node_type
+    - d6_field_instance
+    - d6_field_option_translation
+    - language

@@ -1,0 +1,123 @@
+jquery.farbtastic:
+  version: 0.1
+  js:
+    assets/vendor/farbtastic/farbtastic.js: {}
+  css:
+    component:
+      assets/vendor/farbtastic/farbtastic.css: {}
+  dependencies:
+    - core/jquery
+
+# Library to test CSS and JS file assets.
+files:
+  js:
+    foo.js: {}
+  css:
+    theme:
+      bar.css: {}
+
+# Library to test external CSS and JS file assets.
+external:
+  version: 1
+  js:
+    http://example.com/script.js: { type: external }
+  css:
+    theme:
+      http://example.com/stylesheet.css: { type: external }
+
+# Library to test JS file asset attributes (both internal and external).
+js-attributes:
+  version: 1
+  js:
+    deferred-internal.js: { attributes: { defer: true, bar: foo } }
+    http://example.com/deferred-external.js:
+      type: external
+      attributes:
+        foo: bar
+        defer: true
+
+js-header:
+  header: true
+  js:
+    header.js: {}
+  dependencies:
+    - core/drupal
+
+# Library to test setting cache = FALSE, to prevent aggregation.
+no-cache:
+  js:
+    nocache.js: { cache: false }
+
+order:
+  js:
+    weight_-3_1.js: { weight: -3 }
+    weight_0_1.js: {}
+    weight_0_2.js: {}
+    weight_-8_1.js: { weight: -8 }
+    weight_-8_2.js: { weight: -8 }
+    weight_-8_3.js: { weight: -8 }
+    http://example.com/weight_-5_1.js: { type: external, weight: -5 }
+    weight_-8_4.js: { weight: -8 }
+    weight_-3_2.js: { weight: -3 }
+    weight_0_3.js: {}
+  css:
+    base:
+      base_weight_0_1.js: {}
+      base_weight_0_2.js: {}
+      base_weight_-8_1.js: { weight: -8 }
+      base_weight_-101_1.js: { weight: -101 }
+    layout:
+      layout_weight_0_1.js: {}
+      layout_weight_0_2.js: {}
+      layout_weight_-8_1.js: { weight: -8 }
+      layout_weight_-101_1.js: { weight: -101 }
+    component:
+      component_weight_0_1.js: {}
+      component_weight_0_2.js: {}
+      component_weight_-8_1.js: { weight: -8}
+      component_weight_-101_1.js: { weight: -101}
+    state:
+      state_weight_0_1.js: {}
+      state_weight_0_2.js: {}
+      state_weight_-8_1.js: { weight: -8}
+      state_weight_-101_1.js: { weight: -101}
+    theme:
+      theme_weight_0_1.js: {}
+      theme_weight_0_2.js: {}
+      theme_weight_-8_1.js: { weight: -8}
+      theme_weight_-101_1.js: { weight: -101}
+
+weight:
+  css:
+    theme:
+      first.css: {}
+      lighter.js: { weight: -1 }
+  js:
+    first.js: {}
+    lighter.js: { weight: -1 }
+    before-jquery.js: { weight: -21 }
+
+# Library to test hook_js_alter().
+hook_js_alter:
+  version: VERSION
+  js:
+    alter.js: {}
+  dependencies:
+    - core/drupal.tableselect
+
+browsers:
+  js:
+    old-ie.js:
+      browsers:
+        'IE': 'lte IE 8'
+        '!IE': false
+    no-ie.js:
+      browsers:
+        IE: false
+
+querystring:
+  js:
+    querystring.js?arg1=value1&arg2=value2: {}
+  css:
+    theme:
+      querystring.css?arg1=value1&arg2=value2: {}

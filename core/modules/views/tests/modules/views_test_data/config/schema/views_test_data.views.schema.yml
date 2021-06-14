@@ -1,0 +1,103 @@
+# Schema for the views plugins of the Views test data module.
+
+views.style.mapping_test:
+  type: views_style
+  label: 'Mapping test style'
+  mapping:
+    mapping:
+      type: mapping
+      label: 'Mapping'
+      mapping:
+        name_field:
+          type: string
+          label: 'Name field'
+        title_field:
+          type: string
+          label: 'Title field'
+        numeric_field:
+          type: sequence
+          label: 'Numeric fields'
+          sequence:
+            type: string
+            label: 'Numeric field'
+        toggle_numeric_field:
+          type: boolean
+          label: 'Toggle numeric field'
+        toggle_title_field:
+          type: boolean
+          label: 'Toggle title field'
+
+views_test_data.tests:
+  type: config_object
+  label: 'Views test data tests'
+  mapping:
+    handler_access_callback:
+      type: boolean
+      label: 'Access callback handler toggle'
+    handler_access_callback_argument:
+      type: boolean
+      label: 'Access callback argument handler toggle'
+
+views.access.test_static:
+  type: mapping
+  label: 'Static test'
+  mapping:
+    access:
+      type: boolean
+      label: 'Allow access'
+
+views.display.display_test:
+  type: views_display
+  label: 'Test display options'
+  mapping:
+    test_option:
+      label: 'Test option'
+      type: string
+
+views.display.invalid:
+  type: views.display.page
+  label: 'Invalid display'
+
+views.display.display_no_area_test:
+  type: views.display.display_test
+  label: 'Test display options without areas'
+
+views.query.query_test:
+  type: views_query
+  label: 'Views query test options'
+  mapping:
+    test_setting:
+      type: string
+      label: 'Test setting'
+
+views.row.test_row:
+  type: views_entity_row
+  label: 'Row test options'
+  mapping:
+    test_option:
+      type: string
+      label: 'Test option'
+
+views.style.test_style:
+  type: views_style
+  label: 'Test style options'
+  mapping:
+    test_option:
+      type: string
+      label: 'Test option'
+
+views.display_extender.display_extender_test:
+  type: views_display_extender
+  mapping:
+    test_extender_test_option:
+      type: string
+      label: 'Test option'
+
+views.display_extender.display_extender_test2:
+  type: views.display_extender.display_extender_test
+
+views.argument_default.argument_default_test:
+  type: ignore
+
+views.argument_validator.argument_validator_test:
+  type: ignore

@@ -1,0 +1,9 @@
+id: feedback
+label: 'Website feedback'
+recipients: {  }
+reply: ''
+weight: 0
+status: true
+langcode: en
+message: 'Your message has been sent.'
+redirect: ''

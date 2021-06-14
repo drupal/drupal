@@ -1,0 +1,182 @@
+/**
+ * Generic elements.
+ */
+body {
+  color: #333;
+  background: #fff;
+  font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+}
+a,
+.link {
+  text-decoration: none;
+  color: #0074bd;
+}
+a:hover,
+.link:hover,
+a:focus,
+.link:focus {
+  text-decoration: underline;
+  outline: 0;
+}
+hr {
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: #ccc;
+}
+summary,
+.fieldgroup:not(.form-composite) > legend {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.simpletest-results-form summary {
+  text-transform: none;
+}
+
+/**
+ * Reusable heading classes are included to help modules change the styling of
+ * headings on a page without affecting accessibility.
+ */
+h1,
+.heading-a {
+  margin: 0;
+  font-size: 1.625em;
+  font-weight: bold;
+  line-height: 1.875em;
+}
+h2,
+.heading-b {
+  margin: 10px 0;
+  font-size: 1.385em;
+  font-weight: bold;
+}
+h3,
+.heading-c {
+  margin: 10px 0;
+  font-size: 1.231em;
+  font-weight: bold;
+}
+h4,
+.heading-d {
+  margin: 10px 0;
+  font-size: 1.154em;
+  font-weight: bold;
+}
+h5,
+.heading-e {
+  margin: 10px 0;
+  font-size: 1.077em;
+  font-weight: bold;
+}
+h6,
+.heading-f {
+  margin: 10px 0;
+  font-size: 1.077em;
+  font-weight: bold;
+}
+p {
+  margin: 1em 0;
+}
+dl {
+  margin: 0 0 20px;
+}
+dl dd,
+dl dl {
+  margin-bottom: 10px;
+  margin-left: 20px; /* LTR */
+}
+[dir="rtl"] dl dd,
+[dir="rtl"] dl dl {
+  margin-right: 20px;
+}
+blockquote {
+  margin: 1em 40px;
+}
+address {
+  font-style: italic;
+}
+u,
+ins {
+  text-decoration: underline;
+}
+s,
+strike,
+del {
+  text-decoration: line-through;
+}
+big {
+  font-size: larger;
+}
+small {
+  font-size: smaller;
+}
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+  line-height: normal;
+}
+sup {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
+abbr,
+acronym {
+  border-bottom: dotted 1px;
+}
+ul {
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+  list-style-type: disc;
+  list-style-image: none;
+}
+[dir="rtl"] ul {
+  margin-right: 1.5em;
+  margin-left: 0;
+}
+/* This is required to win over specificity of [dir="rtl"] ul */
+[dir="rtl"] .messages__list {
+  margin-right: 0;
+}
+ol {
+  margin: 0.25em 0 0.25em 2em; /* LTR */
+  padding: 0;
+  list-style-type: decimal;
+}
+[dir="rtl"] ol {
+  margin-right: 2em;
+  margin-left: 0;
+}
+code {
+  margin: 0.5em 0;
+}
+pre {
+  margin: 0.5em 0;
+  white-space: pre-wrap;
+}
+details {
+  line-height: 1.295em;
+}
+details summary {
+  padding: 0.95em 1.45em;
+}
+details summary:focus {
+  outline: none;
+}
+/**
+ * Unfortunately, text-decoration for details summary is not supported on all
+ * browsers. So we add a span (which can handle text-decoration) in Seven's
+ * templates/details.html.twig. In case there are other details templates that
+ * don't have the span, we provide text-decoration in the parent selector.
+ * This provides maximum compatibility and coverage with minimal disruption.
+ */
+details summary:not(.seven-details__summary):focus {
+  text-decoration: underline;
+}
+details summary:focus span {
+  text-decoration: underline;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}

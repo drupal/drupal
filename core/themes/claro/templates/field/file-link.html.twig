@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Theme override for a link to a file.
+ *
+ * Available variables:
+ * - attributes: The HTML attributes for the containing element.
+ * - link: A link to the file.
+ * - icon: The icon image representing the file type. This seems to be always
+ *   empty.
+ * - file_size: The size of the file.
+ *
+ * @see template_preprocess_file_link()
+ */
+#}
+{{ attach_library('claro/classy.file') }}
+<span{{ attributes }}>{{ link }} <span class="file__size">({{ file_size }})</span></span>

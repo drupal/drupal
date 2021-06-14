@@ -1,0 +1,31 @@
+id: d7_global_theme_settings
+label: D7 global theme settings
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - theme_settings
+  source_module: system
+process:
+  'features/logo': theme_settings/toggle_logo
+  'features/name': theme_settings/toggle_name
+  'features/slogan': theme_settings/toggle_slogan
+  'features/node_user_picture': theme_settings/toggle_node_user_picture
+  'features/comment_user_picture': theme_settings/toggle_comment_user_picture
+  'features/comment_user_verification': theme_settings/toggle_comment_user_verification
+  'features/favicon': theme_settings/toggle_favicon
+  'logo/use_default': theme_settings/default_logo
+  'logo/path': theme_settings/logo_path
+  'favicon/use_default': theme_settings/default_favicon
+  'favicon/path': theme_settings/favicon_path
+  'favicon/mimetype': theme_settings/favicon_mimetype
+# Ignore settings not present in Drupal 8
+#  theme_settings/logo_upload
+#  theme_settings/favicon_upload
+#  theme_settings/toggle_main_menu
+#  theme_settings/toggle_secondary_menu
+destination:
+  plugin: config
+  config_name: system.theme.global

@@ -1,0 +1,5 @@
+name: 'Toolbar module API tests'
+type: module
+description: 'Support module for toolbar testing.'
+package: Testing
+version: VERSION

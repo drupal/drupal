@@ -1,0 +1,58 @@
+{
+    "version": "0.1",
+    "language": "en-US",
+    "allowCompoundWords": false,
+    "ignorePaths": [
+      ".*.json",
+      ".*ignore",
+      "composer.lock",
+      "assets/vendor/**",
+      "lib/Drupal/Component/Diff/**",
+      "lib/Drupal/Component/Transliteration/data/**",
+      "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
+      "**/LICENSE.txt",
+      "modules/**/Migrate*Test.php",
+      "modules/color/preview.html",
+      "modules/color/tests/modules/color_test/themes/color_test_theme/color/preview.html",
+      "modules/media/tests/fixtures/oembed/*",
+      "modules/migrate_drupal/tests/fixtures/drupal6.php",
+      "modules/migrate_drupal/tests/fixtures/drupal7.php",
+      "modules/search/tests/UnicodeTest.txt",
+      "modules/system/tests/logo.svgz",
+      "node_modules/*",
+      "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
+      "tests/fixtures/files/*",
+      "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
+      "themes/bartik/color/preview.html",
+      "themes/olivero/fonts/**",
+      "COPYRIGHT.txt",
+      "MAINTAINERS.txt",
+      "package.json",
+      "yarn.lock",
+      "misc/cspell/dictionary.txt"
+    ],
+    "ignoreRegExpList": [
+      "^msgstr .*",
+      "!!binary .*",
+      "%[0-9][0-9A-F]",
+      "\\Wi18n"
+    ],
+    "dictionaries": ["drupal","companies", "fonts", "html", "php", "softwareTerms"],
+    "dictionaryDefinitions": [
+      { "name": "drupal", "path": "./misc/cspell/dictionary.txt"}
+    ],
+    "flagWords": [
+      "grey",
+      "hte"
+    ],
+    "overrides": [
+      {
+        "filename": "**/{*.engine,*.inc,*.install,*.module,*.profile,*.theme}",
+        "languageId": "php"
+      },
+      {
+        "filename": "**/scripts/{*.php.txt, *.sh}",
+        "languageId": "php"
+      }
+    ]
+}

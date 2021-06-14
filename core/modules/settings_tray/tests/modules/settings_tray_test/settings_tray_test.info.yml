@@ -1,0 +1,8 @@
+name: 'Settings Tray Test'
+type: module
+description: 'Provides Settings Tray test functionality.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:block
+  - drupal:settings_tray

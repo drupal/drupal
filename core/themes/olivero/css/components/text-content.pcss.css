@@ -1,0 +1,161 @@
+/**
+ * @file
+ * Text Content.
+ */
+
+@import "../base/variables.pcss.css";
+
+.text-content,
+.cke_editable {
+  color: var(--color--gray-10);
+  font-family: var(--font-serif);
+  line-height: var(--sp1-5);
+
+  & h2 {
+    margin-block-start: var(--sp2);
+    margin-block-end: var(--sp1-5);
+    letter-spacing: 0.12em;
+    color: var(--color--black);
+    font-size: 16px;
+    line-height: var(--sp1-5);
+
+    @media (--md) {
+      margin-block-start: var(--sp3);
+      margin-block-end: var(--sp2);
+      letter-spacing: 0.09em;
+      font-size: 21px;
+    }
+  }
+
+  /*
+    @todo
+
+    text-decoration-thickness is supported by FF & Safari
+    text-underline-offset is supported by Safari
+
+    text-decoration-color supported by Chrome, FF, & Safari
+  */
+
+  & a {
+    color: var(--color--blue-20);
+    text-decoration-color: var(--color--blue-20);
+    text-decoration-thickness: 2px;
+    overflow-wrap: break-word;
+
+    @supports (box-shadow: none) {
+      transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
+      text-decoration: none;
+      box-shadow: inset 0 -2px 0 0 var(--color--blue-50);
+
+      &:hover {
+        text-decoration: underline;
+        color: var(--color--black);
+
+        /* @todo - #d9ecfa isn't currently a variable. */
+        box-shadow: inset 0 -2em 0 0 #d9ecfa;
+        text-decoration-color: #d9ecfa;
+      }
+    }
+  }
+
+  & p {
+    margin-block-start: var(--sp);
+    margin-block-end: var(--sp);
+
+    &:first-child {
+      margin-block-start: 0;
+    }
+
+    &:last-child {
+      margin-block-end: 0;
+    }
+
+    @media (--md) {
+      margin-block-start: var(--sp2);
+      margin-block-end: var(--sp2);
+    }
+  }
+
+  & code {
+    background-color: var(--color--gray-95);
+  }
+
+  & pre code {
+    display: block;
+    overflow: auto;
+    padding-block: var(--sp);
+    padding-inline-start: var(--sp);
+    padding-inline-end: var(--sp);
+    color: var(--color--gray-20);
+  }
+
+  & blockquote {
+    position: relative;
+    margin-block: var(--sp2);
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: var(--sp2);
+    letter-spacing: -0.01em;
+    font-family: var(--font-serif);
+    font-size: 21px;
+    line-height: var(--sp2);
+
+    &:before {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      content: "“";
+      color: var(--color--blue-70);
+      font-size: 54px;
+    }
+
+    &:after {
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline-start: 0;
+      width: var(--sp0-5);
+      height: calc(100% - 30px);
+      margin-inline-start: 4px;
+      content: "";
+      background: var(--color--gray-95);
+    }
+
+    @media (--grid-md) {
+      font-size: 32px;
+      line-height: var(--sp3);
+    }
+
+    @media (--lg) {
+      font-size: 40px;
+      line-height: calc(3.5 * var(--sp));
+    }
+  }
+
+  @media (--grid-md) {
+    font-size: 18px;
+    line-height: var(--sp2);
+  }
+}
+
+/**
+ * Special colors for footer that has a dark background.
+ */
+.site-footer .text-content {
+  color: inherit;
+
+  & * {
+    color: inherit;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: var(--color--white);
+    box-shadow: none;
+
+    &:hover {
+      text-decoration: none;
+      color: var(--color--white);
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+views.argument.datetime:
+  type: views.argument.date
+
+views.argument.datetime_day:
+  type: views.argument.datetime
+
+views.argument.datetime_full_date:
+  type: views.argument.datetime
+
+views.argument.datetime_month:
+  type: views.argument.datetime
+
+views.argument.datetime_week:
+  type: views.argument.datetime
+
+views.argument.datetime_year:
+  type: views.argument.datetime
+
+views.argument.datetime_year_month:
+  type: views.argument.datetime
+
+views.filter.datetime:
+  type: views.filter.date
+
+views.filter_value.datetime:
+  type: views.filter_value.date
+
+views.sort.datetime:
+  type: views.sort.date
+
+views.sort_expose.datetime:
+  type: views.sort_expose.date

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: de
+label: German
+direction: 'ltr'
+weight: 0
+locked: false

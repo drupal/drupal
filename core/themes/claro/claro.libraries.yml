@@ -1,0 +1,347 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/base/elements.css: {}
+      css/base/typography.css: {}
+      css/base/print.css: {}
+    component:
+      css/classy/components/container-inline.css: {}
+      css/classy/components/exposed-filters.css: {}
+      css/classy/components/field.css: {}
+      css/classy/components/icons.css: {}
+      css/classy/components/inline-form.css: {}
+      css/classy/components/item-list.css: {}
+      css/classy/components/link.css: {}
+      css/classy/components/links.css: {}
+      css/classy/components/menu.css: {}
+      css/classy/components/more-link.css: {}
+      css/classy/components/tablesort.css: {}
+      css/classy/components/textarea.css: {}
+      css/classy/components/ui-dialog.css: {}
+      css/components/accordion.css: {}
+      css/components/action-link.css: {}
+      css/components/content-header.css: {}
+      css/components/container-inline.css: {}
+      css/components/container-inline.module.css: {}
+      css/components/breadcrumb.css: {}
+      css/components/button.css: {}
+      css/components/details.css: {}
+      css/components/divider.css: {}
+      css/components/messages.css: {}
+      css/components/entity-meta.css: {}
+      css/components/fieldset.css: {}
+      css/components/form.css: {}
+      css/components/form--checkbox-radio.css: {}
+      css/components/form--checkbox-radio--ie.css: {}
+      css/components/form--field-multiple.css: {}
+      css/components/form--managed-file.css: {}
+      css/components/form--text.css: {}
+      css/components/form--select.css: {}
+      css/components/help.css: {}
+      css/components/image-preview.css: {}
+      css/components/menus-and-lists.css: {}
+      css/components/modules-page.css: {}
+      css/components/node.css: {}
+      css/components/page-title.css: {}
+      css/components/pager.css: {}
+      css/components/skip-link.css: {}
+      css/components/tables.css: {}
+      css/components/table--file-multiple-widget.css: {}
+      css/components/search-admin-settings.css: {}
+      css/components/tablesort-indicator.css: {}
+      css/components/system-status-report-general-info.css: {}
+      css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
+      css/components/tableselect.css: {}
+      css/components/tabs.css: {}
+      css/components/views-ui.css: {}
+    theme:
+      css/theme/colors.css: {}
+    layout:
+      css/layout/breadcrumb.css: {}
+      css/layout/local-actions.css: {}
+      css/layout/layout.css: {}
+  dependencies:
+    - system/admin
+    - core/jquery
+    - core/drupal
+    # Claro has small and extra small variation for most of the control elements
+    # such as inputs, action links, buttons, dropbuttons. For usability and
+    # accessibility reasons, we keep target sizes big enough on touch screen
+    # devices (by not making these elements smaller than their default size).
+    # Modernizr is used for recognizing whether user is using a touch device or
+    # not. This allows conditionally rendering small variation of the control
+    # elements on non-touch devices. In some cases, such as when rendering
+    # links, it is hard recognize when Modernizr should be attached, therefore
+    # it has to be always attached.
+    - core/modernizr
+
+node-form:
+  version: VERSION
+  css:
+    layout:
+      css/layout/node-add.css: {}
+  dependencies:
+    - node/form
+
+maintenance-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      css/theme/maintenance-page.css: {}
+  dependencies:
+    - system/maintenance
+    - claro/global-styling
+
+install-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      css/theme/install-page.css: {}
+  dependencies:
+    - claro/maintenance-page
+
+drupal.nav-tabs:
+  version: VERSION
+  js:
+    js/nav-tabs.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.debounce
+    - core/collapse
+
+drupal.responsive-detail:
+  version: VERSION
+  js:
+    js/responsive-details.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/collapse
+
+claro.jquery.ui:
+  version: VERSION
+  css:
+    component:
+      css/components/jquery.ui/theme.css: { weight: -1 }
+
+claro.drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/components/dialog.css: {}
+
+claro.tabledrag:
+  version: VERSION
+  js:
+    js/tabledrag.js: {}
+
+ckeditor-admin:
+  version: VERSION
+  css:
+    theme:
+      css/theme/ckeditor.admin.css: {}
+
+ckeditor-dialog:
+  version: VERSION
+  css:
+    theme:
+      css/theme/ckeditor-dialog.css: {}
+
+ckeditor-editor:
+  version: VERSION
+  css:
+    theme:
+      css/theme/ckeditor-editor.css: {}
+
+tour-styling:
+  version: VERSION
+  css:
+    theme:
+      css/theme/tour.theme.css: {}
+
+media-form:
+  version: VERSION
+  css:
+    layout:
+      css/components/media.css: {}
+  dependencies:
+    - media/form
+
+system.admin:
+  version: VERSION
+  css:
+    component:
+      css/components/system-admin--admin-list.css: { weight: -10 }
+      css/components/system-admin--links.css: { weight: -10 }
+      css/components/system-admin--modules.css: { weight: -10 }
+      css/components/system-admin--panel.css: { weight: -10 }
+      css/components/system-admin--status-report.css: { weight: -10 }
+    layout:
+      css/layout/system-admin--layout.css: { weight: -10 }
+  dependencies:
+    - claro/card
+
+checkbox:
+  version: VERSION
+  js:
+    js/checkbox.js: {}
+  dependencies:
+    - core/drupal
+
+icon-link:
+  version: VERSION
+  css:
+    component:
+      css/components/icon-link.css: {}
+
+dropbutton:
+  version: VERSION
+  js:
+    js/dropbutton.js: {}
+  dependencies:
+    - core/drupal
+
+autocomplete:
+  version: VERSION
+  js:
+    js/autocomplete.js: {}
+  dependencies:
+    - core/once
+
+drupal.shortcut:
+  version: VERSION
+  css:
+    # @todo move this to components after
+    #   https://www.drupal.org/project/drupal/issues/3045467 is in.
+    theme:
+      css/components/shortcut.css: {}
+
+details-focus:
+  js:
+    js/details.js: {}
+
+ajax:
+  js:
+    js/ajax.js: {}
+
+form.password-confirm:
+  css:
+    component:
+      css/components/form--password-confirm.css: {}
+  js:
+    js/user.theme.js: {}
+  dependencies:
+    - core/drupal.object.assign
+    - core/drupal
+    - claro/global-styling
+
+views:
+  css:
+    component:
+      css/components/views-exposed-form.css: {}
+
+messages:
+  js:
+    js/messages.js: {}
+
+card:
+  css:
+    component:
+      css/layout/card-list.css: {}
+      css/components/card.css: {}
+
+vertical-tabs:
+  css:
+    component:
+      css/components/vertical-tabs.css: {}
+  dependencies:
+    - claro/global-styling
+
+file:
+  css:
+    component:
+      css/components/file.css: {}
+
+media_library.theme:
+  version: VERSION
+  css:
+    theme:
+      css/theme/media-library.css: {}
+  dependencies:
+    - claro/icon-link
+
+media_library.ui:
+  version: VERSION
+  css:
+    component:
+      css/components/media-library.ui.css : {}
+  js:
+    js/media-library.ui.js: { weight: -1 }
+
+progress:
+  version: VERSION
+  css:
+    component:
+      css/components/progress.css: {}
+
+filter:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.theme.css: {}
+
+classy.book-navigation:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/book-navigation.css: {}
+
+classy.file:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/file.css: { weight: -10 }
+
+classy.forum:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/forum.css: { weight: -10 }
+
+classy.indented:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/indented.css: {}
+
+classy.media_embed_error:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/media-embed-error.css: {}
+
+classy.media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/classy/media_embed_ckeditor.theme.js: {}
+
+classy.node:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/node.css: { weight: -10 }
+
+classy.search-results:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/search-results.css: {}

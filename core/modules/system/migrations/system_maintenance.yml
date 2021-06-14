@@ -1,0 +1,26 @@
+id: system_maintenance
+label: Maintenance page configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - maintenance_mode_message
+    - site_offline_message
+  source_module: system
+process:
+  message:
+  -
+    plugin: callback
+    callable: array_filter
+    source:
+      - maintenance_mode_message
+      - site_offline_message
+  -
+    plugin: callback
+    callable: current
+destination:
+  plugin: config
+  config_name: system.maintenance

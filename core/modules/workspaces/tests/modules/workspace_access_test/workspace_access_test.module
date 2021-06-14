@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Provides supporting code for testing access for workspaces.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for the 'workspace' entity type.
+ */
+function workspace_access_test_workspace_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  return \Drupal::state()->get("workspace_access_test.result.$operation", AccessResult::neutral());
+}

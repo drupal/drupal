@@ -1,0 +1,25 @@
+id: d6_imagecache_presets
+label: ImageCache Presets
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: d6_imagecache_presets
+process:
+  name:
+    -
+      plugin: machine_name
+      source: presetname
+    -
+      plugin: make_unique_entity_field
+      entity_type: image_style
+      field: name
+      length: 30
+  label: presetname
+  effects:
+    plugin: d6_imagecache_actions
+    source:
+      - '@plugin'
+      - data
+destination:
+  plugin: entity:image_style

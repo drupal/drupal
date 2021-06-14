@@ -1,0 +1,6 @@
+type: module
+name: Migrate query batch Source test
+description: 'Provides a database table and records for SQL import with batch testing.'
+package: Testing
+dependencies:
+  - drupal:migrate

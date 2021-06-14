@@ -1,0 +1,25 @@
+id: d7_aggregator_item
+label: Aggregator items
+audit: true
+migration_tags:
+  - Drupal 7
+  - Content
+source:
+  plugin: aggregator_item
+process:
+  iid: iid
+  fid:
+    plugin: migration_lookup
+    migration: d7_aggregator_feed
+    source: fid
+  title: title
+  link: link
+  author: author
+  description: description
+  timestamp: timestamp
+  guid: guid
+destination:
+  plugin: entity:aggregator_item
+migration_dependencies:
+  required:
+    - d7_aggregator_feed

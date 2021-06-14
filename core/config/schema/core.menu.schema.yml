@@ -1,0 +1,26 @@
+core.menu.static_menu_link_overrides:
+  type: config_object
+  label: 'Static menu link overrides'
+  mapping:
+    definitions:
+      type: sequence
+      label: Definitions
+      sequence:
+        type: mapping
+        label: Definition
+        mapping:
+          menu_name:
+            type: string
+            label: 'Menu name'
+          parent:
+            type: string
+            label: 'Parent'
+          weight:
+            type: integer
+            label: 'Weight'
+          expanded:
+            type: boolean
+            label: 'Expanded'
+          enabled:
+            type: boolean
+            label: 'Enabled'

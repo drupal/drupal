@@ -1,0 +1,46 @@
+/**
+ * @file
+ * This file is used to style the 'full' view mode.
+ */
+.node--view-mode-full {
+  margin: 0 auto 2.37rem;
+  padding: 1.266rem;
+  border-top: 1px solid #fcece7;
+  border-right: none;
+  border-bottom: 1px solid #fcece7;
+  border-left: none;
+  background-color: #fff;
+}
+/* Large */
+@media screen and (min-width: 60rem) {
+  /* 960px */
+  .node--view-mode-full {
+    padding: 2.37rem;
+    border-right: 1px solid #fcece7;
+    border-left: 1px solid #fcece7;
+  }
+}
+
+.node--view-mode-full .node__submitted {
+  margin-bottom: 1.2em;
+  font-size: 0.889em;
+}
+.node--view-mode-full .by-author::after {
+  display: inline-block;
+  margin: 0 0.25ex;
+  content: "•";
+  vertical-align: middle;
+  color: #7cbe8c;
+  font-size: 2em;
+}
+
+.node--view-mode-full .field--name-field-media-image {
+  margin-bottom: 1.184rem;
+}
+/* Large */
+@media screen and (min-width: 60rem) {
+  /* 960px */
+  .node--view-mode-full .field--name-field-media-image {
+    margin-bottom: 2.369rem;
+  }
+}

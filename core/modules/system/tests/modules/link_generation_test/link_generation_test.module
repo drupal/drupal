@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the link generation tests.
+ */
+
+/**
+ * Implements hook_link_alter().
+ */
+function link_generation_test_link_alter(&$variables) {
+  if (\Drupal::state()->get('link_generation_test_link_alter', FALSE)) {
+    // Add a text to the end of links.
+    if (\Drupal::state()->get('link_generation_test_link_alter_safe', FALSE)) {
+      $variables['text'] = t('@text <strong>Test!</strong>', ['@text' => $variables['text']]);
+    }
+    else {
+      $variables['text'] .= ' <strong>Test!</strong>';
+    }
+  }
+}

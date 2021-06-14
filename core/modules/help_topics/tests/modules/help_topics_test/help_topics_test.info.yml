@@ -1,0 +1,8 @@
+# The name of this module is deliberately different from its machine
+# name to test the presented order of help topics.
+name: 'ABC Help Test'
+type: module
+description: 'Support module for help testing.'
+package: Testing
+dependencies:
+  - drupal:help_topics

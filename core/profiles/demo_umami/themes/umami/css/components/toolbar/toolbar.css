@@ -1,0 +1,11 @@
+/**
+ * @file
+ * This file is used to style the admin toolbar.
+ *
+ * Button styles in /css/base.css change the font for the 'Edit' button
+ * in the admin toolbar - set this back to inherit, which normalize.css does.
+ */
+
+.toolbar button {
+  font-family: inherit;
+}

@@ -1,0 +1,19 @@
+id: d7_syslog_settings
+label: Syslog configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - syslog_facility
+    - syslog_format
+    - syslog_identity
+  source_module: syslog
+process:
+  facility: syslog_facility
+  format: syslog_format
+  identity: syslog_identity
+destination:
+  plugin: config
+  config_name: syslog.settings

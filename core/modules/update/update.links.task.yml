@@ -1,0 +1,26 @@
+update.status:
+  route_name: update.status
+  base_route: system.admin_reports
+  title: List
+update.settings:
+  route_name: update.settings
+  base_route: system.admin_reports
+  title: Settings
+  weight: 50
+update.report_update:
+  route_name: update.report_update
+  base_route: system.admin_reports
+  title: Update
+  weight: 10
+
+update.module_update:
+  route_name: update.module_update
+  base_route: system.modules_list
+  title: Update
+  weight: 10
+
+update.theme_update:
+  route_name: update.theme_update
+  base_route: system.themes_page
+  title: Update
+  weight: 10

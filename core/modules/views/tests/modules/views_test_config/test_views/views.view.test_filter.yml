@@ -1,0 +1,48 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_filter
+label: 'Test filters'
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            ellipsis: false
+            word_boundary: false
+          field: name
+          id: name
+          label: ''
+          table: views_test_data
+          plugin_id: string
+      filters:
+        type:
+          field: name
+          id: test_filter
+          table: views_test_data
+          plugin_id: string
+      query:
+        type: views_query
+      use_more_always: false
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

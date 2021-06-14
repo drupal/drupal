@@ -1,0 +1,5 @@
+image_style_add_action:
+  route_name: image.style_add
+  title: 'Add image style'
+  appears_on:
+    - entity.image_style.collection

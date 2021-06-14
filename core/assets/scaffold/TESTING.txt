@@ -1,0 +1,16 @@
+HOW-TO: Test these Drupal scaffold files
+
+In order to test these scaffold files, you'll need to get the entire Drupal repo and
+run the tests there.
+
+You'll find the tests in core/tests/Drupal/Tests/ComposerIntegrationTest.php.
+
+You can get the full Drupal repo here:
+https://www.drupal.org/project/drupal/git-instructions
+
+You can find more information about running PHPUnit tests with Drupal here:
+https://www.drupal.org/node/2116263
+
+You can run a single phpunit test file like so:
+
+$ ./vendor/bin/phpunit -c core core/tests/Drupal/Tests/ComposerIntegrationTest.php

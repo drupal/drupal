@@ -1,0 +1,16 @@
+/**
+ * @file
+ * This file is used to style the bottom region.
+ */
+
+.layout-bottom {
+  overflow: hidden;
+  padding: 2rem 4%;
+  background: #fff;
+}
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .layout-bottom {
+    padding: 2rem 0;
+  }
+}

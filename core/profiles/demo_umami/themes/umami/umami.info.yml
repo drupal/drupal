@@ -1,0 +1,69 @@
+name: Umami
+type: theme
+base theme: false
+description: 'The theme used for the Umami food magazine demonstration site.'
+version: VERSION
+libraries:
+  - umami/classy.base
+  - core/normalize
+  - umami/global
+  - umami/messages
+  - umami/webfonts-open-sans
+  - umami/webfonts-scope-one
+
+libraries-override:
+  layout_builder/twocol_section:
+    css:
+      theme:
+        layouts/twocol_section/twocol_section.css: layouts/twocol_section/twocol_section.css
+  layout_builder/threecol_section:
+    css:
+      theme:
+        layouts/threecol_section/threecol_section.css: layouts/threecol_section/threecol_section.css
+  layout_builder/fourcol_section:
+    css:
+      theme:
+        layouts/fourcol_section/fourcol_section.css: layouts/fourcol_section/fourcol_section.css
+
+libraries-extend:
+  tour/tour-styling:
+    - umami/demo-umami-tour
+  core/drupal.dialog:
+    - umami/classy.dialog
+  core/drupal.dropbutton:
+    - umami/classy.dropbutton
+  core/drupal.progress:
+    - umami/classy.progress
+  file/drupal.file:
+    - umami/classy.file
+  filter/drupal.filter.admin:
+    - umami/filter
+  filter/drupal.filter:
+    - umami/filter
+  media/media_embed_ckeditor_theme:
+    - umami/classy.media_embed_ckeditor_theme
+  media_library/view:
+    - umami/classy.media_library
+  media_library/widget:
+    - umami/classy.media_library
+  user/drupal.user:
+    - umami/user
+
+regions:
+  pre_header: Pre-header
+  header: Header
+  highlighted: Highlighted
+  tabs: Tabs
+  banner_top: 'Banner Top'
+  breadcrumbs: Breadcrumbs
+  page_title: 'Page Title'
+  content: Content
+  sidebar: Sidebar
+  content_bottom: 'Content Bottom'
+  footer: Footer
+  bottom: Bottom
+  page_top: 'Page top' # Needed by Drupal Core
+  page_bottom: 'Page bottom' # Needed by Drupal Core
+
+ckeditor_stylesheets:
+  - css/classy/components/media-embed-error.css

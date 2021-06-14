@@ -1,0 +1,5 @@
+entity.image_style.collection:
+  title: 'Image styles'
+  description: 'Configure styles that can be used for resizing or adjusting images on display.'
+  parent: system.admin_config_media
+  route_name: entity.image_style.collection

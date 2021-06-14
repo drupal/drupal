@@ -1,0 +1,73 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_attachment_ui
+label: null
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'views_test_data test permission'
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  attachment_1:
+    display_plugin: attachment
+    display_title: Attachment
+    id: attachment_1
+    position: 1
+  feed_1:
+    display_plugin: feed
+    id: feed_1
+    display_title: Feed
+    position: 3
+    display_options:
+      pager:
+        type: some
+      style:
+        type: rss
+      row:
+        type: rss_fields
+        options:
+          title_field: id
+          link_field: id
+          description_field: id
+          creator_field: id
+          date_field: id
+          guid_field_options:
+            guid_field: id
+            guid_field_is_permalink: false
+      path: test_attachment_ui_feed
+  page_1:
+    display_plugin: page
+    display_title: <em>Page</em>
+    display_options:
+      path: test_attachment_ui
+    id: page_1
+    position: 2

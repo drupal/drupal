@@ -1,0 +1,530 @@
+<?php
+
+/**
+ * @file
+ * Provides media items.
+ */
+
+use Drupal\Component\Plugin\DerivativeInspectionInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+use Drupal\field\FieldConfigInterface;
+use Drupal\media\Plugin\media\Source\OEmbedInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_help().
+ */
+function media_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.media':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Media module manages the creation, editing, deletion, settings, and display of media. Items are typically images, documents, slideshows, YouTube videos, tweets, Instagram photos, etc. You can reference media items from any other content on your site. For more information, see the <a href=":media">online documentation for the Media module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Creating media items') . '</dt>';
+      $output .= '<dd>' . t('When a new media item is created, the Media module records basic information about it, including the author, date of creation, and the <a href=":media-type">media type</a>. It also manages the <em>publishing options</em>, which define whether or not the item is published. Default settings can be configured for each type of media on your site.', [':media-type' => Url::fromRoute('entity.media_type.collection')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Listing media items') . '</dt>';
+      $output .= '<dd>' . t('Media items are listed at the <a href=":media-collection">media administration page</a>.', [
+        ':media-collection' => Url::fromRoute('entity.media.collection')->toString(),
+      ]) . '</dd>';
+      $output .= '<dt>' . t('Creating custom media types') . '</dt>';
+      $output .= '<dd>' . t('The Media module gives users with the <em>Administer media types</em> permission the ability to <a href=":media-new">create new media types</a> in addition to the default ones already configured. Each media type has an associated media source (such as the image source) which support thumbnail generation and metadata extraction. Fields managed by the <a href=":field">Field module</a> may be added for storing that metadata, such as width and height, as well as any other associated values.', [
+        ':media-new' => Url::fromRoute('entity.media_type.add_form')->toString(),
+        ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
+      ]) . '</dd>';
+      $output .= '<dt>' . t('Creating revisions') . '</dt>';
+      $output .= '<dd>' . t('The Media module also enables you to create multiple versions of any media item, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
+      $output .= '<dt>' . t('User permissions') . '</dt>';
+      $output .= '<dd>' . t('The Media module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>.', [
+        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-media'])->toString(),
+      ]) . '</dd>';
+      $output .= '<dt>' . t('Adding media to other content') . '</dt>';
+      $output .= '<dd>' . t('Users with permission to administer content types can add media support by adding a media reference field to the content type on the content type administration page. (The same is true of block types, taxonomy terms, user profiles, and other content that supports fields.) A media reference field can refer to any configured media type. It is possible to allow multiple media types in the same field.') . '</dd>';
+      $output .= '</dl>';
+      $output .= '<h3>' . t('Differences between Media, File, and Image reference fields') . '</h3>';
+      $output .= '<p>' . t('<em>Media</em> reference fields offer several advantages over basic <em>File</em> and <em>Image</em> references:') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('Media reference fields can reference multiple media types in the same field.') . '</li>';
+      $output .= '<li>' . t('Fields can also be added to media types themselves, which means that custom metadata like descriptions and taxonomy tags can be added for the referenced media. (Basic file and image fields do not support this.)') . '</li>';
+      $output .= '<li>' . t('Media types for audio and video files are provided by default, so there is no need for additional configuration to upload these media.') . '</li>';
+      $output .= '<li>' . t('Contributed or custom projects can provide additional media sources (such as third-party websites, Twitter, etc.).') . '</li>';
+      $output .= '<li>' . t('Existing media items can be reused on any other content items with a media reference field.') . '</li>';
+      $output .= '</ul>';
+      $output .= '<p>' . t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_theme() {
+  return [
+    'media' => [
+      'render element' => 'elements',
+    ],
+    'media_reference_help' => [
+      'render element' => 'element',
+      'base hook' => 'field_multiple_value_form',
+    ],
+    'media_oembed_iframe' => [
+      'variables' => [
+        'resource' => NULL,
+        'media' => NULL,
+        'placeholder_token' => '',
+      ],
+    ],
+    'media_embed_error' => [
+      'variables' => [
+        'message' => NULL,
+        'attributes' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function media_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if ($operation === 'delete' && $entity instanceof FieldConfigInterface && $entity->getTargetEntityTypeId() === 'media') {
+    /** @var \Drupal\media\MediaTypeInterface $media_type */
+    $media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load($entity->getTargetBundle());
+    return AccessResult::forbiddenIf($entity->id() === 'media.' . $media_type->id() . '.' . $media_type->getSource()->getConfiguration()['source_field']);
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function media_theme_suggestions_media(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\media\MediaInterface $media */
+  $media = $variables['elements']['#media'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'media__' . $sanitized_view_mode;
+  $suggestions[] = 'media__' . $media->bundle();
+  $suggestions[] = 'media__' . $media->bundle() . '__' . $sanitized_view_mode;
+
+  // Add suggestions based on the source plugin ID.
+  $source = $media->getSource();
+  if ($source instanceof DerivativeInspectionInterface) {
+    $source_id = $source->getBaseId();
+    $derivative_id = $source->getDerivativeId();
+    if ($derivative_id) {
+      $source_id .= '__derivative_' . $derivative_id;
+    }
+  }
+  else {
+    $source_id = $source->getPluginId();
+  }
+  $suggestions[] = "media__source_$source_id";
+
+  // If the source plugin uses oEmbed, add a suggestion based on the provider
+  // name, if available.
+  if ($source instanceof OEmbedInterface) {
+    $provider_id = $source->getMetadata($media, 'provider_name');
+    if ($provider_id) {
+      $provider_id = \Drupal::transliteration()->transliterate($provider_id);
+      $provider_id = preg_replace('/[^a-z0-9_]+/', '_', mb_strtolower($provider_id));
+      $suggestions[] = end($suggestions) . "__provider_$provider_id";
+    }
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for media templates.
+ *
+ * Default template: media.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - media: The media item.
+ *   - name: The label for the media item.
+ *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+ */
+function template_preprocess_media(array &$variables) {
+  $variables['media'] = $variables['elements']['#media'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['name'] = $variables['media']->label();
+
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_field_ui_preconfigured_options_alter().
+ */
+function media_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+  // If the field is not an "entity_reference"-based field, bail out.
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+  $class = $field_type_manager->getPluginClass($field_type);
+  if (!is_a($class, 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem', TRUE)) {
+    return;
+  }
+
+  // Set the default formatter for media in entity reference fields to be the
+  // "Rendered entity" formatter.
+  if (!empty($options['media'])) {
+    $options['media']['entity_view_display']['type'] = 'entity_reference_entity_view';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Provide some help text to aid users decide whether they need a Media,
+  // File, or Image reference field.
+  $description_text = t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.');
+  if (\Drupal::moduleHandler()->moduleExists('help')) {
+    $description_text .= ' ' . t('For more information, see the <a href="@help_url">Media help page</a>.', [
+      '@help_url' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
+    ]);
+  }
+  $form['add']['description_wrapper'] = [
+    '#type' => 'container',
+  ];
+  $field_types = [
+    'file',
+    'image',
+    'field_ui:entity_reference:media',
+  ];
+  foreach ($field_types as $field_name) {
+    $form['add']['description_wrapper']["description_{$field_name}"] = [
+      '#type' => 'item',
+      '#markup' => $description_text,
+      '#states' => [
+        'visible' => [
+          ':input[name="new_storage_type"]' => ['value' => $field_name],
+        ],
+      ],
+    ];
+  }
+  $form['add']['new_storage_type']['#weight'] = 0;
+  $form['add']['description_wrapper']['#weight'] = 1;
+}
+
+/**
+ * Implements hook_field_widget_complete_form_alter().
+ */
+function media_field_widget_complete_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  $elements = &$field_widget_complete_form['widget'];
+  // Do not alter the default settings form.
+  if ($context['default']) {
+    return;
+  }
+
+  // Only act on entity reference fields that reference media.
+  $field_type = $context['items']->getFieldDefinition()->getType();
+  $target_type = $context['items']->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+  if ($field_type !== 'entity_reference' ||  $target_type !== 'media') {
+    return;
+  }
+
+  // Autocomplete widgets need different help text than options widgets.
+  $widget_plugin_id = $context['widget']->getPluginId();
+  if (in_array($widget_plugin_id, ['entity_reference_autocomplete', 'entity_reference_autocomplete_tags'])) {
+    $is_autocomplete = TRUE;
+  }
+  else {
+    // @todo We can't yet properly alter non-autocomplete fields. Resolve this
+    //   in https://www.drupal.org/node/2943020 and remove this condition.
+    return;
+  }
+  $elements['#media_help'] = [];
+
+  // Retrieve the media bundle list and add information for the user based on
+  // which bundles are available to be created or referenced.
+  $settings = $context['items']->getFieldDefinition()->getSetting('handler_settings');
+  $allowed_bundles = !empty($settings['target_bundles']) ? $settings['target_bundles'] : [];
+  $add_url = _media_get_add_url($allowed_bundles);
+  if ($add_url) {
+    $elements['#media_help']['#media_add_help'] = t('Create your media on the <a href=":add_page" target="_blank">media add page</a> (opens a new window), then add it by name to the field below.', [':add_page' => $add_url]);
+  }
+
+  $elements['#theme'] = 'media_reference_help';
+  // @todo template_preprocess_field_multiple_value_form() assumes this key
+  //   exists, but it does not exist in the case of a single widget that
+  //   accepts multiple values. This is for some reason necessary to use
+  //   our template for the entity_autocomplete_tags widget.
+  //   Research and resolve this in https://www.drupal.org/node/2943020.
+  if (empty($elements['#cardinality_multiple'])) {
+    $elements['#cardinality_multiple'] = NULL;
+  }
+
+  // Use the title set on the element if it exists, otherwise fall back to the
+  // field label.
+  $elements['#media_help']['#original_label'] = isset($elements['#title']) ? $elements['#title'] : $context['items']->getFieldDefinition()->getLabel();
+
+  // Customize the label for the field widget.
+  // @todo Research a better approach https://www.drupal.org/node/2943024.
+  $use_existing_label = t('Use existing media');
+  if (!empty($elements[0]['target_id']['#title'])) {
+    $elements[0]['target_id']['#title'] = $use_existing_label;
+  }
+  if (!empty($elements['#title'])) {
+    $elements['#title'] = $use_existing_label;
+  }
+  if (!empty($elements['target_id']['#title'])) {
+    $elements['target_id']['#title'] = $use_existing_label;
+  }
+
+  // This help text is only relevant for autocomplete widgets. When the user
+  // is presented with options, they don't need to type anything or know what
+  // types of media are allowed.
+  if ($is_autocomplete) {
+    $elements['#media_help']['#media_list_help'] = t('Type part of the media name.');
+
+    $overview_url = Url::fromRoute('entity.media.collection');
+    if ($overview_url->access()) {
+      $elements['#media_help']['#media_list_link'] = t('See the <a href=":list_url" target="_blank">media list</a> (opens a new window) to help locate media.', [':list_url' => $overview_url->toString()]);
+    }
+    $all_bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('media');
+    $bundle_labels = array_map(function ($bundle) use ($all_bundles) {
+      return $all_bundles[$bundle]['label'];
+    }, $allowed_bundles);
+    $elements['#media_help']['#allowed_types_help'] = t('Allowed media types: %types', ['%types' => implode(", ", $bundle_labels)]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for media reference widgets.
+ */
+function media_preprocess_media_reference_help(&$variables) {
+  // Most of these attribute checks are copied from
+  // template_preprocess_fieldset(). Our template extends
+  // field-multiple-value-form.html.twig to provide our help text, but also
+  // groups the information within a semantic fieldset with a legend. So, we
+  // incorporate parity for both.
+  $element = $variables['element'];
+  Element::setAttributes($element, ['id']);
+  RenderElement::setAttributes($element);
+  $variables['attributes'] = isset($element['#attributes']) ? $element['#attributes'] : [];
+  $variables['legend_attributes'] = new Attribute();
+  $variables['header_attributes'] = new Attribute();
+  $variables['description']['attributes'] = new Attribute();
+  $variables['legend_span_attributes'] = new Attribute();
+
+  if (!empty($element['#media_help'])) {
+    foreach ($element['#media_help'] as $key => $text) {
+      $variables[substr($key, 1)] = $text;
+    }
+  }
+}
+
+/**
+ * Returns the appropriate URL to add media for the current user.
+ *
+ * @todo Remove in https://www.drupal.org/project/drupal/issues/2938116
+ *
+ * @param string[] $allowed_bundles
+ *   An array of bundles that should be checked for create access.
+ *
+ * @return bool|\Drupal\Core\Url
+ *   The URL to add media, or FALSE if the user cannot create any media.
+ *
+ * @internal
+ *   This function is internal and may be removed in a minor release.
+ */
+function _media_get_add_url($allowed_bundles) {
+  $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
+  $create_bundles = array_filter($allowed_bundles, [$access_handler, 'createAccess']);
+
+  // Add a section about how to create media if the user has access to do so.
+  if (count($create_bundles) === 1) {
+    return Url::fromRoute('entity.media.add_form', ['media_type' => reset($create_bundles)])->toString();
+  }
+  elseif (count($create_bundles) > 1) {
+    return Url::fromRoute('entity.media.add_page')->toString();
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function media_entity_type_alter(array &$entity_types) {
+  if (\Drupal::config('media.settings')->get('standalone_url')) {
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $entity_types['media'];
+    $entity_type->setLinkTemplate('canonical', '/media/{media}');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Add an additional validate callback so we can ensure the order of filters
+  // is correct.
+  $form['#validate'][] = 'media_filter_format_edit_form_validate';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Add an additional validate callback so we can ensure the order of filters
+  // is correct.
+  $form['#validate'][] = 'media_filter_format_edit_form_validate';
+}
+
+/**
+ * Validate callback to ensure filter order and allowed_html are compatible.
+ */
+function media_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
+  if ($form_state->getTriggeringElement()['#name'] !== 'op') {
+    return;
+  }
+
+  $allowed_html_path = [
+    'filters',
+    'filter_html',
+    'settings',
+    'allowed_html',
+  ];
+
+  $filter_html_settings_path = [
+    'filters',
+    'filter_html',
+    'settings',
+  ];
+
+  $filter_html_enabled = $form_state->getValue([
+    'filters',
+    'filter_html',
+    'status',
+  ]);
+
+  $media_embed_enabled = $form_state->getValue([
+    'filters',
+    'media_embed',
+    'status',
+  ]);
+
+  if (!$media_embed_enabled) {
+    return;
+  }
+
+  $get_filter_label = function ($filter_plugin_id) use ($form) {
+    return (string) $form['filters']['order'][$filter_plugin_id]['filter']['#markup'];
+  };
+
+  if ($filter_html_enabled && $form_state->getValue($allowed_html_path)) {
+    /** @var \Drupal\filter\Entity\FilterFormat $filter_format */
+    $filter_format = $form_state->getFormObject()->getEntity();
+
+    $filter_html = clone $filter_format->filters()->get('filter_html');
+    $filter_html->setConfiguration(['settings' => $form_state->getValue($filter_html_settings_path)]);
+    $restrictions = $filter_html->getHTMLRestrictions();
+    $allowed = $restrictions['allowed'];
+
+    // Require `<drupal-media>` HTML tag if filter_html is enabled.
+    if (!isset($allowed['drupal-media'])) {
+      $form_state->setError($form['filters']['settings']['filter_html']['allowed_html'], t('The %media-embed-filter-label filter requires <code>&lt;drupal-media&gt;</code> among the allowed HTML tags.', [
+        '%media-embed-filter-label' => $get_filter_label('media_embed'),
+      ]));
+    }
+    else {
+      $required_attributes = [
+        'data-entity-type',
+        'data-entity-uuid',
+      ];
+
+      // If there are no attributes, the allowed item is set to FALSE,
+      // otherwise, it is set to an array.
+      if ($allowed['drupal-media'] === FALSE) {
+        $missing_attributes = $required_attributes;
+      }
+      else {
+        $missing_attributes = array_diff($required_attributes, array_keys($allowed['drupal-media']));
+      }
+
+      if ($missing_attributes) {
+        $form_state->setError($form['filters']['settings']['filter_html']['allowed_html'], t('The <code>&lt;drupal-media&gt;</code> tag in the allowed HTML tags is missing the following attributes: <code>%list</code>.', [
+          '%list' => implode(', ', $missing_attributes),
+        ]));
+      }
+    }
+  }
+
+  $filters = $form_state->getValue('filters');
+
+  // The "media_embed" filter must run after "filter_align", "filter_caption",
+  // and "filter_html_image_secure".
+  $precedents = [
+    'filter_align',
+    'filter_caption',
+    'filter_html_image_secure',
+  ];
+
+  $error_filters = [];
+  foreach ($precedents as $filter_name) {
+    // A filter that should run before media embed filter.
+    $precedent = $filters[$filter_name];
+
+    if (empty($precedent['status']) || !isset($precedent['weight'])) {
+      continue;
+    }
+
+    if ($precedent['weight'] >= $filters['media_embed']['weight']) {
+      $error_filters[$filter_name] = $get_filter_label($filter_name);
+    }
+  }
+
+  if (!empty($error_filters)) {
+    $error_message = \Drupal::translation()->formatPlural(
+      count($error_filters),
+      'The %media-embed-filter-label filter needs to be placed after the %filter filter.',
+      'The %media-embed-filter-label filter needs to be placed after the following filters: %filters.',
+      [
+        '%media-embed-filter-label' => $get_filter_label('media_embed'),
+        '%filter' => reset($error_filters),
+        '%filters' => implode(', ', $error_filters),
+      ]
+    );
+
+    $form_state->setErrorByName('filters', $error_message);
+  }
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+function media_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
+  // Add an attribute so that "drupalmedia" CKEditor plugin can pass the host
+  // entity's language to EditorMediaDialog, allowing it to present entities
+  // in the same language.
+  if (!empty($element['#type']) && $element['#type'] == 'text_format') {
+    $element['#attributes']['data-media-embed-host-entity-langcode'] = $context['items']->getLangcode();
+  }
+}
+
+/**
+ * Implements hook_views_query_substitutions().
+ */
+function media_views_query_substitutions(ViewExecutable $view) {
+  $account = \Drupal::currentUser();
+  return [
+    '***VIEW_OWN_UNPUBLISHED_MEDIA***' => (int) $account->hasPermission('view own unpublished media'),
+    '***ADMINISTER_MEDIA***' => (int) $account->hasPermission('administer media'),
+  ];
+}

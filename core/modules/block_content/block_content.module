@@ -1,0 +1,184 @@
+<?php
+
+/**
+ * @file
+ * Allows the creation of custom blocks through the user interface.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\ConditionInterface;
+
+/**
+ * Implements hook_help().
+ */
+function block_content_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.block_content':
+      $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Custom Block module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em> from the <a href=":block-library">Custom block library</a> page. Custom block types have fields; see the <a href=":field-help">Field module help</a> for more information. Once created, custom blocks can be placed in regions just like blocks provided by other modules; see the <a href=":blocks">Block module help</a> page for details. For more information, see the <a href=":online-help">online documentation for the Custom Block module</a>.', [':block-library' => Url::fromRoute('entity.block_content.collection')->toString(), ':block-content' => Url::fromRoute('entity.block_content.collection')->toString(), ':field-help' => Url::fromRoute('help.page', ['name' => 'field'])->toString(), ':blocks' => Url::fromRoute('help.page', ['name' => 'block'])->toString(), ':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Creating and managing custom block types') . '</dt>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit custom block types with fields and display settings, from the <a href=":types">Block types</a> page in the Custom block library. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a>.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':field-ui' => $field_ui]) . '</dd>';
+      $output .= '<dt>' . t('Creating custom blocks') . '</dt>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete custom blocks of each defined custom block type, from the <a href=":block-library">Blocks</a> page in the Custom block library. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page; see the <a href=":block_help">Block module help</a> for more information about placing blocks.', [':blocks' => Url::fromRoute('block.admin_display')->toString(), ':block-library' => Url::fromRoute('entity.block_content.collection')->toString(), ':block_help' => Url::fromRoute('help.page', ['name' => 'block'])->toString()]) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'entity.block_content.collection':
+      $output = '<p>' . t('Blocks in the block library belong to <a href=":types">Custom block types</a>, each with its own fields and display settings. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
+      return $output;
+
+    case 'entity.block_content_type.collection':
+      $output = '<p>' . t('Each block type has its own fields and display settings. Create blocks of each type on the <a href=":block-library">Blocks</a> page in the custom block library.', [':block-library' => Url::fromRoute('entity.block_content.collection')->toString()]) . '</p>';
+      return $output;
+
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function block_content_theme($existing, $type, $theme, $path) {
+  return [
+    'block_content_add_list' => [
+      'variables' => ['content' => NULL],
+      'file' => 'block_content.pages.inc',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function block_content_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  // Add a translation handler for fields if the language module is enabled.
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
+    $translation = $entity_types['block_content']->get('translation');
+    $translation['block_content'] = TRUE;
+    $entity_types['block_content']->set('translation', $translation);
+  }
+}
+
+/**
+ * Adds the default body field to a custom block type.
+ *
+ * @param string $block_type_id
+ *   Id of the block type.
+ * @param string $label
+ *   (optional) The label for the body instance. Defaults to 'Body'
+ *
+ * @return \Drupal\field\Entity\FieldConfig
+ *   A Body field object.
+ */
+function block_content_add_body_field($block_type_id, $label = 'Body') {
+  // Add or remove the body field, as needed.
+  $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
+  if (empty($field)) {
+    $field = FieldConfig::create([
+      'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
+      'bundle' => $block_type_id,
+      'label' => $label,
+      'settings' => ['display_summary' => FALSE],
+    ]);
+    $field->save();
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Assign widget settings for the default form mode.
+    $display_repository->getFormDisplay('block_content', $block_type_id)
+      ->setComponent('body', [
+        'type' => 'text_textarea_with_summary',
+      ])
+      ->save();
+
+    // Assign display settings for default view mode.
+    $display_repository->getViewDisplay('block_content', $block_type_id)
+      ->setComponent('body', [
+        'label' => 'hidden',
+        'type' => 'text_default',
+      ])
+      ->save();
+  }
+
+  return $field;
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Alters any 'entity_reference' query where the entity type is
+ * 'block_content' and the query has the tag 'block_content_access'.
+ *
+ * These queries should only return reusable blocks unless a condition on
+ * 'reusable' is explicitly set.
+ *
+ * Block_content entities that are not reusable should by default not be
+ * selectable as entity reference values. A module can still create an instance
+ * of \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+ * that will allow selection of non-reusable blocks by explicitly setting
+ * a condition on the 'reusable' field.
+ *
+ * @see \Drupal\block_content\BlockContentAccessControlHandler
+ */
+function block_content_query_entity_reference_alter(AlterableInterface $query) {
+  if ($query instanceof SelectInterface && $query->getMetaData('entity_type') === 'block_content' && $query->hasTag('block_content_access')) {
+    $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
+    if (array_key_exists($data_table, $query->getTables()) && !_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
+      $query->condition("$data_table.reusable", TRUE);
+    }
+  }
+}
+
+/**
+ * Utility function to find nested conditions using the reusable field.
+ *
+ * @todo Replace this function with a call to the API in
+ *   https://www.drupal.org/project/drupal/issues/2984930
+ *
+ * @param array $condition
+ *   The condition or condition group to check.
+ * @param array $tables
+ *   The tables from the related select query.
+ *
+ * @see \Drupal\Core\Database\Query\SelectInterface::getTables
+ *
+ * @return bool
+ *   Whether the conditions contain any condition using the reusable field.
+ */
+function _block_content_has_reusable_condition(array $condition, array $tables) {
+  // If this is a condition group call this function recursively for each nested
+  // condition until a condition is found that return TRUE.
+  if (isset($condition['#conjunction'])) {
+    foreach (array_filter($condition, 'is_array') as $nested_condition) {
+      if (_block_content_has_reusable_condition($nested_condition, $tables)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+  if (isset($condition['field'])) {
+    $field = $condition['field'];
+    if (is_object($field) && $field instanceof ConditionInterface) {
+      return _block_content_has_reusable_condition($field->conditions(), $tables);
+    }
+    $field_parts = explode('.', $field);
+    $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
+    foreach ($tables as $table) {
+      if ($table['table'] === $data_table && $field_parts[0] === $table['alias'] && $field_parts[1] === 'reusable') {
+        return TRUE;
+      }
+    }
+
+  }
+  return FALSE;
+}

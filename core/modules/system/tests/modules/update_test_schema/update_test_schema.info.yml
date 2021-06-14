@@ -1,0 +1,5 @@
+name: 'Update test schema'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION

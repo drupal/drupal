@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function system_test_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.system_test':
+      $output = '';
+      $output .= '<h3>' . t('Test Help Page') . '</h3>';
+      $output .= '<p>' . t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function system_test_modules_installed($modules) {
+  if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      \Drupal::messenger()->addStatus(t('hook_modules_installed fired for @module', ['@module' => $module]));
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function system_test_modules_uninstalled($modules) {
+  if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      \Drupal::messenger()->addStatus(t('hook_modules_uninstalled fired for @module', ['@module' => $module]));
+    }
+  }
+}
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function system_test_system_info_alter(&$info, Extension $file, $type) {
+  // We need a static otherwise the last test will fail to alter common_test.
+  static $test;
+  if (($dependencies = \Drupal::state()->get('system_test.dependencies')) || $test) {
+    if ($file->getName() == 'module_test') {
+      $info['hidden'] = FALSE;
+      $info['dependencies'][] = array_shift($dependencies);
+      \Drupal::state()->set('system_test.dependencies', $dependencies);
+      $test = TRUE;
+    }
+    if ($file->getName() == 'common_test') {
+      $info['hidden'] = FALSE;
+      $info['version'] = '8.x-2.4-beta3';
+    }
+  }
+
+  // Make the system_dependencies_test visible by default.
+  if ($file->getName() == 'system_dependencies_test') {
+    $info['hidden'] = FALSE;
+  }
+  if (in_array($file->getName(), [
+    'system_incompatible_module_version_dependencies_test',
+    'system_incompatible_core_version_dependencies_test',
+    'system_incompatible_module_version_test',
+  ])) {
+    $info['hidden'] = FALSE;
+  }
+  if ($file->getName() == 'requirements1_test' || $file->getName() == 'requirements2_test') {
+    $info['hidden'] = FALSE;
+  }
+  if ($file->getName() == 'system_test') {
+    $info['hidden'] = \Drupal::state()->get('system_test.module_hidden', TRUE);
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function system_test_page_attachments(array &$page) {
+  // Used by FrontPageTestCase to get the results of
+  // \Drupal::service('path.matcher')->isFrontPage().
+  $frontpage = \Drupal::state()->get('system_test.front_page_output', 0);
+  if ($frontpage && \Drupal::service('path.matcher')->isFrontPage()) {
+    \Drupal::messenger()->addStatus(t('On front page.'));
+  }
+}
+
+/**
+ * Dummy shutdown function which registers another shutdown function.
+ */
+function _system_test_first_shutdown_function($arg1, $arg2) {
+  // Set something to ensure that this function got called.
+  \Drupal::state()->set('_system_test_first_shutdown_function', [$arg1, $arg2]);
+  drupal_register_shutdown_function('_system_test_second_shutdown_function', $arg1, $arg2);
+}
+
+/**
+ * Dummy shutdown function.
+ */
+function _system_test_second_shutdown_function($arg1, $arg2) {
+  // Set something to ensure that this function got called.
+  \Drupal::state()->set('_system_test_second_shutdown_function', [$arg1, $arg2]);
+
+  // Throw an exception with an HTML tag. Since this is called in a shutdown
+  // function, it will not bubble up to the default exception handler but will
+  // be caught in _drupal_shutdown_function() and be displayed through
+  // \Drupal\Core\Utility\Error::renderExceptionSafe() if possible.
+  throw new Exception('Drupal is <blink>awesome</blink>.');
+}
+
+/**
+ * Implements hook_filetransfer_info().
+ */
+function system_test_filetransfer_info() {
+  return [
+    'system_test' => [
+      'title' => t('System Test FileTransfer'),
+      'class' => 'Drupal\system_test\MockFileTransfer',
+      'weight' => -10,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_module_preinstall().
+ */
+function system_test_module_preinstall($module) {
+  \Drupal::messenger()->addStatus('system_test_preinstall_module called');
+  \Drupal::state()->set('system_test_preinstall_module', $module);
+}
+
+/**
+ * Implements hook_module_preuninstall().
+ */
+function system_test_module_preuninstall($module) {
+  \Drupal::state()->set('system_test_preuninstall_module', $module);
+}

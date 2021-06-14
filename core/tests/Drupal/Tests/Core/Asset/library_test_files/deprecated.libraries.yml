@@ -1,0 +1,6 @@
+deprecated:
+  version: VERSION
+  css:
+    theme:
+      css/example.css: {}
+  deprecated: 'The "%library_id%" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com'

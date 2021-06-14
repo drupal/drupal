@@ -1,0 +1,37 @@
+id: d7_rdf_mapping
+label: Drupal 7 RDF Mappings
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_rdf_mapping
+process:
+  id:
+    plugin: concat
+    source:
+      - type
+      - bundle
+    delimiter: .
+  targetEntityType: type
+  bundle: bundle
+  types: types
+  fieldMappings:
+    plugin: sub_process
+    source: fieldMappings
+    process:
+      properties: predicates
+      datatype: datatype
+      datatype_callback/callable:
+        plugin: static_map
+        source: callback
+        bypass: true
+        map:
+          date_iso8601: Drupal\rdf\CommonDataConverter::dateIso8601Value
+      mapping_type: type
+destination:
+  plugin: entity:rdf_mapping
+migration_dependencies:
+  optional:
+    - d7_comment_type
+    - d7_node_type
+    - d7_taxonomy_vocabulary

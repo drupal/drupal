@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module.
+ */
+
+use Drupal\demo_umami_content\InstallHelper;
+
+/**
+ * Implements hook_module_preinstall().
+ */
+function demo_umami_content_module_preinstall($module) {
+  if ($module === 'demo_umami_content' && !\Drupal::service('config.installer')->isSyncing()) {
+    // Run before importing config so blocks are created with the correct
+    // dependencies.
+    \Drupal::classResolver(InstallHelper::class)->importContent();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function demo_umami_content_uninstall($is_syncing) {
+  if (!$is_syncing) {
+    \Drupal::classResolver(InstallHelper::class)->deleteImportedContent();
+  }
+}

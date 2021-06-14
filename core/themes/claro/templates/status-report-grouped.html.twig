@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Theme override to display status report.
+ *
+ * - grouped_requirements: Contains grouped requirements.
+ *   Each group contains:
+ *   - title: The title of the group.
+ *   - type: The severity of the group.
+ *   - items: The requirement instances.
+ *     Each requirement item contains:
+ *     - title: The title of the requirement.
+ *     - value: (optional) The requirement's status.
+ *     - description: (optional) The requirement's description.
+ *     - severity_title: The title of the severity.
+ *     - severity_status: Indicates the severity status.
+ */
+#}
+{{ attach_library('core/drupal.collapse') }}
+
+<div class="system-status-report">
+  <h2 class="system-status-general-info__header">{{ 'Status Details'|t }}</h2>
+  {% for group in grouped_requirements %}
+    <details class="claro-details" open>
+      <summary id="{{ group.type }}" class="claro-details__summary claro-details__summary--system-status-report">{{ group.title }}</summary>
+      <div class="claro-details__wrapper claro-details__wrapper--system-status-report">
+        {% for requirement in group.items %}
+          <div class="system-status-report__row">
+              {%
+                set summary_classes = [
+                  'system-status-report__status-title',
+                  group.type in ['warning', 'error'] ? 'system-status-report__status-icon system-status-report__status-icon--' ~ group.type
+                ]
+              %}
+              <div{{ create_attribute({'class': summary_classes}) }} role="button">
+                {% if requirement.severity_title  %}
+                  <span class="visually-hidden">{{ requirement.severity_title }}</span>
+                {% endif %}
+                {{ requirement.title }}
+              </div>
+              <div class="system-status-report__entry__value">
+                {{ requirement.value }}
+                {% if requirement.description %}
+                  <div class="description">{{ requirement.description }}</div>
+                {% endif %}
+              </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    </details>
+  {% endfor %}
+</div>

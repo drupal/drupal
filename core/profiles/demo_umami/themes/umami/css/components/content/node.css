@@ -1,0 +1,9 @@
+/**
+ * @file
+ * This file is used to high-level node styling. Individual view modes or
+ * content types may override this.
+ */
+
+.node {
+  background: #fff;
+}

@@ -1,0 +1,30 @@
+---
+label: 'Managing content listings (views)'
+top_level: true
+related:
+  - block.overview
+---
+<h2>{% trans %}What is a view?{% endtrans %}</h2>
+<p>{% trans %}A <em>view</em> is a listing of items on your site; for example, a block showing the most recent comments, a page listing news items, or a list of registered users. The listings can be formatted in a table, grid, list, calendar, RSS feed, and other formats (some output formats may require you to install additional contributed modules).{% endtrans %}</p>
+<h2>{% trans %}What are the components of a view?{% endtrans %}</h2>
+<p>{% trans %}When you first create a view, you will specify what type of <em>base data</em> is being displayed in the view, which cannot be changed. After choosing a base data type, you can edit the following components, which allow you to specify which data to output, in what order, and in what format:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}<em>Displays</em>: whether the output goes to a page, block, feed, etc.; a single view can have multiple displays, each with different settings.{% endtrans %}</li>
+  <li>{% trans %}<em>Format</em>: the output style for each display, such as content item, grid, table, or HTML list.{% endtrans %}</li>
+  <li>{% trans %}<em>Fields</em>: if the Format allows, the particular fields to display.{% endtrans %}</li>
+  <li>{% trans %}<em>Filter criteria</em>: criteria to limit the data to output, such as whether the content is published, the type of content, etc. Filters can be <em>exposed</em> to let users choose how to filter the data.{% endtrans %}</li>
+  <li>{% trans %}<em>Sort criteria</em>: how to order the data. Sorting can also be exposed to users.{% endtrans %}</li>
+  <li>{% trans %}<em>Page settings</em>, <em>Block settings</em>, etc.: settings specific to the display type, such as the URL for a page display.{% endtrans %}</li>
+  <li>{% trans %}<em>Header</em> and <em>Footer</em>: content to display at the top or bottom of the view display.{% endtrans %}</li>
+  <li>{% trans %}<em>No results behavior</em>: what to do if the filter criteria result in having no data to display.{% endtrans %}</li>
+  <li>{% trans %}<em>Pager</em>: how many items to display, and how to paginate if there are additional items to display.{% endtrans %}</li>
+  <li>{% trans %}<em>Advanced</em> &gt; <em>Contextual filters</em>: like regular filters, except the criteria come from the <em>context</em>, such as the current date, page the view is displayed on, etc.{% endtrans %}</li>
+  <li>{% trans %}<em>Advanced</em> &gt; <em>Relationships</em>: additional data to pull in and display, related in some way to the base data of the view (such as data about the user who created the content item).{% endtrans %}</li>
+  <li>{% trans %}<em>Advanced</em> &gt; <em>Exposed form</em>: if you have exposed filters or sorts, how to display the form to the user.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}Managing views overview{% endtrans %}</h2>
+<p>{% trans %}The core Views module handles the display of views, and the core Views UI module allows you to create, edit, and delete views in the administrative interface. See the related topics listed below for specific tasks (if the Views UI module is installed).{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/views-chapter.html">Views chapter in the User Guide</a>{% endtrans %}</li>
+</ul>

@@ -1,0 +1,8 @@
+name: 'Comment base field test'
+type: module
+description: 'Test comment as a base field'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:comment
+  - drupal:entity_test

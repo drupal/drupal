@@ -1,0 +1,62 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_views_handler_field_user_name
+label: test_views_handler_field_user_name
+module: views
+description: ''
+tag: default
+base_table: users_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          alter:
+            absolute: false
+            alter_text: false
+            ellipsis: false
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: false
+          empty_zero: false
+          field: name
+          hide_empty: false
+          id: name
+          label: ''
+          table: users_field_data
+          plugin_id: field
+          type: user_name
+          entity_type: user
+          entity_field: name
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+      sorts:
+        uid:
+          id: uid
+          table: users
+          field: uid
+          plugin_id: standard
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Template for layout_test_plugin layout.
+ */
+#}
+<div{{ attributes.addClass('layout-test-plugin', 'clearfix') }}>
+  <div>
+    <span class="setting-1-label">Blah: </span>
+    {{ settings.setting_1 }}
+  </div>
+  <div {{ region_attributes.main.addClass('region-main') }}>
+    {{ content.main }}
+  </div>
+</div>

@@ -1,0 +1,5 @@
+name: 'Theme test subseven'
+type: theme
+description: 'Test theme which uses seven as the base theme.'
+version: VERSION
+base theme: seven

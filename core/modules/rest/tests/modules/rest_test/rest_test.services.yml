@@ -1,0 +1,18 @@
+services:
+  rest_test.authentication.test_auth:
+    class: Drupal\rest_test\Authentication\Provider\TestAuth
+    tags:
+      - { name: authentication_provider, provider_id: 'rest_test_auth' }
+  rest_test.authentication.test_auth_global:
+    class: Drupal\rest_test\Authentication\Provider\TestAuthGlobal
+    tags:
+      - { name: authentication_provider, provider_id: 'rest_test_auth_global', global: TRUE }
+  rest_test.page_cache_request_policy.deny_test_auth_requests:
+      class: Drupal\rest_test\PageCache\RequestPolicy\DenyTestAuthRequests
+      public: false
+      tags:
+        - { name: page_cache_request_policy }
+  rest_test.encoder.foobar:
+    class: Drupal\serialization\Encoder\JsonEncoder
+    tags:
+      - { name: encoder, format: foobar }

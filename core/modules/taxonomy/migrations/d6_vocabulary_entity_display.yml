@@ -1,0 +1,58 @@
+id: d6_vocabulary_entity_display
+label: Vocabulary display configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: d6_taxonomy_vocabulary_per_type
+  constants:
+    entity_type: node
+    view_mode: default
+    options:
+      label: hidden
+      type: entity_reference_label
+      weight: 20
+    field_prefix: field_
+process:
+  entity_type: 'constants/entity_type'
+  view_mode: 'constants/view_mode'
+  options: 'constants/options'
+  bundle:
+    -
+      plugin: migration_lookup
+      migration: d6_node_type
+      source: type
+    -
+      plugin: skip_on_empty
+      method: row
+  # This value is only used in the 'field_name' process pipeline below.
+  raw_field_name:
+    -
+      plugin: migration_lookup
+      migration: d6_taxonomy_vocabulary
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
+  field_name:
+    # Prepend field_ to avoid conflicts with base fields, and make sure the
+    # result is no longer than 32 characters.
+    -
+      plugin: concat
+      source:
+        - constants/field_prefix
+        - '@raw_field_name'
+    -
+      plugin: substr
+      length: 32
+    -
+      # This plugin checks if the vocabulary being migrated is the one used by
+      # Forum. If so, we use the machine name that Forum expects. Otherwise, we
+      # leave it unchanged.
+      plugin: forum_vocabulary
+      machine_name: taxonomy_forums
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - d6_vocabulary_field_instance

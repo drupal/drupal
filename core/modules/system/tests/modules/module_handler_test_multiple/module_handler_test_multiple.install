@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module_handler_test_multiple module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function module_handler_test_multiple_install() {
+  // Set weight of module.
+  module_set_weight('module_handler_test_multiple', 1);
+}

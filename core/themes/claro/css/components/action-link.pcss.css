@@ -1,0 +1,444 @@
+/**
+ * @file
+ * Styles for action links.
+ *
+ * Contains Action link component and the action-links layout styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Action links layout.
+ */
+.action-links,
+[dir="rtl"] .action-links {
+  margin: var(--space-l) 0;
+  list-style: none;
+}
+
+.action-links__item {
+  display: inline-block;
+}
+
+.action-links__item + .action-links__item > .action-link {
+  margin-left: var(--space-s); /* LTR */
+}
+[dir="rtl"] .action-links__item + .action-links__item > .action-link {
+  margin-right: var(--space-s);
+  margin-left: 0;
+}
+
+.action-links__item + .action-links__item > .action-link--small {
+  margin-left: var(--space-xs); /* LTR */
+}
+[dir="rtl"] .action-links__item + .action-links__item > .action-link--small {
+  margin-right: var(--space-xs);
+  margin-left: 0;
+}
+
+/**
+ * The action link component.
+ */
+.action-link {
+  display: inline-block;
+  padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--color-davysgray);
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--color-bg);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  line-height: var(--space-l); /* Bigger line-height needed to prevent the icon from increasing the height */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Small variant. */
+.no-touchevents .action-link--small {
+  padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
+  font-size: var(--font-size-s);
+}
+
+/* Extra small variant. */
+.no-touchevents .action-link--extrasmall {
+  padding: 0 var(--space-xs);
+  font-size: var(--font-size-s);
+}
+
+.action-link + .action-link {
+  margin-left: var(--space-s); /* LTR */
+}
+[dir="rtl"] .action-link + .action-link {
+  margin-right: var(--space-s);
+  margin-left: 0;
+}
+.no-touchevents .action-link--small + .action-link--small,
+.no-touchevents .action-link--extrasmall + .action-link--extrasmall {
+  margin-left: var(--space-xs); /* LTR */
+}
+[dir="rtl"] .no-touchevents .action-link--small + .action-link--small,
+[dir="rtl"] .no-touchevents .action-link--extrasmall + .action-link--extrasmall {
+  margin-right: var(--space-xs);
+  margin-left: 0;
+}
+
+/**
+ * Action links inside form-actions.
+ *
+ * Add the same margin for action-link inside form-actions as button has.
+ */
+.form-actions .action-link {
+  margin-right: var(--space-s); /* LTR */
+  margin-left: 0; /* LTR */
+}
+[dir="rtl"] .form-actions .action-link {
+  margin-right: 0;
+  margin-left: var(--space-s);
+}
+
+/* Action link states */
+.action-link:hover {
+  text-decoration: none;
+  color: var(--color-absolutezero-hover);
+  background-color: var(--color-bgblue-hover);
+}
+.action-link:focus {
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+}
+.action-link:active {
+  color: var(--color-absolutezero-active);
+  background-color: var(--color-bgblue-active);
+}
+
+/**
+ * Action link variants.
+ */
+/* Danger. */
+.action-link--danger {
+  color: var(--color-maximumred);
+}
+.action-link--danger:hover {
+  color: var(--color-maximumred-hover);
+  background-color: var(--color-bgred-hover);
+}
+.action-link--danger:active {
+  color: var(--color-maximumred-active);
+  background-color: var(--color-bgred-active);
+}
+
+/**
+ * Action link icons with states.
+ *
+ * We use parent-relative units here to follow the .action-link's font size.
+ */
+
+/* Defaults for icons */
+.action-link::before {
+  position: relative;
+  top: 0.125rem; /* Set the proper vertical alignment */
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.5em; /* LTR */
+  margin-left: calc(var(--space-s) - var(--space-m)); /* LTR */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+[dir="rtl"] .action-link::before {
+  margin-right: calc(var(--space-s) - var(--space-m));
+  margin-left: 0.5em;
+}
+
+.no-touchevents .action-link--small::before,
+.no-touchevents .action-link--extrasmall::before {
+  top: 0.0625rem; /* Set the proper vertical alignment */
+  width: var(--space-s);
+  height: var(--space-s);
+}
+
+.no-touchevents .action-link--extrasmall::before {
+  margin-right: 0.4em; /* LTR */
+  margin-left: -0.125rem; /* LTR */
+}
+[dir="rtl"].no-touchevents .action-link--extrasmall::before {
+  margin-right: -0.125rem;
+  margin-left: 0.4em;
+}
+
+/**
+ * Hide action link icons for IE11.
+ *
+ * IE 11 does not display inline svg backgrounds
+ */
+@media screen and (-ms-high-contrast: active) {
+  /* stylelint-disable-next-line selector-type-no-unknown */
+  _:-ms-fullscreen,
+  .action-link::before {
+    display: none;
+  }
+}
+
+/* Plus */
+.action-link--icon-plus::before {
+  content: "";
+  background-image: url(../../images/icons/545560/plus.svg);
+}
+
+.action-link--icon-plus:hover::before {
+  background-image: url(../../images/icons/0036b1/plus.svg);
+}
+.action-link--icon-plus:active::before {
+  background-image: url(../../images/icons/00309e/plus.svg);
+}
+
+/* Plus — danger */
+.action-link--icon-plus.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/plus.svg);
+}
+.action-link--icon-plus.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/plus.svg);
+}
+.action-link--icon-plus.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/plus.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-plus.action-link--icon-plus.action-link--icon-plus::before {
+    background-image: url(../../images/icons/windowText/plus.svg);
+  }
+}
+
+/* Trash */
+.action-link--icon-trash::before {
+  content: "";
+  background-image: url(../../images/icons/545560/trash.svg);
+}
+.action-link--icon-trash:hover::before {
+  background-image: url(../../images/icons/0036b1/trash.svg);
+}
+.action-link--icon-trash:active::before {
+  background-image: url(../../images/icons/00309e/trash.svg);
+}
+
+/* Trash — danger */
+.action-link--icon-trash.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/trash.svg);
+}
+.action-link--icon-trash.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/trash.svg);
+}
+.action-link--icon-trash.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/trash.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-trash.action-link--icon-trash.action-link--icon-trash::before {
+    background-image: url(../../images/icons/windowText/trash.svg) !important;
+  }
+}
+
+/* Ex */
+.action-link--icon-ex::before {
+  content: "";
+  background-image: url(../../images/icons/545560/ex.svg);
+}
+.action-link--icon-ex:hover::before {
+  background-image: url(../../images/icons/0036b1/ex.svg);
+}
+.action-link--icon-ex:active::before {
+  background-image: url(../../images/icons/00309e/ex.svg);
+}
+
+/* Ex — danger */
+.action-link--icon-ex.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/ex.svg);
+}
+.action-link--icon-ex.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/ex.svg);
+}
+.action-link--icon-ex.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/ex.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-ex.action-link--icon-ex.action-link--icon-ex::before {
+    background-image: url(../../images/icons/windowText/ex.svg) !important;
+  }
+}
+
+/* Checkmark */
+.action-link--icon-checkmark::before {
+  content: "";
+  background-image: url(../../images/icons/545560/checkmark.svg);
+}
+.action-link--icon-checkmark:hover::before {
+  background-image: url(../../images/icons/0036b1/checkmark.svg);
+}
+.action-link--icon-checkmark:active::before {
+  background-image: url(../../images/icons/00309e/checkmark.svg);
+}
+
+/* Checkmark — danger */
+.action-link--icon-checkmark.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/checkmark.svg);
+}
+.action-link--icon-checkmark.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/checkmark.svg);
+}
+.action-link--icon-checkmark.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/checkmark.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-checkmark.action-link--icon-checkmark.action-link--icon-checkmark::before {
+    background-image: url(../../images/icons/windowText/checkmark.svg) !important;
+  }
+}
+
+/* Cog */
+.action-link--icon-cog::before {
+  content: "";
+  background-image: url(../../images/icons/545560/cog.svg);
+}
+.action-link--icon-cog:hover::before {
+  background-image: url(../../images/icons/0036b1/cog.svg);
+}
+.action-link--icon-cog:active::before {
+  background-image: url(../../images/icons/00309e/cog.svg);
+}
+
+/* Cog — danger */
+.action-link--icon-cog.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/cog.svg);
+}
+.action-link--icon-cog.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/cog.svg);
+}
+.action-link--icon-cog.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/cog.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-cog.action-link--icon-cog.action-link--icon-cog::before {
+    background-image: url(../../images/icons/windowText/cog.svg) !important;
+  }
+}
+
+/* Show */
+.action-link--icon-show::before {
+  content: "";
+  background-image: url(../../images/icons/545560/show.svg);
+}
+.action-link--icon-show:hover::before {
+  background-image: url(../../images/icons/0036b1/show.svg);
+}
+.action-link--icon-show:active::before {
+  background-image: url(../../images/icons/00309e/show.svg);
+}
+
+/* Show - danger */
+.action-link--icon-show.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/show.svg);
+}
+.action-link--icon-show.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/show.svg);
+}
+.action-link--icon-show.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/show.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-show.action-link--icon-show.action-link--icon-show::before {
+    background-image: url(../../images/icons/windowText/show.svg) !important;
+  }
+}
+
+/* Hide */
+.action-link--icon-hide::before {
+  content: "";
+  background-image: url(../../images/icons/545560/hide.svg);
+}
+.action-link--icon-hide:hover::before {
+  background-image: url(../../images/icons/0036b1/hide.svg);
+}
+.action-link--icon-hide:active::before {
+  background-image: url(../../images/icons/00309e/hide.svg);
+}
+
+/* Hide - danger */
+.action-link--icon-hide.action-link--danger::before {
+  background-image: url(../../images/icons/d72222/hide.svg);
+}
+.action-link--icon-hide.action-link--danger:hover::before {
+  background-image: url(../../images/icons/c11f1f/hide.svg);
+}
+.action-link--icon-hide.action-link--danger:active::before {
+  background-image: url(../../images/icons/ab1b1b/hide.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-hide.action-link--icon-hide.action-link--icon-hide::before {
+    background-image: url(../../images/icons/windowText/hide.svg);
+  }
+}
+
+/* Key */
+.action-link--icon-key::before {
+  content: "";
+  background-image: url("../../images/icons/545560/key.svg");
+}
+.action-link--icon-key:hover::before {
+  background-image: url("../../images/icons/0036b1/key.svg");
+}
+.action-link--icon-key:active::before {
+  background-image: url("../../images/icons/00309e/key.svg");
+}
+
+/* Key — danger */
+.action-link--icon-key.action-link--danger::before {
+  background-image: url("../../images/icons/d72222/key.svg");
+}
+.action-link--icon-key.action-link--danger:hover::before {
+  background-image: url("../../images/icons/c11f1f/key.svg");
+}
+.action-link--icon-key.action-link--danger:active::before {
+  background-image: url("../../images/icons/ab1b1b/key.svg");
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-key.action-link--icon-key.action-link--icon-key::before {
+    background-image: url("../../images/icons/windowText/key.svg") !important;
+  }
+}
+
+/* Question Mark */
+.action-link--icon-questionmark::before {
+  content: "";
+  background-image: url("../../images/icons/545560/questionmark.svg");
+}
+.action-link--icon-questionmark:hover::before {
+  background-image: url("../../images/icons/0036b1/questionmark.svg");
+}
+.action-link--icon-questionmark:active::before {
+  background-image: url("../../images/icons/00309e/questionmark.svg");
+}
+
+/* Question Mark - danger */
+.action-link--icon-questionmark.action-link--danger::before {
+  background-image: url("../../images/icons/d72222/questionmark.svg");
+}
+.action-link--icon-questionmark.action-link--danger:hover::before {
+  background-image: url("../../images/icons/c11f1f/questionmark.svg");
+}
+.action-link--icon-questionmark.action-link--danger:active::before {
+  background-image: url("../../images/icons/ab1b1b/questionmark.svg");
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-questionmark.action-link--icon-questionmark.action-link--icon-questionmark::before {
+    background-image: url("../../images/icons/windowText/questionmark.svg") !important;
+  }
+}

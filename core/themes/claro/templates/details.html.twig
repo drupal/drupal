@@ -1,0 +1,96 @@
+{#
+/**
+ * @file
+ * Theme override for a details element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the details element.
+ * - errors: (optional) Any errors for this details element, may not be set.
+ * - title: (optional) The title of the element, may not be set.
+ * - description: (optional) The description of the element, may not be set.
+ * - children: (optional) The children of the element, may not be set.
+ * - value: (optional) The value of the element, may not be set.
+ * - accordion: whether the details element should look as an accordion.
+ * - accordion_item: whether the details element is an item of an accordion
+ *   list.
+ * - disabled: whether the details is disabled.
+ *
+ * @see template_preprocess_details()
+ * @see claro_preprocess_details()
+ */
+#}
+{#
+  Prefix 'details' class to avoid collision with Modernizr.
+
+  @todo Remove prefix after https://www.drupal.org/node/2981732 has been solved.
+#}
+{%
+  set classes = [
+    'claro-details',
+    accordion ? 'claro-details--accordion',
+    accordion_item ? 'claro-details--accordion-item',
+    element['#module_package_listing'] ? 'claro-details--package-listing',
+  ]
+%}
+{%
+  set content_wrapper_classes = [
+    'claro-details__wrapper',
+    'details-wrapper',
+    accordion ? 'claro-details__wrapper--accordion',
+    accordion_item ? 'claro-details__wrapper--accordion-item',
+    element['#module_package_listing'] ? 'claro-details__wrapper--package-listing',
+  ]
+%}
+{%
+  set inner_wrapper_classes = [
+    'claro-details__content',
+    accordion ? 'claro-details__content--accordion',
+    accordion_item ? 'claro-details__content--accordion-item',
+    element['#module_package_listing']  ? 'claro-details__content--package-listing',
+  ]
+%}
+<details{{ attributes.addClass(classes) }}>
+  {%- if title -%}
+    {%
+      set summary_classes = [
+        'claro-details__summary',
+        required ? 'js-form-required',
+        required ? 'form-required',
+        accordion ? 'claro-details__summary--accordion',
+        accordion_item ? 'claro-details__summary--accordion-item',
+        element['#module_package_listing']  ? 'claro-details__summary--package-listing',
+
+    ]
+    %}
+    <summary{{ summary_attributes.addClass(summary_classes) }}>
+      {{- title -}}
+      {%- if required -%}
+        <span class="required-mark"></span>
+      {%- endif -%}
+    </summary>
+  {%- endif -%}
+  <div{{ content_attributes.addClass(content_wrapper_classes) }}>
+    {% if accordion or accordion_item %}
+    <div{{ create_attribute({class: inner_wrapper_classes}) }}>
+    {% endif %}
+
+      {% if errors %}
+        <div class="form-item form-item--error-message">
+          {{ errors }}
+        </div>
+      {% endif %}
+      {%- if description -%}
+        <div class="claro-details__description{{ disabled ? ' is-disabled' }}">{{ description }}</div>
+      {%- endif -%}
+      {%- if children -%}
+        {{ children }}
+      {%- endif -%}
+      {%- if value -%}
+        {{ value }}
+      {%- endif -%}
+
+    {% if accordion or accordion_item %}
+    </div>
+    {% endif %}
+  </div>
+</details>

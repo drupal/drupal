@@ -1,0 +1,9 @@
+forum.overview:
+  route_name: forum.overview
+  base_route: forum.overview
+  title: List
+forum.settings:
+  route_name: forum.settings
+  base_route: forum.overview
+  title: Settings
+  weight: 100

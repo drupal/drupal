@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Update functions for the update_test_last_removed module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function update_test_last_removed_update_last_removed() {
+  return 8002;
+}
+
+/**
+ * Dummy update function to run during the tests.
+ */
+function update_test_last_removed_update_8003() {
+  return 'The update_test_last_removed_update_8003() update was executed successfully.';
+}

@@ -1,0 +1,5 @@
+name: 'Field API configuration tests'
+type: module
+description: 'Support module for the Field API configuration tests.'
+package: Testing
+version: VERSION

@@ -1,0 +1,5 @@
+name: 'Theme test'
+type: module
+description: 'Support module for theme system testing.'
+package: Testing
+version: VERSION

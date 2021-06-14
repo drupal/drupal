@@ -1,0 +1,5 @@
+name: 'Update test with hook_update_last_removed() implementation'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION

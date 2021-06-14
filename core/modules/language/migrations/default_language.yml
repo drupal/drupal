@@ -1,0 +1,40 @@
+id: default_language
+label: Default language
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - language_default
+  source_module: locale
+process:
+  default_langcode:
+    -
+      plugin: default_value
+      source: language_default
+      default_value:
+        'language': 'en'
+    # Encode and decode to turn the default_language variable, which is
+    # an stdClass, into an array so it can be passed to extract.
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\Component\Serialization\Json'
+        - 'encode'
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\Component\Serialization\Json'
+        - 'decode'
+    -
+      plugin: extract
+      index:
+        - language
+destination:
+  plugin: default_langcode
+  config_name: system.site
+migration_dependencies:
+  required:
+    - language

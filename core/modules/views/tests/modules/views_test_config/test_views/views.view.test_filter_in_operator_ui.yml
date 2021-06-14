@@ -1,0 +1,154 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_filter_in_operator_ui
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: field
+      filters:
+        type:
+          expose:
+            identifier: type
+            label: 'Content: Type'
+            operator_id: type_op
+            reduce: false
+            use_operator: false
+          exposed: true
+          field: type
+          id: type
+          table: node_field_data
+          plugin_id: in_operator
+          entity_type: node
+          entity_field: type
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: nid_op
+            label: ID
+            description: ''
+            use_operator: true
+            operator: nid_op
+            operator_limit_selection: true
+            operator_list:
+              '<': '<'
+              '<=': '<='
+              '=': '='
+            identifier: nid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: nid
+          plugin_id: numeric
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      display_extenders: {  }
+
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }
+  page_1:
+    display_options:
+      path: test_filter_in_operator_ui
+      display_extenders: {  }
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }

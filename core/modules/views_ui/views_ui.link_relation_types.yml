@@ -1,0 +1,11 @@
+# Views UI extension relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.2.
+edit-display-form:
+  uri: https://drupal.org/link-relations/edit-display-form
+  description: A form where a view display can be edited.
+preview-form:
+  uri: https://drupal.org/link-relations/preview-form
+  description: A form where a view display can be previewed.
+break-lock-form:
+  uri: https://drupal.org/link-relations/break-lock-form
+  description: A form where a view lock can be broken.

@@ -1,0 +1,52 @@
+langcode: en
+status: true
+id: test_area_order
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      header:
+        entity_block_2:
+          field: entity_block
+          id: entity_block
+          table: views
+          target: 'bartik_powered'
+          view_mode: full
+          plugin_id: entity
+        entity_block_1:
+          field: entity_block
+          id: entity_block
+          table: views
+          target: 'bartik_branding'
+          view_mode: full
+          plugin_id: entity
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      arguments:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          plugin_id: numeric
+      pager:
+        options:
+          offset: 0
+        type: none
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

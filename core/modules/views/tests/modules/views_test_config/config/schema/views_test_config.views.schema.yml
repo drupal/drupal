@@ -1,0 +1,12 @@
+# Schema for the views plugins of the Views test config module.
+
+views.area.test_example:
+  type: views_area
+  label: 'Test example'
+  mapping:
+    string:
+      type: text
+      label: 'The shown text of the area'
+    custom_access:
+      type: boolean
+      label: 'Should access to the area be allowed'

@@ -1,0 +1,108 @@
+layout_onecol:
+  label: 'One column'
+  path: layouts/onecol
+  template: layout--onecol
+  library: layout_discovery/onecol
+  category: 'Columns: 1'
+  default_region: content
+  icon_map:
+    - [content]
+  regions:
+    content:
+      label: Content
+
+layout_twocol:
+  label: 'Two column'
+  path: layouts/twocol
+  template: layout--twocol
+  library: layout_discovery/twocol
+  category: 'Columns: 2'
+  default_region: first
+  icon_map:
+    - [top]
+    - [first, second]
+    - [bottom]
+  regions:
+    top:
+      label: Top
+    first:
+      label: First
+    second:
+      label: Second
+    bottom:
+      label: Bottom
+
+layout_twocol_bricks:
+  label: 'Two column bricks'
+  path: layouts/twocol_bricks
+  template: layout--twocol-bricks
+  library: layout_discovery/twocol_bricks
+  category: 'Columns: 2'
+  default_region: middle
+  icon_map:
+    - [top]
+    - [first_above, second_above]
+    - [middle]
+    - [first_below, second_below]
+    - [bottom]
+  regions:
+    top:
+      label: Top
+    first_above:
+      label: 'First above'
+    second_above:
+      label: 'Second above'
+    middle:
+      label: Middle
+    first_below:
+      label: 'First below'
+    second_below:
+      label: 'Second below'
+    bottom:
+      label: Bottom
+
+layout_threecol_25_50_25:
+  label: 'Three column 25/50/25'
+  path: layouts/threecol_25_50_25
+  template: layout--threecol-25-50-25
+  library: layout_discovery/threecol_25_50_25
+  category: 'Columns: 3'
+  default_region: second
+  icon_map:
+    - [top]
+    - [first, second, second, third]
+    - [bottom]
+  regions:
+    top:
+      label: Top
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    bottom:
+      label: Bottom
+
+layout_threecol_33_34_33:
+  label: 'Three column 33/34/33'
+  path: layouts/threecol_33_34_33
+  template: layout--threecol-33-34-33
+  library: layout_discovery/threecol_33_34_33
+  category: 'Columns: 3'
+  default_region: first
+  icon_map:
+    - [top]
+    - [first, second, third]
+    - [bottom]
+  regions:
+    top:
+      label: Top
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    bottom:
+      label: Bottom

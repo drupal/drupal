@@ -1,0 +1,46 @@
+/**
+ * @file
+ * Tablesort indicator styles.
+ */
+
+.tablesort {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  width: 0.875rem; /* 14px */
+  height: 1rem; /* 16px */
+  margin-top: -0.5rem; /* -8px */
+  opacity: 0.5;
+  background: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 0 50%;
+  background-size: auto;
+}
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen, /* Only IE 11 */
+.tablesort {
+  position: static;
+  float: right;
+  margin-top: 0.125rem; /* 2px */
+  margin-right: -1.5rem; /* -24px */
+}
+[dir="rtl"] .tablesort {
+  right: auto;
+  left: 1rem; /* 16px */
+  background-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
+}
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen, /* Only IE 11 */
+[dir="rtl"] .tablesort {
+  float: left;
+  margin-right: 0;
+  margin-left: -1.5rem; /* -24px */
+}
+.tablesort--asc,
+[dir="rtl"] .tablesort--asc {
+  opacity: 1;
+  background-image: url(../../images/icons/004adc/sort--asc.svg);
+}
+.tablesort--desc,
+[dir="rtl"] .tablesort--desc {
+  opacity: 1;
+  background-image: url(../../images/icons/004adc/sort--desc.svg);
+}

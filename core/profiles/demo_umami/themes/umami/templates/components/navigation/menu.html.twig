@@ -1,0 +1,85 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link url, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ */
+#}
+
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see https://twig.symfony.com/doc/1.x/tags/macro.html
+
+  1. We use menu_name (see above) to create a CSS class name from it.
+  See https://www.drupal.org/node/2649076
+#}
+{{ menus.menu_links(items, attributes, 0, menu_name) }} {# 1. #}
+
+{% macro menu_links(items, attributes, menu_level, menu_name) %} {# 1. #}
+  {% import _self as menus %}
+  {# 1. #}
+  {%
+    set menu_classes = [
+      'menu-' ~ menu_name|clean_class,
+    ]
+  %}
+  {# 1. #}
+  {%
+    set submenu_classes = [
+      'menu-' ~ menu_name|clean_class ~ '__submenu',
+    ]
+  %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul{{ attributes.addClass(menu_classes) }}> {# 1. #}
+    {% else %}
+      <ul{{ attributes.removeClass(menu_classes).addClass(submenu_classes) }}> {# 1. #}
+    {% endif %}
+    {% for item in items %}
+      {# 1. #}
+      {%
+        set item_classes = [
+          'menu-' ~ menu_name|clean_class ~ '__item',
+          item.is_expanded ? 'menu-' ~ menu_name|clean_class ~ '__item--expanded',
+          item.is_collapsed ? 'menu-' ~ menu_name|clean_class ~ '__item--collapsed',
+          item.in_active_trail ? 'menu-' ~ menu_name|clean_class ~ '__item--active-trail',
+        ]
+      %}
+      {# 1. #}
+      {%
+        set link_classes = [
+          'menu-' ~ menu_name|clean_class ~ '__link',
+        ]
+      %}
+      <li{{ item.attributes.addClass(item_classes) }}>{# 1. #}
+        {# 1. #}
+        {{
+          link(
+            item.title,
+            item.url,
+            item.attributes.removeClass(item_classes).addClass(link_classes)
+          )
+        }}
+        {% if item.below %}
+          {{ menus.menu_links(item.below, attributes, menu_level + 1, menu_name) }} {# 1. #}
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the block_content module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function block_content_update_last_removed() {
+  return 8600;
+}

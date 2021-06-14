@@ -1,0 +1,142 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_mini_pager
+label: test_mini_pager
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: null
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: mini
+        options:
+          items_per_page: 3
+          offset: 0
+          id: 0
+          total_pages: null
+          tags:
+            previous: '‹‹ test'
+            next: '›› test'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+        options:
+          view_mode: teaser
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      filters: {  }
+      sorts:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          plugin_id: standard
+          order: ASC
+          entity_type: node
+          entity_field: nid
+      title: test_mini_pager
+      filter_groups:
+        operator: AND
+        groups: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test_mini_pager
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Page
+    position: null
+    display_options:
+      path: test_mini_pager_one
+      defaults:
+        pager: false
+      pager:
+        type: mini
+        options:
+          items_per_page: 1
+  page_3:
+    display_plugin: page
+    id: page_3
+    display_title: Page
+    position: null
+    display_options:
+      path: test_mini_pager_all
+      defaults:
+        pager: false
+      pager:
+        type: mini
+        options:
+          items_per_page: 0
+  page_4:
+    display_plugin: page
+    id: page_4
+    display_title: 'Page 4'
+    position: 4
+    display_options:
+      display_extenders: {  }
+      path: test_mini_pager_total
+      empty: {  }
+      defaults:
+        empty: false
+        header: false
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          content: 'Displaying @start - @end of @total'
+          plugin_id: result

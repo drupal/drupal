@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the shortcut module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function shortcut_schema() {
+  $schema['shortcut_set_users'] = [
+    'description' => 'Maps users to shortcut sets.',
+    'fields' => [
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid for this set.',
+      ],
+      'set_name' => [
+        'type' => 'varchar_ascii',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The {shortcut_set}.set_name that will be displayed for this user.",
+      ],
+    ],
+    'primary key' => ['uid'],
+    'indexes' => [
+      'set_name' => ['set_name'],
+    ],
+    'foreign keys' => [
+      'set_user' => [
+        'table' => 'users',
+        'columns' => ['uid' => 'uid'],
+      ],
+      'set_name' => [
+        'table' => 'shortcut_set',
+        'columns' => ['set_name' => 'set_name'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function shortcut_install() {
+  // Theme settings are not configuration entities and cannot depend on modules
+  // so to set a module-specific setting, we need to set it with logic.
+  foreach (['seven', 'claro'] as $theme) {
+    if (\Drupal::service('theme_handler')->themeExists($theme)) {
+      \Drupal::configFactory()
+        ->getEditable("$theme.settings")
+        ->set('third_party_settings.shortcut.module_link', TRUE)
+        ->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function shortcut_uninstall() {
+  // Theme settings are not configuration entities and cannot depend on modules
+  // so to unset a module-specific setting, we need to unset it with logic.
+  foreach (['seven', 'claro'] as $theme) {
+    if (\Drupal::service('theme_handler')->themeExists($theme)) {
+      \Drupal::configFactory()
+        ->getEditable("$theme.settings")
+        ->clear('third_party_settings.shortcut')
+        ->save(TRUE);
+    }
+  }
+}

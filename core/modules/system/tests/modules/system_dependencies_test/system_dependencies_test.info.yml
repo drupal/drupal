@@ -1,0 +1,7 @@
+name: 'System dependency test'
+type: module
+description: 'Support module for testing system dependencies.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:_missing_dependency

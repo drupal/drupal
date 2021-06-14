@@ -1,0 +1,35 @@
+---
+label: 'Configuring site search'
+top_level: true
+related:
+  - user.permissions
+  - block.place
+---
+{% set search_url = render_var(url('search.view')) %}
+{% set user_topic = render_var(url('help.help_topic', {'id': 'user.overview'})) %}
+<h2>{% trans %}What are search pages?{% endtrans %}</h2>
+<p>{% trans %}The core Search module organizes site search into <em>pages</em>. Each page allows users to search a particular type of content with a particular configuration. The configuration includes specifying a URL that starts with <em>search</em>, a name for the page, and additional options for some search page types.{% endtrans %}</p>
+<p>{% trans %}When users visit the main <a href="{{ search_url }}">Search page</a>, they will see the configured search pages that they have access to. Each search page has a search form on it, and the page will display search results after the user enters keywords into the form and clicks the search button.{% endtrans %}</p>
+<h2>{% trans %}What modules provide site search?{% endtrans %}</h2>
+<p>{% trans %}The core Search module provides the ability to configure search pages; search page types are provided by both core and contributed modules. The core modules that provide search page types are:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}The Node module, for searching content pages{% endtrans %}</li>
+  <li>{% trans %}The User module, for searching user profiles{% endtrans %}</li>
+  <li>{% trans %}The Help module, for searching help topics{% endtrans %}</li>
+</ul>
+<p>{% trans %}As an alternative to the core Search module's system of search pages, you can use contributed modules to provide site search. For example, the <a href="https://www.drupal.org/project/apachesolr">Apache Solr</a> and <a href="https://www.drupal.org/project/sphinx">Sphinx</a> contributed modules use third-party technology to provide site search.{% endtrans %}</p>
+<h2>{% trans %}What are the limitations of the core Search module?{% endtrans %}</h2>
+<p>{% trans %}There are two main limitations of the core Search module. First, it is not appropriate for very large sites -- if you have a large site, look into other search technologies like Apache Solr. Second, the Node search page type only supports exact keyword matching, which is not the behavior that most users will expect. You can improve this by installing a language-specific stemming module for your language (such as <a href="https://www.drupal.org/project/porterstemmer">Porter Stemmer</a> for American English), which makes it so that, for example, a search for the word walk would match pages containing the words walk, walking, and walked.{% endtrans %}</p>
+<h2>{% trans %}What are the search permissions?{% endtrans %}</h2>
+<ul>
+<li>{% trans %}Users with <em>Use search</em> permission can use the <em>Search form</em> block and <em>Search</em> page; this permission is required for any search configured in the core Search module.{% endtrans %}</li>
+<li>{% trans %}In addition to <em>Use search</em>, <em>View user information</em> permission is needed for searching users.{% endtrans %}</li>
+<li>{% trans %}In addition to <em>Use search</em>, <em>View published content</em> permission is needed for searching content.{% endtrans %}</li>
+<li>{% trans %}Users with <em>Use advanced search</em> permission can use more complex search filtering when performing content searches.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}Configuring site search overview{% endtrans %}</h2>
+<p>{% trans %}In order to configure site search using the core Search module, you will need to configure one or more search pages. You will also need to verify or alter permissions so that the desired user roles can search the site (see <a href="{{ user_topic }}">Managing user accounts and site visitors</a> for more information about roles and permissions). For content search, you will also need to make sure that the search index is configured and that the site is fully indexed. Finally, you may wish to place the <em>Search form</em> block on pages of your site, or add the search page to a navigation menu, to give users easy access to search. See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}<a href="https://www.drupal.org/documentation/modules/search">Online documentation for the Search module</a>{% endtrans %}</li>
+</ul>

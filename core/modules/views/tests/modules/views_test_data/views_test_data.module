@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Helper module for Views tests.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewEntityInterface;
+
+/**
+ * Access callback for the generic handler test.
+ *
+ * @return bool
+ *   Returns views_test_data.tests->handler_access_callback config. so the user
+ *   has access to the handler.
+ *
+ * @see \Drupal\views\Tests\Handler\HandlerTest
+ */
+function views_test_data_handler_test_access_callback() {
+  return \Drupal::config('views_test_data.tests')->get('handler_access_callback');
+}
+
+/**
+ * Access callback with an argument for the generic handler test.
+ *
+ * @param bool $argument
+ *   A parameter to test that an argument got passed.
+ *
+ * @return bool
+ *   Returns views_test_data.tests->handler_access_callback_argument, so the
+ *   use has access to the handler.
+ *
+ * @see \Drupal\views\Tests\Handler\HandlerTest
+ */
+function views_test_data_handler_test_access_callback_argument($argument = FALSE) {
+  // Check the argument to be sure that access arguments are passed into the
+  // callback.
+  if ($argument) {
+    return \Drupal::config('views_test_data.tests')->get('handler_access_callback_argument');
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views table templates.
+ */
+function views_test_data_preprocess_views_view_table(&$variables) {
+  if ($variables['view']->storage->id() == 'test_view_render') {
+    $views_render_test = \Drupal::state()->get('views_render.test');
+    $views_render_test++;
+    \Drupal::state()->set('views_render.test', $views_render_test);
+  }
+}
+
+/**
+ * Prepares variables for the mapping row style test templates.
+ *
+ * Default template: views-view-mapping-test.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - rows: A list of view rows.
+ *   - options: Various view options, including the row style mapping.
+ *   - view: The view object.
+ */
+function template_preprocess_views_view_mapping_test(&$variables) {
+  $variables['element'] = [];
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $fields = [];
+    foreach ($variables['options']['mapping'] as $type => $field_names) {
+      if (!is_array($field_names)) {
+        $field_names = [$field_names];
+      }
+      foreach ($field_names as $field_name) {
+        if ($value = $variables['view']->style_plugin->getField($delta, $field_name)) {
+          $fields[$type . '-' . $field_name] = $type . ':' . $value;
+        }
+      }
+    }
+
+    // If there are no fields in this row, skip to the next one.
+    if (empty($fields)) {
+      continue;
+    }
+
+    // Build a container for the row.
+    $variables['element'][$delta] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'views-row-mapping-test',
+        ],
+      ],
+    ];
+
+    // Add each field to the row.
+    foreach ($fields as $key => $render) {
+      $variables['element'][$delta][$key] = [
+        '#children' => $render,
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            $key,
+          ],
+        ],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function views_test_data_form_views_form_test_form_multiple_default_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::messenger()->addStatus(t('Test base form ID with Views forms and arguments.'));
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for the 'view' entity type.
+ */
+function views_test_data_view_update(ViewEntityInterface $view) {
+  // Use state to keep track of how many times a file is saved.
+  $view_save_count = \Drupal::state()->get('views_test_data.view_save_count', []);
+  $view_save_count[$view->id()] = isset($view_save_count[$view->id()]) ? $view_save_count[$view->id()] + 1 : 1;
+  \Drupal::state()->set('views_test_data.view_save_count', $view_save_count);
+}

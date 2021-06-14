@@ -1,0 +1,5 @@
+name: 'Service Provider test'
+type: module
+description: 'Support module for service provider testing.'
+package: Testing
+version: VERSION

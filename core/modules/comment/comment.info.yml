@@ -1,0 +1,8 @@
+name: Comment
+type: module
+description: 'Allows users to comment on content.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:text
+configure: comment.admin

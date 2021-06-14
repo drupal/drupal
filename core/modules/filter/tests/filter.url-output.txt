@@ -1,0 +1,39 @@
+This is just a <a href="http://www.test.com">www.test.com</a>. paragraph with <a href="mailto:person@test.com">person@test.com</a>. some <a href="http://www.test.com">http://www.test.com</a>. urls thrown in and also <code>using www.test.com the code tag</code>.
+
+<blockquote>
+This is just a <a href="http://www.test.com">www.test.com</a>. paragraph with <a href="mailto:person@test.com">person@test.com</a>. some <a href="http://www.test.com">http://www.test.com</a>. urls thrown in and also <code>using www.test.com the code tag</code>.
+</blockquote>
+
+<code>Testing code tag http://www.test.com abc</code>
+
+<a href="http://www.test.com">http://www.test.com</a>
+<a href="http://www.test.com">www.test.com</a>
+<a href="mailto:person@test.com">person@test.com</a>
+<code>www.test.com</code>
+<a href="http://test.com/?search=test">http://test.com/?search=test</a>
+<a href="http://test.com/?search=Test">http://test.com/?search=Test</a>
+<a href="http://test.com/?search=tesT">http://test.com/?search=tesT</a>
+
+What about tags that don't exist <x>like x say <a href="http://www.test.com">www.test.com</a></x>? And what about tag <pooh>beginning <a href="http://www.test.com">www.test.com</a> with p?</pooh>
+
+Test &lt;br/&gt;: This is just a <a href="http://www.test.com">www.test.com</a>. paragraph <strong>with</strong> some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. *<br/> This is just a <a href="http://www.test.com">www.test.com</a> paragraph *<br/> with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. *<br/>This is just a <a href="http://www.test.com">www.test.com</a> paragraph <a href="mailto:person@test.com">person@test.com</a> with some <a href="http://www.test.com">http://www.test.com</a> urls *img*<img/> thrown in. This is just a <a href="http://www.test.com">www.test.com</a> paragraph with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. This is just a <a href="http://www.test.com">www.test.com</a> paragraph <a href="mailto:person@test.com">person@test.com</a> with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in.
+
+This is just a <a href="http://www.test.com">www.test.com</a> paragraph <strong>with</strong> some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. <br /> This is just a <a href="http://www.test.com">www.test.com</a> paragraph with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. This is just a <a href="http://www.test.com">www.test.com</a> paragraph <a href="mailto:person@test.com">person@test.com</a> with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. This is just a <a href="http://www.test.com">www.test.com</a> paragraph with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in. This is just a <a href="http://www.test.com">www.test.com</a> paragraph <a href="mailto:person@test.com">person@test.com</a> with some <a href="http://www.test.com">http://www.test.com</a> urls thrown in.
+
+The old URL filter has problems with <a title="kind of link www.example.com with text" href="http://www.example.com">this kind of link</a> with www address as part of text in title. <a href="http://www.test.com">www.test.com</a>
+
+<!-- This url www.test.com is inside a comment -->
+
+<dl>
+<dt><a href="http://www.test.com">www.test.com</a></dt>
+<dd><a href="http://www.test.com">http://www.test.com</a></dd>
+<dd><a href="mailto:person@test.com">person@test.com</a></dd>
+<dt>check <a href="http://www.test.com">www.test.com</a></dt>
+<dd>this with some text around: <a href="http://www.test.com">http://www.test.com</a> not so easy <a href="mailto:person@test.com">person@test.com</a> now?</dd>
+</dl>
+
+<!-- <p>This url http://www.test.com is
+ inside a comment containing newlines and 
+<em>html</em> tags.</p> -->
+
+This is the end!

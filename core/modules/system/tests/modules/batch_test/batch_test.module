@@ -1,0 +1,260 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Batch API tests.
+ */
+
+use Drupal\Core\Form\FormState;
+
+/**
+ * Batch operation: Submits form_test_mock_form().
+ */
+function _batch_test_nested_drupal_form_submit_callback($value) {
+  $form_state = (new FormState())
+    ->setValue('test_value', $value);
+  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
+}
+
+/**
+ * Batch 0: Does nothing.
+ */
+function _batch_test_batch_0() {
+  $batch = [
+    'operations' => [],
+    'finished' => '_batch_test_finished_0',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_0',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 1: Repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_1() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [];
+  for ($i = 1; $i <= $total; $i++) {
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+  }
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_1',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_1',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 2: Performs a single multistep operation.
+ *
+ * Operations: op 2 from 1 to 10.
+ */
+function _batch_test_batch_2() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [
+    ['_batch_test_callback_2', [1, $total, $sleep]],
+  ];
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_2',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_2',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 3: Performs both single and multistep operations.
+ *
+ * Operations:
+ * - op 1 from 1 to 5,
+ * - op 2 from 1 to 5,
+ * - op 1 from 6 to 10,
+ * - op 2 from 6 to 10.
+ */
+function _batch_test_batch_3() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [];
+  for ($i = 1; $i <= round($total / 2); $i++) {
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+  }
+  $operations[] = ['_batch_test_callback_2', [1, $total / 2, $sleep]];
+  for ($i = round($total / 2) + 1; $i <= $total; $i++) {
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+  }
+  $operations[] = ['_batch_test_callback_2', [6, $total / 2, $sleep]];
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_3',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_3',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 4: Performs a batch within a batch.
+ *
+ * Operations:
+ * - op 1 from 1 to 5,
+ * - set batch 2 (op 2 from 1 to 10, should run at the end)
+ * - op 1 from 6 to 10,
+ */
+function _batch_test_batch_4() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [];
+  for ($i = 1; $i <= round($total / 2); $i++) {
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+  }
+  $operations[] = ['_batch_test_nested_batch_callback', [[2]]];
+  for ($i = round($total / 2) + 1; $i <= $total; $i++) {
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+  }
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_4',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_4',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 5: Repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_5() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [];
+  for ($i = 1; $i <= $total; $i++) {
+    $operations[] = ['_batch_test_callback_5', [$i, $sleep]];
+  }
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_5',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_5',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 6: Repeats a simple operation.
+ *
+ * Operations: op 6 from 1 to 10.
+ */
+function _batch_test_batch_6() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [];
+  for ($i = 1; $i <= $total; $i++) {
+    $operations[] = ['_batch_test_callback_6', [$i, $sleep]];
+  }
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_6',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_6',
+  ];
+  return $batch;
+}
+
+/**
+ * Batch 7: Performs two batches within a batch.
+ *
+ * Operations:
+ * - op 7 from 1 to 5,
+ * - set batch 5 (op 5 from 1 to 10, should run at the end before batch 2)
+ * - set batch 6 (op 6 from 1 to 10, should run at the end after batch 1)
+ * - op 7 from 6 to 10,
+ */
+function _batch_test_batch_7() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = [];
+  for ($i = 1; $i <= $total / 2; $i++) {
+    $operations[] = ['_batch_test_callback_7', [$i, $sleep]];
+  }
+  $operations[] = ['_batch_test_nested_batch_callback', [[6, 5]]];
+  for ($i = ($total / 2) + 1; $i <= $total; $i++) {
+    $operations[] = ['_batch_test_callback_7', [$i, $sleep]];
+  }
+  $batch = [
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_7',
+    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
+    'batch_test_id' => 'batch_7',
+  ];
+  return $batch;
+}
+
+/**
+ * Implements callback_batch_operation().
+ *
+ * Tests the progress page theme.
+ */
+function _batch_test_theme_callback() {
+  // Because drupalGet() steps through the full progressive batch before
+  // returning control to the test function, we cannot test that the correct
+  // theme is being used on the batch processing page by viewing that page
+  // directly. Instead, we save the theme being used in a variable here, so
+  // that it can be loaded and inspected in the thread running the test.
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
+  batch_test_stack($theme);
+}
+
+/**
+ * Tests the title on the progress page by performing a batch callback.
+ */
+function _batch_test_title_callback() {
+  // Because drupalGet() steps through the full progressive batch before
+  // returning control to the test function, we cannot test that the correct
+  // title is being used on the batch processing page by viewing that page
+  // directly. Instead, we save the title being used in a variable here, so
+  // that it can be loaded and inspected in the thread running the test.
+  $request = \Drupal::request();
+  $route_match = \Drupal::routeMatch();
+  $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
+  batch_test_stack($title);
+}
+
+/**
+ * Helper function: Stores or retrieves traced execution data.
+ */
+function batch_test_stack($data = NULL, $reset = FALSE) {
+  $state = \Drupal::state();
+  if ($reset) {
+    $state->delete('batch_test.stack');
+  }
+  if (!isset($data)) {
+    return $state->get('batch_test.stack');
+  }
+  $stack = $state->get('batch_test.stack');
+  $stack[] = $data;
+  $state->set('batch_test.stack', $stack);
+}

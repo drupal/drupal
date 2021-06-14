@@ -1,0 +1,5 @@
+name: 'JS Message test module'
+type: module
+description: 'Module for the JSMessageTest test.'
+package: Testing
+version: VERSION

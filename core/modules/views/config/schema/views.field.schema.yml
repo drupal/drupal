@@ -1,0 +1,258 @@
+# Schema for the views field plugins.
+
+views.field.*:
+  type: views_field
+  label: 'Default field'
+
+views.field.boolean:
+  type: views_field
+  label: 'Boolean'
+  mapping:
+    type:
+      type: string
+      label: 'Output format'
+    type_custom_true:
+      type: string
+      label: 'Custom output for TRUE'
+    type_custom_false:
+      type: string
+      label: 'Custom output for FALSE'
+    not:
+      type: boolean
+      label: 'Reverse'
+
+views.field.broken:
+  type: views_field
+  label: 'Broken'
+
+views.field.counter:
+  type: views_field
+  label: 'Counter'
+  mapping:
+    counter_start:
+      type: integer
+      label: 'Starting value'
+
+views.field.custom:
+  type: views_field
+  label: 'Custom'
+
+views.field.date:
+  type: views_field
+  label: 'Date'
+  mapping:
+    date_format:
+      type: string
+      label: 'Date format'
+    custom_date_format:
+      type: string
+      label: 'Custom date format'
+    timezone:
+      type: string
+      label: 'Timezone'
+
+views.field.entity_label:
+  type: views_field
+  label: 'Entity label'
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to entity'
+
+views.field.file_size:
+  type: views_field
+  label: 'File size'
+  mapping:
+    file_size_display:
+      type: string
+      label: 'File size display'
+
+views.field.links:
+  type: views_field
+  label: 'Links'
+  mapping:
+    fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: string
+        label: 'Field'
+    destination:
+      type: boolean
+      label: 'Include destination'
+
+views.field.dropbutton:
+  type: views.field.links
+  label: 'Drop button'
+
+views.field.machine_name:
+  type: views_field
+  label: 'Machine name'
+  mapping:
+    machine_name:
+      type: boolean
+      label: 'Output machine name'
+
+views.field.markup:
+  type: views_field
+  label: 'Markup'
+
+views.field.numeric:
+  type: views_field
+  label: 'Numeric'
+  mapping:
+    set_precision:
+      type: boolean
+      label: 'Round'
+    precision:
+      type: integer
+      label: 'Precision'
+    decimal:
+      type: string
+      label: 'Decimal point'
+    separator:
+      type: string
+      label: 'Thousands marker'
+    format_plural:
+      type: boolean
+      label: 'Format plural'
+    format_plural_string:
+      type: plural_label
+      label: 'Plural variants'
+    prefix:
+      type: label
+      label: 'Prefix'
+    suffix:
+      type: label
+      label: 'Suffix'
+
+views.field.prerender_list:
+  type: views_field
+  label: 'List'
+  mapping:
+    type:
+      type: string
+      label: 'Display type'
+    separator:
+      type: string
+      label: 'Separator'
+
+views.field.serialized:
+  type: views_field
+  label: 'Serialized'
+  mapping:
+    format:
+      type: string
+      label: 'Display format'
+    key:
+      type: string
+      label: 'Which key should be displayed'
+
+views.field.standard:
+  type: views_field
+  label: 'Standard'
+
+views.field.time_interval:
+  type: views_field
+  label: 'Time interval'
+  mapping:
+    granularity:
+      type: integer
+      label: 'Granularity'
+
+views.field.url:
+  type: views_field
+  label: 'URL'
+  mapping:
+    display_as_link:
+      type: boolean
+      label: 'Display as link'
+
+views.field.language:
+  type: views_field
+  label: 'Language'
+  mapping:
+    native_language:
+      type: boolean
+      label: 'Display in native language'
+
+views.field.rendered_entity:
+  type: views_field
+  label: 'Rendered entity'
+  mapping:
+    view_mode:
+      type: string
+      label: 'View mode'
+
+views.field.entity_link:
+  type: views_field
+  label: 'Entity link'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+    output_url_as_text:
+      type: boolean
+      label: 'Output the URL as text'
+    absolute:
+      type: boolean
+      label: 'Output an absolute link'
+
+views.field.entity_link_delete:
+  type: views.field.entity_link
+  label: 'Entity delete link'
+
+views.field.entity_link_edit:
+  type: views.field.entity_link
+  label: 'Entity edit link'
+
+views.field.bulk_form:
+  type: views_field_bulk_form
+  label: 'Bulk form'
+
+views.field.field:
+  type: views_field
+  label: 'Views entity field handler'
+  mapping:
+    click_sort_column:
+      type: string
+      label: 'Column used for click sorting'
+    type:
+      type: string
+      label: 'Formatter'
+    settings:
+      label: 'Settings'
+      type: field.formatter.settings.[%parent.type]
+    group_column:
+      type: string
+      label: 'Group by column'
+    group_columns:
+      type: sequence
+      label: 'Group by columns'
+      sequence:
+        type: string
+        label: 'Column'
+    group_rows:
+      type: boolean
+      label: 'Display all values in the same row'
+    delta_limit:
+      type: integer
+      label: 'Field'
+    delta_offset:
+      type: integer
+      label: 'Offset'
+    delta_reversed:
+      type: boolean
+      label: 'Reversed'
+    delta_first_last:
+      type: boolean
+      label: 'First and last only'
+    multi_type:
+      type: string
+      label: 'Display type'
+    separator:
+      type: label
+      label: 'Separator'
+    field_api_classes:
+      type: boolean
+      label: 'Use field template'

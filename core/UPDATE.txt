@@ -1,0 +1,77 @@
+CONTENTS OF THIS FILE
+---------------------
+
+ * Introduction
+ * Minor and patch version updates
+ * Is my site using Composer?
+ * Updating code manually
+ * Updating code with Composer
+ * Updating Drupal 8 to Drupal 9
+ * Updating Drupal 6 or 7 to Drupal 9
+
+
+INTRODUCTION
+------------
+
+This document provides links to resources on how to update or migrate your
+Drupal site.
+
+
+MINOR AND PATCH VERSION UPDATES
+-------------------------------
+
+Minor and patch updates are done either manually or with Composer, depending on
+how the site was installed. Refer to the sections below on updating with
+Composer or updating manually for tarball/zip installations.
+
+Minor and patch versions are updates such as:
+ * Patch releases (e.g. 9.1.2 to 9.1.3)
+ * Scheduled minor releases (e.g 9.3.5 to 9.4.0)
+ * Beta to final releases (e.g. 9.1.0-beta2 to 9.1.0)
+
+
+IS MY SITE USING COMPOSER?
+--------------------------
+
+Before updating, determine if your site is currently managed by Composer.
+
+On a typical Unix/Linux command line, this can be determined by running the
+following command (replace /PATH/TO/composer with the appropriate location
+for your system):
+
+  /PATH/TO/composer info drupal/core
+
+
+UPDATING CODE WITH COMPOSER
+---------------------------
+
+ * Refer to 'Update Drupal core via Composer' for details on using Composer:
+   https://www.drupal.org/docs/8/update/update-drupal-core-via-composer
+
+
+UPDATING CODE MANUALLY
+----------------------
+
+ * Refer to 'Updating the Core Software' for details on updating manually:
+   https://www.drupal.org/docs/8/update/update-core-manually
+
+
+UPDATING DRUPAL 8 TO DRUPAL 9
+-----------------------------
+
+    1. Prepare the Drupal 8 site for Drupal 9:
+    https://www.drupal.org/docs/9/how-to-prepare-your-drupal-7-or-8-site-for-drupal-9/upgrading-a-drupal-8-site-to-drupal-9
+
+    2. Update the Drupal 8 codebase to Drupal 9:
+    https://www.drupal.org/docs/8/upgrade/upgrading-between-drupal-8-major-versions-eg-from-drupal-8-to-drupal-9
+
+    3. Navigate to /update.php to initiate the update process.
+
+
+UPDATING DRUPAL 6 OR 7 TO DRUPAL 9
+----------------------------------
+
+ * Updating from a previous major version, such as Drupal 6 or 7, requires
+   importing the old site configuration and content into a new Drupal 9 site.
+   Refer to the 'Migrate Guide' for more details on this process:
+   https://www.drupal.org/upgrade/migrate

@@ -1,0 +1,5 @@
+services:
+  config_translation_test_event_subscriber:
+    class: Drupal\config_translation_test\EventSubscriber\ConfigTranslationTestSubscriber
+    tags:
+      - {name: event_subscriber}

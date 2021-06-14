@@ -1,0 +1,36 @@
+id: d6_upload_entity_form_display
+label: Upload form display configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: d6_upload_instance
+  constants:
+    empty: {}
+    entity_type: node
+    form_mode: default
+    name: upload
+    type: file_generic
+    options:
+      settings:
+        progress_indicator: throbber
+process:
+  entity_type: 'constants/entity_type'
+  bundle:
+    -
+      plugin: migration_lookup
+      migration: d6_node_type
+      source: node_type
+    -
+      plugin: skip_on_empty
+      method: row
+  field_name: 'constants/name'
+  form_mode: 'constants/form_mode'
+  type: 'constants/type'
+  options: 'constants/options'
+  'options/type': '@type'
+destination:
+  plugin: component_entity_form_display
+migration_dependencies:
+  required:
+    - d6_upload_field_instance

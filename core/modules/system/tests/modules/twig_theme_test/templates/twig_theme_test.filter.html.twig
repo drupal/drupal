@@ -1,0 +1,29 @@
+<div><strong>No author:</strong> {{ quote|without('author') }}.</div>
+<div><strong>Complete quote after without:</strong> {{ quote }}.</div>
+<div><strong>Only author:</strong> {{ quote.author }}.</div>
+<div><strong>No author or date:</strong> {{ quote|without('date', 'author') }}.</div>
+<div><strong>Only date:</strong> {{ quote.date }}.</div>
+<div><strong>Complete quote again for good measure:</strong> {{ quote }}.</div>
+<div><strong>Marked-up:</strong>
+  <blockquote>
+    <p>{{ quote.content }}</p>
+    <footer>
+      &ndash; <cite><a href="#">{{ quote.author }}</a> <em>({{ quote.date }})</em></cite>
+    </footer>
+  </blockquote>
+</div>
+<div><span{{ attributes }}>All attributes:</span></div>
+<div><span class="{{ attributes.class }}"{{ attributes|without('class') }}>Class attributes in front, remainder at the back:</span></div>
+<div><span{{ attributes|without('class') }} data-class="{{ attributes.class }}">Class attributes in back, remainder at the front:</span></div>
+<div><span class="{{ attributes.class }}">Class attributes only:</span></div>
+<div><span {{ attributes.checked }}{{ attributes|without('checked') }}>Without boolean attribute.</span></div>
+<div><span data-id="{{ attributes.id }}"{{ attributes|without('id') }}>Without string attribute.</span></div>
+<div><span{{ attributes|without('id', 'class') }}>Without id and class attributes.</span></div>
+{% set without_args = ['id', 'class'] %}
+<div><span{{ attributes|without(without_args) }}>Without id and class attributes via an array.</span></div>
+<div><span{{ attributes|without(without_args, 'checked') }}>Without any attributes via mixed array and string.</span></div>
+<div><span{{ attributes|without('checked', without_args) }}>Without any attributes via mixed string then array.</span></div>
+<div><span{{ attributes|without(without_args, ['id', 'checked']) }}>Without any attributes with duplicate "id" key.</span></div>
+<div><span{{ attributes }}>All attributes again.</span></div>
+<div id="{{ 'quotes Here!'|clean_id }}"><span class="{{ 'Gray like a bunny!'|clean_class }} {{ 'BEM__ized--Top Feature'|clean_class }}" id="{{ 'quotes Here!'|clean_id }}">ID and class. Having the same ID twice is not valid markup but we want to make sure the filter doesn't use \Drupal\Component\Utility\Html::getUniqueId().</span></div>
+<div><strong>Rendered author string length:</strong> {{ quote.author|render|length }}.</div>

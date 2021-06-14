@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Theme override for the node user field.
+ *
+ * This is an override of field.html.twig for the node user field. See that
+ * template for documentation about its details and overrides.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing span element.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item content.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
+ *
+ * @see field.html.twig
+ */
+#}
+<span{{ attributes }}>
+  {%- for item in items -%}
+    {{ item.content }}
+  {%- endfor -%}
+</span>

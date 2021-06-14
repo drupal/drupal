@@ -1,0 +1,8 @@
+name: 'Forum test views'
+type: module
+description: 'Provides default views for views forum tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:forum
+  - drupal:views

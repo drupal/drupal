@@ -1,0 +1,136 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.article.body
+    - field.field.node.article.field_media_image
+    - field.field.node.article.field_tags
+    - field.field.node.article.layout_builder__layout
+    - node.type.article
+  module:
+    - layout_builder
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: true
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          439cd644-2346-4467-b296-2c9453bd18c2:
+            uuid: 439cd644-2346-4467-b296-2c9453bd18c2
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:article:field_tags'
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          02d32417-145b-41a4-8d7a-27e4477b9666:
+            uuid: 02d32417-145b-41a4-8d7a-27e4477b9666
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:article:field_media_image'
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: responsive_3x2
+                  link: false
+                third_party_settings: {  }
+            additional: {  }
+            weight: 1
+          f73af85e-15fc-4672-8b72-3ed91353e08c:
+            uuid: f73af85e-15fc-4672-8b72-3ed91353e08c
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:article:body'
+              formatter:
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+                label: hidden
+            additional: {  }
+            weight: 2
+          957850fc-d5ea-4a6f-b3c9-dd2e4811a5c4:
+            uuid: 957850fc-d5ea-4a6f-b3c9-dd2e4811a5c4
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:article:links'
+            additional: {  }
+            weight: 3
+          937c9738-b63e-409f-897a-c9fc98f6716e:
+            uuid: 937c9738-b63e-409f-897a-c9fc98f6716e
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:article:content_moderation_control'
+            additional: {  }
+            weight: 4
+        third_party_settings: {  }
+id: node.article.full
+targetEntityType: node
+bundle: article
+mode: full
+content:
+  body:
+    type: text_default
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+    label: hidden
+  content_moderation_control:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_media_image:
+    type: entity_reference_entity_view
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      view_mode: responsive_3x2
+      link: false
+    third_party_settings: {  }
+  field_tags:
+    type: entity_reference_label
+    weight: 0
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  links:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  layout_builder__layout: true

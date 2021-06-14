@@ -1,0 +1,5 @@
+language_add_local_action:
+  route_name: language.add
+  title: 'Add language'
+  appears_on:
+    - entity.configurable_language.collection

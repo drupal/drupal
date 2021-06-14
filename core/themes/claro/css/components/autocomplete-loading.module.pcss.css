@@ -1,0 +1,82 @@
+/**
+ * @file
+ * Visual styles for animated throbber.
+ *
+ * @see autocomplete.js
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Since the autocomplete library is attached conditionally and not globally,
+ * we can be 99% sure that the default icon will be used.
+ * With inline SVGs we can prevent a HTTP request and repaint addressing the
+ * autocomplete input's background — until are sure that it will be pushed by
+ * the server with HTTP/2.
+ *
+ * The autocompleting (active) state's background-image is inlined because
+ * non-used CSS selectors are usually ignored; popular browsers don't download
+ * their 'url' references.
+ * If these selectors become active, the browser needs some time for painting
+ * previously ignored remote asset: it should get it from server, parse it and
+ * repaint the background of autocomplete field. With the inlined background we
+ * can prevent an additional timeout caused by a new request/response pair.
+ * Besides this, the autocompleting event itself may easily finish before the
+ * missing asset gets downloaded/parsed/painted, and the missing instant visual
+ * feedback would be a usability/accessibility issue as well.
+ */
+
+.js .form-autocomplete {
+  background-image: url(../../images/icons/868686/magnifier.svg);
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+}
+.js .form-autocomplete::-ms-clear {
+  display: none;
+}
+.js[dir="rtl"] .form-autocomplete {
+  background-image: url(../../images/icons/868686/magnifier-rtl.svg);
+  background-position: 0 50%;
+}
+.js .form-autocomplete.is-autocompleting {
+  background-image: url(../../images/icons/004adc/spinner.svg);
+}
+.js[dir="rtl"] .form-autocomplete.is-autocompleting {
+  background-image: url(../../images/icons/004adc/spinner-rtl.svg);
+}
+/* IE11 does not animate inline SVG. */
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen,
+.js .form-autocomplete.is-autocompleting {
+  background-image: url("../../images/spinner-ltr.gif");
+  background-size: 2.5rem 1.25rem;
+}
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen,
+.js[dir="rtl"] .form-autocomplete.is-autocompleting {
+  background-image: url("../../images/spinner-rtl.gif");
+}
+
+/**
+ * Autocomplete wrapper for autocompleting message.
+ */
+.claro-autocomplete {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+.claro-autocomplete__message {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  max-width: 100%;
+  margin-bottom: 0.15rem;
+  color: var(--color-link);
+  font-size: var(--font-size-xxs); /* ~11px */
+  font-weight: bold;
+  line-height: calc(18rem / 16); /* 18px */
+}
+[dir="rtl"] .claro-autocomplete__message {
+  right: auto;
+  left: 0;
+}

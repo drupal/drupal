@@ -1,0 +1,63 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_click_sort
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          label: ID
+          plugin_id: numeric
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          label: Name
+          plugin_id: string
+        created:
+          id: created
+          table: views_test_data
+          field: created
+          label: created
+          plugin_id: field
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
+      access:
+        type: none
+      cache:
+        type: tag
+      style:
+        type: table
+        options:
+          info:
+            id:
+              sortable: true
+              default_sort_order: asc
+            name:
+              sortable: true
+              default_sort_order: desc
+            created:
+              sortable: false
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_click_sort
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

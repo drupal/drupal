@@ -1,0 +1,20 @@
+services:
+  session_test.subscriber:
+    class: Drupal\session_test\EventSubscriber\SessionTestSubscriber
+    tags:
+      - { name: event_subscriber }
+  session_test.session_handler.test_proxy:
+    class: Drupal\session_test\Session\TestSessionHandlerProxy
+    tags:
+      - { name: session_handler_proxy }
+  session_test.session_handler.test_proxy2:
+    class: Drupal\session_test\Session\TestSessionHandlerProxy
+    arguments: ['test_argument']
+    tags:
+      - { name: session_handler_proxy, priority: 20 }
+  session_test.session_handler_proxy_trace:
+    class: ArrayObject
+  session_test.session_bag:
+    class: Drupal\session_test\Session\TestSessionBag
+    tags:
+      - { name: session_bag }

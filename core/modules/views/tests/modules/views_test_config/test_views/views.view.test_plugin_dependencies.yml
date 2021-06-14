@@ -1,0 +1,52 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - views_test_data
+  content:
+    - StaticTest
+    - RowTest
+    - StyleTest
+id: test_plugin_dependencies
+label: test_plugin_dependencies
+module: views
+description: ''
+tag: default
+base_table: comment_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: test_static
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        cid:
+          field: cid
+          id: cid
+          table: comment_field_data
+          plugin_id: comment
+          entity_type: comment
+          entity_field: cid
+      filter_groups:
+        groups: {  }
+        operator: AND
+      filters: {  }
+      pager:
+        type: full
+      query:
+        type: views_query
+      relationships: {  }
+      sorts: {  }
+      style:
+        type: test_style
+      row:
+        type: test_row
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

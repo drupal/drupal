@@ -1,0 +1,112 @@
+/**
+ * @file
+ * Styling for contextual module.
+ */
+
+/**
+ * Contextual links wrappers.
+ */
+.contextual {
+  position: absolute;
+  z-index: 500;
+  top: 6px;
+  right: 0; /* LTR */
+}
+[dir="rtl"] .contextual {
+  right: auto;
+  left: 0;
+}
+
+/**
+ * Contextual region.
+ */
+.contextual-region.focus {
+  outline: 1px dashed #d6d6d6;
+  outline-offset: 1px;
+}
+
+/**
+ * Contextual trigger.
+ */
+.contextual .trigger {
+  position: relative;
+  right: 6px; /* LTR */
+  float: right; /* LTR */
+  overflow: hidden;
+  margin: 0;
+  padding: 0 2px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 13px;
+  background-color: #fff;
+  background-attachment: scroll;
+}
+[dir="rtl"] .contextual .trigger {
+  right: auto;
+  left: 6px;
+  float: left;
+}
+.contextual.open .trigger {
+  z-index: 2;
+  border: 1px solid #ccc;
+  border-bottom-color: transparent;
+  border-radius: 13px 13px 0 0;
+  box-shadow: none;
+}
+
+/**
+ * Contextual links.
+ *
+ * The following selectors are heavy to discourage theme overriding.
+ */
+.contextual-region .contextual .contextual-links {
+  position: relative;
+  top: -1px;
+  right: 6px; /* LTR */
+  float: right; /* LTR */
+  clear: both;
+  margin: 0;
+  padding: 0.25em 0;
+  text-align: left; /* LTR */
+  white-space: nowrap;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 4px 4px; /* LTR */
+  background-color: #fff;
+}
+[dir="rtl"] .contextual-region .contextual .contextual-links {
+  right: auto;
+  left: 6px;
+  float: left;
+  text-align: right;
+  border-radius: 0 4px 4px 4px;
+}
+.contextual-region .contextual .contextual-links li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  list-style-image: none;
+  border: none;
+  background-color: #fff;
+  line-height: 100%;
+}
+.contextual-region .contextual .contextual-links a {
+  display: block;
+  margin: 0.25em 0;
+  padding: 0.4em 0.6em;
+  color: #333;
+  background-color: #fff;
+  font-family: sans-serif;
+  font-size: small;
+  line-height: 0.8em;
+}
+.touchevents .contextual-region .contextual .contextual-links a {
+  font-size: large;
+}
+.contextual-region .contextual .contextual-links a,
+.contextual-region .contextual .contextual-links a:hover {
+  text-decoration: none;
+}
+.no-touchevents .contextual-region .contextual .contextual-links li a:hover {
+  color: #000;
+  background: #f7fcff;
+}

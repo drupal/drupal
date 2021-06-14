@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_exposed_form_sort_items_per_page
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        options:
+          expose_sort_order: true
+          reset_button: true
+        type: basic
+      pager:
+        type: full
+        options:
+          expose:
+            items_per_page: true
+            offset: true
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: 'fields'
+      fields:
+        id:
+          table: entity_test
+          field: id
+          plugin_id: field
+          id: id
+      sorts:
+        id:
+          table: entity_test
+          field: id
+          id: id
+          order: asc
+          expose:
+            label: 'id'
+          exposed: true
+          plugin_id: standard
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_exposed_form_sort_items_per_page
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

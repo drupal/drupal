@@ -1,0 +1,26 @@
+services:
+  plugin.manager.media.source:
+    class: Drupal\media\MediaSourceManager
+    parent: default_plugin_manager
+  access_check.media.revision:
+    class: Drupal\media\Access\MediaRevisionAccessCheck
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: access_check, applies_to: _access_media_revision }
+  media.oembed.url_resolver:
+    class: Drupal\media\OEmbed\UrlResolver
+    arguments: ['@media.oembed.provider_repository', '@media.oembed.resource_fetcher', '@http_client', '@module_handler', '@cache.default']
+  media.oembed.provider_repository:
+    class: Drupal\media\OEmbed\ProviderRepository
+    arguments: ['@http_client', '@config.factory', '@datetime.time', '@cache.default']
+  media.oembed.resource_fetcher:
+    class: Drupal\media\OEmbed\ResourceFetcher
+    arguments: ['@http_client', '@media.oembed.provider_repository', '@cache.default']
+  media.oembed.iframe_url_helper:
+    class: Drupal\media\IFrameUrlHelper
+    arguments: ['@router.request_context', '@private_key']
+  media.config_subscriber:
+    class: Drupal\media\EventSubscriber\MediaConfigSubscriber
+    arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

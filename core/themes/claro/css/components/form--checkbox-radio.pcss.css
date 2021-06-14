@@ -1,0 +1,177 @@
+/**
+ * @file
+ * Checkbox and radio input elements.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Form item modifiers.
+ */
+.form-type--boolean {
+  margin-left: var(--input--label-spacing); /* LTR */
+  line-height: var(--space-l);
+}
+[dir="rtl"] .form-type--boolean {
+  margin-right: var(--input--label-spacing);
+  margin-left: 0;
+}
+
+/**
+ * Radio and checkbox items that are the child of a form item.
+ */
+.form-type--boolean .form-boolean {
+  position: relative;
+  top: calc(var(--space-l) / 2);
+  float: left; /* LTR */
+  margin-left: calc(var(--input--label-spacing) * -1); /* LTR */
+  transform: translateY(-50%);
+}
+[dir="rtl"] .form-type--boolean .form-boolean {
+  float: right;
+  margin-right: calc(var(--input--label-spacing) * -1);
+  margin-left: 0;
+}
+
+.form-type--boolean.form-item--no-label {
+  margin-left: 0;
+}
+[dir="rtl"] .form-type--boolean.form-item--no-label {
+  margin-right: 0;
+}
+.form-type--boolean.form-item--no-label .form-boolean,
+[dir="rtl"] .form-type--boolean.form-item--no-label .form-boolean {
+  position: static;
+  float: none;
+  margin-right: 0;
+  margin-left: 0;
+  transform: none;
+}
+
+/**
+ * When form items are nested in radios or checkboxes group, reduce the default
+ * space between them.
+ */
+.form-boolean-group .form-type--boolean {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+/**
+ * Input appearance.
+ */
+.form-boolean {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  vertical-align: text-bottom;
+  border: 1px solid var(--input-border-color);
+  border-radius: 2px;
+  background: var(--input-bg-color) no-repeat 50% 50%;
+  background-image: url(../../images/icons/ffffff/checkmark.svg);
+  background-size: 100% 100%;
+  box-shadow: 0 0 0 4px transparent;
+  appearance: none;
+}
+.form-boolean--type-radio {
+  width: 19px;
+  height: 19px;
+  border-radius: 19px;
+}
+.form-boolean:active,
+.form-boolean:hover {
+  border-color: var(--input-fg-color);
+  box-shadow: inset 0 0 0 1px var(--input-fg-color);
+}
+.form-boolean:focus:active,
+.form-boolean:focus:hover {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input-fg-color);
+}
+.form-boolean--type-checkbox:checked {
+  border-color: var(--input--focus-border-color);
+  background-color: var(--input--focus-border-color);
+  background-image: url(../../images/icons/ffffff/checkmark-sm.svg);
+}
+.form-boolean--type-checkbox:checked:active,
+.form-boolean--type-checkbox:checked:hover {
+  border-color: var(--input-fg-color);
+  background-color: var(--input-fg-color);
+}
+.form-boolean--type-radio:checked {
+  border-color: var(--input--focus-border-color);
+  background-image: url(../../images/icons/004adc/circle.svg);
+  box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
+}
+.form-boolean--type-radio:checked:focus {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--focus-border-color);
+}
+.form-boolean--type-radio:checked:active,
+.form-boolean--type-radio:checked:hover {
+  border-color: var(--input-fg-color);
+  background-image: url(../../images/icons/222330/circle.svg);
+  box-shadow: inset 0 0 0 1px var(--input-fg-color);
+}
+.form-boolean--type-radio:checked:focus:active,
+.form-boolean--type-radio:checked:focus:hover {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input-fg-color);
+}
+
+/**
+ * Error states.
+ */
+.form-boolean.error {
+  border-color: var(--input--error-border-color);
+  background-color: var(--input-bg-color);
+  box-shadow: inset 0 0 0 1px var(--input--error-border-color);
+}
+.form-boolean.error:active,
+.form-boolean.error:hover {
+  box-shadow: inset 0 0 0 1px var(--input--error-border-color);
+}
+.form-boolean.error:focus,
+.form-boolean.error:focus:active,
+.form-boolean.error:focus:hover {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
+}
+.form-boolean.error:checked:active,
+.form-boolean.error:checked:hover {
+  border-color: var(--input--error-border-color);
+  background-color: var(--input-bg-color);
+}
+.form-boolean--type-checkbox.error:checked,
+.form-boolean--type-checkbox.error:checked:active,
+.form-boolean--type-checkbox.error:checked:hover {
+  background-color: var(--input--error-border-color);
+}
+.form-boolean--type-radio.error:checked,
+.form-boolean--type-radio.error:checked:active,
+.form-boolean--type-radio.error:checked:hover {
+  background-image: url(../../images/icons/d72222/circle.svg);
+}
+.form-boolean--type-radio.error:checked:focus {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
+}
+
+/**
+ * Disabled states.
+ */
+.form-boolean[disabled],
+.form-boolean[disabled]:hover,
+.form-boolean[disabled].error,
+.form-boolean[disabled].error:hover,
+.form-boolean--type-radio[disabled]:focus:active,
+.form-boolean--type-radio[disabled]:active:hover,
+.form-boolean--type-radio[disabled].error:active:hover {
+  border-color: var(--input--disabled-border-color);
+  background-color: var(--input--disabled-bg-color);
+  background-image: none;
+  box-shadow: none;
+}
+.form-boolean--type-checkbox[disabled]:checked {
+  background-image: url(../../images/icons/82828c/checkmark.svg);
+}
+.form-boolean--type-radio[disabled]:checked,
+.form-boolean--type-radio[disabled].error:checked {
+  background-image: url(../../images/icons/82828c/circle.svg);
+}

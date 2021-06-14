@@ -1,0 +1,6 @@
+name: 'Configuration Storage Transformer Test'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:config

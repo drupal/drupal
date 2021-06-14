@@ -1,0 +1,39 @@
+services:
+  locale.default.config.storage:
+    class: Drupal\locale\LocaleDefaultConfigStorage
+    arguments: ['@config.storage', '@language_manager', '%install_profile%']
+    public: false
+  locale.config_manager:
+    class: Drupal\locale\LocaleConfigManager
+    arguments: ['@config.storage', '@locale.storage', '@config.factory', '@config.typed', '@language_manager', '@locale.default.config.storage', '@config.manager']
+  locale.storage:
+    class: Drupal\locale\StringDatabaseStorage
+    arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
+  locale.project:
+    class: Drupal\locale\LocaleProjectStorage
+    arguments: ['@keyvalue']
+  locale.plural.formula:
+    class: Drupal\locale\PluralFormula
+    arguments: ['@language_manager', '@state']
+  string_translator.locale.lookup:
+    class: Drupal\locale\LocaleTranslation
+    arguments: ['@locale.storage', '@cache.default', '@lock', '@config.factory', '@language_manager', '@request_stack']
+    tags:
+      - { name: string_translator }
+      - { name: needs_destruction }
+  stream_wrapper.translations:
+    class: Drupal\locale\StreamWrapper\TranslationsStream
+    tags:
+      - { name: stream_wrapper, scheme: translations }
+  locale.config_subscriber:
+    class: Drupal\locale\LocaleConfigSubscriber
+    arguments: ['@config.factory', '@locale.config_manager']
+    tags:
+      - { name: event_subscriber }
+  locale.locale_translation_cache_tag:
+    class: Drupal\locale\EventSubscriber\LocaleTranslationCacheTag
+    arguments: ['@cache_tags.invalidator']
+    tags:
+      - { name: event_subscriber }

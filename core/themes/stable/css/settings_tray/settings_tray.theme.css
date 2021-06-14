@@ -1,0 +1,70 @@
+/**
+ * @file
+ * Visual styling for Settings Tray module.
+ */
+
+/* @todo remove the @imports when we find a better way to load these styles last.
+ * https://www.drupal.org/node/1945262.
+ */
+
+/* Style the edit mode toolbar and tabs. */
+#toolbar-bar.js-settings-tray-edit-mode {
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
+}
+.js-settings-tray-edit-mode .toolbar-item:not(.toolbar-icon-edit) {
+  color: #999;
+}
+.js-settings-tray-edit-mode .toolbar-item:not(.toolbar-icon-edit) .is-active {
+  color: #333;
+}
+
+/* Style both the edit and editing states of the contextual links toggle tab. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item,
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active,
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:focus {
+  color: #eee;
+  outline: none;
+  background-color: #0066a1;
+  background-image: linear-gradient(to bottom, #0066a1, #005b98);
+  text-shadow: none;
+  font-weight: bold;
+}
+/* Make the hover of the inactive state the same as the active state. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover,
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
+  color: #fff;
+  background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
+}
+/* Make the hover of the active state the same as the inactive state. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+  color: #fff;
+  background-color: #0066a1;
+  background-image: linear-gradient(to bottom, #0066a1, #005b98);
+}
+/* Make the inactive icon gray. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:before {
+  background-image: url(../../../../misc/icons/bebebe/pencil.svg);
+}
+/* Make the active icon white. */
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:before {
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover:before {
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
+}
+.toolbar-tab > .button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+  background-image: url(../../../../misc/icons/ffffff/pencil.svg);
+}
+
+/* Style the editables while in edit mode. */
+.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .settings-tray-editable {
+  outline: 1px dashed rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .settings-tray-editable:hover,
+.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode .settings-tray-editable.settings-tray-active-editable {
+  background-color: rgba(0, 0, 0, 0.2);
+}

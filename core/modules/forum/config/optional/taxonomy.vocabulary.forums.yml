@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - forum
+name: Forums
+vid: forums
+description: 'Forum navigation vocabulary'
+weight: -10

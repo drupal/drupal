@@ -1,0 +1,20 @@
+help_page_test.has_help:
+  path: '/help_page_test/has_help'
+  defaults:
+    _controller: '\Drupal\help_page_test\HelpPageTestController::hasHelp'
+  requirements:
+    _access: 'TRUE'
+
+help_page_test.no_help:
+  path: '/help_page_test/no_help'
+  defaults:
+    _controller: '\Drupal\help_page_test\HelpPageTestController::noHelp'
+  requirements:
+    _access: 'TRUE'
+
+help_page_test.test_array:
+  path: '/help_page_test/test_array'
+  defaults:
+    _controller: '\Drupal\help_page_test\HelpPageTestController::testArray'
+  requirements:
+    _access: 'TRUE'

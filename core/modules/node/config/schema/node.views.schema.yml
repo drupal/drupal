@@ -1,0 +1,156 @@
+# Schema for the views plugins of the Node module.
+
+views.area.node_listing_empty:
+  type: views_area
+  label: 'Node link'
+
+views.argument.node_nid:
+  type: views_argument
+  label: 'Node ID'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.node_type:
+  type: views_argument
+  label: 'Node type'
+  mapping:
+    glossary:
+      type: boolean
+      label: 'Glossary mode'
+    limit:
+      type: integer
+      label: 'Character limit'
+    case:
+      type: string
+      label: 'Case'
+    path_case:
+      type: string
+      label: 'Case in path'
+    transform_dash:
+      type: boolean
+      label: 'Transform spaces to dashes in URL'
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    add_table:
+      type: boolean
+      label: 'Allow multiple filter values to work together'
+    require_value:
+      type: boolean
+      label: 'Do not display items with no value in summary'
+
+views.argument.node_uid_revision:
+  type: views_argument
+  label: 'Node user ID'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.argument.node_vid:
+  type: views_argument
+  label: 'Node revision ID'
+  mapping:
+    break_phrase:
+      type: boolean
+      label: 'Allow multiple values'
+    not:
+      type: boolean
+      label: 'Exclude'
+
+views.field.node:
+  type: views_field
+  label: 'Node'
+  mapping:
+    link_to_node:
+      type: boolean
+      label: 'Link this field to the original piece of content'
+
+views.field.node_bulk_form:
+  type: views_field_bulk_form
+  label: 'Node bulk form'
+
+views.field.node_path:
+  type: views_field
+  label: 'Node path'
+  mapping:
+    absolute:
+      type: boolean
+      label: 'Use absolute link (begins with "http://")'
+
+views.field.node_revision_link:
+  type: views_field
+  label: 'Link to a node revision'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.field.node_revision_link_delete:
+  type: views_field
+  label: 'Link to delete a node revision'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.field.node_revision_link_revert:
+  type: views_field
+  label: 'Link to revert a node to a revision'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.filter.node_access:
+  type: views_filter
+  label: 'Node access'
+
+views.filter.node_status:
+  type: views_filter
+  label: 'Node status'
+
+views.filter.node_uid_revision:
+  type: views_filter
+  label: 'Node revisions of an user'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: string
+        label: 'Value'
+    expose:
+      type: mapping
+      label: 'Expose'
+      mapping:
+        reduce:
+          type: boolean
+          label: 'Reduce'
+
+views.filter_value.node_access:
+  type: string
+  label: 'Access'
+
+views.filter_value.node_status:
+  type: boolean
+  label: 'Status'
+
+views.row.node_rss:
+  type: views_row
+  label: 'Content options'
+  mapping:
+    view_mode:
+      type: string
+      label: 'Display type'

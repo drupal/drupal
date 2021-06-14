@@ -1,0 +1,7 @@
+name: 'Custom Menu Links'
+type: module
+description: 'Allows users to create menu links.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:link

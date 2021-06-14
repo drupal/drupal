@@ -1,0 +1,5 @@
+name: 'User module hooks tests'
+type: module
+description: 'Support module for user hooks testing.'
+package: Testing
+version: VERSION

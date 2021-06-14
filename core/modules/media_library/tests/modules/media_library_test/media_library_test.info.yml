@@ -1,0 +1,11 @@
+name: 'Media Library test'
+type: module
+description: 'Test module for Media Library.'
+package: Testing
+dependencies:
+  - drupal:image
+  - drupal:media_library
+  - drupal:media_test_source
+  - drupal:menu_ui
+  - drupal:node
+  - drupal:path

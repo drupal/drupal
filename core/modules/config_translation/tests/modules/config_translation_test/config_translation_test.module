@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @file
+ * Configuration Translation Test module.
+ */
+
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function config_translation_test_system_info_alter(array &$info, Extension $file, $type) {
+  // @see \Drupal\config_translation\Tests\ConfigTranslationUiThemeTest
+  if ($file->getType() == 'theme' && $file->getName() == 'config_translation_test_theme') {
+    $info['hidden'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function config_translation_test_entity_type_alter(array &$entity_types) {
+  // Remove entity definition for these entity types from config_test module.
+  unset($entity_types['config_test_no_status']);
+  unset($entity_types['config_query_test']);
+}
+
+/**
+ * Implements hook_config_translation_info_alter().
+ */
+function config_translation_test_config_translation_info_alter(&$info) {
+  if (\Drupal::state()->get('config_translation_test_config_translation_info_alter')) {
+    // Limit account settings config files to only one of them.
+    $info['entity.user.admin_form']['names'] = ['user.settings'];
+
+    // Add one more config file to the site information page.
+    $info['system.site_information_settings']['names'][] = 'system.rss';
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for ConfigTranslationFormBase.
+ *
+ * Adds a list of configuration names to the top of the configuration
+ * translation form.
+ *
+ * @see \Drupal\config_translation\Form\ConfigTranslationFormBase
+ */
+function config_translation_test_form_config_translation_form_alter(&$form, FormStateInterface $form_state) {
+  if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
+    $form['#base_altered'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for ConfigTranslationAddForm.
+ *
+ * Changes the title to include the source language.
+ *
+ * @see \Drupal\config_translation\Form\ConfigTranslationAddForm
+ */
+function config_translation_test_form_config_translation_add_form_alter(&$form, FormStateInterface $form_state) {
+  if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
+    $form['#altered'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for ConfigTranslationEditForm.
+ *
+ * Adds a column to the configuration translation edit form that shows the
+ * current translation. Note that this column would not be displayed by default,
+ * as the columns are hardcoded in
+ * config_translation_manage_form_element.html.twig. The template would need to
+ * be overridden for the column to be displayed.
+ *
+ * @see \Drupal\config_translation\Form\ConfigTranslationEditForm
+ */
+function config_translation_test_form_config_translation_edit_form_alter(&$form, FormStateInterface $form_state) {
+  if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
+    $form['#altered'] = TRUE;
+  }
+}

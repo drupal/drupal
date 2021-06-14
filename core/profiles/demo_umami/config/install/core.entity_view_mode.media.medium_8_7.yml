@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.medium_8_7
+label: 'Medium 8:7'
+targetEntityType: media
+cache: true

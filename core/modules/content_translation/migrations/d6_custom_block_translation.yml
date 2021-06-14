@@ -1,0 +1,50 @@
+id: d6_custom_block_translation
+label: Custom block translations
+migration_tags:
+  - Drupal 6
+  - Content
+  - Multilingual
+source:
+  plugin: d6_box_translation
+process:
+  id:
+    plugin: migration_lookup
+    migration: d6_custom_block
+    source:
+      - bid
+  langcode: language
+  info:
+    -
+      plugin: callback
+      source:
+        - title_translated
+        - title
+      callable: array_filter
+    -
+      plugin: callback
+      callable: current
+  'body/value':
+    -
+      plugin: callback
+      source:
+        - body_translated
+        - body
+      callable: array_filter
+    -
+      plugin: callback
+      callable: current
+  'body/format':
+    plugin: migration_lookup
+    migration: d6_filter_format
+    source: format
+destination:
+  plugin: entity:block_content
+  no_stub: true
+  translations: true
+  destination_module: content_translation
+migration_dependencies:
+  required:
+    - d6_filter_format
+    - block_content_body_field
+    - d6_custom_block
+    - language

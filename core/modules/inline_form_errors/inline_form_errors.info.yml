@@ -1,0 +1,5 @@
+type: module
+name: Inline Form Errors
+description: 'Places error messages adjacent to form inputs, for improved usability and accessibility.'
+version: VERSION
+package: Core

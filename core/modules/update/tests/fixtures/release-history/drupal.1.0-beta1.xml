@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Drupal</title>
+<short_name>drupal</short_name>
+<dc:creator>Drupal</dc:creator>
+<supported_branches>8.0.,8.1.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/drupal</link>
+  <terms>
+   <term><name>Projects</name><value>Drupal project</value></term>
+  </terms>
+<releases>
+  <release>
+    <!-- This release is not in a supported branch; therefore it should not be recommended. -->
+    <name>Drupal 8.2.0</name>
+    <version>8.2.0</version>
+    <status>published</status>
+    <release_link>http://example.com/drupal-8-2-0-release</release_link>
+    <download_link>http://example.com/drupal-8-2-0.tar.gz</download_link>
+    <date>1250425521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+ <release>
+   <name>Drupal 8.1.0-beta1</name>
+   <version>8.1.0-beta1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-1-0-beta1-release</release_link>
+   <download_link>http://example.com/drupal-8-1-0-beta1.tar.gz</download_link>
+   <date>1250424581</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.1.0-alpha1</name>
+   <version>8.1.0-alpha1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-1-0-alpha1-release</release_link>
+   <download_link>http://example.com/drupal-8-1-0-alpha1.tar.gz</download_link>
+   <date>1250424581</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.0.1</name>
+   <version>8.0.1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-0-1-release</release_link>
+   <download_link>http://example.com/drupal-8-0-1.tar.gz</download_link>
+   <date>1250424581</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.0.1-beta1</name>
+   <version>8.0.1-beta1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-0-1-beta1-release</release_link>
+   <download_link>http://example.com/drupal-8-0-1-beta1.tar.gz</download_link>
+   <date>1250424521</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.0.1-alpha1</name>
+   <version>8.0.1-alpha1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-0-1-alpha1-release</release_link>
+   <download_link>http://example.com/drupal-8-0-1-alpha1.tar.gz</download_link>
+   <date>1250424521</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.0.0</name>
+   <version>8.0.0</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-0-0-release</release_link>
+   <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
+   <date>1250424521</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.0.0-beta1</name>
+   <version>8.0.0-beta1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-0-0-beta1-release</release_link>
+   <download_link>http://example.com/drupal-8-0-0-beta1.tar.gz</download_link>
+   <date>1250424521</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+ <release>
+   <name>Drupal 8.0.0-alpha1</name>
+   <version>8.0.0-alpha1</version>
+   <status>published</status>
+   <release_link>http://example.com/drupal-8-0-0-alpha1-release</release_link>
+   <download_link>http://example.com/drupal-8-0-0-alpha1.tar.gz</download_link>
+   <date>1250424521</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+</releases>
+</project>

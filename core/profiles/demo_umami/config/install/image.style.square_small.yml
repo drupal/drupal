@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: square_small
+label: 'Square Small'
+effects:
+  6c19e3f2-f291-4824-bc17-e485a979502c:
+    uuid: 6c19e3f2-f291-4824-bc17-e485a979502c
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      anchor: center-center
+      width: 300
+      height: 300

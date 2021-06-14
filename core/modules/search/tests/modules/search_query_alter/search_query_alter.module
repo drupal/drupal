@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Test module that alters search queries.
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Tags search_$type with $type node_search.
+ */
+function search_query_alter_query_search_node_search_alter(AlterableInterface $query) {
+  // For testing purposes, restrict the query to node type 'article' only.
+  $query->condition('n.type', 'article');
+}

@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Sets up the key value entity storage.
+ */
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function keyvalue_test_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  if (isset($entity_types['entity_test_label'])) {
+    $entity_types['entity_test_label']->setStorageClass('Drupal\Core\Entity\KeyValueStore\KeyValueContentEntityStorage');
+    $entity_keys = $entity_types['entity_test_label']->getKeys();
+    $entity_types['entity_test_label']->set('entity_keys', $entity_keys + ['uuid' => 'uuid']);
+    $entity_types['entity_test_label']->set('provider', 'keyvalue_test');
+  }
+}

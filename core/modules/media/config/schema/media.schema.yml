@@ -1,0 +1,126 @@
+media.settings:
+  type: config_object
+  label: 'Media settings'
+  mapping:
+    icon_base_uri:
+      type: string
+      label: 'Full URI to a folder where the media icons will be installed'
+    iframe_domain:
+      type: uri
+      label: 'Domain from which to serve oEmbed content in an iframe'
+    oembed_providers_url:
+      type: uri
+      label: 'The URL of the oEmbed providers database in JSON format'
+    standalone_url:
+      type: boolean
+      label: 'Allow media items to be viewed standalone at /media/{id}'
+
+media.type.*:
+  type: config_entity
+  label: 'Media type'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name'
+    label:
+      type: label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    source:
+      type: string
+      label: 'Source'
+    source_configuration:
+      type: media.source.[%parent.source]
+    queue_thumbnail_downloads:
+      type: boolean
+      label: 'Whether the thumbnail downloads should be queued'
+    new_revision:
+      type: boolean
+      label: 'Whether a new revision should be created by default'
+    field_map:
+      type: sequence
+      label: 'Field map'
+      sequence:
+        type: string
+
+field.formatter.settings.media_thumbnail:
+  type: field.formatter.settings.image
+  label: 'Media thumbnail field display format settings'
+
+field.formatter.settings.oembed:
+  type: mapping
+  label: 'oEmbed display format settings'
+  mapping:
+    max_width:
+      type: integer
+      label: 'Maximum width'
+    max_height:
+      type: integer
+      label: 'Maximum height'
+
+field.widget.settings.oembed_textfield:
+  type: field.widget.settings.string_textfield
+  label: 'oEmbed widget format settings'
+
+media.source.*:
+  type: mapping
+  label: 'Media source settings'
+
+media.source.file:
+  type: media.source.field_aware
+  label: '"File" media source configuration'
+
+media.source.image:
+  type: media.source.field_aware
+  label: '"Image" media source configuration'
+
+media.source.audio_file:
+  type: media.source.field_aware
+  label: '"Audio" media source configuration'
+
+media.source.video_file:
+  type: media.source.field_aware
+  label: '"Video" media source configuration'
+
+media.source.oembed:*:
+  type: media.source.field_aware
+  label: 'oEmbed media source configuration'
+  mapping:
+    thumbnails_directory:
+      type: uri
+      label: 'URI of thumbnail storage directory'
+    providers:
+      type: sequence
+      label: 'Allowed oEmbed providers'
+      sequence:
+        type: string
+        label: 'Provider name'
+
+media.source.field_aware:
+  type: mapping
+  mapping:
+    source_field:
+      type: string
+      label: 'Source field'
+
+filter_settings.media_embed:
+  type: filter
+  label: 'Media Embed'
+  mapping:
+    default_view_mode:
+      type: string
+      label: 'The view mode that is used by default'
+    allowed_media_types:
+      type: sequence
+      label: 'Media types selectable in the Media Library'
+      sequence:
+        type: string
+        label: 'Media type'
+    allowed_view_modes:
+      type: sequence
+      label: 'View modes selectable in the "Edit media" dialog'
+      sequence:
+        type: string
+        label: 'View mode'

@@ -1,0 +1,5 @@
+name: 'Update script test'
+type: module
+description: 'Support module for update script testing.'
+package: Testing
+version: VERSION

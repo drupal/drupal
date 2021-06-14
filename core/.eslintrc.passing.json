@@ -1,0 +1,15 @@
+{
+  "extends": "./.eslintrc.json",
+  "rules": {
+    "no-shadow": "off",
+    "no-new": "off",
+    "no-continue": "off",
+    "new-cap": "off",
+    "max-len": "off",
+    "default-case": "off",
+    "prefer-destructuring": "off",
+    "react/no-this-in-sfc": "off",
+    "react/destructuring-assignment": "off",
+    "import/named": "off"
+  }
+}

@@ -1,0 +1,55 @@
+id: d7_language_content_taxonomy_vocabulary_settings
+label: Drupal 7 language taxonomy vocabulary settings
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_language_content_settings_taxonomy_vocabulary
+  constants:
+    target_type: 'taxonomy_term'
+    default_langcode: 'site_default'
+process:
+  target_bundle:
+    -
+      plugin: migration_lookup
+      migration: d7_taxonomy_vocabulary
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
+  # State is the value in the i18n_mode column of taxonomy_vocabulary table
+  # 0: No multilingual options.
+  # 1: Localize. Localizable object. Run through the localization system
+  # 2: Fixed Language. Predefined language for this object and all related ones
+  # 4: Translate. Multilingual objects, translatable but not localizable.
+  # 5: Objects are translatable (if they have language or localizable if not)
+  # Note: the Drupal 6 Per-language value (3) changed to 4 in Drupal 7.
+  language_alterable:
+    plugin: static_map
+    source: i18n_mode
+    map:
+      0: false
+      1: true
+      2: false
+      4: true
+      5: true
+  'third_party_settings/content_translation/enabled':
+    plugin: static_map
+    source: i18n_mode
+    map:
+      0: false
+      1: true
+      2: false
+      4: false
+      5: true
+  target_entity_type_id: 'constants/target_type'
+  default_langcode:
+    plugin: default_value
+    default_value: site_default
+    source: language
+destination:
+  plugin: entity:language_content_settings
+migration_dependencies:
+  required:
+    - language
+    - d7_taxonomy_vocabulary

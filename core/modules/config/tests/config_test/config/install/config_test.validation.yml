@@ -1,0 +1,8 @@
+llama: llama
+cat:
+  type: kitten
+  count: 2
+giraffe:
+  hum1: hum1
+  hum2: hum2
+uuid: '7C30C50E-641A-4E34-A7F1-46BCFB9BE5A3'

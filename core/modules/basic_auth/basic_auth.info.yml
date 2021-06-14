@@ -1,0 +1,7 @@
+name: 'HTTP Basic Authentication'
+type: module
+description: 'Supplies an HTTP Basic authentication provider.'
+package: Web services
+version: VERSION
+dependencies:
+  - drupal:user

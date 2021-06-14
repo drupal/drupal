@@ -1,0 +1,7 @@
+name: 'AJAX Test'
+type: module
+description: 'Support module for AJAX framework tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:contact

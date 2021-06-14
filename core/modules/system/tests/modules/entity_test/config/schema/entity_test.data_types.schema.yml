@@ -1,0 +1,5 @@
+# Schema for the configuration of the 'internal property test' field type.
+
+field.storage_settings.internal_property_test:
+  type: field.storage_settings.string
+  label: 'Internal property settings'

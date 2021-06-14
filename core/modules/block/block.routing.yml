@@ -1,0 +1,86 @@
+block.admin_demo:
+  path: '/admin/structure/block/demo/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::demo'
+    _title_callback: 'theme_handler:getName'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+  options:
+    _admin_route: FALSE
+
+entity.block.delete_form:
+  path: '/admin/structure/block/manage/{block}/delete'
+  defaults:
+    _entity_form: 'block.delete'
+    _title: 'Delete block'
+  requirements:
+    _permission: 'administer blocks'
+
+entity.block.edit_form:
+  path: '/admin/structure/block/manage/{block}'
+  defaults:
+    _entity_form: 'block.default'
+    _title: 'Configure block'
+  requirements:
+    _entity_access: 'block.update'
+
+entity.block.enable:
+  path: '/admin/structure/block/manage/{block}/enable'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::performOperation'
+    op: enable
+  requirements:
+    _entity_access: 'block.enable'
+    _csrf_token: 'TRUE'
+
+entity.block.disable:
+  path: '/admin/structure/block/manage/{block}/disable'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::performOperation'
+    op: disable
+  requirements:
+    _entity_access: 'block.disable'
+    _csrf_token: 'TRUE'
+
+block.admin_display:
+  path: '/admin/structure/block'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockListController::listing'
+    _title: 'Block layout'
+  requirements:
+    _permission: 'administer blocks'
+
+block.admin_display_theme:
+  path: '/admin/structure/block/list/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockListController::listing'
+    _title: 'Block layout'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
+block.admin_library:
+  path: '/admin/structure/block/library/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockLibraryController::listBlocks'
+    _title: 'Place block'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
+block.admin_add:
+  path: '/admin/structure/block/add/{plugin_id}/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
+    theme: null
+    _title: 'Configure block'
+  requirements:
+    _permission: 'administer blocks'
+
+block.category_autocomplete:
+  path: '/block-category/autocomplete'
+  defaults:
+    _controller: '\Drupal\block\Controller\CategoryAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'administer blocks'

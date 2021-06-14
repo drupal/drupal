@@ -1,0 +1,168 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_exposed_admin_ui
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        options:
+          reset_button: true
+        type: basic
+      filters:
+        type:
+          expose:
+            label: 'Content: Type'
+            operator_id: type_op
+            use_operator: true
+          field: type
+          id: type
+          table: node_field_data
+          plugin_id: bundle
+          entity_type: node
+          entity_field: type
+        body_value:
+          id: body_value
+          table: node__body
+          field: body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: body_value_op
+            label: 'Body (body)'
+            description: ''
+            use_operator: false
+            operator: body_value_op
+            identifier: body_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: true
+          group_info:
+            label: 'Body (body)'
+            description: ''
+            identifier: body_value
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Test
+                operator: empty
+                value: ''
+          plugin_id: string
+          entity_type: node
+          entity_field: body
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: 'Authored on'
+            description: null
+            use_operator: false
+            operator: created_op
+            identifier: created
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: true
+          group_info:
+            label: 'Authored on'
+            description: ''
+            identifier: created
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Between
+                operator: between
+                value:
+                  type: date
+                  value: ''
+                  min: '2015-01-01'
+                  max: '2016-01-01'
+              2:
+                title: 'Not Between'
+                operator: 'not between'
+                value:
+                  type: date
+                  value: ''
+                  min: '2015-01-01'
+                  max: '2016-01-01'
+              3:
+                title: Equal
+                operator: '='
+                value:
+                  type: date
+                  value: '2016-01-01'
+                  min: ''
+                  max: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+      pager:
+        type: full
+      sorts:
+        created:
+          field: created
+          id: created
+          table: node_field_data
+          plugin_id: date
+          entity_type: node
+          entity_field: created
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_exposed_admin_ui
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

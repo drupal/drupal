@@ -1,0 +1,10 @@
+comment.admin:
+  title: Comments
+  route_name: comment.admin
+  parent: system.admin_content
+  description: 'List and edit site comments and the comment approval queue.'
+entity.comment_type.collection:
+  title: 'Comment types'
+  route_name: entity.comment_type.collection
+  parent: system.admin_structure
+  description: 'Manage form and displays settings of comments.'

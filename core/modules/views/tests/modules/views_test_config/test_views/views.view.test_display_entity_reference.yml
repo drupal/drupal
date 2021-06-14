@@ -1,0 +1,49 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_display_entity_reference
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      fields:
+        name:
+          id: name
+          table: entity_test
+          field: name
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: name
+      style:
+        type: html_list
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  entity_reference_1:
+    display_plugin: entity_reference
+    id: entity_reference_1
+    display_title: 'Entity Reference'
+    position: 1
+    display_options:
+      display_extenders: {  }
+      style:
+        type: entity_reference
+        options:
+          search_fields:
+            name: name
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags: {  }

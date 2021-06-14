@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the plugin tests.
+ */
+
+/**
+ * Implements hook_plugin_test_alter().
+ */
+function plugin_test_plugin_test_alter(&$definitions) {
+  foreach ($definitions as &$definition) {
+    $definition['altered'] = TRUE;
+  }
+  $definitions['user_login']['altered_single'] = TRUE;
+}

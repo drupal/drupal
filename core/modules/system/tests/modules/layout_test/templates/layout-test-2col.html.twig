@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Template for an example 2 column layout.
+ */
+#}
+<div{{ attributes.addClass('layout-example-2col', 'clearfix') }}>
+  <div {{ region_attributes.left.addClass('region-left') }}>
+    {{ content.left }}
+  </div>
+  <div {{ region_attributes.right.addClass('region-right') }}>
+    {{ content.right }}
+  </div>
+</div>

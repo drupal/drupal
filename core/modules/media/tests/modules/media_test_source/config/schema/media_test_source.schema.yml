@@ -1,0 +1,23 @@
+media.source.test:
+  type: media.source.field_aware
+  label: 'Test media source configuration'
+  mapping:
+    test_config_value:
+      type: string
+      label: 'Test config value'
+
+media.source.test_translation:
+  type: media.source.test
+  label: 'Test media source with translations'
+
+media.source.test_constraints:
+  type: media.source.test
+  label: 'Test media source with constraints configuration'
+
+media.source.test_hidden_source_field:
+  type: media.source.test
+  label: 'Test media source with hidden source field'
+
+media.source.test_different_displays:
+  type: media.source.test
+  label: 'Test media source with different source field displays'

@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the dblog module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function dblog_schema() {
+  $schema['watchdog'] = [
+    'description' => 'Table that contains logs of all system events.',
+    'fields' => [
+      'wid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique watchdog event ID.',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid of the user who triggered the event.',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Type of log message, for example "user" or "page not found."',
+      ],
+      'message' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Text of log message to be passed into the t() function.',
+      ],
+      'variables' => [
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Serialized array of variables that match the message string and that is passed into the t() function.',
+      ],
+      'severity' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)',
+      ],
+      'link' => [
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => 'Link to view the result of the event.',
+      ],
+      'location'  => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'URL of the origin of the event.',
+      ],
+      'referer' => [
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => 'URL of referring page.',
+      ],
+      'hostname' => [
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Hostname of the user who triggered the event.',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp of when event occurred.',
+      ],
+    ],
+    'primary key' => ['wid'],
+    'indexes' => [
+      'type' => ['type'],
+      'uid' => ['uid'],
+      'severity' => ['severity'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function dblog_update_last_removed() {
+  return 8600;
+}

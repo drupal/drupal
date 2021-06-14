@@ -1,0 +1,6 @@
+name: 'Configuration test ID mismatch'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:config_test

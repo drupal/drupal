@@ -1,0 +1,30 @@
+views_ui.settings_tab:
+  route_name: views_ui.settings_basic
+  title: Settings
+  base_route: entity.view.collection
+
+views_ui.settings_basic_tab:
+  route_name: views_ui.settings_basic
+  title: Basic
+  parent_id: views_ui.settings_tab
+
+views_ui.settings_advanced_tab:
+  route_name: views_ui.settings_advanced
+  title: Advanced
+  parent_id: views_ui.settings_tab
+  weight: 10
+
+views_ui.list_tab:
+  route_name: entity.view.collection
+  title: List
+  base_route: entity.view.collection
+
+views_ui.reports_fields:
+  route_name: views_ui.reports_fields
+  title: 'Used in views'
+  base_route: entity.field_storage_config.collection
+
+entity.view.edit_form:
+  title: 'Edit'
+  route_name: entity.view.edit_form
+  base_route: entity.view.edit_form

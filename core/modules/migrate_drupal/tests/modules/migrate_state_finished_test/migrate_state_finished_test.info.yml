@@ -1,0 +1,5 @@
+name: Migrate state active test
+type: module
+description: Tests the 'active' migrate state
+package: Testing
+version: VERSION

@@ -1,0 +1,8 @@
+name: 'Content Moderation'
+type: module
+description: 'Provides moderation states for content.'
+version: VERSION
+package: Core
+configure: entity.workflow.collection
+dependencies:
+  - drupal:workflows

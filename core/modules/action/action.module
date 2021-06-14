@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * This is the Actions module for executing stored actions.
+ */
+
+use Drupal\Core\Url;
+use Drupal\action\Form\ActionAddForm;
+use Drupal\action\Form\ActionEditForm;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function action_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.action':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Actions module provides tasks that can be executed by the site such as unpublishing content, sending email messages, or blocking a user. Other modules can trigger these actions when specific system events happen; for example, when new content is posted or when a user logs in. Modules can also provide additional actions. For more information, see the <a href=":documentation">online documentation for the Actions module</a>.', [':documentation' => 'https://www.drupal.org/documentation/modules/action']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Using simple actions') . '</dt>';
+      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href=":actions">Actions page</a>.', [':actions' => Url::fromRoute('entity.action.collection')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Creating and configuring advanced actions') . '</dt>';
+      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href=":actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', [':actions' => Url::fromRoute('entity.action.collection')->toString()]) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'entity.action.collection':
+      $output = '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration and are listed here automatically. Advanced actions need to be created and configured before they can be used because they have options that need to be specified; for example, sending an email to a specified address or unpublishing content containing certain words. To create an advanced action, select the action from the drop-down list in the advanced action section below and click the <em>Create</em> button.') . '</p>';
+      return $output;
+
+    case 'action.admin_add':
+    case 'entity.action.edit_form':
+      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Label</em> field is recommended in order to better identify the precise action taking place.');
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function action_entity_type_build(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  $entity_types['action']
+    ->setFormClass('add', ActionAddForm::class)
+    ->setFormClass('edit', ActionEditForm::class)
+    ->setFormClass('delete', 'Drupal\action\Form\ActionDeleteForm')
+    ->setListBuilderClass('Drupal\action\ActionListBuilder')
+    ->setLinkTemplate('delete-form', '/admin/config/system/actions/configure/{action}/delete')
+    ->setLinkTemplate('edit-form', '/admin/config/system/actions/configure/{action}')
+    ->setLinkTemplate('collection', '/admin/config/system/actions');
+}

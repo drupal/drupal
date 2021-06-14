@@ -1,0 +1,4 @@
+menu_link_content:
+  class: \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent
+  form_class: \Drupal\menu_link_content\Form\MenuLinkContentForm
+  deriver: \Drupal\menu_link_content\Plugin\Deriver\MenuLinkContentDeriver

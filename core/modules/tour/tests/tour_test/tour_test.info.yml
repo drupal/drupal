@@ -1,0 +1,7 @@
+name: Tour module tests
+type: module
+description: Tests module for tour module.
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:tour

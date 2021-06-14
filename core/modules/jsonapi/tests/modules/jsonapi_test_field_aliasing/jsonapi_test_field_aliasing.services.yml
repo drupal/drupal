@@ -1,0 +1,6 @@
+services:
+  jsonapi.resource_type.repository.jsonapi_test_field_aliasing:
+    class: Drupal\jsonapi_test_field_aliasing\ResourceType\AliasingResourceTypeRepository
+    public: false
+    decorates: jsonapi.resource_type.repository
+    parent: jsonapi.resource_type.repository

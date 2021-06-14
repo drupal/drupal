@@ -1,0 +1,8 @@
+name: Testing multilingual
+type: profile
+description: 'Minimal profile for running tests with a multilingual installer.'
+version: VERSION
+hidden: true
+install:
+  - locale
+  - tour

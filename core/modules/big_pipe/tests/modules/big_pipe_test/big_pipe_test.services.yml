@@ -1,0 +1,5 @@
+services:
+  big_pipe_test_subscriber:
+    class: Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber
+    tags:
+      - { name: event_subscriber }

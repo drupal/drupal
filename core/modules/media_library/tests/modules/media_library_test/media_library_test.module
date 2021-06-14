@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the media_library_test module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\media_library_test\Form\TestNodeFormOverride;
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function media_library_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  return AccessResult::forbiddenIf($field_definition->getName() === 'field_media_no_access', 'Field access denied by test module');
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function media_library_test_entity_type_alter(array &$entity_types) {
+  if (isset($entity_types['node'])) {
+    $entity_types['node']->setFormClass('default', TestNodeFormOverride::class);
+    $entity_types['node']->setFormClass('edit', TestNodeFormOverride::class);
+  }
+}

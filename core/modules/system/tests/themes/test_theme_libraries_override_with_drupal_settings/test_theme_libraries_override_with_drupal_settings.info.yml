@@ -1,0 +1,11 @@
+name: 'Test theme libraries-override'
+type: theme
+description: 'Theme with drupalSettings libraries-override'
+version: VERSION
+base theme: classy
+libraries-override:
+  # drupalSettings libraries override. Should throw a
+  # \Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException.
+  core/drupal.ajax:
+    drupalSettings:
+      ajaxPageState: { }

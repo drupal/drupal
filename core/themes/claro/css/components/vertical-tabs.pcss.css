@@ -1,0 +1,330 @@
+/**
+ * @file
+ * Vertical tabs module.
+ *
+ * Replaces /core/misc/vertical-tabs.css.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Main wrapper of vertical tabs.
+ * This wrapper div is added by JavaScript.
+ */
+.vertical-tabs {
+  margin-top: var(--vertical-tabs-margin-vertical);
+  margin-bottom: var(--vertical-tabs-margin-vertical);
+  border-top: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .vertical-tabs {
+    border-color: transparent;
+  }
+}
+
+/**
+ * Vertical tabs menu.
+ */
+.vertical-tabs__menu {
+  position: relative;
+  display: none;
+  float: left; /* LTR */
+  width: var(--vertical-tabs-menu-width);
+  margin: 0;
+  padding-top: var(--vertical-tabs-menu-item-shadow-extraspace);
+  list-style: none;
+  color: var(--color-text);
+}
+[dir="rtl"] .vertical-tabs__menu {
+  float: right;
+  margin: 0;
+}
+
+@media screen and (min-width: 85em) {
+  .vertical-tabs__menu {
+    display: block;
+    width: var(--vertical-tabs-menu-width);
+  }
+}
+
+/**
+ * Vertical tabs menu item.
+ */
+.vertical-tabs__menu-item {
+  overflow: hidden;
+  margin: var(--vertical-tabs-menu-item--top-margin) var(--vertical-tabs-menu-item--right-margin) var(--vertical-tabs-menu-item--bottom-margin) var(--vertical-tabs-menu-item--left-margin); /* LTR */
+  padding: var(--vertical-tabs-menu-item-shadow-extraspace) 0 var(--vertical-tabs-menu-item-shadow-extraspace) var(--vertical-tabs-menu-item-shadow-extraspace); /* LTR */
+}
+[dir="rtl"] .vertical-tabs__menu-item {
+  margin-right: var(--vertical-tabs-menu-item--left-margin);
+  margin-left: var(--vertical-tabs-menu-item--right-margin);
+  padding-right: var(--vertical-tabs-menu-item-shadow-extraspace);
+  padding-left: 0;
+}
+
+/**
+ * These are the (gray) lines that are visually separating the vertical tab menu
+ * items.
+ */
+.vertical-tabs__menu-item::before,
+.vertical-tabs__menu-item::after {
+  position: absolute;
+  z-index: 1; /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
+  display: block;
+  width: 100%;
+  margin-top: calc(var(--vertical-tabs-menu-separator-size) * -1);
+  border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
+}
+
+/**
+ * This pseudo element covers the gray separator line of the vertical tab menu
+ * item that follows the active one.
+ *
+ * Without this, we would have a lightgray line at the bottom-left (LTR) corner
+ * of the active vertical tab menu item.
+ *
+ * Let's call this 'masking' line.
+ */
+.vertical-tabs__menu-item::after {
+  z-index: 2;
+  border-color: var(--color-white);
+}
+
+/**
+ * Making the separator line visible only if it follows an unhidden menu item.
+ */
+.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item::before {
+  content: "";
+}
+
+/* Menu item states. */
+.vertical-tabs__menu-item:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+.vertical-tabs__menu-item.is-selected::before,
+.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item.is-selected::before {
+  content: normal;
+}
+
+/* Make the white masking line displayed for the selected menu item. */
+.vertical-tabs__menu-item.is-selected::after {
+  content: "";
+}
+
+/**
+ * Anchor link inside the vertical tabs menu item.
+ */
+.vertical-tabs__menu-link {
+  position: relative;
+  display: block;
+  margin-top: calc(var(--vertical-tabs-border-size) * -1);
+  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
+  text-decoration: none;
+  word-wrap: break-word;
+  hyphens: auto;
+  color: var(--color-text);
+  border: var(--vertical-tabs-border-size) solid transparent;
+  border-width: var(--vertical-tabs-border-size) 0 var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size); /* LTR */
+  border-radius: var(--vertical-tabs-border-radius) 0 0 var(--vertical-tabs-border-radius); /* LTR */
+}
+[dir="rtl"] .vertical-tabs__menu-link {
+  padding-right: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
+  padding-left: var(--space-s);
+  border-width: var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size) var(--vertical-tabs-border-size) 0;
+  border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .vertical-tabs__menu-link {
+    border-color: transparent;
+  }
+}
+
+/* Menu link states. */
+.vertical-tabs__menu-link:focus {
+  z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.vertical-tabs__menu-link:hover {
+  text-decoration: none;
+  color: var(--color-absolutezero);
+}
+
+/* This pseudo element provides the background for the hover state. */
+.vertical-tabs__menu-link::before {
+  position: absolute;
+  z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
+  top: calc(var(--vertical-tabs-border-size) * -1);
+  right: 0; /* LTR */
+  bottom: calc(var(--vertical-tabs-border-size) * -1);
+  left: calc(var(--vertical-tabs-menu-link--active-border-size) * -1); /* LTR */
+  content: "";
+  pointer-events: none;
+  background-clip: padding-box;
+}
+[dir="rtl"] .vertical-tabs__menu-link::before {
+  right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+  left: 0;
+}
+
+.vertical-tabs__menu-link:hover::before {
+  background: var(--color-bgblue-hover);
+}
+
+.vertical-tabs__menu-link:focus::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+  content: "";
+  pointer-events: none;
+  border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
+  border-radius: var(--vertical-tabs-border-radius);
+}
+
+.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
+  z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
+  color: var(--color-absolutezero);
+  border-color: var(--vertical-tabs-border-color) transparent;
+  background-color: var(--color-white);
+  box-shadow: var(--vertical-tabs-shadow);
+}
+
+.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover {
+  color: var(--color-absolutezero-hover);
+  background-color: var(--color-bgblue-hover);
+}
+
+.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+  z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
+  border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
+  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
+}
+[dir=rtl] .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+  border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
+  border-left: 0;
+  border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
+}
+
+.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
+  background: none;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
+    border-color: windowText transparent;
+  }
+
+  .vertical-tabs__menu-link:focus::after {
+    border-color: transparent;
+  }
+
+  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+    border-color: windowText;
+  }
+}
+
+.vertical-tabs__menu-link-content {
+  position: relative;
+  z-index: 1; /* We are using a pseudo element for displaying the hover state's background, and we have to keep the link content above that pseudo element. Without this, the text would be covered by the background. */
+}
+
+/**
+ * Details summary in vertical tabs menu link and in the summary of the details.
+ */
+.vertical-tabs__menu-link-summary {
+  display: block;
+  color: var(--color-davysgray);
+  font-size: var(--font-size-s);
+  font-weight: normal;
+}
+
+/**
+ * Wrapper of vertical tabs panes.
+ */
+.vertical-tabs__items {
+  box-sizing: border-box;
+  margin-top: var(--vertical-tabs-margin-vertical);
+  margin-bottom: var(--vertical-tabs-margin-vertical);
+  color: var(--color-text);
+  border: var(--vertical-tabs-border);
+  border-radius: var(--vertical-tabs-border-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--vertical-tabs-shadow);
+}
+
+/* This modifier is added by JavaScript (this is inherited from Drupal core). */
+.vertical-tabs__items--processed {
+  position: relative;
+  z-index: 1; /* The wrapper of the details of the vertical tabs should be on a higher level than the vertical tabs menu */
+  top: -1px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* This clearfix makes the pane wrapper at least as tall as the menu. */
+.vertical-tabs__items--processed::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+@media screen and (min-width: 85em) {
+  .vertical-tabs__items--processed {
+    margin-left: var(--vertical-tabs-menu-width); /* LTR */
+    border-top-left-radius: 0; /* LTR */
+  }
+
+  .js[dir="rtl"] .vertical-tabs__items--processed {
+    margin-right: var(--vertical-tabs-menu-width);
+    margin-left: 0;
+    border-top-left-radius: var(--vertical-tabs-border-radius);
+    border-top-right-radius: 0;
+  }
+}
+
+/**
+ * The actual vertical tabs pane.
+ *
+ * This is a claro-details element which in this case is also
+ * vertical-tabs__item.
+ */
+.vertical-tabs__item {
+  /* Render on top of the border of vertical-tabs__items. */
+  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-border-size) * -1) 0;
+  border-radius: 0;
+}
+
+.vertical-tabs__item--first {
+  border-top-left-radius: var(--details-accordion-border-size-radius);
+  border-top-right-radius: var(--details-accordion-border-size-radius);
+}
+
+.vertical-tabs__item--last {
+  margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
+  border-bottom-right-radius: var(--details-accordion-border-size-radius);
+  border-bottom-left-radius: var(--details-accordion-border-size-radius);
+}
+
+@media screen and (min-width: 85em) {
+  .js .vertical-tabs__item {
+    overflow: hidden;
+    margin: 0;
+    border: 0;
+  }
+
+  .js .vertical-tabs__item--first,
+  .js .vertical-tabs__item--last {
+    border-radius: 0;
+  }
+
+  .js .vertical-tabs__item > summary {
+    display: none;
+  }
+}

@@ -1,0 +1,98 @@
+menu_test.local_task_test_tasks_view:
+  route_name: menu_test.local_task_test_tasks_view
+  title: View
+  base_route: menu_test.local_task_test_tasks_view
+menu_test.local_task_test_tasks_edit:
+  route_name: menu_test.local_task_test_tasks_edit
+  title: Edit
+  base_route: menu_test.local_task_test_tasks_view
+menu_test.local_task_test_tasks_settings:
+  route_name: menu_test.local_task_test_tasks_settings
+  title: Settings
+  base_route: menu_test.local_task_test_tasks_view
+menu_test.local_task_test_tasks_settings_dynamic:
+  route_name: menu_test.local_task_test_tasks_settings_dynamic
+  base_route: menu_test.local_task_test_tasks_view
+  class: \Drupal\menu_test\Plugin\Menu\LocalTask\TestTaskWithUserInput
+menu_test.local_task_test_tasks_settings_sub1:
+  route_name: menu_test.local_task_test_tasks_settings_sub1
+  title: sub1
+  parent_id: menu_test.local_task_test_tasks_settings
+  class: Drupal\menu_test\Plugin\Menu\LocalTask\TestTasksSettingsSub1
+  weight: -10
+menu_test.local_task_test_tasks_settings_sub2:
+  route_name: menu_test.local_task_test_tasks_settings_sub2
+  title: sub2
+  parent_id: menu_test.local_task_test_tasks_settings
+menu_test.local_task_test_tasks_settings_sub3:
+  route_name: menu_test.local_task_test_tasks_settings_sub3
+  title: sub3
+  parent_id: menu_test.local_task_test_tasks_settings
+  weight: 20
+menu_test.local_task_test_tasks_settings_derived:
+  route_name: menu_test.local_task_test_tasks_settings_derived
+  title: derived
+  parent_id: menu_test.local_task_test_tasks_settings
+  deriver: Drupal\menu_test\Plugin\Derivative\LocalTaskTest
+  weight: 50
+menu_test.local_task_test.placeholder_sub1:
+  route_name: menu_test.local_task_test_placeholder_sub1
+  title: 'placeholder sub1'
+  base_route: menu_test.local_task_test_placeholder_sub1
+menu_test.local_task_test_placeholder_sub2:
+  route_name: menu_test.local_task_test_placeholder_sub2
+  title: 'placeholder sub2'
+  base_route: menu_test.local_task_test_placeholder_sub1
+menu_test.local_task_test.upcasting_sub1:
+  route_name: menu_test.local_task_test_upcasting_sub1
+  title: 'upcasting sub1'
+  base_route: menu_test.local_task_test_upcasting_sub1
+menu_test.local_task_test_upcasting_sub2:
+  route_name: menu_test.local_task_test_upcasting_sub2
+  title: 'upcasting sub2'
+  base_route: menu_test.local_task_test_upcasting_sub1
+  weight: 10
+
+menu_test.tasks_default_tab:
+  route_name: menu_test.tasks_default
+  title: 'View'
+  base_route: menu_test.tasks_default
+menu_test.tasks_default_derived:
+  route_name: menu_test.router_test1
+  title: 'Derived'
+  base_route: menu_test.tasks_default
+  deriver: '\Drupal\menu_test\Plugin\Derivative\LocalTaskTestWithUnsafeTitle'
+
+menu_test.tasks_tasks_tab:
+  route_name: menu_test.tasks_tasks
+  title: 'View'
+  base_route: menu_test.tasks_tasks
+menu_test.tasks_edit_tab:
+  route_name: menu_test.tasks_edit
+  title: 'Edit'
+  base_route: menu_test.tasks_tasks
+menu_test.tasks_settings_tab:
+  route_name: menu_test.tasks_settings
+  title: 'Settings'
+  weight: 100
+  base_route: menu_test.tasks_tasks
+
+menu_test.router_test1:
+  route_name: menu_test.router_test1
+  title: 'Local task A'
+  base_route: menu_test.router_test1
+
+menu_test.router_test2:
+  route_name: menu_test.router_test2
+  title: 'Local task B'
+  base_route: menu_test.router_test1
+
+menu_test.router_test3:
+  route_name: menu_test.router_test3
+  title: 'Local task C'
+  base_route: menu_test.router_test1
+
+menu_test.router_test4:
+  route_name: menu_test.router_test4
+  base_route: menu_test.router_test1
+  class: \Drupal\menu_test\Plugin\Menu\LocalTask\TestTaskWithUserInput

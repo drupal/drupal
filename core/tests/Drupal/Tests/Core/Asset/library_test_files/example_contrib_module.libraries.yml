@@ -1,0 +1,5 @@
+third_party_library:
+  version: VERSION
+  css:
+    theme:
+      /libraries/third_party_library/css/example.css: {}

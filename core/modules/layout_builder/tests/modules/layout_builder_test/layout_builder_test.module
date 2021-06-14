@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for Layout Builder tests.
+ */
+
+use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function layout_builder_test_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  // Explicitly remove the "Help" blocks from the list.
+  unset($definitions['help_block']);
+
+  // Explicitly remove the "Sticky at top of lists field_block".
+  $disallowed_fields = [
+    'sticky',
+  ];
+
+  // Remove "Changed" field if this is the first section.
+  if ($extra['delta'] === 0) {
+    $disallowed_fields[] = 'changed';
+  }
+
+  foreach ($definitions as $plugin_id => $definition) {
+    // Field block IDs are in the form 'field_block:{entity}:{bundle}:{name}',
+    // for example 'field_block:node:article:revision_timestamp'.
+    preg_match('/field_block:.*:.*:(.*)/', $plugin_id, $parts);
+    if (isset($parts[1]) && in_array($parts[1], $disallowed_fields, TRUE)) {
+      // Unset any field blocks that match our predefined list.
+      unset($definitions[$plugin_id]);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function layout_builder_test_entity_extra_field_info() {
+  $extra['node']['bundle_with_section_field']['display']['layout_builder_test'] = [
+    'label' => t('Extra label'),
+    'description' => t('Extra description'),
+    'weight' => 0,
+  ];
+  $extra['node']['bundle_with_section_field']['display']['layout_builder_test_2'] = [
+    'label' => t('Extra Field 2'),
+    'description' => t('Extra Field 2 description'),
+    'weight' => 0,
+    'visible' => FALSE,
+  ];
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_node_view().
+ */
+function layout_builder_test_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('layout_builder_test')) {
+    $build['layout_builder_test'] = [
+      '#markup' => 'Extra, Extra read all about it.',
+    ];
+  }
+  if ($display->getComponent('layout_builder_test_2')) {
+    $build['layout_builder_test_2'] = [
+      '#markup' => 'Extra Field 2 is hidden by default.',
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for layout_builder_configure_block.
+ */
+function layout_builder_test_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\layout_builder\Form\ConfigureBlockFormBase $form_object */
+  $form_object = $form_state->getFormObject();
+
+  $form['layout_builder_test']['storage'] = [
+    '#type' => 'item',
+    '#title' => 'Layout Builder Storage: ' . $form_object->getSectionStorage()->getStorageId(),
+  ];
+  $form['layout_builder_test']['section'] = [
+    '#type' => 'item',
+    '#title' => 'Layout Builder Section: ' . $form_object->getCurrentSection()->getLayoutId(),
+  ];
+  $form['layout_builder_test']['component'] = [
+    '#type' => 'item',
+    '#title' => 'Layout Builder Component: ' . $form_object->getCurrentComponent()->getPluginId(),
+  ];
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function layout_builder_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
+  if ($context['form_mode'] === 'layout_builder') {
+    $form_display->setComponent('status', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+    ]);
+  }
+}
+
+/**
+ * Implements hook_system_breadcrumb_alter().
+ */
+function layout_builder_test_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
+  $breadcrumb->addLink(Link::fromTextAndUrl('External link', Url::fromUri('http://www.example.com')));
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function layout_builder_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'system_breadcrumb_alter') {
+    // Move our hook_system_breadcrumb_alter() implementation to run before
+    // layout_builder_system_breadcrumb_alter().
+    $group = $implementations['layout_builder_test'];
+    $implementations = [
+      'layout_builder_test' => $group,
+    ] + $implementations;
+  }
+}
