@@ -69,7 +69,6 @@
 .node--view-mode-teaser .primary-image img {
       width: 3.9375rem;
       height: 3.9375rem;
-      -o-object-fit: cover;
       object-fit: cover;
       border-radius: 50%
     }
