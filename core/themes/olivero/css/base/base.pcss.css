@@ -125,3 +125,18 @@ ul {
 .js-overlay-active .overlay {
   display: block;
 }
+
+.quickedit .icon {
+    position: relative;
+    min-width: 2.5em;
+    min-height: 1em;
+}
+
+.quickedit-toolbar {
+    font-family: "Droid sans", "Lucida Grande", sans-serif;
+    line-height: 1rem;
+}
+
+.quickedit-toolbar-label {
+    padding: 0.49em 0.4em;
+}
