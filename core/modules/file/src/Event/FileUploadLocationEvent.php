@@ -6,7 +6,7 @@ use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Defines a class for a file upload event.
+ * Defines an event fired to determine the upload location of a file upload.
  */
 class FileUploadLocationEvent extends Event {
 
@@ -51,8 +51,8 @@ class FileUploadLocationEvent extends Event {
    *   Managed file element.
    */
   public function __construct(?string $uploadLocation, $filesUpload, FormStateInterface $formState, array $element) {
-    $this->uploadLocation = (array) $uploadLocation;
-    $this->filesUpload = $filesUpload;
+    $this->uploadLocation = $uploadLocation;
+    $this->filesUpload = (array) $filesUpload;
     $this->formState = $formState;
     $this->element = $element;
   }
@@ -70,7 +70,7 @@ class FileUploadLocationEvent extends Event {
   /**
    * Gets files uploaded.
    *
-   * @return array
+   * @return \Symfony\Component\HttpFoundation\File\UploadedFile[]
    *   Uploaded files.
    */
   public function getFilesUpload(): array {

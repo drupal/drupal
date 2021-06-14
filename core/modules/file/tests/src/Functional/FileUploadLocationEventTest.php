@@ -39,8 +39,7 @@ class FileUploadLocationEventTest extends FileFieldTestBase {
       'folder' => $folder,
       'files[file]' => \Drupal::service('file_system')->realPath($temp_file),
     ], 'submit');
-    $fids = \Drupal::state()->get(UploadLocationEventTestForm::UPLOAD_LOCATION_EVENT_TEST_FIDS
-    );
+    $fids = \Drupal::state()->get(UploadLocationEventTestForm::UPLOAD_LOCATION_EVENT_TEST_FIDS);
     $this->assertNotNull($fids);
     $file = File::load(reset($fids));
     assert($file instanceof FileInterface);
