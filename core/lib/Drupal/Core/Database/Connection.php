@@ -916,10 +916,13 @@ abstract class Connection {
    *   driver.
    *
    * @see \Drupal\Core\Database\Query\Select
+   *
+   * @throws \InvalidArgumentException
+   *   If the $alias argument is not a string or NULL.
    */
   public function select($table, $alias = NULL, array $options = []) {
     if (!is_null($alias) && !is_string($alias)) {
-      @trigger_error('Passing a non-string \'alias\' argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/3216552', E_USER_DEPRECATED);
+      throw new \InvalidArgumentException('The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
     }
     $class = $this->getDriverClass('Select');
     return new $class($this, $table, $alias, $options);
