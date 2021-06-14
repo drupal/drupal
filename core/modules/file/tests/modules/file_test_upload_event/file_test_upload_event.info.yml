@@ -1,0 +1,6 @@
+name: File Test upload event
+description: 'Test implementations for file uploading'
+core_version_requirement: ^8.8 || ~9.0
+type: module
+dependencies:
+  - drupal:file

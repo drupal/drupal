@@ -1,0 +1,5 @@
+services:
+  file_test_upload_event.upload_location_subscriber:
+    class: Drupal\file_test_upload_event\EventSubscriber\UploadLocationSubscriber
+    tags:
+      - { name: event_subscriber }

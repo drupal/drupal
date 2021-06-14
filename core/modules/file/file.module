@@ -19,6 +19,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
+use Drupal\file\Event\FileUploadLocationEvent;
 use Drupal\file\FileInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -1410,6 +1411,12 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   $file_upload = $all_files[$upload_name];
 
   $destination = isset($element['#upload_location']) ? $element['#upload_location'] : NULL;
+  $event = new FileUploadLocationEvent($destination, $file_upload, $form_state, $element);
+  \Drupal::service('event_dispatcher')->dispatch($event);
+  $destination = $event->getUploadLocation();
+  if ($destination) {
+    $element['#upload_location'] = $destination;
+  }
   if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
     \Drupal::logger('file')->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', ['%directory' => $destination, '%name' => $element['#field_name']]);
     $form_state->setError($element, t('The file could not be uploaded.'));

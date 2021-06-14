@@ -1,0 +1,6 @@
+file_test_upload_event:
+  path: /file-test-upload-event
+  defaults:
+    _form: '\Drupal\file_test_upload_event\Form\UploadLocationEventTestForm'
+  requirements:
+    _access: 'TRUE'
