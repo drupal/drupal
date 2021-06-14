@@ -26,4 +26,15 @@ class EntityKernelTestBaseTest extends EntityKernelTestBase {
     $this->assertSame($account->id(), $current_user->id());
   }
 
+  /**
+   * Ensure that calls to enable or disable modules result in our getting
+   * updated references to the DI container's services.
+   */
+  public function testEnsureContainerIntegrity() {
+    $storage = new \SplObjectStorage();
+    $this->disableModules(['user']);
+    $storage->attach($this->entityTypeManager);
+    $this->assertTrue($storage->contains(\Drupal::entityTypeManager()));
+  }
+
 }

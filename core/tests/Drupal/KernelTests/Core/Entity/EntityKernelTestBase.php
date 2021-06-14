@@ -148,7 +148,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    */
   protected function installModule($module) {
     $this->enableModules([$module]);
-    $this->refreshServices();
   }
 
   /**
@@ -159,6 +158,21 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    */
   protected function uninstallModule($module) {
     $this->disableModules([$module]);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function enableModules(array $modules) {
+    parent::enableModules($modules);
+    $this->refreshServices();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function disableModules(array $modules) {
+    parent::disableModules($modules);
     $this->refreshServices();
   }
 
@@ -166,8 +180,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * Refresh services.
    */
   protected function refreshServices() {
-    $this->container = \Drupal::getContainer();
-
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
   }
