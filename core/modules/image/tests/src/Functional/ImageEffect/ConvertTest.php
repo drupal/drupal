@@ -51,7 +51,7 @@ class ConvertTest extends BrowserTestBase {
       ->setImageStyle($image_style)
       ->setSourceImageUri($test_uri);
     $derivative_uri = 'public://styles/image_effect_test/public/image-test-do.png.jpeg';
-    $this->assertFileNotExists($derivative_uri);
+    $this->assertFileDoesNotExist($derivative_uri);
     $url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
     $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertSession()->statusCodeEquals(200);
