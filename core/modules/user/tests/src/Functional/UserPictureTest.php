@@ -96,7 +96,7 @@ class UserPictureTest extends BrowserTestBase {
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
     clearstatcache(TRUE, $file->getFileUri());
-    $this->assertFileNotExists($file->getFileUri());
+    $this->assertFileDoesNotExist($file->getFileUri());
   }
 
   /**

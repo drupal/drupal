@@ -195,7 +195,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Run cron and then ensure that only the old, temp file was deleted.
     $this->container->get('cron')->run();
-    $this->assertFileNotExists($temp_old->getFileUri());
+    $this->assertFileDoesNotExist($temp_old->getFileUri());
     $this->assertFileExists($temp_new->getFileUri());
     $this->assertFileExists($perm_old->getFileUri());
     $this->assertFileExists($perm_new->getFileUri());

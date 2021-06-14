@@ -247,7 +247,7 @@ class UpdateScriptTest extends BrowserTestBase {
     if ($extension_type === 'theme') {
       $base_info['base theme'] = FALSE;
     }
-    $folder_path = \Drupal::service('site.path') . "/{$extension_type}s/$extension_machine_name";
+    $folder_path = \Drupal::getContainer()->getParameter('site.path') . "/{$extension_type}s/$extension_machine_name";
     $file_path = "$folder_path/$extension_machine_name.info.yml";
     mkdir($folder_path, 0777, TRUE);
     file_put_contents($file_path, Yaml::encode($base_info + $correct_info));
@@ -380,7 +380,7 @@ class UpdateScriptTest extends BrowserTestBase {
     if ($extension_type === 'theme') {
       $extension_info['base theme'] = FALSE;
     }
-    $folder_path = \Drupal::service('site.path') . "/{$extension_type}s/$extension_machine_name";
+    $folder_path = \Drupal::getContainer()->getParameter('site.path') . "/{$extension_type}s/$extension_machine_name";
     $file_path = "$folder_path/$extension_machine_name.info.yml";
     mkdir($folder_path, 0777, TRUE);
     file_put_contents($file_path, Yaml::encode($extension_info));

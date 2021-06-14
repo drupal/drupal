@@ -61,7 +61,7 @@ class FormValuesTest extends WebDriverTestBase {
 
     // Verify that AJAX elements with invalid callbacks return error code 500.
     // Ensure the test error log is empty before these tests.
-    $this->assertFileNotExists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
+    $this->assertFileDoesNotExist(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
     // We don't need to check for the X-Drupal-Ajax-Token header with these
     // invalid requests.
     $this->assertAjaxHeader = FALSE;
