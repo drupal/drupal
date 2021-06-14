@@ -152,7 +152,7 @@ class FileCopyTest extends FileTestBase {
       list($source_path, $destination_path) = $data;
       $actual_destination = $this->doTransform($source_path, $destination_path, ['move' => TRUE]);
       $this->assertFileExists($destination_path);
-      $this->assertFileNotExists($source_path);
+      $this->assertFileDoesNotExist($source_path);
       $this->assertSame($actual_destination, $destination_path, 'The importer returned the moved filename.');
     }
   }

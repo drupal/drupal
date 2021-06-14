@@ -51,7 +51,7 @@ class FileCopyTest extends FileTestBase {
   public function testNonExistent() {
     // Copy non-existent file
     $desired_filepath = $this->randomMachineName();
-    $this->assertFileNotExists($desired_filepath);
+    $this->assertFileDoesNotExist($desired_filepath);
     $this->expectException(FileNotExistsException::class);
     $new_filepath = \Drupal::service('file_system')->copy($desired_filepath, $this->randomMachineName());
     $this->assertFalse($new_filepath, 'Copying a missing file fails.');

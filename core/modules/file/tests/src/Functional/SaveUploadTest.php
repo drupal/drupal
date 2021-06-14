@@ -714,7 +714,7 @@ class SaveUploadTest extends FileManagedTestBase {
       'http_errors' => FALSE,
     ];
 
-    $this->assertFileNotExists('temporary://' . $filename);
+    $this->assertFileDoesNotExist('temporary://' . $filename);
     // Use Guzzle's HTTP client directly so we can POST files without having to
     // write them to disk. Not all filesystem support writing files with invalid
     // UTF-8 filenames.
@@ -725,7 +725,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $error_text = new FormattableMarkup('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $filename]);
     $this->assertStringContainsString((string) $error_text, $content);
     $this->assertStringContainsString('Epic upload FAIL!', $content);
-    $this->assertFileNotExists('temporary://' . $filename);
+    $this->assertFileDoesNotExist('temporary://' . $filename);
   }
 
 }

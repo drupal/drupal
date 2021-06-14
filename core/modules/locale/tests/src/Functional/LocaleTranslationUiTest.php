@@ -311,7 +311,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     // Test JavaScript translation rebuilding.
     \Drupal::service('file_system')->delete($js_file);
-    $this->assertFileNotExists($js_file);
+    $this->assertFileDoesNotExist($js_file);
     _locale_rebuild_js($langcode);
     $this->assertFileExists($js_file);
   }
