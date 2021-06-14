@@ -61,6 +61,8 @@ class ConfigEntityDependency {
     if (isset($this->dependencies[$type])) {
       $dependencies = $this->dependencies[$type];
     }
+    // Add a dependency on the provider module (which defines this config
+    // entity type, such as 'node' in the case of 'node.type' configuration).
     if ($type == 'module') {
       $dependencies[] = substr($this->name, 0, strpos($this->name, '.'));
     }
@@ -81,7 +83,8 @@ class ConfigEntityDependency {
    * @return bool
    */
   public function hasDependency($type, $name) {
-    // A config entity is always dependent on its provider.
+    // Add a dependency on the provider module (which defines this config
+    // entity type, such as 'node' in the case of 'node.type' configuration).
     if ($type == 'module' && strpos($this->name, $name . '.') === 0) {
       return TRUE;
     }
