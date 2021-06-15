@@ -447,7 +447,7 @@ function drupal_generate_test_ua($prefix) {
     else {
       // Generate and save a new hash salt for a test run.
       // Consumed by drupal_valid_test_ua() before settings.php is loaded.
-      file_exists($key_file_directory) ? chmod($key_file_directory, 0775) : mkdir($key_file_directory, 0755, true);
+      file_exists($key_file_directory) ? chmod($key_file_directory, 0775) : mkdir($key_file_directory, 0755, TRUE);
       $private_key = Crypt::randomBytesBase64(55);
       file_put_contents($key_file, $private_key);
     }
