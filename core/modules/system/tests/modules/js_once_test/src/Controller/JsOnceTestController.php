@@ -19,7 +19,7 @@ class JsOnceTestController extends ControllerBase {
     $output = [
       '#attached' => ['library' => ['core/once']],
     ];
-    foreach(range(1,5) as $item) {
+    foreach (range(1, 5) as $item) {
       $output['item' . $item] = [
         '#type' => 'html_tag',
         '#tag' => 'div',
@@ -42,7 +42,7 @@ class JsOnceTestController extends ControllerBase {
     $output = [
       '#attached' => ['library' => ['core/jquery.once']],
     ];
-    foreach(range(1,5) as $item) {
+    foreach (range(1, 5) as $item) {
       $output['item' . $item] = [
         '#type' => 'html_tag',
         '#tag' => 'div',
@@ -54,4 +54,5 @@ class JsOnceTestController extends ControllerBase {
     }
     return $output;
   }
+
 }
