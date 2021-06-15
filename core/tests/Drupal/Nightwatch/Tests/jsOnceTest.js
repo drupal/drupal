@@ -29,7 +29,7 @@ module.exports = {
           browser.assert.strictEqual(
             result.value.length,
             5,
-            '5 items returned and "onced"',
+            '5 items returned and "once-d"',
           );
         },
       )
@@ -57,7 +57,7 @@ module.exports = {
           browser.assert.strictEqual(
             result.value.length,
             2,
-            '2 items returned and "onced"',
+            '2 items returned and "once-d"',
           );
         },
       )
@@ -84,7 +84,7 @@ module.exports = {
           browser.assert.strictEqual(
             result.value.length,
             5,
-            '5 items returned and "de-onced"',
+            '5 items returned and "de-once-d"',
           );
         },
       )
@@ -111,7 +111,7 @@ module.exports = {
           browser.assert.strictEqual(
             result.value.length,
             2,
-            '2 items returned and "de-onced"',
+            '2 items returned and "de-once-d"',
           );
         },
       )
