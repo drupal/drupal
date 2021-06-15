@@ -980,11 +980,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // If an ID is set in #attributes, copy to $element['#id'] as there is
     // rendering logic that only checks there for explicitly set IDs.
-    if (!isset($element['#id']) && isset($element['#attributes']['id'])) {
-      $element['#id'] = $element['#attributes']['id'];
+    if (!isset($element['#id']) && !empty($element['#attributes']['id'])) {
+      $element['#id'] = is_array($element['#attributes']['id']) ? $element['#attributes']['id'][0] : $element['#attributes']['id'];
     }
 
-    if (!isset($element['#id']) && !isset($element['id'])) {
+    if (!isset($element['#id'])) {
       $unprocessed_id = 'edit-' . implode('-', $element['#parents']);
       $element['#id'] = Html::getUniqueId($unprocessed_id);
       // Provide a selector usable by JavaScript. As the ID is unique, it's not
