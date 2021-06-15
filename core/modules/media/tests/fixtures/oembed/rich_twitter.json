@@ -4,7 +4,7 @@
   "author_url": "https:\/\/twitter.com\/drupaldevdays",
   "html": "<h1>By the power of Grayskull, Twitter works!</h1>",
   "width": 550,
-  "height": 360,
+  "height": null,
   "type": "rich",
   "cache_age": "3153600000",
   "provider_name": "Twitter",
