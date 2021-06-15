@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
@@ -1169,6 +1170,29 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 2',
     ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_3',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 3',
+    ])->save();
+
+    // Only enable view mode 1 & 2 for Image.
+    EntityViewDisplay::create([
+      'id' => 'media.image.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'view_mode_1',
+    ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.view_mode_2',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'view_mode_2',
+    ])->save();
 
     $filter_format = FilterFormat::load('test_format');
     $filter_format->setFilterConfig('media_embed', [
@@ -1179,6 +1203,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
           'view_mode_2' => 'view_mode_2',
+          'view_mode_3' => 'view_mode_3',
         ],
       ],
     ])->save();
@@ -1188,6 +1213,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.view_mode_2',
+      'core.entity_view_mode.media.view_mode_3',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
@@ -1207,6 +1233,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->waitForMetadataDialog();
     $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_1');
     $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_2');
+    $assert_session->optionNotExists('attributes[data-view-mode]', 'view_mode_3');
     $assert_session->selectExists('attributes[data-view-mode]')->selectOption('view_mode_2');
     $this->submitDialog();
     $this->getSession()->switchToIFrame('ckeditor');
