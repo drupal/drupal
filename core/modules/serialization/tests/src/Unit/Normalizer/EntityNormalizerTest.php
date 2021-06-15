@@ -95,10 +95,10 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('normalize')
-      ->willReturnMap([
+      ->withConsecutive(
         [$list_item_1, 'test_format'],
         [$list_item_2, 'test_format'],
-      ]);
+      );
 
     $this->entityNormalizer->setSerializer($serializer);
 
