@@ -353,7 +353,7 @@ class TermTest extends TaxonomyTestBase {
     // Submitting a term takes us to the add page; we need the List page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
-    $this->clickLink(t('Edit'));
+    $this->click('table[data-drupal-selector="edit-terms"] ul li.edit a');
 
     // Verify that the randomly generated term is present.
     $this->assertRaw($edit['name[0][value]']);

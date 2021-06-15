@@ -69,7 +69,7 @@ class ConfigEntityListTest extends BrowserTestBase {
         'url' => $entity->toUrl('disable')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
       'delete' => [
-        'title' => t('Edit <span class="visually-hidden">"Default"</span>'),
+        'title' => t('Delete <span class="visually-hidden">"Default"</span>'),
         'weight' => 100,
         'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
@@ -134,12 +134,12 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Test getOperations() method.
     $expected_operations = [
       'edit' => [
-        'title' => t('Edit'),
+        'title' => t('Edit <span class="visually-hidden">"Default"</span>'),
         'weight' => 10,
         'url' => $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
       'delete' => [
-        'title' => t('Delete'),
+        'title' => t('Delete <span class="visually-hidden">"Default"</span>'),
         'weight' => 100,
         'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],

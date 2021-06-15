@@ -105,7 +105,7 @@ class DefaultViewsTest extends UITestBase {
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Duplicate <span class="visually-hidden">view "@label"</span>', ['@label' => 'Glossary']), '/glossary');
-    $this->assertUrl('admin/structure/views/view/glossary/duplicate');
+    $this->assertSession()->addressEquals('admin/structure/views/view/glossary/duplicate');
 
     $random_name = strtolower($this->randomMachineName());
     $this->submitForm(['id' => $random_name], 'Duplicate');
