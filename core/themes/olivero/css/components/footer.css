@@ -50,6 +50,12 @@
       text-decoration: none;
     }
 
+/* Avoid a 1px line at the bottom of the page when the toolbar is visible */
+
+.user-logged-in.toolbar-fixed .site-footer {
+    margin-bottom: -1px;
+  }
+
 @media (min-width: 75rem) {
   [dir="ltr"] body:not(.is-always-mobile-nav) .site-footer {
     border-left: solid 90px #000
