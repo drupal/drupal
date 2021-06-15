@@ -188,7 +188,6 @@ class FormTestLabelForm extends FormBase {
       ],
     ];
 
-
     return $form;
   }
 
