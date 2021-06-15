@@ -187,6 +187,7 @@ user.reset.login:
   options:
     _maintenance_access: TRUE
     no_cache: TRUE
+    path_has_secret: TRUE
 
 user.reset:
   path: '/user/reset/{uid}/{timestamp}/{hash}'
@@ -198,6 +199,7 @@ user.reset:
   options:
     _maintenance_access: TRUE
     no_cache: TRUE
+    path_has_secret: TRUE
 
 user.reset.form:
   path: '/user/reset/{uid}'
