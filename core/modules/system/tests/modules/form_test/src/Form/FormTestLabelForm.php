@@ -174,6 +174,21 @@ class FormTestLabelForm extends FormBase {
       }
     }
 
+    $form['id_set_with_id_property'] = [
+      '#type' => 'textfield',
+      '#title' => 'ID is set using the #id property',
+      '#id' => 'was_set_with_id_property',
+    ];
+
+    $form['id_set_within_attributes'] = [
+      '#type' => 'textfield',
+      '#title' => 'ID is set within #attributes',
+      '#attributes' => [
+        'id' => 'was_set_within_attributes',
+      ],
+    ];
+
+
     return $form;
   }
 
