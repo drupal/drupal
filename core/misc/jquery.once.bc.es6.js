@@ -15,19 +15,18 @@
   // We'll replace the whole library so keep a version in cache for later.
   const oldOnce = once;
 
-  // Define a new once function that call both the @drupal/once library as well
-  // as $.fn.once().
+  // When calling once, also populate jQuery.once registry.
   const newOnce = (id, selector, context) => {
     $(selector, context).once(id);
     return oldOnce(id, selector, context);
   };
 
-  // Replace the once.remove function with a function that calls
-  // $.fn.removeOnce().
+  // When calling once.remove, also remove it from jQuery.once registry.
   newOnce.remove = (id, selector, context) => {
     $(selector, context).removeOnce(id);
     return oldOnce.remove(id, selector, context);
   };
+
   // Expose the rest of the once API.
   newOnce.filter = once.filter;
   newOnce.find = once.find;
