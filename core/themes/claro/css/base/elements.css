@@ -249,7 +249,8 @@ img {
  */
 
 .page-wrapper *:focus,
-.ui-dialog *:focus {
+.ui-dialog *:focus,
+.node-preview-container *:focus {
   outline: 2px dotted transparent;
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
 }

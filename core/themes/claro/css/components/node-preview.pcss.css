@@ -1,0 +1,101 @@
+/**
+ * @file
+ * Node preview container styling.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  /**
+  * Pager.
+  */
+  --node-preview--size: 2rem; /* --space-m Ã— 2 */
+  --node-preview--border-width: 0.125rem; /* 2px */
+  --node-preview--fg-color: var(--color-davysgray);
+  --node-preview--bg-color: var(--color-white);
+  --node-preview--hover-bg-color: var(--color-bgblue-active);
+  --node-preview--focus-bg-color: var(--color-focus);
+  --node-preview--active-fg-color: var(--color-white);
+  --node-preview--active-bg-color: var(--color-absolutezero);
+}
+
+.node-preview-container {
+  position: sticky;
+  z-index: 499;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.node-preview-form-select {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.node-preview-form-select .form-item--view-mode {
+  margin-left: var(--space-l); /* LTR */
+}
+
+[dir="rtl"] .node-preview-form-select .form-item--view-mode {
+  margin-left: 0;
+  margin-right: var(--space-l);
+}
+
+.node-preview-backlink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--node-preview--size);
+  height: var(--node-preview--size);
+  padding-right: var(--space-xs);
+  padding-left: var(--space-xs);
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--node-preview--fg-color);
+  border-radius: var(--node-preview--border-width);
+  background: var(--node-preview--bg-color); /* Make sure that the text is visible on dark background. */
+  line-height: 1;
+}
+
+.node-preview-backlink:hover,
+.node-preview-backlink:focus,
+.node-preview-backlink:active {
+  text-decoration: none;
+}
+
+.node-preview-backlink:hover,
+.node-preview-backlink.is-active:hover {
+  color: var(--node-preview--fg-color);
+  background: var(--node-preview--hover-bg-color);
+}
+
+.node-preview-backlink::before {
+  position: relative;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(../../images/icons/545560/pager-prev.svg);
+}
+
+.node-preview-backlink::before {
+  margin-right: 0.5rem; /* LTR */
+}
+[dir="rtl"] .node-preview-backlink::before {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+@media (-ms-high-contrast: active) {
+  .node-preview-backlink:hover {
+    text-decoration: underline;
+  }
+}
