@@ -654,6 +654,9 @@ class LinkFieldTest extends BrowserTestBase {
 
   /**
    * Get array of url with complex query parameters for render check.
+   *
+   * @return array
+   *   The URLs to test.
    */
   protected function getUrlWithComplexQuery() {
     $test_urls = [
@@ -701,6 +704,9 @@ class LinkFieldTest extends BrowserTestBase {
 
   /**
    * Get list of url with complex query parameters for input check.
+   *
+   * @return array
+   *   The URLs with complex query parameters.
    */
   protected function getUrlWithComplexQueryInputList() {
     $test_urls = $this->getUrlWithComplexQuery();
