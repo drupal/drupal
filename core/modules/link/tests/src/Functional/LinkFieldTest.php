@@ -567,8 +567,6 @@ class LinkFieldTest extends BrowserTestBase {
 
     // Create an entity with link field values provided
     // by $this->getUrlWithComplexQuery().
-    // For consistency in assertion code below, the URL is assigned to the title
-    // variable for the first field.
     $this->drupalGet('entity_test/add');
     $edit = [];
     foreach ($test_urls as $key => $test_url) {
