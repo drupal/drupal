@@ -349,7 +349,7 @@ EOF
     $this->assertEquals('module_b', $actual_permissions['access module b']['provider']);
     $this->assertEquals('Access C', $actual_permissions['access_module_c']['title']);
     $this->assertEquals('module_c', $actual_permissions['access_module_c']['provider']);
-    $this->assertEquals(TRUE, $actual_permissions['access_module_c']['restrict access']);
+    $this->assertTrue($actual_permissions['access_module_c']['restrict access']);
     $this->assertEquals('module_a', $actual_permissions['access module a via module b']['provider']);
   }
 
