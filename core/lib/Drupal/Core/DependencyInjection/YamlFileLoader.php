@@ -48,9 +48,6 @@ class YamlFileLoader
         'public' => 'public',
         'tags' => 'tags',
         'autowire' => 'autowire',
-// @todo I think remove these.
-//        'autoconfigure' => 'autoconfigure',
-//        'bind' => 'bind',
     );
 
     public function __construct(ContainerBuilder $container)
@@ -192,15 +189,6 @@ class YamlFileLoader
                 }
             }
         }
-
-        // @todo probably remove this.
-//        if (isset($defaults['bind'])) {
-//            if (!\is_array($defaults['bind'])) {
-//                throw new InvalidArgumentException(sprintf('Parameter "bind" in "_defaults" must be an array in %s. Check your YAML syntax.', $file));
-//            }
-//
-//            $defaults['bind'] = array_map(function ($v) { return new BoundArgument($v); }, $this->resolveServices($defaults['bind'], $file));
-//        }
 
         return $defaults;
     }
