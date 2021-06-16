@@ -8,13 +8,13 @@ use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\rest\RestResourceConfigInterface;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 
-abstract class MediaResourceTestBase extends EntityResourceTestBase {
+abstract class MediaResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

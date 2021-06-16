@@ -4,11 +4,11 @@ namespace Drupal\Tests\node\Functional\Rest;
 
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
-abstract class NodeResourceTestBase extends EntityResourceTestBase {
+abstract class NodeResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

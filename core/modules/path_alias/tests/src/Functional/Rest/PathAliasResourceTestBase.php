@@ -4,12 +4,12 @@ namespace Drupal\Tests\path_alias\Functional\Rest;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\path_alias\Entity\PathAlias;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 
 /**
  * Base class for path_alias EntityResource tests.
  */
-abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
+abstract class PathAliasResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

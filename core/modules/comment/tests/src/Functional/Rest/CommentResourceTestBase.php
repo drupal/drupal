@@ -7,11 +7,11 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
-abstract class CommentResourceTestBase extends EntityResourceTestBase {
+abstract class CommentResourceTestBase extends ContentEntityResourceTestBase {
 
   use CommentTestTrait;
 

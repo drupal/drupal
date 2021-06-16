@@ -3,12 +3,12 @@
 namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 
 /**
  * ResourceTestBase for MenuLinkContent entity.
  */
-abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
+abstract class MenuLinkContentResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

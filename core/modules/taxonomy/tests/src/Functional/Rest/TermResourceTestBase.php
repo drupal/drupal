@@ -5,10 +5,10 @@ namespace Drupal\Tests\taxonomy\Functional\Rest;
 use Drupal\Core\Cache\Cache;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 use GuzzleHttp\RequestOptions;
 
-abstract class TermResourceTestBase extends EntityResourceTestBase {
+abstract class TermResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
