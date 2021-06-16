@@ -423,11 +423,17 @@ function _batch_next_set() {
   if (isset($set_indexes[$current_set_index_key + 1])) {
     $batch['current_set'] = $set_indexes[$current_set_index_key + 1];
     $current_set = &_batch_current_set();
-    if (isset($current_set['form_submit']) && ($callback = $current_set['form_submit']) && is_callable($callback)) {
-      // We use our stored copies of $form and $form_state to account for
-      // possible alterations by previous form submit handlers.
-      $complete_form = &$batch['form_state']->getCompleteForm();
-      call_user_func_array($callback, [&$complete_form, &$batch['form_state']]);
+
+    if (isset($current_set['form_submit'])) {
+      $form_state = &$batch['form_state'];
+      $callback = $form_state->prepareCallback($current_set['form_submit']);
+
+      if (is_callable($callback)) {
+        // We use our stored copies of $form and $form_state to account for
+        // possible alterations by previous form submit handlers.
+        $complete_form = $form_state->getCompleteForm();
+        call_user_func_array($callback, [&$complete_form, &$form_state]);
+      }
     }
     return TRUE;
   }
