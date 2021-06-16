@@ -574,7 +574,7 @@ class LinkFieldTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
 
     $edit = [];
-    foreach ($test_urls as $key => &$test_url) {
+    foreach ($test_urls as $key => $test_url) {
       $edit["{$field_name}[$key][uri]"] = $test_url['inputByUser'];
       $edit["{$field_name}[$key][title]"] = $test_url['title'];
     }
