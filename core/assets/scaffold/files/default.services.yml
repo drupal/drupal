@@ -36,6 +36,14 @@ parameters:
     # @default none
     # cookie_domain: '.example.com'
     #
+    # Prior to Drupal 9.2.0 the cookie domain was set to a dot plus the current
+    # domain. For example, if Drupal we served from 'www.example.com' the cookie
+    # domain would be set to '.www.example.com'. From Drupal 9.2.0 onwards,
+    # by default, host-only cookies are used and the browser will determine the
+    # cookie name. If you want to customize the cookie domain use the
+    # 'cookie_domain' parameter as documented above.
+    cookie_domain_bc_mode: false
+    #
     # Set the session ID string length. The length can be between 22 to 256. The
     # PHP recommended value is 48. See
     # https://www.php.net/manual/session.security.ini.php for more information.

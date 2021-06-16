@@ -120,6 +120,14 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     elseif (function_exists('com_create_guid')) {
       $uuid_service->setClass('Drupal\Component\Uuid\Com');
     }
+
+    // If 'cookie_domain_bc_mode' is not set then set it to TRUE to provide
+    // a backward-compatible cookie domain.
+    $session_storage_options = $container->getParameter('session.storage.options');
+    if (!isset($session_storage_options['cookie_domain_bc_mode'])) {
+      $session_storage_options['cookie_domain_bc_mode'] = TRUE;
+      $container->setParameter('session.storage.options', $session_storage_options);
+    }
   }
 
   /**

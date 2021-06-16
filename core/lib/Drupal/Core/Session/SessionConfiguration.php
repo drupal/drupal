@@ -44,7 +44,7 @@ class SessionConfiguration implements SessionConfigurationInterface {
     $options = $this->options;
 
     // Generate / validate the cookie domain.
-    $options['cookie_domain'] = $this->getCookieDomain($request) ?: '';
+    $options['cookie_domain'] = $this->getCookieDomain($request);
 
     // If the site is accessed via SSL, ensure that the session cookie is
     // issued with the secure flag.
@@ -122,10 +122,11 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *   The session cookie domain.
    */
   protected function getCookieDomain(Request $request) {
+    $cookie_domain = '';
     if (isset($this->options['cookie_domain'])) {
       $cookie_domain = $this->options['cookie_domain'];
     }
-    else {
+    elseif (isset($this->options['cookie_domain_bc_mode']) && $this->options['cookie_domain_bc_mode'] === TRUE) {
       $host = $request->getHost();
       // To maximize compatibility and normalize the behavior across user
       // agents, the cookie domain should start with a dot.
@@ -136,9 +137,11 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // agents in order to defeat malicious websites attempting to set cookies
     // for top-level domains. Also IP addresses may not be used in the domain
     // attribute of a Set-Cookie header.
-    if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
-      return $cookie_domain;
+    if ($cookie_domain !== '' && (strpos($cookie_domain, '.') === FALSE || is_numeric(str_replace('.', '', $cookie_domain)))) {
+      $cookie_domain = '';
     }
+
+    return $cookie_domain;
   }
 
   /**
