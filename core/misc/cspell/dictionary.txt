@@ -81,6 +81,7 @@ autocompleteresponses
 autocompletesearch
 autocompleteselect
 autocompleting
+autoconfigure
 autocreate
 autocreated
 autocreation
@@ -110,6 +111,7 @@ autosave
 autosubmit
 autowire
 autowired
+autowiring
 backend's
 backlink
 backlinks
