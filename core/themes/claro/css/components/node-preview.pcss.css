@@ -7,16 +7,13 @@
 
 :root {
   /**
-  * Pager.
+  * Node preview.
   */
   --node-preview--size: 2rem; /* --space-m Ã— 2 */
   --node-preview--border-width: 0.125rem; /* 2px */
   --node-preview--fg-color: var(--color-davysgray);
   --node-preview--bg-color: var(--color-white);
   --node-preview--hover-bg-color: var(--color-bgblue-active);
-  --node-preview--focus-bg-color: var(--color-focus);
-  --node-preview--active-fg-color: var(--color-white);
-  --node-preview--active-bg-color: var(--color-absolutezero);
 }
 
 .node-preview-container {
