@@ -6,17 +6,17 @@
 (($, Drupal, once) => {
   Drupal.behaviors.claroAutoCompete = {
     attach(context) {
+      const classRemove = ($autoCompleteElem) => {
+        $autoCompleteElem.removeClass('is-autocompleting');
+        $autoCompleteElem
+          .siblings('[data-drupal-selector="autocomplete-message"]')
+          .addClass('hidden');
+      };
       once('claroAutoComplete', 'input.form-autocomplete', context).forEach(
         (value) => {
           const $input = $(value);
           const timeout = 400;
           let classRemoveTimeout;
-          const classRemove = ($autoCompleteElem) => {
-            $autoCompleteElem.removeClass('is-autocompleting');
-            $autoCompleteElem
-              .siblings('[data-drupal-selector="autocomplete-message"]')
-              .addClass('hidden');
-          };
 
           $input.on(
             'input autocompletesearch autocompleteresponses',
