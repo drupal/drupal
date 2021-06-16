@@ -76,13 +76,15 @@ class Term extends FieldableEntity {
   public function fields() {
     $fields = [
       'tid' => $this->t('The term ID.'),
-      'vid' => $this->t('Existing term VID'),
+      'vid' => $this->t('The vocabulary ID.'),
       'machine_name' => $this->t('Vocabulary machine name'),
-      'name' => $this->t('The name of the term.'),
+      'name' => $this->t('The term name.'),
       'description' => $this->t('The term description.'),
-      'weight' => $this->t('Weight'),
+      'weight' => $this->t('The term weight'),
       'parent' => $this->t("The Drupal term IDs of the term's parents."),
       'format' => $this->t("Format of the term description."),
+      'language' => $this->t('Language for this term.'),
+      'is_container' => $this->t('Flag to determine whether this is a forum container.'),
     ];
     return $fields;
   }

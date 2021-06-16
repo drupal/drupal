@@ -88,15 +88,21 @@ class File extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return [
+    $fields = [
       'fid' => $this->t('File ID'),
       'uid' => $this->t('The {users}.uid who added the file. If set to 0, this file was added by an anonymous user.'),
       'filename' => $this->t('File name'),
-      'filepath' => $this->t('File path'),
+      'uri' => $this->t('The URI to access the file (prefixed with scheme).'),
+      'filepath' => $this->t('File path relative to the document root.'),
       'filemime' => $this->t('File MIME Type'),
+      'filesize' => $this->t('File size in bytes.'),
       'status' => $this->t('The published status of a file.'),
       'timestamp' => $this->t('The time that the file was added.'),
     ];
+    if ($this->moduleExists('file_entity')) {
+      $fields['type'] = $this->t('The type of the file.');
+    }
+    return $fields;
   }
 
   /**

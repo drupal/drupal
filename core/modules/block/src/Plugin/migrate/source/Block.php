@@ -93,10 +93,15 @@ class Block extends DrupalSqlBase {
       'status' => $this->t('Whether or not the block is enabled.'),
       'weight' => $this->t('Weight of the block for ordering within regions.'),
       'region' => $this->t('Region the block is placed in.'),
+      'custom' => $this->t('Visibility control rule.'),
       'visibility' => $this->t('Visibility expression.'),
       'pages' => $this->t('Pages list.'),
       'title' => $this->t('Block title.'),
       'cache' => $this->t('Cache rule.'),
+      'default_theme' => $this->t('The default theme.'),
+      'admin_theme' => $this->t('The admin theme.'),
+      'roles' => $this->t('Allowed user roles.'),
+      'settings' => $this->t('Additional block settings.'),
     ];
   }
 

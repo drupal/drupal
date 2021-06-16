@@ -45,7 +45,7 @@ class BlockTranslation extends Block {
       'module' => $this->t('The module providing the block.'),
       'delta' => $this->t("The block's delta."),
       'type' => $this->t('Block type'),
-      'language' => $this->t('Language for this field.'),
+      'language' => $this->t('Language code.'),
       'theme' => $this->t('Which theme the block is placed in.'),
       'default_theme' => $this->t('The default theme.'),
       'title' => $this->t('Block title.'),

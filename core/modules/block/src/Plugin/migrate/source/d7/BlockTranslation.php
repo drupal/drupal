@@ -79,6 +79,7 @@ class BlockTranslation extends Block {
       'status' => $this->t('Block enabled status'),
       'weight' => $this->t('Block weight within region'),
       'region' => $this->t('Theme region within which the block is set'),
+      'custom' => $this->t('Visibility control rule.'),
       'visibility' => $this->t('Visibility'),
       'pages' => $this->t('Pages list.'),
       'title' => $this->t('Block title.'),

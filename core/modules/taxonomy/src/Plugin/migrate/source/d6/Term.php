@@ -68,10 +68,10 @@ class Term extends DrupalSqlBase {
   public function fields() {
     $fields = [
       'tid' => $this->t('The term ID.'),
-      'vid' => $this->t('Existing term VID'),
-      'name' => $this->t('The name of the term.'),
+      'vid' => $this->t('The vocabulary ID.'),
+      'name' => $this->t('The term name.'),
       'description' => $this->t('The term description.'),
-      'weight' => $this->t('Weight'),
+      'weight' => $this->t('The term weight'),
       'parent' => $this->t("The Drupal term IDs of the term's parents."),
     ];
     if (isset($this->configuration['translations'])) {

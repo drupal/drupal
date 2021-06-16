@@ -41,6 +41,7 @@ class AggregatorFeed extends DrupalSqlBase {
     ];
     if ($this->getModuleSchemaVersion('system') >= 7000) {
       $fields['queued'] = $this->t('Time when this feed was queued for refresh, 0 if not queued.');
+      $fields['hash'] = $this->t('Calculated hash of the feed data, used for validating cache.');
     }
     return $fields;
   }

@@ -48,7 +48,6 @@ class TermTranslation extends Term {
    */
   public function fields() {
     $fields = [
-      'language' => $this->t('Language for this term.'),
       'name_translated' => $this->t('Term name translation.'),
       'description_translated' => $this->t('Term description translation.'),
     ];

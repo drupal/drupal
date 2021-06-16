@@ -51,14 +51,11 @@ class Upload extends DrupalSqlBase {
    */
   public function fields() {
     return [
-      'fid' => $this->t('The file Id.'),
       'nid' => $this->t('The node Id.'),
       'vid' => $this->t('The version Id.'),
       'type' => $this->t('The node type'),
       'language' => $this->t('The node language.'),
-      'description' => $this->t('The file description.'),
-      'list' => $this->t('Whether the list should be visible on the node page.'),
-      'weight' => $this->t('The file weight.'),
+      'upload' => $this->t('Array with information about uploaded files. Each item is an associative array with the following keys: fid, description, list.'),
     ];
   }
 

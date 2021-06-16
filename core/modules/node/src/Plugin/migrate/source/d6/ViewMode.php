@@ -53,7 +53,8 @@ class ViewMode extends ViewModeBase {
    */
   public function fields() {
     return [
-      'display_settings' => $this->t('Serialize data with display settings.'),
+      'entity_type' => $this->t('The entity type.'),
+      'view_mode' => $this->t('The view mode ID.'),
     ];
   }
 
