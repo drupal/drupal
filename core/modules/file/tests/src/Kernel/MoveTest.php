@@ -27,7 +27,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File moved successfully.');
-    $this->assertFileNotExists($source->getFileUri());
+    $this->assertFileDoesNotExist($source->getFileUri());
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
@@ -44,7 +44,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test renaming when moving onto a file that already exists.
+   * Tests renaming when moving onto a file that already exists.
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -59,7 +59,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File moved successfully.');
-    $this->assertFileNotExists($source->getFileUri());
+    $this->assertFileDoesNotExist($source->getFileUri());
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
@@ -79,7 +79,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test replacement when moving onto a file that already exists.
+   * Tests replacement when moving onto a file that already exists.
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -94,7 +94,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Look at the results.
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
-    $this->assertFileNotExists($source->getFileUri());
+    $this->assertFileDoesNotExist($source->getFileUri());
     $this->assertNotEmpty($result, 'File moved successfully.');
 
     // Check that the correct hooks were called.
@@ -111,7 +111,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test replacement when moving onto itself.
+   * Tests replacement when moving onto itself.
    */
   public function testExistingReplaceSelf() {
     // Setup a file to overwrite.
@@ -133,7 +133,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test that moving onto an existing file fails when instructed to do so.
+   * Tests that moving onto an existing file fails when instructed to do so.
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);

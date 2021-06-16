@@ -39,7 +39,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test decimal field.
+   * Tests decimal field.
    */
   public function testNumberDecimalField() {
     // Create a field with settings to validate.
@@ -127,7 +127,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test integer field.
+   * Tests integer field.
    */
   public function testNumberIntegerField() {
     $minimum = rand(-4000, -2000);
@@ -282,7 +282,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test float field.
+   * Tests float field.
    */
   public function testNumberFloatField() {
     // Create a field with settings to validate.
@@ -434,7 +434,8 @@ class NumberFieldTest extends BrowserTestBase {
     $edit = [
       'settings[min]' => $minimum_value,
     ];
-    $this->drupalPostForm($field_configuration_url, $edit, 'Save settings');
+    $this->drupalGet($field_configuration_url);
+    $this->submitForm($edit, 'Save settings');
     // Check if an error message is shown.
     $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]));
     // Check if a success message is shown.

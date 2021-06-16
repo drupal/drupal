@@ -299,6 +299,11 @@ function hook_modules_uninstalled($modules, $is_syncing) {
  * tables are removed, allowing your module to query its own tables during
  * this routine.
  *
+ * Adding custom logic to hook_uninstall implementations to check for
+ * criteria before uninstalling, does not take advantage of the module
+ * uninstall page UI. Instead, use
+ * \Drupal\Core\Extension\ModuleUninstallValidatorInterface.
+ *
  * @param bool $is_syncing
  *   TRUE if the module is being uninstalled as part of a configuration import.
  *   In these cases, your hook implementation needs to carefully consider what
@@ -308,6 +313,7 @@ function hook_modules_uninstalled($modules, $is_syncing) {
  * @see hook_install()
  * @see hook_schema()
  * @see hook_modules_uninstalled()
+ * @see \Drupal\Core\Extension\ModuleUninstallValidatorInterface
  */
 function hook_uninstall($is_syncing) {
   // Delete remaining general module variables.

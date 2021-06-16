@@ -30,7 +30,7 @@ class ExcludedModulesEventSubscriberTest extends KernelTestBase {
   }
 
   /**
-   * Test excluding modules from the config export.
+   * Tests excluding modules from the config export.
    */
   public function testExcludedModules() {
     // Assert that config_test is in the active config.

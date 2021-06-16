@@ -152,7 +152,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $this->assertStringContainsString('Successfully installed a test site', $process->getOutput());
     $this->assertSame(0, $process->getExitCode());
     $regex = '/Database prefix\s+([^\s]*)/';
-    $this->assertRegExp($regex, $process->getOutput());
+    $this->assertMatchesRegularExpression($regex, $process->getOutput());
     preg_match('/Database prefix\s+([^\s]*)/', $process->getOutput(), $matches);
     $other_db_prefix = $matches[1];
     $other_key = $this->addTestDatabase($other_db_prefix);
@@ -172,7 +172,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Ensure that all the tables and files for this DB prefix are gone.
     $this->assertCount(0, Database::getConnection('default', $key)->schema()->findTables('%'));
-    $this->assertFileNotExists($test_file);
+    $this->assertFileDoesNotExist($test_file);
 
     // Ensure the other site's tables and files still exist.
     $this->assertGreaterThan(0, count(Database::getConnection('default', $other_key)->schema()->findTables('%')));
@@ -194,12 +194,12 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Ensure that all the tables and files for this DB prefix are gone.
     $this->assertCount(0, Database::getConnection('default', $other_key)->schema()->findTables('%'));
-    $this->assertFileNotExists($test_file);
+    $this->assertFileDoesNotExist($test_file);
 
     // The lock for the first site should still exist but the second site's lock
     // is released during tear down.
     $this->assertFileExists($this->getTestLockFile($db_prefix));
-    $this->assertFileNotExists($this->getTestLockFile($other_db_prefix));
+    $this->assertFileDoesNotExist($this->getTestLockFile($other_db_prefix));
   }
 
   /**

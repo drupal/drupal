@@ -33,7 +33,7 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Test non-default theme admin.
+   * Tests non-default theme admin.
    */
   public function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser([

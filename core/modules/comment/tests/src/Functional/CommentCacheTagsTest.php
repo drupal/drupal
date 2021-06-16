@@ -7,6 +7,7 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
@@ -96,7 +97,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   }
 
   /**
-   * Test that comments correctly invalidate the cache tag of their host entity.
+   * Tests that comments invalidate the cache tag of their host entity.
    */
   public function testCommentEntity() {
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'MISS');
@@ -155,6 +156,17 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
       'config:filter.format.plain_text',
       'user:' . $entity->getOwnerId(),
       'user_view',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultCacheContexts() {
+    return [
+      'languages:' . LanguageInterface::TYPE_INTERFACE,
+      'theme',
+      'user.permissions',
     ];
   }
 

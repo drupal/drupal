@@ -49,7 +49,8 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['format'] = mb_strtolower($this->randomMachineName());
     $edit['name'] = $name;
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
-    $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/add');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('Added text format %format.', ['%format' => $name]));
     $this->assertSession()->pageTextContains('hook_filter_format_insert invoked.');
 
@@ -58,7 +59,8 @@ class FilterHooksTest extends BrowserTestBase {
     // Update text format.
     $edit = [];
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('The text format %format has been updated.', ['%format' => $name]));
     $this->assertSession()->pageTextContains('hook_filter_format_update invoked.');
 
@@ -68,11 +70,13 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['title[0][value]'] = $title;
     $edit['body[0][value]'] = $this->randomMachineName(32);
     $edit['body[0][format]'] = $format_id;
-    $this->drupalPostForm("node/add/{$type->id()}", $edit, 'Save');
+    $this->drupalGet("node/add/{$type->id()}");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($type_name . ' ' . $title . ' has been created.');
 
     // Disable the text format.
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', [], 'Disable');
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id . '/disable');
+    $this->submitForm([], 'Disable');
     $this->assertRaw(t('Disabled text format %format.', ['%format' => $name]));
     $this->assertSession()->pageTextContains('hook_filter_format_disable invoked.');
   }

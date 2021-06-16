@@ -114,6 +114,8 @@ destination:
   default_bundle: menu_link_content
   no_stub: true
 migration_dependencies:
+  required:
+    - language
   optional:
     - d6_menu
     - d6_menu_links

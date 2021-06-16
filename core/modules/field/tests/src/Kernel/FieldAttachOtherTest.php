@@ -20,7 +20,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test rendering fields with EntityDisplay build().
+   * Tests rendering fields with EntityDisplay build().
    */
   public function testEntityDisplayBuild() {
     $this->createFieldWithStorage('_2');
@@ -156,7 +156,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test entity cache.
+   * Tests entity cache.
    *
    * Complements unit test coverage in
    * \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTest.

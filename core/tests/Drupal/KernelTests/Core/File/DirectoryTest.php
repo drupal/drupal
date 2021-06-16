@@ -17,7 +17,7 @@ use Drupal\Core\File\FileSystemInterface;
 class DirectoryTest extends FileTestBase {
 
   /**
-   * Test local directory handling functions.
+   * Tests local directory handling functions.
    */
   public function testFileCheckLocalDirectoryHandling() {
     $site_path = $this->container->getParameter('site.path');
@@ -58,13 +58,13 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
-   * Test directory handling functions.
+   * Tests directory handling functions.
    */
   public function testFileCheckDirectoryHandling() {
     // A directory to operate on.
     $default_scheme = 'public';
     $directory = $default_scheme . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
 
     // Non-existent directory.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
@@ -97,13 +97,13 @@ class DirectoryTest extends FileTestBase {
 
     // Remove .htaccess file to then test that it gets re-created.
     @$file_system->unlink($default_scheme . '://.htaccess');
-    $this->assertFileNotExists($default_scheme . '://.htaccess');
+    $this->assertFileDoesNotExist($default_scheme . '://.htaccess');
     $this->container->get('file.htaccess_writer')->ensure();
     $this->assertFileExists($default_scheme . '://.htaccess');
 
     // Remove .htaccess file again to test that it is re-created by a cron run.
     @$file_system->unlink($default_scheme . '://.htaccess');
-    $this->assertFileNotExists($default_scheme . '://.htaccess');
+    $this->assertFileDoesNotExist($default_scheme . '://.htaccess');
     system_cron();
     $this->assertFileExists($default_scheme . '://.htaccess');
 

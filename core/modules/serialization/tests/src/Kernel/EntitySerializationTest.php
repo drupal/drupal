@@ -120,7 +120,7 @@ class EntitySerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Test the normalize function.
+   * Tests the normalize function.
    */
   public function testNormalize() {
     $expected = [
@@ -203,7 +203,7 @@ class EntitySerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Test registered Serializer's entity serialization for core's formats.
+   * Tests registered Serializer's entity serialization for core's formats.
    */
   public function testSerialize() {
     // Test that Serializer responds using the ComplexDataNormalizer and
