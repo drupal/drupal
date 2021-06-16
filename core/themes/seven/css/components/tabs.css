@@ -52,7 +52,7 @@
 }
 .tabs__tab:hover,
 .tabs__tab:focus {
-  color: #008ee6;
+  color: #0179bc;
   background-color: #fafaf7;
 }
 li.tabs__tab {
@@ -66,6 +66,7 @@ li.tabs__tab {
 }
 li.tabs__tab a {
   padding: 9px 2em 7px 1em; /* LTR */
+  color: #007496;
 }
 [dir="rtl"] li.tabs__tab a {
   padding-right: 1em;
@@ -96,9 +97,10 @@ li.tabs__tab a {
 .tabs.primary a {
   background: none;
 }
-.tabs.primary a:focus {
+.tabs.primary a:focus,
+.tabs.primary a:hover {
   text-decoration: underline;
-  color: #008ee6;
+  color: #0179bc;
   background-color: #fafaf7;
 }
 .tabs.primary .is-active a:focus {
@@ -284,7 +286,7 @@ li.tabs__tab a {
 .tabs.secondary .tabs__tab:hover,
 .tabs.secondary .tabs__tab:focus {
   padding-left: 15px; /* LTR */
-  color: #008ee6;
+  color: #0179bc;
   border-left: 2px solid #008ee6; /* LTR */
 }
 [dir="rtl"] .tabs.secondary .tabs__tab:hover,
