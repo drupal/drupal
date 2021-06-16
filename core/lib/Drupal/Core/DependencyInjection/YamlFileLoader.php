@@ -143,10 +143,10 @@ class YamlFileLoader
      *
      * @throws InvalidArgumentException
      */
-    private function parseDefaults(array &$content, $file)
+    private function parseDefaults(array &$content, string $file): array
     {
-        if (!array_key_exists('_defaults', $content['services'])) {
-            return array();
+        if (!\array_key_exists('_defaults', $content['services'])) {
+            return [];
         }
         $defaults = $content['services']['_defaults'];
         unset($content['services']['_defaults']);
@@ -163,27 +163,27 @@ class YamlFileLoader
 
         if (isset($defaults['tags'])) {
             if (!\is_array($tags = $defaults['tags'])) {
-                throw new InvalidArgumentException(sprintf('Parameter "tags" in "_defaults" must be an array in %s. Check your YAML syntax.', $file));
+                throw new InvalidArgumentException(sprintf('Parameter "tags" in "_defaults" must be an array in "%s". Check your YAML syntax.', $file));
             }
 
             foreach ($tags as $tag) {
                 if (!\is_array($tag)) {
-                    $tag = array('name' => $tag);
+                    $tag = ['name' => $tag];
                 }
 
                 if (!isset($tag['name'])) {
-                    throw new InvalidArgumentException(sprintf('A "tags" entry in "_defaults" is missing a "name" key in %s.', $file));
+                    throw new InvalidArgumentException(sprintf('A "tags" entry in "_defaults" is missing a "name" key in "%s".', $file));
                 }
                 $name = $tag['name'];
                 unset($tag['name']);
 
                 if (!\is_string($name) || '' === $name) {
-                    throw new InvalidArgumentException(sprintf('The tag name in "_defaults" must be a non-empty string in %s.', $file));
+                    throw new InvalidArgumentException(sprintf('The tag name in "_defaults" must be a non-empty string in "%s".', $file));
                 }
 
                 foreach ($tag as $attribute => $value) {
                     if (!is_scalar($value) && null !== $value) {
-                        throw new InvalidArgumentException(sprintf('Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type in %s. Check your YAML syntax.', $name, $attribute, $file));
+                        throw new InvalidArgumentException(sprintf('Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type in "%s". Check your YAML syntax.', $name, $attribute, $file));
                     }
                 }
             }
