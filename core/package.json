@@ -123,7 +123,5 @@
     "last 1 Samsung version",
     "Firefox ESR"
   ],
-  "dependencies": {
-    "enhanced-resolve": "^5.8.2"
-  }
+  "dependencies": {}
 }
