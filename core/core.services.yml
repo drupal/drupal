@@ -468,7 +468,7 @@ services:
     arguments: ['@keyvalue']
   queue:
     class: Drupal\Core\Queue\QueueFactory
-    arguments: ['@settings']
+    arguments: ['@settings', '@plugin.manager.queue_worker']
     calls:
       - [setContainer, ['@service_container']]
   queue.database:
