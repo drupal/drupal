@@ -425,8 +425,8 @@
   user-select: none;
   box-shadow: none;
 }
-#drupal-off-canvas input:placeholder,
-#drupal-off-canvas textarea:placeholder {
+#drupal-off-canvas input::placeholder,
+#drupal-off-canvas textarea::placeholder {
   color: gray;
 }
 #drupal-off-canvas textarea,
