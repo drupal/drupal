@@ -13,11 +13,27 @@
         event.target.click();
       };
 
+      var SPACE = 32;
+
+      var keyDownPreventScroll = function keyDownPreventScroll(event) {
+        if (event.which === SPACE) {
+          event.preventDefault();
+        }
+      };
+
+      var keyUpToClick = function keyUpToClick(event) {
+        if (event.which === SPACE) {
+          event.target.click();
+        }
+      };
+
       return {
         'click .toolbar-bar .toolbar-tab .trigger': 'onTabClick',
         'click .toolbar-toggle-orientation button': 'onOrientationToggleClick',
         'touchend .toolbar-bar .toolbar-tab .trigger': touchEndToClick,
-        'touchend .toolbar-toggle-orientation button': touchEndToClick
+        'touchend .toolbar-toggle-orientation button': touchEndToClick,
+        'keydown .toolbar-bar .toolbar-tab .trigger': keyDownPreventScroll,
+        'keyup .toolbar-bar .toolbar-tab .trigger': keyUpToClick
       };
     },
     initialize: function initialize(options) {
