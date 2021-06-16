@@ -164,3 +164,57 @@
   color: transparent; /* IE */
   background-image: url("data:image/svg+xml,%3csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M3.795 7.096l2.387 2.506 6.023-6.327 1.484 1.56-7.507 7.89L2.31 8.656z' fill='%2382828c'/%3e%3c/svg%3e");
 }
+
+/**
+ * IE11 flex-wrap will not work in several scenarios such as when it is nested
+ * in another flexbox with flex-wrap enabled. To get around this, IE11 instead
+ * uses the classic float and clearfix approach.
+ *
+ * Note that most rules with .container-inline selectors are accompanied by
+ * similar rules that use the selector .claro-form-elements-inline.
+ *
+ * @see container-inline.pcss.css for more information about this wrapper class.
+ */
+
+@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .container-inline .form-boolean-group,
+  .claro-form-elements-inline .form-boolean-group {
+    display: block;
+  }
+  /**
+   * This implements core's clearfix style without adding the clearfix class to
+   * the container since it is browser-specific.
+   *
+   * @see clearfix.module.css.
+   */
+  .container-inline .form-boolean-group::after,
+  .claro-form-elements-inline .form-boolean-group::after {
+    display: table;
+    clear: both;
+    content: "";
+  }
+
+  .container-inline .form-boolean-group .form-type--boolean,
+  .claro-form-elements-inline .form-boolean-group .form-type--boolean {
+    float: left; /* LTR */
+  }
+  [dir="rtl"] .container-inline .form-boolean-group .form-type--boolean,
+  [dir="rtl"] .claro-form-elements-inline .form-boolean-group .form-type--boolean {
+    float: right;
+  }
+
+  .container-inline .form-boolean-group .form-type--boolean {
+    display: inline;
+  }
+
+  .container-inline .fieldset__legend--composite,
+  .claro-form-elements-inline .fieldset__legend--composite {
+    display: block;
+    width: 100%;
+  }
+
+  .fieldset__description,
+  .fieldset__error-message {
+    clear: both;
+  }
+}

@@ -368,6 +368,14 @@
   margin: var(--space-m);
 }
 
+.container-inline .claro-details__wrapper.claro-details__wrapper > * {
+  margin-right: var(--space-m); /* LTR */
+}
+[dir="rtl"] .container-inline .claro-details__wrapper.claro-details__wrapper > * {
+  margin-right: 0;
+  margin-left: var(--space-m);
+}
+
 .claro-details__wrapper--accordion,
 .claro-details__wrapper--accordion-item,
 .claro-details__wrapper--vertical-tabs-item {

@@ -65,3 +65,15 @@
 .field-plugin-settings-edit-form .plugin-name {
   font-weight: bold;
 }
+
+.form--inline .form-item--separator.form-item--separator {
+  /* Top margin is the label line-height + label top and bottom margins */
+  margin-top: calc(1.125rem + var(--space-xs));
+  margin-right: var(--space-s); /* LTR */
+  white-space: nowrap;
+  line-height: 3;
+}
+[dir="rtl"] .form--inline .form-item--separator.form-item--separator {
+  margin-right: 0;
+  margin-left: var(--space-s);
+}

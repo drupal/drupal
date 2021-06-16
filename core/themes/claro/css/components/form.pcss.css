@@ -1,6 +1,14 @@
 /**
  * @file
  * Main form and form item styles.
+ *
+ * Note that most rules with .container-inline selectors are accompanied by
+ * similar rules that use the selector .claro-form-elements-inline.
+ *
+ * Note that most rules with .container-inline selectors are accompanied by
+ * similar rules that use the selector .claro-form-elements-inline.
+ *
+ * @see container-inline.pcss.css for more information about this wrapper class.
  */
 
 @import "../base/variables.pcss.css";
@@ -29,6 +37,15 @@ tr .form-item,
 .container-inline .form-item {
   margin-top: var(--space-s);
   margin-bottom: var(--space-s);
+  vertical-align: top;
+}
+
+.container-inline .form-item:not(:last-child) {
+  margin-right: var(--space-m); /* LTR */
+}
+[dir="rtl"] .container-inline .form-item:not(:last-child) {
+  margin-right: 0;
+  margin-left: var(--space-m);
 }
 
 /**
@@ -56,6 +73,42 @@ tr .form-item,
   display: inline;
   font-weight: normal;
 }
+
+.claro-form-elements-inline .form-item__label,
+.claro-form-elements-inline.fieldset__legend,
+.claro-form-elements-inline .form-textarea-wrapper {
+  margin-right: var(--space-m); /* LTR */
+  white-space: nowrap;
+}
+[dir="rtl"] .claro-form-elements-inline .form-item__label,
+[dir="rtl"] .claro-form-elements-inline .fieldset__legend,
+[dir="rtl"] .claro-form-elements-inline .form-textarea-wrapper {
+  margin-right: 0;
+  margin-left: var(--space-m);
+}
+
+/**
+ * The label margins for .container-inline must be 4px less than the label
+ * margins for .claro-form-elements-inline, due to the additional spacing
+ * between elements displayed as inline blocks.
+ *
+ * @see https://css-tricks.com/fighting-the-space-between-inline-block-elements/
+ */
+.container-inline .form-item__label,
+.container-inline .fieldset__legend,
+.container-inline .form-textarea-wrapper,
+.search-block-form > .container-inline > h2 {
+  margin-right: var(--space-s); /* LTR */
+  white-space: nowrap;
+}
+[dir="rtl"] .container-inline .form-item__label,
+[dir="rtl"] .container-inline .fieldset__legend,
+[dir="rtl"] .container-inline .form-textarea-wrapper,
+[dir="rtl"] .search-block-form > .container-inline > h2 {
+  margin-right: 0;
+  margin-left: var(--space-s);
+}
+
 /* Label states. */
 .form-item__label.has-error {
   color: var(--input--error-color);
@@ -87,6 +140,20 @@ tr .form-item,
   font-size: var(--font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
 }
+
+.claro-form-elements-inline .fieldset__description,
+.claro-form-elements-inline .form-item__description,
+.claro-form-elements-inline .form-item__error-message,
+.claro-form-elements-inline .fieldset__error-message,
+.container-inline .fieldset__description,
+.container-inline .form-item__description,
+.container-inline .form-item__error-message,
+.container-inline .fieldset__error-message {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
 /* Description states. */
 .form-item__description.is-disabled {
   color: var(--input--disabled-fg-color);
@@ -138,6 +205,12 @@ tr .form-item,
 }
 .form-actions .ajax-progress--throbber {
   align-self: center;
+}
+
+.container-inline .form-actions,
+.container-inline.form-actions {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 /**

@@ -385,6 +385,15 @@
   margin: 1rem;
 }
 
+.container-inline .claro-details__wrapper.claro-details__wrapper > * {
+  margin-right: 1rem; /* LTR */
+}
+
+[dir="rtl"] .container-inline .claro-details__wrapper.claro-details__wrapper > * {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
 .claro-details__wrapper--accordion,
 .claro-details__wrapper--accordion-item,
 .claro-details__wrapper--vertical-tabs-item {

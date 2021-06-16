@@ -97,3 +97,7 @@ _:-ms-fullscreen,
   right: auto;
   left: 0;
 }
+
+.container-inline .claro-autocomplete {
+  margin: 0;
+}

@@ -49,6 +49,79 @@
 }
 
 /**
+ * Inline styles
+ *
+ * Note that most rules with .container-inline selectors are accompanied by
+ * similar rules that use the selector .claro-form-elements-inline.
+ *
+ * @see container-inline.pcss.css for more information about this wrapper class.
+ */
+.container-inline .form-item__label.option,
+.claro-form-elements-inline .form-item__label.option {
+  margin-top: 0;
+  margin-bottom: 0;
+  white-space: normal;
+}
+
+.container-inline .form-boolean-group,
+.claro-form-elements-inline .form-boolean-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container-inline .form-type--boolean,
+.claro-form-elements-inline .form-type--boolean {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-left: 0;
+}
+[dir="rtl"] .container-inline .form-type--boolean,
+[dir="rtl"] .claro-form-elements-inline .form-type--boolean {
+  margin-right: 0;
+}
+
+.container-inline .form-type--boolean .form-boolean,
+.claro-form-elements-inline .form-type--boolean .form-boolean {
+  position: static;
+  float: none; /* LTR */
+  margin-right: var(--space-xs); /* LTR */
+  margin-left: 0; /* LTR */
+  transform: none;
+}
+[dir="rtl"] .container-inline .form-type--boolean .form-boolean,
+[dir="rtl"] .claro-form-elements-inline .form-type--boolean .form-boolean {
+  float: none; /* Same as LTR, but needs to be here for specificity. */
+  margin-right: 0;
+  margin-left: var(--space-xs);
+}
+
+.ui-dialog .container-inline .form-type--checkbox:not(:last-child),
+.ui-dialog .container-inline .form-type--radio:not(:last-child),
+.ui-dialog .claro-form-elements-inline .form-type--checkbox:not(:last-child),
+.ui-dialog .claro-form-elements-inline .form-type--radio:not(:last-child) {
+  margin-right: var(--space-m); /* LTR */
+}
+[dir="rtl"] .ui-dialog .container-inline .form-type--checkbox:not(:last-child),
+[dir="rtl"] .ui-dialog .container-inline .form-type--radio:not(:last-child),
+[dir="rtl"] .ui-dialog .claro-form-elements-inline .form-type--checkbox:not(:last-child),
+[dir="rtl"] .ui-dialog .claro-form-elements-inline .form-type--radio:not(:last-child) {
+  margin-right: 0;
+  margin-left: var(--space-m);
+}
+
+@media screen and (min-width: 601px) {
+  .container-inline .form-type--boolean:not(:last-child),
+  .claro-form-elements-inline .form-type--boolean:not(:last-child) {
+    margin-right: 2rem; /* LTR */
+  }
+  [dir="rtl"] .container-inline .form-type--boolean:not(:last-child),
+  [dir="rtl"] .claro-form-elements-inline .form-type--boolean:not(:last-child) {
+    margin-right: 0;
+    margin-left: 2rem;
+  }
+}
+
+/**
  * When form items are nested in radios or checkboxes group, reduce the default
  * space between them.
  */
@@ -64,6 +137,7 @@
   display: inline-block;
   box-sizing: border-box;
   width: 18px;
+  min-width: 18px;
   height: 18px;
   vertical-align: text-bottom;
   border: 1px solid var(--input-border-color);
@@ -76,6 +150,7 @@
 }
 .form-boolean--type-radio {
   width: 19px;
+  min-width: 19px;
   height: 19px;
   border-radius: 19px;
 }

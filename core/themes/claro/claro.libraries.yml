@@ -6,11 +6,9 @@ global-styling:
       css/base/typography.css: {}
       css/base/print.css: {}
     component:
-      css/classy/components/container-inline.css: {}
       css/classy/components/exposed-filters.css: {}
       css/classy/components/field.css: {}
       css/classy/components/icons.css: {}
-      css/classy/components/inline-form.css: {}
       css/classy/components/item-list.css: {}
       css/classy/components/link.css: {}
       css/classy/components/links.css: {}
@@ -23,7 +21,6 @@ global-styling:
       css/components/action-link.css: {}
       css/components/content-header.css: {}
       css/components/container-inline.css: {}
-      css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
       css/components/button.css: {}
       css/components/details.css: {}
@@ -40,6 +37,7 @@ global-styling:
       css/components/form--select.css: {}
       css/components/help.css: {}
       css/components/image-preview.css: {}
+      css/components/inline-form.css: {}
       css/components/menus-and-lists.css: {}
       css/components/modules-page.css: {}
       css/components/node.css: {}
@@ -48,7 +46,6 @@ global-styling:
       css/components/skip-link.css: {}
       css/components/tables.css: {}
       css/components/table--file-multiple-widget.css: {}
-      css/components/search-admin-settings.css: {}
       css/components/tablesort-indicator.css: {}
       css/components/system-status-report-general-info.css: {}
       css/components/system-status-report.css: {}

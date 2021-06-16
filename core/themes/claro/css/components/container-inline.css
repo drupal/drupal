@@ -8,17 +8,67 @@
 /**
  * @file
  * Inline items.
+ *
+ * Note that most rules with .container-inline selectors are accompanied by
+ * similar rules that use the selector .claro-form-elements-inline.
+ * Elements inside a form with the .claro-form-elements-inline class will all be
+ * styled as inline elements. This eliminates the need to add a wrapper with
+ * .container-inline to individual form elements.
+ * The .claro-form-elements-inline class does not adhere to BEM methodology.
+ * This deviation from BEM was approved as it ensures that elements added to
+ * admin forms via contrib match the styling of their constituent elements.
+ *
+ * @todo revisit the use of .claro-form-elements-inline in
+ *   https://drupal.org/node/3170933
  */
 
-.container-inline .form-radios label:after {
-  content: "";
+.container-inline div,
+.container-inline label {
+  display: inline-block;
 }
 
-.container-inline .form-radios .form-type-radio {
-  margin-right: 1em;
+/* Details contents always need to be rendered as block. */
+
+.container-inline .details-wrapper {
+  display: block;
 }
 
-[dir="rtl"] .container-inline .form-radios .form-type-radio {
-  margin-right: 0;
-  margin-left: 1em;
+.container-inline .hidden {
+  display: none;
+}
+
+/**
+ * Textarea and datetime items need to be flex in order to properly position
+ * labels.
+ */
+
+.container-inline .form-type--textarea,
+.container-inline .form-datetime-wrapper,
+.claro-form-elements-inline .form-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Vertically center labels. */
+
+.container-inline .form-item__label,
+.claro-form-elements-inline .form-item__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Textarea labels are top aligned. */
+
+.container-inline .form-type--textarea .form-item__label,
+.claro-form-elements-inline .form-type--textarea .form-item__label {
+  align-items: flex-start;
+}
+
+/* Set to display:block so margins collapse. */
+
+.container-inline .fieldset__description,
+.container-inline .form-item__description,
+.container-inline .form-item__error-message,
+.container-inline .fieldset__error-message {
+  display: block;
 }

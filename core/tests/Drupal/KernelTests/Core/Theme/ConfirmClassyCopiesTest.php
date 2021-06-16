@@ -260,14 +260,12 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'filenames' => [
           'css' => [
             'book-navigation.css',
-            'container-inline.css',
             'exposed-filters.css',
             'field.css',
             'file.css',
             'forum.css',
             'icons.css',
             'indented.css',
-            'inline-form.css',
             'item-list.css',
             'link.css',
             'links.css',
