@@ -571,7 +571,7 @@ class LinkFieldTest extends BrowserTestBase {
     $edit = [];
     foreach ($test_urls as $key => $test_url) {
       $edit["{$field_name}[$key][uri]"] = $test_url['inputByUser'];
-      $edit["{$field_name}[$key][title]"] = $test_url['title'];
+      $edit["{$field_name}[$key][title]"] = $test_url['inputByUser'];
     }
     // Assert label is shown.
     $this->assertSession()->pageTextContains('Read more about this entity');
@@ -612,7 +612,7 @@ class LinkFieldTest extends BrowserTestBase {
         $output = $this->renderTestEntity($id);
         foreach ($test_urls as $test_url) {
           $url = $test_url['renderedHref'];
-          $title = $test_url['title'];
+          $title = $test_url['inputByUser'];
           switch ($setting) {
             case 'trim_length':
               $title = isset($new_value) ? Unicode::truncate($title, $new_value, FALSE, TRUE) : $title;
@@ -660,40 +660,33 @@ class LinkFieldTest extends BrowserTestBase {
     $test_urls = [
       [
         'inputByUser' => '?a[]=1&a[]=2',
-        'title' => '?a[]=1&a[]=2',
         'renderedHref' => '?a%5B0%5D=1&amp;a%5B1%5D=2',
       ],
       [
         'inputByUser' => '?b[0]=1&b[1]=2',
-        'title' => '?b[0]=1&b[1]=2',
         'renderedHref' => '?b%5B0%5D=1&amp;b%5B1%5D=2',
       ],
       // UrlHelper::buildQuery will change order of params.
       [
         'inputByUser' => '?c[]=1&d=3&c[]=2',
-        'title' => '?c[]=1&d=3&c[]=2',
         'renderedHref' => '?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3',
       ],
       [
         'inputByUser' => '?e[f][g]=h',
-        'title' => '?e[f][g]=h',
         'renderedHref' => '?e%5Bf%5D%5Bg%5D=h',
       ],
       [
         'inputByUser' => '?i[j[k]]=l',
-        'title' => '?i[j[k]]=l',
         'renderedHref' => '?i%5Bj%5Bk%5D=l',
       ],
 
       // Query string replace value.
       [
         'inputByUser' => '?x=1&x=2',
-        'title' => '?x=1&x=2',
         'renderedHref' => '?x=2',
       ],
       [
         'inputByUser' => '?z[0]=1&z[0]=2',
-        'title' => '?z[0]=1&z[0]=2',
         'renderedHref' => '?z%5B0%5D=2',
       ],
     ];
