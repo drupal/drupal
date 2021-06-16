@@ -12,7 +12,7 @@
       once('filter-status', '#filters-status-wrapper input.form-checkbox', context).forEach(function (checkbox) {
         var $checkbox = $(checkbox);
         var $row = $context.find("#".concat($checkbox.attr('id').replace(/-status$/, '-weight'))).closest('tr');
-        var $filterSettings = $context.find("#".concat($checkbox.attr('id').replace(/-status$/, '-settings')));
+        var $filterSettings = $context.find("[data-drupal-selector='".concat($checkbox.attr('id').replace(/-status$/, '-settings'), "']"));
         var filterSettingsTab = $filterSettings.data('verticalTab');
         $checkbox.on('click.filterUpdate', function () {
           if ($checkbox.is(':checked')) {
