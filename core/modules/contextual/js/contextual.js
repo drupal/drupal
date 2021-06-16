@@ -28,25 +28,53 @@
   }
 
   function adjustIfNestedAndOverlapping($contextual) {
+    function dimensions($el) {
+      var $trigger = $el.find('.trigger');
+      var triggerIsVisuallyHidden = $trigger.hasClass('visually-hidden');
+
+      if (triggerIsVisuallyHidden) {
+        $trigger.removeClass('visually-hidden');
+      }
+
+      var dimensions = {
+        width: $el.width(),
+        height: $el.height()
+      };
+
+      if (triggerIsVisuallyHidden) {
+        $trigger.addClass('visually-hidden');
+      }
+
+      return dimensions;
+    }
+
+    function overlapsTooMuch($el1, $el2, width, height) {
+      return Math.abs($el1.offset().left - $el2.offset().left) < width && Math.abs($el1.offset().top - $el2.offset().top) < height;
+    }
+
     var $contextuals = $contextual.parents('.contextual-region').eq(-1).find('.contextual');
 
     if ($contextuals.length <= 1) {
       return;
     }
 
-    var firstTop = $contextuals.eq(0).offset().top;
-    var secondTop = $contextuals.eq(1).offset().top;
+    var _dimensions = dimensions($contextuals.eq(0)),
+        width = _dimensions.width,
+        height = _dimensions.height;
 
-    if (firstTop === secondTop) {
-      var $nestedContextual = $contextuals.eq(1);
-      var height = 0;
-      var $trigger = $nestedContextual.find('.trigger');
-      $trigger.removeClass('visually-hidden');
-      height = $nestedContextual.height();
-      $trigger.addClass('visually-hidden');
-      $nestedContextual.css({
-        top: $nestedContextual.position().top + height
-      });
+    for (var i1 = 0; i1 < $contextuals.length; i1++) {
+      for (var i2 = i1 + 1; i2 < $contextuals.length; i2++) {
+        var $contextual1 = $contextuals.eq(i1);
+        var $contextual2 = $contextuals.eq(i2);
+
+        if (overlapsTooMuch($contextual1, $contextual2, width / 2, height / 2)) {
+          var c2right = parseFloat($contextual2.css('right'));
+          var offset = $contextual2.offset().left - $contextual1.offset().left;
+          $contextual2.css({
+            right: c2right + offset + width
+          });
+        }
+      }
     }
   }
 

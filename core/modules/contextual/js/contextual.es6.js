@@ -37,15 +37,35 @@
   /**
    * Determines if a contextual link is nested & overlapping, if so: adjusts it.
    *
-   * This only deals with two levels of nesting; deeper levels are not touched.
-   *
    * @param {jQuery} $contextual
    *   A contextual links placeholder DOM element, containing the actual
    *   contextual links as rendered by the server.
    */
   function adjustIfNestedAndOverlapping($contextual) {
+    function dimensions($el) {
+      // Retrieve width of nested contextual link.
+      const $trigger = $el.find('.trigger');
+      // Elements with the .visually-hidden class have no dimensions, so this
+      // class must be temporarily removed to the calculate the height.
+      const triggerIsVisuallyHidden = $trigger.hasClass('visually-hidden');
+      if (triggerIsVisuallyHidden) {
+        $trigger.removeClass('visually-hidden');
+      }
+      // eslint-disable-next-line no-shadow
+      const dimensions = { width: $el.width(), height: $el.height() };
+      if (triggerIsVisuallyHidden) {
+        $trigger.addClass('visually-hidden');
+      }
+      return dimensions;
+    }
+    function overlapsTooMuch($el1, $el2, width, height) {
+      return (
+        Math.abs($el1.offset().left - $el2.offset().left) < width &&
+        Math.abs($el1.offset().top - $el2.offset().top) < height
+      );
+    }
+    // Find all contextual link divs in the outermost contextual region.
     const $contextuals = $contextual
-      // @todo confirm that .closest() is not sufficient
       .parents('.contextual-region')
       .eq(-1)
       .find('.contextual');
@@ -54,24 +74,24 @@
     if ($contextuals.length <= 1) {
       return;
     }
-
-    // If the two contextual links overlap, then we move the second one.
-    const firstTop = $contextuals.eq(0).offset().top;
-    const secondTop = $contextuals.eq(1).offset().top;
-    if (firstTop === secondTop) {
-      const $nestedContextual = $contextuals.eq(1);
-
-      // Retrieve height of nested contextual link.
-      let height = 0;
-      const $trigger = $nestedContextual.find('.trigger');
-      // Elements with the .visually-hidden class have no dimensions, so this
-      // class must be temporarily removed to the calculate the height.
-      $trigger.removeClass('visually-hidden');
-      height = $nestedContextual.height();
-      $trigger.addClass('visually-hidden');
-
-      // Adjust nested contextual link's position.
-      $nestedContextual.css({ top: $nestedContextual.position().top + height });
+    // Assuming all contextuals are equal, we only need to evaluate this once.
+    const { width, height } = dimensions($contextuals.eq(0));
+    // Iterate over pairs of nested contextual links. If the two contextual links
+    // overlap, then move the second one to the left of the first one.
+    for (let i1 = 0; i1 < $contextuals.length; i1++) {
+      for (let i2 = i1 + 1; i2 < $contextuals.length; i2++) {
+        const $contextual1 = $contextuals.eq(i1);
+        const $contextual2 = $contextuals.eq(i2);
+        // eslint-disable-next-line prettier/prettier
+        if (overlapsTooMuch($contextual1, $contextual2, width / 2, height / 2)) {
+          // Adjust contextual2's position to be to the left of contextual1.
+          const c2right = parseFloat($contextual2.css('right'));
+          // eslint-disable-next-line prettier/prettier
+          const offset = $contextual2.offset().left - $contextual1.offset().left;
+          // If c2 is on the right of c1, right offset must be higher, so it's +offset.
+          $contextual2.css({ right: c2right + offset + width });
+        }
+      }
     }
   }
 
