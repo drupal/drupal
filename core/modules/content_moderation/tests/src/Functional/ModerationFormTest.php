@@ -565,4 +565,44 @@ class ModerationFormTest extends ModerationStateTestBase {
     }
   }
 
+  /**
+   * Tests the form redirects to the right destination.
+   */
+  public function testModerationFormRedirect() {
+    // Create new moderated content in published state.
+    $node = $this->createNode(['type' => 'moderated_content', 'moderation_state' => 'published']);
+    // Make a pending revision.
+    $node->title = $this->randomMachineName();
+    $node->moderation_state->value = 'draft';
+    $node->save();
+
+    $canonical_path = sprintf('node/%d', $node->id());
+    $latest_version_path = sprintf('node/%d/latest', $node->id());
+
+    // Publish the pending revision.
+    $this->drupalGet($latest_version_path);
+    $this->submitForm([
+      'new_state' => 'published',
+    ], 'Apply');
+
+    // After publishing the user should be redirected to the canonical route.
+    $this->assertStringEndsWith($canonical_path, $this->getUrl());
+
+    // Create a new draft.
+    $node->moderation_state->value = 'draft';
+    $node->save();
+
+    // Enable the test module that alters the moderation state.
+    $this->container->get('module_installer')->install(['content_moderation_test_moderation_form']);
+    // Publish the pending revision. The test module will alter this and set it
+    // back to draft.
+    $this->drupalGet($latest_version_path);
+    $this->submitForm([
+      'new_state' => 'published',
+    ], 'Apply');
+
+    // The user should be redirected to the latest version route.
+    $this->assertStringEndsWith($latest_version_path, $this->getUrl());
+  }
+
 }
