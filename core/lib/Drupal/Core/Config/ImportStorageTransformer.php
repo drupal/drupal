@@ -93,7 +93,7 @@ final class ImportStorageTransformer {
    */
   public function transform(StorageInterface $storage) {
     // We use a database storage to reduce the memory requirement.
-    $mutable = new DatabaseStorage($this->connection, 'config_import');
+    $mutable = $this->connection->getConfigDatabaseStorage('config_import');
 
     if (!$this->persistentLock->lockMayBeAvailable(ConfigImporter::LOCK_NAME)) {
       // If the config importer is already importing, the transformation will

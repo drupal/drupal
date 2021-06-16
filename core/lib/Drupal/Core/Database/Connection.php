@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\Database\Query\Insert;
@@ -2061,6 +2062,24 @@ abstract class Connection {
    */
   public function getPagerManager(): PagerManagerInterface {
     return \Drupal::service('pager.manager');
+  }
+
+  /**
+   * Get the config database storage class.
+   *
+   * The class \Drupal\Core\Config\DatabaseStorage should not be overridden by
+   * contrib or custom modules. Only some database drivers need to override the
+   * class. Therefore is the class not part of a backend overridable service and
+   * is this method the only way to override the class.
+   *
+   * @param string $table
+   *   A database table name to store configuration data in.
+   *
+   * @return \Drupal\Core\Config\DatabaseStorage
+   *   The config database storage.
+   */
+  public function getConfigDatabaseStorage($table) {
+    return new DatabaseStorage($this, $table);
   }
 
 }

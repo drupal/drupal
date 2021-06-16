@@ -68,7 +68,7 @@ final class ExportStorageManager implements StorageManagerInterface {
     $this->lock = $lock;
     // The point of this service is to provide the storage and dispatch the
     // event when needed, so the storage itself can not be a service.
-    $this->storage = new DatabaseStorage($connection, 'config_export');
+    $this->storage = $connection->getConfigDatabaseStorage('config_export');
   }
 
   /**
