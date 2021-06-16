@@ -565,14 +565,11 @@ class LinkFieldTest extends BrowserTestBase {
       ->setComponent($field_name, $display_options)
       ->save();
 
-    // Create an entity with three link field values:
-    // - The first field item uses a URL only.
-    // - The second field item uses a URL and link text.
-    // - The third field item uses a fragment-only URL with text.
+    // Create an entity with link field values provided
+    // by $this->getUrlWithComplexQuery().
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('entity_test/add');
-
     $edit = [];
     foreach ($test_urls as $key => $test_url) {
       $edit["{$field_name}[$key][uri]"] = $test_url['inputByUser'];
