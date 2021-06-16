@@ -1,23 +1,23 @@
 const path = require('path');
-const { copyFile } = require('fs/promises');
+const { copyFile, writeFile, readFile } = require('fs/promises');
 
 const packageFolder = path.resolve(__dirname, '../../node_modules');
 const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
 
 [
   {
-    module: 'backbone',
+    pack: 'backbone',
     files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
   },
   {
-    module: 'es6-promise',
+    pack: 'es6-promise',
     files: [
       { from: 'dist/es6-promise.auto.min.js', to: 'es6-promise.auto.min.js' },
       { from: 'dist/es6-promise.auto.min.map', to: 'es6-promise.auto.min.map' },
     ],
   },
   {
-    module: 'farbtastic',
+    pack: 'farbtastic',
     files: [
       'marker.png',
       'mask.png',
@@ -27,7 +27,7 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
     ],
   },
   {
-    module: 'jquery',
+    pack: 'jquery',
     files: [
       { from: 'dist/jquery.js', to: 'jquery.js' },
       { from: 'dist/jquery.min.js', to: 'jquery.min.js' },
@@ -35,29 +35,30 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
     ],
   },
   {
-    module: 'jquery-form',
+    pack: 'jquery-form',
     files: [
       { from: 'dist/jquery.form.min.js', to: 'jquery.form.min.js' },
       { from: 'dist/jquery.form.min.js.map', to: 'jquery.form.min.js.map' },
+      { from: 'src/jquery.form.js', to: 'src/jquery.form.js' },
     ],
   },
   {
-    module: 'joyride',
+    pack: 'joyride',
     folder: 'jquery-joyride',
     files: ['jquery.joyride-2.1.js'],
   },
   {
-    module: 'jquery-once',
+    pack: 'jquery-once',
     files: ['jquery.once.js', 'jquery.once.min.js', 'jquery.once.min.js.map'],
   },
-  // { module: 'js-cookie', files: ['js.cookie.min.js'] },
+  // { pack: 'js-cookie', files: ['js.cookie.min.js'] },
   {
-    module: 'normalize.css',
+    pack: 'normalize.css',
     folder: 'normalize-css',
     files: ['normalize.css'],
   },
   {
-    module: '@drupal/once',
+    pack: '@drupal/once',
     folder: 'once',
     files: [
       { from: 'dist/once.js', to: 'once.js' },
@@ -66,11 +67,11 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
     ],
   },
   {
-    module: 'picturefill',
+    pack: 'picturefill',
     files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
   },
   {
-    module: '@popperjs/core',
+    pack: '@popperjs/core',
     folder: 'popperjs',
     files: [
       { from: 'dist/umd/popper.min.js', to: 'popper.min.js' },
@@ -78,28 +79,28 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
     ],
   },
   {
-    module: 'shepherd.js',
+    pack: 'shepherd.js',
     folder: 'shepherd',
     files: [
       { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
       { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },
     ],
   },
-  { module: 'sortablejs', folder: 'sortable', files: ['Sortable.min.js'] },
+  { pack: 'sortablejs', folder: 'sortable', files: ['Sortable.min.js'] },
   {
-    module: 'tabbable',
+    pack: 'tabbable',
     files: [
       { from: 'dist/index.umd.min.js', to: 'index.umd.min.js' },
       { from: 'dist/index.umd.min.js.map', to: 'index.umd.min.js.map' },
     ],
   },
   {
-    module: 'underscore',
+    pack: 'underscore',
     files: ['underscore-min.js', 'underscore-min.js.map'],
   },
-].forEach(({ module, files = [], folder = false }) => {
-  const sourceFolder = module;
-  const destFolder = folder || module;
+].forEach(({ pack, files = [], folder = false }) => {
+  const sourceFolder = pack;
+  const destFolder = folder || pack;
   files.forEach(async (file) => {
     let source = file;
     let dest = file;
@@ -107,9 +108,30 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
       source = file.from;
       dest = file.to;
     }
-    await copyFile(
-      `${packageFolder}/${sourceFolder}/${source}`,
-      `${assetsFolder}/${destFolder}/${dest}`,
-    );
+    // For map files, make sure the sources files don't leak outside the library
+    // folder inside assets/vendor.
+    if (path.extname(source) === '.map') {
+      console.log('Process map file', source);
+      const map = await readFile(`${packageFolder}/${sourceFolder}/${source}`);
+      const json = JSON.parse(map);
+      json.sources = json.sources.map((source) =>
+        source.replace(/^(\.\.\/)+/, ''),
+      );
+      await writeFile(
+        `${assetsFolder}/${destFolder}/${dest}`,
+        JSON.stringify(json),
+      );
+    } else {
+      console.log(
+        'Copy',
+        `${sourceFolder}/${source}`,
+        'to',
+        `${destFolder}/${dest}`,
+      );
+      await copyFile(
+        `${packageFolder}/${sourceFolder}/${source}`,
+        `${assetsFolder}/${destFolder}/${dest}`,
+      );
+    }
   });
 });
