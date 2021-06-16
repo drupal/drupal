@@ -528,7 +528,7 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the default 'link' formatter with coples query parameters.
+   * Tests the default 'link' formatter with complex query parameters.
    */
   public function testLinkFormatterQueryParametersDuplication() {
     $test_urls = $this->getUrlWithComplexQuery();
