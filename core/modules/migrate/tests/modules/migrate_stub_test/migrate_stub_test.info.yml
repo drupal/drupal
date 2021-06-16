@@ -1,0 +1,7 @@
+name: 'Migration Stub Test'
+type: module
+description: 'Provides test migrations to test migration  stub service.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:migrate

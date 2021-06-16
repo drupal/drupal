@@ -1,0 +1,7 @@
+name: 'Field UI'
+type: module
+description: 'Provides a user interface for the Field module.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:field

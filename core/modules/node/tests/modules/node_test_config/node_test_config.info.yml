@@ -1,0 +1,5 @@
+name: 'Node configuration tests'
+type: module
+description: 'Support module for node configuration tests.'
+package: Testing
+version: VERSION

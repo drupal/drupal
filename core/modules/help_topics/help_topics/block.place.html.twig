@@ -1,0 +1,22 @@
+---
+label: 'Placing a block'
+related:
+  - block.overview
+  - block.configure
+---
+{% set layout_link_text %}
+{% trans %}Block layout{% endtrans %}
+{% endset %}
+{% set layout_link = render_var(help_route_link(layout_link_text, 'block.admin_display')) %}
+{% set configure_topic = render_var(help_topic_link('block.configure')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Place a block into a theme's region. {% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; {{ layout_link }}.{% endtrans %}</li>
+  <li>{% trans %}Click the name of the theme that you want to place the block in.{% endtrans %}</li>
+  <li>{% trans %}Optionally, click <em>Demonstrate block regions</em> to see the regions of the theme.{% endtrans %}</li>
+  <li>{% trans %}Find the region where you want the block, and click <em>Place block</em> in that region. A modal dialog will pop up.{% endtrans %}</li>
+  <li>{% trans %}Find the block you want to place and click <em>Place block</em>. A <em>Configure block</em> modal dialog will pop up.{% endtrans %}</li>
+  <li>{% trans %}Configure the block and click <em>Save block</em>; see {{ configure_topic }} for configuration details.{% endtrans %}</li>
+</ol>

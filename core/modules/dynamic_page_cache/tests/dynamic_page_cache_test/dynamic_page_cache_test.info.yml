@@ -1,0 +1,5 @@
+name: 'Test Dynamic Page Cache'
+type: module
+description: 'Provides test routes/responses for Dynamic Page Cache.'
+package: Testing
+version: VERSION

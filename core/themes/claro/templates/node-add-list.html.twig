@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Claro's theme implementation to list node types available for adding content.
+ *
+ * Available variables:
+ * - bundles: A list of content types, each with the following properties:
+ *   - label: Content type label.
+ *   - add_link: \Drupal\Core\Link link instance to create an entity of this
+ *     content type. This is a GeneratedLink originally and is switched by
+ *     claro_preprocess_node_add_list().
+ *   - description: Description of this type of content.
+ *
+ * @todo Revisit after https://www.drupal.org/node/3026221 has been solved.
+ *
+ * @see template_preprocess_node_add_list()
+ * @see claro_preprocess_node_add_list()
+ */
+#}
+{% extends '@claro/entity-add-list.html.twig' %}
+
+{% set create_content = path('node.type_add') %}
+{%
+  set add_bundle_message = 'You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.'|t({ '@create-content': create_content })
+%}

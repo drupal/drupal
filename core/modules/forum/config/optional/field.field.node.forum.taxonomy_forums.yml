@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.taxonomy_forums
+    - node.type.forum
+    - taxonomy.vocabulary.forums
+id: node.forum.taxonomy_forums
+field_name: taxonomy_forums
+entity_type: node
+bundle: forum
+label: Forums
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      forums: forums
+    sort:
+      field: _none
+    auto_create: true
+field_type: entity_reference

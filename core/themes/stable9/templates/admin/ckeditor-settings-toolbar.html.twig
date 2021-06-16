@@ -1,0 +1,73 @@
+{#
+/**
+ * @file
+ * Theme override for the CKEditor settings toolbar.
+ *
+ * Available variables:
+ * - multiple_buttons: A list of buttons that may be added multiple times.
+ * - disabled_buttons: A list of disabled buttons.
+ * - active_buttons: A list of active button rows.
+ *
+ * @see template_preprocess_ckeditor_settings_toolbar()
+ */
+#}
+{% apply spaceless %}
+  <fieldset role="form" aria-labelledby="ckeditor-button-configuration ckeditor-button-description">
+    <legend id="ckeditor-button-configuration">{{ 'Toolbar configuration'|t }}</legend>
+    <div class="fieldset-wrapper">
+      <div id="ckeditor-button-description" class="fieldset-description">
+      {%- trans -%}
+        Move a button into the <em>Active toolbar</em> to enable it, or into the list of <em>Available buttons</em> to disable it. Buttons may be moved with the mouse or keyboard arrow keys. Toolbar group names are provided to support screen reader users. Empty toolbar groups will be removed upon save.
+      {%- endtrans -%}
+      </div>
+      <div class="ckeditor-toolbar-disabled clearfix">
+        {# Available buttons. #}
+        <div class="ckeditor-toolbar-available">
+          <label for="ckeditor-available-buttons">{{ 'Available buttons'|t }}</label>
+          <ul id="ckeditor-available-buttons" class="ckeditor-buttons clearfix" role="form" data-drupal-ckeditor-button-sorting="source">
+          {% for disabled_button in disabled_buttons %}
+             <li{{ disabled_button.attributes.addClass('ckeditor-button') }}>{{ disabled_button.value }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+        {# Dividers. #}
+        <div class="ckeditor-toolbar-dividers">
+          <label for="ckeditor-multiple-buttons">{{ 'Button divider'|t }}</label>
+          <ul id="ckeditor-multiple-buttons" class="ckeditor-multiple-buttons" role="form" data-drupal-ckeditor-button-sorting="dividers">
+          {% for multiple_button in multiple_buttons %}
+            <li{{ multiple_button.attributes.addClass('ckeditor-multiple-button') }}>{{ multiple_button.value }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {# Active toolbar. #}
+      <div class="clearfix">
+        <label id="ckeditor-active-toolbar">{{ 'Active toolbar'|t }}</label>
+      </div>
+      <div data-toolbar="active" role="form" class="ckeditor-toolbar ckeditor-toolbar-active clearfix">
+        <ul class="ckeditor-active-toolbar-configuration" role="presentation" aria-label="{{ 'CKEditor toolbar and button configuration.'|t }}">
+        {% for button_row in active_buttons %}
+          <li class="ckeditor-row" role="group" aria-labelledby="ckeditor-active-toolbar">
+            <ul class="ckeditor-toolbar-groups clearfix">
+            {% for group_name, button_group in button_row %}
+              <li class="ckeditor-toolbar-group" role="presentation" data-drupal-ckeditor-type="group" data-drupal-ckeditor-toolbar-group-name="{{ group_name }}" tabindex="0">
+                <h3 class="ckeditor-toolbar-group-name" id="ckeditor-toolbar-group-aria-label-for-{{ button_group.group_name_class }}">{{ group_name }}</h3>
+                <ul class="ckeditor-buttons ckeditor-toolbar-group-buttons" role="toolbar" data-drupal-ckeditor-button-sorting="target" aria-labelledby="ckeditor-toolbar-group-aria-label-for-{{ button_group.group_name_class }}">
+                {% for active_button in button_group.buttons %}
+                  <li{{ active_button.attributes.addClass(active_button.multiple ? 'ckeditor-multiple-button' : 'ckeditor-button') }}>{{ active_button.value }}</li>
+                {% endfor %}
+                </ul>
+              </li>
+            {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li>
+            <ul class="ckeditor-buttons"></ul>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </fieldset>
+{% endapply %}

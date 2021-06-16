@@ -1,0 +1,19 @@
+id: d7_image_settings
+label: Image configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - allow_insecure_derivatives
+    - suppress_itok_output
+    - image_style_preview_image
+  source_module: image
+process:
+  suppress_itok_output: suppress_itok_output
+  allow_insecure_derivatives: allow_insecure_derivatives
+  preview_image: image_style_preview_image
+destination:
+  plugin: config
+  config_name: image.settings

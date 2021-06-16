@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_noadd_media
+    - media.type.type_one
+    - media.type.type_two
+    - node.type.basic_page
+id: node.basic_page.field_noadd_media
+field_name: field_noadd_media
+entity_type: node
+bundle: basic_page
+label: 'No add media'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      type_one: type_one
+      type_two: type_two
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: file
+field_type: entity_reference

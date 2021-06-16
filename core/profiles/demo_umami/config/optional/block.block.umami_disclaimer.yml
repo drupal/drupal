@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:disclaimer_block:9b4dcd67-99f3-48d0-93c9-2c46648b29de'
+  enforced:
+    module:
+      - demo_umami_content
+  module:
+    - block_content
+  theme:
+    - umami
+id: umami_disclaimer
+theme: umami
+region: bottom
+weight: 10
+provider: null
+plugin: 'block_content:9b4dcd67-99f3-48d0-93c9-2c46648b29de'
+settings:
+  id: 'block_content:9b4dcd67-99f3-48d0-93c9-2c46648b29de'
+  label: 'Umami disclaimer'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

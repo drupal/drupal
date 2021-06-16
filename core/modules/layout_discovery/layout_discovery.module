@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for Layout Discovery.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_help().
+ */
+function layout_discovery_help($route_name) {
+  switch ($route_name) {
+    case 'help.page.layout_discovery':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Layout Discovery allows modules or themes to register layouts, and for other modules to list the available layouts and render them.') . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":layout-discovery-documentation">online documentation for the Layout Discovery module</a>.', [':layout-discovery-documentation' => 'https://www.drupal.org/docs/8/api/layout-api']) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function layout_discovery_theme() {
+  return \Drupal::service('plugin.manager.core.layout')->getThemeImplementations();
+}
+
+/**
+ * Prepares variables for layout templates.
+ *
+ * @param array &$variables
+ *   An associative array containing:
+ *   - content: An associative array containing the properties of the element.
+ *     Properties used: #settings, #layout.
+ */
+function template_preprocess_layout(&$variables) {
+  $variables['settings'] = isset($variables['content']['#settings']) ? $variables['content']['#settings'] : [];
+  $variables['layout'] = isset($variables['content']['#layout']) ? $variables['content']['#layout'] : [];
+
+  // Create an attributes variable for each region.
+  foreach (Element::children($variables['content']) as $name) {
+    if (!isset($variables['content'][$name]['#attributes'])) {
+      $variables['content'][$name]['#attributes'] = [];
+    }
+    $variables['region_attributes'][$name] = new Attribute($variables['content'][$name]['#attributes']);
+  }
+}

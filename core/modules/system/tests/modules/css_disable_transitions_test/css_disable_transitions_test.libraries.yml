@@ -1,0 +1,7 @@
+testing.css_disable_transitions_test:
+  version: VERSION
+  css:
+    theme:
+      css/disable_transitions.theme.css: { weight: 100 }
+  js:
+    js/disable_transitions.theme.js: {}

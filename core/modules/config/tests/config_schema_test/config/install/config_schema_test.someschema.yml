@@ -1,0 +1,5 @@
+testitem: 'Since this file at least has top level schema in config_test.schema.yml'
+testlist:
+ - 'Direct string items are identified and other items are'
+ - 'recognized as undefined types.'
+test_no_schema: 12

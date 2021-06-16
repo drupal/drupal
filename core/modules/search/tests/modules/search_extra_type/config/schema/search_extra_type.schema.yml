@@ -1,0 +1,18 @@
+# Schema for the configuration files of the Search Extra Type module.
+
+search_extra_type.settings:
+  type: mapping
+  label: 'Test search type settings'
+  mapping:
+    boost:
+      type: string
+      label: 'String'
+
+# Plugin \Drupal\search_extra_type\Plugin\Search\SearchExtraTypeSearch
+search.plugin.search_extra_type_search:
+  type: mapping
+  label: 'Extra type settings'
+  mapping:
+    boost:
+      type: string
+      label: 'Boost method'

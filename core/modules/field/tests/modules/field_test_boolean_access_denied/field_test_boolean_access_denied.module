@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Module for testing denying access to boolean fields.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function field_test_boolean_access_denied_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  return AccessResult::forbiddenIf($field_definition->getName() === \Drupal::state()->get('field.test_boolean_field_access_field'));
+}

@@ -1,0 +1,5 @@
+name: 'Legacy theme functions suggestions test'
+type: module
+description: 'Support module for testing theme suggestions for legacy theme functions.'
+package: Testing
+version: VERSION

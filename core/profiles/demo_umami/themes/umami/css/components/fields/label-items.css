@@ -1,0 +1,18 @@
+/**
+ * @file
+ * This file is used to style fields with class 'label-items' eg: Recipe
+ * category.
+ */
+.label-items {
+  margin-bottom: 1.2em;
+}
+
+.label-items .field__items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.label-items .field__label,
+.label-items .field__item {
+  padding-right: 0.6rem;
+}

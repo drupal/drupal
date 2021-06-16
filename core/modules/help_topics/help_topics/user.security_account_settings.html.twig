@@ -1,0 +1,35 @@
+---
+label: 'Configuring how user accounts are created and deleted'
+related:
+  - core.security
+  - user.overview
+---
+{% set account_settings_url = render_var(url('entity.user.admin_form')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure settings related to how user accounts are created and deleted.{% endtrans %}</p>
+<h2>{% trans %}What are the settings related to user account creation and deletion?{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}You can make it possible for new users to register themselves for accounts, with or without email verification or administrative approval. Or, you can make it so only administrators with <em>Administer users</em> permission can register new users.{% endtrans %}</li>
+  <li>{% trans %}You can configure what happens to content that a user created, if their account is <em>canceled</em> (deleted).{% endtrans %}</li>
+  <li>{% trans %}You can edit the email messages that are sent to users when their accounts are pending, approved, created, blocked, or canceled, or when they request a password reset.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}What are variables in email message text?{% endtrans %}</h2>
+<p>{% trans %}<em>Variables</em> are short text strings, enclosed in square brackets [], that you can insert into configured email message text. When an individual message is generated, data from your site is substituted for the variables. Some commonly-used variables are:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}[site:name]: The name of your website.{% endtrans %}</li>
+  <li>{% trans %}[site:url]: The URL of your website.{% endtrans %}</li>
+  <li>{% trans %}[site:login-url]: The URL where users can log in to your site.{% endtrans %}</li>
+  <li>{% trans %}[user:display-name]: The user's displayed name.{% endtrans %}</li>
+  <li>{% trans %}[user:account-name]: The user's account name.{% endtrans %}</li>
+  <li>{% trans %}[user:mail]: The user's email alias.{% endtrans %}</li>
+  <li>{% trans %}[user:one-time-login-url]: An expiring URL that a user can use to log in once, if they need to reset their password.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>People</em> &gt; <a href="{{ account_settings_url}}"><em>Account settings</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Select the method you want to use for creating user accounts, and check or uncheck the box that requires email verification, to match the settings you want for your site.{% endtrans %}</li>
+  <li>{% trans %}Select the desired option for what happens to content that a user created if their account is canceled.{% endtrans %}</li>
+  <li>{% trans %}Optionally, edit the text of email messages related to user accounts.{% endtrans %}</li>
+  <li>{% trans %}Verify that the other settings are correct.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save configuration</em>. You should see a message indicating that the settings were saved.{% endtrans %}</li>
+</ol>

@@ -1,0 +1,8 @@
+name: 'KeyValue tests'
+type: module
+description: 'A support module to test key value storage.'
+package: Testing
+version: VERSION
+hidden: true
+dependencies:
+  - drupal:entity_test

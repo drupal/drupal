@@ -1,0 +1,46 @@
+display_extenders: {  }
+skip_cache: false
+sql_signature: false
+ui:
+  show:
+    additional_queries: false
+    advanced_column: false
+    default_display: false
+    performance_statistics: false
+    preview_information: true
+    sql_query:
+      enabled: false
+      where: above
+    display_embed: false
+  always_live_preview: true
+  exposed_filter_any_label: old_any
+field_rewrite_elements:
+  div: DIV
+  span: SPAN
+  h1: H1
+  h2: H2
+  h3: H3
+  h4: H4
+  h5: H5
+  h6: H6
+  p: P
+  header: HEADER
+  footer: FOOTER
+  article: ARTICLE
+  section: SECTION
+  aside: ASIDE
+  details: DETAILS
+  blockquote: BLOCKQUOTE
+  figure: FIGURE
+  address: ADDRESS
+  code: CODE
+  pre: PRE
+  var: VAR
+  samp: SAMP
+  kbd: KBD
+  strong: STRONG
+  em: EM
+  del: DEL
+  ins: INS
+  q: Q
+  s: S

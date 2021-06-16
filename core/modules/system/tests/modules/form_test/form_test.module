@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the form API tests.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function block_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
+  \Drupal::messenger()->addStatus('block_form_form_test_alter_form_alter() executed.');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function form_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'form_test_alter_form') {
+    \Drupal::messenger()->addStatus('form_test_form_alter() executed.');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function form_test_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
+  \Drupal::messenger()->addStatus('form_test_form_form_test_alter_form_alter() executed.');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function system_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
+  \Drupal::messenger()->addStatus('system_form_form_test_alter_form_alter() executed.');
+}
+
+/**
+ * Create a header and options array. Helper function for callbacks.
+ */
+function _form_test_tableselect_get_data() {
+  $header = [
+    'one' => t('One'),
+    'two' => t('Two'),
+    'three' => t('Three'),
+    'four' => t('Four'),
+  ];
+
+  $options['row1'] = [
+    'title' => ['data' => ['#title' => t('row1')]],
+    'one' => 'row1col1',
+    'two' => t('row1col2'),
+    'three' => t('row1col3'),
+    'four' => t('row1col4'),
+  ];
+
+  $options['row2'] = [
+    'title' => ['data' => ['#title' => t('row2')]],
+    'one' => 'row2col1',
+    'two' => t('row2col2'),
+    'three' => t('row2col3'),
+    'four' => t('row2col4'),
+  ];
+
+  $options['row3'] = [
+    'title' => ['data' => ['#title' => t('row3')]],
+    'one' => 'row3col1',
+    'two' => t('row3col2'),
+    'three' => t('row3col3'),
+    'four' => t('row3col4'),
+  ];
+
+  return [$header, $options];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the registration form.
+ */
+function form_test_form_user_register_form_alter(&$form, FormStateInterface $form_state) {
+  $form['test_rebuild'] = [
+    '#type' => 'submit',
+    '#value' => t('Rebuild'),
+    '#submit' => ['form_test_user_register_form_rebuild'],
+  ];
+}
+
+/**
+ * Submit callback that just lets the form rebuild.
+ */
+function form_test_user_register_form_rebuild($form, FormStateInterface $form_state) {
+  \Drupal::messenger()->addStatus('Form rebuilt.');
+  $form_state->setRebuild();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form_test_vertical_tabs_access_form().
+ */
+function form_test_form_form_test_vertical_tabs_access_form_alter(&$form, &$form_state, $form_id) {
+  $form['vertical_tabs1']['#access'] = FALSE;
+  $form['vertical_tabs2']['#access'] = FALSE;
+  $form['tabs3']['#access'] = TRUE;
+  $form['fieldset1']['#access'] = FALSE;
+  $form['container']['#access'] = FALSE;
+}
+
+/**
+ * Ajax callback that returns the form element.
+ */
+function form_test_tableselect_ajax_callback($form, FormStateInterface $form_state) {
+  return $form['tableselect'];
+}

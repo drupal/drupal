@@ -1,0 +1,63 @@
+langcode: en
+status: true
+dependencies:
+  content:
+    - entity_test:entity_test:aa0c61cb-b7bb-4795-972a-493dabcf529c
+id: test_entity_area
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      header:
+        entity_entity_test:
+          field: entity_entity_test
+          id: entity_entity_test
+          table: views
+          target: 'aa0c61cb-b7bb-4795-972a-493dabcf529c'
+          view_mode: full
+          plugin_id: entity
+      footer:
+        entity_entity_test:
+          field: entity_entity_test
+          id: entity_entity_test
+          table: views
+          target: '{{ raw_arguments.id }}'
+          view_mode: full
+          plugin_id: entity
+        entity_block:
+          field: entity_block
+          id: entity_block
+          table: views
+          target: 'test_block'
+          view_mode: full
+          plugin_id: entity
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      arguments:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          plugin_id: numeric
+      pager:
+        options:
+          offset: 0
+        type: none
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

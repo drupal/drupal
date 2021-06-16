@@ -1,0 +1,109 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - rest
+    - user
+id: test_serializer_display_field
+label: 'Test serializer display field rows'
+module: rest
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: null
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      style:
+        type: serializer
+      row:
+        type: data_field
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          label: ''
+          plugin_id: string
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Custom text'
+          exclude: false
+          alter:
+            alter_text: true
+            text: TEST
+          plugin_id: custom
+        created:
+          id: created
+          table: views_test_data
+          field: created
+          type: timestamp
+          settings:
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
+          plugin_id: field
+      sorts:
+        created:
+          id: created
+          table: views_test_data
+          field: created
+          order: DESC
+          plugin_id: date
+      title: 'Test serialize'
+      arguments: {  }
+  rest_export_1:
+    display_plugin: rest_export
+    id: rest_export_1
+    display_title: serializer
+    position: null
+    display_options:
+      defaults:
+        access: false
+        style: false
+        row: false
+      path: test/serialize/field
+      access:
+        type: none
+      style:
+        type: serializer
+      row:
+        type: data_field
+  rest_export_2:
+    display_plugin: rest_export
+    id: rest_export_2
+    display_title: 'serialize - access denied'
+    position: null
+    display_options:
+      defaults:
+        access: false
+        style: false
+        row: false
+      path: test/serialize/denied
+      access:
+        type: perm
+        options:
+          perm: 'administer views'
+      style:
+        type: serializer
+      row:
+        type: data_field

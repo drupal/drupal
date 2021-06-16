@@ -1,0 +1,157 @@
+# Schema for the configuration files of the Options module.
+
+field.storage_settings.list_integer:
+  type: mapping
+  label: 'List (integer) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        type: mapping
+        label: 'Allowed value with label'
+        mapping:
+          value:
+            type: integer
+            label: 'Value'
+          label:
+            type: label
+            label: 'Label'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+
+field.field_settings.list_integer:
+  label: 'List (integer) settings'
+  type: mapping
+
+field.value.list_integer:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: integer
+      label: 'Value'
+
+field.storage_settings.list_float:
+  type: mapping
+  label: 'List (float) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        type: mapping
+        label: 'Allowed value with label'
+        mapping:
+          value:
+            type: float
+            label: 'Value'
+          label:
+            type: label
+            label: 'Label'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+
+field.field_settings.list_float:
+  label: 'List (float) settings'
+  type: mapping
+
+field.value.list_float:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
+
+field.storage_settings.list_string:
+  type: mapping
+  label: 'List (text) settings'
+  mapping:
+    allowed_values:
+      type: sequence
+      label: 'Allowed values list'
+      sequence:
+        type: mapping
+        label: 'Allowed value with label'
+        mapping:
+          value:
+            type: string
+            label: 'Value'
+          label:
+            type: label
+            label: 'Label'
+    allowed_values_function:
+      type: string
+      label: 'Allowed values function'
+
+field.field_settings.list_string:
+  label: 'List (text) settings'
+  type: mapping
+
+field.value.list_string:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'
+
+field.formatter.settings.list_default:
+  type: mapping
+  label: 'Options list default display settings'
+
+field.formatter.settings.list_key:
+  type: mapping
+  label: 'Key format settings'
+
+field.widget.settings.options_buttons:
+  type: mapping
+  label: 'Check boxes/radio buttons format settings'
+
+field.widget.settings.options_select:
+  type: mapping
+  label: 'Select list format settings'
+
+views.argument.number_list_field:
+  type: views.argument.numeric
+  mapping:
+    summary:
+      type: mapping
+      label: 'Display a summary'
+      mapping:
+        sort_order:
+          type: string
+          label: 'Sort order'
+        number_of_records:
+          type: integer
+          label: 'Sort by'
+        format:
+          type: string
+          label: 'Format'
+        human:
+          type: boolean
+
+views.argument.string_list_field:
+  type: views.argument.string
+  mapping:
+    summary:
+      type: mapping
+      label: 'Display a summary'
+      mapping:
+        sort_order:
+          type: string
+          label: 'Sort order'
+        number_of_records:
+          type: integer
+          label: 'Sort by'
+        format:
+          type: string
+          label: 'Format'
+        human:
+          type: boolean
+
+views.filter.list_field:
+  type: views.filter.many_to_one

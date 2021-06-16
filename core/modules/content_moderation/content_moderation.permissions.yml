@@ -1,0 +1,9 @@
+view any unpublished content:
+  title: 'View any unpublished content'
+
+view latest version:
+  title: 'View the latest version'
+  description: 'Requires the "View any unpublished content" or "View own unpublished content" permission'
+
+permission_callbacks:
+  - \Drupal\content_moderation\Permissions::transitionPermissions

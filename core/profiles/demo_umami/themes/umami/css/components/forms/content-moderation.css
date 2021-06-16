@@ -1,0 +1,21 @@
+/**
+ * @file
+ * This file is used to style the content moderation form.
+ */
+.entity-moderation-form {
+  padding-top: 0.5em;
+  padding-right: 1em;
+}
+.entity-moderation-form .form-item,
+.entity-moderation-form .form-submit {
+  margin: 0.5em 0;
+}
+.entity-moderation-form__item .form-text {
+  width: 100%;
+}
+.entity-moderation-form__item:last-child {
+  width: 100%;
+}
+.entity-moderation-form input[type="submit"] {
+  margin-bottom: 1em;
+}

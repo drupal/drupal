@@ -1,0 +1,80 @@
+{#
+/**
+ * @file
+ * Theme override for displaying a single search result.
+ *
+ * This template renders a single search result. The list of results is
+ * rendered using '#theme' => 'item_list', with suggestions of:
+ * - item_list__search_results__(plugin_id)
+ * - item_list__search_results
+ *
+ * Available variables:
+ * - url: URL of the result.
+ * - title: Title of the result.
+ * - snippet: A small preview of the result. Does not apply to user searches.
+ * - info: String of all the meta information ready for print. Does not apply
+ *   to user searches.
+ * - plugin_id: The machine-readable name of the plugin being executed,such
+ *   as "node_search" or "user_search".
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - info_split: Contains same data as info, but split into separate parts.
+ *   - info_split.type: Node type (or item type string supplied by module).
+ *   - info_split.user: Author of the node linked to users profile. Depends
+ *     on permission.
+ *   - info_split.date: Last update of the node. Short formatted.
+ *   - info_split.comment: Number of comments output as "% comments", %
+ *     being the count. (Depends on comment.module).
+ *   items should instead be within info and renamed info.foo, info.bar, etc.
+ *
+ * Other variables:
+ * - title_attributes: HTML attributes for the title.
+ * - content_attributes: HTML attributes for the content.
+ *
+ * Since info_split is keyed, a direct print of the item is possible.
+ * This array does not apply to user searches so it is recommended to check
+ * for its existence before printing. The default keys of 'type', 'user' and
+ * 'date' always exist for node searches. Modules may provide other data.
+ * @code
+ *   {% if (info_split.comment) %}
+ *     <span class="info-comment">
+ *       {{ info_split.comment }}
+ *     </span>
+ *   {% endif %}
+ * @endcode
+ *
+ * To check for all available data within info_split, use the code below.
+ * @code
+ *   <pre>
+ *     {{ dump(info_split) }}
+ *   </pre>
+ * @endcode
+ *
+ * @see template_preprocess_search_result()
+ */
+#}
+{{ attach_library('olivero/search-results') }}
+{% if info_split %}
+  <div class="search-result__meta">
+    {% if info_split.user  %}
+      <span>
+        {{ 'By'|t }} {% apply spaceless %}<span class="search-result__author">{{ info_split.user }}</span>{% endapply %}
+      </span>
+    {% endif %}
+    {% if info_date  %}
+      <span  class="search-result__date">, {{ info_date }}</span>
+    {% endif %}
+  </div>
+{% endif %}
+{% if title %}
+  {{ title_prefix }}
+  <h3{{ title_attributes.addClass('search-result__title') }}>
+    <a href="{{ url }}">{{ title }}</a>
+  </h3>
+  {{ title_suffix }}
+{% endif %}
+{% if snippet %}
+  <div{{ content_attributes.addClass('search-result__snippet', layout, 'text-content') }}>{{ snippet }}</div>
+{% endif %}

@@ -1,0 +1,7 @@
+name: 'Test Search Type'
+type: module
+description: 'Support module for Search module testing.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:test_page_test

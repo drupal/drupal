@@ -1,0 +1,33 @@
+# Schema for the views relationship.
+
+views.relationship.*:
+  type: views_relationship
+  label: 'Standard'
+
+views.relationship.standard:
+  type: views_relationship
+  label: 'Standard'
+
+views.relationship.broken:
+  type: views_relationship
+  label: 'Broken'
+
+views.relationship.groupwise_max:
+  type: views_relationship
+  label: 'Groupwise max'
+  mapping:
+    subquery_sort:
+      type: string
+      label: 'Representative sort criteria'
+    subquery_order:
+      type: string
+      label: 'Representative sort order'
+    subquery_regenerate:
+      type: boolean
+      label: 'Generate subquery each time view is run'
+    subquery_view:
+      type: string
+      label: 'Representative view'
+    subquery_namespace:
+      type: string
+      label: 'Subquery namespace'

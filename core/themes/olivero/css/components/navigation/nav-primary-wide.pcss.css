@@ -1,0 +1,255 @@
+/**
+ * @file
+ * Nav Primary (wide widths).
+ */
+
+@import "../../base/variables.pcss.css";
+
+body:not(.is-always-mobile-nav) {
+  @media (--nav) {
+    & .primary-nav__menu-item {
+      flex-wrap: nowrap; /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
+
+      &.primary-nav__menu-item--has-children {
+        & .primary-nav__menu-link--link,
+        & .primary-nav__menu-link--nolink {
+          flex-basis: auto;
+        }
+      }
+    }
+
+    & .primary-nav__menu-link {
+      letter-spacing: 0.02em;
+      font-size: 16px;
+      line-height: var(--sp1-5);
+
+      &:focus {
+        position: relative;
+        outline: 0;
+
+        &:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + var(--sp));
+          height: var(--sp3);
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px var(--color--blue-50);
+          border-radius: 4px;
+        }
+      }
+    }
+
+    & .primary-nav__menu-link--button {
+      &.primary-nav__menu-link--has-children {
+        overflow: visible; /* Necessary to view icon in IE11 */
+        padding-inline-end: 9px;
+
+        &:focus:before {
+          width: calc(100% + var(--sp1-5));
+          content: "";
+        }
+
+        &:before {
+          content: none;
+        }
+
+        /* Chevron icon for desktop navigation. */
+        &:after {
+          position: absolute;
+          inset-block-start: 50%;
+          inset-inline-start: calc(100% - 3px);
+          width: 8px;
+          height: 8px;
+          margin-block-start: -2px;
+          transform: translateY(-50%) rotate(45deg);
+          /* Intentionally not using CSS logical properties. */
+          border-top: 0;
+          border-right: solid 2px currentColor;
+          border-bottom: solid 2px currentColor;
+        }
+
+        &[aria-expanded="true"]:after {
+          opacity: 1;
+        }
+      }
+    }
+
+    & .primary-nav__menu-link-inner {
+      padding-block: var(--sp2);
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+      transform-origin: center;
+      border-top-width: var(--sp0-5);
+    }
+
+    & .primary-nav__menu--level-1 {
+      display: flex;
+      align-items: stretch;
+      margin-inline-end: var(--sp);
+    }
+
+    & .primary-nav__menu-item--level-1 {
+      position: relative; /* Anchor secondary menu */
+      display: flex;
+      align-items: center;
+      width: max-content;
+      max-width: 200px;
+      margin-block: 0;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+
+      &:not(:last-child) {
+        margin-inline-end: var(--sp2);
+      }
+    }
+
+    & .primary-nav__menu--level-2 {
+      position: absolute;
+      z-index: 105; /* Appear above search container. */
+      top: calc(100% - (0.5 * var(--sp)));
+      left: 50%;
+      visibility: hidden;
+      overflow: auto;
+      width: 250px;
+      /**
+       * Ensure that long level-2 menus will never overflow viewport (focused
+       * elements should always be in viewport per accessibility guidelines).
+       */
+      max-height: calc(100vh - var(--site-header-height-wide) - var(--sp));
+      margin-block-start: 0;
+      margin-inline-start: 0;
+      padding-block: calc(3 * var(--sp));
+      padding-inline-start: var(--sp2);
+      padding-inline-end: var(--sp2);
+      transition: none;
+      transform: translate(-50%, -20px);
+      opacity: 0;
+      /* Intentionally not using CSS logical properties. */
+      border-top: solid var(--color--blue-50) var(--sp0-5);
+      border-right: solid 1px transparent; /* Transparent borders useful for Windows High Contrast mode. */
+      border-bottom: solid 1px transparent;
+      border-left: solid 1px transparent;
+      border-radius: 0 0 2px 2px;
+      background: var(--color--white);
+      box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08);
+
+      &.is-active-menu-parent {
+        visibility: visible;
+        margin-block-start: 0;
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    & .primary-nav__menu-link--level-2 {
+      display: block;
+
+      &:focus:before {
+        height: 100%;
+      }
+
+      & .primary-nav__menu-link-inner {
+        padding-block: var(--sp0-5);
+        padding-inline-start: 0;
+        padding-inline-end: 0;
+
+        &:after {
+          transform-origin: left;
+          border-top-width: 3px;
+        }
+      }
+    }
+
+    /**
+     * Arrow is placed outside of submenu because the submenu has the
+     * `overflow: hidden` CSS rule applied.
+     */
+    & .primary-nav__menu-🥕 {
+      position: absolute;
+      z-index: 105; /* Match level 2 menus. */
+      top: calc(100% - var(--sp));
+      left: 50%;
+      visibility: hidden;
+      width: 0;
+      height: 0;
+      transform: translate(-50%, -20px);
+      opacity: 0;
+      /* Intentionally not using CSS logical properties. */
+      border-right: solid 10px transparent;
+      border-bottom: solid 10px var(--color--blue-50);
+      border-left: solid 10px transparent;
+
+      &.is-active-menu-parent {
+        visibility: visible;
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    /**
+     * When ensuring that long menus don't overflow viewport, we can give a
+     * little extra room when the toolbar is fixed (and is shorter).
+     */
+    & .js-fixed .primary-nav__menu--level-2 {
+      max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) + var(--sp4));
+    }
+  }
+}
+
+/*
+ * Take into account Drupal's admin toolbars when ensuring that long level-2
+ * menus will never overflow viewport.
+ */
+@media (--nav) {
+  body:not(.is-always-mobile-nav) {
+    /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
+    &.toolbar-vertical,
+    &.toolbar-horizontal.toolbar-fixed {
+      & .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height));
+      }
+
+      & .js-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) + var(--sp4));
+      }
+    }
+
+    /* Toolbar is horizontal fixed, and tray is open. */
+    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open {
+      & .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height));
+      }
+
+      & .js-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height) + var(--sp4));
+      }
+    }
+  }
+}
+
+/*
+ * Only apply transition styles to menu when JS is loaded. This
+ * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
+ */
+html.js body:not(.is-always-mobile-nav) {
+  @media (--nav) {
+    & .primary-nav__menu--level-2,
+    & .primary-nav__menu-🥕 {
+      transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+    }
+  }
+}
+
+[dir="rtl"] {
+  & body:not(.is-always-mobile-nav) {
+    @media (--nav) {
+      & .primary-nav__menu-link--level-2 {
+        & .primary-nav__menu-link-inner:after {
+          transform-origin: right;
+        }
+      }
+    }
+  }
+}

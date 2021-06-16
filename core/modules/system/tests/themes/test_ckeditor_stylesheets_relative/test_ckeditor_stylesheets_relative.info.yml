@@ -1,0 +1,7 @@
+name: Test relative CKEditor stylesheets
+type: theme
+description: 'A theme that uses a relative CKEditor stylesheet.'
+version: VERSION
+base theme: false
+ckeditor_stylesheets:
+  - css/yokotsoko.css

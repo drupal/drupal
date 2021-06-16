@@ -1,0 +1,67 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - comment_test_views
+    - node
+    - user
+id: test_comment_user_uid
+label: test_comment_user_uid
+module: comment_test_views
+description: ''
+tag: default
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      arguments:
+        uid_touch:
+          default_argument_skip_url: false
+          default_argument_type: fixed
+          field: uid_touch
+          id: uid_touch
+          summary:
+            format: default_summary
+            number_of_records: 0
+          summary_options:
+            items_per_page: 25
+          table: node_field_data
+          plugin_id: argument_comment_user_uid
+          entity_type: node
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        nid:
+          field: nid
+          id: nid
+          table: node_field_data
+          plugin_id: node
+          entity_type: node
+          entity_field: nid
+        title:
+          field: title
+          id: title
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

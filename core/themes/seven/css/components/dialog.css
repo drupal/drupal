@@ -1,0 +1,127 @@
+/**
+ * Presentational styles for Drupal dialogs.
+ */
+
+.ui-dialog {
+  position: absolute;
+  z-index: 1260;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog {
+    min-width: 92%;
+    max-width: 92%;
+  }
+}
+.ui-dialog .ui-dialog-titlebar {
+  padding: 15px 49px 15px 15px; /* LTR */
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background: #6b6b6b;
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar {
+  padding-right: 15px;
+  padding-left: 49px;
+}
+.ui-dialog .ui-dialog-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.231em;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+  position: absolute;
+  top: 10px;
+  right: 12px; /* LTR */
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  border: 3px solid #6b6b6b;
+  border-radius: 5px;
+  background: none;
+}
+.ui-dialog .ui-dialog-titlebar-close:hover,
+.ui-dialog .ui-dialog-titlebar-close:focus {
+  border-color: #fff;
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
+  right: auto;
+  left: 20px;
+}
+.ui-dialog .ui-icon.ui-icon-closethick {
+  margin-top: -8px;
+  background: url(../../../../misc/icons/ffffff/ex.svg) 0 0 no-repeat;
+}
+.ui-dialog .ui-widget-content.ui-dialog-content {
+  overflow: auto;
+  padding: 1em;
+  background: #fff;
+}
+.views-ui-dialog .ui-widget-content.ui-dialog-content {
+  padding: 0;
+}
+.ui-dialog .ui-widget-content.ui-dialog-buttonpane {
+  /* border-top: 1px solid #bfbfbf; */
+  margin: 0;
+  padding: 15px 20px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background: #f5f5f2;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float: none;
+  margin: 0;
+  padding: 0;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
+  padding: 0;
+}
+.ui-dialog .ui-dialog-content {
+  position: static;
+}
+
+/* Form action buttons are moved in dialogs. Remove empty space. */
+.ui-dialog .ui-dialog-content .form-actions {
+  margin: 0;
+  padding: 0;
+}
+.ui-dialog .ajax-progress-throbber {
+  position: fixed;
+  z-index: 1000;
+  top: 48.5%;
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%; /* LTR */
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  opacity: 0.9;
+  border-radius: 7px;
+  background-color: #232323;
+  background-image: url(../../../../misc/loading-small.gif);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+[dir="rtl"] .ui-dialog .ajax-progress-throbber {
+  right: 49%;
+  left: auto;
+}
+.ui-dialog .ajax-progress-throbber .throbber,
+.ui-dialog .ajax-progress-throbber .message {
+  display: none;
+}
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  position: relative;
+}
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+  top: 10px;
+}
+.ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
+  background: none;
+}

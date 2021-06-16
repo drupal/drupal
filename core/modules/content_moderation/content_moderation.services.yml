@@ -1,0 +1,22 @@
+services:
+  content_moderation.state_transition_validation:
+    class: Drupal\content_moderation\StateTransitionValidation
+    arguments: ['@content_moderation.moderation_information']
+  content_moderation.moderation_information:
+    class: Drupal\content_moderation\ModerationInformation
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
+  access_check.latest_revision:
+    class: Drupal\content_moderation\Access\LatestRevisionCheck
+    arguments: ['@content_moderation.moderation_information']
+    tags:
+      - { name: access_check, applies_to: _content_moderation_latest_version }
+  content_moderation.config_import_subscriber:
+    class: Drupal\content_moderation\EventSubscriber\ConfigImportSubscriber
+    arguments: ['@config.manager', '@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
+  content_moderation.route_subscriber:
+    class: Drupal\content_moderation\Routing\ContentModerationRouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

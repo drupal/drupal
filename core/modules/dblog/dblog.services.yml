@@ -1,0 +1,7 @@
+services:
+  logger.dblog:
+    class: Drupal\dblog\Logger\DbLog
+    arguments: ['@database', '@logger.log_message_parser']
+    tags:
+      - { name: logger }
+      - { name: backend_overridable }

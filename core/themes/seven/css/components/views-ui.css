@@ -1,0 +1,331 @@
+/**
+ * Views styling
+ */
+
+/* @group Forms */
+
+/**
+ * Seven positions the summary absolutely, but does not have a way to ignore
+ * details without a summary so we make one up.
+ *
+ * @todo Neither a fieldset without legend nor a details without summary is
+ *   valid HTML markup in any way. Refactor Views UI to not produce such invalid
+ *   markup.
+ */
+details.fieldset-no-legend {
+  padding-top: 0;
+}
+
+/**
+ * Being extra safe here and scoping this to the add view wizard form (where
+ * a layout problem occurs for the Display format details if we don't fix its
+ * padding), but it's probably safe to just let it apply everywhere.
+ */
+#views-ui-add-form details details .seven-details__wrapper {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.views-display-tab details.box-padding .seven-details__wrapper {
+  padding: 0;
+}
+
+.views-admin input.form-submit,
+.views-ui-dialog input.form-submit,
+.views-admin a.button,
+.views-ui-dialog a.button {
+  margin-top: 0;
+  margin-right: 0; /* LTR */
+  margin-bottom: 0;
+}
+[dir="rtl"] .views-admin input.form-submit,
+[dir="rtl"] .views-ui-dialog input.form-submit,
+[dir="rtl"] .views-admin a.button,
+[dir="rtl"] .views-ui-dialog a.button {
+  margin-right: 1em;
+  margin-left: 0;
+}
+[dir="rtl"] .views-admin input.form-submit:first-child,
+[dir="rtl"] .views-ui-dialog input.form-submit:first-child,
+[dir="rtl"] .views-admin a.button:first-child,
+[dir="rtl"] .views-ui-dialog a.button:first-child {
+  margin-right: 0;
+}
+
+.form-radios > .form-item {
+  margin-top: 3px;
+}
+
+/* @group Dependent options
+ */
+
+/* This is necessary to supersede the Seven .form-item
+ * reset declaration that sets the margin to zero.
+ */
+.form-item-options-expose-required,
+.form-item-options-expose-label,
+.form-item-options-expose-description {
+  margin-left: 1.5em; /* LTR */
+}
+[dir="rtl"] .form-item-options-expose-required,
+[dir="rtl"] .form-item-options-expose-label,
+[dir="rtl"] .form-item-options-expose-description {
+  margin-right: 1.5em;
+  margin-left: 0;
+}
+
+.views-admin-dependent .form-item .form-item,
+.views-admin-dependent .form-type-checkboxes,
+.views-admin-dependent .form-type-radios,
+.views-admin-dependent .form-item .form-item,
+.form-item-options-expose-required,
+.form-item-options-expose-label,
+.form-item-options-expose-description {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.views-admin-dependent .form-type-radio,
+.views-admin-dependent .form-radios .form-item {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+/* @end */
+
+/* @group Lists */
+
+.views-admin ul.secondary,
+.views-admin .item-list ul {
+  margin: 0;
+  padding: 0;
+}
+
+.views-displays ul.secondary li a,
+.views-displays ul.secondary li.is-active a,
+.views-displays ul.secondary li.is-active a.is-active {
+  padding: 2px 7px 3px;
+}
+
+.views-displays ul.secondary li a {
+  color: #0074bd;
+}
+
+.views-displays ul.secondary li.is-active a,
+.views-displays ul.secondary li.is-active a.is-active {
+  border: 1px solid transparent;
+}
+
+.views-admin .links li {
+  padding-right: 0; /* LTR */
+}
+[dir="rtl"] .views-admin .links li {
+  padding-left: 0;
+}
+
+.views-admin .button .links li {
+  padding-right: 12px; /* LTR */
+}
+[dir="rtl"] .views-admin .button .links li {
+  padding-left: 12px;
+}
+
+.views-display-top ul.secondary {
+  float: left; /* LTR */
+  background-color: transparent;
+}
+[dir="rtl"] .views-display-top ul.secondary {
+  float: right;
+}
+
+.views-display-top .secondary .action-list li {
+  float: none;
+  margin: 0;
+}
+
+/* @end */
+
+/* @group Tables */
+
+.views-ui-rearrange-filter-form table td,
+.views-ui-rearrange-filter-form table th {
+  vertical-align: top;
+}
+
+/* @end */
+
+/* @group Attachment details */
+
+#edit-display-settings-title {
+  color: #008bcb;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+
+.views-displays .secondary {
+  text-align: left; /* LTR */
+}
+[dir="rtl"] .views-displays .secondary {
+  text-align: right;
+}
+
+.views-admin .icon.add {
+  background-position: center 3px;
+}
+
+.views-displays .secondary a:hover > .icon.add {
+  background-position: center -25px;
+}
+
+.views-displays .secondary .open > a {
+  border-radius: 7px 7px 0 0;
+}
+
+.views-displays .secondary .open > a:hover,
+.views-displays .secondary .open > a:focus {
+  color: #008bcb;
+  background-color: #f1f1f1;
+}
+
+.views-displays .secondary .action-list li:first-child {
+  border-radius: 0 7px 0 0; /* LTR */
+}
+[dir="rtl"] .views-displays .secondary .action-list li:first-child {
+  border-radius: 7px 0 0 0;
+}
+
+.views-displays .secondary .action-list li:last-child {
+  border-radius: 0 0 7px 7px;
+}
+
+.views-displays .secondary .action-list input.form-submit {
+  color: #008bcb;
+}
+
+/* @end */
+
+/* @group Attachment buckets
+ *
+ * These are the individual "buckets," or boxes, inside the display settings area
+ */
+
+.views-ui-display-tab-bucket h3 {
+  text-transform: uppercase;
+}
+
+.views-ui-display-tab-bucket .links {
+  padding: 2px 6px 4px;
+}
+
+.views-ui-display-tab-bucket .links li + li {
+  margin-left: 3px; /* LTR */
+}
+[dir="rtl"] .views-ui-display-tab-bucket .links li + li {
+  margin-right: 3px;
+  margin-left: 0;
+}
+
+/* @end */
+
+/* @group Rearrange filter criteria */
+
+.views-ui-rearrange-filter-form .action-links {
+  float: left;
+  margin: 0 0 1em;
+  padding: 0;
+}
+.views-ui-rearrange-filter-form .tabledrag-toggle-weight-wrapper {
+  float: right;
+  margin-bottom: 1em;
+}
+
+.views-ui-rearrange-filter-form table {
+  border: medium none;
+}
+
+.views-ui-rearrange-filter-form [id^="views-row"] {
+  border: medium none;
+}
+
+.views-ui-rearrange-filter-form tr td:last-child {
+  border-right: medium none; /* LTR */
+}
+[dir="rtl"] .views-ui-rearrange-filter-form tr td:last-child {
+  border-right: initial;
+  border-left: medium none;
+}
+
+.views-ui-rearrange-filter-form .filter-group-operator-row {
+  border-right: 1px solid transparent !important;
+  border-left: 1px solid transparent !important;
+}
+
+.views-ui-rearrange-filter-form tr.drag td {
+  background-color: #fe7 !important;
+}
+
+.views-ui-rearrange-filter-form tr.drag-previous td {
+  background-color: #ffb !important;
+}
+
+/* @end */
+
+/* @group Live preview elements */
+
+.views-query-info pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* @group Query info table */
+
+.views-query-info table {
+  border-radius: 7px;
+  -webkit-border-horizontal-spacing: 1px;
+  -webkit-border-vertical-spacing: 1px;
+}
+
+.views-query-info table tr td:last-child {
+  /* Fixes a Seven style that bleeds down into this table unnecessarily */
+  border-right: 0 none; /* LTR */
+}
+[dir="rtl"] .views-query-info table tr td:last-child {
+  border-right: initial;
+  border-left: 0 none;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Add view */
+
+.form-item-page-create,
+.form-item-block-create {
+  margin-top: 13px;
+}
+
+/* @end */
+
+/* @group Modal dialog box
+ *
+ * The contents of the popup dialog on the views edit form.
+ */
+
+.filterable-option .form-item.form-type-checkbox {
+  padding-top: 4px;
+  /* This selector is aggressive because Seven's reset for .form-items is aggressive. */
+  padding-bottom: 4px;
+  padding-left: 4px; /* LTR */
+}
+[dir="rtl"] .filterable-option .form-item.form-type-checkbox {
+  padding-right: 4px;
+  padding-left: 8px;
+}
+
+/* @end */

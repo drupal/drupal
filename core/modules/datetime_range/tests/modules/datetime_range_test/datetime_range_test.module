@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains datetime_range_test.module.
+ */
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function datetime_range_test_entity_type_alter(array &$entity_types) {
+  // Inhibit views data for the 'taxonomy_term' entity type in order to cover
+  // the case when an entity type provides no views data.
+  // @see https://www.drupal.org/project/drupal/issues/2995578
+  // @see \Drupal\Tests\datetime_range\Kernel\Views\EntityTypeWithoutViewsDataTest
+  $entity_types['taxonomy_term']->setHandlerClass('views_data', NULL);
+}

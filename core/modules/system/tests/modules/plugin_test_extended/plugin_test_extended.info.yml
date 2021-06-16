@@ -1,0 +1,5 @@
+name: 'Plugin Test Extended'
+type: module
+description: 'Test annotations can extend other annotations in a different namespace.'
+package: Testing
+version: VERSION

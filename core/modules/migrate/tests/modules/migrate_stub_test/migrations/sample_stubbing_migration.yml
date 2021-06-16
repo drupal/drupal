@@ -1,0 +1,25 @@
+id: sample_stubbing_migration
+label: "Sample Stubbing Migration"
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 17
+      title: "Sample 1"
+      bodyvalue: "This is the body for ID 17"
+      bodyformat: "plain_text"
+    - id: 25
+      title: "Sample 2"
+      bodyvalue: "This is the body for ID 25"
+      bodyformat: "plain_text"
+    - id: 33
+      title: "Sample 3"
+  ids:
+    id:
+      type: integer
+process:
+  title: title
+  body/0/value: bodyvalue
+  body/0/format: bodyformat
+destination:
+  default_bundle: node_stub
+  plugin: entity:node

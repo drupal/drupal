@@ -1,0 +1,6 @@
+statistics.settings:
+  title: Statistics
+  description: 'Configure the logging of content statistics.'
+  route_name: statistics.settings
+  parent: system.admin_config_system
+  weight: -15

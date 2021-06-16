@@ -1,0 +1,81 @@
+{#
+/**
+ * @file
+ * Theme override for a fieldset element and its children.
+ *
+ * @see template_preprocess_fieldset()
+ * @see claro_preprocess_fieldset()
+ */
+#}
+{%
+  set classes = [
+    'fieldset',
+    attributes.hasClass('fieldgroup') ? 'fieldset--group',
+    'js-form-item',
+    'form-item',
+    'js-form-wrapper',
+    'form-wrapper',
+  ]
+%}
+{%
+  set wrapper_classes = [
+    'fieldset__wrapper',
+    attributes.hasClass('fieldgroup') ? 'fieldset__wrapper--group',
+  ]
+%}
+{%
+  set legend_span_classes = [
+    'fieldset__label',
+    attributes.hasClass('fieldgroup') ? 'fieldset__label--group',
+    required ? 'js-form-required',
+    required ? 'form-required',
+  ]
+%}
+{%
+  set legend_classes = [
+    'fieldset__legend',
+    attributes.hasClass('fieldgroup') and not attributes.hasClass('form-composite') ? 'fieldset__legend--group',
+    attributes.hasClass('form-composite') ? 'fieldset__legend--composite',
+    title_display == 'invisible' ? 'fieldset__legend--invisible' : 'fieldset__legend--visible',
+  ]
+%}
+{%
+  set description_classes = [
+   'fieldset__description',
+  ]
+%}
+
+<fieldset{{ attributes.addClass(classes) }}>
+  {#  Always wrap fieldset legends in a <span> for CSS positioning. #}
+  {% if legend.title %}
+  <legend{{ legend.attributes.addClass(legend_classes) }}>
+    <span{{ legend_span.attributes.addClass(legend_span_classes) }}>{{ legend.title }}</span>
+  </legend>
+  {% endif %}
+
+  <div{{ content_attributes.addClass(wrapper_classes) }}>
+    {% if inline_items %}
+      <div class="container-inline">
+    {% endif %}
+
+    {% if prefix %}
+      <span class="fieldset__prefix">{{ prefix }}</span>
+    {% endif %}
+    {{ children }}
+    {% if suffix %}
+      <span class="fieldset__suffix">{{ suffix }}</span>
+    {% endif %}
+    {% if errors %}
+      <div class="fieldset__error-message">
+        {{ errors }}
+      </div>
+    {% endif %}
+    {% if description.content %}
+      <div{{ description.attributes.addClass(description_classes) }}>{{ description.content }}</div>
+    {% endif %}
+
+    {% if inline_items %}
+      </div>
+    {% endif %}
+  </div>
+</fieldset>

@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Mock module for language layer tests.
+ */
+
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
+
+/**
+ * Implements hook_page_top().
+ */
+function language_test_page_top() {
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
+    language_test_store_language_negotiation();
+    \Drupal::messenger()->addStatus(t('Language negotiation method: @name', ['@name' => \Drupal::languageManager()->getNegotiatedLanguageMethod()]));
+  }
+}
+
+/**
+ * Implements hook_language_types_info().
+ */
+function language_test_language_types_info() {
+  if (\Drupal::state()->get('language_test.language_types')) {
+    return [
+      'test_language_type' => [
+        'name' => t('Test'),
+        'description' => t('A test language type.'),
+      ],
+      'fixed_test_language_type' => [
+        'fixed' => ['test_language_negotiation_method'],
+        'locked' => TRUE,
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_language_types_info_alter().
+ */
+function language_test_language_types_info_alter(array &$language_types) {
+  if (\Drupal::state()->get('language_test.content_language_type')) {
+    $language_types[LanguageInterface::TYPE_CONTENT]['locked'] = FALSE;
+    unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
+    // By default languages are not configurable. Make
+    // LanguageInterface::TYPE_CONTENT configurable.
+    $config = \Drupal::configFactory()->getEditable('language.types');
+    $configurable = $config->get('configurable');
+    if (!in_array(LanguageInterface::TYPE_CONTENT, $configurable)) {
+      $configurable[] = LanguageInterface::TYPE_CONTENT;
+      $config->set('configurable', $configurable)->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_language_negotiation_info_alter().
+ */
+function language_test_language_negotiation_info_alter(array &$negotiation_info) {
+  if (\Drupal::state()->get('language_test.language_negotiation_info_alter')) {
+    unset($negotiation_info[LanguageNegotiationUI::METHOD_ID]);
+  }
+}
+
+/**
+ * Store the last negotiated languages.
+ */
+function language_test_store_language_negotiation() {
+  $last = [];
+  foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
+    $last[$type] = \Drupal::languageManager()->getCurrentLanguage($type)->getId();
+  }
+  \Drupal::state()->set('language_test.language_negotiation_last', $last);
+}
+
+/**
+ * Implements hook_language_fallback_candidates_alter().
+ */
+function language_test_language_fallback_candidates_alter(array &$candidates, array $context) {
+  if (Drupal::state()->get('language_test.fallback_alter.candidates')) {
+    unset($candidates[LanguageInterface::LANGCODE_NOT_SPECIFIED]);
+  }
+}
+
+/**
+ * Implements hook_language_fallback_candidates_OPERATION_alter().
+ */
+function language_test_language_fallback_candidates_test_alter(array &$candidates, array $context) {
+  if (Drupal::state()->get('language_test.fallback_operation_alter.candidates')) {
+    $langcode = LanguageInterface::LANGCODE_NOT_APPLICABLE;
+    $candidates[$langcode] = $langcode;
+  }
+}
+
+/**
+ * Implements hook_module_preinstall().
+ */
+function language_test_module_preinstall() {
+  \Drupal::state()->set('language_test.language_count_preinstall', count(\Drupal::languageManager()->getLanguages()));
+}
+
+/**
+ * Implements hook_language_switch_links_alter().
+ */
+function language_test_language_switch_links_alter(array &$links, $type, Url $url) {
+  // I'll just sit here and wait to be called with the right arguments.
+}

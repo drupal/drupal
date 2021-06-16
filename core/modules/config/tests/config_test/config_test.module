@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Provides Config module hook implementations for testing purposes.
+ */
+
+require_once dirname(__FILE__) . '/config_test.hooks.inc';
+
+/**
+ * Implements hook_cache_flush().
+ */
+function config_test_cache_flush() {
+  // Set a global value we can check in test code.
+  $GLOBALS['hook_cache_flush'] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function config_test_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  // The 'translatable' entity key is not supposed to change over time. In this
+  // case we can safely do it because we set it once and we do not change it for
+  // all the duration of the test session.
+  $entity_types['config_test']->set('translatable', \Drupal::service('state')->get('config_test.translatable'));
+
+  // Create a clone of config_test that does not have a status.
+  $entity_types['config_test_no_status'] = clone $entity_types['config_test'];
+  $config_test_no_status = &$entity_types['config_test_no_status'];
+  $config_test_no_status->setLinkTemplate('edit-form', '/admin/structure/config_test/manage/{config_test_no_status}');
+  $config_test_no_status->setLinkTemplate('delete-form', '/admin/structure/config_test/manage/{config_test_no_status}/delete');
+
+  $keys = $config_test_no_status->getKeys();
+  unset($keys['status']);
+  $config_test_no_status->set('id', 'config_test_no_status');
+  $config_test_no_status->set('entity_keys', $keys);
+  $config_test_no_status->set('config_prefix', 'no_status');
+  $config_test_no_status->set('mergedConfigExport', ['id' => 'id', 'label' => 'label']);
+  if (\Drupal::service('state')->get('config_test.lookup_keys', FALSE)) {
+    $entity_types['config_test']->set('lookup_keys', ['uuid', 'style']);
+  }
+}

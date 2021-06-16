@@ -1,0 +1,8 @@
+name: 'Media test type'
+type: module
+description: 'Provides test type for a media item.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:media
+  - drupal:media_test_source

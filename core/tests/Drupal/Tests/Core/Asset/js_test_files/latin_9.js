@@ -1,0 +1,1 @@
+var latin9Char = '¤';

@@ -1,0 +1,38 @@
+content_moderation.state:
+  type: workflows.state
+  mapping:
+    published:
+      type: boolean
+      label: 'Is published'
+    default_revision:
+      type: boolean
+      label: 'Is default revision'
+
+workflow.type_settings.content_moderation:
+  type: mapping
+  mapping:
+    states:
+      type: sequence
+      label: 'Content moderation states'
+      orderby: key
+      sequence:
+        type: content_moderation.state
+        label: 'States'
+    transitions:
+      type: sequence
+      orderby: key
+      sequence:
+        type: workflows.transition
+        label: 'Transitions'
+    entity_types:
+      type: sequence
+      label: 'Entity types'
+      sequence:
+        type: sequence
+        label: 'Bundles'
+        sequence:
+          type: string
+          label: 'Bundle ID'
+    default_moderation_state:
+      type: string
+      label: 'Default moderation state'

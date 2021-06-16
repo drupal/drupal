@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for File module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function file_schema() {
+  $schema['file_usage'] = [
+    'description' => 'Track where a file is used.',
+    'fields' => [
+      'fid' => [
+        'description' => 'File ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'module' => [
+        'description' => 'The name of the module that is using the file.',
+        'type' => 'varchar_ascii',
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'type' => [
+        'description' => 'The name of the object type in which the file is used.',
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'id' => [
+        'description' => 'The primary key of the object using the file.',
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'count' => [
+        'description' => 'The number of times this file is used by this object.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['fid', 'type', 'id', 'module'],
+    'indexes' => [
+      'type_id' => ['type', 'id'],
+      'fid_count' => ['fid', 'count'],
+      'fid_module' => ['fid', 'module'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * Display information about getting upload progress bars working.
+ */
+function file_requirements($phase) {
+  $requirements = [];
+
+  // Check the server's ability to indicate upload progress.
+  if ($phase == 'runtime') {
+    $description = NULL;
+    $implementation = file_progress_implementation();
+    $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE');
+
+    // Test the web server identity.
+    if (preg_match("/Nginx/i", $server_software)) {
+      $is_nginx = TRUE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+    elseif (preg_match("/Apache/i", $server_software)) {
+      $is_nginx = FALSE;
+      $is_apache = TRUE;
+      $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
+    }
+    else {
+      $is_nginx = FALSE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+
+    if (!$is_apache && !$is_nginx) {
+      $value = t('Not enabled');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php or Nginx with PHP-FPM.');
+    }
+    elseif ($fastcgi) {
+      $value = t('Not enabled');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.');
+    }
+    elseif (!$implementation) {
+      $value = t('Not enabled');
+      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.');
+    }
+    elseif ($implementation == 'uploadprogress') {
+      $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
+    }
+    $requirements['file_progress'] = [
+      'title' => t('Upload progress'),
+      'value' => $value,
+      'description' => $description,
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function file_update_last_removed() {
+  return 8700;
+}

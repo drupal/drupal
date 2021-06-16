@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the modules listing page.
+ *
+ * Displays a list of all packages in a project.
+ *
+ * Available variables:
+ * - modules: Contains multiple module instances. Each module contains:
+ *   - attributes: Attributes on the row.
+ *   - checkbox: A checkbox for enabling the module.
+ *   - name: The human-readable name of the module.
+ *   - id: A unique identifier for interacting with the details element.
+ *   - enable_id: A unique identifier for interacting with the checkbox element.
+ *   - description: The description of the module.
+ *   - machine_name: The module's machine name.
+ *   - version: Information about the module version.
+ *   - requires: A list of modules that this module requires.
+ *   - required_by: A list of modules that require this module.
+ *   - links: A list of administration links provided by the module.
+ *
+ * @see template_preprocess_system_modules_details()
+ *
+ * @ingroup themeable
+ */
+#}
+<table class="responsive-enabled module-list">
+  <thead>
+    <tr>
+      <th class="checkbox visually-hidden">{{ 'Installed'|t }}</th>
+      <th class="name visually-hidden">{{ 'Name'|t }}</th>
+      <th class="description visually-hidden priority-low">{{ 'Description'|t }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for module in modules %}
+      <tr{{ module.attributes.addClass('module-list__module') }}>
+        <td class="module-list__checkbox">
+          {{ module.checkbox }}
+        </td>
+        <td class="module-list__module">
+          <label id="{{ module.id }}" for="{{ module.enable_id }}" class="module-list__module-name table-filter-text-source">{{ module.name }}</label>
+        </td>
+        <td class="expand priority-low module-list__description">
+          <details class="js-form-wrapper form-wrapper module-list__module-details claro-details" id="{{ module.enable_id }}-description">
+            <summary aria-controls="{{ module.enable_id }}-description" role="button" aria-expanded="false" class="claro-details__summary module-list__module-summary"><span class="text module-description">{{ module.description }}</span></summary>
+            <div class="claro-details__wrapper module-details__wrapper">
+              <div class="module-details__description">
+                <div class="module-details__requirements">
+                  <div class="module-details__requirement">{{ 'Machine name: <span dir="ltr" class="table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name }) }}</div>
+                  {% if module.version %}
+                    <div class="module-details__requirement">{{ 'Version: @module-version'|t({'@module-version': module.version }) }}</div>
+                  {% endif %}
+                  {% if module.requires %}
+                    <div class="module-details__requirement">{{ 'Requires: @module-list'|t({'@module-list': module.requires }) }}</div>
+                  {% endif %}
+                  {% if module.required_by %}
+                    <div class="module-details__requirement">{{ 'Required by: @module-list'|t({'@module-list': module.required_by }) }}</div>
+                  {% endif %}
+                </div>
+                {% if module.links %}
+                  <div class="module-details__links">
+                    {% for link_type in ['help', 'permissions', 'configure'] %}
+                      {{ module.links[link_type] }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </details>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

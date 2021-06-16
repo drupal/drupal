@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Quick Edit tests.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_quickedit_render_field().
+ */
+function quickedit_test_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+  $entity = \Drupal::service('entity.repository')->getTranslationFromContext($entity, $langcode);
+  return [
+    '#prefix' => '<div class="quickedit-test-wrapper">',
+    'field' => $entity->get($field_name)->view($view_mode_id),
+    '#suffix' => '</div>',
+  ];
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ *
+ * @see quickedit_field_formatter_info_alter()
+ * @see editor_field_formatter_info_alter()
+ */
+function quickedit_test_field_formatter_info_alter(&$info) {
+  // Update \Drupal\text\Plugin\Field\FieldFormatter\TextDefaultFormatter's
+  // annotation to indicate that it supports the 'wysiwyg' in-place editor
+  // provided by this module.
+  $info['text_default']['quickedit'] = ['editor' => 'wysiwyg'];
+}

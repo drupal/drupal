@@ -1,0 +1,48 @@
+/**
+ * @file
+ * This file is used to style the 'field-recipe-instruction' field.
+ */
+
+.field--name-field-recipe-instruction .field__label {
+  margin: 0 0 1em 0;
+  padding: 0 0 0.6em 0;
+  border-bottom: 1px solid #eec2cb;
+  font-family: "Scope One", Georgia, serif;
+  font-size: 1.266rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+/* Large */
+@media screen and (min-width: 60rem) {
+  /* 960px */
+  .field--name-field-recipe-instruction .field__label {
+    margin: 0 0 1.5em 0;
+    font-size: 1.77rem;
+  }
+}
+.field--name-field-recipe-instruction ol {
+  padding: 0;
+  list-style-type: none;
+}
+.field--name-field-recipe-instruction ol > li {
+  position: relative;
+  min-height: 1.5em;
+  padding: 0 0 0.6em 2.5em; /* LTR */
+  list-style: none;
+  counter-increment: step-counter;
+}
+[dir=rtl] .field--name-field-recipe-instruction ol > li {
+  padding: 0 2.5em 0.6em 0;
+}
+.field--name-field-recipe-instruction ol > li::before {
+  position: absolute;
+  top: 0;
+  left: 0; /* LTR */
+  content: counter(step-counter);
+  color: #cc2a00;
+  font-size: 1.5rem;
+}
+[dir=rtl] .field--name-field-recipe-instruction ol > li::before {
+  right: 0;
+  left: auto;
+}

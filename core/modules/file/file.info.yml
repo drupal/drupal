@@ -1,0 +1,7 @@
+name: File
+type: module
+description: 'Defines a field type for files.'
+package: Field types
+version: VERSION
+dependencies:
+  - drupal:field

@@ -1,0 +1,6 @@
+entity.path_alias.collection:
+  title: 'URL aliases'
+  description: 'Add custom URLs to existing paths.'
+  route_name: entity.path_alias.collection
+  parent: system.admin_config_search
+  weight: -5

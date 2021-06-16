@@ -1,0 +1,48 @@
+# This is the DrupalCI testbot build file for Drupal core.
+# Learn to make one for your own drupal.org project:
+# https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
+build:
+  assessment:
+    validate_codebase:
+      # Core's code quality is checked by container_command.commit_checks.
+    testing:
+      # Run code quality checks.
+      container_command.commit-checks:
+        commands:
+          - "core/scripts/dev/commit-code-check.sh --drupalci"
+        halt-on-fail: true
+      # run_tests task is executed several times in order of performance speeds.
+      # halt-on-fail can be set on the run_tests tasks in order to fail fast.
+      # suppress-deprecations is false in order to be alerted to usages of
+      # deprecated code.
+      run_tests.phpunit:
+        types: 'PHPUnit-Unit'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.kernel:
+        types: 'PHPUnit-Kernel'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.build:
+        # Limit concurrency due to disk space concerns.
+        concurrency: 15
+        types: 'PHPUnit-Build'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.functional:
+        types: 'PHPUnit-Functional'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.javascript:
+        concurrency: 15
+        types: 'PHPUnit-FunctionalJavascript'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      # Run nightwatch testing.
+      # @see https://www.drupal.org/project/drupal/issues/2869825
+      nightwatchjs:

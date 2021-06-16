@@ -1,0 +1,39 @@
+id: d6_view_modes
+label: View modes
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: d6_view_mode
+  constants:
+    entity_type: node
+    status: true
+process:
+  mode:
+    plugin: static_map
+    source: view_mode
+    map:
+      0: normal
+      1: preview
+      2: search_index
+      3: search_result
+      4: rss
+      5: print
+      teaser: teaser
+      full: full
+  label:
+    plugin: static_map
+    source: view_mode
+    map:
+      0: "Normal"
+      1: "Preview"
+      2: "Search index"
+      3: "Search result"
+      4: "RSS"
+      5: "Print"
+      teaser: "Teaser"
+      full: "Full"
+  targetEntityType: 'constants/entity_type'
+  status: 'constants/status'
+destination:
+  plugin: entity:entity_view_mode

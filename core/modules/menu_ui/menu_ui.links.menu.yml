@@ -1,0 +1,5 @@
+entity.menu.collection:
+  title: Menus
+  description: 'Manage menus and menu links.'
+  route_name: entity.menu.collection
+  parent: system.admin_structure

@@ -1,0 +1,119 @@
+{#
+/**
+ * @file
+ * Theme override for the Appearance page.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the main container.
+ * - theme_groups: A list of theme groups. Each theme group contains:
+ *   - attributes: HTML attributes specific to this theme group.
+ *   - title: Title for the theme group.
+ *   - state: State of the theme group, e.g. installed or uninstalled.
+ *   - themes: A list of themes within the theme group. Each theme contains:
+ *     - attributes: HTML attributes specific to this theme.
+ *     - screenshot: A screenshot representing the theme.
+ *     - description: Description of the theme.
+ *     - name: Theme name.
+ *     - version: The theme's version number.
+ *     - is_default: Boolean indicating whether the theme is the default theme
+ *       or not.
+ *     - is_admin: Boolean indicating whether the theme is the admin theme or
+ *       not.
+ *     - notes: Identifies what context this theme is being used in, e.g.,
+ *       default theme, admin theme.
+ *     - incompatible: Text describing any compatibility issues.
+ *     - module_dependencies: A list of modules that this theme requires.
+ *     - operations: A list of operation links, e.g., Settings, Enable, Disable,
+ *       etc. these links should only be displayed if the theme is compatible.
+ *     - title_id: The unique id of the theme label.
+ *     - description_id: The unique id of the theme description. This is
+ *       undefined if the description is casted to an empty string.
+ *
+ * @see template_preprocess_system_themes_page()
+ * @see claro_preprocess_system_themes_page()
+ */
+#}
+<div{{ attributes }}>
+  {% for theme_group in theme_groups %}
+    {%
+      set theme_group_classes = [
+        'system-themes-list',
+        'system-themes-list--' ~ theme_group.state,
+        'clearfix',
+      ]
+    %}
+
+    {%
+      set card_alignment = theme_group.state == 'installed' ? 'horizontal' : 'vertical'
+    %}
+
+    {% if not loop.first %}
+      <hr>
+    {% endif %}
+
+    <div{{ theme_group.attributes.addClass(theme_group_classes) }}>
+      <h2 class="system-themes-list__header">{{ theme_group.title }}</h2>
+      <div class="card-list {{ card_alignment == 'horizontal' ? 'card-list--two-cols' : 'card-list--four-cols' }}">
+        {% for theme in theme_group.themes %}
+          {%
+            set theme_classes = [
+              theme.is_default ? 'theme-default',
+              theme.is_admin ? 'theme-admin',
+              'card',
+              'card--' ~ card_alignment,
+              'card-list__item',
+            ]
+          %}
+          {%
+            set theme_title_classes = [
+              'card__content-item',
+              'heading-f',
+            ]
+          %}
+          {%
+            set theme_description_classes = [
+              'card__content-item',
+            ]
+          %}
+          <div{{ theme.attributes.addClass(theme_classes).setAttribute('aria-labelledby', theme.title_id).setAttribute('aria-describedby', theme.description_id ?: null) }}>
+            {% if theme.screenshot %}
+              <div class="card__image">
+                {{ theme.screenshot }}
+              </div>
+            {% endif %}
+            <div class="card__content-wrapper">
+              <div class="card__content">
+                <h3{{ create_attribute({'id': theme.title_id}).addClass(theme_title_classes) }} id={{ theme.title_id }}>
+                  {{- theme.name }} {{ theme.version -}}
+                  {% if theme.notes %}
+                    ({{ theme.notes|safe_join(', ') }})
+                  {%- endif -%}
+                </h3>
+
+                {% if theme.description and theme.description_id %}
+                  <div{{ create_attribute({'id': theme.description_id ?: null}).addClass(theme_description_classes) }}>
+                    {{ theme.description }}
+                  </div>
+                {%- endif -%}
+              </div>
+
+              <div class="card__footer">
+                {% if theme.module_dependencies %}
+                  <div class="theme-info__requires">
+                    {{ 'Requires: @module_dependencies'|t({ '@module_dependencies': theme.module_dependencies|render }) }}
+                  </div>
+                {% endif %}
+                {# Display operation links only if the theme is compatible. #}
+                {% if theme.incompatible %}
+                  <small class="incompatible">{{ theme.incompatible }}</small>
+                {% else %}
+                    {{ theme.operations }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,37 @@
+/**
+ * @file
+ * Styling for toolbar warning message.
+ */
+
+.toolbar-warning {
+  overflow: hidden;
+  margin: 0.5em 0;
+  padding: 0.5em 2em 0.5em 2.3333em;
+  text-indent: -1000px;
+  background: url(../../../../core/misc/icons/e29700/warning.svg) no-repeat center center transparent;
+  background-size: auto 20px;
+}
+
+.toolbar-warning:hover {
+  color: #000;
+}
+
+@media only screen and (min-width: 40em) {
+  .toolbar-warning {
+    padding-right: 1em; /* LTR */
+    text-decoration: none;
+    text-indent: 0;
+    color: #000;
+    border-color: #f4daa6;
+    border-radius: 4px;
+    background-color: #fdf8ed;
+    background-position: 0.5em center; /* LTR */
+    background-size: auto 18px;
+    font-weight: bold;
+  }
+  [dir="rtl"] .toolbar-warning {
+    padding-right: 2em;
+    padding-left: 1em;
+    background-position: right 0.5em center;
+  }
+}

@@ -1,0 +1,41 @@
+/**
+ * Menus and lists.
+ */
+.item-list ul {
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+  list-style-type: disc;
+  list-style-image: none;
+}
+[dir="rtl"] .item-list ul {
+  margin: 0.25em 1.5em 0.25em 0;
+}
+.item-list ul li,
+.menu-item {
+  list-style-type: disc;
+  list-style-image: none;
+}
+.menu-item {
+  margin: 0;
+}
+.item-list ul li.collapsed,
+.menu-item--collapsed {
+  list-style-type: disc;
+  list-style-image: url(../../../../misc/menu-collapsed.png);
+}
+.item-list ul li.expanded,
+.menu-item--expanded {
+  list-style-type: circle;
+  list-style-image: url(../../../../misc/menu-expanded.png);
+}
+ul.links li,
+ul.inline li {
+  padding-right: 1em; /* LTR */
+}
+[dir="rtl"] ul.links li,
+[dir="rtl"] ul.inline li {
+  padding-right: 0;
+  padding-left: 1em;
+}
+ul.inline li {
+  display: inline;
+}

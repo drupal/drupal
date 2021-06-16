@@ -1,0 +1,5 @@
+name: 'HTML mail test support'
+description: 'Test if HTML in mails works as expected.'
+type: module
+package: Testing
+version: VERSION

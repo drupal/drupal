@@ -1,0 +1,12 @@
+cache_strings: true
+javascript:
+  directory: languages
+translation:
+  use_source: remote_and_local
+  default_filename: '%project-%version.%language.po'
+  default_server_pattern: 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po'
+  overwrite_customized: false
+  overwrite_not_customized: true
+  update_interval_days: 0
+  path: ''
+  import_enabled: false

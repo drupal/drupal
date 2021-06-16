@@ -1,0 +1,18 @@
+name: max_2600x2600
+label: 'Max 2600x2600'
+effects:
+  9b311dd1-0351-45a1-9500-cd069e4670cb:
+    id: image_scale
+    data:
+      width: 2600
+      height: 2600
+      upscale: false
+    weight: 3
+    uuid: 9b311dd1-0351-45a1-9500-cd069e4670cb
+langcode: en
+dependencies:
+  module:
+    - responsive_image
+  enforced:
+    module:
+      - responsive_image

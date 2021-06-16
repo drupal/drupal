@@ -1,0 +1,5 @@
+name: 'Placeholder setting a message test'
+type: module
+description: 'Support module for PlaceholderMessageTest.'
+package: Testing
+version: VERSION

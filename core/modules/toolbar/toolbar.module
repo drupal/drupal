@@ -1,0 +1,292 @@
+<?php
+
+/**
+ * @file
+ * Administration toolbar for quick access to top level administration items.
+ */
+
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Url;
+use Drupal\toolbar\Controller\ToolbarController;
+
+/**
+ * Implements hook_help().
+ */
+function toolbar_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.toolbar':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Toolbar module provides a toolbar for site administrators, which displays tabs and trays provided by the Toolbar module itself and other modules. For more information, see the <a href=":toolbar_docs">online documentation for the Toolbar module</a>.', [':toolbar_docs' => 'https://www.drupal.org/documentation/modules/toolbar']) . '</p>';
+      $output .= '<h4>' . t('Terminology') . '</h4>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Tabs') . '</dt>';
+      $output .= '<dd>' . t('Tabs are buttons, displayed in a bar across the top of the screen. Some tabs execute an action (such as starting Edit mode), while other tabs toggle which tray is open.') . '</dd>';
+      $output .= '<dt>' . t('Trays') . '</dt>';
+      $output .= '<dd>' . t('Trays are usually lists of links, which can be hierarchical like a menu. If a tray has been toggled open, it is displayed either vertically or horizontally below the tab bar, depending on the browser width. Only one tray may be open at a time. If you click another tab, that tray will replace the tray being displayed. In wide browser widths, the user has the ability to toggle from vertical to horizontal, using a link at the bottom or right of the tray. Hierarchical menus only have open/close behavior in vertical mode; if you display a tray containing a hierarchical menu horizontally, only the top-level links will be available.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function toolbar_theme($existing, $type, $theme, $path) {
+  $items['toolbar'] = [
+    'render element' => 'element',
+  ];
+  $items['menu__toolbar'] = [
+    'base hook' => 'menu',
+    'variables' => ['items' => [], 'attributes' => []],
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_page_top().
+ *
+ * Add admin toolbar to the top of the page automatically.
+ */
+function toolbar_page_top(array &$page_top) {
+  $page_top['toolbar'] = [
+    '#type' => 'toolbar',
+    '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
+    '#cache' => [
+      'keys' => ['toolbar'],
+      'contexts' => ['user.permissions'],
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for administration toolbar templates.
+ *
+ * Default template: toolbar.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tray. Properties used: #children, #attributes and #bar.
+ */
+function template_preprocess_toolbar(&$variables) {
+  $element = $variables['element'];
+
+  // Prepare the toolbar attributes.
+  $variables['attributes'] = $element['#attributes'];
+  $variables['toolbar_attributes'] = new Attribute($element['#bar']['#attributes']);
+  $variables['toolbar_heading'] = $element['#bar']['#heading'];
+
+  // Prepare the trays and tabs for each toolbar item as well as the remainder
+  // variable that will hold any non-tray, non-tab elements.
+  $variables['trays'] = [];
+  $variables['tabs'] = [];
+  $variables['remainder'] = [];
+  foreach (Element::children($element) as $key) {
+    // Early rendering to collect the wrapper attributes from
+    // ToolbarItem elements.
+    if (!empty($element[$key])) {
+      Drupal::service('renderer')->render($element[$key]);
+    }
+    // Add the tray.
+    if (isset($element[$key]['tray'])) {
+      $attributes = [];
+      if (!empty($element[$key]['tray']['#wrapper_attributes'])) {
+        $attributes = $element[$key]['tray']['#wrapper_attributes'];
+      }
+      $variables['trays'][$key] = [
+        'links' => $element[$key]['tray'],
+        'attributes' => new Attribute($attributes),
+      ];
+      if (array_key_exists('#heading', $element[$key]['tray'])) {
+        $variables['trays'][$key]['label'] = $element[$key]['tray']['#heading'];
+      }
+    }
+
+    // Add the tab.
+    if (isset($element[$key]['tab'])) {
+      $attributes = [];
+      // Pass the wrapper attributes along.
+      if (!empty($element[$key]['#wrapper_attributes'])) {
+        $attributes = $element[$key]['#wrapper_attributes'];
+      }
+
+      $variables['tabs'][$key] = [
+        'link' => $element[$key]['tab'],
+        'attributes' => new Attribute($attributes),
+      ];
+    }
+
+    // Add other non-tray, non-tab child elements to the remainder variable for
+    // later rendering.
+    foreach (Element::children($element[$key]) as $child_key) {
+      if (!in_array($child_key, ['tray', 'tab'])) {
+        $variables['remainder'][$key][$child_key] = $element[$key][$child_key];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function toolbar_toolbar() {
+  // The 'Home' tab is a simple link, with no corresponding tray.
+  $items['home'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Back to site'),
+      '#url' => Url::fromRoute('<front>'),
+      '#attributes' => [
+        'title' => t('Return to site content'),
+        'class' => ['toolbar-icon', 'toolbar-icon-escape-admin'],
+        'data-toolbar-escape-admin' => TRUE,
+      ],
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => -20,
+  ];
+
+  // To conserve bandwidth, we only include the top-level links in the HTML.
+  // The subtrees are fetched through a JSONP script that is generated at the
+  // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
+  // script here with the hash parameter that is needed for that route.
+  // @see toolbar_subtrees_jsonp()
+  list($hash, $hash_cacheability) = _toolbar_get_subtrees_hash();
+  $subtrees_attached['drupalSettings']['toolbar'] = [
+    'subtreesHash' => $hash,
+  ];
+
+  // The administration element has a link that is themed to correspond to
+  // a toolbar tray. The tray contains the full administrative menu of the site.
+  $items['administration'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Manage'),
+      '#url' => Url::fromRoute('system.admin'),
+      '#attributes' => [
+        'title' => t('Admin menu'),
+        'class' => ['toolbar-icon', 'toolbar-icon-menu'],
+        // A data attribute that indicates to the client to defer loading of
+        // the admin menu subtrees until this tab is activated. Admin menu
+        // subtrees will not render to the DOM if this attribute is removed.
+        // The value of the attribute is intentionally left blank. Only the
+        // presence of the attribute is necessary.
+        'data-drupal-subtrees' => '',
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Administration menu'),
+      '#attached' => $subtrees_attached,
+      'toolbar_administration' => [
+        '#pre_render' => [[ToolbarController::class, 'preRenderAdministrationTray']],
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['toolbar-menu-administration'],
+        ],
+      ],
+    ],
+    '#weight' => -15,
+  ];
+  $hash_cacheability->applyTo($items['administration']);
+
+  return $items;
+}
+
+/**
+ * Adds toolbar-specific attributes to the menu link tree.
+ *
+ * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
+ *   The menu link tree to manipulate.
+ *
+ * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
+ *   The manipulated menu link tree.
+ */
+function toolbar_menu_navigation_links(array $tree) {
+  foreach ($tree as $element) {
+    if ($element->subtree) {
+      toolbar_menu_navigation_links($element->subtree);
+    }
+
+    // Make sure we have a path specific ID in place, so we can attach icons
+    // and behaviors to the menu links.
+    $link = $element->link;
+    $url = $link->getUrlObject();
+    if (!$url->isRouted()) {
+      // This is an unusual case, so just get a distinct, safe string.
+      $id = substr(Crypt::hashBase64($url->getUri()), 0, 16);
+    }
+    else {
+      $id = str_replace(['.', '<', '>'], ['-', '', ''], $url->getRouteName());
+    }
+
+    // Get the non-localized title to make the icon class.
+    $definition = $link->getPluginDefinition();
+
+    $element->options['attributes']['id'] = 'toolbar-link-' . $id;
+    $element->options['attributes']['class'][] = 'toolbar-icon';
+    $element->options['attributes']['class'][] = 'toolbar-icon-' . strtolower(str_replace(['.', ' ', '_'], ['-', '-', '-'], $definition['id']));
+    $element->options['attributes']['title'] = $link->getDescription();
+  }
+  return $tree;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function toolbar_preprocess_html(&$variables) {
+  if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
+    return;
+  }
+  $variables['attributes']['class'][] = 'toolbar-tray-open';
+  $variables['attributes']['class'][] = 'toolbar-horizontal';
+  $variables['attributes']['class'][] = 'toolbar-fixed';
+  $variables['attributes']['class'][] = 'toolbar-loading';
+}
+
+/**
+ * Returns the rendered subtree of each top-level toolbar link.
+ *
+ * @return array
+ *   An array with the following key-value pairs:
+ *   - 'subtrees': the rendered subtrees
+ *   - 'cacheability: the associated cacheability.
+ */
+function toolbar_get_rendered_subtrees() {
+  $data = [
+    '#pre_render' => [[ToolbarController::class, 'preRenderGetRenderedSubtrees']],
+    '#cache' => [
+      'keys' => [
+        'toolbar_rendered_subtrees',
+      ],
+    ],
+    '#cache_properties' => ['#subtrees'],
+  ];
+  \Drupal::service('renderer')->renderPlain($data);
+  return [$data['#subtrees'], CacheableMetadata::createFromRenderArray($data)];
+}
+
+/**
+ * Returns the hash of the per-user rendered toolbar subtrees.
+ *
+ * @return string
+ *   The hash of the admin_menu subtrees.
+ */
+function _toolbar_get_subtrees_hash() {
+  list($subtrees, $cacheability) = toolbar_get_rendered_subtrees();
+  $hash = Crypt::hashBase64(serialize($subtrees));
+  return [$hash, $cacheability];
+}

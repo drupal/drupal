@@ -1,0 +1,52 @@
+layout_twocol_section:
+  label: 'Two column'
+  path: layouts/twocol_section
+  template: layout--twocol-section
+  library: layout_builder/twocol_section
+  class: '\Drupal\layout_builder\Plugin\Layout\TwoColumnLayout'
+  category: 'Columns: 2'
+  default_region: first
+  icon_map:
+    - [first, second]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+
+layout_threecol_section:
+  label: 'Three column'
+  path: layouts/threecol_section
+  template: layout--threecol-section
+  library: layout_builder/threecol_section
+  class: '\Drupal\layout_builder\Plugin\Layout\ThreeColumnLayout'
+  category: 'Columns: 3'
+  default_region: second
+  icon_map:
+    - [first, second, third]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+
+layout_fourcol_section:
+  label: 'Four column'
+  path: layouts/fourcol_section
+  template: layout--fourcol-section
+  library: layout_builder/fourcol_section
+  category: 'Columns: 4'
+  default_region: first
+  icon_map:
+    - [first, second, third, fourth]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    fourth:
+      label: Fourth

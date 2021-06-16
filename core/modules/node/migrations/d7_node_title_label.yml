@@ -1,0 +1,29 @@
+id: d7_node_title_label
+label: Node title label
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: d7_node_type
+  constants:
+    entity_type: node
+    field_name: title
+process:
+  label:
+    -
+      plugin: static_map
+      source: title_label
+      bypass: true
+      map:
+        Title: 0
+    -
+      plugin: skip_on_empty
+      method: row
+  entity_type: 'constants/entity_type'
+  bundle: type
+  field_name: 'constants/field_name'
+destination:
+  plugin: entity:base_field_override
+migration_dependencies:
+  required:
+    - d7_node_type

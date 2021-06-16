@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Module file for workflow_type_test.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\workflow_type_test\Plugin\WorkflowType\WorkflowCustomAccessType;
+use Drupal\workflows\WorkflowInterface;
+
+/**
+ * Implements hook_workflow_type_info_alter().
+ */
+function workflow_type_test_workflow_type_info_alter(&$definitions) {
+  // Allow tests to override the workflow type definitions.
+  $state = \Drupal::state();
+  if ($state->get('workflow_type_test.plugin_definitions') !== NULL) {
+    $definitions = $state->get('workflow_type_test.plugin_definitions');
+  }
+}
+
+/**
+ * Sets the type plugin definitions override and clear the cache.
+ *
+ * @param array $definitions
+ *   Definitions to set.
+ */
+function workflow_type_test_set_definitions($definitions) {
+  \Drupal::state()->set('workflow_type_test.plugin_definitions', $definitions);
+  \Drupal::service('plugin.manager.workflows.type')->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for the Workflow entity type.
+ */
+function workflow_type_test_workflow_access(WorkflowInterface $entity, $operation, AccountInterface $account) {
+  if ($entity->getTypePlugin()->getPluginId() === 'workflow_custom_access_type') {
+    return WorkflowCustomAccessType::workflowAccess($entity, $operation, $account);
+  }
+  return AccessResult::neutral();
+}

@@ -1,0 +1,46 @@
+batch_test.test_form:
+  title: Simple
+  route_name: batch_test.test_form
+  base_route: batch_test.test_form
+
+batch_test.multistep:
+  title: Multistep
+  route_name: batch_test.multistep
+  base_route: batch_test.test_form
+  weight: 1
+
+batch_test.chained:
+  title: Chained
+  route_name: batch_test.chained
+  base_route: batch_test.test_form
+  weight: 2
+
+batch_test.programmatic:
+  title: Chained
+  route_name: batch_test.programmatic
+  base_route: batch_test.test_form
+  weight: 3
+
+batch_test.no_form:
+  title: 'No form'
+  route_name: batch_test.no_form
+  base_route: batch_test.test_form
+  weight: 4
+
+batch_test.large_percentage:
+  title: 'Large percentage'
+  route_name: batch_test.large_percentage
+  base_route: batch_test.test_form
+  weight: 5
+
+batch_test.nested_programmatic:
+  title: 'Nested programmatic'
+  route_name: batch_test.nested_programmatic
+  base_route: batch_test.test_form
+  weight: 6
+
+batch_test.redirect:
+  title: 'Redirect'
+  route_name: batch_test.redirect
+  base_route: batch_test.test_form
+  weight: 7

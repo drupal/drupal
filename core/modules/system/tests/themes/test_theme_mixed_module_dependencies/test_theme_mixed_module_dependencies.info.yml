@@ -1,0 +1,5 @@
+name: Test Theme with a Module Dependency and Base Theme with a Different Module Dependency
+type: theme
+base theme: test_theme_depending_on_modules
+dependencies:
+  - help

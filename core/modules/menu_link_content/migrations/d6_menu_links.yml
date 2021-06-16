@@ -1,0 +1,59 @@
+id: d6_menu_links
+label: Menu links
+audit: true
+migration_tags:
+  - Drupal 6
+  - Content
+source:
+  plugin: menu_link
+process:
+  id: mlid
+  title: link_title
+  description: description
+  menu_name:
+    -
+      plugin: migration_lookup
+      # The menu migration is in the system module.
+      migration: d6_menu
+      source: menu_name
+    -
+      plugin: skip_on_empty
+      method: row
+    -
+      plugin: static_map
+      map:
+        management: admin
+      bypass: true
+  'link/uri':
+    plugin: link_uri
+    source: link_path
+  'link/options': options
+  route:
+    plugin: route
+    source:
+      - link_path
+      - options
+  route_name: '@route/route_name'
+  route_parameters: '@route/route_parameters'
+  url: '@route/url'
+  options: '@route/options'
+  external: external
+  weight: weight
+  expanded: expanded
+  enabled: enabled
+  parent:
+    plugin: menu_link_parent
+    source:
+      - plid
+      - '@menu_name'
+      - parent_link_path
+  changed: updated
+destination:
+  plugin: entity:menu_link_content
+  default_bundle: menu_link_content
+  no_stub: true
+migration_dependencies:
+  required:
+    - d6_menu
+  optional:
+    - d6_node

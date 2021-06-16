@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Empty node access hook implementations.
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_node_grants().
+ */
+function node_access_test_empty_node_grants($account, $op) {
+  return [];
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function node_access_test_empty_node_access_records(NodeInterface $node) {
+  return [];
+}

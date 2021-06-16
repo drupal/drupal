@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Theme override for an image field widget.
+ *
+ * Available variables:
+ * - main_items: Main render elements of the image widget:
+ *   file name, upload input, upload and remove buttons and hidden inputs.
+ * - data: Other render elements of the image widget like preview, alt or title.
+ * - display: A flag indicating whether the display field is visible.
+ * - attributes: HTML attributes for the containing element.
+ * - multiple: Whether this widget is the part of a multi-value file widget or
+ *   not.
+ * - upload: Whether the file upload input is displayed or not.
+ * - has_value: true if the widget already contains a file.
+ * - has_meta: true when at least one of the alt or title inputs is enabled and
+ *   visible.
+ *
+ * @see template_preprocess_image_widget()
+ * @see claro_preprocess_image_widget()
+ */
+#}
+
+{% extends '@claro/content-edit/file-managed-file.html.twig' %}
+
+{% set attributes = attributes.addClass('form-managed-file--image') %}

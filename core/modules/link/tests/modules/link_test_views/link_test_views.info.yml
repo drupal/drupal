@@ -1,0 +1,9 @@
+name: 'Link test views'
+type: module
+description: 'Provides default views for views link tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:views
+  - drupal:link

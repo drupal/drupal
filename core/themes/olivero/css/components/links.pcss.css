@@ -1,0 +1,28 @@
+/**
+ * @file
+ * Links component.
+ */
+
+@import "../base/variables.pcss.css";
+
+.links.inline {
+  margin-inline-start: 0;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  list-style: none;
+
+  & > * {
+    display: inline;
+
+    &:not(:last-child) {
+      padding-inline-end: 1em;
+    }
+  }
+}
+
+.node--type-book .links.inline {
+  @media (--md) {
+    text-align: end;
+  }
+}

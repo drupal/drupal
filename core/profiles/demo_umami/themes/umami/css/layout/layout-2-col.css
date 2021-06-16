@@ -1,0 +1,26 @@
+/**
+ * @file
+ * This file is used to create the layout when the theme has 2 columns.
+ */
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .two-columns .main {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .two-columns .main .layout-content,
+  .two-columns .main .layout-sidebar {
+    flex: 0 1 100%;
+  }
+  .two-columns .main .layout-content {
+    flex: 0 1 72%;
+    margin-right: 3%; /* LTR */
+  }
+  [dir="rtl"] .two-columns .main .layout-content {
+    margin-right: 0;
+    margin-left: 3%;
+  }
+  .two-columns .main .layout-sidebar {
+    flex: 0 1 25%;
+  }
+}

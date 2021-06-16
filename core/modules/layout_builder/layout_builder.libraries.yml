@@ -1,0 +1,29 @@
+drupal.layout_builder:
+  version: VERSION
+  css:
+    theme:
+      css/layout-builder.css: {}
+  js:
+    js/layout-builder.js: {}
+  dependencies:
+    - core/sortable
+    - core/drupal.dialog.off_canvas
+    - core/drupal.announce
+    - core/drupal.debounce
+
+# CSS libraries for Layout plugins.
+twocol_section:
+  version: VERSION
+  css:
+    theme:
+      layouts/twocol_section/twocol_section.css: {}
+threecol_section:
+  version: VERSION
+  css:
+    theme:
+      layouts/threecol_section/threecol_section.css: {}
+fourcol_section:
+  version: VERSION
+  css:
+    theme:
+      layouts/fourcol_section/fourcol_section.css: {}

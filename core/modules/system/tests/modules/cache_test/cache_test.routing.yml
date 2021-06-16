@@ -1,0 +1,13 @@
+cache_test.url_bubbling:
+  path: '/cache-test/url-bubbling'
+  defaults:
+    _controller: '\Drupal\cache_test\Controller\CacheTestController::urlBubbling'
+  requirements:
+    _access: 'TRUE'
+
+cache_test_list.bundle_tags:
+  path: '/cache-test-list/{entity_type_id}/{bundle}'
+  defaults:
+    _controller: '\Drupal\cache_test\Controller\CacheTestController::bundleTags'
+  requirements:
+    _access: 'TRUE'

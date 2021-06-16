@@ -1,0 +1,548 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the media_library module.
+ */
+
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\media\MediaTypeForm;
+use Drupal\media\MediaTypeInterface;
+use Drupal\media_library\Form\FileUploadForm;
+use Drupal\media_library\Form\OEmbedForm;
+use Drupal\media_library\MediaLibraryState;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Component\Serialization\Json;
+
+/**
+ * Implements hook_help().
+ *
+ * @todo Update in https://www.drupal.org/project/drupal/issues/2964789
+ */
+function media_library_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.media_library':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Media Library module provides a rich, visual interface for managing media, and allows media to be reused in entity reference fields or embedded into text content. It overrides the <a href=":media-collection">media administration page</a>, allowing users to toggle between the existing table-style interface and a new grid-style interface for browsing and performing administrative operations on media.', [
+        ':media-collection' => Url::fromRoute('entity.media.collection')->toString(),
+      ]) . '</p>';
+      $output .= '<p>' . t('To learn more about media management, begin by reviewing the <a href=":media-help">documentation for the Media module</a>. For more information about the media library and related functionality, see the <a href=":media-library-handbook">online documentation for the Media Library module</a>.', [
+        ':media-help' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
+        ':media-library-handbook' => 'https://www.drupal.org/docs/8/core/modules/media-library-module',
+      ]) . '</p>';
+      $output .= '<h3>' . t('Selection dialog') . '</h3>';
+      $output .= '<p>' . t('When selecting media for an entity reference field or a text editor, Media Library opens a modal dialog to help users easily find and select media. The modal dialog can toggle between a grid-style and table-style interface, and new media items can be uploaded directly into it.') . '</p>';
+      $output .= '<p>' . t('Within the dialog, media items are divided up by type. If more than one media type can be selected by the user, the available types will be displayed as a set of vertical tabs. To users who have appropriate permissions, each media type may also present a short form allowing you to upload or create new media items of that type.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Grid-style vs. table-style interface') . '</dt>';
+      $output .= '<dd>' . t('The Media Library module provides a new grid-style interface for the media administration page that displays media as thumbnails, with minimal textual information, allowing users to visually browse media in their site. The existing table-style interface is better suited to displaying additional information about media items, in addition to being more accessible to users with assistive technology.') . '</dd>';
+      $output .= '<dt>' . t('Reusing media in entity reference fields') . '</dt>';
+      $output .= '<dd>' . t('Any entity reference field that references media can use the media library. To enable, configure the form display for the field to use the "Media library" widget.') . '</dd>';
+      $output .= '<dt>' . t('Embedding media in text content') . '</dt>';
+      $output .= '<dd>' . t('To use the media library within CKEditor, you must add the "Insert from Media Library" button to the CKEditor toolbar, and enable the "Embed media" filter in the text format associated with the text editor.') . '</dd>';
+      $output .= '</dl>';
+      $output .= '<h3>' . t('Customize') . '</h3>';
+      $output .= '<ul>';
+      $output .= '<li>';
+      if (\Drupal::moduleHandler()->moduleExists('views_ui') && \Drupal::currentUser()->hasPermission('administer views')) {
+        $output .= t('Both the table-style and grid-style interfaces are regular views and can be customized via the <a href=":views-ui">Views UI</a>, including sorting and filtering. This is the case for both the administration page and the modal dialog.', [
+          ':views_ui' => Url::fromRoute('entity.view.collection')->toString(),
+        ]);
+      }
+      else {
+        $output .= t('Both the table-style and grid-style interfaces are regular views and can be customized via the Views UI, including sorting and filtering. This is the case for both the administration page and the modal dialog.');
+      }
+      $output .= '</li>';
+      $output .= '<li>' . t('In the grid-style interface, the fields that are displayed (including which image style is used for images) can be customized by configuring the "Media library" view mode for each of your <a href=":media-types">media types</a>. The thumbnail images in the grid-style interface can be customized by configuring the "Media Library thumbnail (220×220)" image style.', [
+        ':media-types' => Url::fromRoute('entity.media_type.collection')->toString(),
+      ]) . '</li>';
+      $output .= '<li>' . t('When adding new media items within the modal dialog, the fields that are displayed can be customized by configuring the "Media library" form mode for each of your <a href=":media-types">media types</a>.', [
+        ':media-types' => Url::fromRoute('entity.media_type.collection')->toString(),
+      ]) . '</li>';
+      $output .= '</ul>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_media_source_info_alter().
+ */
+function media_library_media_source_info_alter(array &$sources) {
+  if (empty($sources['audio_file']['forms']['media_library_add'])) {
+    $sources['audio_file']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['file']['forms']['media_library_add'])) {
+    $sources['file']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['image']['forms']['media_library_add'])) {
+    $sources['image']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['video_file']['forms']['media_library_add'])) {
+    $sources['video_file']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['oembed:video']['forms']['media_library_add'])) {
+    $sources['oembed:video']['forms']['media_library_add'] = OEmbedForm::class;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_library_theme() {
+  return [
+    'media__media_library' => [
+      'base hook' => 'media',
+    ],
+    'media_library_wrapper' => [
+      'render element' => 'element',
+    ],
+    'media_library_item' => [
+      'render element' => 'element',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for the media library modal dialog.
+ *
+ * Default template: media-library-wrapper.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #menu, #content.
+ */
+function template_preprocess_media_library_wrapper(array &$variables) {
+  $variables['menu'] = &$variables['element']['menu'];
+  $variables['content'] = &$variables['element']['content'];
+}
+
+/**
+ * Prepares variables for a selected media item.
+ *
+ * Default template: media-library-item.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the element.
+ */
+function template_preprocess_media_library_item(array &$variables) {
+  $element = &$variables['element'];
+  foreach (Element::children($element) as $key) {
+    $variables['content'][$key] = $element[$key];
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function media_library_views_pre_render(ViewExecutable $view) {
+  $add_classes = function (&$option, array $classes_to_add) {
+    $classes = $option ? preg_split('/\s+/', trim($option)) : [];
+    $classes = array_filter($classes);
+    $classes = array_merge($classes, $classes_to_add);
+    $option = implode(' ', array_unique($classes));
+  };
+
+  if ($view->id() === 'media_library') {
+    if ($view->current_display === 'page') {
+      $add_classes($view->style_plugin->options['row_class'], ['js-media-library-item', 'js-click-to-select']);
+
+      if (array_key_exists('media_bulk_form', $view->field)) {
+        $add_classes($view->field['media_bulk_form']->options['element_class'], ['js-click-to-select-checkbox']);
+      }
+    }
+    elseif (strpos($view->current_display, 'widget') === 0) {
+      if (array_key_exists('media_library_select_form', $view->field)) {
+        $add_classes($view->field['media_library_select_form']->options['element_wrapper_class'], ['js-click-to-select-checkbox']);
+      }
+      $add_classes($view->display_handler->options['css_class'], ['js-media-library-view']);
+    }
+
+    $add_classes($view->style_plugin->options['row_class'], ['js-media-library-item', 'js-click-to-select']);
+
+    if ($view->display_handler->options['defaults']['css_class']) {
+      $add_classes($view->displayHandlers->get('default')->options['css_class'], ['js-media-library-view']);
+    }
+    else {
+      $add_classes($view->display_handler->options['css_class'], ['js-media-library-view']);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_post_render().
+ */
+function media_library_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  if ($view->id() === 'media_library') {
+    $output['#attached']['library'][] = 'media_library/view';
+    if (strpos($view->current_display, 'widget') === 0) {
+      try {
+        $query = MediaLibraryState::fromRequest($view->getRequest())->all();
+      }
+      catch (InvalidArgumentException $e) {
+        // MediaLibraryState::fromRequest() will throw an exception if the view
+        // is being previewed, since not all required query parameters will be
+        // present. In a preview, however, this can be omitted since we're
+        // merely previewing.
+        // @todo Use the views API for checking for the preview mode when it
+        //   lands. https://www.drupal.org/project/drupal/issues/3060855
+        if (empty($view->preview) && empty($view->live_preview)) {
+          throw $e;
+        }
+      }
+
+      // If the current query contains any parameters we use to contextually
+      // filter the view, ensure they persist across AJAX rebuilds.
+      // The ajax_path is shared for all AJAX views on the page, but our query
+      // parameters are prefixed and should not interfere with any other views.
+      // @todo Rework or remove this in https://www.drupal.org/node/2983451
+      if (!empty($query)) {
+        $ajax_path = &$output['#attached']['drupalSettings']['views']['ajax_path'];
+        $parsed_url = UrlHelper::parse($ajax_path);
+        $query = array_merge($query, $parsed_url['query']);
+        $ajax_path = $parsed_url['path'] . '?' . UrlHelper::buildQuery($query);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_media().
+ */
+function media_library_preprocess_media(&$variables) {
+  if ($variables['view_mode'] === 'media_library') {
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = $variables['media'];
+    $variables['#cache']['contexts'][] = 'user.permissions';
+    $rel = $media->access('edit') ? 'edit-form' : 'canonical';
+    $variables['url'] = $media->toUrl($rel, [
+      'language' => $media->language(),
+    ]);
+    $variables += [
+      'preview_attributes' => new Attribute(),
+      'metadata_attributes' => new Attribute(),
+    ];
+    $variables['status'] = $media->isPublished();
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view() for the 'media_library' view.
+ */
+function media_library_preprocess_views_view__media_library(array &$variables) {
+  $variables['attributes']['data-view-display-id'] = $variables['view']->current_display;
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields().
+ */
+function media_library_preprocess_views_view_fields(&$variables) {
+  // Add classes to media rendered entity field so it can be targeted for
+  // JavaScript mouseover and click events.
+  if ($variables['view']->id() === 'media_library' && isset($variables['fields']['rendered_entity'])) {
+    if (isset($variables['fields']['rendered_entity']->wrapper_attributes)) {
+      $variables['fields']['rendered_entity']->wrapper_attributes->addClass('js-click-to-select-trigger');
+    }
+  }
+}
+
+/**
+ * Alter the bulk form to add a more accessible label.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
+ * @todo Remove in https://www.drupal.org/node/2983454
+ */
+function media_library_form_views_form_media_library_page_alter(array &$form, FormStateInterface $form_state) {
+  if (isset($form['media_bulk_form']) && isset($form['output'])) {
+    /** @var \Drupal\views\ViewExecutable $view */
+    $view = $form['output'][0]['#view'];
+    foreach (Element::getVisibleChildren($form['media_bulk_form']) as $key) {
+      if (isset($view->result[$key])) {
+        $media = $view->field['media_bulk_form']->getEntity($view->result[$key]);
+        $form['media_bulk_form'][$key]['#title'] = t('Select @label', [
+          '@label' => $media->label(),
+        ]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function media_library_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Add a process callback to ensure that the media library view's exposed
+  // filters submit button is not moved to the modal dialog's button area.
+  if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
+    $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
+  }
+
+  // Configures media_library displays when a type is submitted.
+  if ($form_state->getFormObject() instanceof MediaTypeForm) {
+    $form['actions']['submit']['#submit'][] = '_media_library_media_type_form_submit';
+  }
+}
+
+/**
+ * Form #after_build callback for media_library view's exposed filters form.
+ */
+function _media_library_views_form_media_library_after_build(array $form, FormStateInterface $form_state) {
+  // Remove .form-actions from the view's exposed filter actions. This prevents
+  // the "Apply filters" submit button from being moved into the dialog's
+  // button area.
+  // @see \Drupal\Core\Render\Element\Actions::processActions
+  // @see Drupal.behaviors.dialog.prepareDialogButtons
+  // @todo Remove this after
+  //   https://www.drupal.org/project/drupal/issues/3089751 is fixed.
+  if (($key = array_search('form-actions', $form['actions']['#attributes']['class'])) !== FALSE) {
+    unset($form['actions']['#attributes']['class'][$key]);
+  }
+  return $form;
+}
+
+/**
+ * Submit callback for media type form.
+ */
+function _media_library_media_type_form_submit(array &$form, FormStateInterface $form_state) {
+  $form_object = $form_state->getFormObject();
+  if ($form_object->getOperation() === 'add') {
+    $type = $form_object->getEntity();
+    $form_display_created = _media_library_configure_form_display($type);
+    $view_display_created = _media_library_configure_view_display($type);
+    if ($form_display_created || $view_display_created) {
+      \Drupal::messenger()->addStatus(t('Media Library form and view displays have been created for the %type media type.', [
+        '%type' => $type->label(),
+      ]));
+    }
+  }
+}
+
+/**
+ * Implements hook_field_ui_preconfigured_options_alter().
+ */
+function media_library_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+  // If the field is not an "entity_reference"-based field, bail out.
+  $class = \Drupal::service('plugin.manager.field.field_type')->getPluginClass($field_type);
+  if (!is_a($class, EntityReferenceItem::class, TRUE)) {
+    return;
+  }
+
+  // Set the default field widget for media to be the Media library.
+  if (!empty($options['media'])) {
+    $options['media']['entity_form_display']['type'] = 'media_library_widget';
+  }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ *
+ * Removes tasks for the Media library if the view display no longer exists.
+ */
+function media_library_local_tasks_alter(&$local_tasks) {
+  /** @var \Symfony\Component\Routing\RouteCollection $route_collection */
+  $route_collection = \Drupal::service('router')->getRouteCollection();
+  foreach (['media_library.grid', 'media_library.table'] as $key) {
+    if (isset($local_tasks[$key]) && !$route_collection->get($local_tasks[$key]['route_name'])) {
+      unset($local_tasks[$key]);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function media_library_image_style_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // Prevent the fallback 'media_library' image style from being deleted.
+  // @todo: Lock the image style instead of preventing delete access.
+  //   https://www.drupal.org/project/drupal/issues/2247293
+  if ($operation === 'delete' && $entity->id() === 'media_library') {
+    return AccessResult::forbidden();
+  }
+}
+
+/**
+ * Ensures that the given media type has a media_library form display.
+ *
+ * @param \Drupal\media\MediaTypeInterface $type
+ *   The media type to configure.
+ *
+ * @return bool
+ *   Whether a form display has been created or not.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _media_library_configure_form_display(MediaTypeInterface $type) {
+  $display = EntityFormDisplay::load('media.' . $type->id() . '.media_library');
+
+  if ($display) {
+    return FALSE;
+  }
+
+  $values = [
+    'targetEntityType' => 'media',
+    'bundle' => $type->id(),
+    'mode' => 'media_library',
+    'status' => TRUE,
+  ];
+  $display = EntityFormDisplay::create($values);
+  // Remove all default components.
+  foreach (array_keys($display->getComponents()) as $name) {
+    $display->removeComponent($name);
+  }
+  // Expose the name field when it is not mapped.
+  if (!in_array('name', $type->getFieldMap(), TRUE)) {
+    $display->setComponent('name', [
+      'type' => 'string_textfield',
+      'settings' => [
+        'size' => 60,
+      ],
+    ]);
+  }
+  // If the source field is an image field, expose it so that users can set alt
+  // and title text.
+  $source_field = $type->getSource()->getSourceFieldDefinition($type);
+  if ($source_field->isDisplayConfigurable('form') && is_a($source_field->getItemDefinition()->getClass(), ImageItem::class, TRUE)) {
+    $type->getSource()->prepareFormDisplay($type, $display);
+  }
+  return (bool) $display->save();
+}
+
+/**
+ * Ensures that the given media type has a media_library view display.
+ *
+ * @param \Drupal\media\MediaTypeInterface $type
+ *   The media type to configure.
+ *
+ * @return bool
+ *   Whether a view display has been created or not.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _media_library_configure_view_display(MediaTypeInterface $type) {
+  $display = EntityViewDisplay::load('media.' . $type->id() . '.media_library');
+
+  if ($display) {
+    return FALSE;
+  }
+
+  $values = [
+    'targetEntityType' => 'media',
+    'bundle' => $type->id(),
+    'mode' => 'media_library',
+    'status' => TRUE,
+  ];
+  $display = EntityViewDisplay::create($values);
+  // Remove all default components.
+  foreach (array_keys($display->getComponents()) as $name) {
+    $display->removeComponent($name);
+  }
+
+  // @todo: Remove dependency on 'medium' and 'thumbnail' image styles from
+  //   media and media library modules.
+  //   https://www.drupal.org/project/drupal/issues/3030437
+  $image_style = ImageStyle::load('medium');
+
+  // Expose the thumbnail component. If the medium image style doesn't exist,
+  // use the fallback 'media_library' image style.
+  $display->setComponent('thumbnail', [
+    'type' => 'image',
+    'label' => 'hidden',
+    'settings' => [
+      'image_style' => $image_style ? $image_style->id() : 'media_library',
+      'image_link' => '',
+    ],
+  ]);
+  return (bool) $display->save();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_library_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Add an additional validate callback so so we can ensure the media_embed
+  // filter is enabled when the DrupalMediaLibrary button is enabled.
+  $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_library_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Add an additional validate callback so so we can ensure the media_embed
+  // filter is enabled when the DrupalMediaLibrary button is enabled.
+  $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
+}
+
+/**
+ * Validate callback to ensure the DrupalMediaLibrary button can work correctly.
+ */
+function media_library_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
+  if ($form_state->getTriggeringElement()['#name'] !== 'op') {
+    return;
+  }
+
+  // The "DrupalMediaLibrary" button is for the CKEditor text editor.
+  if ($form_state->getValue(['editor', 'editor']) !== 'ckeditor') {
+    return;
+  }
+
+  $button_group_path = [
+    'editor',
+    'settings',
+    'toolbar',
+    'button_groups',
+  ];
+
+  if ($button_groups = $form_state->getValue($button_group_path)) {
+    $buttons = [];
+    $button_groups = Json::decode($button_groups);
+
+    foreach ($button_groups as $button_row) {
+      foreach ($button_row as $button_group) {
+        $buttons = array_merge($buttons, array_values($button_group['items']));
+      }
+    }
+
+    $get_filter_label = function ($filter_plugin_id) use ($form) {
+      return (string) $form['filters']['order'][$filter_plugin_id]['filter']['#markup'];
+    };
+
+    if (in_array('DrupalMediaLibrary', $buttons, TRUE)) {
+      $media_embed_enabled = $form_state->getValue([
+        'filters',
+        'media_embed',
+        'status',
+      ]);
+
+      if (!$media_embed_enabled) {
+        $error_message = new TranslatableMarkup('The %media-embed-filter-label filter must be enabled to use the %drupal-media-library-button button.', [
+          '%media-embed-filter-label' => $get_filter_label('media_embed'),
+          '%drupal-media-library-button' => new TranslatableMarkup('Insert from Media Library'),
+        ]);
+        $form_state->setErrorByName('filters', $error_message);
+      }
+    }
+  }
+}

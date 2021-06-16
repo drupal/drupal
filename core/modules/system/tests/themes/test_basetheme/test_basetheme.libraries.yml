@@ -1,0 +1,8 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      base-add.css: {}
+      base-add.sub-remove.css: {}
+      samename.css: {}
+      css/base-libraries-extend.css: {}

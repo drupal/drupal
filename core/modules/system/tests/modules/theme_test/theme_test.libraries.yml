@@ -1,0 +1,21 @@
+theme_stylesheets_override_and_remove_test:
+  version: VERSION
+  css:
+    base:
+      css/base-remove.css: {}
+      css/sub-override.css: {}
+      css/sub-remove.css: {}
+
+deprecated_library:
+  version: VERSION
+  css:
+    base:
+      css/foo.css: {}
+  deprecated: 'The "%library_id%" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com'
+
+another_deprecated_library:
+  version: VERSION
+  css:
+    base:
+      css/bar.css: {}
+  deprecated: 'The "%library_id%" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com'

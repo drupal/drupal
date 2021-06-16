@@ -1,0 +1,5 @@
+name: 'Options test'
+type: module
+description: 'Support module for the Options module tests.'
+package: Testing
+version: VERSION

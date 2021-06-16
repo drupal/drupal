@@ -1,0 +1,5 @@
+name: 'Display variant tests'
+type: module
+description: 'Support module for testing display variants.'
+package: Testing
+version: VERSION

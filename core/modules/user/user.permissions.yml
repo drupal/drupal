@@ -1,0 +1,24 @@
+administer permissions:
+  title: 'Administer roles and permissions'
+  restrict access: true
+administer account settings:
+  title: 'Administer account settings'
+  description: 'Configure site-wide settings and behavior for user accounts and registration. This includes account cancellation methods, the content of user emails and fields attached to users.'
+  restrict access: true
+administer users:
+  title: 'Administer users'
+  description: 'Manage all user accounts. This includes editing all user information, changes of email addresses and passwords, issuing emails to users and blocking and deleting user accounts.'
+  restrict access: true
+access user profiles:
+  title: 'View user information'
+view user email addresses:
+  title: 'View user email addresses'
+  description: 'Users without this permission will not have access to email addresses on user pages or other places where they might be shown, such as Views and JSON:API responses.'
+change own username:
+  title: 'Change own username'
+select account cancellation method:
+  title: 'Select method for cancelling account'
+  restrict access: true
+cancel account:
+  title: 'Cancel own user account'
+  description: 'Note: content may be kept, unpublished, deleted or transferred to the anonymous user depending on the configured user settings.'

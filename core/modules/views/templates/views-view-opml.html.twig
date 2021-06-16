@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default template for feed displays that use the OPML style.
+ *
+ * Available variables:
+ * - title: The title of the feed (as set in the view).
+ * - updated: The modified date of the feed.
+ * - items: The feed items themselves.
+ *
+ * @see template_preprocess_views_view_opml()
+ *
+ * @ingroup themeable
+ */
+#}
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="2.0">
+  <head>
+    <title>{{ title }}</title>
+    <dateModified>{{ updated }}</dateModified>
+  </head>
+  <body>
+    {{ items }}
+  </body>
+</opml>

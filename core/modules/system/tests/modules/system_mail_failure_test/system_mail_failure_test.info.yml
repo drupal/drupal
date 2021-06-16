@@ -1,0 +1,5 @@
+name: 'System mail failure test'
+type: module
+description: 'Provides a malfunctioning mail service for testing purposes.'
+package: Testing
+version: VERSION

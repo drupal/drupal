@@ -1,0 +1,71 @@
+body.maintenance-page {
+  color: #000;
+  background-color: #fff;
+}
+.maintenance-page #page-wrapper {
+  min-width: 0;
+  min-height: 0;
+  margin-top: 40px;
+  margin-right: auto;
+  margin-left: auto;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.maintenance-page #page {
+  margin: 10px;
+}
+.maintenance-page #main-wrapper {
+  min-height: inherit;
+}
+.maintenance-page #header {
+  width: auto;
+}
+.maintenance-page #main {
+  margin: 0;
+}
+.maintenance-page .content .section {
+  padding: 0 0 0 10px; /* LTR */
+}
+[dir="rtl"] .maintenance-page .content .section {
+  padding-right: 10px;
+  padding-left: 0;
+}
+.maintenance-page #header {
+  background-color: #fff;
+  background-image: none;
+}
+.maintenance-page .site-branding-text {
+  margin-bottom: 50px;
+  margin-left: 0; /* LTR */
+  padding-top: 20px;
+  font-size: 90%;
+}
+[dir="rtl"] .maintenance-page .site-branding-text {
+  margin-right: 0;
+}
+.maintenance-page .site-branding-text,
+.maintenance-page .site-branding-text a,
+.maintenance-page .site-branding-text a:hover,
+.maintenance-page .site-branding-text a:focus {
+  color: #777;
+}
+.maintenance-page .page-title {
+  margin-top: 0;
+  line-height: 1em;
+}
+
+@media all and (min-width: 800px) {
+  .maintenance-page #page-wrapper {
+    width: 800px;
+  }
+  .maintenance-page #header div.section,
+  .maintenance-page #main {
+    width: 700px;
+  }
+}
+
+@media all and (min-width: 600px) { /* @TODO find the proper breakpoint */
+  .maintenance-page #page {
+    margin: 20px 40px 40px;
+  }
+}

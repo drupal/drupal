@@ -1,0 +1,68 @@
+entity.search_page.collection:
+  path: '/admin/config/search/pages'
+  defaults:
+    _entity_list: 'search_page'
+    _title: 'Search pages'
+  requirements:
+    _permission: 'administer search'
+
+search.reindex_confirm:
+  path: '/admin/config/search/pages/reindex'
+  defaults:
+    _form: '\Drupal\search\Form\ReindexConfirm'
+    _title: 'Clear index'
+  requirements:
+    _permission: 'administer search'
+
+search.add_type:
+  path: '/admin/config/search/pages/add/{search_plugin_id}'
+  defaults:
+    _entity_form: 'search_page.add'
+    _title: 'Add new search page'
+  requirements:
+    _entity_create_access: 'search_page'
+
+entity.search_page.edit_form:
+  path: '/admin/config/search/pages/manage/{search_page}'
+  defaults:
+    _entity_form: 'search_page.edit'
+    _title_callback: '\Drupal\search\Controller\SearchController::editTitle'
+  requirements:
+    _entity_access: 'search_page.update'
+
+entity.search_page.enable:
+  path: '/admin/config/search/pages/manage/{search_page}/enable'
+  defaults:
+    _controller: '\Drupal\search\Controller\SearchController::performOperation'
+    op: 'enable'
+  requirements:
+    _entity_access: 'search_page.update'
+    _csrf_token: 'TRUE'
+
+entity.search_page.disable:
+  path: '/admin/config/search/pages/manage/{search_page}/disable'
+  defaults:
+    _controller: '\Drupal\search\Controller\SearchController::performOperation'
+    op: 'disable'
+  requirements:
+    _entity_access: 'search_page.disable'
+    _csrf_token: 'TRUE'
+
+entity.search_page.set_default:
+  path: '/admin/config/search/pages/manage/{search_page}/set-default'
+  defaults:
+    _controller: '\Drupal\search\Controller\SearchController::setAsDefault'
+  requirements:
+    _entity_access: 'search_page.update'
+    _csrf_token: 'TRUE'
+
+entity.search_page.delete_form:
+  path: '/admin/config/search/pages/manage/{search_page}/delete'
+  defaults:
+    _entity_form: 'search_page.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'search_page.delete'
+
+route_callbacks:
+  - '\Drupal\search\Routing\SearchPageRoutes::routes'

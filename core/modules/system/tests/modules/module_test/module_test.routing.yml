@@ -1,0 +1,23 @@
+module_test.dynamic_invoke:
+  path: '/module-test/hook-dynamic-loading-invoke'
+  defaults:
+    _title: 'Test hook dynamic loading (invoke)'
+    _controller: '\Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvoke'
+  requirements:
+    _access: 'TRUE'
+
+module_test.dynamic_invoke_all:
+  path: '/module-test/hook-dynamic-loading-invoke-all'
+  defaults:
+    _title: 'Test hook dynamic loading (invoke_all)'
+    _controller: '\Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvokeAll'
+  requirements:
+    _access: 'TRUE'
+
+module_test.class_loading:
+  path: '/module-test/class-loading'
+  defaults:
+    _title: 'Test loading a class from another module'
+    _controller: '\Drupal\module_test\Controller\ModuleTestController::testClassLoading'
+  requirements:
+    _access: 'TRUE'

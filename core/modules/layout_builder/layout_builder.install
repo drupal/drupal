@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Layout Builder.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Section;
+
+/**
+ * Implements hook_install().
+ */
+function layout_builder_install() {
+  $display_changed = FALSE;
+
+  $displays = LayoutBuilderEntityViewDisplay::loadMultiple();
+  /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
+  foreach ($displays as $display) {
+    // Create the first section from any existing Field Layout settings.
+    $field_layout = $display->getThirdPartySettings('field_layout');
+    if (isset($field_layout['id'])) {
+      $field_layout += ['settings' => []];
+      $display
+        ->enableLayoutBuilder()
+        ->appendSection(new Section($field_layout['id'], $field_layout['settings']))
+        ->save();
+      $display_changed = TRUE;
+    }
+  }
+
+  // Clear the rendered cache to ensure the new layout builder flow is used.
+  // While in many cases the above change will not affect the rendered output,
+  // the cacheability metadata will have changed and should be processed to
+  // prepare for future changes.
+  if ($display_changed) {
+    Cache::invalidateTags(['rendered']);
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function layout_builder_schema() {
+  $schema['inline_block_usage'] = [
+    'description' => 'Track where a block_content entity is used.',
+    'fields' => [
+      'block_content_id' => [
+        'description' => 'The block_content entity ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'layout_entity_type' => [
+        'description' => 'The entity type of the parent entity.',
+        'type' => 'varchar_ascii',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+        'not null' => FALSE,
+        'default' => '',
+      ],
+      'layout_entity_id' => [
+        'description' => 'The ID of the parent entity.',
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => FALSE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['block_content_id'],
+    'indexes' => [
+      'type_id' => ['layout_entity_type', 'layout_entity_id'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function layout_builder_update_last_removed() {
+  return 8602;
+}

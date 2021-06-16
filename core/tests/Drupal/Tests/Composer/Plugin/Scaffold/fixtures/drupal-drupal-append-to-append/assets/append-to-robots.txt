@@ -1,0 +1,3 @@
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# This content is appended to the bottom of the existing robots.txt fixture.
+# robots.txt fixture scaffolded from "file-mappings" in drupal-drupal-append-to-append composer.json fixture.

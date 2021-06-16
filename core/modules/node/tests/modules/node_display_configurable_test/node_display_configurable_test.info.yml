@@ -1,0 +1,5 @@
+name: 'Node configurable display module tests'
+type: module
+description: 'Support module for node \Drupal\Core\Field\BaseFieldDefinition::setDisplayConfigurable() testing.'
+package: Testing
+version: VERSION

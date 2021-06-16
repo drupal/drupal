@@ -1,0 +1,3 @@
+maintain_index_table: true
+override_selector: false
+terms_per_page_admin: 100

@@ -1,0 +1,11 @@
+drupal.content_translation.admin:
+  version: VERSION
+  js:
+    content_translation.admin.js: {}
+  css:
+    theme:
+      css/content_translation.admin.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once

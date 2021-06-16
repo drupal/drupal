@@ -1,0 +1,5 @@
+services:
+  twig_extension_test.twig.test_extension:
+    class: Drupal\twig_extension_test\TwigExtension\TestExtension
+    tags:
+      - { name: twig.extension }

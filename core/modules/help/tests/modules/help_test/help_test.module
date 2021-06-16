@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Test Help module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function help_test_help($route_name, RouteMatchInterface $route_match) {
+  // Do not implement a module overview page to test an empty implementation.
+  // @see \Drupal\help\Tests\HelpTest
+}

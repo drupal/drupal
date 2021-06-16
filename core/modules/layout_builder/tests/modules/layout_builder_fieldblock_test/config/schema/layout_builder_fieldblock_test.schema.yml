@@ -1,0 +1,3 @@
+# See \Drupal\layout_builder_fieldblock_test\Plugin\Block\FieldBlock.
+block.settings.field_block_test:*:*:*:
+  type: block.settings.field_block:*:*:*

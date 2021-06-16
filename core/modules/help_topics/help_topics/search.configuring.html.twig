@@ -1,0 +1,22 @@
+---
+label: 'Configuring search pages'
+related:
+  - search.overview
+  - search.index
+---
+{% set search_settings = render_var(url('entity.search_page.collection')) %}
+{% set index_topic = render_var(url('help.help_topic', {'id': 'search.index'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure one or more search pages.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Search and Metadata</em> &gt; <a href="{{ search_settings }}"><em>Search pages</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Scroll down to the <em>Search pages</em> section. You will see a list of the already-configured search pages on your site.{% endtrans %}</li>
+  <li>{% trans %}To configure an existing search page, click <em>Edit</em>. Or, to add a new search page, select the <em>Search page type</em> and click <em>Add search page</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter the desired <em>Label</em> name and URL <em>Path</em> for the search page.{% endtrans %}</li>
+  <li>{% trans %}For <em>Content</em> search pages, select the desired level of influence in ranking search results of the available <em>Content ranking</em> factors.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>. You will be returned to the <em>Search pages</em> page.{% endtrans %}</li>
+  <li>{% trans %}Verify that the correct search page is listed as <em>Default</em> in the <em>Status</em> column. If not, click <em>Set as default</em> in the <em>Operations</em> list for the correct search page.{% endtrans %}</li>
+  <li>{% trans %}Optionally, disable or delete any search pages that you do not want to have available on the site (disabling is temporary, while deleting is permanent).{% endtrans %}</li>
+  <li>{% trans %}Follow the steps in <a href="{{ index_topic }}">Managing the search index</a> to make sure that the search index is updated.{% endtrans %}</li>
+</ol>

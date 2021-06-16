@@ -1,0 +1,58 @@
+aggregator.admin_overview:
+  path: '/admin/config/services/aggregator'
+  defaults:
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::adminOverview'
+    _title: 'Aggregator'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator.admin_settings:
+  path: '/admin/config/services/aggregator/settings'
+  defaults:
+    _form: '\Drupal\aggregator\Form\SettingsForm'
+    _title: 'Aggregator settings'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator.feed_items_delete:
+  path: '/admin/config/services/aggregator/delete/{aggregator_feed}'
+  defaults:
+    _entity_form: 'aggregator_feed.delete_items'
+    _title: 'Delete items'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator.feed_refresh:
+  path: '/admin/config/services/aggregator/update/{aggregator_feed}'
+  defaults:
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
+    _title: 'Update items'
+  requirements:
+    _permission: 'administer news feeds'
+    _csrf_token: 'TRUE'
+
+aggregator.opml_add:
+  path: '/admin/config/services/aggregator/add/opml'
+  defaults:
+    _form: '\Drupal\aggregator\Form\OpmlFeedAdd'
+    _title: 'Import OPML'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator.feed_add:
+  path: '/aggregator/sources/add'
+  defaults:
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
+    _title: 'Add feed'
+  requirements:
+    _permission: 'administer news feeds'
+  options:
+    _admin_route: TRUE
+
+aggregator.page_last:
+  path: '/aggregator'
+  defaults:
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
+    _title: 'Aggregator'
+  requirements:
+    _permission: 'access news feeds'

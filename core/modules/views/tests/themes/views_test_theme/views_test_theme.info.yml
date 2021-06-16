@@ -1,0 +1,5 @@
+name: Views test theme
+type: theme
+base theme: stable
+description: Theme for testing Views functionality.
+version: VERSION

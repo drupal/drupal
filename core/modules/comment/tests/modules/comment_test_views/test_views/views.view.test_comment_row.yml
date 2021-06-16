@@ -1,0 +1,156 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - node
+    - user
+id: test_comment_row
+label: test_comment_row
+module: views
+description: ''
+tag: ''
+base_table: comment_field_data
+base_field: cid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: 1
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+          offset: 0
+          id: 0
+          total_pages: null
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
+          quantity: 9
+      style:
+        type: default
+      row:
+        type: 'entity:comment'
+        options:
+          view_mode: full
+      relationships:
+        node:
+          field: node
+          id: node
+          required: true
+          table: comment_field_data
+          relationship: none
+          group_type: group
+          admin_label: Content
+      fields:
+        subject:
+          id: subject
+          table: comment_field_data
+          field: subject
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
+          entity_type: comment
+          entity_field: subject
+      filters:
+        status:
+          value: '1'
+          table: comment_field_data
+          field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+          plugin_id: boolean
+          entity_type: comment
+          entity_field: status
+        status_node:
+          value: '1'
+          table: node_field_data
+          field: status
+          relationship: node
+          id: status_node
+          expose:
+            operator: ''
+          group: 1
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+      sorts: {  }
+      title: test_comment_row
+      header: {  }
+      footer: {  }
+      empty: {  }
+      arguments: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      path: test-comment-row

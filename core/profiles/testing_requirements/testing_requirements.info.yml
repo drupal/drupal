@@ -1,0 +1,5 @@
+name: 'Testing requirements'
+type: profile
+description: 'Profile for testing hook_requirements().'
+version: VERSION
+hidden: true

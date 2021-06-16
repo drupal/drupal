@@ -1,0 +1,10 @@
+file_module_test.managed_test:
+  path: '/file/test/{tree}/{extended}/{multiple}/{default_fids}'
+  defaults:
+    _form: '\Drupal\file_module_test\Form\FileModuleTestForm'
+    tree: TRUE
+    extended: TRUE
+    multiple: FALSE
+    default_fids: NULL
+  requirements:
+    _access: 'TRUE'

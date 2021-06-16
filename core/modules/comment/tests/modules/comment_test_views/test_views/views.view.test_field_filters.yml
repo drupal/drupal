@@ -1,0 +1,324 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - node
+    - user
+id: test_field_filters
+label: 'Test field filters'
+module: views
+description: ''
+tag: ''
+base_table: comment_field_data
+base_field: cid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: 0
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: none
+        options:
+          items_per_page: 0
+          offset: 0
+      style:
+        type: default
+      row:
+        type: 'entity:comment'
+        options:
+          view_mode: default
+      relationships:
+        node:
+          id: node
+          table: comment_field_data
+          field: node
+          required: true
+          plugin_id: standard
+          relationship: none
+          group_type: group
+          admin_label: Content
+      fields:
+        subject:
+          id: subject
+          table: comment_field_data
+          field: subject
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+          type: string
+          settings:
+            link_to_entity: false
+          plugin_id: field
+          entity_type: comment
+          entity_field: subject
+      filters:
+        subject:
+          id: subject
+          table: comment_field_data
+          field: subject
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: comment
+          entity_field: subject
+      sorts: {  }
+      title: 'Title filter page'
+      header: {  }
+      footer: {  }
+      empty: {  }
+      arguments: {  }
+      rendering_language: '***LANGUAGE_entity_translation***'
+  page_bf:
+    display_plugin: page
+    id: page_bf
+    display_title: 'Body Comida'
+    position: 1
+    display_options:
+      path: test-body-filter
+      display_description: ''
+      filters:
+        comment_body_value:
+          id: comment_body_value
+          table: comment__comment_body
+          field: comment_body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Comida
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: comment
+          entity_field: comment_body
+      defaults:
+        filters: false
+        filter_groups: false
+        title: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Body filter page'
+  page_bp:
+    display_plugin: page
+    id: page_bp
+    display_title: 'Body Paris'
+    position: 1
+    display_options:
+      path: test-body-paris
+      display_description: ''
+      filters:
+        comment_body_value:
+          id: comment_body_value
+          table: comment__comment_body
+          field: comment_body_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: comment
+          entity_field: comment_body
+      defaults:
+        filters: false
+        filter_groups: false
+        title: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Body filter page'
+  page_tc:
+    display_plugin: page
+    id: page_tc
+    display_title: 'Title Comida'
+    position: 1
+    display_options:
+      path: test-title-filter
+      display_description: ''
+  page_tp:
+    display_plugin: page
+    id: page_tp
+    display_title: 'Title Paris'
+    position: 1
+    display_options:
+      path: test-title-paris
+      display_description: ''
+      filters:
+        subject:
+          id: subject
+          table: comment_field_data
+          field: subject
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: Paris
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+          entity_type: comment
+          entity_field: subject
+      defaults:
+        filters: false
+        filter_groups: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND

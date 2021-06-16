@@ -1,0 +1,51 @@
+entity.user_role.edit_form:
+  title: 'Edit'
+  route_name: entity.user_role.edit_form
+  base_route: entity.user_role.edit_form
+
+user.account_settings_tab:
+  route_name: entity.user.admin_form
+  title: 'Settings'
+  base_route: entity.user.admin_form
+
+user.register:
+  route_name: user.register
+  base_route: user.page
+  title: 'Create new account'
+
+user.pass:
+  route_name: user.pass
+  base_route: user.page
+  title: 'Reset your password'
+
+# Other authentication methods may add pages below user/login/.
+user.login:
+  route_name: user.login
+  base_route: user.page
+  title: 'Log in'
+  weight: -10
+
+entity.user.canonical:
+  route_name: entity.user.canonical
+  base_route: entity.user.canonical
+  title: View
+entity.user.edit_form:
+  route_name: entity.user.edit_form
+  base_route: entity.user.canonical
+  title: Edit
+
+entity.user.collection:
+  title: List
+  route_name: entity.user.collection
+  base_route: entity.user.collection
+
+user.admin_permissions:
+  title: Permissions
+  route_name: user.admin_permissions
+  base_route: entity.user.collection
+
+entity.user_role.collection:
+  title: 'Roles'
+  route_name: entity.user_role.collection
+  base_route: entity.user.collection
+  weight: 10

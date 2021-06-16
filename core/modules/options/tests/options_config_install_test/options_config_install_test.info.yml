@@ -1,0 +1,8 @@
+name: 'Options config install test'
+type: module
+description: 'Support module for the Options module tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:options

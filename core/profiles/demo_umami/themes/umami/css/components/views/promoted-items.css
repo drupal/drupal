@@ -1,0 +1,121 @@
+/**
+ * @file
+ * This file is used to style the 'Promoted Items' view.
+ */
+
+.view-promoted-items--single {
+  padding: 1rem 0 2rem;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--single {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single {
+    display: flex;
+  }
+}
+/* 77em == the max width of .container + 1em either side */
+@media screen and (min-width: 77em) {
+  .view-promoted-items--single {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single > .view-content {
+    display: flex;
+    flex: 0 0 50%;
+    margin-right: 14px; /* LTR */
+  }
+  [dir=rtl] .view-promoted-items--single > .view-content {
+    margin-right: 0;
+    margin-left: 14px;
+  }
+}
+
+.view-promoted-items--single > .view-content .views-row {
+  margin-bottom: 14px;
+}
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--single > .view-content .views-row {
+    display: flex;
+    margin-bottom: 28px;
+  }
+}
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single > .view-content .views-row {
+    margin-bottom: 0;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single > .attachment-after {
+    display: flex;
+    margin-left: 14px; /* LTR */
+  }
+  [dir=rtl] .view-promoted-items--single > .attachment-after {
+    margin-right: 14px;
+    margin-left: 0;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single .attachment-after .views-element-container {
+    display: flex;
+  }
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .view-promoted-items--single .attachment-after .view-promoted-items--double {
+    display: flex;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--double {
+    overflow-x: hidden;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--double .view-content {
+    display: flex;
+    margin: 0 -14px;
+  }
+}
+
+/* Small */
+@media screen and (min-width: 30rem) { /* 480px */
+  .view-promoted-items--double .views-row {
+    display: flex;
+    width: calc(50% - 28px);
+    margin: 0 14px;
+  }
+}
+
+/* For the front page only, apply .container gutters */
+.path-frontpage .block-views-blockpromoted-items-block-1 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4%;
+}
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .path-frontpage .block-views-blockpromoted-items-block-1 {
+    padding: 0;
+  }
+}

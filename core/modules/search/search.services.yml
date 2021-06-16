@@ -1,0 +1,18 @@
+services:
+  plugin.manager.search:
+    class: Drupal\search\SearchPluginManager
+    parent: default_plugin_manager
+
+  search.search_page_repository:
+    class: Drupal\search\SearchPageRepository
+    arguments: ['@config.factory', '@entity_type.manager']
+
+  search.index:
+    class: Drupal\search\SearchIndex
+    arguments: ['@config.factory', '@database','@database.replica', '@cache_tags.invalidator', '@search.text_processor']
+    tags:
+      - { name: backend_overridable }
+
+  search.text_processor:
+    class: Drupal\search\SearchTextProcessor
+    arguments: ['@transliteration', '@config.factory', '@module_handler']

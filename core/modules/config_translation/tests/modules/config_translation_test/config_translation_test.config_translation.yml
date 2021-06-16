@@ -1,0 +1,6 @@
+# Attach to file settings for testing. The base route does not matter.
+system.file_system_settings:
+  title: 'Test config translation'
+  base_route_name: system.file_system_settings
+  names:
+    - config_translation_test.content

@@ -1,0 +1,22 @@
+# Schema for the configuration files of the Filter test module.
+
+filter_settings.filter_test_restrict_tags_and_attributes:
+  type: filter
+  label: 'Filter to restrict HTML tags and attributes'
+  mapping:
+    restrictions:
+      type: mapping
+      label: 'Restrictions'
+      mapping:
+        allowed:
+          type: sequence
+          label: 'Allowed tags and attributes'
+          sequence:
+            type: ignore
+            label: 'Tag and optionally list of attributes'
+        forbidden_tags:
+          type: sequence
+          label: 'Forbidden tags'
+          sequence:
+            type: boolean
+            label: 'Tag'

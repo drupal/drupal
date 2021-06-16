@@ -1,0 +1,162 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_theme().
+ */
+function theme_test_theme($existing, $type, $theme, $path) {
+  $items['theme_test'] = [
+    'file' => 'theme_test.inc',
+    'variables' => ['foo' => ''],
+  ];
+  $items['theme_test_template_test'] = [
+    'template' => 'theme_test.template_test',
+  ];
+  $items['theme_test_template_test_2'] = [
+    'template' => 'theme_test.template_test',
+  ];
+  $items['theme_test_suggestion_provided'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_specific_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_general_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_foo'] = [
+    'variables' => ['foo' => NULL],
+  ];
+  $items['theme_test_render_element'] = [
+    'render element' => 'elements',
+  ];
+  $items['theme_test_render_element_children'] = [
+    'render element' => 'element',
+  ];
+  $items['theme_test_preprocess_suggestions'] = [
+    'variables' => [
+      'foo' => '',
+      'bar' => '',
+    ],
+  ];
+  $items['theme_test_registered_by_module'] = [
+    'render element' => 'content',
+    'base hook' => 'container',
+  ];
+  $items['theme_test_theme_class'] = [
+    'variables' => [
+      'message' => '',
+    ],
+  ];
+  return $items;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function theme_test_preprocess_html(&$variables) {
+  $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
+  $variables['attributes']['theme_test_body_attribute'] = 'theme test body attribute value';
+
+  $variables['attributes']['theme_test_page_variable'] = 'Page variable is an array.';
+}
+
+/**
+ * Implements hook_page_bottom().
+ */
+function theme_test_page_bottom(array &$page_bottom) {
+  $page_bottom['theme_test_page_bottom'] = ['#markup' => 'theme test page bottom markup'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variables) {
+  return ['theme_test_preprocess_suggestions__' . $variables['foo']];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables) {
+  $variables['foo'] = 'Theme hook implementor=theme_theme_test_preprocess_suggestions().';
+}
+
+/**
+ * Tests a module overriding a default hook with a suggestion.
+ */
+function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$variables) {
+  $variables['foo'] = 'Monkey';
+}
+
+/**
+ * Prepares variables for test render element templates.
+ *
+ * Default template: theme-test-render-element.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
+ */
+function template_preprocess_theme_test_render_element(&$variables) {
+  $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
+  return ['theme_test_suggestion_provided__foo'];
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function theme_test_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed for ' . $hook . '.');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function theme_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
+}
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * @see \Drupal\system\Tests\Theme\ThemeInfoTest::testChanges()
+ */
+function theme_test_system_info_alter(array &$info, Extension $file, $type) {
+  if ($type == 'theme' && $file->getName() == 'test_theme' && \Drupal::state()->get('theme_test.modify_info_files')) {
+    // Add a library to see if the system picks it up.
+    $info += ['libraries' => []];
+    $info['libraries'][] = 'core/backbone';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_node(array $variables) {
+  $xss = '<script type="text/javascript">alert(\'yo\');</script>';
+  $suggestions[] = 'node__' . $xss;
+
+  return $suggestions;
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme_test_registered_by_module.
+ */
+function template_preprocess_theme_test_registered_by_module() {
+}

@@ -1,0 +1,64 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_user_bulk_form
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: users_field_data
+base_field: uid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: null
+    display_options:
+      style:
+        type: table
+      row:
+        type: fields
+      fields:
+        user_bulk_form:
+          id: user_bulk_form
+          table: users
+          field: user_bulk_form
+          plugin_id: user_bulk_form
+          entity_type: user
+        name:
+          id: name
+          table: users_field_data
+          field: name
+          plugin_id: field
+          type: user_name
+          entity_type: user
+          entity_field: name
+      sorts:
+        uid:
+          id: uid
+          table: users_field_data
+          field: uid
+          order: ASC
+          plugin_id: user
+          entity_type: user
+          entity_field: uid
+      filters:
+        status:
+          id: status
+          table: users_field_data
+          field: status
+          operator: '='
+          value: '1'
+          plugin_id: boolean
+          entity_type: user
+          entity_field: status
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test-user-bulk-form

@@ -1,0 +1,8 @@
+name: 'Tracker test views'
+type: module
+description: 'Provides default views for views tracker tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:tracker
+  - drupal:views

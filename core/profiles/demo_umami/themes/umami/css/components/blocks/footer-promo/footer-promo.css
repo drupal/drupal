@@ -1,0 +1,41 @@
+/**
+ * @file
+ * This file is used to style the Footer promo block.
+ */
+
+.block-type-footer-promo-block .field--type-image {
+  padding-bottom: 14px;
+}
+
+.block-type-footer-promo-block .block__title {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.block-type-footer-promo-block .footer-promo-content {
+  margin-bottom: 1.28rem;
+}
+
+@media screen and (min-width: 60rem) {
+  .block-type-footer-promo-block {
+    overflow: hidden;
+    flex-basis: 60%;
+    height: 200px;
+    font-size: 0.9rem;
+  }
+
+  .block-type-footer-promo-block .field--type-image {
+    float: left; /* LTR */
+    margin-right: 14px; /* LTR */
+    padding-bottom: 0;
+  }
+
+  [dir="rtl"] .block-type-footer-promo-block .field--type-image {
+    float: right;
+    margin-left: 14px;
+  }
+
+  .block-type-footer-promo-block .block__title {
+    padding-top: 2rem;
+  }
+}

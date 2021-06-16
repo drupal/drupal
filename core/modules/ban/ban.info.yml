@@ -1,0 +1,6 @@
+name: Ban
+type: module
+description: 'Allows administrators to ban visits from specific IP addresses.'
+package: Core
+version: VERSION
+configure: ban.admin_page

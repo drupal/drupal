@@ -1,0 +1,16 @@
+id: tag_test_0
+label: migration tag test 0
+migration_tags:
+  - test
+  - tag_test_0
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 0
+  ids:
+    id:
+      type: integer
+process:
+  id: id
+destination:
+  plugin: null

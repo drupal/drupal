@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_user_login().
+ */
+function session_test_user_login(UserInterface $account) {
+  if ($account->getAccountName() == 'session_test_user') {
+    // Exit so we can verify that the session was regenerated
+    // before hook_user_login() was called.
+    exit;
+  }
+  // Add some data in the session for retrieval testing purpose.
+  \Drupal::request()->getSession()->set("session_test_key", "foobar");
+}

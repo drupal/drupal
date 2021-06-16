@@ -1,0 +1,20 @@
+finished:
+  6:
+    # A field migration
+    #  migrate_state_finished_test: migrate_state_finished_test
+    aggregator: migrate_state_finished_test
+    action:
+      - migrate_state_finished_test
+      - migrate_state_not_finished_test
+  7:
+    # A field migration
+    #  migrate_state_finished_test: migrate_state_finished_test
+    aggregator: migrate_state_finished_test
+    # Migrations
+    action:
+      - migrate_state_finished_test
+      - migrate_state_not_finished_test
+not_finished:
+  7:
+    # Migrations
+    action: system

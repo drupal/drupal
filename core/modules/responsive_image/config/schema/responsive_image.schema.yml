@@ -1,0 +1,69 @@
+# Schema for the configuration files of the Responsive Image module.
+
+responsive_image.styles.*:
+  type: config_entity
+  label: 'Responsive image style'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    label:
+      type: label
+      label: 'Label'
+    image_style_mappings:
+      type: sequence
+      label: 'Image style mappings'
+      sequence:
+        type: mapping
+        label: 'Image style mapping'
+        mapping:
+          # Image mapping type. Either 'sizes' (using the 'sizes' attribute)
+          # or 'image_style' (using a single image style to map to this
+          # breakpoint).
+          image_mapping_type:
+            type: string
+            label: 'Responsive image mapping type'
+          image_mapping:
+            type: responsive_image.image_mapping_type.[%parent.image_mapping_type]
+          breakpoint_id:
+            type: string
+            label: 'Breakpoint ID'
+          multiplier:
+            type: string
+            label: 'Multiplier'
+    breakpoint_group:
+      type: string
+      label: 'Breakpoint group'
+    fallback_image_style:
+      type: string
+      label: 'Fallback image style'
+
+responsive_image.image_mapping_type.image_style:
+  type: string
+  label: 'Image style'
+
+responsive_image.image_mapping_type.sizes:
+  type: mapping
+  mapping:
+    # The value for the sizes attribute as described in the spec:
+    # http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-sizes
+    sizes:
+      type: string
+      label: 'Sizes attribute'
+    sizes_image_styles:
+      type: sequence
+      label: 'Image styles to be used when using the ''sizes'' attribute'
+      sequence:
+        type: string
+        label: 'Image style'
+
+field.formatter.settings.responsive_image:
+  type: mapping
+  label: 'Responsive image list format settings'
+  mapping:
+    responsive_image_style:
+      type: string
+      label: 'Responsive image style'
+    image_link:
+      type: string
+      label: 'Link image to'

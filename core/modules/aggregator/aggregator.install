@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the aggregator module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function aggregator_update_last_removed() {
+  return 8501;
+}

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.disclaimer_block
+    - field.storage.block_content.field_copyright
+  module:
+    - text
+id: block_content.disclaimer_block.field_copyright
+field_name: field_copyright
+entity_type: block_content
+bundle: disclaimer_block
+label: Copyright
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

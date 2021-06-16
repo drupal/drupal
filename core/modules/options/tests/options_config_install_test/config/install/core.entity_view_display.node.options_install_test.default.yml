@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.options_install_test.body
+    - node.type.options_install_test
+  module:
+    - text
+    - user
+id: node.options_install_test.default
+targetEntityType: node
+bundle: options_install_test
+mode: default
+content:
+  links:
+    weight: 100
+    region: content
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
+third_party_settings: {  }

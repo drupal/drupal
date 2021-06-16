@@ -1,0 +1,63 @@
+/**
+ * @file
+ * Styles for system messages.
+ */
+
+.messages {
+  margin-bottom: 1em;
+  padding: 20px;
+  word-wrap: break-word;
+  color: inherit;
+  overflow-wrap: break-word;
+}
+[dir="rtl"] .messages {
+  text-align: right;
+  background-position: right 10px top 17px;
+}
+.messages + .messages {
+  margin-top: 1.538em;
+}
+.messages__content {
+  padding-left: 24px; /* LTR */
+  background: no-repeat 0 center; /* LTR */
+}
+[dir=rtl] .messages__content {
+  padding-right: 24px;
+  padding-left: 0;
+  background-position: right;
+}
+.messages--status {
+  border: 1px solid #cbdebc;
+  background-color: #e6eee0;
+}
+.messages--status .messages__content {
+  background-image: url(/core/misc/icons/73b355/check.svg);
+}
+.messages--warning {
+  border: 1px solid #fae2a4;
+  background-color: #fcf1d4;
+}
+.messages--warning .messages__content {
+  background-image: url(/core/misc/icons/e29700/warning.svg);
+}
+.messages--error {
+  border: 1px solid #f8c8d5;
+  background-color: #f9e6eb;
+}
+.messages--error .messages__content {
+  background-image: url(/core/misc/icons/e32700/error.svg);
+}
+.messages--error .error {
+  color: inherit;
+}
+.messages a {
+  color: #cc2a00;
+}
+.messages__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.messages__item + .messages__item {
+  margin-top: 0.769em;
+}

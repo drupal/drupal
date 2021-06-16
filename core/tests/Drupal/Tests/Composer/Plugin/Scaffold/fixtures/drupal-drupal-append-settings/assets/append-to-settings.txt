@@ -1,0 +1,1 @@
+include __DIR__ . "/settings-custom-additions.php";

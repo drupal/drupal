@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the media_library module.
+ */
+
+use Drupal\media\Entity\MediaType;
+
+/**
+ * Implements hook_install().
+ */
+function media_library_install($is_syncing) {
+  if (!$is_syncing) {
+    foreach (MediaType::loadMultiple() as $type) {
+      _media_library_configure_form_display($type);
+      _media_library_configure_view_display($type);
+    }
+  }
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function media_library_update_last_removed() {
+  return 8704;
+}

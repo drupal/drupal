@@ -1,0 +1,7 @@
+name: 'Migration external translated test'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:migrate

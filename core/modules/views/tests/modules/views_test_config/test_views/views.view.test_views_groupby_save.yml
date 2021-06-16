@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_views_groupby_save
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: none
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        id:
+          field: id
+          table: views_test_data
+          id: id
+          plugin_id: numeric
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

@@ -1,0 +1,4 @@
+block_content.block_edit:
+  title: 'Edit'
+  group: block_content
+  route_name: 'entity.block_content.canonical'

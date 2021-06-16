@@ -1,0 +1,24 @@
+id: d6_book
+label: Books
+migration_tags:
+  - Drupal 6
+  - Content
+source:
+  plugin: book
+process:
+  nid: nid
+  'book/bid': bid
+  'book/weight': weight
+  'book/pid':
+    -
+      plugin: skip_on_empty
+      method: process
+      source: plid
+    -
+      plugin: migration_lookup
+      migration: d6_book
+destination:
+  plugin: book
+migration_dependencies:
+  required:
+    - d6_node

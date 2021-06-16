@@ -1,0 +1,403 @@
+<?php
+
+/**
+ * @file
+ * Enables the organization of content into categories.
+ */
+
+use Drupal\Component\Utility\Tags;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
+
+/**
+ * Implements hook_help().
+ */
+function taxonomy_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.taxonomy':
+      $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Taxonomy module allows users who have permission to create and edit content to categorize (tag) content of that type. Users who have the <em>Administer vocabularies and terms</em> <a href=":permissions" title="Taxonomy module permissions">permission</a> can add <em>vocabularies</em> that contain a set of related <em>terms</em>. The terms in a vocabulary can either be pre-set by an administrator or built gradually as content is added and edited. Terms may be organized hierarchically if desired.', [':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-taxonomy'])->toString()]) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":taxonomy">online documentation for the Taxonomy module</a>.', [':taxonomy' => 'https://www.drupal.org/documentation/modules/taxonomy/']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing vocabularies') . '</dt>';
+      $output .= '<dd>' . t('Users who have the <em>Administer vocabularies and terms</em> permission can add and edit vocabularies from the <a href=":taxonomy_admin">Taxonomy administration page</a>. Vocabularies can be deleted from their <em>Edit vocabulary</em> page. Users with the <em>Taxonomy term: Administer fields</em> permission may add additional fields for terms in that vocabulary using the <a href=":field_ui">Field UI module</a>.', [':taxonomy_admin' => Url::fromRoute('entity.taxonomy_vocabulary.collection')->toString(), ':field_ui' => $field_ui_url]) . '</dd>';
+      $output .= '<dt>' . t('Managing terms') . '</dt>';
+      $output .= '<dd>' . t('Users who have the <em>Administer vocabularies and terms</em> permission or the <em>Edit terms</em> permission for a particular vocabulary can add, edit, and organize the terms in a vocabulary from a vocabulary\'s term listing page, which can be accessed by going to the <a href=":taxonomy_admin">Taxonomy administration page</a> and clicking <em>List terms</em> in the <em>Operations</em> column. Users must have the <em>Administer vocabularies and terms</em> permission or the <em>Delete terms</em> permission for a particular vocabulary to delete terms.', [':taxonomy_admin' => Url::fromRoute('entity.taxonomy_vocabulary.collection')->toString()]) . ' </dd>';
+      $output .= '<dt>' . t('Classifying entity content') . '</dt>';
+      $output .= '<dd>' . t('A user with the <em>Administer fields</em> permission for a certain entity type may add <em>Taxonomy term</em> reference fields to the entity type, which will allow entities to be classified using taxonomy terms. See the <a href=":entity_reference">Entity Reference help</a> for more information about reference fields. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them.', [':field_ui' => $field_ui_url, ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(), ':entity_reference' => Url::fromRoute('help.page', ['name' => 'entity_reference'])->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Adding new terms during content creation') . '</dt>';
+      $output .= '<dd>' . t("Allowing users to add new terms gradually builds a vocabulary as content is added and edited. Users can add new terms if either of the two <em>Autocomplete</em> widgets is chosen for the Taxonomy term reference field in the <em>Manage form display</em> page for the field. You will also need to enable the <em>Create referenced entities if they don't already exist</em> option, and restrict the field to one vocabulary.") . '</dd>';
+      $output .= '<dt>' . t('Configuring displays and form displays') . '</dt>';
+      $output .= '<dd>' . t('See the <a href=":entity_reference">Entity Reference help</a> page for the field widgets and formatters that can be configured for any reference field on the <em>Manage display</em> and <em>Manage form display</em> pages. Taxonomy additionally provides an <em>RSS category</em> formatter that displays nothing when the entity item is displayed as HTML, but displays an RSS category instead of a list when the entity item is displayed in an RSS feed.', [':entity_reference' => Url::fromRoute('help.page', ['name' => 'entity_reference'])->toString()]) . '</li>';
+      $output .= '</ul>';
+      $output .= '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'entity.taxonomy_vocabulary.collection':
+      $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Entity URI callback.
+ */
+function taxonomy_term_uri($term) {
+  return new Url('entity.taxonomy_term.canonical', [
+    'taxonomy_term' => $term->id(),
+  ]);
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function taxonomy_page_attachments_alter(array &$page) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical' && ($term = $route_match->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
+    foreach ($term->uriRelationships() as $rel) {
+      // Set the URI relationships, like canonical.
+      $page['#attached']['html_head_link'][] = [
+        [
+          'rel' => $rel,
+          'href' => $term->toUrl($rel)->toString(),
+        ],
+        TRUE,
+      ];
+
+      // Set the term path as the canonical URL to prevent duplicate content.
+      if ($rel == 'canonical') {
+        // Set the non-aliased canonical path as a default shortlink.
+        $page['#attached']['html_head_link'][] = [
+          [
+            'rel' => 'shortlink',
+            'href' => $term->toUrl($rel, ['alias' => TRUE])->toString(),
+          ],
+          TRUE,
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function taxonomy_theme() {
+  return [
+    'taxonomy_term' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
+  $suggestions = [];
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  $term = $variables['elements']['#taxonomy_term'];
+
+  $suggestions[] = 'taxonomy_term__' . $term->bundle();
+  $suggestions[] = 'taxonomy_term__' . $term->id();
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for taxonomy term templates.
+ *
+ * Default template: taxonomy-term.html.twig.
+ *
+ * By default this function performs special preprocessing to move the name
+ * base field out of the elements array into a separate variable. This
+ * preprocessing is skipped if:
+ * - a module makes the field's display configurable via the field UI by means
+ *   of BaseFieldDefinition::setDisplayConfigurable()
+ * - AND the additional entity type property
+ *   'enable_base_field_custom_preprocess_skipping' has been set using
+ *   hook_entity_type_build().
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the taxonomy term and any
+ *     fields attached to the term. Properties used:
+ *     - #taxonomy_term: A \Drupal\taxonomy\TermInterface object.
+ *     - #view_mode: The current view mode for this taxonomy term, e.g.
+ *       'full' or 'teaser'.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_taxonomy_term(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['term'] = $variables['elements']['#taxonomy_term'];
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  $term = $variables['term'];
+
+  $variables['url'] = !$term->isNew() ? $term->toUrl()->toString() : NULL;
+
+  // Make name field available separately.  Skip this custom preprocessing if
+  // the field display is configurable and skipping has been enabled.
+  // @todo https://www.drupal.org/project/drupal/issues/3015623
+  //   Eventually delete this code and matching template lines. Using
+  //   $variables['content'] is more flexible and consistent.
+  $skip_custom_preprocessing = $term->getEntityType()->get('enable_base_field_custom_preprocess_skipping');
+  if (!$skip_custom_preprocessing || !$term->getFieldDefinition('name')->isDisplayConfigurable('view')) {
+    // We use name here because that is what appears in the UI.
+    $variables['name'] = $variables['elements']['name'];
+    unset($variables['elements']['name']);
+  }
+
+  $variables['page'] = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
+
+  // Helpful $content variable for templates.
+  $variables['content'] = [];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Returns whether the current page is the page of the passed-in term.
+ *
+ * @param \Drupal\taxonomy\Entity\Term $term
+ *   A taxonomy term entity.
+ */
+function taxonomy_term_is_page(Term $term) {
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.taxonomy_term.canonical' && $page_term_id = \Drupal::routeMatch()->getRawParameter('taxonomy_term')) {
+    return $page_term_id == $term->id();
+  }
+  return FALSE;
+}
+
+/**
+ * Clear all static cache variables for terms.
+ */
+function taxonomy_terms_static_reset() {
+  \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
+}
+
+/**
+ * Clear all static cache variables for vocabularies.
+ *
+ * @param $ids
+ *   An array of ids to reset in the entity cache.
+ */
+function taxonomy_vocabulary_static_reset(array $ids = NULL) {
+  \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->resetCache($ids);
+}
+
+/**
+ * Get names for all taxonomy vocabularies.
+ *
+ * @return array
+ *   A list of existing vocabulary IDs.
+ */
+function taxonomy_vocabulary_get_names() {
+  $names = &drupal_static(__FUNCTION__);
+
+  if (!isset($names)) {
+    $names = [];
+    $config_names = \Drupal::configFactory()->listAll('taxonomy.vocabulary.');
+    foreach ($config_names as $config_name) {
+      $id = substr($config_name, strlen('taxonomy.vocabulary.'));
+      $names[$id] = $id;
+    }
+  }
+
+  return $names;
+}
+
+/**
+ * Try to map a string to an existing term, as for glossary use.
+ *
+ * Provides a case-insensitive and trimmed mapping, to maximize the
+ * likelihood of a successful match.
+ *
+ * @param $name
+ *   Name of the term to search for.
+ * @param $vocabulary
+ *   (optional) Vocabulary machine name to limit the search. Defaults to NULL.
+ *
+ * @return
+ *   An array of matching term objects.
+ */
+function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
+  $values = ['name' => trim($name)];
+  if (isset($vocabulary)) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    if (isset($vocabularies[$vocabulary])) {
+      $values['vid'] = $vocabulary;
+    }
+    else {
+      // Return an empty array when filtering by a non-existing vocabulary.
+      return [];
+    }
+  }
+  return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties($values);
+}
+
+/**
+ * Implodes a list of tags of a certain vocabulary into a string.
+ *
+ * @see \Drupal\Component\Utility\Tags::explode()
+ */
+function taxonomy_implode_tags($tags, $vid = NULL) {
+  $typed_tags = [];
+  foreach ($tags as $tag) {
+    // Extract terms belonging to the vocabulary in question.
+    if (!isset($vid) || $tag->bundle() == $vid) {
+      // Make sure we have a completed loaded taxonomy term.
+      if ($tag instanceof EntityInterface && $label = $tag->label()) {
+        // Commas and quotes in tag names are special cases, so encode 'em.
+        $typed_tags[] = Tags::encode($label);
+      }
+    }
+  }
+  return implode(', ', $typed_tags);
+}
+
+/**
+ * Title callback for term pages.
+ *
+ * @param \Drupal\taxonomy\Entity\Term $term
+ *   A taxonomy term entity.
+ *
+ * @return
+ *   The term name to be used as the page title.
+ */
+function taxonomy_term_title(Term $term) {
+  return $term->getName();
+}
+
+/**
+ * @defgroup taxonomy_index Taxonomy indexing
+ * @{
+ * Functions to maintain taxonomy indexing.
+ *
+ * Taxonomy uses default field storage to store canonical relationships
+ * between terms and fieldable entities. However its most common use case
+ * requires listing all content associated with a term or group of terms
+ * sorted by creation date. To avoid slow queries due to joining across
+ * multiple node and field tables with various conditions and order by criteria,
+ * we maintain a denormalized table with all relationships between terms,
+ * published nodes and common sort criteria such as status, sticky and created.
+ * When using other field storage engines or alternative methods of
+ * denormalizing this data you should set the
+ * taxonomy.settings:maintain_index_table to '0' to avoid unnecessary writes in
+ * SQL.
+ */
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
+ */
+function taxonomy_node_insert(EntityInterface $node) {
+  // Add taxonomy index entries for the node.
+  taxonomy_build_node_index($node);
+}
+
+/**
+ * Builds and inserts taxonomy index entries for a given node.
+ *
+ * The index lists all terms that are related to a given node entity, and is
+ * therefore maintained at the entity level.
+ *
+ * @param \Drupal\node\Entity\Node $node
+ *   The node entity.
+ */
+function taxonomy_build_node_index($node) {
+  // We maintain a denormalized table of term/node relationships, containing
+  // only data for current, published nodes.
+  if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityTypeManager()->getStorage('node') instanceof SqlContentEntityStorage)) {
+    return;
+  }
+
+  $status = $node->isPublished();
+  $sticky = (int) $node->isSticky();
+  // We only maintain the taxonomy index for published nodes.
+  if ($status && $node->isDefaultRevision()) {
+    // Collect a unique list of all the term IDs from all node fields.
+    $tid_all = [];
+    $entity_reference_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+    foreach ($node->getFieldDefinitions() as $field) {
+      $field_name = $field->getName();
+      $class = $field->getItemDefinition()->getClass();
+      $is_entity_reference_class = ($class === $entity_reference_class) || is_subclass_of($class, $entity_reference_class);
+      if ($is_entity_reference_class && $field->getSetting('target_type') == 'taxonomy_term') {
+        foreach ($node->getTranslationLanguages() as $language) {
+          foreach ($node->getTranslation($language->getId())->$field_name as $item) {
+            if (!$item->isEmpty()) {
+              $tid_all[$item->target_id] = $item->target_id;
+            }
+          }
+        }
+      }
+    }
+    // Insert index entries for all the node's terms.
+    if (!empty($tid_all)) {
+      $connection = \Drupal::database();
+      foreach ($tid_all as $tid) {
+        $connection->merge('taxonomy_index')
+          ->key(['nid' => $node->id(), 'tid' => $tid, 'status' => $node->isPublished()])
+          ->fields(['sticky' => $sticky, 'created' => $node->getCreatedTime()])
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for node entities.
+ */
+function taxonomy_node_update(EntityInterface $node) {
+  // If we're not dealing with the default revision of the node, do not make any
+  // change to the taxonomy index.
+  if (!$node->isDefaultRevision()) {
+    return;
+  }
+  taxonomy_delete_node_index($node);
+  taxonomy_build_node_index($node);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
+ */
+function taxonomy_node_predelete(EntityInterface $node) {
+  // Clean up the {taxonomy_index} table when nodes are deleted.
+  taxonomy_delete_node_index($node);
+}
+
+/**
+ * Deletes taxonomy index entries for a given node.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $node
+ *   The node entity.
+ */
+function taxonomy_delete_node_index(EntityInterface $node) {
+  if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+    \Drupal::database()->delete('taxonomy_index')->condition('nid', $node->id())->execute();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for taxonomy_term entities.
+ */
+function taxonomy_taxonomy_term_delete(Term $term) {
+  if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+    // Clean up the {taxonomy_index} table when terms are deleted.
+    \Drupal::database()->delete('taxonomy_index')->condition('tid', $term->id())->execute();
+  }
+}
+
+/**
+ * @} End of "defgroup taxonomy_index".
+ */

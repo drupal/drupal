@@ -1,0 +1,9 @@
+# Schema for the views plugins of the Tracker module.
+
+views.argument.tracker_user_uid:
+  type: views.argument.argument_comment_user_uid
+  label: 'Nodes user posted/commented on'
+
+views.filter.tracker_user_uid:
+  type: views.filter.user_name
+  label: 'UID of a nodes user posted/commented on'

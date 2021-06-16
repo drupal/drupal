@@ -1,0 +1,77 @@
+/**
+ * @file
+ * Styles for the system status counter component.
+ */
+
+@import "../base/variables.pcss.css";
+
+.system-status-counter {
+  display: inline-block;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  white-space: nowrap;
+}
+.system-status-counter__status-icon {
+  display: inline-block;
+  width: 65px;
+  height: 60px;
+  vertical-align: middle;
+}
+[dir="rtl"] .system-status-counter__status-icon {
+  border-right: 0;
+  border-left: 1px solid #e6e4df;
+}
+.system-status-counter__status-icon:before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 40px;
+}
+
+.system-status-counter__status-icon--error:before {
+  background-image: url(../../images/core/e32700/error.svg);
+}
+.system-status-counter__status-icon--warning:before {
+  background-image: url(../../images/core/e29700/warning.svg);
+}
+.system-status-counter__status-icon--checked:before {
+  background-image: url(../../images/core/73b355/check.svg);
+}
+
+.system-status-counter__status-title {
+  display: inline-block;
+  padding: 0 18px;
+  vertical-align: middle;
+  font-size: 1.125em;
+  font-weight: bold;
+  line-height: 1em;
+}
+.system-status-counter__title-count {
+  display: block;
+  margin-bottom: 8px;
+}
+.system-status-counter__details {
+  display: block;
+  text-transform: none;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+@media screen and (min-width: 61rem) {
+  .system-status-report-counters__item {
+    padding-top: var(--space-s);
+    padding-bottom: var(--space-s);
+  }
+  .system-status-counter__status-icon,
+  .system-status-counter {
+    height: 65px;
+  }
+  .system-status-counter__status-icon {
+    width: 65px;
+  }
+}

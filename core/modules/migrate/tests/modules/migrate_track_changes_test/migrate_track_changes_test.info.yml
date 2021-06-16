@@ -1,0 +1,6 @@
+type: module
+name: Migration Track Changes Test
+description: 'Provides test fixtures for testing track changes marks.'
+package: Testing
+dependencies:
+  - drupal:migrate

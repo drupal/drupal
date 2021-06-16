@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.card_common_alt
+label: 'Card common alt'
+targetEntityType: node
+cache: true

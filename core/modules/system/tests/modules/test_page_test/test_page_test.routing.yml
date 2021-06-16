@@ -1,0 +1,154 @@
+test_page_test.test_page:
+  path: '/test-page'
+  defaults:
+    _title: 'Test front page'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.render_title:
+  path: '/test-render-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.static_title:
+  path: '/test-page-static-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::staticTitle'
+    _title: 'Static title'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.cached_controller:
+  path: '/test-page-cached-controller'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::controllerWithCache'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.dynamic_title:
+  path: '/test-page-dynamic-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::staticTitle'
+    _title_callback: '\Drupal\test_page_test\Controller\Test::dynamicTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.admin_render_title:
+  path: '/admin/test-render-title'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.http_response_exception:
+  path: '/test-http-response-exception/{code}'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::httpResponseException'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.error:
+  path: '/test-error'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::error'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.null_header:
+  path: '/test-null-header'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::setHeader'
+    name: Null-Header
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.encoded:
+  path: '/test-encoded'
+  defaults:
+    _title: 'Page with encoded HTML'
+    _controller: '\Drupal\test_page_test\Controller\Test::renderEncodedMarkup'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.pipe:
+  path: '/test-pipe-char'
+  defaults:
+    _title: 'Page with pipe char in link'
+    _controller: '\Drupal\test_page_test\Controller\Test::renderPipeInLink'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.field_xpath:
+  path: '/test-field-xpath'
+  defaults:
+    _title: 'Table and form elements for field xpath assertion testing'
+    _form: '\Drupal\test_page_test\Form\TestForm'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.escaped_characters:
+  path: '/test-escaped-characters'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::escapedCharacters'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.escaped_script:
+  path: '/test-escaped-script'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::escapedScript'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.unescaped_script:
+  path: '/test-unescaped-script'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::unescapedScript'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.meta_refresh:
+  path: '/test-meta-refresh'
+  defaults:
+    _title: 'Page with a redirect'
+    _controller: '\Drupal\test_page_test\Controller\Test::metaRefresh'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.page_with_duplicate_ids:
+  path: '/test-page-with-duplicate-ids'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::renderPageWithDuplicateIds'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.page_without_duplicate_ids:
+  path: '/test-page-without-duplicate-ids'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::renderPageWithoutDuplicateIds'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.deprecations:
+  path: '/test-deprecations'
+  defaults:
+    _title: 'Page with deprecation notices'
+    _controller: '\Drupal\test_page_test\Controller\Test::deprecations'
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.test_page_var_dump:
+  path: '/test-page-var-dump'
+  defaults:
+    _title: 'Test front page with var dump'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPageVarDump'
+  requirements:
+    _access: 'TRUE'

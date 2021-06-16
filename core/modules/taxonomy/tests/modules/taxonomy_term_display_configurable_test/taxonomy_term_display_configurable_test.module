@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * A module for testing making taxonomy_term base fields' displays
+ * configurable.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function taxonomy_term_display_configurable_test_entity_base_field_info_alter(&$base_field_definitions, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'taxonomy_term') {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+    $base_field_definitions['name']->setDisplayConfigurable('view', TRUE);
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function taxonomy_term_display_configurable_test_entity_type_build(array &$entity_types) {
+  // Allow skipping of extra preprocessing for configurable display.
+  $entity_types['taxonomy_term']->set('enable_base_field_custom_preprocess_skipping', TRUE);
+}

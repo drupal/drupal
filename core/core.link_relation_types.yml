@@ -1,0 +1,305 @@
+# Drupal core's extension relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.2.
+add-form:
+  uri: https://drupal.org/link-relations/add-form
+  description: A form where a resource of this type can be created.
+add-page:
+  uri: https://drupal.org/link-relations/add-page
+  description: A page where a resource of this type and related types can be created.
+delete-form:
+  uri: https://drupal.org/link-relations/delete-form
+  description: A form where a resource of this type can be deleted.
+delete-multiple-form:
+  uri: https://drupal.org/link-relations/delete-multiple-form
+  description: A form where multiple resources of this type can be deleted.
+revision:
+  uri: https://drupal.org/link-relations/revision
+  description: A particular version of this resource.
+create:
+  uri: https://drupal.org/link-relations/create
+  description: A REST resource URL where a resource of this type can be created.
+enable:
+  uri: https://drupal.org/link-relations/enable
+  description: A REST resource URL where a resource of this type can be enabled.
+disable:
+  uri: https://drupal.org/link-relations/disable
+  description: A REST resource URL where a resource of this type can be disabled.
+edit-permissions-form:
+  uri: https://drupal.org/link-relations/edit-permissions-form
+  description: A form where permissions assigned to a resource of this type can be edited.
+overview-form:
+  uri: https://drupal.org/link-relations/overview-form
+  description: A form where an overview of the collection of resources belonging to a resource of this type can be edited in bulk.
+reset-form:
+  uri: https://drupal.org/link-relations/reset-form
+  description: A form where an overview of the collection of resources belonging to a resource of this type can be reset.
+cancel-form:
+  uri: https://drupal.org/link-relations/cancel-form
+  description: A form where a resource of this type can be canceled.
+flush-form:
+  uri: https://drupal.org/link-relations/flush-form
+  description: A form where a resource of this type can be flushed.
+duplicate-form:
+  uri: https://drupal.org/link-relations/duplicate-form
+  description: A form where a resource of this type can be duplicated.
+
+# All registered relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.1.
+# See https://www.iana.org/assignments/link-relations/link-relations.xhtml.
+about:
+  description: "Refers to a resource that is the subject of the link's context."
+  reference: '[RFC6903], section 2'
+alternate:
+  description: 'Refers to a substitute for this context'
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-alternate]'
+appendix:
+  description: 'Refers to an appendix.'
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+archives:
+  description: "Refers to a collection of records, documents, or other materials of historical interest."
+  reference: '[http://www.w3.org/TR/2011/WD-html5-20110113/links.html#rel-archives]'
+author:
+  description: "Refers to the context's author."
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-author]'
+blocked-by:
+  description: "Identifies the entity that blocks access to a resource following receipt of a legal demand."
+  reference: '[RFC7725]'
+bookmark:
+  description: 'Gives a permanent link to use for bookmarking purposes.'
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-bookmark]'
+canonical:
+  description: 'Designates the preferred version of a resource (the IRI and its contents).'
+  reference: '[RFC6596]'
+chapter:
+  description: 'Refers to a chapter in a collection of resources.'
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+collection:
+  description: 'The target IRI points to a resource which represents the collection resource for the context IRI.'
+  reference: '[RFC6573]'
+contents:
+  description: 'Refers to a table of contents.'
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+copyright:
+  description: "Refers to a copyright statement that applies to the link's context."
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+create-form:
+  description: 'The target IRI points to a resource where a submission form can be obtained.'
+  reference: '[RFC6861]'
+current:
+  description: "Refers to a resource containing the most recent item(s) in a collection of resources."
+  reference: '[RFC5005]'
+customize-form:
+  description: "The target URI points to a resource where a submission form for customizing associated resource can be obtained."
+  reference: '[RFC6861]'
+derivedfrom:
+  description: 'The target IRI points to a resource from which this material was derived.'
+  reference: '[draft-hoffman-xml2rfc]'
+describedby:
+  description: "Refers to a resource providing information about the link's context."
+  reference: '[http://www.w3.org/TR/powder-dr/#assoc-linking]'
+describes:
+  description: "The relationship A 'describes' B asserts that resource A provides a description of resource B. There are no constraints on the format or representation of either A or B, neither are there any further constraints on either resource."
+  reference: '[RFC6892]'
+  notes: "This link relation type is the inverse of the 'describedby' relation type.  While 'describedby' establishes a relation from the described resource back to the resource that describes it, 'describes' established a relation from the describing resource to the resource it describes.  If B is 'describedby' A, then A 'describes' B."
+disclosure:
+  description: "Refers to a list of patent disclosures made with respect to  material for which 'disclosure' relation is specified."
+  reference: '[RFC6579]'
+dns-prefetch:
+  description: "Used to indicate an origin that will be used to fetch required  resources for the link context, and that the user agent ought to resolve  as early as possible."
+  reference: '[https://www.w3.org/TR/resource-hints/]'
+duplicate:
+  description: "Refers to a resource whose available representations are byte-for-byte identical with the corresponding representations of the context IRI."
+  reference: '[RFC6249]'
+  notes: "This relation is for static resources.  That is, an HTTP GET request on any duplicate will return the same representation.  It does not make sense for dynamic or POSTable resources and should not be used for them."
+edit:
+  description: "Refers to a resource that can be used to edit the link's context."
+  reference: '[RFC5023]'
+edit-form:
+  description: "The target IRI points to a resource where a submission form for editing associated resource can be obtained."
+  reference: '[RFC6861]'
+edit-media:
+  description: "Refers to a resource that can be used to edit media associated with the link's context."
+  reference: '[RFC5023]'
+enclosure:
+  description: "Identifies a related resource that is potentially large and might require special handling."
+  reference: '[RFC4287]'
+first:
+  description: "An IRI that refers to the furthest preceding resource in a series of resources."
+  reference: '[RFC5988]'
+  notes: "This relation type registration did not indicate a reference.  Originally requested by Mark Nottingham in December 2004."
+glossary:
+  description: 'Refers to a glossary of terms.'
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+help:
+  description: 'Refers to context-sensitive help.'
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-help]'
+hosts:
+  description: "Refers to a resource hosted by the server indicated by the link context."
+  reference: '[RFC6690]'
+  notes: "This relation is used in CoRE where links are retrieved as a \"/.well-known/core\" resource representation, and is the default relation type in the CoRE Link Format."
+hub:
+  description: "Refers to a hub that enables registration for notification of updates to the context."
+  reference: '[http://pubsubhubbub.googlecode.com]'
+  notes: 'This relation type was requested by Brett Slatkin.'
+icon:
+  description: "Refers to an icon representing the link's context."
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-icon]'
+index:
+  description: 'Refers to an index.'
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+item:
+  description: 'The target IRI points to a resource that is a member of the collection represented by the context IRI.'
+  reference: '[RFC6573]'
+last:
+  description: "An IRI that refers to the furthest following resource in a series of resources."
+  reference: '[RFC5988]'
+  notes: "This relation type registration did not indicate a reference. Originally requested by Mark Nottingham in December 2004."
+latest-version:
+  description: "Points to a resource containing the latest (e.g., current) version of the context."
+  reference: '[RFC5829]'
+license:
+  description: 'Refers to a license associated with this context.'
+  reference: '[RFC4946]'
+  notes: "For implications of use in HTML, see:  http://www.w3.org/TR/html5/links.html#link-type-license"
+lrdd:
+  description: "Refers to further information about the link's context, expressed as a LRDD (\"Link-based Resource Descriptor Document\") resource.  See [RFC6415] for information about processing this relation type in host-meta documents. When used elsewhere, it refers to additional links and other metadata. Multiple instances indicate additional LRDD resources. LRDD resources MUST have an \"application/xrd+xml\" representation, and MAY have others."
+  reference: '[RFC6415]'
+memento:
+  description: 'The Target IRI points to a Memento, a fixed resource that will not change state anymore.'
+  reference: '[RFC7089]'
+  notes: "A Memento for an Original Resource is a resource that encapsulates a prior state of the Original Resource."
+monitor:
+  description: 'Refers to a resource that can be used to monitor changes in an HTTP resource.'
+  reference: '[RFC5989]'
+monitor-group:
+  description: 'Refers to a resource that can be used to monitor changes in a specified group of HTTP resources.'
+  reference: '[RFC5989]'
+next:
+  description: "Indicates that the link's context is a part of a series, and that the next in the series is the link target."
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-next]'
+next-archive:
+  description: 'Refers to the immediately following archive resource.'
+  reference: '[RFC5005]'
+nofollow:
+  description: 'Indicates that the context’s original author or publisher does not endorse the link target.'
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-nofollow]'
+noreferrer:
+  description: 'Indicates that no referrer information is to be leaked when following the link.'
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-noreferrer]'
+original:
+  description: 'The Target IRI points to an Original Resource.'
+  reference: '[RFC7089]'
+  notes: "An Original Resource is a resource that exists or used to exist, and for which access to one of its prior states may be required."
+payment:
+  description: 'Indicates a resource where payment is accepted.'
+  reference: '[RFC5988]'
+  notes: "This relation type registration did not indicate a reference.  Requested by Joshua Kinberg and Robert Sayre.  It is meant as a general way to facilitate acts of payment, and thus this specification makes no assumptions on the type of payment or transaction protocol.  Examples may include a web page where donations are accepted or where goods and services are available for purchase. rel=\"payment\" is not intended to initiate an automated transaction.  In Atom documents, a link element with a rel=\"payment\" attribute may exist at the feed/channel level and/or the entry/item level.  For example, a rel=\"payment\" link at the feed/channel level may point to a \"tip jar\" URI, whereas an entry/ item containing a book review may include a rel=\"payment\" link that points to the location where the book may be purchased through an online retailer."
+pingback:
+  description: 'Gives the address of the pingback resource for the link context.'
+  reference: '[http://www.hixie.ch/specs/pingback/pingback]'
+preconnect:
+  description: "Used to indicate an origin that will be used to fetch required  resources for the link context. Initiating an early connection, which  includes the DNS lookup, TCP handshake, and optional TLS negotiation,  allows the user agent to mask the high latency costs of establishing a  connection."
+  reference: '[https://www.w3.org/TR/resource-hints/]'
+predecessor-version:
+  description: "Points to a resource containing the predecessor version in the version history."
+  reference: '[RFC5829]'
+prefetch:
+  description: "The prefetch link relation type is used to identify a resource  that might be required by the next navigation from the link context, and  that the user agent ought to fetch, such that the user agent can deliver a  faster response once the resource is requested in the future."
+  reference: '[http://www.w3.org/TR/resource-hints/]'
+preload:
+  description: "Refers to a resource that should be loaded early in the  processing of the link's context, without blocking rendering."
+  reference: '[http://www.w3.org/TR/preload/]'
+  notes: 'Additional target attributes establish the detailed fetch properties of the link.'
+prerender:
+  description: "Used to identify a resource that might be required by the next  navigation from the link context, and that the user agent ought to fetch  and execute, such that the user agent can deliver a faster response once  the resource is requested in the future."
+  reference: '[https://www.w3.org/TR/resource-hints/]'
+prev:
+  description: "Indicates that the link's context is a part of a series, and that the previous in the series is the link target."
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-prev]'
+preview:
+  description: "Refers to a resource that provides a preview of the link's context."
+  reference: '[RFC6903], section 3'
+previous:
+  description: "Refers to the previous resource in an ordered series of resources.  Synonym for \"prev\"."
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+prev-archive:
+  description: 'Refers to the immediately preceding archive resource.'
+  reference: '[RFC5005]'
+privacy-policy:
+  description: "Refers to a privacy policy associated with the link's context."
+  reference: '[RFC6903], section 4'
+profile:
+  description: "Identifying that a resource representation conforms to a certain profile, without affecting the non-profile semantics of the resource representation."
+  reference: '[RFC6906]'
+  notes: "Profile URIs are primarily intended to be used as identifiers, and thus clients SHOULD NOT indiscriminately access profile URIs."
+related:
+  description: 'Identifies a related resource.'
+  reference: '[RFC4287]'
+replies:
+  description: "Identifies a resource that is a reply to the context of the link."
+  reference: '[RFC4685]'
+search:
+  description: "Refers to a resource that can be used to search through the link's context and related resources."
+  reference: '[http://www.opensearch.org/Specifications/OpenSearch/1.1]'
+section:
+  description: 'Refers to a section in a collection of resources.'
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+self:
+  description: "Conveys an identifier for the link's context."
+  reference: '[RFC4287]'
+set-default:
+  description: "Indicates a URI that can be used to set a resource as the default."
+  reference: '[RFC5023]'
+service:
+  description: "Indicates a URI that can be used to retrieve a service document."
+  reference: '[RFC5023]'
+  notes: "When used in an Atom document, this relation type specifies Atom Publishing Protocol service documents by default.  Requested by James Snell."
+start:
+  description: "Refers to the first resource in a collection of resources."
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+stylesheet:
+  description: 'Refers to a stylesheet.'
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-stylesheet]'
+subsection:
+  description: "Refers to a resource serving as a subsection in a collection of resources."
+  reference: '[http://www.w3.org/TR/1999/REC-html401-19991224]'
+successor-version:
+  description: "Points to a resource containing the successor version in the version history."
+  reference: '[RFC5829]'
+tag:
+  description: "Gives a tag (identified by the given address) that applies to the current document."
+  reference: '[http://www.w3.org/TR/html5/links.html#link-type-tag]'
+terms-of-service:
+  description: "Refers to the terms of service associated with the link's context."
+  reference: '[RFC6903], section 5'
+timegate:
+  description: 'The Target IRI points to a TimeGate for an Original Resource.'
+  reference: '[RFC7089]'
+  notes: "A TimeGate for an Original Resource is a resource that is capable of datetime negotiation to support access to prior states of the Original Resource."
+timemap:
+  description: 'The Target IRI points to a TimeMap for an Original Resource.'
+  reference: '[RFC7089]'
+  notes: "A TimeMap for an Original Resource is a resource from which a list of URIs of Mementos of the Original Resource is available."
+type:
+  description: "Refers to a resource identifying the abstract semantic type of which the link's context is considered to be an instance."
+  reference: '[RFC6903], section 6'
+up:
+  description: "Refers to a parent document in a hierarchy of documents."
+  reference: '[RFC5988]'
+  notes: "This relation type registration did not indicate a reference.  Requested by Noah Slater."
+version-history:
+  description: "Points to a resource containing the version history for the context."
+  reference: '[RFC5829]'
+via:
+  description: "Identifies a resource that is the source of the information in the link's context."
+  reference: '[RFC4287]'
+webmention:
+  description: "Identifies a target URI that supports the Webmention protocol. This allows clients that mention a resource in some form of publishing process to contact that endpoint and inform it that this resource has been mentioned."
+  reference: '[http://www.w3.org/TR/webmention/]'
+  notes: "This is a similar \"Linkback\" mechanism to the ones of Refback, Trackback, and Pingback. It uses a different protocol, though, and thus should be discoverable through its own link relation type."
+working-copy:
+  description: 'Points to a working copy for this resource.'
+  reference: '[RFC5829]'
+working-copy-of:
+  description: "Points to the versioned resource from which this working copy was obtained."
+  reference: '[RFC5829]'

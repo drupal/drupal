@@ -1,0 +1,43 @@
+id: d7_node_translation
+label: Node translations
+migration_tags:
+  - Drupal 7
+  - translation
+  - Content
+  - Multilingual
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
+source:
+  plugin: d7_node
+  translations: true
+process:
+  # If you are using this file to build a custom migration consider removing
+  # the nid field to allow incremental migrations.
+  nid: tnid
+  type: type
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: "und"
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+destination:
+  plugin: entity:node
+  translations: true
+  destination_module: content_translation
+migration_dependencies:
+  required:
+    - d7_user
+    - d7_node_type
+    - language
+  optional:
+    - d7_field_instance

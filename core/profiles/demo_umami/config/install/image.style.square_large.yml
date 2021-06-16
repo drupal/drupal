@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: square_large
+label: 'Square Large'
+effects:
+  c7627da6-934e-47e2-a795-f10a424bda34:
+    uuid: c7627da6-934e-47e2-a795-f10a424bda34
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      anchor: center-center
+      width: 900
+      height: 900

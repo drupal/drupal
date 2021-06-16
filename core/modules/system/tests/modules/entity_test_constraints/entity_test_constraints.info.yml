@@ -1,0 +1,7 @@
+name: 'Entity constraints test module'
+type: module
+description: 'Tests extending and altering entity constraints.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test

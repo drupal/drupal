@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_test
+id: test_entity_multivalue_basefield
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test_multivalue_basefield
+base_field: id
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: 0
+    display_options:
+      fields:
+        id:
+          id: id
+          table: entity_test_multivalue_basefield
+          field: nid
+          relationship: none
+          plugin_id: field
+          entity_type: entity_test_multivalue_basefield
+          entity_field: id
+        name:
+          id: name
+          table: entity_test_multivalue_basefield__name
+          field: name_value
+          plugin_id: field
+          entity_type: entity_test_multivalue_basefield
+          entity_field: name
+      defaults:
+        fields: false
+        filters: false
+      sorts:
+        id:
+          id: id
+          table: entity_test_multivalue_basefield
+          field: id
+          order: asc

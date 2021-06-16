@@ -1,0 +1,6 @@
+deprecation_log:
+  version: VERSION
+  js:
+    js/js_deprecation_log.js: { weight: -100 }
+  dependencies:
+    - core/drupal

@@ -1,0 +1,297 @@
+/**
+ * @file
+ * Header Search Wide Block.
+ */
+
+@import "../base/variables.pcss.css";
+
+/* Override contextual links so we can position against .site-header. */
+.block-search-wide.contextual-region {
+  position: static;
+}
+
+.block-search-wide__wrapper {
+  position: absolute;
+  z-index: 1; /* Ensure left border shows above social region in IE11. */
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  display: none;
+  visibility: hidden;
+  overflow: hidden;
+  width: 100vw;
+  max-width: var(--max-bg-color);
+  height: var(--sp8);
+  max-height: 0;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  transition: all 0.2s;
+  border-inline-start: solid var(--content-left) var(--color--gray-10);
+  background: var(--color--black);
+
+  &.is-active {
+    visibility: visible;
+    max-height: var(--sp8);
+  }
+
+  & form {
+    display: flex;
+    grid-column: 1 / 14;
+  }
+
+  & input[type="search"] {
+    width: calc(100% + var(--sp2));
+    height: var(--sp8);
+    padding-block: 0;
+    padding-inline-start: var(--sp12);
+    padding-inline-end: 0;
+    transition: background-size 0.4s;
+    color: var(--color--white);
+    border: solid 1px transparent;
+    box-shadow: none;
+    font-family: serif;
+    font-size: 32px;
+    -webkit-appearance: none;
+
+    &::-ms-clear {
+      width: 40px;
+      opacity: 0.5;
+    }
+
+    &:focus {
+      outline: solid 4px transparent;
+      outline-offset: -4px;
+
+      /*
+        We normally indicate focus by animating background-image width. This isn't
+        available in IE11 when in Windows high contrast mode.
+      */
+      @media screen and (-ms-high-contrast: active) {
+        border-bottom-width: var(--sp0-5);
+      }
+    }
+  }
+
+  & .form-item-keys {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  & .form-actions {
+    display: flex;
+    margin: 0;
+  }
+
+  & .search-form__submit {
+    position: relative;
+    overflow: hidden;
+    align-self: stretch;
+    width: 100px;
+    height: auto;
+    margin-block: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    cursor: pointer;
+    border-color: transparent;
+    background-color: transparent;
+
+    /*
+      When in Windows high contrast mode, FF will will not output either background
+      images or SVGs that are nested directly within a <button> element, so we add a <span>.
+    */
+    & .icon--search {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-end: 0;
+      display: block;
+      width: 24px; /* Width of the SVG background image. */
+      height: 100%;
+      pointer-events: none;
+      background-image: url("../../images/search--white.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+
+      &:after {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        width: 100%;
+        height: 0;
+        content: "";
+        transition: transform 0.2s;
+        transform: scaleX(0);
+        transform-origin: left;
+        border-block-start: solid var(--sp0-5) var(--color--blue-50);
+      }
+    }
+
+    &:focus {
+      outline: solid 4px transparent;
+      outline-offset: -4px;
+      box-shadow: none;
+
+      & span:after {
+        transform: scaleX(1);
+      }
+
+      @media screen and (-ms-high-contrast: active) {
+        border-bottom-width: var(--sp0-5);
+
+        & span:after {
+          content: none;
+        }
+      }
+    }
+
+    @media screen and (-ms-high-contrast: active) {
+      /* IE11's high contrast show will not show the background image, so we show the text. */
+      & .visually-hidden {
+        position: static;
+        overflow: visible;
+        clip: auto;
+        width: auto;
+        height: auto;
+        text-align: center;
+      }
+
+      /* Edge's high contrast does show the background image, so we hide it. */
+      & .icon--search {
+        display: none;
+      }
+    }
+  }
+}
+
+.block-search-wide__container {
+  max-width: var(--max-width);
+  padding-inline-end: var(--sp2);
+}
+
+.block-search-wide__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-col-count--md), 1fr);
+  grid-column-gap: var(--grid-gap--md);
+}
+
+/* Override specificity from container-inline.module.css */
+.container-inline {
+  & .block-search-wide__container {
+    display: block;
+  }
+
+  & .block-search-wide__grid {
+    display: grid;
+  }
+}
+
+.block-search-wide__button {
+  position: relative;
+  display: none;
+  width: var(--sp3);
+  height: var(--sp6);
+  cursor: pointer;
+  color: var(--color--gray-0); /* Affects SVG search icon. */
+  border: 0;
+  background: transparent;
+  -webkit-appearance: none;
+
+  &:focus {
+    position: relative;
+    outline: 0;
+
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80%;
+      height: var(--sp3);
+      content: "";
+      transform: translate(-50%, -50%);
+      border: solid 2px var(--color--blue-50);
+      border-radius: 4px;
+    }
+  }
+
+  &[aria-expanded="true"] {
+    background: var(--color--black);
+
+    &:focus:after {
+      border-color: var(--color--white);
+    }
+
+    & .block-search-wide__button-close {
+      &:before,
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--sp1-5);
+        height: 0;
+        content: "";
+        border-block-start: solid 2px var(--color--white);
+      }
+
+      &:before {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      &:after {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    }
+
+    & svg {
+      display: none;
+    }
+  }
+
+  & svg {
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+  }
+}
+
+/* Provide rudimentary access to site search if JS is disabled. */
+html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
+  visibility: visible;
+  max-height: var(--sp8);
+}
+
+/* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */
+[dir] .block-search-wide__wrapper input[type="search"] {
+  background-color: transparent;
+  background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
+  background-repeat: no-repeat;
+  background-position: bottom left; /* LTR */
+  background-size: 0% 10px;
+
+  &:focus {
+    background-size: 100% var(--sp0-5);
+  }
+}
+
+[dir="rtl"] .block-search-wide__wrapper {
+  & input[type="search"] {
+    background-position: bottom right;
+  }
+
+  & .search-form__submit .icon--search:after {
+    transform-origin: right;
+  }
+}
+
+body:not(.is-always-mobile-nav) {
+  & .block-search-wide__wrapper,
+  & .block-search-wide__button {
+    @media (--nav) {
+      display: block;
+    }
+  }
+}

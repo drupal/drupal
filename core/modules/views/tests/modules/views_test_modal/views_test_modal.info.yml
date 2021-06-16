@@ -1,0 +1,8 @@
+name: 'Views Test Modal'
+type: module
+description: 'Provides a test page that renders a View in a modal.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:views

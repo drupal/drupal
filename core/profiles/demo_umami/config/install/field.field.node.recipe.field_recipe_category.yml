@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_recipe_category
+    - node.type.recipe
+    - taxonomy.vocabulary.recipe_category
+id: node.recipe.field_recipe_category
+field_name: field_recipe_category
+entity_type: node
+bundle: recipe
+label: 'Recipe category'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      recipe_category: recipe_category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

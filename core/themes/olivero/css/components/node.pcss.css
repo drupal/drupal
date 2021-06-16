@@ -1,0 +1,67 @@
+/**
+ * @file
+ * Node specific styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.node__meta {
+  display: flex;
+  align-items: center;
+  margin-block-end: var(--sp1);
+  color: var(--color--gray-20);
+  font-size: 14px;
+  line-height: var(--sp);
+
+  & a {
+    font-weight: bold;
+  }
+
+  @media (--sm) {
+    margin-block-end: var(--sp2);
+  }
+}
+
+.node__author-image img {
+  width: var(--sp2-5);
+  height: var(--sp2-5);
+  margin-inline-end: var(--sp0-5);
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.node__title {
+  & a {
+    padding-block-end: 3px;
+    transition: background-size 0.2s, color 0.2s;
+    text-decoration: none;
+    color: var(--color--gray-0);
+    background-color: transparent;
+    background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
+    background-repeat: no-repeat;
+    background-position: bottom left; /* LTR */
+    background-size: 0 3px;
+
+    &:hover,
+    &:focus {
+      color: var(--color--blue-20);
+    }
+  }
+}
+
+[dir="rtl"] .node__title {
+  background-position: bottom right;
+}
+
+.node__content {
+  padding-block-end: var(--sp1-5);
+
+  @media (--lg) {
+    padding-block-end: var(--sp3);
+  }
+}
+
+.node--unpublished {
+  /* There is no variable for the color - #fff4f4. */
+  background-color: #fff4f4;
+}

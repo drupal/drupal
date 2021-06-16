@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.card_common
+label: 'Card common'
+targetEntityType: node
+cache: true

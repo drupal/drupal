@@ -1,0 +1,53 @@
+id: d6_profile_field_option_translation
+label: Profile field configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+  - Multilingual
+source:
+  plugin: d6_profile_field_option_translation
+  skip_count: true
+  constants:
+    entity_type: user
+process:
+  entity_type: 'constants/entity_type'
+  status: active
+  langcode:
+    plugin: skip_on_empty
+    source: language
+    method: row
+  field_name: objectid
+  # Use the process from user_profile_field to determine the field type.
+  type:
+    plugin: static_map
+    source: type
+    map:
+      selection: list_string
+  results:
+    plugin: d6_profile_field_option_translation
+    source:
+      - '@type'
+      - translation
+  translation:
+    -
+      plugin: extract
+      source: '@results'
+      index: [1]
+    -
+      plugin: skip_on_empty
+      method: row
+  property:
+    -
+      plugin: extract
+      source: '@results'
+      index: [0]
+    -
+      plugin: skip_on_empty
+      method: row
+destination:
+  plugin: entity:field_storage_config
+  translations: true
+migration_dependencies:
+  required:
+    - language
+    - user_profile_field_instance

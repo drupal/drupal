@@ -1,0 +1,12 @@
+langcode: en
+status: false
+dependencies:
+  enforced:
+    module:
+      - book
+  module:
+    - node
+id: node.print
+label: Print
+targetEntityType: node
+cache: true

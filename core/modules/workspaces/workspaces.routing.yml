@@ -1,0 +1,54 @@
+entity.workspace.collection:
+  path: '/admin/config/workflow/workspaces'
+  defaults:
+    _title: 'Workspaces'
+    _entity_list: 'workspace'
+  requirements:
+    _permission: 'administer workspaces+edit any workspace'
+
+entity.workspace.activate_form:
+  path: '/admin/config/workflow/workspaces/manage/{workspace}/activate'
+  defaults:
+    _entity_form: 'workspace.activate'
+    _title: 'Activate Workspace'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'workspace.view'
+
+entity.workspace.publish_form:
+  path: '/admin/config/workflow/workspaces/manage/{workspace}/publish'
+  defaults:
+    _form: '\Drupal\workspaces\Form\WorkspacePublishForm'
+    _title: 'Publish workspace'
+  options:
+    _admin_route: TRUE
+    parameters:
+      workspace:
+        type: entity:workspace
+  requirements:
+    _permission: 'administer workspaces'
+
+entity.workspace.merge_form:
+  path: '/admin/config/workflow/workspaces/manage/{source_workspace}/{target_workspace}/merge'
+  defaults:
+    _form: '\Drupal\workspaces\Form\WorkspaceMergeForm'
+    _title: 'Merge workspace'
+  options:
+    _admin_route: TRUE
+    parameters:
+      source_workspace:
+        type: entity:workspace
+      target_workspace:
+        type: entity:workspace
+  requirements:
+    _permission: 'administer workspaces'
+
+workspaces.switch_to_live:
+  path: '/admin/config/workflow/workspaces/switch-to-live'
+  defaults:
+    _form: '\Drupal\workspaces\Form\SwitchToLiveForm'
+    _title: 'Switch to Live'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _has_active_workspace: 'TRUE'

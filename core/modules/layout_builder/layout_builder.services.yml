@@ -1,0 +1,58 @@
+services:
+  layout_builder.tempstore_repository:
+    class: Drupal\layout_builder\LayoutTempstoreRepository
+    arguments: ['@tempstore.shared']
+  access_check.entity.layout_builder_access:
+    class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
+    tags:
+      - { name: access_check, applies_to: _layout_builder_access }
+  plugin.manager.layout_builder.section_storage:
+    class: Drupal\layout_builder\SectionStorage\SectionStorageManager
+    parent: default_plugin_manager
+    arguments: ['@context.handler']
+  layout_builder.routes:
+    class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
+    arguments: ['@plugin.manager.layout_builder.section_storage']
+    tags:
+     - { name: event_subscriber }
+  layout_builder.param_converter:
+    class: Drupal\layout_builder\Routing\LayoutTempstoreParamConverter
+    arguments: ['@layout_builder.tempstore_repository', '@plugin.manager.layout_builder.section_storage']
+    tags:
+      - { name: paramconverter, priority: 10 }
+  cache_context.layout_builder_is_active:
+    class: Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: cache.context}
+  cache_context.route.name.is_layout_builder_ui:
+    class: Drupal\layout_builder\Cache\LayoutBuilderUiCacheContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: cache.context }
+  layout_builder.sample_entity_generator:
+    class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
+    arguments: ['@tempstore.shared', '@entity_type.manager']
+  layout_builder.render_block_component_subscriber:
+    class: Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray
+    arguments: ['@current_user']
+    tags:
+      - { name: event_subscriber }
+  logger.channel.layout_builder:
+    parent: logger.channel_base
+    arguments: ['layout_builder']
+  inline_block.usage:
+    class: Drupal\layout_builder\InlineBlockUsage
+    arguments: ['@database']
+  layout_builder.controller.entity_form:
+    # Override the entity form controller to handle the entity layout_builder
+    # operation.
+    decorates: controller.entity_form
+    class: Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
+    public: false
+    arguments: ['@layout_builder.controller.entity_form.inner']
+  layout_builder.element.prepare_layout:
+    class: Drupal\layout_builder\EventSubscriber\PrepareLayout
+    arguments: ['@layout_builder.tempstore_repository', '@messenger']
+    tags:
+      - { name: event_subscriber }

@@ -1,0 +1,19 @@
+---
+label: 'Using contextual links'
+related:
+  - core.ui_components
+  - block.overview
+---
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Use contextual links to access administrative tasks without navigating the administrative menu.{% endtrans %}</p>
+<h2>{% trans %}What are contextual links?{% endtrans %}</h2>
+<p>{% trans %}<em>Contextual links</em> give users with the <em>Use contextual links</em> permission quick access to administrative tasks related to areas of non-administrative pages. For example, if a page on your site displays a block, the block would have a contextual link that would allow users with permission to configure the block. If the block contains a menu or a view, it would also have a contextual link for editing the menu links or the view. Clicking a contextual link takes you to the related administrative page directly, without needing to navigate through the administrative menu system.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}Make sure that the core Contextual Links module is installed, and that you have a role with the <em>Use contextual links</em> permission. Optionally, make sure that a toolbar module is installed (either the core Toolbar module or a contributed module replacement).{% endtrans %}</li>
+  <li>{% trans %}Visit a non-administrative page on your site, such as the home page.{% endtrans %}</li>
+  <li>{% trans %}Locate a block or another area on the page that you want to edit or configure.{% endtrans %}</li>
+  <li>{% trans %}Make the contextual links button visible by hovering your mouse over that area in the page. In most themes, this button looks like a pencil and is placed in the upper right corner of the page area (upper left for right-to-left languages), and hovering will also temporarily outline the affected area. Alternatively, click the contextual links toggle button on the right end of the toolbar (left end for right-to-left languages), which will make all contextual link buttons on the page visible until it is clicked again.{% endtrans %}</li>
+  <li>{% trans %}While the contextual links button for the area of interest is visible, click the button to display the list of links for that area. Click a link in the list to visit the corresponding administrative page.{% endtrans %}</li>
+  <li>{% trans %}Complete your administrative task and save your settings, or cancel the action. You should be returned to the page you started from.{% endtrans %}</li>
+</ol>

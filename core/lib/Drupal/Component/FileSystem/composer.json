@@ -1,0 +1,15 @@
+{
+  "name": "drupal/core-filesystem",
+  "description": "FileSystem.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\FileSystem\\": ""
+    }
+  }
+}

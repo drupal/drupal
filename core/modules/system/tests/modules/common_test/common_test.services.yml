@@ -1,0 +1,6 @@
+services:
+  main_content_renderer.json:
+    class: Drupal\common_test\Render\MainContent\JsonRenderer
+    arguments: ['@title_resolver', '@renderer']
+    tags:
+      - { name: render.main_content_renderer, format: json }

@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: test_block_content_revision_revision_id
+label: null
+module: views
+description: ''
+tag: ''
+base_table: block_content_field_revision
+base_field: revision_id
+display:
+  default:
+    display_options:
+      relationships:
+        revision_id:
+          id: revision_id
+          table: block_content_field_revision
+          field: revision_id
+          required: true
+          entity_type: block_content
+          entity_field: revision_id
+          plugin_id: standard
+      fields:
+        revision_id:
+          id: revision_id
+          table: block_content_field_revision
+          field: revision_id
+          plugin_id: field
+          entity_type: block_content
+          entity_field: revision_id
+        id_1:
+          id: id_1
+          table: block_content_field_revision
+          field: id
+          plugin_id: field
+          entity_type: block_content
+          entity_field: id
+        id:
+          id: id
+          table: block_content_field_data
+          field: id
+          relationship: revision_id
+          plugin_id: field
+          entity_type: block_content
+          entity_field: id
+      arguments:
+        id:
+          id: id
+          table: block_content_field_revision
+          field: id
+          plugin_id: block_content_id
+          entity_type: block_content
+          entity_field: id
+      sorts:
+        revision_id:
+          id: revision_id
+          table: block_content_field_revision
+          field: revision_id
+          order: ASC
+          plugin_id: field
+          entity_type: block_content
+          entity_field: revision_id
+      display_extenders: {  }
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

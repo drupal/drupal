@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Tour Test module.
+
+tour.tip.image:
+  type: tour.tip
+  label: 'Image tour tip'
+  mapping:
+    url:
+      type: uri
+      label: 'Image URL'

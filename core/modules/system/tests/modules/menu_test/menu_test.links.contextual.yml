@@ -1,0 +1,20 @@
+menu_test.contextual_hidden_manage:
+  title: 'List links - contextual'
+  group: menu_test_menu
+  route_name: menu_test.contextual_hidden_manage
+  class: '\Drupal\menu_test\Plugin\Menu\ContextualLink\TestContextualLink'
+
+menu_test.contextual_hidden_manage_edit:
+  title: 'Edit menu - contextual'
+  group: menu_test_menu
+  route_name: menu_test.contextual_hidden_manage_edit
+  options:
+    attributes:
+      class: ['use-ajax']
+      data-dialog-type: 'modal'
+      data-is-something: TRUE
+
+menu_test.hidden_block_configure:
+  title: 'Configure block'
+  group: menu_test_block
+  route_name: menu_test.hidden_block_configure

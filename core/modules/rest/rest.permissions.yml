@@ -1,0 +1,5 @@
+permission_callbacks:
+  - Drupal\rest\RestPermissions::permissions
+
+administer rest resources:
+  title: 'Administer REST resource configuration'

@@ -1,0 +1,81 @@
+menu_test_local_action4:
+  route_name: menu_test.local_action3
+  title: 'My YAML discovery action'
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action5:
+  route_name: menu_test.local_action5
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalAction'
+  weight: 10
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action.cache_check:
+  route_name: menu_test.local_action5
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalActionWithConfig'
+  cache_tags:
+    - config:menu_test.links.action
+  appears_on:
+    - menu_test.local_action6
+
+menu_test.local_action2:
+  route_name: menu_test.local_action2
+  title: 'My hook_menu action'
+  weight: -10
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action4:
+  route_name: menu_test.local_action4
+  title: 'My dynamic title action'
+  weight: -20
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalAction4'
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action_derivative:
+  route_name: menu_test.local_action4
+  weight: -20
+  deriver: Drupal\menu_test\Plugin\Derivative\LocalActionTest
+  class: Drupal\Core\Menu\LocalActionDefault
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action6:
+  route_name: menu_test.local_action4
+  title: 'Dynamic local action with user input'
+  weight: -15
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalAction5'
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action7:
+  route_name: menu_test.local_action7
+  title: 'Local action with access'
+  appears_on:
+    - menu_test.local_action7
+
+menu_test.local_action8:
+  route_name: menu_test.local_action8
+  title: 'Local action without access'
+  appears_on:
+    - menu_test.local_action7
+
+menu_test.hidden_menu_add:
+  route_name: menu_test.hidden_menu_add
+  title: 'Add menu'
+  appears_on:
+    - menu_test.hidden_menu
+
+menu_test.hidden_manage_add:
+  route_name: menu_test.hidden_manage_add
+  title: 'Add link'
+  appears_on:
+    - menu_test.hidden_manage
+
+menu_test.hidden_block_add:
+  route_name: menu_test.hidden_block_add
+  title: 'Add block'
+  appears_on:
+    - menu_test.hidden_block

@@ -1,0 +1,59 @@
+/**
+ * Layout overrides for node add/edit form.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --node-meta-width: 22.5rem;
+}
+
+.layout-region {
+  box-sizing: border-box;
+}
+
+.layout-region--node-footer .layout-region__content {
+  margin-top: var(--space-l);
+}
+
+/**
+ * Wide screens
+ */
+@media screen and (min-width: 61rem) {
+  .layout-region--node-main,
+  .layout-region--node-footer {
+    float: left; /* LTR */
+    width: calc(100% - var(--node-meta-width));
+    padding-right: var(--space-l); /* LTR */
+  }
+  [dir="rtl"] .layout-region--node-main,
+  [dir="rtl"] .layout-region--node-footer {
+    float: right;
+    padding-right: 0;
+    padding-left: var(--space-l);
+  }
+
+  .layout-region--node-main .layout-region__content,
+  .layout-region--node-footer .layout-region__content {
+    max-width: 48rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .layout-region--node-footer .layout-region__content {
+    margin-top: var(--space-xs);
+  }
+
+  .layout-region--node-secondary {
+    float: right; /* LTR */
+    width: var(--node-meta-width);
+  }
+  [dir="rtl"] .layout-region--node-secondary {
+    float: left;
+  }
+
+  /* Push sidebar down to horizontal align with form section */
+  .layout-region--node-secondary {
+    margin-top: var(--space-l);
+  }
+}

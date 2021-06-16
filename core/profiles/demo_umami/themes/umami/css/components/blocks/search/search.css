@@ -1,0 +1,158 @@
+/**
+ * @file
+ * This file is used to style the search block.
+ */
+
+.search-block-form {
+  display: none;
+}
+
+@media screen and (min-width: 48em) {
+  .search-block-form {
+    display: block;
+  }
+}
+
+.search-block-form form {
+  display: flex;
+  margin-top: 1.3rem;
+  margin-bottom: 1.2rem;
+}
+
+.search-iconwrap {
+  /* Compensate for focus styling that offsets left alignment of icon */
+  margin-left: -7px;
+}
+
+@media screen and (min-width: 48em) {
+  .search-iconwrap {
+    display: none;
+  }
+}
+
+/* Search icon for mobile */
+.search-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 40px;
+  height: 40px;
+  /* Centres the icon when focused/hovered */
+  margin-right: -7px;
+  padding-right: 7px;
+}
+.search-link:focus,
+.search-link:hover {
+  background-color: #fff;
+}
+.search-link svg {
+  display: block;
+  width: 26px;
+  height: auto;
+}
+
+/* Search input */
+.search-block-form .form-type-search {
+  margin-top: 0;
+  margin-bottom: 0;
+  border: 1px solid #dbdbdb;
+  border-top-left-radius: 3px; /* LTR */
+  border-bottom-right-radius: 3px; /* LTR */
+}
+[dir=rtl] .search-block-form .form-type-search {
+  border-top-left-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 0;
+}
+
+.search-block-form .form-search {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 7px 8px 7px 32px;
+  color: #464646;
+  border: 2px solid #fff;
+  background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
+  font-size: 0.875rem;
+  line-height: normal;
+}
+
+@media screen and (min-width: 48em) {
+  .search-block-form .form-search {
+    width: 20rem;
+  }
+}
+
+.search-block-form .form-search:focus {
+  border: 2px solid #008068;
+  border-top-left-radius: 2px;  /* LTR */
+  border-bottom-left-radius: 2px; /* LTR */
+}
+[dir=rtl] .search-block-form .form-search:focus {
+  border-top-left-radius: 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 0;
+}
+
+.form-search::placeholder {
+  opacity: 1;
+}
+.form-type-search .form-search {
+  box-sizing: border-box; /* Override input[type="search"] of normalize.css */
+}
+
+/* Search submit */
+.search-block-form .form-actions {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #dbdbdb;
+  border-right: 1px solid #dbdbdb; /* LTR */
+  border-bottom: 1px solid #dbdbdb;
+  border-top-right-radius: 3px; /* LTR */
+  border-bottom-right-radius: 3px; /* LTR */
+}
+[dir=rtl] .search-block-form .form-actions {
+  border-right: none;
+  border-left: 1px solid #dbdbdb;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 3px;
+}
+.search-block-form .form-actions .button {
+  margin: 0;
+}
+.search-block-form .form-submit {
+  margin: 0;
+  padding: 0.6em 1.25em 0.4em;
+  transition: background-color 0.5s ease;
+  transition: border 0.5s ease;
+  color: #000;
+  border: 2px solid #fff;
+  background-color: #fff;
+  font-size: 0.875rem;
+}
+
+@media screen and (min-width: 48em) {
+  .search-block-form .form-submit {
+    border-top-left-radius: 0; /* LTR */
+    border-bottom-left-radius: 0; /* LTR */
+  }
+  [dir=rtl] .search-block-form .form-submit {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 3px;
+  }
+}
+
+.search-block-form .form-submit:focus,
+.search-block-form .form-submit:hover {
+  margin: 0;
+  border: 2px solid #008068;
+  outline-offset: 2px;
+  background-color: #e6eee0;
+}

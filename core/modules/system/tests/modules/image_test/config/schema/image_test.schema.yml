@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Image Test module.
+
+system.image.test_toolkit:
+  type: config_object
+  label: 'Image test toolkit'
+  mapping:
+    test_parameter:
+      type: integer
+      label: 'Test parameter'

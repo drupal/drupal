@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Theme override for the administrative toolbar.
+ *
+ * If Claro is the admin theme, this template will be used by the active theme
+ * even if the active theme is not Claro.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - toolbar_attributes: HTML attributes to apply to the toolbar.
+ * - toolbar_heading: The heading or label for the toolbar.
+ * - tabs: List of tabs for the toolbar.
+ *   - attributes: HTML attributes for the tab container.
+ *   - link: Link or button for the menu tab.
+ * - trays: Toolbar tray list, each associated with a tab. Each tray in trays
+ *   contains:
+ *   - attributes: HTML attributes to apply to the tray.
+ *   - label: The tray's label.
+ *   - links: The tray menu links.
+ * - remainder: Any non-tray, non-tab elements left to be rendered.
+ *
+ * @see template_preprocess_toolbar()
+ */
+#}
+<div{{ attributes.addClass('toolbar', 'claro-toolbar') }}>
+  <nav{{ toolbar_attributes.addClass('toolbar-bar', 'clearfix') }}>
+    <h2 class="visually-hidden">{{ toolbar_heading }}</h2>
+    {% for key, tab in tabs %}
+      {% set tray = trays[key] %}
+      <div{{ tab.attributes.addClass('toolbar-tab') }}>
+        {{ tab.link }}
+        {% apply spaceless %}
+          <div{{ tray.attributes }}>
+            {% if tray.label %}
+              <nav class="toolbar-lining clearfix" role="navigation" aria-label="{{ tray.label }}">
+                <h3 class="toolbar-tray-name visually-hidden">{{ tray.label }}</h3>
+            {% else %}
+              <nav class="toolbar-lining clearfix" role="navigation">
+            {% endif %}
+            {{ tray.links }}
+            </nav>
+          </div>
+        {% endapply %}
+      </div>
+    {% endfor %}
+  </nav>
+  {{ remainder }}
+</div>

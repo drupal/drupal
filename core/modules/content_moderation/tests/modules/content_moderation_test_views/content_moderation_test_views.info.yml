@@ -1,0 +1,10 @@
+name: 'Content moderation test views'
+type: module
+description: 'Provides default views for views Content moderation tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:content_moderation
+  - drupal:node
+  - drupal:views
+  - drupal:entity_test

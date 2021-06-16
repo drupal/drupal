@@ -1,0 +1,4 @@
+name: Test Missing Base Theme
+type: theme
+description: A theme to test missing base theme.
+version: VERSION

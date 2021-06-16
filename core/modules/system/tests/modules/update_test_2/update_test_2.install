@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_test_2 module.
+ */
+
+/**
+ * Implements hook_update_dependencies().
+ *
+ * @see update_test_1_update_dependencies()
+ * @see update_test_3_update_dependencies()
+ */
+function update_test_2_update_dependencies() {
+  // Combined with update_test_3_update_dependencies(), we are declaring here
+  // that these two modules run updates in the following order:
+  // 1. update_test_2_update_8001()
+  // 2. update_test_3_update_8001()
+  // 3. update_test_2_update_8002()
+  // 4. update_test_2_update_8003()
+  $dependencies['update_test_2'][8002] = [
+    'update_test_3' => 8001,
+  ];
+
+  // These are coordinated with the corresponding dependencies declared in
+  // update_test_1_update_dependencies().
+  $dependencies['update_test_0'][8001] = [
+    'update_test_2' => 8002,
+  ];
+  $dependencies['update_test_0'][8002] = [
+    'update_test_1' => 8002,
+  ];
+
+  return $dependencies;
+}
+
+/**
+ * Dummy update_test_2 update 8001.
+ */
+function update_test_2_update_8001() {
+}
+
+/**
+ * Dummy update_test_2 update 8002.
+ */
+function update_test_2_update_8002() {
+}
+
+/**
+ * Dummy update_test_2 update 8003.
+ */
+function update_test_2_update_8003() {
+}

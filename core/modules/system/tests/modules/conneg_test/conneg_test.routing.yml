@@ -1,0 +1,32 @@
+# Tests
+conneg.simpletest:
+  path: conneg/simple.json
+  defaults:
+    _controller: '\Drupal\conneg_test\Controller\TestController::simple'
+  requirements:
+    _access: 'TRUE'
+conneg.html:
+  path: conneg/html
+  defaults:
+    _controller: '\Drupal\conneg_test\Controller\TestController::html'
+  requirements:
+    _access: 'TRUE'
+conneg.simple_conneg:
+  path: conneg/html
+  defaults:
+    _controller: '\Drupal\conneg_test\Controller\TestController::format'
+  requirements:
+    _access: 'TRUE'
+    _format: 'json|xml'
+conneg.variable_with_period:
+  path: conneg/plugin/{plugin_id}
+  defaults:
+    _controller: '\Drupal\conneg_test\Controller\TestController::variable'
+  requirements:
+    _access: 'TRUE'
+conneg.full_content_negotiation:
+  path: conneg/negotiate
+  defaults:
+    _controller: '\Drupal\conneg_test\Controller\TestController::format'
+  requirements:
+    _access: 'TRUE'

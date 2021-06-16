@@ -1,0 +1,33 @@
+name: Classy
+type: theme
+base theme: stable
+description: 'A base theme with sensible default CSS classes added. Learn how to use Classy as a base theme in the <a href="https://www.drupal.org/docs/8/theming">Drupal 8 Theming Guide</a>.'
+package: Core
+version: VERSION
+hidden: true
+
+libraries:
+  - classy/base
+  - classy/messages
+  - core/normalize
+
+libraries-extend:
+  user/drupal.user:
+    - classy/user
+  core/drupal.dropbutton:
+    - classy/dropbutton
+  core/drupal.dialog:
+    - classy/dialog
+  file/drupal.file:
+    - classy/file
+  core/drupal.progress:
+    - classy/progress
+  media/media_embed_ckeditor_theme:
+    - classy/media_embed_ckeditor_theme
+  media_library/view:
+    - classy/media_library
+  media_library/widget:
+    - classy/media_library
+
+ckeditor_stylesheets:
+  - css/components/media-embed-error.css

@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_access_none
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

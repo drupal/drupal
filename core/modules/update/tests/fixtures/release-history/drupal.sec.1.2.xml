@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Drupal</title>
+<short_name>drupal</short_name>
+<dc:creator>Drupal</dc:creator>
+<supported_branches>8.0.,8.1.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/drupal</link>
+  <terms>
+   <term><name>Projects</name><value>Drupal project</value></term>
+  </terms>
+<releases>
+ <release>
+  <name>Drupal 8.1.2</name>
+  <version>8.1.2</version>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-1-2-release</release_link>
+  <download_link>http://example.com/drupal-8-1-2.tar.gz</download_link>
+  <date>1250424641</date>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Security update</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.1.1</name>
+  <version>8.1.1</version>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-1-1-release</release_link>
+  <download_link>http://example.com/drupal-8-1-1.tar.gz</download_link>
+  <date>1250424581</date>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.1.0</name>
+  <version>8.1.0</version>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-1-0-release</release_link>
+  <download_link>http://example.com/drupal-8-1-0.tar.gz</download_link>
+  <date>1250424521</date>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+   <term><name>Release type</name><value>Insecure</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.0.2</name>
+  <version>8.0.2</version>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-0-2-release</release_link>
+  <download_link>http://example.com/drupal-8-0-2.tar.gz</download_link>
+  <date>1250424641</date>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.0.1</name>
+  <version>8.0.1</version>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-0-1-release</release_link>
+  <download_link>http://example.com/drupal-8-0-1.tar.gz</download_link>
+  <date>1250424581</date>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+  </terms>
+ </release>
+ <release>
+  <name>Drupal 8.0.0</name>
+  <version>8.0.0</version>
+  <status>published</status>
+  <release_link>http://example.com/drupal-8-0-0-release</release_link>
+  <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
+  <date>1250424521</date>
+  <terms>
+   <term><name>Release type</name><value>New features</value></term>
+   <term><name>Release type</name><value>Bug fixes</value></term>
+  </terms>
+ </release>
+</releases>
+</project>

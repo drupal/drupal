@@ -1,0 +1,16 @@
+dblog.overview:
+  title: 'Recent log messages'
+  parent: system.admin_reports
+  description: 'View events that have recently been logged.'
+  route_name: dblog.overview
+  weight: -1
+dblog.page_not_found:
+  title: 'Top ''page not found'' errors'
+  route_name: dblog.page_not_found
+  parent: system.admin_reports
+  description: 'View ''page not found'' errors (404s).'
+dblog.access_denied:
+  title: 'Top ''access denied'' errors'
+  route_name: dblog.access_denied
+  description: 'View ''access denied'' errors (403s).'
+  parent: system.admin_reports

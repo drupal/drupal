@@ -1,0 +1,5 @@
+name: 'Contextual Links'
+type: module
+description: 'Provides contextual links to directly access tasks related to page elements.'
+package: Core
+version: VERSION

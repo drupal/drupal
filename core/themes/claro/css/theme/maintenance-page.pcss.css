@@ -1,0 +1,192 @@
+/**
+ * @file
+ * Maintenance theming.
+ */
+
+@import "../base/variables.pcss.css";
+
+.maintenance-page {
+  min-height: 100%;
+  background-color: var(--color-lightdiamond);
+}
+
+.site-name {
+  margin-top: var(--space-m);
+  word-wrap: break-word;
+  color: var(--color-davysgray);
+  font-size: var(--font-size-h4);
+}
+
+.site-name,
+.title {
+  margin-bottom: var(--space-l);
+}
+
+.content {
+  margin-bottom: var(--space-m);
+  color: var(--color-davysgray);
+}
+
+.site-name,
+.title,
+.content {
+  max-width: 512px;
+}
+
+/**
+ * Task list & step indicator
+ */
+@media all and (max-width: 48em) { /* 768px */
+  header[role="banner"] {
+    position: relative;
+  }
+  .step-indicator {
+    position: absolute;
+    top: 0.2em;
+    right: 0.5em; /* LTR */
+    display: block;
+    font-size: 1.385em;
+  }
+  [dir="rtl"] .step-indicator {
+    right: auto;
+    left: 0.5em;
+  }
+  .task-list {
+    display: none;
+  }
+}
+
+@media all and (min-width: 48em) { /* 768px */
+  .step-indicator {
+    display: none;
+  }
+  .task-list {
+    margin-left: 0; /* LTR */
+    padding-bottom: 1em;
+    padding-left: 0; /* LTR */
+    list-style-type: none;
+  }
+  [dir="rtl"] .task-list {
+    margin-right: 0;
+    padding-right: 0;
+  }
+  .task-list li {
+    padding: 0.5em 1em 0.5em 3.85em; /* LTR */
+    color: #1a1a1a;
+  }
+  [dir="rtl"] .task-list li {
+    padding: 0.5em 3.85em 0.5em 1em;
+  }
+  .task-list .is-active {
+    position: relative;
+    background: #ebeae4;
+    font-weight: normal;
+  }
+  .task-list .is-active:after {
+    position: absolute;
+    top: 50%;
+    left: 100%; /* LTR */
+    width: 0;
+    height: 0;
+    margin-top: -1.269em;
+    content: " ";
+    pointer-events: none;
+    border: solid transparent;
+    border-width: 1.269em;
+    border-color: rgba(235, 234, 228, 0);
+    border-left-color: #ebeae4; /* LTR */
+  }
+  [dir="rtl"] .task-list .is-active:after {
+    right: 100%;
+    left: auto;
+    border-right-color: #ebeae4;
+    border-left-color: transparent;
+  }
+  .task-list .done {
+    color: #adadad;
+  }
+}
+
+/**
+ * Layout
+ */
+.layout-container {
+  width: auto;
+  margin-right: 1.25em;
+  margin-left: 1.25em;
+  padding: var(--space-xl);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow-z3);
+}
+.layout-container:after { /* no reason for a clearfix in the markup */
+  display: table;
+  clear: both;
+  content: "";
+}
+
+@media all and (max-width: 48em) { /* 768px */
+  .layout-container {
+    margin: 1.25em;
+    padding: var(--space-m) var(--space-l);
+  }
+}
+
+@media all and (min-width: 48em) { /* 768px */
+  html {
+    display: table;
+  }
+  .install-page,
+  .maintenance-page {
+    display: table-cell;
+    padding: 1em 0;
+    vertical-align: middle;
+  }
+  html,
+  .install-page,
+  .maintenance-page {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+  /**
+   * Needed to override rules from system-admin--layout.pcss.
+   */
+  .layout-container.layout-container.layout-container {
+    width: 75%;
+    max-width: 940px;
+    margin: 0 auto;
+  }
+  ul {
+    margin: 0.25em 0;
+    padding: 15px;
+  }
+  [dir="rtl"] ul {
+    margin-right: 0; /* Overrides default [dir="rtl"] ul margin */
+  }
+  .layout-sidebar-first {
+    float: left; /* LTR */
+    width: 35%;
+  }
+  [dir="rtl"] .layout-sidebar-first {
+    float: right;
+  }
+}
+
+/**
+ * Status report customization for install and update page.
+ */
+.system-status-report__status-title {
+  float: none;
+  width: 100%;
+}
+.system-status-report__entry__value {
+  float: none;
+  width: 100%;
+  padding-top: 0;
+  padding-left: 3em; /* LTR */
+}
+[dir="rtl"] .system-status-report__entry__value {
+  padding-right: 3em;
+  padding-left: 1em;
+}

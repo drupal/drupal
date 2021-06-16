@@ -1,0 +1,7 @@
+id: dependency_for_unmet2
+label: 'Other module test to test optional config installation'
+weight: 0
+style: ''
+status: true
+langcode: en
+protected_property: Default

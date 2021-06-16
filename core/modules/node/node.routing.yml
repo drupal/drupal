@@ -1,0 +1,143 @@
+node.multiple_delete_confirm:
+  path: '/admin/content/node/delete'
+  defaults:
+    _form: '\Drupal\node\Form\DeleteMultiple'
+    entity_type_id: 'node'
+  requirements:
+    _entity_delete_multiple_access: 'node'
+
+entity.node.delete_multiple_form:
+  path: '/admin/content/node/delete'
+  defaults:
+    _form: '\Drupal\node\Form\DeleteMultiple'
+    entity_type_id: 'node'
+  requirements:
+    _entity_delete_multiple_access: 'node'
+
+node.add_page:
+  path: '/node/add'
+  defaults:
+    _title: 'Add content'
+    _controller: '\Drupal\node\Controller\NodeController::addPage'
+  options:
+    _node_operation_route: TRUE
+  requirements:
+    _node_add_access: 'node'
+
+node.add:
+  path: '/node/add/{node_type}'
+  defaults:
+    _entity_form: 'node.default'
+    _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
+  requirements:
+    _node_add_access: 'node:{node_type}'
+  options:
+    _node_operation_route: TRUE
+    parameters:
+      node_type:
+        type: entity:node_type
+        with_config_overrides: TRUE
+
+entity.node.preview:
+  path: '/node/preview/{node_preview}/{view_mode_id}'
+  defaults:
+    _controller: '\Drupal\node\Controller\NodePreviewController::view'
+    _title_callback: '\Drupal\node\Controller\NodePreviewController::title'
+  requirements:
+    _node_preview_access: '{node_preview}'
+  options:
+    parameters:
+      node_preview:
+        type: 'node_preview'
+
+entity.node.version_history:
+  path: '/node/{node}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: '\Drupal\node\Controller\NodeController::revisionOverview'
+  requirements:
+    _access_node_revision: 'view'
+    node: \d+
+  options:
+    _node_operation_route: TRUE
+
+entity.node.revision:
+  path: '/node/{node}/revisions/{node_revision}/view'
+  defaults:
+    _controller: '\Drupal\node\Controller\NodeController::revisionShow'
+    _title_callback: '\Drupal\node\Controller\NodeController::revisionPageTitle'
+  requirements:
+    _access_node_revision: 'view'
+    node: \d+
+
+node.revision_revert_confirm:
+  path: '/node/{node}/revisions/{node_revision}/revert'
+  defaults:
+    _form: '\Drupal\node\Form\NodeRevisionRevertForm'
+    _title: 'Revert to earlier revision'
+  requirements:
+    _access_node_revision: 'update'
+    node: \d+
+  options:
+    _node_operation_route: TRUE
+
+node.revision_revert_translation_confirm:
+  path: '/node/{node}/revisions/{node_revision}/revert/{langcode}'
+  defaults:
+    _form: '\Drupal\node\Form\NodeRevisionRevertTranslationForm'
+    _title: 'Revert to earlier revision of a translation'
+  requirements:
+    _access_node_revision: 'update'
+    node: \d+
+  options:
+    _node_operation_route: TRUE
+
+node.revision_delete_confirm:
+  path: '/node/{node}/revisions/{node_revision}/delete'
+  defaults:
+    _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
+    _title: 'Delete earlier revision'
+  requirements:
+    _access_node_revision: 'delete'
+    node: \d+
+  options:
+    _node_operation_route: TRUE
+
+entity.node_type.collection:
+  path: '/admin/structure/types'
+  defaults:
+    _entity_list: 'node_type'
+    _title: 'Content types'
+  requirements:
+    _permission: 'administer content types'
+
+node.type_add:
+  path: '/admin/structure/types/add'
+  defaults:
+    _entity_form: 'node_type.add'
+    _title: 'Add content type'
+  requirements:
+    _permission: 'administer content types'
+
+entity.node_type.edit_form:
+  path: '/admin/structure/types/manage/{node_type}'
+  defaults:
+    _entity_form: 'node_type.edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  requirements:
+    _permission: 'administer content types'
+
+entity.node_type.delete_form:
+  path: '/admin/structure/types/manage/{node_type}/delete'
+  defaults:
+    _entity_form: 'node_type.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'node_type.delete'
+
+node.configure_rebuild_confirm:
+  path: '/admin/reports/status/rebuild'
+  defaults:
+    _form: '\Drupal\node\Form\RebuildPermissionsForm'
+  requirements:
+    _permission: 'access administration pages'

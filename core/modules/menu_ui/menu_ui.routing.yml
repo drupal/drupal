@@ -1,0 +1,63 @@
+entity.menu.collection:
+  path: '/admin/structure/menu'
+  defaults:
+    _entity_list: 'menu'
+    _title: 'Menus'
+  requirements:
+    _permission: 'administer menu'
+
+menu_ui.parent_options_js:
+  path: '/admin/structure/menu/parents'
+  defaults:
+    _controller: '\Drupal\menu_ui\Controller\MenuController::getParentOptions'
+  requirements:
+    _permission: 'administer menu'
+
+menu_ui.link_edit:
+  path: '/admin/structure/menu/link/{menu_link_plugin}/edit'
+  defaults:
+    _form: '\Drupal\menu_ui\Form\MenuLinkEditForm'
+    _title: 'Edit menu link'
+  options:
+    parameters:
+      menu_link_plugin:
+        type: menu_link_plugin
+  requirements:
+    _permission: 'administer menu'
+
+menu_ui.link_reset:
+  path: '/admin/structure/menu/link/{menu_link_plugin}/reset'
+  defaults:
+    _form: '\Drupal\menu_ui\Form\MenuLinkResetForm'
+    _title: 'Reset menu link'
+  options:
+    parameters:
+      menu_link_plugin:
+        type: menu_link_plugin
+  requirements:
+    _permission: 'administer menu'
+    _custom_access: '\Drupal\menu_ui\Form\MenuLinkResetForm::linkIsResettable'
+
+entity.menu.add_form:
+  path: '/admin/structure/menu/add'
+  defaults:
+    _entity_form: 'menu.add'
+    _title: 'Add menu'
+  requirements:
+    _entity_create_access: 'menu'
+
+entity.menu.edit_form:
+  path: '/admin/structure/menu/manage/{menu}'
+  defaults:
+    _entity_form: 'menu.edit'
+    _title_callback: '\Drupal\menu_ui\Controller\MenuController::menuTitle'
+  requirements:
+    _entity_access: 'menu.update'
+
+entity.menu.delete_form:
+  path: '/admin/structure/menu/manage/{menu}/delete'
+  defaults:
+    _entity_form: 'menu.delete'
+    _title: 'Delete menu'
+  requirements:
+    _entity_access: 'menu.delete'

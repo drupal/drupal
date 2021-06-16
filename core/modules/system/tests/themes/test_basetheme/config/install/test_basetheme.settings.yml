@@ -1,0 +1,4 @@
+features:
+  favicon: false
+base: only
+override: base

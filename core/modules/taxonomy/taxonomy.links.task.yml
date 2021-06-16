@@ -1,0 +1,24 @@
+entity.taxonomy_term.canonical:
+  title: 'View'
+  route_name: entity.taxonomy_term.canonical
+  base_route: entity.taxonomy_term.canonical
+
+entity.taxonomy_term.edit_form:
+  title: 'Edit'
+  route_name: entity.taxonomy_term.edit_form
+  base_route: entity.taxonomy_term.canonical
+
+entity.taxonomy_term.delete_form:
+  title: 'Delete'
+  route_name: entity.taxonomy_term.delete_form
+  base_route: entity.taxonomy_term.canonical
+
+entity.taxonomy_vocabulary.overview_form:
+  title: 'List'
+  route_name: entity.taxonomy_vocabulary.overview_form
+  base_route: entity.taxonomy_vocabulary.overview_form
+
+entity.taxonomy_vocabulary.edit_form:
+  title: 'Edit'
+  route_name: entity.taxonomy_vocabulary.edit_form
+  base_route: entity.taxonomy_vocabulary.overview_form

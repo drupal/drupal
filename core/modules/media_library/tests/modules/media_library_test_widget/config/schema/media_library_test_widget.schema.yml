@@ -1,0 +1,10 @@
+field.widget.settings.media_library_inception_widget:
+  type: mapping
+  label: 'Media library inception widget settings'
+  mapping:
+    media_types:
+      type: sequence
+      label: 'Allowed media types, in display order'
+      sequence:
+        type: string
+        label: 'Media type ID'

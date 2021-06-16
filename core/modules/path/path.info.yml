@@ -1,0 +1,8 @@
+name: Path
+type: module
+description: 'Allows users to rename URLs.'
+package: Core
+version: VERSION
+configure: entity.path_alias.collection
+dependencies:
+  - drupal:path_alias

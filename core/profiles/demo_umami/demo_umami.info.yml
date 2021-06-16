@@ -1,0 +1,54 @@
+name: 'Demo: Umami Food Magazine (Experimental)'
+type: profile
+description: 'Install an example site that shows off some of Drupal’s capabilities.'
+version: VERSION
+install:
+  - node
+  - history
+  - big_pipe
+  - block
+  - breakpoint
+  - ckeditor
+  - color
+  - config
+  - contextual
+  - contact
+  - layout_builder
+  - layout_discovery
+  - menu_link_content
+  - datetime
+  - block_content
+  - quickedit
+  - editor
+  - help
+  - image
+  - media
+  - media_library
+  - menu_ui
+  - options
+  - path
+  - page_cache
+  - dynamic_page_cache
+  - taxonomy
+  - dblog
+  - search
+  - shortcut
+  - toolbar
+  - field_ui
+  - file
+  - rdf
+  - views
+  - views_ui
+  - tour
+  - automated_cron
+  - responsive_image
+  - content_moderation
+  - workflows
+  - language
+  - locale
+  - config_translation
+  - content_translation
+themes:
+  - seven
+  - umami
+keep_english: true

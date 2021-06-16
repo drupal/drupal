@@ -1,0 +1,6 @@
+services:
+  url_alter_test.path_processor:
+    class: Drupal\url_alter_test\PathProcessorTest
+    tags:
+      - { name: path_processor_inbound, priority: 800 }
+      - { name: path_processor_outbound, priority: 100 }

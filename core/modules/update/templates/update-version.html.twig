@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the version display of a project.
+ *
+ * Available variables:
+ * - attributes: HTML attributes suitable for a container element.
+ * - title: The title of the project.
+ * - core_compatibility_details: Render array of core compatibility details.
+ * - version:  A list of data about the latest released version, containing:
+ *   - version: The version number.
+ *   - date: The date of the release.
+ *   - download_link: The URL for the downloadable file.
+ *   - release_link: The URL for the release notes.
+ *   - core_compatible: A flag indicating whether the project is compatible
+ *     with the currently installed version of Drupal core. This flag is not
+ *     set for the Drupal core project itself.
+ *   - core_compatibility_message: A message indicating the versions of Drupal
+ *     core with which this project is compatible. This message is also
+ *     contained within the 'core_compatibility_details' variable documented
+ *     above. This message is not set for the Drupal core project itself.
+ *
+ * @see template_preprocess_update_version()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="{{ attributes.class }} project-update__version"{{ attributes|without('class') }}>
+  <div class="clearfix">
+    <div class="project-update__version-title layout-column layout-column--quarter">{{ title }}</div>
+    <div class="project-update__version-details layout-column layout-column--quarter">
+      <a href="{{ version.release_link }}">{{ version.version }}</a>
+      <span class="project-update__version-date">({{ version.date|date('Y-M-d') }})</span>
+    </div>
+    <div class="layout-column layout-column--half">
+      <ul class="project-update__version-links">
+        {% if version.core_compatible is not defined or version.core_compatible %}
+          <li class="project-update__download-link">
+            <a href="{{ version.download_link }}">{{ 'Download'|t }}</a>
+          </li>
+        {% endif %}
+        <li class="project-update__release-notes-link">
+          <a href="{{ version.release_link }}">{{ 'Release notes'|t }}</a>
+        </li>
+        {% if core_compatibility_details %}
+          <li class="project-update__compatibility-details">
+            {{ core_compatibility_details }}
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>

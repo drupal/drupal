@@ -1,0 +1,5 @@
+tour_test_action:
+  route_name: tour_test.1_action
+  title: 'Tour test action'
+  appears_on:
+    - tour_test.1

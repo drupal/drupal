@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Test templates file with extra messages div.
+ */
+#}
+<div data-drupal-messages>
+{% block messages %}
+{% for type, messages in message_list %}
+  {%
+    set classes = [
+      'messages',
+      'messages--' ~ type,
+    ]
+  %}
+  <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+    {% if type == 'error' %}
+      <div role="alert">
+    {% endif %}
+      {% if status_headings[type] %}
+        <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
+      {% endif %}
+      {% if messages|length > 1 %}
+        <ul class="messages__list">
+          {% for message in messages %}
+            <li class="messages__item">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        {{ messages|first }}
+      {% endif %}
+    {% if type == 'error' %}
+      </div>
+    {% endif %}
+  </div>
+  {# Remove type specific classes. #}
+  {% set attributes = attributes.removeClass(classes) %}
+{% endfor %}
+{% endblock messages %}
+</div>
+<div data-drupal-messages-other></div>

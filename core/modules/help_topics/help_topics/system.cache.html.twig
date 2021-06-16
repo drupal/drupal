@@ -1,0 +1,19 @@
+---
+label: 'Clearing the site cache'
+related:
+  - core.maintenance
+---
+{% set performance_url = render_var(url('system.performance_settings')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Clear the data in the site cache.{% endtrans %}</p>
+<h2>{% trans %}What is the cache?{% endtrans %}</h2>
+<p>{% trans %}Some of the calculations that are done when your site loads a page take a long time to run. To save time when these calculations would need to be done again, their results can be <em>cached</em> in your site's database. There are internal mechanisms to <em>clear</em> cached data when the conditions or assumptions that went into the calculation have changed, but you can also clear cached data manually. When your site is misbehaving, a good first step is to clear the cache and see if the problem goes away.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em><a href="{{ performance_url }}"><em>Performance</em></a></em>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Clear all caches</em>. Your site's cached data will be cleared.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+    <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/prevent-cache.html">Concept: Cache in the User Guide</a>{% endtrans %}</li>
+</ul>

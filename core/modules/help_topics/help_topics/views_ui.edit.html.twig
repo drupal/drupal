@@ -1,0 +1,24 @@
+---
+label: 'Editing an existing view display'
+related:
+  - views.overview
+  - views_ui.add_display
+---
+{% set views = render_var(url('entity.view.collection')) %}
+{% set overview = render_var(url('help.help_topic', {'id': 'views.overview'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Edit an existing view display, to modify what data is displayed or how it is displayed.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}If you are not already editing your view, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ views }}"><em>Views</em></a>. Find the view you want to edit, and click its <em>Edit</em> link.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Displays</em>, click the display you want to edit.{% endtrans %}</li>
+  <li>{% trans %}Find the section whose settings you want to change, such as <em>Format</em> or <em>Filter criteria</em> (see <a href="{{ overview }}">Managing content listings (views)</a> for more information).{% endtrans %}</li>
+  <li>{% trans %}For sections containing lists (such as <em>Fields</em> and <em>Filter criteria</em>), to modify or delete an existing item, click the name of the item. To add a new item, click <em>Add</em> in the drop-down list. To change the order of items, click <em>Rearrange</em> in the drop-down list.{% endtrans %}</li>
+  <li>{% trans %}For sections containing individual settings (such as <em>Title</em> and <em>Format</em>), there are often two links for each setting. The first link shows the current value; click that link to change the value. If there is a second link called <em>Settings</em>, click that link to change the settings details. For example, if your <em>Format</em> is currently shown as <em>Unformatted list</em>, click <em>Unformatted list</em> to switch to using a <em>Grid</em> or <em>Table</em> format. Click <em>Settings</em> next to your format type to change the settings for your chosen format.{% endtrans %}</li>
+  <li>{% trans %}When you have finished changing all the settings, verify that the display is correct by clicking <em>Update preview</em>. Return to editing settings if necessary.{% endtrans %}</li>
+  <li>{% trans %}When you have verified the display, click <em>Save</em>. Alternatively, if you have made mistakes and want to discard your changes, click <em>Cancel</em>.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/views-chapter.html">Views chapter in the User Guide</a>{% endtrans %}</li>
+</ul>

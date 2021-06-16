@@ -1,0 +1,72 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_view_fieldapi
+label: test_view_fieldapi
+module: views
+description: ''
+tag: default
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      fields:
+        nid:
+          field: nid
+          id: nid
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+        field_name_0:
+          id: field_name_0
+          table: node__field_name_0
+          field: field_name_0
+          plugin_id: field
+          entity_type: node
+          entity_field: field_name_0
+        field_name_5:
+          id: field_name_5
+          table: node__field_name_5
+          field: field_name_5
+          plugin_id: field
+          entity_type: node
+          entity_field: field_name_5
+        field_no_view_access:
+          id: field_no_view_access
+          table: node__field_no_view_access
+          field: field_no_view_access
+          plugin_id: field
+          entity_type: node
+          entity_field: field_no_view_access
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      query:
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+      sorts:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          order: ASC
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

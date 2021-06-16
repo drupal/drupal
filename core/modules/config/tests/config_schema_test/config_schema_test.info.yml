@@ -1,0 +1,5 @@
+name: 'Configuration schema test'
+type: module
+package: Testing
+version: VERSION
+hidden: true

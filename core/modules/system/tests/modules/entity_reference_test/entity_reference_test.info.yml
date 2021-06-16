@@ -1,0 +1,10 @@
+name: "Entity Reference Test"
+type: module
+description: "Support module for the Entity Reference tests."
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:user
+  - drupal:views
+  - drupal:entity_test

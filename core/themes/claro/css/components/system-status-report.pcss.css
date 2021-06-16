@@ -1,0 +1,142 @@
+/**
+ * @file
+ * Claro styles for the System Status Report.
+ */
+
+@import "../base/variables.pcss.css";
+
+.system-status-report__requirements-group {
+  padding-top: 20px;
+}
+.system-status-report__entry {
+  overflow: auto;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+.system-status-report__entry--error {
+  background-color: transparent;
+}
+.system-status-report__entry--warning {
+  background-color: transparent;
+}
+.system-status-report__entry h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 1.231em;
+}
+
+.system-status-report .claro-details {
+  border: none;
+  border-bottom: var(--details-border-size) solid var(--details-border-color);
+  box-shadow: none;
+}
+
+/* Account for native and poly-filled details element */
+.system-status-report__status-title {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1em 1em 1em 3em; /* LTR */
+  font-weight: bold;
+}
+.system-status-report__status-title .details-title {
+  text-transform: none;
+  color: inherit;
+}
+.system-status-report__status-title .details-title {
+  padding-left: 3em; /* LTR */
+}
+[dir="rtl"] .system-status-report__status-title .details-title {
+  padding-right: 3em;
+  padding-left: 0;
+}
+[dir="rtl"].details .system-status-report__status-title {
+  padding: 1em 3em 1em 1em;
+}
+
+.system-status-report__status-title .details-title:before,
+.details .system-status-report__status-icon:before {
+  position: absolute;
+  top: 1em;
+  left: 10px; /* LTR */
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px; /* LTR */
+  content: "";
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: contain;
+}
+[dir="rtl"] .system-status-report__status-title .details-title:before,
+[dir="rtl"].details .system-status-report__status-title:before {
+  right: 10px;
+  left: auto;
+  margin-right: 0;
+}
+.system-status-report__status-icon--error .details-title:before,
+.details .system-status-report__status-icon--error:before {
+  background-image: url(../../images/core/e32700/error.svg);
+}
+.system-status-report__status-icon--warning .details-title:before,
+.details .system-status-report__status-icon--warning:before {
+  background-image: url(../../images/core/e29700/warning.svg);
+}
+
+.system-status-report__entry__value {
+  box-sizing: border-box;
+  padding: 0 1em 1em 3em; /* LTR */
+  font-size: 14px;
+}
+[dir="rtl"] .system-status-report__entry__value {
+  padding-right: 3em;
+  padding-left: 1em;
+}
+
+.claro-details__summary--system-status-report {
+  background: var(--color-whitesmoke);
+}
+
+@media screen and (max-width: 48em) {
+  .system-status-report {
+    word-wrap: break-word;
+  }
+}
+
+@media screen and (min-width: 48em) {
+  .system-status-report__entry::after {
+    display: table;
+    clear: both;
+    content: "";
+  }
+  .system-status-report__status-title {
+    width: 18rem;
+    cursor: default;
+  }
+  .system-status-report__status-title:hover,
+  .system-status-report__status-title:focus {
+    text-decoration: none;
+  }
+
+  html.js .system-status-report__status-title::-webkit-details-marker {
+    display: none;
+  }
+  .collapse-processed > .system-status-report__status-title:before {
+    position: relative;
+    top: 3px;
+  }
+  .system-status-report__entry__value {
+    display: block;
+    width: calc(100% - 23em);
+    padding-top: 1em;
+    padding-left: 0; /* LTR */
+  }
+  [dir="rtl"] .system-status-report__entry__value {
+    padding-right: 3em;
+    padding-left: 0;
+  }
+}

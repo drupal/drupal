@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_executable_displays
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+display:
+  default:
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 1
+  page_2:
+    display_plugin: page
+    display_title: 'Page 2'
+    id: page_2
+    position: 2
+    display_options:
+      defaults:
+        style: false
+      style:
+        type: grid

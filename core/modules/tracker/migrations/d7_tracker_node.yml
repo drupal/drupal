@@ -1,0 +1,16 @@
+id: d7_tracker_node
+label: Tracker node
+migration_tags:
+  - Drupal 7
+  - Content
+source:
+  plugin: d7_tracker_node
+process:
+  nid: nid
+  published: published
+  changed: changed
+destination:
+  plugin: entity:node
+migration_dependencies:
+  required:
+    - d7_user

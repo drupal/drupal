@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the testing_site_config module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function testing_site_config_install() {
+  // Set the site email address to something that is not sendmail_from.
+  \Drupal::configFactory()->getEditable('system.site')
+    ->set('mail', 'profile-testing-site-config@example.com')
+    ->save(TRUE);
+
+  // Set the time zone to something that is not the system timezone (which is
+  // Australia/Sydney in the testing environment).
+  \Drupal::configFactory()->getEditable('system.date')
+    ->set('timezone.default', 'America/Los_Angeles')
+    ->save(TRUE);
+}

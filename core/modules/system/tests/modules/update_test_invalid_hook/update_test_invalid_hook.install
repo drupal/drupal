@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_test_invalid_hook module.
+ */
+
+/**
+ * Hook implementation using the reserved schema version 8000.
+ */
+function update_test_invalid_hook_update_8000() {
+}

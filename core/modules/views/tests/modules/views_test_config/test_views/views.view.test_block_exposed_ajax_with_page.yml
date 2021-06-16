@@ -1,0 +1,95 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+  module:
+    - node
+id: test_block_exposed_ajax_with_page
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        options:
+          submit_button: Apply
+          reset_button: true
+        type: basic
+      filters:
+        type:
+          expose:
+            identifier: type
+            label: 'Content: Type'
+            operator_id: type_op
+            reduce: false
+          exposed: true
+          field: type
+          id: type
+          table: node_field_data
+          plugin_id: in_operator
+          entity_type: node
+          entity_field: type
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+      display_extenders: {  }
+      use_ajax: true
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: 2
+    display_options:
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 2
+    display_options:
+      display_extenders: {  }
+      path: some-path
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }

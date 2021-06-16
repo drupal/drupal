@@ -1,0 +1,6 @@
+views_test_modal.modal:
+  path: '/views-test-modal/modal'
+  defaults:
+    _controller: '\Drupal\views_test_modal\Controller\TestController::modal'
+  requirements:
+    _access: 'TRUE'

@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Update functions for Language module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function language_update_last_removed() {
+  return 8001;
+}

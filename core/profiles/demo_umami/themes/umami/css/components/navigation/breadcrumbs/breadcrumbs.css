@@ -1,0 +1,17 @@
+/**
+ * @file
+ * This file is used to style the breadcrumbs.
+ */
+.breadcrumb {
+  padding: 0.79rem 4%;
+}
+.breadcrumb li {
+  display: inline-block;
+}
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .breadcrumb {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

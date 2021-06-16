@@ -1,0 +1,6 @@
+name: 'Automated Cron'
+type: module
+description: 'Provides an automated way to run cron jobs, by executing them at the end of a server response.'
+package: Core
+version: VERSION
+configure: system.cron_settings

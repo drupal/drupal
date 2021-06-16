@@ -1,0 +1,5 @@
+name: 'Module test'
+type: module
+description: 'Support module for module system testing.'
+package: Testing
+version: VERSION

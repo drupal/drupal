@@ -1,0 +1,7 @@
+name: 'Configuration override integration test'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:block
+  - drupal:block_test

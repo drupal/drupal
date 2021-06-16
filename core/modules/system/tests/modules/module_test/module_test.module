@@ -1,0 +1,115 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * Manipulate module dependencies to test dependency chains.
+ */
+function module_test_system_info_alter(&$info, Extension $file, $type) {
+  if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
+    }
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on a non-existing module.
+      $info['dependencies'][] = 'foo';
+    }
+  }
+  elseif (\Drupal::state()->get('module_test.dependency') == 'dependency') {
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
+    }
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on help module.
+      $info['dependencies'][] = 'help';
+    }
+    elseif ($file->getName() == 'entity_test') {
+      // Make entity test module depend on help module.
+      $info['dependencies'][] = 'help';
+    }
+  }
+  elseif (\Drupal::state()->get('module_test.dependency') == 'version dependency') {
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
+    }
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on a specific version of help module.
+      $info['dependencies'][] = 'help (1.x)';
+    }
+    elseif ($file->getName() == 'help') {
+      // Set help module to a version compatible with the above.
+      $info['version'] = '8.x-1.0';
+    }
+  }
+  if ($file->getName() == 'seven' && $type == 'theme') {
+    $info['regions']['test_region'] = 'Test region';
+  }
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function module_test_hook_info() {
+  $hooks['test_hook'] = [
+    'group' => 'file',
+  ];
+  return $hooks;
+}
+
+/**
+ * Load function used by module_test_hook_dynamic_loading_invoke_all_during_load().
+ *
+ * @see module_test_menu()
+ */
+function module_test_load($param) {
+  $result = \Drupal::moduleHandler()->invokeAll('test_hook');
+  return $result[$param];
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function module_test_modules_installed($modules) {
+  // Record the ordered list of modules that were passed in to this hook so we
+  // can check that the modules were enabled in the correct sequence.
+  \Drupal::state()->set('module_test.install_order', $modules);
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function module_test_modules_uninstalled($modules) {
+  // Record the ordered list of modules that were passed in to this hook so we
+  // can check that the modules were uninstalled in the correct sequence.
+  \Drupal::state()->set('module_test.uninstall_order', $modules);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * @see module_test_altered_test_hook()
+ * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
+ */
+function module_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'altered_test_hook') {
+    // Add a hook implementation, that will be found in
+    // module_test.implementation.inc.
+    $implementations['module_test'] = 'implementations';
+  }
+  if ($hook === 'unimplemented_test_hook') {
+    // Add the non-existing function module_test_unimplemented_test_hook(). This
+    // should cause an exception to be thrown in
+    // \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo('unimplemented_test_hook').
+    $implementations['module_test'] = FALSE;
+  }
+}

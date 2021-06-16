@@ -1,0 +1,12 @@
+# Schema for the migration source plugins.
+
+migrate.source.update_settings:
+  type: migrate_source_sql
+  label: 'Drupal update settings'
+  mapping:
+    variables:
+      type: sequence
+      label: 'Variables'
+      sequence:
+        type: string
+        label: 'Variable'

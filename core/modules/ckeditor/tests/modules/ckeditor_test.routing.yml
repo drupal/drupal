@@ -1,0 +1,14 @@
+ckeditor_test.ajax_css:
+  path: '/ckeditor_test/ajax_css'
+  defaults:
+    _title: 'AJAX CSS Test'
+    _form: '\Drupal\ckeditor_test\Form\AjaxCssForm'
+  requirements:
+    _access: 'TRUE'
+
+ckeditor_test.off_canvas:
+  path: '/ckeditor_test/off_canvas'
+  defaults:
+    _controller: '\Drupal\ckeditor_test\CkeditorOffCanvasTestController::testOffCanvas'
+  requirements:
+    _access: 'TRUE'

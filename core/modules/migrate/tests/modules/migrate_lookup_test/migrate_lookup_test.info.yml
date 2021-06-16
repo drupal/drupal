@@ -1,0 +1,7 @@
+name: 'Migration Lookup Test'
+type: module
+description: 'Provides test migrations to test migration lookup service.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:migrate

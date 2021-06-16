@@ -1,0 +1,52 @@
+# Schema for the configuration files of the CKEditor module.
+
+editor.settings.ckeditor:
+  type: mapping
+  label: 'CKEditor settings'
+  mapping:
+    toolbar:
+      type: mapping
+      label: 'Toolbar configuration'
+      mapping:
+        rows:
+          type: sequence
+          label: 'Rows'
+          sequence:
+            type: sequence
+            label: 'Button groups'
+            sequence:
+              type: mapping
+              label: 'Button group'
+              mapping:
+                name:
+                  type: string
+                  label: 'Button group name'
+                items:
+                  type: sequence
+                  label: 'Buttons'
+                  sequence:
+                    type: string
+                    label: 'Button'
+    plugins:
+      type: sequence
+      label: 'Plugins'
+      sequence:
+        type: ckeditor.plugin.[%key]
+
+# Plugin \Drupal\ckeditor\Plugin\CKEditorPlugin\Language
+ckeditor.plugin.language:
+  type: mapping
+  label: 'Language'
+  mapping:
+    language_list:
+      type: string
+      label: 'Language list ID'
+
+# Plugin \Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo
+ckeditor.plugin.stylescombo:
+  type: mapping
+  label: 'Styles dropdown'
+  mapping:
+    styles:
+      type: text
+      label: 'List of styles'

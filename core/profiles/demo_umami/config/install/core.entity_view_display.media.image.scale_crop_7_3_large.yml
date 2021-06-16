@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.scale_crop_7_3_large
+    - field.field.media.image.field_media_image
+    - image.style.scale_crop_7_3_large
+    - media.type.image
+  module:
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.image.scale_crop_7_3_large
+targetEntityType: media
+bundle: image
+mode: scale_crop_7_3_large
+content:
+  field_media_image:
+    label: visually_hidden
+    settings:
+      image_style: scale_crop_7_3_large
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    weight: 1
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

@@ -1,0 +1,8 @@
+name: Statistics
+type: module
+description: 'Logs content statistics for your site.'
+package: Core
+version: VERSION
+configure: statistics.settings
+dependencies:
+  - drupal:node

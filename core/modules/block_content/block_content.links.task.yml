@@ -1,0 +1,28 @@
+entity.block_content.collection:
+  title: 'Custom block library'
+  route_name: entity.block_content.collection
+  base_route: block.admin_display
+block_content.list_sub:
+  title: Blocks
+  route_name: entity.block_content.collection
+  parent_id: entity.block_content.collection
+entity.block_content_type.collection:
+  title: Block types
+  route_name: entity.block_content_type.collection
+  parent_id: entity.block_content.collection
+  weight: 1
+
+entity.block_content.canonical:
+  title: Edit
+  route_name: entity.block_content.canonical
+  base_route: entity.block_content.canonical
+entity.block_content.delete_form:
+  title: Delete
+  route_name: entity.block_content.delete_form
+  base_route: entity.block_content.canonical
+
+# Default tab for custom block type editing.
+entity.block_content_type.edit_form:
+  title: 'Edit'
+  route_name: entity.block_content_type.edit_form
+  base_route: entity.block_content_type.edit_form

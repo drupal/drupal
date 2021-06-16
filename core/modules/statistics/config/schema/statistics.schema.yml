@@ -1,0 +1,26 @@
+# Schema for the configuration files of the statistics module.
+
+statistics.settings:
+  type: config_object
+  label: 'Statistics settings'
+  mapping:
+    count_content_views:
+      type: integer
+      label: 'Count content views'
+    display_max_age:
+      type: integer
+      label: 'How long any statistics may be cached, i.e. the refresh interval'
+
+block.settings.statistics_popular_block:
+  type: block_settings
+  label: 'Popular content block settings'
+  mapping:
+    top_day_num:
+      type: integer
+      label: 'Number of day\s top views to display'
+    top_all_num:
+      type: integer
+      label: 'Number of all time views to display'
+    top_last_num:
+      type: integer
+      label: 'Number of most recent views to display'

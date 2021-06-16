@@ -1,0 +1,30 @@
+services:
+  plugin.manager.rest:
+    class: Drupal\rest\Plugin\Type\ResourcePluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  cache.rest:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: ['@cache_factory', 'get']
+    arguments: [rest]
+  rest.resource_routes:
+    class: Drupal\rest\Routing\ResourceRoutes
+    arguments: ['@plugin.manager.rest', '@entity_type.manager', '@logger.channel.rest']
+    tags:
+      - { name: 'event_subscriber' }
+  logger.channel.rest:
+    parent: logger.channel_base
+    arguments: ['rest']
+
+  # Event subscribers.
+  rest.resource_response.subscriber:
+    class: Drupal\rest\EventSubscriber\ResourceResponseSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@serializer', '@renderer', '@current_route_match']
+  rest.resource.entity.post_route.subscriber:
+    class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

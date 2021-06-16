@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Test preprocess functions for theme test_stable.
+ */
+
+/**
+ * Implements hook_preprocess_theme_test_render_element().
+ */
+function test_stable_preprocess_theme_test_render_element($variables) {
+  // This is used for Drupal\Tests\Core\Theme\RegistryTest.
+}

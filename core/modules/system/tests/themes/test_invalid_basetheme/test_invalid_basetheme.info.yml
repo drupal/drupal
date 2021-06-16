@@ -1,0 +1,5 @@
+name: 'Theme test with invalid base theme'
+type: theme
+description: 'Test theme which has a non-existent base theme.'
+version: VERSION
+base theme: not_real_test_basetheme

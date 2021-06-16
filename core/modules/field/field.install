@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function field_update_last_removed() {
+  return 8500;
+}

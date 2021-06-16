@@ -1,0 +1,7 @@
+name: Link
+type: module
+description: 'Provides a simple link field type.'
+package: Field types
+version: VERSION
+dependencies:
+  - drupal:field

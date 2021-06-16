@@ -1,0 +1,45 @@
+id: d7_menu_links_localized
+label: Menu links
+migration_tags:
+  - Drupal 7
+  - Content
+  - Multilingual
+source:
+  plugin: d7_menu_link_localized
+  constants:
+    bundle: menu_link_content
+process:
+  skip_translation:
+    plugin: skip_on_empty
+    method: row
+    source: skip_source_translation
+  exists:
+    -
+      plugin: migration_lookup
+      migration: d7_menu_links
+      source: mlid
+    -
+      plugin: skip_on_empty
+      method: row
+  id: mlid
+  langcode: language
+  title: link_title
+  description: description
+  menu_name:
+    -
+      plugin: migration_lookup
+      migration: d7_menu
+      source: menu_name
+    -
+      plugin: skip_on_empty
+      method: row
+destination:
+  plugin: entity:menu_link_content
+  no_stub: true
+  translations: true
+  destination_module: content_translation
+migration_dependencies:
+  required:
+    - language
+    - d7_language_content_menu_settings
+    - d7_menu_links

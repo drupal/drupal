@@ -1,0 +1,6 @@
+system.date_format_add:
+  route_name: system.date_format_add
+  title: 'Add format'
+  weight: -10
+  appears_on:
+    - entity.date_format.collection

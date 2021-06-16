@@ -1,0 +1,59 @@
+id: d6_node_translation
+label: Node translations
+migration_tags:
+  - Drupal 6
+  - translation
+  - Content
+  - Multilingual
+class: Drupal\node\Plugin\migrate\D6NodeTranslation
+deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
+source:
+  plugin: d6_node
+  translations: true
+process:
+  # If you are using this file to build a custom migration consider removing
+  # the nid field to allow incremental migrations.
+  nid: tnid
+  type: type
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: "und"
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  'body/format':
+    plugin: migration_lookup
+    migration: d6_filter_format
+    source: format
+  'body/value': body
+  'body/summary': teaser
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+
+#  unmapped d6 fields.
+#  translate
+#  moderate
+#  comment
+
+destination:
+  plugin: entity:node
+  translations: true
+  destination_module: content_translation
+migration_dependencies:
+  required:
+    - d6_user
+    - d6_node_type
+    - d6_node_settings
+    - d6_filter_format
+    - language
+  optional:
+    - d6_field_instance_widget_settings
+    - d6_field_formatter_settings
+    - d6_upload_field_instance

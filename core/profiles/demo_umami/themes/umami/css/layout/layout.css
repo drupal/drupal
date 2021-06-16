@@ -1,0 +1,22 @@
+/**
+ * @file
+ * This file is used to create generic layout styles.
+ *
+ * More specific layout items may be found within their respective files, e.g.
+ * the layout for two columns is in the layout-2-cols.css file.
+ */
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+/* Add responsive side gutters to the outer layout container 'main' at smaller sizes */
+.main {
+  padding: 0 4%;
+}
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .main {
+    padding: 0;
+  }
+}

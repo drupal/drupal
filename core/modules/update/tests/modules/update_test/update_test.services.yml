@@ -1,0 +1,4 @@
+services:
+  datetime.time:
+    class: Drupal\update_test\Datetime\TestTime
+    arguments: ['@request_stack']

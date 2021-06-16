@@ -1,0 +1,1 @@
+# File in drupal-drupal-test-overwrite that is not replaced by a scaffold file.

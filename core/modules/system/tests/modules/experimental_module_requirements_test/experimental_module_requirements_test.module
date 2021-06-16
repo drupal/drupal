@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Experimental Test Requirements module to test hook_requirements().
+ */
+
+/**
+ * Implements hook_help().
+ */
+function experimental_module_requirements_test_help($route_name) {
+  switch ($route_name) {
+    case 'help.page.experimental_module_requirements_test':
+      // Make the help text conform to core standards. See
+      // \Drupal\system\Tests\Module\InstallUninstallTest::assertHelp().
+      return t('The Experimental Requirements Test module is not done yet. It may eat your data, but you can read the <a href=":url">online documentation for the Experimental Requirements Test module</a>.', [':url' => 'http://www.example.com']);
+  }
+}

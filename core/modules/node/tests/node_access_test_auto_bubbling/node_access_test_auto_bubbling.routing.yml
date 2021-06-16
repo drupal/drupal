@@ -1,0 +1,6 @@
+node_access_test_auto_bubbling:
+  path: '/node_access_test_auto_bubbling'
+  defaults:
+    _controller: '\Drupal\node_access_test_auto_bubbling\Controller\NodeAccessTestAutoBubblingController::latest'
+  requirements:
+    _access: 'TRUE'

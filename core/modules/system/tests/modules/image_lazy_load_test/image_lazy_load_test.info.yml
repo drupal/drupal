@@ -1,0 +1,5 @@
+name: 'Image lazy load'
+type: module
+description: 'Support module for image loading attribute tests.'
+package: Testing
+version: VERSION

@@ -1,0 +1,81 @@
+/**
+ * @file
+ * Settings tray specific styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+#drupal-off-canvas {
+  & .form-type-boolean {
+    margin-inline-start: 0;
+    line-height: var(--line-height-s);
+
+    & input[type="checkbox"],
+    & input[type="radio"] {
+      float: none;
+      width: var(--sp0-75);
+      height: var(--sp0-75);
+      transform: none;
+      vertical-align: middle;
+    }
+
+    & .form-item__description {
+      margin-inline-start: 0;
+    }
+  }
+
+  /* Necessary for Safari. */
+  & .olivero-details {
+    border-top: solid 1px rgba(255, 255, 255, 0.25);
+    border-bottom: solid 1px rgba(255, 255, 255, 0.25);
+    box-shadow: none;
+  }
+
+  & .olivero-details__wrapper {
+    padding: 20px;
+  }
+
+  /* Necessary for Safari. */
+  & .olivero-details__summary {
+    display: block;
+    list-style: initial;
+
+    &:focus {
+      outline: solid 1px rgba(255, 255, 255, 0.25);
+    }
+
+    &:before {
+      content: none;
+    }
+
+    &::-webkit-details-marker {
+      display: inline-block;
+    }
+
+    /* Necessary for IE11. */
+    & .details-title:before {
+      content: none;
+    }
+
+    /* Necessary for Firefox. */
+    @supports (list-style-type: disclosure-closed) {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: disclosure-closed;
+    }
+  }
+
+  /* Necessary for Firefox. */
+  & .olivero-details[open] .olivero-details__summary {
+    @supports (list-style-type: disclosure-open) {
+      list-style-type: disclosure-open;
+    }
+  }
+
+  /* Necessary for Safari. */
+  & div {
+    display: block;
+    color: #ddd;
+    font-size: 14px;
+  }
+}

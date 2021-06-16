@@ -1,0 +1,33 @@
+# Every site requires at least one text format as fallback format that
+# - is accessible to all users.
+# - is secure, using very basic formatting only.
+# - may be modified by installation profiles to have other properties.
+langcode: en
+status: true
+dependencies: {  }
+name: 'Plain text'
+format: plain_text
+weight: 10
+filters:
+  # Escape all HTML.
+  filter_html_escape:
+    id: filter_html_escape
+    provider: filter
+    status: true
+    weight: -10
+    settings: {  }
+  # Convert URLs into links.
+  filter_url:
+    id: filter_url
+    provider: filter
+    status: true
+    weight: 0
+    settings:
+      filter_url_length: 72
+  # Convert linebreaks into paragraphs.
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }

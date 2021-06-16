@@ -1,0 +1,67 @@
+id: d7_field_instance
+label: Field instance configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
+field_plugin_method: alterFieldInstanceMigration
+source:
+  plugin: d7_field_instance
+  constants:
+    status: true
+process:
+  type:
+    plugin: process_field
+    source: type
+    method: getFieldType
+  entity_type: entity_type
+  field_name: field_name
+  # The bundle needs to be statically mapped in order to support comment types
+  # that might already exist before this migration is run. See
+  # d7_comment_type.yml for more information.
+  bundle_mapped:
+    plugin: static_map
+    source: bundle
+    bypass: true
+    map:
+      comment_node_forum: comment_forum
+  bundle:
+    plugin: field_bundle
+    source:
+      - entity_type
+      - '@bundle_mapped'
+  label: label
+  description: description
+  required: required
+  status: 'constants/status'
+  allowed_values:
+    -
+      plugin: sub_process
+      source: allowed_vid
+      process:
+        -
+          plugin: migration_lookup
+          migration: d7_taxonomy_vocabulary
+          source: vid
+  settings:
+    plugin: d7_field_instance_settings
+    source:
+      - settings
+      - widget
+      - field_definition
+  default_value_function: ''
+  default_value:
+    plugin: d7_field_instance_defaults
+    source:
+      - default_value
+      - widget
+  translatable: translatable
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d7_field
+  optional:
+    - d7_node_type
+    - d7_comment_type
+    - d7_taxonomy_vocabulary

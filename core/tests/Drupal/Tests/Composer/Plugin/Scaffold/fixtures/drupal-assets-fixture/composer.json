@@ -1,0 +1,24 @@
+{
+  "name": "fixtures/drupal-assets-fixture",
+  "extra": {
+    "drupal-scaffold": {
+      "file-mapping": {
+        "[web-root]/.csslintrc": "assets/.csslintrc",
+        "[web-root]/.editorconfig": "assets/.editorconfig",
+        "[web-root]/.eslintignore": "assets/.eslintignore",
+        "[web-root]/.eslintrc.json": "assets/.eslintrc.json",
+        "[web-root]/.gitattributes": "assets/.gitattributes",
+        "[web-root]/.ht.router.php": "assets/.ht.router.php",
+        "[web-root]/.htaccess": "assets/.htaccess",
+        "[web-root]/sites/default/default.services.yml": "assets/default.services.yml",
+        "[web-root]/sites/default/default.settings.php": "assets/default.settings.php",
+        "[web-root]/sites/example.settings.local.php": "assets/example.settings.local.php",
+        "[web-root]/sites/example.sites.php": "assets/example.sites.php",
+        "[web-root]/index.php": "assets/index.php",
+        "[web-root]/robots.txt": "assets/robots.txt",
+        "[web-root]/update.php": "assets/update.php",
+        "[web-root]/web.config": "assets/web.config"
+      }
+    }
+  }
+}

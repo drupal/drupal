@@ -1,0 +1,6 @@
+name: 'Locale Test Development Release'
+type: module
+description: 'Helper module to test the behavior when the core verison is a development release.'
+package: Testing
+version: VERSION
+hidden: true

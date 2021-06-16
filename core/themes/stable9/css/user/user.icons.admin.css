@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Styling for the user module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-user:before {
+  background-image: url(../../../../misc/icons/bebebe/person.svg);
+}
+.toolbar-bar .toolbar-icon-user:active:before,
+.toolbar-bar .toolbar-icon-user.is-active:before {
+  background-image: url(../../../../misc/icons/ffffff/person.svg);
+}

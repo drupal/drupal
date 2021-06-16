@@ -1,0 +1,5 @@
+name: 'JS Deprecation log test'
+description: 'Stores all JS deprecation calls to allow JS tests to determine if they have been called.'
+type: module
+package: Testing
+version: VERSION

@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Feed icon styles for Bartik.
+ */
+
+.feed-icon {
+  display: inline-block;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.feed-icon:focus,
+.feed-icon:hover {
+  border-color: #018fe2;
+}

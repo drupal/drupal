@@ -1,0 +1,7 @@
+name: 'Contextual Test'
+type: module
+description: 'Provides test contextual links.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:contextual

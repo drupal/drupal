@@ -1,0 +1,5 @@
+name: Testing site config
+type: profile
+description: 'Minimal profile for testing with default site config.'
+version: VERSION
+hidden: true

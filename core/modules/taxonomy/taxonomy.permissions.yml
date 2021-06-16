@@ -1,0 +1,9 @@
+administer taxonomy:
+  title: 'Administer vocabularies and terms'
+
+access taxonomy overview:
+  title: 'Access the taxonomy vocabulary overview page'
+  description: 'Get an overview of all taxonomy vocabularies.'
+
+permission_callbacks:
+  - Drupal\taxonomy\TaxonomyPermissions::permissions

@@ -1,0 +1,45 @@
+drupal.node:
+  version: VERSION
+  css:
+    layout:
+      css/node.module.css: {}
+  js:
+    node.js: {}
+  dependencies:
+    - core/drupal.entity-form
+    - core/drupalSettings
+
+drupal.node.preview:
+  version: VERSION
+  css:
+    theme:
+      css/node.preview.css: {}
+  js:
+    node.preview.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupal.dialog
+    - core/drupal.form
+
+drupal.content_types:
+  version: VERSION
+  js:
+    content_types.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form
+
+form:
+  version: VERSION
+  css:
+    layout:
+      css/node.module.css: {}
+
+drupal.node.admin:
+  version: VERSION
+  css:
+    theme:
+      css/node.admin.css: {}

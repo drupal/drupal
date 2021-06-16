@@ -1,0 +1,7 @@
+name: 'Rendering #attached test'
+type: module
+description: 'Support module for HtmlResponseAttachmentsTest.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:block

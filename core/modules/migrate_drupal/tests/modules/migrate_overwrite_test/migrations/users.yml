@@ -1,0 +1,31 @@
+id: users
+label: User migration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: d6_user
+process:
+  # If the entity's ID is migrated, the Migrate API will try to update
+  # an existing entity with that ID. If no entity with that ID already
+  # exists, it will be created.
+  uid: uid
+  name: name
+  mail: mail
+  password: password
+  'signature/value':
+    plugin: default_value
+    default_value: 'The answer is 42.'
+destination:
+  plugin: entity:user
+  # If the destination is going to update an existing user, you can optionally
+  # specify the properties that should be overwritten. For example, if the
+  # migration tries to import user 31 and user 31 already exists in the
+  # destination database, only the 'name' and 'mail' properties of the user
+  # will be overwritten. If user 31 doesn't exist, it will be created and
+  # the overwrite_properties list will be ignored.
+  overwrite_properties:
+    - name
+    - mail
+    # It's possible to overwrite nested properties too.
+    - 'signature/value'

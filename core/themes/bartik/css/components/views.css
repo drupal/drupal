@@ -1,0 +1,89 @@
+/**
+ * @file
+ * Styling for Views in Bartik.
+ */
+
+/* Tab styles */
+.views-displays .tabs .open > a {
+  border-radius: 7px 7px 0 0;
+}
+.views-displays .tabs .open > a:hover,
+.views-displays .tabs .open > a:focus {
+  color: #0071b3;
+}
+.views-displays .secondary .form-submit {
+  font-size: 0.846em;
+}
+
+/* Tabs action list styles */
+.views-displays .tabs .action-list {
+  padding: 0;
+}
+
+/* Contextual filter options styles */
+.views-filterable-options .filterable-option:nth-of-type(even) .form-type-checkbox {
+  background-color: #f9f9f9;
+}
+
+/* Views action dropbutton styles */
+.views-ui-display-tab-actions .dropbutton .form-submit {
+  color: #0071b3;
+}
+
+.views-ui-display-tab-actions .dropbutton .form-submit:hover,
+.views-ui-display-tab-actions .dropbutton .form-submit:focus {
+  color: #018fe2;
+}
+
+/**
+ * Responsive grids.
+ */
+.views-view-grid .views-col {
+  min-width: 100%;
+}
+
+@media all and (min-width: 640px) {
+  .views-view-grid.vertical {
+    margin: 0 -15px;
+  }
+  .views-view-grid .views-col {
+    float: left;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 0 15px;
+  }
+  .views-view-grid h2 {
+    margin-top: 0;
+  }
+  .views-view-grid .node--view-mode-teaser {
+    margin: 0;
+    border-bottom: 0;
+  }
+  .views-view-grid .node--view-mode-teaser .node__title {
+    padding-top: 0;
+  }
+
+  /* Horizontal grids. */
+  .views-view-grid.horizontal .views-row {
+    margin: 0 0 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #d3d7d9;
+  }
+  .views-view-grid.horizontal .views-col:first-child {
+    padding-left: 0;
+  }
+  .views-view-grid.horizontal .views-col:last-child {
+    padding-left: 0;
+  }
+
+  /* Vertical grids */
+  .views-view-grid.vertical .views-col {
+    border-right: 1px solid #d3d7d9;
+  }
+  .views-view-grid.vertical .views-col:last-child {
+    border-right: 0;
+  }
+  .views-view-grid.vertical .views-row {
+    border-bottom: 0 none;
+  }
+}

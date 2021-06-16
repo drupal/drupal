@@ -1,0 +1,16 @@
+services:
+  theme_test.subscriber:
+    class: Drupal\theme_test\EventSubscriber\ThemeTestSubscriber
+    arguments: ['@current_route_match', '@renderer']
+    tags:
+      - { name: event_subscriber }
+
+  theme.negotiator.test_custom_theme:
+    class: Drupal\theme_test\Theme\CustomThemeNegotiator
+    tags:
+      - { name: theme_negotiator }
+
+  theme.negotiator.high_priority:
+    class: Drupal\theme_test\Theme\HighPriorityThemeNegotiator
+    tags:
+      - { name: theme_negotiator, priority: 1000 }

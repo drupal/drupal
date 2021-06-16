@@ -1,0 +1,9 @@
+book.admin:
+  title: Books
+  description: 'Manage your site''s book outlines.'
+  parent: system.admin_structure
+  route_name: book.admin
+book.render:
+  title: Books
+  route_name: book.render
+  enabled: 0

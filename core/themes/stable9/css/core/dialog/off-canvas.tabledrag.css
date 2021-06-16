@@ -1,0 +1,122 @@
+/**
+ * @file
+ * Table drag behavior for off-canvas dialog.
+ *
+ * @see tabledrag.js
+ */
+
+#drupal-off-canvas .drag {
+  cursor: move;
+}
+#drupal-off-canvas tr.region-title {
+  font-weight: normal;
+}
+#drupal-off-canvas table .region-message {
+  color: #fff;
+}
+#drupal-off-canvas table .region-populated {
+  display: none;
+}
+#drupal-off-canvas .add-new .tabledrag-changed {
+  display: none;
+}
+#drupal-off-canvas .draggable a.tabledrag-handle {
+  float: left; /* LTR */
+  overflow: hidden;
+  min-width: 20px;
+  height: auto;
+  margin: 0 5px 0 0;
+  padding: 0;
+  cursor: move;
+  text-decoration: none;
+  background-image: none;
+}
+[dir="rtl"] #drupal-off-canvas .draggable a.tabledrag-handle {
+  float: right;
+  margin-right: 0;
+  margin-left: 5px;
+}
+#drupal-off-canvas a.tabledrag-handle .handle {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  /* Use lighter drag icon against dark background. */
+  background-image: url(../../../../../misc/icons/bebebe/move.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#drupal-off-canvas .draggable a.tabledrag-handle:hover .handle,
+#drupal-off-canvas .draggable a.tabledrag-handle:focus .handle {
+  text-decoration: none;
+  background-image: url(../../../../../misc/icons/787878/move.svg);
+}
+#drupal-off-canvas tr td {
+  transition: background 0.3s ease;
+}
+
+#drupal-off-canvas tr td abbr {
+  margin-left: 5px; /* LTR */
+}
+
+[dir="rtl"] #drupal-off-canvas tr td abbr {
+  margin-right: 5px;
+  margin-left: 0;
+}
+#drupal-off-canvas tr:hover td {
+  background: #222;
+}
+#drupal-off-canvas tr.drag td {
+  background: #111;
+}
+#drupal-off-canvas tr.drag-previous td {
+  background: #000;
+}
+#drupal-off-canvas tr.drag-previous:hover td {
+  background: #222;
+}
+body div.tabledrag-changed-warning {
+  margin-bottom: 0.5em;
+  font-size: 14px;
+}
+#drupal-off-canvas .touchevents .draggable td {
+  padding: 0 10px;
+}
+#drupal-off-canvas .touchevents .draggable .menu-item__link {
+  display: inline-block;
+  padding: 10px 0;
+}
+#drupal-off-canvas .touchevents a.tabledrag-handle {
+  width: 40px;
+  height: 44px;
+}
+#drupal-off-canvas .touchevents a.tabledrag-handle .handle {
+  height: 21px;
+  background-position: 40% 19px; /* LTR */
+}
+[dir="rtl"] #drupal-off-canvas .touch a.tabledrag-handle .handle {
+  background-position: right 40% top 19px;
+}
+#drupal-off-canvas .touchevents .draggable.drag a.tabledrag-handle .handle {
+  background-position: 50% -32px;
+}
+#drupal-off-canvas .tabledrag-toggle-weight-wrapper {
+  padding-top: 10px;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] #drupal-off-canvas .tabledrag-toggle-weight-wrapper {
+  text-align: left;
+}
+#drupal-off-canvas .indentation {
+  float: left; /* LTR */
+  width: auto;
+  height: auto;
+  margin: 0 3px 0 -10px; /* LTR */
+  padding: 0 0 0 10px; /* LTR */
+}
+[dir="rtl"] #drupal-off-canvas .indentation {
+  float: right;
+  margin: 0 -10px 0 3px;
+  padding: 0 10px 0 0;
+}

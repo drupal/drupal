@@ -1,0 +1,6 @@
+test:
+  css:
+    component:
+      views_cache.test.css: {}
+  js:
+    views_cache.test.js: {}

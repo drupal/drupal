@@ -1,0 +1,5 @@
+name: 'Migrate entity test'
+type: module
+description: 'Support module for entity destination test.'
+package: Testing
+version: VERSION

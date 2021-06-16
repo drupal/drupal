@@ -1,0 +1,7 @@
+name: Views
+type: module
+description: 'Create customized lists and queries from your database.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:filter

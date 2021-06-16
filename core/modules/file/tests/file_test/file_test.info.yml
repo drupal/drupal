@@ -1,0 +1,5 @@
+name: 'File test'
+type: module
+description: 'Support module for file handling tests.'
+package: Testing
+version: VERSION

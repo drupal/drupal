@@ -1,0 +1,11 @@
+name: Testing themes blocks
+type: profile
+description: 'Minimal profile for testing block installation of themes.'
+version: VERSION
+hidden: true
+themes:
+  - testing_theme_optional_blocks
+  - testing_theme_required_blocks
+  - testing_theme_without_blocks
+install:
+  - block

@@ -1,0 +1,5 @@
+name: 'Update test with an invalid hook_update_8000().'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION

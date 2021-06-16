@@ -1,0 +1,180 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_bulk_form
+label: form
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: null
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: tag
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          summary: ''
+          columns:
+            title: title
+            node_bulk_form: node_bulk_form
+          info:
+            title:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            bulk_form:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: ''
+          empty_table: false
+      row:
+        type: fields
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          label: ''
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+        node_bulk_form:
+          id: node_bulk_form
+          table: node
+          field: node_bulk_form
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Bulk form'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: node_bulk_form
+          entity_type: node
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          order: DESC
+          plugin_id: date
+          entity_type: node
+          entity_field: created
+      title: form
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: null
+    display_options:
+      path: test_bulk_form
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Page
+    position: null
+    display_options:
+      path: test_bulk_form_empty
+      defaults:
+        style: false
+        empty: false
+      style:
+        type: default
+      empty:
+        area:
+          id: area
+          table: views
+          field: area_text_custom
+          empty: true
+          content: 'This view is empty.'
+          plugin_id: text_custom

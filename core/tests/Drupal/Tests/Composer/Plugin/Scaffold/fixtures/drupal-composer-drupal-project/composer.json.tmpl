@@ -1,0 +1,69 @@
+{
+  "name": "fixtures/drupal-composer-drupal-project",
+  "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": {
+    "packagist.org": false,
+    "composer-scaffold": {
+      "type": "path",
+      "url": "__PROJECT_ROOT__",
+      "options": {
+        "symlink": true
+      }
+    },
+    "drupal-core-fixture": {
+      "type": "path",
+      "url": "../drupal-core-fixture",
+      "options": {
+        "symlink": true
+      }
+    },
+    "drupal-assets-fixture": {
+      "type": "path",
+      "url": "../drupal-assets-fixture",
+      "options": {
+        "symlink": true
+      }
+    },
+    "scaffold-override-fixture": {
+      "type": "path",
+      "url": "../scaffold-override-fixture",
+      "options": {
+        "symlink": true
+      }
+    }
+  },
+  "require": {
+    "drupal/core-composer-scaffold": "*",
+    "fixtures/drupal-core-fixture": "*",
+    "fixtures/scaffold-override-fixture": "*"
+  },
+  "extra": {
+    "drupal-scaffold": {
+      "allowed-packages": [
+        "fixtures/drupal-core-fixture",
+        "fixtures/scaffold-override-fixture"
+      ],
+      "locations": {
+        "web-root": "./docroot"
+      },
+      "symlink": __SYMLINK__,
+      "file-mapping": {
+        "[web-root]/.htaccess": false,
+        "[web-root]/robots.txt": "assets/robots-default.txt"
+      }
+    },
+    "installer-paths": {
+      "docroot/core": ["type:drupal-core"],
+      "docroot/modules/contrib/{$name}": ["type:drupal-module"],
+      "docroot/modules/custom/{$name}": ["type:drupal-custom-module"],
+      "docroot/profiles/contrib/{$name}": ["type:drupal-profile"],
+      "docroot/profiles/custom/{$name}": ["type:drupal-custom-profile"],
+      "docroot/themes/contrib/{$name}": ["type:drupal-theme"],
+      "docroot/themes/custom/{$name}": ["type:drupal-custom-theme"],
+      "docroot/libraries/{$name}": ["type:drupal-library"],
+      "drush/Commands/contrib/{$name}": ["type:drupal-drush"]
+    }
+  }
+}

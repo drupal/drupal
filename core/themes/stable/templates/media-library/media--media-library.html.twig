@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Theme override to present a media entity in the media library.
+ *
+ * Available variables:
+ * - media: The entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - entity.getEntityTypeId() will return the entity type ID.
+ *   - entity.hasField('field_example') returns TRUE if the entity includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   Calling other methods, such as entity.delete(), will result in an exception.
+ *   See \Drupal\Core\Entity\EntityInterface for a full list of methods.
+ * - name: Name of the media.
+ * - content: Media content.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - attributes: HTML attributes for the containing element.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - url: Direct URL of the media.
+ * - preview_attributes: HTML attributes for the preview wrapper.
+ * - metadata_attributes: HTML attributes for the expandable metadata area.
+ * - status: Whether or not the Media is published.
+ *
+ * @see template_preprocess_media()
+ * @see media_library_preprocess_media()
+ */
+#}
+<article{{ attributes }}>
+  {% if content %}
+    <div{{ preview_attributes.addClass('js-media-library-item-preview') }}>
+      {{ content|without('name') }}
+    </div>
+    {% if not status %}
+      {{ "unpublished" | t }}
+    {% endif %}
+    <div{{ metadata_attributes }}>
+      {{ name }}
+    </div>
+  {% endif %}
+</article>

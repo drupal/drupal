@@ -1,0 +1,6 @@
+layout_builder.section.third_party.layout_builder_defaults_test:
+  type: mapping
+  mapping:
+    which_party:
+      label: 'Which party?'
+      type: string

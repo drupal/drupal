@@ -1,0 +1,25 @@
+# Schema for the configuration files of the Telephone module.
+
+field.formatter.settings.telephone_link:
+  type: mapping
+  label: 'Telephone link format settings'
+  mapping:
+    title:
+      type: label
+      label: 'Title to replace basic numeric telephone number display'
+
+field.widget.settings.telephone_default:
+  type: mapping
+  label: 'Telephone default format settings'
+  mapping:
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.value.telephone:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: string
+      label: 'Value'

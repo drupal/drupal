@@ -1,0 +1,11 @@
+entity.taxonomy_vocabulary.add_form:
+  route_name: entity.taxonomy_vocabulary.add_form
+  title: 'Add vocabulary'
+  appears_on:
+    - entity.taxonomy_vocabulary.collection
+
+entity.taxonomy_term.add_form:
+  route_name: entity.taxonomy_term.add_form
+  title: 'Add term'
+  appears_on:
+    - entity.taxonomy_vocabulary.overview_form

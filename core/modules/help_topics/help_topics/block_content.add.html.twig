@@ -1,0 +1,18 @@
+---
+label: 'Creating a custom block'
+related:
+  - block.overview
+  - block.configure
+  - block.place
+  - block_content.type
+---
+{% set content_url = render_var(url('entity.block_content.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create a custom block, which can later be placed on the site.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Block layout</em> &gt; <a href="{{ content_url }}"><em>Custom block library</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click  <em>Add custom block</em>. If you have more than one custom block type defined on your site, click the name of the type you want to create.{% endtrans %}</li>
+  <li>{% trans %}Enter a description of your block (to be shown to administrators) and the body text for your block.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
+</ol>

@@ -1,0 +1,22 @@
+locale.translate_page:
+  route_name: locale.translate_page
+  base_route: locale.translate_page
+  title: Translate
+
+locale.translate_import:
+  route_name: locale.translate_import
+  base_route: locale.translate_page
+  title: Import
+  weight: 20
+
+locale.translate_export:
+  route_name: locale.translate_export
+  base_route: locale.translate_page
+  title: Export
+  weight: 30
+
+locale.settings:
+  route_name: locale.settings
+  base_route: locale.translate_page
+  title: Settings
+  weight: 100

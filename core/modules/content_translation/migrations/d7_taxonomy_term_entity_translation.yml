@@ -1,0 +1,32 @@
+id: d7_taxonomy_term_entity_translation
+label: Taxonomy term entity translations
+migration_tags:
+  - Drupal 7
+  - translation
+  - Content
+  - Multilingual
+deriver: Drupal\taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
+source:
+  plugin: d7_taxonomy_term_entity_translation
+process:
+  tid: entity_id
+  name: name
+  description/value: description
+  description/format: format
+  langcode: language
+  status: status
+  content_translation_source: source
+  content_translation_outdated: translate
+  content_translation_uid: uid
+  content_translation_created: created
+  changed: changed
+  forum_container: is_container
+destination:
+  plugin: entity:taxonomy_term
+  translations: true
+  destination_module: content_translation
+migration_dependencies:
+  required:
+    - language
+    - d7_entity_translation_settings
+    - d7_taxonomy_term

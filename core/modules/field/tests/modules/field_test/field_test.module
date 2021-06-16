@@ -1,0 +1,218 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Field API tests.
+ *
+ * The module defines
+ * - a field type and its formatters and widgets (field_test.field.inc)
+ * - a field storage backend (field_test.storage.inc)
+ *
+ * The main field_test.module file implements generic hooks and provides some
+ * test helper functions
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\field\FieldStorageConfigInterface;
+
+require_once __DIR__ . '/field_test.entity.inc';
+require_once __DIR__ . '/field_test.field.inc';
+
+/**
+ * Store and retrieve keyed data for later verification by unit tests.
+ *
+ * This function is a simple in-memory key-value store with the
+ * distinction that it stores all values for a given key instead of
+ * just the most recently set value. field_test module hooks call
+ * this function to record their arguments, keyed by hook name. The
+ * unit tests later call this function to verify that the correct
+ * hooks were called and were passed the correct arguments.
+ *
+ * This function ignores all calls until the first time it is called
+ * with $key of NULL. Each time it is called with $key of NULL, it
+ * erases all previously stored data from its internal cache, but also
+ * returns the previously stored data to the caller. A typical usage
+ * scenario is:
+ *
+ * @code
+ *   // calls to field_test_memorize() here are ignored
+ *
+ *   // turn on memorization
+ *   field_test_memorize();
+ *
+ *   // call some Field API functions that invoke field_test hooks
+ *   FieldStorageConfig::create($field_definition)->save();
+ *
+ *   // retrieve and reset the memorized hook call data
+ *   $mem = field_test_memorize();
+ *
+ *   // make sure hook_field_storage_config_create() is invoked correctly
+ *   assertEqual(count($mem['field_test_field_storage_config_create']), 1);
+ *   assertEqual($mem['field_test_field_storage_config_create'][0], array($field));
+ * @endcode
+ *
+ * @param $key
+ *   The key under which to store to $value, or NULL as described above.
+ * @param $value
+ *   A value to store for $key.
+ *
+ * @return
+ *   An array mapping each $key to an array of each $value passed in
+ *   for that key.
+ */
+function field_test_memorize($key = NULL, $value = NULL) {
+  static $memorize;
+
+  if (!isset($key)) {
+    $return = $memorize;
+    $memorize = [];
+    return $return;
+  }
+  if (is_array($memorize)) {
+    $memorize[$key][] = $value;
+  }
+}
+
+/**
+ * Memorize calls to field_test_field_storage_config_create().
+ */
+function field_test_field_storage_config_create(FieldStorageConfigInterface $field_storage) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
+ * Implements hook_entity_display_build_alter().
+ */
+function field_test_entity_display_build_alter(&$output, $context) {
+  $display_options = $context['display']->getComponent('test_field');
+  if (isset($display_options['settings']['alter'])) {
+    $output['test_field'][] = ['#markup' => 'field_test_entity_display_build_alter'];
+  }
+
+  if (isset($output['test_field'])) {
+    $output['test_field'][] = ['#markup' => 'entity language is ' . $context['entity']->language()->getId()];
+  }
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+function field_test_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
+  // Set a message if this is for the form displayed to set default value for
+  // the field.
+  if ($context['default']) {
+    \Drupal::messenger()
+      ->addStatus('From hook_field_widget_single_element_form_alter(): Default form is true.');
+  }
+}
+
+/**
+ * Implements hook_field_widget_complete_form_alter().
+ */
+function field_test_field_widget_complete_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_complete_form_alter", $field_widget_complete_form, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function field_test_field_widget_complete_test_field_widget_multiple_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function field_test_field_widget_complete_test_field_widget_multiple_single_value_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
+}
+
+/**
+ * Sets up alterations for widget alter tests.
+ *
+ * @see \Drupal\field\Tests\FormTest::widgetAlterTest()
+ */
+function _field_test_alter_widget($hook, array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  $elements = &$field_widget_complete_form['widget'];
+  // Set a message if this is for the form displayed to set default value for
+  // the field.
+  if ($context['default']) {
+    \Drupal::messenger()->addStatus("From $hook(): Default form is true.");
+  }
+  $alter_info = \Drupal::state()->get("field_test.widget_alter_test");
+  $name = $context['items']->getFieldDefinition()->getName();
+  if (!empty($alter_info) && $hook === $alter_info['hook'] && $name === $alter_info['field_name']) {
+    $elements['#prefix'] = "From $hook(): prefix on $name parent element.";
+    foreach (Element::children($elements) as $delta => $element) {
+      $elements[$delta]['#suffix'] = "From $hook(): suffix on $name child element.";
+    }
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter() for tag 'efq_table_prefixing_test'.
+ *
+ * @see \Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
+ */
+function field_test_query_efq_table_prefixing_test_alter(&$query) {
+  // Add an additional join onto the entity base table. This will cause an
+  // exception if the EFQ does not properly prefix the base table.
+  $query->join('entity_test', 'et2', '[%alias].[id] = [entity_test].[id]');
+}
+
+/**
+ * Implements hook_query_TAG_alter() for tag 'efq_metadata_test'.
+ *
+ * @see \Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
+ */
+function field_test_query_efq_metadata_test_alter(&$query) {
+  global $efq_test_metadata;
+  $efq_test_metadata = $query->getMetadata('foo');
+}
+
+/**
+ * Implements hook_entity_extra_field_info_alter().
+ */
+function field_test_entity_extra_field_info_alter(&$info) {
+  // Remove all extra fields from the 'no_fields' content type;
+  unset($info['node']['no_fields']);
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function field_test_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  if (($field_name = \Drupal::state()->get('field_test_constraint', FALSE)) && $entity_type->id() == 'entity_test' && $bundle == 'entity_test' && !empty($fields[$field_name])) {
+    // Set a property constraint using
+    // \Drupal\Core\Field\FieldConfigInterface::setPropertyConstraints().
+    $fields[$field_name]->setPropertyConstraints('value', [
+      'TestField' => [
+        'value' => -2,
+        'message' => t('%name does not accept the value @value.', ['%name' => $field_name, '@value' => -2]),
+      ],
+    ]);
+
+    // Add a property constraint using
+    // \Drupal\Core\Field\FieldConfigInterface::addPropertyConstraints().
+    $fields[$field_name]->addPropertyConstraints('value', [
+      'Range' => [
+        'min' => 0,
+        'max' => 32,
+      ],
+    ]);
+  }
+}
+
+/**
+ * Implements hook_field_ui_preconfigured_options_alter().
+ */
+function field_test_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+  if ($field_type === 'test_field_with_preconfigured_options') {
+    $options['custom_options']['entity_view_display']['settings'] = [
+      'test_formatter_setting_multiple' => 'altered dummy test string',
+    ];
+  }
+}

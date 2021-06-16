@@ -1,0 +1,20 @@
+{
+  "name": "drupal/core-gettext",
+  "description": "PHP library for reading PO files.",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/drupal",
+    "irc": "irc://irc.freenode.net/drupal-contribute",
+    "source": "https://www.drupal.org/project/drupal/git-instructions"
+  },
+  "require": {
+    "php": ">=7.3.0",
+    "drupal/core-utility": "^8.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Gettext\\": ""
+    }
+  }
+}

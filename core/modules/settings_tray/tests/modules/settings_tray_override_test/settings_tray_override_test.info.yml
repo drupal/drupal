@@ -1,0 +1,6 @@
+name: 'Configuration override test for Settings Tray'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:settings_tray

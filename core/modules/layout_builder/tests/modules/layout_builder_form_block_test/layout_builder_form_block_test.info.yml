@@ -1,0 +1,5 @@
+name: 'Layout Builder form block test'
+type: module
+description: 'Support module for testing layout building using blocks with forms.'
+package: Testing
+version: VERSION

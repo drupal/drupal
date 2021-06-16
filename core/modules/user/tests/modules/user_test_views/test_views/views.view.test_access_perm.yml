@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_access_perm
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'views_test_data test permission'
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

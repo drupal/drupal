@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * A module implementing node related hooks to test API interaction.
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
+ */
+function node_test_exception_node_insert(NodeInterface $node) {
+  if ($node->getTitle() == 'testing_transaction_exception') {
+    throw new Exception('Test exception for rollback.');
+  }
+}

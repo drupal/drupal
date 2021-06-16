@@ -1,0 +1,128 @@
+langcode: en
+status: true
+dependencies: {  }
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: nid
+id: test_argument
+display:
+  default:
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+        arguments: false
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+      pager:
+        options:
+          offset: 0
+        type: none
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+      arguments:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: ignore
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: true
+          not: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: numeric
+        name:
+          id: title
+          table: views_test_data
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: ignore
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: none
+          path_case: none
+          transform_dash: false
+          break_phrase: true
+          entity_type: node
+          entity_field: name
+          plugin_id: string
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

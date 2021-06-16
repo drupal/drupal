@@ -1,0 +1,5 @@
+name: 'Early rendering controller test'
+type: module
+description: 'Support module for EarlyRenderingControllerTest.'
+package: Testing
+version: VERSION

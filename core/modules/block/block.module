@@ -1,0 +1,316 @@
+<?php
+
+/**
+ * @file
+ * Controls the visual building blocks a page is constructed with.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\language\ConfigurableLanguageInterface;
+use Drupal\system\Entity\Menu;
+use Drupal\block\Entity\Block;
+
+/**
+ * Implements hook_help().
+ */
+function block_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.block':
+      $block_content = \Drupal::moduleHandler()->moduleExists('block_content') ? Url::fromRoute('help.page', ['name' => 'block_content'])->toString() : '#';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Block module allows you to place blocks in regions of your installed themes, and configure block settings. For more information, see the <a href=":blocks-documentation">online documentation for the Block module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block/']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Placing and moving blocks') . '</dt>';
+      $output .= '<dd>' . t('You can place a new block in a region by selecting <em>Place block</em> on the <a href=":blocks">Block layout page</a>. Once a block is placed, it can be moved to a different region by drag-and-drop or by using the <em>Region</em> drop-down list, and then clicking <em>Save blocks</em>.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Toggling between different themes') . '</dt>';
+      $output .= '<dd>' . t('Blocks are placed and configured specifically for each theme. The Block layout page opens with the default theme, but you can toggle to other installed themes.') . '</dd>';
+      $output .= '<dt>' . t('Demonstrating block regions for a theme') . '</dt>';
+      $output .= '<dd>' . t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the <a href=":blocks">Block layout page</a>. Regions are specific to each theme.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Configuring block settings') . '</dt>';
+      $output .= '<dd>' . t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href=":blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Controlling visibility') . '</dt>';
+      $output .= '<dd>' . t('You can control the visibility of a block by restricting it to specific pages, content types, and/or roles by setting the appropriate options under <em>Visibility settings</em> of the block configuration.') . '</dd>';
+      $output .= '<dt>' . t('Adding custom blocks') . '</dt>';
+      $output .= '<dd>' . t('You can add custom blocks, if the <em>Custom Block</em> module is installed. For more information, see the <a href=":blockcontent-help">Custom Block help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+  if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
+    $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
+    $themes = \Drupal::service('theme_handler')->listInfo();
+    $output = '<p>' . t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
+    $output .= '<p>' . Link::fromTextAndUrl(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
+    return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function block_theme() {
+  return [
+    'block' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_top().
+ */
+function block_page_top(array &$page_top) {
+  if (\Drupal::routeMatch()->getRouteName() === 'block.admin_demo') {
+    $theme = \Drupal::theme()->getActiveTheme()->getName();
+    $page_top['backlink'] = [
+      '#type' => 'link',
+      '#title' => t('Exit block region demonstration'),
+      '#options' => ['attributes' => ['class' => ['block-demo-backlink']]],
+      '#weight' => -10,
+    ];
+    if (\Drupal::config('system.theme')->get('default') == $theme) {
+      $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display');
+    }
+    else {
+      $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display_theme', ['theme' => $theme]);
+    }
+  }
+}
+
+/**
+ * Initializes blocks for installed themes.
+ *
+ * @param $theme_list
+ *   An array of theme names.
+ *
+ * @see block_modules_installed()
+ */
+function block_themes_installed($theme_list) {
+  // Disable this functionality prior to install profile installation because
+  // block configuration is often optional or provided by the install profile
+  // itself. block_theme_initialize() will be called when the install profile is
+  // installed.
+  if (InstallerKernel::installationAttempted() && \Drupal::config('core.extension')->get('module.' . \Drupal::installProfile()) === NULL) {
+    return;
+  }
+
+  foreach ($theme_list as $theme) {
+    // Don't initialize themes that are not displayed in the UI.
+    if (\Drupal::service('theme_handler')->hasUi($theme)) {
+      block_theme_initialize($theme);
+    }
+  }
+}
+
+/**
+ * Assigns an initial, default set of blocks for a theme.
+ *
+ * This function is called the first time a new theme is installed. The new
+ * theme gets a copy of the default theme's blocks, with the difference that if
+ * a particular region isn't available in the new theme, the block is assigned
+ * to the new theme's default region.
+ *
+ * @param $theme
+ *   The name of a theme.
+ */
+function block_theme_initialize($theme) {
+  // Initialize theme's blocks if none already registered.
+  $has_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
+  if (!$has_blocks) {
+    $default_theme = \Drupal::config('system.theme')->get('default');
+    // Apply only to new theme's visible regions.
+    $regions = system_region_list($theme, REGIONS_VISIBLE);
+    $default_theme_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $default_theme]);
+    foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
+      if (strpos($default_theme_block_id, $default_theme . '_') === 0) {
+        $id = str_replace($default_theme, $theme, $default_theme_block_id);
+      }
+      else {
+        $id = $theme . '_' . $default_theme_block_id;
+      }
+      $block = $default_theme_block->createDuplicateBlock($id, $theme);
+      // If the region isn't supported by the theme, assign the block to the
+      // theme's default region.
+      if (!isset($regions[$block->getRegion()])) {
+        $block->setRegion(system_default_region($theme));
+      }
+      $block->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_installed().
+ *
+ * @see block_themes_installed()
+ */
+function block_modules_installed($modules) {
+  // block_themes_installed() does not call block_theme_initialize() during site
+  // installation because block configuration can be optional or provided by the
+  // profile. Now, when the profile is installed, this configuration exists,
+  // call block_theme_initialize() for all installed themes.
+  $profile = \Drupal::installProfile();
+  if (in_array($profile, $modules, TRUE)) {
+    foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {
+      block_theme_initialize($theme);
+    }
+  }
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+function block_rebuild() {
+  foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {
+    if ($data->status) {
+      $regions = system_region_list($theme);
+      /** @var \Drupal\block\BlockInterface[] $blocks */
+      $blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
+      foreach ($blocks as $block_id => $block) {
+        // Disable blocks in invalid regions.
+        if (!isset($regions[$block->getRegion()])) {
+          if ($block->status()) {
+            \Drupal::messenger()
+              ->addWarning(t('The block %info was assigned to the invalid region %region and has been disabled.', [
+                '%info' => $block_id,
+                '%region' => $block->getRegion(),
+              ]));
+          }
+          $block
+            ->setRegion(system_default_region($theme))
+            ->disable()
+            ->save();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function block_theme_suggestions_block(array $variables) {
+  $suggestions = [];
+
+  $suggestions[] = 'block__' . $variables['elements']['#configuration']['provider'];
+  // Hyphens (-) and underscores (_) play a special role in theme suggestions.
+  // Theme suggestions should only contain underscores, because within
+  // drupal_find_theme_templates(), underscores are converted to hyphens to
+  // match template file names, and then converted back to underscores to match
+  // pre-processing and other function names. So if your theme suggestion
+  // contains a hyphen, it will end up as an underscore after this conversion,
+  // and your function names won't be recognized. So, we need to convert
+  // hyphens to underscores in block deltas for the theme suggestions.
+
+  // We can safely explode on : because we know the Block plugin type manager
+  // enforces that delimiter for all derivatives.
+  $parts = explode(':', $variables['elements']['#plugin_id']);
+  $suggestion = 'block';
+  while ($part = array_shift($parts)) {
+    $suggestions[] = $suggestion .= '__' . strtr($part, '-', '_');
+  }
+
+  if (!empty($variables['elements']['#id'])) {
+    $suggestions[] = 'block__' . $variables['elements']['#id'];
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for block templates.
+ *
+ * Default template: block.html.twig.
+ *
+ * Prepares the values passed to the theme_block function to be passed
+ * into a pluggable template engine. Uses block properties to generate a
+ * series of template file suggestions. If none are found, the default
+ * block.html.twig is used.
+ *
+ * Most themes use their own copy of block.html.twig. The default is located
+ * inside "core/modules/block/templates/block.html.twig". Look in there for the
+ * full list of available variables.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
+ *     Properties used: #block, #configuration, #children, #plugin_id.
+ */
+function template_preprocess_block(&$variables) {
+  $variables['configuration'] = $variables['elements']['#configuration'];
+  $variables['plugin_id'] = $variables['elements']['#plugin_id'];
+  $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];
+  $variables['derivative_plugin_id'] = $variables['elements']['#derivative_plugin_id'];
+  $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
+  $variables['content'] = $variables['elements']['content'];
+  // A block's label is configuration: it is static. Allow dynamic labels to be
+  // set in the render array.
+  if (isset($variables['elements']['content']['#title']) && !empty($variables['configuration']['label_display'])) {
+    $variables['label'] = $variables['elements']['content']['#title'];
+  }
+
+  // Create a valid HTML ID and make sure it is unique.
+  if (!empty($variables['elements']['#id'])) {
+    $variables['attributes']['id'] = Html::getUniqueId('block-' . $variables['elements']['#id']);
+  }
+
+  // Proactively add aria-describedby if possible to improve accessibility.
+  if ($variables['label'] && isset($variables['attributes']['role'])) {
+    $variables['title_attributes']['id'] = Html::getUniqueId($variables['label']);
+    $variables['attributes']['aria-describedby'] = $variables['title_attributes']['id'];
+  }
+
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for user_role entities.
+ *
+ * Removes deleted role from blocks that use it.
+ */
+function block_user_role_delete($role) {
+  foreach (Block::loadMultiple() as $block) {
+    /** @var \Drupal\block\BlockInterface $block */
+    $visibility = $block->getVisibility();
+    if (isset($visibility['user_role']['roles'][$role->id()])) {
+      unset($visibility['user_role']['roles'][$role->id()]);
+      $block->setVisibilityConfig('user_role', $visibility['user_role']);
+      $block->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for menu entities.
+ */
+function block_menu_delete(Menu $menu) {
+  if (!$menu->isSyncing()) {
+    foreach (Block::loadMultiple() as $block) {
+      if ($block->getPluginId() == 'system_menu_block:' . $menu->id()) {
+        $block->delete();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
+ *
+ * Delete the potential block visibility settings of the deleted language.
+ */
+function block_configurable_language_delete(ConfigurableLanguageInterface $language) {
+  // Remove the block visibility settings for the deleted language.
+  foreach (Block::loadMultiple() as $block) {
+    /** @var \Drupal\block\BlockInterface $block */
+    $visibility = $block->getVisibility();
+    if (isset($visibility['language']['langcodes'][$language->id()])) {
+      unset($visibility['language']['langcodes'][$language->id()]);
+      $block->setVisibilityConfig('language', $visibility['language']);
+      $block->save();
+    }
+  }
+}

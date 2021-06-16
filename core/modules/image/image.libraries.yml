@@ -1,0 +1,21 @@
+admin:
+  version: VERSION
+  css:
+    theme:
+      css/image.admin.css: {}
+
+quickedit.inPlaceEditor.image:
+  version: VERSION
+  js:
+    js/editors/image.js: {}
+    js/theme.js: {}
+  css:
+    component:
+      css/editors/image.css: {}
+    theme:
+      css/editors/image.theme.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/underscore
+    - quickedit/quickedit

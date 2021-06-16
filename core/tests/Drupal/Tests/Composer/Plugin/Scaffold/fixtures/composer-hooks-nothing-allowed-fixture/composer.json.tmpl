@@ -1,0 +1,64 @@
+{
+  "name": "fixtures/drupal-drupal",
+  "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": {
+    "packagist.org": false,
+    "composer-scaffold": {
+      "type": "path",
+      "url": "__PROJECT_ROOT__",
+      "options": {
+        "symlink": true
+      }
+    },
+    "drupal-core-fixture": {
+      "type": "path",
+      "url": "../drupal-core-fixture",
+      "options": {
+        "symlink": true
+      }
+    },
+    "drupal-assets-fixture": {
+      "type": "path",
+      "url": "../drupal-assets-fixture",
+      "options": {
+        "symlink": true
+      }
+    },
+    "scaffold-override-fixture": {
+      "type": "path",
+      "url": "../scaffold-override-fixture",
+      "options": {
+        "symlink": true
+      }
+    }
+  },
+  "require": {
+    "drupal/core-composer-scaffold": "*",
+    "fixtures/drupal-core-fixture": "*"
+  },
+  "extra": {
+    "drupal-scaffold": {
+      "locations": {
+        "web-root": "./"
+      },
+      "symlink": __SYMLINK__,
+      "file-mapping": {
+        "[web-root]/.htaccess": false,
+        "[web-root]/robots.txt": "assets/robots-default.txt"
+      }
+    },
+    "installer-paths": {
+      "core": ["type:drupal-core"],
+      "modules/contrib/{$name}": ["type:drupal-module"],
+      "modules/custom/{$name}": ["type:drupal-custom-module"],
+      "profiles/contrib/{$name}": ["type:drupal-profile"],
+      "profiles/custom/{$name}": ["type:drupal-custom-profile"],
+      "themes/contrib/{$name}": ["type:drupal-theme"],
+      "themes/custom/{$name}": ["type:drupal-custom-theme"],
+      "libraries/{$name}": ["type:drupal-library"],
+      "drush/Commands/contrib/{$name}": ["type:drupal-drush"]
+    }
+  }
+}

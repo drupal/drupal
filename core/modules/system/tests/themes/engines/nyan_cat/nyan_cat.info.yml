@@ -1,0 +1,4 @@
+type: theme_engine
+name: Nyan cat
+version: VERSION
+package: Core

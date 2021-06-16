@@ -1,0 +1,16 @@
+migrate_drupal.settings:
+  type: config_object
+  label: 'Migrate Drupal settings'
+  mapping:
+    enforce_source_module_tags:
+      type: sequence
+      label: 'source_module enforcement tags'
+      sequence:
+        type: string
+        label: 'Tag'
+    follow_up_migration_tags:
+      type: sequence
+      label: 'Follow-up migration tags'
+      sequence:
+        type: string
+        label: 'Tag'

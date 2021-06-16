@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_aggregate_count
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      arguments:
+        name:
+          default_action: summary
+          default_argument_type: fixed
+          field: name
+          id: name
+          summary:
+            format: default_summary
+          table: entity_test
+          plugin_id: string
+          entity_type: entity_test
+          entity_field: name
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        id:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: id
+          hide_empty: false
+          id: id
+          table: entity_test
+          plugin_id: field
+          type: number_integer
+          entity_type: entity_test
+          entity_field: id
+      group_by: true
+      pager:
+        type: some
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

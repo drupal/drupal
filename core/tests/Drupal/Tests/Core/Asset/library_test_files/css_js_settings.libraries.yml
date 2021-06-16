@@ -1,0 +1,8 @@
+example:
+  css:
+    base:
+      css/base.css: {}
+  js:
+    js/example.js: {}
+  drupalSettings:
+    key: value

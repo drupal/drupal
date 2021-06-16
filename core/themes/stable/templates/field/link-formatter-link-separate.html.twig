@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Theme override of a link with separate title and URL elements.
+ *
+ * Available variables:
+ * - link: The link that has already been formatted by l().
+ * - title: (optional) A descriptive or alternate title for the link, which may
+ *   be different than the actual link text.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_link_formatter_link_separate()
+ */
+#}
+{% apply spaceless %}
+  {{ title }}
+  {{ link }}
+{% endapply %}

@@ -1,0 +1,8 @@
+name: 'Text Editor Private test'
+type: module
+description: 'Support module for the Text Editor Private module tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:filter
+  - drupal:ckeditor

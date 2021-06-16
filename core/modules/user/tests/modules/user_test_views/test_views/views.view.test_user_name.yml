@@ -1,0 +1,61 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: test_user_name
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: users_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      row:
+        type: fields
+      style:
+        type: default
+      fields:
+        name:
+          id: uid
+          table: users_field_data
+          field: uid
+          entity_type: user
+          entity_field: uid
+      filters:
+        uid:
+          id: uid
+          table: users_field_data
+          field: uid
+          exposed: true
+          expose:
+            operator_id: uid_op
+            label: Name
+            operator: uid_op
+            identifier: uid
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+          entity_type: user
+          entity_field: uid
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  page_1:
+    display_options:
+      path: test_user_name
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

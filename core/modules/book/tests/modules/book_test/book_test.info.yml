@@ -1,0 +1,5 @@
+name: 'Book module tests'
+type: module
+description: 'Support module for book module testing.'
+package: Testing
+version: VERSION

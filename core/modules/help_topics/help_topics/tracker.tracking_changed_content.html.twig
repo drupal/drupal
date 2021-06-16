@@ -1,0 +1,16 @@
+---
+label: 'Viewing lists of recently-updated content'
+related:
+  - core.tracking_content
+  - statistics.tracking_popular_content
+  - history.tracking_user_content
+---
+{% set recent = render_var(url('tracker.page')) %}
+<h2>{% trans %}What displays of recently-updated content are available?{% endtrans %}</h2>
+<p>{% trans %}Assuming that you have the core Activity Tracker module installed, these pages that show recently-updated content are available:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}<a href="{{ recent }}"><em>Recent content</em></a>: Shows the content that has been most recently added, updated, or commented on.{% endtrans %}</li>
+  <li>{% trans %}The <em>My recent content</em> tab on the <em>Recent content</em> page (for logged-in users) limits the list to content created or commented on by the user viewing the page.{% endtrans %}</li>
+  <li>{% trans %}The <em>Activity</em> tab on a user profile shows the same list for the user whose profile is being viewed.{% endtrans %}</li>
+</ul>
+

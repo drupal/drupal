@@ -1,0 +1,16 @@
+name: 'Block test theme'
+type: theme
+base theme: stable
+description: 'Theme for testing the block system'
+version: VERSION
+regions:
+  sidebar_first: 'Left sidebar'
+  sidebar_second: 'Right sidebar'
+  content: Content
+  header: Header
+  footer: Footer
+  highlighted: Highlighted
+  help: Help
+regions_hidden:
+  - sidebar_first
+  - sidebar_second

@@ -1,0 +1,7 @@
+name: System
+type: module
+description: 'Handles general site configuration for administrators.'
+package: Core
+version: VERSION
+required: true
+configure: system.admin_config_system

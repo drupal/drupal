@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Vertical tabs component.
+ */
+
+/* Vertical Tabs Reset */
+.vertical-tabs__menu {
+  margin: -1px 0 -1px -15em; /* LTR */
+  padding: 0;
+}
+[dir="rtl"] .vertical-tabs__menu {
+  margin-right: -15em;
+  margin-left: 0;
+  /* This is required to win specificity over [dir="rtl"] .region-content ul */
+  padding: 0;
+}

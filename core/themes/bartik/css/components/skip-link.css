@@ -1,0 +1,25 @@
+/**
+ * @file
+ * Styles for the skip link.
+ */
+
+.skip-link {
+  z-index: 50;
+  left: 50%;
+  padding: 1px 10px 2px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border-bottom-width: 0;
+  border-radius: 0 0 10px 10px;
+  outline: 0;
+  background: #444;
+  background: rgba(0, 0, 0, 0.6);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.94em;
+  line-height: 1.7em;
+}
+.skip-link.visually-hidden.focusable:focus {
+  position: absolute !important;
+  color: #fff;
+}

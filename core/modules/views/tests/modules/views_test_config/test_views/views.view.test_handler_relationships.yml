@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_handler_relationships
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          plugin_id: field
+          entity_type: node
+          entity_field: title
+      relationships:
+        comment_cid:
+          id: comment_cid
+          table: node_field_data
+          field: comment_cid
+          plugin_id: standard
+        nid:
+          id: nid
+          table: comment_field_data
+          field: node
+          relationship: comment_cid
+          plugin_id: standard
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0

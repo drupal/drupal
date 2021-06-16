@@ -1,0 +1,8 @@
+name: 'Locale test'
+type: module
+description: 'Support module for locale module testing.'
+package: Testing
+version: '1.2'
+hidden: true
+'interface translation project': locale_test
+'interface translation server pattern': core/modules/locale/test/test.%language.po

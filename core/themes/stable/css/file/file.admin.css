@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Admin stylesheet for file module.
+ */
+
+/* File upload widget. */
+.form-managed-file .form-submit {
+  margin: 0 0.5em;
+}
+.form-managed-file div.ajax-progress-bar {
+  display: none;
+  width: 28em;
+  margin-top: 4px;
+  padding: 0;
+}
+.form-managed-file .ajax-progress-bar .bar {
+  margin: 0;
+}

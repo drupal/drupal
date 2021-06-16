@@ -1,0 +1,5 @@
+name: 'Module autoload test'
+type: module
+description: 'Support module for module system tests.'
+package: Testing
+version: VERSION

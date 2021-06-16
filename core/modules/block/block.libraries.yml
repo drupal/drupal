@@ -1,0 +1,21 @@
+drupal.block:
+  version: VERSION
+  js:
+    js/block.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.block.admin:
+  version: VERSION
+  js:
+    js/block.admin.js: {}
+  css:
+    theme:
+      css/block.admin.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.announce
+    - core/drupal.debounce
+    - core/drupal.dialog.ajax

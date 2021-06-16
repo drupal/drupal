@@ -1,0 +1,122 @@
+/**
+ * @file
+ * Claro styles for the System Status general info.
+ */
+
+@import "../base/variables.pcss.css";
+
+.system-status-general-info {
+  padding-top: var(--space-m);
+}
+
+.system-status-general-info__header {
+  padding: 2.75rem 0 0.75em;
+  border-top: 1px solid #ccc;
+}
+
+.system-status-general-info__item {
+  display: block;
+  overflow-x: auto;
+  box-sizing: border-box;
+  margin-bottom: var(--space-l);
+  padding: 18px;
+}
+
+.system-status-general-info__item-icon {
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  vertical-align: top;
+}
+.system-status-general-info__item-icon:before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  border-radius: 42px;
+  background-color: #828388;
+  background-repeat: no-repeat;
+  background-position: 50% center;
+  background-size: 24px;
+}
+.system-status-general-info__item-icon--drupal:before {
+  background-image: url(../../images/core/ffffff/drupal-logo.svg);
+}
+.system-status-general-info__item-icon--clock:before {
+  background-image: url(../../images/core/ffffff/clock.svg);
+}
+.system-status-general-info__item-icon--server:before {
+  background-image: url(../../images/core/ffffff/server.svg);
+}
+.system-status-general-info__item-icon--php:before {
+  background-image: url(../../images/core/ffffff/php-logo.svg);
+  background-size: 32px;
+}
+.system-status-general-info__item-icon--database:before {
+  background-image: url(../../images/core/ffffff/database.svg);
+}
+
+.system-status-general-info__item-details {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  width: calc(100% - 60px);
+  padding-left: 10px; /* LTR */
+  font-size: 14px;
+}
+[dir="rtl"] .system-status-general-info__item-details {
+  padding-right: 10px;
+  padding-left: 0;
+}
+
+.system-status-general-info__item-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.system-status-general-info__sub-item-title {
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+
+.system-status-general-info__sub-item__title {
+  font-weight: bold;
+}
+.system-status-general-info__sub-item__value {
+  display: block;
+}
+
+.system-status-general-info__run-cron {
+  margin: 1em 0 0;
+}
+
+@media screen and (min-width: 48em) {
+  .system-status-general-info__items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .system-status-general-info__items::after {
+    flex: auto;
+    content: "";
+  }
+
+  .system-status-general-info__item {
+    display: block;
+    width: 32%;
+  }
+  .system-status-general-info__item:last-of-type {
+    margin-left: 2%;
+  }
+}
+
+@media screen and (max-width: 48em) {
+  .system-status-general-info__header {
+    display: none;
+  }
+  .system-status-general-info {
+    margin-top: 25px;
+    border-top: 0;
+  }
+}

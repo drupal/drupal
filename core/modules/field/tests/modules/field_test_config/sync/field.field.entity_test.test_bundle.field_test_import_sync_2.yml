@@ -1,0 +1,16 @@
+id: entity_test.test_bundle.field_test_import_sync_2
+uuid: f07794a2-d7cc-45b6-b40d-13cf021b5552
+langcode: en
+field_name: field_test_import_sync_2
+entity_type: entity_test
+bundle: test_bundle
+label: 'Test import field 2 on test bundle'
+description: ''
+required: '0'
+default_value: {  }
+default_value_callback: ''
+settings: { }
+field_type: text
+dependencies:
+  config:
+    - field.storage.entity_test.field_test_import_sync_2

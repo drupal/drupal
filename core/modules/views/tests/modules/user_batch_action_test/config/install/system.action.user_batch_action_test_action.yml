@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user_batch_action_test_action
+label: 'Process user in batch'
+type: user
+plugin: user_batch_action_test_action
+configuration: {  }

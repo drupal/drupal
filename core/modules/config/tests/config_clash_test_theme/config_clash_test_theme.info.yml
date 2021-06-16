@@ -1,0 +1,9 @@
+name: 'Test theme for configuration clash detection'
+type: theme
+description: 'Test theme for configuration clash detection'
+version: VERSION
+base theme: classy
+regions:
+  content: Content
+  left: Left
+  right: Right

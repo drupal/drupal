@@ -1,0 +1,23 @@
+# Schema for configuration files of the Menu UI module.
+
+menu_ui.settings:
+  type: config_object
+  label: 'Menu settings'
+  mapping:
+    override_parent_selector:
+      type: boolean
+      label: 'Override parent selector'
+
+node.type.*.third_party.menu_ui:
+  type: mapping
+  label: 'Per-content type menu settings'
+  mapping:
+    available_menus:
+      type: sequence
+      label: 'Available menus'
+      sequence:
+       type: string
+       label: 'Menu machine name'
+    parent:
+      type: string
+      label: 'Parent'

@@ -1,0 +1,16 @@
+api:
+  version: VERSION
+  js:
+    js/history.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - core/drupal
+    - core/drupal.ajax
+
+mark-as-read:
+  version: VERSION
+  js:
+    js/mark-as-read.js: {}
+  dependencies:
+    - history/api

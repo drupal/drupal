@@ -1,0 +1,42 @@
+# Schema for the configuration files of the Update module.
+
+update.settings:
+  type: config_object
+  label: 'Update settings'
+  mapping:
+    check:
+      type: mapping
+      label: 'Check settings'
+      mapping:
+        disabled_extensions:
+          type: boolean
+          label: 'Check for updates of uninstalled modules and themes'
+        interval_days:
+          type: integer
+          label: 'Days since last check'
+    fetch:
+      type: mapping
+      label: 'Fetch settings'
+      mapping:
+        url:
+          type: uri
+          label: 'URL for fetching available update data'
+        max_attempts:
+          type: integer
+          label: 'Maximum attempts'
+        timeout:
+          type: integer
+          label: 'Timeout in seconds'
+    notification:
+      type: mapping
+      label: 'Notification settings'
+      mapping:
+        emails:
+          type: sequence
+          label: 'Email addresses to notify when updates are available'
+          sequence:
+            type: email
+            label: 'Email'
+        threshold:
+          type: string
+          label: 'Email notification threshold'

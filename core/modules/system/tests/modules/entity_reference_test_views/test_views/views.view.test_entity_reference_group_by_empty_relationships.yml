@@ -1,0 +1,127 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_entity_reference_group_by_empty_relationships
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      fields:
+        name_1:
+          id: name_1
+          table: entity_test
+          field: name
+          entity_type: entity_test
+          entity_field: name
+          plugin_id: field
+          relationship: none
+          group_type: group
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          exclude: false
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+        name_2:
+          id: name_2
+          table: entity_test_mul_property_data
+          field: name
+          entity_type: entity_test_mul
+          entity_field: name
+          plugin_id: field
+          relationship: reverse__entity_test_mul__field_data_test_unlimited
+          group_type: group
+          group_column: entity_id
+          group_columns: {  }
+          group_rows: false
+          exclude: false
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+      sorts:
+        name:
+          table: entity_test
+          field: name
+          id: name
+          entity_type: entity_test
+          entity_field: field_test
+          order: ASC
+          plugin_id: standard
+      pager:
+        type: some
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            name_1: name_1
+            name_2: name_2
+          info:
+            name_1:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name_2:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: '-1'
+          empty_table: false
+      row:
+        type: fields
+        options:
+          inline: {  }
+          separator: ''
+          hide_empty: false
+          default_field_elements: true
+      relationships:
+        reverse__entity_test_mul__field_data_test_unlimited:
+          id: reverse__entity_test_mul__field_data_test_unlimited
+          table: entity_test
+          field: reverse__entity_test_mul__field_data_test_unlimited
+          entity_type: entity_test
+          plugin_id: entity_reverse
+          group_type: group
+          required: false
+      group_by: true
+    display_plugin: block
+    display_title: Default
+    id: default
+    position: 0

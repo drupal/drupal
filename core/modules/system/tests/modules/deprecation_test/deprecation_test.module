@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Contains functions for testing calling deprecated functions in tests.
+ */
+
+/**
+ * A deprecated function.
+ *
+ * @return string
+ *   A known return value of 'known_return_value'.
+ *
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. This is
+ *   the deprecation message for deprecated_test_function().
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2870194
+ */
+function deprecation_test_function() {
+  @trigger_error('This is the deprecation message for deprecation_test_function().', E_USER_DEPRECATED);
+  return 'known_return_value';
+}
+
+/**
+ * Implements hook_deprecated_hook().
+ */
+function deprecation_test_deprecated_hook($arg) {
+  return $arg;
+}
+
+/**
+ * Implements hook_deprecated_alter_alter().
+ */
+function deprecation_test_deprecated_alter_alter(&$data, $context1, $context2) {
+  $data = [$context1, $context2];
+}

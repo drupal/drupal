@@ -1,0 +1,15 @@
+book.admin:
+  route_name: book.admin
+  title: 'List'
+  base_route: book.admin
+book.settings:
+  route_name: book.settings
+  title: 'Settings'
+  base_route: book.admin
+  weight: 100
+
+entity.node.book_outline_form:
+  route_name: entity.node.book_outline_form
+  base_route: entity.node.canonical
+  title: Outline
+  weight: 2

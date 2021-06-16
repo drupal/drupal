@@ -1,0 +1,56 @@
+quickedit:
+  version: VERSION
+  js:
+    # Core.
+    js/quickedit.js: {}
+    js/util.js: {}
+    # Models.
+    js/models/BaseModel.js: {}
+    js/models/AppModel.js: {}
+    js/models/EntityModel.js: {}
+    js/models/FieldModel.js: {}
+    js/models/EditorModel.js: {}
+    # Views.
+    js/views/AppView.js: {}
+    js/views/FieldDecorationView.js: {}
+    js/views/EntityDecorationView.js: {}
+    js/views/EntityToolbarView.js: {}
+    js/views/ContextualLinkView.js: {}
+    js/views/FieldToolbarView.js: {}
+    js/views/EditorView.js: {}
+    # Other.
+    js/theme.js: {}
+  css:
+    component:
+      css/quickedit.module.css: {}
+    theme:
+      css/quickedit.theme.css: {}
+      css/quickedit.icons.theme.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/underscore
+    - core/backbone
+    - core/jquery.form
+    - core/drupal
+    - core/drupal.displace
+    - core/drupal.form
+    - core/drupal.ajax
+    - core/drupal.debounce
+    - core/drupalSettings
+    - core/drupal.dialog
+    - core/popperjs
+
+quickedit.inPlaceEditor.form:
+  version: VERSION
+  js:
+    js/editors/formEditor.js: {}
+  dependencies:
+    - quickedit/quickedit
+
+quickedit.inPlaceEditor.plainText:
+  version: VERSION
+  js:
+    js/editors/plainTextEditor.js: {}
+  dependencies:
+    - quickedit/quickedit

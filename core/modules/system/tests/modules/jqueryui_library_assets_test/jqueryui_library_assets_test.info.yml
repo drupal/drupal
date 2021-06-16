@@ -1,0 +1,5 @@
+name: 'jQuery UI library assets test'
+type: module
+description: 'Tests jQuery UI library asset loading'
+package: Testing
+version: VERSION

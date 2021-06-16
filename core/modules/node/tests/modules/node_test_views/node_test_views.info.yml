@@ -1,0 +1,9 @@
+name: 'Node test views'
+type: module
+description: 'Provides default views for views node tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:views
+  - drupal:language

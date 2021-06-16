@@ -1,0 +1,5 @@
+name: 'Node module access tests'
+type: module
+description: 'Support module for node permission testing.'
+package: Testing
+version: VERSION

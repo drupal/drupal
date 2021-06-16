@@ -1,0 +1,15 @@
+name: Testing theme without blocks
+type: theme
+base theme: false
+package: Testing
+version: VERSION
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'

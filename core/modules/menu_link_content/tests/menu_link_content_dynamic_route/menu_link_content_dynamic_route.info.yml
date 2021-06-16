@@ -1,0 +1,5 @@
+name: 'Menu link content dynamic route'
+type: module
+hidden: true
+dependencies:
+  - drupal:menu_link_content

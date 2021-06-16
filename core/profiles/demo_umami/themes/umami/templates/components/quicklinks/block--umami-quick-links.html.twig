@@ -1,0 +1,11 @@
+{% extends "block.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for Umami footer Promo block.
+ */
+#}
+{% block content %}
+  {{ attach_library('umami/quicklinks') }}
+  {{ content }}
+{% endblock %}

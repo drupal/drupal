@@ -1,0 +1,59 @@
+# Schema for configuration files of the Field module.
+
+field.settings:
+  type: config_object
+  label: 'Field settings'
+  mapping:
+    purge_batch_size:
+      type: integer
+      label: 'Maximum number of field data records to purge'
+
+field.storage.*.*:
+  type: config_entity
+  label: 'Field'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    field_name:
+      type: string
+      label: 'Field name'
+    entity_type:
+      type: string
+      label: 'Entity type'
+    type:
+      type: string
+      label: 'Type'
+    settings:
+      type: field.storage_settings.[%parent.type]
+    module:
+      type: string
+      label: 'Module'
+    locked:
+      type: boolean
+      label: 'Locked'
+    cardinality:
+      type: integer
+      label: 'Maximum number of values users can enter'
+    translatable:
+      type: boolean
+      label: 'Translatable'
+    indexes:
+      type: sequence
+      label: 'Indexes'
+      sequence:
+        type: sequence
+        label: 'Indexes'
+        sequence:
+          type: ignore
+          label: 'Index'
+    persist_with_no_fields:
+      type: boolean
+      label: 'Persist field storage with no fields'
+    custom_storage:
+      type: boolean
+      label: 'Enable custom storage'
+
+field.field.*.*.*:
+  type: field_config_base
+  label: 'Field'

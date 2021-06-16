@@ -1,0 +1,139 @@
+/**
+ * @file
+ * Checkbox and radio input elements styles for IE11 and below.
+ */
+
+@import "../base/variables.pcss.css";
+
+.form-boolean::-ms-check {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  vertical-align: text-bottom;
+  color: transparent; /* IE */
+  border: 1px solid var(--input-border-color);
+  border-radius: 2px;
+  background: var(--input-bg-color) no-repeat 50% 50%;
+  background-image: url(../../images/icons/ffffff/checkmark.svg);
+  background-size: 100% 100%;
+  box-shadow: 0 0 0 4px transparent;
+}
+.form-boolean--type-radio::-ms-check {
+  width: 19px;
+  height: 19px;
+  border-radius: 19px;
+}
+.form-boolean:focus::-ms-check {
+  color: transparent; /* IE */
+}
+.form-boolean:active::-ms-check,
+.form-boolean:hover::-ms-check {
+  border-color: var(--input-fg-color);
+  box-shadow: inset 0 0 0 1px var(--input-fg-color);
+}
+.form-boolean:focus:active::-ms-check,
+.form-boolean:focus:hover::-ms-check {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input-fg-color);
+}
+.form-boolean--type-checkbox:checked::-ms-check {
+  color: transparent; /* IE */
+  border-color: var(--input--focus-border-color);
+  background-color: var(--input--focus-border-color);
+  background-image: url(../../images/icons/ffffff/checkmark-sm.svg);
+}
+.form-boolean--type-checkbox:checked:active::-ms-check,
+.form-boolean--type-checkbox:checked:hover::-ms-check {
+  border-color: var(--input-fg-color);
+  background-color: var(--input-fg-color);
+}
+.form-boolean--type-radio:checked::-ms-check {
+  color: transparent; /* IE */
+  border-color: var(--input--focus-border-color);
+  background-image: url(../../images/icons/004adc/circle.svg);
+  box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
+}
+.form-boolean--type-checkbox:checked:active::-ms-check,
+.form-boolean--type-checkbox:checked:hover::-ms-check {
+  border-color: var(--input-fg-color);
+  background-color: var(--input-fg-color);
+}
+.form-boolean--type-radio:checked::-ms-check {
+  border-color: var(--input--focus-border-color);
+  background-image: url(../../images/icons/004adc/circle.svg);
+  box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
+}
+.form-boolean--type-radio:checked:focus::-ms-check {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--focus-border-color);
+}
+.form-boolean--type-radio:checked:active::-ms-check,
+.form-boolean--type-radio:checked:hover::-ms-check {
+  border-color: var(--input-fg-color);
+  background-image: url(../../images/icons/222330/circle.svg);
+  box-shadow: inset 0 0 0 1px var(--input-fg-color);
+}
+.form-boolean--type-radio:checked:focus:active::-ms-check,
+.form-boolean--type-radio:checked:focus:hover::-ms-check {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input-fg-color);
+}
+
+/**
+ * Error states.
+ */
+.form-boolean.error::-ms-check {
+  border-color: var(--input--error-border-color);
+  background-color: var(--input-bg-color);
+  box-shadow: inset 0 0 0 1px var(--input--error-border-color);
+}
+.form-boolean.error:active::-ms-check,
+.form-boolean.error:hover::-ms-check {
+  box-shadow: inset 0 0 0 1px var(--input--error-border-color);
+}
+.form-boolean.error:focus::-ms-check,
+.form-boolean.error:focus:active::-ms-check,
+.form-boolean.error:focus:hover::-ms-check {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
+}
+.form-boolean.error:checked:active::-ms-check,
+.form-boolean.error:checked:hover::-ms-check {
+  border-color: var(--input--error-border-color);
+  background-color: var(--input-bg-color);
+}
+.form-boolean--type-checkbox.error:checked::-ms-check,
+.form-boolean--type-checkbox.error:checked:active::-ms-check,
+.form-boolean--type-checkbox.error:checked:hover::-ms-check {
+  background-color: var(--input--error-border-color);
+}
+.form-boolean--type-radio.error:checked::-ms-check,
+.form-boolean--type-radio.error:checked:active::-ms-check,
+.form-boolean--type-radio.error:checked:hover::-ms-check {
+  background-image: url(../../images/icons/d72222/circle.svg);
+}
+.form-boolean--type-radio.error:checked:focus::-ms-check {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
+}
+
+/**
+ * Disabled states.
+ */
+.form-boolean[disabled]::-ms-check,
+.form-boolean[disabled]:hover::-ms-check,
+.form-boolean[disabled].error::-ms-check,
+.form-boolean[disabled].error:hover::-ms-check,
+.form-boolean--type-radio[disabled]:focus:active::-ms-check,
+.form-boolean--type-radio[disabled]:active:hover::-ms-check,
+.form-boolean--type-radio[disabled].error:active:hover::-ms-check {
+  border-color: var(--input--disabled-border-color);
+  background-color: var(--input--disabled-bg-color);
+  background-image: none;
+  box-shadow: none;
+}
+.form-boolean--type-checkbox[disabled]:checked::-ms-check {
+  color: transparent; /* IE */
+  background-image: url(../../images/icons/82828c/checkmark.svg);
+}
+.form-boolean--type-radio[disabled]:checked::-ms-check,
+.form-boolean--type-radio[disabled].error:checked::-ms-check {
+  color: transparent; /* IE */
+  background-image: url(../../images/icons/82828c/checkmark.svg);
+}

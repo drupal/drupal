@@ -1,0 +1,8 @@
+name: 'Taxonomy Migrate stub test'
+type: module
+description: 'Provides a migration plugin for stub testing.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:taxonomy
+  - drupal:migrate

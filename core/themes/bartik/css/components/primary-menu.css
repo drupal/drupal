@@ -1,0 +1,212 @@
+/* --------------- Primary Menu ------------ */
+
+.region-primary-menu {
+  clear: both;
+}
+.region-primary-menu .menu {
+  margin: 0 5px;
+  padding: 0;
+  text-align: left; /* LTR */
+  font-size: 0.929em;
+}
+[dir="rtl"] .region-primary-menu .menu {
+  margin-right: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
+  margin-left: 5px; /* This is required to win over specificity of [dir="rtl"] ul.menu */
+  text-align: right;
+}
+.region-primary-menu .menu-item {
+  float: none;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.region-primary-menu .menu a {
+  display: block;
+  float: none;
+  margin: 4px 0;
+  padding: 0.9em 0 0.9em 10px; /* LTR */
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px #eee;
+}
+[dir="rtl"] .region-primary-menu .menu a {
+  padding: 0.9em 10px 0.9em 0;
+}
+.region-primary-menu .menu a:hover,
+.region-primary-menu .menu a:focus {
+  background: #f6f6f2;
+  background: rgba(255, 255, 255, 0.95);
+}
+.region-primary-menu .menu a:active {
+  background: #b3b3b3;
+  background: rgba(255, 255, 255, 1);
+}
+.region-primary-menu .menu-item a.is-active {
+  border-bottom: none;
+}
+
+/* ---------- Primary Menu Toggle ----------- */
+/* Hide the toggle by default. */
+.menu-toggle,
+.menu-toggle-target {
+  display: none;
+}
+/* Unhide it for the primary menu. */
+.region-primary-menu .menu-toggle-target {
+  position: fixed;
+  top: 0;
+  display: inherit;
+}
+.region-primary-menu .menu-toggle {
+  display: none;
+}
+body:not(:target) .region-primary-menu .menu-toggle {
+  z-index: 1000;
+  display: block;
+  float: none;
+  padding: 0.9em 10px 0.9em 10px;
+  text-decoration: none;
+  color: #333;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px #eee;
+  font-size: 0.929em;
+}
+body:not(:target) .region-primary-menu .menu-toggle:after {
+  position: absolute;
+  right: 10px; /* LTR */
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  content: "";
+  background: url(../../../../misc/icons/ffffff/hamburger.svg) no-repeat;
+  background-size: contain;
+}
+[dir="rtl"] body:not(:target) .region-primary-menu .menu-toggle:after {
+  right: initial;
+  left: 10px;
+}
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle,
+body:not(:target) .region-primary-menu .menu-toggle--hide {
+  display: none;
+}
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle--hide {
+  display: block;
+}
+
+body:not(:target) .region-primary-menu .menu-item {
+  overflow: hidden;
+  height: 0;
+}
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .menu-item {
+  overflow: visible;
+  height: auto;
+}
+
+/**
+ * Media queries for primary menu.
+ */
+@media all and (min-width: 461px) and (max-width: 900px) {
+  .region-primary-menu .menu {
+    margin: 0 5px;
+    padding: 0;
+    text-align: center;
+  }
+  /* This is required to win over specificity of the global [dir="rtl"] .region-primary-menu .menu */
+  [dir="rtl"] .region-primary-menu .menu {
+    text-align: center;
+  }
+  .region-primary-menu .menu-item,
+  body:not(:target) .region-primary-menu .menu-item {
+    display: inline-block;
+    float: left; /* LTR */
+    overflow: visible;
+    width: 32.75%;
+    height: auto;
+    margin-right: 5px; /* LTR */
+    padding: 0;
+  }
+  [dir="rtl"] .region-primary-menu .menu-item,
+  [dir="rtl"] body:not(:target) .region-primary-menu .menu-item {
+    float: right;
+    margin-right: 0;
+    margin-left: 5px;
+  }
+  .region-primary-menu .menu-item:nth-child(3n) {
+    margin-right: -5px; /* LTR */
+  }
+  [dir="rtl"] .region-primary-menu .menu-item:nth-child(3n) {
+    margin-right: 0;
+    margin-left: -5px;
+  }
+  .region-primary-menu .menu a {
+    display: block;
+    float: none;
+    margin-bottom: 5px;
+    padding: 0.9em 5px;
+    border-radius: 8px;
+  }
+  /* This is required to win over specificity of the global [dir="rtl"] .region-primary-menu .menu a */
+  [dir="rtl"] .region-primary-menu .menu a {
+    padding: 0.9em 5px;
+  }
+  body:not(:target) .region-primary-menu .menu-toggle {
+    display: none;
+  }
+}
+
+@media all and (min-width: 901px) {
+  .region-primary-menu .block-menu .menu {
+    margin: 0;
+    padding: 0 15px;
+    font-size: 0.929em;
+  }
+  .region-primary-menu .menu-item,
+  body:not(:target) .region-primary-menu .menu-item {
+    float: left; /* LTR */
+    overflow: visible;
+    width: auto;
+    height: auto;
+    margin: 0 1px;
+    padding: 0 1px;
+    list-style: none;
+  }
+  [dir="rtl"] .region-primary-menu .menu-item,
+  [dir="rtl"] body:not(:target) .region-primary-menu .menu-item {
+    float: right;
+  }
+  .region-primary-menu .menu a {
+    float: left; /* LTR */
+    margin-bottom: 0;
+    padding: 0.7em 0.8em;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  [dir="rtl"] .region-primary-menu .menu a {
+    float: right;
+    padding: 0.7em 0.8em;
+  }
+  .featured .region-primary-menu .menu-item a:active,
+  .featured .region-primary-menu .menu-item a.is-active {
+    background: #f0f0f0;
+    background: rgba(240, 240, 240, 1);
+  }
+  body:not(:target) .region-primary-menu .menu-toggle {
+    display: none;
+  }
+}
+
+/**
+ * Ensures that the open mobile menu hides when the screen dimensions become
+ * 461px or wider.
+ */
+@media all and (min-width: 461px) {
+  body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle--hide {
+    display: none;
+  }
+}

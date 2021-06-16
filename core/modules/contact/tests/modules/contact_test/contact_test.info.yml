@@ -1,0 +1,7 @@
+name: 'Contact test module'
+type: module
+description: 'Contains test contact form.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:contact

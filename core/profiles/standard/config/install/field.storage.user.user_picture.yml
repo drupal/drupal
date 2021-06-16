@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - image
+    - user
+id: user.user_picture
+field_name: user_picture
+entity_type: user
+type: image
+settings:
+  uri_scheme: public
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  target_type: file
+  display_field: false
+  display_default: false
+module: image
+locked: false
+cardinality: 1
+translatable: true
+indexes:
+  target_id:
+    - target_id
+persist_with_no_fields: false
+custom_storage: false

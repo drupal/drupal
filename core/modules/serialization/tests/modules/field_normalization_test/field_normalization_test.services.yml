@@ -1,0 +1,6 @@
+services:
+  serializer.normalizer.silly_fielditem:
+    class: Drupal\field_normalization_test\Normalization\TextItemSillyNormalizer
+    tags:
+      # The priority must be higher than serialization.normalizer.field_item.
+      - { name: normalizer , priority: 9 }

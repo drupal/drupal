@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Theme override to present a list of available bundles.
+ *
+ * Available variables:
+ * - bundles: A list of bundles, each with the following properties:
+ *   - label: Bundle label.
+ *   - description: Bundle description.
+ *   - add_link: \Drupal\Core\Link link instance to create an entity of this
+ *     bundle.
+ * - add_bundle_message: The message shown when there are no bundles. Only
+ *     available if the entity type uses bundle entities.
+ *
+ * @see template_preprocess_entity_add_list()
+ */
+#}
+{%
+  set item_classes = [
+    'admin-item',
+  ]
+%}
+{% if bundles is not empty %}
+  <dl{{ attributes.addClass('admin-list') }}>
+    {% for bundle in bundles %}
+      {#
+        Add 'admin-item__link' class to the link attributes.
+        This is needed for keeping the original attributes of the link's url.
+      #}
+      {% set bundle_attributes = bundle.add_link.url.getOption('attributes') ?: {} %}
+      {% set link_attributes = create_attribute(bundle_attributes).addClass('admin-item__link') %}
+      <div{{ create_attribute({ class: item_classes }) }}>
+        <dt class="admin-item__title">
+          <a href="{{ bundle.add_link.url }}"{{ link_attributes|without('href') }}>
+            {{ bundle.add_link.text }}
+          </a>
+        </dt>
+        {# Don't print empty description wrapper if there is no description #}
+        {% if bundle.description %}
+          <dd class="admin-item__description">{{ bundle.description }}</dd>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </dl>
+{% elseif add_bundle_message is not empty %}
+  <p>
+    {{ add_bundle_message }}
+  </p>
+{% endif %}

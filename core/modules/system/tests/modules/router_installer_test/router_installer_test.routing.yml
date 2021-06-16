@@ -1,0 +1,4 @@
+router_installer_test.1:
+  path: '/router_installer_test/test1'
+  requirements:
+    _access: 'TRUE'

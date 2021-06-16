@@ -1,0 +1,40 @@
+/**
+ * @file
+ * The visual styles for Bartik's search form(s).
+ */
+
+.search-form {
+  font-size: 0.875rem;
+}
+.search-form .form-search {
+  float: left; /* LTR */
+  margin-right: 5px; /* LTR */
+  padding: 4px;
+}
+[dir="rtl"] .search-form .form-search {
+  float: right;
+  margin-right: 0;
+  margin-left: 5px;
+}
+.button.search-form__submit,
+.search-form__submit {
+  overflow: hidden;
+  width: 34px;
+  height: 26px;
+  margin-right: 0;
+  margin-left: 0;
+  padding: 0;
+  cursor: pointer;
+  text-indent: -9999px;
+  direction: ltr;
+  background: #f0f0f0 url(../../../../misc/icons/505050/loupe.svg) no-repeat center;
+}
+.button.search-form__submit:hover,
+.search-form__submit:hover,
+.button.search-form__submit:focus,
+.search-form__submit:focus {
+  background: #dedede url(../../../../misc/icons/424242/loupe.svg) no-repeat center;
+}
+.search-form .form-item-keys label {
+  display: block;
+}

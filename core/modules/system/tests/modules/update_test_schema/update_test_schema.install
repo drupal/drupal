@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Update hooks and schema definition for the update_test_schema module.
+ */
+
+use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
+use Drupal\Component\Render\FormattableMarkup;
+
+/**
+ * Implements hook_requirements().
+ */
+function update_test_schema_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    $requirements['path_alias_test'] = [
+      'title' => 'Path alias test',
+      'value' => 'Check a path alias for the admin page',
+      'severity' => REQUIREMENT_INFO,
+      'description' => new FormattableMarkup('Visit <a href=":link">the structure page</a> to do many useful things.', [
+        ':link' => Url::fromRoute('system.admin_structure')->toString(),
+      ]),
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * The schema defined here will vary on state to allow for update hook testing.
+ */
+function update_test_schema_schema() {
+  $schema_version = \Drupal::state()->get('update_test_schema_version', 8000);
+  $table = [
+    'fields' => [
+      'a' => ['type' => 'int', 'not null' => TRUE],
+      'b' => ['type' => 'blob', 'not null' => FALSE],
+    ],
+  ];
+  switch ($schema_version) {
+    case 8001:
+      // Add the index.
+      $table['indexes']['test'] = ['a'];
+      break;
+  }
+  return ['update_test_schema_table' => $table];
+}
+
+// Update hooks are defined depending on state as well.
+$schema_version = \Drupal::state()->get('update_test_schema_version', 8000);
+
+if ($schema_version >= 8001) {
+
+  /**
+   * Schema version 8001.
+   */
+  function update_test_schema_update_8001() {
+    $table = [
+      'fields' => [
+        'a' => ['type' => 'int', 'not null' => TRUE],
+        'b' => ['type' => 'blob', 'not null' => FALSE],
+      ],
+    ];
+
+    // Add a column.
+    Database::getConnection()->schema()->addIndex('update_test_schema_table', 'test', ['a'], $table);
+  }
+
+}
+
+if ($schema_version >= 8002) {
+
+  /**
+   * Schema version 8002.
+   */
+  function update_test_schema_update_8002() {
+    // Return a message that contains a system path with an alias.
+    // @see \Drupal\FunctionalTests\Update\UpdatePathTestBaseTest::testPathAliasProcessing()
+    return new FormattableMarkup('Visit <a href=":link">the structure page</a> to do many useful things.', [
+      ':link' => Url::fromRoute('system.admin_structure')->toString(),
+    ]);
+  }
+
+}
+
+if ($schema_version >= 8003) {
+
+  /**
+   * Schema version 8003.
+   */
+  function update_test_schema_update_8003() {
+    // Uninstall a module with no dependencies installed by the Standard
+    // profile.
+    \Drupal::service('module_installer')->uninstall(['page_cache']);
+    // Install a test module that is not installed in any of the database
+    // dumps.
+    \Drupal::service('module_installer')->install(['module_test']);
+  }
+
+}

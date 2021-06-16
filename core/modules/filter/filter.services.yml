@@ -1,0 +1,11 @@
+services:
+  plugin.manager.filter:
+    class: Drupal\filter\FilterPluginManager
+    parent: default_plugin_manager
+
+  filter.uninstall_validator:
+    class: Drupal\filter\FilterUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
+    lazy: true

@@ -1,0 +1,20 @@
+---
+label: 'Changing the appearance of your site'
+top_level: true
+related:
+  - core.content_structure
+---
+{% set entities = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+<h2>{% trans %}What is a theme?{% endtrans %}</h2>
+<p>{% trans %}A <em>theme</em> is a set of files that define the visual look and feel of your site. The core software and modules that run on your site determine which content (including HTML text and other data stored in the database, uploaded images, and any other asset files) is displayed on the pages of your site. The theme determines the HTML markup and CSS styling that wraps the content. Several basic themes are supplied with the core software; additional <em>contributed themes</em> can be downloaded separately from the <a href="https://www.drupal.org/project/project_theme">Download &amp; Extend page on drupal.org</a>, or you can create your own theme.{% endtrans %}</p>
+<h2>{% trans %}What is a base theme?{% endtrans %}</h2>
+<p>{% trans %}A base theme is a theme that is not meant to be used directly on a site, but instead acts as a scaffolding for building other themes. The core Classy theme is one example; other base themes can be downloaded from the <a href="https://www.drupal.org/project/project_theme">Download &amp; Extend page on drupal.org</a>.{% endtrans %}</p>
+<h2>{% trans %}What is a layout?{% endtrans %}</h2>
+<p>{% trans %}A <em>layout</em> is a template that defines where blocks and other pieces of content should be displayed. The core Layout Discovery module allows modules and themes to register layouts, and the core Layout Builder module provides a visual interface for placing fields and blocks in layouts for entity sub-types and individual entity items (see <a href="{{ entities }}">Managing content structure</a> for more on entities and fields).{% endtrans %}</p>
+<h2>{% trans %}Changing site appearance overview{% endtrans %}</h2>
+<p>{% trans %}The main way to change the overall appearance of your site is to switch the default theme. You can also change the color palette of some themes, if the core Color module is installed and the theme supports it; some themes also have other settings. The core Layout Builder and Layout Discovery modules allow you to define layouts for your site's content, and the core Breakpoint module helps themes change appearance for different-sized devices. See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/user_guide/en/extend-chapter.html">{% trans %}Extending and Customizing Your Site chapter in the User Guide{% endtrans %}</a></li>
+  <li><a href="https://www.drupal.org/docs/8/theming">{% trans %}Theming Drupal 8{% endtrans %}</a></li>
+</ul>

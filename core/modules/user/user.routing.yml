@@ -1,0 +1,218 @@
+user.register:
+  path: '/user/register'
+  defaults:
+    _entity_form: 'user.register'
+    _title: 'Create new account'
+  requirements:
+    _access_user_register: 'TRUE'
+
+user.logout:
+  path: '/user/logout'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::logout'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+user.admin_index:
+  path: '/admin/config/people'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'People'
+  requirements:
+    _permission: 'access administration pages'
+
+entity.user.admin_form:
+  path: '/admin/config/people/accounts'
+  defaults:
+    _form: '\Drupal\user\AccountSettingsForm'
+    _title: 'Account settings'
+  requirements:
+    _permission: 'administer account settings'
+
+entity.user.collection:
+  path: '/admin/people'
+  defaults:
+    _entity_list: 'user'
+    _title: 'People'
+  requirements:
+    _permission: 'administer users'
+
+user.admin_create:
+  path: '/admin/people/create'
+  defaults:
+    _entity_form: 'user.register'
+    _title: 'Add user'
+  requirements:
+    _entity_create_access: 'user'
+
+user.admin_permissions:
+  path: '/admin/people/permissions'
+  defaults:
+    _form: '\Drupal\user\Form\UserPermissionsForm'
+    _title: 'Permissions'
+  requirements:
+    _permission: 'administer permissions'
+
+entity.user_role.edit_permissions_form:
+  path: '/admin/people/permissions/{user_role}'
+  defaults:
+    _form: '\Drupal\user\Form\UserPermissionsRoleSpecificForm'
+    _title: 'Edit role'
+  requirements:
+    _entity_access: 'user_role.update'
+
+user.multiple_cancel_confirm:
+  path: '/admin/people/cancel'
+  defaults:
+    _form: '\Drupal\user\Form\UserMultipleCancelConfirm'
+    _title: 'Cancel user'
+  requirements:
+    _permission: 'administer users'
+
+entity.user_role.collection:
+  path: '/admin/people/roles'
+  defaults:
+    _entity_list: 'user_role'
+    _title: 'Roles'
+  requirements:
+    _permission: 'administer permissions'
+
+user.role_add:
+  path: '/admin/people/roles/add'
+  defaults:
+    _entity_form: user_role.default
+    _title: 'Add role'
+  requirements:
+    _permission: 'administer permissions'
+
+entity.user_role.edit_form:
+  path: '/admin/people/roles/manage/{user_role}'
+  defaults:
+    _entity_form: user_role.default
+    _title: 'Edit role'
+  requirements:
+    _entity_access: user_role.update
+
+entity.user_role.delete_form:
+  path: '/admin/people/roles/manage/{user_role}/delete'
+  defaults:
+    _entity_form: user_role.delete
+    _title: 'Delete role'
+  requirements:
+    _entity_access: user_role.delete
+
+user.pass:
+  path: '/user/password'
+  defaults:
+    _form: '\Drupal\user\Form\UserPasswordForm'
+    _title: 'Reset your password'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
+
+user.pass.http:
+  path: '/user/password'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::resetPassword
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
+user.page:
+  path: '/user'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::userPage'
+    _title: 'My account'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+user.login:
+  path: '/user/login'
+  defaults:
+    _form: '\Drupal\user\Form\UserLoginForm'
+    _title: 'Log in'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+
+user.login.http:
+  path: '/user/login'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::login
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'FALSE'
+    _format: 'json'
+
+user.login_status.http:
+  path: '/user/login_status'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::loginStatus
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
+user.logout.http:
+  path: '/user/logout'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::logout
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _format: 'json'
+    _csrf_token: 'TRUE'
+
+user.cancel_confirm:
+  path: '/user/{user}/cancel/confirm/{timestamp}/{hashed_pass}'
+  defaults:
+    _title: 'Confirm account cancellation'
+    _controller: '\Drupal\user\Controller\UserController::confirmCancel'
+    timestamp: 0
+    hashed_pass: ''
+  requirements:
+    _entity_access: 'user.delete'
+    user: \d+
+
+user.reset.login:
+  path: '/user/reset/{uid}/{timestamp}/{hash}/login'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::resetPassLogin'
+    _title: 'Reset password'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+user.reset:
+  path: '/user/reset/{uid}/{timestamp}/{hash}'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::resetPass'
+    _title: 'Reset password'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+user.reset.form:
+  path: '/user/reset/{uid}'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::getResetPassForm'
+    _title: 'Reset password'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+user.well-known.change_password:
+  path: '/.well-known/change-password'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::userEditPage'
+  requirements:
+    _user_is_logged_in: 'TRUE'

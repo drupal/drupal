@@ -1,0 +1,21 @@
+services:
+  plugin.manager.migrate.field:
+    class: Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager
+    arguments:
+      - field
+      - '@container.namespaces'
+      - '@cache.discovery'
+      - '@module_handler'
+      - '\Drupal\migrate_drupal\Annotation\MigrateField'
+  logger.channel.migrate_drupal:
+    parent: logger.channel_base
+    arguments: ['migrate_drupal']
+  migrate_drupal.field_discovery:
+    class: Drupal\migrate_drupal\FieldDiscovery
+    arguments:
+      - '@plugin.manager.migrate.field'
+      - '@plugin.manager.migration'
+      - '@logger.channel.migrate_drupal'
+  migrate_drupal.migration_state:
+    class: Drupal\migrate_drupal\MigrationState
+    arguments: ['@plugin.manager.migrate.field', '@module_handler', '@messenger', '@string_translation']

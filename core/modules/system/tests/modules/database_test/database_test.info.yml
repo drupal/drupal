@@ -1,0 +1,5 @@
+name: 'Database Test'
+type: module
+description: 'Support module for Database layer tests.'
+package: Testing
+version: VERSION

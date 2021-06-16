@@ -1,0 +1,29 @@
+core.entity_view_display.*.*.*.third_party.entity_test:
+  type: mapping
+  label: 'Schema for entity_test module additions to entity_view_display entity'
+  mapping:
+    foo:
+      type: string
+      label: 'Label for foo'
+
+field.storage_settings.shape:
+  type: mapping
+  label: 'Shape field storage settings'
+  mapping:
+    foreign_key_name:
+      type: string
+      label: 'Foreign key name'
+
+entity_test.entity_test_bundle.*:
+  type: config_entity
+  label: 'Entity test bundle'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'Machine-readable name'
+    description:
+      type: text
+      label: 'Description'

@@ -1,0 +1,8 @@
+name: Text
+type: module
+description: 'Defines simple text field types.'
+package: Field types
+version: VERSION
+dependencies:
+  - drupal:field
+  - drupal:filter

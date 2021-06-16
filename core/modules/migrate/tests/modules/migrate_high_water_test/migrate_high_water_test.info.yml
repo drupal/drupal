@@ -1,0 +1,6 @@
+type: module
+name: Migration High Water Test
+description: 'Provides test fixtures for testing high water marks.'
+package: Testing
+dependencies:
+  - drupal:migrate

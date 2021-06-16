@@ -1,0 +1,617 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Olivero theme.
+ */
+
+use Drupal\olivero\OliveroPreRender;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Render\Element;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ *
+ * Adds body classes if certain regions have content.
+ */
+function olivero_preprocess_html(&$variables) {
+  if (theme_get_setting('mobile_menu_all_widths') === 1) {
+    $variables['attributes']['class'][] = 'is-always-mobile-nav';
+  }
+
+  // So fonts can be preloaded from base theme in the event Olivero is used as a
+  // subtheme.
+  $variables['olivero_path'] = drupal_get_path('theme', 'olivero');
+
+  $query_string = \Drupal::state()->get('system.css_js_query_string') ?: '0';
+
+  // Create render array with noscript tag to output non-JavaScript
+  // stylesheet for primary menu.
+  $variables['noscript_styles'] = [
+    '#type' => 'html_tag',
+    '#noscript' => TRUE,
+    '#tag' => 'link',
+    '#attributes' => [
+      'rel' => 'stylesheet',
+      'href' => '/' . $variables['olivero_path'] . '/css/components/navigation/nav-primary-no-js.css?' . $query_string,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page title templates.
+ */
+function olivero_preprocess_page_title(&$variables) {
+  // Since the title and the shortcut link are both block level elements,
+  // positioning them next to each other is much simpler with a wrapper div.
+  if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
+    // Add a wrapper div using the title_prefix and title_suffix render
+    // elements.
+    $variables['title_prefix']['shortcut_wrapper'] = [
+      '#markup' => '<div class="shortcut-wrapper">',
+      '#weight' => 100,
+    ];
+    $variables['title_suffix']['shortcut_wrapper'] = [
+      '#markup' => '</div>',
+      '#weight' => -99,
+    ];
+
+    // Make sure the shortcut link is the first item in title_suffix.
+    $variables['title_suffix']['add_or_remove_shortcut']['#weight'] = -100;
+  }
+
+  // Unset shortcut link on front page.
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  if ($variables['is_front'] === TRUE) {
+    unset($variables['title_suffix']['add_or_remove_shortcut']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
+ */
+function olivero_preprocess_maintenance_page(&$variables) {
+  // By default, site_name is set to Drupal if no db connection is available
+  // or during site installation. Setting site_name to an empty string makes
+  // the site and update pages look cleaner.
+  // @see template_preprocess_maintenance_page
+  if (!$variables['db_is_active']) {
+    $variables['site_name'] = '';
+  }
+
+  // Olivero has custom styling for the maintenance page.
+  $variables['#attached']['library'][] = 'olivero/maintenance_page';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node.html.twig.
+ */
+function olivero_preprocess_node(&$variables) {
+  // Remove the "Add new comment" link on teasers or when the comment form is
+  // displayed on the page.
+  if ($variables['teaser'] || !empty($variables['content']['comments']['comment_form'])) {
+    unset($variables['content']['links']['comment']['#links']['comment-add']);
+  }
+
+  // Apply custom date formatter to "date" field.
+  if (!empty($variables['date']) && !empty($variables['display_submitted']) && $variables['display_submitted'] === TRUE) {
+    $variables['date'] = \Drupal::service('date.formatter')->format($variables['node']->getCreatedTime(), 'olivero_medium');
+  }
+
+  // Pass layout variable to template if content type is article in full view
+  // mode. This is then used in the template to create a BEM style CSS class to
+  // control the layout.
+  if ($variables['node']->bundle() === 'article' && $variables['view_mode'] === 'full') {
+    $variables['layout'] = 'content-narrow';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block.html.twig.
+ */
+function olivero_preprocess_block(&$variables) {
+  if (!empty($variables['elements']['#id'])) {
+    /** @var \Drupal\block\BlockInterface $block */
+    $block = \Drupal::entityTypeManager()
+      ->getStorage('block')
+      ->load($variables['elements']['#id']);
+    if ($block) {
+      $region = $block->getRegion();
+      if ($region == 'primary_menu') {
+        if ($variables['base_plugin_id'] === 'system_menu_block') {
+          $variables['content']['#attributes']['region'] = $region;
+        }
+        elseif ($variables['base_plugin_id'] === 'search_form_block') {
+          // Attaching library for search block if present at primary menu
+          // region.
+          $variables['#attached']['library'][] = 'olivero/search-narrow';
+        }
+      }
+      elseif ($region === 'secondary_menu' && $variables['base_plugin_id'] === 'system_menu_block') {
+        $variables['content']['#attributes']['region'] = $region;
+      }
+      elseif ($region === 'secondary_menu' && $variables['base_plugin_id'] === 'search_form_block') {
+        // Attaching library for search block if present at secondary menu
+        // region.
+        $variables['#attached']['library'][] = 'olivero/search-wide';
+      }
+      if ($variables['base_plugin_id'] === 'search_form_block' && in_array($region, ['primary_menu', 'secondary_menu'], TRUE)) {
+        $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
+      }
+    }
+  }
+
+  if ($variables['plugin_id'] === 'system_branding_block') {
+    $site_branding_color = theme_get_setting('site_branding_bg_color');
+    if ($site_branding_color && $site_branding_color !== 'default') {
+      $variables['attributes']['class'][] = 'site-branding--bg-' . $site_branding_color;
+    }
+  }
+
+  // Add a primary-nav class to main menu navigation block.
+  if ($variables['plugin_id'] === 'system_menu_block:main') {
+    $variables['attributes']['class'][] = 'primary-nav';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for menu.
+ */
+function olivero_theme_suggestions_menu_alter(&$suggestions, array $variables) {
+  if (isset($variables['attributes']['region'])) {
+    $suggestions[] = 'menu__' . $variables['attributes']['region'];
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for form templates.
+ */
+function olivero_theme_suggestions_form_alter(array &$suggestions, array $variables) {
+  if ($variables['element']['#form_id'] === 'search_block_form') {
+    $suggestions[] = 'form__search_block_form';
+  }
+}
+
+/**
+ * Implements hook_form_alter() for adding classes and placeholder text to the search forms.
+ */
+function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['actions']) && (count($form['actions'])) <= 2) {
+    $form['actions']['submit']['#attributes']['class'][] = 'button--primary';
+  }
+
+  switch ($form_id) {
+    case 'search_block_form':
+      // Add placeholder text to keys input.
+      $form['keys']['#attributes']['placeholder'] = t('Search by keyword or phrase.');
+
+      // Add classes to the search form submit input.
+      $form['actions']['submit']['#attributes']['class'][] = 'search-form__submit';
+      break;
+
+    case 'search_form':
+      $form['basic']['keys']['#attributes']['placeholder'] = t('Search by keyword or phrase.');
+      $form['basic']['submit']['#attributes']['class'][] = 'button--primary';
+      $form['advanced']['submit']['#attributes']['class'][] = 'button--primary';
+      break;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for block().
+ */
+function olivero_theme_suggestions_block_alter(&$suggestions, array $variables) {
+  if (!empty($variables['elements']['#id'])) {
+
+    /** @var \Drupal\block\BlockInterface $block */
+    $block = \Drupal::entityTypeManager()
+      ->getStorage('block')
+      ->load($variables['elements']['#id']);
+    if ($block) {
+
+      // Add region-specific block theme suggestions.
+      $region = $block
+        ->getRegion();
+
+      $suggestions[] = 'block__' . $region;
+      $suggestions[] = 'block__' . $region . '__' . 'plugin_id' . '__' . $variables['elements']['#plugin_id'];
+      $suggestions[] = 'block__' . $region . '__' . 'id' . '__' . $variables['elements']['#id'];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
+ */
+function olivero_preprocess_menu_local_tasks(&$variables) {
+  foreach (Element::children($variables['primary']) as $key) {
+    $variables['primary'][$key]['#level'] = 'primary';
+  }
+  foreach (Element::children($variables['secondary']) as $key) {
+    $variables['secondary'][$key]['#level'] = 'secondary';
+  }
+}
+
+/**
+ * Implements hook_preprocess_form_element().
+ */
+function olivero_preprocess_form_element(&$variables) {
+  if (in_array($variables['element']['#type'] ?? FALSE, ['checkbox', 'radio'], TRUE)) {
+    $variables['attributes']['class'][] = 'form-type-boolean';
+  }
+
+  if (!empty($variables['description']['attributes'])) {
+    $variables['description']['attributes']->addClass('form-item__description');
+  }
+
+  if ($variables['disabled']) {
+    $variables['label']['#attributes']['class'][] = 'is-disabled';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_form_element_label(&$variables) {
+  $variables['attributes']['class'][] = 'form-item__label';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_input(&$variables) {
+  if (
+    !empty($variables['element']['#title_display']) &&
+    $variables['element']['#title_display'] === 'attribute' &&
+    !empty((string) $variables['element']['#title'])
+  ) {
+    $variables['attributes']['title'] = (string) $variables['element']['#title'];
+  }
+
+  $type_api = $variables['element']['#type'];
+  $type_html = $variables['attributes']['type'];
+  $text_types_html = [
+    'text',
+    'email',
+    'tel',
+    'number',
+    'search',
+    'password',
+    'date',
+    'time',
+    'file',
+    'color',
+    'datetime-local',
+    'url',
+    'month',
+    'week',
+  ];
+
+  if (in_array($type_html, $text_types_html, TRUE)) {
+    $variables['attributes']['class'][] = 'form-element';
+    $variables['attributes']['class'][] = Html::getClass('form-element--type-' . $type_html);
+    $variables['attributes']['class'][] = Html::getClass('form-element--api-' . $type_api);
+
+    if (!empty($variables['element']['#autocomplete_route_name'])) {
+      $variables['autocomplete_message'] = t('Loading…');
+    }
+  }
+
+  if (in_array($type_html, ['checkbox', 'radio'], TRUE)) {
+    $variables['attributes']['class'][] = 'form-boolean';
+    $variables['attributes']['class'][] = Html::getClass('form-boolean--type-' . $type_html);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_textarea(&$variables) {
+  $variables['attributes']['class'][] = 'form-element';
+  $variables['attributes']['class'][] = 'form-element--type-textarea';
+  $variables['attributes']['class'][] = 'form-element--api-textarea';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_select(&$variables) {
+  $variables['attributes']['class'][] = 'form-element';
+  $variables['attributes']['class'][] = $variables['element']['#multiple'] ?
+    'form-element--type-select-multiple' :
+    'form-element--type-select';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_checkboxes(&$variables) {
+  $variables['attributes']['class'][] = 'form-boolean-group';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_radios(&$variables) {
+  $variables['attributes']['class'][] = 'form-boolean-group';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_field(&$variables) {
+  $rich_field_types = ['text_with_summary', 'text', 'text_long'];
+
+  if (in_array($variables['field_type'], $rich_field_types, TRUE)) {
+    $variables['attributes']['class'][] = 'text-content';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_field_multiple_value_form(&$variables) {
+  // Make disabled available for the template.
+  $variables['disabled'] = !empty($variables['element']['#disabled']);
+
+  if ($variables['multiple']) {
+    // Add an additional CSS class for the field label table cell.
+    // This repeats the logic of template_preprocess_field_multiple_value_form()
+    // without using '#prefix' and '#suffix' for the wrapper element.
+    //
+    // If the field is multiple, we don't have to check the existence of the
+    // table header cell.
+    //
+    // @see template_preprocess_field_multiple_value_form().
+    $header_attributes = ['class' => ['form-item__label', 'form-item__label--multiple-value-form']];
+    if (!empty($variables['element']['#required'])) {
+      $header_attributes['class'][] = 'js-form-required';
+      $header_attributes['class'][] = 'form-required';
+    }
+    // Using array_key_first() for addressing the first header cell would be
+    // more elegant here, but we can rely on the related theme.inc preprocess.
+    // @todo change this after https://www.drupal.org/node/3099026 has landed.
+    $variables['table']['#header'][0]['data'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h4',
+      '#value' => $variables['element']['#title'],
+      '#attributes' => $header_attributes,
+    ];
+
+    if ($variables['disabled']) {
+      $variables['table']['#attributes']['class'][] = 'tabledrag-disabled';
+      $variables['table']['#attributes']['class'][] = 'js-tabledrag-disabled';
+
+      // We will add the 'is-disabled' CSS class to the disabled table header
+      // cells.
+      $header_attributes['class'][] = 'is-disabled';
+      foreach ($variables['table']['#header'] as &$cell) {
+        if (is_array($cell) && isset($cell['data'])) {
+          $cell = $cell + ['class' => []];
+          $cell['class'][] = 'is-disabled';
+        }
+        else {
+          // We have to modify the structure of this header cell.
+          $cell = [
+            'data' => $cell,
+            'class' => ['is-disabled'],
+          ];
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu-local-task templates.
+ */
+function olivero_preprocess_menu_local_task(&$variables) {
+  $variables['link']['#options']['attributes']['class'][] = 'tabs__link';
+  $variables['link']['#options']['attributes']['class'][] = 'js-tabs-link';
+
+  // Ensure is-active class is set when the tab is active. The generic active
+  // link handler applies stricter comparison rules than what is necessary for
+  // tabs.
+  if (isset($variables['is_active']) && $variables['is_active'] === TRUE) {
+    $variables['link']['#options']['attributes']['class'][] = 'is-active';
+  }
+
+  if (isset($variables['element']['#level'])) {
+    $variables['level'] = $variables['element']['#level'];
+  }
+}
+
+/**
+ * Implements template_preprocess_HOOK() for fieldset.
+ */
+function olivero_preprocess_fieldset(&$variables) {
+  $element = $variables['element'];
+  $composite_types = ['checkboxes', 'radios'];
+
+  if (!empty($element['#type']) && in_array($element['#type'], $composite_types) && !empty($variables['element']['#children_errors'])) {
+    $variables['legend_span']['attributes']->addClass('has-error');
+  }
+
+  if (!empty($element['#disabled'])) {
+    $variables['legend_span']['attributes']->addClass('is-disabled');
+
+    if (!empty($variables['description']) && !empty($variables['description']['attributes'])) {
+      $variables['description']['attributes']->addClass('is-disabled');
+    }
+  }
+
+  // Remove 'container-inline' class from the main attributes and add a flag
+  // instead.
+  // @todo remove this after https://www.drupal.org/node/3059593 has been
+  //   resolved.
+  if (!empty($variables['attributes']['class'])) {
+    $container_inline_key = array_search('container-inline', $variables['attributes']['class']);
+
+    if ($container_inline_key !== FALSE) {
+      unset($variables['attributes']['class'][$container_inline_key]);
+      $variables['inline_items'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function olivero_theme_suggestions_user_alter(&$suggestions, $variables) {
+  $suggestions[] = 'user__' . $variables['elements']['#view_mode'];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_field__node__created(&$variables) {
+  foreach (Element::children($variables['items']) as $item) {
+    unset($variables['items'][$item]['content']['#prefix']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_field__node__field_image__article(&$variables) {
+  if ($variables['element']['#view_mode'] == 'full') {
+    $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide');
+    if ($image_style) {
+      foreach (Element::children($variables['items']) as $key) {
+        $variables['items'][$key]['content']['#image_style'] = 'wide';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for setting classes.
+ */
+function olivero_preprocess_filter_caption(&$variables) {
+  $variables['classes'] = isset($variables['classes']) && !empty($variables['classes']) ? $variables['classes'] . ' caption' : 'caption';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function olivero_form_comment_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $comment = $form_state->getFormObject()
+    ->getEntity();
+  /** @var \Drupal\comment\Entity\Comment $comment */
+  if ($comment->hasParentComment()) {
+    $form['actions']['submit']['#value'] = t('Reply to comment');
+  }
+  else {
+    $form['actions']['submit']['#value'] = t('Post comment');
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function olivero_form_node_preview_form_select_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['backlink']['#options']['attributes']['class'][] = 'button';
+  $form['backlink']['#options']['attributes']['class'][] = 'button--small';
+  $form['backlink']['#options']['attributes']['class'][] = 'button--icon-back';
+  $form['backlink']['#options']['attributes']['class'][] = 'button--primary';
+  $form['view_mode']['#attributes']['class'][] = 'form-element--small';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for comment.html.twig.
+ */
+function olivero_preprocess_comment(&$variables) {
+  // Getting the node creation time stamp from the comment object.
+  $date = $variables['comment']->getCreatedTime();
+  // Formatting "created" as "X days ago".
+  $variables['created'] = t('@time ago', ['@time' => \Drupal::service('date.formatter')->formatInterval(\Drupal::time()->getRequestTime() - $date)]);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field--comment.html.twig.
+ */
+function olivero_preprocess_field__comment(&$variables) {
+  // Add a comment_count.
+  $variables['comment_count'] = count(array_filter($variables['comments'], 'is_numeric', ARRAY_FILTER_USE_KEY));
+
+  // Add user.compact to field-comment if profile's avatar of current user
+  // exist.
+  $user = \Drupal::currentUser();
+  if ($user->isAuthenticated() && $user instanceof UserInterface) {
+    if ($user->hasField('user_picture') && !$user->get('user_picture')->isEmpty()) {
+      $variables['user_picture'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('user')
+        ->view($user, 'compact');
+    }
+
+    $variables['#cache']['contexts'][] = 'user';
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function olivero_element_info_alter(&$info) {
+  if (array_key_exists('text_format', $info)) {
+    $info['text_format']['#pre_render'][] = [OliveroPreRender::class, 'textFormat'];
+  }
+
+  if (isset($info['status_messages'])) {
+    $info['status_messages']['#pre_render'][] = [OliveroPreRender::class, 'messagePlaceholder'];
+  }
+}
+
+/**
+ * Implements template_preprocess_text_format_wrapper().
+ *
+ * @todo Remove when https://www.drupal.org/node/3016343 is fixed.
+ */
+function olivero_preprocess_text_format_wrapper(&$variables) {
+  $description_attributes = [];
+  if (!empty($variables['attributes']['id'])) {
+    $description_attributes['id'] = $variables['attributes']['aria-describedby'] = $variables['attributes']['id'];
+    unset($variables['attributes']['id']);
+  }
+  $variables['description_attributes'] = new Attribute($description_attributes);
+}
+
+/**
+ * Implements hook_preprocess_search_result().
+ */
+function olivero_preprocess_search_result(&$variables) {
+  // Apply custom date formatter to "date" field.
+  if (!empty($variables['result']['date'])) {
+    $variables['info_date'] = \Drupal::service('date.formatter')->format($variables['result']['node']->getCreatedTime(), 'olivero_medium');
+  }
+}
+
+/**
+ * Implements hook_preprocess_links__comment().
+ */
+function olivero_preprocess_links__comment(&$variables) {
+  foreach ($variables['links'] as &$link) {
+    $link['link']['#options']['attributes']['class'][] = 'comment__links-link';
+  }
+}
+
+/**
+ * Implements hook_preprocess_table().
+ */
+function olivero_preprocess_table(&$variables) {
+  // Mark the whole table and the first cells if rows are draggable.
+  if (!empty($variables['rows'])) {
+    $draggable_row_found = FALSE;
+    foreach ($variables['rows'] as &$row) {
+      /** @var \Drupal\Core\Template\Attribute $row['attributes'] */
+      if (!empty($row['attributes']) && $row['attributes']->hasClass('draggable')) {
+        if (!$draggable_row_found) {
+          $variables['attributes']['class'][] = 'draggable-table';
+          $draggable_row_found = TRUE;
+        }
+      }
+    }
+  }
+}

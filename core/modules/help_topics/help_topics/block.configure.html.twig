@@ -1,0 +1,26 @@
+---
+label: 'Configuring a previously-placed block'
+related:
+  - block.overview
+  - core.ui_accessibility
+---
+{% set layout_url = render_var(url('block.admin_display')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure the settings of a block that was previously placed in a region of a theme.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ layout_url }}"><em>Block layout</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click the name of the theme that contains the block.{% endtrans %}</li>
+  <li>{% trans %}Optionally, click <em>Demonstrate block regions</em> to see the regions of the theme.{% endtrans %}</li>
+  <li>{% trans %}If you only want to change the region where a block is located, or the ordering of blocks within a region, drag blocks to their desired positions and click <em>Save blocks</em>.{% endtrans %}</li>
+<li>{% trans %}If you want to change additional settings, find the region where the block you want to update is currently located, and click <em>Configure</em> in the line of the block description.{% endtrans %}</li>
+  <li>{% trans %}Edit the block's settings. The available settings vary depending on the module that provides the block, but for all blocks you can change:{% endtrans %}
+    <ul>
+      <li>{% trans %}<em>Block title</em>: The heading for the block on your site -- for some blocks, you will need to check the <em>Override title</em> checkbox in order to enter a title{% endtrans %}</li>
+      <li>{% trans %}<em>Display title</em>: Check the box if you want the title displayed{% endtrans %}</li>
+      <li>{% trans %}<em>Visibility</em>: Add conditions for when the block should be displayed{% endtrans %}</li>
+      <li>{% trans %}<em>Region</em>: Change the theme region the block is displayed in{% endtrans %}</li>
+    </ul>
+  </li>
+  <li>{% trans %}Click <em>Save block</em>.{% endtrans %}</li>
+</ol>

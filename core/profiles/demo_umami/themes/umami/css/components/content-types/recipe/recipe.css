@@ -1,0 +1,74 @@
+/**
+* @file
+* This file is used to style the recipe using the 'full' view mode.
+*/
+
+/* Icons for the recipe meta fields */
+.node--type-recipe.node--view-mode-full .field--name-field-preparation-time,
+.node--type-recipe.node--view-mode-full .field--name-field-cooking-time,
+.node--type-recipe.node--view-mode-full .field--name-field-number-of-servings,
+.node--type-recipe.node--view-mode-full .field--name-field-difficulty {
+  align-items: center;
+  min-height: 40px;
+  margin-bottom: 0.96em;
+  padding-left: 48px; /* LTR */
+  background-repeat: no-repeat;
+  background-position: left center; /* LTR */
+  background-size: 40px 40px;
+}
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-preparation-time,
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-cooking-time,
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-number-of-servings,
+[dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-difficulty {
+  padding-right: 48px;
+  padding-left: 0;
+  background-position: right center;
+}
+/* Large */
+@media screen and (min-width: 60rem) {  /* 960px */
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty {
+    padding-top: 64px;
+    padding-left: 0; /* LTR */
+    text-align: center;
+    background-position: center top; /* LTR */
+    background-size: 56px 56px;
+  }
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time,
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time,
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings,
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty {
+    padding-right: 0;
+  }
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time {
+    margin-top: 0.96em;
+  }
+
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time .field__item,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time .field__item,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings .field__item,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty .field__item {
+    width: 100%;
+    padding-right: 0;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .field--name-field-preparation-time {
+  background-image: url(../../../../images/svg/knife.svg);
+}
+.node--type-recipe.node--view-mode-full .field--name-field-cooking-time {
+  background-image: url(../../../../images/svg/timer.svg);
+}
+.node--type-recipe.node--view-mode-full .field--name-field-number-of-servings {
+  background-image: url(../../../../images/svg/serves.svg);
+}
+.node--type-recipe.node--view-mode-full .field--name-field-difficulty {
+  background-image: url(../../../../images/svg/difficulty.svg);
+}

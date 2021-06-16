@@ -1,0 +1,3 @@
+name: Test Theme with a Base Theme Depending on Modules
+type: theme
+base theme: test_theme_depending_on_modules

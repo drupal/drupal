@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Theme override for comment fields.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether to show the field label or not.
+ * - title_attributes: HTML attributes for the title.
+ * - label: The label for the field.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional title output populated by modules, intended to
+ *   be displayed after the main title tag that appears in the template.
+ * - comments: List of comments rendered through comment.html.twig.
+ * - comment_count: Count of comments rendered through comment.html.twig.
+ * - content_attributes: HTML attributes for the form title.
+ * - comment_form: The 'Add new comment' form.
+ * - comment_display_mode: Is the comments are threaded.
+ * - comment_type: The comment type bundle ID for the comment field.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
+ *
+ * @see template_preprocess_field()
+ * @see comment_preprocess_field()
+ */
+#}
+
+{{ attach_library('olivero/comments') }}
+<section{{ attributes.addClass('comments') }}>
+
+  {% if comments and not label_hidden %}
+    {{ title_prefix }}
+    <h2{{ title_attributes.addClass('comments__title') }}>{{ label }} <span class="comments__count">{{ comment_count }}</span></h2>
+    {{ title_suffix }}
+  {% endif %}
+
+  {% if comment_form %}
+    <div class="add-comment">
+      {% if user_picture %}
+      <div class="add-comment__picture-wrapper">
+        <div class="add-comment__picture">
+          {{ user_picture }}
+        </div>
+      </div>
+      {% endif %}
+      <div class="add-comment__form">
+        {{ comment_form }}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ comments }}
+
+</section>

@@ -1,0 +1,5 @@
+name: Color
+type: module
+description: 'Allows users to change the color scheme of compatible themes.'
+package: Core
+version: VERSION

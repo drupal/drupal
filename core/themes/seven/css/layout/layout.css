@@ -1,0 +1,14 @@
+/**
+ * Add spacing to bottom of pages
+ */
+.page-content {
+  margin-bottom: 80px;
+}
+
+/**
+ * Add color to layout icons.
+ */
+.layout-icon__region {
+  fill: #f5f5f2;
+  stroke: #666;
+}

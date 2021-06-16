@@ -1,0 +1,4 @@
+name: 'Migrate events test'
+type: module
+package: Testing
+version: VERSION

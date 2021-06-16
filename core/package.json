@@ -1,0 +1,110 @@
+{
+  "name": "Drupal",
+  "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+  "license": "GPL-2.0",
+  "private": true,
+  "engines": {
+    "yarn": ">= 1.6",
+    "node": ">= 12.0"
+  },
+  "scripts": {
+    "build": "yarn build:css & yarn build:js & yarn build:jqueryui",
+    "watch": "yarn watch:css & yarn watch:js",
+    "build:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-build.js",
+    "watch:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-watch.js",
+    "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
+    "build:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
+    "build:jqueryui": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/jqueryui-build.js",
+    "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
+    "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
+    "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",
+    "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json .",
+    "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js .",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js",
+    "test:nightwatch": "cross-env BABEL_ENV=development node -r dotenv-safe/config -r @babel/register ./node_modules/.bin/nightwatch --config ./tests/Drupal/Nightwatch/nightwatch.conf.js",
+    "prettier": "prettier --write \"./**/*.es6.js\" \"./tests/Drupal/Nightwatch/**/*.js\"",
+    "spellcheck": "cspell",
+    "spellcheck:make-drupal-dict": "rm -f misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --wordsOnly | tr '[:upper:]' '[:lower:]' | tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
+    "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.7.7",
+    "babel-plugin-add-header-comment": "^1.0.3",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.3.1",
+    "chromedriver": "^87.0.0",
+    "cross-env": "^7.0.2",
+    "cspell": "^4.0.63",
+    "dotenv-safe": "^8.2.0",
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.10.0",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "glob": "^7.1.2",
+    "minimist": "^1.2.2",
+    "mkdirp": "^1.0.4",
+    "nightwatch": "^1.6.3",
+    "postcss": "^7.0.18",
+    "postcss-calc": "^7.0.1",
+    "postcss-header": "^2.0.0",
+    "postcss-import": "^12.0.1",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-pxtorem": "^5.1.1",
+    "postcss-url": "^8.0.0",
+    "prettier": "^2.1.2",
+    "stylelint": "^13.0.0",
+    "stylelint-checkstyle-formatter": "^0.1.1",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-order": "^4.0.0",
+    "terser": "^5.3.4"
+  },
+  "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
+  "babel": {
+    "env": {
+      "development": {
+        "presets": [
+          [
+            "@babel/preset-env",
+            {
+              "modules": "commonjs",
+              "targets": {
+                "node": "current"
+              }
+            }
+          ]
+        ]
+      },
+      "legacy": {
+        "presets": [
+          [
+            "@babel/preset-env",
+            {
+              "modules": false
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "browserslist": [
+    "last 2 Chrome major versions",
+    "last 2 Firefox major versions",
+    "last 2 Safari major versions",
+    "last 2 Edge major versions",
+    "last 2 Opera versions",
+    "last 2 iOS major versions",
+    "last 1 Explorer major version",
+    "last 1 ChromeAndroid version",
+    "last 1 UCAndroid version",
+    "last 1 Samsung version",
+    "last 1 OperaMini version",
+    "Firefox ESR"
+  ]
+}

@@ -1,0 +1,7 @@
+name: 'Views UI Test'
+type: module
+description: 'Test module for Views UI.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:views_ui

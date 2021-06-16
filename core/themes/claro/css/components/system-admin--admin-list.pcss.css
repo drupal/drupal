@@ -1,0 +1,71 @@
+/**
+ * @file
+ * Admin list and admin item modules.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Admin list (wrapper of admin items).
+ */
+.admin-list {
+  margin-top: 1em;
+  margin-bottom: 2em;
+  padding: 0;
+}
+.admin-list--panel {
+  margin: -1em -1.5em;
+}
+
+/**
+ * Admin item.
+ */
+.admin-item {
+  padding: 0.75em 1.5em 0.75em 3em;
+}
+[dir="rtl"] .admin-item {
+  padding-right: 3em;
+  padding-left: 1.5em;
+}
+.admin-item:not(:last-child) {
+  border-bottom: calc(1em / 16) solid var(--color-lightgray);
+}
+.admin-item__title {
+  font-weight: bold;
+}
+.admin-item__link {
+  position: relative;
+  display: inline-block;
+  margin-left: -1.5em;
+  padding-left: 1.5em;
+  text-decoration: none;
+}
+[dir="rtl"] .admin-item__link {
+  margin-right: -1.5em;
+  margin-left: 0;
+  padding-right: 1.5em;
+  padding-left: 0;
+}
+.admin-item__link::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 1em;
+  height: 1.5em;
+  content: "";
+  background: transparent no-repeat 50% 50%;
+  background-image: url(../../images/icons/004adc/arrow-right.svg);
+}
+[dir="rtl"] .admin-item__link::before {
+  right: 0;
+  left: auto;
+  background-image: url(../../images/icons/004adc/arrow-left.svg);
+}
+.admin-item__description {
+  margin: 0.5em 0 0.25em;
+  color: var(--color-oldsilver);
+}
+[dir="rtl"] .admin-item__description {
+  margin-right: 0;
+}

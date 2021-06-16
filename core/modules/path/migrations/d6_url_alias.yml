@@ -1,0 +1,58 @@
+id: d6_url_alias
+label: URL aliases
+migration_tags:
+  - Drupal 6
+  - Content
+source:
+  plugin: d6_url_alias
+  constants:
+    slash: '/'
+process:
+  # If you are using this file to build a custom migration consider removing
+  # the id field to allow incremental migrations.
+  id: pid
+  _path:
+    plugin: concat
+    source:
+      - constants/slash
+      - src
+  alias:
+    plugin: concat
+    source:
+      - constants/slash
+      - dst
+
+  node_translation:
+    -
+      plugin: explode
+      source: src
+      delimiter: /
+    -
+      # If the source path has no slashes return a dummy default value.
+      plugin: extract
+      default: 'INVALID_NID'
+      index:
+        - 1
+    -
+      plugin: migration_lookup
+      migration:
+        - d6_node_complete
+        - d6_node_translation
+    -
+      plugin: node_complete_node_translation_lookup
+  langcode:
+    -
+      plugin: null_coalesce
+      source:
+        - '@node_translation/1'
+        - language
+    -
+      plugin: default_value
+      default_value: 'und'
+  path:
+    plugin: path_set_translated
+    source:
+      - '@_path'
+      - '@node_translation'
+destination:
+  plugin: entity:path_alias

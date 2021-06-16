@@ -1,0 +1,4 @@
+name: 'Element info test'
+type: module
+package: Testing
+version: VERSION

@@ -1,0 +1,4 @@
+entity.workspace.collection:
+  title: 'List'
+  route_name: entity.workspace.collection
+  base_route: entity.workspace.collection

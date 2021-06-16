@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Comment module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_uninstall().
+ */
+function comment_uninstall() {
+  // Remove the comment fields.
+  $storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
+  $fields = $storage->loadByProperties(['type' => 'comment']);
+  $storage->delete($fields);
+
+  // Remove state setting.
+  \Drupal::state()->delete('comment.node_comment_statistics_scale');
+}
+
+/**
+ * Implements hook_install().
+ */
+function comment_install() {
+  // By default, maintain entity statistics for comments.
+  // @see \Drupal\comment\CommentStatisticsInterface
+  \Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
+}
+
+/**
+ * Implements hook_schema().
+ */
+function comment_schema() {
+  $schema['comment_entity_statistics'] = [
+    'description' => 'Maintains statistics of entity and comments posts to show "new" and "updated" flags.',
+    'fields' => [
+      'entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The entity_id of the entity for which the statistics are compiled.',
+      ],
+      'entity_type' => [
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => 'node',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+        'description' => 'The entity_type of the entity to which this comment is a reply.',
+      ],
+      'field_name' => [
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => '',
+        'length' => FieldStorageConfig::NAME_MAX_LENGTH,
+        'description' => 'The field_name of the field that was used to add this comment.',
+      ],
+      'cid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {comment}.cid of the last comment.',
+      ],
+      'last_comment_timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
+      ],
+      'last_comment_name' => [
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'description' => 'The name of the latest author to post a comment on this node, from {comment}.name.',
+      ],
+      'last_comment_uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
+      ],
+      'comment_count' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The total number of comments on this entity.',
+      ],
+    ],
+    'primary key' => ['entity_id', 'entity_type', 'field_name'],
+    'indexes' => [
+      'last_comment_timestamp' => ['last_comment_timestamp'],
+      'comment_count' => ['comment_count'],
+      'last_comment_uid' => ['last_comment_uid'],
+    ],
+    'foreign keys' => [
+      'last_comment_author' => [
+        'table' => 'users',
+        'columns' => [
+          'last_comment_uid' => 'uid',
+        ],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function comment_update_last_removed() {
+  return 8701;
+}

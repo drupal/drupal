@@ -1,0 +1,4 @@
+entity.node.test_local_task_without_upcast_node:
+  route_name: entity.node.test_local_task_without_upcast_node
+  base_route: entity.node.canonical
+  title: 'Task Without Upcast Node'

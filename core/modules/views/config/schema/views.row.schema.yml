@@ -1,0 +1,91 @@
+# Schema for the views row.
+
+views.row.*:
+  type: views_row
+
+views.row.entity:*:
+  type: views_entity_row
+  label: 'Entity options'
+
+views.row.fields:
+  type: views_row
+  label: 'Field options'
+  mapping:
+    default_field_elements:
+      type: boolean
+      label: 'Provide default field wrapper elements'
+    inline:
+      type: sequence
+      label: 'Inline'
+      sequence:
+        type: string
+        label: 'Inline'
+    separator:
+      type: string
+      label: 'Separator'
+    hide_empty:
+      type: boolean
+      label: 'Hide empty'
+
+views.row.rss_fields:
+  type: views_row
+  label: 'RSS field options'
+  mapping:
+    title_field:
+      type: string
+      label: 'Title field'
+    link_field:
+      type: string
+      label: 'Link field'
+    description_field:
+      type: string
+      label: 'Description field'
+    creator_field:
+      type: string
+      label: 'Creator field'
+    date_field:
+      type: string
+      label: 'Publication date field'
+    guid_field_options:
+      type: mapping
+      label: 'Guid settings'
+      mapping:
+        guid_field:
+          type: string
+          label: 'GUID field'
+        guid_field_is_permalink:
+          type: boolean
+          label: 'GUID is permalink'
+
+views.row.opml_fields:
+  type: views_row
+  label: 'OPML field options'
+  mapping:
+    type_field:
+      type: string
+      label: 'Type attribute'
+    text_field:
+      type: string
+      label: 'Text attribute'
+    created_field:
+      type: string
+      label: 'Created attribute'
+    description_field:
+      type: string
+      label: 'Description attribute'
+    html_url_field:
+      type: string
+      label: 'HTML URL attribute'
+    language_field:
+      type: string
+      label: 'Language attribute'
+    xml_url_field:
+      type: string
+      label: 'XML URL attribute'
+    url_field:
+      type: string
+      label: 'URL attribute'
+
+views.row.entity_reference:
+  type: views.row.fields
+  label: 'Entity Reference inline fields'

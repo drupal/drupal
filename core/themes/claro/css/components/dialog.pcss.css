@@ -1,0 +1,158 @@
+/**
+ * @file
+ * Presentational styles for Drupal dialogs.
+ */
+
+@import "../base/variables.pcss.css";
+
+.ui-dialog {
+  padding: 0;
+  border: 0;
+  border-radius: var(--jui-dialog-border-radius);
+  background: transparent;
+  box-shadow: var(--jui-dialog-box-shadow);
+}
+
+.ui-dialog:focus {
+  outline: var(--jui-dialog--focus-outline);
+  box-shadow: var(--jui-dialog--focus-box-shadow);
+}
+
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog:not(.ui-dialog-off-canvas) {
+    min-width: 92%;
+    max-width: 92%;
+  }
+}
+
+.ui-dialog .ui-dialog-titlebar {
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--space-m) var(--jui-dialog-close-button-reserved-space) var(--space-m) var(--space-l); /* LTR */
+  color: var(--jui-dialog-title-color);
+  border-top-left-radius: var(--jui-dialog-border-radius);
+  border-top-right-radius: var(--jui-dialog-border-radius);
+  background: var(--jui-dialog-title-bg-color);
+  line-height: calc(var(--space-m) * 2);
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar {
+  padding-right: var(--space-l);
+  padding-left: var(--jui-dialog-close-button-reserved-space);
+}
+
+.ui-dialog .ui-dialog-title {
+  -webkit-font-smoothing: antialiased;
+  font-size: var(--jui-dialog-title-font-size);
+  font-weight: bold;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  position: absolute;
+  top: 50%;
+  right: 0; /* LTR */
+  box-sizing: border-box;
+  width: var(--jui-dialog-close-button-size);
+  height: var(--jui-dialog-close-button-size);
+  margin: 0 var(--space-l);
+  padding: 0;
+  transition: all 0.1s;
+  transform: translateY(-50%);
+  border: 2px solid transparent;
+  border-radius: var(--jui-dialog-close-button-border-radius);
+  background: none;
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
+  right: auto;
+  left: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar-close:hover {
+  border-color: var(--color-white);
+}
+
+.ui-dialog .ui-dialog-titlebar-close:focus {
+  border-color: var(--color-focus);
+  outline: var(--jui-dialog--focus-outline);
+  box-shadow: none;
+}
+
+.ui-dialog .ui-icon.ui-icon-closethick {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  background: url(../../images/icons/d3d4d9/ex.svg) no-repeat 50%;
+}
+
+.ui-dialog > .ui-dialog-content {
+  overflow: auto;
+  padding: var(--space-m) var(--space-l);
+  color: var(--color-text);
+  background: var(--color-white);
+}
+
+.ui-dialog > .ui-dialog-buttonpane {
+  color: var(--color-text);
+  border-bottom-right-radius: var(--jui-dialog-border-radius);
+  border-bottom-left-radius: var(--jui-dialog-border-radius);
+  background: var(--color-whitesmoke);
+}
+
+.ui-dialog-buttonpane .ui-dialog-buttonset {
+  justify-content: flex-end;
+  margin: 0 var(--space-s);
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
+  padding: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+  position: static;
+}
+
+/* Form action buttons are moved in dialogs. Remove empty space. */
+.ui-dialog .ui-dialog-content .form-actions {
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Off-canvas styles.
+ */
+.ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
+  background: none;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .ui-dialog .ui-icon.ui-icon-closethick {
+    background: none;
+  }
+
+  .ui-dialog .ui-icon.ui-icon-closethick::before,
+  .ui-dialog .ui-icon.ui-icon-closethick::after {
+    position: relative;
+    display: block;
+    width: 50%;
+    height: 100%;
+    content: "";
+  }
+  .ui-dialog .ui-icon.ui-icon-closethick::before {
+    top: -40%;
+    left: 60%;
+    transform: rotate(45deg);
+    border-bottom: 2px white solid;
+  }
+  .ui-dialog .ui-icon.ui-icon-closethick::after {
+    top: -78%;
+    left: 60%;
+    transform: rotate(-45deg);
+    border-top: 2px white solid;
+  }
+}
+
+#drupal-off-canvas {
+  & .form-type--boolean {
+    margin-left: 0;
+  }
+}

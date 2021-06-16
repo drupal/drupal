@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for tracker.module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function tracker_uninstall() {
+  \Drupal::state()->delete('tracker.index_nid');
+}
+
+/**
+ * Implements hook_install().
+ */
+function tracker_install() {
+  $max_nid = \Drupal::database()->query('SELECT MAX([nid]) FROM {node}')->fetchField();
+  if ($max_nid != 0) {
+    \Drupal::state()->set('tracker.index_nid', $max_nid);
+    // To avoid timing out while attempting to do a complete indexing, we
+    // simply call our cron job to remove stale records and begin the process.
+    tracker_cron();
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function tracker_schema() {
+  $schema['tracker_node'] = [
+    'description' => 'Tracks when nodes were last changed or commented on.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {node}.nid this record tracks.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'published' => [
+        'description' => 'Boolean indicating whether the node is published.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ],
+      'changed' => [
+        'description' => 'The Unix timestamp when the node was most recently saved or commented on.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'indexes' => [
+      'tracker' => ['published', 'changed'],
+    ],
+    'primary key' => ['nid'],
+    'foreign keys' => [
+      'tracked_node' => [
+        'table' => 'node',
+        'columns' => ['nid' => 'nid'],
+      ],
+    ],
+  ];
+
+  $schema['tracker_user'] = [
+    'description' => 'Tracks when nodes were last changed or commented on, for each user that authored the node or one of its comments.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {node}.nid this record tracks.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'uid' => [
+        'description' => 'The {users}.uid of the node author or commenter.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'published' => [
+        'description' => 'Boolean indicating whether the node is published.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ],
+      'changed' => [
+        'description' => 'The Unix timestamp when the node was most recently saved or commented on.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'indexes' => [
+      'tracker' => ['uid', 'published', 'changed'],
+    ],
+    'primary key' => ['nid', 'uid'],
+    'foreign keys' => [
+      'tracked_node' => [
+        'table' => 'node',
+        'columns' => ['nid' => 'nid'],
+      ],
+      'tracked_user' => [
+        'table' => 'users',
+        'columns' => ['uid' => 'uid'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}

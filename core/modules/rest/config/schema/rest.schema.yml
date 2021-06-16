@@ -1,0 +1,87 @@
+# Method-level granularity of REST resource configuration.
+rest_resource.method:
+  type: mapping
+  mapping:
+    HEAD:
+      type: rest_request
+      label: 'HEAD method settings'
+    GET:
+      type: rest_request
+      label: 'GET method settings'
+    POST:
+      type: rest_request
+      label: 'POST method settings'
+    PUT:
+      type: rest_request
+      label: 'PUT method settings'
+    DELETE:
+      type: rest_request
+      label: 'DELETE method settings'
+    TRACE:
+      type: rest_request
+      label: 'TRACE method settings'
+    OPTIONS:
+      type: rest_request
+      label: 'OPTIONS method settings'
+    CONNECT:
+      type: rest_request
+      label: 'CONNECT method settings'
+    PATCH:
+      type: rest_request
+      label: 'PATCH method settings'
+
+# Resource-level granularity of REST resource configuration.
+rest_resource.resource:
+  type: mapping
+  mapping:
+    methods:
+      type: sequence
+      label: 'Supported methods'
+      sequence:
+        type: string
+        label: 'HTTP method'
+    formats:
+      type: sequence
+      label: 'Supported formats'
+      sequence:
+        type: string
+        label: 'Format'
+    authentication:
+      type: sequence
+      label: 'Supported authentication providers'
+      sequence:
+        type: string
+        label: 'Authentication provider'
+
+rest_request:
+  type: mapping
+  mapping:
+    supported_formats:
+      type: sequence
+      label: 'Supported format'
+      sequence:
+        type: string
+        label: 'Format'
+    supported_auth:
+      type: sequence
+      label: 'Supported authentication'
+      sequence:
+        type: string
+        label: 'Authentication'
+
+rest.resource.*:
+  type: config_entity
+  label: 'REST resource config'
+  mapping:
+    id:
+      type: string
+      label: 'REST resource config ID'
+    plugin_id:
+      type: string
+      label: 'REST resource plugin id'
+    granularity:
+      type: string
+      label: 'REST resource configuration granularity'
+    configuration:
+      type: rest_resource.[%parent.granularity]
+      label: 'REST resource configuration'

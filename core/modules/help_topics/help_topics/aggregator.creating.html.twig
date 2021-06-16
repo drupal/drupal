@@ -1,0 +1,18 @@
+---
+label: 'Creating a feed'
+related:
+  - aggregator.overview
+  - aggregator.managing
+---
+{% set aggregator_overview_url = render_var(url('aggregator.admin_overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create a new feed to display syndicated data from an outside source on your website, or import an OPML file to create multiple feeds.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Web services</em> &gt; <a href="{{ aggregator_overview_url }}"><em>Aggregator</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add feed</em> if you have an individual feed URL to add, or <em>Import OPML</em> if you have an OPML-formatted list of feeds to add.{% endtrans %}</li>
+  <li>{% trans %}If you clicked <em>Add feed</em>, enter a <em>Title</em> for the feed and the <em>URL</em> of the feed. Select an <em>Update interval</em> and click <em>Save</em>.{% endtrans %}</li>
+  <li>{% trans %}If you clicked <em>Import OPML</em>, either choose an <em>OPML file</em> from your local computer or enter an <em>OPML Remote URL</em> to import an OPML list from a URL. Select an <em>Update interval</em> and click <em>Import</em>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate back to <em>Configuration</em> &gt; <em>Web services</em> &gt; <a href="{{ aggregator_overview_url }}"><em>Aggregator</em></a>. You should see the new feed or feeds that you added in the list under <em>Feed overview</em>.{% endtrans %}</li>
+  <li>{% trans %}To verify that your feed is working, click <em>Update items</em> in the <em>Operations</em> list for your feed, and then click the feed name to view the imported items on the standard provided feed page.{% endtrans %}</li>
+</ol>

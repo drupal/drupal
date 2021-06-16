@@ -1,0 +1,10 @@
+/**
+ * @file
+ * CKEditor frame styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.cke_editable:not(.cke_editable_inline) {
+  margin: 1em calc(1em - var(--input-border-size) - var(--input-border-size));
+}

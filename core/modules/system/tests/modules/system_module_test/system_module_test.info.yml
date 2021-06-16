@@ -1,0 +1,5 @@
+name: 'System test'
+type: module
+description: 'Provides hook implementations for testing System module functionality.'
+package: Testing
+version: VERSION

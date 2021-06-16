@@ -1,0 +1,191 @@
+<?php
+
+/**
+ * @file
+ * A dummy module for testing node related hooks.
+ *
+ * This is a dummy module that implements node related hooks to test API
+ * interaction with the Node module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for node entities.
+ */
+function node_test_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode == 'rss') {
+    // Add RSS elements and namespaces when building the RSS feed.
+    $node->rss_elements[] = [
+      'key' => 'testElement',
+      'value' => t('Value of testElement RSS element for node @nid.', ['@nid' => $node->id()]),
+    ];
+
+    // Add content that should be displayed only in the RSS feed.
+    $build['extra_feed_content'] = [
+      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node @nid.', ['@nid' => $node->id()]) . '</p>',
+      '#weight' => 10,
+    ];
+  }
+
+  if ($view_mode != 'rss') {
+    // Add content that should NOT be displayed in the RSS feed.
+    $build['extra_non_feed_content'] = [
+      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node @nid.', ['@nid' => $node->id()]) . '</p>',
+    ];
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_build_defaults_alter() for node entities.
+ */
+function node_test_node_build_defaults_alter(array &$build, NodeInterface &$node, $view_mode = 'full') {
+  if ($view_mode == 'rss') {
+    $node->rss_namespaces['xmlns:drupaltest'] = 'http://example.com/test-namespace';
+  }
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function node_test_node_grants(AccountInterface $account, $op) {
+  // Give everyone full grants so we don't break other node tests.
+  // Our node access tests asserts three realms of access.
+  // See testGrantAlter().
+  return [
+    'test_article_realm' => [1],
+    'test_page_realm' => [1],
+    'test_alter_realm' => [2],
+  ];
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function node_test_node_access_records(NodeInterface $node) {
+  // Return nothing when testing for empty responses.
+  if (!empty($node->disable_node_access)) {
+    return;
+  }
+  $grants = [];
+  if ($node->getType() == 'article') {
+    // Create grant in arbitrary article_realm for article nodes.
+    $grants[] = [
+      'realm' => 'test_article_realm',
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+    ];
+  }
+  elseif ($node->getType() == 'page') {
+    // Create grant in arbitrary page_realm for page nodes.
+    $grants[] = [
+      'realm' => 'test_page_realm',
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+    ];
+  }
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records_alter().
+ */
+function node_test_node_access_records_alter(&$grants, NodeInterface $node) {
+  if (!empty($grants)) {
+    foreach ($grants as $key => $grant) {
+      // Alter grant from test_page_realm to test_alter_realm and modify the gid.
+      if ($grant['realm'] == 'test_page_realm' && $node->isPromoted()) {
+        $grants[$key]['realm'] = 'test_alter_realm';
+        $grants[$key]['gid'] = 2;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_grants_alter().
+ */
+function node_test_node_grants_alter(&$grants, AccountInterface $account, $op) {
+  // Return an empty array of grants to prove that we can alter by reference.
+  $grants = [];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
+ */
+function node_test_node_presave(NodeInterface $node) {
+  if ($node->getTitle() == 'testing_node_presave') {
+    // Sun, 19 Nov 1978 05:00:00 GMT
+    $node->setCreatedTime(280299600);
+    // Drupal 1.0 release.
+    $node->changed = 979534800;
+  }
+  // Determine changes.
+  if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
+    if ($node->original->getTitle() != $node->getTitle()) {
+      $node->title->value .= '_presave';
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for node entities.
+ */
+function node_test_node_update(NodeInterface $node) {
+  // Determine changes on update.
+  if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
+    if ($node->original->getTitle() != $node->getTitle()) {
+      $node->title->value .= '_update';
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function node_test_entity_view_mode_alter(&$view_mode, EntityInterface $entity) {
+  // Only alter the view mode if we are on the test callback.
+  $change_view_mode = \Drupal::state()->get('node_test_change_view_mode', '');
+  if ($change_view_mode) {
+    $view_mode = $change_view_mode;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
+ *
+ * This tests saving a node on node insert.
+ *
+ * @see \Drupal\node\Tests\NodeSaveTest::testNodeSaveOnInsert()
+ */
+function node_test_node_insert(NodeInterface $node) {
+  // Set the node title to the node ID and save.
+  if ($node->getTitle() == 'new') {
+    $node->setTitle('Node ' . $node->id());
+    $node->setNewRevision(FALSE);
+    $node->save();
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function node_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!$form_state->get('node_test_form_alter')) {
+    \Drupal::messenger()->addStatus('Storage is not set');
+    $form_state->set('node_test_form_alter', TRUE);
+  }
+  else {
+    \Drupal::messenger()->addStatus('Storage is set');
+  }
+}

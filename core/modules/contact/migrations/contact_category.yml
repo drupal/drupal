@@ -1,0 +1,24 @@
+id: contact_category
+label: Contact category configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: contact_category
+process:
+  id:
+    -
+      plugin: machine_name
+      source: category
+    -
+      plugin: make_unique_entity_field
+      entity_type: contact_form
+      field: id
+      length: 30
+  label: category
+  recipients: recipients
+  reply: reply
+  weight: weight
+destination:
+  plugin: entity:contact_form

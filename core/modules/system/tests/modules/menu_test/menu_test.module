@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Module that implements various hooks for menu tests.
+ */
+
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function menu_test_menu_links_discovered_alter(&$links) {
+  // Many of the machine names here are slightly different from the route name.
+  // Since the machine name is arbitrary, this helps ensure that core does not
+  // add mistaken assumptions about the correlation.
+  $links['menu_test.menu_name_test']['menu_name'] = menu_test_menu_name();
+  $links['menu_test.context']['title'] = \Drupal::config('menu_test.menu_item')->get('title');
+
+  // Adds a custom menu link.
+  $links['menu_test.custom'] = [
+    'title' => 'Custom link',
+    'route_name' => 'menu_test.custom',
+    'description' => 'Custom link used to check the integrity of manually added menu links.',
+    'parent' => 'menu_test',
+  ];
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function menu_test_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  if (in_array($route_name, ['menu_test.tasks_default'])) {
+    $data['tabs'][0]['foo'] = [
+      '#theme' => 'menu_local_task',
+      '#link' => [
+        'title' => "Task 1 <script>alert('Welcome to the jungle!')</script>",
+        'url' => Url::fromRoute('menu_test.router_test1', ['bar' => '1']),
+      ],
+      '#weight' => 10,
+    ];
+    $data['tabs'][0]['bar'] = [
+      '#theme' => 'menu_local_task',
+      '#link' => [
+        'title' => 'Task 2',
+        'url' => Url::fromRoute('menu_test.router_test2', ['bar' => '2']),
+      ],
+      '#weight' => 20,
+    ];
+  }
+  $cacheability->addCacheTags(['kittens:dwarf-cat']);
+}
+
+/**
+ * Sets a static variable for the testMenuName() test.
+ *
+ * Used to change the menu_name parameter of a menu.
+ *
+ * @param string $new_name
+ *   (optional) If set, will change the $menu_name value.
+ *
+ * @return string
+ *   The $menu_name value to use.
+ */
+function menu_test_menu_name($new_name = '') {
+  static $menu_name = 'original';
+  if ($new_name) {
+    $menu_name = $new_name;
+  }
+  return $menu_name;
+}
+
+/**
+ * Title callback: Concatenates the title and case number.
+ *
+ * @param string $title
+ *   Title string.
+ * @param int $case_number
+ *   (optional) The current case number which it tests (defaults to 3).
+ *
+ * @return string
+ *   A string containing the title and case number.
+ *
+ * @see menu_test_menu()
+ */
+function menu_test_title_callback($title, $case_number = 3) {
+  return t($title) . ' - Case ' . $case_number;
+}

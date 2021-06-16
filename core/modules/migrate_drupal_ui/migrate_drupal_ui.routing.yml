@@ -1,0 +1,54 @@
+migrate_drupal_ui.upgrade:
+  path: '/upgrade'
+  defaults:
+    _form: '\Drupal\migrate_drupal_ui\Form\OverviewForm'
+    _title: 'Upgrade'
+  requirements:
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
+  options:
+    _admin_route: TRUE
+migrate_drupal_ui.upgrade_incremental:
+  path: '/upgrade/incremental'
+  defaults:
+    _form: '\Drupal\migrate_drupal_ui\Form\IncrementalForm'
+    _title: 'Upgrade'
+  requirements:
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
+  options:
+    _admin_route: TRUE
+migrate_drupal_ui.upgrade_credential:
+  path: '/upgrade/credentials'
+  defaults:
+    _form: '\Drupal\migrate_drupal_ui\Form\CredentialForm'
+    _title: 'Upgrade'
+  requirements:
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
+  options:
+    _admin_route: TRUE
+migrate_drupal_ui.upgrade_idconflict:
+  path: '/upgrade/idconflict'
+  defaults:
+    _form: '\Drupal\migrate_drupal_ui\Form\IdConflictForm'
+    _title: 'Upgrade'
+  requirements:
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
+  options:
+    _admin_route: TRUE
+migrate_drupal_ui.upgrade_review:
+  path: '/upgrade/review'
+  defaults:
+    _form: '\Drupal\migrate_drupal_ui\Form\ReviewForm'
+    _title: 'Upgrade'
+  requirements:
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
+  options:
+    _admin_route: TRUE
+
+migrate_drupal_ui.log:
+  path: '/admin/reports/upgrade'
+  defaults:
+      _controller: '\Drupal\migrate_drupal_ui\Controller\MigrateController::showLog'
+  requirements:
+    _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,84 @@
+core.entity_view_display.*.*.*.third_party.layout_builder:
+  type: mapping
+  label: 'Per-view-mode Layout Builder settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Whether the Layout Builder is enabled for this display'
+    allow_custom:
+      type: boolean
+      label: 'Allow a customized layout'
+    sections:
+      type: sequence
+      sequence:
+        type: layout_builder.section
+
+layout_builder.section:
+  type: mapping
+  label: 'Layout section'
+  mapping:
+    layout_id:
+      type: string
+      label: 'Layout ID'
+    layout_settings:
+      type: layout_plugin.settings.[%parent.layout_id]
+      label: 'Layout settings'
+    components:
+      type: sequence
+      label: 'Components'
+      sequence:
+        type: layout_builder.component
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: '[%parent.%parent.%type].third_party.[%key]'
+
+layout_builder.component:
+  type: mapping
+  label: 'Component'
+  mapping:
+    configuration:
+      type: block.settings.[id]
+    region:
+      type: string
+      label: 'Region'
+    uuid:
+      type: uuid
+      label: 'UUID'
+    weight:
+      type: integer
+      label: 'Weight'
+    additional:
+      type: ignore
+      label: 'Additional data'
+
+inline_block:
+  type: block_settings
+  label: 'Inline block'
+  mapping:
+    view_mode:
+      type: string
+      label: 'View mode'
+    block_revision_id:
+      type: integer
+      label: 'Block revision ID'
+    block_serialized:
+      type: string
+      label: 'Serialized block'
+
+block.settings.inline_block:*:
+  type: inline_block
+
+layout_builder_multi_width:
+  type: layout_plugin.settings
+  mapping:
+    column_widths:
+      type: string
+      label: 'Column widths'
+
+layout_plugin.settings.layout_twocol_section:
+  type: layout_builder_multi_width
+
+layout_plugin.settings.layout_threecol_section:
+  type: layout_builder_multi_width

@@ -1,0 +1,5 @@
+name: help_test
+type: module
+package: Testing
+dependencies:
+  - drupal:help

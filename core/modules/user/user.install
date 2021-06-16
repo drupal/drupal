@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the user module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function user_schema() {
+  $schema['users_data'] = [
+    'description' => 'Stores module data as key/value pairs per user.',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid this record affects.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'module' => [
+        'description' => 'The name of the module declaring the variable.',
+        'type' => 'varchar_ascii',
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'name' => [
+        'description' => 'The identifier of the data.',
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'value' => [
+        'description' => 'The value.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ],
+      'serialized' => [
+        'description' => 'Whether value is serialized.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['uid', 'module', 'name'],
+    'indexes' => [
+      'module' => ['module'],
+      'name' => ['name'],
+    ],
+    'foreign keys' => [
+      'data_user' => [
+        'table' => 'users',
+        'columns' => [
+          'uid' => 'uid',
+        ],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function user_install() {
+  $storage = \Drupal::entityTypeManager()->getStorage('user');
+  // Insert a row for the anonymous user.
+  $storage
+    ->create([
+      'uid' => 0,
+      'status' => 0,
+      'name' => '',
+    ])
+    ->save();
+
+  // We need some placeholders here as name and mail are unique.
+  // This will be changed by the settings form in the installer.
+  $storage
+    ->create([
+      'uid' => 1,
+      'name' => 'placeholder-for-uid-1',
+      'mail' => 'placeholder-for-uid-1',
+      'status' => TRUE,
+    ])
+    ->save();
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function user_update_last_removed() {
+  return 8100;
+}

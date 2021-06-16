@@ -1,0 +1,5 @@
+name: CSRF test
+type: module
+description: 'Support testing protecting routes with CSRF token.'
+package: Testing
+version: VERSION

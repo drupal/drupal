@@ -1,0 +1,3 @@
+# Set the domain for HAL type and relation links.
+# If left blank, the site's domain will be used.
+link_domain: ~

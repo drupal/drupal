@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Test module with a language-aware node access implementation.
+ *
+ * The module adds a 'private' field to page nodes that allows each translation
+ * of the node to be marked as private (viewable only by administrators).
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_node_grants().
+ *
+ * This module defines a single grant realm. All users belong to this group.
+ */
+function node_access_test_language_node_grants($account, $op) {
+  $grants['node_access_language_test'] = [7888];
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function node_access_test_language_node_access_records(NodeInterface $node) {
+  $grants = [];
+
+  // Create grants for each translation of the node.
+  foreach ($node->getTranslationLanguages() as $langcode => $language) {
+    // If the translation is not marked as private, grant access.
+    $translation = $node->getTranslation($langcode);
+    $grants[] = [
+      'realm' => 'node_access_language_test',
+      'gid' => 7888,
+      'grant_view' => empty($translation->field_private->value) ? 1 : 0,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+      'langcode' => $langcode,
+    ];
+  }
+  return $grants;
+}

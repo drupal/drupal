@@ -1,0 +1,63 @@
+id: d7_menu_links
+label: Menu links
+audit: true
+migration_tags:
+  - Drupal 7
+  - Content
+source:
+  plugin: menu_link
+  constants:
+    bundle: menu_link_content
+process:
+  skip_translation:
+    plugin: skip_on_empty
+    method: row
+    source: skip_translation
+  id: mlid
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: und
+  bundle: 'constants/bundle'
+  title: link_title
+  description: description
+  menu_name:
+    -
+      plugin: migration_lookup
+      migration: d7_menu
+      source: menu_name
+    -
+      plugin: skip_on_empty
+      method: row
+  'link/uri':
+    plugin: link_uri
+    source: link_path
+  'link/options': options
+  route:
+    plugin: route
+    source:
+      - link_path
+      - options
+  route_name: '@route/route_name'
+  route_parameters: '@route/route_parameters'
+  url: '@route/url'
+  options: '@route/options'
+  external: external
+  weight: weight
+  expanded: expanded
+  enabled: enabled
+  parent:
+    plugin: menu_link_parent
+    source:
+      - plid
+      - '@menu_name'
+      - parent_link_path
+  changed: updated
+destination:
+  plugin: entity:menu_link_content
+  no_stub: true
+migration_dependencies:
+  required:
+    - d7_menu
+  optional:
+    - d7_node

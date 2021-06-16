@@ -1,0 +1,52 @@
+# Every migration that references a file by Drupal 6 fid should specify this
+# migration as an optional dependency.
+id: d6_file
+label: Public files
+audit: true
+migration_tags:
+  - Drupal 6
+  - Content
+source:
+  plugin: d6_file
+  constants:
+    # The tool configuring this migration must set source_base_path. It
+    # represents the fully qualified path relative to which URIs in the files
+    # table are specified, and must end with a /. See source_full_path
+    # configuration in this migration's process pipeline as an example.
+    source_base_path: ''
+process:
+    # If you are using both this migration and d6_user_picture_file in a custom
+    # migration and executing migrations incrementally, it is strongly
+    # recommended that you remove the fid mapping to avoid potential ID
+    # conflicts. For that reason, this mapping is commented out by default.
+    # fid: fid
+  filename: filename
+  source_full_path:
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constants/source_base_path
+        - filepath
+    -
+      plugin: urlencode
+  destination_full_path:
+    plugin: file_uri
+    source:
+      - filepath
+      - file_directory_path
+      - temp_directory_path
+      - is_public
+  uri:
+    plugin: file_copy
+    source:
+      - '@source_full_path'
+      - '@destination_full_path'
+  filemime: filemime
+  # No need to migrate filesize, it is computed when file entities are saved.
+  # filesize: filesize
+  status: status
+  changed: timestamp
+  uid: uid
+destination:
+  plugin: entity:file

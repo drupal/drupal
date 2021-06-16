@@ -1,0 +1,71 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+  module:
+    - node
+id: test_entity_row_renderers
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: 0
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      pager:
+        options:
+          offset: 0
+        type: none
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: teaser
+      sorts:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          plugin_id: standard
+          entity_type: node
+          entity_field: title
+      rendering_language: '***LANGUAGE_entity_translation***'
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      rendering_language: '***LANGUAGE_entity_translation***'
+      path: test_entity_row_renderers/entities
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: 'Page 2'
+    position: 2
+    display_options:
+      rendering_language: '***LANGUAGE_entity_translation***'
+      path: test_entity_row_renderers/fields
+      defaults:
+        row: false
+      row:
+        type: fields

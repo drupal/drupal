@@ -1,0 +1,11 @@
+---
+label: "ABC Help Test module"
+top_level: true
+related:
+  - help_topics_test.linked
+  - does_not_exist.and_no_error
+---
+{% set help_topic_link = render_var(help_topic_link('help_topics_test.test_urls')) %}
+<p>{% trans %}This is a test. It should link to the URL test topic {{ help_topic_link }}. Also there should be a related topic link below to the Help module topic page and the linked topic.{% endtrans %}</p>
+<p>{% trans %}Nonworditem totranslate.{% endtrans %}</p>
+<p>{% trans %}Test translation.{% endtrans %}</p>

@@ -1,0 +1,5 @@
+name: 'Responsive image test theme'
+type: module
+description: 'Test theme for responsive image.'
+package: Testing
+version: VERSION

@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Module install file.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_install().
+ */
+function jsonapi_install() {
+  $module_handler = \Drupal::moduleHandler();
+  $potential_conflicts = [
+    'content_translation',
+    'config_translation',
+    'language',
+  ];
+  $should_warn = array_reduce($potential_conflicts, function ($should_warn, $module_name) use ($module_handler) {
+    return $should_warn ?: $module_handler->moduleExists($module_name);
+  }, FALSE);
+  if ($should_warn) {
+    \Drupal::messenger()->addWarning(t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
+      ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations',
+    ]));
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function jsonapi_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    $module_handler = \Drupal::moduleHandler();
+    $potential_conflicts = [
+      'content_translation',
+      'config_translation',
+      'language',
+    ];
+    $should_warn = array_reduce($potential_conflicts, function ($should_warn, $module_name) use ($module_handler) {
+      return $should_warn ?: $module_handler->moduleExists($module_name);
+    }, FALSE);
+    if ($should_warn) {
+      $requirements['jsonapi_multilingual_support'] = [
+        'title' => t('JSON:API multilingual support'),
+        'value' => t('Limited'),
+        'severity' => REQUIREMENT_INFO,
+        'description' => t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
+          ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations',
+        ]),
+      ];
+    }
+    $requirements['jsonapi_revision_support'] = [
+      'title' => t('JSON:API revision support'),
+      'value' => t('Limited'),
+      'severity' => REQUIREMENT_INFO,
+      'description' => t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [
+        ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions',
+      ]),
+    ];
+    $requirements['jsonapi_read_only_mode'] = [
+      'title' => t('JSON:API allowed operations'),
+      'value' => t('Read-only'),
+      'severity' => REQUIREMENT_INFO,
+    ];
+    if (!\Drupal::configFactory()->get('jsonapi.settings')->get('read_only')) {
+      $requirements['jsonapi_read_only_mode']['value'] = t('All (create, read, update, delete)');
+      $requirements['jsonapi_read_only_mode']['description'] = t('It is recommended to <a href=":configure-url">configure</a> JSON:API to only accept all operations if the site requires it. <a href=":docs">Learn more about securing your site with JSON:API.</a>', [
+        ':docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/security-considerations',
+        ':configure-url' => Url::fromRoute('jsonapi.settings')->toString(),
+      ]);
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function jsonapi_update_last_removed() {
+  return 8701;
+}

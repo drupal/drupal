@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Select input elements.
+ */
+
+@import "../base/variables.pcss.css";
+
+.form-element--type-select {
+  padding-right: calc(2rem - var(--input-border-size));
+  background-image: url(../../images/icons/545560/chevron-down.svg);
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  background-size: 2.75rem 0.5625rem; /* w: 14px + (2 * 15px), h: 9px */
+}
+[dir="rtl"] .form-element--type-select {
+  padding-right: calc(1rem - var(--input-border-size));
+  padding-left: calc(2rem - var(--input-border-size));
+  background-position: 0 50%;
+}
+
+.no-touchevents .form-element--type-select.form-element--extrasmall,
+.no-touchevents .form-element--type-select[name$="][_weight]"] {
+  padding-right: calc(1.5rem - var(--input-border-size));
+  background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
+}
+[dir="rtl"].no-touchevents .form-element--type-select.form-element--extrasmall,
+[dir="rtl"].no-touchevents .form-element--type-select[name$="][_weight]"] {
+  padding-right: calc(0.5rem - var(--input-border-size));
+  padding-left: calc(1.5rem - var(--input-border-size));
+}
+
+.form-element--type-select::-ms-expand {
+  display: none;
+}
+
+/**
+ * Select states.
+ */
+.form-element--type-select:focus {
+  background-image: url(../../images/icons/004adc/chevron-down.svg);
+}
+.form-element--type-select[disabled] {
+  background-image: url(../../images/icons/8e929c/chevron-down.svg);
+}

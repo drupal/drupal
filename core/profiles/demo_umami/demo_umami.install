@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the demo_umami installation profile.
+ */
+
+use Drupal\user\Entity\User;
+use Drupal\shortcut\Entity\Shortcut;
+
+/**
+ * Implements hook_requirements().
+ */
+function demo_umami_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+    $profile = \Drupal::installProfile();
+    $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
+    $requirements['experimental_profile_used'] = [
+      'title' => t('Experimental installation profile used'),
+      'value' => $info['name'],
+      'description' => t('Experimental profiles are provided for testing purposes only. Use at your own risk. To start building a new site, reinstall Drupal and choose a non-experimental profile.'),
+      'severity' => REQUIREMENT_WARNING,
+    ];
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function demo_umami_install() {
+  // Assign user 1 the "administrator" role.
+  $user = User::load(1);
+  $user->roles[] = 'administrator';
+  $user->save();
+
+  // We install some menu links, so we have to rebuild the router, to ensure the
+  // menu links are valid.
+  \Drupal::service('router.builder')->rebuildIfNeeded();
+
+  // Populate the default shortcut set.
+  $shortcut = Shortcut::create([
+    'shortcut_set' => 'default',
+    'title' => t('Add content'),
+    'weight' => -20,
+    'link' => ['uri' => 'internal:/node/add'],
+  ]);
+  $shortcut->save();
+
+  $shortcut = Shortcut::create([
+    'shortcut_set' => 'default',
+    'title' => t('All content'),
+    'weight' => -19,
+    'link' => ['uri' => 'internal:/admin/content'],
+  ]);
+  $shortcut->save();
+
+  // Enable the demo content module. This can't be specified as a dependency
+  // in the demo_umami.info.yml file, as it requires configuration provided by
+  // the profile (fields etc.).
+  \Drupal::service('module_installer')->install(['demo_umami_content'], TRUE);
+}

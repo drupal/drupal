@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Theme override for multiple value form element.
+ *
+ * Available variables for all fields:
+ * - multiple: Whether there are multiple instances of the field.
+ * - disabled: Whether the input is disabled.
+ *
+ * Available variables for single cardinality fields:
+ * - elements: Form elements to be rendered.
+ *
+ * Available variables when there are multiple fields.
+ * - table: Table of field items.
+ * - description: The description element containing the following properties:
+ *   - content: The description content of the form element.
+ *   - attributes: HTML attributes to apply to the description container.
+ * - button: "Add another item" button.
+ *
+ * @see template_preprocess_field_multiple_value_form()
+ * @see claro_preprocess_field_multiple_value_form()
+ */
+#}
+{% if multiple %}
+  {%
+    set classes = [
+      'js-form-item',
+      'form-item',
+      'form-item--multiple',
+      disabled ? 'form-item--disabled',
+    ]
+  %}
+  {%
+    set description_classes = [
+      'form-item__description',
+      disabled ? 'is-disabled',
+    ]
+  %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ table }}
+    {% if description.content %}
+      <div{{ description.attributes.addClass(description_classes) }} >{{ description.content }}</div>
+    {% endif %}
+    {% if button %}
+      <div class="form-actions">{{ button }}</div>
+    {% endif %}
+  </div>
+{% else %}
+  {% for element in elements %}
+    {{ element }}
+  {% endfor %}
+{% endif %}

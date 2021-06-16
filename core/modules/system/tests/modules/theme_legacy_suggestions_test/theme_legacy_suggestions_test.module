@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Support module for testing theme suggestions.
+ *
+ * @todo Remove in https://www.drupal.org/project/drupal/issues/3097889
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function theme_legacy_suggestions_test_theme() {
+  $items['theme_suggestions_test_include'] = [
+    'file' => 'theme_legacy_suggestions_test.inc',
+    'function' => 'theme_theme_suggestions_test_include',
+  ];
+  return $items;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function theme_legacy_suggestions_test_theme_suggestions_theme_test_function_suggestions_alter(array &$suggestions, array $variables) {
+  $suggestions[] = 'theme_test_function_suggestions__module_override';
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function theme_legacy_suggestions_test_theme_suggestions_theme_test_suggestions_include_alter(array &$suggestions, array $variables, $hook) {
+  $suggestions[] = 'theme_suggestions_test_include';
+}

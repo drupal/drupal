@@ -1,0 +1,9 @@
+# Schema for the views plugins of the Content Translation module.
+
+views.field.content_translation_link:
+  type: views_field
+  label: 'Content translation link'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'

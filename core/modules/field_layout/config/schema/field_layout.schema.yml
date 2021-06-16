@@ -1,0 +1,16 @@
+core.entity_view_display.*.*.*.third_party.field_layout:
+  type: field_layout.third_party_settings
+
+core.entity_form_display.*.*.*.third_party.field_layout:
+  type: field_layout.third_party_settings
+
+field_layout.third_party_settings:
+  type: mapping
+  label: 'Per-view-mode field layout settings'
+  mapping:
+    id:
+      type: string
+      label: 'Layout ID'
+    settings:
+      type: layout_plugin.settings.[%parent.id]
+      label: 'Layout settings'

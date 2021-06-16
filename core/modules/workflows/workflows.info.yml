@@ -1,0 +1,6 @@
+name: 'Workflows'
+type: module
+description: 'Provides an interface to create workflows with transitions between different states (for example publication or user status) provided by other modules.'
+version: VERSION
+package: Core
+configure: entity.workflow.collection

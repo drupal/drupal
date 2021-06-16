@@ -1,0 +1,41 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: test_display_invalid
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    display_options:
+      row:
+        type: fields
+      fields:
+        id:
+          id: nid
+          table: node_field_data
+          field: nid
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: 1
+  page_1:
+    display_options:
+      path: test_display_invalid
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0

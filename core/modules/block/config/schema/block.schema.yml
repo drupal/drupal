@@ -1,0 +1,32 @@
+# Schema for the configuration files of the Block module.
+
+block.block.*:
+  type: config_entity
+  label: 'Block'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    theme:
+      type: string
+      label: 'Theme'
+    region:
+      type: string
+      label: 'Region'
+    weight:
+      type: integer
+      label: 'Weight'
+    provider:
+      type: string
+      label: 'Provider'
+    plugin:
+      type: string
+      label: 'Plugin'
+    settings:
+      type: block.settings.[%parent.plugin]
+    visibility:
+      type: sequence
+      label: 'Visibility Conditions'
+      sequence:
+        type: condition.plugin.[id]
+        label: 'Visibility Condition'

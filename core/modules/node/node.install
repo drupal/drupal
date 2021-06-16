@@ -1,0 +1,162 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the node module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Database\Database;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_requirements().
+ */
+function node_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    // Only show rebuild button if there are either 0, or 2 or more, rows
+    // in the {node_access} table, or if there are modules that
+    // implement hook_node_grants().
+    $grant_count = \Drupal::entityTypeManager()->getAccessControlHandler('node')->countGrants();
+    if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
+      $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', ['@count' => $grant_count]);
+    }
+    else {
+      $value = t('Disabled');
+    }
+
+    $requirements['node_access'] = [
+      'title' => t('Node Access Permissions'),
+      'value' => $value,
+      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href=":rebuild">Rebuild permissions</a>', [
+        ':rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString(),
+      ]),
+    ];
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function node_schema() {
+  $schema['node_access'] = [
+    'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {node}.nid this record affects.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'langcode' => [
+        'description' => 'The {language}.langcode of this node.',
+        'type' => 'varchar_ascii',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'fallback' => [
+        'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+        'size' => 'tiny',
+      ],
+      'gid' => [
+        'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'realm' => [
+        'description' => 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().',
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'grant_view' => [
+        'description' => 'Boolean indicating whether a user with the realm/grant pair can view this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ],
+      'grant_update' => [
+        'description' => 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ],
+      'grant_delete' => [
+        'description' => 'Boolean indicating whether a user with the realm/grant pair can delete this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ],
+    ],
+    'primary key' => ['nid', 'gid', 'realm', 'langcode'],
+    'foreign keys' => [
+      'affected_node' => [
+        'table' => 'node',
+        'columns' => ['nid' => 'nid'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function node_install() {
+  // Enable default permissions for system roles.
+  // IMPORTANT: Modules SHOULD NOT automatically grant any user role access
+  // permissions in hook_install().
+  // However, the 'access content' permission is a very special case, since
+  // there is hardly a point in installing the Node module without granting
+  // these permissions. Doing so also allows tests to continue to operate as
+  // expected without first having to manually grant these default permissions.
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access content']);
+  }
+
+  // Populate the node access table.
+  Database::getConnection()->insert('node_access')
+    ->fields([
+      'nid' => 0,
+      'gid' => 0,
+      'realm' => 'all',
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ])
+    ->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function node_uninstall() {
+  // Delete remaining general module variables.
+  \Drupal::state()->delete('node.node_access_needs_rebuild');
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function node_update_last_removed() {
+  return 8700;
+}

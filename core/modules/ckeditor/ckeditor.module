@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Provides integration with the CKEditor WYSIWYG editor.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\editor\Entity\Editor;
+
+/**
+ * Implements hook_help().
+ */
+function ckeditor_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.ckeditor':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The CKEditor module provides a highly-accessible, highly-usable visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href=":text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see the <a href=":doc_url">online documentation for the CKEditor module</a> and the <a href=":cke_url">CKEditor website</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/ckeditor', ':cke_url' => 'http://ckeditor.com', ':text_editor' => Url::fromRoute('help.page', ['name' => 'editor'])->toString()]) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Enabling CKEditor for individual text formats') . '</dt>';
+      $output .= '<dd>' . t('CKEditor has to be enabled and configured separately for individual text formats from the <a href=":formats">Text formats and editors page</a> because the filter settings for each text format can be different. For more information, see the <a href=":text_editor">Text Editor help page</a> and <a href=":filter">Filter help page</a>.', [':formats' => Url::fromRoute('filter.admin_overview')->toString(), ':text_editor' => Url::fromRoute('help.page', ['name' => 'editor'])->toString(), ':filter' => Url::fromRoute('help.page', ['name' => 'filter'])->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Configuring the toolbar') . '</dt>';
+      $output .= '<dd>' . t('When CKEditor is chosen from the <em>Text editor</em> drop-down menu, its toolbar configuration is displayed. You can add and remove buttons from the <em>Active toolbar</em> by dragging and dropping them, and additional rows can be added to organize the buttons.') . '</dd>';
+      $output .= '<dt>' . t('Formatting content') . '</dt>';
+      $output .= '<dd>' . t('CKEditor only allow users to format content in accordance with the filter configuration of the specific text format. If a text format excludes certain HTML tags, the corresponding toolbar buttons are not displayed to users when they edit a text field in this format. For more information see the <a href=":filter">Filter help page</a>.', [':filter' => Url::fromRoute('help.page', ['name' => 'filter'])->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Toggling between formatted text and HTML source') . '</dt>';
+      $output .= '<dd>' . t('If the <em>Source</em> button is available in the toolbar, users can click this button to disable the visual editor and edit the HTML source directly. After toggling back, the visual editor uses the allowed HTML tags to format the text — independent of whether buttons for these tags are available in the toolbar. If the text format is set to <em>limit the use of HTML tags</em>, then all excluded tags will be stripped out of the HTML source when the user toggles back to the text editor.') . '</dd>';
+      $output .= '<dt>' . t('Check my spelling as I type') . '</dt>';
+      $output .= '<dd>' . t("By default, CKEditor is configured to leverage your browser's spell check capability. Make sure your browser's spell checker is enabled in your browser's settings. To access suggested corrections for misspelled words, it may be necessary to hold the <em>Control</em> or <em>command</em> (Mac) key while right-clicking the misspelling.") . '</dd>';
+      $output .= '<dt>' . t('Accessibility features') . '</dt>';
+      $output .= '<dd>' . t('The built in WYSIWYG editor (CKEditor) comes with a number of <a href=":features">accessibility features</a>. CKEditor comes with built in <a href=":shortcuts">keyboard shortcuts</a>, which can be beneficial for both power users and keyboard only users.', [':features' => 'http://docs.ckeditor.com/#!/guide/dev_a11y', ':shortcuts' => 'http://docs.ckeditor.com/#!/guide/dev_shortcuts']) . '</dd>';
+      $output .= '<dt>' . t('Generating accessible content') . '</dt>';
+      $output .= '<dd>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('HTML tables can be created with table headers and caption/summary elements.') . '</li>';
+      $output .= '<li>' . t('Alt text is required by default on images added through CKEditor (note that this can be overridden).') . '</li>';
+      $output .= '<li>' . t('Semantic HTML5 figure/figcaption are available to add captions to images.') . '</li>';
+      $output .= '<li>' . t('To support multilingual page content, CKEditor can be configured to include a language button in the toolbar.') . '</li>';
+      $output .= '</ul>';
+      $output .= '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ckeditor_theme() {
+  return [
+    'ckeditor_settings_toolbar' => [
+      'file' => 'ckeditor.admin.inc',
+      'variables' => ['editor' => NULL, 'plugins' => NULL],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ckeditor_css_alter().
+ */
+function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
+  if (!$editor->hasAssociatedFilterFormat()) {
+    return;
+  }
+
+  // Add the filter caption CSS if the text format associated with this text
+  // editor uses the filter_caption filter. This is used by the included
+  // CKEditor DrupalImageCaption plugin.
+  if ($editor->getFilterFormat()->filters('filter_caption')->status) {
+    $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
+  }
+}
+
+/**
+ * Retrieves the default theme's CKEditor stylesheets.
+ *
+ * Themes may specify iframe-specific CSS files for use with CKEditor by
+ * including a "ckeditor_stylesheets" key in their .info.yml file.
+ *
+ * @code
+ * ckeditor_stylesheets:
+ *   - css/ckeditor-iframe.css
+ * @endcode
+ */
+function _ckeditor_theme_css($theme = NULL) {
+  $css = [];
+  if (!isset($theme)) {
+    $theme = \Drupal::config('system.theme')->get('default');
+  }
+  if (isset($theme) && $theme_path = drupal_get_path('theme', $theme)) {
+    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    if (isset($info['ckeditor_stylesheets'])) {
+      $css = $info['ckeditor_stylesheets'];
+      foreach ($css as $key => $url) {
+        // CSS url is external.
+        if (UrlHelper::isExternal($url)) {
+          $css[$key] = $url;
+        }
+        // CSS url is relative to Drupal root.
+        elseif ($url[0] === '/') {
+          $css[$key] = substr($url, 1);
+        }
+        // CSS url is relative to theme.
+        else {
+          $css[$key] = $theme_path . '/' . $url;
+        }
+      }
+    }
+    if (isset($info['base theme'])) {
+      $css = array_merge(_ckeditor_theme_css($info['base theme']), $css);
+    }
+  }
+  return $css;
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function ckeditor_library_info_alter(&$libraries, $extension) {
+  // Pass Drupal's JS cache-busting string via settings along to CKEditor.
+  // @see http://docs.ckeditor.com/#!/api/CKEDITOR-property-timestamp
+  if ($extension === 'ckeditor' && isset($libraries['drupal.ckeditor'])) {
+    $query_string = \Drupal::state()->get('system.css_js_query_string', '0');
+    $libraries['drupal.ckeditor']['drupalSettings']['ckeditor']['timestamp'] = $query_string;
+  }
+}

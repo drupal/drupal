@@ -1,0 +1,21 @@
+id: language
+# The enforced dependency ensures that profile configuration in config/install
+# can depend on optional configuration of modules and themes it installs.
+dependencies:
+  enforced:
+    config:
+      - tour.tour.testing_config_overrides_module
+  module:
+    - language
+module: language
+label: Language
+langcode: en
+routes:
+  - route_name: entity.configurable_language.collection
+tips:
+  language-overview:
+    id: language-overview
+    plugin: text
+    label: Languages
+    body: '<p>The "Languages" page allows you to add, edit, delete, and reorder languages for the site.</p>'
+    weight: 1

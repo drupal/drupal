@@ -1,0 +1,129 @@
+<?php
+
+/**
+ * @file
+ * Allows administrators to create custom menu links.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\path_alias\PathAliasInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\system\MenuInterface;
+
+/**
+ * Implements hook_help().
+ */
+function menu_link_content_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.menu_link_content':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
+      if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
+        $output .= ' ' . t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', [':menu-help' => Url::fromRoute('help.page', ['name' => 'menu_ui'])->toString(), ':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link']);
+      }
+      else {
+        $output .= ' ' . t('For more information, see the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>. If you enable the Menu UI module, it provides an interface for managing menus and menu links.', [':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link']);
+      }
+      $output .= '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function menu_link_content_entity_type_alter(array &$entity_types) {
+  // @todo Moderation is disabled for custom menu links until when we have an UI
+  //   for them.
+  //   @see https://www.drupal.org/project/drupal/issues/2350939
+  $entity_types['menu_link_content']->setHandlerClass('moderation', '');
+}
+
+/**
+ * Implements hook_menu_delete().
+ */
+function menu_link_content_menu_delete(MenuInterface $menu) {
+  $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $menu_links = $storage->loadByProperties(['menu_name' => $menu->id()]);
+  $storage->delete($menu_links);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for 'path_alias'.
+ */
+function menu_link_content_path_alias_insert(PathAliasInterface $path_alias) {
+  _menu_link_content_update_path_alias($path_alias->getAlias());
+}
+
+/**
+ * Helper function to update plugin definition using internal scheme.
+ *
+ * @param string $path
+ *   The path alias.
+ */
+function _menu_link_content_update_path_alias($path) {
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
+  $entities = \Drupal::entityTypeManager()
+    ->getStorage('menu_link_content')
+    ->loadByProperties(['link.uri' => 'internal:' . $path]);
+  foreach ($entities as $menu_link) {
+    $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for 'path_alias'.
+ */
+function menu_link_content_path_alias_update(PathAliasInterface $path_alias) {
+  if ($path_alias->getAlias() != $path_alias->original->getAlias()) {
+    _menu_link_content_update_path_alias($path_alias->getAlias());
+    _menu_link_content_update_path_alias($path_alias->original->getAlias());
+  }
+  elseif ($path_alias->getPath() != $path_alias->original->getPath()) {
+    _menu_link_content_update_path_alias($path_alias->getAlias());
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'path_alias'.
+ */
+function menu_link_content_path_alias_delete(PathAliasInterface $path_alias) {
+  _menu_link_content_update_path_alias($path_alias->getAlias());
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function menu_link_content_entity_predelete(EntityInterface $entity) {
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $entity_type_id = $entity->getEntityTypeId();
+  foreach ($entity->uriRelationships() as $rel) {
+    $url = $entity->toUrl($rel);
+    // Entities can provide uri relationships that are not routed, in this case
+    // getRouteParameters() will throw an exception.
+    if (!$url->isRouted()) {
+      continue;
+    }
+    $route_parameters = $url->getRouteParameters();
+    if (!isset($route_parameters[$entity_type_id])) {
+      // Do not delete links which do not relate to this exact entity. For
+      // example, "collection", "add-form", etc.
+      continue;
+    }
+    // Delete all MenuLinkContent links that point to this entity route.
+    $result = $menu_link_manager->loadLinksByRoute($url->getRouteName(), $route_parameters);
+
+    if ($result) {
+      foreach ($result as $id => $instance) {
+        if ($instance->isDeletable() && strpos($id, 'menu_link_content:') === 0) {
+          $instance->deleteLink();
+        }
+      }
+    }
+  }
+}

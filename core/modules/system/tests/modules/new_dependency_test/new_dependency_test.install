@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the new_dependency_test module.
+ */
+
+/**
+ * Enable the new_dependency_test_with_service module.
+ */
+function new_dependency_test_update_8001() {
+  $services = [
+    'new_dependency_test.hard_dependency',
+    'new_dependency_test.optional_dependency',
+    'new_dependency_test.recursion',
+    'new_dependency_test.alias',
+    'new_dependency_test.alias_dependency',
+    'new_dependency_test.alias2',
+    'new_dependency_test.alias_dependency2',
+    'new_dependency_test.setter_injection',
+  ];
+
+  // Gather the state of the services prior to installing the
+  // new_dependency_test_with_service module.
+  \Drupal::state()->set(
+    'new_dependency_test_update_8001.decorated_service',
+    \Drupal::service('new_dependency_test.another_service')->isDecorated()
+  );
+
+  \Drupal::state()->set(
+    'new_dependency_test_update_8001.decorated_service_custom_inner',
+    \Drupal::service('new_dependency_test.another_service_two')->isDecorated()
+  );
+
+  $map = [];
+  foreach ($services as $id) {
+    $map[$id] = \Drupal::hasService($id);
+  }
+  \Drupal::state()->set('new_dependency_test_update_8001.has_before_install', $map);
+
+  // During the update hooks the container is cleaned up to contain only
+  // services that have their dependencies met. Core services are available.
+  \Drupal::getContainer()->get('module_installer')->install(['new_dependency_test_with_service']);
+
+  // Gather the state of the services after installing the
+  // new_dependency_test_with_service module.
+  $map = [];
+  foreach ($services as $id) {
+    $map[$id] = \Drupal::hasService($id);
+  }
+  \Drupal::state()->set('new_dependency_test_update_8001.has_after_install', $map);
+}

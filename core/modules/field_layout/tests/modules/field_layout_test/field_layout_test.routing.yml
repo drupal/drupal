@@ -1,0 +1,7 @@
+entity.entity_test.test_view_mode:
+  path: '/entity_test/{entity_test}/test'
+  defaults:
+    _entity_view: 'entity_test.test'
+    _title: 'Test test view mode'
+  requirements:
+    _entity_access: 'entity_test.view'

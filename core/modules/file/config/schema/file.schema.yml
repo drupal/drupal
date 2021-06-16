@@ -1,0 +1,165 @@
+# Schema for the configuration files of the File module.
+
+file.settings:
+  type: config_object
+  label: 'File settings'
+  mapping:
+    description:
+      type: mapping
+      label: 'Description'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        length:
+          type: integer
+          label: 'Length'
+    icon:
+      type: mapping
+      label: 'Icon'
+      mapping:
+        directory:
+          type: path
+          label: 'Directory'
+    make_unused_managed_files_temporary:
+      type: boolean
+      label: 'Controls if unused files should be marked temporary'
+
+field.storage_settings.file:
+  type: base_entity_reference_field_settings
+  label: 'File settings'
+  mapping:
+    display_field:
+      type: boolean
+      label: 'Enable Display field'
+    display_default:
+      type: boolean
+      label: 'Files displayed by default'
+    uri_scheme:
+      type: string
+      label: 'Upload destination'
+
+field.value.file:
+  type: mapping
+  label: 'Default value'
+
+base_file_field_field_settings:
+  type: mapping
+  mapping:
+    handler:
+      type: string
+      label: 'Reference method'
+    handler_settings:
+      type: entity_reference_selection.[%parent.handler]
+      label: 'File selection handler settings'
+    file_directory:
+      type: string
+      label: 'File directory'
+    file_extensions:
+      type: string
+      label: 'Allowed file extensions'
+    max_filesize:
+      type: string
+      label: 'Maximum upload size'
+
+field.field_settings.file:
+  type: base_file_field_field_settings
+  label: 'File settings'
+  mapping:
+    description_field:
+      type: boolean
+      label: 'Enable Description field'
+
+file.formatter.media:
+  type: mapping
+  label: 'Media display format settings'
+  mapping:
+    controls:
+      type: boolean
+      label: 'Show playback controls'
+    autoplay:
+      type: boolean
+      label: 'Autoplay'
+    loop:
+      type: boolean
+      label: 'Loop'
+    multiple_file_display_type:
+      type: string
+      label: 'Display of multiple files'
+
+field.formatter.settings.file_audio:
+  type: file.formatter.media
+  label: 'Audio file display format settings'
+
+field.formatter.settings.file_video:
+  type: file.formatter.media
+  label: 'Video file display format settings'
+  mapping:
+    muted:
+      type: boolean
+      label: 'Muted'
+    width:
+      type: integer
+      label: 'Width'
+    height:
+      type: integer
+      label: 'Height'
+
+field.formatter.settings.file_default:
+  type: mapping
+  label: 'Generic file format settings'
+  mapping:
+    use_description_as_link_text:
+      type: boolean
+      label: 'Replace the file name by its description when available'
+
+field.formatter.settings.file_rss_enclosure:
+  type: mapping
+  label: 'RSS enclosure format settings'
+
+field.formatter.settings.file_table:
+  type: field.formatter.settings.file_default
+  label: 'Table of files format settings'
+
+field.formatter.settings.file_url_plain:
+  type: mapping
+  label: 'URL to file format settings'
+
+field.widget.settings.file_generic:
+  type: mapping
+  label: 'File format settings'
+  mapping:
+    progress_indicator:
+      type: string
+      label: 'Progress indicator'
+
+field_formatter_settings_base_file:
+  type: mapping
+  mapping:
+    link_to_file:
+      type: boolean
+      label: 'Link to file'
+
+field.formatter.settings.file_link:
+  type: field_formatter_settings_base_file
+
+field.formatter.settings.file_uri:
+  type: field_formatter_settings_base_file
+  mapping:
+    file_download_path:
+      type: boolean
+      label: 'Display download path'
+
+field.formatter.settings.file_filemime:
+  type: field_formatter_settings_base_file
+  mapping:
+    filemime_image:
+      type: boolean
+      label: 'Display the filemime as icon'
+
+field.formatter.settings.file_extension:
+  type: field_formatter_settings_base_file
+  mapping:
+    extension_detect_tar:
+      type: boolean
+      label: 'Detect tar'

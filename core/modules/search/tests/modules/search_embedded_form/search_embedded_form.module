@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Test module implementing a form that can be embedded in search results.
+ *
+ * A sample use of an embedded form is an e-commerce site where each search
+ * result may include an embedded form with buttons like "Add to cart" for each
+ * individual product (node) listed in the search results.
+ */
+
+/**
+ * Adds the test form to search results.
+ */
+function search_embedded_form_preprocess_search_result(&$variables) {
+  $form = \Drupal::formBuilder()->getForm('Drupal\search_embedded_form\Form\SearchEmbeddedForm');
+  $variables['snippet'] = array_merge($variables['snippet'], $form);
+}

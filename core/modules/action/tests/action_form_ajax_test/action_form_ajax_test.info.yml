@@ -1,0 +1,6 @@
+name: action_form_ajax_test
+type: module
+description: 'module used for testing ajax in action config entity forms.'
+package: Core
+version: VERSION
+hidden: true

@@ -1,0 +1,146 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * The doctype, html, head and body tags are not in this template. Instead they
+ * can be found in the html.html.twig template in this directory.
+ *
+ * Available variables:
+ *
+ * General utility variables:
+ * - base_path: The base URL path of the Drupal installation. Will usually be
+ *   "/" unless you have installed Drupal in a sub-directory.
+ * - is_front: A flag indicating if the current page is the front page.
+ * - logged_in: A flag indicating if the user is registered and signed in.
+ * - is_admin: A flag indicating if the user has permission to access
+ *   administration pages.
+ *
+ * Site identity:
+ * - front_page: The URL of the front page. Use this instead of base_path when
+ *   linking to the front page. This includes the language domain or prefix.
+ *
+ * Page content (in order of occurrence in the default page.html.twig):
+ * - node: Fully loaded node, if there is an automatically-loaded node
+ *   associated with the page and the node ID is the second argument in the
+ *   page's path (e.g. node/12345 and node/12345/revisions, but not
+ *   comment/reply/12345).
+ *
+ * Regions:
+ * - page.header: Items for the header region.
+ * - page.primary_menu: Items for the primary menu region.
+ * - page.secondary_menu: Items for the secondary menu region.
+ * - page.highlighted: Items for the highlighted content region.
+ * - page.help: Dynamic help text, mostly for admin pages.
+ * - page.content: The main content of the current page.
+ * - page.sidebar_first: Items for the first sidebar.
+ * - page.sidebar_second: Items for the second sidebar.
+ * - page.footer: Items for the footer region.
+ * - page.breadcrumb: Items for the breadcrumb region.
+ *
+ * @see template_preprocess_page()
+ * @see html.html.twig
+ */
+#}
+<div class="layout-container">
+
+  {% if page.pre_header|render|striptags|trim is not empty or
+     page.header|render|striptags|trim is not empty %}
+    <header class="layout-header" role="banner">
+      <div class="container">
+        {% if page.pre_header|render|striptags|trim is not empty %}
+          {{ page.pre_header }}
+        {% endif %}
+        {% if page.header|render|striptags|trim is not empty %}
+          {{ page.header }}
+        {% endif %}
+      </div>
+    </header>
+  {% endif %}
+
+  {% if page.highlighted %}
+    <div class="layout-highlighted">
+      <div class="container">
+        {{ page.highlighted }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if page.tabs %}
+  <div class="layout-tabs">
+    <div class="container">
+      {{ page.tabs }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if page.banner_top|render|striptags|trim is not empty %}
+    <div class="layout-banner-top">
+      {{ page.banner_top }}
+    </div>
+  {% endif %}
+
+  {% if page.breadcrumbs|render|striptags|trim is not empty %}
+  <div class="layout-breadcrumbs">
+    <div class="container">
+      {{ page.breadcrumbs }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if not node %}
+    {% if page.page_title|render|striptags|trim is not empty %}
+      <div class="layout-page-title">
+        {% if is_front %}
+          <div class="is-front container">
+            {{ page.page_title }}
+          </div>
+          {% else %}
+          <div class="container">
+            {{ page.page_title }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <main role="main" class="main container">
+
+    <div class="layout-content">
+      <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+      {{ page.content }}
+    </div>{# /.layout-content #}
+
+    {% if page.sidebar|render|striptags|trim is not empty %}
+      <aside class="layout-sidebar" role="complementary">
+        {{ page.sidebar }}
+      </aside>
+    {% endif %}
+
+  </main>
+
+  {% if page.content_bottom|render|striptags|trim is not empty %}
+    <div class="layout-content-bottom">
+      {{ page.content_bottom }}
+    </div>
+  {% endif %}
+
+  {% if page.footer|render|striptags|trim is not empty %}
+  <div class="layout-footer">
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        {{ page.footer }}
+      </div>
+    </footer>
+  </div>
+  {% endif %}
+
+  {% if page.bottom|render|striptags|trim is not empty %}
+    <div class="layout-bottom">
+      <div class="container">
+        {{ page.bottom }}
+      </div>
+    </div>
+  {% endif %}
+
+</div>{# /.layout-container #}

@@ -1,0 +1,84 @@
+/*
+ * @file
+ * Provides the layout styles for two-column layout section.
+ */
+
+@import "../base/variables.pcss.css";
+
+.layout--twocol-section {
+  display: flex;
+  flex-wrap: wrap;
+
+  & > .layout__region {
+    flex: 1 0 100%;
+    margin-block-end: var(--grid-gap);
+
+    @media (--md) {
+      flex-grow: 0;
+      flex-shrink: 0;
+      margin-block-end: 0;
+    }
+  }
+}
+
+@media (--md) {
+  .layout--twocol-section--50-50 {
+    & > .layout__region--first {
+      flex-basis: calc(50% - (var(--grid-gap--md) * 0.5));
+      margin-inline-end: calc(var(--grid-gap--md) * 0.5);
+    }
+
+    & > .layout__region--second {
+      flex-basis: calc(50% - (var(--grid-gap--md) * 0.5));
+      margin-inline-start: calc(var(--grid-gap--md) * 0.5);
+    }
+  }
+
+  .layout--twocol-section--33-67 {
+    & > .layout__region--first {
+      flex-basis: calc(33.33% - (var(--grid-gap--md) * 0.3333));
+      margin-inline-end: calc(var(--grid-gap--md) * 0.3333);
+    }
+
+    & > .layout__region--second {
+      flex-basis: calc(66.66% - (var(--grid-gap--md) * 0.6666));
+      margin-inline-start: calc(var(--grid-gap--md) * 0.6666);
+    }
+  }
+
+  .layout--twocol-section--67-33 {
+    & > .layout__region--first {
+      flex-basis: calc(66.66% - (var(--grid-gap--md) * 0.6666));
+      margin-inline-end: calc(var(--grid-gap--md) * 0.6666);
+    }
+
+    & > .layout__region--second {
+      flex-basis: calc(33.33% - (var(--grid-gap--md) * 0.3333));
+      margin-inline-start: calc(var(--grid-gap--md) * 0.3333);
+    }
+  }
+
+  .layout--twocol-section--25-75 {
+    & > .layout__region--first {
+      flex-basis: calc(25% - (var(--grid-gap--md) * 0.25));
+      margin-inline-end: calc(var(--grid-gap--md) * 0.25);
+    }
+
+    & > .layout__region--second {
+      flex-basis: calc(75% - (var(--grid-gap--md) * 0.75));
+      margin-inline-start: calc(var(--grid-gap--md) * 0.75);
+    }
+  }
+
+  .layout--twocol-section--75-25 {
+    & > .layout__region--first {
+      flex-basis: calc(75% - (var(--grid-gap--md) * 0.75));
+      margin-inline-end: calc(var(--grid-gap--md) * 0.75);
+    }
+
+    & > .layout__region--second {
+      flex-basis: calc(25% - (var(--grid-gap--md) * 0.25));
+      margin-inline-start: calc(var(--grid-gap--md) * 0.25);
+    }
+  }
+}

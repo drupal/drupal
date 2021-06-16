@@ -1,0 +1,7 @@
+content_moderation:
+  version: VERSION
+  css:
+    component:
+      css/content_moderation.module.css: {}
+    theme:
+      css/content_moderation.theme.css: {}

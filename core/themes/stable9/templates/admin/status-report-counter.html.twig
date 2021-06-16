@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Theme override for the status report counter.
+ *
+ * Available variables:
+ * - amount: The number shown on counter.
+ * - text: The text shown on counter.
+ * - severity: The severity of the counter.
+ */
+#}
+<span class="system-status-counter__status-icon system-status-counter__status-icon--{{ severity }}"></span>
+<span>{{ amount }} {{ text }}</span>
+<a href="#{{ severity }}"><span class="visually-hidden">{{ text }} </span>Details</a>

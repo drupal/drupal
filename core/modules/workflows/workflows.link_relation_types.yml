@@ -1,0 +1,8 @@
+# Workflows extension relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.2.
+add-state-form:
+  uri: https://drupal.org/link-relations/add-state-form
+  description: A form where a state can be created.
+add-transition-form:
+  uri: https://drupal.org/link-relations/add-transition-form
+  description: A form where a transition can be created.

@@ -1,0 +1,45 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - views_test_data
+id: test_view_display_template
+label: test_view_display_template
+module: views
+description: ''
+tag: ''
+base_table: views_test_data
+base_field: id
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Default
+    position: 1
+    display_options:
+      access: {  }
+      query: {  }
+      pager: {  }
+      style:
+        type: test_template_style
+      row:
+        type: fields
+        options: {  }
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter: {  }
+      filters: {  }
+      sorts: {  }
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }

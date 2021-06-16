@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the entity_test module.
+ */
+
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_install().
+ */
+function entity_test_install() {
+  foreach (entity_test_entity_types() as $entity_type) {
+    // Auto-create fields for testing.
+    FieldStorageConfig::create([
+      'entity_type' => $entity_type,
+      'field_name' => 'field_test_text',
+      'type' => 'text',
+      'cardinality' => 1,
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => $entity_type,
+      'field_name' => 'field_test_text',
+      'bundle' => $entity_type,
+      'label' => 'Test text-field',
+      'translatable' => FALSE,
+    ])->save();
+
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay($entity_type, $entity_type)
+      ->setComponent('field_test_text', ['type' => 'text_textfield'])
+      ->save();
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function entity_test_schema() {
+  // Schema for simple entity.
+  $schema['entity_test_example'] = [
+    'description' => 'Stores entity_test items.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique entity-test item ID.',
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+  return $schema;
+}
+
+$index = \Drupal::state()->get('entity_test.db_updates.entity_definition_updates');
+module_load_include('inc', 'entity_test', 'update/entity_definition_updates_' . $index);
+$index = \Drupal::state()->get('entity_test.db_updates.status_report');
+module_load_include('inc', 'entity_test', 'update/status_report_' . $index);

@@ -1,0 +1,20 @@
+id: book_settings
+label: Book configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - book_child_type
+    - book_block_mode
+    - book_allowed_types
+  source_module: book
+process:
+  child_type: book_child_type
+  'block/navigation/mode': book_block_mode
+  allowed_types: book_allowed_types
+destination:
+  plugin: config
+  config_name: book.settings

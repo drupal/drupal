@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<oembed>
+  <type>video</type>
+  <version>1.0</version>
+  <title>Let's Not Get a Drink Sometime</title>
+  <https/>
+  <author_name>CollegeHumor</author_name>
+  <author_url>http://www.collegehumor.com</author_url>
+  <provider_name>CollegeHumor</provider_name>
+  <provider_url>http://www.collegehumor.com</provider_url>
+  <width>610</width>
+  <height>343</height>
+  <html><h1>By the power of Grayskull, CollegeHumor works!</h1>
+  </html>
+  <thumbnail_url>internal:/core/misc/druplicon.png</thumbnail_url>
+  <thumbnail_width>88</thumbnail_width>
+  <thumbnail_height>100</thumbnail_height>
+</oembed>

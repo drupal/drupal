@@ -1,0 +1,12 @@
+services:
+  form_test.form.serviceform:
+    class: Drupal\form_test\FormTestServiceObject
+    arguments: ['@config.factory']
+  form_test.event_subscriber:
+    class: Drupal\form_test\EventSubscriber\FormTestEventSubscriber
+    tags:
+      - { name: event_subscriber }
+  form_test.http_middleware:
+    class: Drupal\form_test\StackMiddleware\FormTestMiddleware
+    tags:
+      - { name: http_middleware, priority: 0 }

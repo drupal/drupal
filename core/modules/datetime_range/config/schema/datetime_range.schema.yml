@@ -1,0 +1,73 @@
+# Schema for the configuration files of the Datetime Range module.
+
+# Daterange field type.
+
+field.storage_settings.daterange:
+  type: field.storage_settings.datetime
+  label: 'Date range settings'
+
+field.field_settings.daterange:
+  type: field.field_settings.datetime
+  label: 'Date range settings'
+
+field.value.daterange:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    default_date_type:
+      type: string
+      label: 'Default start date type'
+    default_date:
+      type: string
+      label: 'Default start date value'
+    default_end_date_type:
+      type: string
+      label: 'Default end date type'
+    default_end_date:
+      type: string
+      label: 'Default end date value'
+
+field.formatter.settings.daterange_default:
+  type: field.formatter.settings.datetime_default
+  label: 'Date range default display format settings'
+  mapping:
+    separator:
+      type: label
+      label: 'Separator'
+      translation context: 'Date range separator'
+
+field.formatter.settings.daterange_plain:
+  type: field.formatter.settings.datetime_plain
+  label: 'Date range plain display format settings'
+  mapping:
+    separator:
+      type: label
+      label: 'Separator'
+      translation context: 'Date range separator'
+
+field.formatter.settings.daterange_custom:
+  type: field.formatter.settings.datetime_custom
+  label: 'Date range custom display format settings'
+  mapping:
+    separator:
+      type: label
+      label: 'Separator'
+      translation context: 'Date range separator'
+
+field.widget.settings.daterange_datelist:
+  type: mapping
+  label: 'Date range select list display format settings'
+  mapping:
+    increment:
+      type: integer
+      label: 'Time increments'
+    date_order:
+      type: string
+      label: 'Date part order'
+    time_type:
+      type: string
+      label: 'Time type'
+
+field.widget.settings.daterange_default:
+  type: mapping
+  label: 'Date range default display format settings'

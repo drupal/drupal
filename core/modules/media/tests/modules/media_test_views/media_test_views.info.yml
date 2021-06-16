@@ -1,0 +1,8 @@
+name: 'Media test views'
+type: module
+description: 'Provides default views for views media tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:media
+  - drupal:views

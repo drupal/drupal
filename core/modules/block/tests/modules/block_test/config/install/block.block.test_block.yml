@@ -1,0 +1,17 @@
+id: test_block
+theme: stark
+weight: 0
+status: true
+langcode: en
+region: '-1'
+plugin: test_html
+settings:
+  label: 'Test HTML block'
+  provider: block_test
+  label_display: 'hidden'
+dependencies:
+  module:
+    - block_test
+  theme:
+    - stark
+visibility: {  }

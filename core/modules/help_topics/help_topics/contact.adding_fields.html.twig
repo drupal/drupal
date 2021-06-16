@@ -1,0 +1,16 @@
+---
+label: 'Managing the fields of contact forms'
+related:
+  - contact.overview
+---
+{% set contact_url = render_var(url('entity.contact_form.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Add, remove, or rearrange the fields on personal and site-wide contact forms.{% endtrans %}</p>
+<h2>{% trans %}What are the fields on contact forms?{% endtrans %}</h2>
+<p>{% trans %}Both personal and site-wide contact forms will always have <em>Subject</em> and <em>Message</em> fields. You can add additional fields for users to fill out if desired. Note that if you want to display other content on a form page, such as text or images, you can use a custom block.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ contact_url }}"><em>Contact forms</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Manage fields</em> for the form you want to change the fields of, and add or remove one or more fields on the form.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Manage form display</em> to change the order or configuration of the fields on the form.{% endtrans %}</li>
+</ol>

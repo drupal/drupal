@@ -1,0 +1,2 @@
+<?php
+// phpcs:ignoreFile

@@ -1,0 +1,20 @@
+{
+  "name": "drupal/core-project-message",
+  "description": "Adds a message after Composer installation.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0-or-later",
+  "type": "composer-plugin",
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Composer\\Plugin\\ProjectMessage\\": "."
+    }
+  },
+  "extra": {
+    "class": "Drupal\\Composer\\Plugin\\ProjectMessage\\MessagePlugin"
+  },
+  "require": {
+    "php": ">=7.3.0",
+    "composer-plugin-api": "^1.1 || ^2"
+  }
+}

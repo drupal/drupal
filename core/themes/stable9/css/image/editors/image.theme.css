@@ -1,0 +1,100 @@
+/**
+ * @file
+ * Theme styles for the Image module's in-place editor.
+ */
+
+.quickedit-image-dropzone {
+  transition: background 0.2s;
+  background: rgba(116, 183, 255, 0.8);
+}
+
+.quickedit-image-icon {
+  margin: 0 0 10px 0;
+  transition: margin 0.5s;
+}
+
+.quickedit-image-dropzone.hover {
+  background: rgba(116, 183, 255, 0.9);
+}
+
+.quickedit-image-dropzone.error {
+  background: rgba(255, 52, 27, 0.81);
+}
+
+.quickedit-image-dropzone.upload .quickedit-image-icon {
+  background-image: url("../../../../../modules/image/images/upload.svg");
+}
+
+.quickedit-image-dropzone.error .quickedit-image-icon {
+  background-image: url("../../../../../modules/image/images/error.svg");
+}
+
+.quickedit-image-dropzone.loading .quickedit-image-icon {
+  margin: -10px 0 20px 0;
+}
+
+.quickedit-image-dropzone.loading .quickedit-image-icon::after {
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin-top: -5px;
+  margin-left: -10px;
+  content: "";
+  animation-name: quickedit-image-spin;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  border-width: 5px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+  border-radius: 35px;
+}
+
+@keyframes quickedit-image-spin {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.quickedit-image-text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: center;
+  color: white;
+  font-family: "Droid sans", "Lucida Grande", sans-serif;
+  font-size: 16px;
+}
+
+.quickedit-image-field-info {
+  padding: 5px;
+  border-top: 1px solid #c5c5c5;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.quickedit-image-field-info div {
+  margin-right: 10px; /* LTR */
+}
+
+.quickedit-image-field-info div:last-child {
+  margin-right: 0; /* LTR */
+}
+
+[dir="rtl"] .quickedit-image-field-info div {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+[dir="rtl"] .quickedit-image-field-info div:last-child {
+  margin-left: 0;
+}
+
+.quickedit-image-errors .messages__wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.quickedit-image-errors .messages--error {
+  box-shadow: none;
+}

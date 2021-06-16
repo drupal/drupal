@@ -1,0 +1,5 @@
+name: module handler test no hook
+type: module
+description: 'Test module used to test modules that do not implement a hook.'
+package: Testing
+version: VERSION

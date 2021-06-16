@@ -1,0 +1,44 @@
+id: system_site
+label: Site configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  constants:
+    slash: '/'
+  variables:
+    - site_name
+    - site_mail
+    - site_slogan
+    - site_frontpage
+    - site_403
+    - site_404
+    - drupal_weight_select_max
+    - admin_compact_mode
+  source_module: system
+process:
+  name: site_name
+  mail: site_mail
+  slogan: site_slogan
+  'page/front':
+    plugin: concat
+    source:
+      - constants/slash
+      - site_frontpage
+  'page/403':
+    plugin: concat
+    source:
+      - constants/slash
+      - site_403
+  'page/404':
+    plugin: concat
+    source:
+      - constants/slash
+      - site_404
+  weight_select_max: drupal_weight_select_max
+  admin_compact_mode: admin_compact_mode
+destination:
+  plugin: config
+  config_name: system.site

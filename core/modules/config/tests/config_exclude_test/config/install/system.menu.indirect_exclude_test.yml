@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    config:
+      - system.menu.exclude_test
+id: indirect_exclude_test
+label: Test
+description: 'Test menu depending indirectly on config_test'
+locked: true

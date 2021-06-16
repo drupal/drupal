@@ -1,0 +1,20 @@
+update.report_install:
+  route_name: update.report_install
+  title: 'Add new module or theme'
+  weight: 25
+  appears_on:
+    - update.status
+
+update.module_install:
+  route_name: update.module_install
+  title: 'Add new module'
+  weight: 25
+  appears_on:
+    - system.modules_list
+
+update.theme_install:
+  route_name: update.theme_install
+  title: 'Add new theme'
+  weight: 25
+  appears_on:
+    - system.themes_page

@@ -1,0 +1,21 @@
+id: d7_user_settings_translation
+label: User settings configuration translation
+migration_tags:
+  - Drupal 7
+  - Configuration
+  - Multilingual
+source:
+  plugin: d7_variable_translation
+  variables:
+    - anonymous
+process:
+  langcode: language
+  anonymous: anonymous
+destination:
+  plugin: config
+  config_name: user.settings
+  translations: true
+migration_dependencies:
+  required:
+    - language
+    - d7_user_settings

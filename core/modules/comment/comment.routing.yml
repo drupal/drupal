@@ -1,0 +1,142 @@
+comment.admin:
+  path: '/admin/content/comment'
+  defaults:
+    _title: 'Comments'
+    _form: '\Drupal\comment\Form\CommentAdminOverview'
+    type: 'new'
+  requirements:
+    _permission: 'administer comments'
+
+comment.admin_approval:
+  path: '/admin/content/comment/approval'
+  defaults:
+    _title: 'Unapproved comments'
+    _form: '\Drupal\comment\Form\CommentAdminOverview'
+    type: 'approval'
+  requirements:
+    _permission: 'administer comments'
+
+entity.comment.edit_form:
+  path: '/comment/{comment}/edit'
+  defaults:
+    _title: 'Edit'
+    _entity_form: 'comment.default'
+  requirements:
+    _entity_access: 'comment.update'
+    comment: \d+
+
+comment.approve:
+  path: '/comment/{comment}/approve'
+  defaults:
+    _title: 'Approve'
+    _controller: '\Drupal\comment\Controller\CommentController::commentApprove'
+    entity_type: 'comment'
+  requirements:
+    _entity_access: 'comment.approve'
+    _csrf_token: 'TRUE'
+    comment: \d+
+
+entity.comment.canonical:
+  path: '/comment/{comment}'
+  defaults:
+    _title_callback: '\Drupal\comment\Controller\CommentController::commentPermalinkTitle'
+    _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
+  requirements:
+    _entity_access: 'comment.view'
+    comment: \d+
+
+entity.comment.delete_form:
+  path: '/comment/{comment}/delete'
+  defaults:
+    _title: 'Delete'
+    _entity_form: 'comment.delete'
+  requirements:
+    _entity_access: 'comment.delete'
+    comment: \d+
+
+comment.multiple_delete_confirm:
+  path: '/admin/content/comment/delete'
+  defaults:
+    _title: 'Delete'
+    _form: '\Drupal\comment\Form\ConfirmDeleteMultiple'
+    entity_type_id: 'comment'
+  requirements:
+    _entity_delete_multiple_access: 'comment'
+
+entity.comment.delete_multiple_form:
+  path: '/admin/content/comment/delete'
+  defaults:
+    _title: 'Delete'
+    _form: '\Drupal\comment\Form\ConfirmDeleteMultiple'
+    entity_type_id: 'comment'
+  requirements:
+    _entity_delete_multiple_access: 'comment'
+
+comment.reply:
+  path: '/comment/reply/{entity_type}/{entity}/{field_name}/{pid}'
+  defaults:
+    _controller: '\Drupal\comment\Controller\CommentController::getReplyForm'
+    _title: 'Add new comment'
+    pid: ~
+  requirements:
+    _custom_access: '\Drupal\comment\Controller\CommentController::replyFormAccess'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+
+comment.new_comments_node_links:
+  path: '/comments/render_new_comments_node_links'
+  defaults:
+    _controller: '\Drupal\comment\Controller\CommentController::renderNewCommentsNodeLinks'
+  requirements:
+    _permission: 'access content'
+
+comment.node_redirect:
+  path: '/comment/{node}/reply'
+  defaults:
+    _controller: '\Drupal\comment\Controller\CommentController::redirectNode'
+  requirements:
+    _entity_access: 'node.view'
+    _module_dependencies: 'node'
+    node: \d+
+
+entity.comment_type.collection:
+  path: '/admin/structure/comment'
+  defaults:
+    _entity_list: 'comment_type'
+    _title: 'Comment types'
+  requirements:
+    _permission: 'administer comment types'
+  options:
+    _admin_route: TRUE
+
+entity.comment_type.delete_form:
+  path: '/admin/structure/comment/manage/{comment_type}/delete'
+  defaults:
+    _entity_form: 'comment_type.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'comment_type.delete'
+  options:
+    _admin_route: TRUE
+
+entity.comment_type.add_form:
+  path: '/admin/structure/comment/types/add'
+  defaults:
+    _entity_form: 'comment_type.add'
+    _title: 'Add comment type'
+  requirements:
+    _permission: 'administer comment types'
+  options:
+    _admin_route: TRUE
+
+entity.comment_type.edit_form:
+  path: '/admin/structure/comment/manage/{comment_type}'
+  defaults:
+    _entity_form: 'comment_type.edit'
+    _title: 'Edit'
+  requirements:
+    _entity_access: 'comment_type.update'
+  options:
+    _admin_route: TRUE

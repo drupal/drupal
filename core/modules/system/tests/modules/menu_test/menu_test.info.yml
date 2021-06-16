@@ -1,0 +1,8 @@
+name: 'Hook menu tests'
+type: module
+description: 'Support module for menu hook testing.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:test_page_test
+  - drupal:menu_ui

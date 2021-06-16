@@ -1,0 +1,5 @@
+name: 'Update test with 7.x updates left in the codebase.'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION

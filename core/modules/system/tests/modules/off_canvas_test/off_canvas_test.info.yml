@@ -1,0 +1,5 @@
+name: 'Off-canvas tests'
+type: module
+description: 'Provides off-canvas test links.'
+package: Testing
+version: VERSION

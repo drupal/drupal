@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Theme override for the status report.
+  *
+  * Available variables:
+  * - grouped_requirements: Contains grouped requirements.
+  *   Each group contains:
+  *   - title: The title of the group.
+  *   - type: The severity of the group.
+  *   - items: The requirement instances.
+  *     Each requirement item contains:
+  *     - title: The title of the requirement.
+  *     - value: (optional) The requirement's status.
+  *     - description: (optional) The requirement's description.
+  *     - severity_title: The title of the severity.
+  *     - severity_status: Indicates the severity status.
+  * - requirements: Ungrouped requirements
+  */
+ #}
+{% for group in grouped_requirements %}
+  <h3 id="{{ group.type }}">{{ group.title }}</h3>
+  {% for requirement in group.items %}
+    <details>
+      <summary role="button">
+        {% if requirement.severity_title  %}
+          <span class="visually-hidden">{{ requirement.severity_title }}</span>
+        {% endif %}
+        {{ requirement.title }}
+      </summary>
+      {{ requirement.value }}
+      {% if requirement.description %}
+        <div>{{ requirement.description }}</div>
+      {% endif %}
+    </details>
+  {% endfor %}
+{% endfor %}

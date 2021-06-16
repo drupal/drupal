@@ -1,0 +1,71 @@
+/**
+ * @file
+ * Styling for the off-canvas ui dialog.
+ *
+ * Contains overrides for jQuery UI dialog.
+ */
+
+@import "./variables.pcss.css";
+
+/* Style the dialog-off-canvas container. */
+.ui-dialog.ui-dialog-off-canvas {
+  /* Layer the dialog just under the toolbar. */
+  z-index: var(--jui-dialog-off-canvas-z-index);
+  padding: 0;
+  color: #ddd;
+  border-radius: 0;
+  background: #444;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3333);
+}
+.ui-widget.ui-dialog.ui-dialog-off-canvas {
+  border: 1px solid transparent;
+}
+
+/* Style the off-canvas dialog header. */
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  padding: var(--space-s) var(--jui-dialog-off-canvas-close-button-reserved-space) var(--space-s) var(--space-m); /* LTR */
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  background: #2d2d2d;
+  line-height: var(--line-height);
+}
+[dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
+  padding-right: var(--space-m);
+  padding-left: var(--jui-dialog-off-canvas-close-button-reserved-space);
+}
+
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
+  /* Push the text away from the icon. */
+  padding-left: calc(var(--space-m) + var(--space-s)); /* LTR */
+  /* Ensure that long titles are not truncated. */
+  white-space: normal;
+  background: transparent url(../../../../misc/icons/ffffff/pencil.svg);
+  background-repeat: no-repeat;
+  background-position: 0 50%; /* LTR */
+  background-size: 1.25rem 1.25rem;
+  font-size: var(--font-size-base);
+}
+[dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
+  padding-right: calc(var(--space-m) + var(--space-s));
+  padding-left: 0;
+  background-position: 100% 50%;
+}
+
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+  margin-right: var(--space-m);
+  margin-left: var(--space-m);
+}
+
+/* Override default styling from jQuery UI. */
+#drupal-off-canvas .ui-state-default,
+#drupal-off-canvas .ui-widget-content .ui-state-default,
+#drupal-off-canvas .ui-widget-header .ui-state-default {
+  color: #333;
+  border: 0;
+  font-size: var(--font-size-s);
+  font-weight: normal;
+}
+#drupal-off-canvas .ui-widget-content a {
+  color: #85bef4;
+}

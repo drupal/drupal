@@ -1,0 +1,30 @@
+administer modules:
+  title: 'Administer modules'
+administer site configuration:
+  title: 'Administer site configuration'
+  restrict access: true
+administer themes:
+  title: 'Administer themes'
+administer software updates:
+  title: 'Administer software updates'
+  restrict access: true
+access administration pages:
+  title: 'Use the administration pages and help'
+access site in maintenance mode:
+  title: 'Use the site in maintenance mode'
+view the administration theme:
+  title: 'View the administration theme'
+  description: 'This is only used when the site is configured to use a separate administration theme on the Appearance page.'
+# Note that the 'access content' permission is moved to the Node section of the
+# permission form when the Node module is enabled.
+access content:
+  title: 'View published content'
+access site reports:
+  title: 'View site reports'
+  restrict access: true
+link to any page:
+  title: 'Link to any page'
+  restrict access: true
+  description: 'This allows to bypass access checking when linking to internal paths.'
+administer menu:
+  title: 'Administer menus and menu links'

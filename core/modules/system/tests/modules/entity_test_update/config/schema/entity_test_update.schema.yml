@@ -1,0 +1,9 @@
+field.value.multi_value_test:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value1:
+      type: sequence
+      sequence:
+        type: string
+        label: 'First value'

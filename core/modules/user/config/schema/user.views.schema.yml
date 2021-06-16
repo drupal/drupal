@@ -1,0 +1,104 @@
+# Schema for the views plugins of the User module.
+
+views.access.perm:
+  type: mapping
+  label: 'Permission'
+  mapping:
+    perm:
+      type: string
+      label: 'Permission'
+
+views.access.role:
+  type: mapping
+  label: 'Roles'
+  mapping:
+    role:
+      type: sequence
+      label: 'List of roles'
+      sequence:
+        type: string
+        label: 'Role'
+
+views.argument.user_uid:
+  type: views.argument.numeric
+  label: 'User ID'
+
+views.argument.user__roles_rid:
+  type: views.argument.many_to_one
+  label: 'Role ID'
+
+views.argument_validator.entity:user:
+  type: views.argument_validator_entity
+  label: 'User'
+  mapping:
+    restrict_roles:
+      type: boolean
+      label: 'Restrict user based on role'
+    roles:
+      type: sequence
+      label: 'Restrict to the selected roles'
+      sequence:
+        type: string
+        label: 'Role'
+
+views.argument_default.user:
+  type: mapping
+  label: 'User ID from URL'
+  mapping:
+    user:
+      type: boolean
+      label: 'Also look for a node and use the node author'
+
+views_field_user:
+  type: views_field
+  mapping:
+    link_to_user:
+      type: boolean
+      label: 'Link this field to its user'
+
+views.field.user_permissions:
+  type: views.field.prerender_list
+  label: 'List of permission'
+
+views.field.user_roles:
+  type: views.field.prerender_list
+  label: 'List of roles'
+
+views.field.user:
+  type: views_field_user
+  label: 'User'
+
+views.field.user_bulk_form:
+  type: views_field_bulk_form
+  label: 'User operations bulk form'
+
+views.field.user_data:
+  type: views_field
+  label: 'User data field'
+  mapping:
+    data_module:
+      type: string
+      label: 'Module name'
+    data_name:
+      type: string
+      label: 'Name'
+
+views.filter.user_current:
+  type: views.filter.boolean
+  label: 'Current user'
+
+views.filter.user_name:
+  type: views.filter.in_operator
+  label: 'User name'
+
+views.filter.user_permissions:
+  type: views.filter.many_to_one
+  label: 'Permission'
+
+views.filter.user_roles:
+  type: views.filter.many_to_one
+  label: 'Role'
+
+views.filter_value.user_current:
+  type: views.filter_value.boolean
+  label: 'Current user'

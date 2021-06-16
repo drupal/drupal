@@ -1,0 +1,5 @@
+name: Breakpoint
+type: module
+description: 'Manages breakpoints and breakpoint groups for responsive designs.'
+package: Core
+version: VERSION

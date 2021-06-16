@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - umami
+id: umami_search
+theme: umami
+region: pre_header
+weight: 1
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+  page_id: node_search
+visibility: {  }
