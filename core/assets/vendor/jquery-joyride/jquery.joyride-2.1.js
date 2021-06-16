@@ -132,7 +132,7 @@
               methods.end(true /* isAborted */);
             });
 
-            settings.$window.on('resize.joyride', function (e) {
+            settings.$window.bind('resize.joyride', function (e) {
               if(settings.$li){
               if(settings.exposed && settings.exposed.length>0){
                 var $els = $(settings.exposed);
@@ -279,7 +279,7 @@
             }
 
             // scroll if not modal
-            if (!settings.$target.is("body") && settings.scroll) {
+            if (!/body/i.test(settings.$target.selector) && settings.scroll) {
               methods.scroll_to();
             }
 
@@ -476,7 +476,7 @@
           settings.$next_tip.show();
         }
 
-        if (!settings.$target.is("body")) {
+        if (!/body/i.test(settings.$target.selector)) {
             var
               topAdjustment = settings.tipSettings.tipAdjustmentY ? parseInt(settings.tipSettings.tipAdjustmentY) : 0,
               leftAdjustment = settings.tipSettings.tipAdjustmentX ? parseInt(settings.tipSettings.tipAdjustmentX) : 0;
@@ -564,7 +564,7 @@
           settings.$next_tip.show();
         }
 
-        if (!settings.$target.is("body")) {
+        if (!/body/i.test(settings.$target.selector)) {
 
           if (methods.top()) {
 
@@ -618,7 +618,7 @@
           randId = 'expose-'+Math.floor(Math.random()*10000);
         if (arguments.length>0 && arguments[0] instanceof $){
           el = arguments[0];
-        } else if(settings.$target && !settings.$target.is("body")){
+        } else if(settings.$target && !/body/i.test(settings.$target.selector)){
           el = settings.$target;
         }  else {
           return false;
@@ -673,7 +673,7 @@
           clearAll = false;
         if (arguments.length>0 && arguments[0] instanceof $){
           el = arguments[0];
-        } else if(settings.$target && !settings.$target.is("body")){
+        } else if(settings.$target && !/body/i.test(settings.$target.selector)){
           el = settings.$target;
         }  else {
           return false;
@@ -828,7 +828,7 @@
 
         // Unbind resize events.
         if (isAborted) {
-          settings.$window.off('resize.joyride');
+          settings.$window.unbind('resize.joyride');
         }
 
         if (settings.cookieMonster) {
