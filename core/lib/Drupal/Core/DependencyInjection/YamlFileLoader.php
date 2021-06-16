@@ -31,6 +31,11 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  */
 class YamlFileLoader
 {
+    private const DEFAULTS_KEYWORDS = [
+        'public' => 'public',
+        'tags' => 'tags',
+        'autowire' => 'autowire',
+    ];
 
     /**
      * @var \Drupal\Core\DependencyInjection\ContainerBuilder $container
@@ -43,12 +48,6 @@ class YamlFileLoader
      * @var \Drupal\Component\FileCache\FileCacheInterface
      */
     protected $fileCache;
-
-    private static $defaultsKeywords = array(
-        'public' => 'public',
-        'tags' => 'tags',
-        'autowire' => 'autowire',
-    );
 
     public function __construct(ContainerBuilder $container)
     {
@@ -157,8 +156,8 @@ class YamlFileLoader
         }
 
         foreach ($defaults as $key => $default) {
-            if (!isset(self::$defaultsKeywords[$key])) {
-                throw new InvalidArgumentException(sprintf('The configuration key "%s" cannot be used to define a default value in "%s". Allowed keys are "%s".', $key, $file, implode('", "', self::$defaultsKeywords)));
+            if (!isset(self::DEFAULTS_KEYWORDS[$key])) {
+                throw new InvalidArgumentException(sprintf('The configuration key "%s" cannot be used to define a default value in "%s". Allowed keys are "%s".', $key, $file, implode('", "', self::DEFAULTS_KEYWORDS)));
             }
         }
 
