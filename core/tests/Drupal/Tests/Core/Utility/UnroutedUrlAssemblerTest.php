@@ -102,6 +102,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
       'override-deep-query-merge-int-ket' => ['https://example.com/test?120=1', ['query' => ['bar' => ['baz' => 'foo']]], 'https://example.com/test?120=1&bar%5Bbaz%5D=foo'],
       'override-fragment' => ['https://example.com/test?foo=1#bar', ['fragment' => 'baz'], 'https://example.com/test?foo=1#baz'],
       ['//www.drupal.org', [], '//www.drupal.org'],
+      ['https://example.com/test?foo=1&bar=2&foo=3', [], 'https://example.com/test?foo=1&bar=2&foo=3'],
     ];
   }
 
