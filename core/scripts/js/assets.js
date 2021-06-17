@@ -23,11 +23,11 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   function updateLibraryVersion(libraryName, { version }) {
     const index = libraries.indexOf(`${libraryName}:`);
     if (index > 0) {
-      console.log('Update library', libraryName, 'to', `v${version}`);
       const versionMatch = /^(\s+version: ).*$/;
       for (let i = 0; i < 5; i += 1) {
         const line = index + i;
         if (versionMatch.test(libraries[line])) {
+          console.log('Update library', libraryName, 'to', `v${version}`);
           libraries[line] = libraries[line].replace(
             versionMatch,
             `$1"${version}"`,
