@@ -77,7 +77,6 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
     }
     /** @var \Drupal\field\Entity\FieldConfig $field_definition */
     $field_definition = $field_definitions[$context['related']];
-    // This is typically 'target_id'.
     $target_resource_types = $resource_type->getRelatableResourceTypesByField($resource_type->getPublicName($context['related']));
     $target_resource_type_names = array_map(function (ResourceType $resource_type) {
       return $resource_type->getTypeName();
