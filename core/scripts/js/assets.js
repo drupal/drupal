@@ -18,22 +18,21 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   const librariesPath = `${coreFolder}/core.libraries.yml`;
   // Open the core.libraries.yml file to update version information
   // automatically.
-  const libraries = (await readFile(librariesPath, 'utf-8')).split('\n');
+  const libraries = (await readFile(librariesPath, 'utf-8')).split('\n\n');
 
   function updateLibraryVersion(libraryName, { version }) {
-    const index = libraries.indexOf(`${libraryName}:`);
-    if (index > 0) {
-      const versionMatch = /^(\s+version: ).*$/;
-      for (let i = 0; i < 5; i += 1) {
-        const line = index + i;
-        if (versionMatch.test(libraries[line])) {
-          console.log('Update library', libraryName, 'to', `v${version}`);
-          libraries[line] = libraries[line].replace(
-            versionMatch,
-            `$1"${version}"`,
-          );
-        }
-      }
+    const libraryIndex = libraries.findIndex((lib) =>
+      lib.startsWith(libraryName),
+    );
+    if (libraryIndex > 0) {
+      const libraryDeclaration = libraries[libraryIndex];
+      // Get the previous package version.
+      const currentVersion = libraryDeclaration.match(/version: "(.*)"\n/)[1];
+      // Replace the version value and the version in the licence URL.
+      libraries[libraryIndex] = libraryDeclaration.replace(
+        new RegExp(currentVersion, 'g'),
+        version,
+      );
     }
   }
 
@@ -80,6 +79,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'farbtastic',
+      library: 'jquery.farbtastic',
       files: [
         'marker.png',
         'mask.png',
@@ -108,6 +108,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'joyride',
       folder: 'jquery-joyride',
+      library: 'jquery.joyride',
       files: ['jquery.joyride-2.1.js'],
     },
     {
@@ -227,5 +228,5 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   });
 
   await Promise.all(process);
-  await writeFile(librariesPath, libraries.join('\n'));
+  await writeFile(librariesPath, libraries.join('\n\n'));
 })();
