@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
@@ -165,7 +166,7 @@ class DefaultConfigTest extends KernelTestBase {
       }
       else {
         $info = $this->container->get('extension.list.module')->getExtensionInfo($module);
-        if (!isset($info['package']) || $info['package'] !== 'Core (Experimental)') {
+        if (!isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL) {
           $this->fail("$config_name provided by $module does not exist after installing all dependencies");
         }
       }

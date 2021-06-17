@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Tests\UnitTestCase;
@@ -689,6 +690,112 @@ INFO;
       $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
       $this->assertSame(TRUE, $info_values['core_incompatible'], "Expected 'core_incompatible's for file: $filename");
     }
+  }
+
+  /**
+   * Tests an info file with valid lifecycle values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerValidLifecycle
+   */
+  public function testValidLifecycle($lifecycle, $expected) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+INFO;
+    if (!empty($lifecycle)) {
+      $info .= "\nlifecycle: $lifecycle\n";
+    }
+    vfsStream::setup('modules');
+    $filename = "lifecycle-$lifecycle.info.yml";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+    $this->assertSame($expected, $info_values[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]);
+  }
+
+  /**
+   * Data provider for testValidLifecycle().
+   */
+  public function providerValidLifecycle() {
+    return [
+      'empty' => [
+        '',
+        ExtensionLifecycle::STABLE,
+      ],
+      'experimental' => [
+        ExtensionLifecycle::EXPERIMENTAL,
+        ExtensionLifecycle::EXPERIMENTAL,
+      ],
+      'stable' => [
+        ExtensionLifecycle::STABLE,
+        ExtensionLifecycle::STABLE,
+      ],
+      'deprecated' => [
+        ExtensionLifecycle::DEPRECATED,
+        ExtensionLifecycle::DEPRECATED,
+      ],
+      'obsolete' => [
+        ExtensionLifecycle::OBSOLETE,
+        ExtensionLifecycle::OBSOLETE,
+      ],
+    ];
+  }
+
+  /**
+   * Tests an info file with invalid lifecycle values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerInvalidLifecycle
+   */
+  public function testInvalidLifecycle($lifecycle, $exception_message) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+INFO;
+    $info .= "\nlifecycle: $lifecycle\n";
+    vfsStream::setup('modules');
+    $filename = "lifecycle-$lifecycle.info.txt";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage($exception_message);
+    $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+    $this->assertEmpty($info_values);
+  }
+
+  /**
+   * Data provider for testInvalidLifecycle().
+   */
+  public function providerInvalidLifecycle() {
+    return [
+      'bogus' => [
+        'bogus',
+        "'lifecycle: bogus' is not valid",
+      ],
+      'two words' => [
+        'deprecated obsolete',
+        "'lifecycle: deprecated obsolete' is not valid",
+      ],
+      'wrong case' => [
+        'Experimental',
+        "'lifecycle: Experimental' is not valid",
+      ],
+    ];
   }
 
 }

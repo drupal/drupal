@@ -3,6 +3,7 @@
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -38,7 +39,7 @@ class TestCoverageTest extends BrowserTestBase {
         && empty($module->info['hidden'])
         && $module->status == FALSE
         && $module->info['package'] !== 'Testing'
-        && $module->info['package'] !== 'Core (Experimental)';
+        && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL;
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));

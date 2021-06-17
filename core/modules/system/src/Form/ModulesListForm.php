@@ -6,6 +6,7 @@ use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Core\Extension\ModuleDependencyMessageTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -404,7 +405,7 @@ class ModulesListForm extends FormBase {
       elseif (($checkbox = $form_state->getValue(['modules', $name], FALSE)) && $checkbox['enable']) {
         $modules['install'][$name] = $data[$name]->info['name'];
         // Identify experimental modules.
-        if ($data[$name]->info['package'] == 'Core (Experimental)') {
+        if ($data[$name]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
           $modules['experimental'][$name] = $data[$name]->info['name'];
         }
       }
@@ -418,7 +419,7 @@ class ModulesListForm extends FormBase {
           $modules['install'][$dependency] = $data[$dependency]->info['name'];
 
           // Identify experimental modules.
-          if ($data[$dependency]->info['package'] == 'Core (Experimental)') {
+          if ($data[$dependency]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
             $modules['experimental'][$dependency] = $data[$dependency]->info['name'];
           }
         }

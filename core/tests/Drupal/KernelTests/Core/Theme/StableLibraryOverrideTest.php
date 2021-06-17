@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Theme;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -64,7 +65,7 @@ class StableLibraryOverrideTest extends KernelTestBase {
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, experimental, already enabled modules, and
       // modules in the Testing package.
-      if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing' || $module->info['package'] == 'Core (Experimental)') {
+      if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing' || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
         return FALSE;
       }
       return TRUE;

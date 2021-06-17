@@ -3,6 +3,7 @@ type: module
 description: 'Allows users to stage content or preview a full site by using multiple workspaces on a single site.'
 version: VERSION
 package: Core (Experimental)
+lifecycle: experimental
 configure: entity.workspace.collection
 dependencies:
  - drupal:user

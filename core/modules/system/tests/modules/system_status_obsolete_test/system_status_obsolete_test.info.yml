@@ -1,0 +1,6 @@
+name: 'System obsolete status test'
+type: module
+description: 'Support module for testing an obsolete module extension.'
+package: Testing
+version: VERSION
+lifecycle: obsolete
