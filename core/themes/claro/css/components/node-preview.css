@@ -39,8 +39,8 @@
 }
 
 [dir="rtl"] .node-preview-form-select .form-item--view-mode {
-  margin-left: 0;
   margin-right: 1.5rem;
+  margin-left: 0;
 }
 
 .node-preview-backlink {
@@ -52,11 +52,11 @@
   height: 2rem;
   padding-right: 0.5rem;
   padding-left: 0.5rem;
-  font-weight: bold;
   text-decoration: none;
   color: #545560;
   border-radius: 0.125rem;
   background: #fff; /* Make sure that the text is visible on dark background. */
+  font-weight: bold;
   line-height: 1;
 }
 
@@ -78,9 +78,9 @@
   width: 1rem;
   height: 1rem;
   content: "";
+  background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 2L5 8l6 6' stroke='%23545560' stroke-width='2'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 2L5 8l6 6' stroke='%23545560' stroke-width='2'/%3e%3c/svg%3e");
 }
 
 .node-preview-backlink::before {
@@ -88,8 +88,8 @@
 }
 
 [dir="rtl"] .node-preview-backlink::before {
-  margin-left: 0.5rem;
   margin-right: 0;
+  margin-left: 0.5rem;
 }
 
 @media (-ms-high-contrast: active) {
