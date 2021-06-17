@@ -10,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\datetime\Functional\Traits\TimezoneFieldTestHelper;
 
 /**
  * Tests Datetime field functionality.
@@ -17,6 +18,8 @@ use Drupal\node\Entity\Node;
  * @group datetime
  */
 class DateTimeFieldTest extends DateTestBase {
+
+  use TimezoneFieldTestHelper;
 
   /**
    * The default display settings to use for the formatters.
@@ -50,7 +53,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Loop through defined time zones to test that date-only fields work at the
     // extremes.
-    foreach (static::$timezones as $timezone) {
+    foreach ($this->timezones as $timezone) {
 
       $this->setSiteTimezone($timezone);
       $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
