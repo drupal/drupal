@@ -451,7 +451,7 @@ class StandardProfileTest extends BrowserTestBase {
       'type' => 'literal',
       // There is an extra carriage return in the when parsing comments as
       // output by Bartik, so it must be added to the expected value.
-      'value' => implode(PHP_EOL, [$text, '']),
+      'value' => $text . PHP_EOL,
       'lang' => 'en',
     ];
     $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleCommentUri, 'http://schema.org/text', $expected_value), "Article comment body was found (schema:text).");
