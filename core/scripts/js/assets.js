@@ -1,5 +1,5 @@
 const path = require('path');
-const { copyFile, writeFile, readFile } = require('fs/promises');
+const { copyFile, writeFile, readFile, chmod } = require('fs/promises');
 
 const packageFolder = path.resolve(__dirname, '../../node_modules');
 const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
@@ -132,6 +132,10 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
         `${packageFolder}/${sourceFolder}/${source}`,
         `${assetsFolder}/${destFolder}/${dest}`,
       );
+      // Fix some permissions
+      if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
+        await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+      }
     }
   });
 });
