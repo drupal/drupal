@@ -372,10 +372,7 @@ class ConfigSync extends FormBase {
           ->setProgressMessage($this->t('Completed step @current of @total.'))
           ->setErrorMessage($this->t('Configuration synchronization has encountered an error.'));
         foreach ($sync_steps as $sync_step) {
-          $batch_builder->addOperation([
-            ConfigImporterBatch::class,
-            'process',
-          ], [$config_importer, $sync_step]);
+          $batch_builder->addOperation([ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]);
         }
 
         batch_set($batch_builder->toArray());

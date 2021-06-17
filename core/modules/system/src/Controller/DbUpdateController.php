@@ -614,11 +614,7 @@ class DbUpdateController extends ControllerBase {
           \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
-        $batch_builder->addOperation('update_do_one', [
-          $update['module'],
-          $update['number'],
-          $dependency_map[$function],
-        ]);
+        $batch_builder->addOperation('update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]);
       }
     }
 
