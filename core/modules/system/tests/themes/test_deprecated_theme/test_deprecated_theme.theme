@@ -1,3 +1,8 @@
 <?php
 
+/**
+ * @file
+ * For testing theme deprecation warnings.
+ */
+
 @trigger_error('The "test_deprecated_theme" Theme is deprecated in drupal:8.9.0 and is removed from drupal:10.0.0. Use the theoretical contrib theme instead. See https://www.drupal.org/node/3084816', E_USER_DEPRECATED);
