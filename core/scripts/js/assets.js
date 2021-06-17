@@ -16,9 +16,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
 
 (async () => {
   const librariesPath = `${coreFolder}/core.libraries.yml`;
-  // Open the core.libraries.yml file to update version information
-  // automatically.
-  const libraries = (await readFile(librariesPath, 'utf-8')).split('\n');
 
   function updateLibraryVersion(libraryName, { version }) {
     const index = libraries.indexOf(`${libraryName}:`);
@@ -226,6 +223,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     });
   });
 
+  // Open the core.libraries.yml file to update version information
+  // automatically.
+  const libraries = (await readFile(librariesPath, 'utf-8')).split('\n');
   await Promise.all(process);
   await writeFile(librariesPath, libraries.join('\n'));
 })();
