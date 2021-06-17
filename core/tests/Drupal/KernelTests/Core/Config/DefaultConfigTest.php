@@ -72,7 +72,7 @@ class DefaultConfigTest extends KernelTestBase {
       ->addArgument(InstallStorage::CONFIG_SCHEMA_DIRECTORY);
 
     $definition = $container->getDefinition('config.typed');
-    $definition->replaceArgument(1, new Reference('default_config_test.schema_storage'));
+    $definition->replaceArgument('$schemaStorage', new Reference('default_config_test.schema_storage'));
   }
 
   /**
