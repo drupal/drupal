@@ -1,9 +1,34 @@
+/**
+ * @file
+ * Copy files for JS vendor dependencies from node_modules to the assets/vendor
+ * folder.
+ *
+ * This script handles all dependencies except CKEditor and Modernizr who
+ * require a custom build step.
+ */
+
 const path = require('path');
 const { copyFile, writeFile, readFile, chmod } = require('fs/promises');
 
 const packageFolder = path.resolve(__dirname, '../../node_modules');
 const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
 
+/**
+ * Declare the array that defines what needs to be copied over.
+ *
+ * @prop {string} pack
+ *   The name of the npm package (used to get the name of the folder where the
+ *   files are situated inside of the node_modules folder).
+ * @prop {string} [folder]
+ *   The folder under `assets/vendor/` where the files will be copied. If this
+ *   is not defined the value of `pack` is used.
+ * @prop {Array} files
+ *   An array of files to be copied over.
+ *     - A string if the file has the same name and is at the same level in the
+ *       source and target folder.
+ *     - An object with a `from` and `to` property if the source and target have
+ *       a different name or if the folder nesting is different.
+ */
 [
   {
     pack: 'backbone',
@@ -117,7 +142,9 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
       dest = file.to;
     }
     // For map files, make sure the sources files don't leak outside the library
-    // folder inside assets/vendor.
+    // folder. In the `sources` member, remove all "../" values at the start of
+    // the files names to avoid having the virtual files outside of the library
+    // vendor folder in dev tools.
     if (path.extname(source) === '.map') {
       console.log('Process map file', source);
       const map = await readFile(`${packageFolder}/${sourceFolder}/${source}`);
@@ -140,7 +167,8 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
         `${packageFolder}/${sourceFolder}/${source}`,
         `${assetsFolder}/${destFolder}/${dest}`,
       );
-      // Fix some permissions
+      // Those 2 files come from a zip file that hasn't been updated in years
+      // hardcode the permission fix to pass the commit checks.
       if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
         await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
       }
