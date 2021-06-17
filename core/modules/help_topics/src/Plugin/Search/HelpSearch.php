@@ -255,6 +255,11 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
       $this->messenger->addWarning($this->formatPlural($this->searchSettings->get('index.minimum_word_size'), 'You must include at least one keyword to match in the content, and punctuation is ignored.', 'You must include at least one keyword to match in the content. Keywords must be at least @count characters, and punctuation is ignored.'));
     }
 
+    $unindexed = $this->state->get('help_search_unindexed_count', 1);
+    if ($unindexed) {
+      $this->messenger()->addWarning($this->t('Help search is not fully indexed. Some results may be missing or incorrect.'));
+    }
+
     return $find;
   }
 
@@ -366,6 +371,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     }
     finally {
       $this->searchIndex->updateWordWeights($words);
+      $this->updateIndexState();
     }
   }
 
@@ -430,6 +436,20 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
 
     // Remove remaining items from the index.
     $this->removeItemsFromIndex($sids_to_remove);
+  }
+
+  /**
+   * Updates the 'help_search_unindexed_count' state variable.
+   *
+   * The state variable is a count of help topics that have never been indexed.
+   */
+  public function updateIndexState() {
+    $query = $this->database->select('help_search_items', 'hsi');
+    $query->addExpression('COUNT(DISTINCT(hsi.sid))');
+    $query->leftJoin('search_dataset', 'sd', 'hsi.sid = sd.sid AND sd.type = :type', [':type' => $this->getType()]);
+    $query->isNull('sd.sid');
+    $never_indexed = $query->execute()->fetchField();
+    $this->state->set('help_search_unindexed_count', $never_indexed);
   }
 
   /**

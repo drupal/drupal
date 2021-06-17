@@ -472,7 +472,7 @@ function comment_user_cancel($edit, UserInterface $account, $method) {
  * Implements hook_ENTITY_TYPE_predelete() for user entities.
  */
 function comment_user_predelete($account) {
-  $entity_query = \Drupal::entityQuery('comment');
+  $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
   $entity_query->condition('uid', $account->id());
   $cids = $entity_query->execute();
   $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
@@ -529,7 +529,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
   }
 
   $preview_build['comment_output_below'] = $build;
-  $preview_build['comment_output_below']['#weight'] = 100;
+  $preview_build['comment_output_below']['#weight'] = 200;
 
   return $preview_build;
 }

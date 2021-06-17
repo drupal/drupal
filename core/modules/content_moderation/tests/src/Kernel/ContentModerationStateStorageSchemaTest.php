@@ -53,7 +53,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
   }
 
   /**
-   * Test the ContentModerationState unique keys.
+   * Tests the ContentModerationState unique keys.
    *
    * @covers ::getEntitySchema
    */

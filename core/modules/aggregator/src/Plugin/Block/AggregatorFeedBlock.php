@@ -127,37 +127,38 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function build() {
     // Load the selected feed.
-    if ($feed = $this->feedStorage->load($this->configuration['feed'])) {
-      $result = $this->itemStorage->getQuery()
-        ->accessCheck(TRUE)
-        ->condition('fid', $feed->id())
-        ->range(0, $this->configuration['block_count'])
-        ->sort('timestamp', 'DESC')
-        ->sort('iid', 'DESC')
-        ->execute();
+    if (!$feed = $this->feedStorage->load($this->configuration['feed'])) {
+      return [];
+    }
+    $result = $this->itemStorage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('fid', $feed->id())
+      ->range(0, $this->configuration['block_count'])
+      ->sort('timestamp', 'DESC')
+      ->sort('iid', 'DESC')
+      ->execute();
 
-      if ($result) {
-        // Only display the block if there are items to show.
-        $items = $this->itemStorage->loadMultiple($result);
+    if ($result) {
+      // Only display the block if there are items to show.
+      $items = $this->itemStorage->loadMultiple($result);
 
-        $build['list'] = [
-          '#theme' => 'item_list',
-          '#items' => [],
+      $build['list'] = [
+        '#theme' => 'item_list',
+        '#items' => [],
+      ];
+      foreach ($items as $item) {
+        $build['list']['#items'][$item->id()] = [
+          '#type' => 'link',
+          '#url' => $item->toUrl(),
+          '#title' => $item->label(),
         ];
-        foreach ($items as $item) {
-          $build['list']['#items'][$item->id()] = [
-            '#type' => 'link',
-            '#url' => $item->toUrl(),
-            '#title' => $item->label(),
-          ];
-        }
-        $build['more_link'] = [
-          '#type' => 'more_link',
-          '#url' => $feed->toUrl(),
-          '#attributes' => ['title' => $this->t("View this feed's recent news.")],
-        ];
-        return $build;
       }
+      $build['more_link'] = [
+        '#type' => 'more_link',
+        '#url' => $feed->toUrl(),
+        '#attributes' => ['title' => $this->t("View this feed's recent news.")],
+      ];
+      return $build;
     }
   }
 

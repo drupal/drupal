@@ -50,7 +50,7 @@ class EntityResolverTest extends NormalizerTestBase {
   }
 
   /**
-   * Test that fields referencing UUIDs can be denormalized.
+   * Tests that fields referencing UUIDs can be denormalized.
    */
   public function testUuidEntityResolver() {
     // Create an entity to get the UUID from.
@@ -90,7 +90,7 @@ class EntityResolverTest extends NormalizerTestBase {
 
     $denormalized = $this->container->get('serializer')->denormalize($data, 'Drupal\entity_test\Entity\EntityTestMulRev', $this->format);
     $field_value = $denormalized->get('field_test_entity_reference')->getValue();
-    $this->assertEqual(1, $field_value[0]['target_id'], 'Entity reference resolved using UUID.');
+    $this->assertEquals(1, $field_value[0]['target_id'], 'Entity reference resolved using UUID.');
   }
 
 }

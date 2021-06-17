@@ -10,11 +10,11 @@
   "scripts": {
     "build": "yarn build:css & yarn build:js & yarn build:jqueryui",
     "watch": "yarn watch:css & yarn watch:js",
-    "build:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-build.js",
-    "watch:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-watch.js",
+    "build:css": "node ./scripts/css/postcss-build.js",
+    "watch:css": "node ./scripts/css/postcss-watch.js",
     "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "build:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
-    "build:jqueryui": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/jqueryui-build.js",
+    "build:jqueryui": "cross-env NODE_ENV=development node ./scripts/js/jqueryui-build.js",
     "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",
@@ -50,7 +50,7 @@
     "glob": "^7.1.2",
     "minimist": "^1.2.2",
     "mkdirp": "^1.0.4",
-    "nightwatch": "^1.2.1",
+    "nightwatch": "^1.6.3",
     "postcss": "^7.0.18",
     "postcss-calc": "^7.0.1",
     "postcss-header": "^2.0.0",
@@ -62,7 +62,6 @@
     "stylelint": "^13.0.0",
     "stylelint-checkstyle-formatter": "^0.1.1",
     "stylelint-config-standard": "^20.0.0",
-    "stylelint-no-browser-hacks": "^1.2.1",
     "stylelint-order": "^4.0.0",
     "terser": "^5.3.4"
   },
@@ -105,7 +104,6 @@
     "last 1 ChromeAndroid version",
     "last 1 UCAndroid version",
     "last 1 Samsung version",
-    "last 1 OperaMini version",
     "Firefox ESR"
   ]
 }

@@ -169,7 +169,7 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
 
   // Add editor-specific validation and submit handlers.
   if ($editor) {
-    /** @var $plugin \Drupal\editor\Plugin\EditorPluginInterface */
+    /** @var \Drupal\editor\Plugin\EditorPluginInterface $plugin */
     $plugin = $manager->createInstance($editor->getEditor());
     $form_state->set('editor_plugin', $plugin);
     $form['editor']['settings']['subform'] = [];

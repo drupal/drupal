@@ -42,11 +42,11 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
     $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');
 
-    $this->assertEqual($node_names['article'], $node_types['article']->label(), 'Correct node type base has been returned.');
+    $this->assertEquals($node_names['article'], $node_types['article']->label(), 'Correct node type base has been returned.');
 
     $article = NodeType::load('article');
-    $this->assertEqual($node_types['article'], $article, 'Correct node type has been returned.');
-    $this->assertEqual($node_types['article']->label(), $article->label(), 'Correct node type name has been returned.');
+    $this->assertEquals($node_types['article'], $article, 'Correct node type has been returned.');
+    $this->assertEquals($node_types['article']->label(), $article->label(), 'Correct node type name has been returned.');
   }
 
   /**
@@ -86,7 +86,8 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'title for foo',
       'type' => 'foo',
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
+    $this->drupalGet('admin/structure/types/add');
+    $this->submitForm($edit, 'Save and manage fields');
     $type_exists = (bool) NodeType::load('foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
@@ -109,7 +110,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $field = FieldConfig::loadByName('node', 'page', 'body');
-    $this->assertEqual('Body', $field->getLabel(), 'Body field was found.');
+    $this->assertEquals('Body', $field->getLabel(), 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');
@@ -120,7 +121,8 @@ class NodeTypeTest extends NodeTestBase {
     $edit = [
       'title_label' => 'Foo',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save content type');
 
     $this->drupalGet('node/add/page');
     $assert->pageTextContains('Foo');
@@ -131,7 +133,8 @@ class NodeTypeTest extends NodeTestBase {
       'name' => 'Bar',
       'description' => 'Lorem ipsum.',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save content type');
 
     $this->drupalGet('node/add');
     $assert->pageTextContains('Bar');
@@ -149,12 +152,14 @@ class NodeTypeTest extends NodeTestBase {
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
     $bundle_info = \Drupal::service('entity_type.bundle.info');
     $node_bundles = $bundle_info->getBundleInfo('node');
-    $this->assertEqual('NewBar', $node_bundles['page']['label'], 'Node type bundle cache is updated');
+    $this->assertEquals('NewBar', $node_bundles['page']['label'], 'Node type bundle cache is updated');
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.body/delete', [], 'Delete');
+    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.body/delete');
+    $this->submitForm([], 'Delete');
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/types/manage/page', [], 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm([], 'Save content type');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/types/manage/page/fields', [
       $front_page_path => 'Home',
@@ -197,7 +202,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the content type %type?', ['%type' => $type->label()])
     );
-    $this->assertText('This action cannot be undone.');
+    $this->assertSession()->pageTextContains('This action cannot be undone.');
 
     // Test that a locked node type could not be deleted.
     $this->container->get('module_installer')->install(['node_test_config']);
@@ -263,9 +268,11 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     // Delete 'article' bundle.
-    $this->drupalPostForm('admin/structure/types/manage/article/delete', [], 'Delete');
+    $this->drupalGet('admin/structure/types/manage/article/delete');
+    $this->submitForm([], 'Delete');
     // Delete 'page' bundle.
-    $this->drupalPostForm('admin/structure/types/manage/page/delete', [], 'Delete');
+    $this->drupalGet('admin/structure/types/manage/page/delete');
+    $this->submitForm([], 'Delete');
 
     // Navigate to content type administration screen
     $this->drupalGet('admin/structure/types');

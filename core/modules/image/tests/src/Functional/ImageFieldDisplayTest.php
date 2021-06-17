@@ -39,14 +39,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test image formatters on node display for public files.
+   * Tests image formatters on node display for public files.
    */
   public function testImageFieldFormattersPublic() {
     $this->_testImageFieldFormatters('public');
   }
 
   /**
-   * Test image formatters on node display for private files.
+   * Tests image formatters on node display for private files.
    */
   public function testImageFieldFormattersPrivate() {
     // Remove access content permission from anonymous users.
@@ -55,7 +55,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test image formatters on node display.
+   * Tests image formatters on node display.
    */
   public function _testImageFieldFormatters($scheme) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -144,7 +144,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertRaw($default_output);
     // Verify that the image can be downloaded.
-    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
+    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
@@ -222,12 +222,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => ['image_style' => ''],
     ];
     $expected_url = file_url_transform_relative(file_create_url($image_uri));
-    $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+    $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
 
     // Test the image URL formatter with an image style.
     $display_options['settings']['image_style'] = 'thumbnail';
     $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
-    $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+    $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
   }
 
   /**
@@ -262,9 +262,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
-    $this->assertText('50 KB limit.');
-    $this->assertText('Allowed types: ' . $test_image_extension . '.');
-    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
+    $this->assertSession()->pageTextContains('50 KB limit.');
+    $this->assertSession()->pageTextContains('Allowed types: ' . $test_image_extension . '.');
+    $this->assertSession()->pageTextContains('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
@@ -301,7 +301,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][alt]' => $image['#alt'],
       $field_name . '[0][title]' => $image['#title'],
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output);
 
@@ -311,7 +312,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][alt]' => $this->randomMachineName($test_size),
       $field_name . '[0][title]' => $this->randomMachineName($test_size),
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
     $schema = $field->getFieldStorageDefinition()->getSchema();
     $this->assertRaw(t('Alternative text cannot be longer than %max characters but is currently %length characters long.', [
       '%max' => $schema['columns']['alt']['length'],
@@ -329,14 +331,18 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // 1, so we need to make sure the file widget prevents these notices by
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', ['cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED], 'Save field settings');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage');
+    $this->submitForm([
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ], 'Save field settings');
     $edit = [
       'files[' . $field_name . '_1][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Add the required alt text.
     $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
-    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
+    $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -349,7 +355,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test use of a default image with an image field.
+   * Tests use of a default image with an image field.
    */
   public function testImageFieldDefaultImage() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -380,7 +386,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
-    $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, 'Save field settings');
+    $this->drupalGet("admin/structure/types/manage/article/fields/node.article.{$field_name}/storage");
+    $this->submitForm($edit, 'Save field settings');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
@@ -452,7 +459,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage', $edit, 'Save field settings');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage');
+    $this->submitForm($edit, 'Save field settings');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
@@ -460,7 +468,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $default_image = $private_field_storage->getSetting('default_image');
     $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
 
-    $this->assertEqual('private', StreamWrapperManager::getScheme($file->getFileUri()), 'Default image uses private:// scheme.');
+    $this->assertEquals('private', StreamWrapperManager::getScheme($file->getFileUri()), 'Default image uses private:// scheme.');
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private
     // image is displayed.

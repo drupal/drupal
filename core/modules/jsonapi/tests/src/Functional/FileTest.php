@@ -117,7 +117,7 @@ class FileTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function createAnotherEntity($key) {
-    /* @var \Drupal\file\FileInterface $duplicate */
+    /** @var \Drupal\file\FileInterface $duplicate */
     $duplicate = parent::createAnotherEntity($key);
     $duplicate->setFileUri("public://$key.txt");
     $duplicate->save();

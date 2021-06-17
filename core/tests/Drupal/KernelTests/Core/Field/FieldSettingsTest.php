@@ -37,13 +37,13 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'test_field_setting' => 'dummy test string',
       'translatable_field_setting' => 'a translatable field setting',
     ];
-    $this->assertEqual($expected_settings, $base_field->getSettings());
+    $this->assertEquals($expected_settings, $base_field->getSettings());
 
     // Change one single setting using setSettings(), and check that the other
     // expected settings are still present.
     $expected_settings['test_field_setting'] = 'another test string';
     $base_field->setSettings(['test_field_setting' => $expected_settings['test_field_setting']]);
-    $this->assertEqual($expected_settings, $base_field->getSettings());
+    $this->assertEquals($expected_settings, $base_field->getSettings());
   }
 
   /**
@@ -92,13 +92,13 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'unchangeable' => 'an unchangeable field storage setting',
       'translatable_storage_setting' => 'a translatable field storage setting',
     ];
-    $this->assertEqual($expected_settings, $field_storage->getSettings());
+    $this->assertEquals($expected_settings, $field_storage->getSettings());
 
     // Change one single setting using setSettings(), and check that the other
     // expected settings are still present.
     $expected_settings['test_field_storage_setting'] = 'another test string';
     $field_storage->setSettings(['test_field_storage_setting' => $expected_settings['test_field_storage_setting']]);
-    $this->assertEqual($expected_settings, $field_storage->getSettings());
+    $this->assertEquals($expected_settings, $field_storage->getSettings());
   }
 
   /**
@@ -131,13 +131,13 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'translatable_field_setting' => 'a translatable field setting',
       'field_setting_from_config_data' => 'TRUE',
     ];
-    $this->assertEqual($expected_settings, $field->getSettings());
+    $this->assertEquals($expected_settings, $field->getSettings());
 
     // Change one single setting using setSettings(), and check that the other
     // expected settings are still present.
     $expected_settings['test_field_setting'] = 'another test string';
     $field->setSettings(['test_field_setting' => $expected_settings['test_field_setting']]);
-    $this->assertEqual($expected_settings, $field->getSettings());
+    $this->assertEquals($expected_settings, $field->getSettings());
   }
 
 }
