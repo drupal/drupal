@@ -10,6 +10,11 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
     files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
   },
   {
+    pack: 'css.escape',
+    folder: 'css-escape',
+    files: ['css.escape.js'],
+  },
+  {
     pack: 'es6-promise',
     files: [
       { from: 'dist/es6-promise.auto.min.js', to: 'es6-promise.auto.min.js' },
