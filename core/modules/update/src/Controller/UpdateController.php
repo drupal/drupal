@@ -92,10 +92,10 @@ class UpdateController extends ControllerBase {
   public function updateStatusManually() {
     $this->updateManager->refreshUpdateData();
     $batch_builder = (new BatchBuilder())
-      ->setTitle($this->t('Checking available update data'))
+      ->setTitle(t('Checking available update data'))
       ->addOperation([$this->updateManager, 'fetchDataBatch'], [])
-      ->setProgressMessage($this->t('Trying to check available update data ...'))
-      ->setErrorMessage($this->t('Error checking available update data.'))
+      ->setProgressMessage(t('Trying to check available update data ...'))
+      ->setErrorMessage(t('Error checking available update data.'))
       ->setFinishCallback('update_fetch_data_finished');
     batch_set($batch_builder->toArray());
     return batch_process('admin/reports/updates');
