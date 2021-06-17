@@ -8,7 +8,7 @@
  */
 
 const path = require('path');
-const { copyFile, writeFile, readFile, chmod } = require('fs/promises');
+const { copyFile, writeFile, readFile, chmod } = require('fs').promises;
 
 const coreFolder = path.resolve(__dirname, '../../');
 const packageFolder = `${coreFolder}/node_modules`;
