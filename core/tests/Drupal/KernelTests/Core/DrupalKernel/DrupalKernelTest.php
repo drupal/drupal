@@ -145,6 +145,7 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Check that the location of the new module is registered.
     $modules = $container->getParameter('container.modules');
+    require_once $this->root . '/core/includes/schema.inc';
     $this->assertEquals(['type' => 'module', 'pathname' => drupal_get_filename('module', 'service_provider_test'), 'filename' => NULL], $modules['service_provider_test']);
 
     // Check that the container itself is not among the persist IDs because it
