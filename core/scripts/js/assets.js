@@ -51,7 +51,10 @@ const assetsFolder = path.resolve(__dirname, '../../assets/vendor');
     pack: 'jquery-once',
     files: ['jquery.once.js', 'jquery.once.min.js', 'jquery.once.min.js.map'],
   },
-  // { pack: 'js-cookie', files: ['js.cookie.min.js'] },
+  {
+    pack: 'js-cookie',
+    files: [{ from: 'dist/js.cookie.min.js', to: 'js.cookie.min.js' }],
+  },
   {
     pack: 'normalize.css',
     folder: 'normalize-css',
