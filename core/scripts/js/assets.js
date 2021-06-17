@@ -16,7 +16,8 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
 
 (async () => {
   const librariesPath = `${coreFolder}/core.libraries.yml`;
-  // Open the core.libraries.yml file to update version informations.
+  // Open the core.libraries.yml file to update version information
+  // automatically.
   const libraries = (await readFile(librariesPath, 'utf-8')).split('\n');
 
   function updateLibraryVersion(libraryName, { version }) {
