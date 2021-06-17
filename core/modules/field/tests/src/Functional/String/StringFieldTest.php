@@ -48,7 +48,7 @@ class StringFieldTest extends BrowserTestBase {
   // Test fields.
 
   /**
-   * Test widgets.
+   * Tests widgets.
    */
   public function testTextfieldWidgets() {
     $this->_testTextfieldWidgets('string', 'string_textfield');
@@ -102,7 +102,7 @@ class StringFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     // Display the entity.
     $entity = EntityTest::load($id);

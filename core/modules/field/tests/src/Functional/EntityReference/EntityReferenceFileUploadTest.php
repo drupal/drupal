@@ -17,7 +17,7 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
 
   use TestFileCreationTrait;
 
-  protected static $modules = ['entity_reference', 'node', 'file'];
+  protected static $modules = ['node', 'file'];
 
   /**
    * {@inheritdoc}
@@ -129,7 +129,8 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
 
     $test_file = current($this->getTestFiles('text'));
     $edit['files[file_field_0]'] = \Drupal::service('file_system')->realpath($test_file->uri);
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Upload');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Upload');
     $this->assertSession()->statusCodeEquals(200);
     $edit = [
       'title[0][value]' => $this->randomMachineName(),

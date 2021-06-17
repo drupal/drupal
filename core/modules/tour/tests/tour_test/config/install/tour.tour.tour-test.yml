@@ -14,16 +14,14 @@ tips:
     label: 'The first tip'
     body: 'Is <a href="[site:url]">[site:name]</a> always the best dressed?'
     weight: 1
-    attributes:
-      data-id: tour-test-1
+    selector: '#tour-test-1'
   tour-test-action:
     id: tour-test-3
     plugin: text
     label: 'The action'
     body: 'The action button of awesome'
     weight: 2
-    attributes:
-      data-class: button-action
+    selector: '.button-action'
   tour-test-3:
     id: tour-test-3
     plugin: image
@@ -36,5 +34,4 @@ tips:
     label: 'Im a list'
     body: '<p>Im all these things:</p><ul><li>Modal</li><li>Awesome</li></ul>'
     weight: 6
-    attributes:
-      data-id: tour-test-3
+    selector: '#tour-test-3'

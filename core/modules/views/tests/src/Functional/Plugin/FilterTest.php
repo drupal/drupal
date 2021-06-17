@@ -56,7 +56,7 @@ class FilterTest extends ViewTestBase {
   }
 
   /**
-   * Test query of the row plugin.
+   * Tests query of the row plugin.
    */
   public function testFilterQuery() {
     // Check that we can find the test filter plugin.
@@ -151,20 +151,25 @@ class FilterTest extends ViewTestBase {
   }
 
   /**
-   * Test no error message is displayed when all options are selected in an
+   * Tests no error message is displayed when all options are selected in an
    * exposed filter.
    */
   public function testInOperatorSelectAllOptions() {
     $row['row[type]'] = 'fields';
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_in_operator_ui/default/row', $row, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_filter_in_operator_ui/default/row');
+    $this->submitForm($row, 'Apply');
     $field['name[node_field_data.nid]'] = TRUE;
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_filter_in_operator_ui/default/field', $field, 'Add and configure fields');
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/field/nid', [], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_filter_in_operator_ui/default/field');
+    $this->submitForm($field, 'Add and configure fields');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/field/nid');
+    $this->submitForm([], 'Apply');
     $edit['options[value][all]'] = TRUE;
     $edit['options[value][article]'] = TRUE;
     $edit['options[value][page]'] = TRUE;
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_filter_in_operator_ui/edit/default', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_filter_in_operator_ui/edit/default');
+    $this->submitForm([], 'Save');
     $this->submitForm([], 'Update preview');
     $this->assertNoText('An illegal choice has been detected.');
   }
@@ -191,8 +196,10 @@ class FilterTest extends ViewTestBase {
     $edit = [];
     $edit['options[operator]'] = '>';
     $edit['options[expose][operator_list][]'] = ['>', '>=', 'between'];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/nid', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_filter_in_operator_ui/edit/default', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/nid');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_filter_in_operator_ui/edit/default');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet('test_filter_in_operator_ui');
     $this->assertSession()->statusCodeEquals(200);
@@ -210,8 +217,9 @@ class FilterTest extends ViewTestBase {
     $edit = [];
     $edit['options[operator]'] = '=';
     $edit['options[expose][operator_list][]'] = ['<', '>'];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/nid', $edit, 'Apply');
-    $this->assertText('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/nid');
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
   }
 
 }

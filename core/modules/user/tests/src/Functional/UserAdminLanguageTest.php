@@ -128,38 +128,40 @@ class UserAdminLanguageTest extends BrowserTestBase {
     // no preference set, negotiation will fall back further.
     $path = 'user/' . $this->adminUser->id() . '/edit';
     $this->drupalGet($path);
-    $this->assertText('Language negotiation method: language-default');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-default');
     $this->drupalGet('xx/' . $path);
-    $this->assertText('Language negotiation method: language-url');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-url');
 
     // Set a preferred language code for the user.
     $edit = [];
     $edit['preferred_admin_langcode'] = 'xx';
-    $this->drupalPostForm($path, $edit, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Save');
 
     // Test negotiation with the URL method first. The admin method will only
     // be used if the URL method did not match.
     $this->drupalGet($path);
-    $this->assertText('Language negotiation method: language-user-admin');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-user-admin');
     $this->drupalGet('xx/' . $path);
-    $this->assertText('Language negotiation method: language-url');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-url');
 
     // Test negotiation with the admin language method first. The admin method
     // will be used at all times.
     $this->setLanguageNegotiation(TRUE);
     $this->drupalGet($path);
-    $this->assertText('Language negotiation method: language-user-admin');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-user-admin');
     $this->drupalGet('xx/' . $path);
-    $this->assertText('Language negotiation method: language-user-admin');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-user-admin');
 
     // Unset the preferred language code for the user.
     $edit = [];
     $edit['preferred_admin_langcode'] = '';
-    $this->drupalPostForm($path, $edit, 'Save');
     $this->drupalGet($path);
-    $this->assertText('Language negotiation method: language-default');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet($path);
+    $this->assertSession()->pageTextContains('Language negotiation method: language-default');
     $this->drupalGet('xx/' . $path);
-    $this->assertText('Language negotiation method: language-url');
+    $this->assertSession()->pageTextContains('Language negotiation method: language-url');
   }
 
   /**
@@ -178,7 +180,8 @@ class UserAdminLanguageTest extends BrowserTestBase {
       'language_interface[weight][language-user-admin]' => ($admin_first ? -12 : -8),
       'language_interface[weight][language-url]' => -10,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
   }
 
   /**
@@ -194,7 +197,8 @@ class UserAdminLanguageTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
   }
 
 }

@@ -99,7 +99,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Retrieve the accounts to be canceled from the temp store.
-    /* @var \Drupal\user\Entity\User[] $accounts */
+    /** @var \Drupal\user\Entity\User[] $accounts */
     $accounts = $this->tempStoreFactory
       ->get('user_user_operations_cancel')
       ->get($this->currentUser()->id());

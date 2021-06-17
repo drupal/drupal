@@ -62,7 +62,7 @@ class ModuleHandlerTest extends KernelTestBase {
   protected function assertModuleList(array $expected_values, $condition) {
     $expected_values = array_values(array_unique($expected_values));
     $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
-    $this->assertEqual($expected_values, $enabled_modules, new FormattableMarkup('@condition: extension handler returns correct results', ['@condition' => $condition]));
+    $this->assertEquals($expected_values, $enabled_modules, new FormattableMarkup('@condition: extension handler returns correct results', ['@condition' => $condition]));
   }
 
   /**
@@ -117,7 +117,7 @@ class ModuleHandlerTest extends KernelTestBase {
 
     // Verify that the modules were enabled in the correct order.
     $module_order = \Drupal::state()->get('module_test.install_order', []);
-    $this->assertEqual(['help', 'config', 'color'], $module_order);
+    $this->assertEquals(['help', 'config', 'color'], $module_order);
 
     // Uninstall all three modules explicitly, but in the incorrect order,
     // and make sure that ModuleInstaller::uninstall() uninstalled them in the
@@ -128,10 +128,10 @@ class ModuleHandlerTest extends KernelTestBase {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (['color', 'config', 'help'] as $module) {
-      $this->assertEqual($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
+      $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
     }
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
-    $this->assertEqual(['color', 'config', 'help'], $uninstalled_modules, 'Modules were uninstalled in the correct order.');
+    $this->assertEquals(['color', 'config', 'help'], $uninstalled_modules, 'Modules were uninstalled in the correct order.');
 
     // Enable Color module again, which should enable both the Config module and
     // Help module. But, this time do it with Config module declaring a
@@ -280,7 +280,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $update_registry = \Drupal::service('update.update_hook_registry');
     $result = $this->moduleInstaller()->uninstall(['help']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
-    $this->assertEqual($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('entity_test'), "entity_test module was uninstalled.");
+    $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('entity_test'), "entity_test module was uninstalled.");
   }
 
   /**

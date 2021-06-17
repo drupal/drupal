@@ -39,15 +39,18 @@ class AreaEntityUITest extends UITestBase {
     $this->drupalGet($view->toUrl('edit-form'));
 
     // Add a global NULL argument to the view for testing argument placeholders.
-    $this->drupalPostForm("admin/structure/views/nojs/add-handler/$id/page_1/argument", ['name[views.null]' => TRUE], 'Add and configure contextual filters');
+    $this->drupalGet("admin/structure/views/nojs/add-handler/{$id}/page_1/argument");
+    $this->submitForm(['name[views.null]' => TRUE], 'Add and configure contextual filters');
     $this->submitForm([], 'Apply');
 
     // Configure both the entity_test area header and the block header to
     // reference the given entities.
-    $this->drupalPostForm("admin/structure/views/nojs/add-handler/$id/page_1/header", ['name[views.entity_block]' => TRUE], 'Add and configure header');
+    $this->drupalGet("admin/structure/views/nojs/add-handler/{$id}/page_1/header");
+    $this->submitForm(['name[views.entity_block]' => TRUE], 'Add and configure header');
     $this->submitForm(['options[target]' => $block->id()], 'Apply');
 
-    $this->drupalPostForm("admin/structure/views/nojs/add-handler/$id/page_1/header", ['name[views.entity_entity_test]' => TRUE], 'Add and configure header');
+    $this->drupalGet("admin/structure/views/nojs/add-handler/{$id}/page_1/header");
+    $this->submitForm(['name[views.entity_entity_test]' => TRUE], 'Add and configure header');
     $this->submitForm(['options[target]' => $entity_test->id()], 'Apply');
 
     $this->submitForm([], 'Save');
@@ -55,10 +58,10 @@ class AreaEntityUITest extends UITestBase {
     // Confirm the correct target identifiers were saved for both entities.
     $view = View::load($id);
     $header = $view->getDisplay('default')['display_options']['header'];
-    $this->assertEqual(['entity_block', 'entity_entity_test'], array_keys($header));
+    $this->assertEquals(['entity_block', 'entity_entity_test'], array_keys($header));
 
-    $this->assertEqual($block->id(), $header['entity_block']['target']);
-    $this->assertEqual($entity_test->uuid(), $header['entity_entity_test']['target']);
+    $this->assertEquals($block->id(), $header['entity_block']['target']);
+    $this->assertEquals($entity_test->uuid(), $header['entity_entity_test']['target']);
 
     // Confirm that the correct serial ID (for the entity_test) and config ID
     // (for the block) are displayed in the form.
@@ -69,17 +72,19 @@ class AreaEntityUITest extends UITestBase {
     $this->assertSession()->fieldValueEquals('options[target]', $entity_test->id());
 
     // Replace the header target entities with argument placeholders.
-    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
-    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test", ['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
+    $this->drupalGet("admin/structure/views/nojs/handler/{$id}/page_1/header/entity_block");
+    $this->submitForm(['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
+    $this->drupalGet("admin/structure/views/nojs/handler/{$id}/page_1/header/entity_entity_test");
+    $this->submitForm(['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
     $this->submitForm([], 'Save');
 
     // Confirm that the argument placeholders are saved.
     $view = View::load($id);
     $header = $view->getDisplay('default')['display_options']['header'];
-    $this->assertEqual(['entity_block', 'entity_entity_test'], array_keys($header));
+    $this->assertEquals(['entity_block', 'entity_entity_test'], array_keys($header));
 
-    $this->assertEqual('{{ raw_arguments.null }}', $header['entity_block']['target']);
-    $this->assertEqual('{{ raw_arguments.null }}', $header['entity_entity_test']['target']);
+    $this->assertEquals('{{ raw_arguments.null }}', $header['entity_block']['target']);
+    $this->assertEquals('{{ raw_arguments.null }}', $header['entity_entity_test']['target']);
 
     // Confirm that the argument placeholders are still displayed in the form.
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_block");
@@ -89,18 +94,20 @@ class AreaEntityUITest extends UITestBase {
     $this->assertSession()->fieldValueEquals('options[target]', '{{ raw_arguments.null }}');
 
     // Change the targets for both headers back to the entities.
-    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => $block->id()], 'Apply');
-    $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test", ['options[target]' => $entity_test->id()], 'Apply');
+    $this->drupalGet("admin/structure/views/nojs/handler/{$id}/page_1/header/entity_block");
+    $this->submitForm(['options[target]' => $block->id()], 'Apply');
+    $this->drupalGet("admin/structure/views/nojs/handler/{$id}/page_1/header/entity_entity_test");
+    $this->submitForm(['options[target]' => $entity_test->id()], 'Apply');
     $this->submitForm([], 'Save');
 
     // Confirm the targets were again saved correctly and not skipped based on
     // the previous form value.
     $view = View::load($id);
     $header = $view->getDisplay('default')['display_options']['header'];
-    $this->assertEqual(['entity_block', 'entity_entity_test'], array_keys($header));
+    $this->assertEquals(['entity_block', 'entity_entity_test'], array_keys($header));
 
-    $this->assertEqual($block->id(), $header['entity_block']['target']);
-    $this->assertEqual($entity_test->uuid(), $header['entity_entity_test']['target']);
+    $this->assertEquals($block->id(), $header['entity_block']['target']);
+    $this->assertEquals($entity_test->uuid(), $header['entity_entity_test']['target']);
   }
 
 }

@@ -449,8 +449,9 @@ Umami demo
 - Keith Jay 'kjay' https://www.drupal.org/u/kjay
 - Ofer Shaal 'shaal' https://www.drupal.org/u/shaal
 
-Update UI
-- ?
+Update Manager
+- Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
+- Derek Wright 'dww' https://www.drupal.org/u/dww
 
 User
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman

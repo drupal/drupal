@@ -63,11 +63,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $scheme = 'public';
     $actual = $this->style->buildUri("$scheme://foo/bar.gif");
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
-    $this->assertEqual($expected, $actual, 'Got the path for a file URI.');
+    $this->assertEquals($expected, $actual, 'Got the path for a file URI.');
 
     $actual = $this->style->buildUri('foo/bar.gif');
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
-    $this->assertEqual($expected, $actual, 'Got the path for a relative file path.');
+    $this->assertEquals($expected, $actual, 'Got the path for a relative file path.');
   }
 
   /**
@@ -164,7 +164,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
     // Get the URL of a file that has not been generated and try to create it.
     $generated_uri = $this->style->buildUri($original_uri);
-    $this->assertFileNotExists($generated_uri);
+    $this->assertFileDoesNotExist($generated_uri);
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
 
     // Make sure that language prefix is never added to the image style URL.
@@ -197,7 +197,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->config('system.file')->set('default_scheme', $scheme)->save();
     $relative_path = StreamWrapperManager::getTarget($original_uri);
     $generate_url_from_relative_path = $this->style->buildUrl($relative_path, $clean_url);
-    $this->assertEqual($generate_url, $generate_url_from_relative_path);
+    $this->assertEquals($generate_url, $generate_url_from_relative_path);
     $this->config('system.file')->set('default_scheme', 'temporary')->save();
 
     // Fetch the URL that generates the file.
@@ -243,7 +243,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
       $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
-      $this->assertFileNotExists($generated_uri_noaccess);
+      $this->assertFileDoesNotExist($generated_uri_noaccess);
       $generate_url_noaccess = $this->style->buildUrl($original_uri_noaccess);
 
       $this->drupalGet($generate_url_noaccess);
@@ -291,7 +291,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // is not present in the URL but that the image is still accessible.
     $this->config('image.settings')->set('suppress_itok_output', TRUE)->save();
     $generated_uri = $this->style->buildUri($original_uri);
-    $this->assertFileNotExists($generated_uri);
+    $this->assertFileDoesNotExist($generated_uri);
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
     $this->assertStringNotContainsString(IMAGE_DERIVATIVE_TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
@@ -300,7 +300,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Stop suppressing the security token in the URL.
     $this->config('image.settings')->set('suppress_itok_output', FALSE)->save();
     // Ensure allow_insecure_derivatives is enabled.
-    $this->assertEqual(TRUE, $this->config('image.settings')->get('allow_insecure_derivatives'));
+    $this->assertEquals(TRUE, $this->config('image.settings')->get('allow_insecure_derivatives'));
     // Check that a security token is still required when generating a second
     // image derivative using the first one as a source.
     $nested_url = $this->style->buildUrl($generated_uri, $clean_url);
@@ -323,7 +323,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
   }
 
 }

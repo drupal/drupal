@@ -52,7 +52,7 @@ class MenuTreeStorageTest extends KernelTestBase {
    * Ensures that there are no menu links by default.
    */
   protected function doTestEmptyStorage() {
-    $this->assertEqual(0, $this->treeStorage->countMenuLinks());
+    $this->assertEquals(0, $this->treeStorage->countMenuLinks());
   }
 
   /**
@@ -267,8 +267,8 @@ class MenuTreeStorageTest extends KernelTestBase {
     $parameters->addCondition('parent', 'test1');
     $data = $this->treeStorage->loadTreeData('tools', $parameters);
     $this->assertCount(1, $data['tree']);
-    $this->assertEqual('test2', $data['tree']['test2']['definition']['id']);
-    $this->assertEqual([], $data['tree']['test2']['subtree']);
+    $this->assertEquals('test2', $data['tree']['test2']['definition']['id']);
+    $this->assertEquals([], $data['tree']['test2']['subtree']);
 
     // Test for only enabled links.
     $link = $this->treeStorage->load('test3');
@@ -285,10 +285,10 @@ class MenuTreeStorageTest extends KernelTestBase {
     $parameters->onlyEnabledLinks();
     $data = $this->treeStorage->loadTreeData('tools', $parameters);
     $this->assertCount(1, $data['tree']);
-    $this->assertEqual('test1', $data['tree']['test1']['definition']['id']);
+    $this->assertEquals('test1', $data['tree']['test1']['definition']['id']);
     $this->assertCount(1, $data['tree']['test1']['subtree']);
-    $this->assertEqual('test2', $data['tree']['test1']['subtree']['test2']['definition']['id']);
-    $this->assertEqual([], $data['tree']['test1']['subtree']['test2']['subtree']);
+    $this->assertEquals('test2', $data['tree']['test1']['subtree']['test2']['definition']['id']);
+    $this->assertEquals([], $data['tree']['test1']['subtree']['test2']['subtree']);
 
   }
 
@@ -307,11 +307,11 @@ class MenuTreeStorageTest extends KernelTestBase {
     $this->addMenuLink('child3', 'child2');
     $this->addMenuLink('child4', 'child3');
 
-    $this->assertEqual(5, $this->treeStorage->getSubtreeHeight('root'));
-    $this->assertEqual(4, $this->treeStorage->getSubtreeHeight('child1'));
-    $this->assertEqual(3, $this->treeStorage->getSubtreeHeight('child2'));
-    $this->assertEqual(2, $this->treeStorage->getSubtreeHeight('child3'));
-    $this->assertEqual(1, $this->treeStorage->getSubtreeHeight('child4'));
+    $this->assertEquals(5, $this->treeStorage->getSubtreeHeight('root'));
+    $this->assertEquals(4, $this->treeStorage->getSubtreeHeight('child1'));
+    $this->assertEquals(3, $this->treeStorage->getSubtreeHeight('child2'));
+    $this->assertEquals(2, $this->treeStorage->getSubtreeHeight('child3'));
+    $this->assertEquals(1, $this->treeStorage->getSubtreeHeight('child4'));
   }
 
   /**
@@ -329,20 +329,20 @@ class MenuTreeStorageTest extends KernelTestBase {
     $this->addMenuLink('child3', 'child2');
     $this->addMenuLink('child4', 'child3');
 
-    $this->assertEqual(5, $this->treeStorage->getSubtreeHeight('root'));
-    $this->assertEqual(4, $this->treeStorage->getSubtreeHeight('child1'));
-    $this->assertEqual(3, $this->treeStorage->getSubtreeHeight('child2'));
-    $this->assertEqual(2, $this->treeStorage->getSubtreeHeight('child3'));
-    $this->assertEqual(1, $this->treeStorage->getSubtreeHeight('child4'));
+    $this->assertEquals(5, $this->treeStorage->getSubtreeHeight('root'));
+    $this->assertEquals(4, $this->treeStorage->getSubtreeHeight('child1'));
+    $this->assertEquals(3, $this->treeStorage->getSubtreeHeight('child2'));
+    $this->assertEquals(2, $this->treeStorage->getSubtreeHeight('child3'));
+    $this->assertEquals(1, $this->treeStorage->getSubtreeHeight('child4'));
 
     // Intentionally leave child3 out to mimic static or external links.
     $definitions = $this->treeStorage->loadMultiple(['root', 'child1', 'child2', 'child4']);
     $this->treeStorage->rebuild($definitions);
-    $this->assertEqual(5, $this->treeStorage->getSubtreeHeight('root'));
-    $this->assertEqual(4, $this->treeStorage->getSubtreeHeight('child1'));
-    $this->assertEqual(3, $this->treeStorage->getSubtreeHeight('child2'));
-    $this->assertEqual(2, $this->treeStorage->getSubtreeHeight('child3'));
-    $this->assertEqual(1, $this->treeStorage->getSubtreeHeight('child4'));
+    $this->assertEquals(5, $this->treeStorage->getSubtreeHeight('root'));
+    $this->assertEquals(4, $this->treeStorage->getSubtreeHeight('child1'));
+    $this->assertEquals(3, $this->treeStorage->getSubtreeHeight('child2'));
+    $this->assertEquals(2, $this->treeStorage->getSubtreeHeight('child3'));
+    $this->assertEquals(1, $this->treeStorage->getSubtreeHeight('child4'));
   }
 
   /**
@@ -360,14 +360,14 @@ class MenuTreeStorageTest extends KernelTestBase {
         $this->fail($message);
       }
       catch (\InvalidArgumentException $e) {
-        $this->assertRegExp('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage(), 'Found expected exception message.');
+        $this->assertMatchesRegularExpression('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage(), 'Found expected exception message.');
       }
     }
     $this->addMenuLink('test_link.1', '', 'test', [], 'menu1');
     $properties = ['menu_name' => 'menu1'];
     $links = $this->treeStorage->loadByProperties($properties);
-    $this->assertEqual('menu1', $links['test_link.1']['menu_name']);
-    $this->assertEqual('test', $links['test_link.1']['route_name']);
+    $this->assertEquals('menu1', $links['test_link.1']['menu_name']);
+    $this->assertEquals('test', $links['test_link.1']['route_name']);
   }
 
   /**
@@ -436,18 +436,18 @@ class MenuTreeStorageTest extends KernelTestBase {
     $this->assertCount($raw['depth'], $found_parents, 'Number of parents is the same as the depth');
 
     $materialized_path = $this->treeStorage->getRootPathIds($id);
-    $this->assertEqual(array_values($parents), array_values($materialized_path), 'Parents match the materialized path');
+    $this->assertEquals(array_values($parents), array_values($materialized_path), 'Parents match the materialized path');
     // Check that the selected mlid values of the parents are in the correct
     // column, including the link's own.
     for ($i = $raw['depth']; $i >= 1; $i--) {
       $parent_id = array_shift($parents);
-      $this->assertEqual($found_parents[$parent_id], $raw["p{$i}"], "mlid of parent matches at column p{$i}");
+      $this->assertEquals($found_parents[$parent_id], $raw["p{$i}"], "mlid of parent matches at column p{$i}");
     }
     for ($i = $raw['depth'] + 1; $i <= $this->treeStorage->maxDepth(); $i++) {
-      $this->assertEqual(0, $raw["p{$i}"], "parent is 0 at column p{$i} greater than depth");
+      $this->assertEquals(0, $raw["p{$i}"], "parent is 0 at column p{$i} greater than depth");
     }
     if ($parents) {
-      $this->assertEqual(end($parents), $raw['parent'], 'Ensure that the parent field is set properly');
+      $this->assertEquals(end($parents), $raw['parent'], 'Ensure that the parent field is set properly');
     }
     // Verify that the child IDs match.
     $this->assertEqualsCanonicalizing($children, array_keys($this->treeStorage->loadAllChildren($id)));

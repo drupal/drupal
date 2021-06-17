@@ -1,6 +1,10 @@
 ((Drupal) => {
-  const searchWideButton = document.querySelector('.header-nav__search-button');
-  const searchWideWrapper = document.querySelector('.search-wide__wrapper');
+  const searchWideButton = document.querySelector(
+    '[data-drupal-selector="block-search-wide-button"]',
+  );
+  const searchWideWrapper = document.querySelector(
+    '[data-drupal-selector="block-search-wide-wrapper"]',
+  );
 
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
@@ -40,13 +44,15 @@
   document.addEventListener('click', (e) => {
     if (
       e.target.matches(
-        '.header-nav__search-button, .header-nav__search-button *',
+        '[data-drupal-selector="block-search-wide-button"], [data-drupal-selector="block-search-wide-button"] *',
       )
     ) {
       toggleSearchVisibility(!searchIsVisible());
     } else if (
       searchIsVisible() &&
-      !e.target.matches('.search-wide__wrapper, .search-wide__wrapper *')
+      !e.target.matches(
+        '[data-drupal-selector="block-search-wide-wrapper"], [data-drupal-selector="block-search-wide-wrapper"] *',
+      )
     ) {
       toggleSearchVisibility(false);
     }

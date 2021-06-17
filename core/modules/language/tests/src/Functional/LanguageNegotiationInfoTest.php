@@ -38,7 +38,8 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
       'administer modules',
     ]);
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'it'], 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm(['predefined_langcode' => 'it'], 'Add language');
   }
 
   /**
@@ -104,7 +105,8 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
       $test_type . '[enabled][' . $test_method_id . ']' => TRUE,
       $test_type . '[configurable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Alter language negotiation info to remove interface language negotiation
     // method.
@@ -137,7 +139,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
       $langcode = $last[$type];
       $value = $type == LanguageInterface::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
-      $this->assertEqual($langcode, $value, new FormattableMarkup('The negotiated language for %type is %language', ['%type' => $type, '%language' => $value]));
+      $this->assertEquals($langcode, $value, new FormattableMarkup('The negotiated language for %type is %language', ['%type' => $type, '%language' => $value]));
     }
 
     // Uninstall language_test and check that everything is set back to the
@@ -188,15 +190,18 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Editing config.
     $edit = [$test_type . '[configurable]' => TRUE];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is now configurable.');
 
     // After installing another module, the config should be the same.
-    $this->drupalPostForm('admin/modules', ['modules[test_module][enable]' => 1], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[test_module][enable]' => 1], 'Install');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
 
     // After uninstalling the other module, the config should be the same.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[test_module]' => 1], 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[test_module]' => 1], 'Uninstall');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
   }
 

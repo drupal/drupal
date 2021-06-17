@@ -3,6 +3,7 @@
 namespace Drupal\BuildTests\Composer\Template;
 
 use Composer\Json\JsonFile;
+use Composer\Semver\VersionParser;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Composer\Composer;
 
@@ -27,6 +28,21 @@ use Drupal\Composer\Composer;
 class ComposerProjectTemplatesTest extends BuildTestBase {
 
   /**
+   * The minimum stability requirement for dependencies.
+   *
+   * @see https://getcomposer.org/doc/04-schema.md#minimum-stability
+   */
+  protected const MINIMUM_STABILITY = 'stable';
+
+  /**
+   * The order of stability strings from least stable to most stable.
+   *
+   * This only includes normalized stability strings: i.e., ones that are
+   * returned by \Composer\Semver\VersionParser::parseStability().
+   */
+  protected const STABILITY_ORDER = ['dev', 'alpha', 'beta', 'RC', 'stable'];
+
+  /**
    * Get Composer items that we want to be path repos, from within a directory.
    *
    * @param string $workspace_directory
@@ -39,10 +55,10 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    */
   public function getPathReposForType($workspace_directory, $subdir) {
     // Find the Composer items that we want to be path repos.
+    /** @var \SplFileInfo[] $path_repos */
     $path_repos = Composer::composerSubprojectPaths($workspace_directory, $subdir);
 
     $data = [];
-    /* @var $path_repo \SplFileInfo */
     foreach ($path_repos as $path_repo) {
       $json_file = new JsonFile($path_repo->getPathname());
       $json = $json_file->read();
@@ -67,6 +83,25 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
   }
 
   /**
+   * Make sure that static::MINIMUM_STABILITY is sufficiently strict.
+   */
+  public function testMinimumStabilityStrictness() {
+    // Ensure that static::MINIMUM_STABILITY is not less stable than the
+    // current core stability. For example, if we've already released a beta on
+    // the branch, ensure that we no longer allow alpha dependencies.
+    $this->assertGreaterThanOrEqual(array_search($this->getCoreStability(), static::STABILITY_ORDER), array_search(static::MINIMUM_STABILITY, static::STABILITY_ORDER));
+
+    // Ensure that static::MINIMUM_STABILITY is the same as the least stable
+    // dependency.
+    // - We can't set it stricter than our least stable dependency.
+    // - We don't want to set it looser than we need to, because we don't want
+    //   to in the future accidentally commit a dependency that regresses our
+    //   actual stability requirement without us explicitly changing this
+    //   constant.
+    $this->assertSame($this->getLowestDependencyStability(), static::MINIMUM_STABILITY);
+  }
+
+  /**
    * Make sure we've accounted for all the templates.
    */
   public function testVerifyTemplateTestProviderIsAccurate() {
@@ -83,7 +118,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     foreach ($data as $data_name => $data_value) {
       $template_data[$data_value[0]] = $data_name;
     }
-    /* @var $file \SplFileInfo */
+    /** @var \SplFileInfo $file */
     foreach ($template_files as $file) {
       $json_file = new JsonFile($file->getPathname());
       $json = $json_file->read();
@@ -111,17 +146,6 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     $this->executeCommand("COMPOSER_HOME=$composer_home composer config --no-interaction --global repo.packagist false");
     $this->assertCommandSuccessful();
 
-    // Get the Drupal core version branch. For instance, this should be
-    // 8.9.x-dev for the 8.9.x branch.
-    $core_version = Composer::drupalVersionBranch();
-
-    // In order to use create-project on our template, we must have stable
-    // versions of drupal/core and our other SUT repositories. Since we have
-    // provided these as path repositories, they will take on the version of
-    // the root project. We'll make a simulated version number that is stable
-    // to fulfill this role.
-    $simulated_stable_version = str_replace('.x-dev', '.99', $core_version);
-
     // Create a "Composer"-type repository containing one entry for every
     // package in the vendor directory.
     $vendor_packages_path = $this->getWorkspaceDirectory() . '/vendor_packages/packages.json';
@@ -130,9 +154,15 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // Make a copy of the code to alter in the workspace directory.
     $this->copyCodebase();
 
-    // Set the Drupal version and minimum stability of the template projects
-    Composer::setDrupalVersion($this->getWorkspaceDirectory(), $simulated_stable_version);
-    $this->assertDrupalVersion($simulated_stable_version, $this->getWorkspaceDirectory());
+    // Tests are typically run on "-dev" versions, but we want to simulate
+    // running them on a tagged release at the same stability as specified in
+    // static::MINIMUM_STABILITY, in order to verify that everything will work
+    // if/when we make such a release.
+    $simulated_core_version = \Drupal::VERSION;
+    $simulated_core_version_suffix = (static::MINIMUM_STABILITY === 'stable' ? '' : '-' . static::MINIMUM_STABILITY . '99');
+    $simulated_core_version = str_replace('-dev', $simulated_core_version_suffix, $simulated_core_version);
+    Composer::setDrupalVersion($this->getWorkspaceDirectory(), $simulated_core_version);
+    $this->assertDrupalVersion($simulated_core_version, $this->getWorkspaceDirectory());
 
     // Remove the packages.drupal.org entry (and any other custom repository)
     // from the SUT's repositories section. There is no way to do this via
@@ -154,12 +184,13 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
       $this->executeCommand("composer config --no-interaction repositories.$name path $path", $package_dir);
       $this->assertCommandSuccessful();
     }
-    // Fix up drupal/core-recommended so that it requires a stable version
-    // of drupal/core rather than a dev version.
+
+    // Change drupal/core-recommended to require the simulated version of
+    // drupal/core.
     $core_recommended_dir = 'composer/Metapackage/CoreRecommended';
     $this->executeCommand("composer remove --no-interaction drupal/core --no-update", $core_recommended_dir);
     $this->assertCommandSuccessful();
-    $this->executeCommand("composer require --no-interaction drupal/core:^$simulated_stable_version --no-update", $core_recommended_dir);
+    $this->executeCommand("composer require --no-interaction drupal/core:^$simulated_core_version --no-update", $core_recommended_dir);
     $this->assertCommandSuccessful();
 
     // Add our vendor package repository to our SUT's repositories section.
@@ -168,32 +199,29 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     $this->assertCommandSuccessful();
 
     $repository_path = $this->getWorkspaceDirectory() . '/test_repository/packages.json';
-    $this->makeTestPackage($repository_path, $simulated_stable_version);
+    $this->makeTestPackage($repository_path, $simulated_core_version);
 
     $installed_composer_json = $this->getWorkspaceDirectory() . '/testproject/composer.json';
     $autoloader = $this->getWorkspaceDirectory() . '/testproject' . $docroot_dir . '/autoload.php';
-    $this->assertFileNotExists($autoloader);
+    $this->assertFileDoesNotExist($autoloader);
 
-    // At the moment, we are only testing stable versions. If we used a
-    // non-stable version instead of $simulated_stable_version, then we would
-    // also need to pass the --stability flag to composer create-project.
-    $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$simulated_stable_version composer create-project --no-ansi $project testproject -vvv --repository $repository_path");
+    $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$simulated_core_version composer create-project --no-ansi $project testproject $simulated_core_version -vvv --repository $repository_path");
     $this->assertCommandSuccessful();
 
     // Ensure we used the project from our codebase.
-    $this->assertErrorOutputContains("Installing $project ($simulated_stable_version): Symlinking from $package_dir");
+    $this->assertErrorOutputContains("Installing $project ($simulated_core_version): Symlinking from $package_dir");
     // Ensure that we used drupal/core from our codebase. This probably means
     // that drupal/core-recommended was added successfully by the project.
-    $this->assertErrorOutputContains("Installing drupal/core ($simulated_stable_version): Symlinking from");
+    $this->assertErrorOutputContains("Installing drupal/core ($simulated_core_version): Symlinking from");
     // Verify that there is an autoloader. This is written by the scaffold
     // plugin, so its existence assures us that scaffolding happened.
     $this->assertFileExists($autoloader);
 
     // Verify that the minimum stability in the installed composer.json file
-    // is 'stable'
+    // matches the stability of the simulated core version.
     $this->assertFileExists($installed_composer_json);
     $composer_json_contents = file_get_contents($installed_composer_json);
-    $this->assertStringContainsString('"minimum-stability": "stable"', $composer_json_contents);
+    $this->assertStringContainsString('"minimum-stability": "' . static::MINIMUM_STABILITY . '"', $composer_json_contents);
 
     // In order to verify that Composer used the path repos for our project, we
     // have to get the requirements from the project composer.json so we can
@@ -215,10 +243,10 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
         // we still must check that their installed version matches
         // COMPOSER_CORE_VERSION.
         if (array_key_exists($package_name, $metapackage_path_repos)) {
-          $this->assertErrorOutputContains("Installing $package_name ($simulated_stable_version)");
+          $this->assertErrorOutputContains("Installing $package_name ($simulated_core_version)");
         }
         else {
-          $this->assertErrorOutputContains("Installing $package_name ($simulated_stable_version): Symlinking from");
+          $this->assertErrorOutputContains("Installing $package_name ($simulated_core_version): Symlinking from");
         }
       }
     }
@@ -323,6 +351,92 @@ JSON;
     $json = json_encode($packages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     mkdir(dirname($repository_path));
     file_put_contents($repository_path, $json);
+  }
+
+  /**
+   * Returns the stability of the least stable dependency.
+   */
+  protected function getLowestDependencyStability() {
+    $root = $this->getDrupalRoot();
+    $process = $this->executeCommand("composer --working-dir=$root info --format=json");
+    $this->assertCommandSuccessful();
+    $installed = json_decode($process->getOutput(), TRUE);
+
+    $lowest_stability_order_index = count(static::STABILITY_ORDER);
+    foreach ($installed['installed'] as $project) {
+      // Exclude dependencies that are required with "self.version", since
+      // those stabilities will automatically match the corresponding Drupal
+      // release.
+      $exclude = ['drupal/core', 'drupal/core-project-message', 'drupal/core-vendor-hardening'];
+      if (!in_array($project['name'], $exclude, TRUE)) {
+        $stability = VersionParser::parseStability($project['version']);
+        $stability_order_index = array_search($stability, static::STABILITY_ORDER);
+        $lowest_stability_order_index = min($lowest_stability_order_index, $stability_order_index);
+      }
+    }
+    $lowest_stability = static::STABILITY_ORDER[$lowest_stability_order_index];
+
+    return $lowest_stability;
+  }
+
+  /**
+   * Returns the stability of the current core version.
+   *
+   * If the current core version is a tagged release (not a "-dev" version),
+   * this returns the stability of that version.
+   *
+   * If the current core version is a "-dev" version, but not a "x.y.0-dev"
+   * version, this returns "stable", because it means that the corresponding
+   * "x.y.0" has already been released, and only stable changes are now
+   * permitted on the branch.
+   *
+   * If the current core version is a "x.y.0-dev" version, then this returns
+   * the stability of the latest tag that matches "x.y.0-*". For example, if
+   * we've already released "x.y.0-alpha1" but have not yet released
+   * "x.y.0-beta1", then the current stability is "alpha". If there aren't any
+   * matching tags, this returns "dev", because it means that an "alpha1" has
+   * not yet been released.
+   *
+   * @return string
+   *   One of: "dev", "alpha", "beta", "RC", "stable".
+   */
+  protected function getCoreStability() {
+    $version = \Drupal::VERSION;
+    $stability = VersionParser::parseStability($version);
+    if ($stability === 'dev') {
+      // Strip off "-dev";
+      $version_towards = substr($version, 0, -4);
+
+      if (substr($version_towards, -2) !== '.0') {
+        // If the current version is developing towards an x.y.z release where
+        // z is not 0, it means that the x.y.0 has already been released, and
+        // only stable changes are permitted on the branch.
+        $stability = 'stable';
+      }
+      else {
+        // If the current version is developing towards an x.y.0 release, there
+        // might be tagged pre-releases. "git describe" identifies the latest
+        // one.
+        $root = $this->getDrupalRoot();
+        $process = $this->executeCommand("git -C \"$root\" describe --abbrev=0 --match=\"$version_towards-*\"");
+
+        // If there aren't any tagged pre-releases for this version yet, return
+        // 'dev'. Ensure that any other error from "git describe" causes a test
+        // failure.
+        if (!$process->isSuccessful()) {
+          $this->assertErrorOutputContains('No names found, cannot describe anything.');
+          return 'dev';
+        }
+
+        // We expect a pre-release, because:
+        // - A tag should not be of "dev" stability.
+        // - After a "stable" release is made, \Drupal::VERSION is incremented,
+        //   so there should not be a stable release on that new version.
+        $stability = VersionParser::parseStability(trim($process->getOutput()));
+        $this->assertContains($stability, ['alpha', 'beta', 'RC']);
+      }
+    }
+    return $stability;
   }
 
 }
