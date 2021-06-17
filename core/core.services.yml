@@ -1095,6 +1095,8 @@ services:
   url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
     autowire: true
+    arguments:
+      $filter_protocols: '%filter_protocols%'
     public: false
     calls:
       - [setContext, ['@?router.request_context']]
