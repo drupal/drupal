@@ -56886,7 +56886,7 @@ $connection->insert('system')
   'info' => 'a:11:{s:4:"name";s:22:"Breakpoints Theme Test";s:11:"description";s:35:"Test breakpoints provided by themes";s:7:"package";s:5:"Other";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:5:"mtime";i:1544938132;s:12:"dependencies";a:0:{}s:7:"version";N;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
-  'filename' => 'sites/all/modules/contrib/multiupload_filefield_widget/multiupload_filefield_widget.module',
+  'filename' => 'sites/all/modules/multiupload_filefield_widget/multiupload_filefield_widget.module',
   'name' => 'multiupload_filefield_widget',
   'type' => 'module',
   'owner' => '',
@@ -56897,7 +56897,7 @@ $connection->insert('system')
   'info' => 'a:12:{s:4:"name";s:28:"Multiupload Filefield Widget";s:11:"description";s:76:"Creates a widget for filefield to upload multiple files at once using html5.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"file";}s:5:"files";a:2:{i:0;s:35:"multiupload_filefield_widget.module";i:1;s:33:"multiupload_filefield_widget.test";}s:7:"version";s:8:"7.x-1.13";s:7:"project";s:28:"multiupload_filefield_widget";s:9:"datestamp";s:10:"1388873905";s:5:"mtime";i:1388873905;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
-  'filename' => 'sites/all/modules/contrib/multiupload_imagefield_widget/multiupload_imagefield_widget.module',
+  'filename' => 'sites/all/modules/multiupload_imagefield_widget/multiupload_imagefield_widget.module',
   'name' => 'multiupload_imagefield_widget',
   'type' => 'module',
   'owner' => '',
