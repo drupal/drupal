@@ -46,7 +46,7 @@ class Error {
     // For PDOException errors, we try to return the initial caller,
     // skipping internal functions of the database layer.
     if ($exception instanceof \PDOException || $exception instanceof DatabaseExceptionWrapper) {
-      $driver_namespace = Database::getConnectionInfo()['default']['namespace'];
+      $driver_namespace = (Database::getConnectionInfo() ?? [])['default']['namespace'] ?? '';
       $backtrace = Log::removeDatabaseEntries($backtrace, $driver_namespace);
       if (isset($exception->query_string, $exception->args)) {
         $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
