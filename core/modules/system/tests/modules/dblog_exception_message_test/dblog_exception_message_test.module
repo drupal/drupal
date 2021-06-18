@@ -12,7 +12,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * Implements hook_entity_base_field_info().
  */
 function dblog_exception_message_test_entity_base_field_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() == 'contact_message') {
+  if ($entity_type->id() == 'entity_test_no_id') {
     $fields = [];
 
     $fields['id'] = BaseFieldDefinition::create('integer')
@@ -32,9 +32,9 @@ function dblog_exception_message_test_entity_type_alter(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
-  $entity_types['contact_message']->setStorageClass('\Drupal\Core\Entity\Sql\SqlContentEntityStorage');
-  $keys = $entity_types['contact_message']->getKeys();
+  $entity_types['entity_test_no_id']->setStorageClass('\Drupal\Core\Entity\Sql\SqlContentEntityStorage');
+  $keys = $entity_types['entity_test_no_id']->getKeys();
   $keys['id'] = 'id';
-  $entity_types['contact_message']->set('entity_keys', $keys);
-  $entity_types['contact_message']->set('base_table', 'contact_message');
+  $entity_types['entity_test_no_id']->set('entity_keys', $keys);
+  $entity_types['entity_test_no_id']->set('base_table', 'entity_test');
 }

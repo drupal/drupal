@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 function dblog_exception_message_test_install() {
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
 
-  $original = $entity_definition_update_manager->getEntityType('contact_message');
+  $original = $entity_definition_update_manager->getEntityType('entity_test_no_id');
   $entity_definition_update_manager->uninstallEntityType($original);
 
   // Update the entity type definition and make it use the default SQL storage.
@@ -22,7 +22,7 @@ function dblog_exception_message_test_install() {
   $keys = $entity_type->getKeys();
   $keys['id'] = 'id';
   $entity_type->set('entity_keys', $keys);
-  $entity_type->set('base_table', 'contact_message');
+  $entity_type->set('base_table', 'entity_test');
   $entity_definition_update_manager->installEntityType($entity_type);
 
   /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
@@ -30,7 +30,7 @@ function dblog_exception_message_test_install() {
 
   // Purposefully change the field storage definition to get exception message.
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $field_definition = $field_manager->getFieldStorageDefinitions('contact_message')['id'];
-  $entity_definition_update_manager->installFieldStorageDefinition('id', 'contact_message', 'contact_storage', $field_definition);
+  $field_definition = $field_manager->getFieldStorageDefinitions('entity_test')['id'];
+  $entity_definition_update_manager->installFieldStorageDefinition('id', 'entity_test_no_id', 'entity_test', $field_definition);
 
 }

@@ -907,16 +907,4 @@ class DbLogTest extends BrowserTestBase {
     $this->assertRaw('<pre class="backtrace">');
   }
 
-  /**
-   * Tests the message when entity storage creation fails on module install.
-   */
-  public function testModuleInstallerErrorMessagesText() {
-    $this->drupalLogin($this->adminUser);
-    \Drupal::service('module_installer')->install(['dblog_exception_message_test']);
-
-    $this->drupalGet('admin/reports/dblog');
-    $this->clickLink('An error occurred while notifying the creation of the…', 0);
-    $this->assertSession()->pageTextContains("Exception thrown while performing a schema update. Cannot add field 'contact_message.id': table doesn't exist.");
-  }
-
 }
