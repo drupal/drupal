@@ -143,8 +143,7 @@ class ModuleInstallerTest extends KernelTestBase {
   public function testObsoleteInstall() {
     $this->expectException(ObsoleteExtensionException::class);
     $this->expectExceptionMessage("Unable to install modules: module 'system_status_obsolete_test' is obsolete.");
-    $this->container->get('module_installer')
-      ->install(['system_status_obsolete_test']);
+    $this->container->get('module_installer')->install(['system_status_obsolete_test']);
   }
 
   /**
