@@ -1415,7 +1415,23 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
       $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
 
-      $session[$this->options['group_info']['identifier']] = $input[$this->options['group_info']['identifier']];
+      // Saves group filter values as an array instead of single value.
+      if (!isset($session[$this->options['group_info']['identifier']]) || !is_array($session[$this->options['group_info']['identifier']])) {
+        $session[$this->options['group_info']['identifier']] = [];
+      }
+
+      // Saves the option key instead of label.
+      if (isset($this->options['group_info']['group_items'])) {
+        foreach ($this->options['group_info']['group_items'] as $option_key => $option_item) {
+          if ($option_item['value'] == $input[$this->options['group_info']['identifier']]) {
+            $session[$this->options['group_info']['identifier']][] = $option_key;
+            break;
+          }
+        }
+      }
+      else {
+        $session[$this->options['group_info']['identifier']][] = $input[$this->options['group_info']['identifier']];
+      }
     }
   }
 
@@ -1487,7 +1503,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       return TRUE;
     }
 
-    if (empty($this->options['expose']['remember'])) {
+    // Does not apply if remember is not checked or in group filters.
+    if (empty($this->options['expose']['remember']) || $this->isAGroup()) {
       return;
     }
 

@@ -1353,6 +1353,10 @@ class ViewExecutable {
         if ($handlers[$id]->multipleExposedInput()) {
           $multiple_exposed_input = $handlers[$id]->groupMultipleExposedInput($this->exposed_data);
         }
+        // Reset group filter before storing new entries.
+        if ($handlers[$id]->isAGroup()) {
+          $handlers[$id]->storeGroupInput($this->exposed_data, FALSE);
+        }
         foreach ($multiple_exposed_input as $group_id) {
           // Give this handler access to the exposed filter input.
           if (!empty($this->exposed_data)) {
