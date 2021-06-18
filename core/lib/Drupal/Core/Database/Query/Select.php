@@ -125,7 +125,7 @@ class Select extends Query implements SelectInterface {
    *   Database connection object.
    * @param string $table
    *   The name of the table that is being queried.
-   * @param ?string $alias
+   * @param string|null $alias
    *   The alias for the table.
    * @param array $options
    *   Array of query options.
