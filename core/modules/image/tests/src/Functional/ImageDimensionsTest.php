@@ -578,7 +578,7 @@ class ImageDimensionsTest extends BrowserTestBase {
     $original_uri = $file_system->copy($file->uri, 'public://', FileSystemInterface::EXISTS_RENAME);
 
     // Create a style.
-    /** @var $style \Drupal\image\ImageStyleInterface */
+    /** @var \Drupal\image\ImageStyleInterface $style */
     $style = ImageStyle::create(['name' => 'test', 'label' => 'Test']);
     $style->save();
 
