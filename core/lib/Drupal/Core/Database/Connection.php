@@ -1130,13 +1130,13 @@ abstract class Connection {
   /**
    * Prepares and returns a SELECT query object.
    *
-   * @param string $table
+   * ##param string $table
    *   The base table for this query, that is, the first table in the FROM
    *   clause. This table will also be used as the "base" table for query_alter
    *   hook implementations.
-   * @param string $alias
+   * ##param string $alias
    *   (optional) The alias of the base table of this query.
-   * @param $options
+   * ##param $options
    *   An array of options on the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
@@ -1146,7 +1146,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Select
    */
-  public function select(/*string|SelectInterface $table, ?string $alias = NULL, array $options = []*/)/*: SelectInterface*/  {
+  public function select(/*(string|SelectInterface $table, ?string $alias = NULL, array $options = []*/)/*: SelectInterface*/ {
     $args = func_get_args();
     $table = $args[0] ?? NULL;
     $alias = $args[1] ?? NULL;
