@@ -95,7 +95,7 @@ class FileMoveTest extends BrowserTestBase {
     $this->assertFileExists($result->getFileUri(), 'Make sure image is moved successfully.');
 
     // Check if derivative image has been flushed.
-    $this->assertFileNotExists($derivative_uri, 'Make sure derivative image has been flushed.');
+    $this->assertFileDoesNotExist($derivative_uri, 'Make sure derivative image has been flushed.');
   }
 
   /**
@@ -127,7 +127,7 @@ class FileMoveTest extends BrowserTestBase {
     $this->assertFileExists($result->getFileUri(), 'Make sure image is moved successfully.');
 
     // Check if derivative image has been flushed.
-    $this->assertFileNotExists($derivative_uri, 'Make sure derivative image has been flushed.');
+    $this->assertFileDoesNotExist($derivative_uri, 'Make sure derivative image has been flushed.');
   }
 
 }

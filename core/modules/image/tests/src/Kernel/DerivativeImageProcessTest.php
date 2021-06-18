@@ -146,7 +146,7 @@ class DerivativeImageProcessTest extends KernelTestBase {
       ->setImageStyle($this->imageStyle)
       ->setSourceImageUri('public://missing.png');
     $this->assertFalse($pipeline->buildDerivativeImage());
-    $this->assertFileNotExists('public://styles/thumbnail/public/missing.png');
+    $this->assertFileDoesNotExist('public://styles/thumbnail/public/missing.png');
 
     // Starting off from a path.
     $pipeline = $this->imageProcessor->createInstance('derivative')

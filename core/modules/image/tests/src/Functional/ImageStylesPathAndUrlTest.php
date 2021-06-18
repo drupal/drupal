@@ -459,9 +459,9 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       ->setSourceImageUri($original_uri)
       ->setCleanUrl($clean_url);
     $generated_uri = $pipeline->getDerivativeImageUri();
-    $this->assertFileNotExists($generated_uri);
+    $this->assertFileDoesNotExist($generated_uri);
     $generate_url = $pipeline->getDerivativeImageUrl()->toString();
-    $this->assertFileNotExists($generated_uri);
+    $this->assertFileDoesNotExist($generated_uri);
 
     // Make sure that language prefix is never added to the image style URL.
     if ($langcode) {
@@ -551,7 +551,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
       $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
-      $this->assertFileNotExists($generated_uri_noaccess);
+      $this->assertFileDoesNotExist($generated_uri_noaccess);
       $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
         ->setImageStyle($this->style)
         ->setSourceImageUri($original_uri_noaccess);
@@ -603,7 +603,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       ->setSourceImageUri($original_uri)
       ->setCleanUrl($clean_url);
     $generated_uri = $pipeline->getDerivativeImageUri();
-    $this->assertFileNotExists($generated_uri, 'Generated file does not exist.');
+    $this->assertFileDoesNotExist($generated_uri, 'Generated file does not exist.');
     $generate_url = $pipeline->getDerivativeImageUrl()->toString();
     $this->assertStringNotContainsString(IMAGE_DERIVATIVE_TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
@@ -639,7 +639,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
-    $this->assertFileNotExists($directory, 'New directory was not created in the filesystem when requesting an unauthorized image.');
+    $this->assertFileDoesNotExist($directory, 'New directory was not created in the filesystem when requesting an unauthorized image.');
   }
 
   /**
@@ -730,9 +730,9 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       ->setSourceImageUri($original_uri)
       ->setCleanUrl($clean_url);
     $generated_uri = $pipeline->getDerivativeImageUri();
-    $this->assertFileNotExists($generated_uri);
+    $this->assertFileDoesNotExist($generated_uri);
     $generate_url = $pipeline->getDerivativeImageUrl()->toString();
-    $this->assertFileNotExists($generated_uri);
+    $this->assertFileDoesNotExist($generated_uri);
 
     // Make sure that language prefix is never added to the image style URL.
     if ($langcode) {
@@ -822,7 +822,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
       $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
-      $this->assertFileNotExists($generated_uri_noaccess);
+      $this->assertFileDoesNotExist($generated_uri_noaccess);
       $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
         ->setImageStyle($this->style)
         ->setSourceImageUri($original_uri_noaccess);
@@ -874,7 +874,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       ->setSourceImageUri($original_uri)
       ->setCleanUrl($clean_url);
     $generated_uri = $pipeline->getDerivativeImageUri();
-    $this->assertFileNotExists($generated_uri, 'Generated file does not exist.');
+    $this->assertFileDoesNotExist($generated_uri, 'Generated file does not exist.');
     $generate_url = $pipeline->getDerivativeImageUrl()->toString();
     $this->assertStringNotContainsString(IMAGE_DERIVATIVE_TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
@@ -910,7 +910,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
-    $this->assertFileNotExists($directory, 'New directory was not created in the filesystem when requesting an unauthorized image.');
+    $this->assertFileDoesNotExist($directory, 'New directory was not created in the filesystem when requesting an unauthorized image.');
   }
 
 }
