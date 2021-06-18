@@ -9,6 +9,35 @@ use Drupal\migrate\Row;
 /**
  * Drupal menu link source from database.
  *
+ * Available configuration keys:
+ * - menu_name: (optional) The menu name(s) to filter menu links from the source
+ *   can be a string or an array. If not declared then menu links of all menus
+ *   are retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: menu_link
+ *   menu_name: main-menu
+ * @endcode
+ *
+ * In this example menu links of main-menu are retrieved from the source
+ * database.
+ *
+ * @code
+ * source:
+ *   plugin: menu_link
+ *   menu_name: [main-menu, navigation]
+ * @endcode
+ *
+ * In this example menu links of main-menu and navigation menus are retrieved
+ * from the source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "menu_link",
  *   source_module = "menu"
@@ -29,6 +58,9 @@ class MenuLink extends DrupalSqlBase {
       ->condition('ml.customized', 1)
       ->condition($and);
     $query->condition($condition);
+    if (isset($this->configuration['menu_name'])) {
+      $query->condition('ml.menu_name', (array) $this->configuration['menu_name'], 'IN');
+    }
     $query->leftJoin('menu_links', 'pl', '[ml].[plid] = [pl].[mlid]');
     $query->addField('pl', 'link_path', 'parent_link_path');
     $query->orderBy('ml.depth');
