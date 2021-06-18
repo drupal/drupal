@@ -254,7 +254,7 @@
 }
 
 /* fixing tabs overlaps with ckeditor */
-.cke_inner {
+.cke .cke_inner {
   position: relative;
   z-index: 1;
 }
