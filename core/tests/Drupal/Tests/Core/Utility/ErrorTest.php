@@ -14,9 +14,11 @@ use Drupal\Core\Utility\Error;
 class ErrorTest extends UnitTestCase {
 
   /**
-   * Tests that `decodeException()` works properly with no databases defined.
+   * Tests that database logging utils work properly with no databases defined.
+   *
+   * @dataProvider providerTestDatabaseLoggingUtilsWhenNoDatabasesConfigured
    */
-  public function testDecodeExceptionWhenNoDatabasesConfigured(): void {
+  public function testDatabaseLoggingUtilsWhenNoDatabasesConfigured(\Closure $assert_error): void {
     try {
       $db_path = '/tmp/broken.sqlite';
       static::assertSame(18, \file_put_contents($db_path, 'not a DB, sorry :('));
@@ -25,11 +27,32 @@ class ErrorTest extends UnitTestCase {
       ];
 
       new Connection(Connection::open($config), $config);
+      static::fail('The invalid SQLite database must not be connected.');
     }
     catch (\Exception $error) {
-      static::assertIsArray((new Log())->findCaller());
-      static::assertIsArray(Error::decodeException($error));
+      $assert_error($error);
     }
+  }
+
+  /**
+   * Returns the test cases.
+   *
+   * @return array[]
+   *   The test cases.
+   */
+  public function providerTestDatabaseLoggingUtilsWhenNoDatabasesConfigured(): array {
+    return [
+      [
+        static function () {
+          static::assertIsArray((new Log())->findCaller());
+        },
+      ],
+      [
+        static function (\Exception $error) {
+          static::assertIsArray(Error::decodeException($error));
+        },
+      ],
+    ];
   }
 
   /**
