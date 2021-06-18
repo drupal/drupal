@@ -188,7 +188,9 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    *   The route defaults array.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
-   *   The entity for the route, or NULL if none exist.
+   *   The entity for the route, or NULL if none exist. The entity is not
+   *   guaranteed to be fieldable, or contain the necessary field for this
+   *   section storage plugin.
    *
    * @see \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
@@ -205,10 +207,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       return NULL;
     }
 
-    $entity = $this->entityRepository->getActive($entity_type_id, $entity_id);
-    if ($entity instanceof FieldableEntityInterface && $entity->hasField(static::FIELD_NAME)) {
-      return $entity;
-    }
+    return $this->entityRepository->getActive($entity_type_id, $entity_id);
   }
 
   /**

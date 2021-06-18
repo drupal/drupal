@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\Routing\Route;
 
@@ -33,6 +34,24 @@ class LayoutBuilderAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(SectionStorageInterface $section_storage, AccountInterface $account, Route $route) {
+    $section_storage_type = $route->getDefault('section_storage_type');
+
+    // Check if a section storage type mismatch has occurred.
+    //
+    // When a type mismatch occurs, it's likely because the display associated
+    // with the current route doesn't allow layout overrides; however, a
+    // mismatch could also occur because of a contrib module.
+    //
+    // The mismatch serves as both a useful sentinel to deny access to this
+    // route, and also a delivery mechanism for the associated display.
+    if ($section_storage instanceof DefaultsSectionStorage && $section_storage_type !== 'defaults') {
+      // Forbid access to this route until the associated display is updated.
+      $access = AccessResult::forbidden();
+      $access->addCacheableDependency($section_storage);
+
+      return $access;
+    }
+
     $operation = $route->getRequirement('_layout_builder_access');
     $access = $section_storage->access($operation, $account, TRUE);
 
