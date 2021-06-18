@@ -52,11 +52,4 @@ class LogTest extends UnitTestCase {
     ], $result);
   }
 
-  /**
-   * Tests that `findCaller()` is not producing warnings with no databases.
-   */
-  public function testFindCallerWhenNoDatabasesConfigured(): void {
-    (new Log())->findCaller();
-  }
-
 }

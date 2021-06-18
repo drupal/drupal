@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\Core\Database\Log;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Utility\Error;
 
@@ -26,7 +27,8 @@ class ErrorTest extends UnitTestCase {
       new Connection(Connection::open($config), $config);
     }
     catch (\Exception $error) {
-      Error::decodeException($error);
+      static::assertIsArray((new Log())->findCaller());
+      static::assertIsArray(Error::decodeException($error));
     }
   }
 
