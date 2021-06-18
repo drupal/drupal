@@ -89,7 +89,7 @@
 }
 
 /* First dropbutton list item variants */
-js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
+.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
 [dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {

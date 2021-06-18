@@ -86,7 +86,7 @@
 
 /* First dropbutton list item variants */
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
+js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
   margin-right: calc(2rem + 1px); /* LTR */
 }
 
@@ -307,8 +307,8 @@
   border-radius: 0 2px 2px 0;
 }
 
-.dropbutton .dropbutton__item > a,
-.dropbutton .dropbutton__item > .button {
+[dir="rtl"] .dropbutton .dropbutton__item > a,
+[dir="rtl"] .dropbutton .dropbutton__item > .button {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -316,8 +316,8 @@
   text-align: left; /* LTR */
 }
 
-[dir="rtl"] .dropbutton .dropbutton__item > a,
-[dir="rtl"] .dropbutton .dropbutton__item > .button {
+[dir="rtl"] .dropbutton > .dropbutton__item > a,
+[dir="rtl"] .dropbutton > .dropbutton__item > .button {
   text-align: right;
 }
 
@@ -332,7 +332,7 @@
 .dropbutton__subitems {
   margin: 0;
   list-style: none;
-  color: var(--color-davysgray);
+  color: #545560;
   background: #fff;
 }
 
@@ -372,6 +372,7 @@
 .dropbutton .dropbutton__sub-item > a,
 .dropbutton .dropbutton__sub-item > .button {
   position: relative;
+  display: block;
   padding: calc(1rem - 1px);
   text-decoration: none;
   color: #545560;
