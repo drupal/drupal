@@ -149,7 +149,7 @@ class Log {
    *   database call itself.
    */
   public function findCaller() {
-    $driver_namespace = Database::getConnectionInfo($this->connectionKey)['default']['namespace'];
+    $driver_namespace = static::getDriverNamespace($this->connectionKey);
     $stack = static::removeDatabaseEntries($this->getDebugBacktrace(), $driver_namespace);
 
     // Return the first function call whose stack entry has a 'file' key, that
@@ -169,6 +169,21 @@ class Log {
   }
 
   /**
+   * Returns the PHP namespace of a database driver.
+   *
+   * @param string $key
+   *   The database key.
+   * @param string $target
+   *   The database target name.
+   *
+   * @return string
+   *   The PHP namespace of a database driver.
+   */
+  public static function getDriverNamespace(string $key = 'default', string $target = 'default'): string {
+    return (Database::getConnectionInfo($key) ?? [])[$target]['namespace'] ?? '';
+  }
+
+  /**
    * Removes database related calls from a backtrace array.
    *
    * @param array $backtrace
@@ -180,6 +195,11 @@ class Log {
    *   The cleaned backtrace array.
    */
   public static function removeDatabaseEntries(array $backtrace, string $driver_namespace): array {
+    $driver_namespaces = [__NAMESPACE__];
+    // The empty string is not allowed as it'll cause `strpos(): Empty needle`.
+    if (!empty($driver_namespace)) {
+      $driver_namespaces[] = $driver_namespace;
+    }
     // Starting from the very first entry processed during the request, find
     // the first function call that can be identified as a call to a
     // method/function in the database layer.
@@ -187,8 +207,10 @@ class Log {
       // If the call was made from a function, 'class' will be empty. We give
       // it a default empty string value in that case.
       $class = $backtrace[$n]['class'] ?? '';
-      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $driver_namespace, 0) === 0) {
-        break;
+      foreach ($driver_namespaces as $namespace) {
+        if (strpos($class, $namespace) === 0) {
+          break 2;
+        }
       }
     }
 
