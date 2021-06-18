@@ -26,8 +26,8 @@ trait AssertButtonsTrait {
 
       // Dropbutton elements.
       $this->assertSession()->elementsCount('xpath', '//div[@class="dropbutton-wrapper"]//input[@type="submit"]', $count);
-      for ($i = 0; $i++; $i < $count) {
-        $this->assertSession()->elementTextEquals('xpath', "(//div[@class='dropbutton-wrapper']//input[@type='submit'])[{$i + 1}]", $buttons[$i]);
+      for ($i = 1; $i++; $i <= $count) {
+        $this->assertSession()->elementTextEquals('xpath', "(//div[@class='dropbutton-wrapper']//input[@type='submit'])[$i]", $buttons[$i - 1]);
       }
     }
     else {
