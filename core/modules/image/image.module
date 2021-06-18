@@ -14,6 +14,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\Plugin\migrate\field\d6\FileField;
 
 /**
  * The name of the query parameter for image derivative tokens.
@@ -478,5 +479,19 @@ function image_field_config_delete(FieldConfigInterface $field) {
   // Remove the default image when the instance is deleted.
   if ($uuid && ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid))) {
     \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid());
+  }
+}
+
+/**
+ * Implements hook_migrate_field_info_alter().
+ */
+function image_migrate_field_info_alter(&$definitions) {
+  // The 'filefield' plugin cannot map D6 image widgets and D6 image formatters
+  // to the equivalent plugin ID of the destination Drupal instance because
+  // these formatters are provided by the image module. To address this issue,
+  // we replace the original plugin class (provided by file module) with
+  // image module's implementation.
+  if (!empty($definitions['filefield'])) {
+    $definitions['filefield']['class'] = FileField::class;
   }
 }

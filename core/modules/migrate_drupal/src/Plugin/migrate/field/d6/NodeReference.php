@@ -42,4 +42,16 @@ class NodeReference extends ReferenceBase {
     return 'nid';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldFormatterMap() {
+    return [
+      'default' => 'entity_reference_label',
+      'plain' => 'entity_reference_label',
+      'full' => 'entity_reference_entity_view',
+      'teaser' => 'entity_reference_entity_view',
+    ];
+  }
+
 }

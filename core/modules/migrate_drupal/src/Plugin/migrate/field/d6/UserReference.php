@@ -61,4 +61,14 @@ class UserReference extends ReferenceBase {
     $migration->setProcessOfProperty($field_name, $process);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldFormatterMap() {
+    return [
+      'default' => 'entity_reference_label',
+      'plain' => 'entity_reference_label',
+    ];
+  }
+
 }

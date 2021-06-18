@@ -55,18 +55,7 @@ process:
       plugin: static_map
       bypass: true
       source: '@widget_type'
-      map:
-        link_field: link_default
-        email_textfield: email_default
-        date_select: datetime_default
-        date_text: datetime_default
-        date_popup: datetime_default
-        media_generic: file_generic
-        phone_textfield: telephone_default
-        options_onoff: boolean_checkbox
-        entityreference_autocomplete: entity_reference_autocomplete
-        entityreference_autocomplete_tags: entity_reference_autocomplete_tags
-        taxonomy_autocomplete: entity_reference_autocomplete
+      map: { }
   'options/settings':
     plugin: field_instance_widget_settings
     source:

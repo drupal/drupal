@@ -10,7 +10,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 
-// cspell:ignore imagelink
+// cspell:ignore imagelink imagefield optionwidgets
 
 /**
  * Test FieldDiscovery Service against Drupal 7.
@@ -260,14 +260,31 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                   'email_contact' => 'basic_string',
                   'email_plain' => 'basic_string',
                   'email_spamspan' => 'basic_string',
+                  'default' => 'email_mailto',
+                  'spamspan' => 'email_mailto',
+                  'contact' => 'email_mailto',
+                  'plain' => 'basic_string',
                 ],
                 'phone' => [
                   'phone' => 'basic_string',
+                ],
+                'date' => [
+                  'date_default' => 'datetime_default',
+                  'format_interval' => 'datetime_time_ago',
+                  'date_plain' => 'datetime_plain',
+                  'default' => 'datetime_default',
+                ],
+                'datestamp' => [
+                  'date_default' => 'datetime_default',
+                  'format_interval' => 'datetime_time_ago',
+                  'date_plain' => 'datetime_plain',
+                  'default' => 'datetime_default',
                 ],
                 'datetime' => [
                   'date_default' => 'datetime_default',
                   'format_interval' => 'datetime_time_ago',
                   'date_plain' => 'datetime_plain',
+                  'default' => 'datetime_default',
                 ],
                 'telephone' => [
                   'text_plain' => 'string',
@@ -286,11 +303,12 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
               'map' => [
                 'd7_text' => 'd7_text_default',
                 'number_default' => 'number_default_default',
-                'taxonomy_term_reference' => 'taxonomy_term_reference_default',
+                'taxonomy_autocomplete' => 'entity_reference_autocomplete',
                 'image' => 'image_default',
                 'image_miw' => 'image_image',
                 'link_field' => 'link_default',
-                'entityreference' => 'entityreference_default',
+                'entityreference_autocomplete' => 'entity_reference_autocomplete',
+                'entityreference_autocomplete_tags' => 'entity_reference_autocomplete_tags',
                 'node_reference_select' => 'options_select',
                 'node_reference_buttons' => 'options_buttons',
                 'node_reference_autocomplete' => 'entity_reference_autocomplete_tags',
@@ -298,13 +316,19 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 'user_reference_buttons' => 'options_buttons',
                 'user_reference_autocomplete' => 'entity_reference_autocomplete_tags',
                 'list' => 'list_default',
-                'file_mfw' => 'file_generic',
+                'options_onoff' => 'boolean_checkbox',
                 'filefield_widget' => 'file_generic',
+                'imagefield_widget' => 'file_generic',
+                'file_mfw' => 'file_generic',
+                'media_generic' => 'file_generic',
                 'email_textfield' => 'email_default',
-                'phone' => 'phone_default',
+                'phone_textfield' => 'telephone_default',
                 'date' => 'datetime_default',
                 'datetime' => 'datetime_default',
                 'datestamp' => 'datetime_timestamp',
+                'date_select' => 'datetime_default',
+                'date_text' => 'datetime_default',
+                'date_popup' => 'datetime_default',
               ],
             ],
           ],

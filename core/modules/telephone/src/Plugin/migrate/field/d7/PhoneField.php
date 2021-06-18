@@ -26,4 +26,13 @@ class PhoneField extends FieldPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldWidgetMap() {
+    return [
+      'phone_textfield' => 'telephone_default',
+    ];
+  }
+
 }

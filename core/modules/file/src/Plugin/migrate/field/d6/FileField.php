@@ -24,6 +24,7 @@ class FileField extends FieldPluginBase {
   public function getFieldWidgetMap() {
     return [
       'filefield_widget' => 'file_generic',
+      'imagefield_widget' => 'file_generic',
     ];
   }
 
