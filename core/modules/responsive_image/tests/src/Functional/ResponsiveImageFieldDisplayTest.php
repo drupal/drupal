@@ -95,7 +95,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test responsive image formatters when image style is empty.
+   * Tests responsive image formatters when image style is empty.
    */
   public function testResponsiveImageFieldFormattersEmptyStyle() {
     $this->addTestImageStyleMappings(TRUE);
@@ -166,7 +166,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test responsive image formatters on node display.
+   * Tests responsive image formatters on node display.
    *
    * If the empty styles param is set, then the function only tests for the
    * fallback image style (large).
@@ -261,7 +261,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     $this->assertSession()->responseMatches('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)>\s*<picture/');
     // Verify that the image can be downloaded.
-    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
+    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.

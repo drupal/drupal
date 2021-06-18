@@ -4,6 +4,7 @@ namespace Drupal\media_library\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseDialogCommand;
+use Drupal\Core\Ajax\FocusFirstCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -608,7 +609,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
       // source field).
       if (empty($added_media)) {
         $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $this->buildMediaLibraryUi($form_state)));
-        $response->addCommand(new InvokeCommand('#media-library-add-form-wrapper :tabbable', 'focus'));
+        $response->addCommand(new FocusFirstCommand('#media-library-add-form-wrapper'));
       }
       // When there are still more items, update the form and shift the focus to
       // the next media item. If the last list item is removed, shift focus to

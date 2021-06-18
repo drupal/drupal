@@ -60,7 +60,10 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function installModulesFromClassProperty(ContainerInterface $container) {
-    self::$modules = ['js_deprecation_log_test'];
+    self::$modules = [
+      'js_deprecation_log_test',
+      'jquery_keyevent_polyfill_test',
+    ];
     if ($this->disableCssAnimations) {
       self::$modules[] = 'css_disable_transitions_test';
     }
@@ -110,8 +113,8 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   }
 
   /**
-    * {@inheritdoc}
-    */
+   * {@inheritdoc}
+   */
   protected function getMinkDriverArgs() {
     if ($this->minkDefaultDriverClass === DrupalSelenium2Driver::class) {
       return getenv('MINK_DRIVER_ARGS_WEBDRIVER') ?: parent::getMinkDriverArgs();

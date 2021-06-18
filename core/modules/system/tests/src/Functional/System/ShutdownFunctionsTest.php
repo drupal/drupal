@@ -32,7 +32,7 @@ class ShutdownFunctionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test shutdown functions.
+   * Tests shutdown functions.
    */
   public function testShutdownFunctions() {
     $arg1 = $this->randomMachineName();
@@ -47,8 +47,8 @@ class ShutdownFunctionsTest extends BrowserTestBase {
       // We need to wait to ensure that the shutdown functions have fired.
       sleep(1);
     }
-    $this->assertEqual([$arg1, $arg2], \Drupal::state()->get('_system_test_first_shutdown_function'));
-    $this->assertEqual([$arg1, $arg2], \Drupal::state()->get('_system_test_second_shutdown_function'));
+    $this->assertEquals([$arg1, $arg2], \Drupal::state()->get('_system_test_first_shutdown_function'));
+    $this->assertEquals([$arg1, $arg2], \Drupal::state()->get('_system_test_second_shutdown_function'));
 
     if (!$server_using_fastcgi) {
       // Make sure exceptions displayed through

@@ -57,7 +57,7 @@ class ModerationActionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test the node status actions report moderation status to users correctly.
+   * Tests the node status actions report moderation status to users correctly.
    *
    * @dataProvider nodeStatusActionsTestCases
    */
@@ -73,7 +73,8 @@ class ModerationActionsTest extends BrowserTestBase {
     }
     $node->save();
 
-    $this->drupalPostForm('admin/content', [
+    $this->drupalGet('admin/content');
+    $this->submitForm([
       'node_bulk_form[0]' => TRUE,
       'action' => $action,
     ], 'Apply to selected items');

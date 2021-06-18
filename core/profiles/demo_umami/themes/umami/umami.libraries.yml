@@ -39,7 +39,6 @@ global:
       css/components/regions/footer/footer.css: {}
       css/components/regions/header/header.css: {}
       css/components/regions/highlighted/highlighted.css: {}
-      css/components/regions/page-title/page-title.css: {}
       css/components/regions/pre-header/pre-header.css: {}
       css/components/regions/tabs/tabs.css: {}
       css/components/toolbar/toolbar.css: {}

@@ -65,7 +65,7 @@ class SessionAuthenticationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Check that the correct user is logged in.
-    $this->assertEqual($this->user->id(), json_decode($session->getPage()->getContent())->user, 'The correct user is authenticated on a route with basic authentication.');
+    $this->assertEquals($this->user->id(), json_decode($session->getPage()->getContent())->user, 'The correct user is authenticated on a route with basic authentication.');
     $session->restart();
 
     // If we now try to access a page without basic authentication then we
@@ -106,10 +106,10 @@ class SessionAuthenticationTest extends BrowserTestBase {
    */
   protected function assertSessionData($response, $expected) {
     $response = json_decode($response, TRUE);
-    $this->assertEqual(['test_value' => $expected], $response['session'], 'The session data matches the expected value.');
+    $this->assertEquals(['test_value' => $expected], $response['session'], 'The session data matches the expected value.');
 
     // Check that we are logged in as the correct user.
-    $this->assertEqual($this->user->id(), $response['user'], 'The correct user is logged in.');
+    $this->assertEquals($this->user->id(), $response['user'], 'The correct user is logged in.');
   }
 
   /**
@@ -136,7 +136,8 @@ class SessionAuthenticationTest extends BrowserTestBase {
     $this->drupalGet($cookie_url);
     $this->assertEmpty($this->getSessionCookies());
     $edit = ['name' => $this->user->getAccountName(), 'pass' => $this->user->passRaw];
-    $this->drupalPostForm($cookie_url, $edit, 'Log in');
+    $this->drupalGet($cookie_url);
+    $this->submitForm($edit, 'Log in');
     $this->assertNotEmpty($this->getSessionCookies());
   }
 

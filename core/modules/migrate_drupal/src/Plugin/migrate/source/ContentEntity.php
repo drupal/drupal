@@ -58,6 +58,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   include_translations: false
  * @endcode
  *
+ * For additional configuration keys, refer to the parent class:
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "content_entity",
  *   source_module = "migrate_drupal",

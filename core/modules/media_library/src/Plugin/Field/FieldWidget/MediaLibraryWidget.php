@@ -174,13 +174,14 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $elements = [];
     $media_type_ids = $this->getAllowedMediaTypeIdsSorted();
 
     if (count($media_type_ids) <= 1) {
-      return $form;
+      return $elements;
     }
 
-    $form['media_types'] = [
+    $elements['media_types'] = [
       '#type' => 'table',
       '#header' => [
         $this->t('Tab order'),
@@ -200,7 +201,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $weight = 0;
     foreach ($media_types as $media_type_id => $media_type) {
       $label = $media_type->label();
-      $form['media_types'][$media_type_id] = [
+      $elements['media_types'][$media_type_id] = [
         'label' => ['#markup' => $label],
         'weight' => [
           '#type' => 'weight',
@@ -215,7 +216,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       $weight++;
     }
 
-    return $form;
+    return $elements;
   }
 
   /**
@@ -492,7 +493,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           'type' => 'throbber',
           'message' => $this->t('Opening media library.'),
         ],
-        // The AJAX system automatically moves focus to the first :tabbable
+        // The AJAX system automatically moves focus to the first tabbable
         // element of the modal, so we need to disable refocus on the button.
         'disable-refocus' => TRUE,
       ],

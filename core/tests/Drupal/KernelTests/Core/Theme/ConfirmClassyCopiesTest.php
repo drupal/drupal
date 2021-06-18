@@ -752,7 +752,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'input.html.twig' => 'b844ef5f74df3058bd6ff9ec024d907b',
         'form-element-label.html.twig' => '21026361fa9ba15ccdc823d6bb00a6d9',
         'datetime-wrapper.html.twig' => '765aa519f7e4ae36ee4726ae2633de6d',
-        'fieldset.html.twig' => 'a9067cc8e8896e91059a50798942aca8',
+        'fieldset.html.twig' => '5900e42f5ee2574a3d002d19771bd764',
         'form.html.twig' => '0767ff441543553d51443b970c4b736b',
         'datetime-form.html.twig' => '649c36a2900c556b8a1385c1fa755281',
         'checkboxes.html.twig' => 'a5faa5fdd7de4aa42045753db65ffb0b',

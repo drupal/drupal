@@ -40,7 +40,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test the file_validate_extensions() function.
+   * Tests the file_validate_extensions() function.
    */
   public function testFileValidateExtensions() {
     $file = File::create(['filename' => 'asdf.txt']);
@@ -125,7 +125,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
 
     // Add a filename with an allowed length and test it.
     $file->setFilename(str_repeat('x', 240));
-    $this->assertEqual(240, strlen($file->getFilename()));
+    $this->assertEquals(240, strlen($file->getFilename()));
     $errors = file_validate_name_length($file);
     $this->assertCount(0, $errors, 'No errors reported for 240 length filename.');
 
@@ -141,7 +141,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test file_validate_size().
+   * Tests file_validate_size().
    */
   public function testFileValidateSize() {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.

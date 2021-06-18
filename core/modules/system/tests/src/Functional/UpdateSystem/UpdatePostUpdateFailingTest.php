@@ -68,7 +68,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
     $this->assertSame([], \Drupal::state()->get('post_update_test_execution', []));
 
     $key_value = \Drupal::keyValue('update__post_update');
-    $this->assertEqual([], $key_value->get('existing_updates', []));
+    $this->assertEquals([], $key_value->get('existing_updates', []));
   }
 
   /**
@@ -76,8 +76,8 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
    */
   protected function doSelectionTest() {
     // First update, should not be run since this module's update hooks fail.
-    $this->assertRaw('8001 -   This update will fail.');
-    $this->assertRaw('8002 -   A further update.');
+    $this->assertSession()->responseContains('8001 - This update will fail.');
+    $this->assertSession()->responseContains('8002 - A further update');
     $this->assertSession()->assertEscaped("First update, should not be run since this module's update hooks fail.");
   }
 

@@ -36,20 +36,20 @@ class AreaTitleTest extends ViewsKernelTestBase {
     $this->executeView($view);
     $view->result = [];
     $view->render();
-    $this->assertEqual('test_title_empty', $view->getTitle(), 'The title area should override the title if the result is empty.');
+    $this->assertEquals('test_title_empty', $view->getTitle(), 'The title area should override the title if the result is empty.');
     $view->destroy();
 
     $view->setDisplay('page_1');
     $this->executeView($view);
     $view->render();
-    $this->assertEqual('test_title_header', $view->getTitle(), 'The title area on the header should override the title if the result is not empty.');
+    $this->assertEquals('test_title_header', $view->getTitle(), 'The title area on the header should override the title if the result is not empty.');
     $view->destroy();
 
     $view->setDisplay('page_1');
     $this->executeView($view);
     $view->result = [];
     $view->render();
-    $this->assertEqual('test_title_empty', $view->getTitle(), 'The title area should override the title if the result is empty.');
+    $this->assertEquals('test_title_empty', $view->getTitle(), 'The title area should override the title if the result is empty.');
     $view->destroy();
   }
 

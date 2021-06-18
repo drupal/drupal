@@ -134,7 +134,9 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
    *   The default cache contexts for rendered entities.
    */
   protected function getDefaultCacheContexts() {
-    return ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
+    // For url.site, see
+    // \Drupal\Core\Entity\Controller\EntityViewController::view().
+    return ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions', 'url.site'];
   }
 
 }

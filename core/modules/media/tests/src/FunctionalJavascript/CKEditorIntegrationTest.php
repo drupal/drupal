@@ -72,7 +72,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     'media',
     'node',
     'text',
-    'media_test_ckeditor',
+    'media_test_embed',
   ];
 
   /**
@@ -224,7 +224,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // extra class.
     // @see \Drupal\media\Plugin\Filter\MediaEmbed::renderMissingMediaIndicator()
     // @see core/modules/media/templates/media-embed-error.html.twig
-    // @see media_test_ckeditor_preprocess_media_embed_error()
+    // @see media_test_embed_preprocess_media_embed_error()
     $original_value = $this->host->body->value;
     $this->host->body->value = str_replace($this->media->uuid(), 'invalid_uuid', $original_value);
     $this->host->save();
@@ -280,7 +280,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
 
     // Assert that when looking at an embedded entity in the CKEditor Widget,
     // the preview is generated using the default theme, not the admin theme.
-    // @see media_test_ckeditor_entity_view_alter()
+    // @see media_test_embed_entity_view_alter()
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $this->assignNameToCkeditorIframe();
@@ -483,7 +483,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
-   * Test the EditorMediaDialog's form elements' #access logic.
+   * Tests the EditorMediaDialog's form elements' #access logic.
    */
   public function testDialogAccess() {
     $page = $this->getSession()->getPage();
@@ -746,7 +746,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
-   * Test that dialog loads appropriate translation's alt text.
+   * Tests that dialog loads appropriate translation's alt text.
    */
   public function testTranslationAlt() {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);

@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\PlaceholderGenerator;
 use Drupal\Core\Render\PlaceholderingRenderCache;
@@ -18,7 +19,6 @@ use Drupal\Core\Render\Renderer;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Base class for the actual unit tests testing \Drupal\Core\Render\Renderer.
@@ -318,10 +318,20 @@ class PlaceholdersTest implements TrustedCallbackInterface {
   }
 
   /**
+   * A lazy builder callback that returns an invalid renderable.
+   *
+   * @return bool
+   *   TRUE, which is not a valid return value for a lazy builder.
+   */
+  public static function callbackNonArrayReturn() {
+    return TRUE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback'];
+    return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback', 'callbackNonArrayReturn'];
   }
 
 }

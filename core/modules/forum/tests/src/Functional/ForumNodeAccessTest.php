@@ -65,7 +65,8 @@ class ForumNodeAccessTest extends BrowserTestBase {
       'body[0][value]' => $this->randomMachineName(200),
       'private[0][value]' => TRUE,
     ];
-    $this->drupalPostForm('node/add/forum', $edit, 'Save', ['query' => ['forum_id' => 1]]);
+    $this->drupalGet('node/add/forum', ['query' => ['forum_id' => 1]]);
+    $this->submitForm($edit, 'Save');
     $private_node = $this->drupalGetNodeByTitle($private_node_title);
     $this->assertTrue(!empty($private_node), 'New private forum node found in database.');
 
@@ -75,7 +76,8 @@ class ForumNodeAccessTest extends BrowserTestBase {
       'title[0][value]' => $public_node_title,
       'body[0][value]' => $this->randomMachineName(200),
     ];
-    $this->drupalPostForm('node/add/forum', $edit, 'Save', ['query' => ['forum_id' => 1]]);
+    $this->drupalGet('node/add/forum', ['query' => ['forum_id' => 1]]);
+    $this->submitForm($edit, 'Save');
     $public_node = $this->drupalGetNodeByTitle($public_node_title);
     $this->assertTrue(!empty($public_node), 'New public forum node found in database.');
 
@@ -88,8 +90,8 @@ class ForumNodeAccessTest extends BrowserTestBase {
     $this->drupalGet('');
 
     // Ensure private node and public node are found.
-    $this->assertText($private_node->getTitle());
-    $this->assertText($public_node->getTitle());
+    $this->assertSession()->pageTextContains($private_node->getTitle());
+    $this->assertSession()->pageTextContains($public_node->getTitle());
 
     // Test for $no_access_user.
     $this->drupalLogin($no_access_user);
@@ -97,7 +99,7 @@ class ForumNodeAccessTest extends BrowserTestBase {
 
     // Ensure private node is not found but public is found.
     $this->assertNoText($private_node->getTitle());
-    $this->assertText($public_node->getTitle());
+    $this->assertSession()->pageTextContains($public_node->getTitle());
   }
 
 }
