@@ -459,7 +459,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       ->setImageStyle($style)
       ->setSourceImageUri($image_uri);
     $this->assertTrue($pipeline->buildDerivativeImage());
-    $this->assertEquals($this->getImageCount($style), 1);
+    $this->assertEquals(1, $this->getImageCount($style));
 
     // Go to image styles list page and check if the flush operation link
     // exists.
