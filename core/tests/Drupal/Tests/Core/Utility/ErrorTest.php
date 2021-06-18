@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Utility;
 
+use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Utility\Error;
 
@@ -10,6 +11,24 @@ use Drupal\Core\Utility\Error;
  * @group Utility
  */
 class ErrorTest extends UnitTestCase {
+
+  /**
+   * Tests that `decodeException()` works properly with no databases defined.
+   */
+  public function testDecodeExceptionWhenNoDatabasesConfigured(): void {
+    try {
+      $db_path = '/tmp/broken.sqlite';
+      static::assertSame(18, \file_put_contents($db_path, 'not a DB, sorry :('));
+      $config = [
+        'database' => $db_path,
+      ];
+
+      new Connection(Connection::open($config), $config);
+    }
+    catch (\Exception $error) {
+      Error::decodeException($error);
+    }
+  }
 
   /**
    * Tests the getLastCaller() method.
