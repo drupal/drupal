@@ -4,7 +4,6 @@ namespace Drupal\Core\Utility;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Log;
 
