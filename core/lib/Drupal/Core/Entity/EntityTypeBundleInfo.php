@@ -8,6 +8,7 @@ use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Provides discovery and retrieval of entity type bundles.
@@ -91,10 +92,20 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         $this->bundleInfo = $cache->data;
       }
       else {
-        $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
+        $this->bundleInfo = [];
+        // First let each entity class define its bundles.
         foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
-          // First look for entity types that act as bundles for others, load them
-          // and add them as bundles.
+          $entity_class = $entity_type->getClass();
+          $this->bundleInfo[$type] = $entity_class::bundleDefinitions($entity_type);
+        }
+
+        // Next, let modules define bundles with hook_entity_bundle_info().
+        $hook_bundle_info = $this->moduleHandler->invokeAll('entity_bundle_info');
+        $this->bundleInfo = NestedArray::mergeDeep($this->bundleInfo, $hook_bundle_info);
+
+        foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
+          // Next, look for entity types that act as bundles for others, load
+          // them and add them as bundles.
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
             foreach ($this->entityTypeManager->getStorage($bundle_entity_type)->loadMultiple() as $entity) {
               $this->bundleInfo[$type][$entity->id()]['label'] = $entity->label();

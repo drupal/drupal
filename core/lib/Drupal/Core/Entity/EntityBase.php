@@ -147,6 +147,13 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
+  public static function bundleDefinitions(EntityTypeInterface $entity_type) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function label() {
     if (($label_key = $this->getEntityType()->getKey('label')) && isset($this->{$label_key})) {
       return $this->{$label_key};

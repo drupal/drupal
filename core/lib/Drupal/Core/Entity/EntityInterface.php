@@ -88,6 +88,29 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   public function bundle();
 
   /**
+   * Defines the bundles for the entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return array
+   *   An associative array of bundles, keyed by the bundle name, where values
+   *   are arrays with the following keys:
+   *   - label: The human-readable name of the bundle.
+   *   - uri_callback: (optional) The same as the 'uri_callback' key defined for
+   *     the entity type in the EntityTypeManager, but for the bundle only. When
+   *     determining the URI of an entity, if a 'uri_callback' is defined for
+   *     both the entity type and the bundle, the one for the bundle is used.
+   *   - translatable: (optional) A boolean value specifying whether this bundle
+   *     has translation support enabled. Defaults to FALSE.
+   *
+   * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
+   * @see hook_entity_bundle_info()
+   * @see hook_entity_bundle_info_alter()
+   */
+  public static function bundleDefinitions(EntityTypeInterface $entity_type);
+
+  /**
    * Gets the label of the entity.
    *
    * @return string|null
