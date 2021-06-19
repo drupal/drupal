@@ -30,7 +30,9 @@
       function loadAjaxBehavior(base) {
         const elementSettings = settings.ajax[base];
         if (typeof elementSettings.selector === 'undefined') {
-          elementSettings.selector = `#${base}`;
+          // Remove ', #${base}' from the end after this is resloved:
+          // https://www.drupal.org/project/drupal/issues/2509970
+          elementSettings.selector = `[data-drupal-selector='${base}'], #${base}`;
         }
         $(elementSettings.selector)
           .once('drupal-ajax')

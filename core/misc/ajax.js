@@ -26,7 +26,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         var elementSettings = settings.ajax[base];
 
         if (typeof elementSettings.selector === 'undefined') {
-          elementSettings.selector = "#".concat(base);
+          elementSettings.selector = "[data-drupal-selector='".concat(base, "'], #").concat(base);
         }
 
         $(elementSettings.selector).once('drupal-ajax').each(function () {
