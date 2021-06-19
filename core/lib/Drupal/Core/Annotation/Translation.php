@@ -70,7 +70,7 @@ class Translation extends AnnotationBase {
    *   - value (required): the string that is to be translated.
    *   - arguments (optional): an array with placeholder replacements, keyed by
    *     placeholder.
-   *   - context (optional): a string that describes the context of "value";
+   *   - context (optional): a string that describes the context of "value".
    */
   public function __construct(array $values) {
     $string = $values['value'];

@@ -21,7 +21,7 @@ class StaticTranslation implements TranslatorInterface {
    * Constructs a translator from an array of translations.
    *
    * @param array $translations
-   *   Array of override strings indexed by language and context
+   *   Array of override strings indexed by language and context.
    */
   public function __construct($translations = []) {
     $this->translations = $translations;

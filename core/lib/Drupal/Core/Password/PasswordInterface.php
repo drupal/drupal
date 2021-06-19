@@ -27,7 +27,7 @@ interface PasswordInterface {
    * Check whether a plain text password matches a hashed password.
    *
    * @param string $password
-   *   A plain-text password
+   *   A plain-text password.
    * @param string $hash
    *   A hashed password.
    *

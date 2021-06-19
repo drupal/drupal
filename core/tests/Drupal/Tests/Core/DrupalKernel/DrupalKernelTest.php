@@ -147,7 +147,7 @@ class FakeAutoloader {
    * Registers this instance as an autoloader.
    *
    * @param bool $prepend
-   *   Whether to prepend the autoloader or not
+   *   Whether to prepend the autoloader or not.
    */
   public function register($prepend = FALSE) {
     spl_autoload_register([$this, 'loadClass'], TRUE, $prepend);

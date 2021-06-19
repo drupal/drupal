@@ -43,7 +43,7 @@ class ResourceRoutes implements EventSubscriberInterface {
    * @param \Drupal\rest\Plugin\Type\ResourcePluginManager $manager
    *   The resource plugin manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager
+   *   The entity type manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */

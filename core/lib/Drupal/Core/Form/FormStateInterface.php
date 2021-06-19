@@ -117,7 +117,7 @@ interface FormStateInterface {
    * Sets the redirect for the form.
    *
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options

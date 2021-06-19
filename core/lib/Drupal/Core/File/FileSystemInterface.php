@@ -105,7 +105,7 @@ interface FileSystemInterface {
    * @param string $uri
    *   A URI or pathname.
    * @param resource $context
-   *   Refer to http://php.net/manual/ref.stream.php
+   *   Refer to http://php.net/manual/ref.stream.php.
    *
    * @return bool
    *   Boolean TRUE on success, or FALSE on failure.
@@ -189,7 +189,7 @@ interface FileSystemInterface {
    *   Create directories recursively, defaults to FALSE. Cannot work with a
    *   mode which denies writing or execution to the owner of the process.
    * @param resource $context
-   *   Refer to http://php.net/manual/ref.stream.php
+   *   Refer to http://php.net/manual/ref.stream.php.
    *
    * @return bool
    *   Boolean TRUE on success, or FALSE on failure.
@@ -212,7 +212,7 @@ interface FileSystemInterface {
    * @param string $uri
    *   A URI or pathname.
    * @param resource $context
-   *   Refer to http://php.net/manual/ref.stream.php
+   *   Refer to http://php.net/manual/ref.stream.php.
    *
    * @return bool
    *   Boolean TRUE on success, or FALSE on failure.

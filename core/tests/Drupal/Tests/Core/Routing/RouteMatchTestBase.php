@@ -17,9 +17,9 @@ abstract class RouteMatchTestBase extends UnitTestCase {
    * @param $name
    *   Route name.
    * @param \Symfony\Component\Routing\Route $route
-   *   Request object
+   *   Request object.
    * @param array $parameters
-   *   Parameters array
+   *   Parameters array.
    * @param $raw_parameters
    *   Raw parameters array
    *

@@ -45,9 +45,9 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
    * @param string $label
    *   The expected image style label.
    * @param array $expected_effect_plugins
-   *   An array of expected plugins attached to the image style entity
+   *   An array of expected plugins attached to the image style entity.
    * @param array $expected_effect_config
-   *   An array of expected configuration for each effect in the image style
+   *   An array of expected configuration for each effect in the image style.
    */
   protected function assertEntity($id, $label, array $expected_effect_plugins, array $expected_effect_config) {
     $style = ImageStyle::load($id);

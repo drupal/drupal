@@ -104,9 +104,9 @@ class ForumController extends ControllerBase {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Entity\EntityTypeInterface $node_entity_type_definition
-   *   Node entity type definition object
+   *   Node entity type definition object.
    * @param \Drupal\Core\Entity\EntityTypeInterface $comment_entity_type_definition
-   *   Comment entity type definition object
+   *   Comment entity type definition object.
    */
   public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage, RendererInterface $renderer, EntityTypeInterface $node_entity_type_definition, EntityTypeInterface $comment_entity_type_definition) {
     $this->forumManager = $forum_manager;

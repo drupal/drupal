@@ -96,7 +96,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   it should be like: ['id' => 'foo', 'label' => 'Foo']. If $values
    *   is a string, it will be considered that it represents the label.
    * @param bool $create_body
-   *   Whether or not to create the body field
+   *   Whether or not to create the body field.
    *
    * @return \Drupal\block_content\Entity\BlockContentType
    *   Created custom block type.

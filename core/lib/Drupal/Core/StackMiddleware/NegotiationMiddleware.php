@@ -30,7 +30,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
    * Constructs a new NegotiationMiddleware.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
-   *   The wrapper HTTP kernel
+   *   The wrapper HTTP kernel.
    */
   public function __construct(HttpKernelInterface $app) {
     $this->app = $app;

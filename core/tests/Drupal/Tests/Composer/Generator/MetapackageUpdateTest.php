@@ -49,7 +49,7 @@ class MetapackageUpdateTest extends TestCase {
    * @param string $builderClass
    *   The metapackage builder to test.
    * @param string $path
-   *   The relative path to the metapackage
+   *   The relative path to the metapackage.
    *
    *  @dataProvider updatedTestData
    */

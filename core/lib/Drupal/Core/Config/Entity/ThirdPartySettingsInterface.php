@@ -34,7 +34,7 @@ interface ThirdPartySettingsInterface {
    * @param string $key
    *   The setting name.
    * @param mixed $default
-   *   The default value
+   *   The default value.
    *
    * @return mixed
    *   The value.

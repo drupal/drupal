@@ -25,7 +25,7 @@ use Drupal\Core\Url;
  *   displayed, with the following keys:
  *   - 'view_mode': the view mode in which the comment is being viewed
  *   - 'langcode': the language in which the comment is being viewed
- *   - 'commented_entity': the entity to which the comment is attached
+ *   - 'commented_entity': the entity to which the comment is attached.
  *
  * @see \Drupal\comment\CommentViewBuilder::renderLinks()
  * @see \Drupal\comment\CommentViewBuilder::buildLinks()

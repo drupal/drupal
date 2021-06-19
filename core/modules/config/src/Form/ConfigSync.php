@@ -146,7 +146,7 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
-   *   The module extension list
+   *   The module extension list.
    * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
    *   The import transformer service.
    */

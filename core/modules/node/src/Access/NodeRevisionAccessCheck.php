@@ -84,7 +84,7 @@ class NodeRevisionAccessCheck implements AccessInterface {
    *   A user object representing the user for whom the operation is to be
    *   performed.
    * @param string $op
-   *   (optional) The specific operation being checked. Defaults to 'view.'
+   *   (optional) The specific operation being checked. Defaults to 'view'.
    *
    * @return bool
    *   TRUE if the operation may be performed, FALSE otherwise.

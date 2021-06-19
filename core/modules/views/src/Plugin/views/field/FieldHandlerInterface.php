@@ -14,7 +14,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * Adds an ORDER BY clause to the query for click sort columns.
    *
    * @param string $order
-   *   Either ASC or DESC
+   *   Either ASC or DESC.
    */
   public function clickSort($order);
 

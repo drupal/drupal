@@ -77,7 +77,7 @@ class StatusMessages extends RenderElement {
    *   - NULL
    *   - 'status'
    *   - 'warning'
-   *   - 'error'
+   *   - 'error'.
    *
    * @return array
    *   A renderable array containing the messages.

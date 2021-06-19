@@ -35,7 +35,7 @@ interface NodeGrantDatabaseStorageInterface {
    *   - "view"
    *   - "update"
    *   - "delete"
-   *   - "create"
+   *   - "create".
    * @param \Drupal\Core\Session\AccountInterface $account
    *   A user object representing the user for whom the operation is to be
    *   performed.

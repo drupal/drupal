@@ -61,7 +61,7 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
-   *   The entity repository service
+   *   The entity repository service.
    * @param \Drupal\statistics\StatisticsStorageInterface $statistics_storage
    *   The storage for statistics.
    * @param \Drupal\Core\Render\RendererInterface $renderer

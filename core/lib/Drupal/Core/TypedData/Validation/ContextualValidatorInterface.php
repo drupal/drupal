@@ -16,7 +16,7 @@ interface ContextualValidatorInterface extends ContextualValidatorInterfaceBase 
    * \Symfony\Component\Validator\Constraints\Valid is assumed.
    *
    * @param mixed $value
-   *   The value to validate
+   *   The value to validate.
    * @param \Symfony\Component\Validator\Constraint|\Symfony\Component\Validator\Constraint[] $constraints
    *   The constraint(s) to validate against.
    * @param array|null $groups

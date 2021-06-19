@@ -14,7 +14,7 @@
  * Perform alterations on the available fetchers.
  *
  * @param array[] $info
- *   Array of fetcher plugins
+ *   Array of fetcher plugins.
  */
 function hook_aggregator_fetcher_info_alter(array &$info) {
   if (empty($info['foo_fetcher'])) {
@@ -28,7 +28,7 @@ function hook_aggregator_fetcher_info_alter(array &$info) {
  * Perform alterations on the available parsers.
  *
  * @param array[] $info
- *   Array of parser plugins
+ *   Array of parser plugins.
  */
 function hook_aggregator_parser_info_alter(array &$info) {
   if (empty($info['foo_parser'])) {
@@ -42,7 +42,7 @@ function hook_aggregator_parser_info_alter(array &$info) {
  * Perform alterations on the available processors.
  *
  * @param array[] $info
- *   Array of processor plugins
+ *   Array of processor plugins.
  */
 function hook_aggregator_processor_info_alter(array &$info) {
   if (empty($info['foo_processor'])) {

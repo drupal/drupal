@@ -339,7 +339,7 @@ EOF
    * Checks that the permissions are like expected.
    *
    * @param array $actual_permissions
-   *   The actual permissions
+   *   The actual permissions.
    */
   protected function assertPermissions(array $actual_permissions) {
     $this->assertCount(4, $actual_permissions);

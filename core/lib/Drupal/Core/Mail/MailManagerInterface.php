@@ -98,7 +98,7 @@ interface MailManagerInterface extends PluginManagerInterface {
    *   - user@example.com
    *   - user@example.com, anotheruser@example.com
    *   - User <user@example.com>
-   *   - User <user@example.com>, Another User <anotheruser@example.com>
+   *   - User <user@example.com>, Another User <anotheruser@example.com>.
    * @param string $langcode
    *   Language code to use to compose the email.
    * @param array $params

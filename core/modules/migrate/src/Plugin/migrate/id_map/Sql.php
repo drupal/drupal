@@ -195,7 +195,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * @internal
    *
    * @param array $source_id_values
-   *   The source identifiers
+   *   The source identifiers.
    *
    * @return string
    *   A hash containing the hashed values of the source identifiers.

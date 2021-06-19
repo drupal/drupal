@@ -98,7 +98,7 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity of which an image field is being rendered.
    * @param string $field_name
-   *   The name of the (image) field that is being rendered
+   *   The name of the (image) field that is being rendered.
    * @param string $langcode
    *   The language code of the field that is being rendered.
    * @param string $view_mode_id
@@ -175,7 +175,7 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity of which an image field is being rendered.
    * @param string $field_name
-   *   The name of the (image) field that is being rendered
+   *   The name of the (image) field that is being rendered.
    * @param string $langcode
    *   The language code of the field that is being rendered.
    * @param string $view_mode_id
@@ -206,7 +206,7 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity of which an image field is being rendered.
    * @param string $field_name
-   *   The name of the (image) field that is being rendered
+   *   The name of the (image) field that is being rendered.
    * @param string $langcode
    *   The language code of the field that is being rendered.
    *

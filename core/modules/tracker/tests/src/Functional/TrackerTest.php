@@ -465,7 +465,7 @@ class TrackerTest extends BrowserTestBase {
    * We do this in JavaScript to prevent breaking the render cache.
    *
    * @param int $node_id
-   *   A node ID, that must exist as a data-history-node-id attribute
+   *   A node ID, that must exist as a data-history-node-id attribute.
    * @param int $node_timestamp
    *   A node timestamp, that must exist as a data-history-node-timestamp
    *   attribute.

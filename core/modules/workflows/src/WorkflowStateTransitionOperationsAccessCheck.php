@@ -40,7 +40,7 @@ class WorkflowStateTransitionOperationsAccessCheck implements AccessInterface {
    * @endcode
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The parametrized route
+   *   The parametrized route.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *
@@ -72,7 +72,7 @@ class WorkflowStateTransitionOperationsAccessCheck implements AccessInterface {
    * Get the operation that will be used for the access check.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The parametrized route
+   *   The parametrized route.
    *
    * @return string
    *   The access operation.

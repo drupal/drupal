@@ -13,7 +13,7 @@ interface EntityRouteProviderInterface {
    * Provides routes for entities.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type
+   *   The entity type.
    *
    * @return \Symfony\Component\Routing\RouteCollection|\Symfony\Component\Routing\Route[]
    *   Returns a route collection or an array of routes keyed by name, like

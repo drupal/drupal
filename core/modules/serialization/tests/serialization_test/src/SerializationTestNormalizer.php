@@ -20,7 +20,7 @@ class SerializationTestNormalizer implements NormalizerInterface {
    *   Object to normalize.
    * @param string|null $format
    *   (optional) Format the normalization result will be encoded as. Defaults
-   *   to NULL
+   *   to NULL.
    * @param array $context
    *   (optional) The context data. Defaults to an empty array.
    *

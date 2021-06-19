@@ -117,7 +117,7 @@ class LocaleDefaultConfigStorage {
    * Get all configuration names and folders for a list of modules or themes.
    *
    * @param string $type
-   *   Type of components: 'module' | 'theme' | 'profile'
+   *   Type of components: 'module' | 'theme' | 'profile'.
    * @param array $list
    *   Array of theme or module names.
    *

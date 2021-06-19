@@ -26,7 +26,7 @@ trait ViewResultAssertionTrait {
    *   from the view (as keys) and the expected result set (as values).
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
-   *   'Identical result set.'
+   *   'Identical result set.'.
    *
    * @return bool
    *   TRUE if the assertion succeeded, or FALSE otherwise.
@@ -49,7 +49,7 @@ trait ViewResultAssertionTrait {
    *   from the view (as keys) and the expected result set (as values).
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
-   *   'Non-identical result set.'
+   *   'Non-identical result set'.
    *
    * @return bool
    *   TRUE if the assertion succeeded, or FALSE otherwise.

@@ -119,7 +119,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
    *   The cache tag invalidator.
    * @param string $table
-   *   (Optional) The table in the database to use for matching. Defaults to 'router'
+   *   (Optional) The table in the database to use for matching. Defaults to 'router'.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
    */
@@ -192,7 +192,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * Find the route using the provided route name.
    *
    * @param string $name
-   *   The route name to fetch
+   *   The route name to fetch.
    *
    * @return \Symfony\Component\Routing\Route
    *   The found route.

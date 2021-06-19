@@ -411,7 +411,7 @@ function hook_ranking() {
  *   Various aspects of the context in which the node links are going to be
  *   displayed, with the following keys:
  *   - 'view_mode': the view mode in which the node is being viewed
- *   - 'langcode': the language in which the node is being viewed
+ *   - 'langcode': the language in which the node is being viewed.
  *
  * @see \Drupal\node\NodeViewBuilder::renderLinks()
  * @see \Drupal\node\NodeViewBuilder::buildLinks()

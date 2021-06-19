@@ -99,7 +99,7 @@ class ExtensionDiscovery {
    * @param bool $use_file_cache
    *   Whether file cache should be used.
    * @param string[] $profile_directories
-   *   The available profile directories
+   *   The available profile directories.
    * @param string $site_path
    *   The path to the site.
    */

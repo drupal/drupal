@@ -72,7 +72,7 @@ interface StaticMenuLinkOverridesInterface {
    *   - parent
    *   - weight
    *   - expanded
-   *   - enabled
+   *   - enabled.
    *
    * @return array
    *   A list of properties which got saved.

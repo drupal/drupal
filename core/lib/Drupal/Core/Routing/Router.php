@@ -139,7 +139,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
    * Tries to match a URL with a set of routes.
    *
    * @param string $pathinfo
-   *   The path info to be parsed
+   *   The path info to be parsed.
    * @param \Symfony\Component\Routing\RouteCollection $routes
    *   The set of routes.
    *
@@ -165,7 +165,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
    * RouteProvider::getRoutesByPath().
    *
    * @param string $pathinfo
-   *   The path info to be parsed
+   *   The path info to be parsed.
    * @param \Symfony\Component\Routing\RouteCollection $routes
    *   The set of routes.
    * @param bool $case_sensitive

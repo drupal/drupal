@@ -132,7 +132,7 @@ class DbUpdateController extends ControllerBase {
    *    - info
    *    - selection
    *    - run
-   *    - results
+   *    - results.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
    *

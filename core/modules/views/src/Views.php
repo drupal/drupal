@@ -283,16 +283,16 @@ class Views {
    *   If TRUE, only return views, not displays.
    * @param string $filter
    *   Filters the views on status. Can either be 'all' (default), 'enabled' or
-   *   'disabled'
+   *   'disabled'.
    * @param mixed $exclude_view
    *   View or current display to exclude.
    *   Either a:
    *   - views object (containing $exclude_view->storage->name and $exclude_view->current_display)
    *   - views name as string:  e.g. my_view
-   *   - views name and display id (separated by ':'): e.g. my_view:default
+   *   - views name and display id (separated by ':'): e.g. my_view:default.
    * @param bool $optgroup
    *   If TRUE, returns an array with optgroups for each view (will be ignored for
-   *   $views_only = TRUE). Can be used by select
+   *   $views_only = TRUE). Can be used by select.
    * @param bool $sort
    *   If TRUE, the list of views is sorted ascending.
    *

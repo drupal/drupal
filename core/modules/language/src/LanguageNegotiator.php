@@ -76,7 +76,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $negotiator_manager
-   *   The language negotiation methods plugin manager
+   *   The language negotiation methods plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\Core\Site\Settings $settings

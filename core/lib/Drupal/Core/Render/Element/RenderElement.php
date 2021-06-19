@@ -246,7 +246,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    *   - #ajax['wrapper']
    *   - #ajax['parameters']
    *   - #ajax['effect']
-   *   - #ajax['accepts']
+   *   - #ajax['accepts'].
    *
    * @return array
    *   The processed element with the necessary JavaScript attached to it.

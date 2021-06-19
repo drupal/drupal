@@ -273,7 +273,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @param array[]|null $limit_validation_errors
    *   Any valid value for
    *   \Drupal\Core\Form\FormStateInterface::setLimitValidationErrors()'s
-   *   $limit_validation_errors argument;
+   *   $limit_validation_errors argument.
    */
   public function testSetLimitValidationErrors($limit_validation_errors) {
     $this->decoratedFormState->setLimitValidationErrors($limit_validation_errors)
@@ -290,7 +290,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @param array[]|null $limit_validation_errors
    *   Any valid value for
    *   \Drupal\Core\Form\FormStateInterface::getLimitValidationErrors()'s
-   *   return value;
+   *   return value.
    */
   public function testGetLimitValidationErrors($limit_validation_errors) {
     $this->decoratedFormState->getLimitValidationErrors()
