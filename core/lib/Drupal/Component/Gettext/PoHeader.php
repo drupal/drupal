@@ -141,9 +141,11 @@ class PoHeader {
 
     // There is only one value relevant for our header implementation when
     // reading, and that is the plural formula.
-    if (!empty($values['Plural-Forms'])) {
-      $this->pluralForms = $values['Plural-Forms'];
+    if (empty($values['Plural-Forms'])) {
+      $this->pluralForms = '';
+      return;
     }
+    $this->pluralForms = $values['Plural-Forms'];
   }
 
   /**
