@@ -22,7 +22,9 @@
           const $input = $(event.currentTarget)
             .closest('.js-click-to-select')
             .find('.js-click-to-select-checkbox input');
-          $input.prop('checked', !$input.prop('checked')).trigger('change');
+          if (!$input.prop('disabled')) {
+            $input.prop('checked', !$input.prop('checked')).trigger('change');
+          }
         });
 
       $('.js-click-to-select-checkbox input', context)
