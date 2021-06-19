@@ -161,7 +161,7 @@ class BasicSettingsForm extends ConfigFormBase {
     $form['live_preview']['options']['ui_show_additional_queries'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show other queries run during render during live preview'),
-      '#description' => $this->t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
+      '#description' => $this->t("Views has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
       '#default_value' => $config->get('ui.show.additional_queries'),
     ];
 

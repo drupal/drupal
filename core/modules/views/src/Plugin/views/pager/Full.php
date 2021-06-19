@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "full",
  *   title = @Translation("Paged output, full pager"),
  *   short_title = @Translation("Full"),
- *   help = @Translation("Paged output, full Drupal style"),
+ *   help = @Translation("Paged output, full style"),
  *   theme = "pager",
  *   register_theme = FALSE
  * )

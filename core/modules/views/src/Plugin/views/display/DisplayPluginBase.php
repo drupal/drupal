@@ -1741,7 +1741,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         // We have some options, so make a list.
         $description = [];
         $description[] = [
-          '#markup' => $this->t('A Drupal path or external URL the more link will point to. Note that this will override the link display setting above.'),
+          '#markup' => $this->t('An internal path or external URL the more link will point to. Note that this will override the link display setting above.'),
         ];
         if (!empty($options)) {
           $description[] = [
@@ -1780,7 +1780,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'exposed_block':
         $form['#title'] .= $this->t('Put the exposed form in a block');
         $form['description'] = [
-          '#markup' => '<div class="js-form-item form-item description">' . $this->t('If set, any exposed widgets will not appear with this view. Instead, a block will be made available to the Drupal block administration system, and the exposed form will appear there. Note that this block must be enabled manually, Views will not enable it for you.') . '</div>',
+          '#markup' => '<div class="js-form-item form-item description">' . $this->t('If set, any exposed widgets will not appear with this view. Instead, a block will be made available to the block administration system, and the exposed form will appear there. Note that this block must be enabled manually, Views will not enable it for you.') . '</div>',
         ];
         $form['exposed_block'] = [
           '#type' => 'radios',

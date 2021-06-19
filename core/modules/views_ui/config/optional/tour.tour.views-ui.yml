@@ -37,7 +37,7 @@ tips:
     id: views-ui-format
     plugin: text
     label: 'Output format'
-    body: 'Choose how to output results. E.g., choose <em>Content</em> to output each item completely, using your configured display settings. Or choose <em>Fields</em>, which allows you to output only specific fields for each result. Additional formats can be added by installing modules to <em>extend</em> Drupal''s base functionality.'
+    body: 'Choose how to output results. E.g., choose <em>Content</em> to output each item completely, using your configured display settings. Or choose <em>Fields</em>, which allows you to output only specific fields for each result. Additional formats can be added by installing modules to <em>extend</em> the core software''s base functionality.'
     weight: 4
     selector: '.views-ui-display-tab-bucket.format'
   views-ui-fields:

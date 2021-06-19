@@ -746,7 +746,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#title' => $this->t('Link path'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['path'],
-        '#description' => $this->t('The Drupal path or absolute URL for this link. You may enter data from this view as per the "Replacement patterns" below.'),
+        '#description' => $this->t('The internal path or absolute URL for this link. You may enter data from this view as per the "Replacement patterns" below.'),
         '#states' => [
           'visible' => [
             ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
@@ -1004,7 +1004,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#type' => 'textfield',
         '#title' => $this->t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
-        '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "https://www.drupal.org". You may use the "Replacement patterns" above.'),
+        '#description' => $this->t('This can be an internal path such as node/add or an external URL such as "https://www.drupal.org". You may use the "Replacement patterns" above.'),
         '#states' => [
           'visible' => [
             ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
