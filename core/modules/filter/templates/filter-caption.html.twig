@@ -12,7 +12,7 @@
  * - string classes: The classes of the captioned HTML tag.
  */
 #}
-<figure role="group"{%- if classes %} class="{{ classes }}"{%- endif %}>
+<figure role="group" aria-labelledby="{{ aria_labelledby }}"{%- if classes %} class="{{ classes }}"{%- endif %}>
 {{ node }}
-<figcaption>{{ caption }}</figcaption>
+<figcaption id="{{ aria_labelledby }}">{{ caption }}</figcaption>
 </figure>

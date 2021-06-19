@@ -5,6 +5,7 @@
  * Framework for handling the filtering of content.
  */
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
@@ -344,6 +345,33 @@ function _filter_tips($format_id, $long = FALSE) {
   }
 
   return $tips;
+}
+
+/**
+ * Prepares variables for text format caption templates.
+ *
+ * Default template: filter-caption.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - format: An object representing a text format.
+ */
+function template_preprocess_filter_caption(&$variables) {
+
+  // Retrieve caption and strip its tags.
+  $caption = $variables['caption']->__toString();
+  $caption = strip_tags($caption);
+
+  // @todo This is basically the same as what is done in
+  //   \Drupal\system\MachineNameController::transliterate(), so it might make
+  //   sense to provide a common service for the two.
+  $transliterated = \Drupal::transliteration()->transliterate($caption, LanguageInterface::LANGCODE_DEFAULT, '_');
+  $transliterated = mb_strtolower($transliterated);
+  $transliterated = preg_replace('@[^a-z0-9_.]+@', '-', $transliterated);
+
+  // Limit id to 30 characters and generate a unique id with it.
+  $transliterated = Unicode::truncate($transliterated, 30);
+  $variables['aria_labelledby'] = Html::getUniqueId($transliterated);
 }
 
 /**
