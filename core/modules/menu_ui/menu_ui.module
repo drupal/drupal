@@ -170,8 +170,13 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
       $id = (!empty($result)) ? reset($result) : FALSE;
     }
     if ($id) {
+      $source_langcode = NULL;
+      if ($node->isNewTranslation()) {
+        $metadata = \Drupal::service('content_translation.manager')->getTranslationMetadata($node);
+        $source_langcode = $metadata->getSource();
+      }
       $menu_link = MenuLinkContent::load($id);
-      $menu_link = \Drupal::service('entity.repository')->getTranslationFromContext($menu_link);
+      $menu_link = \Drupal::service('entity.repository')->getTranslationFromContext($menu_link, $source_langcode);
       $defaults = [
         'entity_id' => $menu_link->id(),
         'id' => $menu_link->getPluginId(),
