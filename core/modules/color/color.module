@@ -567,7 +567,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   // Replace paths to images.
   foreach ($paths['map'] as $before => $after) {
     $before = base_path() . $paths['source'] . $before;
-    $before = preg_replace('`(^|/)(?!../)([^/]+)/../`', '$1', $before);
+    $before = preg_replace('`(^|/)(?!\.\./)([^/]+)/\.\./`', '$1', $before);
     $output = str_replace($before, $after, $output);
   }
 
