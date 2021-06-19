@@ -188,7 +188,7 @@ class Tables implements TablesInterface {
             $propertyDefinitions = $field_storage->getPropertyDefinitions();
 
             // Prepare the next index prefix.
-            $next_index_prefix = "$relationship_specifier.$column";
+            $next_index_prefix = "{$specifiers[$key]}.{$relationship_specifier}.{$column}";
           }
         }
         $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta);
