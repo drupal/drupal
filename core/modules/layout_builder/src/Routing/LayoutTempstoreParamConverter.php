@@ -58,7 +58,7 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
     // Attempt to load a full instance based on the context.
     if ($section_storage = $this->sectionStorageManager->load($type, $contexts)) {
       // Ensure that all context values pass validation.
-      if (count($section_storage->validateContexts()) === 0) {
+      if (($violations = $section_storage->validateContexts()) && !$violations->count()) {
         // Pass the plugin through the tempstore repository.
         return $this->layoutTempstoreRepository->get($section_storage);
       }
@@ -69,11 +69,8 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
     //
     // @see \Drupal\layout_builder\Access\LayoutBuilderAccessCheck::access()
     if ($section_storage instanceof OverridesSectionStorage && $section_storage = $section_storage->getDefaultSectionStorage()) {
-      // Ensure that all context values pass validation.
-      if (count($section_storage->validateContexts()) === 0) {
-        // Pass the plugin through the tempstore repository.
-        return $this->layoutTempstoreRepository->get($section_storage);
-      }
+      // Pass the plugin through the tempstore repository.
+      return $this->layoutTempstoreRepository->get($section_storage);
     }
   }
 
