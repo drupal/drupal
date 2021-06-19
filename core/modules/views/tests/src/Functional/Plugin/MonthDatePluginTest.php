@@ -50,14 +50,10 @@ class MonthDatePluginTest extends ViewTestBase {
    */
   public function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
-    $utc = new \DateTimeZone('UTC');
-    $format = 'Y-m-d h:i:s';
-    $this->node1 = $this->drupalCreateNode([
-      'created' => \DateTime::createFromFormat($format, '2020-10-01 00:00:00', $utc)->getTimestamp(),
-    ]);
-    $this->node2 = $this->drupalCreateNode([
-      'created' => \DateTime::createFromFormat($format, '2020-11-01 00:00:00', $utc)->getTimestamp(),
-    ]);
+    $date1 = '2020-10-01 00:00:00';
+    $this->node1 = $this->drupalCreateNode(['created' => strtotime($date1)]);
+    $date2 = '2020-11-01 00:00:00';
+    $this->node2 = $this->drupalCreateNode(['created' => strtotime($date2)]);
   }
 
   /**
@@ -100,6 +96,32 @@ class MonthDatePluginTest extends ViewTestBase {
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextNotContains($this->node1->getTitle());
     $assert_session->pageTextNotContains($this->node2->getTitle());
+  }
+
+  /**
+   * Tests that dates and times are converted correctly.
+   */
+  public function testTimeZoneConversion() {
+    $assert_session = $this->assertSession();
+
+    // The timezone is set to Sydney (Australia). $date1 (in setUp()) and
+    // $date3 are in Standard time. $date2 and $date4 are in DST.
+    $date3 = '2020-09-30 23:59:59';
+    $node3 = $this->drupalCreateNode(['created' => strtotime($date3)]);
+    $date4 = '2020-10-31 23:59:59';
+    $node4 = $this->drupalCreateNode(['created' => strtotime($date4)]);
+
+    // Show all four dates for debugging purposes.
+    $this->drupalGet('test-month-date-plugin');
+
+    // Test that none of the dates has been shifted in/out of October by
+    // timezone conversions.
+    $this->drupalGet('test-month-date-plugin/10');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains($this->node1->getTitle());
+    $assert_session->pageTextNotContains($this->node2->getTitle());
+    $assert_session->pageTextNotContains($node3->getTitle());
+    $assert_session->pageTextContains($node4->getTitle());
   }
 
 }
