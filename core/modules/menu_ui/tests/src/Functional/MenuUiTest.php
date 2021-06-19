@@ -80,6 +80,9 @@ class MenuUiTest extends BrowserTestBase {
    */
   protected $items;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -331,8 +334,7 @@ class MenuUiTest extends BrowserTestBase {
     // <$menu_name>
     // - item1
     // -- item2
-    // --- item3
-
+    // --- item3.
     $this->assertMenuLink([
       'children' => [$item2->getPluginId(), $item3->getPluginId()],
       'parents' => [$item1->getPluginId()],
@@ -371,8 +373,7 @@ class MenuUiTest extends BrowserTestBase {
     // --- item3
     // - item4
     // -- item5
-    // -- item6
-
+    // -- item6.
     $this->assertMenuLink([
       'children' => [$item5->getPluginId(), $item6->getPluginId()],
       'parents' => [$item4->getPluginId()],
@@ -411,8 +412,7 @@ class MenuUiTest extends BrowserTestBase {
     // -- item5
     // --- item2
     // ---- item3
-    // -- item6
-
+    // -- item6.
     $this->assertMenuLink([
       'children' => [],
       'parents' => [$item1->getPluginId()],
@@ -493,7 +493,7 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
-   * Ensures that the proper default values are set when adding a menu link
+   * Ensures that the proper default values are set when adding a menu link.
    */
   protected function doMenuLinkFormDefaultsTest() {
     $this->drupalGet("admin/structure/menu/manage/tools/add");

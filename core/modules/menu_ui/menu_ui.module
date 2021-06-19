@@ -146,7 +146,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   $defaults = FALSE;
   if ($node->id()) {
     $id = FALSE;
-    // Give priority to the default menu
+    // Give priority to the default menu.
     $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
     if (in_array($menu_name, $type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
