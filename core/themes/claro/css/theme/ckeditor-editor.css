@@ -93,3 +93,9 @@
 [disabled] + .cke .cke_path_empty::after {
   content: none;
 }
+.ckeditor-buttons li a:focus {
+  outline: -webkit-focus-ring-color auto 1px;
+}
+.ckeditor-buttons li a:hover {
+  outline: -webkit-focus-ring-color auto 1px;
+}
