@@ -144,7 +144,6 @@
   border: 1px solid #a6a6a6;
   border-bottom-color: #979797;
   border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 1px 0 rgba(255, 255, 255, 0.15) inset;
 }
 .ckeditor-toolbar-disabled .ckeditor-buttons {
   border: 0;
