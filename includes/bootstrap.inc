@@ -330,6 +330,11 @@ abstract class DrupalCacheArray implements ArrayAccess {
   protected $bin;
 
   /**
+   * The cache object for the relevant cache bin.
+   */
+  protected $binObject;
+
+  /**
    * An array of keys to add to the cache at the end of the request.
    */
   protected $keysToPersist = array();
@@ -350,6 +355,7 @@ abstract class DrupalCacheArray implements ArrayAccess {
   public function __construct($cid, $bin) {
     $this->cid = $cid;
     $this->bin = $bin;
+    $this->binObject = cache_get_object($this->bin);
 
     if ($cached = cache_get($this->cid, $this->bin)) {
      $this->storage = $cached->data;

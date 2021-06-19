@@ -6,6 +6,19 @@
  */
 
 /**
+ * Provides a simple public API wrapper for _cache_get_object().
+ *
+ * @param $bin
+ *   The cache bin for which the cache object should be returned.
+ *
+ * @return DrupalCacheInterface
+ *   The cache object associated with the specified bin.
+ */
+function cache_get_object($bin) {
+  return _cache_get_object($bin);
+}
+
+/**
  * Gets the cache object for a cache bin.
  *
  * By default, this returns an instance of the DrupalDatabaseCache class.
@@ -323,6 +336,13 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
   protected $bin;
 
   /**
+   * The database connection.
+   *
+   * @var object
+   */
+  protected $connection;
+
+  /**
    * Constructs a DrupalDatabaseCache object.
    *
    * @param $bin
@@ -330,6 +350,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
    */
   function __construct($bin) {
     $this->bin = $bin;
+    $this->connection = \Database::getConnection();
   }
 
   /**
