@@ -34,7 +34,7 @@ class LayoutBuilderAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(SectionStorageInterface $section_storage, AccountInterface $account, Route $route) {
-    $section_storage_type = $route->getDefault('section_storage_type');
+    $section_storage_type = $route->getDefault('section_storage_type') ?? 'defaults';
 
     // Check if a section storage type mismatch has occurred.
     //
