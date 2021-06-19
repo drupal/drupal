@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * Tests error handling for theme hooks.
+ */
+class DrupalThemeErrorTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Drupal theme errors',
+      'description' => 'Tests error handling for theme hooks.',
+      'group' => 'Theme',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('theme_error_test');
+  }
+
+  /**
+   * Tests a template that triggers a fatal error.
+   */
+  public function testFatal() {
+    $this->drupalGet('theme-error-test/fatal-error');
+    $this->assertErrorPage(array(
+      '%type' => 'Error',
+      '!message' => 'Call to undefined function non_existing_function()',
+      '%function' => 'include()',
+      '%line' => 18,
+      '%file' => drupal_realpath(
+        'modules/simpletest/tests/theme_error_test/fatal-error-at-level.tpl.php'),
+    ));
+  }
+
+  /**
+   * Tests a template that throws an exception.
+   */
+  public function testException() {
+    $this->drupalGet('theme-error-test/exception');
+    $this->assertErrorPage(array(
+      '%type' => 'Exception',
+      '!message' => 'Exception in template.',
+      '%function' => 'include()',
+      '%line' => 17,
+      '%file' => drupal_realpath(
+        'modules/simpletest/tests/theme_error_test/exception-at-level.tpl.php'),
+    ));
+  }
+
+  /**
+   * Asserts that the response is an error page as expected.
+   *
+   * @param string[] $replacements
+   *   Text replacements for expected error message.
+   */
+  protected function assertErrorPage(array $replacements) {
+    $this->assertNoLeadingJunkHtml();
+    $this->assertErrorHeader();
+    $this->assertErrorMessage($replacements);
+  }
+
+  /**
+   * Asserts that the page seems like valid html.
+   */
+  protected function assertNoLeadingJunkHtml() {
+    $content = $this->drupalGetContent();
+    $this->assertIdentical(
+      substr($content, 0, 9),
+      '<!DOCTYPE',
+      'No leading junk html.');
+  }
+
+  /**
+   * Asserts that an error header is present.
+   */
+  protected function assertErrorHeader() {
+    $this->assertTrue(
+      strpos(
+        $this->drupalGetHeader(':status'),
+        '500 Service unavailable (with message)'),
+      'Received expected HTTP status line.');
+  }
+
+  /**
+   * Asserts that the error message is found.
+   *
+   * @param string[] $replacements
+   *   Text replacements for expected error message.
+   */
+  function assertErrorMessage(array $replacements) {
+    $message = t('%type: !message in %function (line ', $replacements);
+    $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
+  }
+
+}
+
