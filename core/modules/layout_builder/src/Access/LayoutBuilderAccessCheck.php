@@ -6,7 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
+use Drupal\layout_builder\DefaultsSectionStorageInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\Routing\Route;
 
@@ -44,7 +44,7 @@ class LayoutBuilderAccessCheck implements AccessInterface {
     //
     // The mismatch serves as both a useful sentinel to deny access to this
     // route, and also a delivery mechanism for the associated display.
-    if ($section_storage instanceof DefaultsSectionStorage && $section_storage_type !== 'defaults') {
+    if ($section_storage instanceof DefaultsSectionStorageInterface && $section_storage_type !== 'defaults') {
       // Forbid access to this route until the associated display is updated.
       $access = AccessResult::forbidden();
       $access->addCacheableDependency($section_storage);

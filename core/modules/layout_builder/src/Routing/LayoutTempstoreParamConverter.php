@@ -4,7 +4,7 @@ namespace Drupal\layout_builder\Routing;
 
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
-use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -56,21 +56,18 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
     // Load an empty instance and derive the available contexts.
     $contexts = $this->sectionStorageManager->loadEmpty($type)->deriveContextsFromRoute($value, $definition, $name, $defaults);
     // Attempt to load a full instance based on the context.
-    if ($section_storage = $this->sectionStorageManager->load($type, $contexts)) {
-      // Ensure that all context values pass validation.
-      if (($violations = $section_storage->validateContexts()) && !$violations->count()) {
-        // Pass the plugin through the tempstore repository.
-        return $this->layoutTempstoreRepository->get($section_storage);
-      }
+    if (($section_storage = $this->sectionStorageManager->load($type, $contexts)) && $section_storage->isApplicable($cacheability)) {
+      // Pass the plugin through the tempstore repository.
+      return $this->layoutTempstoreRepository->get($section_storage);
     }
 
-    // If the section storage plugin fails validation, load the defaults section
+    // If the section storage plugin isn't applicable, load the defaults section
     // storage to trigger a type mismatch in the access check.
     //
     // @see \Drupal\layout_builder\Access\LayoutBuilderAccessCheck::access()
-    if ($section_storage instanceof OverridesSectionStorage && $section_storage = $section_storage->getDefaultSectionStorage()) {
+    if ($section_storage instanceof OverridesSectionStorageInterface) {
       // Pass the plugin through the tempstore repository.
-      return $this->layoutTempstoreRepository->get($section_storage);
+      return $this->layoutTempstoreRepository->get($section_storage->getDefaultSectionStorage());
     }
   }
 
