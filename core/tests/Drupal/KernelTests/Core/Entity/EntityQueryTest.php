@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
@@ -1297,6 +1298,27 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $this->assertCount(1, $result);
     $this->assertEquals($entity->id(), reset($result));
+  }
+
+  /**
+   * Tests toSqlQuery().
+   */
+  public function testToSqlQuery() {
+    $query = $this->storage->getQuery();
+    $group_blue = $query->andConditionGroup()->condition("{$this->figures}.color", ['blue'], 'IN');
+    $group_red = $query->andConditionGroup()->condition("{$this->figures}.color", ['red'], 'IN');
+    $null_group = $query->andConditionGroup()->notExists("{$this->figures}.color");
+
+    $entity_query_string = (string) $query;
+
+    $sql_query = $query->toSqlQuery();
+    $this->assertTrue($sql_query instanceof SelectInterface);
+
+    $sql_query_string = (string) $sql_query;
+    // Apply table prefixes to the SQL query string.
+    $sql_query_string = \Drupal::database()->prefixTables($sql_query_string);
+
+    $this->assertEquals($entity_query_string, $sql_query_string);
   }
 
   /**
