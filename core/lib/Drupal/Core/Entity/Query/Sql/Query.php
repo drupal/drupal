@@ -84,6 +84,26 @@ class Query extends QueryBase implements QueryInterface {
   }
 
   /**
+   * Converts this entity query to an SQL select query.
+   *
+   * Note that once this method has been called, the original entity query may
+   * *not* be executed. The returned SQL select query should be executed
+   * instead.
+   *
+   * @return \Drupal\Core\Database\Query\SelectInterface
+   *   The SQL select query.
+   */
+  public function toSqlQuery() {
+    $this
+      ->prepare()
+      ->compile()
+      ->addSort()
+      ->finish();
+
+    return $this->sqlQuery;
+  }
+
+  /**
    * Prepares the basic query with proper metadata/tags and base fields.
    *
    * @return $this
