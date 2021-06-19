@@ -7,6 +7,7 @@ use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Selector\Xpath\Escaper;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\AssertLegacyTrait as BaseAssertLegacyTrait;
 
 /**
@@ -386,6 +387,9 @@ trait AssertLegacyTrait {
     if (func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
+    if ($raw instanceof TranslatableMarkup) {
+      @trigger_error('Passing TranslatableMarkup objects to AssertLegacyTrait::assertRaw() is deprecated in drupal:9.1.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    }
     $this->assertSession()->responseContains($raw);
   }
 
@@ -406,6 +410,9 @@ trait AssertLegacyTrait {
     @trigger_error('AssertLegacyTrait::assertNoRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     if (func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertNoRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    }
+    if ($raw instanceof TranslatableMarkup) {
+      @trigger_error('Passing TranslatableMarkup objects to AssertLegacyTrait::assertNoRaw() is deprecated in drupal:9.1.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
     $this->assertSession()->responseNotContains($raw);
   }

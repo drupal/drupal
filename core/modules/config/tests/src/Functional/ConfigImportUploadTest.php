@@ -60,7 +60,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
     $directory = Settings::get('config_sync_directory');
     \Drupal::service('file_system')->chmod($directory, 0555);
     $this->drupalGet('admin/config/development/configuration/full/import');
-    $this->assertRaw(t('The directory %directory is not writable.', ['%directory' => $directory]));
+    $this->assertSession()->pageTextContains("The directory $directory is not writable.");
     // Ensure submit button for \Drupal\config\Form\ConfigImportForm is
     // disabled.
     $submit_is_disabled = $this->cssSelect('form.config-import-form input[type="submit"]:disabled');

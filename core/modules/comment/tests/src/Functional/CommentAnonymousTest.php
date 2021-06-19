@@ -80,9 +80,7 @@ class CommentAnonymousTest extends CommentTestBase {
     ];
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('The name you used (%name) belongs to a registered user.', [
-      '%name' => $this->adminUser->getAccountName(),
-    ]));
+    $this->assertSession()->pageTextContains('The name you used (' . $this->adminUser->getAccountName() . ') belongs to a registered user.');
 
     // Allow contact info.
     $this->drupalLogin($this->adminUser);
@@ -114,9 +112,7 @@ class CommentAnonymousTest extends CommentTestBase {
     ];
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('The name you used (%name) belongs to a registered user.', [
-      '%name' => $this->adminUser->getAccountName(),
-    ]));
+    $this->assertSession()->pageTextContains('The name you used (' . $this->adminUser->getAccountName() . ') belongs to a registered user.');
 
     // Require contact info.
     $this->drupalLogin($this->adminUser);

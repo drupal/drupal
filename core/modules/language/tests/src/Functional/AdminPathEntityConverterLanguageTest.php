@@ -39,12 +39,12 @@ class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('es/admin/language_test/entity_using_current_language/es');
-    $this->assertNoRaw(t('Loaded %label.', ['%label' => 'Spanish']));
-    $this->assertRaw(t('Loaded %label.', ['%label' => 'Español']));
+    $this->assertNoRaw((string) t('Loaded %label.', ['%label' => 'Spanish']));
+    $this->assertRaw((string) t('Loaded %label.', ['%label' => 'Español']));
 
     $this->drupalGet('es/admin/language_test/entity_using_original_language/es');
-    $this->assertRaw(t('Loaded %label.', ['%label' => 'Spanish']));
-    $this->assertNoRaw(t('Loaded %label.', ['%label' => 'Español']));
+    $this->assertRaw((string) t('Loaded %label.', ['%label' => 'Spanish']));
+    $this->assertNoRaw((string) t('Loaded %label.', ['%label' => 'Español']));
   }
 
 }

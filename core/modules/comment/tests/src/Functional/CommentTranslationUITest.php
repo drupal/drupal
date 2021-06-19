@@ -235,7 +235,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
           '@title' => $entity->getTranslation($langcode)->label(),
           '%language' => $languages[$langcode]->getName(),
         ]);
-        $this->assertRaw($title);
+        $this->assertRaw((string) $title);
       }
     }
   }

@@ -99,7 +99,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function deleteFeed(FeedInterface $feed) {
     $this->drupalGet('aggregator/sources/' . $feed->id() . '/delete');
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The feed %title has been deleted.', ['%title' => $feed->label()]));
+    $this->assertSession()->pageTextContains('The feed ' . $feed->label() . ' has been deleted.');
   }
 
   /**
@@ -222,7 +222,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function deleteFeedItems(FeedInterface $feed) {
     $this->drupalGet('admin/config/services/aggregator/delete/' . $feed->id());
     $this->submitForm([], 'Delete items');
-    $this->assertRaw(t('The news items from %title have been deleted.', ['%title' => $feed->label()]));
+    $this->assertSession()->pageTextContains('The news items from ' . $feed->label() . ' have been deleted.');
   }
 
   /**

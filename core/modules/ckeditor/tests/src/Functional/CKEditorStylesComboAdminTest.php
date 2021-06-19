@@ -95,7 +95,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
       'editor[settings][plugins][stylescombo][styles]' => "h1.title|Title\np.callout|Title\n\n",
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(t('Each style must have a unique label.'));
+    $this->assertSession()->pageTextContains('Each style must have a unique label.');
     $editor = Editor::load($this->format);
     $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
   }

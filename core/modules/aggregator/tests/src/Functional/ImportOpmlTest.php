@@ -63,7 +63,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $edit = [];
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->submitForm($edit, 'Import');
-    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
+    $this->assertSession()->pageTextContains('Either upload a file or enter a URL.');
 
     $path = $this->getEmptyOpml();
     $edit = [
@@ -72,7 +72,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     ];
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->submitForm($edit, 'Import');
-    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
+    $this->assertSession()->pageTextContains('Either upload a file or enter a URL.');
 
     // Error if the URL is invalid.
     $edit = ['remote' => 'invalidUrl://empty'];
@@ -120,9 +120,9 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->submitForm($edit, 'Import');
     // Verify that a duplicate URL was identified.
-    $this->assertRaw(t('A feed with the URL %url already exists.', ['%url' => $feeds[0]['url[0][value]']]));
+    $this->assertSession()->pageTextContains('A feed with the URL ' . $feeds[0]['url[0][value]'] . ' already exists.');
     // Verify that a duplicate title was identified.
-    $this->assertRaw(t('A feed named %title already exists.', ['%title' => $feeds[1]['title[0][value]']]));
+    $this->assertSession()->pageTextContains('A feed named ' . $feeds[1]['title[0][value]'] . ' already exists.');
 
     $after = $count_query->execute();
     $this->assertEquals(2, $after, 'Verifying that two distinct feeds were added.');
