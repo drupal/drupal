@@ -7,6 +7,7 @@ use Drupal\layout_builder\Routing\LayoutTempstoreParamConverter;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutTempstoreParamConverter
@@ -24,6 +25,8 @@ class LayoutTempstoreParamConverterTest extends UnitTestCase {
     $converter = new LayoutTempstoreParamConverter($layout_tempstore_repository->reveal(), $section_storage_manager->reveal());
 
     $section_storage = $this->prophesize(SectionStorageInterface::class);
+    $violations = $this->prophesize(ConstraintViolationList::class);
+    $violations->count()->willReturn(0);
 
     $value = 'some_value';
     $definition = ['layout_builder_tempstore' => TRUE];
@@ -35,6 +38,7 @@ class LayoutTempstoreParamConverterTest extends UnitTestCase {
     $section_storage_manager->loadEmpty('my_type')->willReturn($section_storage->reveal());
     $section_storage->deriveContextsFromRoute($value, $definition, $name, $defaults)->willReturn([]);
     $section_storage_manager->load('my_type', [])->willReturn($section_storage->reveal());
+    $section_storage->validateContexts()->willReturn($violations->reveal());
 
     $layout_tempstore_repository->get($section_storage->reveal())->willReturn($expected);
 
