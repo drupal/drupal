@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -117,8 +118,8 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $node_revision = NULL) {
-    $this->revision = $this->nodeStorage->loadRevision($node_revision);
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node_revision = NULL) {
+    $this->revision = $node_revision;
     $form = parent::buildForm($form, $form_state);
 
     return $form;

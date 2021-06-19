@@ -28,7 +28,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that migrated view modes can be loaded using D8 API's.
+   * Tests that migrated view modes can be loaded using D8 API's.
    */
   public function testWidgetSettings() {
     // Test the config can be loaded.

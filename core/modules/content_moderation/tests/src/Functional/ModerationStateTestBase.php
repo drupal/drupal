@@ -138,7 +138,8 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     $this->drupalGet('/admin/config/workflow/workflows');
     $this->assertSession()->linkByHrefExists('admin/config/workflow/workflows/manage/' . $workflow_id);
     $edit['bundles[' . $content_type_id . ']'] = TRUE;
-    $this->drupalPostForm('admin/config/workflow/workflows/manage/' . $workflow_id . '/type/node', $edit, 'Save');
+    $this->drupalGet('admin/config/workflow/workflows/manage/' . $workflow_id . '/type/node');
+    $this->submitForm($edit, 'Save');
     // Ensure the parent environment is up-to-date.
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
@@ -158,7 +159,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    */
   protected function grantUserPermissionToCreateContentOfType(AccountInterface $account, $content_type_id) {
     $role_ids = $account->getRoles(TRUE);
-    /* @var \Drupal\user\RoleInterface $role */
+    /** @var \Drupal\user\RoleInterface $role */
     $role_id = reset($role_ids);
     $role = Role::load($role_id);
     $role->grantPermission(sprintf('create %s content', $content_type_id));

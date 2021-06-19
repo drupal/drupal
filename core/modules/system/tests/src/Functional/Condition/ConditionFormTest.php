@@ -41,9 +41,9 @@ class ConditionFormTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('bundles[page]');
     $this->submitForm(['bundles[page]' => 'page', 'bundles[article]' => 'article'], 'Submit');
     // @see \Drupal\condition_test\FormController::submitForm()
-    $this->assertText('Bundle: page');
-    $this->assertText('Bundle: article');
-    $this->assertText('Executed successfully.');
+    $this->assertSession()->pageTextContains('Bundle: page');
+    $this->assertSession()->pageTextContains('Bundle: article');
+    $this->assertSession()->pageTextContains('Executed successfully.');
   }
 
 }

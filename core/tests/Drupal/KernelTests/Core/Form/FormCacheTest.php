@@ -58,9 +58,9 @@ class FormCacheTest extends KernelTestBase {
 
     $cached_form_state = new FormState();
     $cached_form = \Drupal::formBuilder()->getCache($this->formBuildId, $cached_form_state);
-    $this->assertEqual($this->form['#property'], $cached_form['#property']);
+    $this->assertEquals($this->form['#property'], $cached_form['#property']);
     $this->assertNotEmpty($cached_form['#cache_token'], 'Form has a cache token');
-    $this->assertEqual($this->formState->get('example'), $cached_form_state->get('example'));
+    $this->assertEquals($this->formState->get('example'), $cached_form_state->get('example'));
 
     // Test that the form cache isn't loaded when the session/token has changed.
     // Change the private key. (We cannot change the session ID because this
@@ -93,9 +93,9 @@ class FormCacheTest extends KernelTestBase {
 
     $cached_form_state = new FormState();
     $cached_form = \Drupal::formBuilder()->getCache($this->formBuildId, $cached_form_state);
-    $this->assertEqual($this->form['#property'], $cached_form['#property']);
+    $this->assertEquals($this->form['#property'], $cached_form['#property']);
     $this->assertTrue(empty($cached_form['#cache_token']), 'Form has no cache token');
-    $this->assertEqual($this->formState->get('example'), $cached_form_state->get('example'));
+    $this->assertEquals($this->formState->get('example'), $cached_form_state->get('example'));
 
     // Restore user account.
     $account_switcher->switchBack();

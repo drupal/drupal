@@ -99,7 +99,7 @@ class FileSystemTest extends UnitTestCase {
 
     $this->assertFileExists($uri);
     $this->fileSystem->unlink($uri);
-    $this->assertFileNotExists($uri);
+    $this->assertFileDoesNotExist($uri);
   }
 
   /**

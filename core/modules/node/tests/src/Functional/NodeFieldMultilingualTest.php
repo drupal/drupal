@@ -48,13 +48,15 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Set "Basic page" content type to use multilingual support.
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save content type');
     $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
 
     // Make node body translatable.
@@ -78,7 +80,8 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $edit = [];
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -128,7 +131,8 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $edit = [];
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);

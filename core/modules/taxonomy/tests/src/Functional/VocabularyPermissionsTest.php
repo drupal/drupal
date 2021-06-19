@@ -60,7 +60,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test the vocabulary overview permission.
+   * Tests the vocabulary overview permission.
    */
   public function testTaxonomyVocabularyOverviewPermissions() {
     // Create two vocabularies, one with two terms, the other without any term.
@@ -243,7 +243,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $edit['name[0][value]'] = $this->randomMachineName();
 
     $this->submitForm($edit, 'Save');
-    $this->assertText('Created new term ' . $edit['name[0][value]'] . '.');
+    $this->assertSession()->pageTextContains('Created new term ' . $edit['name[0][value]'] . '.');
 
     // Verify that the creation message contains a link to a term.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');
@@ -256,11 +256,11 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     // Edit the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($edit['name[0][value]']);
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
 
     $edit['name[0][value]'] = $this->randomMachineName();
     $this->submitForm($edit, 'Save');
-    $this->assertText('Updated term ' . $edit['name[0][value]'] . '.');
+    $this->assertSession()->pageTextContains('Updated term ' . $edit['name[0][value]'] . '.');
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
@@ -313,11 +313,11 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     // Edit the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($term->getName());
+    $this->assertSession()->pageTextContains($term->getName());
 
     $edit['name[0][value]'] = $this->randomMachineName();
     $this->submitForm($edit, 'Save');
-    $this->assertText('Updated term ' . $edit['name[0][value]'] . '.');
+    $this->assertSession()->pageTextContains('Updated term ' . $edit['name[0][value]'] . '.');
 
     // Verify that the update message contains a link to a term.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');

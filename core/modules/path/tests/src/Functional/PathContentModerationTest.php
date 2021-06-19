@@ -56,7 +56,8 @@ class PathContentModerationTest extends BrowserTestBase {
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Enable translation for moderated node.
     $edit = [
@@ -66,7 +67,8 @@ class PathContentModerationTest extends BrowserTestBase {
       'settings[node][moderated][fields][body]' => 1,
       'settings[node][moderated][settings][language][language_alterable]' => 1,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
     \Drupal::entityTypeManager()->clearCachedDefinitions();
   }
 
@@ -171,7 +173,8 @@ class PathContentModerationTest extends BrowserTestBase {
       'moderation_state[0][state]' => 'draft',
       'path[0][alias]' => '/' . $this->randomMachineName(),
     ];
-    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation_draft_with_alias, 'Save (this translation)');
+    $this->drupalGet('fr/node/' . $default_node->id() . '/edit');
+    $this->submitForm($edit_new_translation_draft_with_alias, 'Save (this translation)');
     // Confirm the expected error.
     $this->assertSession()->pageTextContains('You can only change the URL alias for the published version of this content.');
 
@@ -180,7 +183,8 @@ class PathContentModerationTest extends BrowserTestBase {
       'body[0][value]' => $this->randomMachineName(),
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation_draft, 'Save (this translation)');
+    $this->drupalGet('fr/node/' . $default_node->id() . '/edit');
+    $this->submitForm($edit_new_translation_draft, 'Save (this translation)');
     // Confirm that the new draft revision was created.
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
     $this->assertSession()->pageTextContains($edit_new_translation_draft['body[0][value]']);
@@ -192,7 +196,8 @@ class PathContentModerationTest extends BrowserTestBase {
       'moderation_state[0][state]' => 'draft',
       'path[0][alias]' => $default_node->path->alias,
     ];
-    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation_draft_with_defaults_alias, 'Save (this translation)');
+    $this->drupalGet('fr/node/' . $default_node->id() . '/edit');
+    $this->submitForm($edit_new_translation_draft_with_defaults_alias, 'Save (this translation)');
     // Verify the expected error.
     $this->assertSession()->pageTextContains('You can only change the URL alias for the published version of this content.');
 
@@ -203,7 +208,8 @@ class PathContentModerationTest extends BrowserTestBase {
       'moderation_state[0][state]' => 'draft',
       'path[0][alias]' => '',
     ];
-    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation_draft_empty_alias, 'Save (this translation)');
+    $this->drupalGet('fr/node/' . $default_node->id() . '/edit');
+    $this->submitForm($edit_new_translation_draft_empty_alias, 'Save (this translation)');
     // Confirm the expected error.
     $this->assertSession()->pageTextContains('You can only change the URL alias for the published version of this content.');
 
@@ -214,7 +220,8 @@ class PathContentModerationTest extends BrowserTestBase {
       'moderation_state[0][state]' => 'published',
       'path[0][alias]' => '/' . $this->randomMachineName(),
     ];
-    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation, 'Save (this translation)');
+    $this->drupalGet('fr/node/' . $default_node->id() . '/edit');
+    $this->submitForm($edit_new_translation, 'Save (this translation)');
     // Confirm that the new published revision was created.
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
     $this->assertSession()->pageTextContains($edit_new_translation['body[0][value]']);

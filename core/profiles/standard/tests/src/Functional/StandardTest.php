@@ -59,7 +59,7 @@ class StandardTest extends BrowserTestBase {
     ], 'Save block');
     // Verify admin user can see the block.
     $this->drupalGet('');
-    $this->assertText('Main navigation');
+    $this->assertSession()->pageTextContains('Main navigation');
 
     // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
@@ -67,7 +67,7 @@ class StandardTest extends BrowserTestBase {
 
     // Verify anonymous user can see the block.
     $this->drupalLogout();
-    $this->assertText('Main navigation');
+    $this->assertSession()->pageTextContains('Main navigation');
 
     // Ensure comments don't show in the front page RSS feed.
     // Create an article.
@@ -90,7 +90,7 @@ class StandardTest extends BrowserTestBase {
     ], 'Save');
     // Fetch the feed.
     $this->drupalGet('rss.xml');
-    $this->assertText('Foobar');
+    $this->assertSession()->responseContains('Foobar');
     $this->assertNoText('Then she picked out two somebodies, Sally and me');
 
     // Ensure block body exists.
@@ -130,7 +130,7 @@ class StandardTest extends BrowserTestBase {
     /** @var \Drupal\contact\ContactFormInterface $contact_form */
     $contact_form = ContactForm::load('feedback');
     $recipients = $contact_form->getRecipients();
-    $this->assertEqual(['simpletest@example.com'], $recipients);
+    $this->assertEquals(['simpletest@example.com'], $recipients);
 
     $role = Role::create([
       'id' => 'admin_theme',
@@ -148,7 +148,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet('update.php/selection');
     $this->updateRequirementsProblem();
     $this->drupalGet('update.php/selection');
-    $this->assertText('No pending updates.');
+    $this->assertSession()->pageTextContains('No pending updates.');
 
     // Ensure that there are no pending entity updates after installation.
     $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
@@ -165,10 +165,10 @@ class StandardTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['responsive_image']);
     $this->rebuildContainer();
     $this->drupalGet('admin/config/media/image-styles');
-    $this->assertText('Max 325x325');
-    $this->assertText('Max 650x650');
-    $this->assertText('Max 1300x1300');
-    $this->assertText('Max 2600x2600');
+    $this->assertSession()->pageTextContains('Max 325x325');
+    $this->assertSession()->pageTextContains('Max 650x650');
+    $this->assertSession()->pageTextContains('Max 1300x1300');
+    $this->assertSession()->pageTextContains('Max 2600x2600');
 
     // Verify certain routes' responses are cacheable by Dynamic Page Cache, to
     // ensure these responses are very fast for authenticated users.
@@ -211,14 +211,14 @@ class StandardTest extends BrowserTestBase {
     $this->adminUser->save();
     $this->rebuildContainer();
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial');
-    $this->assertText('Draft');
-    $this->assertText('Published');
-    $this->assertText('Archived');
-    $this->assertText('Create New Draft');
-    $this->assertText('Publish');
-    $this->assertText('Archive');
-    $this->assertText('Restore to Draft');
-    $this->assertText('Restore');
+    $this->assertSession()->pageTextContains('Draft');
+    $this->assertSession()->pageTextContains('Published');
+    $this->assertSession()->pageTextContains('Archived');
+    $this->assertSession()->pageTextContains('Create New Draft');
+    $this->assertSession()->pageTextContains('Publish');
+    $this->assertSession()->pageTextContains('Archive');
+    $this->assertSession()->pageTextContains('Restore to Draft');
+    $this->assertSession()->pageTextContains('Restore');
 
     \Drupal::service('module_installer')->install(['media']);
     $role = Role::create([

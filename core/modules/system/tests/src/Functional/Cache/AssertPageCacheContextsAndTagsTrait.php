@@ -88,7 +88,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
-    $this->assertEqual($expected_tags, $cache_entry->tags);
+    $this->assertEquals($expected_tags, $cache_entry->tags);
   }
 
   /**

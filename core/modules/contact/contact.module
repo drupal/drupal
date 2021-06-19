@@ -44,7 +44,7 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_alter().
  */
 function contact_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['user']->setLinkTemplate('contact-form', '/user/{user}/contact');
 }
 
@@ -116,7 +116,7 @@ function contact_menu_local_tasks_alter(&$data, $route_name) {
  */
 function contact_mail($key, &$message, $params) {
   $contact_message = $params['contact_message'];
-  /** @var $sender \Drupal\user\UserInterface */
+  /** @var \Drupal\user\UserInterface $sender */
   $sender = $params['sender'];
   $language = \Drupal::languageManager()->getLanguage($message['langcode']);
 

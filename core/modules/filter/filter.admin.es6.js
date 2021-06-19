@@ -26,7 +26,9 @@
             .closest('tr');
           // Retrieve the vertical tab belonging to this filter.
           const $filterSettings = $context.find(
-            `#${$checkbox.attr('id').replace(/-status$/, '-settings')}`,
+            `[data-drupal-selector='${$checkbox
+              .attr('id')
+              .replace(/-status$/, '-settings')}']`,
           );
           const filterSettingsTab = $filterSettings.data('verticalTab');
 
