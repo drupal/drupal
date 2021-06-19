@@ -139,6 +139,9 @@ views_block:
     views_label:
       type: label
       label: 'Title'
+    offset:
+      type: integer
+      label: 'Offset'      
     items_per_page:
       type: string
       label: 'Items per block'

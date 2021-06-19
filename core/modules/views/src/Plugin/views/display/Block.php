@@ -106,6 +106,7 @@ class Block extends DisplayPluginBase {
     $options['allow'] = [
       'contains' => [
         'items_per_page' => ['default' => 'items_per_page'],
+        'offset' => ['default' => 'offset'],
       ],
     ];
 
@@ -126,6 +127,7 @@ class Block extends DisplayPluginBase {
    */
   public function blockSettings(array $settings) {
     $settings['items_per_page'] = 'none';
+    $settings['offset'] = 'none';
     return $settings;
   }
 
@@ -244,6 +246,7 @@ class Block extends DisplayPluginBase {
 
         $options = [
           'items_per_page' => $this->t('Items per page'),
+          'offset' => $this->t('Offset'),
         ];
 
         $allow = array_filter($this->getOption('allow'));
@@ -322,6 +325,29 @@ class Block extends DisplayPluginBase {
             '#default_value' => $block_configuration['items_per_page'],
           ];
           break;
+        case 'offset':
+          $form['override']['offset'] = array(
+            '#type' => 'select',
+            '#title' => $this->t('Offset'),
+            '#options' => array(
+              'none' => $this->t('@count (default setting)', array('@count' => $this->getPlugin('pager')->getOffset())),
+              0 => 0,
+              1 => 1,
+              2 => 2,
+              3 => 3,
+              4 => 4,
+              5 => 5,
+              6 => 6,
+              10 => 10,
+              12 => 12,
+              20 => 20,
+              24 => 24,
+              40 => 40,
+              48 => 48,
+            ),
+            '#default_value' => !empty($block_configuration['offset']) ? $block_configuration['offset'] : 'none',
+          );
+          break;
       }
     }
 
@@ -360,6 +386,10 @@ class Block extends DisplayPluginBase {
       $block->setConfigurationValue('items_per_page', $items_per_page);
     }
     $form_state->unsetValue(['override', 'items_per_page']);
+    if ($offset = $form_state->getValue(array('override', 'offset'))) {
+      $block->setConfigurationValue('offset', $offset);
+    }
+    $form_state->unsetValue(array('override', 'offset'));
   }
 
   /**
@@ -372,6 +402,9 @@ class Block extends DisplayPluginBase {
     $config = $block->getConfiguration();
     if ($config['items_per_page'] !== 'none') {
       $this->view->setItemsPerPage($config['items_per_page']);
+    }
+    if (!empty($config['offset']) && $config['offset'] !== 'none') {
+      $this->view->setOffset($config['offset']);
     }
   }
 
