@@ -916,6 +916,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
 
     // Use the bare HTML page renderer to render our links.
+    /** @var \Drupal\Core\Render\BareHtmlPageRenderer $renderer */
     $renderer = $this->container->get('bare_html_page_renderer');
     $response = $renderer->renderBarePage($elements, '', 'maintenance_page');
 
