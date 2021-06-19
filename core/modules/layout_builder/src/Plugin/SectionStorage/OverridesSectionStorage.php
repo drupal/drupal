@@ -167,7 +167,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     $contexts = [];
 
     if ($entity = $this->extractEntityFromRoute($value, $defaults)) {
-      $contexts['entity'] = EntityContext::fromEntity($entity);
+      $contexts['entity'] = EntityContext::createFromContext($this->getContext('entity'), $entity);
       // @todo Expand to work for all view modes in
       //   https://www.drupal.org/node/2907413.
       $view_mode = 'full';
