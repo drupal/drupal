@@ -56,6 +56,18 @@
  * settings.php, you can create a services.yml file in the same directory to
  * register custom, site-specific service definitions and/or swap out default
  * implementations with custom ones.
+ *
+ * Including other settings files with `require` or `include` is supported:
+ *
+ * @code
+ * include 'some_settings.php';
+ * @endcode
+ *
+ * However the use of `require_once` and `include_once` is discouraged:
+ *
+ * @code
+ * include_once 'some_settings.php';
+ * @endcode
  */
 
 /**
