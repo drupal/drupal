@@ -2,6 +2,7 @@
 
 namespace Drupal\user_batch_action_test\Plugin\Action;
 
+use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -55,7 +56,8 @@ class BatchUserAction extends ActionBase {
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    return TRUE;
+    $access = new AccessResultAllowed();
+    return $return_as_object ? $access : $access->isAllowed();
   }
 
   /**

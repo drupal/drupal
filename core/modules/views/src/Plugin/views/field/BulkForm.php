@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -392,12 +393,21 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
           continue;
         }
         // Skip execution if the user did not have access.
-        if (!$action->getPlugin()->access($entity, $this->view->getUser())) {
-          $this->messenger->addError($this->t('No access to execute %action on the @entity_type_label %entity_label.', [
+        $access_result = $action->getPlugin()->access($entity, $this->view->getUser(), TRUE);
+        if (!$access_result->isAllowed()) {
+          $message = $this->t('No access to execute %action on the @entity_type_label %entity_label.', [
             '%action' => $action->label(),
             '@entity_type_label' => $entity->getEntityType()->getLabel(),
             '%entity_label' => $entity->label(),
-          ]));
+          ]);
+          // Append the reason if one is provided.
+          if ($access_result instanceof AccessResultReasonInterface) {
+            $reason = $access_result->getReason();
+            if (!empty($reason)) {
+              $message .= ': ' . $reason;
+            }
+          }
+          $this->messenger->addError($message);
           continue;
         }
 
