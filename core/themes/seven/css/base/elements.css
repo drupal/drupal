@@ -11,9 +11,9 @@ a,
   text-decoration: none;
   color: #0074bd;
 }
-a:hover,
+a:not([role="button"]):hover,
 .link:hover,
-a:focus,
+a:not([role="button"]):focus,
 .link:focus {
   text-decoration: underline;
   outline: 0;
