@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Routing;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
@@ -56,7 +57,7 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
     // Load an empty instance and derive the available contexts.
     $contexts = $this->sectionStorageManager->loadEmpty($type)->deriveContextsFromRoute($value, $definition, $name, $defaults);
     // Attempt to load a full instance based on the context.
-    if (($section_storage = $this->sectionStorageManager->load($type, $contexts)) && $section_storage->isApplicable($cacheability)) {
+    if (($section_storage = $this->sectionStorageManager->load($type, $contexts)) && $section_storage->isApplicable(new CacheableMetadata())) {
       // Pass the plugin through the tempstore repository.
       return $this->layoutTempstoreRepository->get($section_storage);
     }
