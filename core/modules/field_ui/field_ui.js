@@ -43,9 +43,47 @@
   };
   Drupal.fieldUIOverview = {
     attach: function attach(table, rowsData, rowHandlers) {
-      var tableDrag = Drupal.tableDrag[table.id];
-      tableDrag.onDrop = this.onDrop;
-      tableDrag.row.prototype.onSwap = this.onSwap;
+      var tableDrag = Drupal.TableDrag.instances[table.id];
+
+      tableDrag.onDrop = function () {
+        var row = this.rowObject.element;
+        var $row = $(row);
+        var rowHandler = row.rowHandler;
+
+        if (typeof rowHandler !== 'undefined') {
+          var regionRow = $row.prevAll('tr.region-message').get(0);
+          var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+
+          if (region !== rowHandler.region) {
+            var refreshRows = rowHandler.regionChange(region);
+            rowHandler.region = region;
+            Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+          }
+        }
+      };
+
+      tableDrag.onSwap = function (draggedRow) {
+        var _this = this;
+
+        this.table.querySelectorAll('tr.region-message').forEach(function (row) {
+          if (Drupal.TableDrag.previous(row, 'tr') === _this.group[_this.group.length - 1]) {
+            if (_this.method !== 'keyboard' || _this.direction === 'down') {
+              _this.swap('afterEnd', row);
+            }
+          }
+
+          var nextRow = Drupal.TableDrag.next(row, 'tr');
+
+          if (typeof nextRow === 'undefined' || !nextRow.matches('draggable')) {
+            row.classList.remove('region-populated');
+            row.classList.add('region-empty');
+          } else if (row.matches('.region-empty')) {
+              row.classList.remove('region-empty');
+              row.classList.add('region-populated');
+            }
+        });
+      };
+
       $(table).find('tr.draggable').each(function () {
         var row = this;
 
@@ -53,6 +91,7 @@
           var data = rowsData[row.id];
           data.tableDrag = tableDrag;
           var rowHandler = new rowHandlers[data.rowHandler](row, data);
+          row.rowHandler = rowHandler;
           $(row).data('fieldUIRowHandler', rowHandler);
         }
       });
@@ -60,7 +99,7 @@
     onChange: function onChange() {
       var $trigger = $(this);
       var $row = $trigger.closest('tr');
-      var rowHandler = $row.data('fieldUIRowHandler');
+      var rowHandler = $row[0].rowHandler;
       var refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
       var region = rowHandler.getRegion();
@@ -72,41 +111,6 @@
       }
 
       Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
-    },
-    onDrop: function onDrop() {
-      var dragObject = this;
-      var row = dragObject.rowObject.element;
-      var $row = $(row);
-      var rowHandler = $row.data('fieldUIRowHandler');
-
-      if (typeof rowHandler !== 'undefined') {
-        var regionRow = $row.prevAll('tr.region-message').get(0);
-        var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-
-        if (region !== rowHandler.region) {
-          var refreshRows = rowHandler.regionChange(region);
-          rowHandler.region = region;
-          Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
-        }
-      }
-    },
-    onSwap: function onSwap(draggedRow) {
-      var rowObject = this;
-      $(rowObject.table).find('tr.region-message').each(function () {
-        var $this = $(this);
-
-        if ($this.prev('tr').get(0) === rowObject.group[rowObject.group.length - 1]) {
-          if (rowObject.method !== 'keyboard' || rowObject.direction === 'down') {
-            rowObject.swap('after', this);
-          }
-        }
-
-        if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
-          $this.removeClass('region-populated').addClass('region-empty');
-        } else if ($this.is('.region-empty')) {
-            $this.removeClass('region-empty').addClass('region-populated');
-          }
-      });
     },
     AJAXRefreshRows: function AJAXRefreshRows(rows) {
       var rowNames = [];

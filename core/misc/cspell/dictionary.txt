@@ -137,6 +137,7 @@ bazinga
 bazqux
 bazs
 beatle
+beforebegin
 beforeclose
 beforecreate
 behat
@@ -1203,6 +1204,7 @@ presetid
 presetname
 pretransaction
 preuninstall
+prevall
 processlist
 projecta
 projectb

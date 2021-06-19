@@ -382,19 +382,19 @@
       operators.val($target.val());
     },
     modifyTableDrag: function modifyTableDrag() {
-      var tableDrag = Drupal.tableDrag['views-rearrange-filters'];
+      var tableDrag = Drupal.TableDrag.instances['views-rearrange-filters'];
       var filterHandler = this;
 
-      tableDrag.row.prototype.onSwap = function () {
+      tableDrag.onSwap = function () {
         if (filterHandler.hasGroupOperator) {
-          var thisRow = $(this.group);
-          var previousRow = thisRow.prev('tr');
+          var thisRow = this.group[0];
+          var previousRow = Drupal.TableDrag.previous(thisRow, 'tr');
 
-          if (previousRow.length && !previousRow.hasClass('group-message') && !previousRow.hasClass('draggable')) {
-            var next = thisRow.next();
+          if (previousRow && !previousRow.classList.contains('group-message') && !previousRow.classList.contains('draggable')) {
+            var next = Drupal.TableDrag.next(thisRow, 'tr');
 
-            if (next.is('tr')) {
-              this.swap('after', next);
+            if (next && next.matches('tr')) {
+              this.swap('afterend', next);
             }
           }
 
@@ -405,24 +405,25 @@
       };
 
       tableDrag.onDrop = function () {
-        var changeMarker = $(this.oldRowElement).find('.tabledrag-changed');
+        var changeMarker = this.oldRowElement.querySelector('.tabledrag-changed');
 
-        if (changeMarker.length) {
-          var operatorLabel = changeMarker.prevAll('.views-operator-label');
+        if (changeMarker) {
+          var operatorLabel = this.constructor.prevAll(changeMarker, '.views-operator-label');
 
           if (operatorLabel.length) {
-            operatorLabel.insertAfter(changeMarker);
+            changeMarker.parentNode.insertBefore(operatorLabel[0], changeMarker.nextSibling);
           }
         }
 
-        var groupRow = $(this.rowObject.element).prevAll('tr.group-message').get(0);
-        var groupName = groupRow.className.replace(/([^ ]+[ ]+)*group-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-        var groupField = $('select.views-group-select', this.rowObject.element);
+        var groupRow = this.constructor.prevAll(this.rowObject.element, 'tr.group-message');
+        var groupName = groupRow[0].className.replace(/([^ ]+[ ]+)*group-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+        var groupField = this.rowObject.element.querySelector('select.views-group-select');
 
-        if (!groupField.is(".views-group-select-".concat(groupName))) {
-          var oldGroupName = groupField.attr('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
-          groupField.removeClass("views-group-select-".concat(oldGroupName)).addClass("views-group-select-".concat(groupName));
-          groupField.val(groupName);
+        if (!groupField.matches(".views-group-select-".concat(groupName))) {
+          var oldGroupName = groupField.getAttribute('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
+          groupField.classList.remove("views-group-select-".concat(oldGroupName));
+          groupField.classList.add("views-group-select-".concat(groupName));
+          groupField.value = groupName;
         }
       };
     },
@@ -589,7 +590,7 @@
   };
   Drupal.behaviors.viewsUiRearrangeFilter = {
     attach: function attach(context) {
-      if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag['views-rearrange-filters'] === 'undefined') {
+      if (typeof Drupal.TableDrag === 'undefined' || typeof Drupal.TableDrag.instances['views-rearrange-filters'] === 'undefined') {
         return;
       }
 

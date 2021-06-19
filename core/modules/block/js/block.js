@@ -42,7 +42,7 @@
   };
   Drupal.behaviors.blockDrag = {
     attach: function attach(context, settings) {
-      if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag.blocks === 'undefined') {
+      if (typeof Drupal.TableDrag === 'undefined' || typeof Drupal.TableDrag.instances.blocks === 'undefined') {
         return;
       }
 
@@ -52,7 +52,7 @@
 
           if ($this.prev('tr').get(0) === rowObject.element) {
             if (rowObject.method !== 'keyboard' || rowObject.direction === 'down') {
-              rowObject.swap('after', this);
+              rowObject.swap('afterend', this);
             }
           }
 
@@ -82,9 +82,9 @@
       }
 
       var table = $('#blocks');
-      var tableDrag = Drupal.tableDrag.blocks;
+      var tableDrag = Drupal.TableDrag.instances.blocks;
 
-      tableDrag.row.prototype.onSwap = function (swappedRow) {
+      tableDrag.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
       };
@@ -115,7 +115,7 @@
       $(context).find('select.block-region-select').once('block-region-select').on('change', function (event) {
         var row = $(this).closest('tr');
         var select = $(this);
-        tableDrag.rowObject = new tableDrag.row(row[0]);
+        tableDrag.rowObject = Drupal.TableDrag.row(row[0]);
         var regionMessage = table.find(".region-".concat(select[0].value, "-message"));
         var regionItems = regionMessage.nextUntil('.region-message, .region-title');
 

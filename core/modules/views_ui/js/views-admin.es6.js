@@ -889,7 +889,7 @@
        * @method
        */
       modifyTableDrag() {
-        const tableDrag = Drupal.tableDrag['views-rearrange-filters'];
+        const tableDrag = Drupal.TableDrag.instances['views-rearrange-filters'];
         const filterHandler = this;
 
         /**
@@ -904,22 +904,22 @@
          * - The operator labels that are displayed next to each filter need to
          * be redrawn, to account for the row's new location.
          */
-        tableDrag.row.prototype.onSwap = function () {
+        tableDrag.onSwap = function () {
           if (filterHandler.hasGroupOperator) {
             // Make sure the row that just got moved (this.group) is inside one
             // of the filter groups (i.e. below an empty marker row or a
             // draggable). If it isn't, move it down one.
-            const thisRow = $(this.group);
-            const previousRow = thisRow.prev('tr');
+            const thisRow = this.group[0];
+            const previousRow = Drupal.TableDrag.previous(thisRow, 'tr');
             if (
-              previousRow.length &&
-              !previousRow.hasClass('group-message') &&
-              !previousRow.hasClass('draggable')
+              previousRow &&
+              !previousRow.classList.contains('group-message') &&
+              !previousRow.classList.contains('draggable')
             ) {
               // Move the dragged row down one.
-              const next = thisRow.next();
-              if (next.is('tr')) {
-                this.swap('after', next);
+              const next = Drupal.TableDrag.next(thisRow, 'tr');
+              if (next && next.matches('tr')) {
+                this.swap('afterend', next);
               }
             }
             filterHandler.updateRowspans();
@@ -936,41 +936,51 @@
           // If the tabledrag change marker (i.e., the "*") has been inserted
           // inside a row after the operator label (i.e., "And" or "Or")
           // rearrange the items so the operator label continues to appear last.
-          const changeMarker = $(this.oldRowElement).find('.tabledrag-changed');
-          if (changeMarker.length) {
+          const changeMarker = this.oldRowElement.querySelector(
+            '.tabledrag-changed',
+          );
+          if (changeMarker) {
             // Search for occurrences of the operator label before the change
             // marker, and reverse them.
-            const operatorLabel = changeMarker.prevAll('.views-operator-label');
+            const operatorLabel = this.constructor.prevAll(
+              changeMarker,
+              '.views-operator-label',
+            );
             if (operatorLabel.length) {
-              operatorLabel.insertAfter(changeMarker);
+              changeMarker.parentNode.insertBefore(
+                operatorLabel[0],
+                changeMarker.nextSibling,
+              );
             }
           }
 
           // Make sure the "group" dropdown is properly updated when rows are
           // dragged into an empty filter group. This is borrowed heavily from
           // the block.js implementation of tableDrag.onDrop().
-          const groupRow = $(this.rowObject.element)
-            .prevAll('tr.group-message')
-            .get(0);
-          const groupName = groupRow.className.replace(
+          const groupRow = this.constructor.prevAll(
+            this.rowObject.element,
+            'tr.group-message',
+          );
+          const groupName = groupRow[0].className.replace(
             /([^ ]+[ ]+)*group-([^ ]+)-message([ ]+[^ ]+)*/,
             '$2',
           );
-          const groupField = $(
+
+          const groupField = this.rowObject.element.querySelector(
             'select.views-group-select',
-            this.rowObject.element,
           );
-          if (!groupField.is(`.views-group-select-${groupName}`)) {
+
+          if (!groupField.matches(`.views-group-select-${groupName}`)) {
             const oldGroupName = groupField
-              .attr('class')
+              .getAttribute('class')
               .replace(
                 /([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/,
                 '$2',
               );
-            groupField
-              .removeClass(`views-group-select-${oldGroupName}`)
-              .addClass(`views-group-select-${groupName}`);
-            groupField.val(groupName);
+
+            groupField.classList.remove(`views-group-select-${oldGroupName}`);
+            groupField.classList.add(`views-group-select-${groupName}`);
+            groupField.value = groupName;
           }
         };
       },
@@ -1305,8 +1315,9 @@
     attach(context) {
       // Only act on the rearrange filter form.
       if (
-        typeof Drupal.tableDrag === 'undefined' ||
-        typeof Drupal.tableDrag['views-rearrange-filters'] === 'undefined'
+        typeof Drupal.TableDrag === 'undefined' ||
+        typeof Drupal.TableDrag.instances['views-rearrange-filters'] ===
+          'undefined'
       ) {
         return;
       }

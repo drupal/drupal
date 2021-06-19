@@ -20,12 +20,12 @@
       const backStep = settings.taxonomy.backStep;
       const forwardStep = settings.taxonomy.forwardStep;
       // Get the taxonomy tableDrag object.
-      const tableDrag = Drupal.tableDrag.taxonomy;
+      // const tableDrag = Drupal.tableDrag.taxonomy;
       const $table = $('#taxonomy');
       const rows = $table.find('tr').length;
 
       // When a row is swapped, keep previous and next page classes set.
-      tableDrag.row.prototype.onSwap = function (swappedRow) {
+      Drupal.TableDrag.onSwap = function (swappedRow) {
         $table
           .find('tr.taxonomy-term-preview')
           .removeClass('taxonomy-term-preview');

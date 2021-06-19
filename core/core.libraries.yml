@@ -372,11 +372,14 @@ drupal.tabledrag:
   version: VERSION
   js:
     misc/tabledrag.js: { weight: -1 }
+
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
+    - core/drupal.nodelist.foreach
+    - core/drupal.element.matches
 
 drupal.tableheader:
   version: VERSION

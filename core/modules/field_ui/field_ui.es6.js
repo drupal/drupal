@@ -110,11 +110,59 @@
      *   Handlers to be added to the rows.
      */
     attach(table, rowsData, rowHandlers) {
-      const tableDrag = Drupal.tableDrag[table.id];
+      const tableDrag = Drupal.TableDrag.instances[table.id];
 
       // Add custom tabledrag callbacks.
-      tableDrag.onDrop = this.onDrop;
-      tableDrag.row.prototype.onSwap = this.onSwap;
+      tableDrag.onDrop = function () {
+        const row = this.rowObject.element;
+        const $row = $(row);
+        const { rowHandler } = row;
+
+        if (typeof rowHandler !== 'undefined') {
+          const regionRow = $row.prevAll('tr.region-message').get(0);
+          // use the prevall in tableDrag
+          const region = regionRow.className.replace(
+            /([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/,
+            '$2',
+          );
+          if (region !== rowHandler.region) {
+            // Let the row handler deal with the region change.
+            const refreshRows = rowHandler.regionChange(region);
+            // Update the row region.
+            rowHandler.region = region;
+            // Ajax-update the rows.
+            Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+          }
+        }
+      };
+
+      tableDrag.onSwap = function (draggedRow) {
+        this.table.querySelectorAll('tr.region-message').forEach((row) => {
+          // If the dragged row is in this region, but above the message row, swap
+          // it down one space.
+          if (
+            Drupal.TableDrag.previous(row, 'tr') ===
+            this.group[this.group.length - 1]
+          ) {
+            // Prevent a recursion problem when using the keyboard to move rows
+            // up.
+            if (this.method !== 'keyboard' || this.direction === 'down') {
+              this.swap('afterEnd', row);
+            }
+          }
+          const nextRow = Drupal.TableDrag.next(row, 'tr');
+          // This region has become empty.
+          if (typeof nextRow === 'undefined' || !nextRow.matches('draggable')) {
+            row.classList.remove('region-populated');
+            row.classList.add('region-empty');
+          }
+          // This region has become populated.
+          else if (row.matches('.region-empty')) {
+            row.classList.remove('region-empty');
+            row.classList.add('region-populated');
+          }
+        });
+      };
 
       // Create row handlers.
       $(table)
@@ -129,6 +177,7 @@
             // Create the row handler, make it accessible from the DOM row
             // element.
             const rowHandler = new rowHandlers[data.rowHandler](row, data);
+            row.rowHandler = rowHandler;
             $(row).data('fieldUIRowHandler', rowHandler);
           }
         });
@@ -140,7 +189,8 @@
     onChange() {
       const $trigger = $(this);
       const $row = $trigger.closest('tr');
-      const rowHandler = $row.data('fieldUIRowHandler');
+      // const rowHandler = $row.data('fieldUIRowHandler');
+      const rowHandler = $row[0].rowHandler;
 
       const refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
@@ -158,75 +208,6 @@
 
       // Ajax-update the rows.
       Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
-    },
-
-    /**
-     * Lets row handlers react when a row is dropped into a new region.
-     */
-    onDrop() {
-      const dragObject = this;
-      const row = dragObject.rowObject.element;
-      const $row = $(row);
-      const rowHandler = $row.data('fieldUIRowHandler');
-      if (typeof rowHandler !== 'undefined') {
-        const regionRow = $row.prevAll('tr.region-message').get(0);
-        const region = regionRow.className.replace(
-          /([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/,
-          '$2',
-        );
-
-        if (region !== rowHandler.region) {
-          // Let the row handler deal with the region change.
-          const refreshRows = rowHandler.regionChange(region);
-          // Update the row region.
-          rowHandler.region = region;
-          // Ajax-update the rows.
-          Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
-        }
-      }
-    },
-
-    /**
-     * Refreshes placeholder rows in empty regions while a row is being dragged.
-     *
-     * Copied from block.js.
-     *
-     * @param {HTMLElement} draggedRow
-     *   The tableDrag rowObject for the row being dragged.
-     */
-    onSwap(draggedRow) {
-      const rowObject = this;
-      $(rowObject.table)
-        .find('tr.region-message')
-        .each(function () {
-          const $this = $(this);
-          // If the dragged row is in this region, but above the message row, swap
-          // it down one space.
-          if (
-            $this.prev('tr').get(0) ===
-            rowObject.group[rowObject.group.length - 1]
-          ) {
-            // Prevent a recursion problem when using the keyboard to move rows
-            // up.
-            if (
-              rowObject.method !== 'keyboard' ||
-              rowObject.direction === 'down'
-            ) {
-              rowObject.swap('after', this);
-            }
-          }
-          // This region has become empty.
-          if (
-            $this.next('tr').is(':not(.draggable)') ||
-            $this.next('tr').length === 0
-          ) {
-            $this.removeClass('region-populated').addClass('region-empty');
-          }
-          // This region has become populated.
-          else if ($this.is('.region-empty')) {
-            $this.removeClass('region-empty').addClass('region-populated');
-          }
-        });
     },
 
     /**
