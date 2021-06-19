@@ -169,7 +169,14 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $this->plugin->setContext('display', $context);
 
     $result = $this->plugin->getContextsDuringPreview();
-    $this->assertSame(['view_mode', 'display', 'layout_builder.entity'], array_keys($result));
+    $this->assertSame([
+      'view_mode',
+      'display',
+      'is_preview',
+      'layout_builder.entity',
+    ], array_keys($result));
+
+    $this->assertSame(TRUE, $result['is_preview']->getContextValue());
 
     $this->assertSame($context, $result['display']);
 

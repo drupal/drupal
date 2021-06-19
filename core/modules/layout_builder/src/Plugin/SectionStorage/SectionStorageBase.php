@@ -94,6 +94,9 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   public function getContextsDuringPreview() {
     $contexts = $this->getContexts();
 
+    // Add a context to detect when a layout is being rendered in preview mode.
+    $contexts['is_preview'] = new Context(new ContextDefinition('boolean'), TRUE);
+
     // view_mode is a required context, but SectionStorage plugins are not
     // required to return it (for example, the layout_library plugin provided
     // in the Layout Library module. In these instances, explicitly create a
@@ -101,6 +104,7 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
     if (!isset($contexts['view_mode']) || $contexts['view_mode']->validate()->count() || !$contexts['view_mode']->getContextValue()) {
       $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'default');
     }
+
     return $contexts;
   }
 
