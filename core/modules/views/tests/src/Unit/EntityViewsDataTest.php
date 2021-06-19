@@ -423,15 +423,13 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->willReturnMap([
-          ['user', TRUE, static::userEntityInfo()],
-      ]
-      );
+        ['user', TRUE, static::userEntityInfo()],
+      ]);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->willReturnMap([
-          ['user', TRUE, static::userEntityInfo()],
-      ]
-      );
+        ['user', TRUE, static::userEntityInfo()],
+      ]);
     $user_id_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $user_id_field_storage_definition->expects($this->any())
       ->method('getSetting')
@@ -573,11 +571,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
-        'field' => 'deleted',
-        'value' => 0,
-        'numeric' => TRUE,
-      ],
+      'extra' => [
+        [
+          'field' => 'deleted',
+          'value' => 0,
+          'numeric' => TRUE,
+        ],
       ],
     ], $data['entity_test__string']['table']['join']['entity_test']);
   }
@@ -926,11 +925,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
-        'field' => 'deleted',
-        'value' => 0,
-        'numeric' => TRUE,
-      ],
+      'extra' => [
+        [
+          'field' => 'deleted',
+          'value' => 0,
+          'numeric' => TRUE,
+        ],
       ],
     ], $data['entity_test_mulrev__string']['table']['join']['entity_test_mulrev_property_data']);
 
@@ -939,11 +939,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals([
       'left_field' => 'revision_id',
       'field' => 'entity_id',
-      'extra' => [[
-        'field' => 'deleted',
-        'value' => 0,
-        'numeric' => TRUE,
-      ],
+      'extra' => [
+        [
+          'field' => 'deleted',
+          'value' => 0,
+          'numeric' => TRUE,
+        ],
       ],
     ], $data['entity_test_mulrev_revision__string']['table']['join']['entity_test_mulrev_property_revision']);
   }

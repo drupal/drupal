@@ -326,8 +326,7 @@ class FrontPageTest extends ViewTestBase {
       'node_view',
       'user_view',
       'user:0',
-    ]
-    );
+    ]);
     $view->setDisplay('page_1');
     $view->setCurrentPage(0);
     $this->assertViewsCacheTags(

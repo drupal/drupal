@@ -302,8 +302,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $view_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and text()=:text]', [
       ':href' => Url::fromRoute('entity.contact_form.canonical', ['contact_form' => $contact_form])->toString(),
       ':text' => $label,
-    ]
-    );
+    ]);
     $this->assertTrue(!empty($view_link), 'Contact listing links to contact form.');
 
     // Find out in which row the form we want to add a field to is.

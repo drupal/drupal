@@ -144,8 +144,7 @@ class ThemeTest extends BrowserTestBase {
       $this->drupalGet('');
       $elements = $this->xpath('//header//a[@rel=:rel]/img', [
         ':rel' => 'home',
-      ]
-      );
+      ]);
       $this->assertEquals($expected['src'], $elements[0]->getAttribute('src'));
     }
     $unsupported_paths = [
@@ -196,8 +195,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('');
     $elements = $this->xpath('//header//a[@rel=:rel]/img', [
       ':rel' => 'home',
-    ]
-    );
+    ]);
     $this->assertEquals(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
 
     $this->container->get('theme_installer')->install(['bartik']);

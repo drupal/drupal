@@ -571,7 +571,7 @@ class FilterKernelTest extends KernelTestBase {
         '<a href="http://www.example.com">www.example.com</a>' => TRUE,
       ],
       // MAILTO URLs.
-      'person@example.com or mailto:person2@example.com or ' . $email_with_plus_sign . ' or ' . $long_email . ' but not ' . $too_long_email . '' => [
+      'person@example.com or mailto:person2@example.com or ' . $email_with_plus_sign . ' or ' . $long_email . ' but not ' . $too_long_email => [
         '<a href="mailto:person@example.com">person@example.com</a>' => TRUE,
         '<a href="mailto:person2@example.com">mailto:person2@example.com</a>' => TRUE,
         '<a href="mailto:' . $long_email . '">' . $long_email . '</a>' => TRUE,

@@ -77,11 +77,10 @@ class PermissionAccessCheckTest extends UnitTestCase {
     $user->expects($this->any())
       ->method('hasPermission')
       ->will($this->returnValueMap([
-          ['allowed', TRUE],
-          ['denied', FALSE],
-          ['other', FALSE],
-      ]
-      ));
+        ['allowed', TRUE],
+        ['denied', FALSE],
+        ['other', FALSE],
+      ]));
     $route = new Route('', [], $requirements);
 
     $this->assertEquals($access_result, $this->accessCheck->access($route, $user));

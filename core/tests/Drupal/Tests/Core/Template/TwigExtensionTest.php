@@ -286,8 +286,7 @@ class TwigExtensionTest extends UnitTestCase {
       'cache' => FALSE,
       'autoescape' => 'html',
       'optimizations' => 0,
-    ]
-    );
+    ]);
 
     $twig->addExtension($this->systemUnderTest);
     $link = new GeneratedLink();

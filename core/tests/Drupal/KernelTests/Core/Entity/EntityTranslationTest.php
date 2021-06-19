@@ -248,8 +248,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       'user_id' => $properties[$langcode]['user_id'],
       'name' => 'some name',
       $langcode_key => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ])
-      ->save();
+    ])->save();
 
     $entities = $storage->loadMultiple();
     $this->assertCount(3, $entities, new FormattableMarkup('%entity_type: Three entities were created.', ['%entity_type' => $entity_type]));

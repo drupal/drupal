@@ -97,8 +97,7 @@ class HookDiscoveryTest extends UnitTestCase {
       ->will($this->returnValueMap([
           ['hook_discovery_test', 'test_plugin', [], $this->hookDiscoveryTestTestPlugin()],
           ['hook_discovery_test2', 'test_plugin', [], $this->hookDiscoveryTest2TestPlugin()],
-      ]
-      ));
+      ]));
 
     $this->assertNull($this->hookDiscovery->getDefinition('test_non_existent', FALSE));
 

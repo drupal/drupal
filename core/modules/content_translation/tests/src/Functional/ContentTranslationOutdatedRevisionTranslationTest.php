@@ -58,11 +58,12 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
     $this->submitForm($edit, 'Save (this translation)');
 
     // Add a published French translation.
-    $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
-      $entity->getEntityTypeId() => $id,
-      'source' => 'en',
-      'target' => 'fr',
-    ],
+    $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add",
+      [
+        $entity->getEntityTypeId() => $id,
+        'source' => 'en',
+        'target' => 'fr',
+      ],
       [
         'language' => ConfigurableLanguage::load('fr'),
         'absolute' => FALSE,
