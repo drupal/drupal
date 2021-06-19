@@ -620,15 +620,23 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     }
 
     // Rebuild the array by changing the bundle key into the bundle label.
+    // Or, if needed, unpack option groups.
     $target_type = $field_definition->getSetting('target_type');
     $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($target_type);
 
     $return = [];
     foreach ($options as $bundle => $entity_ids) {
-      // The label does not need sanitizing since it is used as an optgroup
-      // which is only supported by select elements and auto-escaped.
-      $bundle_label = (string) $bundles[$bundle]['label'];
-      $return[$bundle_label] = $entity_ids;
+      if (substr($bundle, 0, 1) === "\n") {
+        // The bundle key contains packed option groups, unpack them.
+        $groups = explode("\n", substr($bundle, 1));
+        NestedArray::setValue($return, $groups, $entity_ids);
+      }
+      else {
+        // The label does not need sanitizing since it is used as an optgroup
+        // which is only supported by select elements and auto-escaped.
+        $bundle_label = (string) $bundles[$bundle]['label'];
+        $return[$bundle_label] = $entity_ids;
+      }
     }
 
     return count($return) == 1 ? reset($return) : $return;

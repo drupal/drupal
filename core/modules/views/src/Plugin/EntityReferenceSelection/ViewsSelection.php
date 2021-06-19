@@ -284,9 +284,21 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     $stripped_results = [];
     foreach ($results as $id => $row) {
       $entity = $row['#row']->_entity;
-      $stripped_results[$entity->bundle()][$id] = ViewsRenderPipelineMarkup::create(
+      $markup = ViewsRenderPipelineMarkup::create(
         Xss::filter($this->renderer->renderPlain($row), $allowed_tags)
       );
+      if (!empty($row['#_entity_reference_option_groups'])) {
+        // Sigh, expose grouping info while retaining BC.
+        // Pack the groupings into a string key, mark it by prepending \n.
+        // @see \Drupal\views\Plugin\views\style\EntityReference::extractResultsFromGroup
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::getSettableOptions
+        $groupings = array_map('strip_tags', $row['#_entity_reference_option_groups']);
+        $key = "\n" . implode("\n", $groupings);
+      }
+      else {
+        $key = $entity->bundle();
+      }
+      $stripped_results[$key][$id] = $markup;
     }
 
     return $stripped_results;
