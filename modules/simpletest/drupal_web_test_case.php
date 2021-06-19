@@ -876,6 +876,13 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $elements = NULL;
 
   /**
+   * Errors collected while parsing the DOM.
+   *
+   * @var string[]
+   */
+  protected $domErrors = array();
+
+  /**
    * The current user logged in using the internal browser.
    *
    * @var bool
@@ -2160,7 +2167,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Parse content returned from curlExec using DOM and SimpleXML.
    *
-   * @return
+   * @return SimpleXMLElement|false
    *   A SimpleXMLElement or FALSE on failure.
    */
   protected function parse() {
@@ -2168,7 +2175,19 @@ class DrupalWebTestCase extends DrupalTestCase {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
       $htmlDom = new DOMDocument();
-      @$htmlDom->loadHTML($this->drupalGetContent());
+      $content = $this->drupalGetContent();
+
+      $this->domErrors = array();
+
+      // Replace the error handler, while parsing html.
+      set_error_handler(array($this, 'domErrorHandler'));
+      try {
+        $htmlDom->loadHTML($content);
+      }
+      finally {
+        restore_error_handler();
+      }
+
       if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
@@ -2181,6 +2200,20 @@ class DrupalWebTestCase extends DrupalTestCase {
     }
 
     return $this->elements;
+  }
+
+  /**
+   * Temporary error handler used when parsing HTML.
+   *
+   * @param int $error_level
+   *   Error level.
+   * @param string $message
+   *   Error message.
+   */
+  public function domErrorHandler($error_level, $message) {
+    $types = drupal_error_levels();
+    $severity_msg = $types[$error_level][0];
+    $this->domErrors[] = $severity_msg . ': ' . $message;
   }
 
   /**
@@ -3178,6 +3211,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->url = $url;
     $this->plainTextContent = FALSE;
     $this->elements = FALSE;
+    $this->domErrors = array();
     $this->drupalSettings = array();
     if (preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $content, $matches)) {
       $this->drupalSettings = drupal_json_decode($matches[1]);
@@ -3189,6 +3223,99 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalSetSettings($settings) {
     $this->drupalSettings = $settings;
+  }
+
+  /**
+   * Asserts that the DOM parsing succeeded without errors.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   *
+   * @see parse()
+   */
+  protected function assertDomNoErrors() {
+    if (!$this->parse()) {
+      return $this->fail(t('Response must contain HTML.'));
+    }
+
+    if ($this->domErrors) {
+      return $this->fail(t("DOM errors found:")
+        . '<ul><li>'
+        . implode(
+          '</li><li>',
+          array_map('check_plain', $this->domErrors))
+        . '</li></ul>');
+    }
+
+    return $this->pass(t('No DOM errors found.'));
+  }
+
+  /**
+   * Asserts a non-empty html response with specific DOM errors.
+   *
+   * @param int[] $required_error_counts
+   *   Regular expression patterns for expected errors or warnings from
+   *   DOMDocument->loadHTML(), mapped to the expected count of the error.
+   *   Format: $[$pattern] = $expected_count.
+   * @param string[] $allowed_error_patterns
+   *   Regular expression patterns for DOM errors that should be ignored.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on fail.
+   *   The assertion fails, if any unexpected DOM errors were found, or if the
+   *   expected DOM errors are not found in the expected number.
+   */
+  protected function assertDomErrorPatterns(array $required_error_counts, array $allowed_error_patterns = array()) {
+    if (!$this->parse()) {
+      return $this->fail(t('Response must contain HTML.'));
+    }
+
+    $required_error_counts += array_fill_keys($allowed_error_patterns, TRUE);
+
+    $pass = TRUE;
+    $allowed_errors = [];
+    foreach ($required_error_counts as $pattern => $expected_count) {
+      $matching_errors = preg_grep($pattern, $this->domErrors);
+      if ($expected_count !== NULL) {
+        $count = count($matching_errors);
+        $pass = $pass && $this->assertIdentical(
+          count($matching_errors),
+          $expected_count,
+          t('Expected @expected DOM errors matching @pattern, found @count.', array(
+            '@expected' => $expected_count,
+            '@pattern' => var_export($pattern, TRUE),
+            '@count' => $count,
+          )));
+      }
+      $allowed_errors += $matching_errors;
+    }
+
+    $remaining_errors = array_diff_key($this->domErrors, $allowed_errors);
+
+    if ($remaining_errors) {
+      return $this->fail(t("Unexpected DOM errors found:")
+        . '<ul><li>'
+        . implode(
+          '</li><li>',
+          array_map('check_plain', $remaining_errors))
+        . '</li></ul>');
+    }
+
+    $this->pass(t('No unexpected DOM errors found.'));
+
+    return $pass;
+  }
+
+  /**
+   * Asserts that a specific error occurs when parsing the DOM.
+   *
+   * @param string $expected_error
+   *   Expected error message.
+   */
+  protected function assertDomError($expected_error) {
+    $this->assertTrue(
+      in_array($expected_error, $this->domErrors, TRUE),
+      t('Expected DOM error found:') . ' ' . check_plain($expected_error));
   }
 
   /**
