@@ -12,14 +12,14 @@ use Drupal\filter\Plugin\FilterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a filter to track images uploaded via a Text Editor.
+ * Provides a filter to ensure latest image revisions are referenced and append lazy=loading.
  *
  * Generates file URLs and associates the cache tags of referenced files.
  *
  * @Filter(
  *   id = "editor_file_reference",
- *   title = @Translation("Track images uploaded via a Text Editor"),
- *   description = @Translation("Ensures that the latest versions of images uploaded via a Text Editor are displayed."),
+ *   title = @Translation("Ensure latest image revision are referenced and append lazy=loading"),
+ *   description = @Translation("Ensures that the latest revisions of images uploaded via a text editor are displayed and appends a lazy loading attribute to those images."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
