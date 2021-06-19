@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function theme_error_test_menu() {
+  $items['theme-error-test/fatal-error'] = array(
+    'page callback' => 'theme_error_test_fatal_error_page',
+    'access callback' => TRUE,
+  );
+  $items['theme-error-test/exception'] = array(
+    'page callback' => 'theme_error_test_exception_page',
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function theme_error_test_theme() {
+  $items['fatal_error_at_level'] = array(
+    'template' => 'fatal-error-at-level',
+    'variables' => [
+      'level' => 0,
+    ],
+  );
+  $items['exception_at_level'] = array(
+    'template' => 'exception-at-level',
+    'variables' => [
+      'level' => 0,
+    ],
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback.
+ *
+ * @return string
+ *   Page contents.
+ *
+ * @throws \Exception
+ */
+function theme_error_test_fatal_error_page() {
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+  return theme('fatal_error_at_level', ['level' => 2]);
+}
+
+/**
+ * Page callback.
+ *
+ * @return string
+ *   Page contents.
+ *
+ * @throws \Exception
+ */
+function theme_error_test_exception_page() {
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+  return theme('exception_at_level', ['level' => 2]);
+}

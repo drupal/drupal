@@ -1,0 +1,6 @@
+name = "Theme error test"
+description = "Example module to test errors in theme templates."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
