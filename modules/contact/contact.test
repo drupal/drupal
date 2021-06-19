@@ -324,6 +324,32 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests that mails for contact messages are correctly sent.
+   */
+  public function testSendPersonalContactMessage() {
+    // Replace the web user's email so we can check the headers.
+    $reply_email = $edit['mail'] = $this->web_user->name . '&escaped@example.net';
+    $from_email = variable_get('site_mail', 'simpletest@example.com');
+    $account = user_load($this->web_user->uid);
+    user_save($account, $edit);
+
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertRaw(check_plain($reply_email));
+    $this->submitPersonalContact($this->contact_user);
+
+    // Assume the most recent email.
+    $captured_emails = $this->drupalGetMails();
+    $email = end($captured_emails);
+
+    $this->assertEqual(1, count($captured_emails));
+    $this->assertEqual($email['to'], $this->contact_user->mail);
+    $this->assertEqual($email['from'], "\"$reply_email via Drupal\" <$from_email>");
+    $this->assertEqual($email['headers']['Reply-To'], $reply_email);
+    $this->assertEqual($email['key'], 'user_mail');
+  }
+
+  /**
    * Tests access to the personal contact form.
    */
   function testPersonalContactAccess() {
