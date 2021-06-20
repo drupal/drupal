@@ -39,11 +39,12 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
     $entity = $this->storage->load($id);
 
     // Add a published Italian translation.
-    $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
-      $entity->getEntityTypeId() => $id,
-      'source' => 'en',
-      'target' => 'it',
-    ],
+    $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add",
+      [
+        $entity->getEntityTypeId() => $id,
+        'source' => 'en',
+        'target' => 'it',
+      ],
       [
         'language' => ConfigurableLanguage::load('it'),
         'absolute' => FALSE,

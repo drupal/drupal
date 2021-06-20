@@ -320,8 +320,7 @@ class DatabaseStorage implements StorageInterface {
     try {
       return $this->connection->query('SELECT DISTINCT [collection] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] <> :collection ORDER by [collection]', [
         ':collection' => StorageInterface::DEFAULT_COLLECTION,
-      ]
-      )->fetchCol();
+      ])->fetchCol();
     }
     catch (\Exception $e) {
       return [];
