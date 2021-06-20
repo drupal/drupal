@@ -4,7 +4,6 @@ namespace Drupal\layout_builder\Routing;
 
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
-use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -57,18 +56,6 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
     $contexts = $this->sectionStorageManager->loadEmpty($type)->deriveContextsFromRoute($value, $definition, $name, $defaults);
     // Attempt to load a full instance based on the context.
     if ($section_storage = $this->sectionStorageManager->load($type, $contexts)) {
-      // Check whether layouts are overridable for this section storage.
-      if ($section_storage instanceof OverridesSectionStorageInterface) {
-        // In the event that layouts are not overridable, the default section
-        // storage should be returned to cause a storage type mismatch which
-        // will forbid access to this route.
-        //
-        // @see \Drupal\layout_builder\Access\LayoutBuilderAccessCheck::access()
-        if (!$section_storage->getDefaultSectionStorage()->isOverridable()) {
-          $section_storage = $section_storage->getDefaultSectionStorage();
-        }
-      }
-
       // Pass the plugin through the tempstore repository.
       return $this->layoutTempstoreRepository->get($section_storage);
     }
