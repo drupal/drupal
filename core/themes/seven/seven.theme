@@ -348,7 +348,7 @@ function seven_views_pre_render(ViewExecutable $view) {
   };
 
   if ($view->id() === 'media_library') {
-    if ($view->display_handler->options['defaults']['css_class']) {
+    if (isset($view->display_handler->options['defaults']['css_class'])) {
       $add_classes($view->displayHandlers->get('default')->options['css_class'], ['media-library-view']);
     }
     else {
