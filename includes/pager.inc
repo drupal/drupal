@@ -33,7 +33,7 @@ class PagerDefault extends SelectQueryExtender {
    *
    * @var int
    */
-  protected $element = NULL;
+  public $element = NULL;
 
   /**
    * The count query that will be used for this pager.
