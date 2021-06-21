@@ -5,6 +5,7 @@ namespace Drupal\node\Plugin\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a 'Syndicate' block that links to the site's RSS feed.
@@ -39,7 +40,7 @@ class SyndicateBlock extends BlockBase {
   public function build() {
     return [
       '#theme' => 'feed_icon',
-      '#url' => 'rss.xml',
+      '#url' => Url::fromUri('internal:/rss.xml'),
     ];
   }
 
