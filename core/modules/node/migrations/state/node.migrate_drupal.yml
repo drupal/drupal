@@ -1,6 +1,10 @@
 finished:
   6:
+    # Blog requires node.
+    blog: node
     content: node
     node: node
   7:
+    # Blog requires node.
+    blog: node
     node: node

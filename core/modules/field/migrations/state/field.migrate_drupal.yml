@@ -1,5 +1,7 @@
 finished:
   6:
+    nodereference: core
+    userreference: core
     content: field
     email: core
     # Phone does not use a migrate field plugin so it is added here.

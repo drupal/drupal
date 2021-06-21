@@ -4,10 +4,6 @@
 # cspell:ignore imageapi imagefield imagemagick multiupload
 finished:
   6:
-    nodereference: core
-    userreference: core
-    # Blog requires node.
-    blog: node
     # The following do not have an upgrade path.
     blogapi: core
     calendarsignup: core
@@ -47,8 +43,6 @@ finished:
     views_export: core
     views_ui: core
   7:
-    # Blog requires node.
-    blog: node
     # The following do not need have an upgrade path.
     bulk_export: core
     contextual: core
