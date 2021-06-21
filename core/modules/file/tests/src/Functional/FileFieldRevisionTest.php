@@ -138,7 +138,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->execute();
     \Drupal::service('cron')->run();
 
-    $this->assertFileNotExists($node_file_r3->getFileUri());
+    $this->assertFileDoesNotExist($node_file_r3->getFileUri());
     $this->assertFileEntryNotExists($node_file_r3, 'Second file entry is now deleted after deleting third revision, since it is no longer being used by any other nodes.');
 
     // Delete the entire node and check that the original file is deleted.
@@ -155,7 +155,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->condition('fid', $node_file_r1->id())
       ->execute();
     \Drupal::service('cron')->run();
-    $this->assertFileNotExists($node_file_r1->getFileUri());
+    $this->assertFileDoesNotExist($node_file_r1->getFileUri());
     $this->assertFileEntryNotExists($node_file_r1, 'Original file entry is deleted after deleting the entire node with two revisions remaining.');
   }
 
