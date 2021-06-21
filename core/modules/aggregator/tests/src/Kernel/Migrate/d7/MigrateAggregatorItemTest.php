@@ -45,7 +45,7 @@ class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
       $this->assertSame($original->fid, $item->getFeedId());
       $this->assertSame($original->title, $item->label());
       // If $original->author is an empty string, getAuthor() returns NULL so
-      // we need to use assertEqual() here.
+      // we need to use assertEquals() here.
       $this->assertEquals($original->author, $item->getAuthor());
       $this->assertSame($original->description, $item->getDescription());
       $this->assertSame($original->link, $item->getLink());
