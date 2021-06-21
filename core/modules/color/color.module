@@ -314,7 +314,7 @@ function color_palette_color_value($element, $input, FormStateInterface $form_st
     // necessary, falling back on the default value.
     $value = Textfield::valueCallback($element, $input, $form_state);
     $complete_form = $form_state->getCompleteForm();
-    if (!$value || !isset($complete_form['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $complete_form['#token'])) {
+    if (!$value || !isset($complete_form['#token']) || Color::validateStrictHex($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $complete_form['#token'])) {
       return $value;
     }
     else {
@@ -345,7 +345,7 @@ function color_valid_hexadecimal_string($color) {
 function color_scheme_form_validate($form, FormStateInterface $form_state) {
   // Only accept hexadecimal CSS color strings to avoid XSS upon use.
   foreach ($form_state->getValue('palette') as $key => $color) {
-    if (!color_valid_hexadecimal_string($color)) {
+    if (!Color::validateStrictHex($color)) {
       $form_state->setErrorByName('palette][' . $key, t('You must enter a valid hexadecimal color value for %name.', ['%name' => $form['color']['palette'][$key]['#title']]));
     }
   }

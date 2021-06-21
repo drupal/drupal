@@ -44,6 +44,28 @@ system.site:
     mail_notification:
       type: string
       label: 'Notification email address'
+    manifest:
+      type: mapping
+      label: 'Site-wide manifest configuration'
+      mapping:
+        start_url:
+          type: path
+          label: 'Default start url'
+          nullable: true
+        display:
+          type: string
+          label: 'Display mode type'
+          nullable: true
+        short_name:
+          type: label
+          label: 'Short name'
+          nullable: true
+        name:
+          type: label
+          label: 'Name'
+        manifest_version:
+          type: integer
+          label: 'Manifest version'
 
 system.maintenance:
   type: config_object

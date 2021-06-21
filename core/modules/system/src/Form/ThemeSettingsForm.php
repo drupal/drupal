@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Component\Utility\Color;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
@@ -9,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -388,7 +390,199 @@ class ThemeSettingsForm extends ConfigFormBase {
       }
     }
 
+    $site_config_url = Url::fromRoute('system.site_information_settings')->toString();
+    $form['manifest'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Theme specific manifest settings'),
+      '#description' => $this->t('Theme-specifc values for the site manifest file. This is only part of the data needed for generating the manifest file, the rest of the configuration is <a href=":site_config">global to the site </a>', [':site_config' => $site_config_url]),
+      '#open' => FALSE,
+    ];
+    $form['manifest']['manifest_orientation'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Orientation'),
+      '#options' => [
+        '' => $this->t('Leave Empty'),
+        'any' => $this->t('Any'),
+        'natural' => $this->t('Natural'),
+        'portrait' => $this->t('Portrait'),
+        'portrait-primary' => $this->t('Portrait Primary'),
+        'portrait-secondary' => $this->t('Portrait Secondary'),
+        'landscape' => $this->t('Landscape'),
+        'landscape-primary' => $this->t('Landscape Primary'),
+        'landscape-secondary' => $this->t('Landscape Secondary'),
+      ],
+      '#default_value' => $this->config($config_key)->get('manifest.orientation'),
+    ];
+    $form['manifest']['manifest_background_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Background color'),
+      '#description' => $this->t("Color of the background splash screen when launched from shortcut. If left blank the key value pair will the omitted from the manifest"),
+      '#default_value' => $this->config($config_key)->get('manifest.background_color'),
+    ];
+    $form['manifest']['manifest_theme_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Theme color'),
+      '#description' => $this->t("Color of browser bar when launched from shortcut. If left blank the key value pair will the omitted from the manifest"),
+      '#default_value' => $this->config($config_key)->get('manifest.theme_color'),
+    ];
+
+    $triggering_element = $form_state->getTriggeringElement();
+    $name = isset($triggering_element['#name']) ? $triggering_element['#name'] : '';
+
+    if ($name == 'AddButton') {
+      // Append an empty icon data block.
+      $unflatterned_icons = $form_state->getValue('manifest_icons') ?: [];
+      $icons = $this->extractIcons($unflatterned_icons);
+      $icons[] = [
+        'src' => '',
+        'sizes' => '',
+        'media_type' => '',
+        'purpose' => '',
+      ];
+    }
+    else {
+      // Delete and reindex extracted icons.
+      $matches = [];
+      $is_icon_button = preg_match(
+        '/^delete-icon-(\d+)$/',
+        $name,
+        $matches);
+      if ($is_icon_button) {
+        $button_number = (int) $matches[1];
+
+        // Prevent the users input from being reimposed after rebuild.
+        $input = $form_state->getValues();
+        unset($input['manifest_icons'][$button_number]);
+        $input['manifest_icons'] = array_values($input['manifest_icons']);
+        $form_state->setUserInput($input);
+
+        // Rebuild the form's fields with a reduced set of icons.
+        $extracted_icons = $this->extractIcons($input['manifest_icons']);
+        $icons = array_values($extracted_icons);
+
+        $form_state->setRebuild();
+      }
+      else {
+        $icons = $this->config($config_key)->get('manifest.icons') ?: [];
+      }
+    }
+
+    $form['manifest']['manifest_icons'] = $this->buildIconTable($icons);
+
+    $form['manifest']['add_more_icons'] = [
+      '#type' => 'button',
+      '#value' => $this->t('Add Icon'),
+      '#name' => 'AddButton',
+      '#ajax' => [
+        'callback' => '::updatedIconTable',
+        'effect' => 'slide',
+        'wrapper' => 'manifest_table_wrapper',
+      ],
+    ];
+
     return $form;
+  }
+
+  /**
+   * Builds the icon Table.
+   *
+   * Given an array from config or while processing of a AJAX request.
+   *
+   * @return array
+   *   A render array.
+   */
+  public function buildIconTable(Array $icons) : array {
+    $render_array = [
+      '#caption' => $this->t('A list of icons in the manifest'),
+      '#empty' => $this->t('Click the "Add Icon" button to populate this section.'),
+      '#header' => [
+        $this->t('Icons'),
+        $this->t('Operation'),
+      ],
+      '#type' => 'table',
+      '#prefix' => '<div id="manifest_table_wrapper">',
+      '#suffix' => '</div>',
+    ];
+
+    foreach ($icons as $icon_id => $icon) {
+      $render_array[$icon_id]['#attributes']['class'][] = 'draggable';
+      $render_array[$icon_id]['#weight'] = $icon_id;
+      $render_array[$icon_id]['fieldset'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Icon data'),
+        '#open' => TRUE,
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      ];
+
+      foreach ($icon as $key => $value) {
+        switch ($key) {
+          case 'src':
+            $render_array[$icon_id]['fieldset']['src'] = [
+              '#type' => 'textfield',
+              '#title' => $this->t('src'),
+              '#description' => $this->t('The path to the image file. If src is a relative URL, the base URL will be the URL of the manifest.'),
+              '#default_value' => $value,
+            ];
+            break;
+
+          case 'sizes':
+            $render_array[$icon_id]['fieldset']['sizes'] = [
+              '#type' => 'textfield',
+              '#title' => 'Sizes',
+              '#description' => $this->t('A space-separated set of image dimensions. eg. "72x72 96x96"'),
+              '#default_value' => $value,
+            ];
+            break;
+
+          case 'media_type':
+            $render_array[$icon_id]['fieldset']['media_type'] = [
+              '#type' => 'textfield',
+              '#title' => 'type',
+              '#description' => $this->t('A hint as to the media type of the image. e.g. "image/png"'),
+              '#default_value' => $value,
+            ];
+            break;
+
+          case 'purpose':
+            $render_array[$icon_id]['fieldset']['purpose'] = [
+              '#type' => 'select',
+              '#title' => $this->t('Purpose'),
+              '#description' => $this->t('Defines the purpose of the image, for example if the image is intended to serve some special purpose in the context of the host OS'),
+              '#options' => [
+                '' => $this->t('Leave Empty'),
+                'any' => $this->t('Any'),
+                'badge' => $this->t('Badge'),
+                'maskable' => $this->t('Maskable'),
+              ],
+              '#default_value' => $value,
+            ];
+        }
+      }
+
+      $render_array[$icon_id]['Operations'] = [
+        '#type' => 'button',
+        '#value' => $this->t('Delete'),
+        '#name' => "delete-icon-$icon_id",
+        '#ajax' => [
+          'callback' => '::updatedIconTable',
+          'effect' => 'slide',
+          'wrapper' => 'manifest_table_wrapper',
+        ],
+      ];
+    }
+
+    return $render_array;
+  }
+
+  /**
+   * Returns a updated icon table.
+   *
+   * @returns array
+   *   A render array.
+   */
+  public function updatedIconTable(array &$form, FormStateInterface $form_state) : array {
+    return $form['manifest']['manifest_icons'];
   }
 
   /**
@@ -442,6 +636,14 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
       }
     }
+
+    // Only accept hexadecimal CSS color strings to avoid XSS upon use.
+    $form_values = $form_state->getValues();
+    foreach ($form_values as $key => $color) {
+      if (in_array($key, ['manifest_background_color', 'manifest_theme_color'], TRUE) && !empty($color) && !Color::validateStrictHex($color)) {
+        $form_state->setErrorByName('manifest][' . $key, $this->t('You must enter a valid hexadecimal color value for %name.', ['%name' => $form['manifest'][$key]['#title']]));
+      }
+    }
   }
 
   /**
@@ -460,6 +662,9 @@ class ThemeSettingsForm extends ConfigFormBase {
     $form_state->unsetValue('config_key');
 
     $values = $form_state->getValues();
+
+    $icons = $values['manifest_icons'] ?: [];
+    $values['manifest_icons'] = $this->extractIcons($icons);
 
     // If the user uploaded a new logo or favicon, save it to a permanent location
     // and use it in place of the default theme-provided file.
@@ -542,6 +747,22 @@ class ThemeSettingsForm extends ConfigFormBase {
       return $path;
     }
     return FALSE;
+  }
+
+  /**
+   * Extract a icon array from the form state.
+   *
+   * Icons are embedded in a data structure related to fieldset and surrounding
+   * table.
+   */
+  private static function extractIcons(array $icons) : array {
+    $flat_icons = [];
+    // Remove table header data structure.
+    unset($icons['Array']);
+    foreach ($icons as $icon_data) {
+      $flat_icons[] = $icon_data['fieldset'];
+    }
+    return $flat_icons;
   }
 
 }

@@ -30,6 +30,14 @@ system.4xx:
   requirements:
     _access: 'TRUE'
 
+system.manifest:
+  path: '/system/manifest'
+  defaults:
+    _controller: '\Drupal\system\Controller\ManifestController:manifest'
+    _title: 'Manifest'
+  requirements:
+    _access: 'TRUE'
+
 system.admin:
   path: '/admin'
   defaults:

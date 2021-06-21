@@ -25,6 +25,22 @@ class Color {
   }
 
   /**
+   * Determines if a hexadecimal CSS color is valid in a strict way.
+   *
+   * It should start with a # followed by either 3 or 6 hexadecimal characters.
+   *
+   * @param string $hex
+   *   The string to check.
+   *
+   * @return bool
+   *   TRUE if the string is a valid hexadecimal CSS color string, or FALSE if
+   *   it isn't.
+   */
+  public static function validateStrictHex($hex) {
+    return preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $hex);
+  }
+
+  /**
    * Parses a hexadecimal color string like '#abc' or '#aabbcc'.
    *
    * @param string $hex

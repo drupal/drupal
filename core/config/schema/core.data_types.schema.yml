@@ -210,6 +210,38 @@ theme_settings:
         use_default:
           type: boolean
           label: 'Use default'
+    manifest:
+      type: mapping
+      label: 'Theme specific manifest data'
+      mapping:
+        orientation:
+          type: string
+          label: 'Orientation'
+        theme_color:
+          type: color_hex
+          label: 'Theme color'
+        background_color:
+          type: color_hex
+          label: 'Theme color'
+        icons:
+          type: sequence
+          label: 'Icon data'
+          mapping:
+            weight:
+              type: integer
+              label: 'The order in which the entry appears in the icon section.'
+            src:
+              type: string
+              label: 'The path to the image file.'
+            sizes:
+              type: string
+              label: 'A Space separated list of image dimension'
+            media_type:
+              type: string
+              label: 'The images media type'
+            purpose:
+              type: string
+              label: 'any, badge, maskable'
     third_party_settings:
       type: sequence
       label: 'Third party settings'

@@ -10,3 +10,9 @@ admin_compact_mode: false
 weight_select_max: 100
 langcode: en
 default_langcode: en
+manifest:
+  start_url: /
+  display: null
+  short_name: Drupal
+  name: Default Drupal Site Name
+  manifest_version: 2

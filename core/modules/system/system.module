@@ -665,6 +665,36 @@ function system_page_attachments(array &$page) {
   if (\Drupal::currentUser()->isAuthenticated()) {
     $page['#attached']['library'][] = 'core/drupal.active-link';
   }
+
+  $request = \Drupal::request();
+  $is_non_admin = !\Drupal::service('router.admin_context')->isAdminRoute();
+  $is_non_update = strpos($request->getScriptName(), 'update.php') === FALSE;
+  $is_non_install = strpos($request->getScriptName(), 'install.php') === FALSE;
+  if ($is_non_admin && $is_non_update && $is_non_install) {
+    $manifest_url = Url::fromRoute('system.manifest', [],
+    ['query' => ['_format' => 'json']]);
+    $page['#attached']['html_head_link'][][] = [
+      'rel' => 'manifest',
+      'href' => $manifest_url->toString(),
+    ];
+    $manifest = \Drupal::service('theme.manifest_generator')
+      ->generateManifest(\Drupal::theme()
+        ->getActiveTheme()
+        ->getName())
+      ->toArray();
+    if (array_key_exists('theme_color', $manifest)) {
+      $page['#attached']['html_head'][] = [
+        [
+          '#tag' => 'meta',
+          '#attributes' => [
+            'name' => 'theme-color',
+            'content' => $manifest['theme_color'],
+          ],
+        ],
+        'theme-color',
+      ];
+    }
+  }
 }
 
 /**

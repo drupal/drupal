@@ -114,6 +114,13 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       // langcode and default_langcode are not handled by the migration.
       'langcode' => 'en',
       'default_langcode' => 'en',
+      'manifest' => [
+        'start_url' => '/',
+        'display' => NULL,
+        'short_name' => 'Drupal',
+        'name' => 'Default Drupal Site Name',
+        'manifest_version' => 2,
+      ],
     ],
   ];
 
