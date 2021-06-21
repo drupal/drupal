@@ -170,12 +170,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Assert that every effect was saved.
     foreach (array_keys($effect_edits) as $effect_name) {
-      $this->assertTrue(isset($uuids[$effect_name]), new FormattableMarkup(
+      $this->assertArrayHasKey($effect_name, $uuids, new FormattableMarkup(
         'A %effect_name effect was saved with ID %uuid',
         [
           '%effect_name' => $effect_name,
           '%uuid' => $uuids[$effect_name],
         ]));
+      $this->assertNotNull($uuids[$effect_name]);
     }
 
     // Image style overview form (ordering and renaming).

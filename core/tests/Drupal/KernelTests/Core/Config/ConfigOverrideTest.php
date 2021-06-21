@@ -48,7 +48,7 @@ class ConfigOverrideTest extends KernelTestBase {
     $active = $this->container->get('config.storage');
     $data = $active->read('config_test.system');
     $this->assertSame($expected_original_data['foo'], $data['foo']);
-    $this->assertFalse(isset($data['baz']));
+    $this->assertArrayNotHasKey('baz', $data);
     $this->assertSame($expected_original_data['404'], $data['404']);
 
     // Get the configuration object with overrides.
@@ -104,7 +104,7 @@ class ConfigOverrideTest extends KernelTestBase {
     // Verify that the new configuration data exists. Have to read storage
     // directly otherwise overrides will apply.
     $this->assertSame($expected_new_data['foo'], $data['foo']);
-    $this->assertFalse(isset($data['baz']));
+    $this->assertArrayNotHasKey('baz', $data);
     $this->assertSame($expected_new_data['404'], $data['404']);
 
     // Verify that the overrides are still working.

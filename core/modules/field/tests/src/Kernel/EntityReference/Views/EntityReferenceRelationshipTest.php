@@ -359,8 +359,9 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     $views_data = Views::viewsData()->getAll();
     // Test that a relationship got added for content entities but not config
     // entities.
-    $this->assertTrue(isset($views_data['entity_test__field_test_data']['field_test_data']['relationship']));
-    $this->assertFalse(isset($views_data['entity_test__field_test_config_entity']['field_test_config_entity']['relationship']));
+    $this->assertArrayHasKey('relationship', $views_data['entity_test__field_test_data']['field_test_data']);
+    $this->assertNotNull($views_data['entity_test__field_test_data']['field_test_data']['relationship']);
+    $this->assertArrayNotHasKey('relationship', $views_data['entity_test__field_test_config_entity']['field_test_config_entity']);
   }
 
 }

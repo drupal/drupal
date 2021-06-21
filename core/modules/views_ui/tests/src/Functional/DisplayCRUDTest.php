@@ -157,7 +157,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertNotEmpty($block_1, 'The new block display got saved.');
     $this->assertEquals('block', $block_1->display['display_plugin']);
     $this->assertEquals('Block', $block_1->display['display_title'], 'The new display title got generated as expected.');
-    $this->assertFalse(isset($block_1->display['display_options']['path']));
+    $this->assertArrayNotHasKey('path', $block_1->display['display_options']);
     $this->assertEquals($random_title, $block_1->getOption('title'), 'The overridden title option from the display got copied into the duplicate');
     $this->assertEquals($random_css, $block_1->getOption('css_class'), 'The overridden css_class option from the display got copied into the duplicate');
 

@@ -221,7 +221,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
     // Check that the dropped value is the right one.
     $removed_fid = $this->files[0]->fid;
-    $this->assertTrue(!isset($fids[$removed_fid]), new FormattableMarkup('Field item @fid has been correctly removed.', ['@fid' => $removed_fid]));
+    $this->assertArrayNotHasKey($removed_fid, $fids, new FormattableMarkup('Field item @fid has been correctly removed.', ['@fid' => $removed_fid]));
 
     // Add back an item for the dropped value and perform synchronization again.
     $values[$langcode][$removed_fid] = [

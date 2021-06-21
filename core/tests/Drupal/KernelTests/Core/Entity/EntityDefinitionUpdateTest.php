@@ -83,14 +83,17 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     // Check that the "entity_test_new" is not defined.
     $entity_types = $this->entityTypeManager->getDefinitions();
-    $this->assertFalse(isset($entity_types[$entity_type_id]), 'The "entity_test_new" entity type does not exist.');
+    // Verify that the "entity_test_new" entity type does not exist.
+    $this->assertArrayNotHasKey($entity_type_id, $entity_types);
     $this->assertFalse($schema->tableExists($entity_type_id), 'Schema for the "entity_test_new" entity type does not exist.');
 
     // Check that the "entity_test_new" is now defined and the related schema
     // has been created.
     $this->enableNewEntityType();
     $entity_types = $this->entityTypeManager->getDefinitions();
-    $this->assertTrue(isset($entity_types[$entity_type_id]), 'The "entity_test_new" entity type exists.');
+    // Verify that the "entity_test_new" entity type exists.
+    $this->assertArrayHasKey($entity_type_id, $entity_types);
+    $this->assertNotNull($entity_types[$entity_type_id]);
     $this->assertTrue($schema->tableExists($entity_type_id), 'Schema for the "entity_test_new" entity type has been created.');
   }
 

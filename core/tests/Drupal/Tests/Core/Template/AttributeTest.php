@@ -23,7 +23,8 @@ class AttributeTest extends UnitTestCase {
    */
   public function testConstructor() {
     $attribute = new Attribute(['class' => ['example-class']]);
-    $this->assertTrue(isset($attribute['class']));
+    $this->assertArrayHasKey('class', $attribute);
+    $this->assertNotNull($attribute['class']);
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
 
     // Test adding boolean attributes through the constructor.
@@ -33,14 +34,16 @@ class AttributeTest extends UnitTestCase {
 
     // Test that non-array values with name "class" are cast to array.
     $attribute = new Attribute(['class' => 'example-class']);
-    $this->assertTrue(isset($attribute['class']));
+    $this->assertArrayHasKey('class', $attribute);
+    $this->assertNotNull($attribute['class']);
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
 
     // Test that safe string objects work correctly.
     $safe_string = $this->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn('example-class');
     $attribute = new Attribute(['class' => $safe_string->reveal()]);
-    $this->assertTrue(isset($attribute['class']));
+    $this->assertArrayHasKey('class', $attribute);
+    $this->assertNotNull($attribute['class']);
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
   }
 
@@ -51,7 +54,8 @@ class AttributeTest extends UnitTestCase {
     $attribute = new Attribute();
     $attribute['class'] = ['example-class'];
 
-    $this->assertTrue(isset($attribute['class']));
+    $this->assertArrayHasKey('class', $attribute);
+    $this->assertNotNull($attribute['class']);
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
   }
 
@@ -71,7 +75,7 @@ class AttributeTest extends UnitTestCase {
   public function testRemove() {
     $attribute = new Attribute(['class' => ['example-class']]);
     unset($attribute['class']);
-    $this->assertFalse(isset($attribute['class']));
+    $this->assertArrayNotHasKey('class', $attribute);
   }
 
   /**

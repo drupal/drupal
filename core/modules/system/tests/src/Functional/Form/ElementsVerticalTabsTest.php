@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
 
@@ -98,7 +97,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
     $this->drupalGet('form_test/form-state-values-clean');
     $this->submitForm([], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertFalse(isset($values['vertical_tabs__active_tab']), new FormattableMarkup('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
+    $this->assertArrayNotHasKey('vertical_tabs__active_tab', $values);
   }
 
 }

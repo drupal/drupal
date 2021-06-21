@@ -439,10 +439,12 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $id_operators = $view->filter['id']->operators();
     $age_operators = $view->filter['age']->operators();
 
-    $this->assertFalse(isset($id_operators['empty']));
-    $this->assertFalse(isset($id_operators['not empty']));
-    $this->assertTrue(isset($age_operators['empty']));
-    $this->assertTrue(isset($age_operators['not empty']));
+    $this->assertArrayNotHasKey('empty', $id_operators);
+    $this->assertArrayNotHasKey('not empty', $id_operators);
+    $this->assertArrayHasKey('empty', $age_operators);
+    $this->assertNotNull($age_operators['empty']);
+    $this->assertArrayHasKey('not empty', $age_operators);
+    $this->assertNotNull($age_operators['not empty']);
   }
 
   protected function getGroupedExposedFilters() {

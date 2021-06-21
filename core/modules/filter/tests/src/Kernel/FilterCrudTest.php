@@ -68,7 +68,7 @@ class FilterCrudTest extends KernelTestBase {
     $format->disable()->save();
 
     $formats = filter_formats();
-    $this->assertTrue(!isset($formats[$format->id()]), 'filter_formats: Disabled text format no longer exists.');
+    $this->assertArrayNotHasKey($format->id(), $formats, 'filter_formats: Disabled text format no longer exists.');
   }
 
   /**

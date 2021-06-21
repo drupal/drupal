@@ -291,8 +291,8 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->assertFalse($revisions[1]->isDefaultRevision());
     $this->assertFalse($revisions[2]->isDefaultRevision());
     $this->assertTrue($revisions[3]->isDefaultRevision());
-    $this->assertFalse(isset($revisions[4]));
-    $this->assertFalse(isset($revisions[5]));
+    $this->assertArrayNotHasKey(4, $revisions);
+    $this->assertArrayNotHasKey(5, $revisions);
   }
 
   /**

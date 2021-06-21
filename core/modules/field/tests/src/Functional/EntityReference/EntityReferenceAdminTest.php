@@ -357,8 +357,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     // should be reset (no auto-creation).
     $vocabularies[1]->delete();
     $field_config = FieldConfig::load($field_id);
+    $this->assertArrayHasKey('auto_create', $field_config->getSetting('handler_settings'));
     $this->assertFalse($field_config->getSetting('handler_settings')['auto_create']);
-    $this->assertFalse(isset($field_config->getSetting('handler_settings')['auto_create_bundle']));
+    $this->assertArrayHasKey('auto_create_bundle', $field_config->getSetting('handler_settings'));
+    $this->assertNull($field_config->getSetting('handler_settings')['auto_create_bundle']);
   }
 
   /**

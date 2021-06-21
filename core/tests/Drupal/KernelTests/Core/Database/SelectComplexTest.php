@@ -242,7 +242,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $db_type = Database::getConnection()->databaseType();
     $this->assertEquals($db_type == 'pgsql' ? 'ASC NULLS FIRST' : 'ASC', $orderby['name'], 'Query correctly sets ordering clause.');
     $orderby = $count->getOrderBy();
-    $this->assertFalse(isset($orderby['name']), 'Count query correctly unsets ordering clause.');
+    $this->assertArrayNotHasKey('name', $orderby);
 
     // Make sure that the count query works.
     $count = $count->execute()->fetchField();

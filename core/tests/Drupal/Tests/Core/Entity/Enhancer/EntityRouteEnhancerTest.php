@@ -45,7 +45,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $new_defaults = $route_enhancer->enhance($defaults, $request);
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityListController::listing', $new_defaults['_controller'], 'The entity list controller was not set.');
     $this->assertEquals('entity_test.default', $new_defaults['entity_type']);
-    $this->assertFalse(isset($new_defaults['_entity_list']));
+    $this->assertArrayNotHasKey('_entity_list', $new_defaults);
 
     // Set _entity_view and ensure that the entity view controller is set.
     $defaults = [];
@@ -56,7 +56,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityViewController::view', $defaults['_controller'], 'The entity view controller was not set.');
     $this->assertEquals('Mock entity', $defaults['_entity']);
     $this->assertEquals('full', $defaults['view_mode']);
-    $this->assertFalse(isset($defaults['_entity_view']));
+    $this->assertArrayNotHasKey('_entity_view', $defaults);
 
     // Set _entity_view and ensure that the entity view controller is set using
     // a converter.
@@ -75,7 +75,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityViewController::view', $defaults['_controller'], 'The entity view controller was not set.');
     $this->assertEquals('Mock entity', $defaults['_entity']);
     $this->assertEquals('full', $defaults['view_mode']);
-    $this->assertFalse(isset($defaults['_entity_view']));
+    $this->assertArrayNotHasKey('_entity_view', $defaults);
 
     // Set _entity_view without a view mode.
     $defaults = [];
@@ -86,7 +86,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityViewController::view', $defaults['_controller'], 'The entity view controller was not set.');
     $this->assertEquals('Mock entity', $defaults['_entity']);
     $this->assertTrue(empty($defaults['view_mode']));
-    $this->assertFalse(isset($defaults['_entity_view']));
+    $this->assertArrayNotHasKey('_entity_view', $defaults);
   }
 
 }

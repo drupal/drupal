@@ -123,7 +123,8 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($build));
 
     $this->assertText($field_content);
-    $this->assertTrue(isset($executable->field[$field_name]));
+    $this->assertArrayHasKey($field_name, $executable->field);
+    $this->assertNotNull($executable->field[$field_name]);
 
     $account_switcher->switchTo($this->userWithoutAccess);
     $executable = Views::getView($view_id);
@@ -131,7 +132,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($build));
 
     $this->assertNoText($field_content);
-    $this->assertFalse(isset($executable->field[$field_name]));
+    $this->assertArrayNotHasKey($field_name, $executable->field);
 
     \Drupal::state()->delete('views_field_access_test-field');
   }

@@ -491,9 +491,15 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->save();
     $hooks = $this->getHooksInfo();
 
-    $this->assertTrue(isset($hooks['entity_translation_create']), 'The generic entity translation creation hook is run when adding and removing a translation without storing it.');
+    // Verify that the generic entity translation creation hook is run when
+    // adding and removing a translation without storing it.
+    $this->assertArrayHasKey('entity_translation_create', $hooks);
+    $this->assertNotNull($hooks['entity_translation_create']);
     unset($hooks['entity_translation_create']);
-    $this->assertTrue(isset($hooks[$entity_type . '_translation_create']), 'The entity-type-specific entity translation creation hook is run when adding and removing a translation without storing it.');
+    // Verify that the entity-type-specific entity translation creation hook is
+    // run when adding and removing a translation without storing it.
+    $this->assertArrayHasKey($entity_type . '_translation_create', $hooks);
+    $this->assertNotNull($hooks[$entity_type . '_translation_create']);
     unset($hooks[$entity_type . '_translation_create']);
 
     $this->assertEmpty($hooks, 'No other hooks beyond the entity translation creation hooks are run when adding and removing a translation without storing it.');
@@ -688,7 +694,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that field translatability is disabled by default.
     $base_field_definitions = EntityTestMulRev::baseFieldDefinitions($this->entityTypeManager->getDefinition($entity_type));
-    $this->assertTrue(!isset($base_field_definitions['id']->translatable), 'Translatability for the <em>id</em> field is not defined.');
+    $this->assertFalse(isset($base_field_definitions['id']->translatable), 'Translatability for the <em>id</em> field is not defined.');
     $this->assertFalse($definitions['id']->isTranslatable(), 'Field translatability is disabled by default.');
 
     // Check that entity id keys have the expect translatability.

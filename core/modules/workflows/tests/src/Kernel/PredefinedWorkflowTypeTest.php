@@ -46,7 +46,7 @@ class PredefinedWorkflowTypeTest extends KernelTestBase {
 
     // No states configuration is stored for this workflow.
     $configuration = $workflow->getTypePlugin()->getConfiguration();
-    $this->assertFalse(isset($configuration['states']));
+    $this->assertArrayNotHasKey('states', $configuration);
   }
 
 }

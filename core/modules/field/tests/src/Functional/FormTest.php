@@ -276,7 +276,7 @@ class FormTest extends FieldTestBase {
 
     // Check if aria-describedby attribute is placed on multiple value widgets.
     $elements = $this->xpath('//table[@id="field-unlimited-values" and @aria-describedby="edit-field-unlimited--description"]');
-    $this->assertTrue(isset($elements[0]), 'aria-describedby attribute is properly placed on multiple value widgets.');
+    $this->assertArrayHasKey(0, $elements);
 
     // Press 'add more' button -> 2 widgets.
     $this->submitForm([], 'Add another item');
@@ -363,11 +363,12 @@ class FormTest extends FieldTestBase {
     $this->drupalGet('entity_test/add');
     // Check that the Required symbol is present for the multifield label.
     $element = $this->xpath('//h4[contains(@class, "label") and contains(@class, "js-form-required") and contains(text(), :value)]', [':value' => $this->field['label']]);
-    $this->assertTrue(isset($element[0]), 'Required symbol added field label.');
+    $this->assertArrayHasKey(0, $element);
     // Check that the label of the field input is visually hidden and contains
     // the field title and an indication of the delta for a11y.
     $element = $this->xpath('//label[@for=:for and contains(@class, "visually-hidden") and contains(text(), :value)]', [':for' => 'edit-field-unlimited-0-value', ':value' => $this->field['label'] . ' (value 1)']);
-    $this->assertTrue(isset($element[0]), 'Required symbol not added for field input.');
+    // Verify that required symbol was not added for field input.
+    $this->assertArrayHasKey(0, $element);
   }
 
   /**

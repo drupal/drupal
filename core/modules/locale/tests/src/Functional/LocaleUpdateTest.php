@@ -346,9 +346,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if the file data is removed from the database.
     $history = locale_translation_get_file_history();
-    $this->assertFalse(isset($history['locale_test_translate']), 'Project removed from the file history');
+    // Verify that project removed from the file history.
+    $this->assertArrayNotHasKey('locale_test_translate', $history);
     $projects = locale_translation_get_projects();
-    $this->assertFalse(isset($projects['locale_test_translate']), 'Project removed from the project list');
+    // Verify that project removed from the project list.
+    $this->assertArrayNotHasKey('locale_test_translate', $projects);
   }
 
   /**

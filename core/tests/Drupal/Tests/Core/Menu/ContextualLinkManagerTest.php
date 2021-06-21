@@ -363,8 +363,9 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $result = $this->contextualLinkManager->getContextualLinksArrayByGroup('group1', ['key' => 'value']);
 
     // Ensure that access checking was respected.
-    $this->assertTrue(isset($result['test_plugin1']));
-    $this->assertFalse(isset($result['test_plugin2']));
+    $this->assertArrayHasKey('test_plugin1', $result);
+    $this->assertNotNull($result['test_plugin1']);
+    $this->assertArrayNotHasKey('test_plugin2', $result);
   }
 
   /**

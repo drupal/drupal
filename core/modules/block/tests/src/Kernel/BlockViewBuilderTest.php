@@ -205,7 +205,9 @@ class BlockViewBuilderTest extends KernelTestBase {
     // alter the eventual content.
     \Drupal::state()->set('block_test_view_alter_append_pre_render_prefix', TRUE);
     $build = $this->getBlockRenderArray();
-    $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before rendering.');
+    // Verify that the appended #pre_render callback has not yet run before
+    // rendering.
+    $this->assertArrayNotHasKey('#prefix', $build);
     $this->assertSame('Hiya!<br>', (string) $this->renderer->renderRoot($build));
     // Check that a cached block without content is altered.
     $this->assertArrayHasKey('#prefix', $build);
@@ -268,7 +270,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     foreach ([TRUE, FALSE] as $value) {
       \Drupal::state()->set('block_test_block_alter_create_placeholder', $value);
       $build = $this->getBlockRenderArray();
-      $this->assertTrue(isset($build['#create_placeholder']));
+      $this->assertArrayHasKey('#create_placeholder', $build);
+      $this->assertNotNull($build['#create_placeholder']);
       $this->assertSame($value, $build['#create_placeholder']);
     }
     \Drupal::state()->set('block_test_block_alter_create_placeholder', NULL);
@@ -299,7 +302,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->assertSame($expected_contexts, $build['#cache']['contexts']);
     $this->assertSame($expected_tags, $build['#cache']['tags']);
     $this->assertSame($expected_max_age, $build['#cache']['max-age']);
-    $this->assertFalse(isset($build['#create_placeholder']));
+    $this->assertArrayNotHasKey('#create_placeholder', $build);
     // - the rendered render array;
     $this->renderer->renderRoot($build);
     // - the render cache item.

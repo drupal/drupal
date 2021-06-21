@@ -115,7 +115,9 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     ]);
 
     $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
-    $this->assertFalse(isset($negotiation[$interface_method_id]), 'Interface language negotiation method removed from the stored settings.');
+    // Verify that interface language negotiation method removed from the stored
+    // settings.
+    $this->assertArrayNotHasKey($interface_method_id, $negotiation);
 
     // Check that the interface language negotiation method is unavailable.
     $this->drupalGet('admin/config/regional/language/detection');
@@ -159,7 +161,9 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     // Check that unavailable language negotiation methods are not present in
     // the negotiation settings.
     $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
-    $this->assertFalse(isset($negotiation[$test_method_id]), 'The disabled test language negotiation method is not part of the content language negotiation settings.');
+    // Verify that the disabled test language negotiation method is not part of
+    // the content language negotiation settings.
+    $this->assertArrayNotHasKey($test_method_id, $negotiation);
 
     // Check that configuration page presents the correct options and settings.
     $this->assertNoRaw(t('Test language detection'));

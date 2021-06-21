@@ -102,8 +102,9 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
     $this->assertNull(\Drupal::service('entity.repository')->loadEntityByUuid('field_storage_config', $field_storage->uuid()), 'The test field has been deleted by the configuration synchronization');
     $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertFalse(isset($deleted_storages[$field_storage->uuid()]), 'Telephone field has been completed removed from the system.');
-    $this->assertTrue(isset($deleted_storages[$unrelated_field_storage->uuid()]), 'Unrelated field not purged by configuration synchronization.');
+    $this->assertArrayNotHasKey($field_storage->uuid(), $deleted_storages);
+    $this->assertArrayHasKey($unrelated_field_storage->uuid(), $deleted_storages);
+    $this->assertNotNull($deleted_storages[$unrelated_field_storage->uuid()]);
   }
 
   /**
@@ -151,7 +152,10 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $sync->write('core.extension', $core_extension);
 
     $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertTrue(isset($deleted_storages[$field_storage_uuid]), 'Field has been deleted and needs purging before configuration synchronization.');
+    // Verify that field has been deleted and needs purging before configuration
+    // synchronization.
+    $this->assertArrayHasKey($field_storage_uuid, $deleted_storages);
+    $this->assertNotNull($deleted_storages[$field_storage_uuid]);
 
     $steps = $this->configImporter()->initialize();
     $this->assertSame(['\\Drupal\\field\\ConfigImporterFieldPurger', 'process'], $steps[0], 'The additional process configuration synchronization step has been added.');
@@ -162,7 +166,8 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
 
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
     $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertFalse(isset($deleted_storages[$field_storage_uuid]), 'Field has been completed removed from the system.');
+    // Verify that field has been completed removed from the system.
+    $this->assertArrayNotHasKey($field_storage_uuid, $deleted_storages);
   }
 
 }

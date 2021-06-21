@@ -63,7 +63,7 @@ class AjaxResponseTest extends UnitTestCase {
 
     $commands = $this->ajaxResponse->getCommands();
     $this->assertSame(['command' => 'one'], $commands[1]);
-    $this->assertFalse(isset($commands[2]));
+    $this->assertArrayNotHasKey(2, $commands);
     $this->assertSame(['command' => 'three', 'class' => 'test-class'], $commands[0]);
   }
 

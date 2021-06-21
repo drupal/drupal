@@ -59,7 +59,8 @@ class GraphTest extends TestCase {
     $this->assertReversePaths($graph, $expected_reverse_paths);
 
     // Assert that DFS didn't created "missing" vertexes automatically.
-    $this->assertFalse(isset($graph[6]), 'Vertex 6 has not been created');
+    // Verify that vertex 6 has not been created.
+    $this->assertArrayNotHasKey(6, $graph);
 
     $expected_components = [
       [1, 2, 3, 4, 5, 7],

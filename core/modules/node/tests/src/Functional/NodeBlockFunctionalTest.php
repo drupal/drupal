@@ -152,7 +152,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     $block = Block::load($edit['id']);
     $visibility = $block->getVisibility();
-    $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
+    $this->assertArrayHasKey('article', $visibility['node_type']['bundles'], 'Visibility settings were saved to configuration');
+    $this->assertNotNull($visibility['node_type']['bundles']['article'], 'Visibility settings were saved to configuration');
 
     // Create a page node.
     $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);

@@ -232,7 +232,8 @@ class ModuleTest extends ViewsKernelTestBase {
       list($plugin_type, $plugin_id) = explode(':', $key);
       $plugin_def = $this->container->get("plugin.manager.views.$plugin_type")->getDefinition($plugin_id);
 
-      $this->assertTrue(isset($plugin_list[$key]), new FormattableMarkup('The expected @key plugin list key was found.', ['@key' => $key]));
+      $this->assertArrayHasKey($key, $plugin_list, new FormattableMarkup('The expected @key plugin list key was found.', ['@key' => $key]));
+      $this->assertNotNull($plugin_list[$key]);
       $plugin_details = $plugin_list[$key];
 
       $this->assertEquals($plugin_type, $plugin_details['type'], 'The expected plugin type was found.');

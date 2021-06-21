@@ -79,7 +79,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     $this->assertTrue($config['settings']['config_data_from_field_setting']);
-    $this->assertTrue(!isset($config['settings']['field_setting_from_config_data']));
+    $this->assertArrayNotHasKey('field_setting_from_config_data', $config['settings']);
 
     // Since we are working with raw configuration, this needs to be unset
     // manually.

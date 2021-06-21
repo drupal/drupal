@@ -349,7 +349,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     // Test a node for a workflow that hasn't been updated to include the
     // 'default_moderation_state' setting. We must be backwards compatible with
     // configuration that was exported before this change was introduced.
-    $this->assertFalse(isset($configuration['default_moderation_state']));
+    $this->assertArrayNotHasKey('default_moderation_state', $configuration);
     $legacy_configuration_node = Node::create([
       'title' => 'Test title',
       'type' => 'example',

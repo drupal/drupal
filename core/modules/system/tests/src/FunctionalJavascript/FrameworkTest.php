@@ -43,7 +43,7 @@ class FrameworkTest extends WebDriverTestBase {
 
     // Verify that the base page doesn't have the settings and files that are to
     // be lazy loaded as part of the next requests.
-    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), new FormattableMarkup('Page originally lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
+    $this->assertArrayNotHasKey($expected['setting_name'], $original_settings, new FormattableMarkup('Page originally lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
     $this->assertNotContains($expected['library_1'], $original_libraries, new FormattableMarkup('Page originally lacks the %library library, as expected.', ['%library' => $expected['library_1']]));
     $this->assertNotContains($expected['library_2'], $original_libraries, new FormattableMarkup('Page originally lacks the %library library, as expected.', ['%library' => $expected['library_2']]));
 
@@ -54,7 +54,7 @@ class FrameworkTest extends WebDriverTestBase {
     $new_libraries = explode(',', $new_settings['ajaxPageState']['libraries']);
 
     // Verify the setting was not added when not expected.
-    $this->assertTrue(!isset($new_settings[$expected['setting_name']]), new FormattableMarkup('Page still lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
+    $this->assertArrayNotHasKey($expected['setting_name'], $new_settings, new FormattableMarkup('Page still lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
     $this->assertNotContains($expected['library_1'], $new_libraries, new FormattableMarkup('Page still lacks the %library library, as expected.', ['%library' => $expected['library_1']]));
     $this->assertNotContains($expected['library_2'], $new_libraries, new FormattableMarkup('Page still lacks the %library library, as expected.', ['%library' => $expected['library_2']]));
 

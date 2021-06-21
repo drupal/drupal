@@ -187,7 +187,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     $this->assertEquals($this->referencedEntity->id(), $build[0]['#plain_text'], sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $this->assertEquals($this->referencedEntity->getCacheTags(), $build[0]['#cache']['tags'], sprintf('The %s formatter has the expected cache tags.', $formatter));
-    $this->assertTrue(!isset($build[1]), sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
+    $this->assertArrayNotHasKey(1, $build, sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
   }
 
   /**

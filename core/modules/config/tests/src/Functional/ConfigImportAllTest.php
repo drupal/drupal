@@ -103,9 +103,15 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Can not uninstall config and use admin/config/development/configuration!
     unset($modules_to_uninstall['config']);
 
-    $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
-    $this->assertTrue(isset($modules_to_uninstall['file']), 'The File module will be disabled');
-    $this->assertTrue(isset($modules_to_uninstall['editor']), 'The Editor module will be disabled');
+    // Verify that the comment module will be disabled.
+    $this->assertArrayHasKey('comment', $modules_to_uninstall);
+    $this->assertNotNull($modules_to_uninstall['comment']);
+    // Verify that the File module will be disabled.
+    $this->assertArrayHasKey('file', $modules_to_uninstall);
+    $this->assertNotNull($modules_to_uninstall['file']);
+    // Verify that editor module will be disabled.
+    $this->assertArrayHasKey('editor', $modules_to_uninstall);
+    $this->assertNotNull($modules_to_uninstall['editor']);
 
     // Uninstall all modules that can be uninstalled.
     \Drupal::service('module_installer')->uninstall(array_keys($modules_to_uninstall));

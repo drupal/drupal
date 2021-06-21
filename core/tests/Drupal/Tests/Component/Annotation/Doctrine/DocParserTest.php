@@ -42,7 +42,8 @@ class DocParserTest extends TestCase
         $this->assertIsArray($annot->foo[2]);
 
         $nestedArray = $annot->foo[2];
-        $this->assertTrue(isset($nestedArray['key']));
+        $this->assertArrayHasKey('key', $nestedArray);
+        $this->assertNotNull($nestedArray['key']);
         $this->assertInstanceOf(Name::class, $nestedArray['key']);
     }
 
@@ -62,7 +63,8 @@ class DocParserTest extends TestCase
         $annot = $result[0];
         $this->assertNull($annot->value);
         $this->assertIsArray($annot->foo);
-        $this->assertTrue(isset($annot->foo['key1']));
+        $this->assertArrayHasKey('key1', $annot->foo);
+        $this->assertNotNull($annot->foo['key1']);
 
         // Numerical arrays
         $result = $parser->parse('@Name({2="foo", 4="bar"})');
@@ -70,9 +72,9 @@ class DocParserTest extends TestCase
         $this->assertIsArray($annot->value);
         $this->assertEquals('foo', $annot->value[2]);
         $this->assertEquals('bar', $annot->value[4]);
-        $this->assertFalse(isset($annot->value[0]));
-        $this->assertFalse(isset($annot->value[1]));
-        $this->assertFalse(isset($annot->value[3]));
+        $this->assertArrayNotHasKey(0, $annot->value);
+        $this->assertArrayNotHasKey(1, $annot->value);
+        $this->assertArrayNotHasKey(3, $annot->value);
 
         // Multiple values
         $result = $parser->parse('@Name(@Name, @Name)');
@@ -181,8 +183,10 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
         $this->assertCount(2, $result);
-        $this->assertTrue(isset($result[0]));
-        $this->assertTrue(isset($result[1]));
+        $this->assertArrayHasKey(0, $result);
+        $this->assertNotNull($result[0]);
+        $this->assertArrayHasKey(1, $result);
+        $this->assertNotNull($result[1]);
         $annot = $result[0];
         $this->assertInstanceOf(Name::class, $annot);
         $this->assertEquals("bar", $annot->foo);

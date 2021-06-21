@@ -62,14 +62,14 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(isset($themes[$name]));
+    $this->assertArrayNotHasKey($name, $themes);
 
     $this->themeInstaller()->install([$name]);
 
     $this->assertSame(0, $this->extensionConfig()->get("theme.{$name}"));
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
+    $this->assertNotNull($themes[$name]);
     $this->assertEquals($name, $themes[$name]->getName());
 
     // Verify that test_basetheme.settings is active.
@@ -91,14 +91,17 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->themeInstaller()->install([$name]);
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$base_name]));
+    $this->assertArrayHasKey($name, $themes);
+    $this->assertNotNull($themes[$name]);
+    $this->assertArrayHasKey($base_name, $themes);
+    $this->assertNotNull($themes[$base_name]);
 
     $this->themeInstaller()->uninstall([$name]);
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$base_name]));
+    $this->assertArrayNotHasKey($name, $themes);
+    $this->assertArrayHasKey($base_name, $themes);
+    $this->assertNotNull($themes[$base_name]);
   }
 
   /**
@@ -222,8 +225,10 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->config('system.theme')->set('default', $name)->save();
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$other_name]));
+    $this->assertArrayHasKey($name, $themes);
+    $this->assertNotNull($themes[$name]);
+    $this->assertArrayHasKey($other_name, $themes);
+    $this->assertNotNull($themes[$other_name]);
 
     try {
       $message = 'ThemeInstaller::uninstall() throws InvalidArgumentException upon disabling default theme.';
@@ -235,8 +240,10 @@ class ThemeInstallerTest extends KernelTestBase {
     }
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$other_name]));
+    $this->assertArrayHasKey($name, $themes);
+    $this->assertNotNull($themes[$name]);
+    $this->assertArrayHasKey($other_name, $themes);
+    $this->assertNotNull($themes[$other_name]);
   }
 
   /**
@@ -249,8 +256,10 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->config('system.theme')->set('admin', $name)->save();
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$other_name]));
+    $this->assertArrayHasKey($name, $themes);
+    $this->assertNotNull($themes[$name]);
+    $this->assertArrayHasKey($other_name, $themes);
+    $this->assertNotNull($themes[$other_name]);
 
     try {
       $message = 'ThemeInstaller::uninstall() throws InvalidArgumentException upon disabling admin theme.';
@@ -262,8 +271,10 @@ class ThemeInstallerTest extends KernelTestBase {
     }
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$other_name]));
+    $this->assertArrayHasKey($name, $themes);
+    $this->assertNotNull($themes[$name]);
+    $this->assertArrayHasKey($other_name, $themes);
+    $this->assertNotNull($themes[$other_name]);
   }
 
   /**
@@ -277,8 +288,9 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->themeInstaller()->uninstall([$name]);
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$base_name]));
+    $this->assertArrayNotHasKey($name, $themes);
+    $this->assertArrayHasKey($base_name, $themes);
+    $this->assertNotNull($themes[$base_name]);
   }
 
   /**
@@ -300,15 +312,17 @@ class ThemeInstallerTest extends KernelTestBase {
     }
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
-    $this->assertTrue(isset($themes[$sub_name]));
+    $this->assertArrayHasKey($name, $themes);
+    $this->assertNotNull($themes[$name]);
+    $this->assertArrayHasKey($sub_name, $themes);
+    $this->assertNotNull($themes[$sub_name]);
 
     // Verify that uninstalling both at the same time works.
     $this->themeInstaller()->uninstall([$name, $sub_name]);
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(isset($themes[$name]));
-    $this->assertFalse(isset($themes[$sub_name]));
+    $this->assertArrayNotHasKey($name, $themes);
+    $this->assertArrayNotHasKey($sub_name, $themes);
   }
 
   /**
@@ -351,7 +365,7 @@ class ThemeInstallerTest extends KernelTestBase {
     // Ensure that the uninstalled theme can be installed again.
     $this->themeInstaller()->install([$name]);
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]));
+    $this->assertNotNull($themes[$name]);
     $this->assertEquals($name, $themes[$name]->getName());
     $this->assertNotEmpty($this->config("$name.settings")->get());
   }
@@ -384,40 +398,44 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->themeInstaller()->install([$name]);
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));
+    $this->assertArrayNotHasKey('test_region', $themes[$name]->info['regions']);
 
     // Install module_test.
     $this->moduleInstaller()->install(['module_test'], FALSE);
     $this->assertTrue($this->moduleHandler()->moduleExists('module_test'));
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertTrue(isset($themes[$name]->info['regions']['test_region']));
+    $this->assertArrayHasKey('test_region', $themes[$name]->info['regions']);
+    $this->assertNotNull($themes[$name]->info['regions']['test_region']);
 
     // Legacy assertions.
     // @todo Remove once theme initialization/info has been modernized.
     // @see https://www.drupal.org/node/2228093
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($name);
-    $this->assertTrue(isset($info['regions']['test_region']));
+    $this->assertArrayHasKey('test_region', $info['regions']);
+    $this->assertNotNull($info['regions']['test_region']);
     $regions = system_region_list($name);
-    $this->assertTrue(isset($regions['test_region']));
+    $this->assertArrayHasKey('test_region', $regions);
+    $this->assertNotNull($regions['test_region']);
     $theme_list = \Drupal::service('theme_handler')->listInfo();
-    $this->assertTrue(isset($theme_list[$name]->info['regions']['test_region']));
+    $this->assertArrayHasKey('test_region', $theme_list[$name]->info['regions']);
+    $this->assertNotNull($theme_list[$name]->info['regions']['test_region']);
 
     $this->moduleInstaller()->uninstall(['module_test']);
     $this->assertFalse($this->moduleHandler()->moduleExists('module_test'));
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));
+    $this->assertArrayNotHasKey('test_region', $themes[$name]->info['regions']);
 
     // Legacy assertions.
     // @todo Remove once theme initialization/info has been modernized.
     // @see https://www.drupal.org/node/2228093
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($name);
-    $this->assertFalse(isset($info['regions']['test_region']));
+    $this->assertArrayNotHasKey('test_region', $info['regions']);
     $regions = system_region_list($name);
-    $this->assertFalse(isset($regions['test_region']));
+    $this->assertArrayNotHasKey('test_region', $regions);
     $theme_list = \Drupal::service('theme_handler')->listInfo();
-    $this->assertFalse(isset($theme_list[$name]->info['regions']['test_region']));
+    $this->assertArrayNotHasKey('test_region', $theme_list[$name]->info['regions']);
   }
 
   /**

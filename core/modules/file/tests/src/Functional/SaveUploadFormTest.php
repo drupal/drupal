@@ -141,8 +141,10 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Load both files using File::loadMultiple().
     $files = File::loadMultiple([$file1->id(), $file2->id()]);
-    $this->assertTrue(isset($files[$file1->id()]), 'File was loaded successfully');
-    $this->assertTrue(isset($files[$file2->id()]), 'File was loaded successfully');
+    $this->assertArrayHasKey($file1->id(), $files);
+    $this->assertNotNull($files[$file1->id()]);
+    $this->assertArrayHasKey($file2->id(), $files);
+    $this->assertNotNull($files[$file2->id()]);
 
     // Upload a third file to a subdirectory.
     $image3 = current($this->drupalGetTestFiles('image'));

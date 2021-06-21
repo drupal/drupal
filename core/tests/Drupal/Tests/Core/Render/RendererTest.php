@@ -819,13 +819,14 @@ class RendererTest extends RendererTestBase {
     // process (which will set $element['#printed']).
     $element = $test_element;
     $this->renderer->renderRoot($element);
-    $this->assertTrue(isset($element['#printed']), 'No cache hit');
+    $this->assertArrayHasKey('#printed', $element);
+    $this->assertNotNull($element['#printed']);
 
     // Render the element again and confirm that it is retrieved from the cache
     // instead (so $element['#printed'] will not be set).
     $element = $test_element;
     $this->renderer->renderRoot($element);
-    $this->assertFalse(isset($element['#printed']), 'Cache hit');
+    $this->assertArrayNotHasKey('#printed', $element);
 
     // Test that cache tags are correctly collected from the render element,
     // including the ones from its subchild.

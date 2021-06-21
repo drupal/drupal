@@ -165,11 +165,11 @@ class EntityFormDisplayTest extends KernelTestBase {
     $display->save();
     $config = $this->config('core.entity_form_display.' . $display->id());
     $data = $config->get();
-    $this->assertFalse(isset($data['content']['test_no_display']));
-    $this->assertFalse(isset($data['hidden']['test_no_display']));
+    $this->assertArrayNotHasKey('test_no_display', $data['content']);
+    $this->assertArrayNotHasKey('test_no_display', $data['hidden']);
     $this->assertEquals($expected['test_display_configurable'], $data['content']['test_display_configurable']);
-    $this->assertFalse(isset($data['content']['test_display_non_configurable']));
-    $this->assertFalse(isset($data['hidden']['test_display_non_configurable']));
+    $this->assertArrayNotHasKey('test_display_non_configurable', $data['content']);
+    $this->assertArrayNotHasKey('test_display_non_configurable', $data['hidden']);
 
     // Check that defaults are correctly filled when loading the display.
     $display = EntityFormDisplay::load($display->id());

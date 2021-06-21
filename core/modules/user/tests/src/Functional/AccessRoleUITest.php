@@ -65,7 +65,7 @@ class AccessRoleUITest extends UITestBase {
     // Verify that role option is not set.
     $view = $entity_type_manager->getStorage('view')->load('test_access_role');
     $display = $view->getDisplay('default');
-    $this->assertFalse(isset($display['display_options']['access']['options']['role']));
+    $this->assertArrayNotHasKey('role', $display['display_options']['access']['options']);
   }
 
 }

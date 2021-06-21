@@ -100,7 +100,8 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         $args = ['%source' => $str, '%context' => $context];
 
         // Make sure that the string was found in the file.
-        $this->assertTrue(isset($source_strings[$str]), new FormattableMarkup('Found source string: %source', $args));
+        $this->assertArrayHasKey($str, $source_strings, new FormattableMarkup('Found source string: %source', $args));
+        $this->assertNotNull($source_strings[$str]);
 
         // Make sure that the proper context was matched.
         $this->assertArrayHasKey($str, $source_strings);

@@ -326,8 +326,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $ret['test2']->created);
     $this->assertEquals(Cache::PERMANENT, $ret['test2']->expire, 'Expire time is correct.');
     // Test return - ensure it does not contain nonexistent cache ids.
-    $this->assertFalse(isset($ret['test19']), "Nonexistent cache id test19 is not set.");
-    $this->assertFalse(isset($ret['test21']), "Nonexistent cache id test21 is not set.");
+    // Verify that nonexistent cache id test19 is not set.
+    $this->assertArrayNotHasKey('test19', $ret);
+    // Verify that nonexistent cache id test21 is not set.
+    $this->assertArrayNotHasKey('test21', $ret);
     // Test values.
     $this->assertSame(3, $ret['test2']->data, "Existing cache id test2 has the correct value.");
     $this->assertSame(5, $ret['test3']->data, "Existing cache id test3 has the correct value.");
@@ -355,9 +357,12 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertArrayHasKey('test7', $ret, "Existing cache id test7 is set");
     $this->assertArrayHasKey('test19', $ret, "Added cache id test19 is set");
     // Test return - ensure it does not contain nonexistent cache ids.
-    $this->assertFalse(isset($ret['test3']), "Deleted cache id test3 is not set");
-    $this->assertFalse(isset($ret['test6']), "Deleted cache id test6 is not set");
-    $this->assertFalse(isset($ret['test21']), "Nonexistent cache id test21 is not set");
+    // Verify that deleted cache id test3 is not set.
+    $this->assertArrayNotHasKey('test3', $ret);
+    // Verify that deleted cache id test6 is not set.
+    $this->assertArrayNotHasKey('test6', $ret);
+    // Verify that nonexistent cache id test21 is not set.
+    $this->assertArrayNotHasKey('test21', $ret);
     // Test values.
     $this->assertSame(3, $ret['test2']->data, "Existing cache id test2 has the correct value.");
     $this->assertSame(17, $ret['test7']->data, "Existing cache id test7 has the correct value.");

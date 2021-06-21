@@ -898,17 +898,19 @@ class FormBuilderTest extends FormTestBase {
     $form_state = new FormState();
     $built_form = $this->formBuilder->buildForm($form_arg, $form_state);
     if (!isset($expected_form_cacheability) || ($method == 'get' && !is_string($token))) {
-      $this->assertFalse(isset($built_form['#cache']));
+      $this->assertArrayNotHasKey('#cache', $built_form);
     }
     else {
-      $this->assertTrue(isset($built_form['#cache']));
+      $this->assertArrayHasKey('#cache', $built_form);
+      $this->assertNotNull($built_form['#cache']);
       $this->assertEquals($expected_form_cacheability, $built_form['#cache']);
     }
     if (!isset($expected_token_cacheability)) {
-      $this->assertFalse(isset($built_form['form_token']));
+      $this->assertArrayNotHasKey('form_token', $built_form);
     }
     else {
-      $this->assertTrue(isset($built_form['form_token']));
+      $this->assertArrayHasKey('form_token', $built_form);
+      $this->assertNotNull($built_form['form_token']);
       $this->assertEquals($expected_token_cacheability, $built_form['form_token']['#cache']);
     }
   }

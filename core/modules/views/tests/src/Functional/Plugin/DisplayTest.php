@@ -60,8 +60,9 @@ class DisplayTest extends ViewTestBase {
     // Add a new 'display_test' display and test it's there.
     $view->storage->addDisplay('display_test');
     $displays = $view->storage->get('display');
-
-    $this->assertTrue(isset($displays['display_test_1']), 'Added display has been assigned to "display_test_1"');
+    // Verify that added display has been assigned to "display_test_1".
+    $this->assertArrayHasKey('display_test_1', $displays);
+    $this->assertNotNull($displays['display_test_1']);
 
     // Check the display options are like expected.
     $options = [

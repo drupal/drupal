@@ -55,7 +55,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
     // Load terms from the vocabulary by vid.
     $terms3 = $term_storage->loadByProperties(['vid' => $vocabulary->id()]);
     $this->assertCount(4, $terms3, 'Correct number of terms were loaded.');
-    $this->assertFalse(isset($terms3[$deleted->id()]));
+    $this->assertArrayNotHasKey($deleted->id(), $terms3);
 
     // Create a single term and load it by name.
     $term = $this->createTerm($vocabulary);

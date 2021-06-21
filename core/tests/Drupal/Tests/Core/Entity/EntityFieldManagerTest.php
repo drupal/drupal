@@ -306,7 +306,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $definitions = $this->entityFieldManager->getBaseFieldDefinitions('test_entity_type');
 
-    $this->assertTrue(isset($definitions[$default_langcode_key]));
+    $this->assertArrayHasKey($default_langcode_key, $definitions);
   }
 
   /**

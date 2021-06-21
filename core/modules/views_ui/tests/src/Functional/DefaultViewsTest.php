@@ -246,7 +246,7 @@ class DefaultViewsTest extends UITestBase {
         break;
       }
     }
-    $this->assertTrue(isset($index), new FormattableMarkup('Link to "@label" containing @part found.', ['@label' => $label, '@part' => $unique_href_part]));
+    $this->assertNotNull($index, new FormattableMarkup('Link to "@label" containing @part found.', ['@label' => $label, '@part' => $unique_href_part]));
     if (isset($index)) {
       return $this->clickLink((string) $label, $index);
     }

@@ -299,14 +299,15 @@ class ModuleHandlerTest extends KernelTestBase {
     // file_test.module provides (among others) a 'dummy' stream wrapper.
     // Verify that it is not registered yet to prevent false positives.
     $stream_wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers();
-    $this->assertFalse(isset($stream_wrappers['dummy']));
+    $this->assertArrayNotHasKey('dummy', $stream_wrappers);
     $this->moduleInstaller()->install(['file_test']);
     // Verify that the stream wrapper is available even without calling
     // \Drupal::service('stream_wrapper_manager')->getWrappers() again.
     // If the stream wrapper is not available file_exists() will raise a notice.
     file_exists('dummy://');
     $stream_wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers();
-    $this->assertTrue(isset($stream_wrappers['dummy']));
+    $this->assertArrayHasKey('dummy', $stream_wrappers);
+    $this->assertNotNull($stream_wrappers['dummy']);
   }
 
   /**

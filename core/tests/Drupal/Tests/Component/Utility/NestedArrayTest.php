@@ -114,13 +114,14 @@ class NestedArrayTest extends TestCase {
     $parents = $this->parents;
     $parents[] = 'foo';
     NestedArray::unsetValue($this->form, $parents, $key_existed);
-    $this->assertTrue(isset($this->form['details']['element']['#value']), 'Outermost nested element key still exists.');
+    $this->assertArrayHasKey('#value', $this->form['details']['element']);
+    $this->assertNotNull($this->form['details']['element']['#value'], 'Outermost nested element key still exists.');
     $this->assertFalse($key_existed, 'Non-existing key not found.');
 
     // Verify unsetting a nested element.
     $key_existed = NULL;
     NestedArray::unsetValue($this->form, $this->parents, $key_existed);
-    $this->assertFalse(isset($this->form['details']['element']), 'Removed nested element not found.');
+    $this->assertArrayNotHasKey('element', $this->form['details'], 'Removed nested element not found.');
     $this->assertTrue($key_existed, 'Existing key was found.');
   }
 
