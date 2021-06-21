@@ -157,7 +157,7 @@ class DenormalizeTest extends NormalizerTestBase {
   public function testDenormalizeInvalidCustomSerializedField() {
     $entity = EntitySerializedField::create(['serialized_long' => serialize(['Hello world!'])]);
     $normalized = $this->serializer->normalize($entity);
-    $this->assertEquals($normalized['serialized_long'][0]['value'], ['Hello world!']);
+    $this->assertEquals(['Hello world!'], $normalized['serialized_long'][0]['value']);
 
     $normalized['serialized_long'][0]['value'] = 'boo';
     $this->expectException(\LogicException::class);

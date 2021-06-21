@@ -292,7 +292,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Confirm the style directory has been removed.
     $directory = 'public://styles/' . $style_name;
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
 
     $this->assertNull(ImageStyle::load($style_name), new FormattableMarkup('Image style %style successfully deleted.', ['%style' => $style->label()]));
 

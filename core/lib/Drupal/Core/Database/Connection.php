@@ -1180,6 +1180,9 @@ abstract class Connection {
    */
   public function select($table, $alias = NULL, array $options = []) {
     @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
+    if (!is_null($alias) && !is_string($alias)) {
+      @trigger_error('Passing a non-string \'alias\' argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/3216552', E_USER_DEPRECATED);
+    }
     $class = $this->getDriverClass('Select');
     return new $class($this, $table, $alias, $options);
   }

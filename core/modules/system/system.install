@@ -15,6 +15,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
@@ -67,7 +68,7 @@ function system_requirements($phase) {
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
       $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-      if (isset($info['package']) && $info['package'] === 'Core (Experimental)') {
+      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) && $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
         $experimental_modules[$module] = $info['name'];
       }
     }
