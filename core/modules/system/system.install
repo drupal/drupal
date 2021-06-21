@@ -1507,7 +1507,7 @@ function _system_advisories_requirements(array &$requirements): void {
 }
 
 /**
- * Set the new system.site manfifest configuration.
+ * Set the new system.site manifest configuration.
  */
 function system_update_9101() {
   $site = \Drupal::configFactory()->getEditable('system.site');

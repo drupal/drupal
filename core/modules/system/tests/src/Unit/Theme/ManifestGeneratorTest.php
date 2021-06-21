@@ -39,7 +39,7 @@ class ManifestGeneratorTest extends UnitTestCase {
       ],
       'system.site' => [
         'manifest.display' => 'browser',
-        'manifest.name' => 'Micrathene whitneyi',
+        'manifest.name' => 'Elf owl',
         'manifest.short_name' => 'owl',
         'manifest.start_url' => '/',
       ],
@@ -70,7 +70,7 @@ class ManifestGeneratorTest extends UnitTestCase {
     $this->assertArrayHasKey('display', $data);
     $this->assertArrayHasKey('start_url', $data);
     $this->assertSame('owl', $data['short_name']);
-    $this->assertSame('Micrathene whitneyi', $data['name']);
+    $this->assertSame('Elf owl', $data['name']);
     $this->assertSame('browser', $data['display']);
     $this->assertSame('/', $data['start_url']);
 

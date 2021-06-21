@@ -394,7 +394,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     $form['manifest'] = [
       '#type' => 'details',
       '#title' => $this->t('Theme specific manifest settings'),
-      '#description' => $this->t('Theme-specifc values for the site manifest file. This is only part of the data needed for generating the manifest file, the rest of the configuration is <a href=":site_config">global to the site </a>', [':site_config' => $site_config_url]),
+      '#description' => $this->t('Theme-specific values for the site manifest file. This is only part of the data needed for generating the manifest file, the rest of the configuration is <a href=":site_config">global to the site </a>', [':site_config' => $site_config_url]),
       '#open' => FALSE,
     ];
     $form['manifest']['manifest_orientation'] = [
@@ -431,8 +431,8 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     if ($name == 'AddButton') {
       // Append an empty icon data block.
-      $unflatterned_icons = $form_state->getValue('manifest_icons') ?: [];
-      $icons = $this->extractIcons($unflatterned_icons);
+      $non_flattened_icons = $form_state->getValue('manifest_icons') ?: [];
+      $icons = $this->extractIcons($non_flattened_icons);
       $icons[] = [
         'src' => '',
         'sizes' => '',

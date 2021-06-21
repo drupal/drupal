@@ -124,7 +124,7 @@ class SiteInformationForm extends ConfigFormBase {
     $form['site_information']['manifest'] = [
       '#type' => 'details',
       '#title' => $this->t('Site manifest'),
-      '#description' => $this->t('Global values for the site manifest file. This is only part of the data needed for generating the manifest file, the rest of the configuration is <a href=":themeurl">theme specific</a>', [':themeurl' => $theme_config_url]),
+      '#description' => $this->t('Global values for the site manifest file. This is only part of the data needed for generating the manifest file, the rest of the configuration is <a href=":theme_config_url">theme specific</a>', [':theme_config_url' => $theme_config_url]),
       '#open' => FALSE,
     ];
     $form['site_information']['manifest']['start_url'] = [
