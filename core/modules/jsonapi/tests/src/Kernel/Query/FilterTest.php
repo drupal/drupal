@@ -93,7 +93,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
-    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
+    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
     Filter::createFromQueryParameter(['photo' => ''], $resource_type, $this->fieldResolver);
   }
@@ -113,7 +113,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithoutMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
-    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`.');
+    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`.');
     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
     Filter::createFromQueryParameter(['uid' => ''], $resource_type, $this->fieldResolver);
   }

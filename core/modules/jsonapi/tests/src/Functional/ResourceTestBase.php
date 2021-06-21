@@ -1758,14 +1758,90 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     if (!$is_multiple) {
       $target_entity = $field->entity;
-      return is_null($target_entity) ? NULL : static::toResourceIdentifier($target_entity);
+      if (is_null($target_entity)) {
+        return NULL;
+      }
+
+      $resource_identifier = static::toResourceIdentifier($target_entity);
+      $resource_identifier = static::decorateResourceIdentifierWithDrupalInternalTargetId($field, $resource_identifier);
+      return $resource_identifier;
     }
     else {
-      return array_filter(array_map(function ($item) {
+      $arity_counter = [];
+      $relation_list = array_filter(array_map(function ($item) use (&$arity_counter) {
         $target_entity = $item->entity;
-        return is_null($target_entity) ? NULL : static::toResourceIdentifier($target_entity);
+
+        if (is_null($target_entity)) {
+          return NULL;
+        }
+
+        $resource_identifier = static::toResourceIdentifier($target_entity);
+        $resource_identifier = static::decorateResourceIdentifierWithDrupalInternalTargetId($item, $resource_identifier);
+        $type = $resource_identifier['type'];
+        $id = $resource_identifier['id'];
+        // Start the count of identifiers sharing a single type and ID at 1.
+        if (!isset($arity_counter[$type][$id])) {
+          $arity_counter[$type][$id] = 1;
+        }
+        else {
+          $arity_counter[$type][$id] += 1;
+        }
+        return $resource_identifier;
       }, iterator_to_array($field)));
+
+      $arity_map = [];
+      $relation_list = array_map(function ($identifier) use ($arity_counter, &$arity_map) {
+        $type = $identifier['type'];
+        $id = $identifier['id'];
+        // Only add an arity value if there are two or more resource identifiers
+        // with the same type and ID.
+        if (($arity_counter[$type][$id] ?? 0) > 1) {
+          // Arity is indexed from 0. If the array key isn't set, 1 + (-1) = 0.
+          if (!isset($arity_map[$type][$id])) {
+            $arity_map[$type][$id] = 0;
+          }
+          else {
+            $arity_map[$type][$id] += 1;
+          }
+          $identifier['meta']['arity'] = $arity_map[$type][$id];
+        }
+        return $identifier;
+      }, $relation_list);
+
+      return $relation_list;
     }
+  }
+
+  /**
+   * Adds drupal_internal__target_id to the meta of a resource identifier.
+   *
+   * @param \Drupal\Core\Field\FieldItemInterface|\Drupal\Core\Field\FieldItemListInterface $field
+   *   The field containing the entity that is described by the
+   *   resource_identifier.
+   * @param array $resource_identifier
+   *   A resource identifier for an entity.
+   *
+   * @return array
+   *   A resource identifier for an entity with drupal_internal__target_id set
+   *   if appropriate.
+   */
+  protected static function decorateResourceIdentifierWithDrupalInternalTargetId($field, array $resource_identifier): array {
+    $property_definitions = $field->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinitions();
+
+    if (!isset($property_definitions['target_id'])) {
+      return $resource_identifier;
+    }
+
+    $is_data_reference_definition = $property_definitions['target_id'] instanceof DataReferenceTargetDefinition;
+    if ($is_data_reference_definition) {
+      // Numeric target IDs usually reference content entities, which use an
+      // auto-incrementing integer ID. Non-numeric target IDs usually reference
+      // config entities, which use a machine-name as an ID.
+      $resource_identifier['meta']['drupal_internal__target_id'] = is_numeric($field->target_id)
+        ? (int) $field->target_id
+        : $field->target_id;
+    }
+    return $resource_identifier;
   }
 
   /**
