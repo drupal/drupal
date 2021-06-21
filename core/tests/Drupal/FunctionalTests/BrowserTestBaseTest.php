@@ -57,6 +57,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $text = $this->getTextContent();
     $this->assertStringContainsString('Test page text.', $text);
     $this->assertStringNotContainsString('</html>', $text);
+    // Ensure Drupal Javascript settings are not part of the page text.
+    $this->assertArrayHasKey('currentPathIsAdmin', $this->getDrupalSettings()['path']);
+    $this->assertStringNotContainsString('currentPathIsAdmin', $text);
 
     // Response includes cache tags that we can assert.
     $this->assertSession()->responseHeaderExists('X-Drupal-Cache-Tags');

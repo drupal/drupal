@@ -154,6 +154,7 @@ function drupal_phpunit_populate_class_loader() {
 
 // Do class loader population.
 $loader = drupal_phpunit_populate_class_loader();
+class_alias('\Drupal\Tests\DocumentElement', '\Behat\Mink\Element\DocumentElement', TRUE);
 
 ClassWriter::mutateTestBase($loader);
 
