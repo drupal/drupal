@@ -313,7 +313,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/config/system/actions');
     $this->assertSession()->pageTextContains('Test action');
     $this->drupalGet('admin/config/system/actions/configure/test_action');
-    $this->assertSession()->pageTextContains('test_action');
+    $this->assertSession()->fieldValueEquals('id', 'test_action');
     $this->assertRaw('drupal.org');
 
     // Make sure our ban still exists.
