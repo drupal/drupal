@@ -6,7 +6,7 @@ use Drupal\Core\Theme\Manifest;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Class ManifestTest.
+ * Tests manifest file.
  *
  * @group Theme
  * @coversDefaultClass \Drupal\Core\Theme\Manifest
