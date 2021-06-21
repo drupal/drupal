@@ -876,9 +876,9 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog');
 
     $entries = $this->getLogEntries();
-    $this->assertEquals($entries[0]['message'], 'Third Entry #0');
-    $this->assertEquals($entries[1]['message'], 'Second Entry #0');
-    $this->assertEquals($entries[2]['message'], 'First Entry #0');
+    $this->assertEquals('Third Entry #0', $entries[0]['message']);
+    $this->assertEquals('Second Entry #0', $entries[1]['message']);
+    $this->assertEquals('First Entry #0', $entries[2]['message']);
   }
 
   /**
