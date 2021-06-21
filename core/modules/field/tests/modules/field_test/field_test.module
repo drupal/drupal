@@ -49,8 +49,8 @@ require_once __DIR__ . '/field_test.field.inc';
  *   $mem = field_test_memorize();
  *
  *   // make sure hook_field_storage_config_create() is invoked correctly
- *   assertEqual(count($mem['field_test_field_storage_config_create']), 1);
- *   assertEqual($mem['field_test_field_storage_config_create'][0], array($field));
+ *   assertEquals(1, count($mem['field_test_field_storage_config_create']));
+ *   assertEquals(array($field), $mem['field_test_field_storage_config_create'][0]);
  * @endcode
  *
  * @param $key
