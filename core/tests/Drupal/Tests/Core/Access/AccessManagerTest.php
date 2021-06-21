@@ -147,9 +147,9 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->checkProvider->setChecks($this->routeCollection);
 
-    $this->assertEquals($this->routeCollection->get('test_route_1')->getOption('_access_checks'), NULL);
-    $this->assertEquals($this->routeCollection->get('test_route_2')->getOption('_access_checks'), ['test_access_default']);
-    $this->assertEquals($this->routeCollection->get('test_route_3')->getOption('_access_checks'), ['test_access_default']);
+    $this->assertNull($this->routeCollection->get('test_route_1')->getOption('_access_checks'));
+    $this->assertEquals(['test_access_default'], $this->routeCollection->get('test_route_2')->getOption('_access_checks'));
+    $this->assertEquals(['test_access_default'], $this->routeCollection->get('test_route_3')->getOption('_access_checks'));
   }
 
   /**

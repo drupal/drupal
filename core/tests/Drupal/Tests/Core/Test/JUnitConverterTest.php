@@ -30,13 +30,13 @@ class JUnitConverterTest extends UnitTestCase {
 
     $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
     $this->assertCount(4, $res, 'All testcases got extracted');
-    $this->assertNotEquals($res[0]['status'], 'pass');
-    $this->assertEquals($res[0]['status'], 'fail');
+    $this->assertNotEquals('pass', $res[0]['status']);
+    $this->assertEquals('fail', $res[0]['status']);
 
     // Test nested testsuites, which appear when you use @dataProvider.
     for ($i = 0; $i < 3; $i++) {
-      $this->assertNotEquals($res[$i + 1]['status'], 'pass');
-      $this->assertEquals($res[$i + 1]['status'], 'fail');
+      $this->assertNotEquals('pass', $res[$i + 1]['status']);
+      $this->assertEquals('fail', $res[$i + 1]['status']);
     }
 
     // Make sure xmlToRows() does not balk if there are no test results.

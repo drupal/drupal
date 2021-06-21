@@ -99,9 +99,9 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
         // Confirm "Display Title" is not checked.
         $web_assert->checkboxNotChecked('settings[label_display]');
         // Confirm Title is not visible.
-        $this->assertEquals($this->isLabelInputVisible(), FALSE, 'Label is not visible');
+        $this->assertFalse($this->isLabelInputVisible(), 'Label is not visible');
         $page->checkField('settings[label_display]');
-        $this->assertEquals($this->isLabelInputVisible(), TRUE, 'Label is visible');
+        $this->assertTrue($this->isLabelInputVisible(), 'Label is visible');
         // Fill out form, save the form.
         $page->fillField('settings[label]', $new_page_text);
 

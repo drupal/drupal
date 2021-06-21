@@ -344,8 +344,8 @@ class ViewExecutableTest extends UnitTestCase {
   public function testGenerateHandlerId() {
     // Test the generateHandlerId() method.
     $test_ids = ['test' => 'test', 'test_1' => 'test_1'];
-    $this->assertEquals(ViewExecutable::generateHandlerId('new', $test_ids), 'new');
-    $this->assertEquals(ViewExecutable::generateHandlerId('test', $test_ids), 'test_2');
+    $this->assertEquals('new', ViewExecutable::generateHandlerId('new', $test_ids));
+    $this->assertEquals('test_2', ViewExecutable::generateHandlerId('test', $test_ids));
   }
 
   /**

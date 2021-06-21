@@ -26,7 +26,7 @@ class FilterFormatPermissionTest extends MigrateDrupalTestBase {
     $reflected_config = new \ReflectionProperty($filterFormatPermissionMigration, 'configuration');
     $reflected_config->setAccessible(TRUE);
     $config = $reflected_config->getValue($filterFormatPermissionMigration);
-    $this->assertEquals($config['migration'], 'custom_filter_format');
+    $this->assertEquals('custom_filter_format', $config['migration']);
   }
 
 }

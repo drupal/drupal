@@ -211,7 +211,7 @@ DOCBLOCK;
 
         $this->assertNull($annot->name);
         $this->assertNotNull($annot->data);
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
 
 
 
@@ -230,8 +230,8 @@ DOCBLOCK;
         $this->assertNotNull($annot);
         $this->assertInstanceOf(SomeAnnotationClassNameWithoutConstructor::class, $annot);
 
-        $this->assertEquals($annot->name, "Some Name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some Name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
 
 
@@ -246,7 +246,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
         $this->assertNull($annot->name);
 
 
@@ -260,7 +260,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals("Some name", $annot->name);
         $this->assertNull($annot->data);
 
         $docblock = <<<DOCBLOCK
@@ -273,7 +273,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
         $this->assertNull($annot->name);
 
 
@@ -288,8 +288,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
 
         $docblock = <<<DOCBLOCK
@@ -302,8 +302,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
         $docblock = <<<DOCBLOCK
 /**

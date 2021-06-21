@@ -62,7 +62,7 @@ class YamlDiscoveryTest extends TestCase {
 
     foreach (['test_1', 'test_2', 'test_3'] as $key) {
       $this->assertArrayHasKey('name', $data[$key]);
-      $this->assertEquals($data[$key]['name'], 'test');
+      $this->assertEquals('test', $data[$key]['name']);
     }
 
     $this->assertSame([], $data['test_4']);

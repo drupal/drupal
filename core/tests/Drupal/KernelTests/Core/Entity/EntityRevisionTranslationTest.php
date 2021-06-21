@@ -134,8 +134,8 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
 
     $pending_revision = $storage->loadRevision($pending_revision_id);
 
-    $this->assertEquals($pending_revision->name->value, 'updated pending revision - en');
-    $this->assertEquals($pending_revision->getTranslation('de')->name->value, 'pending revision - de');
+    $this->assertEquals('updated pending revision - en', $pending_revision->name->value);
+    $this->assertEquals('pending revision - de', $pending_revision->getTranslation('de')->name->value);
   }
 
   /**
