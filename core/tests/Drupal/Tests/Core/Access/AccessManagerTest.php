@@ -97,6 +97,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->container = new ContainerBuilder();
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
     $this->container->set('cache_contexts_manager', $cache_contexts_manager);
+    $this->container->setParameter('dynamic_access_check_services', []);
     \Drupal::setContainer($this->container);
 
     $this->routeCollection = new RouteCollection();
@@ -162,6 +163,7 @@ class AccessManagerTest extends UnitTestCase {
     // Setup the dynamic access checker.
     $access_check = $this->createMock('Drupal\Tests\Core\Access\TestAccessCheckInterface');
     $this->container->set('test_access', $access_check);
+    $this->container->setParameter('dynamic_access_check_services', ['test_access']);
     $this->checkProvider->addCheckService('test_access', 'access');
 
     $route = new Route('/test-path', [], ['_foo' => '1', '_bar' => '1']);
@@ -398,6 +400,7 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue(AccessResult::forbidden()));
 
     $this->container->set('test_access', $access_check);
+    $this->container->setParameter('dynamic_access_check_services', ['test_access']);
 
     $this->checkProvider->addCheckService('test_access', 'access');
     $this->checkProvider->setChecks($this->routeCollection);
@@ -446,6 +449,7 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue(AccessResult::forbidden()));
 
     $this->container->set('test_access', $access_check);
+    $this->container->setParameter('dynamic_access_check_services', ['test_access']);
 
     $this->checkProvider->addCheckService('test_access', 'access');
     $this->checkProvider->setChecks($this->routeCollection);

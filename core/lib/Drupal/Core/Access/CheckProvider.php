@@ -129,12 +129,14 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
     foreach ($route->getRequirements() as $key => $value) {
       if (isset($this->staticRequirementMap[$key])) {
         foreach ($this->staticRequirementMap[$key] as $service_id) {
+          $this->loadCheck($service_id);
           $checks[] = $service_id;
         }
       }
     }
     // Finally, see if any dynamic access checkers apply.
     foreach ($this->dynamicRequirementMap as $service_id) {
+      $this->loadCheck($service_id);
       if ($this->checks[$service_id]->applies($route)) {
         $checks[] = $service_id;
       }
@@ -147,22 +149,8 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
    * Compiles a mapping of requirement keys to access checker service IDs.
    */
   protected function loadDynamicRequirementMap() {
-    if (isset($this->dynamicRequirementMap)) {
-      return;
-    }
-
-    // Set them here, so we can use the isset() check above.
-    $this->dynamicRequirementMap = [];
-
-    foreach ($this->checkIds as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
-      }
-
-      // Add the service ID to an array that will be iterated over.
-      if ($this->checks[$service_id] instanceof AccessCheckInterface) {
-        $this->dynamicRequirementMap[] = $service_id;
-      }
+    if (!isset($this->dynamicRequirementMap)) {
+      $this->dynamicRequirementMap = $this->container->getParameter('dynamic_access_check_services');
     }
   }
 
