@@ -71,7 +71,7 @@ class SubProcessTest extends MigrateTestCase {
     // key (@id) is the same as the destination ID (42).
     $new_value = $plugin->transform($current_value, $migrate_executable, $row, 'test');
     $this->assertCount(1, $new_value);
-    $this->assertCount(count($process_configuration['process']), $new_value[42]);
+    $this->assertSameSize($process_configuration['process'], $new_value[42]);
     $this->assertSame('test', $new_value[42]['foo']);
     if ($source_values) {
       $this->assertSame('source_baz', $new_value[42]['baaa']);

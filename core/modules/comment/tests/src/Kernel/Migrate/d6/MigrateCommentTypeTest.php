@@ -93,7 +93,7 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
     ];
 
     foreach ($expected_messages as $type => $expected_messages_by_type) {
-      $this->assertEquals(count($expected_messages_by_type), count($actual_messages[$type]));
+      $this->assertSameSize($expected_messages_by_type, $actual_messages[$type]);
       // Cast the actual messages to string.
       $actual_messages_by_type = array_reduce($actual_messages[$type], function (array $carry, $actual_message) {
         $carry[] = (string) $actual_message;

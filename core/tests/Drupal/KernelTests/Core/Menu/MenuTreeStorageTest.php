@@ -432,7 +432,7 @@ class MenuTreeStorageTest extends KernelTestBase {
     $query->condition('id', $parents, 'IN');
     $found_parents = $query->execute()->fetchAllKeyed(0, 1);
 
-    $this->assertSame(count($parents), count($found_parents), 'Found expected number of parents');
+    $this->assertSameSize($parents, $found_parents, 'Found expected number of parents');
     $this->assertCount($raw['depth'], $found_parents, 'Number of parents is the same as the depth');
 
     $materialized_path = $this->treeStorage->getRootPathIds($id);
