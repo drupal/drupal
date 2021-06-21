@@ -1,0 +1,29 @@
+---
+label: 'Managing comments'
+top_level: true
+related:
+  - comment.moderating
+  - comment.configuring
+  - comment.creating_type
+  - comment.disabling
+  - field_ui.add_field
+  - field_ui.manage_display
+  - field_ui.manage_form
+---
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+{% set users_overview_topic = render_var(help_topic_link('user.overview')) %}
+<h2>{% trans %}What is a comment?{% endtrans %}</h2>
+<p>{% trans %}A comment is a piece of content, typically posted by a website visitor, which provides discussion or commentary on other content like forum topics, blog posts, and news articles. Comments are a type of content entity, and can have fields that store text, HTML markup, and other data. Comments are attached to other content entities via Comment fields. See {{ content_structure_topic }} for more about content entities and fields.{% endtrans %}</p>
+<h2>{% trans %}What is a comment type?{% endtrans %}</h2>
+<p>{% trans %}Comments are divided into <em>comment types</em>, which are the entity sub-types for the comment entity type. Each comment type has its own fields and its own form and display settings; each type can be used to comment on a single entity type. You can set up different comment types for different commenting purposes on your web site; for example, you might set up a comment type for recipes that has fields "How did it taste?" and "Did the instructions work?", and another comment type for blog entries that has only a generic comment body field.{% endtrans %}</p>
+<h2>{% trans %}What is moderation?{% endtrans %}</h2>
+<p>{% trans %}<em>Moderation</em> is a workflow where comments posted by some users on your site are verified before being published, to prevent spam and other bad behavior. The core software provides basic moderation functionality: you can configure permissions so that new comments posted by some user roles start as unpublished until a user with a different role reviews and publishes them. Contributed modules provide additional moderation and spam-reduction functionality, such as requiring untrusted users pass a CAPTCHA test before submitting comments and letting community members flag comments as possible spam. See {{ users_overview_topic }} for more about users, permissions, and roles.{% endtrans %}</p>
+<h2>{% trans %}Overview of managing comments{% endtrans %}</h2>
+<p>{% trans %}The core Comment module provides the following functionality:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}Posting comments{% endtrans %}</li>
+  <li>{% trans %}Creating comment types; the core Field UI module allows you to attach fields to comment types and attach comment reference fields to other entities so that people can comment on them.{% endtrans %}</li>
+  <li>{% trans %}Configuring commenting{% endtrans %}</li>
+  <li>{% trans %}Moderating comments as discussed above{% endtrans %}</li>
+</ul>
+<p>{% trans %}See the related topics listed below for specific tasks.{% endtrans %}</p>
