@@ -429,7 +429,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     $triggering_element = $form_state->getTriggeringElement();
     $name = isset($triggering_element['#name']) ? $triggering_element['#name'] : '';
 
-    if ($name == 'AddButton') {
+    if ($name === 'AddButton') {
       // Append an empty icon data block.
       $non_flattened_icons = $form_state->getValue('manifest_icons') ?: [];
       $icons = $this->extractIcons($non_flattened_icons);

@@ -28,9 +28,7 @@ class ManifestGeneratorTest extends UnitTestCase {
     $language_manager
       ->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->returnValue(
-        new Language(['id' => 'en'])
-      ));
+      ->willReturn(new Language(['id' => 'en']));
 
     $config_factory = $this->getConfigFactoryStub([
       'bartik.settings' => [
