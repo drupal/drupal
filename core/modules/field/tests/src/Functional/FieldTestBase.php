@@ -58,7 +58,7 @@ abstract class FieldTestBase extends BrowserTestBase {
     // Filter out empty values so that they don't mess with the assertions.
     $field->filterEmptyItems();
     $values = $field->getValue();
-    $this->assertEquals(count($expected_values), count($values), 'Expected number of values were saved.');
+    $this->assertSameSize($expected_values, $values, 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
       $this->assertEquals($value, $values[$key][$column], new FormattableMarkup('Value @value was saved correctly.', ['@value' => $value]));
     }

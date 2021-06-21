@@ -88,7 +88,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
       $filter = ['key' => $key];
       $this->assertNotEmpty($this->getMails($filter));
     }
-    $this->assertCount(count($mail_keys), $this->getMails());
+    $this->assertSameSize($mail_keys, $this->getMails());
   }
 
   /**

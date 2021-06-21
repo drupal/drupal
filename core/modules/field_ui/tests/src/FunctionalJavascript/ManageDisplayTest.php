@@ -395,7 +395,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $select_options = $field->findAll('xpath', 'option');
 
     // Validate the number of options.
-    $this->assertCount(count($expected_options), $select_options);
+    $this->assertSameSize($expected_options, $select_options);
 
     // Validate the options and expected order.
     foreach ($select_options as $key => $option) {
