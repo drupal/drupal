@@ -1,0 +1,25 @@
+---
+label: 'Configuring actions'
+top_level: true
+related:
+  - views.overview
+  - views_ui.bulk_operations
+---
+{% set actions_link_text %}
+  {% trans %}Actions page{% endtrans %}
+{% endset %}
+{% set actions_page = render_var(help_route_link(actions_link_text, 'entity.action.collection')) %}
+<h2>{% trans %}What are actions?{% endtrans %}</h2>
+<p>{% trans %}Actions are module-defined tasks that can be executed on the site; for example, unpublishing content, sending an email message, or blocking a user.{% endtrans %}</p>
+<h2>{% trans %}What are simple actions?{% endtrans %}</h2>
+<p>{% trans %}Simple actions do not require configuration. They are automatically available to be executed, and are always listed as available on the {{ actions_page }}.{% endtrans %}</p>
+<h2>{% trans %}What are advanced actions?{% endtrans %}</h2>
+<p>{% trans %}Advanced actions require configuration. Before they are available for listing and execution, they need to be created and configured. For example, for an action that sends e-mail, you would need to configure the e-mail address.{% endtrans %}</p>
+<h2>{% trans %}How are actions executed?{% endtrans %}</h2>
+<p>{% trans %}In the core software, actions can be executed through a <em>bulk operations form</em> added to a view; if you have the core Views module installed, see the related topic "Managing content listings (views)" for more information about views and bulk operations.{% endtrans %}</p>
+<h2>{% trans %}Configuring actions overview{% endtrans %}</h2>
+<p>{% trans %}The core Actions module provides a user interface for listing and configuring actions. The core Views UI module provides a user interface for creating views, which may include bulk operations forms for executing actions. See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/documentation/modules/action">{% trans %}Online documentation for the Action module{% endtrans %}</a></li>
+</ul>

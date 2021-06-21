@@ -1,0 +1,30 @@
+---
+label: 'Adding a bulk operations form to a view'
+related:
+  - action.overview
+  - action.creating
+  - views.overview
+  - views_ui.create
+  - user.overview
+---
+{% set views_link_text %}
+  {% trans %}Views{% endtrans %}
+{% endset %}
+{% set views = render_var(help_route_link(views_link_text, 'entity.view.collection')) %}
+{% set views_permissions_link_text %}
+  {% trans %}Administer views{% endtrans %}
+{% endset %}
+{% set views_permissions = render_var(help_route_link(views_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-views_ui'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Add one or more existing actions as bulk operations to an existing table-style view. If you have the core Actions module installed, see the related topic "Configuring actions" for more information about actions.{% endtrans %}</p>
+<h2>{% trans %}Who can edit views?{% endtrans %}</h2>
+<p>{% trans %}The core Views UI module will need to be installed and you will need <em>{{ views_permissions }}</em> permission in order to edit a view.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>{{ views }}</em>. A list of all views is shown.{% endtrans %}</li>
+  <li>{% trans %}Find the view that you would like to edit, and click <em>Edit</em> from the the dropdown button. Note that bulk operations work best in a view with a Page display, and a Table format.{% endtrans %}</li>
+  <li>{% trans %}If there is not already an <em>Operations bulk form</em> in the <em>Fields</em> list for the view, click <em>Add</em> in the <em>Fields</em> section to add it. (The exact name of the bulk form field will vary, and may contain keywords like "bulk update", "form element" or "operations" -- not to be confused with <em>operations links</em>, which are applied to each item in a row.) If the bulk operations field already exists, click the field name to edit its settings.{% endtrans %}</li>
+  <li>{% trans %}Check the action(s) you want to make available in the <em>Selected actions</em> list and click <em>Apply (all displays)</em>.{% endtrans %}</li>
+  <li>{% trans %}Verify that the <em>Access</em> settings for the view are at least as restrictive as the permissions necessary to perform the bulk operations. People with permission to see the view, but who don't have permission to do the bulk operations, will experience problems.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>. The action(s) will be available as bulk operations in the view.{% endtrans %}</li>
+</ol>

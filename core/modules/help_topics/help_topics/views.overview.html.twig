@@ -3,6 +3,9 @@ label: 'Managing content listings (views)'
 top_level: true
 related:
   - block.overview
+  - views_ui.bulk_operations
+  - action.overview
+  - user.overview
 ---
 <h2>{% trans %}What is a view?{% endtrans %}</h2>
 <p>{% trans %}A <em>view</em> is a listing of items on your site; for example, a block showing the most recent comments, a page listing news items, or a list of registered users. The listings can be formatted in a table, grid, list, calendar, RSS feed, and other formats (some output formats may require you to install additional contributed modules).{% endtrans %}</p>
@@ -14,7 +17,7 @@ related:
   <li>{% trans %}<em>Fields</em>: if the Format allows, the particular fields to display.{% endtrans %}</li>
   <li>{% trans %}<em>Filter criteria</em>: criteria to limit the data to output, such as whether the content is published, the type of content, etc. Filters can be <em>exposed</em> to let users choose how to filter the data.{% endtrans %}</li>
   <li>{% trans %}<em>Sort criteria</em>: how to order the data. Sorting can also be exposed to users.{% endtrans %}</li>
-  <li>{% trans %}<em>Page settings</em>, <em>Block settings</em>, etc.: settings specific to the display type, such as the URL for a page display.{% endtrans %}</li>
+  <li>{% trans %}<em>Page settings</em>, <em>Block settings</em>, etc.: settings specific to the display type, such as the URL for a page display. Most display types support an <em>Access</em> setting, where you can choose a Permission or Role that a user must have in order to see the view.{% endtrans %}</li>
   <li>{% trans %}<em>Header</em> and <em>Footer</em>: content to display at the top or bottom of the view display.{% endtrans %}</li>
   <li>{% trans %}<em>No results behavior</em>: what to do if the filter criteria result in having no data to display.{% endtrans %}</li>
   <li>{% trans %}<em>Pager</em>: how many items to display, and how to paginate if there are additional items to display.{% endtrans %}</li>
@@ -22,6 +25,8 @@ related:
   <li>{% trans %}<em>Advanced</em> &gt; <em>Relationships</em>: additional data to pull in and display, related in some way to the base data of the view (such as data about the user who created the content item).{% endtrans %}</li>
   <li>{% trans %}<em>Advanced</em> &gt; <em>Exposed form</em>: if you have exposed filters or sorts, how to display the form to the user.{% endtrans %}</li>
 </ul>
+<h2>{% trans %}What are bulk operations?{% endtrans %}</h2>
+<p>{% trans %}Views using a table display format can include a bulk operations form, which allows users with sufficient permission to select one or more items from the view and apply an administrative action to them. The bulk actions available are specific to the base data type of the view; for example, a view of content items could support bulk publishing and unpublishing actions. If you have the core Actions module installed, see the related topic "Configuring actions" for more about actions.{% endtrans %}</p>
 <h2>{% trans %}Managing views overview{% endtrans %}</h2>
 <p>{% trans %}The core Views module handles the display of views, and the core Views UI module allows you to create, edit, and delete views in the administrative interface. See the related topics listed below for specific tasks (if the Views UI module is installed).{% endtrans %}</p>
 <h2>{% trans %}Additional resources{% endtrans %}</h2>
