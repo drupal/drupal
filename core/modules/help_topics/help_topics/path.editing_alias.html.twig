@@ -1,0 +1,26 @@
+---
+label: 'Editing a URL alias'
+related:
+  - path.overview
+  - path.creating_alias
+---
+{% set path_permissions_link_text %}
+  {% trans %}Administer URL aliases{% endtrans %}
+{% endset %}
+{% set path_permissions_link = render_var(help_route_link(path_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-path'})) %}
+{% set path_aliases_link_text %}
+  {% trans %}URL aliases{% endtrans %}
+{% endset %}
+{% set path_aliases_link = render_var(help_route_link(path_aliases_link_text, 'entity.path_alias.collection')) %}
+{% set path_overview_topic = render_var(help_topic_link('path.overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Change an existing URL alias, to correct the path or the alias value. See {{ path_overview_topic }} for more about aliases.{% endtrans %}</p>
+<h2>{% trans %}Who can manage URL aliases?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ path_permissions_link }}</em> permission can edit aliases.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Configuration</em> &gt; <em>Search and metadata</em> &gt; <em>{{ path_aliases_link }}</em>. A list of all the site's aliases will appear.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Edit</em> in the dropdown button for the alias that you would like to change.{% endtrans %}</li>
+  <li>{% trans %}Make the required changes and click <em>Save</em>. You will be returned to the URL alias list page.{% endtrans %}</li>
+  <li>{% trans %}Note that you can also add new aliases from this page, for any path on your site.{% endtrans %}</li>
+</ol>

@@ -1,0 +1,24 @@
+---
+label: 'Managing taxonomy'
+top_level: true
+---
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+<h2>{% trans %}What is taxonomy?{% endtrans %}</h2>
+<p>{% trans %}<em>Taxonomy</em> is used to classify website content. One common example of taxonomy is the tags used to classify or categorize posts in a blog website; a cooking website could use an ingredients taxonomy to classify recipes. Individual taxonomy items are known as <em>terms</em> (the blog tags or recipe ingredients in these examples); and a set of terms is known as a <em>vocabulary</em> (the set of all blog post tags, or the set of all recipe ingredients in these examples). Technically, taxonomy terms are an entity type and the entity subtypes are the vocabularies; see {{ content_structure_topic }} for more on content entities. Like other entities, taxonomy terms can have fields attached; for instance, you could set up an image field to contain an icon for each term.{% endtrans %}</p>
+<p>{% trans %}An individual vocabulary can organize its terms in a hierarchy, or it could be flat. For example, blog tags normally have a flat structure, while a recipe ingredients vocabulary could be hierarchical (for example, tomatoes could be a sub-term of vegetables, and under tomatoes, you could have green and red tomatoes).{% endtrans %}</p>
+<p>{% trans %}Taxonomy terms are normally attached as reference fields to other content entities, which is how you can use them to classify content. When you set up a taxonomy reference field, you can let users enter terms in two ways:{% endtrans %}</p>
+<dl>
+  <dt>{% trans %}Free tagging{% endtrans %}</dt>
+  <dd>{% trans %}New terms can be created right on the content editing form.{% endtrans %}</dd>
+  <dt>{% trans %}Fixed list of terms{% endtrans %}</dt>
+  <dd>{% trans %}The list of terms is curated and managed outside the content editing form, and users can only select from the existing list when editing content.{% endtrans %}</dd>
+</dl>
+<p>{% trans %}Taxonomy reference fields can be added to any entity, such as user accounts, custom blocks, or regular content items. If you use them to classify regular content items, your site will automatically be set up with taxonomy listing pages for each term; each of these pages lists all of the content items that are classified with that term.{% endtrans %}</p>
+<h2>{% trans %}Overview of managing taxonomy{% endtrans %}</h2>
+<p>{% trans %}The core Taxonomy module allows you to create and edit taxonomy vocabularies and taxonomy terms. The core Field UI module provides a user interface for adding fields to entities, including the taxonomy reference field, and configuring field editing and display. See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a
+      href="https://www.drupal.org/docs/user_guide/en/structure-taxonomy.html">{% trans %}User guide on Taxonomy{% endtrans %}</a>
+  </li>
+</ul>

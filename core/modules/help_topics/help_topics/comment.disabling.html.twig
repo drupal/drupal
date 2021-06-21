@@ -1,0 +1,28 @@
+---
+label: 'Disabling comments'
+related:
+  - comment.overview
+  - comment.configuring
+---
+{% set comment_permissions_text %}
+{% trans %}Administer comments and comment settings{% endtrans %}
+{% endset %}
+{% set comment_permissions_link = render_var(help_route_link(comment_permissions_text, 'user.admin_permissions', {}, {'fragment': 'module-comment'})) %}
+{% set comment_config_topic = render_var(help_topic_link('comment.configuring')) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Turn off commenting for a particular entity (see {{ content_structure_topic }} for more about content entities and fields). Note that if you want to turn off commenting for all entities of an entity type or subtype, you will need to edit the field settings for the comment field; see {{ comment_config_topic }} for more about configuring the comment field.{% endtrans %}</p>
+<h2>{% trans %}Who can disable comments?{% endtrans %}</h2>
+<p>{% trans %}You will need the <em>{{ comment_permissions_link }}</em> permission in order to disable commenting. You will also need permission to edit the entity that the comments are on.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}Find the entity you want to disable comments for, and edit it. For example, to turn off comments on a content item, you could find it by navigating in the <em>Manage</em> administrative menu to <em>Content</em>, filtering to find the content item, and clicking <em>Edit</em>.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Comment settings</em>, select the desired comment setting:{% endtrans %}
+    <ul>
+      <li>{% trans %}<em>Open</em>: comments are allowed.{% endtrans %}</li>
+      <li>{% trans %}<em>Closed</em>: past comments remain visible, but no new comments are allowed.{% endtrans %}</li>
+      <li>{% trans %}<em>Hidden</em>: past comments are hidden, and no new comments are allowed.{% endtrans %}</li>
+    </ul>
+  </li>
+  <li>{% trans %}Save the entity.{% endtrans %}</li>
+</ol>

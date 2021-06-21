@@ -1,0 +1,28 @@
+---
+label: 'Creating a URL alias for a content item'
+related:
+  - path.overview
+  - path.editing_alias
+  - node.creating_content
+  - node.editing
+---
+{% set path_permissions_link_text %}
+{% trans %}Create and edit URL aliases{% endtrans %}
+{% endset %}
+{% set path_permissions_link = render_var(help_route_link(path_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-path'})) %}
+{% set overview_topic = render_var(help_topic_link('path.overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Give a content item page a human- or SEO-friendly URL alias; you can follow similar steps to create an alias for a taxonomy term page. See {{ overview_topic }} for more about aliases.{% endtrans %}</p>
+<h2>{% trans %}Who can create URL aliases?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ path_permissions_link }}</em> permission can create aliases. To follow the steps in this topic, you will also need permission to edit the content item.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}Locate and open the content edit form for the content item, or create a new content item (see related topics on creating and editing content).{% endtrans %}</li>
+  <li>{% trans %}Under <em>URL alias</em> on the edit form, enter the desired alias (for example, "/about-us"). Make sure the alias starts with a "/" character.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
+  <li>{% trans %}Verify that the page can be visited with the new alias, for example <em>https://example.com/about-us</em>.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/user_guide/en/content-create.html">{% trans %}User guide: Creating a Content Item{% endtrans %}</a></li>
+</ul>

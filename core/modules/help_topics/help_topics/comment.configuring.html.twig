@@ -1,0 +1,43 @@
+---
+label: 'Configuring comments'
+related:
+  - comment.overview
+  - comment.creating_type
+  - comment.disabling
+  - field_ui.add_field
+---
+{% set comment_permissions_link_text %}
+{% trans %}Administer comments and comment settings{% endtrans %}
+{% endset %}
+{% set comment_permissions_link = render_var(help_route_link(comment_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-comment'})) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+{% set comment_type_topic = render_var(help_topic_link('comment.creating_type')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure a content entity type/subtype to allow commenting, using a comment type that you have configured. See {{ content_structure_topic }} for more about content entities and fields, and {{ comment_type_topic }} to configure a comment type.{% endtrans %}</p>
+<h2>{% trans %}Who can configure comments?{% endtrans %}</h2>
+<p>{% trans %}In order to follow these steps, the Field UI module must be installed. You'll need the Comment module's <em>{{ comment_permissions_link }}</em> permission, in order to change comment settings for a comment field. You'll also need to have the appropriate permission for adding fields to the entity type or subtype that the comments are attached to. For example, to add a comment field to content items provided by the Node module, you would need the Node module's <em>Administer content types</em> permission.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}Follow the steps in the related <em>Adding a field to an entity sub-type</em> topic to add a field of type <em>Comments</em> to the desired entity type or sub-type.{% endtrans %}</li>
+  <li>{% trans %}On the first field settings page, choose the <em>Comment type</em> to use for this entity type or sub-type. You'll also notice that the <em>Allowed number of values</em> field cannot be changed for comment fields.{% endtrans %}</li>
+  <li>{% trans %}On the next field settings page, enter the desired settings for the comment field:{% endtrans %}
+    <ul>
+      <li>{% trans %}<em>Threading</em>: whether or not the comments are collected by threads, with people able to reply to particular comments instead of to the content entity itself.{% endtrans %}</li>
+      <li>{% trans %}<em>Comments per page</em>: the maximum number of comments displayed on one page (a pager will be added if you exceed this limit).{% endtrans %}</li>
+      <li>{% trans %}<em>Anonymous commenting</em>: whether or not anonymous commenters are allowed or required to leave contact information with their comments (only applies if anonymous users have permission to post comments).{% endtrans %}</li>
+      <li>{% trans %}<em>Show reply form on the same page as comments</em>: whether the comment reply form is displayed on the same page as the comments. If this is not selected, clicking <em>Reply</em> will open a new page with the reply form.{% endtrans %}</li>
+      <li>{% trans %}<em>Preview comments</em>: whether previewing comments before submission is <em>Required</em>, <em>Optional</em>, or <em>Disabled</em>.{% endtrans %}</li>
+      <li>{% trans %}<em>Default value</em>: each individual entity has its own comment settings, but here you can set defaults for the comment settings for this entity type or subtype. The comment settings values are:{% endtrans %}
+        <ul>
+          <li>{% trans %}<em>Open</em>: comments are allowed.{% endtrans %}</li>
+          <li>{% trans %}<em>Closed</em>: past comments remain visible, but no new comments are allowed.{% endtrans %}</li>
+          <li>{% trans %}<em>Hidden</em>: past comments are hidden, and no new comments are allowed.{% endtrans %}</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/8/core/modules/comment/administering-a-content-types-comment-settings">{% trans %}Online documentation for content comment settings{% endtrans %}</a></li>
+</ul>
