@@ -1,0 +1,28 @@
+---
+label: 'Creating an advanced action'
+related:
+  - action.overview
+  - views_ui.bulk_operations
+---
+{% set actions_link_text %}
+  {% trans %}Actions{% endtrans %}
+{% endset %}
+{% set actions = render_var(help_route_link(actions_link_text, 'entity.action.collection')) %}
+{% set action_permissions_link_text %}
+  {% trans %}Administer actions{% endtrans %}
+{% endset %}
+{% set action_permissions = render_var(help_route_link(action_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-action'})) %}
+{% set action_overview = render_var(help_topic_link('action.overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create an advanced action. You can, for example, create an action to change the author of multiple content items. See {{ action_overview }} for more about actions.{% endtrans %}</p>
+<h2>{% trans %}Who can create actions?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ action_permissions }}</em> permission (typically administrators) can create actions.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>System</em> &gt; <em>{{ actions }}</em>. A list of all actions is shown.{% endtrans %}</li>
+  <li>{% trans %}Choose an advanced action from the dropdown and click <em>Create</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter a name for the action in the <em>Label</em> field. This label will be visible for the user.{% endtrans %}</li>
+  <li>{% trans %}Configure any of the other available options. These will depend on the kind of action that you have chosen.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>. You will be returned to the list of actions, with your new action added to the list.{% endtrans %}</li>
+  <li>{% trans %}To edit an action you have previously created, click <em>Configure</em> in the <em>Operations</em> drop-down list. To delete an action you have previously created, click <em>Delete</em> in the <em>Operations</em> drop-down list.{% endtrans %}</li>
+</ol>
