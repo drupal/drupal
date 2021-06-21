@@ -872,8 +872,8 @@ class UpdateContribTest extends UpdateTestBase {
       $this->assertFalse($compatibility_details->hasAttribute('open'));
       $this->assertSame('Compatible', $details_summary_element->getText());
       $this->assertEquals(
-        $update_element->findLink('Download')->getAttribute('href'),
-        "http://example.com/{$this->updateProject}-$download_version.tar.gz"
+        "http://example.com/{$this->updateProject}-$download_version.tar.gz",
+        $update_element->findLink('Download')->getAttribute('href')
       );
     }
     else {

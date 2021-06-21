@@ -937,116 +937,116 @@ www.example.com with a newline in comments -->
   public function testHtmlCorrectorFilter() {
     // Tag closing.
     $f = Html::normalize('<p>text');
-    $this->assertEquals($f, '<p>text</p>', 'HTML corrector -- tag closing at the end of input.');
+    $this->assertEquals('<p>text</p>', $f, 'HTML corrector -- tag closing at the end of input.');
 
     $f = Html::normalize('<p>text<p><p>text');
-    $this->assertEquals($f, '<p>text</p><p></p><p>text</p>', 'HTML corrector -- tag closing.');
+    $this->assertEquals('<p>text</p><p></p><p>text</p>', $f, 'HTML corrector -- tag closing.');
 
     $f = Html::normalize("<ul><li>e1<li>e2");
-    $this->assertEquals($f, "<ul><li>e1</li><li>e2</li></ul>", 'HTML corrector -- unclosed list tags.');
+    $this->assertEquals("<ul><li>e1</li><li>e2</li></ul>", $f, 'HTML corrector -- unclosed list tags.');
 
     $f = Html::normalize('<div id="d">content');
-    $this->assertEquals($f, '<div id="d">content</div>', 'HTML corrector -- unclosed tag with attribute.');
+    $this->assertEquals('<div id="d">content</div>', $f, 'HTML corrector -- unclosed tag with attribute.');
 
     // XHTML slash for empty elements.
     $f = Html::normalize('<hr><br>');
-    $this->assertEquals($f, '<hr /><br />', 'HTML corrector -- XHTML closing slash.');
+    $this->assertEquals('<hr /><br />', $f, 'HTML corrector -- XHTML closing slash.');
 
     $f = Html::normalize('<P>test</P>');
-    $this->assertEquals($f, '<p>test</p>', 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
+    $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
 
     $f = Html::normalize('<P>test</p>');
-    $this->assertEquals($f, '<p>test</p>', 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
+    $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
 
     $f = Html::normalize('test<hr />');
-    $this->assertEquals($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through.');
+    $this->assertEquals('test<hr />', $f, 'HTML corrector -- Let proper XHTML pass through.');
 
     $f = Html::normalize('test<hr/>');
-    $this->assertEquals($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.');
+    $this->assertEquals('test<hr />', $f, 'HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.');
 
     $f = Html::normalize('test<hr    />');
-    $this->assertEquals($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.');
+    $this->assertEquals('test<hr />', $f, 'HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.');
 
     $f = Html::normalize('<span class="test" />');
-    $this->assertEquals($f, '<span class="test"></span>', 'HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.');
+    $this->assertEquals('<span class="test"></span>', $f, 'HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.');
 
     $f = Html::normalize('test1<br class="test">test2');
-    $this->assertEquals($f, 'test1<br class="test" />test2', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEquals('test1<br class="test" />test2', $f, 'HTML corrector -- Automatically close single tags.');
 
     $f = Html::normalize('line1<hr>line2');
-    $this->assertEquals($f, 'line1<hr />line2', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEquals('line1<hr />line2', $f, 'HTML corrector -- Automatically close single tags.');
 
     $f = Html::normalize('line1<HR>line2');
-    $this->assertEquals($f, 'line1<hr />line2', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEquals('line1<hr />line2', $f, 'HTML corrector -- Automatically close single tags.');
 
     $f = Html::normalize('<img src="http://example.com/test.jpg">test</img>');
-    $this->assertEquals($f, '<img src="http://example.com/test.jpg" />test', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEquals('<img src="http://example.com/test.jpg" />test', $f, 'HTML corrector -- Automatically close single tags.');
 
     $f = Html::normalize('<br></br>');
-    $this->assertEquals($f, '<br />', "HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY.");
+    $this->assertEquals('<br />', $f, "HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY.");
 
     $f = Html::normalize('<div></div>');
-    $this->assertEquals($f, '<div></div>', "HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY.");
+    $this->assertEquals('<div></div>', $f, "HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY.");
 
     $f = Html::normalize('<p>line1<br/><hr/>line2</p>');
-    $this->assertEquals($f, '<p>line1<br /></p><hr />line2', 'HTML corrector -- Move non-inline elements outside of inline containers.');
+    $this->assertEquals('<p>line1<br /></p><hr />line2', $f, 'HTML corrector -- Move non-inline elements outside of inline containers.');
 
     $f = Html::normalize('<p>line1<div>line2</div></p>');
-    $this->assertEquals($f, '<p>line1</p><div>line2</div>', 'HTML corrector -- Move non-inline elements outside of inline containers.');
+    $this->assertEquals('<p>line1</p><div>line2</div>', $f, 'HTML corrector -- Move non-inline elements outside of inline containers.');
 
     $f = Html::normalize('<p>test<p>test</p>\n');
-    $this->assertEquals($f, '<p>test</p><p>test</p>\n', 'HTML corrector -- Auto-close improperly nested tags.');
+    $this->assertEquals('<p>test</p><p>test</p>\n', $f, 'HTML corrector -- Auto-close improperly nested tags.');
 
     $f = Html::normalize('<p>Line1<br><STRONG>bold stuff</b>');
-    $this->assertEquals($f, '<p>Line1<br /><strong>bold stuff</strong></p>', 'HTML corrector -- Properly close unclosed tags, and remove useless closing tags.');
+    $this->assertEquals('<p>Line1<br /><strong>bold stuff</strong></p>', $f, 'HTML corrector -- Properly close unclosed tags, and remove useless closing tags.');
 
     $f = Html::normalize('test <!-- this is a comment -->');
-    $this->assertEquals($f, 'test <!-- this is a comment -->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEquals('test <!-- this is a comment -->', $f, 'HTML corrector -- Do not touch HTML comments.');
 
     $f = Html::normalize('test <!--this is a comment-->');
-    $this->assertEquals($f, 'test <!--this is a comment-->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEquals('test <!--this is a comment-->', $f, 'HTML corrector -- Do not touch HTML comments.');
 
     $f = Html::normalize('test <!-- comment <p>another
     <strong>multiple</strong> line
     comment</p> -->');
-    $this->assertEquals($f, 'test <!-- comment <p>another
+    $this->assertEquals('test <!-- comment <p>another
     <strong>multiple</strong> line
-    comment</p> -->', 'HTML corrector -- Do not touch HTML comments.');
+    comment</p> -->', $f, 'HTML corrector -- Do not touch HTML comments.');
 
     $f = Html::normalize('test <!-- comment <p>another comment</p> -->');
-    $this->assertEquals($f, 'test <!-- comment <p>another comment</p> -->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEquals('test <!-- comment <p>another comment</p> -->', $f, 'HTML corrector -- Do not touch HTML comments.');
 
     $f = Html::normalize('test <!--break-->');
-    $this->assertEquals($f, 'test <!--break-->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEquals('test <!--break-->', $f, 'HTML corrector -- Do not touch HTML comments.');
 
     $f = Html::normalize('<p>test\n</p>\n');
-    $this->assertEquals($f, '<p>test\n</p>\n', 'HTML corrector -- New-lines are accepted and kept as-is.');
+    $this->assertEquals('<p>test\n</p>\n', $f, 'HTML corrector -- New-lines are accepted and kept as-is.');
 
     // cSpell:disable
     $f = Html::normalize('<p>دروبال');
-    $this->assertEquals($f, '<p>دروبال</p>', 'HTML corrector -- Encoding is correctly kept.');
+    $this->assertEquals('<p>دروبال</p>', $f, 'HTML corrector -- Encoding is correctly kept.');
     // cSpell:enable
 
     $f = Html::normalize('<script>alert("test")</script>');
-    $this->assertEquals($f, '<script>
+    $this->assertEquals('<script>
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
-</script>', 'HTML corrector -- CDATA added to script element');
+</script>', $f, 'HTML corrector -- CDATA added to script element');
 
     $f = Html::normalize('<p><script>alert("test")</script></p>');
-    $this->assertEquals($f, '<p><script>
+    $this->assertEquals('<p><script>
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
-</script></p>', 'HTML corrector -- CDATA added to a nested script element');
+</script></p>', $f, 'HTML corrector -- CDATA added to a nested script element');
 
     $f = Html::normalize('<p><style> /* Styling */ body {color:red}</style></p>');
-    $this->assertEquals($f, '<p><style>
+    $this->assertEquals('<p><style>
 <!--/*--><![CDATA[/* ><!--*/
  /* Styling */ body {color:red}
 /*--><!]]>*/
-</style></p>', 'HTML corrector -- CDATA added to a style element.');
+</style></p>', $f, 'HTML corrector -- CDATA added to a style element.');
 
     $filtered_data = Html::normalize('<p><style>
 /*<![CDATA[*/
@@ -1054,7 +1054,7 @@ alert("test")
 body {color:red}
 /*]]>*/
 </style></p>');
-    $this->assertEquals($filtered_data, '<p><style>
+    $this->assertEquals('<p><style>
 <!--/*--><![CDATA[/* ><!--*/
 
 /*<![CDATA[*/
@@ -1063,7 +1063,7 @@ body {color:red}
 /*]]]]><![CDATA[>*/
 
 /*--><!]]>*/
-</style></p>',
+</style></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
     );
 
@@ -1073,7 +1073,7 @@ body {color:red}
   body {color:red}
   /*--><!]]>*/
 </style></p>');
-    $this->assertEquals($filtered_data, '<p><style>
+    $this->assertEquals('<p><style>
 <!--/*--><![CDATA[/* ><!--*/
 
   <!--/*--><![CDATA[/* ><!--*/
@@ -1082,7 +1082,7 @@ body {color:red}
   /*--><!]]]]><![CDATA[>*/
 
 /*--><!]]>*/
-</style></p>',
+</style></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
     );
 
@@ -1091,7 +1091,7 @@ body {color:red}
   alert("test");
 //--><!]]>
 </script></p>');
-    $this->assertEquals($filtered_data, '<p><script>
+    $this->assertEquals('<p><script>
 <!--//--><![CDATA[// ><!--
 
 <!--//--><![CDATA[// ><!--
@@ -1099,7 +1099,7 @@ body {color:red}
 //--><!]]]]><![CDATA[>
 
 //--><!]]>
-</script></p>',
+</script></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
     );
 
@@ -1108,7 +1108,7 @@ body {color:red}
   alert("test");
 // ]]>
 </script></p>');
-    $this->assertEquals($filtered_data, '<p><script>
+    $this->assertEquals('<p><script>
 <!--//--><![CDATA[// ><!--
 
 // <![CDATA[
@@ -1116,7 +1116,7 @@ body {color:red}
 // ]]]]><![CDATA[>
 
 //--><!]]>
-</script></p>',
+</script></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
     );
 

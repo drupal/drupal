@@ -98,10 +98,9 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
    * Helper function to make assertions about added HTTP headers.
    */
   protected function assertTeapotHeaders() {
-    $headers = $this->getSession()->getResponseHeaders();
-    $this->assertEquals($headers['X-Test-Teapot'], ['Teapot Mode Active']);
-    $this->assertEquals($headers['X-Test-Teapot-Replace'], ['Teapot replaced']);
-    $this->assertEquals($headers['X-Test-Teapot-No-Replace'], ['This value is not replaced', 'This one is added']);
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot', 'Teapot Mode Active');
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-Replace', 'Teapot replaced');
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced');
   }
 
   /**

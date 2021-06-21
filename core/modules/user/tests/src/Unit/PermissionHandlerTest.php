@@ -327,12 +327,12 @@ EOF
     $actual_permissions = $this->permissionHandler->getPermissions();
 
     $this->assertCount(2, $actual_permissions);
-    $this->assertEquals($actual_permissions['access module a']['title'], 'Access A');
-    $this->assertEquals($actual_permissions['access module a']['provider'], 'module_a');
-    $this->assertEquals($actual_permissions['access module a']['description'], 'bla bla');
-    $this->assertEquals($actual_permissions['access module b']['title'], 'Access B');
-    $this->assertEquals($actual_permissions['access module b']['provider'], 'module_a');
-    $this->assertEquals($actual_permissions['access module b']['description'], 'bla bla');
+    $this->assertEquals('Access A', $actual_permissions['access module a']['title']);
+    $this->assertEquals('module_a', $actual_permissions['access module a']['provider']);
+    $this->assertEquals('bla bla', $actual_permissions['access module a']['description']);
+    $this->assertEquals('Access B', $actual_permissions['access module b']['title']);
+    $this->assertEquals('module_a', $actual_permissions['access module b']['provider']);
+    $this->assertEquals('bla bla', $actual_permissions['access module b']['description']);
   }
 
   /**
@@ -343,14 +343,14 @@ EOF
    */
   protected function assertPermissions(array $actual_permissions) {
     $this->assertCount(4, $actual_permissions);
-    $this->assertEquals($actual_permissions['access_module_a']['title'], 'single_description');
-    $this->assertEquals($actual_permissions['access_module_a']['provider'], 'module_a');
-    $this->assertEquals($actual_permissions['access module b']['title'], 'Access B');
-    $this->assertEquals($actual_permissions['access module b']['provider'], 'module_b');
-    $this->assertEquals($actual_permissions['access_module_c']['title'], 'Access C');
-    $this->assertEquals($actual_permissions['access_module_c']['provider'], 'module_c');
-    $this->assertEquals($actual_permissions['access_module_c']['restrict access'], TRUE);
-    $this->assertEquals($actual_permissions['access module a via module b']['provider'], 'module_a');
+    $this->assertEquals('single_description', $actual_permissions['access_module_a']['title']);
+    $this->assertEquals('module_a', $actual_permissions['access_module_a']['provider']);
+    $this->assertEquals('Access B', $actual_permissions['access module b']['title']);
+    $this->assertEquals('module_b', $actual_permissions['access module b']['provider']);
+    $this->assertEquals('Access C', $actual_permissions['access_module_c']['title']);
+    $this->assertEquals('module_c', $actual_permissions['access_module_c']['provider']);
+    $this->assertTrue($actual_permissions['access_module_c']['restrict access']);
+    $this->assertEquals('module_a', $actual_permissions['access module a via module b']['provider']);
   }
 
 }

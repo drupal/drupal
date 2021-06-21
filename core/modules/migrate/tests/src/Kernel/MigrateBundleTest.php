@@ -68,7 +68,7 @@ class MigrateBundleTest extends MigrateTestBase {
     $term_executable->import();
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = Term::load(1);
-    $this->assertEquals($term->bundle(), 'categories');
+    $this->assertEquals('categories', $term->bundle());
   }
 
   /**
@@ -106,9 +106,9 @@ class MigrateBundleTest extends MigrateTestBase {
     $term_executable->import();
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = Term::load(1);
-    $this->assertEquals($term->bundle(), 'categories');
+    $this->assertEquals('categories', $term->bundle());
     $term = Term::load(2);
-    $this->assertEquals($term->bundle(), 'tags');
+    $this->assertEquals('tags', $term->bundle());
   }
 
   /**
@@ -148,9 +148,9 @@ class MigrateBundleTest extends MigrateTestBase {
     $term_executable->import();
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = Term::load(1);
-    $this->assertEquals($term->bundle(), 'categories');
+    $this->assertEquals('categories', $term->bundle());
     $term = Term::load(2);
-    $this->assertEquals($term->bundle(), 'tags');
+    $this->assertEquals('tags', $term->bundle());
   }
 
 }
