@@ -763,7 +763,7 @@ class RendererTest extends RendererTestBase {
       ->willReturn('foobar');
 
     // Test that defaults work.
-    $this->assertEquals($this->renderer->renderRoot($element), 'foobar', 'Defaults work');
+    $this->assertEquals('foobar', $this->renderer->renderRoot($element), 'Defaults work');
   }
 
   /**

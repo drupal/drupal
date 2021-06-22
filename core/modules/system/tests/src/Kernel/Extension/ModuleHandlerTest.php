@@ -183,7 +183,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $result = $this->moduleInstaller()->uninstall([$non_dependency]);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
     $this->assertFalse($this->moduleHandler()->moduleExists($non_dependency));
-    $this->assertEquals($update_registry->getInstalledVersion($non_dependency), $update_registry::SCHEMA_UNINSTALLED, "$non_dependency module was uninstalled.");
+    $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($non_dependency), "$non_dependency module was uninstalled.");
 
     // Verify that the installation profile itself was not uninstalled.
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
