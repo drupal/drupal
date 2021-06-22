@@ -114,7 +114,6 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
     $subquery = $connection->select('taxonomy_index', 'tn');
     $subquery->addField('tn', 'nid');
     $where = $connection->condition('OR')->condition('tn.tid', $tids, $operator);
-    $last = "tn";
 
     if ($this->options['depth'] > 0) {
       foreach (range(1, abs($this->options['depth'])) as $count) {
@@ -128,16 +127,24 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
           $last = "th$inner_count";
         }
         $inner_subquery->condition($inner_where);
-        // Cast to a string so all placeholdering is done as expected.
-        $where->condition('tn.tid', (string) $inner_subquery, 'IN');
+        $where->condition('tn.tid', $inner_subquery, 'IN');
       }
     }
     elseif ($this->options['depth'] < 0) {
       foreach (range(1, abs($this->options['depth'])) as $count) {
-        $field = $count == 1 ? 'tid' : 'entity_id';
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[$field] = [th$count].[parent_target_id]");
-        $where->condition("th$count.entity_id", $tids, $operator);
-        $last = "th$count";
+        $last = "th1";
+        $inner_subquery = $connection->select('taxonomy_term__parent', "th1");
+        $inner_subquery->addField("th$count", 'parent_target_id');
+        $inner_where = $connection->condition('OR')->condition("th1.entity_id", $tids, $operator);
+        if ($count > 1) {
+          foreach (range(1, $count) as $inner_count) {
+            $subquery->leftJoin('taxonomy_term__parent', "th$inner_count", "[$last].[entity_id] = [th$inner_count].[parent_target_id]");
+            $where->condition("th$inner_count.entity_id", $tids, $operator);
+            $last = "th$inner_count";
+          }
+        }
+        $inner_subquery->condition($inner_where);
+        $where->condition('tn.tid', $inner_subquery, 'IN');
       }
     }
 
