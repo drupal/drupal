@@ -136,7 +136,7 @@ class FormTest extends BrowserTestBase {
           else {
             if (!empty($form_output)) {
               // Make sure the form element is *not* marked as required.
-              $this->assertNotRegExp($required_marker_preg, (string) $form_output, "Optional '$type' field is not marked as required");
+              $this->assertDoesNotMatchRegularExpression($required_marker_preg, (string) $form_output, "Optional '$type' field is not marked as required");
             }
             if ($type == 'select') {
               // Select elements are going to have validation errors with empty

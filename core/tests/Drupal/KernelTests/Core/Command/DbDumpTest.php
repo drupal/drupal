@@ -157,7 +157,7 @@ class DbDumpTest extends KernelTestBase {
 
     // Tables that are schema-only should not have data exported.
     $pattern = preg_quote("\$connection->insert('sessions')");
-    $this->assertNotRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Tables defined as schema-only do not have data exported to the script.');
+    $this->assertDoesNotMatchRegularExpression('/' . $pattern . '/', $command_tester->getDisplay(), 'Tables defined as schema-only do not have data exported to the script.');
 
     // Table data is exported.
     $pattern = preg_quote("\$connection->insert('config')");

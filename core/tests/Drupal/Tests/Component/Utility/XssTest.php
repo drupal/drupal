@@ -541,7 +541,7 @@ class XssTest extends TestCase {
    */
   public function testFilterXSSAdmin() {
     $value = Xss::filterAdmin('<style /><iframe /><frame /><frameset /><meta /><link /><embed /><applet /><param /><layer />');
-    $this->assertEquals($value, '', 'Admin HTML filter -- should never allow some tags.');
+    $this->assertEquals('', $value, 'Admin HTML filter -- should never allow some tags.');
   }
 
   /**

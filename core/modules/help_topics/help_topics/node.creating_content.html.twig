@@ -1,0 +1,36 @@
+---
+label: 'Creating a content item'
+related:
+  - node.overview
+  - node.creating_type
+  - path.creating_alias
+---
+{% set content_link_text %}
+  {% trans %}Content{% endtrans %}
+{% endset %}
+{% set content_link = render_var(help_route_link(content_link_text, 'system.admin_content')) %}
+{% set content_permissions_link_text %}
+  {% trans %}Access the Content overview page{% endtrans %}
+{% endset %}
+{% set content_permissions_link = render_var(help_route_link(content_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-node'})) %}
+{% set content_overview_topic = render_var(help_topic_link('node.overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create and publish a content item. See {{ content_overview_topic }} for more about content types and content items.{% endtrans %}</p>
+<h2>{% trans %}Who can create content?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ content_permissions_link }}</em> permission can visit the <em>Content</em> page as described in this topic. Each content type has its own create permissions. For example, to create content of type Article, a user would need the Article: Create new content permission. In addition, users with the <em>Bypass content access control</em> or <em>Administer content</em> permission can create content items of all types. Some contributed modules change the permission structure for creating content.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>{{ content_link }}</em>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add content</em>.{% endtrans %}</li>
+  <li>{% trans %}If there is more than one content type defined on your site that you have permission to create, click the name of the type of content you want to create.{% endtrans %}</li>
+  <li>{% trans %}On the content edit form, enter the <em>Title</em> of your content, which will show as the page title when the content item is displayed on a page, and also as the label for the content item in administration screens.{% endtrans %}</li>
+  <li>{% trans %}Fill in the other fields shown on the edit form for this specific content type.{% endtrans %}</li>
+  <li>{% trans %}Leave the <em>Published</em> field checked to publish the content immediately, or uncheck it to make it unpublished. Unpublished content is generally not shown to non-administrative site users.{% endtrans %}</li>
+  <li>{% trans %}Optionally, click <em>Preview</em> to preview the content.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>. You will see the content displayed on a page.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/user_guide/en/content-chapter.html">{% trans %}User Guide: Basic page management{% endtrans %}</a></li>
+  <li><a href="https://www.drupal.org/docs/user_guide/en/content-create.html">{% trans %}User Guide: Creating a content item{% endtrans %}</a></li>
+</ul>
