@@ -243,4 +243,37 @@ class MenuTreeParameters implements \Serializable {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __unserialize(array $data): void {
+    foreach ($data as $key => $value) {
+      $this->{$key} = $value;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __serialize(): array {
+    // Enforce type consistency for all the internal properties of this object.
+    $this->root = (string) $this->root;
+    $this->minDepth = $this->minDepth !== NULL ? (int) $this->minDepth : NULL;
+    $this->maxDepth = $this->maxDepth !== NULL ? (int) $this->maxDepth : NULL;
+    $this->activeTrail = array_values(array_filter($this->activeTrail));
+
+    // Sort 'expanded' and 'conditions' to prevent duplicate cache items.
+    sort($this->expandedParents);
+    asort($this->conditions);
+
+    return [
+      'root' => $this->root,
+      'minDepth' => $this->minDepth,
+      'maxDepth' => $this->maxDepth,
+      'expandedParents' => $this->expandedParents,
+      'activeTrail' => $this->activeTrail,
+      'conditions' => $this->conditions,
+    ];
+  }
+
 }

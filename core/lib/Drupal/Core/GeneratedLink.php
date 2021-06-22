@@ -57,7 +57,7 @@ class GeneratedLink extends BubbleableMetadata implements MarkupInterface, \Coun
   /**
    * {@inheritdoc}
    */
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->__toString();
   }
 
