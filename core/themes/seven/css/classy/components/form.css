@@ -84,6 +84,7 @@ label.option {
 }
 abbr.tabledrag-changed,
 abbr.ajax-changed {
+  text-decoration: none;
   border-bottom: none;
 }
 .form-item input.error,
