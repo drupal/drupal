@@ -36,7 +36,7 @@ class OrderByTest extends UnitTestCase {
   public function testInvalidDirection() {
     $this->query->orderBy('test', 'invalid direction');
     $order_bys = $this->query->getOrderBy();
-    $this->assertEquals($order_bys['test'], 'ASC', 'Invalid order by direction is converted to ASC.');
+    $this->assertEquals('ASC', $order_bys['test'], 'Invalid order by direction is converted to ASC.');
   }
 
   /**
