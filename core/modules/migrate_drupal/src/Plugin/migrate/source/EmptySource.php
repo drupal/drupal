@@ -13,6 +13,12 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 /**
  * Source returning an empty row with Drupal specific config dependencies.
  *
+ * For more information and available configuration keys, refer to the parent
+ * classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\EmptySource
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "md_empty",
  *   source_module = "system",

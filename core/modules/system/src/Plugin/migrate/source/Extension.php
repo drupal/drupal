@@ -6,7 +6,28 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Gets system data for a legacy extension.
+ * Drupal 6/7 system data for a legacy extension source from database.
+ *
+ * Available configuration keys:
+ * - name: (optional) The extension name to filter items retrieved from the
+ *   source - can be a string or an array. If omitted, all extensions are
+ *   retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: extension
+ *   name: node
+ * @endcode
+ *
+ * In this example the system data for node module is retrieved from the source
+ * database.
+ *
+ * For additional configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "extension",
