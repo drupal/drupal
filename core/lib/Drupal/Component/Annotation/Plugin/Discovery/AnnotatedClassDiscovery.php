@@ -8,7 +8,7 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Reflection\StaticReflectionParser;
+use Drupal\Component\Reflection\StaticReflectionParser;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 use Drupal\Component\Utility\Crypt;
 

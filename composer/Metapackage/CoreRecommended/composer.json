@@ -12,7 +12,6 @@
         "composer/semver": "3.2.5",
         "doctrine/annotations": "1.13.1",
         "doctrine/lexer": "1.2.1",
-        "doctrine/reflection": "1.2.2",
         "egulias/email-validator": "2.1.25",
         "guzzlehttp/guzzle": "6.5.5",
         "guzzlehttp/promises": "1.4.1",

@@ -5,8 +5,7 @@
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "php": ">=7.3.0",
-    "doctrine/reflection": "^1.1"
+    "php": ">=7.3.0"
   },
   "autoload": {
     "psr-4": {
