@@ -196,8 +196,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
         if ($other != $entity_id) {
-          $label = $entities[$other]->label();
-          $this->assertSession()->pageTextNotContains($label);
+          $path = 'search/' . $entities[$other]->getPath();
+          $this->assertSession()->elementNotExists('xpath', '//ul[@class="tabs primary"]/li/a[@data-drupal-link-system-path="' . $path . '"]');
         }
       }
 
@@ -236,8 +236,9 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     foreach ($paths as $item) {
       $this->drupalGet($item['path'], $item['options']);
       foreach ($plugins as $entity_id) {
+        $path = 'search/' . $entities[$entity_id]->getPath();
         $label = $entities[$entity_id]->label();
-        $this->assertSession()->pageTextContains($label);
+        $this->assertSession()->elementTextEquals('xpath', '//ul[@class="tabs primary"]/li/a[@data-drupal-link-system-path="' . $path . '"]', $label);
       }
     }
   }
