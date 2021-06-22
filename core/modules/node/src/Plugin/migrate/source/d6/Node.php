@@ -266,7 +266,7 @@ class Node extends DrupalSqlBase {
    *   The node.
    *
    * @return array
-   *   The field values, keyed by delta.
+   *   The field values, keyed and sorted by delta.
    */
   protected function getFieldData(array $field, Row $node) {
     $field_table = 'content_' . $field['field_name'];
@@ -310,6 +310,7 @@ class Node extends DrupalSqlBase {
         ->isNotNull($field['field_name'] . '_' . $columns[0])
         ->condition('nid', $node->getSourceProperty('nid'))
         ->condition('vid', $node->getSourceProperty('vid'))
+        ->orderBy('delta')
         ->execute()
         ->fetchAllAssoc('delta');
     }
