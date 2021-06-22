@@ -42,6 +42,7 @@ class FieldOptionTranslation extends ProcessPluginBase {
           break;
 
         default:
+          $new_allowed_values = $allowed_values;
       }
     }
     return ["settings.allowed_values.$translation_key", $new_allowed_values];
