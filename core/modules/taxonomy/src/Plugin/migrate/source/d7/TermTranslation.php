@@ -5,9 +5,10 @@ namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 use Drupal\migrate\Row;
 
 /**
- * Gets i18n taxonomy terms from source database.
+ * Drupal 7 i18n taxonomy terms from source database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase

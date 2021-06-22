@@ -6,7 +6,29 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Source returning tids from the term_node table for the current revision.
+ * Drupal 6 term/node relationships (current revision) source from database.
+ *
+ * Available configuration keys:
+ * - vid: (optional) The taxonomy vocabulary (vid) to filter terms retrieved
+ *   from the source - should be an integer. If omitted, all terms are
+ *   retrieved.
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: d6_term_node
+ *   vid: 7
+ * @endcode
+ *
+ * In this example the relations between nodes and terms are retrieved from
+ * the source database. Source rows include only terms that belong to the
+ * vocabulary with 'vid' equal to 7.
+ *
+ * For additional configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d6_term_node",
