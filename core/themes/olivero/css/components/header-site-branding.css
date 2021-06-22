@@ -124,14 +124,14 @@
   background: #fff;
 }
 
-.site-branding__inner {
-  display: flex;
-  align-items: center
-}
-
-.site-branding__inner a {
-    text-decoration: none;
+.site-branding__inner .site-branding__wrapper {
+    display: flex;
+    align-items: center
   }
+
+.site-branding__inner .site-branding__wrapper a {
+      text-decoration: none;
+    }
 
 @media (min-width: 75rem) {
 
@@ -191,6 +191,7 @@
     }
 
 .site-branding__text {
+  padding-bottom: 1.125rem;
   color: #fff;
   font-size: 1.125rem;
   font-weight: bold
@@ -217,6 +218,12 @@
 }
   }
 
+.site-branding__slogan {
+  color: #fff;
+  font-weight: bold;
+  line-height: 1.125rem;
+}
+
 .site-branding--bg-gray .site-branding__text,
 .site-branding--bg-white .site-branding__text {
   color: #2494db;
@@ -228,4 +235,8 @@
 
 [dir="rtl"] .site-branding__logo + .site-branding__text {
   margin-right: 0.75rem
+}
+
+.site-branding__logo + .site-branding__text {
+  padding-bottom: 0;
 }
