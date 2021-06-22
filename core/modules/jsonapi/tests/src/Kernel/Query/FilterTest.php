@@ -93,7 +93,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
-    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
+    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
     Filter::createFromQueryParameter(['photo' => ''], $resource_type, $this->fieldResolver);
   }
@@ -113,7 +113,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithoutMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
-    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`.');
+    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`.');
     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
     Filter::createFromQueryParameter(['uid' => ''], $resource_type, $this->fieldResolver);
   }
@@ -383,29 +383,29 @@ class FilterTest extends JsonapiKernelTestBase {
     $root = $filter->root();
 
     // Make sure the implicit root group was added.
-    $this->assertEquals($root->conjunction(), 'AND');
+    $this->assertEquals('AND', $root->conjunction());
 
     // Ensure the or-group and the and-group were added correctly.
     $members = $root->members();
 
     // Ensure the OR group was added.
     $or_group = $members[0];
-    $this->assertEquals($or_group->conjunction(), 'OR');
+    $this->assertEquals('OR', $or_group->conjunction());
     $or_group_members = $or_group->members();
 
     // Make sure the nested OR group was added with the right conditions.
     $nested_or_group = $or_group_members[0];
-    $this->assertEquals($nested_or_group->conjunction(), 'OR');
+    $this->assertEquals('OR', $nested_or_group->conjunction());
     $nested_or_group_members = $nested_or_group->members();
-    $this->assertEquals($nested_or_group_members[0]->field(), 'field0');
-    $this->assertEquals($nested_or_group_members[1]->field(), 'field1');
+    $this->assertEquals('field0', $nested_or_group_members[0]->field());
+    $this->assertEquals('field1', $nested_or_group_members[1]->field());
 
     // Make sure the nested AND group was added with the right conditions.
     $nested_and_group = $or_group_members[1];
-    $this->assertEquals($nested_and_group->conjunction(), 'AND');
+    $this->assertEquals('AND', $nested_and_group->conjunction());
     $nested_and_group_members = $nested_and_group->members();
-    $this->assertEquals($nested_and_group_members[0]->field(), 'field2');
-    $this->assertEquals($nested_and_group_members[1]->field(), 'field3');
+    $this->assertEquals('field2', $nested_and_group_members[0]->field());
+    $this->assertEquals('field3', $nested_and_group_members[1]->field());
   }
 
   /**

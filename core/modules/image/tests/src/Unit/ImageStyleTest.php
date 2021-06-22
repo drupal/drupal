@@ -113,7 +113,7 @@ class ImageStyleTest extends UnitTestCase {
     $extensions = ['jpeg', 'gif', 'png'];
     foreach ($extensions as $extension) {
       $extensionReturned = $image_style->getDerivativeExtension($extension);
-      $this->assertEquals($extensionReturned, 'png');
+      $this->assertEquals('png', $extensionReturned);
     }
   }
 
