@@ -4,15 +4,31 @@ top_level: true
 related:
   - block.overview
 ---
-<h2>{% trans %}Administrative interface overview{% endtrans %}</h2>
-<p>{% trans %}The administrative interface has several components:{% endtrans %}</p>
+{% set accessibility_topic = render_var(help_topic_link('core.ui_accessibility')) %}
+{% set quick_edit_topic = render_var(help_topic_link('core.quick_edit')) %}
+{% set admin_link = render_var(help_route_link('/admin', 'system.admin')) %}
+<h2>{% trans %}What administrative interface components are available?{% endtrans %}</h2>
+<p>{% trans %}The following administrative interface components are provided by Drupal core and its modules (some contributed modules offer additional functionality):{% endtrans %}</p>
 <ul>
-  <li>{% trans %}Accessibility features, to enable all users to perform administrative tasks.{% endtrans %}</li>
+  <li>{% trans %}Accessibility features, to enable all users to perform administrative tasks. See {{ accessibility_topic }} for more information.{% endtrans %}</li>
   <li>{% trans %}A menu system, which you can navigate to find pages for administrative tasks. The core Toolbar module displays this menu on the top or left side of the page (right side in right-to-left languages). There are also contributed module replacements for the core Toolbar module, with additional features, such as the <a href="https://www.drupal.org/project/admin_toolbar">Admin Toolbar module</a>.{% endtrans %}</li>
   <li>{% trans %}The core Shortcuts module enhances the toolbar with a configurable list of links to commonly-used tasks.{% endtrans %}</li>
   <li>{% trans %}If you install the core Contextual Links module, non-administrative pages will contain links leading to related administrative tasks.{% endtrans %}</li>
+  <li>{% trans %}In-place or <em>quick</em> editing. In-place editing of content is provided by the core Quick Edit module, and in-place editing of configuration is provided by the core Settings Tray module. See {{ quick_edit_topic }} for more information.{% endtrans %}</li>
   <li>{% trans %}The core Help module displays help topics, and provides a Help block that can be placed on administrative pages to provide an overview of their functionality.{% endtrans %}</li>
   <li>{% trans %}The core Tour module allows modules to provide interactive tours of administrative pages for more detailed help.{% endtrans %}</li>
 </ul>
-
-<p>{% trans %}See the related topics listed below for specific tasks.{% endtrans %}</p>
+<h2>{% trans %}What are the sections of the administrative menu?{% endtrans %}</h2>
+<p>{% trans %}The administrative menu, which you can navigate by visiting <em>{{ admin_link }}</em> on your site or by using an administrative toolbar, has the following sections (some may not be available, depending on which modules are currently installed on your site, and your permissions):{% endtrans %}</p>
+<ul>
+  <li>{% trans %}<strong>Content:</strong> Find, manage, and create new pages; manage comments and files.{% endtrans %}</li>
+  <li>{% trans %}<strong>Structure:</strong> Place and edit blocks, set up content types and fields, configure menus, administer taxonomy, and configure some contributed modules.{% endtrans %}</li>
+  <li>{% trans %}<strong>Appearance:</strong> Switch between themes, install themes, and update existing themes.{% endtrans %}</li>
+  <li>{% trans %}<strong>Extend:</strong> Update, install, and uninstall modules.{% endtrans %}</li>
+  <li>{% trans %}<strong>Configuration:</strong> Configure the settings for various site functionality, including some contributed modules.{% endtrans %}</li>
+  <li>{% trans %}<strong>People:</strong> Manage user accounts and permissions.{% endtrans %}</li>
+  <li>{% trans %}<strong>Reports:</strong> Display information about site security, necessary updates, and site activity.{% endtrans %}</li>
+  <li>{% trans %}<strong>Help:</strong> Get help on using the administrative interface.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}Administrative interface overview{% endtrans %}</h2>
+<p>{% trans %}Install the core modules mentioned above to use the corresponding aspect of the administrative interface. See the related topics listed below for more details on some aspects of the administrative interface.{% endtrans %}</p>
