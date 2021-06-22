@@ -307,12 +307,11 @@ class RouteProviderTest extends KernelTestBase {
     $dumper->dump();
 
     $sample_routes = $this->fixtures->staticSampleRouteCollection();
-    $expected_route_count = count($sample_routes);
 
     $returned_routes = $provider->getAllRoutes();
 
     $this->assertInstanceOf(\Iterator::class, $returned_routes);
-    $this->assertEquals($expected_route_count, count($returned_routes));
+    $this->assertSameSize($sample_routes, $returned_routes);
 
     foreach ($returned_routes as $route_name => $route) {
       $this->assertArrayHasKey($route_name, $sample_routes);
@@ -640,7 +639,7 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
-   * Test RouteProvider::getRouteByName() and RouteProvider::getRoutesByNames().
+   * Tests RouteProvider::getRouteByName() & RouteProvider::getRoutesByNames().
    */
   public function testRouteByName() {
     $connection = Database::getConnection();

@@ -54,7 +54,8 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomMachineName(16);
     $view['block[items_per_page]'] = 3;
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     // Uncheck items per page in block settings.
     $this->drupalGet($this->getSession()->getCurrentUrl() . '/edit/block_1');

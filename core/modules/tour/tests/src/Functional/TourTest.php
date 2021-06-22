@@ -62,7 +62,7 @@ class TourTest extends TourTestBasic {
   }
 
   /**
-   * Test tour functionality.
+   * Tests tour functionality.
    */
   public function testTourFunctionality() {
     // Navigate to tour-test-1 and verify the tour_test_1 tip is found with appropriate classes.
@@ -207,7 +207,7 @@ class TourTest extends TourTestBasic {
     $this->assertCount(1, $elements, 'Found code tip was weighted last and had "End tour".');
 
     // Test hook_tour_alter().
-    $this->assertSession()->pageTextContains('Altered by hook_tour_tips_alter');
+    $this->assertSession()->responseContains('Altered by hook_tour_tips_alter');
 
     // Navigate to tour-test-3 and verify the tour_test_1 tip is found with
     // appropriate classes.

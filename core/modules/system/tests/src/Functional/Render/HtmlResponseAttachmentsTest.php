@@ -24,7 +24,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test rendering of ['#attached'].
+   * Tests rendering of ['#attached'].
    */
   public function testAttachments() {
     // Test ['#attached']['http_header] = ['Status', $code].
@@ -70,7 +70,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   }
 
   /**
-   * Test caching of ['#attached'].
+   * Tests caching of ['#attached'].
    */
   public function testRenderCachedBlock() {
     // Make sure our test block is visible.
@@ -98,10 +98,9 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
    * Helper function to make assertions about added HTTP headers.
    */
   protected function assertTeapotHeaders() {
-    $headers = $this->getSession()->getResponseHeaders();
-    $this->assertEquals($headers['X-Test-Teapot'], ['Teapot Mode Active']);
-    $this->assertEquals($headers['X-Test-Teapot-Replace'], ['Teapot replaced']);
-    $this->assertEquals($headers['X-Test-Teapot-No-Replace'], ['This value is not replaced', 'This one is added']);
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot', 'Teapot Mode Active');
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-Replace', 'Teapot replaced');
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced');
   }
 
   /**

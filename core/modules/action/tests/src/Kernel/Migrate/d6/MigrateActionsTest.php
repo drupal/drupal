@@ -23,7 +23,7 @@ class MigrateActionsTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test Drupal 6 action migration to Drupal 8.
+   * Tests Drupal 6 action migration to Drupal 8.
    */
   public function testActions() {
     // Test default actions.

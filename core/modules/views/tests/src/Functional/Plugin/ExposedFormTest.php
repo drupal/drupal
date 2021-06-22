@@ -256,7 +256,7 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
-   * Test the input required exposed form type.
+   * Tests the input required exposed form type.
    */
   public function testInputRequired() {
     $view = View::load('test_exposed_form_buttons');
@@ -279,7 +279,7 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
-   * Test the "on demand text" for the input required exposed form type.
+   * Tests the "on demand text" for the input required exposed form type.
    */
   public function testTextInputRequired() {
     $view = Views::getView('test_exposed_form_buttons');

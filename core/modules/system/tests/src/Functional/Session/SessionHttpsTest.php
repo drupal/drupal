@@ -242,7 +242,7 @@ class SessionHttpsTest extends BrowserTestBase {
   }
 
   /**
-   * Test that there exists a session with two specific session IDs.
+   * Tests that there exists a session with two specific session IDs.
    *
    * @param $sid
    *   The insecure session ID to search for.

@@ -57,6 +57,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $text = $this->getTextContent();
     $this->assertStringContainsString('Test page text.', $text);
     $this->assertStringNotContainsString('</html>', $text);
+    // Ensure Drupal Javascript settings are not part of the page text.
+    $this->assertArrayHasKey('currentPathIsAdmin', $this->getDrupalSettings()['path']);
+    $this->assertStringNotContainsString('currentPathIsAdmin', $text);
 
     // Response includes cache tags that we can assert.
     $this->assertSession()->responseHeaderExists('X-Drupal-Cache-Tags');
@@ -814,7 +817,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Test the protections provided by .htkey.
+   * Tests the protections provided by .htkey.
    */
   public function testHtkey() {
     // Remove the Simpletest private key file so we can test the protection
@@ -891,6 +894,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * @group legacy
    */
   public function testLegacyDrupalPostForm(): void {
+    $this->expectDeprecation('UiHelperTrait::drupalPostForm() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $submit as an object is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->drupalPostForm('form-test/object-builder', NULL, t('Save'));

@@ -164,7 +164,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Test a missing required definition.
+   * Tests a missing required definition.
    *
    * @param array $definitions
    *   A field plugin definition.

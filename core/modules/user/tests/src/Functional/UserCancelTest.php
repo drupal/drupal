@@ -75,7 +75,7 @@ class UserCancelTest extends BrowserTestBase {
   }
 
   /**
-   * Test ability to change the permission for canceling users.
+   * Tests ability to change the permission for canceling users.
    */
   public function testUserCancelChangePermission() {
     \Drupal::service('module_installer')->install(['user_form_test']);
@@ -88,7 +88,8 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Delete regular user.
-    $this->drupalPostForm('user_form_test_cancel/' . $account->id(), [], 'Cancel account');
+    $this->drupalGet('user_form_test_cancel/' . $account->id());
+    $this->submitForm([], 'Cancel account');
 
     // Confirm deletion.
     $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
@@ -113,7 +114,8 @@ class UserCancelTest extends BrowserTestBase {
       'action' => 'user_cancel_user_action',
       'user_bulk_form[0]' => TRUE,
     ];
-    $this->drupalPostForm('admin/people', $edit, 'Apply to selected items');
+    $this->drupalGet('admin/people');
+    $this->submitForm($edit, 'Apply to selected items');
 
     // Verify that uid 1's account was not cancelled.
     $user_storage->resetCache([1]);
@@ -140,7 +142,8 @@ class UserCancelTest extends BrowserTestBase {
     $node = $this->drupalCreateNode(['uid' => $account->id()]);
 
     // Attempt to cancel account.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', [], 'Cancel account');
+    $this->drupalGet('user/' . $account->id() . '/edit');
+    $this->submitForm([], 'Cancel account');
 
     // Confirm account cancellation.
     $timestamp = time();
@@ -312,7 +315,8 @@ class UserCancelTest extends BrowserTestBase {
     // Cancel node author.
     $admin_user = $this->drupalCreateUser(['cancel other accounts']);
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('user_form_test_cancel/' . $account->id(), [], 'Cancel account');
+    $this->drupalGet('user_form_test_cancel/' . $account->id());
+    $this->submitForm([], 'Cancel account');
 
     // Confirm node has been unpublished, even though the admin user
     // does not have permission to access it.
@@ -485,7 +489,8 @@ class UserCancelTest extends BrowserTestBase {
     $edit['subject[0][value]'] = $this->randomMachineName(8);
     $edit['comment_body[0][value]'] = $this->randomMachineName(16);
 
-    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, 'Preview');
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+    $this->submitForm($edit, 'Preview');
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
     $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['subject' => $edit['subject[0][value]']]);
@@ -616,7 +621,8 @@ class UserCancelTest extends BrowserTestBase {
     for ($i = 0; $i <= 4; $i++) {
       $edit['user_bulk_form[' . $i . ']'] = TRUE;
     }
-    $this->drupalPostForm('admin/people', $edit, 'Apply to selected items');
+    $this->drupalGet('admin/people');
+    $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('Are you sure you want to cancel these user accounts?');
     $this->assertSession()->pageTextContains('When cancelling these accounts');
     $this->assertSession()->pageTextContains('Require email confirmation to cancel account');

@@ -80,9 +80,9 @@ class HelpTopicTwigTest extends UnitTestCase {
    * @covers ::getCacheMaxAge
    */
   public function testCacheInfo() {
-    $this->assertEquals($this->helpTopic->getCacheContexts(), []);
-    $this->assertEquals($this->helpTopic->getCacheTags(), ['core.extension']);
-    $this->assertEquals($this->helpTopic->getCacheMaxAge(), Cache::PERMANENT);
+    $this->assertEquals([], $this->helpTopic->getCacheContexts());
+    $this->assertEquals(['core.extension'], $this->helpTopic->getCacheTags());
+    $this->assertEquals(Cache::PERMANENT, $this->helpTopic->getCacheMaxAge());
   }
 
   /**

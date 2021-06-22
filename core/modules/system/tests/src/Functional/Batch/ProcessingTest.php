@@ -55,7 +55,8 @@ class ProcessingTest extends BrowserTestBase {
   public function testBatchForm() {
     // Batch 0: no operation.
     $edit = ['batch' => 'batch_0'];
-    $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
     // If there is any escaped markup it will include at least an escaped '<'
     // character, so assert on each page that there is no escaped '<' as a way
     // of verifying that no markup is incorrectly escaped.
@@ -65,7 +66,8 @@ class ProcessingTest extends BrowserTestBase {
 
     // Batch 1: several simple operations.
     $edit = ['batch' => 'batch_1'];
-    $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch with simple operations performed successfully.');
     $this->assertEquals($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
@@ -73,7 +75,8 @@ class ProcessingTest extends BrowserTestBase {
 
     // Batch 2: one multistep operation.
     $edit = ['batch' => 'batch_2'];
-    $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch with multistep operation performed successfully.');
     $this->assertEquals($this->_resultStack('batch_2'), batch_test_stack(), 'Execution order was correct.');
@@ -81,7 +84,8 @@ class ProcessingTest extends BrowserTestBase {
 
     // Batch 3: simple + multistep combined.
     $edit = ['batch' => 'batch_3'];
-    $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_3'), 'Batch with simple and multistep operations performed successfully.');
     $this->assertEquals($this->_resultStack('batch_3'), batch_test_stack(), 'Execution order was correct.');
@@ -89,7 +93,8 @@ class ProcessingTest extends BrowserTestBase {
 
     // Batch 4: nested batch.
     $edit = ['batch' => 'batch_4'];
-    $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
     $this->assertEquals($this->_resultStack('batch_4'), batch_test_stack(), 'Execution order was correct.');
@@ -98,7 +103,8 @@ class ProcessingTest extends BrowserTestBase {
     // Submit batches 4 and 7. Batch 4 will trigger batch 2. Batch 7 will
     // trigger batches 6 and 5.
     $edit = ['batch' => ['batch_4', 'batch_7']];
-    $this->drupalPostForm('batch-test', $edit, 'Submit');
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertSession()->responseContains('Redirection successful.');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
@@ -159,7 +165,8 @@ class ProcessingTest extends BrowserTestBase {
     // handlers. Each submit handler modify the submitted 'value'.
     $value = rand(0, 255);
     $edit = ['value' => $value];
-    $this->drupalPostForm('batch-test/chained', $edit, 'Submit');
+    $this->drupalGet('batch-test/chained');
+    $this->submitForm($edit, 'Submit');
     // Check that result messages are present and in the correct order.
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
     // The stack contains execution order of batch callbacks and submit
@@ -187,7 +194,7 @@ class ProcessingTest extends BrowserTestBase {
   }
 
   /**
-   * Test form submission during a batch operation.
+   * Tests form submission during a batch operation.
    */
   public function testDrupalFormSubmitInBatch() {
     // Displaying the page triggers a batch that programmatically submits a

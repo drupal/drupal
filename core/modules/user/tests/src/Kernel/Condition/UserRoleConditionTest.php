@@ -100,7 +100,7 @@ class UserRoleConditionTest extends KernelTestBase {
   }
 
   /**
-   * Test the user_role condition.
+   * Tests the user_role condition.
    */
   public function testConditions() {
     // Grab the user role condition and configure it to check against

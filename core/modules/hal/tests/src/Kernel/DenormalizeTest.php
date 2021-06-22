@@ -105,7 +105,7 @@ class DenormalizeTest extends NormalizerTestBase {
   }
 
   /**
-   * Test that a field set to an empty array is different than an absent field.
+   * Tests that a field set to an empty array is different than an absent field.
    */
   public function testMarkFieldForDeletion() {
     // Add a default value for a field.
@@ -157,7 +157,7 @@ class DenormalizeTest extends NormalizerTestBase {
   public function testDenormalizeInvalidCustomSerializedField() {
     $entity = EntitySerializedField::create(['serialized_long' => serialize(['Hello world!'])]);
     $normalized = $this->serializer->normalize($entity);
-    $this->assertEquals($normalized['serialized_long'][0]['value'], ['Hello world!']);
+    $this->assertEquals(['Hello world!'], $normalized['serialized_long'][0]['value']);
 
     $normalized['serialized_long'][0]['value'] = 'boo';
     $this->expectException(\LogicException::class);

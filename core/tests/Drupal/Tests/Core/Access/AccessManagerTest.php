@@ -97,6 +97,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->container = new ContainerBuilder();
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
     $this->container->set('cache_contexts_manager', $cache_contexts_manager);
+    $this->container->setParameter('dynamic_access_check_services', []);
     \Drupal::setContainer($this->container);
 
     $this->routeCollection = new RouteCollection();
@@ -147,9 +148,9 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->checkProvider->setChecks($this->routeCollection);
 
-    $this->assertEquals($this->routeCollection->get('test_route_1')->getOption('_access_checks'), NULL);
-    $this->assertEquals($this->routeCollection->get('test_route_2')->getOption('_access_checks'), ['test_access_default']);
-    $this->assertEquals($this->routeCollection->get('test_route_3')->getOption('_access_checks'), ['test_access_default']);
+    $this->assertNull($this->routeCollection->get('test_route_1')->getOption('_access_checks'));
+    $this->assertEquals(['test_access_default'], $this->routeCollection->get('test_route_2')->getOption('_access_checks'));
+    $this->assertEquals(['test_access_default'], $this->routeCollection->get('test_route_3')->getOption('_access_checks'));
   }
 
   /**
@@ -162,6 +163,7 @@ class AccessManagerTest extends UnitTestCase {
     // Setup the dynamic access checker.
     $access_check = $this->createMock('Drupal\Tests\Core\Access\TestAccessCheckInterface');
     $this->container->set('test_access', $access_check);
+    $this->container->setParameter('dynamic_access_check_services', ['test_access']);
     $this->checkProvider->addCheckService('test_access', 'access');
 
     $route = new Route('/test-path', [], ['_foo' => '1', '_bar' => '1']);
@@ -297,7 +299,7 @@ class AccessManagerTest extends UnitTestCase {
   }
 
   /**
-   * Test \Drupal\Core\Access\AccessManager::check() with conjunctions.
+   * Tests \Drupal\Core\Access\AccessManager::check() with conjunctions.
    *
    * @dataProvider providerTestCheckConjunctions
    */
@@ -398,6 +400,7 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue(AccessResult::forbidden()));
 
     $this->container->set('test_access', $access_check);
+    $this->container->setParameter('dynamic_access_check_services', ['test_access']);
 
     $this->checkProvider->addCheckService('test_access', 'access');
     $this->checkProvider->setChecks($this->routeCollection);
@@ -446,6 +449,7 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue(AccessResult::forbidden()));
 
     $this->container->set('test_access', $access_check);
+    $this->container->setParameter('dynamic_access_check_services', ['test_access']);
 
     $this->checkProvider->addCheckService('test_access', 'access');
     $this->checkProvider->setChecks($this->routeCollection);

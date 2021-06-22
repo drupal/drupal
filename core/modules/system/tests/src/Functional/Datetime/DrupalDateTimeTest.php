@@ -32,7 +32,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the AJAX Timezone Callback can deal with various formats.
+   * Tests that the AJAX Timezone Callback can deal with various formats.
    */
   public function testSystemTimezone() {
     $options = [
@@ -46,7 +46,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test that DrupalDateTime can detect the right timezone to use.
+   * Tests that DrupalDateTime can detect the right timezone to use.
    * Test with a variety of less commonly used timezone names to
    * help ensure that the system timezone will be different than the
    * stated timezones.
@@ -90,7 +90,8 @@ class DrupalDateTimeTest extends BrowserTestBase {
 
     // Set up the user with a different timezone than the site.
     $edit = ['mail' => $test_user->getEmail(), 'timezone' => 'Asia/Manila'];
-    $this->drupalPostForm('user/' . $test_user->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('user/' . $test_user->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Reload the user and reset the timezone in AccountProxy::setAccount().
     \Drupal::entityTypeManager()->getStorage('user')->resetCache();

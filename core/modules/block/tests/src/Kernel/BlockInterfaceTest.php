@@ -16,7 +16,7 @@ class BlockInterfaceTest extends KernelTestBase {
   protected static $modules = ['system', 'block', 'block_test', 'user'];
 
   /**
-   * Test configuration and subsequent form() and build() method calls.
+   * Tests configuration and subsequent form() and build() method calls.
    *
    * This test is attempting to test the existing block plugin api and all
    * functionality that is expected to remain consistent. The arrays that are

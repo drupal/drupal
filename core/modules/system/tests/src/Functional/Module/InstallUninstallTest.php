@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\workspaces\Entity\Workspace;
 
@@ -72,7 +73,8 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertModuleNotInstalled('help');
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('has been enabled');
     $this->assertSession()->pageTextContains('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
@@ -103,12 +105,13 @@ class InstallUninstallTest extends ModuleTestBase {
 
       // Install the module.
       $edit = [];
-      $package = $module->info['package'];
+      $lifecycle = $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
       $edit['modules[' . $name . '][enable]'] = TRUE;
-      $this->drupalPostForm('admin/modules', $edit, 'Install');
+      $this->drupalGet('admin/modules');
+      $this->submitForm($edit, 'Install');
 
       // Handle experimental modules, which require a confirmation screen.
-      if ($package == 'Core (Experimental)') {
+      if ($lifecycle === ExtensionLifecycle::EXPERIMENTAL) {
         $this->assertSession()->pageTextContains('Are you sure you wish to enable experimental modules?');
         if (count($modules_to_install) > 1) {
           // When there are experimental modules, needed dependencies do not
@@ -208,11 +211,12 @@ class InstallUninstallTest extends ModuleTestBase {
     foreach ($all_modules as $name => $module) {
       $edit['modules[' . $name . '][enable]'] = TRUE;
       // Track whether there is at least one experimental module.
-      if ($module->info['package'] == 'Core (Experimental)') {
+      if ($module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
         $experimental = TRUE;
       }
     }
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // If there are experimental modules, click the confirm form.
     if ($experimental) {
@@ -257,7 +261,8 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function assertSuccessfulUninstall($module, $package = 'Core') {
     $edit = [];
     $edit['uninstall[' . $module . ']'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertModules([$module], FALSE);

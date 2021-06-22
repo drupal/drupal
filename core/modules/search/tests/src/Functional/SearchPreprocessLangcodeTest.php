@@ -56,7 +56,8 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
     // function. If you search for text that is in the node, preprocess is
     // not invoked on the node during the search excerpt generation.
     $edit = ['or' => 'Additional text'];
-    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'edit-submit--2');
 
     // Checks if the langcode message has been set by hook_search_preprocess().
     $this->assertSession()->pageTextContains('Langcode Preprocess Test: en');
@@ -78,7 +79,8 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => 'testing'];
-    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'edit-submit--2');
 
     // Check if the node has been found.
     $this->assertSession()->pageTextContains('Search results');
@@ -86,7 +88,8 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
 
     // Search for the same node using a different query.
     $edit = ['or' => 'test'];
-    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'edit-submit--2');
 
     // Check if the node has been found.
     $this->assertSession()->pageTextContains('Search results');
