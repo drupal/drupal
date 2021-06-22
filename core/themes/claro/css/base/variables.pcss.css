@@ -208,6 +208,34 @@
    */
   --breadcrumb-height: 1.25rem;
   /**
+  * Dropbutton.
+  */
+  --dropbutton-spacing-size: var(--space-m);
+  --dropbutton-font-size: var(--font-size-base);
+  --dropbutton-line-height: var(--space-m);
+  --dropbutton-toggle-size: 3rem;
+  --dropbutton-border-size: 1px;
+  --dropbutton-toggle-size-spacing: var(--dropbutton-border-size);
+  --dropbutton-border-radius-size: 2px;
+  --dropbutton-small-spacing-size: 0.625rem;
+  --dropbutton-small-font-size: var(--font-size-xs);
+  --dropbutton-small-line-height: 0.75rem;
+  --dropbutton-small-toggle-size: calc((2 * var(--dropbutton-small-spacing-size)) + var(--dropbutton-small-line-height));
+  --dropbutton-extrasmall-spacing-size: 0.375rem;
+  --dropbutton-extrasmall-font-size: var(--font-size-xs);
+  --dropbutton-extrasmall-line-height: 0.75rem;
+  --dropbutton-extrasmall-toggle-size: calc((2 * var(--dropbutton-extrasmall-spacing-size)) + var(--dropbutton-extrasmall-line-height));
+  /**
+   * Icon links.
+   */
+  --icon-link-bg-color: var(--color-white);
+  --icon-link-border-color: var(--color-lightgray);
+  --icon-link-border-size: 1px;
+  --icon-link--active-bg-color: var(--color-absolutezero);
+  --icon-link--active-border-color: var(--color-absolutezero);
+  --icon-link--hover-bg-color: var(--color-bgblue-hover);
+  --icon-link--hover-border-color: var(--color-lightgray-o-80);
+  /**
     * Vertical Tabs.
     */
   --vertical-tabs-margin-vertical: var(--space-s);

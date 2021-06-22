@@ -203,6 +203,13 @@ icon-link:
     component:
       css/components/icon-link.css: {}
 
+contextual-trigger:
+  version: VERSION
+  js:
+    js/contextual.js: {}
+  dependencies:
+      - claro/icon-link
+
 dropbutton:
   version: VERSION
   js:

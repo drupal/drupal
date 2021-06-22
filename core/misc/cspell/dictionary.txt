@@ -521,6 +521,7 @@ eventhandler
 exampleurl
 exitcode
 expirable
+extendee
 extlink
 extraday
 extrasmall

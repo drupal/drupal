@@ -1,0 +1,48 @@
+/**
+ * @file
+ * Styling for contextual module icons.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --contextual-trigger-width: 2rem;
+  --contextual-trigger-height: 2rem;
+  --contextual-icon-width: calc(var(--contextual-trigger-width) / 2);
+  --contextual-icon-height: calc(var(--contextual-trigger-height) / 2);
+}
+
+.contextual__trigger,
+.contextual__trigger:focus,
+.contextual__trigger.visually-hidden:focus {
+  width: var(--contextual-trigger-width);
+  height: var(--contextual-trigger-height);
+}
+
+.contextual__trigger::after {
+  position: absolute;
+  top: calc(var(--contextual-icon-height) / 2 - var(--icon-link-border-size));
+  left: calc(var(--contextual-icon-width) / 2 - var(--icon-link-border-size));
+  width: var(--contextual-icon-width);
+  height: var(--contextual-icon-height);
+  content: url(../../images/icons/545560/pencil.svg);
+}
+
+.contextual__trigger:active::after,
+.open > .contextual__trigger::after {
+  content: url(../../images/icons/ffffff/pencil.svg);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .contextual__trigger::after {
+    content: url(../../images/icons/ffffff/pencil.svg);
+  }
+  .contextual__trigger:active,
+  .open > .contextual__trigger {
+    background-color: var(--color-white);
+  }
+  .contextual__trigger:active::after,
+  .open > .contextual__trigger::after {
+    content: url(../../images/icons/000000/pencil.svg);
+  }
+}

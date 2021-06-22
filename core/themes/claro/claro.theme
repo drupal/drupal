@@ -1631,7 +1631,8 @@ function claro_preprocess_toolbar(&$variables, $hook, $info) {
  * Called by system.module via its hook_library_info_alter().
  *
  * If the active theme is not Claro, but Claro is the admin theme, this alters
- * the toolbar library config so Claro's toolbar stylesheets are used.
+ * the library config for specific extensions so Claro's toolbar stylesheets are
+ * used.
  *
  * @see system_library_info_alter()
  */
@@ -1656,6 +1657,29 @@ function claro_system_module_invoked_library_info_alter(&$libraries, $extension)
       }
     }
   }
+
+  if ($extension === 'contextual') {
+    $claro_libraries = \Drupal::service('library.discovery')->getLibrariesByExtension('claro');
+    $claro_info = \Drupal::service('theme_handler')->listInfo()['claro']->info;
+    $path_prefix = '/core/themes/claro/';
+    $claro_contextual_overrides = $claro_info['libraries-override']['contextual/drupal.contextual-links'];
+    $claro_contextual_extend = $claro_info['libraries-extend']['contextual/drupal.contextual-links'];
+
+    foreach ($claro_contextual_overrides['css'] as $concern => $overrides) {
+      foreach ($claro_contextual_overrides['css'][$concern] as $key => $value) {
+        $config = $libraries['drupal.contextual-links']['css'][$concern][$key];
+        $libraries['drupal.contextual-links']['css'][$concern][$path_prefix . $value] = $config;
+        unset($libraries['drupal.contextual-links']['css'][$concern][$key]);
+      }
+    }
+
+    foreach ($claro_contextual_extend as $library => $extendee_library_name) {
+      $extendee_library = $claro_libraries[str_replace('claro/', '', $extendee_library_name)] ?? FALSE;
+      if ($extendee_library) {
+        extend_library($libraries['drupal.contextual-links'], $extendee_library_name, $extendee_library, $claro_libraries);
+      }
+    }
+  }
 }
 
 /**
@@ -1670,6 +1694,33 @@ function claro_system_module_invoked_theme_registry_alter(array &$theme_registry
   foreach (['toolbar', 'menu__toolbar'] as $registry_item) {
     if (isset($theme_registry[$registry_item])) {
       $theme_registry[$registry_item]['path'] = 'core/themes/claro/templates/navigation';
+    }
+  }
+}
+
+/**
+ * Adds library dependencies.
+ *
+ * @param array $library_to_extend
+ *   The library being extended.
+ * @param string $extendee_library_name
+ *   The name of the library being added.
+ * @param array $extendee_library
+ *   The library being added.
+ * @param array $claro_libraries
+ *   All libraries defined by Claro.
+ */
+function extend_library(array &$library_to_extend, $extendee_library_name, array $extendee_library, array $claro_libraries) {
+  $library_to_extend['dependencies'][] = $extendee_library_name;
+
+  // If this library has other Claro dependencies, recursively call this
+  // function to add the assets from those libraries as well.
+  if (isset($extendee_library['dependencies'])) {
+    foreach ($extendee_library['dependencies'] as $dependee_library_name) {
+      $dependee_library = $claro_libraries[str_replace('claro/', '', $dependee_library_name)] ?? FALSE;
+      if ($dependee_library) {
+        extend_library($library_to_extend, $dependee_library_name, $dependee_library, $claro_libraries);
+      }
     }
   }
 }
