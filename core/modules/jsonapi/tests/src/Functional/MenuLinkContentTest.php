@@ -100,7 +100,6 @@ class MenuLinkContentTest extends ResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'bundle' => 'menu_link_content',
           'link' => [
             'uri' => 'https://nl.wikipedia.org/wiki/Llama',
             'title' => NULL,

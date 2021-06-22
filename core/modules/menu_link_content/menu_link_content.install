@@ -11,3 +11,18 @@
 function menu_link_content_update_last_removed() {
   return 8601;
 }
+
+/**
+ * Remove the bundle field.
+ */
+function menu_link_content_update_9200() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('menu_link_content');
+  $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('bundle', 'menu_link_content');
+
+  $keys = $entity_type->getKeys();
+  unset($keys['bundle']);
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->uninstallFieldStorageDefinition($field_storage_definition);
+  $definition_update_manager->updateEntityType($entity_type);
+}
