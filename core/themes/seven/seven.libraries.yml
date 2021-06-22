@@ -15,7 +15,6 @@ global-styling:
       css/classy/components/field.css: {}
       css/classy/components/form.css: {}
       css/classy/components/icons.css: {}
-      css/classy/components/inline-form.css: {}
       css/classy/components/item-list.css: {}
       css/classy/components/link.css: {}
       css/classy/components/links.css: {}
@@ -41,6 +40,7 @@ global-styling:
       css/components/field-ui.css: {}
       css/components/form.css: {}
       css/components/help.css: {}
+      css/components/inline-form.css: {}
       css/components/menus-and-lists.css: {}
       css/components/modules-page.css: {}
       css/components/node.css: {}

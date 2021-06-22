@@ -161,7 +161,8 @@ _:-ms-fullscreen,
     margin-left: 0;
   }
   .form-element:first-child,
-  .form-item__label + .form-element {
+  .form-item__label + .form-element,
+  .form-item__label + .form-item__wrapper .form-element {
     margin-top: 0;
   }
 }
