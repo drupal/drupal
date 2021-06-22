@@ -58,14 +58,32 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * process:
  *   uid:
  *     plugin: migration_lookup
- *       migration:
- *         - users
- *         - members
- *       source_ids:
- *         users:
- *           - author
- *         members:
- *           - id
+ *     migration:
+ *       - users
+ *       - members
+ *     source_ids:
+ *       users:
+ *         - author
+ *       members:
+ *         - id
+ * @endcode
+ *
+ * It's not required to describe source identifiers for each migration. If the
+ * source identifier for a migration is not specified, the default source value
+ * will be used. In the example below, the 'author' source property will be used
+ * to do a lookup in the 'users' migration, and the 'uid' property in the
+ * 'members' migration.
+ * @code
+ * process:
+ *   uid:
+ *     plugin: migration_lookup
+ *     source: uid
+ *     migration:
+ *       - users
+ *       - members
+ *     source_ids:
+ *       users:
+ *         - author
  * @endcode
  *
  * If the migration_lookup plugin does not find the source ID in the migration
@@ -178,22 +196,21 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
     $destination_ids = NULL;
     $source_id_values = [];
     foreach ($lookup_migration_ids as $lookup_migration_id) {
+      $lookup_value = $value;
       if ($lookup_migration_id == $this->migration->id()) {
         $self = TRUE;
       }
       if (isset($this->configuration['source_ids'][$lookup_migration_id])) {
-        $value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
+        $lookup_value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
       }
-      if (!is_array($value)) {
-        $value = [$value];
-      }
-      $this->skipInvalid($value);
-      $source_id_values[$lookup_migration_id] = $value;
+      $lookup_value = (array) $lookup_value;
+      $this->skipInvalid($lookup_value);
+      $source_id_values[$lookup_migration_id] = $lookup_value;
 
       // Re-throw any PluginException as a MigrateException so the executable
       // can shut down the migration.
       try {
-        $destination_id_array = $this->migrateLookup->lookup($lookup_migration_id, $value);
+        $destination_id_array = $this->migrateLookup->lookup($lookup_migration_id, $lookup_value);
       }
       catch (PluginNotFoundException $e) {
         $destination_id_array = [];
