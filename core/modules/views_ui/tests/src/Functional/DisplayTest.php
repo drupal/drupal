@@ -36,12 +36,14 @@ class DisplayTest extends UITestBase {
    */
   public function testAddDisplay() {
     $view = $this->randomView();
-    $this->assertSession()->pageTextNotContains('Block');
-    $this->assertSession()->pageTextNotContains('Block 2');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(0, '/Block name:/');
 
     $this->submitForm([], 'Add Block');
-    $this->assertSession()->pageTextContains('Block');
-    $this->assertSession()->pageTextNotContains('Block 2');
+    $this->assertSession()->elementTextContains('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]', 'Block*');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(1, '/Block name:/');
   }
 
   /**

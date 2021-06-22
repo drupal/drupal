@@ -211,7 +211,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->pageTextContains($view->getTitle());
+    $this->assertSession()->elementExists('xpath', '//h2[text()="' . $view->getTitle() . '"]');
 
     // Set a custom label on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
@@ -228,7 +228,7 @@ class ExposedFormTest extends ViewTestBase {
     // Test that the label is removed.
     $this->drupalGet('test_exposed_block');
     $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
-    $this->assertSession()->pageTextNotContains($view->getTitle());
+    $this->assertSession()->elementNotExists('xpath', '//h2[text()="' . $view->getTitle() . '"]');
 
     // Test there is an exposed form in a block.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);

@@ -238,7 +238,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       foreach ($plugins as $entity_id) {
         $path = 'search/' . $entities[$entity_id]->getPath();
         $label = $entities[$entity_id]->label();
-        $this->assertSession()->elementTextEquals('xpath', '//ul[@class="tabs primary"]/li/a[@data-drupal-link-system-path="' . $path . '"]', $label);
+        $this->assertSession()->elementTextContains('xpath', '//ul[@class="tabs primary"]/li/a[@data-drupal-link-system-path="' . $path . '"]', $label);
       }
     }
   }

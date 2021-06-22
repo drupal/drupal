@@ -88,9 +88,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['permission' => 'administer taxonomy']]);
 
     // Check if the correct users show up.
-    $this->assertSession()->pageTextNotContains($user_a->getAccountName());
-    $this->assertSession()->pageTextContains($user_b->getAccountName());
-    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_a->getAccountName() . '"]');
+    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_b->getAccountName() . '"]');
+    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_c->getAccountName() . '"]');
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->getRoles();
@@ -98,9 +98,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['role' => reset($roles)]]);
 
     // Check if the correct users show up when filtered by role.
-    $this->assertSession()->pageTextNotContains($user_a->getAccountName());
-    $this->assertSession()->pageTextNotContains($user_b->getAccountName());
-    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_a->getAccountName() . '"]');
+    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_b->getAccountName() . '"]');
+    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_c->getAccountName() . '"]');
 
     // Test blocking of a user.
     $account = $user_storage->load($user_c->id());
@@ -125,9 +125,9 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test filtering on admin page for blocked users
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
-    $this->assertSession()->pageTextNotContains($user_a->getAccountName());
-    $this->assertSession()->pageTextNotContains($user_b->getAccountName());
-    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_a->getAccountName() . '"]');
+    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_b->getAccountName() . '"]');
+    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name") and text()="' . $user_c->getAccountName() . '"]');
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = [];
