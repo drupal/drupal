@@ -25,13 +25,25 @@
       );
 
       const prefixSuffix = debounce(this.calculatePrefixSuffix.bind(this), 300);
+      const prefixSuffixInstant = this.calculatePrefixSuffix.bind(this);
+
+      // Recalculate on resize and formUpdated.
       $(window).on('resize.prefixSuffix', prefixSuffix);
       $(input).on('formUpdated.machineName', prefixSuffix);
 
-      // When CKEditor is ready, the input widths may change. The prefixes and
-      // suffixes need to be recalculated against these changed widths.
+      // When CKEditor is ready or the field wrapper visibility toggles, the input widths may change.
+      // The prefixes and suffixes need to be recalculated against these changed widths.
+
+      // Observe 'class' changes on the parent wrapper and re calculate.
+      const observer = new MutationObserver(prefixSuffixInstant);
+
+      observer.observe(elementWrapper.parentElement, {
+        attributeFilter: ['class'],
+      });
+
+      // When CKEditor is ready, recalculate.
       if (window.CKEDITOR) {
-        CKEDITOR.on('instanceReady', prefixSuffix);
+        CKEDITOR.on('instanceReady', prefixSuffixInstant);
       }
 
       // Initialize the prefix+suffix style calculations.

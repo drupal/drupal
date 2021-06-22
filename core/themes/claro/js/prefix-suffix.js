@@ -21,11 +21,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.prefix = elementWrapper.querySelector('[data-drupal-form-item-prefix]');
       this.suffix = elementWrapper.querySelector('[data-drupal-form-item-suffix]');
       var prefixSuffix = debounce(this.calculatePrefixSuffix.bind(this), 300);
+      var prefixSuffixInstant = this.calculatePrefixSuffix.bind(this);
       $(window).on('resize.prefixSuffix', prefixSuffix);
       $(input).on('formUpdated.machineName', prefixSuffix);
+      var observer = new MutationObserver(prefixSuffixInstant);
+      observer.observe(elementWrapper.parentElement, {
+        attributeFilter: ['class']
+      });
 
       if (window.CKEDITOR) {
-        CKEDITOR.on('instanceReady', prefixSuffix);
+        CKEDITOR.on('instanceReady', prefixSuffixInstant);
       }
 
       prefixSuffix();
