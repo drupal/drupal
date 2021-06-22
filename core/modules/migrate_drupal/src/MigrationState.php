@@ -382,7 +382,7 @@ class MigrationState {
     $state_by_source = [];
     $dest_by_source = [];
     $states = [static::FINISHED, static::NOT_FINISHED];
-    foreach ($migration_states as $module => $info) {
+    foreach ($migration_states as $info) {
       foreach ($states as $state) {
         if (isset($info[$state][$version])) {
           foreach ($info[$state][$version] as $source => $destination) {

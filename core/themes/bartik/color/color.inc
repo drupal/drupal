@@ -5,6 +5,7 @@
  * Lists available colors and color schemes for the Bartik theme.
  */
 
+// phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
 $info = [
   // Available colors and color labels used in theme.
   'fields' => [

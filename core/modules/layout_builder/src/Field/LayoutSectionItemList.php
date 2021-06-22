@@ -73,7 +73,7 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
     parent::preSave();
     // Loop through each section and reconstruct it to ensure that all default
     // values are present.
-    foreach ($this->list as $delta => $item) {
+    foreach ($this->list as $item) {
       $item->section = Section::fromArray($item->section->toArray());
     }
   }

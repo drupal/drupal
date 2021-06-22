@@ -250,8 +250,8 @@ class OptimizedPhpArrayDumper extends Dumper {
       $service['shared'] = $definition->isShared();
     }
 
-    if (($decorated = $definition->getDecoratedService()) !== NULL) {
-      throw new InvalidArgumentException("The 'decorated' definition is not supported by the Drupal 8 run-time container. The Container Builder should have resolved that during the DecoratorServicePass compiler pass.");
+    if ($definition->getDecoratedService() !== NULL) {
+      throw new InvalidArgumentException("The 'decorated' definition is not supported by the Drupal run-time container. The Container Builder should have resolved that during the DecoratorServicePass compiler pass.");
     }
 
     if ($callable = $definition->getFactory()) {

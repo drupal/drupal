@@ -55,7 +55,7 @@ class ViewsData {
       return $this->moderationInformation->isModeratedEntityType($type);
     });
 
-    foreach ($entity_types_with_moderation as $entity_type_id => $entity_type) {
+    foreach ($entity_types_with_moderation as $entity_type) {
       $table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
 
       $data[$table]['moderation_state'] = [

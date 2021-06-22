@@ -130,8 +130,8 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       }
 
       // Invoke listeners and resolve callables if necessary.
-      foreach ($this->listeners[$event_name] as $priority => &$definitions) {
-        foreach ($definitions as $key => &$definition) {
+      foreach ($this->listeners[$event_name] as &$definitions) {
+        foreach ($definitions as &$definition) {
           if (!isset($definition['callable'])) {
             $definition['callable'] = [$this->container->get($definition['service'][0]), $definition['service'][1]];
           }
@@ -173,8 +173,8 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       }
 
       // Collect listeners and resolve callables if necessary.
-      foreach ($this->listeners[$event_name] as $priority => &$definitions) {
-        foreach ($definitions as $key => &$definition) {
+      foreach ($this->listeners[$event_name] as &$definitions) {
+        foreach ($definitions as &$definition) {
           if (!isset($definition['callable'])) {
             $definition['callable'] = [$this->container->get($definition['service'][0]), $definition['service'][1]];
           }
@@ -202,7 +202,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
     }
     // Resolve service definitions if the listener has not been found so far.
     foreach ($this->listeners[$event_name] as $priority => &$definitions) {
-      foreach ($definitions as $key => &$definition) {
+      foreach ($definitions as &$definition) {
         if (!isset($definition['callable'])) {
           // Once the callable is retrieved we keep it for subsequent method
           // invocations on this class.

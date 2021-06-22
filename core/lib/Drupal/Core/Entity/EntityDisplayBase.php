@@ -276,7 +276,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     if (\Drupal::moduleHandler()->moduleExists('field')) {
       $components = $this->content + $this->hidden;
       $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->targetEntityType, $this->bundle);
-      foreach (array_intersect_key($field_definitions, $components) as $field_name => $field_definition) {
+      foreach (array_intersect_key($field_definitions, $components) as $field_definition) {
         if ($field_definition instanceof ConfigEntityInterface && $field_definition->getEntityTypeId() == 'field_config') {
           $this->addDependency('config', $field_definition->getConfigDependencyName());
         }

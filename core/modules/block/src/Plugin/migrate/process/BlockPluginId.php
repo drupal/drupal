@@ -76,7 +76,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
       list($module, $delta) = $value;
       switch ($module) {
         case 'aggregator':
-          list($type, $id) = explode('-', $delta);
+          list($type) = explode('-', $delta);
           if ($type == 'feed') {
             return 'aggregator_feed_block';
           }

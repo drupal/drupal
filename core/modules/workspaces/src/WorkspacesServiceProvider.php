@@ -34,7 +34,7 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
     // Ensure that there's no active workspace while running database updates by
     // removing the relevant tag from all workspace negotiator services.
     if ($container->get('kernel') instanceof UpdateKernel) {
-      foreach ($container->getDefinitions() as $id => $definition) {
+      foreach ($container->getDefinitions() as $definition) {
         if ($definition->hasTag('workspace_negotiator')) {
           $definition->clearTag('workspace_negotiator');
         }

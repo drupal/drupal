@@ -25,7 +25,7 @@ trait EntityResourceAccessTrait {
     // Only check 'edit' permissions for fields that were actually submitted by
     // the user. Field access makes no difference between 'create' and 'update',
     // so the 'edit' operation is used here.
-    foreach ($entity->_restSubmittedFields as $key => $field_name) {
+    foreach ($entity->_restSubmittedFields as $field_name) {
       if (!$entity->get($field_name)->access('edit')) {
         throw new AccessDeniedHttpException("Access denied on creating field '$field_name'.");
       }

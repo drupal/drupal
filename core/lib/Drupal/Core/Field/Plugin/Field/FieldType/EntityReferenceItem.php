@@ -345,7 +345,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    *   Either the bundle string, or NULL if there is no bundle.
    */
   protected static function getRandomBundle(EntityTypeInterface $entity_type, array $selection_settings) {
-    if ($bundle_key = $entity_type->getKey('bundle')) {
+    if ($entity_type->getKey('bundle')) {
       if (!empty($selection_settings['target_bundles'])) {
         $bundle_ids = $selection_settings['target_bundles'];
       }

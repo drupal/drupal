@@ -358,9 +358,7 @@ function rdf_preprocess_node(&$variables) {
       $fields = array_keys(\Drupal::service('comment.manager')->getFields('node'));
       $definitions = array_keys($variables['node']->getFieldDefinitions());
       $valid_fields = array_intersect($fields, $definitions);
-      $count = 0;
       foreach ($valid_fields as $field_name) {
-        $count += $variables['node']->get($field_name)->comment_count;
         // Adds RDFa markup for the comment count near the node title as
         // metadata.
         $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->get($field_name)->comment_count);
