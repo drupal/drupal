@@ -5,6 +5,7 @@ namespace Drupal\FunctionalTests\Update;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestRunnerKernel;
+use Drupal\system\Controller\DbUpdateController;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -181,6 +182,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
+
+    $this->assertSystemUpdatesPriorityExecution();
   }
 
   /**
@@ -268,6 +271,14 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
       return FALSE;
     }
     $this->doRunUpdates($this->updateUrl);
+
+    // The update test might be retrieving the schema version of a module
+    // before the updates are executed, which will now lead to
+    // update_get_update_list() retrieving the schema version prior to the
+    // update. To prevent this we reset the static cache of
+    // drupal_get_installed_schema_version() so that more complex update path
+    // testing works.
+    drupal_static_reset('drupal_get_installed_schema_version');
   }
 
   /**
@@ -308,6 +319,48 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     $account->setEmail($this->rootUser->getEmail());
     $account->setUsername($this->rootUser->getAccountName());
     $account->save();
+  }
+
+  /**
+   * Asserts that system updates will be executed first.
+   */
+  protected function assertSystemUpdatesPriorityExecution() {
+    // Ensure install files are loaded. We reset the static cache as if the
+    // update functions for retrieving update information have been called they
+    // might contain an old data.
+    // @see drupal_get_schema_versions().
+    drupal_static_reset('drupal_get_installed_schema_version');
+    drupal_static_reset('drupal_get_schema_versions');
+
+    foreach ($this->container->get('module_handler')->getModuleList() as $loaded_module => $filename) {
+      module_load_install($loaded_module);
+    }
+
+    $db_update_controller = DbUpdateController::create($this->container);
+    $get_module_updates = function () {
+      return $this->getModuleUpdates();
+    };
+    $get_module_updates = $get_module_updates->bindTo($db_update_controller, $db_update_controller);
+    $starting_updates = $get_module_updates();
+    $updates = update_resolve_dependencies($starting_updates);
+
+    if ($updates) {
+      $first_update = reset($updates);
+      $system_updates_finished = !$first_update['module'] === 'system';
+      foreach ($updates as $function => $update) {
+        if ($update['module'] === 'system') {
+          $this->assertFalse($system_updates_finished, "System update {$function} should be among the first updates.");
+        }
+        else {
+          $system_updates_finished = TRUE;
+        }
+      }
+    }
+
+    // Reset the static cache once more as ::runUpdates() is relying on it being
+    // populated after the updates have been executed and not before that.
+    drupal_static_reset('drupal_get_installed_schema_version');
+    drupal_static_reset('drupal_get_schema_versions');
   }
 
 }

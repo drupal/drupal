@@ -478,6 +478,9 @@ function update_resolve_dependencies($starting_updates) {
   // Perform the depth-first search and sort on the results.
   $graph_object = new Graph($graph);
   $graph = $graph_object->searchAndSort();
+  // Prepare the graph for sort.
+  _update_prepare_graph_for_sort($graph);
+  // Finally sort the updates by weight.
   uasort($graph, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
 
   foreach ($graph as $function => &$data) {
@@ -505,6 +508,76 @@ function update_resolve_dependencies($starting_updates) {
   }
 
   return $graph;
+}
+
+/**
+ * Prepares the update graph array for sorting.
+ *
+ * The weights of all updates with the same weight value as a system update
+ * will be increased, so that we ensure that system updates are executed
+ * as soon as possible.
+ *
+ * For example the following graph:
+ * @code
+ * $graph = [
+ *   'node_update_8xxx' => [
+ *     'weight' => 0,
+ *     'module' => 'node',
+ *   ],
+ *   'system_update_8xxx' => [
+ *     'weight' => 0,
+ *     'module' => 'system',
+ *   ].
+ * ];
+ * @endcode
+ *
+ * will be transformed to:
+ *
+ * @code
+ * $graph = [
+ *   'node_update_8xxx' => [
+ *     'weight' => 1,
+ *     'module' => 'node',
+ *   ],
+ *   'system_update_8xxx' => [
+ *     'weight' => 0,
+ *     'module' => 'system',
+ *   ].
+ * ];
+ * @endcode
+ *
+ * @param array &$graph
+ *   The update graph array.
+ *
+ * @internal
+ */
+function _update_prepare_graph_for_sort(array &$graph) {
+  $weights = [];
+  $system_updates = [];
+  foreach ($graph as $update_name => $update_data) {
+    $weight = $update_data['weight'];
+    $weights[] = $weight;
+    if ($update_data['module'] === 'system') {
+      $system_updates[] = $weight;
+    }
+  }
+  sort($weights);
+  $new_weights = array_combine($weights, $weights);
+  foreach ($system_updates as $system_update_weight) {
+    foreach ($new_weights as $old_weight => &$new_weight) {
+      if ($old_weight >= $system_update_weight) {
+        $new_weight++;
+      }
+    }
+  }
+  // Increment the weight of all updates with the same weight value as a system
+  // update, but leave the system update with the old weight in order for it to
+  // be executed first.
+  foreach ($graph as $update_name => &$update_data) {
+    if ($update_data['module'] !== 'system') {
+      $update_data['weight'] = $new_weights[$update_data['weight']];
+    }
+  }
 }
 
 /**
@@ -619,6 +692,62 @@ function update_build_dependency_graph($update_functions) {
         $graph[$dependency]['edges'][$function] = TRUE;
         $graph[$dependency]['module'] = $module;
         $graph[$dependency]['number'] = $number;
+      }
+    }
+  }
+
+  // A function returning all the updates which directly or indirectly have a
+  // specific update as an edge.
+  $get_all_parents = function ($update) use ($graph, &$get_all_parents) {
+    $parents = [];
+    foreach ($graph as $func => $data) {
+      if (isset($data['edges'][$update])) {
+        $parents[] = $func;
+        $parents = array_merge($parents, $get_all_parents($func));
+      }
+    }
+    return array_unique($parents);
+  };
+  // If a given non-system update U1 has an edge pointing to another non-system
+  // update update U2 and U2 has an edge pointing to the a system update S, add
+  // an edge to U1 pointing to S. This ensures that the chain U1->U2->S will be
+  // preserved in that order despite the system updates being moved before any
+  // other updates below.
+  foreach ($graph as $non_system_func => $data) {
+    if ($data['module'] !== 'system') {
+      if (!empty($data['edges'])) {
+        $sys_updates = [];
+        foreach (array_keys($data['edges']) as $edge) {
+          if ($graph[$edge]['module'] === 'system') {
+            $sys_updates[$edge] = TRUE;
+          }
+        }
+        if ($sys_updates) {
+          foreach ($get_all_parents($non_system_func) as $parent_edge) {
+            $graph[$parent_edge]['edges'] = empty($graph[$parent_edge]['edges']) ? $sys_updates : array_unique(array_merge($graph[$parent_edge]['edges'], $sys_updates));
+          }
+        }
+      }
+    }
+  }
+  // Find update functions without edges to system updates and add such updates
+  // as edges to system updates so that system updates are executed first.
+  foreach ($graph as $system_function => &$system_data) {
+    if ($system_data['module'] === 'system') {
+      foreach ($graph as $non_system_function => $non_system_data) {
+        if ($non_system_data['module'] !== 'system') {
+          $contains_system_update_edge = FALSE;
+          $edges = empty($non_system_data['edges']) ? [] : array_keys($non_system_data['edges']);
+          foreach ($edges as $edge) {
+            if ($graph[$edge]['module'] === 'system') {
+              $contains_system_update_edge = TRUE;
+              break;
+            }
+          }
+          if (!$contains_system_update_edge) {
+            $system_data['edges'][$non_system_function] = TRUE;
+          }
+        }
       }
     }
   }
