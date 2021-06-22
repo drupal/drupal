@@ -5,13 +5,13 @@
 * @preserve
 **/
 
-(function (Drupal, $) {
+(function (Drupal, once) {
   Drupal.behaviors.tableScroll = {
     attach: function attach(context) {
-      var $tables = $(context).find('[data-drupal-scrollable-table]').once('tableScroll');
-      $tables.map(function (index, table) {
-        return Drupal.TableScroll.tables.push(new Drupal.TableScroll(table));
-      });
+      var tables = once('tableScroll', '[data-drupal-scrollable-table]', context);
+      Drupal.TableScroll.tables = Drupal.TableScroll.tables.concat(tables.map(function (table) {
+        return new Drupal.TableScroll(table);
+      }));
     }
   };
-})(Drupal, jQuery);
+})(Drupal, once);

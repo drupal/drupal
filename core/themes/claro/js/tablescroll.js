@@ -105,4 +105,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
     return _class;
   }();
+
+  Drupal.TableScroll.tables = [];
 })(Drupal, jQuery, Drupal.debounce);

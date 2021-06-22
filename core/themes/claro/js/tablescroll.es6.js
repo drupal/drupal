@@ -175,4 +175,7 @@
       }
     }
   };
+
+  // Make all scrollable tables available to other JavaScript.
+  Drupal.TableScroll.tables = [];
 })(Drupal, jQuery, Drupal.debounce);

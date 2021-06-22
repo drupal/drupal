@@ -2,7 +2,7 @@
  * @file
  * Initializes scrollable tables.
  */
-((Drupal, $) => {
+((Drupal, once) => {
   /**
    * Attach the tableScroll function to {@link Drupal.behaviors}.
    *
@@ -13,12 +13,14 @@
    */
   Drupal.behaviors.tableScroll = {
     attach(context) {
-      const $tables = $(context)
-        .find('[data-drupal-scrollable-table]')
-        .once('tableScroll');
-      $tables.map((index, table) =>
-        Drupal.TableScroll.tables.push(new Drupal.TableScroll(table)),
+      const tables = once(
+        'tableScroll',
+        '[data-drupal-scrollable-table]',
+        context,
+      );
+      Drupal.TableScroll.tables = Drupal.TableScroll.tables.concat(
+        tables.map((table) => new Drupal.TableScroll(table)),
       );
     },
   };
-})(Drupal, jQuery);
+})(Drupal, once);
