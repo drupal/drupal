@@ -43,12 +43,12 @@ class PrefixSuffixForm extends FormBase {
     ];
     $form['long_suffix'] = [
       '#type' => 'textfield',
-      '#field_suffix' => 'long suffix long suffixlong suffixlong suffixlong suffix long suffix',
+      '#field_suffix' => 'long suffix long suffix long suffix long suffix long suffix long suffix',
     ];
     $form['long_prefix_long_suffix'] = [
       '#type' => 'textfield',
       '#field_prefix' => 'long prefix long prefix long prefix long prefix long prefix',
-      '#field_suffix' => 'long suffix long suffixlong suffixlong suffixlong suffix long suffix',
+      '#field_suffix' => 'long suffix long suffix long suffix long suffix long suffix long suffix',
     ];
     $form['long_prefix_standard_suffix'] = [
       '#type' => 'textfield',
@@ -58,7 +58,7 @@ class PrefixSuffixForm extends FormBase {
     $form['standard_prefix_long_suffix'] = [
       '#type' => 'textfield',
       '#field_prefix' => 'prefix',
-      '#field_suffix' => 'long suffix long suffixlong suffixlong suffixlong suffix long suffix',
+      '#field_suffix' => 'long suffix long suffix long suffix long suffix long suffix long suffix',
     ];
     return $form;
   }

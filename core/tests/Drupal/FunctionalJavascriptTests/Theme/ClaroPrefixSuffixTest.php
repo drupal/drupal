@@ -24,7 +24,7 @@ class ClaroPrefixSuffixTest extends WebDriverTestBase {
   ];
 
   /**
-   * Hellpo.
+   * Ensures that the prefix and suffix are present in the correct positions and that the classes are correct.
    *
    * @param int $width
    *   The viewport width to run the tests at.
@@ -85,7 +85,7 @@ class ClaroPrefixSuffixTest extends WebDriverTestBase {
             // a different Y position.
             $this->assertNotEquals($input_y_position, $affix_y_position, $selector_string);
 
-            // Include the "stacked" classes specfic to this affix type in the
+            // Include the "stacked" classes specific to this affix type in the
             // classes expected to be present.
             $wrapper_classes[] = "form-item__wrapper--stacked-$affix";
             $affix_classes[$affix][] = 'form-item__affix--stacked';
