@@ -55,7 +55,7 @@ class LockBackendAbstractTest extends UnitTestCase {
     $lock_id = $this->lock->getLockId();
     $this->assertIsString($lock_id);
     // Example lock ID would be '7213141505232b6ee2cb967.27683891'.
-    $this->assertRegExp('/[\da-f]+\.\d+/', $lock_id);
+    $this->assertMatchesRegularExpression('/[\da-f]+\.\d+/', $lock_id);
     // Test the same lock ID is returned a second time.
     $this->assertSame($lock_id, $this->lock->getLockId());
   }
