@@ -637,7 +637,7 @@ class BookTest extends BrowserTestBase {
 
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
     $this->assertEquals('View', $elements[0]->getText(), 'View link is found from the list.');
-    $this->assertEquals(count($nodes), count($elements), 'All the book pages are displayed on the book outline page.');
+    $this->assertSameSize($nodes, $elements, 'All the book pages are displayed on the book outline page.');
 
     // Unpublish a book in the hierarchy.
     $nodes[0]->setUnPublished();
@@ -646,7 +646,7 @@ class BookTest extends BrowserTestBase {
     // Node should still appear on the outline for admins.
     $this->drupalGet('admin/structure/book/' . $this->book->id());
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
-    $this->assertEquals(count($nodes), count($elements), 'All the book pages are displayed on the book outline page.');
+    $this->assertSameSize($nodes, $elements, 'All the book pages are displayed on the book outline page.');
 
     // Saving a book page not as the current version shouldn't effect the book.
     $old_title = $nodes[1]->getTitle();
@@ -657,7 +657,7 @@ class BookTest extends BrowserTestBase {
     $nodes[1]->save();
     $this->drupalGet('admin/structure/book/' . $this->book->id());
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
-    $this->assertEquals(count($nodes), count($elements), 'All the book pages are displayed on the book outline page.');
+    $this->assertSameSize($nodes, $elements, 'All the book pages are displayed on the book outline page.');
     $this->assertSession()->responseNotContains($new_title);
     $this->assertSession()->responseContains($old_title);
   }

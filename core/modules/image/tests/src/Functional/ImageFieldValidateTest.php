@@ -63,7 +63,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $node . '/edit');
     $this->submitForm($edit, 'Upload');
-    $this->assertFileNotExists($expected_path . '/' . $zero_size_image->filename);
+    $this->assertFileDoesNotExist($expected_path . '/' . $zero_size_image->filename);
 
     // Try uploading an invalid image.
     $invalid_image = $invalid_image_files['invalid-img-test.png'];
@@ -72,7 +72,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $node . '/edit');
     $this->submitForm($edit, 'Upload');
-    $this->assertFileNotExists($expected_path . '/' . $invalid_image->filename);
+    $this->assertFileDoesNotExist($expected_path . '/' . $invalid_image->filename);
 
     // Upload a valid image again.
     $valid_image = $image_files[0];

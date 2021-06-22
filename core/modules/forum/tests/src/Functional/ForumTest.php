@@ -542,8 +542,8 @@ class ForumTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Test replying to a comment.
-    $this->clickLink('Reply');
+    // Test adding a new comment.
+    $this->clickLink('Add new comment');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldExists('comment_body[0][value]');
 

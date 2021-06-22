@@ -209,7 +209,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEquals($count, 6, 'Customized translations successfully imported.');
+    $this->assertEquals(6, $count, 'Customized translations successfully imported.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // customized strings are kept.

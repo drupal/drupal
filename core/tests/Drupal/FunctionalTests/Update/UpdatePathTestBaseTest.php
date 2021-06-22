@@ -105,7 +105,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Ensure the index was added for column a.
     $this->assertTrue($connection->schema()->indexExists('update_test_schema_table', 'test'), 'Version 8001 of the update_test_schema module is installed.');
     // Ensure update_test_semver_update_n_update_8001 was run.
-    $this->assertEquals(\Drupal::state()->get('update_test_semver_update_n_update_8001'), 'Yes, I was run. Thanks for testing!');
+    $this->assertEquals('Yes, I was run. Thanks for testing!', \Drupal::state()->get('update_test_semver_update_n_update_8001'));
   }
 
   /**

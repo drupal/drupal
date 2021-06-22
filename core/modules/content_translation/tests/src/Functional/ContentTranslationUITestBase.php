@@ -590,10 +590,10 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       }
 
       if ($translatable_changed_field) {
-        $this->assertEquals(count($entity->getTranslationLanguages()), count($timestamps), 'All timestamps from all languages are different.');
+        $this->assertSameSize($entity->getTranslationLanguages(), $timestamps, 'All timestamps from all languages are different.');
       }
       else {
-        $this->assertEquals(1, count($timestamps), 'All timestamps from all languages are identical.');
+        $this->assertCount(1, $timestamps, 'All timestamps from all languages are identical.');
       }
     }
   }

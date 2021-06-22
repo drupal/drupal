@@ -289,7 +289,7 @@ class ThemeUiTest extends BrowserTestBase {
   protected function assertUninstallableTheme(array $expected_requires_list_items, $theme_name) {
     $theme_container = $this->getSession()->getPage()->find('css', "h3:contains(\"$theme_name\")")->getParent();
     $requires_list_items = $theme_container->findAll('css', '.theme-info__requires li');
-    $this->assertCount(count($expected_requires_list_items), $requires_list_items);
+    $this->assertSameSize($expected_requires_list_items, $requires_list_items);
 
     foreach ($requires_list_items as $key => $item) {
       $this->assertContains($item->getText(), $expected_requires_list_items);
