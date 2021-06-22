@@ -8,12 +8,10 @@
     },
     "require": {
         "behat/mink": "^1.8",
-        "behat/mink-goutte-driver": "^1.2",
         "behat/mink-selenium2-driver": "^1.4",
         "composer/composer": "^2.0.2",
         "drupal/coder": "^8.3.10",
         "easyrdf/easyrdf": "^0.9 || ^1.0",
-        "fabpot/goutte": "^3.3",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
