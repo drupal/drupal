@@ -163,6 +163,7 @@
     </properties>
   </rule>
   <rule ref="Drupal.NamingConventions.ValidClassName"/>
+  <rule ref="Drupal.NamingConventions.ValidGlobal"/>
   <rule ref="Generic.NamingConventions.ConstructorName"/>
   <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
   <rule ref="Generic.PHP.DeprecatedFunctions"/>

@@ -118,12 +118,6 @@ class BlockForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
 
-    // Store theme settings in $form_state for use below.
-    if (!$theme = $entity->getTheme()) {
-      $theme = $this->config('system.theme')->get('default');
-    }
-    $form_state->set('block_theme', $theme);
-
     // Store the gathered contexts in the form state for other objects to use
     // during form building.
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
@@ -150,13 +144,14 @@ class BlockForm extends EntityForm {
     ];
 
     // Theme settings.
-    if ($entity->getTheme()) {
+    if ($theme = $entity->getTheme()) {
       $form['theme'] = [
         '#type' => 'value',
         '#value' => $theme,
       ];
     }
     else {
+      $theme = $this->config('system.theme')->get('default');
       $theme_options = [];
       foreach ($this->themeHandler->listInfo() as $theme_name => $theme_info) {
         if (!empty($theme_info->status)) {
