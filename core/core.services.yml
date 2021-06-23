@@ -857,6 +857,12 @@ services:
     tags:
       - { name: backend_overridable }
     lazy: true
+  lock.batch:
+    class: Drupal\Core\Lock\BatchDatabaseLockBackend
+    arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
+    lazy: true
   lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
