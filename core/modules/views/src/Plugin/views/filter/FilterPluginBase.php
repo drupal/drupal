@@ -472,6 +472,11 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#weight' => -200,
     ];
 
+    $form['expose_button']['warning'] = [
+      '#weight' => 1,
+      '#markup' => '<div class="messages messages--warning">' . $this->t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.') . '</div>',
+    ];
+
     // Add a checkbox for JS users, which will have behavior attached to it
     // so it can replace the button.
     $form['expose_button']['checkbox'] = [

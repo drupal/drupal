@@ -224,7 +224,7 @@ class Block extends DisplayPluginBase {
 
       case 'exposed_form_options':
         $this->view->initHandlers();
-        if (!$this->usesExposed() && parent::usesExposed()) {
+        if (!$this->usesExposed()) {
           $form['exposed_form_options']['warning'] = [
             '#weight' => -10,
             '#markup' => '<div class="messages messages--warning">' . $this->t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.') . '</div>',
