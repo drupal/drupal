@@ -746,6 +746,9 @@ services:
     class: Drupal\Core\DependencyInjection\ClassResolver
     calls:
       - [setContainer, ['@service_container']]
+  callable_resolver:
+    class: \Drupal\Core\Utility\CallableResolver
+    arguments: ['@service_container', '@class_resolver']
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation', '@http_kernel.controller.argument_resolver']
