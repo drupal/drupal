@@ -132,9 +132,12 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
 
       // Load links matching this route.
       $links = $this->menuLinkManager->loadLinksByRoute($route_name, $route_parameters, $menu_name);
-      // Select the first matching link.
-      if ($links) {
-        $found = reset($links);
+      // Select the first enabled matching link.
+      foreach ($links as $link) {
+        if ($link->isEnabled()) {
+          $found = $link;
+          break;
+        }
       }
     }
     return $found;
