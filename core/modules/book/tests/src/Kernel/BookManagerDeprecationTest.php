@@ -17,30 +17,30 @@ class BookManagerDeprecationTest extends KernelTestBase {
   protected static $modules = ['book'];
 
   /**
-   * @expectedDeprecation Using drupal_static_reset() with 'Drupal\book\BookManager::bookSubtreeData' as argument is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439.
    * @see drupal_static_reset()
    */
   public function testBookSubtreeDataDrupalStaticCacheDeprecation() {
+    $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::bookSubtreeData' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
     drupal_static_reset('Drupal\book\BookManager::bookSubtreeData');
     // Ensure at least one assertion.
     $this->assertTrue(TRUE);
   }
 
   /**
-   * @expectedDeprecation Using drupal_static_reset() with 'Drupal\book\BookManager::bookTreeAllData' as argument is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439.
    * @see drupal_static_reset()
    */
   public function testBookTreeAllDataDrupalStaticCacheDeprecation() {
+    $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::bookTreeAllData' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
     drupal_static_reset('Drupal\book\BookManager::bookTreeAllData');
     // Ensure at least one assertion.
     $this->assertTrue(TRUE);
   }
 
   /**
-   * @expectedDeprecation Using drupal_static_reset() with 'Drupal\book\BookManager::doBookTreeBuild' as argument is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439.
    * @see drupal_static_reset()
    */
   public function testDoBookTreeBuildDrupalStaticCacheDeprecation() {
+    $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::doBookTreeBuild' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
     drupal_static_reset('Drupal\book\BookManager::doBookTreeBuild');
     // Ensure at least one assertion.
     $this->assertTrue(TRUE);
@@ -48,9 +48,9 @@ class BookManagerDeprecationTest extends KernelTestBase {
 
   /**
    * @covers ::__construct
-   * @expectedDeprecation Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:8.8.0. The $book_cache argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3039439
    */
   public function testBackendChainOptionalParameterDeprecation() {
+    $this->expectDeprecation('Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:9.3.0. The $book_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
     new BookManager(
       $this->container->get('entity_type.manager'),
       $this->container->get('string_translation'),
@@ -69,9 +69,9 @@ class BookManagerDeprecationTest extends KernelTestBase {
 
   /**
    * @covers ::__construct
-   * @expectedDeprecation Calling BookManager::__construct() without the $book_memory_cache argument is deprecated in drupal:8.8.0. The $book_memory_cache argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3039439
    */
   public function testMemoryCacheOptionalParameterDeprecation() {
+    $this->expectDeprecation('Calling BookManager::__construct() without the $book_memory_cache argument is deprecated in drupal:9.3.0. The $book_memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
     new BookManager(
       $this->container->get('entity_type.manager'),
       $this->container->get('string_translation'),

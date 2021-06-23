@@ -638,7 +638,7 @@ function drupal_static_reset($name = NULL) {
     case BookManager::class . '::bookSubtreeData':
     case BookManager::class . '::bookTreeAllData':
     case BookManager::class . '::doBookTreeBuild':
-      @trigger_error("Using drupal_static_reset() with '$name' as argument is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439.", E_USER_DEPRECATED);
+      @trigger_error("Calling drupal_static_reset() with '{$name}' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439", E_USER_DEPRECATED);
       \Drupal::service('book.cache')->deleteAll();
       break;
 
