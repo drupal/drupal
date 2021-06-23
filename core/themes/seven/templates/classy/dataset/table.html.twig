@@ -18,18 +18,21 @@
  *   - field: Field name (required for column sorting).
  *   - sort: Default sort order for this column ("asc" or "desc").
  * - sticky: A flag indicating whether to use a "sticky" table header.
- * - rows: Table rows. Each row contains the following properties:
- *   - attributes: HTML attributes to apply to the <tr> tag.
- *   - data: Table cells.
- *   - no_striping: A flag indicating that the row should receive no
- *     'even / odd' styling. Defaults to FALSE.
- *   - cells: Table cells of the row. Each cell contains the following keys:
- *     - tag: The HTML tag name to use; either 'th' or 'td'.
- *     - attributes: Any HTML attributes, such as "colspan", to apply to the
- *       table cell.
- *     - content: The string to display in the table cell.
- *     - active_table_sort: A boolean indicating whether the cell is the active
-         table sort.
+ * - rowgroups: Groups of table rows. Each will be wrapped in a 'tbody' element.
+ *   Each element contains the following properties:
+ *   - attributes: HTML attributes to apply to the <tbody> tag.
+ *   - rows: Table rows. Each row contains the following properties:
+ *     - attributes: HTML attributes to apply to the <tr> tag.
+ *     - data: Table cells.
+ *     - no_striping: A flag indicating that the row should receive no
+ *       'even / odd' styling. Defaults to FALSE.
+ *     - cells: Table cells of the row. Each cell contains the following keys:
+ *       - tag: The HTML tag name to use; either 'th' or 'td'.
+ *       - attributes: Any HTML attributes, such as "colspan", to apply to the
+ *         table cell.
+ *       - content: The string to display in the table cell.
+ *       - active_table_sort: A boolean indicating whether the cell is the
+ *         active table sort.
  * - footer: Table footer rows, in the same format as the rows variable.
  * - empty: The message to display in an extra row if table does not have
  *   any rows.
@@ -73,23 +76,27 @@
     </thead>
   {% endif %}
 
-  {% if rows %}
-    <tbody>
-      {% for row in rows %}
-        {%
-          set row_classes = [
-            not no_striping ? cycle(['odd', 'even'], loop.index0),
-          ]
-        %}
-        <tr{{ row.attributes.addClass(row_classes) }}>
-          {% for cell in row.cells %}
-            <{{ cell.tag }}{{ cell.attributes }}>
-              {{- cell.content -}}
-            </{{ cell.tag }}>
+  {% if rowgroups %}
+    {% for rowgroup in rowgroups %}
+      {% if rowgroup.rows %}
+        <tbody{{ rowgroup.attributes }}>
+          {% for row in rowgroup.rows %}
+            {%
+              set row_classes = [
+                not no_striping ? cycle(['odd', 'even'], loop.index0),
+              ]
+            %}
+            <tr{{ row.attributes.addClass(row_classes) }}>
+              {% for cell in row.cells %}
+                <{{ cell.tag }}{{ cell.attributes }}>
+                  {{- cell.content -}}
+                </{{ cell.tag }}>
+              {% endfor %}
+            </tr>
           {% endfor %}
-        </tr>
-      {% endfor %}
-    </tbody>
+        </tbody>
+      {% endif %}
+    {% endfor %}
   {% elseif empty %}
     <tbody>
       <tr class="odd">

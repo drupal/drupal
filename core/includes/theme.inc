@@ -913,6 +913,26 @@ function template_preprocess_image(&$variables) {
  *       ),
  *     );
  *     @endcode
+ *   - rowgroups: An array of groups of table rows. Every row is an array with
+ *     the following keys:
+ *     - rows: An array of rows; see the 'rows' key above.
+ *     - attributes: An array of HTML attributes, such as "class", to apply to
+ *       the 'tbody' element which will wrap these rows.
+ *     If both 'rows' and 'rowgroups' exist, the rows from 'rows' will be put in
+ *     their own 'tbody' element before the rows in 'rowgroups'.
+ *     Here's an example for $rowgroups:
+ *     @code
+ *     $rowgroups = [
+ *       [
+ *         'rows' => [$row1, $row2],
+ *         'attributes' => [
+ *           'class' => ['tbody-class'],
+ *         ],
+ *       ],
+ *       $rowgroup_2,
+ *       $rowgroup_3,
+ *     ];
+ *     @endcode
  *   - footer: An array of table rows which will be printed within a <tfoot>
  *     tag, in the same format as the rows element (see above).
  *   - attributes: An array of HTML attributes to apply to the table tag.
@@ -1044,74 +1064,109 @@ function template_preprocess_table(&$variables) {
   }
   $variables['header_columns'] = $header_columns;
 
-  // Rows and footer have the same structure.
-  $sections = ['rows' , 'footer'];
-  foreach ($sections as $section) {
-    if (!empty($variables[$section])) {
-      foreach ($variables[$section] as $row_key => $row) {
-        $cells = $row;
-        $row_attributes = [];
-
-        // Check if we're dealing with a simple or complex row
-        if (isset($row['data'])) {
-          $cells = $row['data'];
-          $variables['no_striping'] = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
-
-          // Set the attributes array and exclude 'data' and 'no_striping'.
-          $row_attributes = $row;
-          unset($row_attributes['data']);
-          unset($row_attributes['no_striping']);
-        }
-
-        // Build row.
-        $variables[$section][$row_key] = [];
-        $variables[$section][$row_key]['attributes'] = new Attribute($row_attributes);
-        $variables[$section][$row_key]['cells'] = [];
-        if (!empty($cells)) {
-          // Reset the responsive index.
-          $responsive_index = -1;
-          foreach ($cells as $col_key => $cell) {
-            // Increase the responsive index.
-            $responsive_index++;
-
-            if (!is_array($cell)) {
-              $cell_content = $cell;
-              $cell_attributes = [];
-              $is_header = FALSE;
-            }
-            else {
-              $cell_content = '';
-              if (isset($cell['data'])) {
-                $cell_content = $cell['data'];
-                unset($cell['data']);
-              }
-
-              // Flag the cell as a header or not and remove the flag.
-              $is_header = !empty($cell['header']);
-              unset($cell['header']);
-
-              $cell_attributes = $cell;
-            }
-            // Active table sort information.
-            if (isset($variables['header'][$col_key]['data']) && $variables['header'][$col_key]['data'] == $ts['name'] && !empty($variables['header'][$col_key]['field'])) {
-              $variables[$section][$row_key]['cells'][$col_key]['active_table_sort'] = TRUE;
-            }
-            // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
-            // class from header to cell as needed.
-            if (isset($responsive_classes[$responsive_index])) {
-              $cell_attributes['class'][] = $responsive_classes[$responsive_index];
-            }
-            $variables[$section][$row_key]['cells'][$col_key]['tag'] = $is_header ? 'th' : 'td';
-            $variables[$section][$row_key]['cells'][$col_key]['attributes'] = new Attribute($cell_attributes);
-            $variables[$section][$row_key]['cells'][$col_key]['content'] = $cell_content;
-          }
-        }
-      }
+  // Ensures #rowgroups is set.
+  $variables['rowgroups'] = $variables['rowgroups'] ?? [];
+  // If there are any #rows, add those to the start of #rowgroups.
+  if (!empty($variables['rows'])) {
+    array_unshift($variables['rowgroups'], ['rows' => $variables['rows']]);
+  }
+  // Process each rowgroup to prepare it for the template.
+  // Empty #rows so it is ready to hold a list of all rows.
+  $variables['rows'] = [];
+  foreach ($variables['rowgroups'] as $key => $rowgroup) {
+    // Process attributes for each rowgroup.
+    if (!empty($rowgroup['attribute'])) {
+      $variables['rowgroups'][$key]['attribute'] = new Attribute($rowgroup['attribute']);
+    }
+    // Prepare each row for display.
+    $variables['rowgroups'][$key]['rows'] = _template_preprocess_table_process_rows($rowgroup['rows']);
+    // Make #rows contain pointers to all rows. Modern templates will refer
+    // to #rowgroups; #rows remains for backwards-compatibility.
+    foreach ($rowgroup['rows'] as &$row) {
+      $variables['rows'][] = $row;
     }
   }
+
+  // Rows and footer have the same structure.
+  if (!empty($variables['footer'])) {
+    $variables['footer'] = _template_preprocess_table_process_rows($variables['footer']);
+  }
+
   if (empty($variables['no_striping'])) {
     $variables['attributes']['data-striping'] = 1;
   }
+}
+
+/**
+ * Prepares rows for table templates.
+ *
+ * @param array[] $rows
+ *   An array of arrays, each representing a row.
+ *
+ * @return array
+ *   The rows, prepared for the template.
+ */
+function _template_preprocess_table_process_rows(array $rows) {
+  foreach ($rows as &$row) {
+    $cells = $row;
+    $row_attributes = [];
+
+    // Check if we're dealing with a simple or complex row
+    if (isset($row['data'])) {
+      $cells = $row['data'];
+      $variables['no_striping'] = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
+
+      // Set the attributes array and exclude 'data' and 'no_striping'.
+      $row_attributes = $row;
+      unset($row_attributes['data']);
+      unset($row_attributes['no_striping']);
+    }
+
+    // Build row.
+    $row = [];
+    $row['attributes'] = new Attribute($row_attributes);
+    $row['cells'] = [];
+    if (!empty($cells)) {
+      // Reset the responsive index.
+      $responsive_index = -1;
+      foreach ($cells as $col_key => $cell) {
+        // Increase the responsive index.
+        $responsive_index++;
+
+        if (!is_array($cell)) {
+          $cell_content = $cell;
+          $cell_attributes = [];
+          $is_header = FALSE;
+        }
+        else {
+          $cell_content = '';
+          if (isset($cell['data'])) {
+            $cell_content = $cell['data'];
+            unset($cell['data']);
+          }
+
+          // Flag the cell as a header or not and remove the flag.
+          $is_header = !empty($cell['header']);
+          unset($cell['header']);
+
+          $cell_attributes = $cell;
+        }
+        // Active table sort information.
+        if (isset($variables['header'][$col_key]['data']) && $variables['header'][$col_key]['data'] == $ts['name'] && !empty($variables['header'][$col_key]['field'])) {
+          $row['cells'][$col_key]['active_table_sort'] = TRUE;
+        }
+        // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
+        // class from header to cell as needed.
+        if (isset($responsive_classes[$responsive_index])) {
+          $cell_attributes['class'][] = $responsive_classes[$responsive_index];
+        }
+        $row['cells'][$col_key]['tag'] = $is_header ? 'th' : 'td';
+        $row['cells'][$col_key]['attributes'] = new Attribute($cell_attributes);
+        $row['cells'][$col_key]['content'] = $cell_content;
+      }
+    }
+  }
+  return $rows;
 }
 
 /**
