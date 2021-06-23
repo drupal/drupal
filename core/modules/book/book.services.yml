@@ -47,4 +47,3 @@ services:
       # This tag ensures that Drupal's cache_tags.invalidator service
       # invalidates also this cache data.
       - { name: cache.bin }
-

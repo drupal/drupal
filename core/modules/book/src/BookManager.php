@@ -561,7 +561,7 @@ class BookManager implements BookManagerInterface {
       $tree_parameters['expanded'] = $active_trail;
       $tree_parameters['active_trail'] = $active_trail;
       $tree_parameters['active_trail'][] = $nid;
-   }
+    }
 
     // Build the tree using the parameters.
     $tree_build = $this->bookTreeBuild($bid, $tree_parameters);
