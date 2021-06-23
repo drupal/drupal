@@ -153,6 +153,8 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         }
       }
     }
+
+    parent::__destruct();
   }
 
   /**

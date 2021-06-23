@@ -589,7 +589,7 @@ class ThemeRegistryTestCase extends DrupalWebTestCase {
     cache_clear_all($cid, 'cache');
 
     // Destroy the class so that it triggers a cache write for the offset.
-    unset($registry);
+    $registry->destroy();
 
     $this->assertTrue(cache_get($cid), 'Cache entry was created.');
 

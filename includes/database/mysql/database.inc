@@ -455,6 +455,8 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     if ($this->needsCleanup) {
       $this->nextIdDelete();
     }
+
+    parent::__destruct();
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {

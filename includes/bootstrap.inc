@@ -354,6 +354,8 @@ abstract class DrupalCacheArray implements ArrayAccess {
     if ($cached = cache_get($this->cid, $this->bin)) {
      $this->storage = $cached->data;
     }
+
+    drupal_register_shutdown_function(array($this, 'destroy'));
   }
 
   /**
@@ -449,7 +451,7 @@ abstract class DrupalCacheArray implements ArrayAccess {
   /**
    * Destructs the DrupalCacheArray object.
    */
-  public function __destruct() {
+  public function destroy() {
     $data = array();
     foreach ($this->keysToPersist as $offset => $persist) {
       if ($persist) {
