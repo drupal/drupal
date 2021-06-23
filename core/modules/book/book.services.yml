@@ -38,7 +38,6 @@ services:
     lazy: true
   book.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
-    public: false
   book.cache:
     class: Drupal\Core\Cache\BackendChain
     calls:

@@ -57,6 +57,8 @@ class BookManagerDeprecationTest extends KernelTestBase {
       $this->container->get('config.factory'),
       $this->container->get('book.outline_storage'),
       $this->container->get('renderer'),
+      $this->container->get('language_manager'),
+      $this->container->get('entity.repository'),
       // The optional parameter is passed as NULL.
       NULL,
       $this->container->get('book.memory_cache')
@@ -76,6 +78,8 @@ class BookManagerDeprecationTest extends KernelTestBase {
       $this->container->get('config.factory'),
       $this->container->get('book.outline_storage'),
       $this->container->get('renderer'),
+      $this->container->get('language_manager'),
+      $this->container->get('entity.repository'),
       $this->container->get('book.cache')
       // The optional parameter is not passed.
     );
