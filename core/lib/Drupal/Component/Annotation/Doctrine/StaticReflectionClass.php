@@ -5,7 +5,7 @@
  * @file
  *
  * This class is a near-copy of
- * Doctrine\Common\Reflection\ReflectionProviderInterface, which is part of the
+ * Doctrine\Common\Reflection\StaticReflectionClass, which is part of the
  * Doctrine project: <http://www.doctrine-project.org>. It was copied from
  * version 1.2.2.
  *
