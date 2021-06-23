@@ -199,6 +199,10 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $this->$property = (bool) $configuration[$config_key];
       }
     }
+    if (isset($configuration['track_last_imported'])) {
+      $migration->setTrackLastImported((bool) $configuration['track_last_imported']);
+    }
+
     $this->cacheKey = !empty($configuration['cache_key']) ? $configuration['cache_key'] : NULL;
     $this->idMap = $this->migration->getIdMap();
     $this->highWaterProperty = !empty($configuration['high_water_property']) ? $configuration['high_water_property'] : FALSE;
