@@ -128,6 +128,9 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   protected function opSimple($field) {
     $timezone = $this->getTimezone();
     $origin_offset = $this->getOffset($this->value['value'], $timezone);
+    if ($this->group_info == 'All') {
+      $this->value['value'] = '01-01-1970';
+    }
 
     // Convert to ISO. UTC timezone is used since dates are stored in UTC.
     $value = new DateTimePlus($this->value['value'], new \DateTimeZone($timezone));
