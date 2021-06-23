@@ -164,11 +164,11 @@ class BlockTest extends BlockTestBase {
       ]);
 
       // Verify that one link is found, with the the expected link text.
-      $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
+      $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
       $this->assertSession()->elementsCount('xpath', $xpath, 1);
       $this->assertSession()->elementTextEquals('xpath', $xpath, 'Place block');
 
-      $link = $this->getSession->getPage()->find('xpath', $xpath);
+      $link = $this->getSession()->getPage()->find('xpath', $xpath);
       list($path, $query_string) = explode('?', $link->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
       $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
