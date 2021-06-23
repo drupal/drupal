@@ -83,7 +83,7 @@ class StaticReflectionClass extends ReflectionClass
      */
     public function getMethod($name)
     {
-        return $this->staticReflectionParser->getReflectionMethod($name);
+        throw new ReflectionException('Method not implemented');
     }
 
     /**
@@ -91,7 +91,7 @@ class StaticReflectionClass extends ReflectionClass
      */
     public function getProperty($name)
     {
-        return $this->staticReflectionParser->getReflectionProperty($name);
+        throw new ReflectionException('Method not implemented');
     }
 
     /**

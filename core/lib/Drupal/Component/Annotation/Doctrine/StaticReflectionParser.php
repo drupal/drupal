@@ -56,7 +56,7 @@ use function substr;
 /**
  * Parses a file for namespaces/use/class declarations.
  */
-class StaticReflectionParser implements ReflectionProviderInterface
+class StaticReflectionParser
 {
     /**
      * The fully qualified class name.
@@ -284,27 +284,13 @@ class StaticReflectionParser implements ReflectionProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the ReflectionClass equivalent for this class.
+     *
+     * @return ReflectionClass
      */
     public function getReflectionClass()
     {
         return new StaticReflectionClass($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getReflectionMethod($methodName)
-    {
-        throw new ReflectionException('Method not implemented');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getReflectionProperty($propertyName)
-    {
-        throw new ReflectionException('Method not implemented');
     }
 
     /**
