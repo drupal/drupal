@@ -5,6 +5,7 @@ namespace Drupal\Core\Database\Driver\sqlite;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\IdentifierHandler;
 use Drupal\Core\Database\StatementInterface;
 
 /**
@@ -75,18 +76,19 @@ class Connection extends DatabaseConnection {
   protected $transactionalDDLSupport = TRUE;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $identifierQuotes = ['"', '"'];
-
-  /**
    * Constructs a \Drupal\Core\Database\Driver\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
     parent::__construct($connection, $connection_options);
 
     // Attach one database for each registered prefix.
-    $prefixes = $this->prefixes;
+    $prefixes = $connection_options['prefix'] ?? [];
+    if (is_array($prefixes)) {
+      $prefixes += ['default' => ''];
+    }
+    else {
+      $prefixes = ['default' => $prefixes];
+    }
     foreach ($prefixes as &$prefix) {
       // Empty prefix means query the main database -- no need to attach anything.
       if (!empty($prefix)) {
@@ -109,8 +111,9 @@ class Connection extends DatabaseConnection {
         $prefix .= '.';
       }
     }
-    // Regenerate the prefixes replacement table.
-    $this->setPrefix($prefixes);
+
+    // Initialize the identifier handler.
+    $this->identifierHandler = new IdentifierHandler($prefixes);
   }
 
   /**
@@ -388,9 +391,7 @@ class Connection extends DatabaseConnection {
     // Generate a new temporary table name and protect it from prefixing.
     // SQLite requires that temporary tables to be non-qualified.
     $tablename = $this->generateTemporaryTableName();
-    $prefixes = $this->prefixes;
-    $prefixes[$tablename] = '';
-    $this->setPrefix($prefixes);
+    $this->identifierHandler->addPrefix($tablename, '');
 
     $this->query('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
     return $tablename;
@@ -465,10 +466,8 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
-    $prefix = $this->tablePrefix($table);
-
     // Don't include the SQLite database file name as part of the table name.
-    return $prefix . $table;
+    return $this->identifierHandler->getPlatformTableName($table, TRUE, TRUE);
   }
 
   /**

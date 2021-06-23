@@ -511,8 +511,15 @@ EOD;
    * {@inheritdoc}
    */
   public function findTables($table_expression) {
-    $individually_prefixed_tables = $this->connection->getUnprefixedTablesMap();
-    $default_prefix = $this->connection->tablePrefix();
+    // Set up a map of prefixed => un-prefixed tables.
+    $individually_prefixed_tables = [];
+    foreach ($this->connection->getIdentifierHandler()->getPrefix() as $table_name => $prefix) {
+      if ($table_name !== 'default') {
+        $individually_prefixed_tables[$prefix . $table_name] = $table_name;
+      }
+    }
+
+    $default_prefix = $this->connection->tablePrefix('default');
     $default_prefix_length = strlen($default_prefix);
     $tables = [];
 

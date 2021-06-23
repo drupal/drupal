@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Statement;
 use Drupal\Core\Database\StatementWrapper;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
@@ -49,10 +50,12 @@ class ConnectionTest extends UnitTestCase {
    * Exercise setPrefix() and tablePrefix().
    *
    * @dataProvider providerPrefixRoundTrip
+   *
+   * @group legacy
    */
   public function testPrefixRoundTrip($expected, $prefix_info) {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, []);
+    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info]);
 
     // setPrefix() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
@@ -60,6 +63,7 @@ class ConnectionTest extends UnitTestCase {
     $set_prefix->setAccessible(TRUE);
 
     // Set the prefix data.
+    $this->expectDeprecation('Drupal\Core\Database\Connection::setPrefix() is deprecated in drupal:9.x.0 and is removed from drupal:10.0.0. @todo. See https://www.drupal.org/node/1234567');
     $set_prefix->invokeArgs($connection, [$prefix_info]);
     // Check the round-trip.
     foreach ($expected as $table => $prefix) {
@@ -611,29 +615,11 @@ class ConnectionTest extends UnitTestCase {
    * @group legacy
    */
   public function testIdentifierQuotesDeprecation() {
-    $this->expectDeprecation('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894');
+    $this->expectDeprecation('Connection::$identifierQuotes should not be accessed in drupal:9.x.0 and is removed from drupal:10.0.0. This is no longer used. See https://www.drupal.org/node/1234567');
     $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], NULL);
-  }
-
-  /**
-   * @covers ::__construct
-   */
-  public function testIdentifierQuotesAssertCount() {
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], ['"']);
-  }
-
-  /**
-   * @covers ::__construct
-   */
-  public function testIdentifierQuotesAssertString() {
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], [0, '1']);
+    $mock_connection = new StubConnection($mock_pdo, [], ['"', '"']);
+    $this->assertInstanceOf(Connection::class, $mock_connection);
+    $test_identifier_quotes = $mock_connection->identifierQuotes;
   }
 
   /**

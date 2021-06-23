@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\IdentifierHandler;
 use Drupal\Core\Database\Log;
 use Drupal\Core\Database\StatementWrapper;
 
@@ -44,12 +45,16 @@ class StubConnection extends Connection {
    *   A class to use as a statement class for deprecation testing.
    */
   public function __construct(\PDO $connection, array $connection_options, $identifier_quotes = ['', ''], $statement_class = NULL) {
-    $this->identifierQuotes = $identifier_quotes;
     if ($statement_class) {
       $this->statementClass = $statement_class;
       $this->statementWrapperClass = NULL;
     }
     parent::__construct($connection, $connection_options);
+
+    // Initialize the identifier handler.
+    $prefix = $connection_options['prefix'] ?? ['default' => ''];
+    $prefix = is_array($prefix) ? $prefix : ['default' => $prefix];
+    $this->identifierHandler = new IdentifierHandler($prefix, $identifier_quotes);
   }
 
   /**

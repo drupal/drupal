@@ -82,12 +82,16 @@ abstract class Schema implements PlaceholderInterface {
    *   A keyed array with information about the schema, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
+    $prefix = $this->connection->tablePrefix($table);
     $info = [
       'schema' => $this->defaultSchema,
-      'prefix' => $this->connection->tablePrefix($table),
+      'prefix' => $prefix,
     ];
-    if ($add_prefix) {
-      $table = $info['prefix'] . $table;
+    if (strpos($table, '%') !== FALSE) {
+      $table = ($add_prefix ? $prefix : '') . $table;
+    }
+    else {
+      $table = $this->connection->getIdentifierHandler()->getPlatformTableName($table ?? '', $add_prefix);
     }
     // If the prefix contains a period in it, then that means the prefix also
     // contains a schema reference in which case we will change the schema key
@@ -191,8 +195,15 @@ abstract class Schema implements PlaceholderInterface {
     $condition = $this->buildTableNameCondition('%', 'LIKE');
     $condition->compile($this->connection, $this);
 
-    $individually_prefixed_tables = $this->connection->getUnprefixedTablesMap();
-    $default_prefix = $this->connection->tablePrefix();
+    // Set up a map of prefixed => un-prefixed tables.
+    $individually_prefixed_tables = [];
+    foreach ($this->connection->getIdentifierHandler()->getPrefix() as $table_name => $prefix) {
+      if ($table_name !== 'default') {
+        $individually_prefixed_tables[$prefix . $table_name] = $table_name;
+      }
+    }
+
+    $default_prefix = $this->connection->tablePrefix('default');
     $default_prefix_length = strlen($default_prefix);
     $tables = [];
     // Normally, we would heartily discourage the use of string

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Driver\pgsql\Schema;
+use Drupal\Core\Database\IdentifierHandler;
 use Drupal\Tests\UnitTestCase;
 
 // cSpell:ignore conname
@@ -56,8 +57,20 @@ class PostgresqlSchemaTest extends UnitTestCase {
     $this->connection->expects($this->any())
       ->method('query')
       ->willReturn($statement);
+    $this->connection->expects($this->any())
+      ->method('tablePrefix')
+      ->willReturn('');
 
-    $this->connection->expects($this->at(2))
+    $identifier_handler = $this->createMock(IdentifierHandler::class);
+    $identifier_handler->expects($this->any())
+      ->method('getPlatformTableName')
+      ->will($this->returnArgument(0));
+
+    $this->connection->expects($this->any())
+      ->method('getIdentifierHandler')
+      ->willReturn($identifier_handler);
+
+    $this->connection->expects($this->at(3))
       ->method('query')
       ->with("SELECT 1 FROM pg_constraint WHERE conname = '$expected'")
       ->willReturn($this->createMock('\Drupal\Core\Database\StatementInterface'));

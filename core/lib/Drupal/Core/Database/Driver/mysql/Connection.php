@@ -11,6 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\IdentifierHandler;
 use Drupal\Core\Database\TransactionNoActiveException;
 
 /**
@@ -85,9 +86,14 @@ class Connection extends DatabaseConnection {
   const MIN_MAX_ALLOWED_PACKET = 1024;
 
   /**
-   * {@inheritdoc}
+   * Constructs a connection object.
    */
-  protected $identifierQuotes = ['"', '"'];
+  public function __construct(\PDO $connection, array $connection_options) {
+    parent::__construct($connection, $connection_options);
+
+    // Initialize the identifier handler.
+    $this->identifierHandler = new IdentifierHandler($connection_options['prefix']);
+  }
 
   /**
    * {@inheritdoc}

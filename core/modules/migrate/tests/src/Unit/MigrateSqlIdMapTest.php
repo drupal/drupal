@@ -963,7 +963,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     // The SQLite driver is a special flower. It will prefix tables with
     // PREFIX.TABLE, instead of the standard PREFIXTABLE.
     // @see \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
-    $this->assertEquals('prefix.migrate_map_sql_idmap_test', $qualified_map_table);
+    $this->assertEquals('"prefix"."migrate_map_sql_idmap_test"', $qualified_map_table);
   }
 
   /**
