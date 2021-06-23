@@ -33,8 +33,20 @@ class TextareaTest extends UnitTestCase {
     $data[] = ['', ['test']];
     $data[] = ['test', 'test'];
     $data[] = ['123', 123];
+    $data[] = ["some\r\ndifferent\rline\nendings", "some\r\ndifferent\rline\nendings"];
 
     return $data;
+  }
+
+  /**
+   * @covers ::valueCallback
+   */
+  public function testNormalizeNewlines() {
+    $element = ['#normalize_newlines' => TRUE];
+    $form_state = $this->prophesize(FormStateInterface::class)->reveal();
+    $input = "some\r\ndifferent\rline\nendings";
+    $expected = "some\ndifferent\nline\nendings";
+    $this->assertSame($expected, Textarea::valueCallback($element, $input, $form_state));
   }
 
 }
