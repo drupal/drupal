@@ -420,7 +420,7 @@ function rdf_preprocess_username(&$variables) {
   // we do not want it to inherit the language attribute, so we set the
   // attribute to an empty string.
   if (empty($variables['attributes']['lang'])) {
-    $variables['attributes']['lang'] = '';
+    unset($variables['attributes']['lang']);
   }
 
   // The profile URI is used to identify the user account. The about attribute
