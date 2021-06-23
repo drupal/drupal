@@ -324,6 +324,9 @@ class LanguageManager implements LanguageManagerInterface {
       'ur' => ['Urdu', /* Left-to-right marker "‭" */ 'اردو', LanguageInterface::DIRECTION_RTL],
       'vi' => ['Vietnamese', 'Tiếng Việt'],
       'xx-lolspeak' => ['Lolspeak', 'Lolspeak'],
+      'zh' => ['Chinese', '中文'],
+      'zh-cn' => ['Chinese, China', '中文中国'],
+      'zh-tw' => ['Chinese, Taiwan', '中文台湾'],
       'zh-hans' => ['Chinese, Simplified', '简体中文'],
       'zh-hant' => ['Chinese, Traditional', '繁體中文'],
     ];
@@ -345,7 +348,7 @@ class LanguageManager implements LanguageManagerInterface {
     // cSpell:disable
     return [
       'ar' => ['Arabic', /* Left-to-right marker "‭" */ 'العربية', LanguageInterface::DIRECTION_RTL],
-      'zh-hans' => ['Chinese, Simplified', '简体中文'],
+      'zh' => ['Chinese', '中文'],
       'en' => ['English', 'English'],
       'fr' => ['French', 'Français'],
       'ru' => ['Russian', 'Русский'],

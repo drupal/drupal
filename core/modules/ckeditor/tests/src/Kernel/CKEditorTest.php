@@ -388,7 +388,7 @@ class CKEditorTest extends KernelTestBase {
 
     // Language codes transformed with browser mappings.
     $this->assertSame('pt', $langcodes['pt-pt'], '"pt" properly resolved');
-    $this->assertSame('zh-cn', $langcodes['zh-hans'], '"zh-hans" properly resolved');
+    $this->assertSame('zh-cn', $langcodes['zh-cn'], '"zh-cn" properly resolved');
 
     // Language code both in Drupal and CKEditor.
     $this->assertSame('gl', $langcodes['gl'], '"gl" properly resolved');

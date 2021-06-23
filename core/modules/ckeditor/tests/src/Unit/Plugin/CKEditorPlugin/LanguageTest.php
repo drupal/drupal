@@ -54,7 +54,7 @@ class LanguageTest extends UnitTestCase {
 
     $this->assertIsArray($config);
     $this->assertContains('ar:Arabic:rtl', $config['language_list']);
-    $this->assertContains('zh-hans:Chinese, Simplified', $config['language_list']);
+    $this->assertContains('zh:Chinese', $config['language_list']);
     $this->assertContains('en:English', $config['language_list']);
     $this->assertContains('fr:French', $config['language_list']);
     $this->assertContains('ru:Russian', $config['language_list']);
