@@ -584,12 +584,13 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getRevisionTable();
 
   /**
-   * Gets the name of the entity's data table.
+   * Gets the name of the entity's data table if the entity translatable.
    *
    * @todo Used by SqlContentEntityStorage only.
    *
    * @return string|null
-   *   The name of the entity type's data table, or NULL if none exists.
+   *   The name of the entity type's data table. NULL if none exists
+   *   or the entity is not translatable.
    */
   public function getDataTable();
 

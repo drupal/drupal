@@ -325,6 +325,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
     if (empty($this->list_cache_tags)) {
       $this->list_cache_tags = [$definition['id'] . '_list'];
     }
+
+    if ($this->translatable === FALSE && $this->data_table !== NULL) {
+      trigger_error(sprintf('The "%s" entity type is not translatable but the the data_table property is set.', $this->id()), E_USER_WARNING);
+    }
   }
 
   /**

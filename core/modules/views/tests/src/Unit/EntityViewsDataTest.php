@@ -590,7 +590,8 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('base_table', 'entity_test_mul')
       ->set('id', 'entity_test_mul')
-      ->setKey('bundle', 'type');
+      ->setKey('bundle', 'type')
+      ->set('translatable', TRUE);
     $base_field_definitions = $this->setupBaseFields(EntityTestMul::baseFieldDefinitions($this->baseEntityType));
     $base_field_definitions['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel('entity test type')
@@ -740,7 +741,7 @@ class EntityViewsDataTest extends UnitTestCase {
           'numeric' => TRUE,
         ],
       ],
-    ], $data['entity_test_mul__string']['table']['join']['entity_test_mul']);
+    ], $data['entity_test_mul__string']['table']['join']['entity_test_mul_property_data']);
   }
 
   /**
@@ -1160,6 +1161,7 @@ class EntityViewsDataTest extends UnitTestCase {
       'label' => 'User',
       'base_table' => 'users',
       'data_table' => 'users_field_data',
+      'translatable' => TRUE,
       'entity_keys' => [
         'id' => 'uid',
         'uuid' => 'uuid',

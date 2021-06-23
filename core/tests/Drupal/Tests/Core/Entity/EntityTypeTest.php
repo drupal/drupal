@@ -282,6 +282,16 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::__construct
+   */
+  public function testIncorrectDataTableUsageWarning() {
+    $id = $this->randomMachineName(8);
+    $this->expectWarning();
+    $this->expectWarningMessage(sprintf('The "%s" entity type is not translatable but the the data_table property is set.', $id));
+    $this->setUpEntityType(['id' => $id, 'data_table' => $id . '_data_table']);
+  }
+
+  /**
    * @covers ::getOriginalClass
    */
   public function testgetOriginalClassUnchanged() {

@@ -116,7 +116,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
    * {@inheritdoc}
    */
   public function getDataTable() {
-    return FALSE;
+    return NULL;
   }
 
   /**

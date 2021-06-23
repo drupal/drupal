@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   id = "entity_test_multivalue_basefield",
  *   label = @Translation("Entity Test with a multivalue base field"),
  *   base_table = "entity_test_multivalue_basefield",
- *   data_table = "entity_test_multivalue_basefield_field_data",
  *   handlers = {
  *     "views_data" = "Drupal\views\EntityViewsData",
  *   },

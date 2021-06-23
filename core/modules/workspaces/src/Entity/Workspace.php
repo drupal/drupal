@@ -41,7 +41,6 @@ use Drupal\workspaces\WorkspaceInterface;
  *   admin_permission = "administer workspaces",
  *   base_table = "workspace",
  *   revision_table = "workspace_revision",
- *   data_table = "workspace_field_data",
  *   revision_data_table = "workspace_field_revision",
  *   field_ui_base_route = "entity.workspace.collection",
  *   entity_keys = {
