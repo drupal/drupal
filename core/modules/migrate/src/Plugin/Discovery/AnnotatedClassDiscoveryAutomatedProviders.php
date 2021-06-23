@@ -4,9 +4,9 @@ namespace Drupal\migrate\Plugin\Discovery;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\Doctrine\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\ClassFinder\ClassFinder;
-use Drupal\Component\Reflection\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\migrate\Annotation\MultipleProviderAnnotationInterface;
 

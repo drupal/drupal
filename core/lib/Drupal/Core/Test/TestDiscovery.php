@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
-use Drupal\Component\Reflection\StaticReflectionParser;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
