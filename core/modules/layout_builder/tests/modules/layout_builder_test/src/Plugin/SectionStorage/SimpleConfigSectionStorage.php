@@ -15,7 +15,7 @@ use Drupal\Core\Url;
 use Drupal\layout_builder\Plugin\SectionStorage\SectionStorageLocalTaskProviderInterface;
 use Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait;
 use Drupal\layout_builder\Section;
-use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
+use Drupal\layout_builder\SectionListTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -34,7 +34,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
 
   use ContextAwarePluginTrait;
   use LayoutBuilderRoutesTrait;
-  use SectionStorageTrait;
+  use SectionListTrait;
 
   /**
    * The config factory.
