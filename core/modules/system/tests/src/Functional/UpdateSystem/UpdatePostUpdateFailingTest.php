@@ -27,15 +27,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
     $connection = Database::getConnection();
 
     // Set the schema version.
-    $connection->merge('key_value')
-      ->condition('collection', 'system.schema')
-      ->condition('name', 'update_test_failing')
-      ->fields([
-        'collection' => 'system.schema',
-        'name' => 'update_test_failing',
-        'value' => 'i:8000;',
-      ])
-      ->execute();
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_failing', 8000);
 
     // Update core.extension.
     $extensions = $connection->select('config')

@@ -58,8 +58,11 @@ class UpdateSchemaTest extends BrowserTestBase {
   public function testUpdateHooks() {
     $connection = Database::getConnection();
 
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+
     // Verify that the 8000 schema is in place.
-    $this->assertEquals(8000, drupal_get_installed_schema_version('update_test_schema'));
+    $this->assertEquals(8000, $update_registry->getInstalledVersion('update_test_schema'));
     $this->assertFalse($connection->schema()->indexExists('update_test_schema_table', 'test'), 'Version 8000 of the update_test_schema module is installed.');
 
     // Increment the schema version.
@@ -75,7 +78,10 @@ class UpdateSchemaTest extends BrowserTestBase {
     $this->checkForMetaRefresh();
 
     // Ensure schema has changed.
-    $this->assertEquals(8001, drupal_get_installed_schema_version('update_test_schema', TRUE));
+    $this->resetAll();
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+    $this->assertEquals(8001, $update_registry->getInstalledVersion('update_test_schema'));
     // Ensure the index was added for column a.
     $this->assertTrue($connection->schema()->indexExists('update_test_schema_table', 'test'), 'Version 8001 of the update_test_schema module is installed.');
   }

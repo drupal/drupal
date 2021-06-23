@@ -49,13 +49,16 @@ class UpdatesWith7xTest extends BrowserTestBase {
   }
 
   public function testWith7x() {
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+
     // Ensure that the minimum schema version is 8000, despite 7200 update
     // hooks and a 7XXX hook_update_last_removed().
-    $this->assertEquals(8000, drupal_get_installed_schema_version('update_test_with_7x'));
+    $this->assertEquals(8000, $update_registry->getInstalledVersion('update_test_with_7x'));
 
     // Try to manually set the schema version to 7110 and ensure that no
     // updates are allowed.
-    drupal_set_installed_schema_version('update_test_with_7x', 7110);
+    $update_registry->setInstalledVersion('update_test_with_7x', 7110);
 
     // Click through update.php with 'administer software updates' permission.
     $this->drupalLogin($this->updateUser);

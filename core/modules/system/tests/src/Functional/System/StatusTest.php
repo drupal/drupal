@@ -65,14 +65,17 @@ class StatusTest extends BrowserTestBase {
     // The setting config_sync_directory is not properly formed.
     $this->assertRaw(t("Your %file file must define the %setting setting", ['%file' => $this->siteDirectory . '/settings.php', '%setting' => "\$settings['config_sync_directory']"]));
 
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+
     // Set the schema version of update_test_postupdate to a lower version, so
     // update_test_postupdate_update_8001() needs to be executed.
-    drupal_set_installed_schema_version('update_test_postupdate', 8000);
+    $update_registry->setInstalledVersion('update_test_postupdate', 8000);
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('Out of date');
 
     // Now cleanup the executed post update functions.
-    drupal_set_installed_schema_version('update_test_postupdate', 8001);
+    $update_registry->setInstalledVersion('update_test_postupdate', 8001);
     /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
     $post_update_registry = \Drupal::service('update.post_update_registry');
     $post_update_registry->filterOutInvokedUpdatesByModule('update_test_postupdate');

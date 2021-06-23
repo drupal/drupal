@@ -605,7 +605,7 @@ class DbUpdateController extends ControllerBase {
         // correct place. (The updates are already sorted, so we can simply base
         // this on the first one we come across in the above foreach loop.)
         if (isset($start[$update['module']])) {
-          drupal_set_installed_schema_version($update['module'], $update['number'] - 1);
+          \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
         $operations[] = ['update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]];

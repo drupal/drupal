@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Update\UpdateHookRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,6 +47,13 @@ class ModulesUninstallForm extends FormBase {
   protected $moduleExtensionList;
 
   /**
+   * The update registry service.
+   *
+   * @var \Drupal\Core\Update\UpdateHookRegistry
+   */
+  protected $updateRegistry;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -53,7 +61,8 @@ class ModulesUninstallForm extends FormBase {
       $container->get('module_handler'),
       $container->get('module_installer'),
       $container->get('keyvalue.expirable')->get('modules_uninstall'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('update.update_hook_registry')
     );
   }
 
@@ -68,12 +77,19 @@ class ModulesUninstallForm extends FormBase {
    *   The key value expirable factory.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
+   * @param \Drupal\Core\Update\UpdateHookRegistry|null $versioning_update_registry
+   *   Versioning update registry service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, UpdateHookRegistry $versioning_update_registry = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
+    if ($versioning_update_registry === NULL) {
+      @trigger_error('The update.update_hook_registry service must be passed to ' . __NAMESPACE__ . '\ModulesUninstallForm::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $versioning_update_registry = \Drupal::service('update.update_hook_registry');
+    }
+    $this->updateRegistry = $versioning_update_registry;
   }
 
   /**
@@ -153,7 +169,7 @@ class ModulesUninstallForm extends FormBase {
       // All modules which depend on this one must be uninstalled first, before
       // we can allow this module to be uninstalled.
       foreach (array_keys($module->required_by) as $dependent) {
-        if (drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
+        if ($this->updateRegistry->getInstalledVersion($dependent) !== $this->updateRegistry::SCHEMA_UNINSTALLED) {
           $form['modules'][$module->getName()]['#required_by'][] = $dependent;
           $form['uninstall'][$module->getName()]['#disabled'] = TRUE;
         }

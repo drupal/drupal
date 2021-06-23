@@ -89,7 +89,7 @@ class Module extends Updater implements UpdaterInterface {
     }
     module_load_include('install', $this->name);
 
-    if (!$updates = drupal_get_schema_versions($this->name)) {
+    if (!\Drupal::service('update.update_hook_registry')->getAvailableUpdates($this->name)) {
       return [];
     }
     $modules_with_updates = update_get_update_list();
