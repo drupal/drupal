@@ -161,6 +161,12 @@
   margin: 0;
   padding: 0;
 }
+.ckeditor-buttons li a:focus {
+  outline: -webkit-focus-ring-color auto 1px;
+}
+.ckeditor-buttons li a:hover {
+  outline: -webkit-focus-ring-color auto 1px;
+}
 [dir="rtl"] .ckeditor-buttons li {
   float: right;
 }
