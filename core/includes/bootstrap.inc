@@ -7,9 +7,10 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\book\BookManager;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
@@ -632,6 +633,13 @@ function drupal_static_reset($name = NULL) {
 
     case 'node_mark':
       @trigger_error("Calling drupal_static_reset() with 'node_mark' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3037203", E_USER_DEPRECATED);
+      break;
+
+    case BookManager::class . '::bookSubtreeData':
+    case BookManager::class . '::bookTreeAllData':
+    case BookManager::class . '::doBookTreeBuild':
+      @trigger_error("Using drupal_static_reset() with '$name' as argument is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439.", E_USER_DEPRECATED);
+      \Drupal::service('book.cache')->deleteAll();
       break;
 
   }
