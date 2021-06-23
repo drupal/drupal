@@ -115,29 +115,36 @@ class ImageThemeFunctionTest extends KernelTestBase {
     // Test using theme_image_formatter() with a NULL value for the alt option.
     $element = $base_element;
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//a[@href=:path]/img[@src=:url and @width=:width and @height=:height]', [':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()]);
-    $this->assertCount(1, $elements, 'theme_image_formatter() correctly renders with a NULL value for the alt option.');
+    $this->assertSession()->elementsCount('xpath', $this->assertSession()->buildXPathQuery('//a[@href=:path]/img[@src=:url and @width=:width and @height=:height]', [
+      ':path' => base_path() . $path,
+      ':url' => $url,
+      ':width' => $image->getWidth(),
+      ':height' => $image->getHeight(),
+    ]), 1);
 
     // Test using theme_image_formatter() without an image title, alt text, or
     // link options.
     $element = $base_element;
     $element['#item']->alt = '';
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//a[@href=:path]/img[@src=:url and @width=:width and @height=:height and @alt=""]', [':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()]);
-    $this->assertCount(1, $elements, 'theme_image_formatter() correctly renders without title, alt, or path options.');
+    $this->assertSession()->elementsCount('xpath', $this->assertSession()->buildXPathQuery('//a[@href=:path]/img[@src=:url and @width=:width and @height=:height and @alt=""]', [
+      ':path' => base_path() . $path,
+      ':url' => $url,
+      ':width' => $image->getWidth(),
+      ':height' => $image->getHeight(),
+    ]), 1);
 
     // Link the image to a fragment on the page, and not a full URL.
     $fragment = $this->randomMachineName();
     $element = $base_element;
     $element['#url'] = Url::fromRoute('<none>', [], ['fragment' => $fragment]);
     $this->setRawContent($renderer->renderRoot($element));
-    $elements = $this->xpath('//a[@href=:fragment]/img[@src=:url and @width=:width and @height=:height and @alt=""]', [
+    $this->assertSession()->elementsCount('xpath', $this->assertSession()->buildXPathQuery('//a[@href=:fragment]/img[@src=:url and @width=:width and @height=:height and @alt=""]', [
       ':fragment' => '#' . $fragment,
       ':url' => $url,
       ':width' => $image->getWidth(),
       ':height' => $image->getHeight(),
-    ]);
-    $this->assertCount(1, $elements, 'theme_image_formatter() correctly renders a link fragment.');
+    ]), 1);
   }
 
   /**
