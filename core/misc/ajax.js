@@ -365,7 +365,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var v = $.fieldValue(this.element);
       if (v !== null) {
-        options.extraData[this.element.name] = v;
+        options.extraData[this.element.name] = Drupal.checkPlain(v);
       }
     }
 

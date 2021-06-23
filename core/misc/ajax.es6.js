@@ -843,7 +843,7 @@
       // disabled, so this is only needed for IFRAME submissions.
       const v = $.fieldValue(this.element);
       if (v !== null) {
-        options.extraData[this.element.name] = v;
+        options.extraData[this.element.name] = Drupal.checkPlain(v);
       }
     }
 
