@@ -462,7 +462,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $subject, 'foo', $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one email going to the sender.
-    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact__page_autoreply', 'to' => $email]);
     $this->assertCount(1, $captured_emails);
     $this->assertEquals(trim(MailFormatHelper::htmlToText($foo_autoreply)), trim($captured_emails[0]['body']));
 
@@ -471,14 +471,14 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
     // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
-    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact__page_autoreply', 'to' => $email]);
     $this->assertCount(1, $captured_emails);
     $this->assertEquals(trim(MailFormatHelper::htmlToText($bar_autoreply)), trim($captured_emails[0]['body']));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomMachineName(32) . '@example.com';
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
-    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact__page_autoreply', 'to' => $email]);
     $this->assertCount(0, $captured_emails);
 
     // Verify that the current error message doesn't show, that the auto-reply
@@ -490,7 +490,7 @@ class ContactSitewideTest extends BrowserTestBase {
       ->save();
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'foo', $this->randomString(128));
     $this->assertNoText('Unable to send email. Contact the site administrator if the problem persists.');
-    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact__page_autoreply', 'to' => $email]);
     $this->assertCount(0, $captured_emails);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/reports/dblog');

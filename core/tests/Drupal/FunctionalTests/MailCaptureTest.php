@@ -57,7 +57,7 @@ class MailCaptureTest extends BrowserTestBase {
     // Send additional emails so more than one email is captured.
     for ($index = 0; $index < 5; $index++) {
       $message = [
-        'id' => 'drupal_mail_test_' . $index,
+        'id' => 'drupal_mail_test__' . $index,
         'headers' => ['Content-type' => 'text/html'],
         'subject' => $this->randomString(64),
         'to' => $this->randomMachineName(32) . '@example.com',
@@ -82,7 +82,7 @@ class MailCaptureTest extends BrowserTestBase {
     // drupalGetMails-filter correctly returns all emails with a given
     // property/value.
     \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'drupal_mail_test', 'key' => $index])->mail($message);
-    $captured_emails = $this->drupalGetMails(['id' => 'drupal_mail_test_4']);
+    $captured_emails = $this->drupalGetMails(['id' => 'drupal_mail_test__4']);
     $this->assertCount(2, $captured_emails, 'All emails with the same id are returned when filtering by id.');
   }
 

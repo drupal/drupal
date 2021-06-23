@@ -233,7 +233,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
 
     // Bundle up the variables into a structured array for altering.
     $message = [
-      'id' => $module . '_' . $key,
+      'id' => $module . '__' . $key,
       'module' => $module,
       'key' => $key,
       'to' => $to,

@@ -60,7 +60,7 @@ class AssertMailTraitTest extends KernelTestBase {
     // Send additional emails so more than one email is captured.
     for ($index = 0; $index < 5; $index++) {
       $message = [
-        'id' => 'drupal_mail_test_' . $index,
+        'id' => 'drupal_mail_test__' . $index,
         'headers' => ['Content-type' => 'text/html'],
         'subject' => $this->randomString(64),
         'to' => $this->randomMachineName(32) . '@example.com',
@@ -90,7 +90,7 @@ class AssertMailTraitTest extends KernelTestBase {
     // \Drupal\Core\Test\AssertMailTrait::getMails() filters correctly returns
     // all emails with a given property/value.
     $mail_service->getInstance(['module' => 'drupal_mail_test', 'key' => $index])->mail($message);
-    $captured_emails = $this->getMails(['id' => 'drupal_mail_test_4']);
+    $captured_emails = $this->getMails(['id' => 'drupal_mail_test__4']);
     $this->assertCount(2, $captured_emails, 'All emails with the same id are returned when filtering by id.');
   }
 
