@@ -133,7 +133,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
       ':href' => $comments[0]->permalink()->toString(),
       ':title' => Unicode::truncate($comments[0]->get('comment_body')->value, 128),
       ':text' => $comments[0]->getSubject(),
-    ]);
+    ]));
 
     // Verify that anonymous author name is displayed correctly.
     $this->assertSession()->pageTextContains($author_name . ' (not verified)');
@@ -143,7 +143,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
       ':href' => $anonymous_comment4->permalink()->toString(),
       ':title' => Unicode::truncate($body, 128),
       ':text' => $subject,
-    ]);
+    ]));
 
     // Verify that anonymous author name is displayed correctly.
     $this->assertSession()->pageTextContains($author_name . ' (not verified)');
@@ -220,11 +220,11 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery('//table/tbody/tr[1]/td/a[contains(@href, :href) and text()=:text]', [
       ':href' => $this->webUser->toUrl()->toString(),
       ':text' => $this->webUser->label(),
-    ]);
+    ]));
     $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery('//table/tbody/tr[2]/td/a[contains(@href, :href) and text()=:text]', [
       ':href' => $this->webUser->toUrl()->toString(),
       ':text' => $this->webUser->label(),
-    ]);
+    ]));
 
     // Admin page contains label of both entities.
     $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
