@@ -364,9 +364,10 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     // trailing wildcard parts as long as the pattern matches, since we
     // dump the route pattern without those optional parts.
     try {
-      $routes = $this->connection->query("SELECT name, route, fit FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN ( :patterns[] ) AND number_parts >= :count_parts", [
+      $routes = $this->connection->query("SELECT name, route, fit FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN ( :patterns[] ) AND (number_parts >= :count_parts OR number_parts = :unlimited_parts)", [
         ':patterns[]' => $ancestors,
         ':count_parts' => count($parts),
+        ':unlimited_parts' => RouteCompiler::UNLIMITED_PARTS,
       ])
         ->fetchAll(\PDO::FETCH_ASSOC);
     }
