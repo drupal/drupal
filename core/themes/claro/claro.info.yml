@@ -167,6 +167,8 @@ libraries-extend:
     - claro/media_library.theme
   media_library/widget:
     - claro/media_library.theme
+  layout_builder/drupal.layout_builder:
+    - claro/layout_builder
 
 quickedit_stylesheets:
   - css/components/quickedit.css
