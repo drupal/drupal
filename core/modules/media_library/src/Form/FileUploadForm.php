@@ -150,7 +150,6 @@ class FileUploadForm extends AddFormBase {
     $form['container']['upload'] = [
       '#type' => 'managed_file',
       '#title' => $this->formatPlural($slots, 'Add file', 'Add files'),
-      // @todo Move validation in https://www.drupal.org/node/2988215
       '#process' => array_merge(['::validateUploadElement'], $process, ['::processUploadElement']),
       '#upload_validators' => $item->getUploadValidators(),
       '#multiple' => $slots > 1 || $slots === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -214,6 +213,7 @@ class FileUploadForm extends AddFormBase {
    *   The processed upload element.
    */
   public function processUploadElement(array $element, FormStateInterface $form_state) {
+    $element['upload_button']['#validate'] = ['::uploadButtonValidate'];
     $element['upload_button']['#submit'] = ['::uploadButtonSubmit'];
     // Limit the validation errors to make sure
     // FormValidator::handleErrorsWithLimitedValidation doesn't remove the
@@ -284,6 +284,27 @@ class FileUploadForm extends AddFormBase {
     }
 
     return $element;
+  }
+
+  /**
+   * Validation handler for the upload button, inside the managed_file element.
+   *
+   * @param array $form
+   *   The form render array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function uploadButtonValidate(array $form, FormStateInterface $form_state) {
+    $source_values = $this->entityTypeManager
+      ->getStorage('file')
+      ->loadMultiple($form_state->getValue('upload', []));
+    try {
+      $validation = $this->validateMediaSourceValues($source_values, $form_state);
+      $this->setAddedMediaItems($validation, $form_state);
+    }
+    catch (\Exception $e) {
+      $form_state->setErrorByName('upload', $e->getMessage());
+    }
   }
 
   /**
