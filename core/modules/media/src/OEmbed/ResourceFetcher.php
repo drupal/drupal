@@ -58,7 +58,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
 
     try {
-      $response = $this->httpClient->get($url);
+      $response = $this->httpClient->request('GET', $url, ['timeout' => 5]);
     }
     catch (TransferException $e) {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
