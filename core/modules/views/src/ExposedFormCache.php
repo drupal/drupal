@@ -28,7 +28,7 @@ class ExposedFormCache {
    */
   public function setForm($view_id, $display_id, array $form_output) {
     // Save the form output.
-    $views_exposed[$view_id][$display_id] = $form_output;
+    $this->cache[$view_id][$display_id] = $form_output;
   }
 
   /**
