@@ -41,7 +41,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
     $extensions_by_type = [];
     $files_by_type_and_name = [];
     foreach (['profile', 'module', 'theme', 'theme_engine'] as $type) {
-      $extensions_by_type[$type] = $extension_discovery->scan($type, FALSE);
+      $extensions_by_type[$type] = $extension_discovery->scan($type, TRUE);
       foreach ($extensions_by_type[$type] as $name => $extension) {
         $files_by_type_and_name[$type][$name] = $extension->getPathname();
       }
@@ -62,6 +62,26 @@ class ExtensionDiscoveryTest extends UnitTestCase {
     $extension_expected->subpath = 'themes/engines/twig';
     $extension_expected->origin = 'core';
     $this->assertEquals($extension_expected, $extensions_by_type['theme_engine']['twig'], 'twig');
+
+    $extension_expected = new Extension($root, 'module', 'core/modules/system/tests/modules/extension_discovery_test_module_php/extension_discovery_test_module_php.info.yml', 'extension_discovery_test_module_php.module.php');
+    $extension_expected->subpath = 'modules/system/tests/modules/extension_discovery_test_module_php';
+    $extension_expected->origin = 'core';
+    $this->assertEquals($extension_expected, $extensions_by_type['module']['extension_discovery_test_module_php'], 'extension_discovery_test_module_php');
+
+    $extension_expected = new Extension($root, 'profile', 'core/modules/system/tests/profiles/extension_discovery_test_profile_php/extension_discovery_test_profile_php.info.yml', 'extension_discovery_test_profile_php.profile.php');
+    $extension_expected->subpath = 'modules/system/tests/profiles/extension_discovery_test_profile_php';
+    $extension_expected->origin = 'core';
+    $this->assertEquals($extension_expected, $extensions_by_type['profile']['extension_discovery_test_profile_php'], 'extension_discovery_test_profile_php');
+
+    $extension_expected = new Extension($root, 'theme', 'core/modules/system/tests/themes/extension_discovery_test_theme_php/extension_discovery_test_theme_php.info.yml', 'extension_discovery_test_theme_php.theme.php');
+    $extension_expected->subpath = 'modules/system/tests/themes/extension_discovery_test_theme_php';
+    $extension_expected->origin = 'core';
+    $this->assertEquals($extension_expected, $extensions_by_type['theme']['extension_discovery_test_theme_php'], 'extension_discovery_test_theme_php');
+
+    $extension_expected = new Extension($root, 'theme_engine', 'core/modules/system/tests/engines/extension_discovery_test_engine_php/extension_discovery_test_engine_php.info.yml', 'extension_discovery_test_engine_php.engine.php');
+    $extension_expected->subpath = 'modules/system/tests/engines/extension_discovery_test_engine_php';
+    $extension_expected->origin = 'core';
+    $this->assertEquals($extension_expected, $extensions_by_type['theme_engine']['extension_discovery_test_engine_php'], 'extension_discovery_test_engine_php');
   }
 
   /**
@@ -143,6 +163,22 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       'core/themes/engines/twig/twig.info.yml' => [
         'type' => 'theme_engine',
       ],
+      // Add a module which has no .module but a .module.php file.
+      'core/modules/system/tests/modules/extension_discovery_test_module_php/extension_discovery_test_module_php.info.yml' => [
+        'type' => 'module',
+      ],
+      // Add a profile which has no .profile but a .profile.php file.
+      'core/modules/system/tests/profiles/extension_discovery_test_profile_php/extension_discovery_test_profile_php.info.yml' => [
+        'type' => 'profile',
+      ],
+      // Add a theme which has no .theme but a .theme.php file.
+      'core/modules/system/tests/themes/extension_discovery_test_theme_php/extension_discovery_test_theme_php.info.yml' => [
+        'type' => 'theme',
+      ],
+      // Add a engine which has no .engine but a .engine.php file.
+      'core/modules/system/tests/engines/extension_discovery_test_engine_php/extension_discovery_test_engine_php.info.yml' => [
+        'type' => 'theme_engine',
+      ],
     ];
 
     $files_by_type_and_name_expected = [];
@@ -161,6 +197,10 @@ class ExtensionDiscoveryTest extends UnitTestCase {
 
     $content_by_file['core/modules/system/system.module'] = '<?php';
     $content_by_file['core/themes/engines/twig/twig.engine'] = '<?php';
+    $content_by_file['core/modules/system/tests/modules/extension_discovery_test_module_php/extension_discovery_test_module_php.module.php'] = '<?php';
+    $content_by_file['core/modules/system/tests/profiles/extension_discovery_test_profile_php/extension_discovery_test_profile_php.profile.php'] = '<?php';
+    $content_by_file['core/modules/system/tests/themes/extension_discovery_test_theme_php/extension_discovery_test_theme_php.theme.php'] = '<?php';
+    $content_by_file['core/modules/system/tests/engines/extension_discovery_test_engine_php/extension_discovery_test_engine_php.engine.php'] = '<?php';
 
     foreach ($content_by_file as $file => $content) {
       $pieces = explode('/', $file);

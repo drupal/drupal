@@ -212,7 +212,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function add($type, $name, $path) {
     $pathname = "$path/$name.info.yml";
-    $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
+    $filename = NULL;
+    if (file_exists($this->root . "/$path/$name.$type.php")) {
+      $filename = "$name.$type.php";
+    }
+    elseif (file_exists($this->root . "/$path/$name.$type")) {
+      $filename = "$name.$type";
+    }
+
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
   }

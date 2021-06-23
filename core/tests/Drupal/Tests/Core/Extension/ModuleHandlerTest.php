@@ -87,11 +87,14 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getModuleHandler();
     $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
     $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
+    $module_handler->addModule('module_handler_test_module_php', 'core/modules/system/tests/modules/module_handler_test_module_php');
     $this->assertFalse(function_exists('module_handler_test_all1_hook'), 'Function does not exist before being loaded.');
     $this->assertFalse(function_exists('module_handler_test_all2_hook'), 'Function does not exist before being loaded.');
+    $this->assertFalse(function_exists('module_handler_test_module_php_hook'), 'Function does not exist before being loaded.');
     $module_handler->loadAll();
     $this->assertTrue(function_exists('module_handler_test_all1_hook'), 'Function exists after being loaded.');
     $this->assertTrue(function_exists('module_handler_test_all2_hook'), 'Function exists after being loaded.');
+    $this->assertTrue(function_exists('module_handler_test_module_php_hook'), 'Function exists after being loaded.');
   }
 
   /**

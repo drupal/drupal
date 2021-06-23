@@ -60,7 +60,8 @@ class Extension {
    *   The relative path and filename of the extension's info file; e.g.,
    *   'core/modules/node/node.info.yml'.
    * @param string $filename
-   *   (optional) The filename of the main extension file; e.g., 'node.module'.
+   *   (optional) The filename of the main extension file; e.g., 'node.module',
+   *    'seven.theme' or 'node.module.php'.
    */
   public function __construct($root, $type, $pathname, $filename = NULL) {
     // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()

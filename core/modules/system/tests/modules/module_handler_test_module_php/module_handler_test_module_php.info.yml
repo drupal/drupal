@@ -1,0 +1,6 @@
+name: module handler test .module.php
+type: module
+description: 'test module with .module.php extension'
+package: Testing
+version: VERSION
+core: 8.x

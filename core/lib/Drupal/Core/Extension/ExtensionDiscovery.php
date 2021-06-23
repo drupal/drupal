@@ -455,22 +455,30 @@ class ExtensionDiscovery {
         $name = $fileinfo->getBasename('.info.yml');
         $pathname = $dir_prefix . $fileinfo->getSubPathname();
 
-        // Determine whether the extension has a main extension file.
-        // For theme engines, the file extension is .engine.
-        if ($type == 'theme_engine') {
-          $filename = $name . '.engine';
-        }
-        // For profiles/modules/themes, it is the extension type.
-        else {
-          $filename = $name . '.' . $type;
-        }
-        if (!file_exists($this->root . '/' . dirname($pathname) . '/' . $filename)) {
-          $filename = NULL;
+        $actual_filename = NULL;
+        foreach (['.php', ''] as $extension) {
+          // Determine whether the extension has a main extension file.
+          // For theme engines, the file extension is .engine.
+          if ($type == 'theme_engine') {
+            $filename = $name . '.engine';
+          }
+          // For profiles/modules/themes, it is the extension type.
+          else {
+            $filename = $name . '.' . $type;
+          }
+          $filename = $filename . $extension;
+          if (file_exists($this->root . '/' . dirname($pathname) . '/' . $filename)) {
+            $actual_filename = $filename;
+            break;
+          }
+          if ($extension === '') {
+            @trigger_error('Using .profile, .theme, or .module is deprecated is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use .profile.php/.module.php/.theme.php', E_USER_DEPRECATED);
+          }
         }
         $extension_arguments = [
           'type' => $type,
           'pathname' => $pathname,
-          'filename' => $filename,
+          'filename' => $actual_filename,
           'subpath' => $fileinfo->getSubPath(),
         ];
 
