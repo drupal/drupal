@@ -262,7 +262,7 @@ class Xss {
         case 2:
           // Attribute value, a URL after href= for instance.
           if (preg_match('/^"([^"]*)"(\s+|$)/', $attributes, $match)) {
-            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1]);
+            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1], $attribute_name);
 
             if (!$skip) {
               $attributes_array[] = "$attribute_name=\"$thisval\"";
@@ -274,7 +274,7 @@ class Xss {
           }
 
           if (preg_match("/^'([^']*)'(\s+|$)/", $attributes, $match)) {
-            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1]);
+            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1], $attribute_name);
 
             if (!$skip) {
               $attributes_array[] = "$attribute_name='$thisval'";
@@ -285,7 +285,7 @@ class Xss {
           }
 
           if (preg_match("%^([^\s\"']+)(\s+|$)%", $attributes, $match)) {
-            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1]);
+            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1], $attribute_name);
 
             if (!$skip) {
               $attributes_array[] = "$attribute_name=\"$thisval\"";

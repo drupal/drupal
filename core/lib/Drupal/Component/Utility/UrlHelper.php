@@ -147,14 +147,14 @@ class UrlHelper {
     if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
       // Split off the fragment, if any.
       if (strpos($url, '#') !== FALSE) {
-        list($url, $options['fragment']) = explode('#', $url, 2);
+        [$url, $options['fragment']] = explode('#', $url, 2);
       }
 
       // Split off everything before the query string into 'path'.
       $parts = explode('?', $url, 2);
 
       // Don't support URLs without a path, like 'http://'.
-      list(, $path) = explode('://', $parts[0], 2);
+      [, $path] = explode('://', $parts[0], 2);
       if ($path != '') {
         $options['path'] = $parts[0];
       }
@@ -279,15 +279,17 @@ class UrlHelper {
    *
    * @param string $string
    *   The string with the attribute value.
+   * @param null $attribute_name
+   *   String with name of the attribute.
    *
    * @return string
    *   Cleaned up and HTML-escaped version of $string.
    */
-  public static function filterBadProtocol($string) {
+  public static function filterBadProtocol($string, $attribute_name = NULL) {
     // Get the plain text representation of the attribute value (i.e. its
     // meaning).
     $string = Html::decodeEntities($string);
-    return Html::escape(static::stripDangerousProtocols($string));
+    return Html::escape(static::stripDangerousProtocols($string, $attribute_name));
   }
 
   /**
@@ -338,6 +340,8 @@ class UrlHelper {
    *
    * @param string $uri
    *   A plain-text URI that might contain dangerous protocols.
+   * @param string $attribute_name
+   *   An attribute name to skip.
    *
    * @return string
    *   A plain-text URI stripped of dangerous protocols. As with all plain-text
@@ -350,9 +354,12 @@ class UrlHelper {
    * @see \Drupal\Core\Routing\UrlGeneratorTrait::url()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public static function stripDangerousProtocols($uri) {
+  public static function stripDangerousProtocols($uri, $attribute_name = NULL) {
     $allowed_protocols = array_flip(static::$allowedProtocols);
 
+    if (isset($attribute_name) && $attribute_name === 'class') {
+      return $uri;
+    }
     // Iteratively remove any invalid protocol found.
     do {
       $before = $uri;
