@@ -119,7 +119,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://www.drupal.org/node/2031223 for the above.
     $url = Url::fromRoute('entity.contact_form.edit_form', ['contact_form' => 'personal'])->toString();
-    $this->assertSession()->elementNotExists('xpath', "//a[@href='{$url}']")
+    $this->assertSession()->elementNotExists('xpath', "//a[@href='{$url}']");
     $this->assertSession()->linkByHrefNotExists('admin/structure/contact/manage/personal/delete');
 
     $this->drupalGet('admin/structure/contact/manage/personal');
