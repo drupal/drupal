@@ -27,12 +27,10 @@ class UserPictureTest extends MigrateSqlSourceTestBase {
     $tests[0]['source_data']['users'] = [
       [
         'uid' => 1,
-        'access' => 1382835435,
         'picture' => 'sites/default/files/pictures/picture-1.jpg',
       ],
       [
         'uid' => 2,
-        'access' => 1382835436,
         'picture' => 'sites/default/files/pictures/picture-2.jpg',
       ],
     ];
