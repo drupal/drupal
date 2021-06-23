@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for Automatic Updates.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_page_top().
+ */
+function auto_updates_page_top(array &$page_top) {
+  /** @var \Drupal\Core\Routing\AdminContext $admin_context */
+  $admin_context = \Drupal::service('router.admin_context');
+  if ($admin_context->isAdminRoute() && \Drupal::currentUser()->hasPermission('administer site configuration')) {
+    $disabled_routes = [
+      'update.theme_update',
+      'system.theme_install',
+      'update.module_update',
+      'update.module_install',
+      'update.status',
+      'update.report_update',
+      'update.report_install',
+      'update.settings',
+      'system.status',
+      'update.confirmation_page',
+    ];
+    // These routes don't need additional nagging.
+    if (in_array(\Drupal::routeMatch()->getRouteName(), $disabled_routes, TRUE)) {
+      return;
+    }
+    /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+    $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+    if (!$checker_manager->hasRunRecently()) {
+      if (\Drupal::currentUser()->hasPermission('administer software updates')) {
+        \Drupal::messenger()->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
+          ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', \Drupal::destination()->getAsArray())->toString(),
+        ]));
+      }
+    }
+    else {
+      $results = $checker_manager->getResults();
+      $has_errors = FALSE;
+      foreach ($results as $result) {
+        if ($errors = $result->getErrorMessages()) {
+          if (!$has_errors) {
+            // @todo Link "automatic updates" to documentation in
+            //    https://www.drupal.org/node/3168405.
+            \Drupal::messenger()->addError(t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.'));
+            $has_errors = TRUE;
+          }
+          $message = count($errors) === 1 ? array_pop($errors) : $result->getErrorsSummary();
+          \Drupal::messenger()->addError($message);
+        }
+      }
+      // Only display warning summaries if no errors were displayed.
+      if (!$has_errors) {
+        $has_warnings = FALSE;
+        foreach ($results as $result) {
+          if ($warnings = $result->getWarningMessages()) {
+            if (!$has_warnings) {
+              // @todo Link "automatic updates" to documentation in
+              //    https://www.drupal.org/node/3168405.
+              \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.'));
+              $has_warnings = TRUE;
+            }
+            $message = count($warnings) === 1 ? array_pop($warnings) : $result->getWarningsSummary();
+            \Drupal::messenger()->addWarning($message);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function auto_updates_cron() {
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+  $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+  $checker_manager->getResults();
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function auto_updates_modules_installed() {
+  // Run the readiness checkers when any modules are installed in case they
+  // provide readiness checker services. Because ReadinessCheckerManager caches
+  // the results it will not rerun checkers if the modules don't provide new
+  // readiness checker services.
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+  $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+  $checker_manager->getResults();
+}

@@ -1,0 +1,9 @@
+services:
+  auto_updates_test.checker:
+    class: Drupal\auto_updates_test\ReadinessChecker\TestChecker
+    tags:
+      - { name: auto_updates.readiness_checker, priority: 2 }
+    arguments: ['@state']
+  datetime.time:
+    class: Drupal\auto_updates_test\Datetime\TestTime
+    arguments: ['@request_stack']

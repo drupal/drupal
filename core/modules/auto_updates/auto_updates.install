@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Automatic Updates.
+ */
+
+use Drupal\auto_updates\ReadinessChecker\ReadinessRequirement;
+
+/**
+ * Implements hook_requirements().
+ */
+function auto_updates_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessRequirement $readinessRequirement */
+  $readinessRequirement = \Drupal::classResolver(ReadinessRequirement::class);
+  return $readinessRequirement->getRequirements();
+}
