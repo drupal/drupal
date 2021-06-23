@@ -44,13 +44,19 @@
         exec(editor) {
           const saveCallback = function (values) {
             editor.fire('saveSnapshot');
-            const mediaElement = editor.document.createElement('drupal-media');
-            // eslint-disable-next-line prefer-destructuring
-            const attributes = values.attributes;
-            Object.keys(attributes).forEach((key) => {
-              mediaElement.setAttribute(key, attributes[key]);
+            let html = '';
+            values.forEach((media) => {
+              const mediaElement = editor.document.createElement(
+                'drupal-media',
+              );
+              // eslint-disable-next-line prefer-destructuring
+              const attributes = media.attributes;
+              Object.keys(attributes).forEach((key) => {
+                mediaElement.setAttribute(key, attributes[key]);
+              });
+              html += mediaElement.getOuterHtml();
             });
-            editor.insertHtml(mediaElement.getOuterHtml());
+            editor.insertHtml(html);
             editor.fire('saveSnapshot');
           };
 

@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\media_library\MediaLibraryUiBuilder;
@@ -142,7 +143,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
       'media_library.opener.editor',
       $media_type_ids,
       reset($media_type_ids),
-      1,
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       ['filter_format_id' => $editor->getFilterFormat()->id()]
     );
 

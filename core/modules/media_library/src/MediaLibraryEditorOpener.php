@@ -63,16 +63,18 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
    * {@inheritdoc}
    */
   public function getSelectionResponse(MediaLibraryState $state, array $selected_ids) {
-    $selected_media = $this->mediaStorage->load(reset($selected_ids));
+    $selected_media = $this->mediaStorage->loadMultiple($selected_ids);
 
     $response = new AjaxResponse();
-    $values = [
-      'attributes' => [
-        'data-entity-type' => 'media',
-        'data-entity-uuid' => $selected_media->uuid(),
-        'data-align' => 'center',
-      ],
-    ];
+    foreach ($selected_media as $media) {
+      $values[] = [
+        'attributes' => [
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => $media->uuid(),
+          'data-align' => 'center',
+        ],
+      ];
+    }
     $response->addCommand(new EditorDialogSave($values));
 
     return $response;

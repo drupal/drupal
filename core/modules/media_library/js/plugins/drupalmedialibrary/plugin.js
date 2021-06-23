@@ -40,12 +40,16 @@
         exec: function exec(editor) {
           var saveCallback = function saveCallback(values) {
             editor.fire('saveSnapshot');
-            var mediaElement = editor.document.createElement('drupal-media');
-            var attributes = values.attributes;
-            Object.keys(attributes).forEach(function (key) {
-              mediaElement.setAttribute(key, attributes[key]);
+            var html = '';
+            values.forEach(function (media) {
+              var mediaElement = editor.document.createElement('drupal-media');
+              var attributes = media.attributes;
+              Object.keys(attributes).forEach(function (key) {
+                mediaElement.setAttribute(key, attributes[key]);
+              });
+              html += mediaElement.getOuterHtml();
             });
-            editor.insertHtml(mediaElement.getOuterHtml());
+            editor.insertHtml(html);
             editor.fire('saveSnapshot');
           };
 
