@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Extension\ExtensionVersion;
+use Drupal\update\ProjectRelease;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\update\ProjectCoreCompatibility;
@@ -355,20 +356,34 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_version_without_extra = '';
   $recommended_release = NULL;
 
-  foreach ($available['releases'] as $version => $release) {
+  foreach ($available['releases'] as $version => $release_info) {
     try {
-      $release_module_version = ExtensionVersion::createFromVersionString($release['version']);
+      $release = ProjectRelease::createFromArray($release_info);
+    }
+    catch (UnexpectedValueException $exception) {
+      // Ignore releases that are in an invalid format. Although this is highly
+      // unlikely we should still process releases in the correct format.
+      watchdog_exception(
+        'update',
+        $exception,
+        'Invalid project format: @release',
+        ['@release' => print_r($release_info, TRUE)]
+      );
+      continue;
+    }
+
+    try {
+      $release_module_version = ExtensionVersion::createFromVersionString($release->getVersion());
     }
     catch (UnexpectedValueException $exception) {
       continue;
     }
     // First, if this is the existing release, check a few conditions.
     if ($project_data['existing_version'] === $version) {
-      if (isset($release['terms']['Release type']) &&
-          in_array('Insecure', $release['terms']['Release type'])) {
+      if ($release->isInsecure()) {
         $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
       }
-      elseif ($release['status'] == 'unpublished') {
+      elseif (!$release->isPublished()) {
         $project_data['status'] = UpdateManagerInterface::REVOKED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
@@ -379,8 +394,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
           'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
         ];
       }
-      elseif (isset($release['terms']['Release type']) &&
-              in_array('Unsupported', $release['terms']['Release type'])) {
+      elseif ($release->isUnsupported()) {
         $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
@@ -394,11 +408,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     }
     // Other than the currently installed release, ignore unpublished, insecure,
     // or unsupported updates.
-    elseif ($release['status'] == 'unpublished' ||
-            !$is_in_supported_branch($release['version']) ||
-            (isset($release['terms']['Release type']) &&
-             (in_array('Insecure', $release['terms']['Release type']) ||
-              in_array('Unsupported', $release['terms']['Release type'])))
+    elseif (!$release->isPublished() ||
+            !$is_in_supported_branch($release->getVersion()) ||
+            $release->isUnsupported() ||
+            $release->isInsecure()
     ) {
       continue;
     }
@@ -412,7 +425,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
       }
       if (!isset($project_data['also'][$release_major_version])) {
         $project_data['also'][$release_major_version] = $version;
-        $project_data['releases'][$version] = $release;
+        $project_data['releases'][$version] = $release_info;
       }
       // Otherwise, this release can't matter to us, since it's neither
       // from the release series we're currently using nor the recommended
@@ -429,7 +442,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     if (!isset($project_data['latest_version'])
         && $release_major_version == $target_major) {
       $project_data['latest_version'] = $version;
-      $project_data['releases'][$version] = $release;
+      $project_data['releases'][$version] = $release_info;
     }
 
     // Look for the development snapshot release for this branch.
@@ -437,14 +450,14 @@ function update_calculate_project_update_status(&$project_data, $available) {
         && $release_major_version == $target_major
         && $release_module_version->getVersionExtra() === 'dev') {
       $project_data['dev_version'] = $version;
-      $project_data['releases'][$version] = $release;
+      $project_data['releases'][$version] = $release_info;
     }
 
     if ($release_module_version->getVersionExtra()) {
-      $release_version_without_extra = str_replace('-' . $release_module_version->getVersionExtra(), '', $release['version']);
+      $release_version_without_extra = str_replace('-' . $release_module_version->getVersionExtra(), '', $release->getVersion());
     }
     else {
-      $release_version_without_extra = $release['version'];
+      $release_version_without_extra = $release->getVersion();
     }
 
     // Look for the 'recommended' version if we haven't found it yet (see
@@ -453,7 +466,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         && $release_major_version == $target_major) {
       if ($recommended_version_without_extra !== $release_version_without_extra) {
         $recommended_version_without_extra = $release_version_without_extra;
-        $recommended_release = $release;
+        $recommended_release = $release_info;
       }
       if ($release_module_version->getVersionExtra() === NULL) {
         $project_data['recommended'] = $recommended_release['version'];
@@ -477,16 +490,14 @@ function update_calculate_project_update_status(&$project_data, $available) {
         // We don't have current timestamp info, so we can't know.
         continue;
       }
-      elseif (isset($release['date']) && ($project_data['datestamp'] + 100 > $release['date'])) {
+      elseif ($release->getDate() && $project_data['datestamp'] + 100 > $release->getDate()) {
         // We're newer than this, so we can skip it.
         continue;
       }
     }
 
-    // See if this release is a security update.
-    if (isset($release['terms']['Release type'])
-        && in_array('Security update', $release['terms']['Release type'])) {
-      $project_data['security updates'][] = $release;
+    if ($release->isSecurityRelease()) {
+      $project_data['security updates'][] = $release_info;
     }
   }
 

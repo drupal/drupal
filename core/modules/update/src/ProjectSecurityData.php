@@ -60,11 +60,6 @@ final class ProjectSecurityData {
    *
    * @var array
    *
-   * Each release item in the array has metadata about that release. This class
-   * uses the keys:
-   * - status (string): The status of the release.
-   * - version (string): The version number of the release.
-   *
    * @see update_get_available()
    */
   protected $releases;
@@ -219,14 +214,29 @@ final class ProjectSecurityData {
   private function getAdditionalSecurityCoveredMinors($security_covered_version) {
     $security_covered_version_major = ExtensionVersion::createFromVersionString($security_covered_version)->getMajorVersion();
     $security_covered_version_minor = $this->getSemanticMinorVersion($security_covered_version);
-    foreach ($this->releases as $release) {
-      $release_version = ExtensionVersion::createFromVersionString($release['version']);
-      if ($release_version->getMajorVersion() === $security_covered_version_major && $release['status'] === 'published' && !$release_version->getVersionExtra()) {
+    foreach ($this->releases as $release_info) {
+      try {
+        $release = ProjectRelease::createFromArray($release_info);
+      }
+      catch (\UnexpectedValueException $exception) {
+        // Ignore releases that are in an invalid format. Although this is
+        // highly unlikely we should still process releases in the correct
+        // format.
+        watchdog_exception(
+          'update',
+          $exception,
+          'Invalid project format: @release',
+          ['@release' => print_r($release_info, TRUE)]
+        );
+        continue;
+      }
+      $release_version = ExtensionVersion::createFromVersionString($release->getVersion());
+      if ($release_version->getMajorVersion() === $security_covered_version_major && $release->isPublished() && !$release_version->getVersionExtra()) {
         // The releases are ordered with the most recent releases first.
         // Therefore, if we have found a published, official release with the
         // same major version as $security_covered_version, then this release
         // can be used to determine the latest minor.
-        $latest_minor = $this->getSemanticMinorVersion($release['version']);
+        $latest_minor = $this->getSemanticMinorVersion($release->getVersion());
         break;
       }
     }
