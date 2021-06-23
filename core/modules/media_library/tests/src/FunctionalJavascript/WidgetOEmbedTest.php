@@ -213,6 +213,10 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     // Assert the remove message is shown.
     $this->waitForText("The media item $youtube_title has been removed.");
     $this->assertNoMediaAdded();
+
+    // Assert that oembed providers are properly restricted.
+    $page->pressButton('Close');
+    $this->assertOembedProviderRestriction($vimeo_url);
   }
 
   /**
@@ -409,6 +413,28 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     // Assert the remove message is shown.
     $this->waitForText("The media item $youtube_title has been removed.");
     $this->assertNoMediaAdded();
+
+    // Assert that oembed providers are properly restricted.
+    $page->pressButton('Close');
+    $this->assertOembedProviderRestriction($vimeo_url);
+  }
+
+  /**
+   * Confirms that oEmbed provider restrictions per media type are respected.
+   *
+   * @param string $url
+   *   The URL of the video to add. Should be from a provider that is not
+   *   permitted by the "Type Six" media type.
+   */
+  private function assertOembedProviderRestriction(string $url): void {
+    $page = $this->getSession()->getPage();
+    $this->openMediaLibraryForField('field_null_types_media');
+    // Assert we cannot add vimeo video to type six.
+    $this->switchToMediaType('Six');
+    $page->fillField('Add Type Six via URL', $url);
+    $this->assertSession()->pageTextContains('Allowed providers: YouTube.');
+    $page->pressButton('Add');
+    $this->waitForText('The Vimeo provider is not allowed');
   }
 
 }
