@@ -59,7 +59,9 @@ class FrontPageTest extends BrowserTestBase {
     ];
     $this->drupalCreateNode($settings);
     $this->drupalGet('');
-    $this->assertTitle('Home | Drupal');
+
+    // confirm frontpage title is same as Home
+    $this->assertTitle('Home');
 
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
