@@ -185,7 +185,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   /**
    * Gets the current user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountProxyInterface
    *   The current user.
    */
   protected function currentUser() {

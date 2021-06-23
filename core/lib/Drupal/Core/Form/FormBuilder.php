@@ -1401,7 +1401,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * Gets the current active user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountProxyInterface
    *   The current account.
    */
   protected function currentUser() {

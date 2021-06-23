@@ -105,7 +105,7 @@ abstract class LinkBase extends FieldPluginBase {
    * @todo: https://www.drupal.org/node/2105123 put this method in
    *   \Drupal\Core\Plugin\PluginBase instead.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountProxyInterface
    *   The current user.
    */
   protected function currentUser() {

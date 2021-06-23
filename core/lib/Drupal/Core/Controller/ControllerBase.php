@@ -232,7 +232,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   /**
    * Returns the current user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountProxyInterface
    *   The current user.
    */
   protected function currentUser() {

@@ -35,7 +35,7 @@ trait PreviewToggleTrait {
   /**
    * Gets the current user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountProxyInterface
    *   The current user.
    */
   abstract protected function currentUser();
