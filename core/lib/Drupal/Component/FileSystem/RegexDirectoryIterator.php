@@ -5,14 +5,7 @@ namespace Drupal\Component\FileSystem;
 /**
  * Iterates over files whose names match a regular expression in a directory.
  */
-class RegexDirectoryIterator extends \FilterIterator {
-
-  /**
-   * The regular expression to match.
-   *
-   * @var string
-   */
-  protected $regex;
+class RegexDirectoryIterator extends \RegexIterator {
 
   /**
    * RegexDirectoryIterator constructor.
@@ -25,18 +18,16 @@ class RegexDirectoryIterator extends \FilterIterator {
    */
   public function __construct($path, $regex) {
     // Use FilesystemIterator to not iterate over the . and .. directories.
-    $iterator = new \FilesystemIterator($path);
-    parent::__construct($iterator);
-    $this->regex = $regex;
+    parent::__construct(new \FilesystemIterator($path), $regex);
   }
 
   /**
-   * Implements \FilterIterator::accept().
+   * Implements \RegexIterator::accept().
    */
   public function accept() {
     /** @var \SplFileInfo $file_info */
     $file_info = $this->getInnerIterator()->current();
-    return $file_info->isFile() && preg_match($this->regex, $file_info->getFilename());
+    return $file_info->isFile() && preg_match($this->getRegex(), $file_info->getFilename());
   }
 
 }
