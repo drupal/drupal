@@ -121,16 +121,14 @@ class CommentPreviewTest extends CommentTestBase {
     // Store the content of this page.
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertCount(1, $elements);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comment-wrapper")]/article', 1);
 
     // Go back and re-submit the form.
     $this->getSession()->getDriver()->back();
     $submit_button = $this->assertSession()->buttonExists('Save');
     $submit_button->click();
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertCount(2, $elements);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comment-wrapper")]/article', 2);
   }
 
   /**
