@@ -1298,6 +1298,27 @@ function system_requirements($phase) {
     }
   }
 
+  if ($phase == 'runtime') {
+    foreach (array_keys(\Drupal::moduleHandler()->getModuleList()) as $module_name) {
+      $libraries = \Drupal::service('library.discovery')->getLibrariesByExtension($module_name);
+      foreach ($libraries as $library_name => $library) {
+        foreach ($library['js'] as $js_array) {
+          if ($js_array['type'] === 'file' && strpos($js_array['data'], 'libraries/') === 0) {
+            if (!file_exists(\Drupal::root() . DIRECTORY_SEPARATOR . $js_array['data'])) {
+              $requirements[$module_name . '_' . $library_name] = [
+                'title' => t('@module javascript libraries', ['@module' => $module_name]),
+                'value' => t('Not installed'),
+                'severity' => REQUIREMENT_ERROR,
+                'description' => t('You are missing one or several required javascript files from @library library. Please check @module module README about how to install them.', ['@library' => $library_name, '@module' => $module_name]),
+              ];
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
   return $requirements;
 }
 
