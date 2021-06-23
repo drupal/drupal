@@ -22,7 +22,9 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
   public function getAccessControlHandler($entity_type_id);
 
   /**
-   * Creates a new storage instance.
+   * Creates a new storage instance. Instantiating @EntityStorageInterface
+   * is expensive performance-wise. Inject @EntityTypeManager and
+   * call @EntityStorageInterface when required.
    *
    * @param string $entity_type_id
    *   The entity type ID for this storage.

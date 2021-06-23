@@ -7,6 +7,9 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 
 /**
  * A base entity storage class.
+ *
+ * Instantiating @EntityStorageInterface is expensive performance-wise.
+ * Inject @EntityTypeManager and call @EntityStorageInterface when required.
  */
 abstract class EntityStorageBase extends EntityHandlerBase implements EntityStorageInterface, EntityHandlerInterface {
 

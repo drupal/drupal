@@ -11,6 +11,9 @@ namespace Drupal\Core\Entity;
  * implementations are used by default when the @ContentEntityType or
  * @ConfigEntityType annotations are used.
  *
+ * Instantiating @EntityStorageInterface is expensive performance-wise.
+ * Inject @EntityTypeManager and call @EntityStorageInterface when required.
+ *
  * @ingroup entity_api
  */
 interface EntityStorageInterface {
