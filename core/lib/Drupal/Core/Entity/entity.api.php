@@ -1126,7 +1126,8 @@ function hook_ENTITY_TYPE_presave(\Drupal\Core\Entity\EntityInterface $entity) {
  * Respond to creation of a new entity.
  *
  * This hook runs once the entity has been stored. Note that hook
- * implementations may not alter the stored entity data.
+ * implementations may not alter the stored entity data. For that, use
+ * hook_ENTITY_TYPE_presave().
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -1150,7 +1151,8 @@ function hook_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
  * Respond to creation of a new entity of a particular type.
  *
  * This hook runs once the entity has been stored. Note that hook
- * implementations may not alter the stored entity data.
+ * implementations may not alter the stored entity data. For that, use
+ * hook_ENTITY_TYPE_presave().
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -1173,8 +1175,9 @@ function hook_ENTITY_TYPE_insert(\Drupal\Core\Entity\EntityInterface $entity) {
  * Respond to updates to an entity.
  *
  * This hook runs once the entity storage has been updated. Note that hook
- * implementations may not alter the stored entity data. Get the original entity
- * object from $entity->original.
+ * implementations may not alter the stored entity data. For that, use
+ * hook_ENTITY_TYPE_presave(). Get the original entity object from
+ * $entity->original.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -1197,8 +1200,9 @@ function hook_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
  * Respond to updates to an entity of a particular type.
  *
  * This hook runs once the entity storage has been updated. Note that hook
- * implementations may not alter the stored entity data. Get the original entity
- * object from $entity->original.
+ * implementations may not alter the stored entity data. For that, use
+ * hook_ENTITY_TYPE_presave(). Get the original entity object from
+ * $entity->original.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
