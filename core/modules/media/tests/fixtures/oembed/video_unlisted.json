@@ -1,0 +1,16 @@
+{
+  "type": "video",
+  "version": "1.0",
+  "provider_name": "UnlistedProvider",
+  "provider_url": "https:\/\/unlisted.fake\/",
+  "title": "A video with provider that is not listed in providers.json.",
+  "author_name": "Nobody",
+  "author_url": "",
+  "html": "<iframe width=\"480\">It is not real, folks.</iframe>",
+  "width": 480,
+  "height": 360,
+  "description": "This video has a provider_name that is not listed in providers.json.",
+  "thumbnail_url": "internal:\/core\/misc\/druplicon.png",
+  "thumbnail_width": 295,
+  "thumbnail_height": 221
+}

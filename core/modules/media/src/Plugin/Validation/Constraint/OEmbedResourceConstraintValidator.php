@@ -101,6 +101,10 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
       $this->handleException($e, $constraint->providerErrorMessage);
       return;
     }
+    catch (\InvalidArgumentException $e) {
+      $this->handleException($e, $constraint->unknownProviderMessage);
+      return;
+    }
 
     // Ensure that the provider is allowed.
     if (!in_array($provider->getName(), $source->getProviders(), TRUE)) {

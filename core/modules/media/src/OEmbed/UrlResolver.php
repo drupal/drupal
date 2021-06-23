@@ -133,7 +133,14 @@ class UrlResolver implements UrlResolverInterface {
 
     $resource_url = $this->discoverResourceUrl($url);
     if ($resource_url) {
-      return $this->resourceFetcher->fetchResource($resource_url)->getProvider();
+      try {
+        $response = $this->resourceFetcher->fetchResource($resource_url);
+
+        return $response->getProvider();
+      }
+      catch (InvalidArgumentException $e) {
+        throw new ResourceException('No matching provider found.', $url);
+      }
     }
 
     throw new ResourceException('No matching provider found.', $url);
