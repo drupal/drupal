@@ -7,11 +7,6 @@
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend(
     /** @lends Drupal.quickedit.FieldDecorationView# */ {
       /**
-       * @type {null}
-       */
-      _widthAttributeIsEmpty: null,
-
-      /**
        * @type {object}
        */
       events: {
@@ -79,7 +74,7 @@
                 this.stopEdit();
               }
             }
-            this._unpad();
+            this.$el.removeClass('quickedit-editing--padded');
             break;
 
           case 'highlighted':
@@ -97,7 +92,7 @@
               this.prepareEdit();
             }
             if (this.editorView.getQuickEditUISettings().padding) {
-              this._pad();
+              this.$el.addClass('quickedit-editing--padded');
             }
             break;
 
@@ -227,141 +222,6 @@
 
         // Make the other editors show up again.
         $('.quickedit-candidate').addClass('quickedit-editable');
-      },
-
-      /**
-       * Adds padding around the editable element to make it pop visually.
-       */
-      _pad() {
-        // Early return if the element has already been padded.
-        if (this.$el.data('quickedit-padded')) {
-          return;
-        }
-        const self = this;
-
-        // Add 5px padding for readability. This means we'll freeze the current
-        // width and *then* add 5px padding, hence ensuring the padding is added
-        // "on the outside".
-        // 1) Freeze the width (if it's not already set); don't use animations.
-        if (this.$el[0].style.width === '') {
-          this._widthAttributeIsEmpty = true;
-          this.$el
-            .addClass('quickedit-animate-disable-width')
-            .css('width', this.$el.width());
-        }
-
-        // 2) Add padding; use animations.
-        const posProp = this._getPositionProperties(this.$el);
-        setTimeout(() => {
-          // Re-enable width animations (padding changes affect width too!).
-          self.$el.removeClass('quickedit-animate-disable-width');
-
-          // Pad the editable.
-          self.$el
-            .css({
-              position: 'relative',
-              top: `${posProp.top - 5}px`,
-              left: `${posProp.left - 5}px`,
-              'padding-top': `${posProp['padding-top'] + 5}px`,
-              'padding-left': `${posProp['padding-left'] + 5}px`,
-              'padding-right': `${posProp['padding-right'] + 5}px`,
-              'padding-bottom': `${posProp['padding-bottom'] + 5}px`,
-              'margin-bottom': `${posProp['margin-bottom'] - 10}px`,
-            })
-            .data('quickedit-padded', true);
-        }, 0);
-      },
-
-      /**
-       * Removes the padding around the element being edited when editing ceases.
-       */
-      _unpad() {
-        // Early return if the element has not been padded.
-        if (!this.$el.data('quickedit-padded')) {
-          return;
-        }
-        const self = this;
-
-        // 1) Set the empty width again.
-        if (this._widthAttributeIsEmpty) {
-          this.$el.addClass('quickedit-animate-disable-width').css('width', '');
-        }
-
-        // 2) Remove padding; use animations (these will run simultaneously with)
-        // the fading out of the toolbar as its gets removed).
-        const posProp = this._getPositionProperties(this.$el);
-        setTimeout(() => {
-          // Re-enable width animations (padding changes affect width too!).
-          self.$el.removeClass('quickedit-animate-disable-width');
-
-          // Unpad the editable.
-          self.$el.css({
-            position: 'relative',
-            top: `${posProp.top + 5}px`,
-            left: `${posProp.left + 5}px`,
-            'padding-top': `${posProp['padding-top'] - 5}px`,
-            'padding-left': `${posProp['padding-left'] - 5}px`,
-            'padding-right': `${posProp['padding-right'] - 5}px`,
-            'padding-bottom': `${posProp['padding-bottom'] - 5}px`,
-            'margin-bottom': `${posProp['margin-bottom'] + 10}px`,
-          });
-        }, 0);
-        // Remove the marker that indicates that this field has padding. This is
-        // done outside the timed out function above so that we don't get numerous
-        // queued functions that will remove padding before the data marker has
-        // been removed.
-        this.$el.removeData('quickedit-padded');
-      },
-
-      /**
-       * Gets the top and left properties of an element.
-       *
-       * Convert extraneous values and information into numbers ready for
-       * subtraction.
-       *
-       * @param {jQuery} $e
-       *   The element to get position properties from.
-       *
-       * @return {object}
-       *   An object containing css values for the needed properties.
-       */
-      _getPositionProperties($e) {
-        let p;
-        const r = {};
-        const props = [
-          'top',
-          'left',
-          'bottom',
-          'right',
-          'padding-top',
-          'padding-left',
-          'padding-right',
-          'padding-bottom',
-          'margin-bottom',
-        ];
-
-        const propCount = props.length;
-        for (let i = 0; i < propCount; i++) {
-          p = props[i];
-          r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
-        }
-        return r;
-      },
-
-      /**
-       * Replaces blank or 'auto' CSS `position: <value>` values with "0px".
-       *
-       * @param {string} [pos]
-       *   The value for a CSS position declaration.
-       *
-       * @return {string}
-       *   A CSS value that is valid for `position`.
-       */
-      _replaceBlankPosition(pos) {
-        if (pos === 'auto' || !pos) {
-          pos = '0px';
-        }
-        return pos;
       },
     },
   );

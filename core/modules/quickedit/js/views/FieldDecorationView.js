@@ -7,7 +7,6 @@
 
 (function ($, Backbone, Drupal) {
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend({
-    _widthAttributeIsEmpty: null,
     events: {
       'mouseenter.quickedit': 'onMouseEnter',
       'mouseleave.quickedit': 'onMouseLeave',
@@ -45,8 +44,7 @@
             }
           }
 
-          this._unpad();
-
+          this.$el.removeClass('quickedit-editing--padded');
           break;
 
         case 'highlighted':
@@ -63,7 +61,7 @@
           }
 
           if (this.editorView.getQuickEditUISettings().padding) {
-            this._pad();
+            this.$el.addClass('quickedit-editing--padded');
           }
 
           break;
@@ -130,82 +128,6 @@
       }
 
       $('.quickedit-candidate').addClass('quickedit-editable');
-    },
-    _pad: function _pad() {
-      if (this.$el.data('quickedit-padded')) {
-        return;
-      }
-
-      var self = this;
-
-      if (this.$el[0].style.width === '') {
-        this._widthAttributeIsEmpty = true;
-        this.$el.addClass('quickedit-animate-disable-width').css('width', this.$el.width());
-      }
-
-      var posProp = this._getPositionProperties(this.$el);
-
-      setTimeout(function () {
-        self.$el.removeClass('quickedit-animate-disable-width');
-        self.$el.css({
-          position: 'relative',
-          top: "".concat(posProp.top - 5, "px"),
-          left: "".concat(posProp.left - 5, "px"),
-          'padding-top': "".concat(posProp['padding-top'] + 5, "px"),
-          'padding-left': "".concat(posProp['padding-left'] + 5, "px"),
-          'padding-right': "".concat(posProp['padding-right'] + 5, "px"),
-          'padding-bottom': "".concat(posProp['padding-bottom'] + 5, "px"),
-          'margin-bottom': "".concat(posProp['margin-bottom'] - 10, "px")
-        }).data('quickedit-padded', true);
-      }, 0);
-    },
-    _unpad: function _unpad() {
-      if (!this.$el.data('quickedit-padded')) {
-        return;
-      }
-
-      var self = this;
-
-      if (this._widthAttributeIsEmpty) {
-        this.$el.addClass('quickedit-animate-disable-width').css('width', '');
-      }
-
-      var posProp = this._getPositionProperties(this.$el);
-
-      setTimeout(function () {
-        self.$el.removeClass('quickedit-animate-disable-width');
-        self.$el.css({
-          position: 'relative',
-          top: "".concat(posProp.top + 5, "px"),
-          left: "".concat(posProp.left + 5, "px"),
-          'padding-top': "".concat(posProp['padding-top'] - 5, "px"),
-          'padding-left': "".concat(posProp['padding-left'] - 5, "px"),
-          'padding-right': "".concat(posProp['padding-right'] - 5, "px"),
-          'padding-bottom': "".concat(posProp['padding-bottom'] - 5, "px"),
-          'margin-bottom': "".concat(posProp['margin-bottom'] + 10, "px")
-        });
-      }, 0);
-      this.$el.removeData('quickedit-padded');
-    },
-    _getPositionProperties: function _getPositionProperties($e) {
-      var p;
-      var r = {};
-      var props = ['top', 'left', 'bottom', 'right', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom', 'margin-bottom'];
-      var propCount = props.length;
-
-      for (var i = 0; i < propCount; i++) {
-        p = props[i];
-        r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
-      }
-
-      return r;
-    },
-    _replaceBlankPosition: function _replaceBlankPosition(pos) {
-      if (pos === 'auto' || !pos) {
-        pos = '0px';
-      }
-
-      return pos;
     }
   });
 })(jQuery, Backbone, Drupal);

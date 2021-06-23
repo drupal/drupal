@@ -34,6 +34,9 @@
 .quickedit-form .form-item .error {
   border: 1px solid #eea0a0;
 }
+.quickedit-editing--padded {
+  padding: 5px;
+}
 
 /**
  * Default form styling overrides.
@@ -69,10 +72,6 @@
 .quickedit-animate-delay-fast {
   -webkit-transition-delay: 0.2s;
   transition-delay: 0.2s;
-}
-.quickedit-animate-disable-width {
-  -webkit-transition: width 0s;
-  transition: width 0s;
 }
 .quickedit-animate-only-visibility {
   -webkit-transition: opacity 0.2s ease;
