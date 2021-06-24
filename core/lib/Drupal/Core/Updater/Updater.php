@@ -124,7 +124,7 @@ class Updater {
    * @see hook_updater_info()
    * @see hook_updater_info_alter()
    */
-  public static function getUpdaterRegistry() {
+  public static function getUpdaterRegistry(): array {
     if (!isset(static::$updaterRegistry)) {
       $module_handler = \Drupal::moduleHandler();
       static::$updaterRegistry = $module_handler->invokeAll('updater_info');
