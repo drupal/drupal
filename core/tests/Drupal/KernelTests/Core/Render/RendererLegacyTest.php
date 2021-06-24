@@ -13,11 +13,10 @@ use Drupal\KernelTests\KernelTestBase;
 class RendererLegacyTest extends KernelTestBase {
 
   /**
-   * Tests deprecation of the drupal_attach_tabledrag() function.
-   *
-   * @expectedDeprecation drupal_attach_tabledrag() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\Element\Table::attachTabledrag() instead. See https://www.drupal.org/node/3035565
+   * @see drupal_attach_tabledrag()
    */
-  public function testTableDrag() {
+  public function testTableDrag(): void {
+    $this->expectDeprecation('drupal_attach_tabledrag() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\Element\Table::attachTabledrag() instead. See https://www.drupal.org/node/3035565');
     $elements = [];
     $options = [
       'table_id' => 'test-table',

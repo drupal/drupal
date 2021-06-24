@@ -339,14 +339,14 @@ function drupal_js_defaults($data = NULL) {
  *     to FALSE if the column should not be hidden.
  *   - 'limit': (optional) Limit the maximum amount of parenting in this table.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Render\Element\Table::attachTabledrag() instead.
  *
  * @see https://www.drupal.org/node/3035565
  * @see MenuForm::BuildOverviewForm()
  */
 function drupal_attach_tabledrag(&$element, array $options) {
-  @trigger_error('drupal_attach_tabledrag() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\Element\Table::attachTabledrag() instead. See https://www.drupal.org/node/3035565', E_USER_DEPRECATED);
+  @trigger_error('drupal_attach_tabledrag() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\Element\Table::attachTabledrag() instead. See https://www.drupal.org/node/3035565', E_USER_DEPRECATED);
   Table::attachTabledrag($element, $options);
 }
 
