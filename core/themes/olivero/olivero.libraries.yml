@@ -27,7 +27,6 @@ global-styling:
       css/components/container-inline.module.css: {}
       css/components/fieldset.css: {}
       css/components/field.css: {}
-      css/components/field-image.css: {}
       css/components/form.css: {}
       css/components/form-boolean.css: {}
       css/components/form-text.css: {}
@@ -54,6 +53,7 @@ global-styling:
       css/components/table.css: {}
       css/components/text-content.css: {}
       css/components/tabledrag.css: {}
+      css/components/wide-image.css: {}
 
   js:
     js/checkbox.js: {}
