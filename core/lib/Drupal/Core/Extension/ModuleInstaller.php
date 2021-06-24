@@ -504,11 +504,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // into its statically cached list.
       \Drupal::service('extension.list.module')->reset();
 
-      // Clear plugin manager caches.
-      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
-
       // Update the kernel to exclude the uninstalled modules.
       $this->updateKernel($module_filenames);
+
+      // Clear plugin manager caches.
+      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
       // Update the theme registry to remove the newly uninstalled module.
       drupal_theme_rebuild();
