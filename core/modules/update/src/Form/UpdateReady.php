@@ -127,9 +127,6 @@ class UpdateReady extends FormBase {
 
     $projects = $session->remove('update_manager_update_projects');
     if ($projects) {
-      // Make sure the Updater registry is loaded.
-      drupal_get_updaters();
-
       $updates = [];
       $directory = _update_manager_extract_directory();
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Updater;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\FileTransfer\FileTransferException;
 use Drupal\Core\FileTransfer\FileTransfer;
 
@@ -23,6 +24,13 @@ class Updater {
    * @var string
    */
   protected $root;
+
+  /**
+   * The updater registry.
+   *
+   * @var string[]
+   */
+  protected static $updaterRegistry;
 
   /**
    * Constructs a new updater.
@@ -82,7 +90,7 @@ class Updater {
    */
   public static function getUpdaterFromDirectory($directory) {
     // Gets a list of possible implementing classes.
-    $updaters = drupal_get_updaters();
+    $updaters = static::getUpdaterRegistry();
     foreach ($updaters as $updater) {
       $class = $updater['class'];
       if (call_user_func([$class, 'canUpdateDirectory'], $directory)) {
@@ -90,6 +98,47 @@ class Updater {
       }
     }
     throw new UpdaterException('Cannot determine the type of project.');
+  }
+
+  /**
+   * Assembles the Drupal Updater registry.
+   *
+   * An Updater is a class that knows how to update various parts of the Drupal
+   * file system, for example to update modules that have newer releases, or to
+   * install a new theme.
+   *
+   * @return string[]
+   *   An associative array of information about the updater(s) being provided.
+   *   This array is keyed by a unique identifier for each updater, and the
+   *   values are subarrays that can contain the following keys:
+   *   - class: The name of the PHP class which implements this updater.
+   *   - name: Human-readable name of this updater.
+   *   - weight: Controls what order the Updater classes are consulted to decide
+   *     which one should handle a given task. When an update task is being run,
+   *     the system will loop through all the Updater classes defined in this
+   *     registry in weight order and let each class respond to the task and
+   *     decide if each Updater wants to handle the task. In general, this
+   *     doesn't matter, but if you need to override an existing Updater, make
+   *     sure your Updater has a lighter weight so that it comes first.
+   *
+   * @see hook_updater_info()
+   * @see hook_updater_info_alter()
+   */
+  public static function getUpdaterRegistry() {
+    if (!isset(static::$updaterRegistry)) {
+      $module_handler = \Drupal::moduleHandler();
+      static::$updaterRegistry = $module_handler->invokeAll('updater_info');
+      $module_handler->alter('updater_info', static::$updaterRegistry);
+      uasort(static::$updaterRegistry, [SortArray::class, 'sortByWeightElement']);
+    }
+    return static::$updaterRegistry;
+  }
+
+  /**
+   * Resets updater registry memory cache.
+   */
+  public static function resetRegistryCache() {
+    static::$updaterRegistry = NULL;
   }
 
   /**

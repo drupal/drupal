@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Updater\Updater;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -69,7 +70,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
 
     // Create the directories within the root path within which the Update
     // Manager will install projects.
-    foreach (drupal_get_updaters() as $updater_info) {
+    foreach (Updater::getUpdaterRegistry() as $updater_info) {
       $updater = $updater_info['class'];
       $install_directory = $update_root . '/' . $updater::getRootDirectoryRelativePath();
       if (!is_dir($install_directory)) {

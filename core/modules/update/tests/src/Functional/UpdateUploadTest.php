@@ -76,7 +76,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertSession()->addressEquals('admin/modules/install');
 
     // Ensure that a new module can be extracted and installed.
-    $updaters = drupal_get_updaters();
+    $updaters = Updater::getUpdaterRegistry();
     $moduleUpdater = $updaters['module']['class'];
     $installedInfoFilePath = $this->container->get('update.root') . '/' . $moduleUpdater::getRootDirectoryRelativePath() . '/update_test_new_module/update_test_new_module.info.yml';
     $this->assertFileDoesNotExist($installedInfoFilePath);

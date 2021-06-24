@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Updater\Updater;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -625,6 +626,12 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   unit tests with a clean environment.
  */
 function drupal_static_reset($name = NULL) {
+  switch ($name) {
+    case 'drupal_get_updaters':
+      @trigger_error("Using drupal_static_reset() with 'drupal_get_updaters' as parameter is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Updater\Updater::resetRegistryCache() instead. See https://www.drupal.org/node/3047258", E_USER_DEPRECATED);
+      Updater::resetRegistryCache();
+      return;
+  }
   drupal_static($name, NULL, TRUE);
 }
 

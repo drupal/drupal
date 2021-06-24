@@ -14,6 +14,7 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Updater\Updater;
 
 /**
  * @defgroup php_wrappers PHP wrapper functions
@@ -634,18 +635,17 @@ function debug($data, $label = NULL, $print_r = TRUE) {
  * @return array
  *   The Drupal Updater class registry.
  *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Updater\Updater::getUpdaterRegistry() instead.
+ *
+ * @see https://www.drupal.org/node/3047258
  * @see \Drupal\Core\Updater\Updater
  * @see hook_updater_info()
  * @see hook_updater_info_alter()
  */
 function drupal_get_updaters() {
-  $updaters = &drupal_static(__FUNCTION__);
-  if (!isset($updaters)) {
-    $updaters = \Drupal::moduleHandler()->invokeAll('updater_info');
-    \Drupal::moduleHandler()->alter('updater_info', $updaters);
-    uasort($updaters, [SortArray::class, 'sortByWeightElement']);
-  }
-  return $updaters;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Updater\Updater::getUpdaterRegistry() instead. See https://www.drupal.org/node/3047258', E_USER_DEPRECATED);
+  return Updater::getUpdaterRegistry();
 }
 
 /**
