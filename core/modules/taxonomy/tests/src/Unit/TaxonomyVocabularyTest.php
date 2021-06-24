@@ -33,7 +33,7 @@ class TaxonomyVocabularyTest extends UnitTestCase {
 
   /**
    * @group legacy
-   * @expectedDeprecation Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. There's no replacement for this usage. See https://www.drupal.org/node/3039041.
+   * @expectedDeprecation Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in Drupal 9.3.0 and is removed from Drupal 10.0.0. There's no replacement for this usage. See https://www.drupal.org/node/3039041
    * @see drupal_static_reset()
    */
   public function testTaxonomyVocabularyGetNamesCacheResetDeprecation() {
