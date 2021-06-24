@@ -543,7 +543,7 @@ class BookManager implements BookManagerInterface {
     $nid = isset($link['nid']) ? $link['nid'] : 0;
     $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
 
-    // Create a cache ID for the given $nid, $link, $language and $max_depth.
+    // Create a cache ID for the given $nid, $link, $langcode and $max_depth.
     $cid = implode(':', ['book-links', $bid, $nid, $langcode, (int) $max_depth]);
 
     // Get it from cache, if available.
