@@ -393,7 +393,7 @@ class Table extends FormElement {
     // HTML ID to the options and attach the behavior.
     if (!empty($element['#tabledrag']) && isset($element['#attributes']['id'])) {
       $element['#attributes']['class'][] = 'tabledrag-enabled';
-      $element['#attributes']['data-drupal-tabledrag-id'] = $element['#attributes']['id'];
+      $element['#attributes']['data-drupal-tabledrag'] = $element['#attributes']['id'];
       foreach ($element['#tabledrag'] as $options) {
         $options['table_id'] = $element['#attributes']['id'];
         static::attachTabledrag($element, $options);
