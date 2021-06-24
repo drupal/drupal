@@ -51,7 +51,8 @@
           $(context)
             .find(`[data-drupal-tabledrag-id="${base}"]`)
             .once('tabledrag'),
-          base);
+          base,
+        );
       });
     },
   };
