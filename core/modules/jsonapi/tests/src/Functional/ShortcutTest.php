@@ -115,6 +115,9 @@ class ShortcutTest extends ResourceTestBase {
           'shortcut_set' => [
             'data' => [
               'type' => 'shortcut_set--shortcut_set',
+              'meta' => [
+                'drupal_internal__target_id' => 'default',
+              ],
               'id' => ShortcutSet::load('default')->uuid(),
             ],
             'links' => [

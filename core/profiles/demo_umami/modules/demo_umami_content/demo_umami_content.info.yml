@@ -3,6 +3,7 @@ description: Imports the content for the Umami demo.
 type: module
 version: VERSION
 package: 'Core (Experimental)'
+lifecycle: experimental
 hidden: true
 dependencies:
   - drupal:field

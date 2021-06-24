@@ -71,6 +71,13 @@ function views_post_update_remove_sorting_global_text_field() {
 }
 
 /**
+ * Rebuild routes to fix view title translations.
+ */
+function views_post_update_title_translations() {
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}
+
+/**
  * Add the identifier option to all sort handler configurations.
  */
 function views_post_update_sort_identifier(?array &$sandbox = NULL): void {

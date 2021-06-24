@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Tests\UnitTestCase;
@@ -519,9 +520,9 @@ COMMONTEST;
         ],
       ]);
       $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
-      $this->assertEquals($info_values['simple_string'], 'A simple string', 'Simple string value was parsed correctly.');
-      $this->assertEquals($info_values['version'], \Drupal::VERSION, 'Constant value was parsed correctly.');
-      $this->assertEquals($info_values['double_colon'], 'dummyClassName::method', 'Value containing double-colon was parsed correctly.');
+      $this->assertEquals('A simple string', $info_values['simple_string'], 'Simple string value was parsed correctly.');
+      $this->assertEquals(\Drupal::VERSION, $info_values['version'], 'Constant value was parsed correctly.');
+      $this->assertEquals('dummyClassName::method', $info_values['double_colon'], 'Value containing double-colon was parsed correctly.');
       $this->assertFalse($info_values['core_incompatible']);
     }
   }
@@ -548,7 +549,7 @@ CORETEST;
       ],
     ]);
     $info_values = $this->infoParser->parse(vfsStream::url("core/fixtures/$filename"));
-    $this->assertEquals($info_values['version'], \Drupal::VERSION, 'Constant value was parsed correctly.');
+    $this->assertEquals(\Drupal::VERSION, $info_values['version'], 'Constant value was parsed correctly.');
     $this->assertFalse($info_values['core_incompatible']);
     $this->assertEquals(\Drupal::VERSION, $info_values['core_version_requirement']);
   }
@@ -689,6 +690,112 @@ INFO;
       $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
       $this->assertSame(TRUE, $info_values['core_incompatible'], "Expected 'core_incompatible's for file: $filename");
     }
+  }
+
+  /**
+   * Tests an info file with valid lifecycle values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerValidLifecycle
+   */
+  public function testValidLifecycle($lifecycle, $expected) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+INFO;
+    if (!empty($lifecycle)) {
+      $info .= "\nlifecycle: $lifecycle\n";
+    }
+    vfsStream::setup('modules');
+    $filename = "lifecycle-$lifecycle.info.yml";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+    $this->assertSame($expected, $info_values[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]);
+  }
+
+  /**
+   * Data provider for testValidLifecycle().
+   */
+  public function providerValidLifecycle() {
+    return [
+      'empty' => [
+        '',
+        ExtensionLifecycle::STABLE,
+      ],
+      'experimental' => [
+        ExtensionLifecycle::EXPERIMENTAL,
+        ExtensionLifecycle::EXPERIMENTAL,
+      ],
+      'stable' => [
+        ExtensionLifecycle::STABLE,
+        ExtensionLifecycle::STABLE,
+      ],
+      'deprecated' => [
+        ExtensionLifecycle::DEPRECATED,
+        ExtensionLifecycle::DEPRECATED,
+      ],
+      'obsolete' => [
+        ExtensionLifecycle::OBSOLETE,
+        ExtensionLifecycle::OBSOLETE,
+      ],
+    ];
+  }
+
+  /**
+   * Tests an info file with invalid lifecycle values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerInvalidLifecycle
+   */
+  public function testInvalidLifecycle($lifecycle, $exception_message) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+INFO;
+    $info .= "\nlifecycle: $lifecycle\n";
+    vfsStream::setup('modules');
+    $filename = "lifecycle-$lifecycle.info.txt";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage($exception_message);
+    $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+    $this->assertEmpty($info_values);
+  }
+
+  /**
+   * Data provider for testInvalidLifecycle().
+   */
+  public function providerInvalidLifecycle() {
+    return [
+      'bogus' => [
+        'bogus',
+        "'lifecycle: bogus' is not valid",
+      ],
+      'two words' => [
+        'deprecated obsolete',
+        "'lifecycle: deprecated obsolete' is not valid",
+      ],
+      'wrong case' => [
+        'Experimental',
+        "'lifecycle: Experimental' is not valid",
+      ],
+    ];
   }
 
 }

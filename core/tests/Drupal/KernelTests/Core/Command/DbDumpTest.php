@@ -157,22 +157,22 @@ class DbDumpTest extends KernelTestBase {
 
     // Tables that are schema-only should not have data exported.
     $pattern = preg_quote("\$connection->insert('sessions')");
-    $this->assertNotRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Tables defined as schema-only do not have data exported to the script.');
+    $this->assertDoesNotMatchRegularExpression('/' . $pattern . '/', $command_tester->getDisplay(), 'Tables defined as schema-only do not have data exported to the script.');
 
     // Table data is exported.
     $pattern = preg_quote("\$connection->insert('config')");
-    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Table data is properly exported to the script.');
+    $this->assertMatchesRegularExpression('/' . $pattern . '/', $command_tester->getDisplay(), 'Table data is properly exported to the script.');
 
     // The test data are in the dump (serialized).
     $pattern = preg_quote(serialize($this->data));
-    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Generated data is found in the exported script.');
+    $this->assertMatchesRegularExpression('/' . $pattern . '/', $command_tester->getDisplay(), 'Generated data is found in the exported script.');
 
     // Check that the user account name and email address was properly escaped.
     // cspell:disable-next-line
     $pattern = preg_quote('"q\'uote\$dollar@example.com"');
-    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'The user account email address was properly escaped in the exported script.');
+    $this->assertMatchesRegularExpression('/' . $pattern . '/', $command_tester->getDisplay(), 'The user account email address was properly escaped in the exported script.');
     $pattern = preg_quote('\'$dollar\'');
-    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'The user account name was properly escaped in the exported script.');
+    $this->assertMatchesRegularExpression('/' . $pattern . '/', $command_tester->getDisplay(), 'The user account name was properly escaped in the exported script.');
   }
 
   /**
