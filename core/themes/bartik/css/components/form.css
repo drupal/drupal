@@ -132,6 +132,9 @@ textarea.form-textarea {
   color: #3b3b3b;
   border: 1px solid #ccc;
 }
+input.form-autocomplete {
+  width: 100%;
+}
 input.form-submit:hover,
 input.form-submit:focus {
   background: #dedede;
