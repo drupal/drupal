@@ -23,11 +23,11 @@ trait SerializedColumnNormalizerTrait {
   protected function checkForSerializedStrings($data, $class, FieldItemInterface $field_item) {
     // Require specialized denormalizers for fields with 'serialize' columns.
     // Note: this cannot be checked in ::supportsDenormalization() because at
-    //       that time we only have the field item class. ::hasSerializeColumn()
-    //       must be able to call $field_item->schema(), which requires a field
-    //       storage definition. To determine that, the entity type and bundle
-    //       must be known, which is contextual information that the Symfony
-    //       serializer does not pass to ::supportsDenormalization().
+    // that time we only have the field item class. ::hasSerializeColumn()
+    // must be able to call $field_item->schema(), which requires a field
+    // storage definition. To determine that, the entity type and bundle
+    // must be known, which is contextual information that the Symfony
+    // serializer does not pass to ::supportsDenormalization().
     if (!is_array($data)) {
       $data = [$field_item->getDataDefinition()->getMainPropertyName() => $data];
     }

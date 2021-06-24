@@ -344,7 +344,7 @@ class Renderer implements RendererInterface {
     // present (without such a callback, it would be impossible to replace the
     // placeholder), replace the current element with a placeholder.
     // @todo remove the isMethodCacheable() check when
-    //       https://www.drupal.org/node/2367555 lands.
+    //   https://www.drupal.org/node/2367555 lands.
     if (isset($elements['#create_placeholder']) && $elements['#create_placeholder'] === TRUE && $this->requestStack->getCurrentRequest()->isMethodCacheable()) {
       if (!isset($elements['#lazy_builder'])) {
         throw new \LogicException('When #create_placeholder is set, a #lazy_builder callback must be present as well.');

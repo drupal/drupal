@@ -225,7 +225,7 @@ class MediaLibraryUiBuilder {
       return [];
     }
 
-    // @todo: Add a class to the li element.
+    // @todo Add a class to the li element.
     //   https://www.drupal.org/project/drupal/issues/3029227
     $menu = [
       '#theme' => 'links__media_library_menu',

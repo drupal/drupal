@@ -484,7 +484,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Provide a default configuration, if not set.
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
-      //  https://www.drupal.org/node/2447753.
+      //   https://www.drupal.org/node/2447753.
       if (function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = ApcuFileCacheBackend::class;
       }

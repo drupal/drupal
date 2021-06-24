@@ -186,15 +186,15 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
       // 'xyabz_', 'foo_', 'bar_', 'baz_', 'șz_', NULL, '<strong>').
       //
       // Note: Even we set the name as NULL, when retrieving the label from the
-      //   entity we'll get an empty string, meaning that this match operator
-      //   will return TRUE every time.
+      // entity we'll get an empty string, meaning that this match operator
+      // will return TRUE every time.
       [NULL, 'IS NOT NULL', 0, 9, static::$labels, 9],
       // Referenceables null, no limit. Expecting 9 items ('abc', 'Xyz_',
       // 'xyabz_', 'foo_', 'bar_', 'baz_', 'șz_', NULL, '<strong>').
       //
       // Note: Even we set the name as NULL, when retrieving the label from the
-      //   entity we'll get an empty string, meaning that this match operator
-      //   will return FALSE every time.
+      // entity we'll get an empty string, meaning that this match operator
+      // will return FALSE every time.
       [NULL, 'IS NULL', 0, 9, static::$labels, 9],
       // Referenceables containing '<strong>' markup, no limit. Expecting 1 item
       // ('<strong>').
