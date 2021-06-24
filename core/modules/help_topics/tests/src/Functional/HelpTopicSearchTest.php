@@ -264,6 +264,28 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   }
 
   /**
+   * Tests uninstalling the search module.
+   */
+  public function testUninstallSearch() {
+    // Ensure we can uninstall search and use the help system without
+    // breaking.
+    $this->drupalLogin($this->rootUser);
+    $edit = [];
+    $edit['uninstall[search]'] = TRUE;
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
+    $this->submitForm([], 'Uninstall');
+    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
+    $this->drupalGet('admin/help');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Rebuild the container to reflect the latest changes.
+    $this->rebuildContainer();
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('help_topics'), 'The help_topics module is still installed.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('search'), 'The search module is uninstalled.');
+  }
+
+  /**
    * Asserts that help search returned the expected number of results.
    *
    * @param int $count
