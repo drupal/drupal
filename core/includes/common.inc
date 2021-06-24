@@ -635,7 +635,7 @@ function debug($data, $label = NULL, $print_r = TRUE) {
  * @return array
  *   The Drupal Updater class registry.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Updater\Updater::getUpdaterRegistry() instead.
  *
  * @see https://www.drupal.org/node/3047258
@@ -644,7 +644,7 @@ function debug($data, $label = NULL, $print_r = TRUE) {
  * @see hook_updater_info_alter()
  */
 function drupal_get_updaters() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Updater\Updater::getUpdaterRegistry() instead. See https://www.drupal.org/node/3047258', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Updater\Updater::getUpdaterRegistry() instead. See https://www.drupal.org/node/3047258', E_USER_DEPRECATED);
   return Updater::getUpdaterRegistry();
 }
 
