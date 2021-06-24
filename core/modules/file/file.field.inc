@@ -185,16 +185,22 @@ function template_preprocess_file_upload_help(&$variables) {
 }
 
 /**
- * Determine whether a field references files stored in {file_managed}.
+ * Determines whether a field references files stored in {file_managed}.
  *
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   A field definition.
  *
  * @return bool
- *   The field column if the field references {file_managed}.fid, typically
- *   fid, FALSE if it does not.
+ *   The field column if the field references {file_managed}.fid, typically fid,
+ *   FALSE if it does not.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is
+ *   no replacement for this function.
+ *
+ * @see https://www.drupal.org/node/3035357
  */
 function file_field_find_file_reference_column(FieldDefinitionInterface $field) {
+  @trigger_error('file_field_find_file_reference_column() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
   $schema = $field->getFieldStorageDefinition()->getSchema();
   foreach ($schema['foreign keys'] as $data) {
     if ($data['table'] == 'file_managed') {

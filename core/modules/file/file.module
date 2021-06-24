@@ -652,9 +652,12 @@ function file_file_download($uri) {
     return;
   }
 
+  /** @var \Drupal\file\FileUsage\FileUsageInterface $usage */
+  $file_usage = \Drupal::service('file.usage');
+
   // Find out if a temporary file is still used in the system.
   if ($file->isTemporary()) {
-    $usage = \Drupal::service('file.usage')->listUsage($file);
+    $usage = $file_usage->listUsage($file);
     if (empty($usage) && $file->getOwnerId() != \Drupal::currentUser()->id()) {
       // Deny access to temporary files without usage that are not owned by the
       // same user. This prevents the security issue that a private file that
@@ -667,7 +670,7 @@ function file_file_download($uri) {
   }
 
   // Find out which (if any) fields of this type contain the file.
-  $references = file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_CURRENT, NULL);
+  $references = $file_usage->getReferences($file, NULL, EntityStorageInterface::FIELD_LOAD_CURRENT, NULL);
 
   // Stop processing if there are no references in order to avoid returning
   // headers for files controlled by other modules. Make an exception for
@@ -1679,9 +1682,9 @@ function file_icon_map($mime_type) {
  * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param \Drupal\Core\Field\FieldDefinitionInterface|null $field
- *   (optional) A field definition to be used for this check. If given,
- *   limits the reference check to the given field. Defaults to NULL.
- * @param int $age
+ *   (optional) A field definition to be used for this check. If given, limits
+ *   the reference check to the given field. Defaults to NULL.
+ * @param string $age
  *   (optional) A constant that specifies which references to count. Use
  *   EntityStorageInterface::FIELD_LOAD_REVISION (the default) to retrieve all
  *   references within all revisions or
@@ -1694,76 +1697,19 @@ function file_icon_map($mime_type) {
  *   returned. Defaults to 'file'.
  *
  * @return array
- *   A multidimensional array. The keys are field_name, entity_type,
- *   entity_id and the value is an entity referencing this file.
+ *   A multidimensional array. The keys are field_name, entity_type, entity_id
+ *   and the value is an entity referencing this file.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *    \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead.
+ *
+ * @see https://www.drupal.org/node/3035357
  *
  * @ingroup file
  */
 function file_get_file_references(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
-  $references = &drupal_static(__FUNCTION__, []);
-  $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', []);
-
-  // Fill the static cache, disregard $field and $field_type for now.
-  if (!isset($references[$file->id()][$age])) {
-    $references[$file->id()][$age] = [];
-    $usage_list = \Drupal::service('file.usage')->listUsage($file);
-    $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : [];
-    foreach ($file_usage_list as $entity_type_id => $entity_ids) {
-      $entities = \Drupal::entityTypeManager()
-        ->getStorage($entity_type_id)->loadMultiple(array_keys($entity_ids));
-      foreach ($entities as $entity) {
-        $bundle = $entity->bundle();
-        // We need to find file fields for this entity type and bundle.
-        if (!isset($file_fields[$entity_type_id][$bundle])) {
-          $file_fields[$entity_type_id][$bundle] = [];
-          // This contains the possible field names.
-          foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-            // If this is the first time this field type is seen, check
-            // whether it references files.
-            if (!isset($field_columns[$field_definition->getType()])) {
-              $field_columns[$field_definition->getType()] = file_field_find_file_reference_column($field_definition);
-            }
-            // If the field type does reference files then record it.
-            if ($field_columns[$field_definition->getType()]) {
-              $file_fields[$entity_type_id][$bundle][$field_name] = $field_columns[$field_definition->getType()];
-            }
-          }
-        }
-        foreach ($file_fields[$entity_type_id][$bundle] as $field_name => $field_column) {
-          // Iterate over the field items to find the referenced file and field
-          // name. This will fail if the usage checked is in a non-current
-          // revision because field items are from the current
-          // revision.
-          // We also iterate over all translations because a file can be linked
-          // to a language other than the default.
-          foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-            foreach ($entity->getTranslation($langcode)->get($field_name) as $item) {
-              if ($file->id() == $item->{$field_column}) {
-                $references[$file->id()][$age][$field_name][$entity_type_id][$entity->id()] = $entity;
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  $return = $references[$file->id()][$age];
-  // Filter the static cache down to the requested entries. The usual static
-  // cache is very small so this will be very fast.
-  $entity_field_manager = \Drupal::service('entity_field.manager');
-  if ($field || $field_type) {
-    foreach ($return as $field_name => $data) {
-      foreach (array_keys($data) as $entity_type_id) {
-        $field_storage_definitions = $entity_field_manager->getFieldStorageDefinitions($entity_type_id);
-        $current_field = $field_storage_definitions[$field_name];
-        if (($field_type && $current_field->getType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
-          unset($return[$field_name][$entity_type_id]);
-        }
-      }
-    }
-  }
-  return $return;
+  @trigger_error('file_get_file_references() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+  return \Drupal::service('file.usage')->getReferences($file, $field, $age, $field_type);
 }
 
 /**

@@ -29,7 +29,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowedIfHasPermission($account, 'access content');
         }
       }
-      elseif ($references = $this->getFileReferences($entity)) {
+      elseif ($references = \Drupal::service('file.usage')->getReferences($entity, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL)) {
         foreach ($references as $field_name => $entity_map) {
           foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
             /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
@@ -76,7 +76,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
   }
 
   /**
-   * Wrapper for file_get_file_references().
+   * Wrapper for \Drupal::service('file.usage')->getReferences().
    *
    * @param \Drupal\file\FileInterface $file
    *   The file object for which to get references.
@@ -85,10 +85,15 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    *   A multidimensional array. The keys are field_name, entity_type,
    *   entity_id and the value is an entity referencing this file.
    *
-   * @see file_get_file_references()
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal::service('file.usage')->getReferences() instead.
+   *
+   * @see https://www.drupal.org/node/3035357
+   * @see \Drupal\file\FileUsage\FileUsageInterface::getReferences()
    */
   protected function getFileReferences(FileInterface $file) {
-    return file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
+    @trigger_error('\Drupal\file\FileAccessControlHandler::getFileReferences() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+    return \Drupal::service('file.usage')->getReferences($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
   }
 
   /**
