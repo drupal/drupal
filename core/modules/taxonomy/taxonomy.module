@@ -170,14 +170,14 @@ function taxonomy_vocabulary_static_reset(array $ids = NULL) {
  * @return array
  *   A list of existing vocabulary IDs.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->loadMultiple()
  *   instead, to get a list of vocabulary entities keyed by vocabulary ID.
  *
  * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_vocabulary_get_names() {
-  @trigger_error('taxonomy_vocabulary_get_names() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->loadMultiple() instead, to get a list of vocabulary entities keyed by vocabulary ID. See https://www.drupal.org/node/3039041.', E_USER_DEPRECATED);
+  @trigger_error("taxonomy_vocabulary_get_names() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->loadMultiple() instead, to get a list of vocabulary entities keyed by vocabulary ID. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
   $vids = array_keys(\Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->loadMultiple());
   return array_combine($vids, $vids);
 }
