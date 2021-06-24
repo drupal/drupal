@@ -26,6 +26,13 @@ class NodeListBuilder extends EntityListBuilder {
   protected $dateFormatter;
 
   /**
+   * Memory cache for node marks.
+   *
+   * @var int[]
+   */
+  protected $nodeMark = [];
+
+  /**
    * Constructs a new NodeListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -93,7 +100,7 @@ class NodeListBuilder extends EntityListBuilder {
     /** @var \Drupal\node\NodeInterface $entity */
     $mark = [
       '#theme' => 'mark',
-      '#mark_type' => node_mark($entity->id(), $entity->getChangedTime()),
+      '#mark_type' => $this->getNodeMark($entity->id(), $entity->getChangedTime()),
     ];
     $langcode = $entity->language()->getId();
     $uri = $entity->toUrl();
@@ -119,6 +126,33 @@ class NodeListBuilder extends EntityListBuilder {
     }
     $row['operations']['data'] = $this->buildOperations($entity);
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * Determines the type of marker to be displayed for a given node.
+   *
+   * @param int $nid
+   *   Node ID whose history supplies the "last viewed" timestamp.
+   * @param int $timestamp
+   *   Time which is compared against node's "last viewed" timestamp.
+   *
+   * @return int
+   *   One of the MARK constants.
+   */
+  protected function getNodeMark($nid, $timestamp) {
+    if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
+      return MARK_READ;
+    }
+    if (!isset($this->nodeMark[$nid])) {
+      $this->nodeMark[$nid] = history_read($nid);
+    }
+    if ($this->nodeMark[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
+      return MARK_NEW;
+    }
+    elseif ($timestamp > $this->nodeMark[$nid] && $timestamp > HISTORY_READ_LIMIT) {
+      return MARK_UPDATED;
+    }
+    return MARK_READ;
   }
 
 }

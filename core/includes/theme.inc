@@ -30,10 +30,11 @@ use Drupal\Core\Utility\TableSort;
 /**
  * @defgroup content_flags Content markers
  * @{
- * Markers used by mark.html.twig and node_mark() to designate content.
+ * Markers used by mark.html.twig & \Drupal\node\NodeListBuilder::getNodeMark()
+ * to designate content.
  *
  * @see mark.html.twig
- * @see node_mark()
+ * @see \Drupal\node\NodeListBuilder::getNodeMark()
  */
 
 /**

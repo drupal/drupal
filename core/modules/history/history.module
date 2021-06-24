@@ -6,7 +6,7 @@
  *
  * @todo
  * - Generic helper for _forum_user_last_visit() + history_read().
- * - Generic helper for node_mark().
+ * - Generic helper for \Drupal\node\NodeListBuilder::getNodeMark().
  */
 
 use Drupal\Core\Url;
