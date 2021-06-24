@@ -528,7 +528,7 @@ class Table extends FormElement {
    *
    * @see \Drupal\menu_ui\MenuForm::buildOverviewForm()
    */
-  public static function attachTabledrag(&$element, array $options) {
+  public static function attachTabledrag(array &$element, array $options): void {
     // Add default values to elements.
     $options += [
       'subgroup' => NULL,
