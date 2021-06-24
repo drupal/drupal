@@ -389,7 +389,7 @@ class UrlGeneratorTest extends UnitTestCase {
       ->method('processOutbound');
 
     $path = $this->generator->getPathFromRoute('test_3');
-    $this->assertEquals($path, 'test/two');
+    $this->assertEquals('test/two', $path);
   }
 
   /**

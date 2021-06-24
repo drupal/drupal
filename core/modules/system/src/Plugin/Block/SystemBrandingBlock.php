@@ -75,19 +75,14 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    // Get the theme.
-    $theme = $form_state->get('block_theme');
-
     // Get permissions.
     $url_system_theme_settings = new Url('system.theme_settings');
-    $url_system_theme_settings_theme = new Url('system.theme_settings_theme', ['theme' => $theme]);
 
-    if ($url_system_theme_settings->access() && $url_system_theme_settings_theme->access()) {
-      // Provide links to the Appearance Settings and Theme Settings pages
-      // if the user has access to administer themes.
-      $site_logo_description = $this->t('Defined on the <a href=":appearance">Appearance Settings</a> or <a href=":theme">Theme Settings</a> page.', [
-        ':appearance' => $url_system_theme_settings->toString(),
-        ':theme' => $url_system_theme_settings_theme->toString(),
+    if ($url_system_theme_settings->access()) {
+      // Provide links to the Appearance Settings page if the user has access to
+      // administer themes.
+      $site_logo_description = $this->t('Defined on the <a href="@appearance">Appearance Settings</a> page.', [
+        '@appearance' => $url_system_theme_settings->toString(),
       ]);
     }
     else {

@@ -38,16 +38,26 @@ class ExposedFormTest extends ViewTestBase {
    */
   protected $defaultTheme = 'classy';
 
+  /**
+   * Nodes to test.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected $nodes = [];
+
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->enableViewsTestModule();
 
     $this->drupalCreateContentType(['type' => 'article']);
+    $this->drupalCreateContentType(['type' => 'page']);
 
+    $this->nodes = [];
     // Create some random nodes.
     for ($i = 0; $i < 5; $i++) {
-      $this->drupalCreateNode(['type' => 'article']);
+      $this->nodes[] = $this->drupalCreateNode(['type' => 'article']);
+      $this->nodes[] = $this->drupalCreateNode(['type' => 'page']);
     }
   }
 
@@ -198,12 +208,13 @@ class ExposedFormTest extends ViewTestBase {
 
   /**
    * Tests the exposed block functionality.
+   *
+   * @dataProvider providerTestExposedBlock
    */
-  public function testExposedBlock() {
-    $this->drupalCreateContentType(['type' => 'page']);
+  public function testExposedBlock($display) {
     $view = Views::getView('test_exposed_block');
-    $view->setDisplay('page_1');
-    $block = $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-page_1');
+    $view->setDisplay($display);
+    $block = $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-' . $display);
 
     // Set label to display on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('label_display', TRUE);
@@ -248,11 +259,33 @@ class ExposedFormTest extends ViewTestBase {
     // Test that the correct option is selected after form submission.
     $this->assertCacheContext('url');
     $this->assertTrue($this->assertSession()->optionExists('Content: Type', 'All')->isSelected());
-    foreach (['All', 'article', 'page'] as $argument) {
-      $this->drupalGet('test_exposed_block', ['query' => ['type' => $argument]]);
+    $arguments = [
+      'All' => ['article', 'page'],
+      'article' => ['article'],
+      'page' => ['page'],
+    ];
+    foreach ($arguments as $argument => $bundles) {
+      $elements[0]->find('css', 'select')->selectOption($argument);
+      $elements[0]->findButton('Apply')->click();
       $this->assertCacheContext('url');
       $this->assertTrue($this->assertSession()->optionExists('Content: Type', $argument)->isSelected());
+      $this->assertNodesExist($bundles);
     }
+    $elements[0]->findButton('Reset')->click();
+    $this->assertNodesExist($arguments['All']);
+  }
+
+  /**
+   * Data provider for testing different types of displays.
+   *
+   * @return array
+   *   Array of display names to test.
+   */
+  public function providerTestExposedBlock() {
+    return [
+      'page_display' => ['page_1'],
+      'block_display' => ['block_1'],
+    ];
   }
 
   /**
@@ -433,6 +466,23 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertTrue($this->assertSession()->optionExists('type[]', 'post')->isSelected());
     $this->assertSession()->fieldValueEquals('created[min]', '-1 month');
     $this->assertSession()->fieldValueEquals('created[max]', '+1 month');
+  }
+
+  /**
+   * Asserts that nodes of only given bundles exist.
+   *
+   * @param array $bundles
+   *   Bundles of nodes.
+   */
+  protected function assertNodesExist(array $bundles) {
+    foreach ($this->nodes as $node) {
+      if (in_array($node->bundle(), $bundles)) {
+        $this->assertSession()->pageTextContains($node->label());
+      }
+      else {
+        $this->assertSession()->pageTextNotContains($node->label());
+      }
+    }
   }
 
 }

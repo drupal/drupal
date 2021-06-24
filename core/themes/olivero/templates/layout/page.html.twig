@@ -91,24 +91,31 @@
 
     <div id="main-wrapper" class="layout-main-wrapper layout-container">
       <div id="main" class="layout-main">
-        <main id="content" class="main-content " role="main">
+        <div class="main-content">
           <a id="main-content" tabindex="-1"></a>
           {{ page.hero }}
           <div class="main-content__container container">
             {{ page.highlighted }}
             {{ page.breadcrumb }}
-            {{ page.content_above }}
+
             {% if page.sidebar %}
               <div class="sidebar-grid grid-full">
-                {{ page.content }}
+                <main role="main" class="site-main ie11-autorow">
+                  {{ page.content_above }}
+                  {{ page.content }}
+                </main>
+
                 {{ page.sidebar }}
               </div>
             {% else %}
-              {{ page.content }}
+              <main role="main">
+                {{ page.content_above }}
+                {{ page.content }}
+              </main>
             {% endif %}
             {{ page.content_below }}
           </div>
-        </main>
+        </div>
         <div class="social-bar">
           {{ page.social }}
         </div>

@@ -57,7 +57,7 @@ class PagerTest extends ViewTestBase {
     ]);
     $this->drupalLogin($admin_user);
     // Test behavior described in
-    //   https://www.drupal.org/node/652712#comment-2354918.
+    // https://www.drupal.org/node/652712#comment-2354918.
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
 
@@ -136,7 +136,7 @@ class PagerTest extends ViewTestBase {
     $this->assertSession()->pageTextContains('Mini');
 
     // Test behavior described in
-    //   https://www.drupal.org/node/652712#comment-2354400.
+    // https://www.drupal.org/node/652712#comment-2354400.
     $view = Views::getView('test_store_pager_settings');
     // Make it editable in the admin interface.
     $view->save();
