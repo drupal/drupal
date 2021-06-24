@@ -134,10 +134,13 @@ messages:
   js:
     js/messages.js: {}
 
-sidebar:
+menu-sidebar:
   css:
     component:
-      css/components/sidebar.css: {}
+      css/components/navigation/menu-sidebar.css: {}
+
+sidebar:
+  css:
     layout:
       css/layout/layout-sidebar.css: {}
 
