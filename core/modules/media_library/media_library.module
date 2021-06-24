@@ -375,7 +375,7 @@ function media_library_local_tasks_alter(&$local_tasks) {
  */
 function media_library_image_style_access(EntityInterface $entity, $operation, AccountInterface $account) {
   // Prevent the fallback 'media_library' image style from being deleted.
-  // @todo: Lock the image style instead of preventing delete access.
+  // @todo Lock the image style instead of preventing delete access.
   //   https://www.drupal.org/project/drupal/issues/2247293
   if ($operation === 'delete' && $entity->id() === 'media_library') {
     return AccessResult::forbidden();
@@ -459,7 +459,7 @@ function _media_library_configure_view_display(MediaTypeInterface $type) {
     $display->removeComponent($name);
   }
 
-  // @todo: Remove dependency on 'medium' and 'thumbnail' image styles from
+  // @todo Remove dependency on 'medium' and 'thumbnail' image styles from
   //   media and media library modules.
   //   https://www.drupal.org/project/drupal/issues/3030437
   $image_style = ImageStyle::load('medium');

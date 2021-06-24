@@ -431,7 +431,7 @@ class XssTest extends TestCase {
         ['p'],
       ],
     ];
-    // @fixme This dataset currently fails under 5.4 because of
+    // @todo This dataset currently fails under 5.4 because of
     //   https://www.drupal.org/node/1210798. Restore after its fixed.
     if (version_compare(PHP_VERSION, '5.4.0', '<')) {
       $cases[] = [

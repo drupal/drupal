@@ -275,7 +275,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $provider = $entity_type->getProvider();
     foreach ($base_field_definitions as $definition) {
       // @todo Remove this check once FieldDefinitionInterface exposes a proper
-      //  provider setter. See https://www.drupal.org/node/2225961.
+      //   provider setter. See https://www.drupal.org/node/2225961.
       if ($definition instanceof BaseFieldDefinition) {
         $definition->setProvider($provider);
       }
@@ -289,7 +289,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
-          //  proper provider setter. See https://www.drupal.org/node/2225961.
+          //   proper provider setter. See https://www.drupal.org/node/2225961.
           if ($definition instanceof BaseFieldDefinition && $definition->getProvider() == NULL) {
             $definition->setProvider($module);
           }
@@ -397,7 +397,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $provider = $entity_type->getProvider();
     foreach ($bundle_field_definitions as $definition) {
       // @todo Remove this check once FieldDefinitionInterface exposes a proper
-      //  provider setter. See https://www.drupal.org/node/2225961.
+      //   provider setter. See https://www.drupal.org/node/2225961.
       if ($definition instanceof BaseFieldDefinition) {
         $definition->setProvider($provider);
       }
@@ -411,7 +411,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
-          //  proper provider setter. See https://www.drupal.org/node/2225961.
+          //   proper provider setter. See https://www.drupal.org/node/2225961.
           if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
           }
@@ -587,7 +587,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
-          //  proper provider setter. See https://www.drupal.org/node/2225961.
+          //   proper provider setter. See https://www.drupal.org/node/2225961.
           if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
             $definition->setName($field_name);

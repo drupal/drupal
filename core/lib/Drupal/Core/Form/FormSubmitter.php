@@ -101,7 +101,7 @@ class FormSubmitter implements FormSubmitterInterface {
       // Check if a previous _submit handler has set a batch, but make sure we
       // do not react to a batch that is already being processed (for instance
       // if a batch operation performs a
-      //  \Drupal\Core\Form\FormBuilderInterface::submitForm()).
+      // \Drupal\Core\Form\FormBuilderInterface::submitForm()).
       if (($batch = &$this->batchGet()) && !isset($batch['id'])) {
         // Some previous submit handler has set a batch. To ensure correct
         // execution order, store the call in a special 'control' batch set.

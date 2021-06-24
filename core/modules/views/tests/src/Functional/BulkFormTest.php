@@ -197,7 +197,7 @@ class BulkFormTest extends BrowserTestBase {
 
     // Test that the bulk form works when multiple nodes are selected
     // but all of the selected nodes are already deleted
-    //  by another user before the loaded bulk form was submitted.
+    // by another user before the loaded bulk form was submitted.
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
     foreach ($nodes as $key => $node) {

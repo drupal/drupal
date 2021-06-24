@@ -16,11 +16,13 @@ class GraphTest extends TestCase {
    */
   public function testDepthFirstSearch() {
     // The sample graph used is:
+    // @code
     // 1 --> 2 --> 3     5 ---> 6
     //       |     ^     ^
     //       |     |     |
     //       |     |     |
     //       +---> 4 <-- 7      8 ---> 9
+    // @endcode
     $graph = $this->normalizeGraph([
       1 => [2],
       2 => [3, 4],

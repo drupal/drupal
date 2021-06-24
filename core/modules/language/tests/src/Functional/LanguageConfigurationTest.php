@@ -113,7 +113,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The prefix may only be left blank for the selected detection fallback language.');
 
-    //  Check that prefix cannot be changed to contain a slash.
+    // Check that prefix cannot be changed to contain a slash.
     $edit = [
       'prefix[en]' => 'foo/bar',
     ];

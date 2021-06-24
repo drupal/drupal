@@ -913,9 +913,9 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface, LegacyMimeTy
 
     // Iterate over the file parts, trying to find a match.
     // For my.awesome.image.jpeg, we try:
-    //   - jpeg
-    //   - image.jpeg, and
-    //   - awesome.image.jpeg
+    // - jpeg
+    // - image.jpeg, and
+    // - awesome.image.jpeg
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
       if (isset($this->mapping['extensions'][$extension])) {

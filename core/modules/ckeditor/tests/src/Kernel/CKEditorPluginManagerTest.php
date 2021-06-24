@@ -86,13 +86,13 @@ class CKEditorPluginManagerTest extends KernelTestBase {
     $this->assertSame(['internal' => NULL] + $enabled_plugins, $this->manager->getEnabledPluginFiles($editor, TRUE), 'Only the "internal" plugin is enabled.');
 
     // Case 3: enable each of the newly available plugins, if possible:
-    // a. Llama: cannot be enabled, since it does not implement
+    // 1. Llama: cannot be enabled, since it does not implement
     //    CKEditorPluginContextualInterface nor CKEditorPluginButtonsInterface.
-    // b. LlamaContextual: enabled by adding the 'Strike' button, which is
+    // 2. LlamaContextual: enabled by adding the 'Strike' button, which is
     //    part of another plugin!
-    // c. LlamaButton: automatically enabled by adding its 'Llama' button.
-    // d. LlamaContextualAndButton: enabled by either b or c.
-    // e. LlamaCSS: automatically enabled by add its 'LlamaCSS' button.
+    // 3. LlamaButton: automatically enabled by adding its 'Llama' button.
+    // 4. LlamaContextualAndButton: enabled by either 2 or 3.
+    // 5. LlamaCSS: automatically enabled by add its 'LlamaCSS' button.
     // Below, we will first enable the "Llama" button, which will cause the
     // LlamaButton and LlamaContextualAndButton plugins to be enabled. Then we
     // will remove the "Llama" button and add the "Strike" button, which will

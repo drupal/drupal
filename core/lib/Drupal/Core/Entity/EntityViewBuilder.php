@@ -292,7 +292,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         $this->alterBuild($build_list[$key], $entity, $display, $view_mode);
 
         // Assign the weights configured in the display.
-        // @todo: Once https://www.drupal.org/node/1875974 provides the missing
+        // @todo Once https://www.drupal.org/node/1875974 provides the missing
         //   API, only do it for 'extra fields', since other components have
         //   been taken care of in EntityViewDisplay::buildMultiple().
         foreach ($display->getComponents() as $name => $options) {
