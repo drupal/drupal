@@ -19,38 +19,19 @@ class BookManagerDeprecationTest extends KernelTestBase {
   /**
    * @see drupal_static_reset()
    */
-  public function testBookSubtreeDataDrupalStaticCacheDeprecation() {
-    $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::bookSubtreeData' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
-    drupal_static_reset('Drupal\book\BookManager::bookSubtreeData');
-    // Ensure at least one assertion.
-    $this->assertTrue(TRUE);
-  }
-
-  /**
-   * @see drupal_static_reset()
-   */
-  public function testBookTreeAllDataDrupalStaticCacheDeprecation() {
-    $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::bookTreeAllData' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
-    drupal_static_reset('Drupal\book\BookManager::bookTreeAllData');
-    // Ensure at least one assertion.
-    $this->assertTrue(TRUE);
-  }
-
-  /**
-   * @see drupal_static_reset()
-   */
-  public function testDoBookTreeBuildDrupalStaticCacheDeprecation() {
-    $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::doBookTreeBuild' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
-    drupal_static_reset('Drupal\book\BookManager::doBookTreeBuild');
-    // Ensure at least one assertion.
-    $this->assertTrue(TRUE);
+  public function testDrupalStaticResetDeprecation(): void {
+    foreach (['bookSubtreeData', 'bookTreeAllData', 'doBookTreeBuild'] as $method) {
+      $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::{$method}' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
+      drupal_static_reset("Drupal\book\BookManager::{$method}");
+    }
   }
 
   /**
    * @covers ::__construct
    */
-  public function testBackendChainOptionalParameterDeprecation() {
-    $this->expectDeprecation('Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:9.3.0. The $book_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
+  public function testOptionalParametersDeprecation(): void {
+    $this->expectDeprecation('Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:9.3.0 and the $book_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
+    $this->expectDeprecation('Calling BookManager::__construct() without the $book_memory_cache argument is deprecated in drupal:9.3.0 and the $book_memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
     new BookManager(
       $this->container->get('entity_type.manager'),
       $this->container->get('string_translation'),
@@ -58,33 +39,8 @@ class BookManagerDeprecationTest extends KernelTestBase {
       $this->container->get('book.outline_storage'),
       $this->container->get('renderer'),
       $this->container->get('language_manager'),
-      $this->container->get('entity.repository'),
-      // The optional parameter is passed as NULL.
-      NULL,
-      $this->container->get('book.memory_cache')
+      $this->container->get('entity.repository')
     );
-    // Ensure at least one assertion.
-    $this->assertTrue(TRUE);
-  }
-
-  /**
-   * @covers ::__construct
-   */
-  public function testMemoryCacheOptionalParameterDeprecation() {
-    $this->expectDeprecation('Calling BookManager::__construct() without the $book_memory_cache argument is deprecated in drupal:9.3.0. The $book_memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
-    new BookManager(
-      $this->container->get('entity_type.manager'),
-      $this->container->get('string_translation'),
-      $this->container->get('config.factory'),
-      $this->container->get('book.outline_storage'),
-      $this->container->get('renderer'),
-      $this->container->get('language_manager'),
-      $this->container->get('entity.repository'),
-      $this->container->get('book.cache')
-      // The optional parameter is not passed.
-    );
-    // Ensure at least one assertion.
-    $this->assertTrue(TRUE);
   }
 
 }
