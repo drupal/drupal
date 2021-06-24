@@ -6,7 +6,7 @@
 @import "../base/variables.pcss.css";
 
 .sidebar-grid {
-  & > .grid-full {
+  & > .site-main {
     grid-column: 1 / 7;
     align-self: flex-start;
     -ms-grid-row-align: start;
@@ -16,57 +16,36 @@
     }
 
     @media (--lg) {
-      grid-template-columns: repeat(10, minmax(0, 1fr));
-      grid-column: 1 / 11;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-column: 3 / 11;
+
+      & > .region--content-above,
+      & > .region--content {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        grid-column: 1 / 9;
+      }
 
       & .layout--content-narrow,
       & .layout--pass--content-narrow > *,
       & .layout--content-medium,
       & .layout--pass--content-medium > * {
-        grid-column: 3 / 11;
-
-        & .grid-full {
-          grid-template-columns: repeat(8, minmax(0, 1fr));
-        }
-
-        & .layout--content-narrow,
-        & .layout--pass--content-narrow > *,
-        & .layout--content-medium,
-        & .layout--pass--content-medium > * {
-          grid-column: 1 / 9;
-        }
+        grid-column: 1 / 9;
       }
     }
   }
 
-  & .layout--content-narrow,
-  & .layout--pass--content-narrow > *,
-  & .layout--content-medium,
-  & .layout--pass--content-medium > * {
+  & .region--sidebar {
+    -ms-grid-row: 2;
+    grid-column: 1 / 7;
+
     @media (--grid-md) {
-      grid-column: 2 / 14;
+      grid-column: 3 / 13;
     }
 
     @media (--lg) {
-      grid-column: 3 / 11;
+      -ms-grid-row: 1;
+      grid-column: 12 / 15;
     }
-  }
-}
-
-.region--sidebar {
-  -ms-grid-row: 2;
-  grid-column: 1 / 7;
-
-  @media (--grid-md) {
-    grid-column: 3 / 13;
-  }
-
-  @media (--lg) {
-    -ms-grid-row: 1;
-    grid-column: 11 / 15;
-  }
-
-  @media (--xl) {
-    grid-column: 12 / 15;
   }
 }
