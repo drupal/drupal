@@ -222,128 +222,12 @@ function drupal_js_defaults($data = NULL) {
 /**
  * Assists in attaching the tableDrag JavaScript behavior to a themed table.
  *
- * Draggable tables should be used wherever an outline or list of sortable items
- * needs to be arranged by an end-user. Draggable tables are very flexible and
- * can manipulate the value of form elements placed within individual columns.
- *
- * To set up a table to use drag and drop in place of weight select-lists or in
- * place of a form that contains parent relationships, the form must be themed
- * into a table. The table must have an ID attribute set and it
- * may be set as follows:
- * @code
- * $table = array(
- *   '#type' => 'table',
- *   '#header' => $header,
- *   '#rows' => $rows,
- *   '#attributes' => array(
- *     'id' => 'my-module-table',
- *   ),
- * );
- * return \Drupal::service('renderer')->render($table);
- * @endcode
- *
- * In the theme function for the form, a special class must be added to each
- * form element within the same column, "grouping" them together.
- *
- * In a situation where a single weight column is being sorted in the table, the
- * classes could be added like this (in the theme function):
- * @code
- * $form['my_elements'][$delta]['weight']['#attributes']['class'] = array('my-elements-weight');
- * @endcode
- *
- * Each row of the table must also have a class of "draggable" in order to
- * enable the drag handles:
- * @code
- * $row = array(...);
- * $rows[] = array(
- *   'data' => $row,
- *   'class' => array('draggable'),
- * );
- * @endcode
- *
- * When tree relationships are present, the two additional classes
- * 'tabledrag-leaf' and 'tabledrag-root' can be used to refine the behavior:
- * - Rows with the 'tabledrag-leaf' class cannot have child rows.
- * - Rows with the 'tabledrag-root' class cannot be nested under a parent row.
- *
- * Calling drupal_attach_tabledrag() would then be written as such:
- * @code
- * drupal_attach_tabledrag('my-module-table', array(
- *   'action' => 'order',
- *   'relationship' => 'sibling',
- *   'group' => 'my-elements-weight',
- * );
- * @endcode
- *
- * In a more complex case where there are several groups in one column (such as
- * the block regions on the admin/structure/block page), a separate subgroup
- * class must also be added to differentiate the groups.
- * @code
- * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = array('my-elements-weight', 'my-elements-weight-' . $region);
- * @endcode
- *
- * The 'group' option is still 'my-element-weight', and the additional
- * 'subgroup' option will be passed in as 'my-elements-weight-' . $region. This
- * also means that you'll need to call drupal_attach_tabledrag() once for every
- * region added.
- *
- * @code
- * foreach ($regions as $region) {
- *   drupal_attach_tabledrag('my-module-table', array(
- *     'action' => 'order',
- *     'relationship' => 'sibling',
- *     'group' => 'my-elements-weight',
- *     'subgroup' => 'my-elements-weight-' . $region,
- *   ));
- * }
- * @endcode
- *
- * In a situation where tree relationships are present, adding multiple
- * subgroups is not necessary, because the table will contain indentations that
- * provide enough information about the sibling and parent relationships. See
- * MenuForm::BuildOverviewForm for an example creating a table
- * containing parent relationships.
- *
- * @param $element
- *   A form element to attach the tableDrag behavior to.
- * @param array $options
- *   These options are used to generate JavaScript settings necessary to
- *   configure the tableDrag behavior appropriately for this particular table.
- *   An associative array containing the following keys:
- *   - 'table_id': String containing the target table's id attribute.
- *     If the table does not have an id, one will need to be set,
- *     such as <table id="my-module-table">.
- *   - 'action': String describing the action to be done on the form item.
- *      Either 'match' 'depth', or 'order':
- *     - 'match' is typically used for parent relationships.
- *     - 'order' is typically used to set weights on other form elements with
- *       the same group.
- *     - 'depth' updates the target element with the current indentation.
- *   - 'relationship': String describing where the "action" option
- *     should be performed. Either 'parent', 'sibling', 'group', or 'self':
- *     - 'parent' will only look for fields up the tree.
- *     - 'sibling' will look for fields in the same group in rows above and
- *       below it.
- *     - 'self' affects the dragged row itself.
- *     - 'group' affects the dragged row, plus any children below it (the entire
- *       dragged group).
- *   - 'group': A class name applied on all related form elements for this action.
- *   - 'subgroup': (optional) If the group has several subgroups within it, this
- *     string should contain the class name identifying fields in the same
- *     subgroup.
- *   - 'source': (optional) If the $action is 'match', this string should contain
- *     the classname identifying what field will be used as the source value
- *     when matching the value in $subgroup.
- *   - 'hidden': (optional) The column containing the field elements may be
- *     entirely hidden from view dynamically when the JavaScript is loaded. Set
- *     to FALSE if the column should not be hidden.
- *   - 'limit': (optional) Limit the maximum amount of parenting in this table.
- *
  * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Render\Element\Table::attachTabledrag() instead.
  *
  * @see https://www.drupal.org/node/3035565
  * @see MenuForm::BuildOverviewForm()
+ * @see \Drupal\Core\Render\Element\Table::attachTabledrag()
  */
 function drupal_attach_tabledrag(&$element, array $options) {
   @trigger_error('drupal_attach_tabledrag() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\Element\Table::attachTabledrag() instead. See https://www.drupal.org/node/3035565', E_USER_DEPRECATED);
