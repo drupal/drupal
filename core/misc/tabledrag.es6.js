@@ -22,7 +22,7 @@
   /**
    * Drag and drop table rows with field manipulation.
    *
-   * Using the drupal_attach_tabledrag() function, any table with weights or
+   * Using the Table::attachTabledrag() function, any table with weights or
    * parent relationships may be made into draggable tables. Columns containing
    * a field may optionally be hidden, providing a better user experience.
    *
@@ -47,7 +47,11 @@
       }
 
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        initTableDrag($(context).find(`#${base}`).once('tabledrag'), base);
+        initTableDrag(
+          $(context)
+            .find(`[data-drupal-tabledrag-id="${base}"]`)
+            .once('tabledrag'),
+          base);
       });
     },
   };

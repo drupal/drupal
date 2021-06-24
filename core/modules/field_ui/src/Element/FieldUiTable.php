@@ -32,7 +32,7 @@ class FieldUiTable extends Table {
    *   A structured array containing two sub-levels of elements. Properties
    *   used:
    *   - #tabledrag: The value is a list of $options arrays that are passed to
-   *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
+   *     Table::attachTabledrag(). The HTML ID of the table is added to each
    *     $options array.
    *
    * @return array
@@ -40,6 +40,7 @@ class FieldUiTable extends Table {
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    * @see \Drupal\Core\Render\Element\Table::preRenderTable()
+   * @see \Drupal\Core\Render\Element\Table::attachTabledrag()
    */
   public static function tablePreRender($elements) {
     $js_settings = [];
@@ -116,7 +117,7 @@ class FieldUiTable extends Table {
     if (!empty($elements['#tabledrag']) && isset($elements['#attributes']['id'])) {
       foreach ($elements['#tabledrag'] as $options) {
         $options['table_id'] = $elements['#attributes']['id'];
-        drupal_attach_tabledrag($elements, $options);
+        static::attachTabledrag($elements, $options);
       }
     }
 
@@ -130,7 +131,7 @@ class FieldUiTable extends Table {
    *   A structured array containing two sub-levels of elements. Properties
    *   used:
    *   - #tabledrag: The value is a list of $options arrays that are passed to
-   *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
+   *     Table::attachTabledrag(). The HTML ID of the table is added to each
    *     $options array.
    *
    * @return array

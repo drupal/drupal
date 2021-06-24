@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Render\Element\Table;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -338,35 +339,15 @@ function drupal_js_defaults($data = NULL) {
  *     to FALSE if the column should not be hidden.
  *   - 'limit': (optional) Limit the maximum amount of parenting in this table.
  *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Render\Element\Table::attachTabledrag() instead.
+ *
+ * @see https://www.drupal.org/node/3035565
  * @see MenuForm::BuildOverviewForm()
  */
 function drupal_attach_tabledrag(&$element, array $options) {
-  // Add default values to elements.
-  $options = $options + [
-    'subgroup' => NULL,
-    'source' => NULL,
-    'hidden' => TRUE,
-    'limit' => 0,
-  ];
-
-  $group = $options['group'];
-
-  $tabledrag_id = &drupal_static(__FUNCTION__);
-  $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
-
-  // If a subgroup or source isn't set, assume it is the same as the group.
-  $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
-  $source = isset($options['source']) ? $options['source'] : $target;
-  $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
-    'target' => $target,
-    'source' => $source,
-    'relationship' => $options['relationship'],
-    'action' => $options['action'],
-    'hidden' => $options['hidden'],
-    'limit' => $options['limit'],
-  ];
-
-  $element['#attached']['library'][] = 'core/drupal.tabledrag';
+  @trigger_error('drupal_attach_tabledrag() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\Element\Table::attachTabledrag() instead. See https://www.drupal.org/node/3035565', E_USER_DEPRECATED);
+  Table::attachTabledrag($element, $options);
 }
 
 /**
