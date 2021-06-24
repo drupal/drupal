@@ -834,7 +834,7 @@ class Sql extends QueryPluginBase {
     $alias = $alias ? $alias : $field;
 
     // PostgreSQL truncates aliases to 63 characters:
-    //   https://www.drupal.org/node/571548.
+    // https://www.drupal.org/node/571548.
 
     // We limit the length of the original alias up to 60 characters
     // to get a unique alias later if its have duplicates

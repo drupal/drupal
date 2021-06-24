@@ -8,6 +8,11 @@ use Drupal\migrate\Row;
 /**
  * Drupal 6 filter source from database.
  *
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d6_filter_format",
  *   source_module = "filter"

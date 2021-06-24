@@ -214,7 +214,7 @@ abstract class CachePluginBase extends PluginBase {
         'build_info' => $build_info,
       ];
       // @todo https://www.drupal.org/node/2433591 might solve it to not require
-      //    the pager information here.
+      //   the pager information here.
       $key_data['pager'] = [
         'page' => $this->view->getCurrentPage(),
         'items_per_page' => $this->view->getItemsPerPage(),
