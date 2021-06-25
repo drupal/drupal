@@ -274,6 +274,9 @@ views_sort:
     plugin_id:
       type: string
       label: 'Plugin ID'
+    granularity:
+      type: string
+      label: 'Granularity'
 
 views_sort_expose:
   type: mapping
@@ -728,6 +731,9 @@ views_filter:
           sequence:
             type: string
             label: 'Role'
+        reduce:
+          type: boolean
+          label: 'Reduce'
     is_grouped:
       type: boolean
       label: 'Grouped filters'
