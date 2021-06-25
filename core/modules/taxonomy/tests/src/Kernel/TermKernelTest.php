@@ -168,32 +168,4 @@ class TermKernelTest extends KernelTestBase {
     $this->assertTrue(!empty(trim($rendered)), 'Term is able to be rendered.');
   }
 
-  /**
-   * @see taxonomy_term_load_multiple_by_name()
-   */
-  public function testTaxonomyTermLoadMultipleByName(): void {
-    $vocabulary1 = $this->createVocabulary();
-    $term1 = $this->createTerm($vocabulary1, ['name' => 'Foo']);
-    $term2 = $this->createTerm($vocabulary1, ['name' => 'Foo']);
-    $vocabulary2 = $this->createVocabulary();
-    $term3 = $this->createTerm($vocabulary2, ['name' => 'Foo']);
-
-    // Call the function without a vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name('Foo');
-    $this->assertCount(3, $terms);
-    $this->assertArrayHasKey($term1->id(), $terms);
-    $this->assertArrayHasKey($term2->id(), $terms);
-    $this->assertArrayHasKey($term3->id(), $terms);
-
-    // Call the function with a valid vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name('Foo', $vocabulary1->id());
-    $this->assertCount(2, $terms);
-    $this->assertArrayHasKey($term1->id(), $terms);
-    $this->assertArrayHasKey($term2->id(), $terms);
-
-    // Call the function with an invalid vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name('Foo', 'invalid');
-    $this->assertEmpty($terms);
-  }
-
 }
