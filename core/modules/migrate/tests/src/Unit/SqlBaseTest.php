@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\Tests\UnitTestCase;
@@ -17,6 +18,71 @@ use Drupal\Tests\UnitTestCase;
  * @group migrate
  */
 class SqlBaseTest extends UnitTestCase {
+
+  /**
+   * The default configuration array.
+   *
+   * @var array
+   */
+  protected $configuration = [];
+
+  /**
+   * The default plugin_id string.
+   *
+   * @var string
+   */
+  protected $pluginId = '';
+
+  /**
+   * The default plugin_definition array.
+   *
+   * @var array
+   */
+  protected $pluginDefinition = [];
+
+  /**
+   * Tests that source conditions are recognized.
+   *
+   * @param array|string $conditions
+   *   Source conditions.
+   *
+   * @dataProvider sqlBaseConstructorTestProvider
+   */
+  public function testConstructor($conditions) {
+    $configuration = [
+      'conditions' => $conditions,
+    ];
+    // Setup the migration interface.
+    $migration = $this->getMockBuilder(MigrationInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    // Setup the state object.
+    $state = $this->getMockBuilder(StateInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    // Test with an invalid process pipeline.
+    $this->expectException(\InvalidArgumentException::class);
+    new TestSqlBase($configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
+  }
+
+  /**
+   * The data provider for testConstructor.
+   */
+  public function sqlBaseConstructorTestProvider() {
+    return [
+      'not array' => [
+        'conditions' => '',
+      ],
+      'not multidimensional array' => [
+        'conditions' => [''],
+      ],
+      'field not specified' => [
+        'conditions' => [['']],
+      ],
+    ];
+  }
 
   /**
    * Tests that the ID map is joinable.
@@ -61,14 +127,19 @@ class SqlBaseTest extends UnitTestCase {
       ->method('getDatabase')
       ->willReturn($idmap_connection);
 
+    // Setup the State object.
+    $state = $this->getMockBuilder(StateInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
     // Setup a migration entity.
     $migration = $this->createMock(MigrationInterface::class);
-    $migration->expects($with_id_map ? $this->once() : $this->never())
+    $migration->expects($this->atLeastOnce())
       ->method('getIdMap')
       ->willReturn($id_map_is_sql ? $sql : NULL);
 
     // Create our SqlBase test class.
-    $sql_base = new TestSqlBase();
+    $sql_base = new TestSqlBase($this->configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
     $sql_base->setMigration($migration);
     $sql_base->setDatabase($source_connection);
 
@@ -140,6 +211,101 @@ class SqlBaseTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Test prepare query for valid condition.
+   *
+   * @param array $conditions
+   *   Source conditions.
+   *
+   * @dataProvider prepareQueryTestProvider
+   */
+  public function testPrepareQuery($conditions) {
+    $migration = $this->getMockBuilder(MigrationInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    // Setup the state object.
+    $state = $this->getMockBuilder(StateInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $configuration['conditions'] = $conditions['condition'];
+    $expected_result = $conditions['expected_result'];
+
+    foreach ($configuration['conditions'] as $condition) {
+      $result[] = [$condition['field'], $condition['value'] ?? NULL, $condition['operator'] ?? '='];
+    }
+    // For multiple result.
+    $this->assertEquals($expected_result, $result);
+    new TestSqlBase($configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
+  }
+
+  /**
+   * The data provider for testPrepareQuery.
+   */
+  public function prepareQueryTestProvider() {
+    return [
+      'field value operator condition' => [
+        'data' => [
+           'condition' => [
+            [
+              'field' => 'nid',
+              'value' => '3',
+              'operator' => '>',
+            ],
+          ],
+           'expected_result' => [
+            ['nid', '3', '>'],
+          ],
+       ],
+      ],
+      'default operator condition' => [
+        'data' => [
+         'condition' => [
+            [
+              'field' => 'type',
+              'value' => 'article',
+            ],
+          ],
+          'expected_result' => [
+            ['type', 'article', '='],
+          ],
+         ],
+      ],
+      'default value null condition' => [
+        'data' => [
+          'condition' => [
+            [
+              'field' => 'langcode',
+              'operator' => 'IS',
+            ],
+          ],
+          'expected_result' => [
+            ['langcode', NULL, 'IS'],
+          ],
+         ],
+      ],
+      'field value operator multiple condition' => [
+        'data' => [
+           'condition' => [
+            [
+              'field' => 'nid',
+              'value' => '3',
+              'operator' => '>',
+            ],
+            [
+              'field' => 'title',
+              'operator' => 'IS',
+            ],
+          ],
+           'expected_result' => [
+            ['nid', '3', '>'],
+            ['title', NULL, 'IS'],
+          ],
+       ],
+      ],
+    ];
+  }
+
 }
 
 /**
@@ -162,9 +328,11 @@ class TestSqlBase extends SqlBase {
   protected $ids;
 
   /**
-   * Override the constructor so we can create one easily.
+   * {@inheritdoc}
    */
-  public function __construct() {}
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state);
+  }
 
   /**
    * Allows us to set the database during tests.

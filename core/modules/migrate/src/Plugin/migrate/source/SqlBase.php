@@ -29,6 +29,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   joined. Using expressions in the query may result in column aliases in the
  *   JOIN clause which would be invalid SQL. If you run into this, set
  *   ignore_map to TRUE.
+ * - conditions: (optional) Conditions to add to the query.
+ *   This should be in array format with each array item providing values for
+ *   field, value (optional) and operator (optional). Defaults to an empty
+ *   array. If value is not defined, defaults to NULL. If operator is not
+ *   defined, defaults to '='.
+ *
+ *   Example:
+ *   @code
+ *   source:
+ *     conditions:
+ *       -
+ *         field: type
+ *         value: article
+ *         operator: <>
+ *     joins:
+ *       -
+ *         table: field_file
+ *         alias: t
+ *         condition: f.fid=t.field_file_fid
+ *   @endcode
  *
  * For other optional configuration keys inherited from the parent class, refer
  * to \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
@@ -108,6 +128,28 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->state = $state;
+
+    // Verify conditions configuration.
+    $this->configuration['conditions'] = $this->configuration['conditions'] ?? [];
+    if (!is_array($this->configuration['conditions'])) {
+      throw new \InvalidArgumentException("Source 'conditions' should be an array of conditions including field, value (optional), and operator (optional) values.");
+    }
+    foreach ($this->configuration['conditions'] as $condition) {
+      if (!is_array($condition) || !isset($condition['field'])) {
+        throw new \InvalidArgumentException('Source condition must be an array including field, value (optional), and operator (optional) values.');
+      }
+    }
+    // Verify joins configuration.
+    $this->configuration['joins'] = $this->configuration['joins'] ?? [];
+    if (!is_array($this->configuration['joins'])) {
+      throw new \InvalidArgumentException("Source 'joins' should be an array of conditions including table, alias and condition.");
+    }
+    foreach ($this->configuration['joins'] as $join) {
+      if (!is_array($join) || !isset($join['table']) || !isset($join['alias']) || !isset($join['condition'])) {
+        throw new \InvalidArgumentException('Source condition must be an array including table, alias and condition.');
+      }
+    }
+
   }
 
   /**
@@ -231,16 +273,26 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Adds tags and metadata to the query.
+   * Adds tags, metadata, and configured conditions and joins to the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
-   *   The query with additional tags and metadata.
+   *   The query with additional tags, metadata, and configured conditions and joins.
    */
   protected function prepareQuery() {
     $this->query = clone $this->query();
     $this->query->addTag('migrate');
     $this->query->addTag('migrate_' . $this->migration->id());
     $this->query->addMetaData('migration', $this->migration);
+
+    // Add any configured conditions.
+    foreach ($this->configuration['conditions'] as $condition) {
+      $this->query->condition($condition['field'], $condition['value'] ?? NULL, $condition['operator'] ?? '=');
+    }
+
+    // Add any configured conditions.
+    foreach ($this->configuration['joins'] as $join) {
+      $this->query->join($join['table'], $join['alias'], $join['condition']);
+    }
 
     return $this->query;
   }
