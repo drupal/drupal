@@ -194,7 +194,9 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $this->drupalGet('node/add/' . $this->referencingType);
     $this->submitForm($edit, 'Save');
     /** @var \Drupal\taxonomy\Entity\Term $term */
-    $term = taxonomy_term_load_multiple_by_name($term_name);
+    $term = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties(['name' => $term_name]);
     $term = reset($term);
 
     // The new term is expected to be stored in the second vocabulary.
