@@ -29,11 +29,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   joined. Using expressions in the query may result in column aliases in the
  *   JOIN clause which would be invalid SQL. If you run into this, set
  *   ignore_map to TRUE.
- * - conditions: (optional) Conditions to add to the query.
- *   This should be in array format with each array item providing values for
- *   field, value (optional) and operator (optional). Defaults to an empty
- *   array. If value is not defined, defaults to NULL. If operator is not
- *   defined, defaults to '='.
+ * - conditions: (optional) Conditions to add to the query. This should be in
+ *   array format with each array item providing values for field, value
+ *   (optional, defaults to NULL) and operator (optional, defaults to '=').
+ *   Defaults to an empty array. For more documentation refer to
+ *   \Drupal\Core\Database\Query\ConditionInterface::condition().
  *
  *   Example:
  *   @code
