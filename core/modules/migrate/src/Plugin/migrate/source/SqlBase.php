@@ -35,20 +35,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   Defaults to an empty array. For more documentation refer to
  *   \Drupal\Core\Database\Query\ConditionInterface::condition().
  *
- *   Example:
- *   @code
- *   source:
- *     conditions:
- *       -
- *         field: type
- *         value: article
- *         operator: <>
- *     joins:
- *       -
- *         table: field_file
- *         alias: t
- *         condition: f.fid=t.field_file_fid
- *   @endcode
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_node
+ *   conditions:
+ *     -
+ *       field: status
+ *       value: 1
+ *     -
+ *       field: type
+ *       value: article
+ *       operator: <>
+ * @endcode
+ *
+ * In this example only published nodes of all types except 'article' are
+ * retrieved from the source database.
  *
  * For other optional configuration keys inherited from the parent class, refer
  * to \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
