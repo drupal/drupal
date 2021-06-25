@@ -627,7 +627,7 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
 function drupal_static_reset($name = NULL) {
   switch ($name) {
     case 'taxonomy_vocabulary_get_names':
-      @trigger_error("Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in Drupal 9.3.0 and is removed from Drupal 10.0.0. There's no replacement for this usage. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
+      @trigger_error("Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
   }
   drupal_static($name, NULL, TRUE);
 }
