@@ -34,6 +34,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   (optional, defaults to NULL) and operator (optional, defaults to '=').
  *   Defaults to an empty array. For more documentation refer to
  *   \Drupal\Core\Database\Query\ConditionInterface::condition().
+ * - joins: (optional) A list of joins against other tables in the database.
+ *   Typically, it can be used to add some conditions by Field API values, which
+ *   are located in separate database tables. This value should be in array
+ *   format with each array item providing values for table, alias, condition,
+ *   and join type (optional, defaults to INNER). Defaults to an empty array.
+ *   For more documentation refer to
+ *   \Drupal\Core\Database\Query\SelectInterface::addJoin().
  *
  * Examples:
  *
@@ -42,7 +49,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   plugin: d7_node
  *   conditions:
  *     -
- *       field: status
+ *       field: n.status
  *       value: 1
  *     -
  *       field: type
@@ -52,6 +59,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * In this example only published nodes of all types except 'article' are
  * retrieved from the source database.
+ *
+ * @code
+ * source:
+ *   plugin: d7_user
+ *   joins:
+ *     -
+ *       table: field_data_field_group
+ *       alias: g
+ *       condition: u.uid = g.entity_id
+ *   conditions:
+ *     -
+ *       field: g.field_group_value
+ *       value: foo
+ * @endcode
+ *
+ * In this example users with 'foo' field_group value are retrieved from the
+ * source database. field_group field values are located in another database
+ * table, which should be joined against base table (users).
  *
  * For other optional configuration keys inherited from the parent class, refer
  * to \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
@@ -132,27 +157,24 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->state = $state;
 
-    // Verify conditions configuration.
-    $this->configuration['conditions'] = $this->configuration['conditions'] ?? [];
-    if (!is_array($this->configuration['conditions'])) {
-      throw new \InvalidArgumentException("Source 'conditions' should be an array of conditions including field, value (optional), and operator (optional) values.");
+    // Validate 'conditions' and 'joins' configuration keys.
+    foreach (['conditions', 'joins'] as $config_key) {
+      $this->configuration[$config_key] = $this->configuration[$config_key] ?? [];
+
+      if (!is_array($this->configuration[$config_key])) {
+        throw new \InvalidArgumentException("'$config_key' configuration key should be an array of arrays.");
+      }
     }
     foreach ($this->configuration['conditions'] as $condition) {
       if (!is_array($condition) || !isset($condition['field'])) {
-        throw new \InvalidArgumentException('Source condition must be an array including field, value (optional), and operator (optional) values.');
+        throw new \InvalidArgumentException("Each 'conditions' array item must be an array including field, value (optional), and operator (optional) keys.");
       }
-    }
-    // Verify joins configuration.
-    $this->configuration['joins'] = $this->configuration['joins'] ?? [];
-    if (!is_array($this->configuration['joins'])) {
-      throw new \InvalidArgumentException("Source 'joins' should be an array of conditions including table, alias and condition.");
     }
     foreach ($this->configuration['joins'] as $join) {
       if (!is_array($join) || !isset($join['table']) || !isset($join['alias']) || !isset($join['condition'])) {
-        throw new \InvalidArgumentException('Source condition must be an array including table, alias and condition.');
+        throw new \InvalidArgumentException("Each 'joins' array item must be an array including table, alias, condition, and type (optional) keys.");
       }
     }
-
   }
 
   /**
@@ -292,9 +314,9 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       $this->query->condition($condition['field'], $condition['value'] ?? NULL, $condition['operator'] ?? '=');
     }
 
-    // Add any configured conditions.
+    // Add any configured joins.
     foreach ($this->configuration['joins'] as $join) {
-      $this->query->join($join['table'], $join['alias'], $join['condition']);
+      $this->query->addJoin($join['type'] ?? 'INNER', $join['table'], $join['alias'], $join['condition']);
     }
 
     return $this->query;
