@@ -12,7 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines the access control handler for the user entity type.
+ * Defines the access control handler for the menu link content entity type.
  */
 class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
