@@ -45,7 +45,7 @@ class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
    * Tests the system module updates with no dependencies installed.
    */
   public function testNoPreExistingSchema() {
-    $schema = \Drupal::keyValue('system.schema')->getAll();
+    $schema = \Drupal::service('update.update_hook_registry')->getAllInstalledVersions();
     $this->assertArrayNotHasKey('update_test_no_preexisting', $schema);
     $this->assertFalse(\Drupal::state()->get('update_test_no_preexisting_update_8001', FALSE));
 
@@ -65,7 +65,7 @@ class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
     $this->drupalGet($update_url);
     $this->updateRequirementsProblem();
 
-    $schema = \Drupal::keyValue('system.schema')->getAll();
+    $schema = \Drupal::service('update.update_hook_registry')->getAllInstalledVersions();
     $this->assertArrayHasKey('update_test_no_preexisting', $schema);
     $this->assertEquals('8001', $schema['update_test_no_preexisting']);
     // The schema version has been fixed, but the update was never run.

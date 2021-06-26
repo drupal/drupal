@@ -446,6 +446,7 @@ function template_preprocess_username(&$variables) {
  *   The account to log in.
  *
  * @see hook_user_login()
+ * @see \Drupal\user\Authentication\Provider\Cookie
  */
 function user_login_finalize(UserInterface $account) {
   \Drupal::currentUser()->setAccount($account);
@@ -461,8 +462,11 @@ function user_login_finalize(UserInterface $account) {
   // This is called before hook_user_login() in case one of those functions
   // fails or incorrectly does a redirect which would leave the old session
   // in place.
-  \Drupal::service('session')->migrate();
-  \Drupal::service('session')->set('uid', $account->id());
+  /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+  $session = \Drupal::service('session');
+  $session->migrate();
+  $session->set('uid', $account->id());
+  $session->set('check_logged_in', TRUE);
   \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
 }
 
