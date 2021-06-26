@@ -27,7 +27,7 @@ function user_post_update_mail_change() {
     ->save();
 
   $mail_change_notification = [
-    'body' => "[user:display-name],\n\nA request to change your email address has been made at [site:name]. In order to complete the change you will need to follow the instructions sent to your new email address within one day.",
+    'body' => "[user:display-name],\n\nA request to change your email address has been made at [site:name]. In order to complete the change you will need to follow the instructions sent to your new email address within one day.\n\nIf you did not intend to make this change, contact [site-email].",
     'subject' => 'Email change for [user:display-name] at [site:name]',
   ];
   $mail_change_verification = [
