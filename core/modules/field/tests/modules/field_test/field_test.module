@@ -49,8 +49,8 @@ require_once __DIR__ . '/field_test.field.inc';
  *   $mem = field_test_memorize();
  *
  *   // make sure hook_field_storage_config_create() is invoked correctly
- *   assertEqual(count($mem['field_test_field_storage_config_create']), 1);
- *   assertEqual($mem['field_test_field_storage_config_create'][0], array($field));
+ *   assertEquals(1, count($mem['field_test_field_storage_config_create']));
+ *   assertEquals(array($field), $mem['field_test_field_storage_config_create'][0]);
  * @endcode
  *
  * @param $key
@@ -169,8 +169,7 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
  * @see \Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
  */
 function field_test_query_efq_metadata_test_alter(&$query) {
-  global $efq_test_metadata;
-  $efq_test_metadata = $query->getMetadata('foo');
+  field_test_memorize(__FUNCTION__, $query->getMetadata('foo'));
 }
 
 /**

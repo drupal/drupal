@@ -17,7 +17,7 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
 
   use TestFileCreationTrait;
 
-  protected static $modules = ['entity_reference', 'node', 'file'];
+  protected static $modules = ['node', 'file'];
 
   /**
    * {@inheritdoc}

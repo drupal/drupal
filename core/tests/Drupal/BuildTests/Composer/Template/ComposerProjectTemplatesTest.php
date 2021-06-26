@@ -32,7 +32,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    *
    * @see https://getcomposer.org/doc/04-schema.md#minimum-stability
    */
-  protected const MINIMUM_STABILITY = 'RC';
+  protected const MINIMUM_STABILITY = 'stable';
 
   /**
    * The order of stability strings from least stable to most stable.
@@ -111,7 +111,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // Find all the templates.
     $template_files = Composer::composerSubprojectPaths($root, 'Template');
 
-    $this->assertSame(count($template_files), count($data));
+    $this->assertSameSize($template_files, $data);
 
     // We could have the same number of templates but different names.
     $template_data = [];
@@ -203,7 +203,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
 
     $installed_composer_json = $this->getWorkspaceDirectory() . '/testproject/composer.json';
     $autoloader = $this->getWorkspaceDirectory() . '/testproject' . $docroot_dir . '/autoload.php';
-    $this->assertFileNotExists($autoloader);
+    $this->assertFileDoesNotExist($autoloader);
 
     $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$simulated_core_version composer create-project --no-ansi $project testproject $simulated_core_version -vvv --repository $repository_path");
     $this->assertCommandSuccessful();

@@ -4617,6 +4617,21 @@ $connection->insert('field_config')
   'translatable' => '0',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '61',
+  'field_name' => 'field_checkbox',
+  'type' => 'list_boolean',
+  'module' => 'list',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:3:{s:14:"allowed_values";a:2:{i:0;s:4:"Stop";i:1;s:2:"Go";}s:23:"allowed_values_function";s:0:"";s:23:"entity_translation_sync";b:0;}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:25:"field_data_field_checkbox";a:1:{s:5:"value";s:20:"field_checkbox_value";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:29:"field_revision_field_checkbox";a:1:{s:5:"value";s:20:"field_checkbox_value";}}}}}s:12:"foreign keys";a:0:{}s:7:"indexes";a:1:{s:5:"value";a:1:{i:0;s:5:"value";}}s:2:"id";s:2:"53";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_config_instance', array(
   'fields' => array(
@@ -5477,6 +5492,15 @@ $connection->insert('field_config_instance')
   'data' => 'a:6:{s:5:"label";s:9:"image_miw";s:6:"widget";a:5:{s:6:"weight";s:2:"18";s:4:"type";s:9:"image_miw";s:6:"module";s:29:"multiupload_imagefield_widget";s:6:"active";i:1;s:8:"settings";a:2:{s:18:"progress_indicator";s:8:"throbber";s:19:"preview_image_style";s:9:"thumbnail";}}s:8:"settings";a:10:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:16:"png gif jpg jpeg";s:12:"max_filesize";s:0:"";s:14:"max_resolution";s:0:"";s:14:"min_resolution";s:0:"";s:9:"alt_field";i:0;s:11:"title_field";i:0;s:13:"default_image";i:0;s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:5:"image";s:8:"settings";a:2:{s:11:"image_style";s:0:"";s:10:"image_link";s:0:"";}s:6:"module";s:5:"image";s:6:"weight";i:16;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '93',
+  'field_id' => '61',
+  'field_name' => 'field_checkbox',
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'data' => 'a:7:{s:5:"label";s:8:"checkbox";s:6:"widget";a:5:{s:6:"weight";s:2:"25";s:4:"type";s:15:"options_buttons";s:6:"module";s:7:"options";s:6:"active";i:1;s:8:"settings";a:0:{}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"list_default";s:8:"settings";a:0:{}s:6:"module";s:4:"list";s:6:"weight";i:25;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_data_body', array(
   'fields' => array(
@@ -5634,6 +5658,88 @@ $connection->insert('field_data_body')
   'body_format' => 'filtered_html',
 ))
 ->execute();
+$connection->schema()->createTable('field_data_field_checkbox', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_checkbox_value' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_checkbox_value' => array(
+      'field_checkbox_value',
+    ),
+  ),
+    'mysql_character_set' => 'utf8',
+  ));
 $connection->schema()->createTable('field_data_comment_body', array(
   'fields' => array(
     'entity_type' => array(
@@ -12047,6 +12153,90 @@ $connection->insert('field_revision_body')
   'body_format' => 'filtered_html',
 ))
 ->execute();
+$connection->schema()->createTable('field_revision_field_checkbox', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_checkbox_value' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_checkbox_value' => array(
+      'field_checkbox_value',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('field_revision_comment_body', array(
   'fields' => array(
     'entity_type' => array(
@@ -20920,6 +21110,26 @@ $connection->insert('i18n_string')
   'objectindex' => '467',
   'format' => '',
 ))
+->values(array(
+  'lid' => '805',
+  'textgroup' => 'field',
+  'context' => 'field_checkbox:#allowed_values:0',
+  'objectid' => '#allowed_values',
+  'type' => 'field_checkbox',
+  'property' => '0',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '806',
+  'textgroup' => 'field',
+  'context' => 'field_checkbox:#allowed_values:1',
+  'objectid' => '#allowed_values',
+  'type' => 'field_checkbox',
+  'property' => '1',
+  'objectindex' => '0',
+  'format' => '',
+))
 ->execute();
 $connection->schema()->createTable('i18n_translation_set', array(
   'fields' => array(
@@ -22555,6 +22765,38 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '804',
   'translation' => 'fr - Google description',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '805',
+  'translation' => 'is - Stop',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '806',
+  'translation' => 'is - Go',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '805',
+  'translation' => 'fr - Stop',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '806',
+  'translation' => 'Go',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -56886,7 +57128,7 @@ $connection->insert('system')
   'info' => 'a:11:{s:4:"name";s:22:"Breakpoints Theme Test";s:11:"description";s:35:"Test breakpoints provided by themes";s:7:"package";s:5:"Other";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:5:"mtime";i:1544938132;s:12:"dependencies";a:0:{}s:7:"version";N;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
-  'filename' => 'sites/all/modules/contrib/multiupload_filefield_widget/multiupload_filefield_widget.module',
+  'filename' => 'sites/all/modules/multiupload_filefield_widget/multiupload_filefield_widget.module',
   'name' => 'multiupload_filefield_widget',
   'type' => 'module',
   'owner' => '',
@@ -56897,7 +57139,7 @@ $connection->insert('system')
   'info' => 'a:12:{s:4:"name";s:28:"Multiupload Filefield Widget";s:11:"description";s:76:"Creates a widget for filefield to upload multiple files at once using html5.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"file";}s:5:"files";a:2:{i:0;s:35:"multiupload_filefield_widget.module";i:1;s:33:"multiupload_filefield_widget.test";}s:7:"version";s:8:"7.x-1.13";s:7:"project";s:28:"multiupload_filefield_widget";s:9:"datestamp";s:10:"1388873905";s:5:"mtime";i:1388873905;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
-  'filename' => 'sites/all/modules/contrib/multiupload_imagefield_widget/multiupload_imagefield_widget.module',
+  'filename' => 'sites/all/modules/multiupload_imagefield_widget/multiupload_imagefield_widget.module',
   'name' => 'multiupload_imagefield_widget',
   'type' => 'module',
   'owner' => '',

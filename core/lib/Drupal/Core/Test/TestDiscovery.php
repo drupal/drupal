@@ -186,7 +186,7 @@ class TestDiscovery {
       // unavailable modules. TestDiscovery should not filter out module
       // requirements for PHPUnit-based test classes.
       // @todo Move this behavior to \Drupal\simpletest\TestBase so tests can be
-      //       marked as skipped, instead.
+      //   marked as skipped, instead.
       // @see https://www.drupal.org/node/1273478
       if ($info['type'] == 'Simpletest') {
         if (!empty($info['requires']['module'])) {

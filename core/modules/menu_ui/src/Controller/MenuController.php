@@ -50,7 +50,7 @@ class MenuController extends ControllerBase {
    */
   public function getParentOptions(Request $request) {
     $available_menus = [];
-    if ($menus = $request->request->all('menus')) {
+    if ($menus = $request->request->get('menus')) {
       foreach ($menus as $menu) {
         $available_menus[$menu] = $menu;
       }
