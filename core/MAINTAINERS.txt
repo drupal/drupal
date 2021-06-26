@@ -521,7 +521,6 @@ their responsibilities. The initiative coordinators are:
 
 Decoupled Menus Initiative
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
