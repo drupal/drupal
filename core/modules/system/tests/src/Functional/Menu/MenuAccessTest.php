@@ -61,11 +61,12 @@ class MenuAccessTest extends BrowserTestBase {
     // Attempt to access a restricted local task.
     $this->drupalGet('foo/asdf/c');
     $this->assertSession()->statusCodeEquals(403);
-    $elements = $this->xpath('//ul[@class=:class]/li/a[@href=:href]', [
-      ':class' => 'tabs primary',
-      ':href' => Url::fromRoute('menu_test.router_test1', ['bar' => 'asdf'])->toString(),
-    ]);
-    $this->assertTrue(empty($elements), 'No tab linking to foo/asdf found');
+    // No tab linking to foo/asdf should be found.
+    $this->assertSession()->elementNotExists('xpath', $this->assertSession()->buildXPathQuery(
+      '//ul[@class="tabs primary"]/li/a[@href=:href]', [
+        ':href' => Url::fromRoute('menu_test.router_test1', ['bar' => 'asdf'])->toString(),
+      ]
+    ));
     $this->assertSession()->linkByHrefNotExists('foo/asdf/b');
     $this->assertSession()->linkByHrefNotExists('foo/asdf/c');
   }

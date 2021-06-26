@@ -142,11 +142,7 @@ class ThemeTest extends BrowserTestBase {
       // branding block.
       $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
-      $elements = $this->xpath('//header//a[@rel=:rel]/img', [
-          ':rel' => 'home',
-        ]
-      );
-      $this->assertEquals($expected['src'], $elements[0]->getAttribute('src'));
+      $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $expected['src']);
     }
     $unsupported_paths = [
       // Stream wrapper URI to non-existing file.
@@ -194,11 +190,7 @@ class ThemeTest extends BrowserTestBase {
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
-    $elements = $this->xpath('//header//a[@rel=:rel]/img', [
-        ':rel' => 'home',
-      ]
-    );
-    $this->assertEquals(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
+    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', file_url_transform_relative(file_create_url($uploaded_filename)));
 
     $this->container->get('theme_installer')->install(['bartik']);
 
