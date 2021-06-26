@@ -33,16 +33,17 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     $this->executeView($view);
     $this->drupalGet('taxonomy_all_terms_test');
 
-    $actual = $this->xpath('//a[@href="' . $this->term1->toUrl()->toString() . '"]');
-    $this->assertCount(2, $actual, 'Correct number of taxonomy term1 links');
-    $this->assertEquals($this->term1->label(), $actual[0]->getText());
-    $this->assertEquals($this->term1->label(), $actual[1]->getText());
-    $this->assertSession()->assertEscaped($this->term1->label());
+    // Test term1 links.
+    $xpath = '//a[@href="' . $this->term1->toUrl()->toString() . '"]';
+    $this->assertSession()->elementsCount('xpath', $xpath, 2);
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[1]', $this->term1->label());
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[2]', $this->term1->label());
 
-    $actual = $this->xpath('//a[@href="' . $this->term2->toUrl()->toString() . '"]');
-    $this->assertCount(2, $actual, 'Correct number of taxonomy term2 links');
-    $this->assertEquals($this->term2->label(), $actual[0]->getText());
-    $this->assertEquals($this->term2->label(), $actual[1]->getText());
+    // Test term2 links.
+    $xpath = '//a[@href="' . $this->term2->toUrl()->toString() . '"]';
+    $this->assertSession()->elementsCount('xpath', $xpath, 2);
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[1]', $this->term2->label());
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[2]', $this->term2->label());
   }
 
   /**
