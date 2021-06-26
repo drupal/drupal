@@ -1035,8 +1035,10 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *   - 'register_pending_approval': Welcome message, user pending admin
  *     approval.
  *   - 'password_reset': Password recovery request.
- *   - 'mail_change_notification': Email change notification.
- *   - 'mail_change_verification': Email change verification.
+ *   - 'mail_change_notification': Email change notification, sent to the old
+ *     email address.
+ *   - 'mail_change_verification': Email change verification, sent to the new
+ *     email address.
  *   - 'status_activated': Account activated.
  *   - 'status_blocked': Account blocked.
  *   - 'cancel_confirm': Account cancellation request.
