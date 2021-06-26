@@ -57,9 +57,9 @@
         "symfony/browser-kit": "v4.4.25",
         "symfony/css-selector": "v4.4.25",
         "symfony/dom-crawler": "v4.4.25",
-        "symfony/filesystem": "v4.4.22",
+        "symfony/filesystem": "v4.4.25",
         "symfony/finder": "v4.4.25",
-        "symfony/lock": "v4.4.23",
+        "symfony/lock": "v4.4.25",
         "symfony/phpunit-bridge": "v5.3.0",
         "theseer/tokenizer": "1.2.0",
         "webmozart/assert": "1.10.0"
