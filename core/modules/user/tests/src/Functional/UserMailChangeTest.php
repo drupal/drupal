@@ -73,7 +73,7 @@ class UserMailChangeTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the validation status message has been displayed.
-    $this->assertSession()->pageTextContains('Your updated email address needs to be validated. Further instructions have been sent to your new email address.');
+    $this->assertSession()->pageTextContains('You must confirm your email address. Further instructions have been sent to your new email address.');
 
     $user_mail = $this->config('user.mail');
 
@@ -125,7 +125,7 @@ class UserMailChangeTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the validation status message has been displayed.
-    $this->assertSession()->pageTextContains('Your updated email address needs to be validated. Further instructions have been sent to your new email address.');
+    $this->assertSession()->pageTextContains('You must confirm your email address. Further instructions have been sent to your new email address.');
 
     // Check that only the verification message was sent.
     self::assertCount(1, $this->getMails());
@@ -152,7 +152,7 @@ class UserMailChangeTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the validation status message has not been displayed.
-    $this->assertSession()->pageTextNotContains('Your updated email address needs to be validated. Further instructions have been sent to your new email address.');
+    $this->assertSession()->pageTextNotContains('You must confirm your email address. Further instructions have been sent to your new email address.');
 
     // Check that no E-mail was sent to the old or to the new address.
     self::assertEmpty($this->getMails());

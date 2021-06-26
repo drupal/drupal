@@ -444,7 +444,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         }
         // The user's mail address will be updated only after verification.
         $form_state->setValue('mail', $old_mail);
-        $this->messenger()->addWarning($this->t('Your updated email address needs to be validated. Further instructions have been sent to your new email address.'));
+        $this->messenger()->addWarning($this->t('You must confirm your email address. Further instructions have been sent to your new email address.'));
       }
     }
 
