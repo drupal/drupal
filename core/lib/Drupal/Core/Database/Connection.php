@@ -1123,10 +1123,10 @@ abstract class Connection {
   /**
    * Prepares and returns a SELECT query object.
    *
-   * @param string $table
-   *   The base table for this query, that is, the first table in the FROM
-   *   clause. This table will also be used as the "base" table for query_alter
-   *   hook implementations.
+   * @param string|\Drupal\Core\Database\Query\SelectInterface $table
+   *   The base table name or subquery for this query, used in the FROM clause.
+   *   If a string, the table specified will also be used as the "base" table
+   *   for query_alter hook implementations.
    * @param string $alias
    *   (optional) The alias of the base table of this query.
    * @param $options
