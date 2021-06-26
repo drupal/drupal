@@ -192,7 +192,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertSession()->pageTextContains('Added a shortcut for Create Basic page.');
     // Assure that Article does not have its shortcut indicated as set.
     $this->drupalGet('node/add/article');
-    $this->assertSession()->elementNotExists('xpath', "//a[normalize-space()='Remove from Default shortcuts'");
+    $this->assertSession()->elementNotExists('xpath', "//a[normalize-space()='Remove from Default shortcuts']");
     // Add Shortcut for Article.
     $this->clickLink('Add to Default shortcuts');
     $this->assertSession()->pageTextContains('Added a shortcut for Create Article.');
