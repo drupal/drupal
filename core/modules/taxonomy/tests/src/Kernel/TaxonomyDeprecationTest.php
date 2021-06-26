@@ -23,7 +23,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
    * @see taxonomy_term_load_multiple_by_name()
    * @see drupal_static_reset()
    */
-  public function testTaxonomyVocabularyGetNamesDeprecation() {
+  public function testTaxonomyDeprecations() {
     $this->installEntitySchema('taxonomy_term');
     $vocabulary1 = $this->createVocabulary();
     $term1 = $this->createTerm($vocabulary1, ['name' => 'Foo']);
@@ -108,7 +108,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
 
     $this->expectDeprecation('taxonomy_term_title() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use $term->label() instead. See https://www.drupal.org/node/3039041');
     $title = taxonomy_term_title($term1);
-    $this->assertOptionSelected($term1->label(), $title);
+    $this->assertSame($term1->label(), $title);
 
     $this->expectDeprecation("Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041");
     drupal_static_reset('taxonomy_vocabulary_get_names');
