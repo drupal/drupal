@@ -28,11 +28,11 @@ function user_post_update_mail_change() {
 
   $mail_change_notification = [
     'body' => "[user:display-name],\n\nA request to change your email address has been made at [site:name]. In order to complete the change you will need to follow the instructions sent to your new email address within one day.",
-    'subject' => 'Email change information for [user:display-name] at [site:name]',
+    'subject' => 'Email change for [user:display-name] at [site:name]',
   ];
   $mail_change_verification = [
     'body' => "[user:display-name],\n\nA request to change your email address has been made at [site:name]. You need to verify the change by clicking on the link below or copying and pasting it in your browser:\n\n[user:mail-change-url]\n\nThis is a one-time URL, so it can be used only once. It expires after one day. If not used, your email address at [site:name] will not change.",
-    'subject' => 'Email change information for [user:display-name] at [site:name]',
+    'subject' => 'Email change for [user:display-name] at [site:name]',
   ];
 
   $config_factory->getEditable('user.mail')
