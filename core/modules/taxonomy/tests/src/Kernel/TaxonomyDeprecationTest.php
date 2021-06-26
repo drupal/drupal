@@ -31,7 +31,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
     $vocabulary2 = $this->createVocabulary();
     $term3 = $this->createTerm($vocabulary2, ['name' => 'Foo']);
 
-    $this->expectDeprecation("taxonomy_vocabulary_get_names() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->loadMultiple() instead, to get a list of vocabulary entities keyed by vocabulary ID. See https://www.drupal.org/node/3039041");
+    $this->expectDeprecation("taxonomy_vocabulary_get_names() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityQuery('taxonomy_vocabulary')->execute() instead. See https://www.drupal.org/node/3039041");
     $this->expectDeprecation('taxonomy_term_load_multiple_by_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->loadByProperties(["name" => $name, "vid" => $vid]) instead, to get a list of taxonomy term entities having the same name and keyed by their term ID. See https://www.drupal.org/node/3039041');
 
     // Vocabulary names are keyed by machine name.
@@ -112,6 +112,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
 
     $this->expectDeprecation("Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041");
     drupal_static_reset('taxonomy_vocabulary_get_names');
+
   }
 
 }
