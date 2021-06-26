@@ -183,7 +183,7 @@ user.reset.login:
     _controller: '\Drupal\user\Controller\UserController::resetPassLogin'
     _title: 'Reset password'
   requirements:
-    _user_is_logged_in: 'FALSE'
+    _access: 'TRUE'
   options:
     _maintenance_access: TRUE
     no_cache: TRUE
