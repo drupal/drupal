@@ -2,6 +2,12 @@
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\node\NodeAccessControlHandler;
+use Drupal\node\NodeAccessControlHandlerInterface;
+
 /**
  * Tests basic node_access functionality.
  *
@@ -121,6 +127,41 @@ class NodeAccessTest extends NodeAccessTestBase {
     $web_user = $this->drupalCreateUser(['access content']);
     $node = $this->drupalCreateNode();
     $this->assertNodeAccess(['random_operation' => FALSE], $node, $web_user);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testNodeAccessViewAllNodesDeprecation() {
+    $this->expectDeprecation('node_access_view_all_nodes() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler("node")->viewAllNodes($account). See https://www.drupal.org/node/3038909.');
+    $container = new ContainerBuilder();
+    $current_user = $this->prophesize(AccountProxyInterface::class);
+    $container->set('current_user', $current_user->reveal());
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $node_access_control_handler = $this->prophesize(NodeAccessControlHandlerInterface::class);
+    $entity_type_manager->getAccessControlHandler('node')->willReturn($node_access_control_handler->reveal());
+    $container->set('entity_type.manager', $entity_type_manager->reveal());
+    \Drupal::setContainer($container);
+
+    require_once $this->root . '/core/modules/node/node.module';
+    node_access_view_all_nodes();
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testNodeAccessViewAllNodesCacheResetDeprecation() {
+    $this->expectDeprecation("Using drupal_static_reset() with 'node_access_view_all_nodes' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909.");
+    $container = new ContainerBuilder();
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $node_access_control_handler = $this->prophesize(NodeAccessControlHandler::class);
+    $node_access_control_handler->resetCache()->shouldBeCalledOnce();
+    $entity_type_manager->getAccessControlHandler('node')->willReturn($node_access_control_handler->reveal());
+    $container->set('entity_type.manager', $entity_type_manager->reveal());
+    \Drupal::setContainer($container);
+
+    require_once $this->root . '/core/includes/bootstrap.inc';
+    drupal_static_reset('node_access_view_all_nodes');
   }
 
 }

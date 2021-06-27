@@ -74,7 +74,7 @@ use Drupal\Component\Utility\Xss;
  *   An array whose keys are "realms" of grants, and whose values are arrays of
  *   the grant IDs within this realm that this user is being granted.
  *
- * @see node_access_view_all_nodes()
+ * @see \Drupal\node\NodeAccessControlHandlerInterface::viewAllNodes()
  * @see node_access_rebuild()
  * @ingroup node_access
  */

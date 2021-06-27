@@ -154,11 +154,11 @@ class NodeQueryAlterTest extends NodeTestBase {
   /**
    * Tests 'node_access' query alter override.
    *
-   * Verifies that node_access_view_all_nodes() is called from
-   * node_query_node_access_alter(). We do this by checking that a user who
-   * normally would not have view privileges is able to view the nodes when we
-   * add a record to {node_access} paired with a corresponding privilege in
-   * hook_node_grants().
+   * Checks that \Drupal\node\NodeAccessControlHandlerInterface::viewAllNodes()
+   * is called from node_query_node_access_alter(). We do this by checking that
+   * a user who normally would not have view privileges is able to view the
+   * nodes when we add a record to {node_access} paired with a corresponding
+   * privilege in hook_node_grants().
    */
   public function testNodeQueryAlterOverride() {
     $record = [
@@ -174,7 +174,7 @@ class NodeQueryAlterTest extends NodeTestBase {
 
     // Test that the noAccessUser still doesn't have the 'view'
     // privilege after adding the node_access record.
-    drupal_static_reset('node_access_view_all_nodes');
+    $this->accessHandler->resetCache();
     try {
       $query = $connection->select('node', 'n')
         ->fields('n');
@@ -191,12 +191,12 @@ class NodeQueryAlterTest extends NodeTestBase {
 
     // Have node_test_node_grants return a node_access_all privilege,
     // to grant the noAccessUser 'view' access.  To verify that
-    // node_access_view_all_nodes is properly checking the specified
-    // $account instead of the current user, we will log in as
-    // noAccessUser2.
+    // \Drupal\node\NodeAccessControlHandlerInterface::viewAllNodes() is
+    // properly checking the specified $account instead of the current user, we
+    // will log in as noAccessUser2.
     $this->drupalLogin($this->noAccessUser2);
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
-    drupal_static_reset('node_access_view_all_nodes');
+    $this->accessHandler->resetCache();
     try {
       $query = $connection->select('node', 'n')
         ->fields('n');

@@ -58,4 +58,27 @@ interface NodeAccessControlHandlerInterface {
    */
   public function checkAllGrants(AccountInterface $account);
 
+  /**
+   * Determines whether the user has a global viewing grant for all nodes.
+   *
+   * Checks to see whether any module grants global 'view' access to a user
+   * account; global 'view' access is encoded in the {node_access} table as a
+   * grant with nid=0. If no node access modules are enabled, node.module
+   * defines such a global 'view' access grant.
+   *
+   * This function is called when a node listing query is tagged with
+   * 'node_access'; when this function returns TRUE, no node access joins are
+   * added to the query.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user object for the user whose access is being checked.
+   *
+   * @return bool
+   *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
+   *
+   * @see hook_node_grants()
+   * @see node_query_node_access_alter()
+   */
+  public function viewAllNodes(AccountInterface $account);
+
 }

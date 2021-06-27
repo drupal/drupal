@@ -29,6 +29,13 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected $grantStorage;
 
   /**
+   * Memory cache for 'view all nodes' access.
+   *
+   * @var bool[]
+   */
+  protected $viewAllNodesCache = [];
+
+  /**
    * Constructs a NodeAccessControlHandler object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -192,6 +199,31 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    */
   public function checkAllGrants(AccountInterface $account) {
     return $this->grantStorage->checkAll($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewAllNodes(AccountInterface $account) {
+    $account_id = $account->id();
+    if (!isset($this->viewAllNodesCache[$account_id])) {
+      // If no modules implement the node access system, access is always TRUE.
+      if (!$this->moduleHandler()->getImplementations('node_grants')) {
+        $this->viewAllNodesCache[$account_id] = TRUE;
+      }
+      else {
+        $this->viewAllNodesCache[$account_id] = (bool) $this->checkAllGrants($account);
+      }
+    }
+    return $this->viewAllNodesCache[$account_id];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetCache() {
+    $this->viewAllNodesCache = [];
+    parent::resetCache();
   }
 
 }

@@ -869,37 +869,31 @@ function node_access_grants($op, AccountInterface $account) {
  * 'node_access'; when this function returns TRUE, no node access joins are
  * added to the query.
  *
- * @param $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   (optional) The user object for the user whose access is being checked. If
  *   omitted, the current user is used. Defaults to NULL.
  *
- * @return
+ * @return bool
  *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal::entityTypeManager()->getAccessControlHandler('node')->viewAllNodes($account)
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3038909
  * @see hook_node_grants()
  * @see node_query_node_access_alter()
  */
 function node_access_view_all_nodes($account = NULL) {
 
+  @trigger_error('node_access_view_all_nodes() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler("node")->viewAllNodes($account). See https://www.drupal.org/node/3038909.', E_USER_DEPRECATED);
   if (!$account) {
     $account = \Drupal::currentUser();
   }
 
-  // Statically cache results in an array keyed by $account->id().
-  $access = &drupal_static(__FUNCTION__);
-  if (isset($access[$account->id()])) {
-    return $access[$account->id()];
-  }
-
-  // If no modules implement the node access system, access is always TRUE.
-  if (!\Drupal::moduleHandler()->getImplementations('node_grants')) {
-    $access[$account->id()] = TRUE;
-  }
-  else {
-    $access[$account->id()] = \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants($account);
-  }
-
-  return $access[$account->id()];
+  /** @var \Drupal\node\NodeAccessControlHandlerInterface $node_access_handler */
+  $node_access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
+  return $node_access_handler->viewAllNodes($account);
 }
 
 /**
@@ -936,7 +930,9 @@ function node_query_node_access_alter(AlterableInterface $query) {
   if (!count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     return;
   }
-  if ($op == 'view' && node_access_view_all_nodes($account)) {
+  /** @var \Drupal\node\NodeAccessControlHandlerInterface $node_access_handler */
+  $node_access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
+  if ($op == 'view' && $node_access_handler->viewAllNodes($account)) {
     return;
   }
 
