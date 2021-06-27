@@ -59,7 +59,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    *   (optional) The field language.
    *
    * @return array
-   *   The raw field values, keyed by delta.
+   *   The raw field values, keyed and sorted by delta.
    */
   protected function getFieldValues($entity_type, $field, $entity_id, $revision_id = NULL, $language = NULL) {
     $table = (isset($revision_id) ? 'field_revision_' : 'field_data_') . $field;
@@ -67,7 +67,8 @@ abstract class FieldableEntity extends DrupalSqlBase {
       ->fields('t')
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $entity_id)
-      ->condition('deleted', 0);
+      ->condition('deleted', 0)
+      ->orderBy('delta');
     if (isset($revision_id)) {
       $query->condition('revision_id', $revision_id);
     }

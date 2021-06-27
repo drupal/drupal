@@ -229,17 +229,19 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     //   a way to catch and assert user-triggered errors.
 
     // Test the case when the field config settings are inconsistent.
+    // @code
     // unset($handler_settings['auto_create_bundle']);
     // $field_config->setSetting('handler_settings', $handler_settings);
     // $field_config->save();
     //
     // $this->drupalGet('node/add/' . $this->referencingType);
     // $error_message = sprintf(
-    //  "Create referenced entities if they don't already exist option is enabled but a specific destination bundle is not set. You should re-visit and fix the settings of the '%s' (%s) field.",
-    //  $field_config->getLabel(),
-    //  $field_config->getName()
+    //   "Create referenced entities if they don't already exist option is enabled but a specific destination bundle is not set. You should re-visit and fix the settings of the '%s' (%s) field.",
+    //   $field_config->getLabel(),
+    //   $field_config->getName()
     // );
     // $this->assertErrorLogged($error_message);
+    // @endcode
   }
 
   /**

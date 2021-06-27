@@ -1130,13 +1130,13 @@ abstract class Connection {
   /**
    * Prepares and returns a SELECT query object.
    *
-   * ##param string $table
-   *   The base table for this query, that is, the first table in the FROM
-   *   clause. This table will also be used as the "base" table for query_alter
-   *   hook implementations.
-   * ##param string $alias
+   * ##param string|\Drupal\Core\Database\Query\SelectInterface $table
+   *   The base table name or subquery for this query, used in the FROM clause.
+   *   If a string, the table specified will also be used as the "base" table
+   *   for query_alter hook implementations.
+   * ##param string|null $alias
    *   (optional) The alias of the base table of this query.
-   * ##param $options
+   * ##param array $options
    *   An array of options on the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
@@ -1146,7 +1146,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Select
    */
-  public function select(/*(string|SelectInterface $table, ?string $alias = NULL, array $options = []*/)/*: SelectInterface*/ {
+  public function select(/* string|SelectInterface $table, ?string $alias = NULL, array $options = [] */)/* : SelectInterface */ {
     $args = func_get_args();
     $table = $args[0] ?? NULL;
     $alias = $args[1] ?? NULL;
@@ -1158,7 +1158,7 @@ abstract class Connection {
       @trigger_error('Passing a non-string \'alias\' argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/3216552', E_USER_DEPRECATED);
     }
     if (!is_array($options)) {
-      @trigger_error('Not passing an array as $options argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/1234567', E_USER_DEPRECATED);
+      throw new \TypeError('The $options argument to ' . __METHOD__ . '() must be an array');
     }
     $class = $this->getDriverClass('Select');
     return new $class($this, $table, $alias, $options);

@@ -86,12 +86,11 @@
     <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
   </rule>
   <rule ref="Drupal.Commenting.InlineComment">
-    <!-- Sniff for: NoSpaceBefore, WrongStyle -->
+    <!-- Sniff for: NoSpaceBefore, SpacingBefore, WrongStyle -->
     <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
     <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
     <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
-    <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
   </rule>
   <rule ref="Drupal.Commenting.PostStatementComment"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
@@ -163,6 +162,7 @@
     </properties>
   </rule>
   <rule ref="Drupal.NamingConventions.ValidClassName"/>
+  <rule ref="Drupal.NamingConventions.ValidGlobal"/>
   <rule ref="Generic.NamingConventions.ConstructorName"/>
   <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
   <rule ref="Generic.PHP.DeprecatedFunctions"/>
