@@ -10,30 +10,46 @@
  * Select input elements.
  */
 
+:root { /* SVG background image has width:14px height:9px. 9 / 14 = .642 */
+}
+
 .form-element--type-select {
-  padding-right: calc(2rem - 1px);
+  padding-right: calc(3rem - 2px); /* LTR */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: 100% 50%;
-  background-size: 2.75rem 0.5625rem; /* w: 14px + (2 * 15px), h: 9px */
+  background-position: calc(100% - 1rem + 1px) calc(50% + 1px); /* LTR */
+  background-size: 1rem 0.642rem;
 }
 
 [dir="rtl"] .form-element--type-select {
   padding-right: calc(1rem - 1px);
-  padding-left: calc(2rem - 1px);
-  background-position: 0 50%;
+  padding-left: calc(3rem - 2px);
+  background-position: calc(1rem - 1px) calc(50% + 1px);
 }
 
-.no-touchevents .form-element--type-select.form-element--extrasmall,
+/**
+ * Small variant.
+ *
+ * A select input can receive small variant styling in two ways:
+ * 1) Adding the .form-element--small class directly to the form element.
+ * 2) A parent element of the select has the .claro-form-elements-small class.
+ *
+ * @see form--text.pcss.css, in the comment labeled "Small variants", for
+ * additional information on using .claro-form-elements-(variant) classes.
+ */
+
+.claro-form-elements-small .form-element--type-select,
+.form-element--type-select.form-element--small,
 .no-touchevents .form-element--type-select[name$="][_weight]"] {
-  padding-right: calc(1.5rem - 1px);
-  background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
+  padding-right: calc(2.75rem - 2px); /* LTR */
+  background-size: 0.75rem 0.4815rem;
 }
 
-[dir="rtl"].no-touchevents .form-element--type-select.form-element--extrasmall,
+[dir="rtl"] .form-element--type-select.form-element--small,
+[dir="rtl"] .claro-form-elements-small .form-element--type-select,
 [dir="rtl"].no-touchevents .form-element--type-select[name$="][_weight]"] {
-  padding-right: calc(0.5rem - 1px);
-  padding-left: calc(1.5rem - 1px);
+  padding-right: calc(1rem - 1px);
+  padding-left: calc(2.75rem - 2px);
 }
 
 .form-element--type-select::-ms-expand {

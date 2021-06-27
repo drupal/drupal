@@ -104,18 +104,20 @@
   --input-border-radius-size: 0.125rem; /* (1/8)em ~ 2px */
   --input-border-size: 1px; /* (1/16)em ~ 1px */
   --input--error-border-size: 2px;
-  --input-padding-vertical: calc(var(--space-s) - var(--input-border-size));
+  --input-min-height: 2.875rem; /* 46px */
+  --input-padding-vertical: calc((var(--input-min-height) - var(--input-line-height) - (var(--input-border-size) * 2)) / 2);
   --input-padding-horizontal: calc(var(--space-m) - var(--input-border-size));
   --input-font-size: var(--font-size-base);
-  --input-line-height: var(--space-l);
+  --input-line-height: calc(var(--input-font-size) * 1.5); /* 150% */
+  --input-min-height--small: 1.875rem; /* 30px */
+  --input-padding-vertical--small: calc((var(--input-min-height--small) - var(--input-line-height--small) - (var(--input-border-size) * 2)) / 2);
+  --input-padding-horizontal--small: var(--input-padding-horizontal);
+  --input-font-size--small: var(--font-size-s);
+  --input-line-height--small: calc(var(--font-size-s) * 1.5); /* 150 % */
   --input-padding-vertical--small: calc(var(--space-xs) - (var(--input-border-size) * 2));
   --input-padding-horizontal--small: calc(var(--space-m) - var(--input-border-size));
   --input-font-size--small: var(--font-size-xs);
   --input-line-height--small: 1.3125rem;
-  --input--extrasmall-padding-vertical: calc(0.15rem - var(--input-border-size));
-  --input--extrasmall-padding-horizontal: calc(var(--space-xs) - var(--input-border-size));
-  --input--extrasmall-font-size: var(--font-size-s);
-  --input--extrasmall-line-height: calc(var(--space-m) + 0.2rem); /* Font size is too big to use 1rem for extrasmall line-height */
   --input--required-mark-size: 0.4375rem; /* 7px inside the form element label. */
   --input--label-spacing: 1.6875rem; /* 8px with the checkbox width of 19px */
   /*

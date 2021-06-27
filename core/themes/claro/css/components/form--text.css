@@ -13,8 +13,8 @@
 .form-element {
   box-sizing: border-box;
   max-width: 100%;
-  min-height: 3rem; /* iOS. */
-  padding: calc(0.75rem - 1px) calc(1rem - 1px);
+  min-height: 2.875rem;
+  padding: calc(0.6875rem - 1px) calc(1rem - 1px);
   color: #222330;
   border: 1px solid #8e929c;
   border-radius: 0.125rem;
@@ -26,12 +26,32 @@
   appearance: none; /* Being able to control inner box shadow on iOS. */
 }
 
-.no-touchevents .form-element--extrasmall,
-.no-touchevents .form-element[name$="][_weight]"] {
-  min-height: 1.5rem; /* iOS. */
-  padding: calc(0.15rem - 1px) calc(0.5rem - 1px);
-  font-size: 0.889rem;
-  line-height: 1.2rem;
+/**
+ * Small variant.
+ *
+ * An element can receive small variant styling in two ways:
+ * 1) Adding the .form-element--small class directly to the form element.
+ * 2) A parent element of the element has the .claro-form-elements-small class.
+ *
+ * The option of using the .claro-form-elements-small class is provided so all
+ * elements in a form can receive the same variant styling with the addition
+ * of a single class to a parent element. This eliminates the need to set a
+ * variant type for every element in a form. The .claro-form-elements-small
+ * class does not adhere to BEM methodology. This deviation from BEM was
+ * approved as it ensures that elements added to admin forms via contrib match
+ * the styling of their constituent elements.
+ *
+ * @todo revisit the use of .claro-form-elements-small in
+ *   https://drupal.org/node/3170933
+ */
+
+.claro-form-elements-small .form-element,
+.form-element--small,
+.form-element[name$="][_weight]"] {
+  min-height: 1.875rem;
+  padding: calc(0.5rem - 2px) calc(1rem - 1px);
+  font-size: 0.79rem;
+  line-height: 1.3125rem;
 }
 
 /**

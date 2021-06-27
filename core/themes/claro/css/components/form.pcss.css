@@ -131,10 +131,13 @@ tr .form-item,
   margin-top: var(--space-m);
   margin-bottom: var(--space-m);
 }
-.form-actions .button,
 .form-actions .action-link {
   margin-top: var(--space-m);
   margin-bottom: var(--space-m);
+}
+.form-actions .button {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .form-actions .ajax-progress--throbber {
   align-self: center;

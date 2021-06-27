@@ -26,18 +26,45 @@
  * feedback would be a usability/accessibility issue as well.
  */
 
+:root {
+  --autocomplete-background-width: calc(var(--space-m) + (var(--input-border-size) * 2));
+  --autocomplete-background-width--small: calc(var(--space-s) + (var(--input-border-size) * 2));
+}
+
 .js .form-autocomplete {
   background-image: url(../../images/icons/868686/magnifier.svg);
   background-repeat: no-repeat;
-  background-position: 100% 50%;
+  background-position: calc(100% - var(--input-padding-horizontal)) 50%; /* LTR */
+  background-size: var(--autocomplete-background-width) 100%;
+}
+.js[dir="rtl"] .form-autocomplete {
+  background-image: url(../../images/icons/868686/magnifier-rtl.svg);
+  background-position: var(--input-padding-horizontal) 50%;
 }
 .js .form-autocomplete::-ms-clear {
   display: none;
 }
-.js[dir="rtl"] .form-autocomplete {
-  background-image: url(../../images/icons/868686/magnifier-rtl.svg);
-  background-position: 0 50%;
+
+/**
+ * Small variant.
+ *
+ * An autocomplete can receive small variant styling in two ways:
+ * 1) Adding the .form-element--small class directly to the form element.
+ * 2) A parent element of the input has the .claro-form-elements-small class.
+ *
+ * @see form--text.pcss.css, in the comment labeled "Small variants", for
+ * additional information on using .claro-form-elements-(variant) classes.
+ */
+.js .claro-form-elements-small .form-autocomplete,
+.js .form-autocomplete.form-element--small {
+  background-position: calc(100% - var(--space-xs) - (var(--input-border-size) * 2)) 50%; /* LTR */
+  background-size: var(--autocomplete-background-width--small) 100%;
 }
+.js[dir="rtl"] .claro-form-elements-small .form-autocomplete,
+.js[dir="rtl"] .form-autocomplete.form-element--small {
+  background-position: calc(var(--space-xs) - (var(--input-border-size) * 2)) 50%;
+}
+
 .js .form-autocomplete.is-autocompleting {
   background-image: url(../../images/icons/004adc/spinner.svg);
 }
@@ -79,4 +106,15 @@ _:-ms-fullscreen,
 [dir="rtl"] .claro-autocomplete__message {
   right: auto;
   left: 0;
+}
+
+@media screen and (max-width: 600px) {
+  /**
+   * Under 600px, all form element widths are 100%, so it is not necessary to
+   * have `.claro-autocomplete` display as inline-block. Setting it to block
+   * ensures the autocomplete input will assume the same width as other fields.
+   */
+  .claro-autocomplete {
+    display: block;
+  }
 }

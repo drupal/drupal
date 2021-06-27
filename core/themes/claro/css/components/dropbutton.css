@@ -19,7 +19,6 @@
   * Dropbutton
   */
   /* Variant variables: small. */
-  /* Variant variables: extra small. */
 }
 
 .dropbutton-wrapper {
@@ -62,17 +61,7 @@
 }
 
 .js .dropbutton {
-  height: 3rem;
-}
-
-/* Variants. */
-
-.js.no-touchevents .dropbutton--small {
-  height: 2rem;
-}
-
-.js.no-touchevents .dropbutton--extrasmall {
-  height: 1.5rem;
+  height: 2.875rem;
 }
 
 /**
@@ -80,32 +69,40 @@
  */
 
 .js .dropbutton--multiple .dropbutton__item:first-of-type {
-  margin-right: calc(3rem + 1px); /* LTR */
+  margin-right: calc(2.875rem + 1px); /* LTR */
 }
 
 [dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: 0;
-  margin-left: calc(3rem + 1px);
+  margin-left: calc(2.875rem + 1px);
 }
 
-/* First dropbutton list item variants */
+/**
+ * Small variant.
+ *
+ * A dropbutton can receive small variant styling in two ways:
+ * 1) Adding the .dropbutton--small class directly to the form element.
+ * 2) A parent element of the dropbutton has the .claro-form-elements-small
+ *    class.
+ *
+ * @see form--text.pcss.css, in the comment labeled "Small variants", for
+ * additional information on using .claro-form-elements-(variant) classes.
+ */
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
-  margin-right: calc(2rem + 1px); /* LTR */
+.js .dropbutton--small,
+.js .claro-form-elements-small .dropbutton {
+  height: 1.875rem;
 }
 
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+.js .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type,
+.js .claro-form-elements-small .dropbutton--multiple .dropbutton__item:first-of-type {
+  margin-right: calc(1.875rem + 1px); /* LTR */
+}
+
+[dir="rtl"].js .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type,
+[dir="rtl"].js .claro-form-elements-small .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: 0;
-  margin-left: calc(2rem + 1px);
-}
-
-.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
-  margin-right: calc(1.5rem + 1px); /* LTR */
-}
-
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
-  margin-right: 0;
-  margin-left: calc(1.5rem + 1px);
+  margin-left: calc(1.875rem + 1px);
 }
 
 /**
@@ -118,8 +115,8 @@
   top: 0;
   right: 0; /* LTR */
   bottom: 0;
-  width: 3rem;
-  height: 3rem;
+  width: 2.875rem;
+  height: 2.875rem;
   border: 1px solid transparent !important; /* 1 */
   border-radius: 0 2px 2px 0; /* LTR */
   background: #d4d4d8;
@@ -172,20 +169,21 @@
   transform: translate(50%, -50%) rotate(-180deg);
 }
 
-/* Toggler variants */
+/**
+ * Toggler small variant.
+ *
+ * The classes .dropbutton--small and .claro-form-elements-small apply the
+ * variant styles differently. Details on this can be found earlier in this
+ * file, in the comment labeled "Small variant".
+ */
 
-.no-touchevents .dropbutton--small .dropbutton__toggle {
-  width: 2rem;
-  height: 2rem;
+.dropbutton--small .dropbutton__toggle,
+.claro-form-elements-small .dropbutton__toggle {
+  width: 1.875rem;
+  height: 1.875rem;
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__toggle {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.no-touchevents .dropbutton--small .dropbutton__toggle::before,
-.no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
+.dropbutton--small .dropbutton__toggle::before {
   width: 0.75rem; /* 12px */
 }
 
@@ -211,10 +209,15 @@
     transform: translate(50%, -50%) rotate(-45deg);
   }
 
-  /* Variants */
-
+  /**
+   * Toggler variants
+   *
+   * The classes .dropbutton--small and .claro-form-elements-small apply the
+   * variant styles differently. Details on this can be found earlier in this
+   * file, in the comment labeled "Small variant".
+   */
   .no-touchevents .dropbutton--small .dropbutton__toggle::before,
-  .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
+  .no-touchevents .claro-form-elements-small .dropbutton__toggle::before {
     width: 0.4375rem;
     height: 0.4375rem;
     margin-top: -0.15467rem;
@@ -234,7 +237,7 @@
 .dropbutton__item:first-of-type > * {
   display: inline-block;
   margin: 0;
-  padding: calc(1rem - 1px) calc(1.5rem - 1px);
+  padding: calc(1rem - 2px) calc(1.5rem - 1px);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -256,20 +259,27 @@
   padding-left: calc(1rem - 1px);
 }
 
-/* Variants */
+/**
+ * Dropbutton primary item variants.
+ *
+ * The classes .dropbutton--small and .claro-form-elements-small apply the
+ * variant styles differently. Details on this can be found earlier in this
+ * file, in the comment labeled "Small variant".
+ */
 
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type > * {
-  padding-top: calc(0.625rem - 1px);
-  padding-bottom: calc(0.625rem - 1px);
+.no-touchevents .dropbutton--small .dropbutton__item:first-of-type > *,
+.touchevents .dropbutton--small .dropbutton__item:first-of-type > *,
+.no-touchevents .claro-form-elements-small .dropbutton__item:first-of-type > *,
+.touchevents .claro-form-elements-small .dropbutton__item:first-of-type > * {
+  padding-top: calc(0.5625rem - 1px);
+  padding-bottom: calc(0.5625rem - 1px);
   font-size: 0.79rem;
   line-height: 0.75rem;
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type > * {
-  padding-top: calc(0.375rem - 1px);
-  padding-bottom: calc(0.375rem - 1px);
-  font-size: 0.79rem;
-  line-height: 0.75rem;
+.dropbutton__item:first-of-type > input.button {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .dropbutton__item:first-of-type > *:hover,
@@ -385,20 +395,20 @@
   z-index: 1;
 }
 
-/* Variants. */
+/**
+ * Dropbutton item variants.
+ *
+ * The classes .dropbutton--small and .claro-form-elements-small apply the
+ * variant styles differently. Details on this can be found earlier in this
+ * file, in the comment labeled "Small variant".
+ */
 
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
-  font-size: 0.79rem;
-  line-height: 0.75rem;
-}
-
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-  padding-top: 0.375rem;
-  padding-bottom: 0.375rem;
+.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button,
+.no-touchevents .claro-form-elements-small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
+.no-touchevents .claro-form-elements-small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+  padding-top: 0.5625rem;
+  padding-bottom: 0.5625rem;
   font-size: 0.79rem;
   line-height: 0.75rem;
 }
