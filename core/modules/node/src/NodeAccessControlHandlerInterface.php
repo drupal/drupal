@@ -79,6 +79,6 @@ interface NodeAccessControlHandlerInterface {
    * @see hook_node_grants()
    * @see node_query_node_access_alter()
    */
-  public function viewAllNodes(AccountInterface $account);
+  public function viewAllNodes(AccountInterface $account): bool;
 
 }

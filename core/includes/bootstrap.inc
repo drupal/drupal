@@ -631,7 +631,7 @@ function drupal_static_reset($name = NULL) {
       break;
 
     case 'node_access_view_all_nodes':
-      @trigger_error("Using drupal_static_reset() with 'node_access_view_all_nodes' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909.", E_USER_DEPRECATED);
+      @trigger_error("Using drupal_static_reset() with 'node_access_view_all_nodes' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909", E_USER_DEPRECATED);
       \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
       break;
 

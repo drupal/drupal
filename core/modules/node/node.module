@@ -885,8 +885,8 @@ function node_access_grants($op, AccountInterface $account) {
  * @see node_query_node_access_alter()
  */
 function node_access_view_all_nodes($account = NULL) {
+  @trigger_error('node_access_view_all_nodes() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler("node")->viewAllNodes($account). See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
 
-  @trigger_error('node_access_view_all_nodes() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler("node")->viewAllNodes($account). See https://www.drupal.org/node/3038909.', E_USER_DEPRECATED);
   if (!$account) {
     $account = \Drupal::currentUser();
   }

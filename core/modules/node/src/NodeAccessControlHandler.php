@@ -204,7 +204,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * {@inheritdoc}
    */
-  public function viewAllNodes(AccountInterface $account) {
+  public function viewAllNodes(AccountInterface $account): bool {
     $account_id = $account->id();
     if (!isset($this->viewAllNodesCache[$account_id])) {
       // If no modules implement the node access system, access is always TRUE.

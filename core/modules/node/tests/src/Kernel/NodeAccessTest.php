@@ -132,35 +132,16 @@ class NodeAccessTest extends NodeAccessTestBase {
   /**
    * @group legacy
    */
-  public function testNodeAccessViewAllNodesDeprecation() {
-    $this->expectDeprecation('node_access_view_all_nodes() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler("node")->viewAllNodes($account). See https://www.drupal.org/node/3038909.');
-    $container = new ContainerBuilder();
-    $current_user = $this->prophesize(AccountProxyInterface::class);
-    $container->set('current_user', $current_user->reveal());
-    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $node_access_control_handler = $this->prophesize(NodeAccessControlHandlerInterface::class);
-    $entity_type_manager->getAccessControlHandler('node')->willReturn($node_access_control_handler->reveal());
-    $container->set('entity_type.manager', $entity_type_manager->reveal());
-    \Drupal::setContainer($container);
-
-    require_once $this->root . '/core/modules/node/node.module';
+  public function testNodeAccessViewAllNodesDeprecation(): void {
+    $this->expectDeprecation('node_access_view_all_nodes() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler("node")->viewAllNodes($account). See https://www.drupal.org/node/3038909');
     node_access_view_all_nodes();
   }
 
   /**
    * @group legacy
    */
-  public function testNodeAccessViewAllNodesCacheResetDeprecation() {
-    $this->expectDeprecation("Using drupal_static_reset() with 'node_access_view_all_nodes' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909.");
-    $container = new ContainerBuilder();
-    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $node_access_control_handler = $this->prophesize(NodeAccessControlHandler::class);
-    $node_access_control_handler->resetCache()->shouldBeCalledOnce();
-    $entity_type_manager->getAccessControlHandler('node')->willReturn($node_access_control_handler->reveal());
-    $container->set('entity_type.manager', $entity_type_manager->reveal());
-    \Drupal::setContainer($container);
-
-    require_once $this->root . '/core/includes/bootstrap.inc';
+  public function testNodeAccessViewAllNodesCacheResetDeprecation(): void {
+    $this->expectDeprecation("Using drupal_static_reset() with 'node_access_view_all_nodes' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909");
     drupal_static_reset('node_access_view_all_nodes');
   }
 
