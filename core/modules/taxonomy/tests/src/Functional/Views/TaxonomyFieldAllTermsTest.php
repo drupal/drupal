@@ -36,14 +36,14 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     // Test term1 links.
     $xpath = '//a[@href="' . $this->term1->toUrl()->toString() . '"]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[0]', $this->term1->label());
     $this->assertSession()->elementTextEquals('xpath', $xpath . '[1]', $this->term1->label());
-    $this->assertSession()->elementTextEquals('xpath', $xpath . '[2]', $this->term1->label());
 
     // Test term2 links.
     $xpath = '//a[@href="' . $this->term2->toUrl()->toString() . '"]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[0]', $this->term2->label());
     $this->assertSession()->elementTextEquals('xpath', $xpath . '[1]', $this->term2->label());
-    $this->assertSession()->elementTextEquals('xpath', $xpath . '[2]', $this->term2->label());
   }
 
   /**

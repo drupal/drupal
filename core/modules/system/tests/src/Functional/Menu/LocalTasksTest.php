@@ -147,9 +147,10 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings_sub1'));
     $this->assertLocalTasks($sub_tasks, 1);
 
-    $this->assertSession()->elementsCount('xpath', '//ul[contains(@class, "tabs")]//a[contains(@class, "active")]', 2);
-    $this->assertSession()->elementTextEquals('xpath', '//ul[contains(@class, "tabs")]//a[contains(@class, "active")][1]', 'Settings(active tab)');
-    $this->assertSession()->elementTextEquals('xpath', '//ul[contains(@class, "tabs")]//a[contains(@class, "active")][2]', 'Dynamic title for TestTasksSettingsSub1(active tab)');
+    $xpath = '//ul[contains(@class, "tabs")]//a[contains(@class, "active")]';
+    $this->assertSession()->elementsCount('xpath', $xpath, 2);
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[0]', 'Settings(active tab)');
+    $this->assertSession()->elementTextEquals('xpath', $xpath . '[1]', 'Dynamic title for TestTasksSettingsSub1(active tab)');
 
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'kittens:ragdoll');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'kittens:dwarf-cat');
