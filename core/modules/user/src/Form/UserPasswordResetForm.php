@@ -33,20 +33,22 @@ class UserPasswordResetForm extends FormBase {
    * @param \Drupal\Core\Session\AccountInterface $user
    *   User requesting reset.
    * @param string $expiration_date
-   *   Formatted expiration date for the login link, or NULL if the link does
-   *   not expire.
+   *   Formatted expiration date for the login link.
    * @param int $timestamp
    *   The current timestamp.
    * @param string $hash
    *   Login link hash.
    */
   public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $user = NULL, $expiration_date = NULL, $timestamp = NULL, $hash = NULL) {
+    // @todo Remove if clause / else block in Drupal 10.0.x. (We are allowed to
+    //   assume variables are populated, even though we're disallowed from
+    //   making them mandatory in this method definition.)
     if ($expiration_date) {
       $form['message'] = ['#markup' => $this->t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', ['%user_name' => $user->getAccountName(), '%expiration_date' => $expiration_date])];
-      $form['#title'] = $this->t('Reset password');
+      $form['#title'] = $this->t($user->getLastLoginTime() ? 'Reset password' : 'Set password');
     }
     else {
-      // No expiration for first time login.
+      @trigger_error('The expiration date argument to UserPasswordResetForm::buildForm() is mandatory / not passing it is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3214529', E_USER_DEPRECATED);
       $form['message'] = ['#markup' => $this->t('<p>This is a one-time login for %user_name.</p><p>Click on this button to log in to the site and change your password.</p>', ['%user_name' => $user->getAccountName()])];
       $form['#title'] = $this->t('Set password');
     }
