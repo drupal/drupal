@@ -625,6 +625,13 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   unit tests with a clean environment.
  */
 function drupal_static_reset($name = NULL) {
+  switch ($name) {
+    case 'file_get_file_references':
+      @trigger_error("Using drupal_static_reset() with 'file_get_file_references' as parameter is deprecated in drupal:9.1.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3035357.", E_USER_DEPRECATED);
+      \Drupal::service('file.usage')->resetCache();
+      return;
+  }
+
   drupal_static($name, NULL, TRUE);
 }
 

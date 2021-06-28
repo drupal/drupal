@@ -2,6 +2,8 @@
 
 namespace Drupal\file\FileUsage;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\file\FileInterface;
 
 /**
@@ -66,5 +68,31 @@ interface FileUsageInterface {
    *   the third level contains the usage count.
    */
   public function listUsage(FileInterface $file);
+
+  /**
+   * Retrieves a list of references to a file.
+   *
+   * @param \Drupal\file\FileInterface $file
+   *   A file entity.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface|null $field
+   *   (optional) A field definition to be used for this check. If given, limits
+   *   the reference check to the given field. Defaults to NULL.
+   * @param string $age
+   *   (optional) A constant that specifies which references to count. Use
+   *   EntityStorageInterface::FIELD_LOAD_REVISION (the default) to retrieve all
+   *   references within all revisions or
+   *   EntityStorageInterface::FIELD_LOAD_CURRENT to retrieve references only in
+   *   the current revisions of all entities that have references to this file.
+   * @param string $field_type
+   *   (optional) The name of a field type. If given, limits the reference check
+   *   to fields of the given type. If both $field and $field_type are given but
+   *   $field is not the same type as $field_type, an empty array will be
+   *   returned. Defaults to 'file'.
+   *
+   * @return array
+   *   A multidimensional array. The keys are field_name, entity_type,
+   *   entity_id and the value is an entity referencing this file.
+   */
+  public function getReferences(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file');
 
 }
