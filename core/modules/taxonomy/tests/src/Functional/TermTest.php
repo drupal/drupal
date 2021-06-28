@@ -277,9 +277,6 @@ class TermTest extends TaxonomyTestBase {
     $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
     $this->assertTrue(empty($tree), 'The terms are not created on preview.');
 
-    // taxonomy.module does not maintain its static caches.
-    \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
-
     // Save, creating the terms.
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
