@@ -21,12 +21,9 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    *
    * @var bool
    *
-   * All core test will have this set to TRUE if they do not override this
-   * property.
-   *
    * @see ::setUp()
    */
-  protected $failOnJavascriptConsoleErrors = FALSE;
+  protected $failOnJavascriptConsoleErrors = TRUE;
 
   /**
    * Disables CSS animations in tests for more reliable testing.
@@ -42,21 +39,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $class = get_class($this);
-
-    // Force core tests that do not have ::failOnJavascriptConsoleErrors set in
-    // in class to fail on Javascript console errors.
-    $prop_fail_on_javascript_console_errors = new \ReflectionProperty($class, 'failOnJavascriptConsoleErrors');
-    if ($prop_fail_on_javascript_console_errors->getDeclaringClass()->getName() === self::class && $this->isCoreTest()) {
-      $this->failOnJavascriptConsoleErrors = TRUE;
-    }
-  }
 
   /**
    * {@inheritdoc}
@@ -137,7 +119,10 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       }
       if ($this->failOnJavascriptConsoleErrors) {
         $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
-        $this->assertEmpty($errors, "Javascript errors found:\n" . implode("\n", $errors));
+        if (!empty($errors)) {
+          $all_errors = implode("\n", $errors);
+          @trigger_error("Not failing Javascript test for Javascript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following Javascript errors: $all_errors. See https://www.drupal.org/node/3221100", E_USER_DEPRECATED);
+        }
       }
 
     }

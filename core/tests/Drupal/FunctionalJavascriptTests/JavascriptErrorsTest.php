@@ -2,12 +2,11 @@
 
 namespace Drupal\FunctionalJavascriptTests;
 
-use PHPUnit\Framework\ExpectationFailedException;
-
 /**
  * Tests that Drupal.throwError will cause tests to fail.
  *
  * @group javascript
+ * @group legacy
  */
 class JavascriptErrorsTest extends WebDriverTestBase {
 
@@ -27,27 +26,12 @@ class JavascriptErrorsTest extends WebDriverTestBase {
    * The actual assert for the error is in ::tearDown().
    */
   public function testJavascriptErrors(): void {
+    $this->expectDeprecation('Not failing Javascript test for Javascript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following Javascript errors: Error: A manually thrown error.');
     // Visit page that will throw a Javascript console error.
     $this->drupalGet('js_errors_test');
     // Ensure that errors from previous page loads will be
     // detected.
     $this->drupalGet('user');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    try {
-      // Call parent::tearDown() to ensure that an error will found for the
-      // expected Javascript error.
-      parent::tearDown();
-    }
-    catch (ExpectationFailedException $exception) {
-      $this->assertStringStartsWith("Javascript errors found:\nError: A manually thrown error.", $exception->getMessage());
-      return;
-    }
-    $this->fail('Expected Javascript errors fail.');
   }
 
 }
