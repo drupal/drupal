@@ -157,19 +157,17 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     if (!empty($sort_by)) {
       // Make sure the original order of sorts is preserved
       // (e.g. a sticky sort is often first)
-      if (isset($view->sort[$sort_by])) {
-        $view->query->orderby = [];
-        foreach ($view->sort as $key => $sort) {
-          if (!$sort->isExposed()) {
-            $sort->query();
+      $view->query->orderby = [];
+      foreach ($view->sort as $key => $sort) {
+        if (!$sort->isExposed()) {
+          $sort->query();
+        }
+        elseif (!empty($sort->options['expose']['field_identifier']) && $sort->options['expose']['field_identifier'] === $sort_by) {
+          if (isset($exposed_data['sort_order']) && in_array($exposed_data['sort_order'], ['ASC', 'DESC'], TRUE)) {
+            $sort->options['order'] = $exposed_data['sort_order'];
           }
-          elseif ($key == $sort_by) {
-            if (isset($exposed_data['sort_order']) && in_array($exposed_data['sort_order'], ['ASC', 'DESC'])) {
-              $sort->options['order'] = $exposed_data['sort_order'];
-            }
-            $sort->setRelationship();
-            $sort->query();
-          }
+          $sort->setRelationship();
+          $sort->query();
         }
       }
     }
@@ -205,16 +203,18 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
 
     // Check if there is exposed sorts for this view
     $exposed_sorts = [];
+    $exposed_sorts_options = [];
     foreach ($this->view->sort as $id => $handler) {
-      if ($handler->canExpose() && $handler->isExposed()) {
-        $exposed_sorts[$id] = $handler->options['expose']['label'];
+      if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['field_identifier'])) {
+        $exposed_sorts[$handler->options['expose']['field_identifier']] = $id;
+        $exposed_sorts_options[$handler->options['expose']['field_identifier']] = $handler->options['expose']['label'];
       }
     }
 
     if (count($exposed_sorts)) {
       $form['sort_by'] = [
         '#type' => 'select',
-        '#options' => $exposed_sorts,
+        '#options' => $exposed_sorts_options,
         '#title' => $this->options['exposed_sorts_label'],
       ];
       $sort_order = [
@@ -222,8 +222,8 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         'DESC' => $this->options['sort_desc_label'],
       ];
       $user_input = $form_state->getUserInput();
-      if (isset($user_input['sort_by']) && isset($this->view->sort[$user_input['sort_by']])) {
-        $default_sort_order = $this->view->sort[$user_input['sort_by']]->options['order'];
+      if (isset($user_input['sort_by']) && isset($exposed_sorts[$user_input['sort_by']]) && isset($this->view->sort[$exposed_sorts[$user_input['sort_by']]])) {
+        $default_sort_order = $this->view->sort[$exposed_sorts[$user_input['sort_by']]]->options['order'];
       }
       else {
         $first_sort = reset($this->view->sort);

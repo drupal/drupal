@@ -49,6 +49,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $options['expose'] = [
       'contains' => [
         'label' => ['default' => ''],
+        'field_identifier' => ['default' => ''],
       ],
     ];
     return $options;
@@ -208,7 +209,50 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
       '#required' => TRUE,
       '#size' => 40,
       '#weight' => -1,
-   ];
+    ];
+
+    $form['expose']['field_identifier'] = [
+      '#type' => 'textfield',
+      '#default_value' => $this->options['expose']['field_identifier'],
+      '#title' => $this->t('Sort field identifier'),
+      '#required' => TRUE,
+      '#size' => 40,
+      '#description' => $this->t("This will appear in the URL after the ?, as value of 'sort_by' parameter, to identify this sort field. Cannot be blank. Only letters, digits and the dot ('.'), hyphen ('-'), underscore ('_'), and tilde ('~') characters are allowed."),
+    ];
+  }
+
+  /**
+   * Validate the options form.
+   */
+  public function validateExposeForm($form, FormStateInterface $form_state) {
+    $field_identifier = $form_state->getValue([
+      'options',
+      'expose',
+      'field_identifier',
+    ]);
+    if (!preg_match('/^[a-zA-z][a-zA-Z0-9_~.\-]*$/', $field_identifier)) {
+      $form_state->setErrorByName('expose][field_identifier', $this->t('This identifier has illegal characters.'));
+      return;
+    }
+
+    // Validate that the sort field identifier is unique within the sort
+    // handlers. Note that the sort field identifier is different that other
+    // identifiers because it is used as a query string value of the 'sort_by'
+    // parameter, while the others are used as query string parameter keys.
+    // Therefore we can have a sort field identifier be the same as an exposed
+    // filter identifier. This prevents us from using
+    // DisplayPluginInterface::isIdentifierUnique() to test for uniqueness.
+    // @see \Drupal\views\Plugin\views\display\DisplayPluginInterface::isIdentifierUnique()
+    foreach ($this->view->display_handler->getHandlers('sort') as $key => $handler) {
+      if ($handler->canExpose() && $handler->isExposed()) {
+        if ($form_state->get('id') !== $key && isset($handler->options['expose']['field_identifier']) && $field_identifier === $handler->options['expose']['field_identifier']) {
+          $form_state->setErrorByName('expose][field_identifier', $this->t('This identifier is already used by %label sort handler.', [
+            '%label' => $handler->adminLabel(TRUE),
+          ]));
+          return;
+        }
+      }
+    }
   }
 
   /**
@@ -226,6 +270,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   public function defaultExposeOptions() {
     $this->options['expose'] = [
       'label' => $this->definition['title'],
+      'field_identifier' => $this->options['id'],
     ];
   }
 

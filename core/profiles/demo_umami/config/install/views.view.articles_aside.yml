@@ -189,6 +189,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: created
           granularity: second
         nid:
           id: nid
@@ -201,6 +202,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: nid
           entity_type: node
           entity_field: nid
           plugin_id: standard

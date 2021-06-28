@@ -220,6 +220,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: created
           granularity: second
       title: 'Promoted Items Double'
       header: {  }
