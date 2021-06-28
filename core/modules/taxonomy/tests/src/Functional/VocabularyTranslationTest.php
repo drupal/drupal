@@ -71,7 +71,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests vocabulary name translation for overview page and reset page.
+   * Tests vocabulary name translation for the overview and reset pages.
    */
   public function testVocabularyTitleLabelTranslation(): void {
     $this->drupalGet('admin/structure/taxonomy/add');
