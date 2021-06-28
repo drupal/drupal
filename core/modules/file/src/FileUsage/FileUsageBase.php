@@ -61,19 +61,19 @@ abstract class FileUsageBase implements FileUsageInterface {
    */
   public function __construct(ConfigFactoryInterface $config_factory = NULL, EntityTypeManagerInterface $entity_type_manager = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
     if (!$config_factory) {
-      @trigger_error('The $config_factory parameter will become required in drupal:10.0.0. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+      @trigger_error('Calling FileUsageBase::__construct() without the $config_factory argument is deprecated in drupal:9.3.0 and the $config_factory argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
       $config_factory = \Drupal::configFactory();
     }
     $this->configFactory = $config_factory;
 
     if (!$entity_type_manager) {
-      @trigger_error('The $entity_type_manager parameter will become required in drupal:10.0.0. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+      @trigger_error('Calling FileUsageBase::__construct() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and the $entity_type_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
       $entity_type_manager = \Drupal::entityTypeManager();
     }
     $this->entityTypeManager = $entity_type_manager;
 
     if (!$entity_field_manager) {
-      @trigger_error('The $entity_field_manager parameter will become required in drupal:10.0.0. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+      @trigger_error('Calling FileUsageBase::__construct() without the $entity_field_manager argument is deprecated in drupal:9.3.0 and the $entity_field_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
       $this->entityFieldManager = \Drupal::service('entity_field.manager');
     }
     $this->entityFieldManager = $entity_field_manager;

@@ -200,7 +200,7 @@ function template_preprocess_file_upload_help(&$variables) {
  * @see https://www.drupal.org/node/3035357
  */
 function file_field_find_file_reference_column(FieldDefinitionInterface $field) {
-  @trigger_error('file_field_find_file_reference_column() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+  @trigger_error('file_field_find_file_reference_column() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
   $schema = $field->getFieldStorageDefinition()->getSchema();
   foreach ($schema['foreign keys'] as $data) {
     if ($data['table'] == 'file_managed') {

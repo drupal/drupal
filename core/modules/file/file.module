@@ -1708,7 +1708,7 @@ function file_icon_map($mime_type) {
  * @ingroup file
  */
 function file_get_file_references(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
-  @trigger_error('file_get_file_references() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+  @trigger_error('file_get_file_references() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
   return \Drupal::service('file.usage')->getReferences($file, $field, $age, $field_type);
 }
 
