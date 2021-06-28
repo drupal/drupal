@@ -28,16 +28,16 @@ class ProfileStream extends ModuleStream {
   /**
    * ProfileStream constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
    *   The module handler service.
-   * @param string $install_profile
+   * @param string|null $install_profile
    *   The install profile.
    */
-  public function __construct(RequestStack $requestStack, ModuleHandlerInterface $moduleHandler, string $install_profile) {
+  public function __construct(RequestStack $requestStack NULL, ModuleHandlerInterface $moduleHandler NULL, string $install_profile = NULL) {
     parent::__construct($requestStack, $moduleHandler);
-    $this->installProfile = $install_profile;
+    $this->installProfile = $install_profile ?? \Drupal::getContainer()->getParameter('install_profile');
   }
 
   /**

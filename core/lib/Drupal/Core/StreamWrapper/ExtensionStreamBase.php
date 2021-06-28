@@ -22,11 +22,11 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   /**
    * Constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack service.
    */
-  public function __construct(RequestStack $requestStack) {
-    $this->requestStack = $requestStack;
+  public function __construct(RequestStack $requestStack = NULL) {
+    $this->requestStack = $requestStack ?? \Drupal::service('request_stack');
   }
 
   /**

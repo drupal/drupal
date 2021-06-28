@@ -28,14 +28,14 @@ class ThemeStream extends ExtensionStreamBase {
   /**
    * Constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $themeHandler
    *   The theme handler service.
    */
-  public function __construct(RequestStack $requestStack, ThemeHandlerInterface $themeHandler) {
+  public function __construct(RequestStack $requestStack = NULL, ThemeHandlerInterface $themeHandler = NULL) {
     parent::__construct($requestStack);
-    $this->themeHandler = $themeHandler;
+    $this->themeHandler = $themeHandler ?? \Drupal::service('theme_handler');
   }
 
   /**

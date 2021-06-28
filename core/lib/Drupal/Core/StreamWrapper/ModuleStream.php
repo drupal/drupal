@@ -27,14 +27,14 @@ class ModuleStream extends ExtensionStreamBase {
   /**
    * Constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
    *   The module handler service.
    */
-  public function __construct(RequestStack $requestStack, ModuleHandlerInterface $moduleHandler) {
+  public function __construct(RequestStack $requestStack = NULL, ModuleHandlerInterface $moduleHandler = NULL) {
     parent::__construct($requestStack);
-    $this->moduleHandler = $moduleHandler;
+    $this->moduleHandler = $moduleHandler ?? \Drupal::service('module_handler');
   }
 
   /**
