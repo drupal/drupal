@@ -334,11 +334,12 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    *   An array of context objects for a given entity.
    */
   protected function getContextsForEntity(FieldableEntityInterface $entity) {
+    $available_context_ids = array_keys($this->contextRepository()->getAvailableContexts());
     return [
       'view_mode' => new Context(ContextDefinition::create('string'), $this->getMode()),
       'entity' => EntityContext::fromEntity($entity),
       'display' => EntityContext::fromEntity($this),
-    ] + $this->contextRepository()->getAvailableContexts();
+    ] + $this->contextRepository()->getRuntimeContexts($available_context_ids);
   }
 
   /**

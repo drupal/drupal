@@ -1448,4 +1448,48 @@ class LayoutBuilderTest extends BrowserTestBase {
     }
   }
 
+  /**
+   * Tests the Layout Builder UI with a context defined at runtime.
+   */
+  public function testLayoutBuilderContexts() {
+    $node_url = 'node/1';
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet($node_url);
+    $assert_session->linkExists('Layout');
+    $this->clickLink('Layout');
+    $assert_session->linkExists('Add section');
+
+    // Add the testing block.
+    $page->clickLink('Add block');
+    $this->clickLink('Can I have runtime contexts');
+    $page->pressButton('Add block');
+
+    // Ensure the runtime context value is rendered before saving.
+    $assert_session->pageTextContains('for sure you can');
+
+    // Save the layout, and test that the value is rendered after save.
+    $page->pressButton('Save layout');
+    $assert_session->addressEquals($node_url);
+    $assert_session->pageTextContains('for sure you can');
+    $assert_session->elementExists('css', '.layout');
+  }
+
 }

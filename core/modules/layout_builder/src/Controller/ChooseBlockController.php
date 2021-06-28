@@ -142,7 +142,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
     $block_categories['#attributes']['class'][] = 'js-layout-builder-categories';
     $block_categories['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
 
-    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getAvailableContexts($section_storage), [
+    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage), [
       'section_storage' => $section_storage,
       'delta' => $delta,
       'region' => $region,
@@ -173,7 +173,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    *   A render array.
    */
   public function inlineBlockList(SectionStorageInterface $section_storage, int $delta, $region) {
-    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getAvailableContexts($section_storage), [
+    $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage), [
       'section_storage' => $section_storage,
       'region' => $region,
       'list' => 'inline_blocks',
