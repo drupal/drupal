@@ -149,8 +149,9 @@ class LocalTasksTest extends BrowserTestBase {
 
     $xpath = '//ul[contains(@class, "tabs")]//a[contains(@class, "active")]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
-    $this->assertSession()->elementTextEquals('xpath', $xpath . '[0]', 'Settings(active tab)');
-    $this->assertSession()->elementTextEquals('xpath', $xpath . '[1]', 'Dynamic title for TestTasksSettingsSub1(active tab)');
+    $links = $this->xpath($xpath);
+    $this->assertEquals('Settings(active tab)', $links[0]->getText(), 'The settings tab is active.');
+    $this->assertEquals('Dynamic title for TestTasksSettingsSub1(active tab)', $links[1]->getText(), 'The sub1 tab is active.');
 
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'kittens:ragdoll');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'kittens:dwarf-cat');
