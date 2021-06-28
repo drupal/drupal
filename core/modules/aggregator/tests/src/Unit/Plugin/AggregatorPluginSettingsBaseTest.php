@@ -87,14 +87,14 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
       ->setMethods(['buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'])
       ->setConstructorArgs([[], 'aggregator_test', ['description' => ''], $this->configFactory])
       ->getMock();
-    $test_processor->expects($this->at(0))
+    $test_processor->expects($this->once())
       ->method('buildConfigurationForm')
       ->with($this->anything(), $form_state)
       ->will($this->returnArgument(0));
-    $test_processor->expects($this->at(1))
+    $test_processor->expects($this->once())
       ->method('validateConfigurationForm')
       ->with($this->anything(), $form_state);
-    $test_processor->expects($this->at(2))
+    $test_processor->expects($this->once())
       ->method('submitConfigurationForm')
       ->with($this->anything(), $form_state);
 

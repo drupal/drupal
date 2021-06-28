@@ -118,18 +118,14 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::setElementErrorsFromFormState
    */
   public function testErrorMessagesInline() {
-    $this->messenger->expects($this->at(0))
+    $this->messenger->expects($this->exactly(4))
       ->method('addError')
-      ->with('no title given');
-    $this->messenger->expects($this->at(1))
-      ->method('addError')
-      ->with('element is invisible');
-    $this->messenger->expects($this->at(2))
-      ->method('addError')
-      ->with('this missing element is invalid');
-    $this->messenger->expects($this->at(3))
-      ->method('addError')
-      ->with('3 errors have been found: <ul-comma-list-mock><li-mock>Test 1</li-mock><li-mock>Test 2 &amp; a half</li-mock><li-mock>Test 3</li-mock></ul-comma-list-mock>');
+      ->withConsecutive(
+        ['no title given', FALSE],
+        ['element is invisible', FALSE],
+        ['this missing element is invalid', FALSE],
+        ['3 errors have been found: <ul-comma-list-mock><li-mock>Test 1</li-mock><li-mock>Test 2 &amp; a half</li-mock><li-mock>Test 3</li-mock></ul-comma-list-mock>', FALSE],
+      );
 
     $this->renderer->expects($this->once())
       ->method('renderPlain')
@@ -164,31 +160,18 @@ class FormErrorHandlerTest extends UnitTestCase {
    * Tests that opting out of Inline Form Errors works.
    */
   public function testErrorMessagesNotInline() {
-    $this->messenger->expects($this->exactly(7))
-      ->method('addMessage');
-
     // Asserts all messages are summarized.
-    $this->messenger->expects($this->at(0))
+    $this->messenger->expects($this->exactly(7))
       ->method('addMessage')
-      ->with('invalid', 'error', FALSE);
-    $this->messenger->expects($this->at(1))
-      ->method('addMessage')
-      ->with('invalid', 'error', FALSE);
-    $this->messenger->expects($this->at(2))
-      ->method('addMessage')
-      ->with('invalid', 'error', FALSE);
-    $this->messenger->expects($this->at(3))
-      ->method('addMessage')
-      ->with('no error message', 'error', FALSE);
-    $this->messenger->expects($this->at(4))
-      ->method('addMessage')
-      ->with('no title given', 'error', FALSE);
-    $this->messenger->expects($this->at(5))
-      ->method('addMessage')
-      ->with('element is invisible', 'error', FALSE);
-    $this->messenger->expects($this->at(6))
-      ->method('addMessage')
-      ->with('this missing element is invalid', 'error', FALSE);
+      ->withConsecutive(
+        ['invalid', 'error', FALSE],
+        ['invalid', 'error', FALSE],
+        ['invalid', 'error', FALSE],
+        ['no error message', 'error', FALSE],
+        ['no title given', 'error', FALSE],
+        ['element is invisible', 'error', FALSE],
+        ['this missing element is invalid', 'error', FALSE],
+      );
 
     $this->renderer->expects($this->never())
       ->method('renderPlain');

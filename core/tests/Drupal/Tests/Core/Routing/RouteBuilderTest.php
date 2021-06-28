@@ -159,13 +159,12 @@ class RouteBuilderTest extends UnitTestCase {
     $route_build_event = new RouteBuildEvent($route_collection);
 
     // Ensure that the alter routes events are fired.
-    $this->dispatcher->expects($this->at(0))
+    $this->dispatcher->expects($this->atLeast(2))
       ->method('dispatch')
-      ->with($route_build_event, RoutingEvents::DYNAMIC);
-
-    $this->dispatcher->expects($this->at(1))
-      ->method('dispatch')
-      ->with($route_build_event, RoutingEvents::ALTER);
+      ->withConsecutive(
+        [$route_build_event, RoutingEvents::DYNAMIC],
+        [$route_build_event, RoutingEvents::ALTER],
+      );
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -173,10 +172,10 @@ class RouteBuilderTest extends UnitTestCase {
       ->with($route_collection);
 
     // Ensure that the routes are set to the dumper and dumped.
-    $this->dumper->expects($this->at(0))
+    $this->dumper->expects($this->once())
       ->method('addRoutes')
       ->with($route_collection);
-    $this->dumper->expects($this->at(1))
+    $this->dumper->expects($this->once())
       ->method('dump')
       ->with();
 
@@ -229,13 +228,12 @@ class RouteBuilderTest extends UnitTestCase {
     $route_build_event = new RouteBuildEvent($route_collection_filled);
 
     // Ensure that the alter routes events are fired.
-    $this->dispatcher->expects($this->at(0))
+    $this->dispatcher->expects($this->atLeast(2))
       ->method('dispatch')
-      ->with($route_build_event, RoutingEvents::DYNAMIC);
-
-    $this->dispatcher->expects($this->at(1))
-      ->method('dispatch')
-      ->with($route_build_event, RoutingEvents::ALTER);
+      ->withConsecutive(
+        [$route_build_event, RoutingEvents::DYNAMIC],
+        [$route_build_event, RoutingEvents::ALTER],
+      );
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -243,10 +241,10 @@ class RouteBuilderTest extends UnitTestCase {
       ->with($route_collection_filled);
 
     // Ensure that the routes are set to the dumper and dumped.
-    $this->dumper->expects($this->at(0))
+    $this->dumper->expects($this->once())
       ->method('addRoutes')
       ->with($route_collection_filled);
-    $this->dumper->expects($this->at(1))
+    $this->dumper->expects($this->once())
       ->method('dump');
 
     $this->assertTrue($this->routeBuilder->rebuild());
@@ -312,9 +310,12 @@ class RouteBuilderTest extends UnitTestCase {
     $route_collection_filled->add('test_route.override', new Route('/test_route_override', [], [], ['compiler_class' => 'Class\Does\Not\Exist']));
     $route_collection_filled->add('test_route', new Route('/test_route', [], [], ['compiler_class' => RouteCompiler::class]));
     $route_build_event = new RouteBuildEvent($route_collection_filled);
-    $this->dispatcher->expects($this->at(0))
+    $this->dispatcher->expects($this->atLeast(2))
       ->method('dispatch')
-      ->with($route_build_event, RoutingEvents::DYNAMIC);
+      ->withConsecutive(
+        [$route_build_event, RoutingEvents::DYNAMIC],
+        [$route_build_event, RoutingEvents::ALTER],
+      );
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }

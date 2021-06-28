@@ -178,23 +178,18 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $result = $this->getLocalTasksForRouteResult($mock_plugin);
 
-    $this->cacheBackend->expects($this->at(0))
+    $this->cacheBackend->expects($this->exactly(2))
       ->method('get')
-      ->with('local_task_plugins:en:menu_local_task_test_tasks_view');
-
-    $this->cacheBackend->expects($this->at(1))
-      ->method('get')
-      ->with('local_task_plugins:en');
-
-    $this->cacheBackend->expects($this->at(2))
+      ->withConsecutive(
+        ['local_task_plugins:en:menu_local_task_test_tasks_view'],
+        ['local_task_plugins:en'],
+      );
+    $this->cacheBackend->expects($this->exactly(2))
       ->method('set')
-      ->with('local_task_plugins:en', $definitions, Cache::PERMANENT);
-
-    $expected_set = $this->getLocalTasksCache();
-
-    $this->cacheBackend->expects($this->at(3))
-      ->method('set')
-      ->with('local_task_plugins:en:menu_local_task_test_tasks_view', $expected_set, Cache::PERMANENT, ['local_task']);
+      ->withConsecutive(
+        ['local_task_plugins:en', $definitions, Cache::PERMANENT],
+        ['local_task_plugins:en:menu_local_task_test_tasks_view', $this->getLocalTasksCache(), Cache::PERMANENT, ['local_task']],
+      );
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
     $this->assertEquals($result, $local_tasks);
@@ -214,7 +209,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $result = $this->getLocalTasksCache($mock_plugin);
 
-    $this->cacheBackend->expects($this->at(0))
+    $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with('local_task_plugins:en:menu_local_task_test_tasks_view')
       ->will($this->returnValue((object) ['data' => $result]));

@@ -311,12 +311,12 @@ class FormCacheTest extends UnitTestCase {
         ],
       ],
     ];
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('loadInclude')
-      ->with('a_module', 'the_type', 'some_name');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('loadInclude')
-      ->with('another_module', 'inc', 'another_module');
+      ->withConsecutive(
+        ['a_module', 'the_type', 'some_name'],
+        ['another_module', 'inc', 'another_module'],
+      );
     $this->formStateCacheStore->expects($this->once())
       ->method('get')
       ->with($form_build_id)
