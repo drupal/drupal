@@ -106,8 +106,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSession()->buttonExists('Upload');
     // Test label has correct 'for' attribute.
     $input = $this->assertSession()->fieldExists("files[{$field_name}_0]");
-    $label = $this->xpath('//label[@for="' . $input->getAttribute('id') . '"]');
-    $this->assertTrue(isset($label[0]), 'Label for upload found.');
+    $this->assertSession()->elementExists('xpath', '//label[@for="' . $input->getAttribute('id') . '"]');
 
     // Save the node and ensure it does not have the file.
     $this->submitForm([], 'Save');
