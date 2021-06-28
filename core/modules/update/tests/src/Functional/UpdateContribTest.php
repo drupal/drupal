@@ -395,7 +395,7 @@ class UpdateContribTest extends UpdateTestBase {
       $this->refreshUpdateStatus($xml_mapping);
       // In neither case should we see the "Themes" heading for installed
       // themes.
-      $this->assertSession()->elementNotExists('xpath', '//h3[text()="Themes"]');
+      $this->assertSession()->pageTextNotMatches('/Themes/');
       if ($check_disabled) {
         $this->assertSession()->pageTextContains('Uninstalled themes');
         $this->assertRaw($base_theme_project_link);
