@@ -41,6 +41,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   and join type (optional, defaults to INNER). Defaults to an empty array.
  *   For more documentation refer to
  *   \Drupal\Core\Database\Query\SelectInterface::addJoin().
+ * - distinct: (optional) Sets the source plugin query to be DISTINCT if set to
+ *   TRUE. If set to FALSE, the distinct flag will be disabled.
  *
  * Examples:
  *
@@ -77,6 +79,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * In this example users with 'foo' field_group value are retrieved from the
  * source database. field_group field values are located in another database
  * table, which should be joined against base table (users).
+ *
+ * @code
+ * source:
+ *   plugin: d7_user
+ *   joins:
+ *     -
+ *       table: users_roles
+ *       alias: ur
+ *       condition: u.uid = ur.uid
+ *   conditions:
+ *     -
+ *       field: ur.rid
+ *       value: [1, 2, 3]
+ *       operator: IN
+ *   distinct: TRUE
+ * @endcode
+ *
+ * In this example users of certain roles are retrieved from the source
+ * database. The distinct is required to remove duplicate records, because each
+ * user can have multiple roles.
  *
  * For other optional configuration keys inherited from the parent class, refer
  * to \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
@@ -317,6 +339,11 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     // Add any configured joins.
     foreach ($this->configuration['joins'] as $join) {
       $this->query->addJoin($join['type'] ?? 'INNER', $join['table'], $join['alias'], $join['condition']);
+    }
+
+    // Add distinct, if configured.
+    if (isset($this->configuration['distinct'])) {
+      $this->query->distinct((bool) $this->configuration['distinct']);
     }
 
     return $this->query;
