@@ -209,7 +209,8 @@ class ExposedFormTest extends ViewTestBase {
     $block->getPlugin()->setConfigurationValue('label_display', TRUE);
     $block->save();
 
-    // Test that the block label is found.
+    // Assert that the only two occurrences of `$view->getTitle()` are the title
+    // and h2 tags.
     $this->drupalGet('test_exposed_block');
     $this->assertSession()->elementContains('css', 'title', $view->getTitle());
     $this->assertSession()->elementExists('xpath', '//h2[text()="' . $view->getTitle() . '"]');
@@ -227,7 +228,8 @@ class ExposedFormTest extends ViewTestBase {
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
     $block->save();
 
-    // Test that the label is removed.
+    // Assert that the only occurrence of `$view->getTitle()` is the title tag
+    // now that label has been removed.
     $this->drupalGet('test_exposed_block');
     $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
     $this->assertSession()->elementContains('css', 'title', $view->getTitle());
