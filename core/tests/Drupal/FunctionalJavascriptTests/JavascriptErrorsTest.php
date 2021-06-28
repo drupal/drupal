@@ -3,7 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests;
 
 /**
- * Tests that Drupal.throwError will cause tests to fail.
+ * Tests that Drupal.throwError will cause a deprecation warning.
  *
  * @group javascript
  * @group legacy
@@ -13,7 +13,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -21,9 +21,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   protected static $modules = ['js_errors_test'];
 
   /**
-   * Tests that Javascript console errors cause a test failure.
-   *
-   * The actual assert for the error is in ::tearDown().
+   * Tests that Javascript console errors will result in a deprecation warning.
    */
   public function testJavascriptErrors(): void {
     $this->expectDeprecation('Not failing Javascript test for Javascript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following Javascript errors: Error: A manually thrown error.');

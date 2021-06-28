@@ -20,8 +20,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * Determines if a test should fail on Javascript console errors.
    *
    * @var bool
-   *
-   * @see ::setUp()
    */
   protected $failOnJavascriptConsoleErrors = TRUE;
 
