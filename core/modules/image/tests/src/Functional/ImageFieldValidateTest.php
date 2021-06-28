@@ -182,14 +182,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->uploadNodeImage($image, $field_name, 'article');
 
     // Look for form-required for the alt text.
-    $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-alt" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
-
-    $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required alt text.');
-
-    $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-title" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
-
-    $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required title text.');
-
+    $this->assertSession()->elementExists('xpath', '//label[@for="edit-' . $field_name . '-0-alt" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
+    $this->assertSession()->elementExists('xpath', '//label[@for="edit-' . $field_name . '-0-title" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
     $this->assertSession()->pageTextContains('Alternative text field is required.');
     $this->assertSession()->pageTextContains('Title field is required.');
 
