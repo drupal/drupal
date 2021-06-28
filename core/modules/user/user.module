@@ -10,6 +10,7 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
@@ -446,6 +447,7 @@ function template_preprocess_username(&$variables) {
  *   The account to log in.
  *
  * @see hook_user_login()
+ * @see \Drupal\user\Authentication\Provider\Cookie
  */
 function user_login_finalize(UserInterface $account) {
   \Drupal::currentUser()->setAccount($account);
@@ -461,8 +463,11 @@ function user_login_finalize(UserInterface $account) {
   // This is called before hook_user_login() in case one of those functions
   // fails or incorrectly does a redirect which would leave the old session
   // in place.
-  \Drupal::service('session')->migrate();
-  \Drupal::service('session')->set('uid', $account->id());
+  /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+  $session = \Drupal::service('session');
+  $session->migrate();
+  $session->set('uid', $account->id());
+  $session->set('check_logged_in', TRUE);
   \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
 }
 
@@ -608,11 +613,9 @@ function user_cancel($edit, $uid, $method) {
   }
 
   // Initialize batch (to set title).
-  $batch = [
-    'title' => t('Cancelling account'),
-    'operations' => [],
-  ];
-  batch_set($batch);
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Cancelling account'));
+  batch_set($batch_builder->toArray());
 
   // When the 'user_cancel_delete' method is used, user_delete() is called,
   // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete()
@@ -624,21 +627,18 @@ function user_cancel($edit, $uid, $method) {
   }
 
   // Finish the batch and actually cancel the account.
-  $batch = [
-    'title' => t('Cancelling user account'),
-    'operations' => [
-      ['_user_cancel', [$edit, $account, $method]],
-    ],
-  ];
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Cancelling user account'))
+    ->addOperation('_user_cancel', [$edit, $account, $method]);
 
   // After cancelling account, ensure that user is logged out.
   if ($account->id() == \Drupal::currentUser()->id()) {
     // Batch API stores data in the session, so use the finished operation to
     // manipulate the current user's session id.
-    $batch['finished'] = '_user_cancel_session_regenerate';
+    $batch_builder->setFinishCallback('_user_cancel_session_regenerate');
   }
 
-  batch_set($batch);
+  batch_set($batch_builder->toArray());
 
   // Batch processing is either handled via Form API or has to be invoked
   // manually.

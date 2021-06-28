@@ -1002,4 +1002,14 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertStringContainsString('</samp>}', $body);
   }
 
+  /**
+   * Test if setting an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
+   */
+  public function testSimpleTestBaseUrlValidation() {
+    putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.');
+    $this->setupBaseUrl();
+  }
+
 }

@@ -80,7 +80,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    * {@inheritdoc}
    */
   public function resetCache(array $ids = NULL) {
-    drupal_static_reset('taxonomy_term_count_nodes');
     $this->ancestors = [];
     $this->treeChildren = [];
     $this->treeParents = [];

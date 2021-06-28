@@ -2,6 +2,7 @@
 
 namespace Drupal\update\Form;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -380,24 +381,18 @@ class UpdateManagerUpdate extends FormBase {
         $projects = array_merge($projects, array_keys(array_filter($form_state->getValue($type))));
       }
     }
-    $operations = [];
+    $batch_builder = (new BatchBuilder())
+      ->setFile(drupal_get_path('module', 'update') . '/update.manager.inc')
+      ->setTitle($this->t('Downloading updates'))
+      ->setInitMessage($this->t('Preparing to download selected updates'))
+      ->setFinishCallback('update_manager_download_batch_finished');
     foreach ($projects as $project) {
-      $operations[] = [
-        'update_manager_batch_project_get',
-        [
-          $project,
-          $form_state->getValue(['project_downloads', $project]),
-        ],
-      ];
+      $batch_builder->addOperation('update_manager_batch_project_get', [
+        $project,
+        $form_state->getValue(['project_downloads', $project]),
+      ]);
     }
-    $batch = [
-      'title' => $this->t('Downloading updates'),
-      'init_message' => $this->t('Preparing to download selected updates'),
-      'operations' => $operations,
-      'finished' => 'update_manager_download_batch_finished',
-      'file' => drupal_get_path('module', 'update') . '/update.manager.inc',
-    ];
-    batch_set($batch);
+    batch_set($batch_builder->toArray());
   }
 
 }
