@@ -2,12 +2,6 @@
 
 namespace Drupal\Tests\node\Kernel;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\node\NodeAccessControlHandler;
-use Drupal\node\NodeAccessControlHandlerInterface;
-
 /**
  * Tests basic node_access functionality.
  *
