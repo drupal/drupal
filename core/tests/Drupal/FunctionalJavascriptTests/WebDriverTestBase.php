@@ -221,15 +221,4 @@ EndOfScript;
     return '';
   }
 
-  /**
-   * Determines whether the current test is core test.
-   *
-   * @return bool
-   *   Returns TRUE if the current test is core test, otherwise FALSE.
-   */
-  protected function isCoreTest(): bool {
-    $class = new \ReflectionClass(self::class);
-    return strpos($class->getFileName(), '/core/') !== FALSE;
-  }
-
 }
