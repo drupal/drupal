@@ -48,9 +48,8 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     // Exercise various defaults for textboxes and modifications to ensure
     // appropriate override and correct behavior.
-    $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-and-required" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
     // Verify that label precedes textfield, with required marker inside label.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//label[@for="edit-form-textfield-test-title-and-required" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
 
     // Verify that label tag with required marker precedes required textfield
     // with no title.
@@ -66,9 +65,8 @@ class ElementsLabelsTest extends BrowserTestBase {
     // field.
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
 
-    $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
-    // Verify that no label tag when title set not to display.
-    $this->assertArrayNotHasKey(0, $elements);
+    // Verify that no label tag exists when title set not to display.
+    $this->assertSession()->elementNotExists('xpath', '//label[@for="edit-form-textfield-test-title-no-show"]');
 
     // Verify that field class is form-no-label when there is no label.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "js-form-item-form-textfield-test-title-invisible") and contains(@class, "form-no-label")]');

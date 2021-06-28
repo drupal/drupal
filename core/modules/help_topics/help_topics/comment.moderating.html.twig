@@ -1,0 +1,34 @@
+---
+label: 'Moderating comments'
+related:
+  - comment.overview
+  - comment.configuring
+  - comment.disabling
+---
+{% set comment_unpublished_link_text %}
+  {% trans %}Unapproved comments{% endtrans %}
+{% endset %}
+{% set comment_unpublished_link = render_var(help_route_link(comment_unpublished_link_text, 'comment.admin_approval')) %}
+{% set comment_published_link_text %}
+  {% trans %}Comments{% endtrans %}
+{% endset %}
+{% set comment_published_link = render_var(help_route_link(comment_published_link_text, 'comment.admin')) %}
+{% set comment_permissions_link_text %}
+  {% trans %}Administer comments and comment settings{% endtrans %}
+{% endset %}
+{% set comment_permissions_link = render_var(help_route_link(comment_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-comment'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Decide which comments are shown on the website.{% endtrans %}</p>
+<h2>{% trans %}Who can moderate comments?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ comment_permissions_link }}</em> permission (typically administrators) can moderate comments. You will also need the <em>Access the Content Overview page</em> permission from the Node module (if it is installed) to navigate to the comment management page.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Content</em> &gt; <em>{{ comment_published_link }}</em>. A list of all comments is shown.{% endtrans %}</li>
+  <li>{% trans %}To unpublish comments, select one or more comments by checking the boxes on the left side (right side in right-to-left languages). Then select <em>Unpublish comment</em> from the <em>Action</em> select list and click <em>Apply to selected items</em>. If you select the <em>Delete comment</em> action, you can instead delete the unwanted  comments.{% endtrans %}</li>
+  <li>{% trans %}To change the content of a comment click <em>Edit</em> from the dropdown button for a particular comment.{% endtrans %}</li>
+  <li>{% trans %}To publish comments that are not yet visible on the website, navigate to the <em>{{ comment_unpublished_link }}</em> tab. Select one or more comments by checking the boxes on the left side (right side in right-to-left languages). Then select <em>Publish comment</em> from the <em>Action</em> select list and click <em>Apply to selected items</em>.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/8/core/modules/comment/administering-and-approving-comments">{% trans %}Online documentation for moderating comments{% endtrans %}</a></li>
+</ul>
