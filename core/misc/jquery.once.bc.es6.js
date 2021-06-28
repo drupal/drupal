@@ -28,8 +28,8 @@
   };
 
   // Expose the rest of the once API.
-  newOnce.filter = once.filter;
-  newOnce.find = once.find;
+  newOnce.filter = oldOnce.filter;
+  newOnce.find = oldOnce.find;
 
   // Replace the once library with the version augmented with jQuery.once calls.
   window.once = newOnce;

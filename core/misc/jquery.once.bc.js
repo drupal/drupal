@@ -18,7 +18,7 @@
     return oldOnce.remove(id, selector, context);
   };
 
-  newOnce.filter = once.filter;
-  newOnce.find = once.find;
+  newOnce.filter = oldOnce.filter;
+  newOnce.find = oldOnce.find;
   window.once = newOnce;
 })(jQuery, once);
