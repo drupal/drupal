@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -183,19 +184,12 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
     $entity_type_id = $form_state->getValue('entity_type_id');
 
     $entity_type_plural = $this->entityTypeManager->getDefinition($entity_type_id)->getPluralLabel();
-    $batch = [
-      'title' => $this->t('Deleting @entity_type_plural', [
-        '@entity_type_plural' => $entity_type_plural,
-      ]),
-      'operations' => [
-        [
-          [__CLASS__, 'deleteContentEntities'], [$entity_type_id],
-        ],
-      ],
-      'finished' => [__CLASS__, 'moduleBatchFinished'],
-      'progress_message' => '',
-    ];
-    batch_set($batch);
+    $batch_builder = (new BatchBuilder())
+      ->setTitle($this->t('Deleting @entity_type_plural', ['@entity_type_plural' => $entity_type_plural]))
+      ->setProgressMessage('')
+      ->setFinishCallback([__CLASS__, 'moduleBatchFinished'])
+      ->addOperation([__CLASS__, 'deleteContentEntities'], [$entity_type_id]);
+    batch_set($batch_builder->toArray());
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\update\Controller;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\update\UpdateFetcherInterface;
@@ -90,16 +91,13 @@ class UpdateController extends ControllerBase {
    */
   public function updateStatusManually() {
     $this->updateManager->refreshUpdateData();
-    $batch = [
-      'operations' => [
-        [[$this->updateManager, 'fetchDataBatch'], []],
-      ],
-      'finished' => 'update_fetch_data_finished',
-      'title' => t('Checking available update data'),
-      'progress_message' => t('Trying to check available update data ...'),
-      'error_message' => t('Error checking available update data.'),
-    ];
-    batch_set($batch);
+    $batch_builder = (new BatchBuilder())
+      ->setTitle(t('Checking available update data'))
+      ->addOperation([$this->updateManager, 'fetchDataBatch'], [])
+      ->setProgressMessage(t('Trying to check available update data ...'))
+      ->setErrorMessage(t('Error checking available update data.'))
+      ->setFinishCallback('update_fetch_data_finished');
+    batch_set($batch_builder->toArray());
     return batch_process('admin/reports/updates');
   }
 
