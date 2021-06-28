@@ -266,18 +266,8 @@
         this.$html.css(
           'scroll-padding-top',
           displace.offsets.top +
-          (this.stickyVisible ? this.$stickyTable.height() : 0),
+            (this.stickyVisible ? this.$stickyTable.height() : 0),
         );
-
-        const stickyParent = this.$stickyTable[0].parentElement;
-
-        // The left offset may be different in a scrollable table.
-        if (stickyParent.hasAttribute('data-drupal-scrollable-table-wrapper')) {
-          // Get the left offset of the scrollable table container.
-          const containerLeftOffset = stickyParent.getBoundingClientRect().left;
-          const containerAmountScrolled = stickyParent.scrollLeft;
-          css.left = `${containerLeftOffset - containerAmountScrolled}px`;
-        }
 
         return this.$stickyTable.css(css);
       },

@@ -121,15 +121,6 @@
       }
 
       this.$html.css('scroll-padding-top', displace.offsets.top + (this.stickyVisible ? this.$stickyTable.height() : 0));
-      var stickyParent = this.$stickyTable[0].parentElement;
-
-      if (stickyParent.hasAttribute('data-drupal-scrollable-table-wrapper')) {
-        var containerLeftOffset = stickyParent.getBoundingClientRect().left;
-        var containerAmountScrolled = stickyParent.scrollLeft;
-        css.left = "".concat(containerLeftOffset - containerAmountScrolled, "px");
-      }
-
-      this.$html.css('scroll-padding-top', displace.offsets.top + (this.stickyVisible ? this.$stickyTable.height() : 0));
       return this.$stickyTable.css(css);
     },
     checkStickyVisible: function checkStickyVisible() {
