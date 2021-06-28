@@ -2,9 +2,11 @@
 
 namespace Drupal\workspaces\Form;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -111,6 +113,31 @@ class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceFo
     catch (WorkspaceAccessException $e) {
       $this->messenger->addError($this->t('You do not have access to activate the %workspace_label workspace.', ['%workspace_label' => $this->entity->label()]));
     }
+
+    // Redirect to the workspace manage page by default.
+    if (!$this->getRequest()->query->has('destination')) {
+      $form_state->setRedirectUrl($this->entity->toUrl());
+    }
+  }
+
+  /**
+   * Checks access for the workspace activate form.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   *
+   * @return \Drupal\Core\Access\AccessResult
+   *   The access result.
+   */
+  public function checkAccess(RouteMatchInterface $route_match) {
+    /** @var \Drupal\workspaces\WorkspaceInterface $workspace */
+    $workspace = $route_match->getParameter('workspace');
+    $active_workspace = $this->workspaceManager->getActiveWorkspace();
+
+    $access = AccessResult::allowedIf(!$active_workspace || ($active_workspace && $active_workspace->id() != $workspace->id()))
+      ->addCacheableDependency($workspace);
+
+    return $access;
   }
 
 }

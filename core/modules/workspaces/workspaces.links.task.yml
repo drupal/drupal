@@ -2,3 +2,16 @@ entity.workspace.collection:
   title: 'List'
   route_name: entity.workspace.collection
   base_route: entity.workspace.collection
+entity.workspace.canonical:
+  title: 'Manage'
+  route_name: entity.workspace.canonical
+  base_route: entity.workspace.canonical
+entity.workspace.edit_form:
+  title: 'Edit'
+  route_name: entity.workspace.edit_form
+  base_route: entity.workspace.canonical
+entity.workspace.delete_form:
+  title: 'Delete'
+  route_name: entity.workspace.delete_form
+  base_route: entity.workspace.canonical
+  weight: 10

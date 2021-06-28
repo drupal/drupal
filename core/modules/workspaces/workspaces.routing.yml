@@ -15,6 +15,7 @@ entity.workspace.activate_form:
     _admin_route: TRUE
   requirements:
     _entity_access: 'workspace.view'
+    _custom_access: '\Drupal\workspaces\Form\WorkspaceActivateForm::checkAccess'
 
 entity.workspace.publish_form:
   path: '/admin/config/workflow/workspaces/manage/{workspace}/publish'
