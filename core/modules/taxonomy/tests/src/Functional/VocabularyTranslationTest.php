@@ -14,7 +14,11 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['content_translation', 'language', 'config_translation'];
+  protected static $modules = [
+    'content_translation',
+    'language',
+    'config_translation',
+  ];
 
   /**
    * {@inheritdoc}
