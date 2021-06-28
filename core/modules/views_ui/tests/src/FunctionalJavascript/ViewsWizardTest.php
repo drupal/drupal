@@ -29,7 +29,7 @@ class ViewsWizardTest extends WebDriverTestBase {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser([
-      'administer site configuration',
+      'access administration pages',
       'administer views',
     ]);
     $this->drupalLogin($admin_user);
@@ -57,6 +57,15 @@ class ViewsWizardTest extends WebDriverTestBase {
     // Create a menu item.
     $page->findField('page[link]')->click();
     $this->assertEquals($label_value, $page->findField('page[link_properties][title]')->getValue());
+
+    // Wait for conditional field to show.
+    $this->assertSession()->waitForElementVisible('named', ['select', 'page[link_properties][parent]']);
+
+    // Assert a menu can be selected as a parent.
+    $this->assertSession()->optionExists('page[link_properties][parent]', 'admin:');
+
+    // Assert a parent menu item can be selected from within a menu.
+    $this->assertSession()->optionExists('page[link_properties][parent]', 'admin:entity.view.collection');
 
     // Add a block display.
     $page->findField('block[create]')->click();

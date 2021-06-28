@@ -32,7 +32,7 @@ class MenuTest extends WizardTestBase {
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
     $view['page[link]'] = 1;
-    $view['page[link_properties][menu_name]'] = 'main';
+    $view['page[link_properties][parent]'] = 'main:';
     $view['page[link_properties][title]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');

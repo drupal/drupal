@@ -25,11 +25,6 @@ class DisplayPathTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_ui'];
-
-  /**
-   * {@inheritdoc}
-   */
   protected $defaultTheme = 'stark';
 
   /**
@@ -266,6 +261,23 @@ class DisplayPathTest extends UITestBase {
     $this->submitForm([
       'tab_options[type]' => 'normal',
       'tab_options[title]' => 'Parent title',
+    ], 'Apply');
+
+    // Open the menu options again.
+    $this->clickLink(t('Tab: Menu title'));
+
+    // Assert a menu can be selected as a parent.
+    $this->assertSession()->optionExists('menu[parent]', 'admin:');
+
+    // Assert a parent menu item can be selected from within a menu.
+    $this->assertSession()->optionExists('menu[parent]', 'admin:system.admin');
+
+    // Check that parent menu item can now be
+    // added without the menu_ui module being enabled.
+    $this->submitForm([
+      'menu[type]' => 'normal',
+      'menu[parent]' => 'admin:system.admin',
+      'menu[title]' => 'Menu title',
     ], 'Apply');
 
     $this->submitForm([], 'Save');
