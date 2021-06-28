@@ -98,7 +98,7 @@ class TermForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, FormStateInterface $form_state): array {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     if (!$this->getRequest()->query->has('destination')) {
       $element['overview'] = [
