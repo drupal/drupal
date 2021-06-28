@@ -35,7 +35,7 @@ class ProfileStream extends ModuleStream {
    * @param string|null $install_profile
    *   The install profile.
    */
-  public function __construct(RequestStack $requestStack NULL, ModuleHandlerInterface $moduleHandler NULL, string $install_profile = NULL) {
+  public function __construct(RequestStack $requestStack = NULL, ModuleHandlerInterface $moduleHandler = NULL, string $install_profile = NULL) {
     parent::__construct($requestStack, $moduleHandler);
     $this->installProfile = $install_profile ?? \Drupal::getContainer()->getParameter('install_profile');
   }
