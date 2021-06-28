@@ -2,3 +2,8 @@ block_configure:
   title: 'Configure block'
   route_name: 'entity.block.edit_form'
   group: 'block'
+
+block_remove:
+  title: 'Remove block'
+  route_name: 'entity.block.delete_form'
+  group: 'block'

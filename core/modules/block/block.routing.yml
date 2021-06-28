@@ -13,7 +13,7 @@ entity.block.delete_form:
   path: '/admin/structure/block/manage/{block}/delete'
   defaults:
     _entity_form: 'block.delete'
-    _title: 'Delete block'
+    _title: 'Remove block'
   requirements:
     _permission: 'administer blocks'
 
