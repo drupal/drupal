@@ -18,7 +18,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    */
   public function testReload() {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
-    $config_factory->expects($this->at(0))
+    $config_factory->expects($this->once())
       ->method('reset')
       ->with('core.menu.static_menu_link_overrides');
 
@@ -88,14 +88,6 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
       ->getMock();
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('definitions')
-      ->will($this->returnValue([]));
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('definitions')
-      ->will($this->returnValue([]));
 
     $definition_save_1 = [
       'definitions' => [
@@ -108,25 +100,24 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
         'test1__la___ma' => ['parent' => 'test1', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE],
       ],
     ];
-    $config->expects($this->at(2))
-      ->method('set')
-      ->with('definitions', $definition_save_1['definitions'])
-      ->will($this->returnSelf());
-    $config->expects($this->at(3))
-      ->method('save');
-    $config->expects($this->at(4))
+
+    $config->expects($this->exactly(4))
       ->method('get')
       ->with('definitions')
-      ->will($this->returnValue($definition_save_1['definitions']));
-    $config->expects($this->at(5))
-      ->method('get')
-      ->with('definitions')
-      ->will($this->returnValue($definition_save_1['definitions']));
-    $config->expects($this->at(6))
+      ->willReturnOnConsecutiveCalls(
+        [],
+        [],
+        $definition_save_1['definitions'],
+        $definition_save_1['definitions'],
+      );
+    $config->expects($this->exactly(2))
       ->method('set')
-      ->with('definitions', $definitions_save_2['definitions'])
+      ->withConsecutive(
+        ['definitions', $definition_save_1['definitions']],
+        ['definitions', $definitions_save_2['definitions']],
+      )
       ->will($this->returnSelf());
-    $config->expects($this->at(7))
+    $config->expects($this->exactly(2))
       ->method('save');
 
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
@@ -156,20 +147,18 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
       ->getMock();
-    $config->expects($this->at(0))
+    $config->expects($this->once())
       ->method('get')
       ->with('definitions')
       ->will($this->returnValue($old_definitions));
 
     // Only save if the definitions changes.
-    if ($old_definitions != $new_definitions) {
-      $config->expects($this->at(1))
-        ->method('set')
-        ->with('definitions', $new_definitions)
-        ->will($this->returnSelf());
-      $config->expects($this->at(2))
-        ->method('save');
-    }
+    $config->expects($old_definitions != $new_definitions ? $this->once() : $this->never())
+      ->method('set')
+      ->with('definitions', $new_definitions)
+      ->will($this->returnSelf());
+    $config->expects($old_definitions != $new_definitions ? $this->once() : $this->never())
+      ->method('save');
 
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())

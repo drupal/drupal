@@ -257,22 +257,14 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $this->controllerResolver->expects($this->at(0))
+    $this->controllerResolver->expects($this->exactly(4))
       ->method('getControllerFromDefinition')
-      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription')
-      ->willReturn([new TestPermissionCallbacks(), 'singleDescription']);
-    $this->controllerResolver->expects($this->at(1))
-      ->method('getControllerFromDefinition')
-      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
-      ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
-    $this->controllerResolver->expects($this->at(2))
-      ->method('getControllerFromDefinition')
-      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider')
-      ->willReturn([new TestPermissionCallbacks(), 'titleProvider']);
-    $this->controllerResolver->expects($this->at(3))
-      ->method('getControllerFromDefinition')
-      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess')
-      ->willReturn([new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']);
+      ->willReturnMap([
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription', [new TestPermissionCallbacks(), 'singleDescription']],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription', [new TestPermissionCallbacks(), 'titleDescription']],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider', [new TestPermissionCallbacks(), 'titleProvider']],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
+      ]);
 
     $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 

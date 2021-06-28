@@ -195,11 +195,11 @@ class EntityUnitTest extends UnitTestCase {
   public function testAccess() {
     $access = $this->createMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
     $operation = $this->randomMachineName();
-    $access->expects($this->at(0))
+    $access->expects($this->once())
       ->method('access')
       ->with($this->entity, $operation)
       ->will($this->returnValue(AccessResult::allowed()));
-    $access->expects($this->at(1))
+    $access->expects($this->once())
       ->method('createAccess')
       ->will($this->returnValue(AccessResult::allowed()));
     $this->entityTypeManager->expects($this->exactly(2))
@@ -396,19 +396,21 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postSave
    */
   public function testPostSave() {
-    $this->cacheTagsInvalidator->expects($this->at(0))
+    $this->cacheTagsInvalidator->expects($this->exactly(2))
       ->method('invalidateTags')
-      ->with([
-        // List cache tag.
-        $this->entityTypeId . '_list',
-      ]);
-    $this->cacheTagsInvalidator->expects($this->at(1))
-      ->method('invalidateTags')
-      ->with([
-        // Own cache tag.
-        $this->entityTypeId . ':' . $this->values['id'],
-        // List cache tag.
-        $this->entityTypeId . '_list',
+      ->withConsecutive([
+        [
+          // List cache tag.
+          $this->entityTypeId . '_list',
+        ],
+      ],
+      [
+        [
+          // Own cache tag.
+          $this->entityTypeId . ':' . $this->values['id'],
+          // List cache tag.
+          $this->entityTypeId . '_list',
+        ],
       ]);
 
     // This method is internal, so check for errors on calling it only.
@@ -425,21 +427,23 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postSave
    */
   public function testPostSaveBundle() {
-    $this->cacheTagsInvalidator->expects($this->at(0))
+    $this->cacheTagsInvalidator->expects($this->exactly(2))
       ->method('invalidateTags')
-      ->with([
-        // List cache tag.
-        $this->entityTypeId . '_list',
-        $this->entityTypeId . '_list:' . $this->entity->bundle(),
-      ]);
-    $this->cacheTagsInvalidator->expects($this->at(1))
-      ->method('invalidateTags')
-      ->with([
-        // Own cache tag.
-        $this->entityTypeId . ':' . $this->values['id'],
-        // List cache tag.
-        $this->entityTypeId . '_list',
-        $this->entityTypeId . '_list:' . $this->entity->bundle(),
+      ->withConsecutive([
+        [
+          // List cache tag.
+          $this->entityTypeId . '_list',
+          $this->entityTypeId . '_list:' . $this->entity->bundle(),
+        ],
+      ],
+      [
+        [
+          // Own cache tag.
+          $this->entityTypeId . ':' . $this->values['id'],
+          // List cache tag.
+          $this->entityTypeId . '_list',
+          $this->entityTypeId . '_list:' . $this->entity->bundle(),
+        ],
       ]);
 
     $this->entityType->expects($this->atLeastOnce())

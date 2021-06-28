@@ -155,12 +155,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('invokeAll')
-      ->with('test_entity_type_create');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_create');
+      ->withConsecutive(['test_entity_type_create'], ['entity_create']);
     $this->uuidService->expects($this->never())
       ->method('generate');
 
@@ -181,12 +178,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage(NULL);
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('invokeAll')
-      ->with('test_entity_type_create');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_create');
+      ->withConsecutive(['test_entity_type_create'], ['entity_create']);
     $this->uuidService->expects($this->never())
       ->method('generate');
 
@@ -209,12 +203,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('invokeAll')
-      ->with('test_entity_type_create');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_create');
+      ->withConsecutive(['test_entity_type_create'], ['entity_create']);
     $this->uuidService->expects($this->once())
       ->method('generate')
       ->will($this->returnValue('bar'));
@@ -256,18 +247,14 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('toArray')
       ->will($this->returnValue($expected));
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(4))
       ->method('invokeAll')
-      ->with('test_entity_type_presave');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_presave');
-    $this->moduleHandler->expects($this->at(2))
-      ->method('invokeAll')
-      ->with('test_entity_type_insert');
-    $this->moduleHandler->expects($this->at(3))
-      ->method('invokeAll')
-      ->with('entity_insert');
+      ->withConsecutive(
+        ['test_entity_type_presave'],
+        ['entity_presave'],
+        ['test_entity_type_insert'],
+        ['entity_insert'],
+      );
     $this->keyValueStore->expects($this->once())
       ->method('set')
       ->with('foo', $expected);
@@ -304,26 +291,18 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->keyValueStore->expects($this->never())
       ->method('delete');
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
-      ->with('entity_load')
+      ->withConsecutive(['entity_load'], ['test_entity_type_load'])
       ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(1))
-      ->method('getImplementations')
-      ->with('test_entity_type_load')
-      ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(2))
+    $this->moduleHandler->expects($this->exactly(4))
       ->method('invokeAll')
-      ->with('test_entity_type_presave');
-    $this->moduleHandler->expects($this->at(3))
-      ->method('invokeAll')
-      ->with('entity_presave');
-    $this->moduleHandler->expects($this->at(4))
-      ->method('invokeAll')
-      ->with('test_entity_type_update');
-    $this->moduleHandler->expects($this->at(5))
-      ->method('invokeAll')
-      ->with('entity_update');
+      ->withConsecutive(
+        ['test_entity_type_presave'],
+        ['entity_presave'],
+        ['test_entity_type_update'],
+        ['entity_update'],
+      );
     $this->keyValueStore->expects($this->once())
       ->method('set')
       ->with('foo', $expected);
@@ -379,13 +358,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
-      ->with('entity_load')
-      ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(1))
-      ->method('getImplementations')
-      ->with('test_entity_type_load')
+      ->withConsecutive(['entity_load'], ['test_entity_type_load'])
       ->will($this->returnValue([]));
     $expected = ['id' => 'foo'];
     $entity->expects($this->once())
@@ -506,13 +481,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('getMultiple')
       ->with(['foo'])
       ->will($this->returnValue([['id' => 'foo']]));
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
-      ->with('entity_load')
-      ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(1))
-      ->method('getImplementations')
-      ->with('test_entity_type_load')
+      ->withConsecutive(['entity_load'], ['test_entity_type_load'])
       ->will($this->returnValue([]));
     $entity = $this->entityStorage->load('foo');
     $this->assertInstanceOf('Drupal\Core\Entity\EntityInterface', $entity);
@@ -554,13 +525,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->keyValueStore->expects($this->once())
       ->method('getAll')
       ->will($this->returnValue([['id' => 'foo'], ['id' => 'bar']]));
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
-      ->with('entity_load')
-      ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(1))
-      ->method('getImplementations')
-      ->with('test_entity_type_load')
+      ->withConsecutive(['entity_load'], ['test_entity_type_load'])
       ->will($this->returnValue([]));
     $entities = $this->entityStorage->loadMultiple();
     foreach ($entities as $id => $entity) {
@@ -588,13 +555,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('getMultiple')
       ->with(['foo'])
       ->will($this->returnValue([['id' => 'foo']]));
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
-      ->with('entity_load')
-      ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(1))
-      ->method('getImplementations')
-      ->with('test_entity_type_load')
+      ->withConsecutive(['entity_load'], ['test_entity_type_load'])
       ->will($this->returnValue([]));
     $entities = $this->entityStorage->loadMultiple(['foo']);
     foreach ($entities as $id => $entity) {
@@ -633,30 +596,12 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class(reset($entities))));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->exactly(8))
       ->method('invokeAll')
-      ->with('test_entity_type_predelete');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_predelete');
-    $this->moduleHandler->expects($this->at(2))
-      ->method('invokeAll')
-      ->with('test_entity_type_predelete');
-    $this->moduleHandler->expects($this->at(3))
-      ->method('invokeAll')
-      ->with('entity_predelete');
-    $this->moduleHandler->expects($this->at(4))
-      ->method('invokeAll')
-      ->with('test_entity_type_delete');
-    $this->moduleHandler->expects($this->at(5))
-      ->method('invokeAll')
-      ->with('entity_delete');
-    $this->moduleHandler->expects($this->at(6))
-      ->method('invokeAll')
-      ->with('test_entity_type_delete');
-    $this->moduleHandler->expects($this->at(7))
-      ->method('invokeAll')
-      ->with('entity_delete');
+      ->withConsecutive(
+        ['test_entity_type_predelete'],
+        ['entity_predelete'],
+      );
 
     $this->keyValueStore->expects($this->once())
       ->method('deleteMultiple')

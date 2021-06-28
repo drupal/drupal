@@ -395,7 +395,7 @@ class EntityUrlTest extends UnitTestCase {
     // Test route with no mandatory parameters.
     $this->registerLinkTemplate('canonical');
     $route_name_0 = 'entity.' . $this->entityTypeId . '.canonical';
-    $url_generator->expects($this->at(0))
+    $url_generator->expects($this->any())
       ->method('generateFromRoute')
       ->with($route_name_0)
       ->willReturn((new GeneratedUrl())->setGeneratedUrl('/entity_test'));
@@ -404,7 +404,7 @@ class EntityUrlTest extends UnitTestCase {
     // Test route with non-default mandatory parameters.
     $this->registerLinkTemplate('{non_default_parameter}');
     $route_name_1 = 'entity.' . $this->entityTypeId . '.{non_default_parameter}';
-    $url_generator->expects($this->at(0))
+    $url_generator->expects($this->any())
       ->method('generateFromRoute')
       ->with($route_name_1)
       ->willThrowException(new MissingMandatoryParametersException());

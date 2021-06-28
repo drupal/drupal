@@ -67,21 +67,15 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
 
     // Set the mock language manager.
     $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->at(0))
-      ->method('getLanguage')
-      ->with($this->equalTo($source))
-      ->will($this->returnValue(new Language(['id' => 'en'])));
-    $language_manager->expects($this->at(1))
+    $language_manager->expects($this->once())
       ->method('getLanguages')
-      ->will($this->returnValue(['en' => [], 'it' => []]));
-    $language_manager->expects($this->at(2))
+      ->willReturn([$source => [], $target => []]);
+    $language_manager->expects($this->any())
       ->method('getLanguage')
-      ->with($this->equalTo($source))
-      ->will($this->returnValue(new Language(['id' => 'en'])));
-    $language_manager->expects($this->at(3))
-      ->method('getLanguage')
-      ->with($this->equalTo($target))
-      ->will($this->returnValue(new Language(['id' => 'it'])));
+      ->willReturnMap([
+        [$source, new Language(['id' => $source])],
+        [$target, new Language(['id' => $target])],
+      ]);
 
     // Set the mock entity. We need to use ContentEntityBase for mocking due to
     // issues with phpunit and multiple interfaces.
