@@ -4,6 +4,7 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -29,6 +30,19 @@ class UserAdminTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Gets the xpath selector a user account.
+   *
+   * @param \Drupal\user\Entity\User $user
+   *   The user to get the link for.
+   *
+   * @return string
+   *   The xpath selector for the user link.
+   */
+  private static function getLinkSelectorForUser(User $user) {
+    return '//td[contains(@class, "views-field-name")]/a[text()="' . $user->getAccountName() . '"]';
+  }
 
   /**
    * Registers a user and deletes it.
@@ -88,9 +102,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['permission' => 'administer taxonomy']]);
 
     // Check if the correct users show up.
-    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_a->getAccountName() . '"]');
-    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_b->getAccountName() . '"]');
-    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_c->getAccountName() . '"]');
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_b));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->getRoles();
@@ -98,9 +112,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['role' => reset($roles)]]);
 
     // Check if the correct users show up when filtered by role.
-    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_a->getAccountName() . '"]');
-    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_b->getAccountName() . '"]');
-    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_c->getAccountName() . '"]');
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_b));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Test blocking of a user.
     $account = $user_storage->load($user_c->id());
@@ -125,9 +139,9 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test filtering on admin page for blocked users
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
-    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_a->getAccountName() . '"]');
-    $this->assertSession()->elementNotExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_b->getAccountName() . '"]');
-    $this->assertSession()->elementExists('xpath', '//td[contains(@class, "views-field-name")]/a[text()="' . $user_c->getAccountName() . '"]');
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_b));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = [];

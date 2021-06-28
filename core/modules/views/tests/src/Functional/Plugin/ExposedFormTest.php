@@ -228,6 +228,7 @@ class ExposedFormTest extends ViewTestBase {
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
     $block->save();
 
+    // Test that the label is removed.
     // Assert that the only occurrence of `$view->getTitle()` is the title tag
     // now that label has been removed.
     $this->drupalGet('test_exposed_block');
