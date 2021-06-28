@@ -23,7 +23,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
    * @see taxonomy_term_load_multiple_by_name()
    * @see drupal_static_reset()
    */
-  public function testTaxonomyDeprecations() {
+  public function testTaxonomyDeprecations(): void {
     $this->installEntitySchema('taxonomy_term');
     $vocabulary1 = $this->createVocabulary();
     $term1 = $this->createTerm($vocabulary1, ['name' => 'Foo']);
