@@ -24,7 +24,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
   /**
    * Languages to enable.
    *
-   * @var array
+   * @var string[]
    */
   protected $additionalLangcodes = ['es'];
 
@@ -71,10 +71,9 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test vocabulary name translation for overview page and Reset Page.
+   * Tests vocabulary name translation for overview page and reset page.
    */
-  public function testVocabularyTitleLabelTranslation() {
-    // Getting taxonomy vocabulary add form
+  public function testVocabularyTitleLabelTranslation(): void {
     $this->drupalGet('admin/structure/taxonomy/add');
 
     // Create the vocabulary.
