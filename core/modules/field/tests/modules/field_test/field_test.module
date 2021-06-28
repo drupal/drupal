@@ -169,8 +169,7 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
  * @see \Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
  */
 function field_test_query_efq_metadata_test_alter(&$query) {
-  global $efq_test_metadata;
-  $efq_test_metadata = $query->getMetadata('foo');
+  field_test_memorize(__FUNCTION__, $query->getMetadata('foo'));
 }
 
 /**

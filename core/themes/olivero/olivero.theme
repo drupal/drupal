@@ -120,26 +120,23 @@ function olivero_preprocess_block(&$variables) {
       ->load($variables['elements']['#id']);
     if ($block) {
       $region = $block->getRegion();
-      if ($region == 'primary_menu') {
-        if ($variables['base_plugin_id'] === 'system_menu_block') {
-          $variables['content']['#attributes']['region'] = $region;
-        }
-        elseif ($variables['base_plugin_id'] === 'search_form_block') {
-          // Attaching library for search block if present at primary menu
-          // region.
-          $variables['#attached']['library'][] = 'olivero/search-narrow';
-        }
-      }
-      elseif ($region === 'secondary_menu' && $variables['base_plugin_id'] === 'system_menu_block') {
+
+      if ($variables['base_plugin_id'] === 'system_menu_block') {
         $variables['content']['#attributes']['region'] = $region;
+        if ($region === 'sidebar') {
+          $variables['#attached']['library'][] = 'olivero/menu-sidebar';
+        }
       }
-      elseif ($region === 'secondary_menu' && $variables['base_plugin_id'] === 'search_form_block') {
-        // Attaching library for search block if present at secondary menu
-        // region.
-        $variables['#attached']['library'][] = 'olivero/search-wide';
-      }
-      if ($variables['base_plugin_id'] === 'search_form_block' && in_array($region, ['primary_menu', 'secondary_menu'], TRUE)) {
-        $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
+
+      if ($variables['base_plugin_id'] === 'search_form_block') {
+        if ($region === 'primary_menu') {
+          $variables['#attached']['library'][] = 'olivero/search-narrow';
+          $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
+        }
+        elseif ($region === 'secondary_menu') {
+          $variables['#attached']['library'][] = 'olivero/search-wide';
+          $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
+        }
       }
     }
   }
@@ -163,6 +160,18 @@ function olivero_preprocess_block(&$variables) {
 function olivero_theme_suggestions_menu_alter(&$suggestions, array $variables) {
   if (isset($variables['attributes']['region'])) {
     $suggestions[] = 'menu__' . $variables['attributes']['region'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function olivero_preprocess_menu(&$variables) {
+  if (isset($variables['attributes']['region'])) {
+    if ($variables['attributes']['region'] === 'sidebar') {
+      $variables['attributes']['class'][] = 'menu--sidebar';
+    }
+    unset($variables['attributes']['region']);
   }
 }
 
@@ -347,6 +356,10 @@ function olivero_preprocess_field(&$variables) {
 
   if (in_array($variables['field_type'], $rich_field_types, TRUE)) {
     $variables['attributes']['class'][] = 'text-content';
+  }
+
+  if ($variables['field_type'] == 'image' && $variables['element']['#view_mode'] == 'full' && !$variables["element"]["#is_multiple"]) {
+    $variables['attributes']['class'][] = 'wide-image';
   }
 }
 
