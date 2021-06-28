@@ -96,11 +96,7 @@ class DisplayPageWebTest extends ViewTestBase {
     // Check local tasks.
     $this->drupalGet('test_page_display_menu');
     $this->assertSession()->statusCodeEquals(200);
-    $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]/child::text()', [
-      ':ul_class' => 'tabs primary',
-      ':a_class' => 'is-active',
-    ]);
-    $this->assertEquals(t('Test default tab'), $element[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', "//ul[contains(@class, 'tabs primary')]//a[contains(@class, 'is-active')]/child::text()", 'Test default tab');
     $this->assertSession()->titleEquals('Test default page | Drupal');
 
     $this->drupalGet('test_page_display_menu/default');
@@ -108,11 +104,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $this->drupalGet('test_page_display_menu/local');
     $this->assertSession()->statusCodeEquals(200);
-    $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]/child::text()', [
-      ':ul_class' => 'tabs primary',
-      ':a_class' => 'is-active',
-    ]);
-    $this->assertEquals(t('Test local tab'), $element[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', "//ul[contains(@class, 'tabs primary')]//a[contains(@class, 'is-active')]/child::text()", 'Test local tab');
     $this->assertSession()->titleEquals('Test local page | Drupal');
 
     // Check an ordinary menu link.
