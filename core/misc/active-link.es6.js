@@ -48,7 +48,9 @@
       );
 
       // Add query string selector for pagers, exposed filters.
-      selectors = selectors.map((current) => current + querySelector);
+      selectors = selectors.concat(
+        selectors.map((current) => current + querySelector),
+      );
 
       // Query the DOM.
       const activeLinks = context.querySelectorAll(selectors.join(','));

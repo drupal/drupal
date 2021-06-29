@@ -23,9 +23,9 @@
       }), originalSelectors.map(function (selector) {
         return "".concat(selector, "[hreflang=\"").concat(path.currentLanguage, "\"]");
       }));
-      selectors = selectors.map(function (current) {
+      selectors = selectors.concat(selectors.map(function (current) {
         return current + querySelector;
-      });
+      }));
       var activeLinks = context.querySelectorAll(selectors.join(','));
       var il = activeLinks.length;
 
