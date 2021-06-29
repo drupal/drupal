@@ -143,7 +143,7 @@ class UpdateManagerInstall extends FormBase {
     $all_files = $this->getRequest()->files->get('files', []);
     if ($this->moduleHandler->moduleExists('file')) {
       if (!($form_state->getValue('project_url') xor !empty($all_files['project_upload']))) {
-        $form_state->setErrorByName('project_url', $this->t('You must either provide a URL or upload an archive file to install.'));
+        $form_state->setErrorByName('project_url', $this->t('You must either provide a URL or upload an archive file.'));
       }
     }
     else {
