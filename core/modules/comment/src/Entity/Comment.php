@@ -134,6 +134,12 @@ class Comment extends ContentEntityBase implements CommentInterface {
             $parent_depth = count(explode('.', $parent->getThread()));
             $n = Number::alphadecimalToInt($parts[$parent_depth]);
           }
+
+          // If the parent is not published, this comment should be unpublished
+          // as well.
+          if (!$parent->isPublished()) {
+            $this->setUnpublished();
+          }
         }
         // Finally, build the thread field for this new comment. To avoid
         // race conditions, get a lock on the thread. If another process already

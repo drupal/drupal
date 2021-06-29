@@ -52,7 +52,7 @@ class CommentController extends ControllerBase {
   /**
    * The entity repository.
    *
-   * @var Drupal\Core\Entity\EntityRepositoryInterface
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
    */
   protected $entityRepository;
 
@@ -311,8 +311,11 @@ class CommentController extends ControllerBase {
 
       // Load the parent comment.
       $comment = $this->entityTypeManager()->getStorage('comment')->load($pid);
-      // Check if the parent comment is published and belongs to the entity.
-      $access = $access->andIf(AccessResult::allowedIf($comment && $comment->isPublished() && $comment->getCommentedEntityId() == $entity->id()));
+      // Check if the parent comment is published or user can administer
+      // comments, and parent comment belongs to the entity.
+      $access = $access->andIf(AccessResult::allowedIf($comment &&
+        ($comment->isPublished() || $account->hasPermission('administer comments')) &&
+        $comment->getCommentedEntityId() == $entity->id()));
       if ($comment) {
         $access->addCacheableDependency($comment);
       }
