@@ -525,14 +525,14 @@ function show(&$element) {
  *   used as a batch operation so $kernel will be an array, in this instance it
  *   will be treated as if it it NULL.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  * \Drupal\Core\Cache\Rebuilder::rebuildAll() instead.
  *
  * @see https://www.drupal.org/node/3014783
  * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  */
 function drupal_flush_all_caches($kernel = NULL) {
-  @trigger_error('drupal_flush_all_caches() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  @trigger_error('drupal_flush_all_caches() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
   Rebuilder::rebuildAll($kernel);
 }
 
@@ -542,7 +542,7 @@ function drupal_flush_all_caches($kernel = NULL) {
  * Changing the dummy query string appended to CSS and JavaScript files forces
  * all browsers to reload fresh files.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  * \Drupal\Core\Cache\QueryString::reset() instead.
  *
  * @see https://www.drupal.org/node/3014783
@@ -550,7 +550,7 @@ function drupal_flush_all_caches($kernel = NULL) {
  * @internal
  */
 function _drupal_flush_css_js() {
-  @trigger_error('_drupal_flush_css_js() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\QueryString::reset() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  @trigger_error('_drupal_flush_css_js() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\QueryString::reset() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
   \Drupal::service('cache.query_string')->reset();
 }
 

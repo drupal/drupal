@@ -41,7 +41,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
   public function __construct(StateInterface $state, QueryStringInterface $query_string = NULL) {
     $this->state = $state;
     if ($query_string === NULL) {
-      @trigger_error('$query_string parameter is added since drupal:9.2.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
+      @trigger_error('$query_string parameter is added since drupal:9.3.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
       $query_string = \Drupal::service('cache.query_string');
     }
     $this->queryString = $query_string;
