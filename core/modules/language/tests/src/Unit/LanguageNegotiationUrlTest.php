@@ -70,7 +70,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->willReturn($this->languages[(in_array($expected_langcode, [
         'en',
-        'de'
+        'de',
       ])) ? $expected_langcode : 'en']);
 
     $config = $this->getConfigFactoryStub([

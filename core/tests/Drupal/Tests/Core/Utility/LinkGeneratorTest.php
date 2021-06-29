@@ -559,7 +559,7 @@ class LinkGeneratorTest extends UnitTestCase {
           [],
           $options,
           TRUE,
-          (new GeneratedUrl())->setGeneratedUrl('/test-route-1')
+          (new GeneratedUrl())->setGeneratedUrl('/test-route-1'),
         ],
       ]);
 
@@ -596,14 +596,14 @@ class LinkGeneratorTest extends UnitTestCase {
           [],
           $options,
           TRUE,
-          (new GeneratedUrl())->setGeneratedUrl('/test-route-1')
+          (new GeneratedUrl())->setGeneratedUrl('/test-route-1'),
         ],
         [
           'test_route_2',
           [],
           $options,
           TRUE,
-          (new GeneratedUrl())->setGeneratedUrl('/test-route-2')
+          (new GeneratedUrl())->setGeneratedUrl('/test-route-2'),
         ],
       ]);
 

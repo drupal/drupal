@@ -56,7 +56,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
         ->willReturn([
           'aggregator_test' => [
             'title' => '',
-            'description' => ''
+            'description' => '',
           ]
         ]);
     }

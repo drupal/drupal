@@ -110,7 +110,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
       ->method('getBundleConfigDependency')
       ->willReturn([
         'type' => 'config',
-        'name' => 'test_module.type.' . $bundle_id
+        'name' => 'test_module.type.' . $bundle_id,
       ]);
 
     $this->entityTypeManager->expects($this->any())

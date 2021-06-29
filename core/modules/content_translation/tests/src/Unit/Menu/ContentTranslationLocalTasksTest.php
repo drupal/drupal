@@ -25,7 +25,7 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTestBase {
         ['canonical', 'entity.node.canonical'],
         [
           'drupal:content-translation-overview',
-          'entity.node.content_translation_overview'
+          'entity.node.content_translation_overview',
         ],
       ]);
     $content_translation_manager = $this->createMock('Drupal\content_translation\ContentTranslationManagerInterface');

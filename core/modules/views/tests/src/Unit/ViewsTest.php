@@ -171,7 +171,7 @@ class ViewsTest extends UnitTestCase {
       ->willReturn([
         'test_view_1' => $view_1,
         'test_view_2' => $view_2,
-        'test_view_3' => $view_3
+        'test_view_3' => $view_3,
       ]);
 
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);

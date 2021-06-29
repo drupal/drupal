@@ -167,7 +167,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->method('getLanguages')
       ->willReturn([
         'en' => $english,
-        LanguageInterface::LANGCODE_NOT_SPECIFIED => $not_specified
+        LanguageInterface::LANGCODE_NOT_SPECIFIED => $not_specified,
       ]);
     $this->languageManager->expects($this->any())
       ->method('getLanguage')

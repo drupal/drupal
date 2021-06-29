@@ -38,7 +38,7 @@ class RolesRidTest extends UnitTestCase {
         [['test_rid_1'], ['test_rid_1' => $role1]],
         [
           ['test_rid_1', 'test_rid_2'],
-          ['test_rid_1' => $role1, 'test_rid_2' => $role2]
+          ['test_rid_1' => $role1, 'test_rid_2' => $role2],
         ],
       ]);
 

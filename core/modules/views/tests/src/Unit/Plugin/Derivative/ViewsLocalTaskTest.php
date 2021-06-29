@@ -142,7 +142,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
       ->willReturn([
         'type' => 'tab',
         'weight' => 12,
-        'title' => 'Example title'
+        'title' => 'Example title',
       ]);
     $executable->display_handler = $display_plugin;
 
@@ -248,7 +248,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
       ->willReturn([
         'type' => 'default tab',
         'weight' => 12,
-        'title' => 'Example title'
+        'title' => 'Example title',
       ]);
     $executable->display_handler = $display_plugin;
 
@@ -321,7 +321,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
       ->willReturn([
         'type' => 'tab',
         'weight' => 12,
-        'title' => 'Example title'
+        'title' => 'Example title',
       ]);
     $display_plugin->expects($this->once())
       ->method('getPath')
