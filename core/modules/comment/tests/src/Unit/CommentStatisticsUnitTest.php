@@ -57,7 +57,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
     $this->statement->expects($this->any())
       ->method('fetchObject')
-      ->will($this->returnCallback([$this, 'fetchObjectCallback']));
+      ->willReturnCallback([$this, 'fetchObjectCallback']);
 
     $this->select = $this->getMockBuilder('Drupal\Core\Database\Query\Select')
       ->disableOriginalConstructor()
@@ -73,7 +73,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
     $this->select->expects($this->any())
       ->method('execute')
-      ->will($this->returnValue($this->statement));
+      ->willReturn($this->statement);
 
     $this->database = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
@@ -81,7 +81,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
     $this->database->expects($this->once())
       ->method('select')
-      ->will($this->returnValue($this->select));
+      ->willReturn($this->select);
 
     $this->commentStatistics = new CommentStatistics($this->database, $this->createMock('Drupal\Core\Session\AccountInterface'), $this->createMock(EntityTypeManagerInterface::class), $this->createMock('Drupal\Core\State\StateInterface'), $this->database);
   }

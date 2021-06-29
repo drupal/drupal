@@ -86,7 +86,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->at(0))
       ->method('tableExists')
       ->with('migrate_map_sql_idmap_test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $schema->expects($this->at(1))
       ->method('createTable')
       ->with('migrate_map_sql_idmap_test', $map_table_schema);
@@ -123,7 +123,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->at(2))
       ->method('tableExists')
       ->with('migrate_message_sql_idmap_test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $schema->expects($this->at(3))
       ->method('createTable')
       ->with('migrate_message_sql_idmap_test', $table_schema);
@@ -142,11 +142,11 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->at(0))
       ->method('tableExists')
       ->with('migrate_map_sql_idmap_test')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $schema->expects($this->at(1))
       ->method('fieldExists')
       ->with('migrate_map_sql_idmap_test', 'rollback_action')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $field_schema = [
       'type' => 'int',
       'size' => 'tiny',
@@ -161,7 +161,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->at(3))
       ->method('fieldExists')
       ->with('migrate_map_sql_idmap_test', 'hash')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $field_schema = [
       'type' => 'varchar',
       'length' => '64',
@@ -174,7 +174,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->at(5))
       ->method('fieldExists')
       ->with('migrate_map_sql_idmap_test', 'source_ids_hash')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $field_schema = [
       'type' => 'varchar',
       'length' => '64',

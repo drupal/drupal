@@ -103,15 +103,15 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->at(0))
       ->method('get')
       ->with('1:test_2')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->keyValue->expects($this->at(1))
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
+      ->willReturn($this->ownObject);
     $this->keyValue->expects($this->at(2))
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue($this->otherObject));
+      ->willReturn($this->otherObject);
 
     $this->assertNull($this->tempStore->get('test_2'));
     $this->assertSame($this->ownObject->data, $this->tempStore->get('test'));
@@ -127,14 +127,14 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->lock->expects($this->at(0))
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->lock->expects($this->at(1))
       ->method('wait')
       ->with('1:test');
     $this->lock->expects($this->at(2))
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $this->keyValue->expects($this->once())
       ->method('getCollectionName');
@@ -152,7 +152,7 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->lock->expects($this->never())
       ->method('wait');
     $this->lock->expects($this->once())
@@ -175,12 +175,12 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->at(0))
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
+      ->willReturn($this->ownObject);
 
     $this->keyValue->expects($this->at(1))
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $metadata = $this->tempStore->getMetadata('test');
     $this->assertInstanceOf(Lock::class, $metadata);
@@ -201,11 +201,11 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->once())
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
+      ->willReturn($this->ownObject);
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->lock->expects($this->never())
       ->method('wait');
     $this->lock->expects($this->once())
@@ -228,18 +228,18 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->once())
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
+      ->willReturn($this->ownObject);
     $this->lock->expects($this->at(0))
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->lock->expects($this->at(1))
       ->method('wait')
       ->with('1:test');
     $this->lock->expects($this->at(2))
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $this->keyValue->expects($this->once())
       ->method('getCollectionName');
@@ -257,23 +257,23 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('1:test_2')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->keyValue->expects($this->at(0))
       ->method('get')
       ->with('1:test_1')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->keyValue->expects($this->at(1))
       ->method('get')
       ->with('1:test_2')
-      ->will($this->returnValue($this->ownObject));
+      ->willReturn($this->ownObject);
     $this->keyValue->expects($this->at(2))
       ->method('delete')
       ->with('1:test_2');
     $this->keyValue->expects($this->at(3))
       ->method('get')
       ->with('1:test_3')
-      ->will($this->returnValue($this->otherObject));
+      ->willReturn($this->otherObject);
 
     $this->assertTrue($this->tempStore->delete('test_1'));
     $this->assertTrue($this->tempStore->delete('test_2'));

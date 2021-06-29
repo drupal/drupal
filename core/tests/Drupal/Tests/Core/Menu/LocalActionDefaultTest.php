@@ -81,7 +81,7 @@ class LocalActionDefaultTest extends UnitTestCase {
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
-      ->will($this->returnValue('Example translated'));
+      ->willReturn('Example translated');
 
     $this->setupLocalActionDefault();
     $this->assertEquals('Example translated', $this->localActionDefault->getTitle());
@@ -97,7 +97,7 @@ class LocalActionDefaultTest extends UnitTestCase {
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
-      ->will($this->returnValue('Example translated with context'));
+      ->willReturn('Example translated with context');
 
     $this->setupLocalActionDefault();
     $this->assertEquals('Example translated with context', $this->localActionDefault->getTitle());
@@ -111,7 +111,7 @@ class LocalActionDefaultTest extends UnitTestCase {
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
       ->with($this->pluginDefinition['title'])
-      ->will($this->returnValue('Example value'));
+      ->willReturn('Example value');
 
     $this->setupLocalActionDefault();
     $request = new Request();

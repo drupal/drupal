@@ -44,7 +44,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $this->discoveryMain->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
     $definitions = $discovery->getDefinitions();
@@ -70,7 +70,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $this->discoveryMain->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
     $definitions = $discovery->getDefinitions();
@@ -100,7 +100,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $this->discoveryMain->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
     $definitions = $discovery->getDefinitions();
@@ -145,7 +145,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
     ];
     $this->discoveryMain->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
     $this->expectException(InvalidDeriverException::class);
@@ -167,7 +167,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
     ];
     $this->discoveryMain->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
     $this->expectException(InvalidDeriverException::class);
@@ -202,7 +202,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $this->discoveryMain->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
     $returned_definitions = $discovery->getDefinitions();
@@ -242,11 +242,11 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
     $this->discoveryMain->expects($this->at(0))
       ->method('getDefinition')
       ->with('non_container_aware_discovery:test_discovery_1')
-      ->will($this->returnValue($derivative_definition));
+      ->willReturn($derivative_definition);
     $this->discoveryMain->expects($this->at(1))
       ->method('getDefinition')
       ->with('non_container_aware_discovery')
-      ->will($this->returnValue($base_definition));
+      ->willReturn($base_definition);
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
 

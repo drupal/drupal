@@ -89,49 +89,49 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $this->anon
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->anon
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(0));
+      ->willReturn(0);
 
     $this->member = $this->createMock(AccountInterface::class);
     $this->member
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['administer foobar form display', TRUE],
-      ]));
+      ]);
     $this->member
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(2));
+      ->willReturn(2);
 
     $this->parent_member = $this->createMock(AccountInterface::class);
     $this->parent_member
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['Llama', TRUE],
-      ]));
+      ]);
     $this->parent_member
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(3));
+      ->willReturn(3);
 
     $entity_form_display_entity_type = $this->createMock(ConfigEntityTypeInterface::class);
     $entity_form_display_entity_type->expects($this->any())
       ->method('getAdminPermission')
-      ->will($this->returnValue('Llama'));
+      ->willReturn('Llama');
     $entity_form_display_entity_type
       ->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['langcode', 'langcode'],
-      ]));
+      ]);
     $entity_form_display_entity_type->expects($this->any())
       ->method('entityClassImplements')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $entity_form_display_entity_type->expects($this->any())
       ->method('getConfigPrefix')
       ->willReturn('');
@@ -140,11 +140,11 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $this->moduleHandler
       ->expects($this->any())
       ->method('getImplementations')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $this->moduleHandler
       ->expects($this->any())
       ->method('invokeAll')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $storage_access_control_handler = new EntityFormDisplayAccessControlHandler($entity_form_display_entity_type);
     $storage_access_control_handler->setModuleHandler($this->moduleHandler);
@@ -165,12 +165,12 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $entity_type_manager
       ->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValue($entity_form_display_entity_type));
+      ->willReturn($entity_form_display_entity_type);
 
     $entity_field_manager = $this->createMock(EntityFieldManagerInterface::class);
     $entity_field_manager->expects($this->any())
       ->method('getFieldDefinitions')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $container = new Container();
     $container->set('entity_type.manager', $entity_type_manager);

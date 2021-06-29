@@ -104,10 +104,10 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $typed_data_manager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         'entity:user' => ['class' => '\Drupal\Core\TypedData\DataDefinitionInterface'],
         'field_item:string_long' => ['class' => '\Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem'],
-      ]));
+      ]);
 
     $this->baseEntityType = new TestEntityType([
       'base_table' => 'entity_test',
@@ -479,16 +479,16 @@ class EntityViewsDataTest extends UnitTestCase {
     ];
     $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', $user_base_field_definitions],
         ['entity_test', $base_field_definitions],
-      ]));
+      ]);
     $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', $user_base_field_definitions],
         ['entity_test', $base_field_definitions],
-      ]));
+      ]);
     // Setup the table mapping.
     $table_mapping = $this->getMockBuilder(DefaultTableMapping::class)
       ->disableOriginalConstructor()
@@ -608,16 +608,16 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', $user_base_field_definitions],
         ['entity_test_mul', $base_field_definitions],
-      ]));
+      ]);
     $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', $user_base_field_definitions],
         ['entity_test_mul', $base_field_definitions],
-      ]));
+      ]);
 
     $this->viewsData->setEntityType($entity_type);
 
@@ -679,10 +679,10 @@ class EntityViewsDataTest extends UnitTestCase {
     $user_entity_type = static::userEntityInfo();
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', TRUE, $user_entity_type],
         ['entity_test_bundle', TRUE, $entity_test_type],
-      ]));
+      ]);
 
     $data = $this->viewsData->getViewsData();
 
@@ -764,16 +764,16 @@ class EntityViewsDataTest extends UnitTestCase {
     ];
     $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', $user_base_field_definitions],
         ['entity_test_mulrev', $base_field_definitions],
-      ]));
+      ]);
     $this->entityFieldManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['user', $user_base_field_definitions],
         ['entity_test_mulrev', $base_field_definitions],
-      ]));
+      ]);
 
     $this->viewsData->setEntityType($entity_type);
 

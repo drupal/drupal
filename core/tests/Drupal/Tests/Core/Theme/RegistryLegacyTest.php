@@ -107,7 +107,7 @@ class RegistryLegacyTest extends UnitTestCase {
     $this->moduleHandler->expects($this->once())
       ->method('getImplementations')
       ->with('theme')
-      ->will($this->returnValue(['theme_legacy_test']));
+      ->willReturn(['theme_legacy_test']);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);

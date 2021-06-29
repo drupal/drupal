@@ -107,7 +107,7 @@ class EntityListBuilderTest extends UnitTestCase {
     $this->moduleHandler->expects($this->once())
       ->method('invokeAll')
       ->with('entity_operation', [$this->role])
-      ->will($this->returnValue($operations));
+      ->willReturn($operations);
     $this->moduleHandler->expects($this->once())
       ->method('alter')
       ->with('entity_operation');
@@ -116,10 +116,10 @@ class EntityListBuilderTest extends UnitTestCase {
 
     $this->role->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
     $this->role->expects($this->any())
       ->method('hasLinkTemplate')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $url = $this->getMockBuilder('\Drupal\Core\Url')
       ->disableOriginalConstructor()
       ->getMock();
@@ -128,7 +128,7 @@ class EntityListBuilderTest extends UnitTestCase {
       ->with(['query' => ['destination' => '/foo/bar']]);
     $this->role->expects($this->any())
       ->method('toUrl')
-      ->will($this->returnValue($url));
+      ->willReturn($url);
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('getAsArray')

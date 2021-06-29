@@ -163,7 +163,7 @@ class LoggingTest extends DatabaseTestBase {
       ->getMock();
     $log->expects($this->once())
       ->method('getDebugBacktrace')
-      ->will($this->returnValue($stack));
+      ->willReturn($stack);
     Database::addConnectionInfo('test', 'default', ['driver' => 'mysql', 'namespace' => $driver_namespace]);
 
     $result = $log->findCaller($stack);

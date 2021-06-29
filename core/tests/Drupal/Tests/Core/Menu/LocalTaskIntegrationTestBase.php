@@ -91,9 +91,9 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     // Set all the modules as being existent.
     $module_handler->expects($this->any())
       ->method('moduleExists')
-      ->will($this->returnCallback(function ($module) use ($module_dirs) {
+      ->willReturnCallback(function ($module) use ($module_dirs) {
         return isset($module_dirs[$module]);
-      }));
+      });
 
     $pluginDiscovery = new YamlDiscovery('links.task', $module_dirs);
     $pluginDiscovery = new ContainerDerivativeDiscoveryDecorator($pluginDiscovery);
@@ -109,7 +109,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $factory->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValue($plugin_stub));
+      ->willReturn($plugin_stub);
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'factory');
     $property->setAccessible(TRUE);
     $property->setValue($manager, $factory);

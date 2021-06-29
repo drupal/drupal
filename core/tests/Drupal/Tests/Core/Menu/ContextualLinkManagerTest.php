@@ -114,7 +114,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->returnValue(new Language(['id' => 'en'])));
+      ->willReturn(new Language(['id' => 'en']));
 
     $request_stack = new RequestStack();
     $property = new \ReflectionProperty('Drupal\Core\Menu\ContextualLinkManager', 'requestStack');
@@ -156,7 +156,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     ];
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     // Test with a non existing group.
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group_non_existing');
@@ -191,7 +191,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with('contextual_links_plugins:en:group1')
-      ->will($this->returnValue((object) ['data' => $definitions]));
+      ->willReturn((object) ['data' => $definitions]);
 
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group1');
     $this->assertEquals($definitions, $result);
@@ -270,11 +270,11 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
 
     // Set up mocking of the plugin factory.
     $map = [];
@@ -283,7 +283,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     }
     $this->factory->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
 
     $this->moduleHandler->expects($this->at(1))
       ->method('alter')
@@ -329,14 +329,14 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['test_route', ['key' => 'value'], $this->account, FALSE, TRUE],
         ['test_route2', ['key' => 'value'], $this->account, FALSE, FALSE],
-      ]));
+      ]);
 
     // Set up mocking of the plugin factory.
     $map = [];
@@ -344,21 +344,21 @@ class ContextualLinkManagerTest extends UnitTestCase {
       $plugin = $this->createMock('Drupal\Core\Menu\ContextualLinkInterface');
       $plugin->expects($this->any())
         ->method('getRouteName')
-        ->will($this->returnValue($definition['route_name']));
+        ->willReturn($definition['route_name']);
       $plugin->expects($this->any())
         ->method('getTitle')
-        ->will($this->returnValue($definition['title']));
+        ->willReturn($definition['title']);
       $plugin->expects($this->any())
         ->method('getWeight')
-        ->will($this->returnValue($definition['weight']));
+        ->willReturn($definition['weight']);
       $plugin->expects($this->any())
         ->method('getOptions')
-        ->will($this->returnValue($definition['options']));
+        ->willReturn($definition['options']);
       $map[] = [$plugin_id, [], $plugin];
     }
     $this->factory->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
 
     $result = $this->contextualLinkManager->getContextualLinksArrayByGroup('group1', ['key' => 'value']);
 
@@ -383,7 +383,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')

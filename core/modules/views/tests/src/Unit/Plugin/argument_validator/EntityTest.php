@@ -60,26 +60,26 @@ class EntityTest extends UnitTestCase {
     $mock_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [], '', FALSE, TRUE, TRUE, ['bundle', 'access']);
     $mock_entity->expects($this->any())
       ->method('bundle')
-      ->will($this->returnValue('test_bundle'));
+      ->willReturn('test_bundle');
     $mock_entity->expects($this->any())
       ->method('access')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['test_op', NULL, FALSE, TRUE],
         ['test_op_2', NULL, FALSE, FALSE],
         ['test_op_3', NULL, FALSE, TRUE],
-      ]));
+      ]);
 
     $mock_entity_bundle_2 = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [], '', FALSE, TRUE, TRUE, ['bundle', 'access']);
     $mock_entity_bundle_2->expects($this->any())
       ->method('bundle')
-      ->will($this->returnValue('test_bundle_2'));
+      ->willReturn('test_bundle_2');
     $mock_entity_bundle_2->expects($this->any())
       ->method('access')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['test_op', NULL, FALSE, FALSE],
         ['test_op_2', NULL, FALSE, FALSE],
         ['test_op_3', NULL, FALSE, TRUE],
-      ]));
+      ]);
 
     $storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
 
@@ -95,12 +95,12 @@ class EntityTest extends UnitTestCase {
     ];
     $storage->expects($this->any())
       ->method('loadMultiple')
-      ->will($this->returnValueMap($value_map));
+      ->willReturnMap($value_map);
 
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('entity_test')
-      ->will($this->returnValue($storage));
+      ->willReturn($storage);
 
     $this->executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()

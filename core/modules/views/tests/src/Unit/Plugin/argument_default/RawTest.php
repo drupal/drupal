@@ -33,7 +33,7 @@ class RawTest extends UnitTestCase {
     $current_path->setPath('/test/example', $request);
     $view->expects($this->any())
       ->method('getRequest')
-      ->will($this->returnValue($request));
+      ->willReturn($request);
     $alias_manager = $this->createMock(AliasManagerInterface::class);
     $alias_manager->expects($this->never())
       ->method('getAliasByPath');
@@ -76,7 +76,7 @@ class RawTest extends UnitTestCase {
     $alias_manager->expects($this->any())
       ->method('getAliasByPath')
       ->with($this->equalTo('/test/example'))
-      ->will($this->returnValue('/other/example'));
+      ->willReturn('/other/example');
 
     $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
     $options = [

@@ -28,7 +28,7 @@ class LockBackendAbstractTest extends UnitTestCase {
     $this->lock->expects($this->any())
       ->method('lockMayBeAvailable')
       ->with($this->equalTo('test_name'))
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->assertFalse($this->lock->wait('test_name'));
   }
@@ -43,7 +43,7 @@ class LockBackendAbstractTest extends UnitTestCase {
     $this->lock->expects($this->any())
       ->method('lockMayBeAvailable')
       ->with($this->equalTo('test_name'))
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $this->assertTrue($this->lock->wait('test_name', 1));
   }

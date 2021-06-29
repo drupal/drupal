@@ -188,13 +188,13 @@ class DateTest extends UnitTestCase {
       ->expects($this->at(0))
       ->method('formatDiff')
       ->with($timestamp, $request_time, $options)
-      ->will($this->returnValue($expected));
+      ->willReturn($expected);
 
     $this->dateFormatterStub
       ->expects($this->at(1))
       ->method('formatDiff')
       ->with($timestamp, $request_time, $options + ['return_as_object' => TRUE])
-      ->will($this->returnValue(new FormattedDateDiff('1 second', 1)));
+      ->willReturn(new FormattedDateDiff('1 second', 1));
 
     $request = Request::createFromGlobals();
     $request->server->set('REQUEST_TIME', $request_time);
@@ -225,13 +225,13 @@ class DateTest extends UnitTestCase {
       ->expects($this->at(0))
       ->method('formatDiff')
       ->with($request_time, $timestamp, $options)
-      ->will($this->returnValue($expected));
+      ->willReturn($expected);
 
     $this->dateFormatterStub
       ->expects($this->at(1))
       ->method('formatDiff')
       ->with($request_time, $timestamp, $options + ['return_as_object' => TRUE])
-      ->will($this->returnValue(new FormattedDateDiff('1 second', 1)));
+      ->willReturn(new FormattedDateDiff('1 second', 1));
 
     $request = Request::createFromGlobals();
     $request->server->set('REQUEST_TIME', $request_time);

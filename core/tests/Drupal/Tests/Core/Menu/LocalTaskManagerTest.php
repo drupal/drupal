@@ -123,7 +123,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
 
@@ -147,7 +147,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
 
@@ -169,7 +169,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
     $this->setupFactory($mock_plugin);
@@ -217,7 +217,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with('local_task_plugins:en:menu_local_task_test_tasks_view')
-      ->will($this->returnValue((object) ['data' => $result]));
+      ->willReturn((object) ['data' => $result]);
 
     $this->cacheBackend->expects($this->never())
       ->method('set');
@@ -240,7 +240,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->argumentResolver->expects($this->once())
       ->method('getArguments')
       ->with($this->request, [$menu_local_task, 'getTitle'])
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->manager->getTitle($menu_local_task);
   }
@@ -258,7 +258,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->returnValue(new Language(['id' => 'en'])));
+      ->willReturn(new Language(['id' => 'en']));
 
     $this->manager = new LocalTaskManager($this->argumentResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
 
@@ -341,7 +341,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     }
     $this->factory->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
   }
 
   /**
@@ -411,7 +411,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     // Set up some cacheability metadata and ensure its merged together.
     $definitions['menu_local_task_test_tasks_settings']['cache_tags'] = ['tag.example1'];
@@ -473,7 +473,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->factory->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
   }
 
   protected function setupNullCacheabilityMetadataValidation() {

@@ -38,7 +38,7 @@ class DateFieldTest extends UnitTestCase {
           ],
         ],
       ])
-      ->will($this->returnValue($migration));
+      ->willReturn($migration);
 
     $plugin = new DateField([], '', []);
     $plugin->defineValueProcessPipeline($migration, 'field_date', $data);

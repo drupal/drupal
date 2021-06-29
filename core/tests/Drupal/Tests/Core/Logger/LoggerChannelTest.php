@@ -84,11 +84,11 @@ class LoggerChannelTest extends UnitTestCase {
       $logger = $this->createMock('Psr\Log\LoggerInterface');
       $logger->expects($this->once())
         ->method('log')
-        ->will($this->returnCallback(function () use ($i, &$index_order) {
+        ->willReturnCallback(function () use ($i, &$index_order) {
           // Append the $i to the index order, so that we know the order that
           // loggers got called with.
           $index_order .= $i;
-        }));
+        });
       $channel->addLogger($logger, $i);
     }
 
@@ -104,14 +104,14 @@ class LoggerChannelTest extends UnitTestCase {
     $account_mock = $this->createMock('Drupal\Core\Session\AccountInterface');
     $account_mock->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(1));
+      ->willReturn(1);
 
     $request_mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
       ->setMethods(['getClientIp'])
       ->getMock();
     $request_mock->expects($this->any())
       ->method('getClientIp')
-      ->will($this->returnValue('127.0.0.1'));
+      ->willReturn('127.0.0.1');
     $request_mock->headers = $this->createMock('Symfony\Component\HttpFoundation\ParameterBag');
 
     // No request or account.

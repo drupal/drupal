@@ -50,7 +50,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('entity'));
+      ->willReturn('entity');
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
@@ -72,27 +72,27 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('test_module'));
+      ->willReturn('test_module');
     $values = ['targetEntityType' => $target_entity_type_id];
     $target_entity_type->expects($this->any())
       ->method('getBundleEntityType')
-      ->will($this->returnValue(NULL));
+      ->willReturn(NULL);
     $target_entity_type->expects($this->any())
       ->method('getBundleConfigDependency')
-      ->will($this->returnValue(['type' => 'module', 'name' => 'test_module']));
+      ->willReturn(['type' => 'module', 'name' => 'test_module']);
 
     $this->entityTypeManager->expects($this->at(0))
       ->method('getDefinition')
       ->with($target_entity_type_id)
-      ->will($this->returnValue($target_entity_type));
+      ->willReturn($target_entity_type);
     $this->entityTypeManager->expects($this->at(1))
       ->method('getDefinition')
       ->with($this->entityTypeId)
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
     $this->entityTypeManager->expects($this->at(2))
       ->method('getDefinition')
       ->with($this->entityTypeId)
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
     $entity = new RdfMapping($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertArrayNotHasKey('config', $dependencies);
@@ -107,22 +107,25 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('test_module'));
+      ->willReturn('test_module');
     $bundle_id = $this->randomMachineName(10);
     $values = ['targetEntityType' => $target_entity_type_id , 'bundle' => $bundle_id];
 
     $target_entity_type->expects($this->any())
       ->method('getBundleConfigDependency')
-      ->will($this->returnValue(['type' => 'config', 'name' => 'test_module.type.' . $bundle_id]));
+      ->willReturn([
+        'type' => 'config',
+        'name' => 'test_module.type.' . $bundle_id
+      ]);
 
     $this->entityTypeManager->expects($this->at(0))
       ->method('getDefinition')
       ->with($target_entity_type_id)
-      ->will($this->returnValue($target_entity_type));
+      ->willReturn($target_entity_type);
     $this->entityTypeManager->expects($this->at(1))
       ->method('getDefinition')
       ->with($this->entityTypeId)
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
 
     $entity = new RdfMapping($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies()->getDependencies();

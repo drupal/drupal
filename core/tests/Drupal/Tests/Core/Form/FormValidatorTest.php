@@ -116,7 +116,7 @@ class FormValidatorTest extends UnitTestCase {
     $request_stack->push($request);
     $this->csrfToken->expects($this->once())
       ->method('validate')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([$request_stack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
@@ -144,7 +144,7 @@ class FormValidatorTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $this->csrfToken->expects($this->once())
       ->method('validate')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([$request_stack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])

@@ -36,7 +36,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
   public function testHttpMethod($expected_result, $method) {
     $this->policy->expects($this->once())
       ->method('isCli')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $request = Request::create('/', $method);
     $actual_result = $this->policy->check($request);
@@ -70,7 +70,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
   public function testIsCli() {
     $this->policy->expects($this->once())
       ->method('isCli')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $request = Request::create('/', 'GET');
     $actual_result = $this->policy->check($request);
