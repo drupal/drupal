@@ -1,0 +1,22 @@
+services:
+  # Multiple services that implements TestInjectionInterface.
+  # These are marked private, because they are only intended to be used as
+  # dependencies injected into other services.
+  Drupal\autowire_test\TestInjection:
+    public: false
+  Drupal\autowire_test\TestInjection2:
+    public: false
+
+  # An alias that specifies which service to use by default for arguments that
+  # type-hint to the interface.
+  # This is marked private, because it is only intended to be used as a
+  # dependency injected into other services.
+  Drupal\autowire_test\TestInjectionInterface:
+    alias: 'Drupal\autowire_test\TestInjection'
+    public: false
+
+  # A service that tests autowiring for two constructor arguments:
+  # - One type-hinted to TestInjectionInterface.
+  # - One type-hinted to TestInjection2.
+  Drupal\autowire_test\TestService:
+    autowire: true
