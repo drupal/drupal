@@ -1,5 +1,5 @@
 name: 'JS Errors test'
-description: 'Provides a Javascript error that can be used for tests'
+description: 'Provides a JavaScript error that can be used for tests'
 type: module
 package: Testing
 version: VERSION
