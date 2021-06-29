@@ -48,6 +48,19 @@
         originalClose.apply(settings.dialog, [event, ...args]);
         $(event.target).remove();
       };
+
+      // Copy interaction settings to modal. This is needed when CkEditor is
+      // used inside a modal, for example the CkEditor table widget inside
+      // layout builder.
+      $(window).once('dialog copy interaction settings').on('dialog:aftercreate', function () {
+        let orig_allowInteraction = $.ui.dialog.prototype._allowInteraction
+        $.ui.dialog.prototype._allowInteraction = function (event) {
+          if ($(event.target).closest('.cke_dialog').length) {
+            return true
+          }
+          return orig_allowInteraction.apply(this, arguments)
+        }
+      });
     },
 
     /**

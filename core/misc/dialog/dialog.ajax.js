@@ -34,6 +34,18 @@
         originalClose.apply(settings.dialog, [event].concat(args));
         $(event.target).remove();
       };
+
+      $(window).once('dialog copy interaction settings').on('dialog:aftercreate', function () {
+        var orig_allowInteraction = $.ui.dialog.prototype._allowInteraction;
+
+        $.ui.dialog.prototype._allowInteraction = function (event) {
+          if ($(event.target).closest('.cke_dialog').length) {
+            return true;
+          }
+
+          return orig_allowInteraction.apply(this, arguments);
+        };
+      });
     },
     prepareDialogButtons: function prepareDialogButtons($dialog) {
       var buttons = [];
