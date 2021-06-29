@@ -129,13 +129,14 @@ class FormErrorHandlerTest extends UnitTestCase {
 
     $this->renderer->expects($this->once())
       ->method('renderPlain')
-      ->will($this->returnCallback(function ($render_array) {
+      ->willReturnCallback(function ($render_array) {
         $links = [];
         foreach ($render_array[1]['#items'] as $item) {
           $links[] = htmlspecialchars($item['#title']);
         }
+
         return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode('</li-mock><li-mock>', $links) . '</li-mock></ul-comma-list-mock>';
-      }));
+      });
 
     $form_state = new FormState();
     $form_state->setErrorByName('test1', 'invalid');
