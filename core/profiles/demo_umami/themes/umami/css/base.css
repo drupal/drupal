@@ -115,6 +115,7 @@ button:focus,
   transition: background-color 0.5s ease;
   text-decoration: none;
   color: #000;
+  border: 2px solid #008068;
   background-color: #e6eee0;
 }
 button[disabled]:hover,
