@@ -185,8 +185,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $container->get('media.oembed.resource_fetcher'),
       $container->get('media.oembed.url_resolver'),
       $container->get('media.oembed.iframe_url_helper'),
-      $container->get('file_system'),
-      $container->get('image.factory')
+      $container->get('file_system')
     );
   }
 
@@ -440,8 +439,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    *   The file extension, or NULL if it could not be determined.
    */
   protected function getThumbnailFileExtensionFromUrl(string $thumbnail_url): ?string {
-    // First, try to glean the extension by seeing if the URL path ends with one
-    // of the file extensions supported by the current image toolkit.
+    // First, try to glean the extension from the URL path.
     $path = parse_url($thumbnail_url, PHP_URL_PATH);
     if ($path) {
       $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
