@@ -36,7 +36,7 @@ function olivero_preprocess_html(&$variables) {
     '#tag' => 'link',
     '#attributes' => [
       'rel' => 'stylesheet',
-      'href' => '/' . $variables['olivero_path'] . '/css/components/navigation/nav-primary-no-js.css?' . $query_string,
+      'href' => $variables['olivero_path'] . '/css/components/navigation/nav-primary-no-js.css?' . $query_string,
     ],
   ];
 }
