@@ -29,7 +29,7 @@
 #}
 
 {{ attach_library('olivero/comments') }}
-<section{{ attributes.addClass('comments') }}>
+<section{{ attributes.setAttribute('data-drupal-selector', 'comments').addClass('comments') }}>
 
   {% if comments and not label_hidden %}
     {{ title_prefix }}
