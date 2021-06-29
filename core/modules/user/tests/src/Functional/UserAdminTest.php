@@ -4,7 +4,6 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -32,15 +31,15 @@ class UserAdminTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Gets the xpath selector a user account.
+   * Gets the xpath selector for a user account.
    *
-   * @param \Drupal\user\Entity\User $user
+   * @param \Drupal\user\Entity\UserInterface $user
    *   The user to get the link for.
    *
    * @return string
    *   The xpath selector for the user link.
    */
-  private static function getLinkSelectorForUser(User $user) {
+  private static function getLinkSelectorForUser(UserInterface $user): string {
     return '//td[contains(@class, "views-field-name")]/a[text()="' . $user->getAccountName() . '"]';
   }
 
