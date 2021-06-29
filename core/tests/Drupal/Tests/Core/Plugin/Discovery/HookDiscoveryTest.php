@@ -97,13 +97,13 @@ class HookDiscoveryTest extends UnitTestCase {
           'hook_discovery_test',
           'test_plugin',
           [],
-          $this->hookDiscoveryTestTestPlugin()
+          $this->hookDiscoveryTestTestPlugin(),
         ],
         [
           'hook_discovery_test2',
           'test_plugin',
           [],
-          $this->hookDiscoveryTest2TestPlugin()
+          $this->hookDiscoveryTest2TestPlugin(),
         ],
       ]);
 

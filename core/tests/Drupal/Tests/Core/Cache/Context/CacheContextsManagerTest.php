@@ -36,27 +36,27 @@ class CacheContextsManagerTest extends UnitTestCase {
         [
           'cache_context.a',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new FooCacheContext()
+          new FooCacheContext(),
         ],
         [
           'cache_context.a.b',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new FooCacheContext()
+          new FooCacheContext(),
         ],
         [
           'cache_context.a.b.c',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new BazCacheContext()
+          new BazCacheContext(),
         ],
         [
           'cache_context.x',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new BazCacheContext()
+          new BazCacheContext(),
         ],
         [
           'cache_context.a.b.no-optimize',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new NoOptimizeCacheContext()
+          new NoOptimizeCacheContext(),
         ],
       ]);
     $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
@@ -185,12 +185,12 @@ class CacheContextsManagerTest extends UnitTestCase {
         [
           'cache_context.foo',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new FooCacheContext()
+          new FooCacheContext(),
         ],
         [
           'cache_context.baz',
           Container::EXCEPTION_ON_INVALID_REFERENCE,
-          new BazCacheContext()
+          new BazCacheContext(),
         ],
       ]);
     return $container;

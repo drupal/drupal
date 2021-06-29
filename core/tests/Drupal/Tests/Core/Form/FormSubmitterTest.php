@@ -138,14 +138,15 @@ class FormSubmitterTest extends UnitTestCase {
     $form_submitter = $this->getFormSubmitter();
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
-      ->willReturnMap([
+      ->willReturnMap(
+        [
           ['test_route_a', [], ['absolute' => TRUE], FALSE, 'test-route'],
           [
             'test_route_b',
             ['key' => 'value'],
             ['absolute' => TRUE],
             FALSE,
-            'test-route/value'
+            'test-route/value',
           ],
         ]
       );

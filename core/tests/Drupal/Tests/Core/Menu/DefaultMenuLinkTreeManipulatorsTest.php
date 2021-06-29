@@ -172,14 +172,14 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
           ['foo' => 'bar'],
           $this->currentUser,
           TRUE,
-          AccessResult::allowed()->cachePerPermissions()
+          AccessResult::allowed()->cachePerPermissions(),
         ],
         [
           'example3',
           ['baz' => 'qux'],
           $this->currentUser,
           TRUE,
-          AccessResult::neutral()
+          AccessResult::neutral(),
         ],
         ['example5', [], $this->currentUser, TRUE, AccessResult::allowed()],
         ['user.logout', [], $this->currentUser, TRUE, AccessResult::allowed()],
