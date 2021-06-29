@@ -2365,6 +2365,11 @@ eslint-plugin-import@^2.13.0:
     resolve "^1.20.0"
     tsconfig-paths "^3.9.0"
 
+eslint-plugin-jquery@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jquery/-/eslint-plugin-jquery-1.5.1.tgz#d6bac643acf9484ce76394e27e2b07baca06662e"
+  integrity sha512-L7v1eaK5t80C0lvUXPFP9MKnBOqPSKhCOYyzy4LZ0+iK+TJwN8S9gAkzzP1AOhypRIwA88HF6phQ9C7jnOpW8w==
+
 eslint-plugin-jsx-a11y@^6.0.3:
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-a11y/-/eslint-plugin-jsx-a11y-6.4.1.tgz#a2d84caa49756942f42f1ffab9002436391718fd"
