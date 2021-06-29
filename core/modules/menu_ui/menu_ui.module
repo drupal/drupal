@@ -350,7 +350,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
 function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
-  $menu_options = menu_ui_get_menus();
+  $menu_options = array_map(function (Menu $menu) { return $menu->label(); }, Menu::loadMultiple());
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
   $form['menu'] = [
