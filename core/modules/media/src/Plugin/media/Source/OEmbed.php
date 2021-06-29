@@ -26,6 +26,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Provides a media source plugin for oEmbed resources.
@@ -184,7 +185,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $container->get('media.oembed.resource_fetcher'),
       $container->get('media.oembed.url_resolver'),
       $container->get('media.oembed.iframe_url_helper'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('image.factory')
     );
   }
 
@@ -390,14 +392,10 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     }
     $remote_thumbnail_url = $remote_thumbnail_url->toString();
 
-    // Remove the query string, since we do not want to include it in the local
-    // thumbnail URI.
-    $local_thumbnail_url = parse_url($remote_thumbnail_url, PHP_URL_PATH);
-
     // Compute the local thumbnail URI, regardless of whether or not it exists.
     $configuration = $this->getConfiguration();
     $directory = $configuration['thumbnails_directory'];
-    $local_thumbnail_uri = "$directory/" . Crypt::hashBase64($local_thumbnail_url) . '.' . pathinfo($local_thumbnail_url, PATHINFO_EXTENSION);
+    $local_thumbnail_uri = "$directory/" . Crypt::hashBase64($remote_thumbnail_url) . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url);
 
     // If the local thumbnail already exists, return its URI.
     if (file_exists($local_thumbnail_uri)) {
@@ -415,7 +413,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     }
 
     try {
-      $response = $this->httpClient->get($remote_thumbnail_url);
+      $response = $this->httpClient->request('GET', $remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {
         $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileSystemInterface::EXISTS_REPLACE);
         return $local_thumbnail_uri;
@@ -429,6 +427,42 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         'url' => $remote_thumbnail_url,
       ]);
     }
+    return NULL;
+  }
+
+  /**
+   * Tries to determine the file extension of a thumbnail, based on its URL.
+   *
+   * @param string $thumbnail_url
+   *   The remote URL of the thumbnail.
+   *
+   * @return string|null
+   *   The file extension, or NULL if it could not be determined.
+   */
+  protected function getThumbnailFileExtensionFromUrl(string $thumbnail_url): ?string {
+    // First, try to glean the extension by seeing if the URL path ends with one
+    // of the file extensions supported by the current image toolkit.
+    $path = parse_url($thumbnail_url, PHP_URL_PATH);
+    if ($path) {
+      $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+      if ($extension) {
+        return $extension;
+      }
+    }
+
+    // If the URL didn't give us any clues about the file extension, make a HEAD
+    // request to the thumbnail URL and see if the headers will give us a MIME
+    // type.
+    $response = $this->httpClient->request('HEAD', $thumbnail_url);
+    if ($response->hasHeader('Content-Type')) {
+      $content_type = $response->getHeader('Content-Type');
+      $extensions = MimeTypes::getDefault()->getExtensions(reset($content_type));
+
+      if ($extensions) {
+        return reset($extensions);
+      }
+    }
+
     return NULL;
   }
 

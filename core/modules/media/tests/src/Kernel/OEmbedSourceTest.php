@@ -11,7 +11,7 @@ use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbed;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use Prophecy\Argument;
+use GuzzleHttp\Psr7\Utils;
 
 /**
  * @coversDefaultClass \Drupal\media\Plugin\media\Source\OEmbed
@@ -43,9 +43,56 @@ class OEmbedSourceTest extends MediaKernelTestBase {
   }
 
   /**
-   * @covers ::getLocalThumbnailUri
+   * Data provider for ::testThumbnailUri().
+   *
+   * @return array
+   *   Sets of arguments to pass to the test method.
    */
-  public function testLocalThumbnailUriQueryStringIsIgnored() {
+  public function providerThumbnailUri(): array {
+    return [
+      'no query string, file extension is known' => [
+        'internal:/core/misc/druplicon.png',
+      ],
+      'with query string and file extension' => [
+        'internal:/core/misc/druplicon.png?foo=bar',
+      ],
+      'no query string, unknown file extension' => [
+        'internal:/core/misc/druplicon',
+        [
+          'Content-Type' => ['image/png'],
+        ],
+      ],
+      'query string, unknown file extension' => [
+        'internal:/core/misc/druplicon?pasta=ravioli',
+        [
+          'Content-Type' => ['image/png'],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Tests that remote thumbnails are downloaded correctly.
+   *
+   * @param string $remote_thumbnail_url
+   *   The URL of the remote thumbnail. This will be wired up to a mocked
+   *   response containing the data from core/misc/druplicon.png.
+   * @param array[] $thumbnail_headers
+   *   (optional) If the thumbnail's file extension cannot be determined from
+   *   its URL, a HEAD request will be made in an attempt to derive its
+   *   extension from its Content-Type header. In this case, these are the
+   *   headers that should be returned by the HEAD request. The keys are header
+   *   names and the values are arrays of strings.
+   *
+   * @covers ::getLocalThumbnailUri
+   *
+   * @dataProvider providerThumbnailUri
+   */
+  public function testThumbnailUri(string $remote_thumbnail_url, array $thumbnail_headers = []): void {
+    // Create a fake resource with the given thumbnail URL.
+    $resource = Resource::rich('<html></html>', 16, 16, NULL, 'Test resource', NULL, NULL, NULL, $remote_thumbnail_url, 16, 16);
+    $thumbnail_url = $resource->getThumbnailUrl()->toString();
+
     // There's no need to resolve the resource URL in this test; we just need
     // to fetch the resource.
     $this->container->set(
@@ -53,23 +100,31 @@ class OEmbedSourceTest extends MediaKernelTestBase {
       $this->prophesize(UrlResolverInterface::class)->reveal()
     );
 
-    $thumbnail_url = Url::fromUri('internal:/core/misc/druplicon.png?foo=bar');
-
-    // Create a mocked resource whose thumbnail URL contains a query string.
-    $resource = $this->prophesize(Resource::class);
-    $resource->getTitle()->willReturn('Test resource');
-    $resource->getThumbnailUrl()->willReturn($thumbnail_url);
+    // Mock the resource fetcher so that it will return our fake resource.
+    $resource_fetcher = $this->prophesize(ResourceFetcherInterface::class);
+    $resource_fetcher->fetchResource(NULL)->willReturn($resource);
+    $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
 
     // The source plugin will try to fetch the remote thumbnail, so mock the
-    // HTTP client to ensure that request returns an empty "OK" response.
+    // HTTP client to ensure that request returns a response with some valid
+    // image data.
+    $data = Utils::tryFopen($this->getDrupalRoot() . '/core/misc/druplicon.png', 'r');
+    $response = new Response(200, [], Utils::streamFor($data));
     $http_client = $this->prophesize(Client::class);
-    $http_client->get(Argument::type('string'))->willReturn(new Response());
-    $this->container->set('http_client', $http_client->reveal());
+    // The thumbnail should only be downloaded once.
+    $http_client->request('GET', $thumbnail_url)->willReturn($response)
+      ->shouldBeCalledOnce();
 
-    // Mock the resource fetcher so that it will return our mocked resource.
-    $resource_fetcher = $this->prophesize(ResourceFetcherInterface::class);
-    $resource_fetcher->fetchResource(NULL)->willReturn($resource->reveal());
-    $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
+    // If the file extension cannot be derived from the URL, a HEAD request
+    // should be made.
+    if ($thumbnail_headers) {
+      $response = new Response(200, $thumbnail_headers);
+      $http_client->request('HEAD', $thumbnail_url)->willReturn($response);
+    }
+    else {
+      $http_client->request('HEAD', $thumbnail_url)->shouldNotBeCalled();
+    }
+    $this->container->set('http_client', $http_client->reveal());
 
     $media_type = $this->createMediaType('oembed:video');
     $source = $media_type->getSource();
@@ -82,9 +137,10 @@ class OEmbedSourceTest extends MediaKernelTestBase {
 
     // Get the local thumbnail URI and ensure that it does not contain any
     // query string.
-    $local_thumbnail_uri = $media_type->getSource()->getMetadata($media, 'thumbnail_uri');
-    $expected_uri = 'public://oembed_thumbnails/' . Crypt::hashBase64('/core/misc/druplicon.png') . '.png';
-    $this->assertSame($expected_uri, $local_thumbnail_uri);
+    $expected_uri = 'public://oembed_thumbnails/' . Crypt::hashBase64($thumbnail_url) . '.png';
+    $this->assertSame($expected_uri, $source->getMetadata($media, 'thumbnail_uri'));
+    // Ensure that the thumbnail is only downloaded once.
+    $source->getMetadata($media, 'thumbnail_uri');
   }
 
 }
