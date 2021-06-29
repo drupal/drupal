@@ -10,7 +10,7 @@
   overflow: hidden;
   width: var(--sp2);
   height: var(--sp2);
-  margin-block-start: 2px; /* Visually align button with menu link text. */
+  margin-block-start: var(--sp0-5); /* Visually align button with menu link text. */
   padding-block: 0;
   padding-inline-start: 0;
   padding-inline-end: 0;
