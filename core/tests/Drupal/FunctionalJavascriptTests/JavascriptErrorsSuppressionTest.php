@@ -25,7 +25,7 @@ class JavascriptErrorsSuppressionTest extends WebDriverTestBase {
   protected $failOnJavascriptConsoleErrors = FALSE;
 
   /**
-   * Tests that Javascript console errors can be suppressed.
+   * Tests that JavaScript console errors can be suppressed.
    */
   public function testJavascriptErrors(): void {
     // Visit page that will throw a Javascript console error.

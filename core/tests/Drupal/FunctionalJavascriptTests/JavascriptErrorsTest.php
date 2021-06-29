@@ -21,7 +21,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   protected static $modules = ['js_errors_test'];
 
   /**
-   * Tests that Javascript console errors will result in a deprecation warning.
+   * Tests that JavaScript console errors will result in a deprecation warning.
    */
   public function testJavascriptErrors(): void {
     $this->expectDeprecation('Not failing Javascript test for Javascript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following Javascript errors: Error: A manually thrown error.');
