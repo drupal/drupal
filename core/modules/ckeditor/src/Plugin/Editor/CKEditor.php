@@ -64,7 +64,10 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @var \Drupal\Core\State\StateInterface
    *
-   * @deprecated since drupal:9.2.0 and removed from drupal:10.0.0.
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+   *   Property no longer required by the service.
+   *
+   * @see https://www.drupal.org/node/3014783
    */
   protected $state;
 
@@ -105,7 +108,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $this->renderer = $renderer;
     $this->state = $state;
     if ($query_string === NULL) {
-      @trigger_error('$query_string parameter is added since drupal:9.2.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
+      @trigger_error('$query_string parameter is added in drupal:9.3.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
       $query_string = \Drupal::service('cache.query_string');
     }
     $this->queryString = $query_string;

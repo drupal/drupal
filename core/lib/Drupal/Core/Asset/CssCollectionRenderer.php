@@ -14,7 +14,11 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
    * The state key/value store.
    *
    * @var \Drupal\Core\State\StateInterface
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+   *   Property no longer required by the service.
+   *
+   * @see https://www.drupal.org/node/3014783
    */
   protected $state;
 

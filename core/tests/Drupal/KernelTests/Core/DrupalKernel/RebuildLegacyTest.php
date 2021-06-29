@@ -47,4 +47,5 @@ class RebuildLegacyTest extends KernelTestBase {
     $this->expectDeprecation('drupal_flush_all_caches() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783');
     drupal_flush_all_caches();
   }
+
 }
