@@ -188,7 +188,7 @@ function olivero_theme_suggestions_form_alter(array &$suggestions, array $variab
  * Implements hook_form_alter() for adding classes and placeholder text to the search forms.
  */
 function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (isset($form['actions']['submit']) && (count($form['actions'])) <= 2) {
+  if (isset($form['actions']) && (count($form['actions'])) <= 2) {
     $form['actions']['submit']['#attributes']['class'][] = 'button--primary';
   }
 
@@ -304,8 +304,6 @@ function olivero_preprocess_input(&$variables) {
     $variables['attributes']['class'][] = Html::getClass('form-element--type-' . $type_html);
     $variables['attributes']['class'][] = Html::getClass('form-element--api-' . $type_api);
 
-    // This logic is functioning as expected, but there is nothing in the theme that renders the result.
-    // As a result it can't currently be covered by a functional test.
     if (!empty($variables['element']['#autocomplete_route_name'])) {
       $variables['autocomplete_message'] = t('Loading…');
     }
@@ -372,7 +370,7 @@ function olivero_preprocess_field_multiple_value_form(&$variables) {
   // Make disabled available for the template.
   $variables['disabled'] = !empty($variables['element']['#disabled']);
 
-  if (!empty($variables['multiple'])) {
+  if ($variables['multiple']) {
     // Add an additional CSS class for the field label table cell.
     // This repeats the logic of template_preprocess_field_multiple_value_form()
     // without using '#prefix' and '#suffix' for the wrapper element.
