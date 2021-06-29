@@ -431,10 +431,18 @@ function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $ty
  *   titles as the values.
  */
 function menu_ui_get_menus($all = TRUE) {
-  if ($custom_menus = Menu::loadMultiple()) {
-    if (!$all) {
-      $custom_menus = array_diff_key($custom_menus, menu_list_system_menus());
-    }
+  if (!$all) {
+    $menus_to_load = \Drupal::entityTypeManager()
+      ->getStorage('menu')
+      ->getQuery()
+      ->condition(
+        'id',
+        ['tools', 'admin', 'account', 'main', 'footer'],
+        'NOT IN'
+      )
+      ->execute();
+  }
+  if ($custom_menus = Menu::loadMultiple($menus_to_load ?? NULL)) {
     foreach ($custom_menus as $menu_name => $menu) {
       $custom_menus[$menu_name] = $menu->label();
     }
