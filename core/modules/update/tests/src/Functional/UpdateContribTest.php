@@ -211,7 +211,7 @@ class UpdateContribTest extends UpdateTestBase {
    */
   public function testUpdateBaseThemeSecurityUpdate() {
     // @todo https://www.drupal.org/node/2338175 base themes have to be
-    //  installed.
+    //   installed.
     // Only install the subtheme, not the base theme.
     \Drupal::service('theme_installer')->install(['update_test_subtheme']);
 
@@ -242,7 +242,8 @@ class UpdateContribTest extends UpdateTestBase {
     ];
     $this->refreshUpdateStatus($xml_mapping);
     $this->assertSession()->pageTextContains('Security update required!');
-    $this->assertRaw(Link::fromTextAndUrl(t('Update test base theme'), Url::fromUri('http://example.com/project/update_test_basetheme'))->toString());
+    $this->updateProject = 'update_test_basetheme';
+    $this->assertVersionUpdateLinks('Security update', '8.x-1.1');
   }
 
   /**

@@ -407,6 +407,25 @@ class TermTest extends TaxonomyTestBase {
     // Assert that the term no longer exists.
     $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertSession()->statusCodeEquals(404);
+
+    // Test "save and go to list" action while creating term.
+    // Create the term to edit.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(12),
+      'description[0][value]' => $this->randomMachineName(100),
+    ];
+
+    // Create the term to edit.
+    $this->submitForm($edit, 'Save and go to list');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
+
+    // Validate that "Save and go to list" doesn't exist when destination
+    // parameter is present.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', ['query' => ['destination' => 'node/add']]);
+    $this->assertSession()->pageTextNotContains('Save and go to list');
   }
 
   /**

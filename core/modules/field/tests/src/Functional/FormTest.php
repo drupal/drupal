@@ -366,8 +366,7 @@ class FormTest extends FieldTestBase {
     $this->assertTrue(isset($element[0]), 'Required symbol added field label.');
     // Check that the label of the field input is visually hidden and contains
     // the field title and an indication of the delta for a11y.
-    $element = $this->xpath('//label[@for=:for and contains(@class, "visually-hidden") and contains(text(), :value)]', [':for' => 'edit-field-unlimited-0-value', ':value' => $this->field['label'] . ' (value 1)']);
-    $this->assertTrue(isset($element[0]), 'Required symbol not added for field input.');
+    $this->assertSession()->elementExists('xpath', "//label[@for='edit-field-unlimited-0-value' and contains(@class, 'visually-hidden') and contains(text(), '{$this->field['label']} (value 1)')]");
   }
 
   /**

@@ -821,6 +821,20 @@ class LinkFieldTest extends BrowserTestBase {
     $output = $this->renderTestEntity($id);
     $expected_link = (string) $this->container->get('link_generator')->generate('Title, none', Url::fromUri('route:<none>'));
     $this->assertStringContainsString($expected_link, $output);
+
+    // Test a link with a <button> uri.
+    $edit = [
+      "{$field_name}[0][title]" => 'Title, button',
+      "{$field_name}[0][uri]" => '<button>',
+    ];
+
+    $this->drupalGet('/entity_test/add');
+    $this->submitForm($edit, 'Save');
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    $id = $match[1];
+    $output = $this->renderTestEntity($id);
+    $expected_link = (string) $this->container->get('link_generator')->generate('Title, button', Url::fromUri('route:<button>'));
+    $this->assertStringContainsString($expected_link, $output);
   }
 
   /**
