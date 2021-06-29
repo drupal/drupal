@@ -28,7 +28,7 @@ class JavascriptErrorsSuppressionTest extends WebDriverTestBase {
    * Tests that JavaScript console errors can be suppressed.
    */
   public function testJavascriptErrors(): void {
-    // Visit page that will throw a Javascript console error.
+    // Visit page that will throw a JavaScript console error.
     $this->drupalGet('js_errors_test');
     // Ensure that errors from previous page loads will be
     // detected.
