@@ -1,6 +1,6 @@
 /**
  * @file
- *  Testing tools for deprecating JavaScript functions and class properties.
+ *  Support code for testing JavaScript error handling in functional tests.
  */
 (function (Drupal) {
   if (typeof console !== 'undefined' && console.warn) {
