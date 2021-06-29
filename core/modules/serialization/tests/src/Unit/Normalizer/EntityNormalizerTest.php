@@ -168,7 +168,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->with('test')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
     $this->entityFieldManager->expects($this->once())
       ->method('getBaseFieldDefinitions')
       ->with('test')
@@ -284,7 +284,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->with('test')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
     $this->entityFieldManager->expects($this->once())
       ->method('getBaseFieldDefinitions')
       ->with('test')

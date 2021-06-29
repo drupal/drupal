@@ -127,7 +127,7 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->lock->expects($this->exactly(2))
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->lock->expects($this->once())
       ->method('wait')
       ->with('1:test');
@@ -219,11 +219,11 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->once())
       ->method('get')
       ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
+      ->willReturn($this->ownObject);
     $this->lock->expects($this->exactly(2))
       ->method('acquire')
       ->with('1:test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->lock->expects($this->once())
       ->method('wait')
       ->with('1:test');

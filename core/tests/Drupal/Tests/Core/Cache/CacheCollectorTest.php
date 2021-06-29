@@ -244,7 +244,7 @@ class CacheCollectorTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->cacheBackend->expects($this->once())
       ->method('delete')
       ->with($this->cid);
@@ -311,7 +311,7 @@ class CacheCollectorTest extends UnitTestCase {
         [$this->cid],
         [$this->cid, TRUE],
       )
-      ->will($this->returnValue($cache));
+      ->willReturn($cache);
 
     $this->collector->delete($key);
 
@@ -320,7 +320,7 @@ class CacheCollectorTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($this->cid, [], Cache::PERMANENT, []);

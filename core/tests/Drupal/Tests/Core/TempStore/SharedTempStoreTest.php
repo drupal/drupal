@@ -150,7 +150,7 @@ class SharedTempStoreTest extends UnitTestCase {
     $this->lock->expects($this->exactly(2))
       ->method('acquire')
       ->with('test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->lock->expects($this->once())
       ->method('wait')
       ->with('test');
@@ -306,7 +306,7 @@ class SharedTempStoreTest extends UnitTestCase {
     $this->lock->expects($this->exactly(2))
       ->method('acquire')
       ->with('test')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->lock->expects($this->once())
       ->method('wait')
       ->with('test');

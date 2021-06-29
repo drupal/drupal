@@ -198,7 +198,7 @@ class EntityUnitTest extends UnitTestCase {
     $access->expects($this->once())
       ->method('access')
       ->with($this->entity, $operation)
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
     $access->expects($this->once())
       ->method('createAccess')
       ->willReturn(AccessResult::allowed());
