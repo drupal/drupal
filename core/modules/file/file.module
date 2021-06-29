@@ -1682,9 +1682,9 @@ function file_icon_map($mime_type) {
  * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param \Drupal\Core\Field\FieldDefinitionInterface|null $field
- *   (optional) A field definition to be used for this check. If given, limits
- *   the reference check to the given field. Defaults to NULL.
- * @param string $age
+ *   (optional) A field definition to be used for this check. If given,
+ *   limits the reference check to the given field. Defaults to NULL.
+ * @param int $age
  *   (optional) A constant that specifies which references to count. Use
  *   EntityStorageInterface::FIELD_LOAD_REVISION (the default) to retrieve all
  *   references within all revisions or
@@ -1697,10 +1697,10 @@ function file_icon_map($mime_type) {
  *   returned. Defaults to 'file'.
  *
  * @return array
- *   A multidimensional array. The keys are field_name, entity_type, entity_id
- *   and the value is an entity referencing this file.
+ *   A multidimensional array. The keys are field_name, entity_type,
+ *   entity_id and the value is an entity referencing this file.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *    \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead.
  *
  * @see https://www.drupal.org/node/3035357
@@ -1708,7 +1708,7 @@ function file_icon_map($mime_type) {
  * @ingroup file
  */
 function file_get_file_references(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
-  @trigger_error('file_get_file_references() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
   return \Drupal::service('file.usage')->getReferences($file, $field, $age, $field_type);
 }
 
