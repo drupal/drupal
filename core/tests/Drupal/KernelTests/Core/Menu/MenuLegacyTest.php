@@ -20,7 +20,7 @@ class MenuLegacyTest extends KernelTestBase {
    * Tests deprecation of the menu_list_system_menus() function.
    */
   public function testListSystemMenus(): void {
-    $this->expectDeprecation('menu_list_system_menus() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\system\Entity\Menu::loadMultiple() instead. See https://www.drupal.org/node/1882552');
+    $this->expectDeprecation('menu_list_system_menus() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\system\Entity\Menu::loadMultiple() instead. See https://www.drupal.org/node/3027453');
     $this->assertSame([
       'tools' => 'Tools',
       'admin' => 'Administration',
@@ -35,7 +35,7 @@ class MenuLegacyTest extends KernelTestBase {
    */
   public function testMenuUiGetMenus(): void {
     $this->container->get('module_installer')->install(['menu_ui']);
-    $this->expectDeprecation('menu_ui_get_menus() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\system\Entity\Menu::loadMultiple() instead. See https://www.drupal.org/node/1882552');
+    $this->expectDeprecation('menu_ui_get_menus() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\system\Entity\Menu::loadMultiple() instead. See https://www.drupal.org/node/3027453');
     $this->assertSame([], menu_ui_get_menus());
   }
 
