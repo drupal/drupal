@@ -36,14 +36,14 @@
       };
 
       $(window).once('dialog copy interaction settings').on('dialog:aftercreate', function () {
-        var orig_allowInteraction = $.ui.dialog.prototype._allowInteraction;
+        var allowInteraction = $.ui.dialog.prototype._allowInteraction;
 
         $.ui.dialog.prototype._allowInteraction = function (event) {
           if ($(event.target).closest('.cke_dialog').length) {
             return true;
           }
 
-          return orig_allowInteraction.apply(this, arguments);
+          return allowInteraction.apply(this, arguments);
         };
       });
     },
