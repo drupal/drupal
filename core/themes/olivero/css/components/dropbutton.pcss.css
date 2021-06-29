@@ -1,76 +1,157 @@
 /**
  * @file
- * Drop button specific styles.
+ * Dropbutton styles.
  */
 
 @import "../base/variables.pcss.css";
 
+:root {
+  --dropbutton--height: var(--sp1-5);
+  --dropbutton--bg-color: var(--color--gray-75);
+  --dropbutton--border-color: var(--color--blue-20);
+}
+
+.dropbutton-wrapper.open {
+  position: relative;
+  z-index: 100; /* Ensure this appears above all other dropbuttons. */
+  filter: drop-shadow(0 2px 2px var(--dropbutton--bg-color));
+}
+
 .dropbutton-widget {
-  overflow: hidden;
-  border: solid 1px var(--color--white);
+  position: relative;
+  width: 200px;
+  height: var(--dropbutton--height);
+  padding-inline-end: var(--dropbutton--height);
   border-radius: var(--border-radius);
+
+  @supports (width: max-content) {
+    width: max-content;
+  }
+}
+
+.dropbutton-single .dropbutton-widget {
+  padding-inline-end: 0;
 }
 
 .dropbutton {
-  background-color: var(--color--blue-20);
+  height: var(--dropbutton--height);
+  margin-block: 0;
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  list-style: none;
+  font-size: var(--font-size-s);
 }
 
-.js .dropbutton-widget .dropbutton {
-  overflow: visible;
+.dropbutton-toggle button {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dropbutton--height);
+  height: var(--dropbutton--height);
+  padding: 0;
+  cursor: pointer;
+  border-color: transparent;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
+  background: var(--dropbutton--bg-color);
+
+  &:focus {
+    outline: solid 2px var(--dropbutton--border-color);
+    outline-offset: -2px;
+  }
+
+  &:before {
+    display: block;
+    width: var(--sp0-5);
+    height: var(--sp0-5);
+    content: "";
+    transform: translateY(-25%) rotate(45deg);
+    border-right: solid 2px var(--dropbutton--border-color);
+    border-bottom: solid 2px var(--dropbutton--border-color);
+  }
+}
+
+[dir="rtl"] .dropbutton-toggle button {
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
 .dropbutton-action {
-  font-size: var(--font-size-s);
-  line-height: var(--line-height-s);
+  &:first-child {
+    margin-inline-end: 2px;
+    border: solid 1px transparent;
+    border-radius: var(--border-radius) 0 0 var(--border-radius); /* LTR */
+    background: var(--dropbutton--bg-color);
+  }
 
   & a {
-    padding-block: var(--sp0-25);
-    padding-inline-start: var(--sp1);
-    padding-inline-end: var(--sp1);
+    display: flex;
+    align-items: center;
+    margin-bottom: -2px; /* Account for borders. */
+    padding: 0 9px;
     text-decoration: none;
-    color: var(--color--white);
-
-    &:hover {
-      background-color: var(--color--blue-50);
-    }
+    color: var(--color--gray-10);
+    font-weight: 600;
 
     &:focus {
-      outline: 2px solid var(--color--blue-70);
-      outline-offset: 2px;
-      background-color: var(--color--blue-50);
+      border: solid 2px var(--dropbutton--border-color);
+      outline: 0;
+
+      /* Negate specific IE rules. */
+      @supports (outline-offset: -2px) {
+        border: 0;
+        outline: solid 2px var(--dropbutton--border-color);
+        outline-offset: -1px; /* Overlap parent container by 1px. */
+      }
     }
   }
 }
 
-.open .dropbutton-action:not(:last-child) {
-  border-block-end: solid 1px var(--color--white);
-}
-
-.js .dropbutton-action a:focus {
-  outline: 2px solid var(--color--blue-70);
-}
-
-.dropbutton-toggle {
-  border-inline-start: 1px solid var(--color--white);
-  background-color: var(--color--blue-20);
-
-  &:hover {
-    background-color: var(--color--blue-50);
+.dropbutton-single .dropbutton-action {
+  &:first-child {
+    border-right: solid 1px transparent; /* LTR */
+    border-radius: var(--border-radius);
   }
 
-  & button:focus {
-    outline: solid 2px var(--color--blue-70);
-    outline-offset: 2px;
-    background-color: var(--color--blue-50);
+  & a {
+    justify-content: center;
   }
 }
 
-.dropbutton-arrow {
-  inset-inline: 0;
-  margin-inline: auto;
-  border-top-color: var(--color--white);
+[dir="rtl"] {
+  & .dropbutton-action:first-child {
+    border: solid 1px transparent;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  }
+
+  & .dropbutton-single .dropbutton-action:first-child {
+    border: solid 1px transparent;
+  }
 }
 
-.dropbutton-multiple.open .dropbutton-arrow {
-  border-bottom-color: var(--color--white);
+.secondary-action {
+  visibility: hidden;
+  width: calc(100% + var(--dropbutton--height));
+  border-right: 1px solid var(--dropbutton--bg-color);
+  border-left: 1px solid var(--dropbutton--bg-color);
+  background: var(--color--white);
+
+  &:last-child {
+    border-bottom: 1px solid var(--dropbutton--bg-color);
+  }
+}
+
+.dropbutton-wrapper.open {
+  & .dropbutton-toggle button:before {
+    transform: translateY(25%) rotate(225deg);
+  }
+
+  & .dropbutton-widget {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+
+  & .secondary-action {
+    visibility: visible;
+  }
 }

@@ -7,99 +7,190 @@
 
 /**
  * @file
- * Drop button specific styles.
+ * Dropbutton styles.
  */
 
+.dropbutton-wrapper.open {
+  position: relative;
+  z-index: 100; /* Ensure this appears above all other dropbuttons. */
+  filter: drop-shadow(0 2px 2px #e3e3e5);
+}
+
+[dir="ltr"] .dropbutton-widget {
+  padding-right: 1.6875rem;
+}
+
+[dir="rtl"] .dropbutton-widget {
+  padding-left: 1.6875rem;
+}
+
 .dropbutton-widget {
-  overflow: hidden;
-  border: solid 1px #fff;
-  border-radius: 0.1875rem;
+  position: relative;
+  width: 12.5rem;
+  height: 1.6875rem;
+  border-radius: 0.1875rem
+}
+
+@supports ((width: -webkit-max-content) or (width: max-content)) {
+
+.dropbutton-widget {
+    width: -webkit-max-content;
+    width: max-content
+}
+  }
+
+[dir="ltr"] .dropbutton-single .dropbutton-widget {
+  padding-right: 0;
+}
+
+[dir="rtl"] .dropbutton-single .dropbutton-widget {
+  padding-left: 0;
+}
+
+[dir="ltr"] .dropbutton {
+  margin-left: 0;
+}
+
+[dir="rtl"] .dropbutton {
+  margin-right: 0;
+}
+
+[dir="ltr"] .dropbutton {
+  padding-left: 0;
+}
+
+[dir="rtl"] .dropbutton {
+  padding-right: 0;
 }
 
 .dropbutton {
-  background-color: #0d77b5;
-}
-
-.js .dropbutton-widget .dropbutton {
-  overflow: visible;
-}
-
-.dropbutton-action {
+  height: 1.6875rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
   font-size: 0.875rem;
-  line-height: 1.125rem
 }
 
-[dir="ltr"] .dropbutton-action a {
-    padding-left: 1.125rem;
+[dir="ltr"] .dropbutton-toggle button {
+  right: 0;
 }
 
-[dir="rtl"] .dropbutton-action a {
-    padding-right: 1.125rem;
+[dir="rtl"] .dropbutton-toggle button {
+  left: 0;
 }
 
-[dir="ltr"] .dropbutton-action a {
-    padding-right: 1.125rem;
+.dropbutton-toggle button {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6875rem;
+  height: 1.6875rem;
+  padding: 0;
+  cursor: pointer;
+  border-color: transparent;
+  border-radius: 0 0.1875rem 0.1875rem 0; /* LTR */
+  background: #e3e3e5
 }
-
-[dir="rtl"] .dropbutton-action a {
-    padding-left: 1.125rem;
-}
-
-.dropbutton-action a {
-    padding-top: 0.28125rem;
-    padding-bottom: 0.28125rem;
-    text-decoration: none;
-    color: #fff
-  }
-
-.dropbutton-action a:hover {
-      background-color: #2494db;
-    }
-
-.dropbutton-action a:focus {
-      outline: 2px solid #53b0eb;
-      outline-offset: 2px;
-      background-color: #2494db;
-    }
-
-.open .dropbutton-action:not(:last-child) {
-  border-bottom: solid 1px #fff;
-}
-
-.js .dropbutton-action a:focus {
-  outline: 2px solid #53b0eb;
-}
-
-[dir="ltr"] .dropbutton-toggle {
-  border-left: 1px solid #fff;
-}
-
-[dir="rtl"] .dropbutton-toggle {
-  border-right: 1px solid #fff;
-}
-
-.dropbutton-toggle {
-  background-color: #0d77b5
-}
-
-.dropbutton-toggle:hover {
-    background-color: #2494db;
-  }
 
 .dropbutton-toggle button:focus {
-    outline: solid 2px #53b0eb;
-    outline-offset: 2px;
-    background-color: #2494db;
+    outline: solid 2px #0d77b5;
+    outline-offset: -2px;
   }
 
-.dropbutton-arrow {
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  border-top-color: #fff;
+.dropbutton-toggle button:before {
+    display: block;
+    width: 0.5625rem;
+    height: 0.5625rem;
+    content: "";
+    transform: translateY(-25%) rotate(45deg);
+    border-right: solid 2px #0d77b5;
+    border-bottom: solid 2px #0d77b5;
+  }
+
+[dir="rtl"] .dropbutton-toggle button {
+  border-radius: 0.1875rem 0 0 0.1875rem;
 }
 
-.dropbutton-multiple.open .dropbutton-arrow {
-  border-bottom-color: #fff;
+[dir="ltr"] .dropbutton-action:first-child {
+    margin-right: 2px;
 }
+
+[dir="rtl"] .dropbutton-action:first-child {
+    margin-left: 2px;
+}
+
+.dropbutton-action:first-child {
+    border: solid 1px transparent;
+    border-radius: 0.1875rem 0 0 0.1875rem; /* LTR */
+    background: #e3e3e5;
+  }
+
+.dropbutton-action a {
+    display: flex;
+    align-items: center;
+    margin-bottom: -2px; /* Account for borders. */
+    padding: 0 0.5625rem;
+    text-decoration: none;
+    color: #313637;
+    font-weight: 600
+  }
+
+.dropbutton-action a:focus {
+      border: solid 2px #0d77b5;
+      outline: 0
+
+      /* Negate specific IE rules. */
+    }
+
+@supports (outline-offset: -2px) {
+
+.dropbutton-action a:focus {
+        border: 0;
+        outline: solid 2px #0d77b5;
+        outline-offset: -1px /* Overlap parent container by 1px. */
+    }
+      }
+
+.dropbutton-single .dropbutton-action:first-child {
+    border-right: solid 1px transparent; /* LTR */
+    border-radius: 0.1875rem;
+  }
+
+.dropbutton-single .dropbutton-action a {
+    justify-content: center;
+  }
+
+[dir="rtl"] .dropbutton-action:first-child {
+    border: solid 1px transparent;
+    border-radius: 0 0.1875rem 0.1875rem 0;
+  }
+
+[dir="rtl"] .dropbutton-single .dropbutton-action:first-child {
+    border: solid 1px transparent;
+  }
+
+.secondary-action {
+  visibility: hidden;
+  width: calc(100% + 1.6875rem);
+  border-right: 1px solid #e3e3e5;
+  border-left: 1px solid #e3e3e5;
+  background: #fff
+}
+
+.secondary-action:last-child {
+    border-bottom: 1px solid #e3e3e5;
+  }
+
+.dropbutton-wrapper.open .dropbutton-toggle button:before {
+    transform: translateY(25%) rotate(225deg);
+  }
+
+.dropbutton-wrapper.open .dropbutton-widget {
+    border-radius: 0.1875rem 0.1875rem 0 0;
+  }
+
+.dropbutton-wrapper.open .secondary-action {
+    visibility: visible;
+  }
