@@ -121,7 +121,7 @@ class UpdateManagerInstall extends FormBase {
 
       $form['project_upload'] = [
         '#type' => 'file',
-        '#title' => $this->t('Upload a module or theme archive to install'),
+        '#title' => $this->t('Upload a module or theme archive'),
         '#description' => $this->t('For example: %filename from your local computer', ['%filename' => 'name.tar.gz']),
       ];
     }
