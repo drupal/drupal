@@ -39,7 +39,7 @@
 
 @media (min-width: 75rem) {
 
-body:not(.is-always-mobile-nav) .js-fixed .wide-nav-expand {
+body:not(.is-always-mobile-nav) .is-fixed .wide-nav-expand {
     visibility: visible
 }
   }
@@ -120,7 +120,7 @@ body.is-always-mobile-nav .wide-nav-expand {
       background-color: currentColor;
     }
 
-.js-fixed .wide-nav-expand__icon {
+.is-fixed .wide-nav-expand__icon {
   opacity: 1;
 }
 

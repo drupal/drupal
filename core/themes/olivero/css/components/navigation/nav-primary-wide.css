@@ -287,7 +287,7 @@ body:not(.is-always-mobile-nav) {
      * little extra room when the toolbar is fixed (and is shorter).
      */
 }
-    body:not(.is-always-mobile-nav) .js-fixed .primary-nav__menu--level-2 {
+    body:not(.is-always-mobile-nav) .is-fixed .primary-nav__menu--level-2 {
       max-height: calc(100vh - 7.875rem);
     }
   }
@@ -305,7 +305,7 @@ body:not(.is-always-mobile-nav) {
         max-height: calc(100vh - 14.8125rem);
       }
 
-      body:not(.is-always-mobile-nav).toolbar-vertical .js-fixed .primary-nav__menu--level-2, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .js-fixed .primary-nav__menu--level-2 {
+      body:not(.is-always-mobile-nav).toolbar-vertical .is-fixed .primary-nav__menu--level-2, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .is-fixed .primary-nav__menu--level-2 {
         max-height: calc(100vh - 10.3125rem);
       }
   body:not(.is-always-mobile-nav) {
@@ -316,7 +316,7 @@ body:not(.is-always-mobile-nav) {
         max-height: calc(100vh - 17.3125rem);
       }
 
-      body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .js-fixed .primary-nav__menu--level-2 {
+      body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .is-fixed .primary-nav__menu--level-2 {
         max-height: calc(100vh - 12.8125rem);
       }
 }
