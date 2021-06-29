@@ -131,3 +131,20 @@
     }
   }
 }
+
+/**
+ * <pre> and <blockquote> elements should not break containers and overflow
+ * into sidebar region when present.
+ */
+.sidebar-grid {
+  & .layout--content-narrow,
+  & .layout--pass--content-narrow > * {
+    &.text-content,
+    & .text-content {
+      & blockquote,
+      & pre {
+        width: auto;
+      }
+    }
+  }
+}
