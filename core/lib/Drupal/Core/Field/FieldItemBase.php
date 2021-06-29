@@ -41,16 +41,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   }
 
   /**
-   * Constructs a FieldItemBase object given its definition and context.
-   *
-   * @param \Drupal\Core\TypedData\ComplexDataDefinitionInterface $definition
-   *   The data definition.
-   * @param string $name
-   *   (optional) The name of the created property, or NULL if it is the root
-   *   of a typed data tree. Defaults to NULL.
-   * @param \Drupal\Core\TypedData\TypedDataInterface $parent
-   *   (optional) The parent object of the data property, or NULL if it is the
-   *   root of a typed data tree. Defaults to NULL.
+   * {@inheritdoc}
    */
   public function __construct(ComplexDataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
