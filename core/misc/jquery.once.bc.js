@@ -6,19 +6,19 @@
 **/
 
 (function ($, once) {
-  var oldOnce = once;
+  var drupalOnce = once;
 
-  var newOnce = function newOnce(id, selector, context) {
+  var augmentedOnce = function augmentedOnce(id, selector, context) {
     $(selector, context).once(id);
-    return oldOnce(id, selector, context);
+    return drupalOnce(id, selector, context);
   };
 
-  newOnce.remove = function (id, selector, context) {
+  augmentedOnce.remove = function (id, selector, context) {
     $(selector, context).removeOnce(id);
-    return oldOnce.remove(id, selector, context);
+    return drupalOnce.remove(id, selector, context);
   };
 
-  newOnce.filter = oldOnce.filter;
-  newOnce.find = oldOnce.find;
-  window.once = newOnce;
+  augmentedOnce.filter = drupalOnce.filter;
+  augmentedOnce.find = drupalOnce.find;
+  window.once = augmentedOnce;
 })(jQuery, once);

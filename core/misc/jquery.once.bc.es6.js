@@ -13,24 +13,25 @@
 
 (($, once) => {
   // We'll replace the whole library so keep a version in cache for later.
-  const oldOnce = once;
+  const drupalOnce = once;
 
-  // When calling once, also populate jQuery.once registry.
-  const newOnce = (id, selector, context) => {
+  // When calling once(), also populate jQuery.once registry.
+  const augmentedOnce = (id, selector, context) => {
     $(selector, context).once(id);
-    return oldOnce(id, selector, context);
+    return drupalOnce(id, selector, context);
   };
 
-  // When calling once.remove, also remove it from jQuery.once registry.
-  newOnce.remove = (id, selector, context) => {
+  // When calling once.remove(), also remove it from jQuery.once registry.
+  augmentedOnce.remove = (id, selector, context) => {
     $(selector, context).removeOnce(id);
-    return oldOnce.remove(id, selector, context);
+    return drupalOnce.remove(id, selector, context);
   };
 
-  // Expose the rest of the once API.
-  newOnce.filter = oldOnce.filter;
-  newOnce.find = oldOnce.find;
+  // Expose the rest of @drupal/once API.
+  augmentedOnce.filter = drupalOnce.filter;
+  augmentedOnce.find = drupalOnce.find;
 
-  // Replace the once library with the version augmented with jQuery.once calls.
-  window.once = newOnce;
+  // Replace @drupal/once library with the version augmented with
+  // jQuery.once calls.
+  window.once = augmentedOnce;
 })(jQuery, once);
