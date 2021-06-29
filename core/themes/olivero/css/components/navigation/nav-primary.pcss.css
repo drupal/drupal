@@ -72,8 +72,8 @@
     &:before,
     &:after {
       position: absolute;
-      inset-block-start: 20px;
       inset-inline-end: 9px;
+      inset-block-start: calc(var(--sp0-5) + 17px); /* Visually align button with menu link text. */
       width: 18px;
       height: 0;
       content: "";

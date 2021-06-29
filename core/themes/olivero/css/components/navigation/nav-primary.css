@@ -134,7 +134,7 @@
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
     .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
       position: absolute;
-      top: 1.25rem;
+      top: 1.625rem; /* Visually align button with menu link text. */
       width: 1.125rem;
       height: 0;
       content: "";
