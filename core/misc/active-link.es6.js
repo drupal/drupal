@@ -25,15 +25,53 @@
       const querySelector = path.currentQuery
         ? `[data-drupal-link-query='${queryString}']`
         : ':not([data-drupal-link-query])';
-      const originalSelectors = [
-        `[data-drupal-link-system-path="${path.currentPath}"]`,
-      ];
+
+      const originalSelectors = [];
+      const currentPathSelector = `[data-drupal-link-system-path="${path.currentPath}"]`;
+      const queryMatchSelector = `[data-drupal-link-query='${queryString}']`;
+      const queryEmptySelector = `[data-drupal-link-query='']`;
+      const noQuerySelector = ':not([data-drupal-link-query])';
+
+      if (path.currentQuery) {
+        // If the current path has a query, match links that:
+        // - Match the path and the query
+        // - Match the path with no query specified
+        // - Match the path with an empty query specified
+        // I.e. If the link patch matches and does also include a query arg that
+        // does not match that of the current path.
+        originalSelectors.push(`${currentPathSelector}${queryMatchSelector}`);
+        originalSelectors.push(`${currentPathSelector}${queryEmptySelector}`);
+        originalSelectors.push(`${currentPathSelector}${noQuerySelector}`);
+      } else {
+        // If the current path has no query, match links that include that path
+        // and have either no query or an empty query specified.
+        originalSelectors.push(`${currentPathSelector}${queryEmptySelector}`);
+        originalSelectors.push(`${currentPathSelector}${noQuerySelector}`);
+      }
+
       let selectors;
 
       // If this is the front page, we have to check for the <front> path as
       // well.
       if (path.isFront) {
-        originalSelectors.push('[data-drupal-link-system-path="<front>"]');
+        if (path.currentQuery) {
+          originalSelectors.push(
+            `[data-drupal-link-system-path="<front>"]${queryMatchSelector}`,
+          );
+          originalSelectors.push(
+            `[data-drupal-link-system-path="<front>"]${queryEmptySelector}`,
+          );
+          originalSelectors.push(
+            `[data-drupal-link-system-path="<front>"]${noQuerySelector}`,
+          );
+        } else {
+          originalSelectors.push(
+            `[data-drupal-link-system-path="<front>"]${queryEmptySelector}`,
+          );
+          originalSelectors.push(
+            `[data-drupal-link-system-path="<front>"]${noQuerySelector}`,
+          );
+        }
       }
 
       // Add language filtering.
