@@ -12,10 +12,33 @@ class Rebuilder {
   /**
    * Flushes all caches.
    *
-   * Flushes all persistent caches, resets all variables, rebuilds all data
-   * structures.
+   * Rebuilds the container, flushes all persistent caches, resets all
+   * variables, and rebuilds all data structures.
    * At times, it is necessary to re-initialize the entire system to account for
-   * changed or new code. This method makes all registered cache bins cleared.
+   * changed or new code. This function:
+   * - Rebuilds the container if $kernel is not passed in.
+   * - Clears all persistent caches:
+   *   - The bootstrap cache bin containing base system, module system, and
+   *     theme system information.
+   *   - The common 'default' cache bin containing arbitrary caches.
+   *   - The page cache.
+   *   - The URL alias path cache.
+   * - Resets all static variables that have been defined via drupal_static().
+   * - Clears asset (JS/CSS) file caches.
+   * - Updates the system with latest information about extensions (modules and
+   *   themes).
+   * - Updates the bootstrap flag for modules implementing bootstrap_hooks().
+   * - Rebuilds the full database schema information (invoking hook_schema()).
+   * - Rebuilds data structures of all modules (invoking hook_rebuild()). In
+   *   core this means
+   *   - blocks, node types, date formats and actions are synchronized with the
+   *     database
+   *   - The 'active' status of fields is refreshed.
+   * - Rebuilds the menu router.
+   *
+   * It's discouraged to call this during a regular page request.
+   * If you call this function in tests, every code afterwards should use the
+   * new container.
    *
    * This means the entire system is reset so all caches and static variables
    * are effectively empty. After that is guaranteed, information about the
@@ -29,6 +52,10 @@ class Rebuilder {
    * fresh and current system data. All modules must be able to rely on this
    * contract.
    *
+   * @see \Drupal\Core\Cache\CacheHelper::getBins()
+   * @see hook_cache_flush()
+   * @see hook_rebuild()
+   *
    * This function also resets the theme, which means it is not initialized
    * anymore and all previously added JavaScript and CSS is gone. Normally, this
    * function is called as an end-of-POST-request operation that is followed by
@@ -39,22 +66,31 @@ class Rebuilder {
    * maintenance theme if it was initialized before.
    *
    * @todo Try to clear page/JS/CSS caches last, so cached pages can still be
-   *   served during this possibly long-running operation. (Conflict on
-   *   bootstrap cache though.)
-   *   See: https://www.drupal.org/project/drupal/issues/3160185
+   *   served during this possibly long-running operation. (Conflict on bootstrap
+   *   cache though.)
    * @todo Add a global lock to ensure that caches are not primed in concurrent
-   *   requests. See: https://www.drupal.org/project/drupal/issues/3160185
+   *   requests.
+   *
+   * @param \Drupal\Core\DrupalKernel|array $kernel
+   *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
+   *   the container if this is passed in. Sometimes drupal_flush_all_caches is
+   *   used as a batch operation so $kernel will be an array, in this instance it
+   *   will be treated as if it it NULL.
    *
    * @see \Drupal\Core\Cache\CacheHelper::getBins()
    * @see hook_cache_flush()
    * @see hook_rebuild()
    */
-  public static function rebuildAll(): void {
+  public static function rebuildAll($kernel): void {
+    // This is executed based on old/previously known information if $kernel is
+    // not passed in, which is sufficient, since new extensions cannot have any
+    // primed caches yet.
+    $module_handler = \Drupal::moduleHandler();
     // Flush all persistent caches.
-    // This is executed based on old/previously known information, which is
-    // sufficient, since new extensions cannot have any primed caches yet.
-    \Drupal::moduleHandler()->invokeAll('cache_flush');
-    self::deleteAllCacheBins();
+    $module_handler->invokeAll('cache_flush');
+    foreach (Cache::getBins() as $cache_backend) {
+      $cache_backend->deleteAll();
+    }
 
     // Flush asset file caches.
     \Drupal::service('asset.css.collection_optimizer')->deleteAll();
@@ -64,50 +100,33 @@ class Rebuilder {
     // Reset all static caches.
     drupal_static_reset();
 
-    // Invalidate the container.
-    \Drupal::service('kernel')->invalidateContainer();
-
     // Wipe the Twig PHP Storage cache.
     \Drupal::service('twig')->invalidate();
-
-    // Rebuild module and theme data.
-    $module_data = \Drupal::service('extension.list.module')->reset()->getList();
-    /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
-    $theme_handler = \Drupal::service('theme_handler');
-    $theme_handler->refreshInfo();
+  
+    // Rebuild theme data that is stored in state.
+    \Drupal::service('theme_handler')->refreshInfo();
     // In case the active theme gets requested later in the same request we need
     // to reset the theme manager.
     \Drupal::theme()->resetActiveTheme();
 
-    // Rebuild and reboot a new kernel. A simple DrupalKernel reboot is not
-    // sufficient, since the list of enabled modules might have been adjusted
-    // above due to changed code.
-    $files = [];
-    $modules = [];
-    foreach ($module_data as $name => $extension) {
-      if ($extension->status) {
-        $files[$name] = $extension;
-        $modules[$name] = $extension->weight;
-      }
+    if (!$kernel instanceof DrupalKernel) {
+      $kernel = \Drupal::service('kernel');
+      $kernel->invalidateContainer();
+      $kernel->rebuildContainer();
     }
-    $modules = module_config_sort($modules);
-    \Drupal::service('kernel')->updateModules($modules, $files);
-    // New container, new module handler.
-    $module_handler = \Drupal::moduleHandler();
 
-    // Ensure that all modules that are currently supposed to be enabled are
-    // actually loaded.
-    $module_handler->loadAll();
+    // Rebuild module data that is stored in state.
+    \Drupal::service('extension.list.module')->reset();
 
     // Rebuild all information based on new module data.
-    $module_handler->invokeAll('rebuild');
+    \Drupal::moduleHandler()->invokeAll('rebuild');
 
     // Clear all plugin caches.
     \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
 
     // Rebuild the menu router based on all rebuilt data.
-    // Important: This rebuild must happen last, so the menu router is
-    // guaranteed  to be based on up to date information.
+    // Important: This rebuild must happen last, so the menu router is guaranteed
+    // to be based on up to date information.
     \Drupal::service('router.builder')->rebuild();
 
     // Re-initialize the maintenance theme, if the current request attempted to
