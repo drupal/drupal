@@ -4,5 +4,3 @@ description: 'Checks for available updates, and can securely install or update m
 version: VERSION
 package: Core
 configure: update.settings
-dependencies:
-  - drupal:file
