@@ -57,7 +57,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
           'aggregator_test' => [
             'title' => '',
             'description' => '',
-          ]
+          ],
         ]);
     }
 
