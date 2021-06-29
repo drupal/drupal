@@ -109,7 +109,7 @@ class UserSessionTest extends UnitTestCase {
         [['anonymous', 'role_two'], [$roles['role_two']]],
         [
           ['anonymous', 'role_one', 'role_two'],
-          [$roles['role_one'], $roles['role_two']].
+          [$roles['role_one'], $roles['role_two']],
         ],
       ]);
 
