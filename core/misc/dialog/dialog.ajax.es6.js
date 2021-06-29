@@ -60,7 +60,7 @@
             if ($(event.target).closest('.cke_dialog').length) {
               return true;
             }
-            return allowInteraction.apply(this, arguments);
+            return allowInteraction.apply(this);
           };
         });
     },
