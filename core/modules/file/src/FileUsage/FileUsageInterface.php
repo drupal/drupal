@@ -93,6 +93,6 @@ interface FileUsageInterface {
    *   A multidimensional array. The keys are field_name, entity_type,
    *   entity_id and the value is an entity referencing this file.
    */
-  public function getReferences(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file');
+  public function getReferences(FileInterface $file, FieldDefinitionInterface $field = NULL, string $age = EntityStorageInterface::FIELD_LOAD_REVISION, string $field_type = 'file'): array;
 
 }

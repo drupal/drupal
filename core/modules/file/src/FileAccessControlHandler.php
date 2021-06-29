@@ -4,16 +4,47 @@ namespace Drupal\file;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\file\FileUsage\FileUsageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a File access control handler.
  */
-class FileAccessControlHandler extends EntityAccessControlHandler {
+class FileAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
+
+  /**
+   * The file usage service.
+   *
+   * @var \Drupal\file\FileUsage\FileUsageInterface
+   */
+  protected $fileUsage;
+
+  /**
+   * FileAccessControlHandler constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\file\FileUsage\FileUsageInterface $file_usage
+   *   The file usage service.
+   */
+  public function __construct(EntityTypeInterface $entity_type, FileUsageInterface $file_usage) {
+    parent::__construct($entity_type);
+    $this->fileUsage = $file_usage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static($entity_type, $container->get('file.usage'));
+  }
 
   /**
    * {@inheritdoc}
@@ -29,7 +60,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowedIfHasPermission($account, 'access content');
         }
       }
-      elseif ($references = \Drupal::service('file.usage')->getReferences($entity, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL)) {
+      elseif ($references = $this->getFileReferences($entity)) {
         foreach ($references as $field_name => $entity_map) {
           foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
             /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
@@ -85,15 +116,10 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    *   A multidimensional array. The keys are field_name, entity_type,
    *   entity_id and the value is an entity referencing this file.
    *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal::service('file.usage')->getReferences() instead.
-   *
-   * @see https://www.drupal.org/node/3035357
    * @see \Drupal\file\FileUsage\FileUsageInterface::getReferences()
    */
   protected function getFileReferences(FileInterface $file) {
-    @trigger_error('\Drupal\file\FileAccessControlHandler::getFileReferences() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.', E_USER_DEPRECATED);
-    return \Drupal::service('file.usage')->getReferences($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
+    return $this->fileUsage->getReferences($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
   }
 
   /**

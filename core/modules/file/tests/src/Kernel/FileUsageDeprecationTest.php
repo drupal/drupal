@@ -34,7 +34,7 @@ class FileUsageDeprecationTest extends KernelTestBase {
   /**
    * Test the file_get_file_references() deprecation.
    */
-  public function testFileGetFileReferencesDeprecation() {
+  public function testFileGetFileReferencesDeprecation(): void {
     $this->expectDeprecation('file_get_file_references() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileUsage\FileUsageInterface::getReferences() instead. See https://www.drupal.org/node/3035357.');
     $file = File::create(['uri' => 'public://test.txt']);
     file_get_file_references($file);
@@ -43,7 +43,7 @@ class FileUsageDeprecationTest extends KernelTestBase {
   /**
    * Test the file_field_find_file_reference_column() deprecation.
    */
-  public function testFileFieldFindFileReferenceColumnDeprecation() {
+  public function testFileFieldFindFileReferenceColumnDeprecation(): void {
     $this->expectDeprecation('file_field_find_file_reference_column() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.');
     $definition = $this->container->get('entity_field.manager')->getBaseFieldDefinitions('file')['uri'];
     file_field_find_file_reference_column($definition);
@@ -52,21 +52,7 @@ class FileUsageDeprecationTest extends KernelTestBase {
   /**
    * Test the FileUsageBase constructor parameter deprecation.
    */
-  public function testFileUsageBaseMissingConfigFactoryParameter() {
-    $this->expectDeprecation('Calling FileUsageBase::__construct() without the $config_factory argument is deprecated in drupal:9.3.0 and the $config_factory argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3035357.');
-    new DatabaseFileUsageBackend(
-      $this->container->get('database'),
-      'file_usage',
-      NULL,
-      $this->container->get('entity_type.manager'),
-      $this->container->get('entity_field.manager')
-    );
-  }
-
-  /**
-   * Test the FileUsageBase constructor parameter deprecation.
-   */
-  public function testFileUsageBaseMissingEntityTypeManagerParameter() {
+  public function testFileUsageBaseMissingEntityTypeManagerParameter(): void {
     $this->expectDeprecation('Calling FileUsageBase::__construct() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and the $entity_type_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3035357.');
     new DatabaseFileUsageBackend(
       $this->container->get('database'),
@@ -80,7 +66,7 @@ class FileUsageDeprecationTest extends KernelTestBase {
   /**
    * Test the FileUsageBase constructor parameter deprecation.
    */
-  public function testFileUsageBaseMissingEntityFieldManagerParameter() {
+  public function testFileUsageBaseMissingEntityFieldManagerParameter(): void {
     $this->expectDeprecation('Calling FileUsageBase::__construct() without the $entity_field_manager argument is deprecated in drupal:9.3.0 and the $entity_field_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3035357.');
     new DatabaseFileUsageBackend(
       $this->container->get('database'),
@@ -94,7 +80,7 @@ class FileUsageDeprecationTest extends KernelTestBase {
   /**
    * Test the drupal_static_reset function deprecation.
    */
-  public function testFileGetFileReferencesCacheResetDeprecation() {
+  public function testFileGetFileReferencesCacheResetDeprecation(): void {
     $this->expectDeprecation("Using drupal_static_reset() with 'file_get_file_references' as parameter is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3035357.");
     drupal_static_reset('file_get_file_references');
   }
@@ -102,7 +88,7 @@ class FileUsageDeprecationTest extends KernelTestBase {
   /**
    * Test the FileAccessControlHandler::getFileReferences() deprecation.
    */
-  public function testGetFileReferencesDeprecation() {
+  public function testGetFileReferencesDeprecation(): void {
     $this->expectDeprecation('\Drupal\file\FileAccessControlHandler::getFileReferences() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3035357.');
     /** @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface $access_controller */
     $access_controller = $this->container->get('entity_type.manager')->getHandler('file', 'access');
