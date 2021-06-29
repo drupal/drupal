@@ -2,7 +2,6 @@
 
 namespace Drupal\entity_test;
 
-
 use Drupal\Core\Entity\EntityListBuilderRowEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,7 +19,7 @@ class TestEntityListBuilderRowSubscriber implements EventSubscriberInterface {
   /**
    * Alters the list builder row.
    *
-   * @param EntityListBuilderRowEvent $event
+   * @param \Drupal\Core\Entity\EntityListBuilderRowEvent $event
    *   The event instance.
    */
   public function alterRow(EntityListBuilderRowEvent $event): void {
