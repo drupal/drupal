@@ -432,9 +432,7 @@ function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $ty
  */
 function menu_ui_get_menus($all = TRUE) {
   if (!$all) {
-    $menus_to_load = \Drupal::entityTypeManager()
-      ->getStorage('menu')
-      ->getQuery()
+    $menus_to_load = \Drupal::entityQuery('menu')
       ->condition(
         'id',
         ['tools', 'admin', 'account', 'main', 'footer'],
