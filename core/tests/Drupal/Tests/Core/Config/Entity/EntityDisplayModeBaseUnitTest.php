@@ -81,14 +81,12 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
       ->willReturn('test_module');
     $values = ['targetEntityType' => $target_entity_type_id];
 
-    $this->entityTypeManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->exactly(2))
       ->method('getDefinition')
-      ->with($target_entity_type_id)
-      ->willReturn($target_entity_type);
-    $this->entityTypeManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($this->entityType)
-      ->willReturn($this->entityInfo);
+      ->willReturnMap([
+        [$target_entity_type_id, TRUE, $target_entity_type],
+        [$this->entityType, TRUE, $this->entityInfo],
+      ]);
 
     $this->entity = $this->getMockBuilder('\Drupal\Core\Entity\EntityDisplayModeBase')
       ->setConstructorArgs([$values, $this->entityType])

@@ -223,27 +223,11 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   public function testIsNewRevision() {
     // Set up the entity type so that on the first call there is no revision key
     // and on the second call there is one.
-    $this->entityType->expects($this->at(0))
+    $this->entityType->expects($this->exactly(4))
       ->method('hasKey')
       ->with('revision')
-      ->willReturn(FALSE);
-    $this->entityType->expects($this->at(1))
-      ->method('hasKey')
-      ->with('revision')
-      ->willReturn(TRUE);
-    $this->entityType->expects($this->at(2))
-      ->method('hasKey')
-      ->with('revision')
-      ->willReturn(TRUE);
-    $this->entityType->expects($this->at(3))
-      ->method('getKey')
-      ->with('revision')
-      ->willReturn('revision_id');
-    $this->entityType->expects($this->at(4))
-      ->method('hasKey')
-      ->with('revision')
-      ->willReturn(TRUE);
-    $this->entityType->expects($this->at(5))
+      ->willReturnOnConsecutiveCalls(FALSE, TRUE, TRUE, TRUE);
+    $this->entityType->expects($this->exactly(2))
       ->method('getKey')
       ->with('revision')
       ->willReturn('revision_id');
@@ -364,14 +348,10 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $non_empty_violation_list = clone $empty_violation_list;
     $violation = $this->createMock('\Symfony\Component\Validator\ConstraintViolationInterface');
     $non_empty_violation_list->add($violation);
-    $validator->expects($this->at(0))
+    $validator->expects($this->exactly(2))
       ->method('validate')
       ->with($this->entity->getTypedData())
-      ->willReturn($empty_violation_list);
-    $validator->expects($this->at(1))
-      ->method('validate')
-      ->with($this->entity->getTypedData())
-      ->willReturn($non_empty_violation_list);
+      ->willReturnOnConsecutiveCalls($empty_violation_list, $non_empty_violation_list);
     $this->typedDataManager->expects($this->exactly(2))
       ->method('getValidator')
       ->willReturn($validator);
@@ -394,7 +374,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
       ->getMock();
-    $validator->expects($this->at(0))
+    $validator->expects($this->once())
       ->method('validate')
       ->with($this->entity->getTypedData())
       ->willReturn($empty_violation_list);
@@ -449,20 +429,13 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   public function testAccess() {
     $access = $this->createMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
     $operation = $this->randomMachineName();
-    $access->expects($this->at(0))
+    $access->expects($this->exactly(2))
       ->method('access')
       ->with($this->entity, $operation)
-      ->willReturn(TRUE);
-    $access->expects($this->at(1))
-      ->method('access')
-      ->with($this->entity, $operation)
-      ->willReturn(AccessResult::allowed());
-    $access->expects($this->at(2))
+      ->willReturnOnConsecutiveCalls(TRUE, AccessResult::allowed());
+    $access->expects($this->exactly(2))
       ->method('createAccess')
-      ->willReturn(TRUE);
-    $access->expects($this->at(3))
-      ->method('createAccess')
-      ->willReturn(AccessResult::allowed());
+      ->willReturnOnConsecutiveCalls(TRUE, AccessResult::allowed());
     $this->entityTypeManager->expects($this->exactly(4))
       ->method('getAccessControlHandler')
       ->willReturn($access);

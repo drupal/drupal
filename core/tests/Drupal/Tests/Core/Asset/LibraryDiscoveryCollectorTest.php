@@ -189,18 +189,18 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
           'kitten_theme/extend',
         ],
       ]);
-    $this->libraryDiscoveryParser->expects($this->at(0))
+    $this->libraryDiscoveryParser->expects($this->exactly(2))
       ->method('buildByExtension')
-      ->with('test')
-      ->willReturn($this->libraryData);
-    $this->libraryDiscoveryParser->expects($this->at(1))
-      ->method('buildByExtension')
-      ->with('kitten_theme')
-      ->willReturn([
-        'extend' => [
-          'css' => [
-            'theme' => [
-              'baz.css' => [],
+      ->willReturnMap([
+        ['test', $this->libraryData],
+        [
+          'kitten_theme', [
+            'extend' => [
+              'css' => [
+                'theme' => [
+                  'baz.css' => [],
+                ],
+              ],
             ],
           ],
         ],
@@ -235,18 +235,18 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
           'kitten_theme/extend',
         ],
       ]);
-    $this->libraryDiscoveryParser->expects($this->at(0))
+    $this->libraryDiscoveryParser->expects($this->exactly(2))
       ->method('buildByExtension')
-      ->with('test')
-      ->willReturn($this->libraryData);
-    $this->libraryDiscoveryParser->expects($this->at(1))
-      ->method('buildByExtension')
-      ->with('kitten_theme')
-      ->willReturn([
-        'extend' => [
-          'css' => [
-            'theme' => [
-              'baz.css' => [],
+      ->willReturnMap([
+        ['test', $this->libraryData],
+        [
+          'kitten_theme', [
+            'extend' => [
+              'css' => [
+                'theme' => [
+                  'baz.css' => [],
+                ],
+              ],
             ],
           ],
         ],

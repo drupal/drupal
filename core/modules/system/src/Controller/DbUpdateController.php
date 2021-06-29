@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -582,7 +583,12 @@ class DbUpdateController extends ControllerBase {
       $this->state->set('system.maintenance_mode', TRUE);
     }
 
-    $operations = [];
+    /** @var \Drupal\Core\Batch\BatchBuilder $batch_builder */
+    $batch_builder = (new BatchBuilder())
+      ->setTitle($this->t('Updating'))
+      ->setInitMessage($this->t('Starting updates'))
+      ->setErrorMessage($this->t('An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.'))
+      ->setFinishCallback([DbUpdateController::class, 'batchFinished']);
 
     // Resolve any update dependencies to determine the actual updates that will
     // be run and the order they will be run in.
@@ -605,10 +611,10 @@ class DbUpdateController extends ControllerBase {
         // correct place. (The updates are already sorted, so we can simply base
         // this on the first one we come across in the above foreach loop.)
         if (isset($start[$update['module']])) {
-          drupal_set_installed_schema_version($update['module'], $update['number'] - 1);
+          \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
-        $operations[] = ['update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]];
+        $batch_builder->addOperation('update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]);
       }
     }
 
@@ -617,20 +623,13 @@ class DbUpdateController extends ControllerBase {
     if ($post_updates) {
       // Now we rebuild all caches and after that execute the hook_post_update()
       // functions.
-      $operations[] = ['drupal_flush_all_caches', []];
+      $batch_builder->addOperation('drupal_flush_all_caches', []);
       foreach ($post_updates as $function) {
-        $operations[] = ['update_invoke_post_update', [$function]];
+        $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
     }
 
-    $batch['operations'] = $operations;
-    $batch += [
-      'title' => $this->t('Updating'),
-      'init_message' => $this->t('Starting updates'),
-      'error_message' => $this->t('An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.'),
-      'finished' => ['\Drupal\system\Controller\DbUpdateController', 'batchFinished'],
-    ];
-    batch_set($batch);
+    batch_set($batch_builder->toArray());
 
     // @todo Revisit once https://www.drupal.org/node/2548095 is in.
     return batch_process(Url::fromUri('base://results'), Url::fromUri('base://start'));

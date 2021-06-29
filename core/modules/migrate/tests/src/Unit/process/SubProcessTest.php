@@ -52,7 +52,7 @@ class SubProcessTest extends MigrateTestCase {
     $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
     $migration->expects($this->at(2))
       ->method('getProcessPlugins')
-      ->will($this->returnValue($key_plugin));
+      ->willReturn($key_plugin);
     $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
     $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
 
@@ -147,7 +147,7 @@ class SubProcessTest extends MigrateTestCase {
       $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
       $migration->expects($this->at(2))
         ->method('getProcessPlugins')
-        ->will($this->returnValue($key_plugin));
+        ->willReturn($key_plugin);
     }
     $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
     $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);

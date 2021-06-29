@@ -81,18 +81,13 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
       ->method('getBundleConfigDependency')
       ->willReturn(['type' => 'module', 'name' => 'test_module']);
 
-    $this->entityTypeManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->with($target_entity_type_id)
-      ->willReturn($target_entity_type);
-    $this->entityTypeManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(2))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
+      ->willReturnMap([
+        [$target_entity_type_id, TRUE, $target_entity_type],
+        [$this->entityTypeId, TRUE, $this->entityType],
+      ]);
+
     $entity = new RdfMapping($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertArrayNotHasKey('config', $dependencies);
@@ -118,14 +113,12 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
         'name' => 'test_module.type.' . $bundle_id
       ]);
 
-    $this->entityTypeManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->with($target_entity_type_id)
-      ->willReturn($target_entity_type);
-    $this->entityTypeManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
+      ->willReturnMap([
+        [$target_entity_type_id, TRUE, $target_entity_type],
+        [$this->entityTypeId, TRUE, $this->entityType],
+      ]);
 
     $entity = new RdfMapping($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies()->getDependencies();
