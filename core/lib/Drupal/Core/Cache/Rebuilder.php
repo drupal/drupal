@@ -102,7 +102,7 @@ class Rebuilder {
 
     // Wipe the Twig PHP Storage cache.
     \Drupal::service('twig')->invalidate();
-  
+
     // Rebuild theme data that is stored in state.
     \Drupal::service('theme_handler')->refreshInfo();
     // In case the active theme gets requested later in the same request we need
