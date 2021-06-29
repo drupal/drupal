@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\media\OEmbed\Resource;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
