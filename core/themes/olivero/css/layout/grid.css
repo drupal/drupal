@@ -45,7 +45,7 @@
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))12];
+    -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
     grid-template-columns: repeat(12, minmax(0, 1fr))
 }
   }
@@ -54,7 +54,7 @@
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))8];
+    -ms-grid-columns: (minmax(0, 1fr))[ 8 ];
     grid-template-columns: repeat(8, minmax(0, 1fr))
 }
   }
@@ -69,7 +69,7 @@
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))12];
+    -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
     grid-template-columns: repeat(12, minmax(0, 1fr))
 }
   }
@@ -78,7 +78,7 @@
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))10];
+    -ms-grid-columns: (minmax(0, 1fr))[ 10 ];
     grid-template-columns: repeat(10, minmax(0, 1fr))
 }
   }
