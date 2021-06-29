@@ -23,7 +23,7 @@ class TestEntityListBuilderRowSubscriber implements EventSubscriberInterface {
    *   The event instance.
    */
   public function alterRow(EntityListBuilderRowEvent $event): void {
-    if (\Drupal::state()->get('entity_test.list_builder.allow_altering')) {
+    if (\Drupal::state()->get('entity_test.list_builder.allow_altering', FALSE)) {
       $row = $event->getRow();
       $row['label'] = "Altered row: {$row['label']}";
       $event->setRow($row);
