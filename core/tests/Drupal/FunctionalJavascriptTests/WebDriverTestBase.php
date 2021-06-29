@@ -119,7 +119,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
         $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
         if (!empty($errors)) {
           $all_errors = implode("\n", $errors);
-          @trigger_error("Not failing JavaScript test for Javascript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following JavaScript errors: $all_errors. See https://www.drupal.org/node/3221100", E_USER_DEPRECATED);
+          @trigger_error("Not failing JavaScript test for JavaScript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following JavaScript errors: $all_errors. See https://www.drupal.org/node/3221100", E_USER_DEPRECATED);
         }
       }
 
