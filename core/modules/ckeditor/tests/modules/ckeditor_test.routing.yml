@@ -12,3 +12,10 @@ ckeditor_test.off_canvas:
     _controller: '\Drupal\ckeditor_test\CkeditorOffCanvasTestController::testOffCanvas'
   requirements:
     _access: 'TRUE'
+
+ckeditor_test.dialog:
+  path: '/ckeditor_test/dialog'
+  defaults:
+    _controller: '\Drupal\ckeditor_test\CkeditorDialogTestController::testDialog'
+  requirements:
+    _access: 'TRUE'
