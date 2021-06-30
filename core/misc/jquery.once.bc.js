@@ -8,17 +8,18 @@
 (function ($, once) {
   var drupalOnce = once;
 
-  var augmentedOnce = function augmentedOnce(id, selector, context) {
-    $(selector, context).once(id);
+  function augmentedOnce(id, selector, context) {
+    $(context).find(selector).once(id);
     return drupalOnce(id, selector, context);
-  };
+  }
 
-  augmentedOnce.remove = function (id, selector, context) {
-    $(selector, context).removeOnce(id);
+  function remove(id, selector, context) {
+    $(context).find(selector).removeOnce(id);
     return drupalOnce.remove(id, selector, context);
-  };
+  }
 
-  augmentedOnce.filter = drupalOnce.filter;
-  augmentedOnce.find = drupalOnce.find;
+  Object.assign(augmentedOnce, drupalOnce, {
+    remove: remove
+  });
   window.once = augmentedOnce;
 })(jQuery, once);
