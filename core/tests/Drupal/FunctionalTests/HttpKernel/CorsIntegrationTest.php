@@ -62,8 +62,27 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.org');
 
+    // Configure the CORS stack to match allowed origins using regex patterns.
+    $cors_config['allowedOrigins'] = [];
+    $cors_config['allowedOriginsPatterns'] = ['#^http://[a-z-]*\.valid.com$#'];
+
+    $this->setContainerParameter('cors.config', $cors_config);
+    $this->rebuildContainer();
+
+    // Fire a request from an origin that isn't allowed.
+    /** @var \Symfony\Component\HttpFoundation\Response $response */
+    $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
+    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->pageTextContains('Not allowed.');
+
+    // Specify a valid origin.
+    $this->drupalGet('/test-page', [], ['Origin' => 'http://sub-domain.valid.com']);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://sub-domain.valid.com');
+
     // Configure the CORS stack to allow a specific set of origins.
     $cors_config['allowedOrigins'] = ['http://example.com'];
+    $cors_config['allowedOriginsPatterns'] = [];
 
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
