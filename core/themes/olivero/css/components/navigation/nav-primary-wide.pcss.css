@@ -192,7 +192,7 @@ body:not(.is-always-mobile-nav) {
      * When ensuring that long menus don't overflow viewport, we can give a
      * little extra room when the toolbar is fixed (and is shorter).
      */
-    & .js-fixed .primary-nav__menu--level-2 {
+    & .is-fixed .primary-nav__menu--level-2 {
       max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) + var(--sp4));
     }
   }
@@ -211,7 +211,7 @@ body:not(.is-always-mobile-nav) {
         max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height));
       }
 
-      & .js-fixed .primary-nav__menu--level-2 {
+      & .is-fixed .primary-nav__menu--level-2 {
         max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) + var(--sp4));
       }
     }
@@ -222,7 +222,7 @@ body:not(.is-always-mobile-nav) {
         max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height));
       }
 
-      & .js-fixed .primary-nav__menu--level-2 {
+      & .is-fixed .primary-nav__menu--level-2 {
         max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height) + var(--sp4));
       }
     }

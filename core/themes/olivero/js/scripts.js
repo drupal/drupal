@@ -65,11 +65,11 @@
       entries.forEach(function (entry) {
         if (entry.intersectionRatio < 1) {
           fixableElements.forEach(function (el) {
-            return el.classList.add('js-fixed');
+            return el.classList.add('is-fixed');
           });
         } else {
           fixableElements.forEach(function (el) {
-            return el.classList.remove('js-fixed');
+            return el.classList.remove('is-fixed');
           });
         }
       });

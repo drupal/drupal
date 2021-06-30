@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\node\Functional;
 
+@trigger_error(__NAMESPACE__ . '\AssertButtonsTrait is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3215411', E_USER_DEPRECATED);
+
 /**
  * Asserts that buttons are present on a page.
  */

@@ -45,7 +45,6 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
     'system',
     'user',
     'field',
-    'entity_reference',
     'node',
     'entity_test',
   ];

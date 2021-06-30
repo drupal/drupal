@@ -10,11 +10,11 @@
   "scripts": {
     "build": "yarn build:css & yarn build:js & yarn build:jqueryui",
     "watch": "yarn watch:css & yarn watch:js",
-    "build:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-build.js",
-    "watch:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-watch.js",
+    "build:css": "node ./scripts/css/postcss-build.js",
+    "watch:css": "node ./scripts/css/postcss-watch.js",
     "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "build:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
-    "build:jqueryui": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/jqueryui-build.js",
+    "build:jqueryui": "cross-env NODE_ENV=development node ./scripts/js/jqueryui-build.js",
     "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",
@@ -43,6 +43,7 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jquery": "^1.5.1",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.10.0",
@@ -104,7 +105,6 @@
     "last 1 ChromeAndroid version",
     "last 1 UCAndroid version",
     "last 1 Samsung version",
-    "last 1 OperaMini version",
     "Firefox ESR"
   ]
 }

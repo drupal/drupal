@@ -79,17 +79,13 @@ class ExportStorageManagerTest extends KernelTestBase {
    */
   public function testGetStorageLock() {
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $lock->expects($this->at(0))
+    $lock->expects($this->exactly(2))
       ->method('acquire')
       ->with(ExportStorageManager::LOCK_NAME)
       ->will($this->returnValue(FALSE));
-    $lock->expects($this->at(1))
+    $lock->expects($this->once())
       ->method('wait')
       ->with(ExportStorageManager::LOCK_NAME);
-    $lock->expects($this->at(2))
-      ->method('acquire')
-      ->with(ExportStorageManager::LOCK_NAME)
-      ->will($this->returnValue(FALSE));
 
     // The export storage manager under test.
     $manager = new ExportStorageManager(
