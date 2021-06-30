@@ -106,7 +106,7 @@ abstract class FileUsageBase implements FileUsageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getReferences(FileInterface $file, FieldDefinitionInterface $field = NULL, string $age = EntityStorageInterface::FIELD_LOAD_REVISION, string $field_type = 'file'): array {
+  public function getReferences(FileInterface $file, FieldDefinitionInterface $field = NULL, string $age = EntityStorageInterface::FIELD_LOAD_REVISION, ?string $field_type = 'file'): array {
     // Fill the static cache, disregard $field and $field_type for now.
     if (!isset($this->references[$file->id()][$age])) {
       $this->references[$file->id()][$age] = [];
@@ -195,7 +195,7 @@ abstract class FileUsageBase implements FileUsageInterface {
   /**
    * Resets the internal memory cache.
    */
-  public function resetCache() {
+  public function resetCache(): void {
     $this->references = [];
     $this->fieldColumns = [];
   }

@@ -107,12 +107,12 @@ class FileAccessControlHandler extends EntityAccessControlHandler implements Ent
   }
 
   /**
-   * Wrapper for \Drupal::service('file.usage')->getReferences().
+   * Returns entities that reference a file.
    *
    * @param \Drupal\file\FileInterface $file
    *   The file object for which to get references.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface[][][]
    *   A multidimensional array. The keys are field_name, entity_type,
    *   entity_id and the value is an entity referencing this file.
    *
