@@ -48,7 +48,16 @@ class NodePreviewAccessCheck implements AccessInterface {
       return $access_controller->createAccess($node_preview->bundle(), $account, [], TRUE);
     }
     else {
-      return $node_preview->access('update', $account, TRUE);
+      $nid = $node_preview->id();
+      /** @var \Drupal\node\NodeStorageInterface $storage */
+      $storage = \Drupal::entityTypeManager()->getStorage('node');
+      $vid = $storage->getLatestRevisionId($nid);
+
+      /** @var \Drupal\node\NodeInterface $latest_revision */
+      $latest_revision = \Drupal::entityTypeManager()->getStorage('node')
+        ->loadRevision($vid);
+
+      return $latest_revision->access('update', $account, TRUE);
     }
   }
 
