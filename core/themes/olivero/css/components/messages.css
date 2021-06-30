@@ -188,7 +188,6 @@
   cursor: pointer;
   vertical-align: top;
   border: 0;
-  border-radius: 50%;
   background: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -222,7 +221,7 @@
 
 .messages__close:focus {
     outline: 2px solid #53b0eb;
-    outline-offset: 1px;
+    outline-offset: 2px;
   }
 
 .messages__icon svg {

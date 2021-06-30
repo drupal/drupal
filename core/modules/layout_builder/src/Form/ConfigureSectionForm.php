@@ -127,7 +127,7 @@ class ConfigureSectionForm extends FormBase {
     // context slot on creation.
     $this->layout = $section->getLayout();
 
-    $form_state->setTemporaryValue('gathered_contexts', $this->getAvailableContexts($this->sectionStorage));
+    $form_state->setTemporaryValue('gathered_contexts', $this->getPopulatedContexts($this->sectionStorage));
     $form['#tree'] = TRUE;
     $form['layout_settings'] = [];
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);

@@ -125,8 +125,10 @@ class ModuleHandlerTest extends KernelTestBase {
     $result = $this->moduleInstaller()->uninstall(['config', 'help', 'color']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returned TRUE.');
 
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (['color', 'config', 'help'] as $module) {
-      $this->assertEquals(SCHEMA_UNINSTALLED, drupal_get_installed_schema_version($module), "{$module} module was uninstalled.");
+      $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
     }
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
     $this->assertEquals(['color', 'config', 'help'], $uninstalled_modules, 'Modules were uninstalled in the correct order.');
@@ -176,10 +178,12 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
 
     // Uninstall the profile module that is not a dependent.
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $result = $this->moduleInstaller()->uninstall([$non_dependency]);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
     $this->assertFalse($this->moduleHandler()->moduleExists($non_dependency));
-    $this->assertEquals(drupal_get_installed_schema_version($non_dependency), SCHEMA_UNINSTALLED, "$non_dependency module was uninstalled.");
+    $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($non_dependency), "$non_dependency module was uninstalled.");
 
     // Verify that the installation profile itself was not uninstalled.
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
@@ -272,9 +276,11 @@ class ModuleHandlerTest extends KernelTestBase {
     // Deleting the entity.
     $entity->delete();
 
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $result = $this->moduleInstaller()->uninstall(['help']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
-    $this->assertEquals(SCHEMA_UNINSTALLED, drupal_get_installed_schema_version('entity_test'), "entity_test module was uninstalled.");
+    $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('entity_test'), "entity_test module was uninstalled.");
   }
 
   /**

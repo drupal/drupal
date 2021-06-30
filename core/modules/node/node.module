@@ -11,6 +11,7 @@
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -506,8 +507,8 @@ function template_preprocess_node(&$variables) {
   $variables['url'] = !$node->isNew() ? $node->toUrl('canonical')->toString() : NULL;
 
   // The 'page' variable is set to TRUE in two occasions:
-  //   - The view mode is 'full' and we are on the 'node.view' route.
-  //   - The node is in preview and view mode is either 'full' or 'default'.
+  // - The view mode is 'full' and we are on the 'node.view' route.
+  // - The node is in preview and view mode is either 'full' or 'default'.
   $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])));
 
   // Helpful $content variable for templates.
@@ -1046,14 +1047,11 @@ function node_access_rebuild($batch_mode = FALSE) {
   // Only recalculate if the site is using a node_access module.
   if (count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     if ($batch_mode) {
-      $batch = [
-        'title' => t('Rebuilding content access permissions'),
-        'operations' => [
-          ['_node_access_rebuild_batch_operation', []],
-        ],
-        'finished' => '_node_access_rebuild_batch_finished',
-      ];
-      batch_set($batch);
+      $batch_builder = (new BatchBuilder())
+        ->setTitle(t('Rebuilding content access permissions'))
+        ->addOperation('_node_access_rebuild_batch_operation', [])
+        ->setFinishCallback('_node_access_rebuild_batch_finished');
+      batch_set($batch_builder->toArray());
     }
     else {
       // Try to allocate enough time to rebuild node grants
