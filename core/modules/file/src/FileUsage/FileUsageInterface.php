@@ -83,7 +83,7 @@ interface FileUsageInterface {
    *   references within all revisions or
    *   EntityStorageInterface::FIELD_LOAD_CURRENT to retrieve references only in
    *   the current revisions of all entities that have references to this file.
-   * @param string $field_type
+   * @param string|null $field_type
    *   (optional) The name of a field type. If given, limits the reference check
    *   to fields of the given type. If both $field and $field_type are given but
    *   $field is not the same type as $field_type, an empty array will be
