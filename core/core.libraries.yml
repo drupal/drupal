@@ -526,8 +526,10 @@ jquery.once:
     gpl-compatible: true
   js:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
+    misc/jquery.once.bc.js: { weight: -19, minified: true }
   dependencies:
     - core/jquery
+    - core/once
 
 jquery.ui:
   version: &jquery_ui_version 1.12.1
