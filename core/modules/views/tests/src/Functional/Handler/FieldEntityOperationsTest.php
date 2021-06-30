@@ -86,7 +86,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
           // Update destination property of the URL as generating it in the
           // test would by default point to the frontpage.
           $operation['url']->setOption('query', ['destination' => $expected_destination]);
-          $this->assertSession()->elementsCount('xpath', "//ul[contains(@class, dropbutton)]/li/a[@href='{$operation['url']->toString()}' and text()='{$operation['title']}']",  1);
+          $this->assertSession()->elementsCount('xpath', "//ul[contains(@class, dropbutton)]/li/a[@href='{$operation['url']->toString()}' and text()='{$operation['title']}']", 1);
           // Entities which were created in Hungarian should link to the Hungarian
           // edit form, others to the English one (which has no path prefix here).
           $base_path = \Drupal::request()->getBasePath();
