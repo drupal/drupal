@@ -50,7 +50,6 @@ global-styling:
       css/components/table--file-multiple-widget.css: {}
       css/components/search-admin-settings.css: {}
       css/components/tablesort-indicator.css: {}
-      css/components/shortcut.css: {}
       css/components/system-status-report-general-info.css: {}
       css/components/system-status-report.css: {}
       css/components/system-status-report-counters.css: {}
