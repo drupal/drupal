@@ -33,7 +33,7 @@ module.exports = {
           );
         },
       )
-      // check that follow-up calls to once return an empty array.
+      // Check that follow-up calls to once return an empty array.
       .execute(
         function () {
           return once('js_once_test', '[data-drupal-item]');
@@ -132,7 +132,7 @@ module.exports = {
       )
       .drupalLogAndEnd({ onlyOnError: false });
   },
-  'Test BC layer with jquery once calls': (browser) => {
+  'Test BC layer with jQuery Once calls': (browser) => {
     browser
       .drupalRelativeURL('/js_once_with_bc_test')
       .waitForElementVisible('[data-drupal-item]', 1000)
@@ -141,8 +141,7 @@ module.exports = {
         function () {
           // A core script calls once on some elements.
           once('js_once_test', '[data-drupal-item]');
-          // a contrib module calls jquery once before they update to
-          // @drupal/once
+          // A contrib module not yet using @drupal/once calls jQuery Once.
           return jQuery('[data-drupal-item]').once('js_once_test');
         },
         (result) => {
@@ -153,10 +152,10 @@ module.exports = {
           );
         },
       )
-      // once calls don't take into account calls to jquery.once by design.
+      // Once calls don't take into account calls to jQuery.once by design.
       .execute(
         function () {
-          // Calling jquery once before @drupal/once will lead to duplicate
+          // Calling jQuery.once before @drupal/once will lead to duplicate
           // processing.
           jQuery('[data-drupal-item]').once('js_once_test_extra');
           // A core script calls once on some elements.
@@ -174,8 +173,8 @@ module.exports = {
         function () {
           // A core script calls once on some elements.
           once.remove('js_once_test', '[data-drupal-item]');
-          // a contrib module calls jquery once before they update to
-          // @drupal/once
+          // A contrib module not yet using @drupal/once calls the jQuery Once 
+          // remove() function.
           return jQuery('[data-drupal-item]').removeOnce('js_once_test');
         },
         (result) => {

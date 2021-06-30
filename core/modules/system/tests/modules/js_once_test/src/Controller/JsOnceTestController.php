@@ -5,12 +5,12 @@ namespace Drupal\js_once_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
- * Test controller to assert js-cookie library integration.
+ * Controller for testing the @drupal/once library integration.
  */
 class JsOnceTestController extends ControllerBase {
 
   /**
-   * Provides buttons to add and remove cookies using JavaScript.
+   * Provides elements for testing @drupal/once.
    *
    * @return array
    *   The render array.
@@ -33,7 +33,7 @@ class JsOnceTestController extends ControllerBase {
   }
 
   /**
-   * Provides buttons to add and remove cookies using JavaScript.
+   * Provides elements for testing jQuery Once BC support.
    *
    * @return array
    *   The render array.
