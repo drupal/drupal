@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\menu_ui\Functional;
 
+use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -32,13 +33,14 @@ class MenuUiNodeTypeTest extends BrowserTestBase {
     $labels = $this->getSession()
       ->getPage()
       ->findAll('css', 'label[for^="edit-menu-options-"]');
-    $this->assertNotEmpty($labels);
 
-    $menu_names = [];
+    $menu_names = $sorted_menu_names = [];
     foreach ($labels as $label) {
       $menu_names[] = $label->getText();
     }
-    $sorted_menu_names = $menu_names;
+    foreach (Menu::loadMultiple() as $menu) {
+      $sorted_menu_names[] = $menu->label();
+    }
     sort($sorted_menu_names);
     $this->assertSame($menu_names, $sorted_menu_names);
   }
