@@ -18,8 +18,7 @@
     return drupalOnce.remove(id, selector, context);
   }
 
-  Object.assign(augmentedOnce, drupalOnce, {
+  window.once = Object.assign(augmentedOnce, drupalOnce, {
     remove: remove
   });
-  window.once = augmentedOnce;
 })(jQuery, once);
