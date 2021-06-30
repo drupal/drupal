@@ -121,22 +121,12 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->method('getBundleConfigDependency')
       ->will($this->returnValue(['type' => 'config', 'name' => 'test.test_entity_type.id']));
 
-    $this->entityTypeManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(2))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(3))
-      ->method('getDefinition')
-      ->with('test_entity_type')
-      ->willReturn($target_entity_type);
+      ->willReturnMap([
+        [$this->entityTypeId, TRUE, $this->entityType],
+        ['test_entity_type', TRUE, $target_entity_type],
+      ]);
 
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefinition')
@@ -179,22 +169,12 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'bundle_entity_type' => 'bundle_entity_type',
     ]);
 
-    $this->entityTypeManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(2))
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn($this->entityType);
-    $this->entityTypeManager->expects($this->at(3))
-      ->method('getDefinition')
-      ->with('test_entity_type')
-      ->willReturn($target_entity_type);
+      ->willReturnMap([
+        [$this->entityTypeId, TRUE, $this->entityType],
+        ['test_entity_type', TRUE, $target_entity_type],
+      ]);
 
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefinition')
