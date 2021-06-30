@@ -430,7 +430,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   }
 
   /**
-   * Tries to determine the file extension of a thumbnail, based on its URL.
+   * Tries to determine the file extension of a thumbnail.
    *
    * @param string $thumbnail_url
    *   The remote URL of the thumbnail.
@@ -451,9 +451,9 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     // If the URL didn't give us any clues about the file extension, make a HEAD
     // request to the thumbnail URL and see if the headers will give us a MIME
     // type.
-    $response = $this->httpClient->request('HEAD', $thumbnail_url);
-    if ($response->hasHeader('Content-Type')) {
-      $content_type = $response->getHeader('Content-Type');
+    $content_type = $this->httpClient->request('HEAD', $thumbnail_url)
+      ->getHeader('Content-Type');
+    if ($content_type) {
       $extensions = MimeTypes::getDefault()->getExtensions(reset($content_type));
 
       if ($extensions) {
