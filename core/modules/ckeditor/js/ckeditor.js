@@ -205,7 +205,7 @@
 
   var origBeforeSubmit = Drupal.Ajax.prototype.beforeSubmit;
 
-  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, options) {
+  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element) {
     if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances) {
       var instances = Object.values(CKEDITOR.instances);
       instances.forEach(function (editor) {
@@ -223,6 +223,10 @@
       });
     }
 
-    return origBeforeSubmit.apply(this, arguments);
+    for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      args[_key - 2] = arguments[_key];
+    }
+
+    return origBeforeSubmit.apply(this, [formValues, element].concat(args));
   };
 })(Drupal, Drupal.debounce, CKEDITOR, jQuery, Drupal.displace, Drupal.AjaxCommands);

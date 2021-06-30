@@ -384,7 +384,7 @@
   }
 
   const origBeforeSubmit = Drupal.Ajax.prototype.beforeSubmit;
-  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, options) {
+  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, ...args) {
     if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances) {
       const instances = Object.values(CKEDITOR.instances);
       instances.forEach((editor) => {
@@ -401,7 +401,7 @@
         });
       });
     }
-    return origBeforeSubmit.apply(this, arguments);
+    return origBeforeSubmit.apply(this, [formValues, element, ...args]);
   };
 })(
   Drupal,
