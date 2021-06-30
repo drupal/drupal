@@ -863,4 +863,58 @@ class LinkFieldTest extends BrowserTestBase {
     return (string) $output;
   }
 
+  /**
+   * Test default_value attribute for link field.
+   */
+  public function testDefaultFieldValues() {
+    $field_name = mb_strtolower($this->randomMachineName());
+    // Create a field with settings to validate.
+    $this->fieldStorage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'link',
+      'cardinality' => 1,
+    ]);
+    $this->fieldStorage->save();
+    $this->field = FieldConfig::create([
+      'field_storage' => $this->fieldStorage,
+      'bundle' => 'entity_test',
+      'label' => 'Read more about this entity',
+      'settings' => [
+        'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
+      ],
+      'default_value' => [
+        0 => [
+          'attributes' => [],
+          'uri' => '',
+          'title' => 'example1',
+          'options' => [],
+        ],
+      ],
+    ]);
+    $this->field->save();
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($field_name, [
+        'type' => 'link_default',
+        'settings' => [
+          'placeholder_url' => 'http://example.com',
+          'placeholder_title' => 'Enter the text for this link',
+        ],
+      ])
+      ->save();
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
+      ->setComponent($field_name, [
+        'type' => 'link',
+        'label' => 'hidden',
+      ])
+      ->save();
+    // Display creation form.
+    $this->drupalGet('entity_test/add');
+    // Assert default values are filled.
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][title]", 'example1');
+  }
+
 }

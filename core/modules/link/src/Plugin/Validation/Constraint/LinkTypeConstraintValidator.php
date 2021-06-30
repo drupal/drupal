@@ -17,6 +17,7 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {
       $uri_is_valid = TRUE;
+      $url = '';
 
       /** @var \Drupal\link\LinkItemInterface $link_item */
       $link_item = $value;
@@ -41,8 +42,7 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
           $uri_is_valid = FALSE;
         }
       }
-
-      if (!$uri_is_valid) {
+      if (isset($url) && $url !== NULL && !$uri_is_valid) {
         $this->context->addViolation($constraint->message, ['@uri' => $link_item->uri]);
       }
     }
