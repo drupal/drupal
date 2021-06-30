@@ -18,6 +18,6 @@ module.exports.assertion = function (expected) {
   this.command = (callback) =>
     // eslint-disable-next-line prefer-arrow-callback
     this.api.execute(function () {
-      return window.sessionStorage.getItem('js_deprecation_log_test.warnings');
+      return window.sessionStorage.getItem('js_testing_log_test.warnings');
     }, callback);
 };
