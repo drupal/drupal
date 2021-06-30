@@ -228,6 +228,7 @@ class HandlerTest extends UITestBase {
       $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
 
       // Test that the handler edit link is present.
+      $result = $this->assertSession()->elementExists('xpath', "//a[contains(@href, '{$href}')]");
       $this->assertSession()->elementsCount('xpath', "//a[contains(@href, '{$href}')]", 1);
 
       $text = 'Broken/missing handler';
@@ -236,7 +237,7 @@ class HandlerTest extends UITestBase {
 
       $this->drupalGet($href);
       $result = $this->xpath('//h1[@class="page-title"]');
-      $this->assertStringContainsString($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
+      $this->assertStringContainsString($text, $result->getText(), 'Ensure the broken handler text was found.');
 
       $original_configuration = [
         'field' => 'id_broken',
