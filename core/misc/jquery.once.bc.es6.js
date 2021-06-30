@@ -27,10 +27,7 @@
     return drupalOnce.remove(id, selector, context);
   }
 
-  // Expose the rest of @drupal/once API.
-  Object.assign(augmentedOnce, drupalOnce, { remove });
-
-  // Replace @drupal/once library with the version augmented with
-  // jQuery.once calls.
-  window.once = augmentedOnce;
+  // Expose the rest of @drupal/once API and replace @drupal/once library with
+  // the version augmented with jQuery.once calls.
+  window.once = Object.assign(augmentedOnce, drupalOnce, { remove });
 })(jQuery, once);
