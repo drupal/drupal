@@ -9,12 +9,12 @@
   var drupalOnce = once;
 
   function augmentedOnce(id, selector, context) {
-    $(context).find(selector).once(id);
+    $(selector, context).once(id);
     return drupalOnce(id, selector, context);
   }
 
   function remove(id, selector, context) {
-    $(context).find(selector).removeOnce(id);
+    $(selector, context).removeOnce(id);
     return drupalOnce.remove(id, selector, context);
   }
 
