@@ -231,14 +231,14 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
 /**
  * Implodes a list of tags of a certain vocabulary into a string.
  *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
- *   replacement for this function.
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead.
  *
  * @see https://www.drupal.org/node/3039041
  * @see \Drupal\Component\Utility\Tags::explode()
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
-  @trigger_error('taxonomy_implode_tags() is deprecated in drupal:9.3.0 and is replaced by \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() in drupal:10.0.0. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
+  @trigger_error('taxonomy_implode_tags() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
   $typed_tags = [];
   foreach ($tags as $tag) {
     // Extract terms belonging to the vocabulary in question.

@@ -103,7 +103,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
     $this->expectDeprecation('taxonomy_vocabulary_static_reset() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->resetCache($ids) instead. See https://www.drupal.org/node/3039041');
     taxonomy_vocabulary_static_reset();
 
-    $this->expectDeprecation('taxonomy_implode_tags() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this function. See https://www.drupal.org/node/3039041');
+    $this->expectDeprecation('taxonomy_implode_tags() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead. See https://www.drupal.org/node/3039041');
     taxonomy_implode_tags(['tag1', 'tag2']);
 
     $this->expectDeprecation('taxonomy_term_title() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use $term->label() instead. See https://www.drupal.org/node/3039041');
