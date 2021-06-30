@@ -109,9 +109,9 @@
         // FF doesn't seem to support entry.isIntersecting properly,
         // so we check the intersectionRatio.
         if (entry.intersectionRatio < 1) {
-          fixableElements.forEach((el) => el.classList.add('js-fixed'));
+          fixableElements.forEach((el) => el.classList.add('is-fixed'));
         } else {
-          fixableElements.forEach((el) => el.classList.remove('js-fixed'));
+          fixableElements.forEach((el) => el.classList.remove('is-fixed'));
         }
       });
     }

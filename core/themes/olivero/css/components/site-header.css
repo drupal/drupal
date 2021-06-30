@@ -40,13 +40,13 @@
 }
 
 @media (min-width: 75rem) {
-      .site-header__fixable.js-fixed:not(.is-expanded) {
+      .site-header__fixable.is-fixed:not(.is-expanded) {
         pointer-events: none;
       }
     }
 
 @media (min-width: 75rem) {
-    body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed {
+    body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
       position: fixed;
       z-index: 102; /* Appear above body content that is position: relative */
       top: -4.5rem;
@@ -56,13 +56,13 @@
 
     /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
   }
-      body:not(.is-always-mobile-nav).toolbar-vertical.toolbar-fixed .site-header__fixable.js-fixed, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .site-header__fixable.js-fixed {
+      body:not(.is-always-mobile-nav).toolbar-vertical.toolbar-fixed .site-header__fixable.is-fixed, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .site-header__fixable.is-fixed {
         top: -2.0625rem;
       }
   body:not(.is-always-mobile-nav) {
     /* Toolbar is fixed, and tray is open and horizontal. */
   }
-    body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.js-fixed {
+    body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.is-fixed {
       top: 0.4375rem;
     }
 }
@@ -103,7 +103,7 @@ html.js body:not(.is-always-mobile-nav) .site-header__inner {
 
 @media (min-width: 75rem) {
 
-body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner {
+body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
     transform: translateX(-101%); /* LTR */
     opacity: 0
 }
@@ -111,7 +111,7 @@ body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded)
 
 @media (min-width: 75rem) {
 
-[dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner {
+[dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
     transform: translateX(101%)
 }
   }
