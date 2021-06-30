@@ -173,7 +173,7 @@ module.exports = {
         function () {
           // A core script calls once on some elements.
           once.remove('js_once_test', '[data-drupal-item]');
-          // A contrib module not yet using @drupal/once calls the jQuery Once 
+          // A contrib module not yet using @drupal/once calls the jQuery Once
           // remove() function.
           return jQuery('[data-drupal-item]').removeOnce('js_once_test');
         },
