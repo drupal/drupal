@@ -1723,7 +1723,8 @@ function install_import_translations(&$install_state) {
 
   // If there is more than one language or the single one is not English, we
   // should import translations.
-  $batch_builder = new BatchBuilder();
+  $batch_builder = (new BatchBuilder())
+    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc');
   foreach (install_download_additional_translations_operations($install_state) as $operation) {
     $batch_builder->addOperation($operation[0], $operation[1]);
   }
@@ -1754,8 +1755,7 @@ function install_import_translations(&$install_state) {
       ->setTitle(t('Updating translations.'))
       ->setProgressMessage('')
       ->setErrorMessage(t('Error importing translation files'))
-      ->setFinishCallback('locale_translation_batch_fetch_finished')
-      ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc');
+      ->setFinishCallback('locale_translation_batch_fetch_finished');
     return $batch_builder->toArray();
   }
 }
