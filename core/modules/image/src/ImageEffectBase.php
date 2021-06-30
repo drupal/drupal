@@ -58,7 +58,7 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('logger.factory')->get('image')
+      $container->get('logger.channel.image')
     );
   }
 
