@@ -136,12 +136,18 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     ]);
     $media->save();
 
-    // Get the local thumbnail URI and ensure that it does not contain any
-    // query string.
+    // The thumbnail should have a file extension, even if it wasn't in the URL.
     $expected_uri = 'public://oembed_thumbnails/' . Crypt::hashBase64($thumbnail_url) . '.png';
     $this->assertSame($expected_uri, $source->getMetadata($media, 'thumbnail_uri'));
-    // Ensure that the thumbnail is only downloaded once.
+    // Even if we get the thumbnail_uri more than once, it should only be
+    // downloaded once (this is verified by the shouldBeCalledOnce() checks
+    // in the mocked HTTP client).
     $source->getMetadata($media, 'thumbnail_uri');
+    // The downloaded thumbnail should be usable by the image toolkit.
+    $this->assertFileExists($expected_uri);
+    /** @var \Drupal\Core\Image\Image $image */
+    $image = $this->container->get('image.factory')->get($expected_uri);
+    $this->assertTrue($image->isValid());
   }
 
 }
