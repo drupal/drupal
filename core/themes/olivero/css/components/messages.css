@@ -221,7 +221,7 @@
 
 .messages__close:focus {
     outline: 2px solid #53b0eb;
-    outline-offset: 1px;
+    outline-offset: 2px;
   }
 
 .messages__icon svg {
