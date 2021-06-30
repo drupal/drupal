@@ -129,11 +129,11 @@ class DiffEngine {
   }
 
   /**
-   * Returns the whole line if it's small enough, or the MD5 hash otherwise.
+   * Returns the whole line if it's small enough, or a hash otherwise.
    */
   protected function _line_hash($line) {
     if (mb_strlen($line) > $this::MAX_XREF_LENGTH) {
-      return md5($line);
+      return hash('crc32b', $line);
     }
     else {
       return $line;
