@@ -490,7 +490,7 @@ function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count
  * Implements hook_file_download().
  *
  * @see file_file_download()
- * @see file_get_file_references()
+ * @see \Drupal\file\FileUsage\FileUsageInterface::getReferences()
  */
 function editor_file_download($uri) {
   // Get the file record based on the URI. If not in the database just return.
