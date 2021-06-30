@@ -6,7 +6,6 @@
   --color-white: #fff;
   --color-text: #222330;
   --color-text-light: var(--color-gray-500);
-  --color-gray-050-light: #fafbfd;
   --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
   /* Secondary. */
   --color-gray-200-o-80: rgba(212, 212, 218, 0.8);
@@ -36,6 +35,7 @@
   --color-gray-200: #d3d4d9;
   --color-gray-100: #dedfe4;
   --color-gray-050: #f3f4f9;
+  --color-gray-025: #F9FAFF;
   /*
    * Base.
    */

@@ -39,7 +39,7 @@
 .tabs__tab {
   position: relative;
   border-bottom: var(--tabs-base-border);
-  background-color: var(--color-gray-050-light);
+  background-color: var(--color-gray-025);
   font-size: var(--font-size-s);
   font-weight: bold;
 }
