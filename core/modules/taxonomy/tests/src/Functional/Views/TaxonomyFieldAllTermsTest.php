@@ -36,7 +36,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     // Test term1 links.
     $xpath = '//a[@href="' . $this->term1->toUrl()->toString() . '"]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
-    $links = $this('xpath', $xpath);
+    $links = $this->xpath($xpath);
     $this->assertEquals($this->term1->label(), $links[0]->getText());
     $this->assertEquals($this->term1->label(), $links[1]->getText());
     $this->assertSession()->assertEscaped($this->term1->label());
@@ -44,7 +44,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     // Test term2 links.
     $xpath = '//a[@href="' . $this->term2->toUrl()->toString() . '"]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
-    $links = $this('xpath', $xpath);
+    $links = $this->xpath($xpath);
     $this->assertEquals($this->term2->label(), $links[0]->getText());
     $this->assertEquals($this->term2->label(), $links[1]->getText());
   }

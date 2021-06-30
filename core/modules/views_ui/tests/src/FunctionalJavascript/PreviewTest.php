@@ -231,13 +231,13 @@ class PreviewTest extends WebDriverTestBase {
     $this->getPreviewAJAX('test_click_sort_ajax', 'page_1', 0);
 
     // Test that the header label is present.
-    $this->assertSession()->elementExists('xpath', '//th[contains(@class, "views-field views-field-name")]/a');
+    $element = $this->assertSession()->elementExists('xpath', '//th[contains(@class, "views-field views-field-name")]/a');
 
     // Verify link.
     $this->assertSession()->linkByHrefExists('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=desc', 0, 'The output URL is as expected.');
 
     // Click link to sort.
-    $elements[0]->click();
+    $element->click();
     $sort_link = $this->assertSession()->waitForElement('xpath', '//th[contains(@class, \'views-field views-field-name is-active\')]/a');
 
     $this->assertNotEmpty($sort_link);
