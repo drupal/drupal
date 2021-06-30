@@ -102,9 +102,6 @@ class OliveroTest extends BrowserTestBase {
       $this->drupalCreateUser(['search content'])
     );
 
-    // Ensure region attribute was added for primary menu.
-    $this->assertSession()->elementExists('css', 'ul[region="primary_menu"]');
-
     // Confirm that search narrow and search wide libraries were added by
     // preprocess.
     $this->assertSession()->responseContains('olivero/css/components/header-search-wide.css');
