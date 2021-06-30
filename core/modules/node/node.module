@@ -198,18 +198,18 @@ function node_mark($nid, $timestamp) {
   static $cache = [];
 
   if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
-    return NodeListBuilder::MARK_READ;
+    return MARK_READ;
   }
   if (!isset($cache[$nid])) {
     $cache[$nid] = history_read($nid);
   }
   if ($cache[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
-    return NodeListBuilder::MARK_NEW;
+    return MARK_NEW;
   }
   elseif ($timestamp > $cache[$nid] && $timestamp > HISTORY_READ_LIMIT) {
-    return NodeListBuilder::MARK_UPDATED;
+    return MARK_UPDATED;
   }
-  return NodeListBuilder::MARK_READ;
+  return MARK_READ;
 }
 
 /**

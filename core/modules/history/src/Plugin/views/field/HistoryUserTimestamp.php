@@ -3,7 +3,6 @@
 namespace Drupal\history\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\NodeListBuilder;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -84,9 +83,9 @@ class HistoryUserTimestamp extends Node {
    */
   public function render(ResultRow $values) {
     // Let's default to 'read' state.
-    // This code shadows \Drupal\node\NodeListBuilder::getNodeMark, but it reads
-    // from the db directly and we already have that info.
-    $mark = NodeListBuilder::MARK_READ;
+    // This code shadows \Drupal\history\HistoryNodeListBuilder(), but it reads
+    // from the DB directly and we already have that info.
+    $mark = MARK_READ;
     if (\Drupal::currentUser()->isAuthenticated()) {
       $last_read = $this->getValue($values);
       $changed = $this->getValue($values, 'changed');
@@ -94,13 +93,13 @@ class HistoryUserTimestamp extends Node {
       $last_comment = \Drupal::moduleHandler()->moduleExists('comment') && !empty($this->options['comments']) ? $this->getValue($values, 'last_comment') : 0;
 
       if (!$last_read && $changed > HISTORY_READ_LIMIT) {
-        $mark = NodeListBuilder::MARK_NEW;
+        $mark = MARK_NEW;
       }
       elseif ($changed > $last_read && $changed > HISTORY_READ_LIMIT) {
-        $mark = NodeListBuilder::MARK_UPDATED;
+        $mark = MARK_UPDATED;
       }
       elseif ($last_comment > $last_read && $last_comment > HISTORY_READ_LIMIT) {
-        $mark = NodeListBuilder::MARK_UPDATED;
+        $mark = MARK_UPDATED;
       }
       $build = [
         '#theme' => 'mark',

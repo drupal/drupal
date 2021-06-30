@@ -6,13 +6,13 @@
  *
  * @todo
  * - Generic helper for _forum_user_last_visit() + history_read().
- * - Generic helper for \Drupal\node\NodeListBuilder::getNodeMark().
  */
 
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\history\HistoryNodeListBuilder;
 use Drupal\user\UserInterface;
 
 /**
@@ -33,6 +33,16 @@ function history_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The History module keeps track of which content a user has read. It marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed it. History records that are older than one month are removed during cron, which means that content older than one month is always considered <em>read</em>. The History module does not have a user interface but it provides a filter to <a href=":views-help">Views</a> to show new or updated content. For more information, see the <a href=":url">online documentation for the History module</a>.', [':views-help' => (\Drupal::moduleHandler()->moduleExists('views')) ? Url::fromRoute('help.page', ['name' => 'views'])->toString() : '#', ':url' => 'https://www.drupal.org/documentation/modules/history']) . '</p>';
       return $output;
   }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function history_entity_type_alter(array &$entity_types): void {
+  // @todo In #3221351, replace this with an event subscriber that listens to
+  //   node list build and adds the node mark to each row.
+  // @see https://www.drupal.org/project/drupal/issues/3221351
+  $entity_types['node']->setHandler('list_builder', HistoryNodeListBuilder::class);
 }
 
 /**

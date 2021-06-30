@@ -6,17 +6,17 @@
  * Available variables:
  * - status: Number representing the marker status to display. Use the constants
  *   below for comparison:
- *   - Drupal\node\NodeListBuilder::MARK_NEW
- *   - Drupal\node\NodeListBuilder::MARK_UPDATED
- *   - Drupal\node\NodeListBuilder::MARK_READ
+ *   - MARK_NEW
+ *   - MARK_UPDATED
+ *   - MARK_READ
  *
  * @ingroup themeable
  */
 #}
 {% if logged_in %}
-  {% if status is constant('Drupal\\node\\NodeListBuilder::MARK_READ') %}
+  {% if status is constant('MARK_NEW') %}
     {{ 'New'|t }}
-  {% elseif status is constant('Drupal\\node\\NodeListBuilder::MARK_UPDATED') %}
+  {% elseif status is constant('MARK_UPDATED') %}
     {{ 'Updated'|t }}
   {% endif %}
 {% endif %}

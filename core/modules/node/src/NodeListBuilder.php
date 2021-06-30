@@ -19,33 +19,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeListBuilder extends EntityListBuilder {
 
   /**
-   * Mark content as read.
-   */
-  const MARK_READ = 0;
-
-  /**
-   * Mark content as being new.
-   */
-  const MARK_NEW = 1;
-
-  /**
-   * Mark content as being updated.
-   */
-  const MARK_UPDATED = 2;
-
-  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
-
-  /**
-   * Memory cache for node marks.
-   *
-   * @var int[]
-   */
-  protected $nodeMark = [];
 
   /**
    * Constructs a new NodeListBuilder object.
@@ -113,10 +91,6 @@ class NodeListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\node\NodeInterface $entity */
-    $mark = [
-      '#theme' => 'mark',
-      '#mark_type' => $this->getNodeMark($entity->id(), $entity->getChangedTime()),
-    ];
     $langcode = $entity->language()->getId();
     $uri = $entity->toUrl();
     $options = $uri->getOptions();
@@ -125,7 +99,6 @@ class NodeListBuilder extends EntityListBuilder {
     $row['title']['data'] = [
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#suffix' => ' ' . \Drupal::service('renderer')->render($mark),
       '#url' => $uri,
     ];
     $row['type'] = node_get_type_label($entity);
@@ -141,33 +114,6 @@ class NodeListBuilder extends EntityListBuilder {
     }
     $row['operations']['data'] = $this->buildOperations($entity);
     return $row + parent::buildRow($entity);
-  }
-
-  /**
-   * Determines the type of marker to be displayed for a given node.
-   *
-   * @param int $nid
-   *   Node ID whose history supplies the "last viewed" timestamp.
-   * @param int $timestamp
-   *   Time which is compared against node's "last viewed" timestamp.
-   *
-   * @return int
-   *   One of the MARK constants.
-   */
-  protected function getNodeMark(int $nid, int $timestamp): int {
-    if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
-      return static::MARK_READ;
-    }
-    if (!isset($this->nodeMark[$nid])) {
-      $this->nodeMark[$nid] = history_read($nid);
-    }
-    if ($this->nodeMark[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
-      return static::MARK_NEW;
-    }
-    elseif ($timestamp > $this->nodeMark[$nid] && $timestamp > HISTORY_READ_LIMIT) {
-      return static::MARK_UPDATED;
-    }
-    return static::MARK_READ;
   }
 
 }
