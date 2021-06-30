@@ -209,6 +209,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
+  $form_state->set('menu_ui_node_original_changed_time', $node->getChangedTime());
   $defaults = menu_ui_get_menu_link_defaults($node);
   /** @var \Drupal\node\NodeTypeInterface $node_type */
   $node_type = $node->type->entity;
@@ -320,10 +321,15 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
   if (!$form_state->isValueEmpty('menu')) {
     $values = $form_state->getValue('menu');
-    if (empty($values['enabled'])) {
-      if ($values['entity_id']) {
-        $entity = MenuLinkContent::load($values['entity_id']);
+    if (empty($values['enabled']) && $values['entity_id']) {
+      $entity = MenuLinkContent::load($values['entity_id']);
+      // Only delete the menu link when it hasn't been edited at the same time
+      // the node was created.
+      if ($form_state->get('menu_ui_node_original_changed_time') > $entity->getChangedTime()) {
         $entity->delete();
+      }
+      else {
+        \Drupal::messenger()->addWarning('The menu link is being edited at the same time than this node. As a result, it could not be deleted.');
       }
     }
     elseif (trim($values['title'])) {
