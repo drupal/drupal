@@ -13,8 +13,6 @@
 .site-footer {
   position: relative; /* stack above left social bar */
   color: #9ea0a1;
-
-  /* @todo - #0c0d0e and #171e23 aren't currently variables */
   background: linear-gradient(180deg, #0c0d0e 0%, #171e23 100%)
 }
 
