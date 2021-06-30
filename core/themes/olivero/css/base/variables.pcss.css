@@ -118,6 +118,8 @@
   --sp12: calc(12 * var(--sp));
   --color--black: #000; /* Black */
   --color--gray-0: #0d1214; /* Black 1 */
+  --color--gray-5: #0c0d0e;
+  --color--gray-8: #171e23;
   --color--gray-10: #313637; /* Black 2 */
   --color--gray-20: #6e7172; /* Black 3 */
   --color--gray-25: #5d7585; /* Gray Dark */
