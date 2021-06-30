@@ -224,6 +224,13 @@ td > .ajax-new-content > .form-item > .form-element {
   width: 100%;
 }
 
+@media screen and (max-width: 48em) {
+  td > .form-item > .form-element,
+  td > .ajax-new-content > .form-item > .form-element {
+    width: inherit;
+  }
+}
+
 /* Win over table-file-multiple-widget. */
 
 th.is-disabled.is-disabled {
