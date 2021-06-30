@@ -252,8 +252,3 @@
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button_ok span {
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
 }
-
-/* fixing tabs overlaps with ckeditor */
-.cke {
-  width: auto !important;
-}
