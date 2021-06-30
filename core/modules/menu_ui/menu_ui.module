@@ -20,6 +20,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
 use Drupal\node\NodeInterface;
+use Drupal\system\MenuInterface;
 
 /**
  * Implements hook_help().
@@ -350,7 +351,10 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
 function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
-  $menu_options = array_map(function (Menu $menu) { return $menu->label(); }, Menu::loadMultiple());
+  $menu_options = array_map(function (MenuInterface $menu) {
+    return $menu->label();
+  }, Menu::loadMultiple());
+  asort($menu_options);
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
   $form['menu'] = [
