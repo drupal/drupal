@@ -239,14 +239,6 @@
 }
   }
 
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-
-.add-comment__picture,
-.comment__picture {
-    position: relative
-}
-  }
-
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .indented .comment__picture {
