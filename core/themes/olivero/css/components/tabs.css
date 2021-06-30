@@ -110,6 +110,7 @@ html:not(.js) .tabs__tab,
 }
   }
 .tabs__link:focus {
+  position: relative;
   outline: solid 3px #2494db;
   outline-offset: -3px;
 }

@@ -29,11 +29,18 @@
   color: #6e7172;
   font-size: 0.875rem;
   font-weight: 600;
-  line-height: 2
+  line-height: 1.6
 }
 
 .field--tags__label:after {
     content: ":";
+  }
+
+@media (min-width: 43.75rem) {
+
+.field--tags__label {
+    line-height: 2
+}
   }
 
 [dir="ltr"] .field--label-inline .field--tags__label {

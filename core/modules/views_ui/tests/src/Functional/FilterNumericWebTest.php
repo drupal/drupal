@@ -123,12 +123,10 @@ class FilterNumericWebTest extends UITestBase {
     // Check the field (wrapper) label.
     $this->assertSession()->elementTextContains('css', 'fieldset#edit-age-wrapper legend', 'Age between');
     // Check the min/max labels.
-    $min_element_label = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]//label[contains(@for, "edit-age-min") and contains(text(), "Min")]');
-    $this->assertCount(1, $min_element_label);
-    $max_element_label = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]//label[contains(@for, "edit-age-max") and contains(text(), "Max")]');
-    $this->assertCount(1, $max_element_label);
+    $this->assertSession()->elementsCount('xpath', '//fieldset[contains(@id, "edit-age-wrapper")]//label[contains(@for, "edit-age-min") and contains(text(), "Min")]', 1);
+    $this->assertSession()->elementsCount('xpath', '//fieldset[contains(@id, "edit-age-wrapper")]//label[contains(@for, "edit-age-max") and contains(text(), "Max")]', 1);
     // Check that the description is shown in the right place.
-    $this->assertEquals(trim($this->cssSelect('#edit-age-wrapper--description')[0]->getText()), 'Description of the exposed filter');
+    $this->assertEquals('Description of the exposed filter', trim($this->cssSelect('#edit-age-wrapper--description')[0]->getText()));
 
     // Change to an operation that only requires one form element ('>').
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/age');
@@ -145,8 +143,7 @@ class FilterNumericWebTest extends UITestBase {
     $this->submitForm([], 'Update preview');
 
     // Make sure the label is visible and that there's no fieldset wrapper.
-    $label = $this->xpath('//label[contains(@for, "edit-age") and contains(text(), "Age greater than")]');
-    $this->assertCount(1, $label);
+    $this->assertSession()->elementsCount('xpath', '//label[contains(@for, "edit-age") and contains(text(), "Age greater than")]', 1);
     $fieldset = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]');
     $this->assertEmpty($fieldset);
   }

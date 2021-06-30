@@ -32,6 +32,7 @@ services:
   example_private_service:
     class: \Drupal\Core\ExampleClass
     public: false
+  Drupal\Core\ExampleClass: ~
 YAML;
 
     vfsStream::setup('drupal', NULL, [
@@ -53,6 +54,8 @@ YAML;
     $builder->compile();
     $this->assertTrue($builder->has('example_service_1'));
     $this->assertFalse($builder->has('example_private_service'));
+    $this->assertTrue($builder->has('Drupal\Core\ExampleClass'));
+    $this->assertSame('Drupal\Core\ExampleClass', $builder->getDefinition('Drupal\Core\ExampleClass')->getClass());
   }
 
 }

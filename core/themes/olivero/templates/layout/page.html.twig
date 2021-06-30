@@ -72,7 +72,7 @@
 
               {% if page.primary_menu or page.secondary_menu %}
                 <div class="mobile-buttons" data-drupal-selector="mobile-buttons">
-                  <button class="mobile-nav-button" aria-label="{{ 'Toggle Main Menu'|t }}" aria-controls="header-nav" aria-expanded="false">
+                  <button class="mobile-nav-button" data-drupal-selector="mobile-nav-button" aria-label="{{ 'Toggle Main Menu'|t }}" aria-controls="header-nav" aria-expanded="false">
                     <span class="mobile-nav-button__label">{{ 'Menu'|t }}</span>
                     <span class="mobile-nav-button__icon"></span>
                   </button>
@@ -91,24 +91,31 @@
 
     <div id="main-wrapper" class="layout-main-wrapper layout-container">
       <div id="main" class="layout-main">
-        <main id="content" class="main-content " role="main">
+        <div class="main-content">
           <a id="main-content" tabindex="-1"></a>
           {{ page.hero }}
           <div class="main-content__container container">
             {{ page.highlighted }}
             {{ page.breadcrumb }}
-            {{ page.content_above }}
+
             {% if page.sidebar %}
               <div class="sidebar-grid grid-full">
-                {{ page.content }}
+                <main role="main" class="site-main ie11-autorow">
+                  {{ page.content_above }}
+                  {{ page.content }}
+                </main>
+
                 {{ page.sidebar }}
               </div>
             {% else %}
-              {{ page.content }}
+              <main role="main">
+                {{ page.content_above }}
+                {{ page.content }}
+              </main>
             {% endif %}
             {{ page.content_below }}
           </div>
-        </main>
+        </div>
         <div class="social-bar">
           {{ page.social }}
         </div>
@@ -122,7 +129,7 @@
       </div>
     </footer>
 
-    <div class="overlay"></div>
+    <div class="overlay" data-drupal-selector="overlay"></div>
 
   </div>
 </div>

@@ -431,7 +431,7 @@ class XssTest extends TestCase {
         ['p'],
       ],
     ];
-    // @fixme This dataset currently fails under 5.4 because of
+    // @todo This dataset currently fails under 5.4 because of
     //   https://www.drupal.org/node/1210798. Restore after its fixed.
     if (version_compare(PHP_VERSION, '5.4.0', '<')) {
       $cases[] = [
@@ -541,7 +541,7 @@ class XssTest extends TestCase {
    */
   public function testFilterXSSAdmin() {
     $value = Xss::filterAdmin('<style /><iframe /><frame /><frameset /><meta /><link /><embed /><applet /><param /><layer />');
-    $this->assertEquals($value, '', 'Admin HTML filter -- should never allow some tags.');
+    $this->assertEquals('', $value, 'Admin HTML filter -- should never allow some tags.');
   }
 
   /**

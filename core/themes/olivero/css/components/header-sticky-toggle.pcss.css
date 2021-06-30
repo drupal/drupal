@@ -34,7 +34,7 @@
   }
 }
 
-body:not(.is-always-mobile-nav) .js-fixed .sticky-header-toggle {
+body:not(.is-always-mobile-nav) .is-fixed .sticky-header-toggle {
   @media (--nav) {
     visibility: visible;
   }
@@ -92,7 +92,7 @@ body.is-always-mobile-nav .sticky-header-toggle {
   }
 }
 
-.js-fixed .sticky-header-toggle {
+.is-fixed .sticky-header-toggle {
   cursor: pointer;
   pointer-events: auto;
   opacity: 1;

@@ -15,7 +15,7 @@ use Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage;
  *
  * @group layout_builder
  */
-class SimpleConfigSectionStorageTest extends SectionStorageTestBase {
+class SimpleConfigSectionListTest extends SectionListTestBase {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class SimpleConfigSectionStorageTest extends SectionStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSectionStorage(array $section_data) {
+  protected function getSectionList(array $section_data) {
     $config = $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.foobar');
     $section_data = array_map(function (Section $section) {
       return $section->toArray();
