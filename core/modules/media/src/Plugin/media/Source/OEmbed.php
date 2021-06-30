@@ -26,6 +26,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Mime\MimeTypes;
 
 /**
@@ -389,17 +390,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     if (!$remote_thumbnail_url) {
       return NULL;
     }
-    $remote_thumbnail_url = $remote_thumbnail_url->toString();
 
-    // Compute the local thumbnail URI, regardless of whether or not it exists.
+    // Ensure that we can write to the local directory where thumbnails are
+    // stored.
     $configuration = $this->getConfiguration();
     $directory = $configuration['thumbnails_directory'];
-    $local_thumbnail_uri = "$directory/" . Crypt::hashBase64($remote_thumbnail_url) . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url);
-
-    // If the local thumbnail already exists, return its URI.
-    if (file_exists($local_thumbnail_uri)) {
-      return $local_thumbnail_uri;
-    }
 
     // The local thumbnail doesn't exist yet, so try to download it. First,
     // ensure that the destination directory is writable, and if it's not,
@@ -411,6 +406,23 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       return NULL;
     }
 
+    // The local filename of the thumbnail is always a hash of its remote URL.
+    // If a file with that name already exists in the thumbnails directory,
+    // regardless of its extension, return its URI.
+    $remote_thumbnail_url = $remote_thumbnail_url->toString();
+    $hash = Crypt::hashBase64($remote_thumbnail_url);
+    $finder = Finder::create()
+      ->files()
+      ->in($directory)
+      ->name("$hash.*");
+    if (count($finder) > 0) {
+      /** @var \Symfony\Component\Finder\SplFileInfo[] $files */
+      $files = iterator_to_array($finder);
+      return reset($files)->getPathname();
+    }
+
+    // The local thumbnail doesn't exist yet, so we need to download it.
+    $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url);
     try {
       $response = $this->httpClient->request('GET', $remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {

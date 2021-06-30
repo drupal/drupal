@@ -114,11 +114,13 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     $http_client->request('GET', $thumbnail_url)->willReturn($response)
       ->shouldBeCalledOnce();
 
-    // If the file extension cannot be derived from the URL, a HEAD request
-    // should be made.
+    // If the file extension cannot be derived from the URL, a single HEAD
+    // request should be made to try and determine its type from the
+    // Content-Type HTTP header.
     if ($thumbnail_headers) {
       $response = new Response(200, $thumbnail_headers);
-      $http_client->request('HEAD', $thumbnail_url)->willReturn($response);
+      $http_client->request('HEAD', $thumbnail_url)->willReturn($response)
+        ->shouldBeCalledOnce();
     }
     else {
       $http_client->request('HEAD', $thumbnail_url)->shouldNotBeCalled();
