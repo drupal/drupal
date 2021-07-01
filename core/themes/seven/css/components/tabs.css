@@ -44,7 +44,7 @@
   text-overflow: ellipsis;
   color: #0074bd;
   border: 1px solid #bfbfbf;
-  background-color: rgba(242, 242, 240, 0.7);
+  background-color: rgba(254, 253, 250, 0.7);
 }
 [dir="rtl"] .tabs__tab {
   padding-right: 1em;
@@ -88,6 +88,7 @@ li.tabs__tab a {
   border-color: #a6a6a6;
   border-radius: 4px 0 0 0; /* LTR */
   background-color: #fff;
+  text-decoration: underline;
 }
 [dir="rtl"] .tabs.primary .tabs__tab.is-active {
   border-top-left-radius: 0;
