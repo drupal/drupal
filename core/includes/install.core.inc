@@ -204,8 +204,10 @@ function install_state_defaults() {
     'config_verified' => FALSE,
     // TRUE when there is a valid database connection.
     'database_verified' => FALSE,
+    // TRUE when there is a valid hash salt.
+    'hash_salt_verified' => FALSE,
     // TRUE when a valid settings.php exists (containing both database
-    // connection information and config directory names).
+    // connection information and hash salt).
     'settings_verified' => FALSE,
     // TRUE when the base system has been installed and is ready to operate.
     'base_system_verified' => FALSE,
@@ -387,7 +389,8 @@ function install_begin_request($class_loader, &$install_state) {
   $install_state['database_verified'] = install_verify_database_settings($site_path);
   // A valid settings.php has database settings and a hash_salt value. Other
   // settings will be checked by system_requirements().
-  $install_state['settings_verified'] = $install_state['database_verified'] && (bool) Settings::get('hash_salt', FALSE);
+  $install_state['hash_salt_verified'] = (bool) Settings::get('hash_salt', FALSE);
+  $install_state['settings_verified'] = $install_state['database_verified'] && $install_state['hash_salt_verified'];
 
   if ($install_state['settings_verified']) {
     try {
@@ -2184,16 +2187,36 @@ function install_check_requirements($install_state) {
       }
       // If the $file is not writable, throw an error.
       if (!$writable) {
-        $requirements["$file file writeable"] = [
-          'title' => $default_file_info['title'],
-          'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
+        if ($install_state['settings_verified'] && $install_state['config_verified']) {
+          $requirements["$file file"] = [
+            'title' => $default_file_info['title'],
+            'value' => t('The @file does not need a rewrite.', ['@file' => $default_file_info['title']]),
+          ];
+        }
+        else {
+          $items = [];
+          // 'settings_verified' == 'database_verified' && 'hash_salt_verified'
+          if (!$install_state['database_verified']) {
+            $items[] = '$databases';
+          }
+          if (!$install_state['hash_salt_verified']) {
+            $items[] = '$settings[\'hash_salt\']';
+          }
+          if (!$install_state['config_verified']) {
+            $items[] = '$settings[\'config_sync_directory\']';
+          }
+          $requirements["$file file writeable"] = [
+            'title' => $default_file_info['title'],
+            'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
+            'severity' => REQUIREMENT_ERROR,
+            'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics. Items needed are: @items', [
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
               ':handbook_url' => 'https://www.drupal.org/server-permissions',
+              '@items' => implode(', ', $items),
             ]),
-        ];
+          ];
+        }
       }
       else {
         $requirements["$file file"] = [
