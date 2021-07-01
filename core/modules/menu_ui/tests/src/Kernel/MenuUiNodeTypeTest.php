@@ -30,7 +30,7 @@ class MenuUiNodeTypeTest extends KernelTestBase {
   /**
    * Asserts that the available menu names are sorted alphabetically by name.
    *
-   * @param NodeType $node_type
+   * @param \Drupal\node\Entity\NodeType $node_type
    *   The node type under test.
    * @param string $operation
    *   The form operation (normally 'add' or 'edit').
