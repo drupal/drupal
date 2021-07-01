@@ -166,8 +166,19 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
 
     // Check if I can see the reply link on an unapproved comment.
     $replyto_comment = $view->style_plugin->getField(0, 'replyto_comment');
+    $this->assertNotEmpty((string) $replyto_comment, "Users with 'administer comments' can see reply link.");
+
+    // Login with normal user and check the reply to link.
+    $account_switcher->switchTo(new AnonymousUserSession());
+    $view = Views::getView('test_comment');
+    $view->preview();
+
+    // Check if I can see the reply link on an unapproved comment.
+    $replyto_comment = $view->style_plugin->getField(0, 'replyto_comment');
     $this->assertEmpty((string) $replyto_comment, "I can't reply to an unapproved comment.");
 
+    // Switch to admin user.
+    $account_switcher->switchTo($this->adminUser);
     // Approve the comment.
     $comment->setPublished();
     $comment->save();
