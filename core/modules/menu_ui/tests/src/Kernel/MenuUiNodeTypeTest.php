@@ -32,10 +32,8 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    *
    * @param \Drupal\node\Entity\NodeType $node_type
    *   The node type under test.
-   * @param string $operation
-   *   The form operation (normally 'add' or 'edit').
    */
-  private function assertMenuNamesAreSorted(NodeType $node_type, string $operation): void {
+  private function assertMenuNamesAreSorted(NodeType $node_type): void {
     $expected_options = [
       'Administration',
       'Footer',
@@ -44,7 +42,7 @@ class MenuUiNodeTypeTest extends KernelTestBase {
       'User account menu',
     ];
     $form = $this->container->get('entity.form_builder')
-      ->getForm($node_type, $operation);
+      ->getForm($node_type, $node_type->isNew() ? 'add' : 'edit');
     $menu_names = array_values($form['menu']['menu_options']['#options']);
     $this->assertSame($expected_options, $menu_names);
   }
@@ -54,8 +52,8 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    */
   public function testContentTypeMenuSettings(): void {
     $this->installConfig(['node', 'system']);
-    $this->assertMenuNamesAreSorted(NodeType::create(), 'add');
-    $this->assertMenuNamesAreSorted($this->createContentType(), 'edit');
+    $this->assertMenuNamesAreSorted(NodeType::create());
+    $this->assertMenuNamesAreSorted($this->createContentType());
   }
 
 }
