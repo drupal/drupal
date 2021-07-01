@@ -28,7 +28,7 @@ class MenuUiNodeTypeTest extends KernelTestBase {
   ];
 
   /**
-   * Asserts that the available menu names are sorted alphabetically.
+   * Asserts that the available menu names are sorted alphabetically by name.
    *
    * @param NodeType $node_type
    *   The node type under test.
@@ -37,15 +37,16 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    */
   private function assertMenuNamesAreSorted(NodeType $node_type, string $operation): void {
     $expected_options = [
-      'admin' => 'Administration',
-      'footer' => 'Footer',
-      'main' => 'Main navigation',
-      'tools' => 'Tools',
-      'account' => 'User account menu',
+      'Administration',
+      'Footer',
+      'Main navigation',
+      'Tools',
+      'User account menu',
     ];
     $form = $this->container->get('entity.form_builder')
       ->getForm($node_type, $operation);
-    $this->assertSame($expected_options, $form['menu']['menu_options']['#options']);
+    $menu_names = array_values($form['menu']['menu_options']['#options']);
+    $this->assertSame($expected_options, $menu_names);
   }
 
   /**
