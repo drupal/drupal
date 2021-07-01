@@ -52,7 +52,6 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    * Tests node type-specific settings for Menu UI.
    */
   public function testContentTypeMenuSettings(): void {
-    $this->assertTrue(true);
     $this->installConfig(['node', 'system']);
     $this->assertMenuNamesAreSorted(NodeType::create(), 'add');
     $this->assertMenuNamesAreSorted($this->createContentType(), 'edit');
