@@ -7,6 +7,7 @@ dependencies:
     - media.type.image
   module:
     - image
+    - path
 id: media.image.default
 targetEntityType: media
 bundle: image
@@ -26,6 +27,12 @@ content:
     type: image_image
     weight: 0
     region: content
+  path:
+    type: path
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:

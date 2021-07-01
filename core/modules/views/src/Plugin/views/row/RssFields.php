@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\row;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -139,7 +140,14 @@ class RssFields extends RowPluginBase {
     // Create the RSS item object.
     $item = new \stdClass();
     $item->title = $this->getField($row_index, $this->options['title_field']);
-    $item->link = $this->getAbsoluteUrl($this->getField($row_index, $this->options['link_field']));
+
+    // If internal link, get absolute URL from URI.
+    if (!UrlHelper::isExternal($this->getField($row_index, $this->options['link_field']))) {
+      $item->link = $this->getAbsoluteUrl($this->getField($row_index, $this->options['link_field']));
+    }
+    else {
+      $item->link = Url::fromUri($this->getField($row_index, $this->options['link_field']))->setAbsolute()->toString();
+    }
 
     $field = $this->getField($row_index, $this->options['description_field']);
     $item->description = is_array($field) ? $field : ['#markup' => $field];
@@ -156,7 +164,14 @@ class RssFields extends RowPluginBase {
     $item_guid = $this->getField($row_index, $this->options['guid_field_options']['guid_field']);
     if ($this->options['guid_field_options']['guid_field_is_permalink']) {
       $guid_is_permalink_string = 'true';
-      $item_guid = $this->getAbsoluteUrl($item_guid);
+
+      // If the guid is an internal link, get the absolute URL from the URI.
+      if (!UrlHelper::isExternal($item_guid)) {
+        $item_guid = $this->getAbsoluteUrl($item_guid);
+      }
+      else {
+        $item_guid = Url::fromUri($item_guid);
+      }
     }
     $item->elements[] = [
       'key' => 'guid',

@@ -62,7 +62,6 @@ class ConfigCheckTest extends BrowserTestBase {
       'core.entity_view_display.media.video.default',
       'core.entity_view_display.media.video.media_library',
       'field.field.media.audio.field_media_audio_file',
-      'field.field.media.file.field_media_document',
       'field.field.media.image.field_media_image',
       'field.field.media.remote_video.field_media_oembed_video',
       'field.field.media.video.field_media_video_file',
