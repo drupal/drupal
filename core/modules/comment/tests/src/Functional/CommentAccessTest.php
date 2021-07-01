@@ -4,15 +4,13 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\node\Entity\NodeType;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests comment administration and preview access.
  *
  * @group comment
  */
-class CommentAccessTest extends BrowserTestBase {
+class CommentAccessTest extends CommentTestBase {
 
   use CommentTestTrait;
 
@@ -42,11 +40,6 @@ class CommentAccessTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $node_type = NodeType::create([
-      'type' => 'article',
-      'name' => 'Article',
-    ]);
-    $node_type->save();
     $node_author = $this->drupalCreateUser([
       'create article content',
       'access comments',
@@ -157,6 +150,17 @@ class CommentAccessTest extends BrowserTestBase {
     $this->drupalGet($comment_url);
     $assert->statusCodeEquals(200);
 
+    // Submit the comment and ensure that comment reply remains unpublished.
+    $edit = [
+      'subject[0][value]' => 'Comment reply subject',
+      'comment_body[0][value]' => 'Comment body',
+    ];
+    $this->submitForm($edit, 'Save');
+    $reply_cid = $this->getUnapprovedComment('Comment reply subject');
+    $reply = Comment::load($reply_cid);
+    $this->assertEquals(0, $reply->isPublished());
+
+    // Logout and visit as an anonymous user.
     $this->drupalLogout();
     $this->drupalGet($comment_url);
     $assert->statusCodeEquals(403);
