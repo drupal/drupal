@@ -476,7 +476,8 @@
       }
 
       $.each(buttons, function (name, props) {
-        props = $.isFunction(props) ? { click: props, text: name } : props;
+        props =
+          typeof props === 'function' ? { click: props, text: name } : props;
 
         // Default to a non-submitting button
         props = $.extend({ type: 'button' }, props);
@@ -603,9 +604,10 @@
 
       data = data || {};
       event = $.Event(event);
-      event.type = (type === this.uiDialogEventPrefix
-        ? type
-        : this.uiDialogEventPrefix + type
+      event.type = (
+        type === this.uiDialogEventPrefix
+          ? type
+          : this.uiDialogEventPrefix + type
       ).toLowerCase();
 
       // The original event may come from any element
