@@ -4,16 +4,41 @@
  */
 
 (function ($, Drupal) {
+  /**
+   * Utility methods for color manipulation taken from farbtastic.
+   *
+   * @see https://github.com/mattfarina/farbtastic
+   *
+   * @namespace
+   */
   Drupal.colorUtils = {
+    /**
+     *
+     * @param dec
+     *
+     * @return {string}
+     */
     dec2hex(dec) {
       return (dec < 16 ? '0' : '') + dec.toString(16);
     },
+    /**
+     *
+     * @param rgb
+     *
+     * @return {string}
+     */
     pack(rgb) {
       const r = Math.round(rgb[0] * 255);
       const g = Math.round(rgb[1] * 255);
       const b = Math.round(rgb[2] * 255);
       return `#${this.dec2hex(r)}${this.dec2hex(g)}${this.dec2hex(b)}`;
     },
+    /**
+     *
+     * @param color
+     *
+     * @return {*[]}
+     */
     unpack(color) {
       if (color.length === 7) {
         // eslint-disable-next-line no-inner-declarations
@@ -30,6 +55,14 @@
         return [x(1), x(2), x(3)];
       }
     },
+    /**
+     *
+     * @param m1
+     * @param m2
+     * @param h
+     *
+     * @return {*}
+     */
     hueToRGB(m1, m2, h) {
       h = (h + 1) % 1;
       if (h * 6 < 1) return m1 + (m2 - m1) * h * 6;
@@ -37,7 +70,12 @@
       if (h * 3 < 2) return m1 + (m2 - m1) * (0.66666 - h) * 6;
       return m1;
     },
-
+    /**
+     *
+     * @param rgb
+     *
+     * @return {*[]}
+     */
     RGBToHSL(rgb) {
       const [r, g, b] = rgb;
       const min = Math.min(r, g, b);
@@ -57,7 +95,12 @@
       }
       return [h, s, l];
     },
-
+    /**
+     *
+     * @param hsl
+     *
+     * @return {*[]}
+     */
     HSLToRGB(hsl) {
       const [h, s, l] = hsl;
       const m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
@@ -68,6 +111,12 @@
         this.hueToRGB(m1, m2, h - 0.33333),
       ];
     },
+    /**
+     *
+     * @param hex
+     *
+     * @return {*[]}
+     */
     hexToHSL(hex) {
       return this.RGBToHSL(this.unpack(hex));
     },

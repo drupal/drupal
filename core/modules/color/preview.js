@@ -8,7 +8,6 @@
 (function ($, Drupal) {
   Drupal.color = {
     callback: function callback(context, settings, form, height, width) {
-      console.log('module preview');
       var accum;
       var delta;
       form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());

@@ -3,7 +3,7 @@
  * Attaches preview-related behavior for the Color module.
  */
 
-(function ($, Drupal) {
+(($, Drupal) => {
   /**
    * Namespace for color-related functionality for Drupal.
    *
@@ -25,7 +25,6 @@
      *   Width of gradient.
      */
     callback(context, settings, form, height, width) {
-      console.log('module preview');
       let accum;
       let delta;
       // Solid background.
