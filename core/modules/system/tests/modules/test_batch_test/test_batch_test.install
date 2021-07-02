@@ -25,7 +25,7 @@ function test_batch_test_install() {
   $batch_processor->queue($batch);
   $batch =& $batch_processor->getCurrentBatch();
   $batch['progressive'] = FALSE;
-  $batch_processor->queue($batch);
+  $batch_processor->process();
 }
 
 /**
