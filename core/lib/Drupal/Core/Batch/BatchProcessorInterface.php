@@ -151,7 +151,7 @@ interface BatchProcessorInterface {
    * Call the 'finished' callback of each batch set to allow custom handling of
    * the results and resolve page redirection.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|NULL
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
    *   A redirect response to the completed page or NULL to stay at the current
    *   URL.
    *

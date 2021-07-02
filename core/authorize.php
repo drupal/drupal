@@ -106,7 +106,11 @@ if ($is_allowed) {
 
   $page_title = $request->getSession()->get('authorize_page_title', t('Authorize file system changes'));
 
-  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor
+   */
   $batch_processor = \Drupal::service('batch.processor');
 
   // See if we've run the operation and need to display a report.

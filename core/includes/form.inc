@@ -10,7 +10,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Prepares variables for select element templates.
