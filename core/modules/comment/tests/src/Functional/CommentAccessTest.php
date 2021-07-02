@@ -20,7 +20,6 @@ class CommentAccessTest extends CommentTestBase {
   protected static $modules = [
     'node',
     'comment',
-    'comment_test',
   ];
 
   /**
