@@ -92,7 +92,7 @@
  *   matches the base route, that will be the default/first tab shown.
  *
  * Local tasks from other modules can be altered using
- * hook_menu_local_tasks_alter().
+ * hook_local_tasks_render_alter().
  *
  * @todo Derivatives are in flux for these; when they are more stable, add
  *   documentation here.
@@ -311,6 +311,11 @@ function hook_menu_links_discovered_alter(&$links) {
  * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
  *   The cacheability metadata for the current route's local tasks.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   hook_local_tasks_render_alter instead.
+ *
+ * @see https://www.drupal.org/node/3216578
+ *
  * @ingroup menu
  */
 function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
@@ -327,6 +332,54 @@ function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\Ref
               ],
           ],
       ],
+  ];
+  // The tab we're adding is dependent on a user's access to add content.
+  $cacheability->addCacheContexts(['user.permissions']);
+}
+
+/**
+ * Alter local tasks displayed on the page before they are rendered.
+ *
+ * This hook is invoked by \Drupal\Core\Menu\LocalTaskManager::getLocalTasks().
+ * The system-determined tabs and actions are passed in by reference. Additional
+ * tabs may be added.
+ *
+ * The local tasks are under the 'tabs' element and keyed by plugin ID.
+ *
+ * Each local task is an associative array containing:
+ * - #theme: The theme function to use to render.
+ * - #link: An associative array containing:
+ *   - title: The localized title of the link.
+ *   - url: a Url object.
+ *   - localized_options: An array of options to pass to
+ *     \Drupal\Core\Utility\LinkGeneratorInterface::generate().
+ * - #weight: The link's weight compared to other links.
+ * - #active: Whether the link should be marked as 'active'.
+ *
+ * @param array $data
+ *   An associative array containing list of (up to 2) tab levels that contain a
+ *   list of tabs keyed by their href, each one being an associative array
+ *   as described above.
+ * @param string $route_name
+ *   The route name of the page.
+ * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
+ *   The cacheability metadata for the current route's local tasks.
+ *
+ * @ingroup menu
+ */
+function hook_local_tasks_render_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
+  // Add a tab linking to node/add to all pages.
+  $data['tabs'][0]['node.add_page'] = [
+    '#theme' => 'menu_local_task',
+    '#link' => [
+      'title' => t('Example tab'),
+      'url' => Url::fromRoute('node.add_page'),
+      'localized_options' => [
+        'attributes' => [
+          'title' => t('Add content'),
+        ],
+      ],
+    ],
   ];
   // The tab we're adding is dependent on a user's access to add content.
   $cacheability->addCacheContexts(['user.permissions']);
