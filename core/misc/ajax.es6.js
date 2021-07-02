@@ -209,8 +209,8 @@
    *     };
    *
    *     // This command will remove this Ajax object from the page.
-   *     myAjaxObject.commands.destroyObject = function (ajax, response, status) {
-   *       Drupal.ajax.instances[this.instanceIndex] = null;
+   *     myAjaxObject.commands.destroyObject = function (ajax, response,
+   *   status) { Drupal.ajax.instances[this.instanceIndex] = null;
    *     };
    *
    *     // Programmatically trigger the Ajax request.
@@ -273,12 +273,25 @@
    *   The list of expired {@link Drupal.Ajax} objects.
    */
   Drupal.ajax.expired = function () {
-    return Drupal.ajax.instances.filter(
-      (instance) =>
+    return Drupal.ajax.instances.filter((instance) => {
+      if (
         instance &&
         instance.element !== false &&
-        !document.body.contains(instance.element),
-    );
+        !(instance.element instanceof HTMLElement)
+      ) {
+        Drupal.throwError(
+          new Error(
+            Drupal.t('TypeError: instance.element is not a HTMLElement'),
+          ),
+        );
+      }
+      return (
+        instance &&
+        instance.element !== false &&
+        instance.element instanceof HTMLElement &&
+        !document.body.contains(instance.element)
+      );
+    });
   };
 
   /**
