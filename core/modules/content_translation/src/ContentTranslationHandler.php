@@ -18,6 +18,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Entity\User;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup entity_api
  */
-class ContentTranslationHandler implements ContentTranslationHandlerInterface, EntityHandlerInterface {
+class ContentTranslationHandler implements ContentTranslationHandlerInterface, EntityHandlerInterface, TrustedCallbackInterface {
 
   use EntityChangesDetectionTrait;
   use DependencySerializationTrait;
@@ -811,6 +812,13 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    */
   public static function getDefaultOwnerId() {
     return \Drupal::currentUser()->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['entityFormSharedElements', 'entityFormValidate'];
   }
 
 }

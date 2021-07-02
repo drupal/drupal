@@ -10,6 +10,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,7 +27,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *   }
  * )
  */
-class FileWidget extends WidgetBase {
+class FileWidget extends WidgetBase implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -593,6 +594,18 @@ class FileWidget extends WidgetBase {
     if ($clicked_button !== 'remove_button') {
       parent::flagErrors($items, $violations, $form, $form_state);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'processMultiple';
+    $callbacks[] = 'process';
+    $callbacks[] = 'value';
+    $callbacks[] = 'validateMultipleCount';
+    return $callbacks;
   }
 
 }

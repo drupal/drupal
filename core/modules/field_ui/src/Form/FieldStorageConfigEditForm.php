@@ -257,4 +257,13 @@ class FieldStorageConfigEditForm extends EntityForm {
     return isset($definition['cardinality']) ? $definition['cardinality'] : NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateCardinality';
+    return $callbacks;
+  }
+
 }

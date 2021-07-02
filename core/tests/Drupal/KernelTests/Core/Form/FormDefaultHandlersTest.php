@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Form;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -12,7 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Form
  */
-class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
+class FormDefaultHandlersTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -84,6 +85,13 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
     $this->assertCount(2, $handlers['submit']);
     $this->assertSame('customSubmitForm', $handlers['submit'][0]);
     $this->assertSame('submitForm', $handlers['submit'][1]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['customValidateForm'];
   }
 
 }

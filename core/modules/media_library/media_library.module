@@ -23,11 +23,10 @@ use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Form\FileUploadForm;
 use Drupal\media_library\Form\OEmbedForm;
+use Drupal\media_library\Form\MediaLibraryTrustedFormCallbacks;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_help().
@@ -296,30 +295,16 @@ function media_library_form_alter(array &$form, FormStateInterface $form_state, 
   // Add a process callback to ensure that the media library view's exposed
   // filters submit button is not moved to the modal dialog's button area.
   if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
-    $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
+    $form['#after_build'][] = [
+      MediaLibraryTrustedFormCallbacks::class,
+      'afterBuildViewsExposedForm',
+    ];
   }
 
   // Configures media_library displays when a type is submitted.
   if ($form_state->getFormObject() instanceof MediaTypeForm) {
     $form['actions']['submit']['#submit'][] = '_media_library_media_type_form_submit';
   }
-}
-
-/**
- * Form #after_build callback for media_library view's exposed filters form.
- */
-function _media_library_views_form_media_library_after_build(array $form, FormStateInterface $form_state) {
-  // Remove .form-actions from the view's exposed filter actions. This prevents
-  // the "Apply filters" submit button from being moved into the dialog's
-  // button area.
-  // @see \Drupal\Core\Render\Element\Actions::processActions
-  // @see Drupal.behaviors.dialog.prepareDialogButtons
-  // @todo Remove this after
-  //   https://www.drupal.org/project/drupal/issues/3089751 is fixed.
-  if (($key = array_search('form-actions', $form['actions']['#attributes']['class'])) !== FALSE) {
-    unset($form['actions']['#attributes']['class'][$key]);
-  }
-  return $form;
 }
 
 /**
@@ -483,7 +468,10 @@ function _media_library_configure_view_display(MediaTypeInterface $type) {
 function media_library_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   // Add an additional validate callback so so we can ensure the media_embed
   // filter is enabled when the DrupalMediaLibrary button is enabled.
-  $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
+  $form['#validate'][] = [
+    MediaLibraryTrustedFormCallbacks::class,
+    'filterFormatEditFormValidate',
+  ];
 }
 
 /**
@@ -492,57 +480,22 @@ function media_library_form_filter_format_edit_form_alter(array &$form, FormStat
 function media_library_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   // Add an additional validate callback so so we can ensure the media_embed
   // filter is enabled when the DrupalMediaLibrary button is enabled.
-  $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
+  $form['#validate'][] = [
+    MediaLibraryTrustedFormCallbacks::class,
+    'filterFormatEditFormValidate',
+  ];
 }
 
 /**
  * Validate callback to ensure the DrupalMediaLibrary button can work correctly.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\media_library\Form\MediaLibraryTrustedFormCallbacks
+ *   ::filterFormatEditFormValidate instead.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function media_library_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
-  if ($form_state->getTriggeringElement()['#name'] !== 'op') {
-    return;
-  }
-
-  // The "DrupalMediaLibrary" button is for the CKEditor text editor.
-  if ($form_state->getValue(['editor', 'editor']) !== 'ckeditor') {
-    return;
-  }
-
-  $button_group_path = [
-    'editor',
-    'settings',
-    'toolbar',
-    'button_groups',
-  ];
-
-  if ($button_groups = $form_state->getValue($button_group_path)) {
-    $buttons = [];
-    $button_groups = Json::decode($button_groups);
-
-    foreach ($button_groups as $button_row) {
-      foreach ($button_row as $button_group) {
-        $buttons = array_merge($buttons, array_values($button_group['items']));
-      }
-    }
-
-    $get_filter_label = function ($filter_plugin_id) use ($form) {
-      return (string) $form['filters']['order'][$filter_plugin_id]['filter']['#markup'];
-    };
-
-    if (in_array('DrupalMediaLibrary', $buttons, TRUE)) {
-      $media_embed_enabled = $form_state->getValue([
-        'filters',
-        'media_embed',
-        'status',
-      ]);
-
-      if (!$media_embed_enabled) {
-        $error_message = new TranslatableMarkup('The %media-embed-filter-label filter must be enabled to use the %drupal-media-library-button button.', [
-          '%media-embed-filter-label' => $get_filter_label('media_embed'),
-          '%drupal-media-library-button' => new TranslatableMarkup('Insert from Media Library'),
-        ]);
-        $form_state->setErrorByName('filters', $error_message);
-      }
-    }
-  }
+  MediaLibraryTrustedFormCallbacks::filterFormatEditFormValidate($form, $form_state);
 }

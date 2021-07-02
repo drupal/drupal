@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\stable\StableTrustedCallbacks;
 
 /**
  * Implements hook_library_info_alter().
@@ -42,26 +43,29 @@ function stable_preprocess_links(&$variables) {
  */
 function stable_element_info_alter(array &$info) {
   if (array_key_exists('text_format', $info)) {
-    $info['text_format']['#process'][] = 'stable_process_text_format';
+    $info['text_format']['#process'][] = [
+      StableTrustedCallbacks::class, 'processTextFormat',
+      ];
   }
 }
 
 /**
- * #process callback, for adding classes to filter components.
+ * Implements #process callback, for adding classes to filter components.
  *
  * @param array $element
  *   Render array for the text_format element.
  *
  * @return array
  *   Text_format element with the filter classes added.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Render\Element\PasswordConfirm::dynamicPasswordConfirm()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
-function stable_process_text_format(array $element) {
-  $element['format']['#attributes']['class'][] = 'filter-wrapper';
-  $element['format']['guidelines']['#attributes']['class'][] = 'filter-guidelines';
-  $element['format']['format']['#attributes']['class'][] = 'filter-list';
-  $element['format']['help']['#attributes']['class'][] = 'filter-help';
-
-  return $element;
+function stable_process_text_format(array $element, FormStateInterface $form_state, array &$form) {
+  return StableTrustedCallbacks::processTextFormat($element, $form_state, $form);
 }
 
 /**

@@ -511,7 +511,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['disableContextualLinks'];
+    return ['disableContextualLinks', 'validateOptions'];
   }
 
   /**

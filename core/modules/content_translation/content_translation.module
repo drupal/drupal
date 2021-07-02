@@ -19,6 +19,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\language\ContentLanguageSettingsInterface;
+use Drupal\content_translation\ContentTranslationTrustedCallbacks;
 
 /**
  * Implements hook_help().
@@ -537,7 +538,7 @@ function content_translation_entity_presave(EntityInterface $entity) {
  */
 function content_translation_element_info_alter(&$type) {
   if (isset($type['language_configuration'])) {
-    $type['language_configuration']['#process'][] = 'content_translation_language_configuration_element_process';
+    $type['language_configuration']['#process'][] = [ContentTranslationTrustedCallbacks::class, 'LanguageConfigurationElementProcess'];
   }
 }
 
@@ -569,63 +570,31 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
 }
 
 /**
- * Process callback: Expands the language_configuration form element.
+ * Implements #process callback.
  *
- * @param array $element
- *   Form API element.
- *
- * @return
- *   Processed language configuration element.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   ContentTranslationTrustedCallbacks::LanguageConfigurationElementProcess()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {
-  if (empty($element['#content_translation_skip_alter']) && \Drupal::currentUser()->hasPermission('administer content translation')) {
-    $key = $element['#name'];
-    $form_state->set(['content_translation', 'key'], $key);
-    $context = $form_state->get(['language', $key]);
-
-    $element['content_translation'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Enable translation'),
-      // For new bundle, we don't know the bundle name yet,
-      // default to no translatability.
-      '#default_value' => $context['bundle'] ? \Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) : FALSE,
-      '#element_validate' => ['content_translation_language_configuration_element_validate'],
-    ];
-
-    $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-    // Only add the submit handler on the submit button if the #submit property
-    // is already available, otherwise this breaks the form submit function.
-    if (isset($form['actions'][$submit_name]['#submit'])) {
-      $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
-    }
-    else {
-      $form['#submit'][] = 'content_translation_language_configuration_element_submit';
-    }
-  }
-  return $element;
+  return ContentTranslationTrustedCallbacks::LanguageConfigurationElementProcess($element, $form_state, $form);
 }
 
 /**
- * Form validation handler for element added with content_translation_language_configuration_element_process().
+ * Form validation handler for element added.
  *
- * Checks whether translation can be enabled: if language is set to one of the
- * special languages and language selector is not hidden, translation cannot be
- * enabled.
+ * Supported content_translation_language_configuration_element_process().
  *
- * @see content_translation_language_configuration_element_submit()
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\system\Form\TrustedFormCallbacks::checkDirectory()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
-function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form) {
-  $key = $form_state->get(['content_translation', 'key']);
-  $values = $form_state->getValue($key);
-  if (!$values['language_alterable'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-    foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
-      $locked_languages[] = $language->getName();
-    }
-    // @todo Set the correct form element name as soon as the element parents
-    //   are correctly set. We should be using NestedArray::getValue() but for
-    //   now we cannot.
-    $form_state->setErrorByName('', t('"Show language selector" is not compatible with translating content that has default language: %choice. Either do not hide the language selector or pick a specific language.', ['%choice' => $locked_languages[$values['langcode']]]));
-  }
+function content_translation_language_configuration_element_validate(array &$element, FormStateInterface $form_state, array $form) {
+  ContentTranslationTrustedCallbacks::languageConfigurationElementValidate($element, $form_state, $form);
 }
 
 /**

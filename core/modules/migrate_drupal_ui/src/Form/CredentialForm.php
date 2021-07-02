@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Exception\RequirementsException;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class CredentialForm extends MigrateUpgradeFormBase {
+class CredentialForm extends MigrateUpgradeFormBase implements TrustedCallbackInterface {
 
   /**
    * The HTTP client to fetch the files with.
@@ -372,6 +373,13 @@ class CredentialForm extends MigrateUpgradeFormBase {
     $this->store->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
     // Store the retrieved system data in the private store.
     $this->store->set('system_data', $system_data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validatePaths'];
   }
 
 }

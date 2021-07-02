@@ -15,6 +15,7 @@ use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
+use Drupal\views_ui\Form\ViewsUiTrustedFormCallbacks;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
@@ -795,7 +796,7 @@ class ViewEditForm extends ViewFormBase {
         '#attributes' => ['class' => ['add-display']],
         // Allow JavaScript to remove the 'Add ' prefix from the button label when
         // placing the button in an "Add" dropdown menu.
-        '#process' => array_merge(['views_ui_form_button_was_clicked'], $this->elementInfo->getInfoProperty('submit', '#process', [])),
+        '#process' => array_merge([[ViewsUiTrustedFormCallbacks::class, 'formButtonClicked']], $this->elementInfo->getInfoProperty('submit', '#process', [])),
         '#values' => [$this->t('Add @display', ['@display' => $label]), $label],
       ];
     }

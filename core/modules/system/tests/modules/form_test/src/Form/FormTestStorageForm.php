@@ -144,4 +144,13 @@ class FormTestStorageForm extends FormBase {
     $form_state->setRedirect('<front>');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementValidateValueCached';
+    return $callbacks;
+  }
+
 }

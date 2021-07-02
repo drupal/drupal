@@ -272,4 +272,13 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'effectValidate';
+    return $callbacks;
+  }
+
 }

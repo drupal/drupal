@@ -64,4 +64,13 @@ class FormTestFormStateValuesCleanForm extends FormBase {
     exit;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'cleanValue';
+    return $callbacks;
+  }
+
 }

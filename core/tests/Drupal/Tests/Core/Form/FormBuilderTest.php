@@ -568,7 +568,19 @@ class FormBuilderTest extends FormTestBase {
     $request_stack = new RequestStack();
     $request_stack->push($request);
     $this->formBuilder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
-      ->setConstructorArgs([$this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $request_stack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken])
+      ->setConstructorArgs([
+        $this->formValidator,
+        $this->formSubmitter,
+        $this->formCache,
+        $this->moduleHandler,
+        $this->eventDispatcher,
+        $request_stack,
+        $this->classResolver,
+        $this->elementInfo,
+        $this->themeManager,
+        $this->csrfToken,
+        $this->controllerResolver,
+      ])
       ->setMethods(['getFileUploadMaxSize'])
       ->getMock();
     $this->formBuilder->expects($this->once())

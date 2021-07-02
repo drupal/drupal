@@ -126,4 +126,13 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateStartEnd';
+    return $callbacks;
+  }
+
 }

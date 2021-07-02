@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -14,7 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group datetime
  */
-class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface {
+class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
 
   use DependencySerializationTrait;
 
@@ -112,6 +113,13 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
     $form_state->setProgrammed();
     $form_state->setSubmitted();
     $form_builder->processForm($form_id, $form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['process', 'validateForm'];
   }
 
 }

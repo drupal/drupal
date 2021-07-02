@@ -17,6 +17,7 @@ use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\menu_ui\Form\MenuUiTrustedFormCallbacks;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
 use Drupal\node\NodeInterface;
@@ -385,28 +386,24 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   ];
   $options_cacheability->applyTo($form['menu']['menu_parent']);
 
-  $form['#validate'][] = 'menu_ui_form_node_type_form_validate';
+  $form['#validate'][] = [
+    MenuUiTrustedFormCallbacks::class,
+    'formNodeTypeFormValidate',
+  ];
   $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';
 }
 
 /**
  * Validate handler for forms with menu options.
  *
- * @see menu_ui_form_node_type_form_alter()
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\menu_ui\Form\MenuUiTrustedFormCallbacks::formNodeTypeFormValidate
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state) {
-  $available_menus = array_filter($form_state->getValue('menu_options'));
-  // If there is at least one menu allowed, the selected item should be in
-  // one of them.
-  if (count($available_menus)) {
-    $menu_item_id_parts = explode(':', $form_state->getValue('menu_parent'));
-    if (!in_array($menu_item_id_parts[0], $available_menus)) {
-      $form_state->setErrorByName('menu_parent', t('The selected menu link is not under one of the selected menus.'));
-    }
-  }
-  else {
-    $form_state->setValue('menu_parent', '');
-  }
+  MenuUiTrustedFormCallbacks::formNodeTypeFormValidate($form, $form_state);
 }
 
 /**

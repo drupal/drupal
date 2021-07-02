@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\language\Entity\ConfigurableLanguage
  */
-class LanguageListBuilder extends DraggableListBuilder {
+class LanguageListBuilder extends DraggableListBuilder implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -170,6 +171,13 @@ class LanguageListBuilder extends DraggableListBuilder {
     // Force the redirection to the page with the language we have just
     // selected as default.
     $form_state->setRedirectUrl($this->entities[$new_id]->toUrl('collection', ['language' => $this->entities[$new_id]]));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateForm'];
   }
 
 }

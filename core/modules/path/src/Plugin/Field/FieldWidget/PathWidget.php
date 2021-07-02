@@ -113,4 +113,13 @@ class PathWidget extends WidgetBase {
     return $element['alias'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateFormElement';
+    return $callbacks;
+  }
+
 }

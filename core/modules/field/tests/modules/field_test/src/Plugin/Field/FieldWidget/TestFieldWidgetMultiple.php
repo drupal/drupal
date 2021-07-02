@@ -94,11 +94,22 @@ class TestFieldWidgetMultiple extends WidgetBase {
 
   /**
    * {@inheritdoc}
-   * Used in \Drupal\field\Tests\EntityReference\EntityReferenceAdminTest::testAvailableFormatters().
+   *
+   * Used in \Drupal\field\Tests\EntityReference\EntityReferenceAdminTest
+   * ::testAvailableFormatters().
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     // Returns FALSE if machine name of the field equals field_onewidgetfield.
     return $field_definition->getName() != "field_onewidgetfield";
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'multipleValidate';
+    return $callbacks;
   }
 
 }

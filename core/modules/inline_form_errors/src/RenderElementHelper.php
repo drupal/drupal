@@ -3,11 +3,12 @@
 namespace Drupal\inline_form_errors;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Provides functionality to process render elements.
  */
-class RenderElementHelper {
+class RenderElementHelper implements TrustedCallbackInterface {
 
   /**
    * Alters the element type info.
@@ -23,19 +24,7 @@ class RenderElementHelper {
   }
 
   /**
-   * Process all render elements.
-   *
-   * @param array $element
-   *   An associative array containing the properties and children of the
-   *   element. Note that $element must be taken by reference here, so processed
-   *   child elements are taken over into $form_state.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @return array
-   *   The processed element.
+   * Implements #process callback for ::alterElementInfo.
    */
   public static function processElement(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Prevent displaying inline form errors when disabled for the whole form.
@@ -44,6 +33,13 @@ class RenderElementHelper {
     }
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['processElement'];
   }
 
 }

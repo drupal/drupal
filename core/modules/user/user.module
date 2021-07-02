@@ -12,6 +12,7 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Render\Element\PasswordConfirm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -1075,7 +1076,7 @@ function _user_mail_notify($op, AccountInterface $account, $langcode = NULL) {
  */
 function user_element_info_alter(array &$types) {
   if (isset($types['password_confirm'])) {
-    $types['password_confirm']['#process'][] = 'user_form_process_password_confirm';
+    $types['password_confirm']['#process'][] = [PasswordConfirm::class, 'dynamicPasswordConfirm'];
   }
 }
 
@@ -1085,38 +1086,16 @@ function user_element_info_alter(array &$types) {
  * This #process handler is automatically invoked for 'password_confirm' form
  * elements to add the JavaScript and string translations for dynamic password
  * validation.
+ *
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Render\Element\PasswordConfirm::dynamicPasswordConfirm()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
-function user_form_process_password_confirm($element) {
-  $password_settings = [
-    'confirmTitle' => t('Passwords match:'),
-    'confirmSuccess' => t('yes'),
-    'confirmFailure' => t('no'),
-    'showStrengthIndicator' => FALSE,
-  ];
-
-  if (\Drupal::config('user.settings')->get('password_strength')) {
-    $password_settings['showStrengthIndicator'] = TRUE;
-    $password_settings += [
-      'strengthTitle' => t('Password strength:'),
-      'hasWeaknesses' => t('Recommendations to make your password stronger:'),
-      'tooShort' => t('Make it at least 12 characters'),
-      'addLowerCase' => t('Add lowercase letters'),
-      'addUpperCase' => t('Add uppercase letters'),
-      'addNumbers' => t('Add numbers'),
-      'addPunctuation' => t('Add punctuation'),
-      'sameAsUsername' => t('Make it different from your username'),
-      'weak' => t('Weak'),
-      'fair' => t('Fair'),
-      'good' => t('Good'),
-      'strong' => t('Strong'),
-      'username' => \Drupal::currentUser()->getAccountName(),
-    ];
-  }
-
-  $element['#attached']['library'][] = 'user/drupal.user';
-  $element['#attached']['drupalSettings']['password'] = $password_settings;
-
-  return $element;
+function user_form_process_password_confirm($element, FormStateInterface $form_state, array $form) {
+  return PasswordConfirm::dynamicPasswordConfirm($element, $form_state, $form);
 }
 
 /**

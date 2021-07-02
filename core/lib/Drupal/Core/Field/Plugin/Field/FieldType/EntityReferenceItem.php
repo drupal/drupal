@@ -17,6 +17,7 @@ use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataReferenceDefinition;
@@ -40,7 +41,7 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  * )
  */
-class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
+class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface, TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -724,6 +725,17 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     }
 
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return [
+      'formProcessMergeParent',
+      'fieldSettingsAjaxProcess',
+      'fieldSettingsFormValidate',
+    ];
   }
 
 }

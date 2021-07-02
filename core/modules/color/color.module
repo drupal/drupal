@@ -15,7 +15,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\Element\Textfield;
+use Drupal\color\ColorTrustedCallbacks;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\color\ColorSystemBrandingBlockAlter;
 
@@ -63,7 +63,7 @@ function color_form_system_theme_settings_alter(&$form, FormStateInterface $form
       '#theme' => 'color_scheme_form',
     ];
     $form['color'] += color_scheme_form($form, $form_state, $theme);
-    $form['#validate'][] = 'color_scheme_form_validate';
+    $form['#validate'][] = [ColorTrustedCallbacks::class, 'schemeFormValidate'];
     // Ensure color submission happens first so we can unset extra values.
     array_unshift($form['#submit'], 'color_scheme_form_submit');
   }
@@ -180,7 +180,7 @@ function color_get_palette($theme, $default = FALSE) {
  * @param $theme
  *   The machine name of the theme whose color settings are being configured.
  *
- * @see color_scheme_form_validate()
+ * @see \Drupal\color\ColorTrustedCallbacks::schemeFormValidate()
  * @see color_scheme_form_submit()
  */
 function color_scheme_form($complete_form, FormStateInterface $form_state, $theme) {
@@ -249,7 +249,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
       $form['palette'][$name] = [
         '#type' => 'textfield',
         '#title' => $names[$name],
-        '#value_callback' => 'color_palette_color_value',
+        '#value_callback' => [ColorTrustedCallbacks::class, 'paletteColorValue'],
         '#default_value' => $value,
         '#size' => 8,
         '#attributes' => ['dir' => LanguageInterface::DIRECTION_LTR],
@@ -293,34 +293,14 @@ function template_preprocess_color_scheme_form(&$variables) {
 /**
  * Determines the value for a palette color field.
  *
- * @param array $element
- *   The form element whose value is being populated.
- * @param string|bool $input
- *   The incoming input to populate the form element. If this is FALSE,
- *   the element's default value should be returned.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
- *
- * @return string
- *   The data that will appear in the $form_state->getValues() collection for this
- *   element. Return nothing to use the default.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\color\ColorTrustedCallbacks::paletteColorValue()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function color_palette_color_value($element, $input, FormStateInterface $form_state) {
-  // If we suspect a possible cross-site request forgery attack, only accept
-  // hexadecimal CSS color strings from user input, to avoid problems when this
-  // value is used in the JavaScript preview.
-  if ($input !== FALSE) {
-    // Start with the provided value for this textfield, and validate that if
-    // necessary, falling back on the default value.
-    $value = Textfield::valueCallback($element, $input, $form_state);
-    $complete_form = $form_state->getCompleteForm();
-    if (!$value || !isset($complete_form['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $complete_form['#token'])) {
-      return $value;
-    }
-    else {
-      return $element['#default_value'];
-    }
-  }
+  return ColorTrustedCallbacks::paletteColorValue($element, $input, $form_state);
 }
 
 /**
@@ -340,15 +320,14 @@ function color_valid_hexadecimal_string($color) {
 /**
  * Form validation handler for color_scheme_form().
  *
- * @see color_scheme_form_submit()
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\color\ColorTrustedCallbacks::schemeFormValidate()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function color_scheme_form_validate($form, FormStateInterface $form_state) {
-  // Only accept hexadecimal CSS color strings to avoid XSS upon use.
-  foreach ($form_state->getValue('palette') as $key => $color) {
-    if (!color_valid_hexadecimal_string($color)) {
-      $form_state->setErrorByName('palette][' . $key, t('You must enter a valid hexadecimal color value for %name.', ['%name' => $form['color']['palette'][$key]['#title']]));
-    }
-  }
+  ColorTrustedCallbacks::schemeFormValidate($form, $form_state);
 }
 
 /**

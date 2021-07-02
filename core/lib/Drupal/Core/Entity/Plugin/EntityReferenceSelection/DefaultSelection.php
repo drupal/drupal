@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,7 +40,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   deriver = "Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver"
  * )
  */
-class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, SelectionWithAutocreateInterface {
+class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, SelectionWithAutocreateInterface, TrustedCallbackInterface {
 
   /**
    * The entity type manager service.
@@ -494,6 +495,13 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     // Restore the tags and metadata.
     $query->alterTags = $old_tags;
     $query->alterMetaData = $old_metadata;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['elementValidateFilter'];
   }
 
 }

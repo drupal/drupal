@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * A widget to display the layout form.
@@ -22,7 +23,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class LayoutBuilderWidget extends WidgetBase {
+class LayoutBuilderWidget extends WidgetBase implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -74,6 +75,15 @@ class LayoutBuilderWidget extends WidgetBase {
    */
   private function getSectionStorage(FormStateInterface $form_state) {
     return $form_state->getFormObject()->getSectionStorage();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'layoutBuilderElementGetKeys';
+    return $callbacks;
   }
 
 }

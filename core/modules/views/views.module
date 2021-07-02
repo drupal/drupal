@@ -789,15 +789,15 @@ function views_get_view_result($name, $display_id = NULL) {
 
 /**
  * Validation callback for query tags.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\views\Plugin\views\query\Sql::validateTags() instead.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function views_element_validate_tags($element, FormStateInterface $form_state) {
-  $values = array_map('trim', explode(',', $element['#value']));
-  foreach ($values as $value) {
-    if (preg_match("/[^a-z_]/", $value)) {
-      $form_state->setError($element, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
-      return;
-    }
-  }
+
 }
 
 /**

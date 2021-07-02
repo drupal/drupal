@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\language\LanguageTrustedCallbacks;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -129,7 +130,7 @@ function language_element_info_alter(&$type) {
       $type['language_select']['#theme_wrappers'] = [];
     }
     $type['language_select']['#process'] = array_merge($type['language_select']['#process'], [
-      'language_process_language_select',
+      [LanguageTrustedCallbacks::class, 'languageSelectProcess'],
       ['Drupal\Core\Render\Element\Select', 'processSelect'],
       ['Drupal\Core\Render\Element\RenderElement', 'processAjaxForm'],
     ]);
@@ -141,24 +142,16 @@ function language_element_info_alter(&$type) {
 }
 
 /**
- * Processes a language select list form element.
+ * Implements #process callback.
  *
- * @param array $element
- *   The form element to process.
- *
- * @return array
- *   The processed form element.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   Drupal\language\LanguageTrustedCallbacks::languageSelectProcess()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
-function language_process_language_select($element) {
-  // Don't set the options if another module (translation for example) already
-  // set the options.
-  if (!isset($element['#options'])) {
-    $element['#options'] = [];
-    foreach (\Drupal::languageManager()->getLanguages($element['#languages']) as $langcode => $language) {
-      $element['#options'][$langcode] = $language->isLocked() ? t('- @name -', ['@name' => $language->getName()]) : $language->getName();
-    }
-  }
-  return $element;
+function language_process_language_select(array &$element, FormStateInterface $form_state, array &$form) {
+  return LanguageTrustedCallbacks::languageSelectProcess($element, $form_state, $form);
 }
 
 /**

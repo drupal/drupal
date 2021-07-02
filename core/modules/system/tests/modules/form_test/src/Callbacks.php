@@ -3,11 +3,12 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Simple class for testing methods as Form API callbacks.
  */
-class Callbacks {
+class Callbacks implements TrustedCallbackInterface {
 
   /**
    * Form element validation handler for 'name' in form_test_validate_form().
@@ -43,6 +44,13 @@ class Callbacks {
       // Trigger a form validation error to see our changes.
       $form_state->setErrorByName('');
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateName'];
   }
 
 }

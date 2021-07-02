@@ -8,6 +8,7 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @ingroup field_widget
  */
-abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface, ContainerFactoryPluginInterface {
+abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface, ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The field definition.
@@ -612,6 +613,15 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    */
   protected function getFilteredDescription() {
     return FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function trustedCallbacks() {
+    return [
+      'afterBuild',
+    ];
   }
 
 }

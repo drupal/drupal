@@ -5,6 +5,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -16,7 +17,7 @@ use Drupal\editor\Entity\Editor;
  *   module = "ckeditor"
  * )
  */
-class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface {
+class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface, TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -83,6 +84,13 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
     $settings = &$form_state->getValue(['editor', 'settings', 'plugins', 'drupalimage', 'image_upload']);
     $form_state->get('editor')->setImageUploadSettings($settings);
     $form_state->unsetValue(['editor', 'settings', 'plugins', 'drupalimage']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateImageUploadSettings'];
   }
 
 }

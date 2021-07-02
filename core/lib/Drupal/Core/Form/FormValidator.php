@@ -4,7 +4,11 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderCallbackInterface;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Psr\Log\LoggerInterface;
@@ -16,6 +20,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class FormValidator implements FormValidatorInterface {
 
   use StringTranslationTrait;
+  use DoTrustedCallbackTrait;
 
   /**
    * The CSRF token generator to validate the form token.
@@ -46,6 +51,13 @@ class FormValidator implements FormValidatorInterface {
   protected $formErrorHandler;
 
   /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
+
+  /**
    * Constructs a new FormValidator.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -58,13 +70,16 @@ class FormValidator implements FormValidatorInterface {
    *   A logger instance.
    * @param \Drupal\Core\Form\FormErrorHandlerInterface $form_error_handler
    *   The form error handler.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
-  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, FormErrorHandlerInterface $form_error_handler) {
+  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, FormErrorHandlerInterface $form_error_handler, ControllerResolverInterface $controller_resolver) {
     $this->requestStack = $request_stack;
     $this->stringTranslation = $string_translation;
     $this->csrfToken = $csrf_token;
     $this->logger = $logger;
     $this->formErrorHandler = $form_error_handler;
+    $this->controllerResolver = $controller_resolver;
   }
 
   /**
@@ -79,7 +94,12 @@ class FormValidator implements FormValidatorInterface {
     }
 
     foreach ($handlers as $callback) {
-      call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+      $this->doCallback(
+        $form_state,
+        '#validate',
+        $callback,
+        [&$form, &$form_state]
+      );
     }
   }
 
@@ -277,7 +297,12 @@ class FormValidator implements FormValidatorInterface {
       elseif (isset($elements['#element_validate'])) {
         foreach ($elements['#element_validate'] as $callback) {
           $complete_form = &$form_state->getCompleteForm();
-          call_user_func_array($form_state->prepareCallback($callback), [&$elements, &$form_state, &$complete_form]);
+          $this->doCallback(
+            $form_state,
+            '#element_validate',
+            $callback,
+            [&$elements, &$form_state, &$complete_form]
+          );
         }
       }
 
@@ -410,6 +435,43 @@ class FormValidator implements FormValidatorInterface {
     else {
       return NULL;
     }
+  }
+
+  /**
+   * Performs a callback.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The current form state.
+   * @param string $callback_type
+   *   The type of the callback. For example, '#process'.
+   * @param string|callable $callback
+   *   The callback to perform.
+   * @param array $args
+   *   The arguments to pass to the callback.
+   *
+   * @return mixed
+   *   The callback's return value.
+   *
+   * @see \Drupal\Core\Security\TrustedCallbackInterface
+   */
+  protected function doCallback(FormStateInterface $formState, $callback_type, $callback, array $args) {
+    $callback = $formState->prepareCallback($callback);
+    if (is_string($callback)) {
+      $double_colon = strpos($callback, '::');
+      if ($double_colon === FALSE) {
+        $callback = $this->controllerResolver->getControllerFromDefinition($callback);
+      }
+      elseif ($double_colon > 0) {
+        $callback = explode('::', $callback, 2);
+      }
+    }
+    $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See replace_with_CR_url', $callback_type, '%s');
+    // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra
+    // trusted interface so that:
+    // - All public methods on Render elements are considered trusted.
+    // - Helper classes that contain only callback methods can implement this
+    //   instead of TrustedCallbackInterface.
+    return $this->doTrustedCallback($callback, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
   }
 
 }

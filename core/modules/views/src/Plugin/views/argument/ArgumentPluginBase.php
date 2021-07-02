@@ -155,6 +155,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public static function trustedCallbacks() {
     $callbacks = parent::trustedCallbacks();
     $callbacks[] = 'preRenderMoveArgumentOptions';
+    $callbacks[] = 'processContainerRadios';
     return $callbacks;
   }
 

@@ -14,7 +14,6 @@ use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
@@ -26,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a base class for creating media items from within the media library.
  */
-abstract class AddFormBase extends FormBase implements BaseFormIdInterface, TrustedCallbackInterface {
+abstract class AddFormBase extends FormBase implements BaseFormIdInterface {
 
   /**
    * The entity type manager.
@@ -343,7 +342,9 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['preRenderAddedMedia'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'preRenderAddedMedia';
+    return $callbacks;
   }
 
   /**

@@ -248,29 +248,29 @@ interface FormBuilderInterface {
    * to invoke validation logic for each element) and drupal_render() (for
    * rendering each element). Each of these three pipelines provides ample
    * opportunity for modules to customize what happens. For example, during this
-   * function's life cycle, the following functions get called for each element:
+   * function's life cycle, the following callables get called for each element:
    * - $element['#value_callback']: A callable that implements how user input is
    *   mapped to an element's #value property. This defaults to a function named
    *   'form_type_TYPE_value' where TYPE is $element['#type'].
-   * - $element['#process']: An array of functions called after user input has
-   *   been mapped to the element's #value property. These functions can be used
-   *   to dynamically add child elements: for example, for the 'date' element
-   *   type, one of the functions in this array is form_process_datetime(),
-   *   which adds the individual 'date', and 'time'. child elements. These
-   *   functions can also be used to set additional properties or implement
-   *   special logic other than adding child elements: for example, for the
-   *   'details' element type, one of the functions in this array is
-   *   form_process_details(), which adds the attributes and JavaScript needed
-   *   to make the details work in older browsers. The #process functions are
-   *   called in preorder traversal, meaning they are called for the parent
-   *   element first, then for the child elements.
+   * - $element['#process']: An array of callables to be called after user input
+   *   has been mapped to the element's #value property. These callables can be
+   *   used  to dynamically add child elements: for example, for the 'datetime'
+   *   form element type, one of the methods in this array is
+   *   Datetime::processDatetime, which adds additional attributes to the
+   *   elements render array. These callables can also be used to set additional
+   *   properties or implement special logic other than adding child elements.
+   *   The #process callables are called in preorder traversal, meaning they are
+   *   called for the parent element first, then for the child elements.
    * - $element['#after_build']: An array of callables called after
    *   self::doBuildForm() is done with its processing of the element. These are
    *   called in postorder traversal, meaning they are called for the child
    *   elements first, then for the parent element.
    * There are similar properties containing callback functions invoked by
    * self::doValidateForm() and drupal_render(), appropriate for those
-   * operations.
+   * operations. These callables must be a closure or methods on objects that
+   * implement TrustedCallbackInterface or RenderCallbackInterface.
+   *
+   * @todo correct [at]see to use change record url above.
    *
    * Developers are strongly encouraged to integrate the functionality needed by
    * their form or module within one of these three pipelines, using the

@@ -5,6 +5,7 @@
  * Test module for the entity API providing several entity types for testing.
  */
 
+use Drupal\entity_test\EntityTestForm;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -322,29 +323,42 @@ function entity_test_entity_extra_field_info() {
 function entity_test_form_entity_test_form_alter(&$form) {
   switch (\Drupal::state()->get('entity_test.form.validate.test')) {
     case 'form-level':
-      $form['#validate'][] = 'entity_test_form_entity_test_form_validate';
-      $form['#validate'][] = 'entity_test_form_entity_test_form_validate_check';
+      $form['#validate'][] = [EntityTestForm::class, 'testValidate'];
+      $form['#validate'][] = [EntityTestForm::class, 'testValidateCheck'];
       break;
 
     case 'button-level':
-      $form['actions']['submit']['#validate'][] = 'entity_test_form_entity_test_form_validate';
+      $form['actions']['submit']['#validate'][] = [
+        EntityTestForm::class,
+        'testValidate',
+      ];
   }
 }
 
 /**
  * Validation handler for the entity_test entity form.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\entity_test\EntityTestForm::testValidate instead.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function entity_test_form_entity_test_form_validate(array &$form, FormStateInterface $form_state) {
-  $form['#entity_test_form_validate'] = TRUE;
+  EntityTestForm::testValidate($form, $form_state);
 }
 
 /**
  * Validation handler for the entity_test entity form.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\entity_test\EntityTestForm::testValidateCheck instead.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function entity_test_form_entity_test_form_validate_check(array &$form, FormStateInterface $form_state) {
-  if (!empty($form['#entity_test_form_validate'])) {
-    \Drupal::state()->set('entity_test.form.validate.result', TRUE);
-  }
+  EntityTestForm::testValidateCheck($form, $form_state);
 }
 
 /**

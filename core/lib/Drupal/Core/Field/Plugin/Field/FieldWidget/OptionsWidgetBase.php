@@ -195,4 +195,13 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   protected function getEmptyLabel() {}
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateElement';
+    return $callbacks;
+  }
+
 }

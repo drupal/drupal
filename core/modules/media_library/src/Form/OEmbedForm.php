@@ -175,4 +175,13 @@ class OEmbedForm extends AddFormBase {
     $this->processInputValues([$form_state->getValue('url')], $form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateUrl';
+    return $callbacks;
+  }
+
 }

@@ -135,6 +135,17 @@ class UserLoginForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateName';
+    $callbacks[] = 'validateAuthentication';
+    $callbacks[] = 'validateFinal';
+    return $callbacks;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     if (empty($uid = $form_state->get('uid'))) {

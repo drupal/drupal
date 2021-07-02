@@ -433,4 +433,15 @@ class LinkWidget extends WidgetBase {
     parent::flagErrors($items, $violations, $form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateUriElement';
+    $callbacks[] = 'validateTitleElement';
+    $callbacks[] = 'validateTitleNoLink';
+    return $callbacks;
+  }
+
 }

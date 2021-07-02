@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
@@ -26,7 +27,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   weight = 0
  * )
  */
-class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface {
+class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
   use StringTranslationTrait;
 
   /**
@@ -134,7 +135,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
 
     $options = [];
     foreach ($displays as $data) {
-      list($view_id, $display_id) = $data;
+      [$view_id, $display_id] = $data;
       $view = $view_storage->load($view_id);
       if (in_array($view->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
         $display = $view->get('display');
@@ -318,7 +319,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
   public static function settingsFormValidate($element, FormStateInterface $form_state, $form) {
     // Split view name and display name from the 'view_and_display' value.
     if (!empty($element['view_and_display']['#value'])) {
-      list($view, $display) = explode(':', $element['view_and_display']['#value']);
+      [$view, $display] = explode(':', $element['view_and_display']['#value']);
     }
     else {
       $form_state->setError($element, t('The views entity selection mode requires a view.'));
@@ -343,6 +344,13 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
       'arguments' => $arguments,
     ];
     $form_state->setValueForElement($element, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['settingsFormValidate'];
   }
 
 }

@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, RefinableDependentAccessInterface {
+class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, RefinableDependentAccessInterface, TrustedCallbackInterface {
 
   use RefinableDependentAccessTrait;
 
@@ -292,6 +293,13 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       $this->configuration['block_revision_id'] = $block->getRevisionId();
       $this->configuration['block_serialized'] = NULL;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['processBlockForm'];
   }
 
 }

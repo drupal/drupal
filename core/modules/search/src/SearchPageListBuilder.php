@@ -11,6 +11,7 @@ use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\search\Entity\SearchPage
  */
-class SearchPageListBuilder extends DraggableListBuilder implements FormInterface {
+class SearchPageListBuilder extends DraggableListBuilder implements FormInterface, TrustedCallbackInterface {
   use ConfigFormBaseTrait;
 
   /**
@@ -394,6 +395,13 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       'search.add_type',
       ['search_plugin_id' => $form_state->getValue('search_type')]
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateAddSearchPage'];
   }
 
 }

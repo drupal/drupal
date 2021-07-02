@@ -5,7 +5,6 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
@@ -27,6 +26,7 @@ use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\system\Form\SystemTrustedFormCallbacks;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -814,48 +814,16 @@ function system_preprocess_block(&$variables) {
 }
 
 /**
- * Checks the existence of the directory specified in $form_element.
+ * Implements #after_build callback.
  *
- * This function is called from the system_settings form to check all core
- * file directories (file_public_path, file_private_path, file_temporary_path).
- *
- * @param $form_element
- *   The form element containing the name of the directory to check.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\system\Form\TrustedFormCallbacks::checkDirectory()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
-function system_check_directory($form_element, FormStateInterface $form_state) {
-  $directory = $form_element['#value'];
-  if (strlen($directory) == 0) {
-    return $form_element;
-  }
-
-  $logger = \Drupal::logger('file system');
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  if (!is_dir($directory) && !$file_system->mkdir($directory, NULL, TRUE)) {
-    // If the directory does not exist and cannot be created.
-    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', ['%directory' => $directory]));
-    $logger->error('The directory %directory does not exist and could not be created.', ['%directory' => $directory]);
-  }
-
-  if (is_dir($directory) && !is_writable($directory) && !$file_system->chmod($directory)) {
-    // If the directory is not writable and cannot be made so.
-    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]));
-    $logger->error('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]);
-  }
-  elseif (is_dir($directory)) {
-    if ($form_element['#name'] == 'file_public_path') {
-      // Create public .htaccess file.
-      FileSecurity::writeHtaccess($directory, FALSE);
-    }
-    else {
-      // Create private .htaccess file.
-      FileSecurity::writeHtaccess($directory);
-    }
-  }
-
-  return $form_element;
+function system_check_directory(array &$form_element, FormStateInterface $form_state) {
+  return SystemTrustedFormCallbacks::checkDirectory($form_element, $form_state);
 }
 
 /**

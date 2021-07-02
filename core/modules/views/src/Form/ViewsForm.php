@@ -9,6 +9,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * default is \Drupal\views\Form\ViewsFormMainForm). That way it is actually
  * possible for modules to have a multistep form if they need to.
  */
-class ViewsForm implements FormInterface, ContainerInjectionInterface {
+class ViewsForm implements FormInterface, ContainerInjectionInterface, TrustedCallbackInterface {
   use DependencySerializationTrait;
 
   /**
@@ -200,6 +201,13 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     // If this is a class, instantiate it.
     $form_step_class = $form_state->get(['step_controller', $form_state->get('step')]) ?: 'Drupal\views\Form\ViewsFormMainForm';
     return $this->classResolver->getInstanceFromDefinition($form_step_class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateForm'];
   }
 
 }

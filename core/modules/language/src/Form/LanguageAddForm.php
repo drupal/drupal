@@ -165,4 +165,14 @@ class LanguageAddForm extends LanguageFormBase {
     $entity->setWeight($last_language->getWeight() + 1);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validatePredefined';
+    $callbacks[] = 'validateCustom';
+    return $callbacks;
+  }
+
 }

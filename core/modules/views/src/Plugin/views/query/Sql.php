@@ -317,7 +317,7 @@ class Sql extends QueryPluginBase {
       '#title' => $this->t('Query Tags'),
       '#description' => $this->t('If set, these tags will be appended to the query and can be used to identify the query in a module. This can be helpful for altering queries.'),
       '#default_value' => implode(', ', $this->options['query_tags']),
-      '#element_validate' => ['views_element_validate_tags'],
+      '#element_validate' => [[static::class, 'validateTags']],
     ];
   }
 
@@ -1848,6 +1848,30 @@ class Sql extends QueryPluginBase {
    */
   public function getDateFormat($field, $format, $string_date = FALSE) {
     return $this->dateSql->getDateFormat($field, $format);
+  }
+
+  /**
+   * Implements #element_validate callback for ::buildOptionsForm()
+   *
+   * Validation callback for query tags.
+   */
+  public static function validateTags(array &$element, FormStateInterface $form_state, array &$form) {
+    $values = array_map('trim', explode(',', $element['#value']));
+    foreach ($values as $value) {
+      if (preg_match("/[^a-z_]/", $value)) {
+        $form_state->setError($element, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
+        return;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateTags';
+    return $callbacks;
   }
 
 }

@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Form classes are internal.
  */
-class FileUploadForm extends AddFormBase {
+class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
 
   /**
    * The element info manager.
@@ -175,17 +176,9 @@ class FileUploadForm extends AddFormBase {
   }
 
   /**
-   * Validates the upload element.
-   *
-   * @param array $element
-   *   The upload element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   *
-   * @return array
-   *   The processed upload element.
+   * Implements #process callback for ::buildInputElement().
    */
-  public function validateUploadElement(array $element, FormStateInterface $form_state) {
+  public function validateUploadElement(array &$element, FormStateInterface $form_state, array &$form) {
     if ($form_state::hasAnyErrors()) {
       // When an error occurs during uploading files, remove all files so the
       // user can re-upload the files.
@@ -203,17 +196,9 @@ class FileUploadForm extends AddFormBase {
   }
 
   /**
-   * Processes an upload (managed_file) element.
-   *
-   * @param array $element
-   *   The upload element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   *
-   * @return array
-   *   The processed upload element.
+   * Implements #process callback for ::buildInputElement().
    */
-  public function processUploadElement(array $element, FormStateInterface $form_state) {
+  public function processUploadElement(array &$element, FormStateInterface $form_state, array &$form) {
     $element['upload_button']['#submit'] = ['::uploadButtonSubmit'];
     // Limit the validation errors to make sure
     // FormValidator::handleErrorsWithLimitedValidation doesn't remove the
@@ -265,7 +250,7 @@ class FileUploadForm extends AddFormBase {
    * @return array
    *   The processed form element.
    */
-  public static function hideExtraSourceFieldComponents($element, FormStateInterface $form_state, $form) {
+  public static function hideExtraSourceFieldComponents(array &$element, FormStateInterface $form_state, array &$form) {
     // Remove original button added by ManagedFile::processManagedFile().
     if (!empty($element['remove_button'])) {
       $element['remove_button']['#access'] = FALSE;
@@ -371,6 +356,17 @@ class FileUploadForm extends AddFormBase {
     }
 
     parent::removeButtonSubmit($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'hideExtraSourceFieldComponents';
+    $callbacks[] = 'validateUploadElement';
+    $callbacks[] = 'processUploadElement';
+    return $callbacks;
   }
 
 }

@@ -9,6 +9,7 @@ use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  * )
  */
-class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The menu link tree service.
@@ -230,6 +231,13 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // accessibility of a menu, will be bubbled automatically.
     $menu_name = $this->getDerivativeId();
     return Cache::mergeContexts(parent::getCacheContexts(), ['route.menu_active_trails:' . $menu_name]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['processMenuLevelParents'];
   }
 
 }

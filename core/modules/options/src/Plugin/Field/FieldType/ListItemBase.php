@@ -6,13 +6,14 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * Plugin base class inherited by the options field types.
  */
-abstract class ListItemBase extends FieldItemBase implements OptionsProviderInterface {
+abstract class ListItemBase extends FieldItemBase implements OptionsProviderInterface, TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -326,6 +327,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   protected static function castAllowedValue($value) {
     return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateAllowedValues'];
   }
 
 }

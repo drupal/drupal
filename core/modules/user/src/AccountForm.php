@@ -311,7 +311,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['alterPreferredLangcodeDescription'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'alterPreferredLangcodeDescription';
+    return $callbacks;
   }
 
   /**

@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,7 +42,7 @@ use Drupal\Core\Messenger\MessengerTrait;
  *
  * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
  */
-abstract class FormBase implements FormInterface, ContainerInjectionInterface {
+abstract class FormBase implements FormInterface, ContainerInjectionInterface, TrustedCallbackInterface {
 
   use DependencySerializationTrait;
   use LoggerChannelTrait;
@@ -87,6 +88,15 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Validation is optional.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return [
+      'validateForm',
+    ];
   }
 
   /**

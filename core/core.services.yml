@@ -394,10 +394,10 @@ services:
     arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file']
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token']
+    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token', '@controller_resolver']
   form_validator:
     class: Drupal\Core\Form\FormValidator
-    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form', '@form_error_handler']
+    arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form', '@form_error_handler', '@controller_resolver']
   form_submitter:
     class: Drupal\Core\Form\FormSubmitter
     arguments: ['@request_stack', '@url_generator']

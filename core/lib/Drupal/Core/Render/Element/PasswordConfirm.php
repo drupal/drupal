@@ -101,6 +101,46 @@ class PasswordConfirm extends FormElement {
   }
 
   /**
+   * Form element process handler for client-side password validation.
+   *
+   * This #process handler is automatically invoked for 'password_confirm' form
+   * elements to add the JavaScript and string translations for dynamic password
+   * validation.
+   */
+  public static function dynamicPasswordConfirm(&$element, FormStateInterface $form_state, array &$complete_form) {
+    $password_settings = [
+      'confirmTitle' => t('Passwords match:'),
+      'confirmSuccess' => t('yes'),
+      'confirmFailure' => t('no'),
+      'showStrengthIndicator' => FALSE,
+    ];
+
+    if (\Drupal::config('user.settings')->get('password_strength')) {
+      $password_settings['showStrengthIndicator'] = TRUE;
+      $password_settings += [
+        'strengthTitle' => t('Password strength:'),
+        'hasWeaknesses' => t('Recommendations to make your password stronger:'),
+        'tooShort' => t('Make it at least 12 characters'),
+        'addLowerCase' => t('Add lowercase letters'),
+        'addUpperCase' => t('Add uppercase letters'),
+        'addNumbers' => t('Add numbers'),
+        'addPunctuation' => t('Add punctuation'),
+        'sameAsUsername' => t('Make it different from your username'),
+        'weak' => t('Weak'),
+        'fair' => t('Fair'),
+        'good' => t('Good'),
+        'strong' => t('Strong'),
+        'username' => \Drupal::currentUser()->getAccountName(),
+      ];
+    }
+
+    $element['#attached']['library'][] = 'user/drupal.user';
+    $element['#attached']['drupalSettings']['password'] = $password_settings;
+
+    return $element;
+  }
+
+  /**
    * Validates a password_confirm element.
    */
   public static function validatePasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {

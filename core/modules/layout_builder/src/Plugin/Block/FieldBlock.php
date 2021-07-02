@@ -19,6 +19,7 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
@@ -35,7 +36,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class FieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
+class FieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The entity field manager.
@@ -118,7 +119,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $this->logger = $logger;
 
     // Get the entity type and field name from the plugin ID.
-    list (, $entity_type_id, $bundle, $field_name) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
+    [, $entity_type_id, $bundle, $field_name] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $this->fieldName = $field_name;
@@ -404,6 +405,13 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
       'view_mode' => EntityDisplayBase::CUSTOM_MODE,
       'prepare' => TRUE,
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['formatterSettingsProcessCallback'];
   }
 
 }

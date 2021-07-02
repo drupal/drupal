@@ -87,4 +87,13 @@ class FormTestValidateRequiredForm extends FormBase {
     $this->messenger()->addStatus('The form_test_validate_required_form form was submitted successfully.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementValidateRequired';
+    return $callbacks;
+  }
+
 }

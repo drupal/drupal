@@ -5,6 +5,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
@@ -15,7 +16,7 @@ use Drupal\editor\Entity\Editor;
  *   label = @Translation("Styles dropdown")
  * )
  */
-class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface {
+class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface, TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -146,7 +147,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       }
 
       // Parse.
-      list($selector, $label) = explode('|', $style);
+      [$selector, $label] = explode('|', $style);
       $classes = explode('.', $selector);
       $element = array_shift($classes);
 
@@ -164,6 +165,13 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       $styles_set[] = $configured_style;
     }
     return $styles_set;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateStylesValue'];
   }
 
 }

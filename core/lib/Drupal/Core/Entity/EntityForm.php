@@ -422,4 +422,14 @@ class EntityForm extends FormBase implements EntityFormInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'processForm';
+    $callbacks[] = 'afterBuild';
+    return $callbacks;
+  }
+
 }

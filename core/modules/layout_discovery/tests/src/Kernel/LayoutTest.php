@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_discovery\Kernel;
 
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -10,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Layout
  */
-class LayoutTest extends KernelTestBase {
+class LayoutTest extends KernelTestBase implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -232,6 +233,13 @@ class LayoutTest extends KernelTestBase {
   public static function processCallback($element) {
     $element['#markup'] = 'This string added by #process.';
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['processCallback'];
   }
 
 }

@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @see \Drupal\block\Entity\Block
  */
-class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface {
+class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface, TrustedCallbackInterface {
 
   /**
    * The theme containing the blocks.
@@ -364,6 +365,13 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // No validation.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateForm'];
   }
 
   /**

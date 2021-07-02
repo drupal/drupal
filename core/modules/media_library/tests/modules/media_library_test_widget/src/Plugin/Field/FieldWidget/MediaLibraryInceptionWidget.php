@@ -56,4 +56,13 @@ class MediaLibraryInceptionWidget extends MediaLibraryWidget {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementValidate';
+    return $callbacks;
+  }
+
 }

@@ -85,4 +85,30 @@ class EntityTestForm extends ContentEntityForm {
     }
   }
 
+  /**
+   * Implements #validate for entity_test_form_entity_test_form_alter().
+   */
+  public static function testValidate(array &$form, FormStateInterface $form_state) {
+    $form['#entity_test_form_validate'] = TRUE;
+  }
+
+  /**
+   * Implements #validate for entity_test_form_entity_test_form_alter().
+   */
+  public static function testValidateCheck(array &$form, FormStateInterface $form_state) {
+    if (!empty($form['#entity_test_form_validate'])) {
+      \Drupal::state()->set('entity_test.form.validate.result', TRUE);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'testValidate';
+    $callbacks[] = 'testValidateCheck';
+    return $callbacks;
+  }
+
 }

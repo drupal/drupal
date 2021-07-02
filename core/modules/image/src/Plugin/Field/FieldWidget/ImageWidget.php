@@ -342,4 +342,13 @@ class ImageWidget extends FileWidget {
     return $changed;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateRequiredFields';
+    return $callbacks;
+  }
+
 }

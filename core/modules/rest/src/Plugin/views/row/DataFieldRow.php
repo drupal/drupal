@@ -193,4 +193,13 @@ class DataFieldRow extends RowPluginBase {
     }, $options);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateAliasName';
+    return $callbacks;
+  }
+
 }

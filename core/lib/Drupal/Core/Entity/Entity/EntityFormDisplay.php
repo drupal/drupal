@@ -8,6 +8,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -36,7 +37,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *   }
  * )
  */
-class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayInterface {
+class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayInterface, TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -342,6 +343,10 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     return [
       'widgets' => new EntityDisplayPluginCollection($this->pluginManager, $configurations),
     ];
+  }
+
+  public static function trustedCallbacks() {
+    return ['processForm'];
   }
 
 }

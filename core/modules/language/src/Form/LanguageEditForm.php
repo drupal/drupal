@@ -49,4 +49,13 @@ class LanguageEditForm extends LanguageFormBase {
     $this->logger('language')->notice('The %language (%langcode) language has been updated.', ['%language' => $this->entity->label(), '%langcode' => $this->entity->id()]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateCommon';
+    return $callbacks;
+  }
+
 }

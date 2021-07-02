@@ -377,7 +377,7 @@ class ImageItem extends FileItem {
       $file = $images[$extension][$min_resolution][$max_resolution][$image_index];
     }
 
-    list($width, $height) = getimagesize($file->getFileUri());
+    [$width, $height] = getimagesize($file->getFileUri());
     $values = [
       'target_id' => $file->id(),
       'alt' => $random->sentences(4),
@@ -498,6 +498,16 @@ class ImageItem extends FileItem {
   public function isDisplayed() {
     // Image items do not have per-item visibility settings.
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateResolution';
+    $callbacks[] = 'validateDefaultImageForm';
+    return $callbacks;
   }
 
 }
