@@ -87,7 +87,7 @@ class BlockManagerTest extends UnitTestCase {
    * @param array $definitions
    *   An array of plugin definitions.
    */
-  protected function setDefinitions(array $definitions) {
+  protected function setDefinitions(array $definitions): void {
     $discovery = $this->prophesize(DiscoveryInterface::class);
     $discovery->getDefinitions()->willReturn($definitions);
     // Force the discovery object onto the block manager.
@@ -134,7 +134,7 @@ class BlockManagerTest extends UnitTestCase {
   /**
    * @group legacy
    */
-  public function testBuildNoReturnType() {
+  public function testBuildNoReturnType(): void {
     $this->expectDeprecation('Declaring \Drupal\Tests\Core\Block\TestBlockManagerNoArrayReturnTypeBlock::build() without an array return typehint is deprecated in drupal:9.3.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.');
     // Overwrite the definitions from ::setUp() to have a block that does not
     // have a return type for ::build().
@@ -152,7 +152,7 @@ class BlockManagerTest extends UnitTestCase {
   /**
    * @group legacy
    */
-  public function testExtendsExistingBlock() {
+  public function testExtendsExistingBlock(): void {
     $this->expectDeprecation('Extending Drupal\Tests\Core\Block\TestBlockManagerExtendsExistingBlock from a concrete class is deprecated in drupal:9.3.0 and will be disallowed before drupal:10.0.0. Extend the class from an abstract base class instead. See https://www.drupal.org/node/3164649.');
     // Overwrite the definitions from ::setUp() to have a block that extends
     // an existing block.
