@@ -119,7 +119,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
         $args = [':href' => $url_alternate->toString(), ':hreflang' => $langcode_alternate];
         $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]', $args);
         $message = sprintf('The "%s" translation has the correct alternate hreflang link for "%s": %s.', $langcode, $langcode_alternate, $url->toString());
-        $this->assertTrue(isset($links[0]), $message);
+        $this->assertArrayHasKey(0, $links, $message);
       }
     }
 

@@ -194,7 +194,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('admin/config/user-interface/shortcut/manage/' . $new_set->id() . '/delete');
     $this->submitForm([], 'Delete');
     $sets = ShortcutSet::loadMultiple();
-    $this->assertFalse(isset($sets[$new_set->id()]), 'Successfully deleted a shortcut set.');
+    $this->assertArrayNotHasKey($new_set->id(), $sets);
   }
 
   /**
@@ -212,7 +212,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $random_name = $this->randomMachineName();
     $new_set = $this->generateShortcutSet($random_name, $random_name);
     $sets = ShortcutSet::loadMultiple();
-    $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');
+    // Verify that successfully created a shortcut set with a defined set name.
+    $this->assertArrayHasKey($random_name, $sets);
+    $this->assertNotNull($sets[$random_name]);
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
     // Verify that generated shortcut set was listed as a choice on the user
     // account page.

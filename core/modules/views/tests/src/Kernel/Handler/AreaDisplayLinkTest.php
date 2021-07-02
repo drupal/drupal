@@ -307,9 +307,11 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
     $form = [];
     $form_state = new FormState();
     $view->display_handler->getHandler('header', $display_link_id)->buildOptionsForm($form, $form_state);
-    $this->assertTrue(isset($form['display_id']['#options']['page_1']));
-    $this->assertTrue(isset($form['display_id']['#options']['page_2']));
-    $this->assertFalse(isset($form['display_id']['#options']['block_1']));
+    $this->assertArrayHasKey('page_1', $form['display_id']['#options']);
+    $this->assertNotNull($form['display_id']['#options']['page_1']);
+    $this->assertArrayHasKey('page_2', $form['display_id']['#options']);
+    $this->assertNotNull($form['display_id']['#options']['page_2']);
+    $this->assertArrayNotHasKey('block_1', $form['display_id']['#options']);
   }
 
   /**

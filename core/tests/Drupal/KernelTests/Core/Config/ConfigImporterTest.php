@@ -76,7 +76,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertSame('dotted.default', $config->get('id'));
 
     // Verify that a bare $this->config() does not involve module APIs.
-    $this->assertFalse(isset($GLOBALS['hook_config_test']));
+    $this->assertArrayNotHasKey('hook_config_test', $GLOBALS);
   }
 
   /**
@@ -143,12 +143,15 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertNull($config->get('id'));
 
     // Verify that appropriate module API hooks have been invoked.
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['presave']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['insert']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['predelete']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['delete']));
+    $this->assertArrayHasKey('load', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['load']);
+    $this->assertArrayNotHasKey('presave', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('insert', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('update', $GLOBALS['hook_config_test']);
+    $this->assertArrayHasKey('predelete', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['predelete']);
+    $this->assertArrayHasKey('delete', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['delete']);
 
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
     $logs = $this->configImporter->getErrors();
@@ -192,16 +195,19 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertSame($original_dynamic_data['label'], $config->get('label'));
 
     // Verify that appropriate module API hooks have been invoked.
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['presave']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['insert']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
+    $this->assertArrayNotHasKey('load', $GLOBALS['hook_config_test']);
+    $this->assertArrayHasKey('presave', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['presave']);
+    $this->assertArrayHasKey('insert', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['insert']);
+    $this->assertArrayNotHasKey('update', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('predelete', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('delete', $GLOBALS['hook_config_test']);
 
     // Verify that hook_config_import_steps_alter() can add steps to
     // configuration synchronization.
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['config_import_steps_alter']));
+    $this->assertArrayHasKey('config_import_steps_alter', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['config_import_steps_alter']);
 
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
@@ -519,12 +525,15 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertSame($original_dynamic_data, $sync->read($dynamic_name));
 
     // Verify that appropriate module API hooks have been invoked.
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['presave']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['insert']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['update']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
+    $this->assertArrayHasKey('load', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['load']);
+    $this->assertArrayHasKey('presave', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['presave']);
+    $this->assertArrayNotHasKey('insert', $GLOBALS['hook_config_test']);
+    $this->assertArrayHasKey('update', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['update']);
+    $this->assertArrayNotHasKey('predelete', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('delete', $GLOBALS['hook_config_test']);
 
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());

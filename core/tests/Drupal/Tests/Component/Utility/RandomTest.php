@@ -33,7 +33,7 @@ class RandomTest extends TestCase {
     $random = new Random();
     for ($i = 0; $i <= 50; $i++) {
       $str = $random->string(1, TRUE);
-      $this->assertFalse(isset($strings[$str]), 'Generated duplicate random string ' . $str);
+      $this->assertArrayNotHasKey($str, $strings, 'Generated duplicate random string ' . $str);
       $strings[$str] = TRUE;
     }
   }
@@ -48,7 +48,7 @@ class RandomTest extends TestCase {
     $random = new Random();
     for ($i = 0; $i <= 10; $i++) {
       $str = $random->name(1, TRUE);
-      $this->assertFalse(isset($names[$str]), 'Generated duplicate random name ' . $str);
+      $this->assertArrayNotHasKey($str, $names, 'Generated duplicate random string ' . $str);
       $names[$str] = TRUE;
     }
   }

@@ -366,7 +366,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // The field storage still exists, not deleted, because it has a second
     // field.
     $storages = \Drupal::entityTypeManager()->getStorage('field_storage_config')->loadByProperties(['uuid' => $field_storage->uuid(), 'include_deleted' => TRUE]);
-    $this->assertTrue(isset($storages[$field_storage->uuid()]), 'The field storage exists and is not deleted');
+    $this->assertArrayHasKey($field_storage->uuid(), $storages, 'The field storage exists and is not deleted');
   }
 
   /**

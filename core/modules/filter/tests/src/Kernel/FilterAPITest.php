@@ -470,12 +470,15 @@ class FilterAPITest extends EntityKernelTestBase {
     // Use the get method to match the assert after the module has been
     // uninstalled.
     $filters = $filter_format->get('filters');
-    $this->assertTrue(isset($filters['filter_test_restrict_tags_and_attributes']), 'The filter plugin filter_test_restrict_tags_and_attributes is configured by the filtered_html filter format.');
+    // Verify that the filter plugin filter_test_restrict_tags_and_attributes is
+    // configured by the filtered_html filter format.
+    $this->assertArrayHasKey('filter_test_restrict_tags_and_attributes', $filters);
+    $this->assertNotNull($filters['filter_test_restrict_tags_and_attributes']);
 
     drupal_static_reset('filter_formats');
     \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
     $module_data = \Drupal::service('extension.list.module')->getList();
-    $this->assertFalse(isset($module_data['filter_test']->info['required']), 'The filter_test module is required.');
+    $this->assertArrayNotHasKey('required', $module_data['filter_test']->info, 'The filter_test module is required.');
 
     // Verify that a dependency exists on the module that provides the filter
     // plugin since it has configuration for the disabled plugin.
@@ -492,7 +495,9 @@ class FilterAPITest extends EntityKernelTestBase {
     // Use the get method since the FilterFormat::filters() method only returns
     // existing plugins.
     $filters = $filter_format->get('filters');
-    $this->assertFalse(isset($filters['filter_test_restrict_tags_and_attributes']), 'The filter plugin filter_test_restrict_tags_and_attributes is not configured by the filtered_html filter format.');
+    // Verify that the filter plugin filter_test_restrict_tags_and_attributes is
+    // not configured by the filtered_html filter format.
+    $this->assertArrayNotHasKey('filter_test_restrict_tags_and_attributes', $filters);
   }
 
   /**

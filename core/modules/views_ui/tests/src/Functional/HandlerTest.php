@@ -137,13 +137,14 @@ class HandlerTest extends UITestBase {
 
       $this->assertSession()->linkByHrefExists($edit_handler_url, 0, 'The handler edit link appears in the UI.');
       $links = $this->xpath('//a[starts-with(normalize-space(text()), :label)]', [':label' => $random_label]);
-      $this->assertTrue(isset($links[0]), 'The handler edit link has the right label');
+      $this->assertArrayHasKey(0, $links, 'The handler edit link has the right label');
 
       // Save the view and have a look whether the handler was added as expected.
       $this->submitForm([], 'Save');
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
-      $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
+      $this->assertArrayHasKey($id, $display['display_options'][$type_info['plural']]);
+      $this->assertNotNull($display['display_options'][$type_info['plural']][$id], 'Ensure the field was added to the view itself.');
 
       // Remove the item and check that it's removed
       $this->drupalGet($edit_handler_url);
@@ -153,7 +154,7 @@ class HandlerTest extends UITestBase {
       $this->submitForm([], 'Save');
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
-      $this->assertFalse(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was removed from the view itself.');
+      $this->assertArrayNotHasKey($id, $display['display_options'][$type_info['plural']], 'Ensure the field was removed from the view itself.');
     }
 
     // Test adding a field of the user table using the uid relationship.
@@ -181,7 +182,8 @@ class HandlerTest extends UITestBase {
     $this->submitForm([], 'Save');
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
     $display = $view->getDisplay('default');
-    $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
+    $this->assertArrayHasKey($id, $display['display_options'][$type_info['plural']]);
+    $this->assertNotNull($display['display_options'][$type_info['plural']][$id], 'Ensure the field was added to the view itself.');
   }
 
   /**

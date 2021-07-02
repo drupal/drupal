@@ -120,7 +120,8 @@ class DisplayPageTest extends ViewsKernelTestBase {
   public function testMenuLinks() {
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $tree = \Drupal::menuTree()->load('admin', new MenuTreeParameters());
-    $this->assertTrue(isset($tree['system.admin']->subtree['views_view:views.test_page_display_menu.page_4']));
+    $this->assertArrayHasKey('views_view:views.test_page_display_menu.page_4', $tree['system.admin']->subtree);
+    $this->assertNotNull($tree['system.admin']->subtree['views_view:views.test_page_display_menu.page_4']);
     $menu_link = $tree['system.admin']->subtree['views_view:views.test_page_display_menu.page_4']->link;
     $this->assertEquals('Test child (with parent)', $menu_link->getTitle());
     $this->assertEquals(TRUE, $menu_link->isExpanded());

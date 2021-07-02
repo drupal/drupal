@@ -95,7 +95,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
       $expected_cacheability->setCacheContexts(['languages:' . LanguageInterface::TYPE_URL]);
     }
     else {
-      $this->assertFalse(isset($options['prefix']));
+      $this->assertArrayNotHasKey('prefix', $options);
     }
     $this->assertEquals($expected_cacheability, $cacheability);
   }

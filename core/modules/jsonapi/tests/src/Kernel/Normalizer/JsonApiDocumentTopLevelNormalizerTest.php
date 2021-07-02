@@ -276,7 +276,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
         'self' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/relationships/node_type', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
       ],
     ], $normalized['data']['relationships']['node_type']);
-    $this->assertTrue(!isset($normalized['data']['attributes']['created']));
+    $this->assertArrayNotHasKey('created', $normalized['data']['attributes']);
     $this->assertEquals([
       'alt' => 'test alt',
       'title' => 'test title',
@@ -307,7 +307,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertSame('taxonomy_term--tags', $normalized['included'][1]['type']);
     $this->assertSame($this->term1->label(), $normalized['included'][1]['attributes']['name']);
     $this->assertCount(12, $normalized['included'][1]['attributes']);
-    $this->assertTrue(!isset($normalized['included'][1]['attributes']['created']));
+    $this->assertArrayNotHasKey('created', $normalized['included'][1]['attributes']);
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
     $this->assertSame(

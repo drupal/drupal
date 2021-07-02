@@ -166,11 +166,14 @@ class ElementsTableSelectTest extends BrowserTestBase {
 
     // Test with a valid value.
     list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => ['row1' => 'row1']]);
-    $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for checkboxes.');
+    // Verify that option checker allows valid values for checkboxes.
+    $this->assertArrayNotHasKey('tableselect', $errors);
 
     // Test with an invalid value.
     list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => ['non_existing_value' => 'non_existing_value']]);
-    $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for checkboxes.');
+    // Verify that option checker disallows invalid values for checkboxes.
+    $this->assertArrayHasKey('tableselect', $errors);
+    $this->assertNotNull($errors['tableselect']);
 
   }
 
@@ -191,11 +194,14 @@ class ElementsTableSelectTest extends BrowserTestBase {
 
     // Test with a valid value.
     list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'row1']);
-    $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for radio buttons.');
+    // Verify that option checker allows valid values for radio buttons.
+    $this->assertArrayNotHasKey('tableselect', $errors);
 
     // Test with an invalid value.
     list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'non_existing_value']);
-    $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for radio buttons.');
+    // Verify that option checker disallows invalid values for radio buttons.
+    $this->assertArrayHasKey('tableselect', $errors);
+    $this->assertNotNull($errors['tableselect']);
   }
 
   /**

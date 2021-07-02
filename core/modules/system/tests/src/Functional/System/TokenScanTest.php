@@ -30,13 +30,20 @@ class TokenScanTest extends BrowserTestBase {
     $text .= 'Last an existing token: [node:author:name].';
     $token_wannabes = \Drupal::token()->scan($text);
 
-    $this->assertTrue(isset($token_wannabes['valid']['simple']), 'A simple valid token has been matched.');
-    $this->assertTrue(isset($token_wannabes['valid']['token with: spaces']), 'A valid token with space characters in the token name has been matched.');
-    $this->assertFalse(isset($token_wannabes['not valid']), 'An invalid token with spaces in the token type has not been matched.');
-    $this->assertFalse(isset($token_wannabes['empty token']), 'An empty token has not been matched.');
+    $this->assertArrayHasKey('simple', $token_wannabes['valid']);
+    $this->assertNotNull($token_wannabes['valid']['simple'], 'A simple valid token has been matched.');
+    $this->assertArrayHasKey('token with: spaces', $token_wannabes['valid']);
+    $this->assertNotNull($token_wannabes['valid']['token with: spaces'], 'A valid token with space characters in the token name has been matched.');
+    // Verify that an invalid token with spaces in the token type has not been
+    // matched.
+    $this->assertArrayNotHasKey('not valid', $token_wannabes);
+    // Verify that an empty token has not been matched.
+    $this->assertArrayNotHasKey('empty token', $token_wannabes);
     $this->assertFalse(isset($token_wannabes['']['empty token type']), 'An empty token type has not been matched.');
     $this->assertFalse(isset($token_wannabes['']['']), 'An empty token and type has not been matched.');
-    $this->assertTrue(isset($token_wannabes['node']), 'An existing valid token has been matched.');
+    // Verify that an existing valid token has been matched.
+    $this->assertArrayHasKey('node', $token_wannabes);
+    $this->assertNotNull($token_wannabes['node']);
   }
 
 }

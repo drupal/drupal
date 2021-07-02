@@ -61,12 +61,14 @@ class ConfigInstallTest extends KernelTestBase {
 
     // Verify that config_test API hooks were invoked for the dynamic default
     // configuration entity.
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['presave']));
-    $this->assertTrue(isset($GLOBALS['hook_config_test']['insert']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
-    $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
+    $this->assertArrayNotHasKey('load', $GLOBALS['hook_config_test']);
+    $this->assertArrayHasKey('presave', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['presave']);
+    $this->assertArrayHasKey('insert', $GLOBALS['hook_config_test']);
+    $this->assertNotNull($GLOBALS['hook_config_test']['insert']);
+    $this->assertArrayNotHasKey('update', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('predelete', $GLOBALS['hook_config_test']);
+    $this->assertArrayNotHasKey('delete', $GLOBALS['hook_config_test']);
 
     // Install the schema test module.
     $this->enableModules(['config_schema_test']);
@@ -179,7 +181,8 @@ class ConfigInstallTest extends KernelTestBase {
     // a label.
     $name = 'config_test.dynamic.dotted.default';
     $data = $active_storage->read($name);
-    $this->assertTrue(isset($data['uuid']));
+    $this->assertArrayHasKey('uuid', $data);
+    $this->assertNotNull($data['uuid']);
     $data = $collection_storage->read($name);
     $this->assertSame(['label' => 'entity'], $data);
   }
@@ -235,7 +238,7 @@ class ConfigInstallTest extends KernelTestBase {
     // Test imported configuration with implicit language code.
     $storage = new InstallStorage();
     $data = $storage->read('config_test.dynamic.dotted.english');
-    $this->assertTrue(!isset($data['langcode']));
+    $this->assertArrayNotHasKey('langcode', $data);
     $this->assertEquals('en', $this->config('config_test.dynamic.dotted.english')->get('langcode'));
 
     // Test imported configuration with explicit language code.

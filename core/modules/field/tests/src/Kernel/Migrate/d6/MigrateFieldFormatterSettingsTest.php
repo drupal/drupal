@@ -77,11 +77,16 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 
     // Check that we can migrate multiple fields.
     $content = $display->get('content');
-    $this->assertTrue(isset($content['field_test']), 'Settings for field_test exist.');
-    $this->assertTrue(isset($content['field_test_two']), "Settings for field_test_two exist.");
+    // Verify that settings for field_test exist.
+    $this->assertArrayHasKey('field_test', $content);
+    $this->assertNotNull($content['field_test']);
+    // Verify that settings for field_test_two exist.
+    $this->assertArrayHasKey('field_test_two', $content);
+    $this->assertNotNull($content['field_test_two']);
 
     // Check that we can migrate a field where exclude is not set.
-    $this->assertTrue(isset($content['field_test_exclude_unset']), "Settings for field_test_exclude_unset exist.");
+    $this->assertArrayHasKey('field_test_exclude_unset', $content);
+    $this->assertNotNull($content['field_test_exclude_unset']);
 
     // Test the number field formatter settings are correct.
     $expected['weight'] = 1;

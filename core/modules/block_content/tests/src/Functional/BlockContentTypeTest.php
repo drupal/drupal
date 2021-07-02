@@ -84,7 +84,10 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'foo');
-    $this->assertTrue(isset($field_definitions['body']), 'Body field created when using the UI to create block content types.');
+    // Verify that body field is created when using the UI to create block
+    // content types.
+    $this->assertArrayHasKey('body', $field_definitions);
+    $this->assertNotNull($field_definitions['body']);
 
     // Check that the block type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
@@ -93,11 +96,16 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Create block types programmatically.
     $this->createBlockContentType('basic', TRUE);
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'basic');
-    $this->assertTrue(isset($field_definitions['body']), "Body field for 'basic' block type created when using the testing API to create block content types.");
+    // Verify that body field for 'basic' block type created when using the
+    // testing API to create block content types.
+    $this->assertArrayHasKey('body', $field_definitions);
+    $this->assertNotNull($field_definitions['body']);
 
     $this->createBlockContentType('other');
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'other');
-    $this->assertFalse(isset($field_definitions['body']), "Body field for 'other' block type not created when using the testing API to create block content types.");
+    // Verify that body field for 'other' block type not created when using the
+    // testing API to create block content types.
+    $this->assertArrayNotHasKey('body', $field_definitions);
 
     $block_type = BlockContentType::load('other');
     $this->assertInstanceOf(BlockContentType::class, $block_type);
@@ -119,7 +127,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->createBlockContentType('other');
 
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('block_content', 'other');
-    $this->assertFalse(isset($field_definitions['body']), 'Body field was not created when using the API to create block content types.');
+    // Verify that body field was not created when using the API to create block
+    // content types.
+    $this->assertArrayNotHasKey('body', $field_definitions);
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');

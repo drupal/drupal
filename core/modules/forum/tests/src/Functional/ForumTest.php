@@ -382,7 +382,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('parent[]');
     // Test relations widget exists.
     $relations_widget = $this->xpath("//details[@id='edit-relations']");
-    $this->assertTrue(isset($relations_widget[0]), 'Relations widget element found.');
+    $this->assertArrayHasKey(0, $relations_widget, 'Relations widget element found.');
   }
 
   /**

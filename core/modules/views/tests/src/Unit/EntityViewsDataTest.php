@@ -214,11 +214,11 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals(['entity_test_list_cache_context'], $data['entity_test']['table']['base']['cache_contexts']);
     $this->assertEquals('Entity test', $data['entity_test']['table']['base']['title']);
 
-    $this->assertFalse(isset($data['entity_test']['table']['defaults']));
+    $this->assertArrayNotHasKey('defaults', $data['entity_test']['table']);
 
-    $this->assertFalse(isset($data['entity_test_mul_property_data']));
-    $this->assertFalse(isset($data['revision_table']));
-    $this->assertFalse(isset($data['revision_data_table']));
+    $this->assertArrayNotHasKey('entity_test_mul_property_data', $data);
+    $this->assertArrayNotHasKey('revision_table', $data);
+    $this->assertArrayNotHasKey('revision_data_table', $data);
   }
 
   /**
@@ -240,7 +240,7 @@ class EntityViewsDataTest extends UnitTestCase {
     // Ensure that the base table is set to the data table.
     $this->assertEquals('id', $data['entity_test_mul_property_data']['table']['base']['field']);
     $this->assertEquals('Entity test', $data['entity_test_mul_property_data']['table']['base']['title']);
-    $this->assertFalse(isset($data['entity_test']['table']['base']));
+    $this->assertArrayNotHasKey('base', $data['entity_test']['table']);
 
     $this->assertEquals('entity_test_mul', $data['entity_test_mul_property_data']['table']['entity type']);
     $this->assertEquals(FALSE, $data['entity_test_mul_property_data']['table']['entity revision']);
@@ -251,8 +251,8 @@ class EntityViewsDataTest extends UnitTestCase {
     // Ensure the join information is set up properly.
     $this->assertCount(1, $base_views_data['table']['join']);
     $this->assertEquals(['entity_test_mul_property_data' => ['left_field' => 'id', 'field' => 'id', 'type' => 'INNER']], $base_views_data['table']['join']);
-    $this->assertFalse(isset($data['revision_table']));
-    $this->assertFalse(isset($data['revision_data_table']));
+    $this->assertArrayNotHasKey('revision_table', $data);
+    $this->assertArrayNotHasKey('revision_data_table', $data);
   }
 
   /**
@@ -285,7 +285,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $revision_data = $data['entity_test_mulrev_revision'];
     $this->assertCount(1, $revision_data['table']['join']);
     $this->assertEquals(['entity_test' => ['left_field' => 'revision_id', 'field' => 'revision_id', 'type' => 'INNER']], $revision_data['table']['join']);
-    $this->assertFalse(isset($data['data_table']));
+    $this->assertArrayNotHasKey('data_table', $data);
   }
 
   /**
@@ -305,7 +305,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->assertEquals('Entity test revisions', $data['entity_test_mulrev_property_revision']['table']['base']['title']);
     $this->assertEquals('revision_id', $data['entity_test_mulrev_property_revision']['table']['base']['field']);
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['table']['base']));
+    $this->assertArrayNotHasKey('base', $data['entity_test_mulrev_revision']['table']);
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
@@ -333,7 +333,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ],
     ], $revision_base_data['table']['join']);
 
-    $this->assertFalse(isset($data['data_table']));
+    $this->assertArrayNotHasKey('data_table', $data);
   }
 
   /**
@@ -352,7 +352,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->assertEquals('Entity test revisions', $data['entity_test_mulrev_property_revision']['table']['base']['title']);
     $this->assertEquals('revision_id', $data['entity_test_mulrev_property_revision']['table']['base']['field']);
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['table']['base']));
+    $this->assertArrayNotHasKey('base', $data['entity_test_mulrev_revision']['table']);
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
@@ -379,7 +379,7 @@ class EntityViewsDataTest extends UnitTestCase {
         'type' => 'INNER',
       ],
     ], $revision_base_data['table']['join']);
-    $this->assertFalse(isset($data['data_table']));
+    $this->assertArrayNotHasKey('data_table', $data);
   }
 
   /**
@@ -687,20 +687,20 @@ class EntityViewsDataTest extends UnitTestCase {
     $data = $this->viewsData->getViewsData();
 
     // Check the base fields.
-    $this->assertFalse(isset($data['entity_test_mul']['id']));
-    $this->assertFalse(isset($data['entity_test_mul']['type']));
+    $this->assertArrayNotHasKey('id', $data['entity_test_mul']);
+    $this->assertArrayNotHasKey('type', $data['entity_test_mul']);
     $this->assertUuidField($data['entity_test_mul']['uuid']);
     $this->assertField($data['entity_test_mul']['uuid'], 'uuid');
 
     $this->assertFalse(isset($data['entity_test_mul']['type']['relationship']));
 
     // Also ensure that field_data only fields don't appear on the base table.
-    $this->assertFalse(isset($data['entity_test_mul']['name']));
-    $this->assertFalse(isset($data['entity_test_mul']['description']));
-    $this->assertFalse(isset($data['entity_test_mul']['description__value']));
-    $this->assertFalse(isset($data['entity_test_mul']['description__format']));
-    $this->assertFalse(isset($data['entity_test_mul']['user_id']));
-    $this->assertFalse(isset($data['entity_test_mul']['homepage']));
+    $this->assertArrayNotHasKey('name', $data['entity_test_mul']);
+    $this->assertArrayNotHasKey('description', $data['entity_test_mul']);
+    $this->assertArrayNotHasKey('description__value', $data['entity_test_mul']);
+    $this->assertArrayNotHasKey('description__format', $data['entity_test_mul']);
+    $this->assertArrayNotHasKey('user_id', $data['entity_test_mul']);
+    $this->assertArrayNotHasKey('homepage', $data['entity_test_mul']);
 
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mul_property_data']['id']);
@@ -847,33 +847,30 @@ class EntityViewsDataTest extends UnitTestCase {
     $data = $this->viewsData->getViewsData();
 
     // Check the base fields.
-    $this->assertFalse(isset($data['entity_test_mulrev']['id']));
-    $this->assertFalse(isset($data['entity_test_mulrev']['type']));
-    $this->assertFalse(isset($data['entity_test_mulrev']['revision_id']));
+    $this->assertArrayNotHasKey('id', $data['entity_test_mulrev']);
+    $this->assertArrayNotHasKey('type', $data['entity_test_mulrev']);
+    $this->assertArrayNotHasKey('revision_id', $data['entity_test_mulrev']);
     $this->assertUuidField($data['entity_test_mulrev']['uuid']);
     $this->assertField($data['entity_test_mulrev']['uuid'], 'uuid');
 
     // Also ensure that field_data only fields don't appear on the base table.
-    $this->assertFalse(isset($data['entity_test_mulrev']['name']));
-    $this->assertFalse(isset($data['entity_test_mul']['description']));
-    $this->assertFalse(isset($data['entity_test_mul']['description__value']));
-    $this->assertFalse(isset($data['entity_test_mul']['description__format']));
-    $this->assertFalse(isset($data['entity_test_mul']['homepage']));
-    $this->assertFalse(isset($data['entity_test_mulrev']['langcode']));
-    $this->assertFalse(isset($data['entity_test_mulrev']['user_id']));
+    $this->assertArrayNotHasKey('name', $data['entity_test_mulrev']);
+    $this->assertArrayNotHasKey('entity_test_mul', $data);
+    $this->assertArrayNotHasKey('langcode', $data['entity_test_mulrev']);
+    $this->assertArrayNotHasKey('user_id', $data['entity_test_mulrev']);
 
     // Check the revision fields. The revision ID should only appear in the data
     // table.
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['revision_id']));
+    $this->assertArrayNotHasKey('revision_id', $data['entity_test_mulrev_revision']);
 
     // Also ensure that field_data only fields don't appear on the revision table.
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['id']));
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['name']));
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['description']));
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['description__value']));
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['description__format']));
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['homepage']));
-    $this->assertFalse(isset($data['entity_test_mulrev_revision']['user_id']));
+    $this->assertArrayNotHasKey('id', $data['entity_test_mulrev_revision']);
+    $this->assertArrayNotHasKey('name', $data['entity_test_mulrev_revision']);
+    $this->assertArrayNotHasKey('description', $data['entity_test_mulrev_revision']);
+    $this->assertArrayNotHasKey('description__value', $data['entity_test_mulrev_revision']);
+    $this->assertArrayNotHasKey('description__format', $data['entity_test_mulrev_revision']);
+    $this->assertArrayNotHasKey('homepage', $data['entity_test_mulrev_revision']);
+    $this->assertArrayNotHasKey('user_id', $data['entity_test_mulrev_revision']);
 
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mulrev_property_data']['id']);
@@ -985,8 +982,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $data = $this->viewsData->getViewsData();
 
     foreach (['entity_test', 'entity_test_revision'] as $table_name) {
-      $this->assertFalse(isset($data[$table_name]['view_entity_test']));
-      $this->assertFalse(isset($data[$table_name]['delete_entity_test']));
+      $this->assertArrayNotHasKey('view_entity_test', $data[$table_name]);
+      $this->assertArrayNotHasKey('delete_entity_test', $data[$table_name]);
 
       $this->assertEquals('entity_link_edit', $data[$table_name]['edit_entity_test']['field']['id']);
     }

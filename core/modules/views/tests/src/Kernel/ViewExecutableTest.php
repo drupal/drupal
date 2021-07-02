@@ -194,7 +194,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   public function testProperties() {
     $view = Views::getView('test_destroy');
     foreach ($this->executableProperties as $property) {
-      $this->assertTrue(isset($view->{$property}));
+      $this->assertNotNull($view->{$property});
     }
 
     // Per default exposed input should fall back to an empty array.
@@ -402,7 +402,8 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   public function testGetHandlerTypes() {
     $types = ViewExecutable::getHandlerTypes();
     foreach (['field', 'filter', 'argument', 'sort', 'header', 'footer', 'empty'] as $type) {
-      $this->assertTrue(isset($types[$type]));
+      $this->assertArrayHasKey($type, $types);
+      $this->assertNotNull($types[$type]);
       // @todo The key on the display should be footers, headers and empties
       //   or something similar instead of the singular, but so long check for
       //   this special case.

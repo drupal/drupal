@@ -647,7 +647,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     // A base field override on a non-existing base field should not cause a
     // field definition to come into existence.
-    $this->assertFalse(isset($fields['status']), 'Node\'s status base field does not exist.');
+    $this->assertArrayNotHasKey('status', $fields, 'Node\'s status base field does not exist.');
   }
 
   /**

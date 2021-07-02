@@ -48,15 +48,21 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     // Exercise various defaults for textboxes and modifications to ensure
     // appropriate override and correct behavior.
-
     // Verify that label precedes textfield, with required marker inside label.
     $this->assertSession()->elementExists('xpath', '//label[@for="edit-form-textfield-test-title-and-required" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
 
+    // Verify that label tag with required marker precedes required textfield
+    // with no title.
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required" and @class="js-form-required form-required"]');
+
+    // Verify that label preceding field and label class is visually-hidden.
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="visually-hidden"]');
 
+    // Verify that no required marker on non-required field.
     $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-form-textfield-test-title"]/preceding-sibling::span[@class="js-form-required form-required"]');
 
+    // Verify that label after field and label option class correct for text
+    // field.
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
 
     // Verify that no label tag exists when title set not to display.
@@ -107,11 +113,14 @@ class ElementsLabelsTest extends BrowserTestBase {
     // Check #description placement with #description_display='after'.
     $field_id = 'edit-form-textfield-test-description-after';
     $description_id = $field_id . '--description';
+    // Verify that properly places the #description element after the form item.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[@id="' . $description_id . '"]');
 
     // Check #description placement with #description_display='before'.
     $field_id = 'edit-form-textfield-test-description-before';
     $description_id = $field_id . '--description';
+    // Verify that properly places the #description element before the form
+    // item.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/preceding-sibling::div[@id="' . $description_id . '"]');
 
     // Check if the class is 'visually-hidden' on the form element description
@@ -119,6 +128,7 @@ class ElementsLabelsTest extends BrowserTestBase {
     // the description is placed after the form element.
     $field_id = 'edit-form-textfield-test-description-invisible';
     $description_id = $field_id . '--description';
+    // Verify that properly renders the #description element visually-hidden.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[contains(@class, "visually-hidden")]');
   }
 

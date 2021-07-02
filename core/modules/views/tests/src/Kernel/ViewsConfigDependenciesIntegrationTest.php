@@ -95,7 +95,7 @@ class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
 
     // Checks that the image field was removed from the View.
     $display = $view->getDisplay('default');
-    $this->assertFalse(isset($display['display_options']['fields']['bar']));
+    $this->assertArrayNotHasKey('bar', $display['display_options']['fields']);
 
     // Checks that the view has been disabled.
     $this->assertFalse($view->status());

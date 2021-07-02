@@ -77,7 +77,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertNoRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     $available = update_get_available();
-    $this->assertFalse(isset($available['aaa_update_test']['fetch_status']), 'Results are cached even if no releases are available.');
+    $this->assertArrayNotHasKey('fetch_status', $available['aaa_update_test'], 'Results are cached even if no releases are available.');
   }
 
   /**

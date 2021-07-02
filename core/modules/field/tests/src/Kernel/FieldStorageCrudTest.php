@@ -55,7 +55,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $field_storage_config = $this->config('field.storage.' . $field_storage->id())->get();
 
     $this->assertTrue($field_storage_config['settings']['config_data_from_storage_setting']);
-    $this->assertTrue(!isset($field_storage_config['settings']['storage_setting_from_config_data']));
+    $this->assertArrayNotHasKey('storage_setting_from_config_data', $field_storage_config['settings']);
 
     // Since we are working with raw configuration, this needs to be unset
     // manually.

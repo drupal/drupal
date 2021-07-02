@@ -210,10 +210,14 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/add/article');
     $editor_settings = $this->getDrupalSettings()['editor']['formats']['filtered_html']['editorSettings'];
-    $this->assertTrue(isset($editor_settings['customConfig']));
-    $this->assertTrue(isset($editor_settings['entities']));
-    $this->assertTrue(isset($editor_settings['allowedContent']));
-    $this->assertTrue(isset($editor_settings['disallowedContent']));
+    $this->assertArrayHasKey('customConfig', $editor_settings);
+    $this->assertNotNull($editor_settings['customConfig']);
+    $this->assertArrayHasKey('entities', $editor_settings);
+    $this->assertNotNull($editor_settings['entities']);
+    $this->assertArrayHasKey('allowedContent', $editor_settings);
+    $this->assertNotNull($editor_settings['allowedContent']);
+    $this->assertArrayHasKey('disallowedContent', $editor_settings);
+    $this->assertNotNull($editor_settings['disallowedContent']);
   }
 
   protected function getThingsToCheck() {

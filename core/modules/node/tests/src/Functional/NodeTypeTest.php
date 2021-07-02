@@ -38,9 +38,12 @@ class NodeTypeTest extends NodeTestBase {
   public function testNodeTypeGetFunctions() {
     $node_types = NodeType::loadMultiple();
     $node_names = node_type_get_names();
-
-    $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
-    $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');
+    // Verify that node type article is available.
+    $this->assertArrayHasKey('article', $node_types);
+    $this->assertNotNull($node_types['article']);
+    // Verify that node type basic page is available.
+    $this->assertArrayHasKey('page', $node_types);
+    $this->assertNotNull($node_types['page']);
 
     $this->assertEquals($node_names['article'], $node_types['article']->label(), 'Correct node type base has been returned.');
 

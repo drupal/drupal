@@ -44,10 +44,10 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
    */
   public function testBundleFieldDefinition() {
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->entityType, $this->bundle);
-    $this->assertTrue(isset($definitions[$this->fieldTestData->field->getName()]));
+    $this->assertArrayHasKey($this->fieldTestData->field->getName(), $definitions);
     $this->assertInstanceOf(FieldDefinitionInterface::class, $definitions[$this->fieldTestData->field->getName()]);
     // Make sure fields on other entity types are not exposed.
-    $this->assertFalse(isset($definitions[$this->fieldTestData->field_rev->getName()]));
+    $this->assertArrayNotHasKey($this->fieldTestData->field_rev->getName(), $definitions);
   }
 
   /**
@@ -55,10 +55,10 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
    */
   public function testFieldStorageDefinition() {
     $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entityType);
-    $this->assertTrue(isset($field_storage_definitions[$this->fieldTestData->field->getName()]));
+    $this->assertArrayHasKey($this->fieldTestData->field->getName(), $field_storage_definitions);
     $this->assertInstanceOf(FieldStorageDefinitionInterface::class, $field_storage_definitions[$this->fieldTestData->field->getName()]);
     // Make sure storages on other entity types are not exposed.
-    $this->assertFalse(isset($field_storage_definitions[$this->fieldTestData->field_rev->getName()]));
+    $this->assertArrayNotHasKey($this->fieldTestData->field_rev->getName(), $field_storage_definitions);
   }
 
 }

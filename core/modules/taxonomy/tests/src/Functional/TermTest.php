@@ -114,14 +114,17 @@ class TermTest extends TaxonomyTestBase {
     // Check the hierarchy.
     $children = $taxonomy_storage->loadChildren($term1->id());
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertTrue(isset($children[$term2->id()]), 'Child found correctly.');
-    $this->assertTrue(isset($parents[$term1->id()]), 'Parent found correctly.');
+    $this->assertArrayHasKey($term2->id(), $children);
+    $this->assertNotNull($children[$term2->id()]);
+    $this->assertArrayHasKey($term1->id(), $parents);
+    $this->assertNotNull($parents[$term1->id()]);
 
     // Load and save a term, confirming that parents are still set.
     $term = Term::load($term2->id());
     $term->save();
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertTrue(isset($parents[$term1->id()]), 'Parent found correctly.');
+    $this->assertArrayHasKey($term1->id(), $parents);
+    $this->assertNotNull($parents[$term1->id()]);
 
     // Create a third term and save this as a parent of term2.
     $term3 = $this->createTerm($this->vocabulary);
@@ -541,19 +544,23 @@ class TermTest extends TaxonomyTestBase {
 
     // Load the term with the exact name.
     $terms = taxonomy_term_load_multiple_by_name($term->getName());
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name.');
+    $this->assertArrayHasKey($term->id(), $terms);
+    $this->assertNotNull($terms[$term->id()]);
 
     // Load the term with space concatenated.
     $terms = taxonomy_term_load_multiple_by_name('  ' . $term->getName() . '   ');
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with extra whitespace.');
+    $this->assertArrayHasKey($term->id(), $terms);
+    $this->assertNotNull($terms[$term->id()]);
 
     // Load the term with name uppercased.
     $terms = taxonomy_term_load_multiple_by_name(strtoupper($term->getName()));
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with uppercased name.');
+    $this->assertArrayHasKey($term->id(), $terms);
+    $this->assertNotNull($terms[$term->id()]);
 
     // Load the term with name lowercased.
     $terms = taxonomy_term_load_multiple_by_name(strtolower($term->getName()));
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with lowercased name.');
+    $this->assertArrayHasKey($term->id(), $terms);
+    $this->assertNotNull($terms[$term->id()]);
 
     // Try to load an invalid term name.
     $terms = taxonomy_term_load_multiple_by_name('Banana');
@@ -578,7 +585,8 @@ class TermTest extends TaxonomyTestBase {
     // Load single term when restricted to one vocabulary.
     $terms = taxonomy_term_load_multiple_by_name($term->getName(), $this->vocabulary->id());
     $this->assertCount(1, $terms, 'One term loaded when restricted by vocabulary.');
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name and vocabulary machine name.');
+    $this->assertArrayHasKey($term->id(), $terms);
+    $this->assertNotNull($terms[$term->id()]);
 
     // Create a new term with another name.
     $term2 = $this->createTerm($this->vocabulary);

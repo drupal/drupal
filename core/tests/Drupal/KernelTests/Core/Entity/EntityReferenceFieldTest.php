@@ -185,7 +185,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       else {
         // A non-existent or NULL entity target id must not return any item in
         // the target entities set.
-        $this->assertFalse(isset($entities[$delta]));
+        $this->assertArrayNotHasKey($delta, $entities);
       }
     }
   }

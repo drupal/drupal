@@ -101,10 +101,14 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $views = $entity_storage->loadMultiple();
 
     // Ensure that all test views exists.
-    $this->assertTrue(isset($views['test_view_entity_test']));
-    $this->assertTrue(isset($views['test_view_entity_test_revision']));
-    $this->assertTrue(isset($views['test_view_entity_test_data']));
-    $this->assertTrue(isset($views['test_view_entity_test_additional_base_field']));
+    $this->assertArrayHasKey('test_view_entity_test', $views);
+    $this->assertNotNull($views['test_view_entity_test']);
+    $this->assertArrayHasKey('test_view_entity_test_revision', $views);
+    $this->assertNotNull($views['test_view_entity_test_revision']);
+    $this->assertArrayHasKey('test_view_entity_test_data', $views);
+    $this->assertNotNull($views['test_view_entity_test_data']);
+    $this->assertArrayHasKey('test_view_entity_test_additional_base_field', $views);
+    $this->assertNotNull($views['test_view_entity_test_additional_base_field']);
 
     $event = new EntityTypeEvent($this->entityTypeManager->getDefinition('entity_test_update'));
     $this->eventDispatcher->dispatch($event, EntityTypeEvents::DELETE);
@@ -115,10 +119,14 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     // Ensure that all test views still exists after the deletion of the
     // entity type.
-    $this->assertTrue(isset($views['test_view_entity_test']));
-    $this->assertTrue(isset($views['test_view_entity_test_revision']));
-    $this->assertTrue(isset($views['test_view_entity_test_data']));
-    $this->assertTrue(isset($views['test_view_entity_test_additional_base_field']));
+    $this->assertArrayHasKey('test_view_entity_test', $views);
+    $this->assertNotNull($views['test_view_entity_test']);
+    $this->assertArrayHasKey('test_view_entity_test_revision', $views);
+    $this->assertNotNull($views['test_view_entity_test_revision']);
+    $this->assertArrayHasKey('test_view_entity_test_data', $views);
+    $this->assertNotNull($views['test_view_entity_test_data']);
+    $this->assertArrayHasKey('test_view_entity_test_additional_base_field', $views);
+    $this->assertNotNull($views['test_view_entity_test_additional_base_field']);
 
     // Ensure that they are all disabled.
     $this->assertFalse($views['test_view_entity_test']->status());
@@ -555,10 +563,13 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $view_save_count = \Drupal::state()->get('views_test_data.view_save_count', []);
     foreach ($all_view_ids as $view_id) {
       if (in_array($view_id, $updated_view_ids, TRUE)) {
-        $this->assertTrue(isset($view_save_count[$view_id]), "The $view_id view has been updated.");
+        // Verify that the $view_id view has been updated.
+        $this->assertArrayHasKey($view_id, $view_save_count);
+        $this->assertNotNull($view_save_count[$view_id]);
       }
       else {
-        $this->assertFalse(isset($view_save_count[$view_id]), "The $view_id view has not been updated.");
+        // Verify that the $view_id view has not been updated.
+        $this->assertArrayNotHasKey($view_id, $view_save_count);
       }
     }
 

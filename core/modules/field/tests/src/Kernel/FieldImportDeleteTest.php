@@ -108,8 +108,9 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
 
     // Check that only the first storage definition is preserved in state.
     $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertTrue(isset($deleted_storages[$field_storage_uuid]));
-    $this->assertFalse(isset($deleted_storages[$field_storage_uuid_2]));
+    $this->assertArrayHasKey($field_storage_uuid, $deleted_storages);
+    $this->assertNotNull($deleted_storages[$field_storage_uuid]);
+    $this->assertArrayNotHasKey($field_storage_uuid_2, $deleted_storages);
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.

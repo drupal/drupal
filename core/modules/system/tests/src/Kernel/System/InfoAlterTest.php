@@ -23,7 +23,7 @@ class InfoAlterTest extends KernelTestBase {
   public function testSystemInfoAlter() {
     \Drupal::state()->set('module_required_test.hook_system_info_alter', TRUE);
     $info = \Drupal::service('extension.list.module')->getList();
-    $this->assertFalse(isset($info['node']->info['required']), 'Before the module_required_test is installed the node module is not required.');
+    $this->assertArrayNotHasKey('required', $info['node']->info, 'Before the module_required_test is installed the node module is not required.');
 
     // Enable the test module.
     \Drupal::service('module_installer')->install(['module_required_test'], FALSE);

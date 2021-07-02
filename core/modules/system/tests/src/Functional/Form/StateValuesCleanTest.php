@@ -41,22 +41,23 @@ class StateValuesCleanTest extends BrowserTestBase {
     ];
 
     // Verify that all internal Form API elements were removed.
-    $this->assertFalse(isset($values['form_id']), new FormattableMarkup('%element was removed.', ['%element' => 'form_id']));
-    $this->assertFalse(isset($values['form_token']), new FormattableMarkup('%element was removed.', ['%element' => 'form_token']));
-    $this->assertFalse(isset($values['form_build_id']), new FormattableMarkup('%element was removed.', ['%element' => 'form_build_id']));
-    $this->assertFalse(isset($values['op']), new FormattableMarkup('%element was removed.', ['%element' => 'op']));
+    $this->assertArrayNotHasKey('form_id', $values);
+    $this->assertArrayNotHasKey('form_token', $values);
+    $this->assertArrayNotHasKey('form_build_id', $values);
+    $this->assertArrayNotHasKey('op', $values);
 
     // Verify that all buttons were removed.
-    $this->assertFalse(isset($values['foo']), new FormattableMarkup('%element was removed.', ['%element' => 'foo']));
-    $this->assertFalse(isset($values['bar']), new FormattableMarkup('%element was removed.', ['%element' => 'bar']));
-    $this->assertFalse(isset($values['baz']['foo']), new FormattableMarkup('%element was removed.', ['%element' => 'foo']));
-    $this->assertFalse(isset($values['baz']['baz']), new FormattableMarkup('%element was removed.', ['%element' => 'baz']));
+    $this->assertArrayNotHasKey('foo', $values);
+    $this->assertArrayNotHasKey('bar', $values);
+    $this->assertArrayNotHasKey('foo', $values['baz'], new FormattableMarkup('%element was removed.', ['%element' => 'foo']));
+    $this->assertArrayNotHasKey('baz', $values['baz'], new FormattableMarkup('%element was removed.', ['%element' => 'baz']));
 
     // Verify values manually added for cleaning were removed.
-    $this->assertFalse(isset($values['wine']), new FormattableMarkup('%element was removed.', ['%element' => 'wine']));
+    $this->assertArrayNotHasKey('wine', $values);
 
     // Verify that nested form value still exists.
-    $this->assertTrue(isset($values['baz']['beer']), 'Nested form value still exists.');
+    $this->assertArrayHasKey('beer', $values['baz']);
+    $this->assertNotNull($values['baz']['beer'], 'Nested form value still exists.');
 
     // Verify that actual form values equal resulting form values.
     $this->assertEquals($result, $values, 'Expected form values equal actual form values.');

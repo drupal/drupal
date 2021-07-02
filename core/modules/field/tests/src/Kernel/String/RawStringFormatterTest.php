@@ -122,7 +122,7 @@ class RawStringFormatterTest extends KernelTestBase {
 
     // Verify the cache tags.
     $build = $entity->{$this->fieldName}->view();
-    $this->assertTrue(!isset($build[0]['#cache']), 'The string formatter has no cache tags.');
+    $this->assertArrayNotHasKey('#cache', $build[0], 'The string formatter has no cache tags.');
   }
 
 }

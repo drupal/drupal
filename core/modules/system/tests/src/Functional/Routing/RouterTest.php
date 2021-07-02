@@ -75,15 +75,15 @@ class RouterTest extends BrowserTestBase {
     // 3. controller result: Response object, globally cacheable route access.
     $this->drupalGet('router_test/test1');
     $headers = $session->getResponseHeaders();
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Max-Age']));
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Contexts', $headers);
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Tags', $headers);
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Max-Age', $headers);
     // 4. controller result: Response object, per-role cacheable route access.
     $this->drupalGet('router_test/test20');
     $headers = $session->getResponseHeaders();
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Max-Age']));
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Contexts', $headers);
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Tags', $headers);
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Max-Age', $headers);
     // 5. controller result: CacheableResponse object, globally cacheable route access.
     $this->drupalGet('router_test/test21');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', '');
@@ -97,17 +97,20 @@ class RouterTest extends BrowserTestBase {
     // headers are not sent when their container parameter is set to FALSE.
     $this->drupalGet('router_test/test18');
     $headers = $session->getResponseHeaders();
-    $this->assertTrue(isset($headers['X-Drupal-Cache-Contexts']));
-    $this->assertTrue(isset($headers['X-Drupal-Cache-Tags']));
-    $this->assertTrue(isset($headers['X-Drupal-Cache-Max-Age']));
+    $this->assertArrayHasKey('X-Drupal-Cache-Contexts', $headers);
+    $this->assertNotNull($headers['X-Drupal-Cache-Contexts']);
+    $this->assertArrayHasKey('X-Drupal-Cache-Tags', $headers);
+    $this->assertNotNull($headers['X-Drupal-Cache-Tags']);
+    $this->assertArrayHasKey('X-Drupal-Cache-Max-Age', $headers);
+    $this->assertNotNull($headers['X-Drupal-Cache-Max-Age']);
     $this->setContainerParameter('http.response.debug_cacheability_headers', FALSE);
     $this->rebuildContainer();
     $this->resetAll();
     $this->drupalGet('router_test/test18');
     $headers = $session->getResponseHeaders();
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
-    $this->assertFalse(isset($headers['X-Drupal-Cache-Max-Age']));
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Contexts', $headers);
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Tags', $headers);
+    $this->assertArrayNotHasKey('X-Drupal-Cache-Max-Age', $headers);
   }
 
   /**

@@ -112,16 +112,17 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $entity->save();
 
     $errors = $this->getErrorsForEntity($entity);
-    $this->assertFalse(isset($errors['name']));
-    $this->assertFalse(isset($errors['type']));
+    $this->assertArrayNotHasKey('name', $errors);
+    $this->assertArrayNotHasKey('type', $errors);
 
     // Provide an invalid value for the name field.
     $entity = EntityTestCompositeConstraint::create([
       'name' => 'failure-field-name',
     ]);
     $errors = $this->getErrorsForEntity($entity);
-    $this->assertTrue(isset($errors['name']));
-    $this->assertFalse(isset($errors['type']));
+    $this->assertArrayHasKey('name', $errors);
+    $this->assertNotNull($errors['name']);
+    $this->assertArrayNotHasKey('type', $errors);
 
     // Hide the second field (type) and ensure the validation still happens. The
     // error message appears on the first field (name).
@@ -129,8 +130,9 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
       'name' => 'failure-field-name',
     ]);
     $errors = $this->getErrorsForEntity($entity, ['type']);
-    $this->assertTrue(isset($errors['name']));
-    $this->assertFalse(isset($errors['type']));
+    $this->assertArrayHasKey('name', $errors);
+    $this->assertNotNull($errors['name']);
+    $this->assertArrayNotHasKey('type', $errors);
 
     // Provide a violation again, but this time hide the first field (name).
     // Ensure that the validation still happens and the error message is moved
@@ -139,8 +141,8 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
       'name' => 'failure-field-name',
     ]);
     $errors = $this->getErrorsForEntity($entity, ['name']);
-    $this->assertFalse(isset($errors['name']));
-    $this->assertTrue(isset($errors['type']));
+    $this->assertArrayNotHasKey('name', $errors);
+    $this->assertNotNull($errors['type']);
     $this->assertEquals(new FormattableMarkup('The validation failed because the value conflicts with the value in %field_name, which you cannot access.', ['%field_name' => 'name']), $errors['type']);
   }
 

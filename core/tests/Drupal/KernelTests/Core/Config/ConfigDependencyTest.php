@@ -30,7 +30,11 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->installConfig(['system']);
     $config_manager = \Drupal::service('config.manager');
     $dependents = $config_manager->findConfigEntityDependents('module', ['system']);
-    $this->assertTrue(isset($dependents['system.site']), 'Simple configuration system.site has a UUID key even though it is not a configuration entity and therefore is found when looking for dependencies of the System module.');
+    // Verify that simple configuration system.site has a UUID key even though
+    // it is not a configuration entity and therefore is found when looking for
+    // dependencies of the System module.
+    $this->assertArrayHasKey('system.site', $dependents);
+    $this->assertNotNull($dependents['system.site']);
     // Ensure that calling
     // \Drupal\Core\Config\ConfigManager::findConfigEntityDependentsAsEntities()
     // does not try to load system.site as an entity.
@@ -58,11 +62,19 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $entity1->save();
 
     $dependents = $config_manager->findConfigEntityDependents('module', ['node']);
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 has a dependency on the Node module.');
+    // Verify that the config_test.dynamic.entity1 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity1', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity1']);
     $dependents = $config_manager->findConfigEntityDependents('module', ['config_test']);
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 has a dependency on the config_test module.');
+    // Verify that the config_test.dynamic.entity1 has a dependency on the
+    // config_test module.
+    $this->assertArrayHasKey('config_test.dynamic.entity1', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity1']);
     $dependents = $config_manager->findConfigEntityDependents('module', ['views']);
-    $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the Views module.');
+    // Verify that the config_test.dynamic.entity1 does not have a dependency on
+    // the Views module.
+    $this->assertArrayNotHasKey('config_test.dynamic.entity1', $dependents);
     // Ensure that the provider of the config entity is not actually written to
     // the dependencies array.
     $raw_config = $this->config('config_test.dynamic.entity1');
@@ -79,10 +91,21 @@ class ConfigDependencyTest extends EntityKernelTestBase {
 
     // Test getting $entity1's dependencies as configuration dependency objects.
     $dependents = $config_manager->findConfigEntityDependents('config', [$entity1->getConfigDependencyName()]);
-    $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on itself.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on config_test.dynamic.entity1.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on config_test.dynamic.entity1.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity4']), 'config_test.dynamic.entity4 has a dependency on config_test.dynamic.entity1.');
+    // Verify that the config_test.dynamic.entity1 does not have a dependency on
+    // itself.
+    $this->assertArrayNotHasKey('config_test.dynamic.entity1', $dependents);
+    // Verify that the config_test.dynamic.entity2 has a dependency on
+    // config_test.dynamic.entity1.
+    $this->assertArrayHasKey('config_test.dynamic.entity2', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity2']);
+    // Verify that the config_test.dynamic.entity3 has a dependency on
+    // config_test.dynamic.entity1.
+    $this->assertArrayHasKey('config_test.dynamic.entity3', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity3']);
+    // Verify that the config_test.dynamic.entity4 has a dependency on
+    // config_test.dynamic.entity1.
+    $this->assertArrayHasKey('config_test.dynamic.entity4', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity4']);
 
     // Test getting $entity2's dependencies as entities.
     $dependents = $config_manager->findConfigEntityDependentsAsEntities('config', [$entity2->getConfigDependencyName()]);
@@ -95,10 +118,22 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // Test getting node module's dependencies as configuration dependency
     // objects.
     $dependents = $config_manager->findConfigEntityDependents('module', ['node']);
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 has a dependency on the Node module.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on the Node module.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on the Node module.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity4']), 'config_test.dynamic.entity4 has a dependency on the Node module.');
+    // Verify that the config_test.dynamic.entity1 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity1', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity1']);
+    // Verify that the config_test.dynamic.entity2 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity2', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity2']);
+    // Verify that the config_test.dynamic.entity3 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity3', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity3']);
+    // Verify that the config_test.dynamic.entity4 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity4', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity4']);
 
     // Test getting node module's dependencies as configuration dependency
     // objects after making $entity3 also dependent on node module but $entity1
@@ -106,10 +141,20 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $entity1->setEnforcedDependencies([])->save();
     $entity3->setEnforcedDependencies(['module' => ['node'], 'config' => [$entity2->getConfigDependencyName()]])->save();
     $dependents = $config_manager->findConfigEntityDependents('module', ['node']);
-    $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the Node module.');
-    $this->assertFalse(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 does not have a dependency on the Node module.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on the Node module.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity4']), 'config_test.dynamic.entity4 has a dependency on the Node module.');
+    // Verify that the config_test.dynamic.entity1 does not have a dependency on
+    // the Node module.
+    $this->assertArrayNotHasKey('config_test.dynamic.entity1', $dependents);
+    // Verify that the config_test.dynamic.entity2 does not have a dependency on
+    // the Node module.
+    $this->assertArrayNotHasKey('config_test.dynamic.entity2', $dependents);
+    // Verify that the config_test.dynamic.entity3 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity3', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity3']);
+    // Verify that the config_test.dynamic.entity4 has a dependency on the Node
+    // module.
+    $this->assertArrayHasKey('config_test.dynamic.entity4', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity4']);
 
     // Test dependency on a content entity.
     $entity_test = EntityTest::create([
@@ -119,10 +164,21 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $entity_test->save();
     $entity2->setEnforcedDependencies(['config' => [$entity1->getConfigDependencyName()], 'content' => [$entity_test->getConfigDependencyName()]])->save();
     $dependents = $config_manager->findConfigEntityDependents('content', [$entity_test->getConfigDependencyName()]);
-    $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the content entity.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on the content entity.');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on the content entity (via entity2).');
-    $this->assertTrue(isset($dependents['config_test.dynamic.entity4']), 'config_test.dynamic.entity4 has a dependency on the content entity (via entity3).');
+    // Verify that the config_test.dynamic.entity1 does not have a dependency on
+    // the content entity.
+    $this->assertArrayNotHasKey('config_test.dynamic.entity1', $dependents);
+    // Verify that the config_test.dynamic.entity2 has a dependency on the
+    // content entity.
+    $this->assertArrayHasKey('config_test.dynamic.entity2', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity2']);
+    // Verify that the config_test.dynamic.entity3 has a dependency on the
+    // content entity (via entity2).
+    $this->assertArrayHasKey('config_test.dynamic.entity3', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity3']);
+    // Verify that the config_test.dynamic.entity4 has a dependency on the
+    // content entity (via entity3).
+    $this->assertArrayHasKey('config_test.dynamic.entity4', $dependents);
+    $this->assertNotNull($dependents['config_test.dynamic.entity4']);
 
     // Create a configuration entity of a different type with the same ID as one
     // of the entities already created.

@@ -487,7 +487,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertStringStartsWith('big_pipe_nojs=1', $headers[0]['Set-Cookie'][0], 'The first response sets the big_pipe_nojs cookie.');
     $this->assertEquals($original_url, $headers[0]['Location'][0], 'The first response redirected back to the original page.');
     $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0]))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
-    $this->assertFalse(isset($headers[0]['Surrogate-Control']), 'The first response has no "Surrogate-Control" header.');
+    $this->assertArrayNotHasKey('Surrogate-Control', $headers[0], 'The first response has no "Surrogate-Control" header.');
 
     // Second response: redirect followed.
     $this->assertEquals(200, $statuses[1], 'The second response was a 200.');

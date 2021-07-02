@@ -585,7 +585,8 @@ class StyleSerializerTest extends ViewTestBase {
     $view->save();
     $this->executeView($view);
     foreach (Json::decode($this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']])) as $index => $values) {
-      $this->assertTrue(!isset($values['created']), 'Excluded value not found.');
+      // Verify that excluded value not found.
+      $this->assertArrayNotHasKey('created', $values);
     }
     // Test that the excluded field is not shown in the row options.
     $this->drupalGet('admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/row_options');

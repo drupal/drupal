@@ -121,11 +121,12 @@ class EntityTypeInfoTest extends KernelTestBase {
     ])->save();
 
     $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
-    $this->assertFalse(isset($base_fields['moderation_state']));
+    $this->assertArrayNotHasKey('moderation_state', $base_fields);
 
     $this->enableModeration('entity_test_with_bundle', 'moderated');
     $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
-    $this->assertTrue(isset($base_fields['moderation_state']));
+    $this->assertArrayHasKey('moderation_state', $base_fields);
+    $this->assertNotNull($base_fields['moderation_state']);
   }
 
   /**

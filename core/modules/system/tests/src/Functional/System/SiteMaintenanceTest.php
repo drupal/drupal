@@ -64,7 +64,8 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should be aggregated, so drupal.js is not in the page source.
     $links = $this->xpath('//script[contains(@src, :href)]', [':href' => '/core/misc/drupal.js']);
-    $this->assertFalse(isset($links[0]), 'script /core/misc/drupal.js not in page');
+    // Verify that the script /core/misc/drupal.js not in page.
+    $this->assertArrayNotHasKey(0, $links);
     // Turn on maintenance mode.
     $edit = [
       'maintenance_mode' => 1,
@@ -79,7 +80,8 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should not be aggregated, so drupal.js is expected in the page source.
     $links = $this->xpath('//script[contains(@src, :href)]', [':href' => '/core/misc/drupal.js']);
-    $this->assertTrue(isset($links[0]), 'script /core/misc/drupal.js in page');
+    // Verify that the script /core/misc/drupal.js in page.
+    $this->assertArrayHasKey(0, $links);
     $this->assertRaw($admin_message);
 
     // Logout and verify that offline message is displayed.

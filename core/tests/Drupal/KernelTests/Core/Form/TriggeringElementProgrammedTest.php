@@ -75,8 +75,11 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
 
     // Verify that only the specified section was validated.
     $errors = $form_state->getErrors();
-    $this->assertTrue(isset($errors['one']), "Section 'one' was validated.");
-    $this->assertFalse(isset($errors['two']), "Section 'two' was not validated.");
+    // Verify that section 'one' was validated.
+    $this->assertArrayHasKey('one', $errors);
+    $this->assertNotNull($errors['one']);
+    // Verify that section 'two' was not validated.
+    $this->assertArrayNotHasKey('two', $errors);
 
     // Verify that there are only values for the specified section.
     $this->assertTrue($form_state->hasValue('one'), "Values for section 'one' found.");

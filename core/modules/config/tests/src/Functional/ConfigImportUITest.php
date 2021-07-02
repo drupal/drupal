@@ -147,7 +147,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSame($original_dynamic_data, $this->config($dynamic_name)->get());
 
     // Verify the cache got cleared.
-    $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
+    $this->assertArrayHasKey('hook_cache_flush', $GLOBALS);
+    $this->assertNotNull($GLOBALS['hook_cache_flush']);
 
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module installed during import.');
@@ -218,7 +219,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertTrue(empty($installed), 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
-    $this->assertFalse(isset($theme_info['bartik']), 'Bartik theme uninstalled during import.');
+    // Verify that bartik theme is uninstalled during import.
+    $this->assertArrayNotHasKey('bartik', $theme_info);
 
     // Verify that the automated_cron.settings configuration object was only
     // deleted once during the import process.
@@ -507,11 +509,12 @@ class ConfigImportUITest extends BrowserTestBase {
     // Node depends on text.
     unset($core['module']['text']);
     $module_data = $this->container->get('extension.list.module')->getList();
-    $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
+    $this->assertNotNull($module_data['node']->requires['text'], 'The Node module depends on the Text module.');
     // Bartik depends on Stable.
     unset($core['theme']['test_basetheme']);
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
-    $this->assertTrue(isset($theme_data['test_subtheme']->requires['test_basetheme']), 'The Test Subtheme theme depends on the Test Basetheme theme.');
+    $this->assertArrayHasKey('test_subtheme', $theme_data);
+    $this->assertNotNull($theme_data['test_subtheme']->requires['test_basetheme'], 'The Test Subtheme theme depends on the Test Basetheme theme.');
     // This module does not exist.
     $core['module']['does_not_exist'] = 0;
     // This theme does not exist.

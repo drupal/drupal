@@ -207,7 +207,8 @@ class AttachedAssetsTest extends KernelTestBase {
     $parsed_settings = Json::decode($json);
 
     // Test whether the settings for core/drupalSettings are available.
-    $this->assertTrue(isset($parsed_settings['path']['baseUrl']), 'drupalSettings.path.baseUrl is present.');
+    $this->assertArrayHasKey('baseUrl', $parsed_settings['path'], 'drupalSettings.path.baseUrl is present.');
+    $this->assertNotNull($parsed_settings['path']['baseUrl'], 'drupalSettings.path.baseUrl is present.');
     $this->assertSame('yarhar', $parsed_settings['path']['pathPrefix'], 'drupalSettings.path.pathPrefix is present and has the correct (overridden) value.');
     $this->assertSame('', $parsed_settings['path']['currentPath'], 'drupalSettings.path.currentPath is present and has the correct value.');
     $this->assertFalse($parsed_settings['path']['currentPathIsAdmin'], 'drupalSettings.path.currentPathIsAdmin is present and has the correct value.');

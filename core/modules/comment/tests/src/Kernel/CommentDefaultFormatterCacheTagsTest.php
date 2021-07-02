@@ -159,7 +159,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
 
     // The children (fields) of the entity render array are only built in case
     // of a cache miss.
-    $this->assertFalse(isset($build['entity']['comment']), 'Cache hit');
+    $this->assertArrayNotHasKey('comment', $build['entity'], 'Cache hit');
   }
 
 }

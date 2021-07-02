@@ -69,7 +69,8 @@ class RowEntityTest extends ViewsKernelTestBase {
     $form_state->set('view', $view->storage);
     $view->rowPlugin->buildOptionsForm($form, $form_state);
 
-    $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available');
+    $this->assertArrayHasKey('default', $form['view_mode']['#options']);
+    $this->assertNotNull($form['view_mode']['#options']['default'], 'Ensure that the default view mode is available');
   }
 
 }

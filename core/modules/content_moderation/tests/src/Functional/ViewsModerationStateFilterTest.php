@@ -131,7 +131,8 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
 
     $view = $this->loadViewUnchanged($view_id);
     $this->assertWorkflowDependencies(['editorial', 'translation'], $view);
-    $this->assertTrue(isset($view->getDisplay('default')['display_options']['filters']['moderation_state']));
+    $this->assertArrayHasKey('moderation_state', $view->getDisplay('default')['display_options']['filters']);
+    $this->assertNotNull($view->getDisplay('default')['display_options']['filters']['moderation_state']);
     $this->assertTrue($view->status());
 
     // Remove the 'Translation' workflow.
@@ -142,7 +143,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     // view can be saved and there are no more config dependencies.
     $view = $this->loadViewUnchanged($view_id);
     $this->assertFalse($view->status());
-    $this->assertFalse(isset($view->getDisplay('default')['display_options']['filters']['moderation_state']));
+    $this->assertArrayNotHasKey('moderation_state', $view->getDisplay('default')['display_options']['filters']);
     $this->drupalGet("admin/structure/views/view/{$view_id}");
     $this->submitForm([], 'Save');
     $this->assertWorkflowDependencies([], $view);
@@ -368,7 +369,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
       $this->assertSame($expected, $dependencies['config']);
     }
     else {
-      $this->assertTrue(!isset($dependencies['config']));
+      $this->assertArrayNotHasKey('config', $dependencies);
     }
   }
 

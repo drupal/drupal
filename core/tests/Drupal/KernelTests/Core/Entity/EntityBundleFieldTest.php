@@ -104,7 +104,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Ensure that the field no longer exists in the field map.
     $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
-    $this->assertFalse(isset($field_map['entity_test_update']['custom_bundle_field']));
+    $this->assertArrayNotHasKey('custom_bundle_field', $field_map['entity_test_update']);
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.

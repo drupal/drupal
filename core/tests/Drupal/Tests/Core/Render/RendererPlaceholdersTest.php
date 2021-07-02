@@ -630,7 +630,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element['#prefix'] = '<p>#cache enabled, GET</p>';
     $output = $this->renderer->renderRoot($element);
     $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
-    $this->assertTrue(isset($element['#printed']), 'No cache hit');
+    $this->assertArrayHasKey('#printed', $element);
+    $this->assertNotNull($element['#printed']);
     $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
@@ -743,7 +744,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element['#prefix'] = '<p>#cache enabled, GET</p>';
     $output = $this->renderer->renderRoot($element);
     $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
-    $this->assertFalse(isset($element['#printed']), 'Cache hit');
+    $this->assertArrayNotHasKey('#printed', $element);
     $this->assertSame('<p>#cache enabled, GET</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
@@ -773,7 +774,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element['#prefix'] = '<p>#cache enabled, POST</p>';
     $output = $this->renderer->renderRoot($element);
     $this->assertSame('<p>#cache enabled, POST</p><p>This is a rendered placeholder!</p>', (string) $output, 'Output is overridden.');
-    $this->assertTrue(isset($element['#printed']), 'No cache hit');
+    $this->assertArrayHasKey('#printed', $element);
+    $this->assertNotNull($element['#printed']);
     $this->assertSame('<p>#cache enabled, POST</p><p>This is a rendered placeholder!</p>', (string) $element['#markup'], '#markup is overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
@@ -816,7 +818,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // 3. automatic placeholdering via bubbled cacheability metadata
     // All three of those should NOT result in placeholders.
     if (!isset($test_element['#attached']['placeholders'])) {
-      $this->assertFalse(isset($element['#attached']['placeholders']), 'No placeholders created.');
+      $this->assertArrayNotHasKey('placeholders', $element['#attached'], 'No placeholders created.');
     }
   }
 
@@ -1012,7 +1014,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
 </details>
 HTML;
     $this->assertSame($expected_output, (string) $output, 'Output is not overridden.');
-    $this->assertTrue(isset($element['#printed']), 'No cache hit');
+    $this->assertArrayHasKey('#printed', $element);
+    $this->assertNotNull($element['#printed']);
     $this->assertSame($expected_output, (string) $element['#markup'], '#markup is not overridden.');
     $expected_js_settings = [
       'foo' => 'bar',
@@ -1062,7 +1065,7 @@ HTML;
     $element = $test_element;
     $output = $this->renderer->renderRoot($element);
     $this->assertSame($expected_output, (string) $output, 'Output is not overridden.');
-    $this->assertFalse(isset($element['#printed']), 'Cache hit');
+    $this->assertArrayNotHasKey('#printed', $element);
     $this->assertSame($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each placeholder #lazy_builder callback exist.');
 
     // Use the exact same element, but now unset #cache; ensure we get the same

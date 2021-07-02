@@ -127,7 +127,9 @@ class FieldUIDeleteTest extends BrowserTestBase {
 
     $xml = $this->cssSelect('#edit-entity-deletes');
     // Test that nothing is scheduled for deletion.
-    $this->assertFalse(isset($xml[0]), 'The field currently being deleted is not shown in the entity deletions.');
+    // Verify that the field currently being deleted is not shown in the entity
+    // deletions.
+    $this->assertArrayNotHasKey(0, $xml);
 
     // Delete the second field.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2);
