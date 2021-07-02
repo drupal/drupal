@@ -68,7 +68,7 @@ tr .form-item,
   color: var(--input--disabled-fg-color);
 }
 .form-item__label.form-required::after,
-.fieldset__label.form-required::after {
+.form-required .fieldset__label::after {
   display: inline-block;
   margin-right: 0.15em;
   margin-left: 0.15em;
