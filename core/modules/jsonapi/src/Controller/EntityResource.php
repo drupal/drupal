@@ -200,7 +200,6 @@ class EntityResource {
     $this->serializer = $serializer;
     $this->time = $time;
     $this->user = $user;
-    $this->languageManager = $language_manager;
     if (!$language_manager) {
       @trigger_error('The language_manager service must be passed to ' . __NAMESPACE__ . '\EntityResource::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
       $language_manager = \Drupal::service('language_manager');
