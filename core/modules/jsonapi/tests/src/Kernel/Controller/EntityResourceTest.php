@@ -261,4 +261,5 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $user = $this->prophesize(AccountInterface::class);
     $this->assertNotNull(new EntityResource($entity_type_manager->reveal(), $field_manager->reveal(), $resource_type_repository->reveal(), $module_renderer_handler->reveal(), $entity_repository->reveal(), $include_resolver->reveal(), $entity_access_checker->reveal(), $field_resolver->reveal(), $serializer->reveal(), $time->reveal(), $user->reveal()));
   }
+
 }
