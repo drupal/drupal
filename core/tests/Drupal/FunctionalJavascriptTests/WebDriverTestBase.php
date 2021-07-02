@@ -17,6 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class WebDriverTestBase extends BrowserTestBase {
 
   /**
+   * Determines if a test should fail on JavaScript console errors.
+   *
+   * @var bool
+   */
+  protected $failOnJavascriptConsoleErrors = TRUE;
+
+  /**
    * Disables CSS animations in tests for more reliable testing.
    *
    * CSS animations are disabled by installing the css_disable_transitions_test
@@ -61,7 +68,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function installModulesFromClassProperty(ContainerInterface $container) {
     self::$modules = [
-      'js_deprecation_log_test',
+      'js_testing_log_test',
       'jquery_keyevent_polyfill_test',
     ];
     if ($this->disableCssAnimations) {
@@ -102,12 +109,20 @@ abstract class WebDriverTestBase extends BrowserTestBase {
         throw new \RuntimeException('Unfinished AJAX requests while tearing down a test');
       }
 
-      $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_deprecation_log_test.warnings') || JSON.stringify([]))");
+      $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
       foreach ($warnings as $warning) {
         if (strpos($warning, '[Deprecation]') === 0) {
           @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
         }
       }
+      if ($this->failOnJavascriptConsoleErrors) {
+        $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
+        if (!empty($errors)) {
+          $all_errors = implode("\n", $errors);
+          @trigger_error("Not failing JavaScript test for JavaScript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following JavaScript errors: $all_errors. See https://www.drupal.org/node/3221100", E_USER_DEPRECATED);
+        }
+      }
+
     }
     parent::tearDown();
   }

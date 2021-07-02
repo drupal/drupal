@@ -15,6 +15,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
@@ -67,7 +68,7 @@ function system_requirements($phase) {
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
       $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-      if (isset($info['package']) && $info['package'] === 'Core (Experimental)') {
+      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) && $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
         $experimental_modules[$module] = $info['name'];
       }
     }
@@ -788,10 +789,12 @@ function system_requirements($phase) {
 
     // Check installed modules.
     $has_pending_updates = FALSE;
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
-      $updates = drupal_get_schema_versions($module);
-      if ($updates !== FALSE) {
-        $default = drupal_get_installed_schema_version($module);
+      $updates = $update_registry->getAvailableUpdates($module);
+      if ($updates) {
+        $default = $update_registry->getInstalledVersion($module);
         if (max($updates) > $default) {
           $has_pending_updates = TRUE;
           break;
@@ -1223,17 +1226,19 @@ function system_requirements($phase) {
   // one that was last removed.
   if ($phase == 'update') {
     $module_handler = \Drupal::moduleHandler();
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $module_list = [];
     foreach ($module_handler->getImplementations('update_last_removed') as $module) {
       $last_removed = $module_handler->invoke($module, 'update_last_removed');
-      if ($last_removed && $last_removed > drupal_get_installed_schema_version($module)) {
+      if ($last_removed && $last_removed > $update_registry->getInstalledVersion($module)) {
 
         /** @var \Drupal\Core\Extension\Extension $module_info */
         $module_info = \Drupal::service('extension.list.module')->get($module);
         $module_list[$module] = [
           'name' => $module_info->info['name'],
           'last_removed' => $last_removed,
-          'installed_version' => drupal_get_installed_schema_version($module),
+          'installed_version' => $update_registry->getInstalledVersion($module),
         ];
       }
     }

@@ -5,7 +5,6 @@ namespace Drupal\Tests\user\Kernel\Views;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests the roles filter handler.
@@ -115,8 +114,8 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     // Ensure no warning is triggered before the role is deleted.
     $view->calculateDependencies();
     $role->delete();
-    $this->expectException(Warning::class);
-    $this->expectExceptionMessage('The test_user_role role does not exist. You should review and fix the configuration of the test_user_name view.');
+    $this->expectWarning();
+    $this->expectWarningMessage('The test_user_role role does not exist. You should review and fix the configuration of the test_user_name view.');
     $view->calculateDependencies();
   }
 

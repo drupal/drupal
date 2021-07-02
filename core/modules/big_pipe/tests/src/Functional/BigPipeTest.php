@@ -8,6 +8,7 @@ use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe_test\BigPipePlaceholderTestCases;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
@@ -94,7 +95,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
     $this->assertSessionCookieExists(TRUE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
-    $this->assertRaw('<noscript><meta http-equiv="Refresh" content="0; URL=' . base_path() . 'big_pipe/no-js?destination=' . base_path() . 'user/1" />' . "\n" . '</noscript>');
+    $this->assertRaw('<noscript><meta http-equiv="Refresh" content="0; URL=' . base_path() . 'big_pipe/no-js?destination=' . UrlHelper::encodePath(base_path() . 'user/1?check_logged_in=1') . '" />' . "\n" . '</noscript>');
     $this->assertNoRaw($no_js_to_js_markup);
     $this->assertBigPipeNoJsMetaRefreshRedirect();
     $this->assertBigPipeNoJsCookieExists(TRUE);
@@ -389,7 +390,7 @@ class BigPipeTest extends BrowserTestBase {
     $placeholders = array_map(function (NodeElement $element) {
       return $element->getAttribute('data-big-pipe-placeholder-id');
     }, $this->cssSelect('[data-big-pipe-placeholder-id]'));
-    $this->assertSame(count($expected_big_pipe_placeholders), count(array_unique($placeholders)));
+    $this->assertSameSize($expected_big_pipe_placeholders, array_unique($placeholders));
     $expected_big_pipe_placeholders_with_replacements = [];
     foreach ($expected_big_pipe_placeholder_stream_order as $big_pipe_placeholder_id) {
       $expected_big_pipe_placeholders_with_replacements[$big_pipe_placeholder_id] = $expected_big_pipe_placeholders[$big_pipe_placeholder_id];

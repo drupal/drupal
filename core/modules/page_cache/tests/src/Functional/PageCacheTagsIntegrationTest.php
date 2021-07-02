@@ -80,7 +80,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // These two cache contexts are added by BigPipe.
       'cookies:big_pipe_nojs',
       'session.exists',
-      'user.roles:anonymous',
       'user.roles:authenticated',
     ];
 

@@ -123,8 +123,8 @@ class Select extends Query implements SelectInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection object.
-   * @param string $table
-   *   The name of the table that is being queried.
+   * @param string|\Drupal\Core\Database\Query\SelectInterface $table
+   *   The table name or subquery that is being queried.
    * @param string $alias
    *   The alias for the table.
    * @param array $options

@@ -31,7 +31,7 @@
   overflow: hidden;
   width: 2.25rem;
   height: 2.25rem;
-  margin-top: 2px; /* Visually align button with menu link text. */
+  margin-top: 0.5625rem; /* Visually align button with menu link text. */
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;

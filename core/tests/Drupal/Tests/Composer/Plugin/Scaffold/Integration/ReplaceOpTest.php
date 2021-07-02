@@ -26,7 +26,7 @@ class ReplaceOpTest extends TestCase {
     $options = ScaffoldOptions::create([]);
     $sut = new ReplaceOp($source, TRUE);
     // Assert that there is no target file before we run our test.
-    $this->assertFileNotExists($destination->fullPath());
+    $this->assertFileDoesNotExist($destination->fullPath());
     // Test the system under test.
     $sut->process($destination, $fixtures->io(), $options);
     // Assert that the target file was created.
