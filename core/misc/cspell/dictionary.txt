@@ -1025,6 +1025,7 @@ noindex
 nojs
 nolink
 nomask
+nomodule
 nonamespace
 nonconfigurable
 nonexistingfilename
