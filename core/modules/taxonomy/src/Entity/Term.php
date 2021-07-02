@@ -40,7 +40,6 @@ use Drupal\user\StatusItem;
  *   data_table = "taxonomy_term_field_data",
  *   revision_table = "taxonomy_term_revision",
  *   revision_data_table = "taxonomy_term_field_revision",
- *   uri_callback = "taxonomy_term_uri",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "tid",

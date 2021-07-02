@@ -20,7 +20,9 @@ class Term extends Entity {
     // @todo Remove the legacy code.
     // Convert legacy vids option to machine name vocabularies.
     if (!empty($this->options['vids'])) {
-      $vocabularies = taxonomy_vocabulary_get_names();
+      $vocabularies = $this->entityTypeManager->getStorage('taxonomy_vocabulary')
+        ->getQuery()
+        ->execute();
       foreach ($this->options['vids'] as $vid) {
         if (isset($vocabularies[$vid], $vocabularies[$vid]->machine_name)) {
           $this->options['vocabularies'][$vocabularies[$vid]->machine_name] = $vocabularies[$vid]->machine_name;
