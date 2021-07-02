@@ -294,6 +294,11 @@ drupal.element.matches:
   js:
     misc/polyfills/element.matches.js: { weight: -20 }
 
+drupal.element.toggleAttribute:
+  version: VERSION
+  js:
+    misc/polyfills/element.toggleAttribute.js: { weight: -20, attributes: { nomodule: true } }
+
 drupal.entity-form:
   version: VERSION
   js:
@@ -467,6 +472,8 @@ jquery.show-hide:
   version: VERSION
   js:
     misc/jquery.show-hide.shim.js: {}
+  dependencies:
+    - core/drupal.element.toggleAttribute
 
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic

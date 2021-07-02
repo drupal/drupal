@@ -22,7 +22,7 @@
 
     this.each(function (index, item) {
       if (item instanceof Element) {
-        item.setAttribute('hidden', '');
+        item.toggleAttribute('hidden', true);
       }
     });
     return this;
@@ -44,7 +44,7 @@
 
     this.each(function (index, item) {
       if (item instanceof Element) {
-        item.removeAttribute('hidden');
+        item.toggleAttribute('hidden', false);
       }
     });
     return this;
@@ -60,17 +60,7 @@
     if (args.length === 0 || args.length === 1 && typeof args[0] === 'boolean') {
       this.each(function (index, item) {
         if (item instanceof Element) {
-          if (args.length === 0) {
-            if (item.hasAttribute('hidden')) {
-              item.removeAttribute('hidden');
-            } else {
-              item.setAttribute('hidden', '');
-            }
-          } else if (args[0]) {
-            item.removeAttribute('hidden');
-          } else if (!args[0]) {
-            item.setAttribute('hidden', '');
-          }
+          item.toggleAttribute('hidden', args[0]);
         }
       });
       return this;
