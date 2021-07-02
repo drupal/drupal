@@ -4,9 +4,13 @@ namespace Drupal\Tests\Core\Block;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Block\BlockManager;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Block\BlockPluginTrait;
 use Drupal\Core\Block\Plugin\Block\Broken;
+use Drupal\Core\Cache\CacheableDependencyTrait;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
@@ -50,10 +54,9 @@ class BlockManagerTest extends UnitTestCase {
     $this->blockManager = new BlockManager(new \ArrayObject(), $cache_backend->reveal(), $module_handler->reveal(), $this->logger->reveal());
     $this->blockManager->setStringTranslation($this->getStringTranslationStub());
 
-    $discovery = $this->prophesize(DiscoveryInterface::class);
     // Specify the 'broken' block, as well as 3 other blocks with admin labels
     // that are purposefully not in alphabetical order.
-    $discovery->getDefinitions()->willReturn([
+    $this->setDefinitions([
       'broken' => [
         'admin_label' => 'Broken/Missing',
         'category' => 'Block',
@@ -63,16 +66,30 @@ class BlockManagerTest extends UnitTestCase {
       'block1' => [
         'admin_label' => 'Coconut',
         'category' => 'Group 2',
+        'class' => TestBlockManagerBlock::class,
       ],
       'block2' => [
         'admin_label' => 'Apple',
         'category' => 'Group 1',
+        'class' => TestBlockManagerBlock::class,
       ],
       'block3' => [
         'admin_label' => 'Banana',
         'category' => 'Group 2',
+        'class' => TestBlockManagerBlock::class,
       ],
     ]);
+  }
+
+  /**
+   * Sets the definitions the block manager will return.
+   *
+   * @param array $definitions
+   *   An array of plugin definitions.
+   */
+  protected function setDefinitions(array $definitions) {
+    $discovery = $this->prophesize(DiscoveryInterface::class);
+    $discovery->getDefinitions()->willReturn($definitions);
     // Force the discovery object onto the block manager.
     $property = new \ReflectionProperty(BlockManager::class, 'discovery');
     $property->setAccessible(TRUE);
@@ -113,5 +130,71 @@ class BlockManagerTest extends UnitTestCase {
     $plugin = $this->blockManager->createInstance('invalid');
     $this->assertSame('broken', $plugin->getPluginId());
   }
+  /**
+   * @group legacy
+   * @expectedDeprecation Declaring ::build() without an array return typehint in Drupal\Tests\Core\Block\TestBlockManagerNoArrayReturnTypeBlock is deprecated in drupal:9.2.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.
+   */
+  public function testBuildNoReturnType() {
+    // Overwrite the definitions from ::setUp() to have a block that does not
+    // have a return type for ::build().
+    $this->setDefinitions([
+      'block1' => [
+        'provider' => 'test',
+        'class' => TestBlockManagerNoArrayReturnTypeBlock::class,
+      ],
+    ]);
+    $expected = [];
+    $definitions = $this->blockManager->getDefinitions();
+    $this->assertSame($expected, $definitions);
+  }
+
+  /**
+   * @group legacy
+   * @expectedDeprecation Extending Drupal\Tests\Core\Block\TestBlockManagerExtendsExistingBlock from a concrete class is deprecated in drupal:9.2.0 and will be disallowed before drupal:10.0.0. Extend the class from an abstract base class instead. See https://www.drupal.org/node/xxxxxxxx.
+   */
+  public function testExtendsExistingBlock() {
+    // Overwrite the definitions from ::setUp() to have a block that extends
+    // an existing block.
+    $this->setDefinitions([
+      'block1' => [
+        'provider' => 'test',
+        'class' => TestBlockManagerExtendsExistingBlock::class,
+      ],
+    ]);
+    $expected = [];
+    $definitions = $this->blockManager->getDefinitions();
+    $this->assertSame($expected, $definitions);
+  }
+
+}
+
+class TestBlockManagerBlock extends PluginBase implements BlockPluginInterface {
+
+  use BlockPluginTrait;
+  use CacheableDependencyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build(): array {
+    return [];
+  }
+
+}
+
+class TestBlockManagerNoArrayReturnTypeBlock extends PluginBase implements BlockPluginInterface {
+
+  use BlockPluginTrait;
+  use CacheableDependencyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build() {
+  }
+
+}
+
+class TestBlockManagerExtendsExistingBlock extends TestBlockManagerBlock {
 
 }

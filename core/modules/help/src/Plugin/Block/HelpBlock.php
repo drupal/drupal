@@ -85,7 +85,7 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     // Do not show on a 403 or 404 page.
     if ($this->request->attributes->has('exception')) {
       return [];

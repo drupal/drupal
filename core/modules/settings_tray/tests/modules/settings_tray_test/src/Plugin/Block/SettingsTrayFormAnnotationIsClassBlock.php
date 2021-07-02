@@ -20,7 +20,7 @@ class SettingsTrayFormAnnotationIsClassBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return ['#markup' => '<span>class</span>'];
   }
 

@@ -64,7 +64,7 @@ class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return ['#markup' => 'Hello test world'];
   }
 

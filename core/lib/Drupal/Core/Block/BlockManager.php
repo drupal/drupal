@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Block;
 
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -65,6 +66,17 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
     $this->processDefinitionCategory($definition);
+
+    // @todo Remove this check in https://www.drupal.org/node/3167432.
+    $class = DefaultFactory::getPluginClass($plugin_id, $definition);
+    $plugin_class = new \ReflectionClass($class);
+    if (!$plugin_class->getParentClass()->isAbstract()) {
+      @trigger_error('Extending ' . $class . ' from a concrete class is deprecated in drupal:9.2.0 and will be disallowed before drupal:10.0.0. Extend the class from an abstract base class instead. See https://www.drupal.org/node/xxxxxxxx.', E_USER_DEPRECATED);
+    }
+    $build_method = new \ReflectionMethod($class, 'build');
+    if (!$build_method->hasReturnType() || $build_method->getReturnType()->getName() !== 'array') {
+      @trigger_error('Declaring ::build() without an array return typehint in ' . $class . ' is deprecated in drupal:9.2.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.', E_USER_DEPRECATED);
+    }
   }
 
   /**

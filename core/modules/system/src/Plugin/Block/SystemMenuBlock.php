@@ -143,7 +143,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $menu_name = $this->getDerivativeId();
     if ($this->configuration['expand_all_items']) {
       $parameters = new MenuTreeParameters();

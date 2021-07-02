@@ -151,7 +151,7 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $content = [];
 
     if ($this->configuration['top_day_num'] > 0) {

@@ -49,7 +49,7 @@ class TestAjaxBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $build['content'] = [
       '#markup' => $this->t('Every word is like an unnecessary stain on silence and nothingness.'),
     ];

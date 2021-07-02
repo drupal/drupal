@@ -68,7 +68,7 @@ class SystemBreadcrumbBlock extends BlockBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return $this->breadcrumbManager->build($this->routeMatch)->toRenderable();
   }
 

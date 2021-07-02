@@ -17,7 +17,7 @@ class TestHtmlBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return [
       '#attributes' => \Drupal::state()->get('block_test.attributes'),
       '#children' => \Drupal::state()->get('block_test.content'),

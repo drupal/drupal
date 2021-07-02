@@ -118,7 +118,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $entity = $this->getEntity();
     // Add a placeholder to replace after the entity view is built.
     // @see layout_builder_entity_view_alter().

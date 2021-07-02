@@ -22,7 +22,7 @@ class AttachedRenderingBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     // Grab test attachment fixtures from
     // Drupal\render_attached_test\Controller\RenderAttachedTestController.
     $controller = new RenderAttachedTestController();

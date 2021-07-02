@@ -72,6 +72,8 @@ interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInt
    * @return array
    *   A renderable array representing the content of the block.
    *
+   * @todo Add array as the return type in https://www.drupal.org/node/3167432.
+   *
    * @see \Drupal\block\BlockViewBuilder
    */
   public function build();

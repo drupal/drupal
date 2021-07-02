@@ -77,7 +77,7 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $page = $this->configuration['page_id'] ?? NULL;
     return $this->formBuilder->getForm(SearchBlockForm::class, $page);
   }

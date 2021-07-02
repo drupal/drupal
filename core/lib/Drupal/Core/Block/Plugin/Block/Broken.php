@@ -64,7 +64,7 @@ class Broken extends PluginBase implements BlockPluginInterface, ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $build = [];
     if ($this->currentUser->hasPermission('administer blocks')) {
       $build += $this->brokenMessage();

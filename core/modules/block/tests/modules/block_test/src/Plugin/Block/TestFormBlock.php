@@ -17,7 +17,7 @@ class TestFormBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return \Drupal::formBuilder()->getForm('Drupal\block_test\Form\TestForm');
   }
 

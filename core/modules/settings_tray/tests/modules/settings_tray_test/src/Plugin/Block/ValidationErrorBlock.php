@@ -18,7 +18,7 @@ class ValidationErrorBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return ['#markup' => '<span>If I had more time this would be very witty :(.</span>'];
   }
 

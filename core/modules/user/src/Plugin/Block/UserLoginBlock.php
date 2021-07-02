@@ -82,7 +82,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $form = \Drupal::formBuilder()->getForm('Drupal\user\Form\UserLoginForm');
     unset($form['name']['#attributes']['autofocus']);
     // When unsetting field descriptions, also unset aria-describedby attributes
