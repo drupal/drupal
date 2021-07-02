@@ -24,7 +24,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
     $comment_admin = $account->hasPermission('administer comments');
     if ($operation == 'approve') {
-      return AccessResult::allowedIf($comment_admin && !$entity->isPublished())
+      return AccessResult::allowedIf($comment_admin)
         ->cachePerPermissions()
         ->addCacheableDependency($entity);
     }

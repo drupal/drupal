@@ -138,20 +138,26 @@ class CommentAccessTest extends CommentTestBase {
     ]);
     $comment->save();
 
-    // Here we are calling comment_test module's url. This url is calling the
-    // same controller. It has CSRF token disabled. Token is intentionally kept
-    // disabled to prevent validation. By disabling CSRF token we can directly
-    // call the controller method and test the messages.
-    $approval_url = 'comment-test/' . $comment->id() . '/approve';
-    $this->drupalGet($approval_url);
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Comment approved.');
+    $this->drupalGet('node/' . $this->node->id());
+    $this->assertSession()->linkExists('Approve');
 
-    // Send the request again to comment approval url.
-    $approval_url = 'comment-test/' . $comment->id() . '/approve';
-    $this->drupalGet($approval_url);
+    // Publish the comment directly via API.
+    $comment->setPublished();
+    $comment->save();
+
+    // Click on "Approve" link.
+    $this->clickLink(t('Approve'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The comment is already published.');
+
+    // Un-publish the comment and verify the message.
+    $comment->setUnpublished();
+    $comment->save();
+
+    $this->drupalGet('node/' . $this->node->id());
+    $this->clickLink(t('Approve'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Comment approved.');
   }
 
 }
