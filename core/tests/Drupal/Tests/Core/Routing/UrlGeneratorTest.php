@@ -390,7 +390,7 @@ class UrlGeneratorTest extends UnitTestCase {
       ->method('processOutbound');
 
     $path = $this->generator->getPathFromRoute('test_3');
-    $this->assertEquals($path, 'test/two');
+    $this->assertEquals('test/two', $path);
   }
 
   /**
@@ -452,7 +452,8 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Test that the 'scheme' route requirement is respected during url generation.
+   * Tests that the 'scheme' route requirement is respected during url
+   * generation.
    */
   public function testUrlGenerationWithHttpsRequirement() {
     $url = $this->generator->generate('test_4', [], TRUE);

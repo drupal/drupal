@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
 class ConfigTest extends UnitTestCase {
 
   /**
-   * Test the import method.
+   * Tests the import method.
    */
   public function testImport() {
     $source = [
@@ -56,11 +56,11 @@ class ConfigTest extends UnitTestCase {
       ->will($this->returnValue($config));
     $destination = new Config(['config_name' => 'd8_config'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager);
     $destination_id = $destination->import($row);
-    $this->assertEquals($destination_id, ['d8_config']);
+    $this->assertEquals(['d8_config'], $destination_id);
   }
 
   /**
-   * Test the import method.
+   * Tests the import method.
    */
   public function testLanguageImport() {
     $source = [
@@ -106,7 +106,7 @@ class ConfigTest extends UnitTestCase {
       ->will($this->returnValue($config));
     $destination = new Config(['config_name' => 'd8_config', 'translations' => 'true'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager);
     $destination_id = $destination->import($row);
-    $this->assertEquals($destination_id, ['d8_config', 'mi']);
+    $this->assertEquals(['d8_config', 'mi'], $destination_id);
   }
 
 }

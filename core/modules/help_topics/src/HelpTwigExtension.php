@@ -153,7 +153,9 @@ class HelpTwigExtension extends AbstractExtension {
     }
     else {
       $build = [
-        '#markup' => $this->t('Missing help topic'),
+        '#markup' => $this->t('Missing help topic %topic', [
+          '%topic' => $topic_id,
+        ]),
       ];
     }
 

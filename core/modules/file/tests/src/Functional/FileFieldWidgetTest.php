@@ -106,8 +106,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSession()->buttonExists('Upload');
     // Test label has correct 'for' attribute.
     $input = $this->assertSession()->fieldExists("files[{$field_name}_0]");
-    $label = $this->xpath('//label[@for="' . $input->getAttribute('id') . '"]');
-    $this->assertTrue(isset($label[0]), 'Label for upload found.');
+    $this->assertSession()->elementExists('xpath', '//label[@for="' . $input->getAttribute('id') . '"]');
 
     // Save the node and ensure it does not have the file.
     $this->submitForm([], 'Save');
@@ -122,7 +121,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
-    // bug in drupalPostForm() with multiple file uploads in one form, where the
+    // bug in submitForm() with multiple file uploads in one form, where the
     // order of uploads depends on the order in which the upload elements are
     // added to the $form (which, in the current implementation of
     // FileStorage::listAll(), comes down to the alphabetical order on field
@@ -144,7 +143,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     foreach ([$field_name2, $field_name] as $each_field_name) {
       for ($delta = 0; $delta < 3; $delta++) {
         $edit = ['files[' . $each_field_name . '_' . $delta . '][]' => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
-        // If the Upload button doesn't exist, drupalPostForm() will
+        // If the Upload button doesn't exist, submitForm() will
         // automatically fail with an assertion message.
         $this->submitForm($edit, 'Upload');
       }
@@ -226,7 +225,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Try to upload multiple files, but fewer than the maximum.
     $nid = $this->uploadNodeFiles($upload_files_node_creation, $field_name, $type_name, TRUE, []);
     $node = $node_storage->loadUnchanged($nid);
-    $this->assertSame(count($upload_files_node_creation), count($node->{$field_name}), 'Node was successfully saved with multiple files.');
+    $this->assertSameSize($upload_files_node_creation, $node->{$field_name}, 'Node was successfully saved with multiple files.');
 
     // Try to upload exactly the allowed number of files on revision.
     $this->uploadNodeFile($test_file, $field_name, $node->id(), 1, [], TRUE);
@@ -258,7 +257,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Change the field setting to make its files private, and upload a file.
     $edit = ['settings[uri_scheme]' => 'private'];
-    $this->drupalPostForm("admin/structure/types/manage/$type_name/fields/$field_id/storage", $edit, 'Save field settings');
+    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/{$field_id}/storage");
+    $this->submitForm($edit, 'Save field settings');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
     $node_file = File::load($node->{$field_name}->target_id);
@@ -309,7 +309,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Add a comment with a file.
@@ -318,7 +319,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'files[field_' . $name . '_' . 0 . ']' => \Drupal::service('file_system')->realpath($text_file->getFileUri()),
       'comment_body[0][value]' => $comment_body = $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/' . $node->id(), $edit, 'Save');
+    $this->drupalGet('node/' . $node->id());
+    $this->submitForm($edit, 'Save');
 
     // Get the comment ID.
     preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);
@@ -344,7 +346,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Unpublishes node.
     $this->drupalLogin($this->adminUser);
     $edit = ['status[value]' => FALSE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
@@ -470,6 +473,33 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   }
 
   /**
+   * Tests maximum upload file size validation.
+   */
+  public function testMaximumUploadFileSizeValidation() {
+    // Grant the admin user required permissions.
+    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+
+    $type_name = 'article';
+    $field_name = strtolower($this->randomMachineName());
+    $this->createFileField($field_name, 'node', $type_name);
+    /** @var \Drupal\Field\FieldConfigInterface $field */
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $field_id = $field->id();
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+
+    // Tests that form validation trims the user input.
+    $edit = ['settings[max_filesize]' => ' 5.1 megabytes '];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+
+    // Reload the field config to check for the saved value.
+    /** @var \Drupal\Field\FieldConfigInterface $field */
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $settings = $field->getSettings();
+    $this->assertEquals('5.1 megabytes', $settings['max_filesize'], 'The max filesize value had been trimmed on save.');
+  }
+
+  /**
    * Tests configuring file field's allowed file extensions setting.
    */
   public function testFileExtensionsSetting() {
@@ -545,7 +575,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $victim_tmp_file = File::load($victim_tmp_file->id());
     $this->assertTrue($victim_tmp_file->isTemporary(), 'New file saved to disk is temporary.');
     $this->assertFalse(empty($victim_tmp_file->id()), 'New file has an fid.');
-    $this->assertEqual($victim_user->id(), $victim_tmp_file->getOwnerId(), 'New file belongs to the victim.');
+    $this->assertEquals($victim_user->id(), $victim_tmp_file->getOwnerId(), 'New file belongs to the victim.');
 
     // Have attacker create a new node with a different uploaded file and
     // ensure it got uploaded successfully.
@@ -555,13 +585,14 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Attach a file to a node.
     $edit['files[' . $field_name . '_0]'] = $this->container->get('file_system')->realpath($test_file->getFileUri());
-    $this->drupalPostForm(Url::fromRoute('node.add', ['node_type' => $type_name]), $edit, 'Save');
+    $this->drupalGet(Url::fromRoute('node.add', ['node_type' => $type_name]));
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = File::load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file->getFileUri());
-    $this->assertEqual($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
+    $this->assertEquals($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
 
     // Ensure the file can be downloaded.
     $this->drupalGet($node_file->createFileUrl());

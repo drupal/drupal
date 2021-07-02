@@ -68,32 +68,35 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Check that the original file is still in place on the first revision.
     $node = node_revision_load($node_vid_r1);
     $current_file = File::load($node->{$field_name}->target_id);
-    $this->assertEqual($node_file_r1->id(), $current_file->id(), 'Original file still in place after replacing file in new revision.');
+    $this->assertEquals($node_file_r1->id(), $current_file->id(), 'Original file still in place after replacing file in new revision.');
     $this->assertFileExists($node_file_r1->getFileUri());
     $this->assertFileEntryExists($node_file_r1, 'Original file entry still in place after replacing file in new revision');
     $this->assertFileIsPermanent($node_file_r1, 'Original file is still permanent.');
 
     // Save a new version of the node without any changes.
     // Check that the file is still the same as the previous revision.
-    $this->drupalPostForm('node/' . $nid . '/edit', ['revision' => '1'], 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm(['revision' => '1'], 'Save');
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r3 = File::load($node->{$field_name}->target_id);
     $node_vid_r3 = $node->getRevisionId();
-    $this->assertEqual($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
+    $this->assertEquals($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
     $this->assertFileIsPermanent($node_file_r3, 'New revision file is permanent.');
 
     // Revert to the first revision and check that the original file is active.
-    $this->drupalPostForm('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', [], 'Revert');
+    $this->drupalGet('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert');
+    $this->submitForm([], 'Revert');
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r4 = File::load($node->{$field_name}->target_id);
-    $this->assertEqual($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
+    $this->assertEquals($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
     $this->assertFileIsPermanent($node_file_r4, 'Original revision file still permanent after reverting to the original revision.');
 
     // Delete the second revision and check that the file is kept (since it is
     // still being used by the third revision).
-    $this->drupalPostForm('node/' . $nid . '/revisions/' . $node_vid_r2 . '/delete', [], 'Delete');
+    $this->drupalGet('node/' . $nid . '/revisions/' . $node_vid_r2 . '/delete');
+    $this->submitForm([], 'Delete');
     $this->assertFileExists($node_file_r3->getFileUri());
     $this->assertFileEntryExists($node_file_r3, 'Second file entry is still available after deleting second revision, since it is being used by the third revision.');
     $this->assertFileIsPermanent($node_file_r3, 'Second file entry is still permanent after deleting second revision, since it is being used by the third revision.');
@@ -106,7 +109,8 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->drupalGet('user/' . $user->id() . '/edit');
 
     // Delete the third revision and check that the file is not deleted yet.
-    $this->drupalPostForm('node/' . $nid . '/revisions/' . $node_vid_r3 . '/delete', [], 'Delete');
+    $this->drupalGet('node/' . $nid . '/revisions/' . $node_vid_r3 . '/delete');
+    $this->submitForm([], 'Delete');
     $this->assertFileExists($node_file_r3->getFileUri());
     $this->assertFileEntryExists($node_file_r3, 'Second file entry is still available after deleting third revision, since it is being used by the user.');
     $this->assertFileIsPermanent($node_file_r3, 'Second file entry is still permanent after deleting third revision, since it is being used by the user.');
@@ -134,11 +138,12 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->execute();
     \Drupal::service('cron')->run();
 
-    $this->assertFileNotExists($node_file_r3->getFileUri());
+    $this->assertFileDoesNotExist($node_file_r3->getFileUri());
     $this->assertFileEntryNotExists($node_file_r3, 'Second file entry is now deleted after deleting third revision, since it is no longer being used by any other nodes.');
 
     // Delete the entire node and check that the original file is deleted.
-    $this->drupalPostForm('node/' . $nid . '/delete', [], 'Delete');
+    $this->drupalGet('node/' . $nid . '/delete');
+    $this->submitForm([], 'Delete');
     // Call file_cron() to clean up the file. Make sure the changed timestamp
     // of the file is older than the system.file.temporary_maximum_age
     // configuration value. We use an UPDATE statement because using the API
@@ -150,7 +155,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->condition('fid', $node_file_r1->id())
       ->execute();
     \Drupal::service('cron')->run();
-    $this->assertFileNotExists($node_file_r1->getFileUri());
+    $this->assertFileDoesNotExist($node_file_r1->getFileUri());
     $this->assertFileEntryNotExists($node_file_r1, 'Original file entry is deleted after deleting the entire node with two revisions remaining.');
   }
 

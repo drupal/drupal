@@ -41,7 +41,7 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
     $node = $this->container->get('entity_type.manager')->getStorage('node')->create(['type' => 'page']);
     $typed_data = $this->typedData->create($definition, $node);
     $violations = $typed_data->validate();
-    $this->assertEqual(0, $violations->count(), 'Validation passed for correct value.');
+    $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
     // Test the validation when an invalid value (in this case a user entity)
     // is passed.
@@ -49,13 +49,13 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
 
     $typed_data = $this->typedData->create($definition, $account);
     $violations = $typed_data->validate();
-    $this->assertEqual(1, $violations->count(), 'Validation failed for incorrect value.');
+    $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEqual(t('The entity must be of type %type.', ['%type' => $entity_type]), $violation->getMessage(), 'The message for invalid value is correct.');
-    $this->assertEqual($typed_data, $violation->getRoot(), 'Violation root is correct.');
-    $this->assertEqual($account, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
+    $this->assertEquals(t('The entity must be of type %type.', ['%type' => $entity_type]), $violation->getMessage(), 'The message for invalid value is correct.');
+    $this->assertEquals($typed_data, $violation->getRoot(), 'Violation root is correct.');
+    $this->assertEquals($account, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
   }
 
 }

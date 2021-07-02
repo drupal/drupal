@@ -167,7 +167,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
     $links = [];
     $request = $this->requestStack->getCurrentRequest();
     foreach ($this->getContextualLinkPluginsByGroup($group_name) as $plugin_id => $plugin_definition) {
-      /** @var $plugin \Drupal\Core\Menu\ContextualLinkInterface */
+      /** @var \Drupal\Core\Menu\ContextualLinkInterface $plugin */
       $plugin = $this->createInstance($plugin_id);
       $route_name = $plugin->getRouteName();
 

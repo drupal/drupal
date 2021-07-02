@@ -29,7 +29,7 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
       'EntityChanged' => NULL,
       'EntityUntranslatableFields' => NULL,
     ];
-    $this->assertEqual($default_constraints, $entity_type->getConstraints());
+    $this->assertEquals($default_constraints, $entity_type->getConstraints());
 
     // Enable our test module and test extending constraints.
     $this->enableModules(['entity_test_constraints']);
@@ -42,7 +42,7 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->entityTypeManager->clearCachedDefinitions();
     $entity_type = $this->entityTypeManager->getDefinition('entity_test_constraints');
-    $this->assertEqual($default_constraints + $extra_constraints, $entity_type->getConstraints());
+    $this->assertEquals($default_constraints + $extra_constraints, $entity_type->getConstraints());
 
     // Test altering constraints.
     $altered_constraints = ['Test' => ['some_setting' => TRUE]];
@@ -52,7 +52,7 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
     \Drupal::state()->resetCache();
     $this->entityTypeManager->clearCachedDefinitions();
     $entity_type = $this->entityTypeManager->getDefinition('entity_test_constraints');
-    $this->assertEqual($altered_constraints, $entity_type->getConstraints());
+    $this->assertEquals($altered_constraints, $entity_type->getConstraints());
   }
 
   /**
@@ -62,12 +62,12 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
     $entity = $this->entityTypeManager->getStorage('entity_test_constraints')->create();
     $entity->user_id->target_id = 0;
     $violations = $entity->validate();
-    $this->assertEqual(0, $violations->count(), 'Validation passed.');
+    $this->assertEquals(0, $violations->count(), 'Validation passed.');
     $entity->save();
     $entity->changed->value = REQUEST_TIME - 86400;
     $violations = $entity->validate();
-    $this->assertEqual(1, $violations->count(), 'Validation failed.');
-    $this->assertEqual(t('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.'), $violations[0]->getMessage());
+    $this->assertEquals(1, $violations->count(), 'Validation failed.');
+    $this->assertEquals(t('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.'), $violations[0]->getMessage());
   }
 
 }

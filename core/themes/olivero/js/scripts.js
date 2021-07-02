@@ -9,13 +9,13 @@
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    var navButtons = document.querySelector('.mobile-buttons');
+    var navButtons = document.querySelector('[data-drupal-selector="mobile-buttons"]');
     return window.getComputedStyle(navButtons).getPropertyValue('display') === 'none';
   }
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
-  var stickyHeaderToggleButton = document.querySelector('.sticky-header-toggle');
-  var siteHeaderFixable = document.querySelector('.site-header__fixable');
+  var stickyHeaderToggleButton = document.querySelector('[data-drupal-selector="sticky-header-toggle"]');
+  var siteHeaderFixable = document.querySelector('[data-drupal-selector="site-header-fixable"]');
 
   function stickyHeaderIsEnabled() {
     return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
@@ -58,18 +58,18 @@
   }
 
   if ('IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
-    var fixableElements = document.querySelectorAll('.fixable');
+    var fixableElements = document.querySelectorAll('[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]');
 
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
       entries.forEach(function (entry) {
         if (entry.intersectionRatio < 1) {
           fixableElements.forEach(function (el) {
-            return el.classList.add('js-fixed');
+            return el.classList.add('is-fixed');
           });
         } else {
           fixableElements.forEach(function (el) {
-            return el.classList.remove('js-fixed');
+            return el.classList.remove('is-fixed');
           });
         }
       });
@@ -92,7 +92,7 @@
     }
 
     function monitorNavPosition() {
-      var primaryNav = document.querySelector('.site-header');
+      var primaryNav = document.querySelector('[data-drupal-selector="site-header"]');
       var options = {
         rootMargin: getRootMargin(),
         threshold: [0.999, 1]
@@ -104,10 +104,10 @@
     stickyHeaderToggleButton.addEventListener('click', function () {
       toggleStickyHeaderState(!stickyHeaderIsEnabled());
     });
-    document.querySelector('#site-header__inner').addEventListener('focusin', function () {
+    document.querySelector('[data-drupal-selector="site-header-inner"]').addEventListener('focusin', function () {
       if (isDesktopNav() && !stickyHeaderIsEnabled()) {
-        var header = document.querySelector('#header');
-        var headerNav = header.querySelector('#header-nav');
+        var header = document.querySelector('[data-drupal-selector="site-header"]');
+        var headerNav = header.querySelector('[data-drupal-selector="header-nav"]');
         var headerMargin = header.clientHeight - headerNav.clientHeight;
 
         if (window.scrollY > headerMargin) {

@@ -144,7 +144,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    *   The render array
    */
   protected function assertCacheabilityMetadata($build) {
-    $this->assertEqual([
+    $this->assertEquals([
       'config:core.entity_view_display.entity_test.entity_test.foobar',
       'config:views.view.test_field_entity_test_rendered',
       'entity_test:1',
@@ -154,7 +154,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
       'entity_test_view',
     ], $build['#cache']['tags']);
 
-    $this->assertEqual([
+    $this->assertEquals([
       'entity_test_view_grants',
       'languages:language_interface',
       'theme',
@@ -170,7 +170,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    */
   protected function assertConfigDependencies(View $storage) {
     $storage->calculateDependencies();
-    $this->assertEqual([
+    $this->assertEquals([
       'config' => ['core.entity_view_mode.entity_test.foobar'],
       'module' => ['entity_test'],
     ], $storage->getDependencies());

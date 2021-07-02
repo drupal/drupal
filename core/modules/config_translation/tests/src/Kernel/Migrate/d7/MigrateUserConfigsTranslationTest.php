@@ -34,6 +34,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal7TestBase {
       'locales_location',
     ]);
     $this->executeMigrations([
+      'language',
       'd7_user_mail',
       'd7_user_settings',
       'd7_user_mail_translation',

@@ -552,7 +552,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Test detecting external urls that point to local resources.
+   * Tests detecting external urls that point to local resources.
    *
    * @param string $url
    *   The external url to test.
@@ -607,7 +607,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Test invalid url arguments.
+   * Tests invalid url arguments.
    *
    * @param string $url
    *   The url to test.

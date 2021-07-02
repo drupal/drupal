@@ -257,9 +257,8 @@
         : [];
       classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
-      dialogSettings.autoResize = window.matchMedia(
-        '(min-width: 600px)',
-      ).matches;
+      dialogSettings.autoResize =
+        window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
 
       // Add a "Loading…" message, hide it underneath the CKEditor toolbar,

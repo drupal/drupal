@@ -45,14 +45,14 @@ class SubProcessTest extends MigrateTestCase {
     foreach ($process_configuration['process'] as $destination => $source) {
       $sub_process_plugins[$destination][] = new Get(['source' => $source], 'get', []);
     }
-    $migration->expects($this->at(1))
-      ->method('getProcessPlugins')
-      ->willReturn($sub_process_plugins);
     // Set up the key plugins.
     $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
-    $migration->expects($this->at(2))
+    $migration->expects($this->exactly(2))
       ->method('getProcessPlugins')
-      ->will($this->returnValue($key_plugin));
+      ->willReturnOnConsecutiveCalls(
+        $sub_process_plugins,
+        $key_plugin,
+      );
     $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
     $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
 
@@ -71,7 +71,7 @@ class SubProcessTest extends MigrateTestCase {
     // key (@id) is the same as the destination ID (42).
     $new_value = $plugin->transform($current_value, $migrate_executable, $row, 'test');
     $this->assertCount(1, $new_value);
-    $this->assertCount(count($process_configuration['process']), $new_value[42]);
+    $this->assertSameSize($process_configuration['process'], $new_value[42]);
     $this->assertSame('test', $new_value[42]['foo']);
     if ($source_values) {
       $this->assertSame('source_baz', $new_value[42]['baaa']);
@@ -139,16 +139,13 @@ class SubProcessTest extends MigrateTestCase {
     foreach ($process_configuration['process'] as $destination => $source) {
       $sub_process_plugins[$destination][] = new Get(['source' => $source], 'get', []);
     }
-    $migration->expects($this->at(1))
+    $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
+    $migration->expects($this->exactly(2))
       ->method('getProcessPlugins')
-      ->willReturn($sub_process_plugins);
-    // Set up the key plugins.
-    if (array_key_exists('key', $process_configuration)) {
-      $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
-      $migration->expects($this->at(2))
-        ->method('getProcessPlugins')
-        ->will($this->returnValue($key_plugin));
-    }
+      ->willReturnOnConsecutiveCalls(
+        $sub_process_plugins,
+        $key_plugin,
+      );
     $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
     $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
 

@@ -201,20 +201,24 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepareStatement(string $query, array $options): StatementInterface {
+  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     // mapConditionOperator converts some operations (LIKE, REGEXP, etc.) to
     // PostgreSQL equivalents (ILIKE, ~*, etc.). However PostgreSQL doesn't
     // automatically cast the fields to the right type for these operators,
     // so we need to alter the query and add the type-cast.
     $query = preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query);
-    return parent::prepareStatement($query, $options);
+    return parent::prepareStatement($query, $options, $allow_row_count);
   }
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function queryTemporary($query, array $args = [], array $options = []) {
+    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
     $tablename = $this->generateTemporaryTableName();
     $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
     return $tablename;

@@ -67,14 +67,15 @@ class ForumIndexTest extends BrowserTestBase {
       'description[0][value]' => $this->randomMachineName(200),
       'parent[0]' => $tid,
     ];
-    $this->drupalPostForm('admin/structure/forum/add/forum', $edit, 'Save');
+    $this->drupalGet('admin/structure/forum/add/forum');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->linkExists('edit forum');
 
     $tid_child = $tid + 1;
 
     // Verify that the node appears on the index.
     $this->drupalGet('forum/' . $tid);
-    $this->assertText($title);
+    $this->assertSession()->pageTextContains($title);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:node.type.forum');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'comment_list');
@@ -84,9 +85,10 @@ class ForumIndexTest extends BrowserTestBase {
 
     // Unpublish the node.
     $edit = ['status[value]' => FALSE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/' . $node->id());
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
 
     // Verify that the node no longer appears on the index.
     $this->drupalGet('forum/' . $tid);

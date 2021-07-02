@@ -1,7 +1,7 @@
 ((Drupal) => {
   const { isDesktopNav } = Drupal.olivero;
   const secondLevelNavMenus = document.querySelectorAll(
-    '.primary-nav__menu-item--has-children',
+    '[data-drupal-selector="primary-nav-menu-item-has-children"]',
   );
 
   /**
@@ -12,7 +12,7 @@
    */
   function toggleSubNav(topLevelMenuItem, toState) {
     const buttonSelector =
-      '.primary-nav__button-toggle, .primary-nav__menu-link--button';
+      '[data-drupal-selector="primary-nav-submenu-toggle-button"]';
     const button = topLevelMenuItem.querySelector(buttonSelector);
     const state =
       toState !== undefined
@@ -27,20 +27,29 @@
             'aria-expanded',
             'false',
           );
-          el.querySelector('.primary-nav__menu--level-2').classList.remove(
-            'is-active-menu-parent',
-          );
+          el.querySelector(
+            '[data-drupal-selector="primary-nav-menu--level-2"]',
+          ).classList.remove('is-active-menu-parent');
+          el.querySelector(
+            '[data-drupal-selector="primary-nav-menu-🥕"]',
+          ).classList.remove('is-active-menu-parent');
         });
       }
       button.setAttribute('aria-expanded', 'true');
       topLevelMenuItem
-        .querySelector('.primary-nav__menu--level-2')
+        .querySelector('[data-drupal-selector="primary-nav-menu--level-2"]')
+        .classList.add('is-active-menu-parent');
+      topLevelMenuItem
+        .querySelector('[data-drupal-selector="primary-nav-menu-🥕"]')
         .classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
       topLevelMenuItem.classList.remove('is-touch-event');
       topLevelMenuItem
-        .querySelector('.primary-nav__menu--level-2')
+        .querySelector('[data-drupal-selector="primary-nav-menu--level-2"]')
+        .classList.remove('is-active-menu-parent');
+      topLevelMenuItem
+        .querySelector('[data-drupal-selector="primary-nav-menu-🥕"]')
         .classList.remove('is-active-menu-parent');
     }
   }
@@ -58,7 +67,7 @@
 
     setTimeout(() => {
       const menuParentItem = e.target.closest(
-        '.primary-nav__menu-item--has-children',
+        '[data-drupal-selector="primary-nav-menu-item-has-children"]',
       );
       if (!menuParentItem.contains(document.activeElement)) {
         toggleSubNav(menuParentItem, false);
@@ -69,7 +78,7 @@
   // Add event listeners onto each sub navigation parent and button.
   secondLevelNavMenus.forEach((el) => {
     const button = el.querySelector(
-      '.primary-nav__button-toggle, .primary-nav__menu-link--button',
+      '[data-drupal-selector="primary-nav-submenu-toggle-button"]',
     );
 
     button.removeAttribute('aria-hidden');
@@ -124,6 +133,12 @@
    */
   function closeAllSubNav() {
     secondLevelNavMenus.forEach((el) => {
+      // Return focus to the toggle button if the submenu contains focus.
+      if (el.contains(document.activeElement)) {
+        el.querySelector(
+          '[data-drupal-selector="primary-nav-submenu-toggle-button"]',
+        ).focus();
+      }
       toggleSubNav(el, false);
     });
   }
@@ -139,7 +154,7 @@
 
     secondLevelNavMenus.forEach((el) => {
       const button = el.querySelector(
-        '.primary-nav__button-toggle, .primary-nav__menu-link--button',
+        '[data-drupal-selector="primary-nav-submenu-toggle-button"]',
       );
       const state = button.getAttribute('aria-expanded') === 'true';
 
@@ -167,7 +182,7 @@
       if (
         areAnySubNavsOpen() &&
         !e.target.matches(
-          '.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *',
+          '[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *',
         )
       ) {
         closeAllSubNav();

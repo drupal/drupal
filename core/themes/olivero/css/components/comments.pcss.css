@@ -144,10 +144,6 @@
     width: var(--sp3);
     height: var(--sp3);
   }
-
-  @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    position: relative;
-  }
 }
 
 .indented .comment__picture {

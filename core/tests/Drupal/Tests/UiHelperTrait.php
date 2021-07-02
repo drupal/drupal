@@ -135,7 +135,8 @@ trait UiHelperTrait {
    *   @code
    *   // First step in form.
    *   $edit = array(...);
-   *   $this->drupalPostForm('some_url', $edit, 'Save');
+   *   $this->drupalGet('some_url');
+   *   $this->submitForm($edit, 'Save');
    *
    *   // Second step in form.
    *   $edit = array(...);

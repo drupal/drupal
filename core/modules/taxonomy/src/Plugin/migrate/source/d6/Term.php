@@ -6,7 +6,7 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Taxonomy term source from database.
+ * Drupal 6 taxonomy term source from database.
  *
  * Available configuration keys:
  * - bundle: (optional) The taxonomy vocabulary (vid) to filter terms retrieved
@@ -33,7 +33,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * In this example terms of vocabularies with 'vid' one of 1, 3, 5 are retrieved
  * from the source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *

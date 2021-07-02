@@ -72,8 +72,8 @@
     &:before,
     &:after {
       position: absolute;
-      inset-block-start: 20px;
       inset-inline-end: 9px;
+      inset-block-start: calc(var(--sp0-5) + 17px); /* Visually align button with menu link text. */
       width: 18px;
       height: 0;
       content: "";
@@ -150,6 +150,7 @@
   overflow: hidden;
   flex-basis: 100%;
   max-height: 0;
+  margin-block: 0;
   margin-inline-start: calc(-1 * var(--sp));
   padding-inline-start: var(--sp2-5);
   transition: opacity 0.2s, visibility 0.2s, max-height 0.2s;

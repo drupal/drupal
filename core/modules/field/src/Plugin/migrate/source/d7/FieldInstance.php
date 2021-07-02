@@ -148,10 +148,10 @@ class FieldInstance extends DrupalSqlBase {
     if ($row->getSourceProperty('entity_type') == 'node') {
       $language_content_type_bundle = (int) $this->variableGet('language_content_type_' . $row->getSourceProperty('bundle'), 0);
       // language_content_type_[bundle] may be
-      //   - 0: no language support
-      //   - 1: language assignment support
-      //   - 2: node translation support
-      //   - 4: entity translation support
+      // - 0: no language support
+      // - 1: language assignment support
+      // - 2: node translation support
+      // - 4: entity translation support
       if ($language_content_type_bundle === 2 || ($language_content_type_bundle === 4 && $row->getSourceProperty('translatable'))) {
         $translatable = TRUE;
       }

@@ -37,7 +37,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * In this example nodes of type page and test are retrieved from the source
  * database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
@@ -266,7 +267,7 @@ class Node extends DrupalSqlBase {
    *   The node.
    *
    * @return array
-   *   The field values, keyed by delta.
+   *   The field values, keyed and sorted by delta.
    */
   protected function getFieldData(array $field, Row $node) {
     $field_table = 'content_' . $field['field_name'];
@@ -310,6 +311,7 @@ class Node extends DrupalSqlBase {
         ->isNotNull($field['field_name'] . '_' . $columns[0])
         ->condition('nid', $node->getSourceProperty('nid'))
         ->condition('vid', $node->getSourceProperty('vid'))
+        ->orderBy('delta')
         ->execute()
         ->fetchAllAssoc('delta');
     }

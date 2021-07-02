@@ -2,4 +2,5 @@ name: 'Experimental Test'
 type: module
 description: 'Module in the experimental package to test experimental functionality.'
 package: Core (Experimental)
+lifecycle: experimental
 version: 8.y.x-unstable
