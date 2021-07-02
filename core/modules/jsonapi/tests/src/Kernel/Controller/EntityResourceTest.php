@@ -251,7 +251,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $field_manager = $this->prophesize(EntityFieldManagerInterface::class);
     $resource_type_repository = $this->prophesize(ResourceTypeRepositoryInterface::class);
-    $modulerenderer_handler = $this->prophesize(RendererInterface::class);
+    $module_renderer_handler = $this->prophesize(RendererInterface::class);
     $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
     $include_resolver = $this->prophesize(IncludeResolver::class);
     $entity_access_checker = $this->prophesize(EntityAccessChecker::class);
@@ -259,6 +259,6 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $serializer = $this->prophesize(SerializerInterface::class);
     $time = $this->prophesize(TimeInterface::class);
     $user = $this->prophesize(AccountInterface::class);
-    $this->assertNotNull(new EntityResource($entity_type_manager->reveal(), $field_manager->reveal(), $resource_type_repository->reveal(), $modulerenderer_handler->reveal(), $entity_repository->reveal(), $include_resolver->reveal(), $entity_access_checker->reveal(), $field_resolver->reveal(), $serializer->reveal(), $time->reveal(), $user->reveal()));
+    $this->assertNotNull(new EntityResource($entity_type_manager->reveal(), $field_manager->reveal(), $resource_type_repository->reveal(), $module_renderer_handler->reveal(), $entity_repository->reveal(), $include_resolver->reveal(), $entity_access_checker->reveal(), $field_resolver->reveal(), $serializer->reveal(), $time->reveal(), $user->reveal()));
   }
 }
