@@ -119,7 +119,9 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
     // Set the X-UA-Compatible HTTP header to force IE to use the most recent
     // rendering engine.
-    $response->headers->set('X-UA-Compatible', 'IE=edge', FALSE);
+    if (!$response->headers->has('X-UA-Compatible')) {
+      $response->headers->set('X-UA-Compatible', 'IE=edge');
+    }
 
     // Set the Content-language header.
     $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->getId());
@@ -128,8 +130,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // different from the declared content-type, since that can lead to
     // XSS and other vulnerabilities.
     // https://www.owasp.org/index.php/List_of_useful_HTTP_headers
-    $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
-    $response->headers->set('X-Frame-Options', 'SAMEORIGIN', FALSE);
+    if (!$response->headers->has('X-Content-Type-Options')) {
+      $response->headers->set('X-Content-Type-Options', 'nosniff');
+    }
+    if (!$response->headers->has('X-Frame-Options')) {
+      $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+    }
 
     // Add a Permissions-Policy header to block Federated Learning of Cohorts.
     if (Settings::get('block_interest_cohort', TRUE) && !$response->headers->has('Permissions-Policy')) {
