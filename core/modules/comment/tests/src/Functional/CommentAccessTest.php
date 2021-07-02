@@ -145,7 +145,7 @@ class CommentAccessTest extends CommentTestBase {
     $comment->save();
 
     // Click on "Approve" link.
-    $this->clickLink(t('Approve'));
+    $this->clickLink('Approve');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The comment is already published.');
 
@@ -154,7 +154,7 @@ class CommentAccessTest extends CommentTestBase {
     $comment->save();
 
     $this->drupalGet('node/' . $this->node->id());
-    $this->clickLink(t('Approve'));
+    $this->clickLink('Approve');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Comment approved.');
   }
