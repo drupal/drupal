@@ -100,10 +100,14 @@ class CommentController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function commentApprove(CommentInterface $comment) {
-    $comment->setPublished();
-    $comment->save();
-
-    $this->messenger()->addStatus($this->t('Comment approved.'));
+    if ($comment->isPublished()) {
+      $this->messenger()->addStatus($this->t('The comment is already published.'));
+    }
+    else {
+      $comment->setPublished();
+      $comment->save();
+      $this->messenger()->addStatus($this->t('Comment approved.'));
+    }
     $permalink_uri = $comment->permalink();
     $permalink_uri->setAbsolute();
     return new RedirectResponse($permalink_uri->toString());

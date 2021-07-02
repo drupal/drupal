@@ -6,3 +6,12 @@ comment_test.report:
   requirements:
     _access: 'TRUE'
     _csrf_token: 'TRUE'
+comment_test.approve:
+  path: '/comment-test/{comment}/approve'
+  defaults:
+    _title: 'Approve'
+    _controller: '\Drupal\comment\Controller\CommentController::commentApprove'
+    entity_type: 'comment'
+  requirements:
+    _access: 'TRUE'
+    comment: \d+
