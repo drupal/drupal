@@ -411,7 +411,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         }
 
         $.each(buttons, function (name, props) {
-          props = $.isFunction(props) ? {
+          props = typeof props === 'function' ? {
             click: props,
             text: name
           } : props;
