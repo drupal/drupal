@@ -99,8 +99,10 @@ class DateFilterTest extends ViewTestBase {
     $edit = [];
     $edit['options[operator]'] = '>';
     $edit['options[expose][operator_list][]'] = ['>', '>=', 'between'];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_filter_datetime/default/filter/field_date_value', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_exposed_filter_datetime/edit/default', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_filter_datetime/default/filter/field_date_value');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_exposed_filter_datetime/edit/default');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet('test_exposed_filter_datetime');
     $this->assertSession()->statusCodeEquals(200);
@@ -118,8 +120,9 @@ class DateFilterTest extends ViewTestBase {
     $edit = [];
     $edit['options[operator]'] = '=';
     $edit['options[expose][operator_list][]'] = ['<', '>'];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_filter_datetime/default/filter/field_date_value', $edit, 'Apply');
-    $this->assertText('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_filter_datetime/default/filter/field_date_value');
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
   }
 
 }

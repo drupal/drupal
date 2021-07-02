@@ -33,6 +33,7 @@ class BlockContentListBuilder extends EntityListBuilder {
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
     $query->condition('reusable', TRUE);
 

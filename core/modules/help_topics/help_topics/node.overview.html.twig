@@ -1,0 +1,19 @@
+---
+label: 'Managing content'
+top_level: true
+related:
+  - core.content_structure
+  - field_ui.add_field
+  - field_ui.manage_display
+  - field_ui.manage_form
+  - node.creating_type
+  - node.creating_content
+  - node.editing
+---
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+<h2>{% trans %}What is a content item?{% endtrans %}</h2>
+<p>{% trans %}A <em>content item</em> is a type of content entity for page-level content, which can have fields that store text, HTML markup, images, attached files, and other data. See {{ content_structure_topic }} for more about content entities and fields.{% endtrans %}</p>
+<h2>{% trans %}What is a content type?{% endtrans %}</h2>
+<p>{% trans %}Content items are divided into <em>content types</em>, which are the entity sub-types for the content item entity type; each content type has its own fields and display settings. For example, you might set up content types for pages, articles, recipes, events, and blog entries on your web site.{% endtrans %}</p>
+<h2>{% trans %}Overview of managing content{% endtrans %}</h2>
+<p>{% trans %}The core Node module allows you to define content types, and add and edit content items. The core Field UI module allows you to attach fields to each content type and manage the edit form and display for each content type. See the related topics listed below for specific tasks. Many other core and contributed modules and installation profiles provide pre-defined content types, modify the permission structure for content items, and provide other functionality.{% endtrans %}</p>

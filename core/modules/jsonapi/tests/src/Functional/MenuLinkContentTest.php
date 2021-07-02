@@ -180,7 +180,7 @@ class MenuLinkContentTest extends ResourceTestBase {
   }
 
   /**
-   * Test requests using a serialized field item property.
+   * Tests requests using a serialized field item property.
    *
    * @see https://security.drupal.org/node/161923
    */

@@ -24,7 +24,7 @@ class DialogTest extends WebDriverTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test sending non-JS and AJAX requests to open and manipulate modals.
+   * Tests sending non-JS and AJAX requests to open and manipulate modals.
    */
   public function testDialog() {
     $this->drupalLogin($this->drupalCreateUser(['administer contact forms']));
@@ -162,7 +162,7 @@ class DialogTest extends WebDriverTestBase {
     $moved_to_buttonpane_buttons = $this->getSession()->getPage()->findAll('css', '.ui-dialog-buttonpane button');
     $this->assertCount(2, $moved_to_buttonpane_buttons);
     foreach ($moved_to_buttonpane_buttons as $key => $button) {
-      $this->assertEqual($hidden_button_text[$key], $button->getText());
+      $this->assertEquals($hidden_button_text[$key], $button->getText());
     }
 
     // Reset: close the form.

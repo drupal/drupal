@@ -160,6 +160,10 @@
   }
 }
 
+#drupal-off-canvas .form-type--boolean {
+  margin-left: 0;
+}
+
 /* Native dialog styling */
 
 dialog::-webkit-backdrop {

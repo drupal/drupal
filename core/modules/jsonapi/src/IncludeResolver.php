@@ -106,16 +106,18 @@ class IncludeResolver {
         // Some objects in the collection may be LabelOnlyResourceObjects or
         // EntityAccessDeniedHttpException objects.
         assert($resource_object instanceof ResourceIdentifierInterface);
+        $public_field_name = $resource_object->getResourceType()->getPublicName($field_name);
+
         if ($resource_object instanceof LabelOnlyResourceObject) {
           $message = "The current user is not allowed to view this relationship.";
-          $exception = new EntityAccessDeniedHttpException($resource_object->getEntity(), AccessResult::forbidden("The user only has authorization for the 'view label' operation."), '', $message, $field_name);
+          $exception = new EntityAccessDeniedHttpException($resource_object->getEntity(), AccessResult::forbidden("The user only has authorization for the 'view label' operation."), '', $message, $public_field_name);
           $includes = IncludedData::merge($includes, new IncludedData([$exception]));
           continue;
         }
         elseif (!$resource_object instanceof ResourceObject) {
           continue;
         }
-        $public_field_name = $resource_object->getResourceType()->getPublicName($field_name);
+
         // Not all entities in $entity_collection will be of the same bundle and
         // may not have all of the same fields. Therefore, calling
         // $resource_object->get($a_missing_field_name) will result in an
@@ -177,7 +179,7 @@ class IncludeResolver {
       return array_map('trim', explode('.', $include_path));
     }, $include_paths);
     $resolved_paths_per_resource_type = [];
-    /* @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface $resource_object */
+    /** @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface $resource_object */
     foreach ($data as $resource_object) {
       $resource_type = $resource_object->getResourceType();
       $resource_type_name = $resource_type->getTypeName();

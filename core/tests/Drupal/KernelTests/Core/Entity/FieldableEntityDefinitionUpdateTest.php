@@ -295,7 +295,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     // least three times.
     /** @var \Drupal\Core\Entity\TranslatableRevisionableStorageInterface|\Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-    $next_id = $storage->getQuery()->count()->execute() + 1;
+    $next_id = $storage->getQuery()->accessCheck(FALSE)->count()->execute() + 1;
 
     // Create test entities with two translations and two revisions.
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -410,7 +410,12 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
 
     if ($revisionable) {
-      $revisions_result = $this->entityTypeManager->getStorage($this->entityTypeId)->getQuery()->allRevisions()->execute();
+      $revisions_result = $this->entityTypeManager
+        ->getStorage($this->entityTypeId)
+        ->getQuery()
+        ->accessCheck(FALSE)
+        ->allRevisions()
+        ->execute();
       $revisions = $this->entityTypeManager->getStorage($this->entityTypeId)->loadMultipleRevisions(array_keys($revisions_result));
       $this->assertCount(6, $revisions);
 

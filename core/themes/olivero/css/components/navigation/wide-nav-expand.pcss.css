@@ -29,7 +29,7 @@
   }
 }
 
-body:not(.is-always-mobile-nav) .js-fixed .wide-nav-expand {
+body:not(.is-always-mobile-nav) .is-fixed .wide-nav-expand {
   @media (--nav) {
     visibility: visible;
   }
@@ -88,7 +88,7 @@ body.is-always-mobile-nav .wide-nav-expand {
   }
 }
 
-.js-fixed .wide-nav-expand__icon {
+.is-fixed .wide-nav-expand__icon {
   opacity: 1;
 }
 

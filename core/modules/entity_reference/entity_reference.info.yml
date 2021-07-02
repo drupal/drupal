@@ -1,6 +1,7 @@
 name: 'Entity Reference'
 type: module
-description: 'Deprecated. All the functionality has been moved to Core.'
+description: 'Obsolete. All the functionality has been moved to Core.'
+lifecycle: obsolete
 package: Field types
 version: VERSION
 hidden: true

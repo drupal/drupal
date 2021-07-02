@@ -113,7 +113,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->assertTrue($menu->hasLink('Show Type Three media (selected)'));
     // Assert the focus is set to the first tabbable element when a vertical tab
     // is clicked.
-    $this->assertJsCondition('jQuery("#media-library-content :tabbable:first").is(":focus")');
+    $this->assertJsCondition('jQuery(tabbable.tabbable(document.getElementById("media-library-content"))[0]).is(":focus")');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert that there are no links in the media library view.
@@ -163,6 +163,12 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $expected_link_titles = ['Show Type Three media (selected)', 'Show Type One media', 'Show Type Two media', 'Show Type Four media'];
     $this->assertSame($link_titles, $expected_link_titles);
     $this->drupalGet('admin/structure/types/manage/basic_page/form-display');
+
+    // Ensure that the widget settings form is not displayed when only
+    // one media type is allowed.
+    $assert_session->pageTextContains('Single media type');
+    $assert_session->buttonNotExists('field_single_media_type_settings_edit');
+
     $assert_session->buttonExists('field_twin_media_settings_edit')->press();
     $this->assertElementExistsAfterWait('css', '#field-twin-media .tabledrag-toggle-weight')->press();
     $assert_session->fieldExists('fields[field_twin_media][settings_edit_form][settings][media_types][type_one][weight]')->selectOption(0);

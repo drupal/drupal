@@ -26,11 +26,12 @@ class FilterBooleanWebTest extends UITestBase {
    * Tests the filter boolean UI.
    */
   public function testFilterBooleanUI() {
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_view/default/filter', ['name[views_test_data.status]' => TRUE], 'Add and configure filter criteria');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_view/default/filter');
+    $this->submitForm(['name[views_test_data.status]' => TRUE], 'Add and configure filter criteria');
 
     // Check the field widget label. 'title' should be used as a fallback.
     $result = $this->cssSelect('#edit-options-value--wrapper legend span');
-    $this->assertEqual('Status', $result[0]->getHtml());
+    $this->assertEquals('Status', $result[0]->getHtml());
 
     // Ensure that the operator and the filter value are displayed using correct
     // layout.
@@ -56,11 +57,11 @@ class FilterBooleanWebTest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
 
     $result = $this->xpath('//input[@name="options[group_info][group_items][1][value]"]');
-    $this->assertEqual('checked', $result[1]->getAttribute('checked'));
+    $this->assertEquals('checked', $result[1]->getAttribute('checked'));
     $result = $this->xpath('//input[@name="options[group_info][group_items][2][value]"]');
-    $this->assertEqual('checked', $result[2]->getAttribute('checked'));
+    $this->assertEquals('checked', $result[2]->getAttribute('checked'));
     $result = $this->xpath('//input[@name="options[group_info][group_items][3][value]"]');
-    $this->assertEqual('checked', $result[1]->getAttribute('checked'));
+    $this->assertEquals('checked', $result[1]->getAttribute('checked'));
 
     // Test that there is a remove link for each group.
     $this->assertCount(3, $this->cssSelect('a.views-remove-link'));

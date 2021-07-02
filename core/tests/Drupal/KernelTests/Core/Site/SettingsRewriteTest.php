@@ -99,7 +99,7 @@ EXPECTED
       $filename = Settings::get('file_public_path', $site_path . '/files') . '/mock_settings.php';
       file_put_contents($filename, "<?php\n" . $test['original'] . "\n");
       drupal_rewrite_settings($test['settings'], $filename);
-      $this->assertEqual("<?php\n" . $test['expected'] . "\n", file_get_contents($filename));
+      $this->assertEquals("<?php\n" . $test['expected'] . "\n", file_get_contents($filename));
     }
 
     // Test that <?php gets added to the start of an empty settings file.
@@ -121,7 +121,7 @@ EXPECTED
     drupal_rewrite_settings($test['settings'], $filename);
 
     // Check that the result is just the php opening tag and the settings.
-    $this->assertEqual("<?php\n" . $test['expected'] . "\n", file_get_contents($filename));
+    $this->assertEquals("<?php\n" . $test['expected'] . "\n", file_get_contents($filename));
   }
 
 }

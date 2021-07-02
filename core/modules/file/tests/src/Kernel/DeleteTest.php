@@ -22,7 +22,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertFileExists($file->getFileUri());
     $file->delete();
     $this->assertFileHooksCalled(['delete']);
-    $this->assertFileNotExists($file->getFileUri());
+    $this->assertFileDoesNotExist($file->getFileUri());
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');
   }
 
@@ -42,7 +42,7 @@ class DeleteTest extends FileManagedUnitTestBase {
 
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
-    $this->assertEqual([1 => 1], $usage['testing']['test'], 'Test file is still in use.');
+    $this->assertEquals([1 => 1], $usage['testing']['test'], 'Test file is still in use.');
     $this->assertFileExists($file->getFileUri());
     $this->assertNotEmpty(File::load($file->id()), 'File still exists in the database.');
 
@@ -73,7 +73,7 @@ class DeleteTest extends FileManagedUnitTestBase {
 
     // file_cron() loads
     $this->assertFileHooksCalled(['delete']);
-    $this->assertFileNotExists($file->getFileUri());
+    $this->assertFileDoesNotExist($file->getFileUri());
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');
   }
 
@@ -84,7 +84,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file = $this->createFile();
     // Delete the file, but leave it in the file_managed table.
     \Drupal::service('file_system')->delete($file->getFileUri());
-    $this->assertFileNotExists($file->getFileUri());
+    $this->assertFileDoesNotExist($file->getFileUri());
     $this->assertInstanceOf(File::class, File::load($file->id()));
 
     // Call file_cron() to clean up the file. Make sure the changed timestamp

@@ -128,9 +128,8 @@
     // Move the buttons to the jQuery UI dialog buttons area.
     if (!response.dialogOptions.buttons) {
       response.dialogOptions.drupalAutoButtons = true;
-      response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons(
-        $dialog,
-      );
+      response.dialogOptions.buttons =
+        Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
 
     // Bind dialogButtonsChange.

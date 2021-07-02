@@ -10,6 +10,7 @@
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
       "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
+      "**/LICENSE.txt",
       "modules/**/Migrate*Test.php",
       "modules/color/preview.html",
       "modules/color/tests/modules/color_test/themes/color_test_theme/color/preview.html",
@@ -33,7 +34,8 @@
     "ignoreRegExpList": [
       "^msgstr .*",
       "!!binary .*",
-      "%[0-9][0-9A-F]"
+      "%[0-9][0-9A-F]",
+      "\\Wi18n"
     ],
     "dictionaries": ["drupal","companies", "fonts", "html", "php", "softwareTerms"],
     "dictionaryDefinitions": [

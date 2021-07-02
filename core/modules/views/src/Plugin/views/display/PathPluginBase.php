@@ -126,7 +126,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   protected function getRoute($view_id, $display_id) {
     $defaults = [
       '_controller' => 'Drupal\views\Routing\ViewPageController::handle',
-      '_title' => $this->view->getTitle(),
+      '_title_callback' => 'Drupal\views\Routing\ViewPageController::getTitle',
       'view_id' => $view_id,
       'display_id' => $display_id,
       '_view_display_show_admin_links' => $this->getOption('show_admin_links'),
@@ -440,7 +440,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $form['path'] = [
           '#type' => 'textfield',
           '#title' => $this->t('Path'),
-          '#description' => $this->t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed". If needed you can even specify named route parameters like taxonomy/term/%taxonomy_term'),
+          '#description' => $this->t('This view will be displayed by visiting this path on your site. You may use "%" or named route parameters like "%node" in your URL to represent values that will be used for contextual filters: For example, "node/%node/feed" or "view_path/%". Named route parameters are required when this path matches an existing path. For example, paths such as "taxonomy/term/%taxonomy_term" or "user/%user/custom-view".'),
           '#default_value' => $this->getOption('path'),
           '#field_prefix' => '<span dir="ltr">' . Url::fromRoute('<none>', [], ['absolute' => TRUE])->toString() . '</span>&lrm;',
           '#attributes' => ['dir' => LanguageInterface::DIRECTION_LTR],

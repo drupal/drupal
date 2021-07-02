@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection\Compiler;
 
+use Drupal\Core\Access\AccessCheckInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
@@ -17,6 +18,7 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
     if (!$container->hasDefinition('access_manager')) {
       return;
     }
+    $dynamic_access_check_services = [];
     // Add services tagged 'access_check' to the access_manager service.
     $access_manager = $container->getDefinition('access_manager.check_provider');
     foreach ($container->findTaggedServiceIds('access_check') as $id => $attributes) {
@@ -35,7 +37,15 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
         }
       }
       $access_manager->addMethodCall('addCheckService', [$id, $method, $applies, $needs_incoming_request]);
+
+      // Collect dynamic access checker services.
+      $class = $container->getDefinition($id)->getClass();
+      if (in_array(AccessCheckInterface::class, class_implements($class), TRUE)) {
+        $dynamic_access_check_services[] = $id;
+      }
     }
+
+    $container->setParameter('dynamic_access_check_services', $dynamic_access_check_services);
   }
 
 }

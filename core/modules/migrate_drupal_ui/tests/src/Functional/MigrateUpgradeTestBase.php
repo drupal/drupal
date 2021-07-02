@@ -253,7 +253,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Assert the correct number of entities exists.
     $actual_entity_counts = [];
     foreach ($entity_definitions as $entity_type) {
-      $actual_entity_counts[$entity_type] = (int) \Drupal::entityQuery($entity_type)->count()->execute();
+      $actual_entity_counts[$entity_type] = (int) \Drupal::entityQuery($entity_type)->accessCheck(FALSE)->count()->execute();
     }
     $this->assertSame($entity_counts, $actual_entity_counts);
 
@@ -350,7 +350,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $scheme = $matches[1];
       $filepath = $fs->realpath($file['uri']);
       if ($scheme === 'temporary') {
-        $this->assertFileNotExists($filepath);
+        $this->assertFileDoesNotExist($filepath);
       }
       else {
         $this->assertFileExists($filepath);

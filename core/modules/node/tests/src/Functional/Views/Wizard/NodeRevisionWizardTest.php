@@ -49,7 +49,8 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'node_revision',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($type, 'Update "Show" choice');
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
@@ -63,11 +64,11 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
 
-    $this->assertEqual(['node_field_revision' => TRUE, '#global' => TRUE, 'node_field_data' => TRUE], $view->getBaseTables());
+    $this->assertEquals(['node_field_revision' => TRUE, '#global' => TRUE, 'node_field_data' => TRUE], $view->getBaseTables());
 
     // Check for the default filters.
-    $this->assertEqual('node_field_revision', $view->filter['status']->table);
-    $this->assertEqual('status', $view->filter['status']->field);
+    $this->assertEquals('node_field_revision', $view->filter['status']->table);
+    $this->assertEquals('status', $view->filter['status']->field);
     $this->assertEquals('1', $view->filter['status']->value);
     $this->assertEquals('node_field_data', $view->filter['type']->table);
 
@@ -80,7 +81,8 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'node_revision',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($type, 'Update "Show" choice');
     $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
@@ -93,11 +95,11 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
 
-    $this->assertEqual(['node_field_revision' => TRUE, '#global' => TRUE], $view->getBaseTables());
+    $this->assertEquals(['node_field_revision' => TRUE, '#global' => TRUE], $view->getBaseTables());
 
     // Check for the default filters.
-    $this->assertEqual('node_field_revision', $view->filter['status']->table);
-    $this->assertEqual('status', $view->filter['status']->field);
+    $this->assertEquals('node_field_revision', $view->filter['status']->table);
+    $this->assertEquals('status', $view->filter['status']->field);
     $this->assertEquals('1', $view->filter['status']->value);
     $this->assertArrayNotHasKey('type', $view->filter);
 

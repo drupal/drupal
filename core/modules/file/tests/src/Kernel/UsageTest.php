@@ -47,8 +47,8 @@ class UsageTest extends FileManagedUnitTestBase {
     $this->assertCount(2, $usage['testing'], 'Returned the correct number of items.');
     $this->assertTrue(isset($usage['testing']['foo'][1]), 'Returned the correct id.');
     $this->assertTrue(isset($usage['testing']['bar'][2]), 'Returned the correct id.');
-    $this->assertEqual(1, $usage['testing']['foo'][1], 'Returned the correct count.');
-    $this->assertEqual(2, $usage['testing']['bar'][2], 'Returned the correct count.');
+    $this->assertEquals(1, $usage['testing']['foo'][1], 'Returned the correct count.');
+    $this->assertEquals(2, $usage['testing']['bar'][2], 'Returned the correct count.');
   }
 
   /**
@@ -69,12 +69,12 @@ class UsageTest extends FileManagedUnitTestBase {
       ->execute()
       ->fetchAllAssoc('id');
     $this->assertCount(2, $usage, 'Created two records');
-    $this->assertEqual('testing', $usage[1]->module, 'Correct module');
-    $this->assertEqual('testing', $usage[2]->module, 'Correct module');
-    $this->assertEqual('foo', $usage[1]->type, 'Correct type');
-    $this->assertEqual('bar', $usage[2]->type, 'Correct type');
-    $this->assertEqual(1, $usage[1]->count, 'Correct count');
-    $this->assertEqual(2, $usage[2]->count, 'Correct count');
+    $this->assertEquals('testing', $usage[1]->module, 'Correct module');
+    $this->assertEquals('testing', $usage[2]->module, 'Correct module');
+    $this->assertEquals('foo', $usage[1]->type, 'Correct type');
+    $this->assertEquals('bar', $usage[2]->type, 'Correct type');
+    $this->assertEquals(1, $usage[1]->count, 'Correct count');
+    $this->assertEquals(2, $usage[2]->count, 'Correct count');
   }
 
   /**
@@ -124,7 +124,7 @@ class UsageTest extends FileManagedUnitTestBase {
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
-    $this->assertEqual(2, $count, 'The count was decremented correctly.');
+    $this->assertEquals(2, $count, 'The count was decremented correctly.');
 
     // Multiple decrement and removal.
     $file_usage->delete($file, 'testing', 'bar', 2, 2);
@@ -195,7 +195,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     // Run cron and then ensure that only the old, temp file was deleted.
     $this->container->get('cron')->run();
-    $this->assertFileNotExists($temp_old->getFileUri());
+    $this->assertFileDoesNotExist($temp_old->getFileUri());
     $this->assertFileExists($temp_new->getFileUri());
     $this->assertFileExists($perm_old->getFileUri());
     $this->assertFileExists($perm_new->getFileUri());

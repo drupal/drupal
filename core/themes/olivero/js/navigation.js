@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(function (Drupal, once, tabbable) {
   function isNavOpen(navWrapper) {
     return navWrapper.classList.contains('is-active');
   }
@@ -15,12 +15,12 @@
     props.navButton.setAttribute('aria-expanded', value);
 
     if (value) {
-      props.body.classList.add('js-overlay-active');
-      props.body.classList.add('js-fixed');
+      props.body.classList.add('is-overlay-active');
+      props.body.classList.add('is-fixed');
       props.navWrapper.classList.add('is-active');
     } else {
-      props.body.classList.remove('js-overlay-active');
-      props.body.classList.remove('js-fixed');
+      props.body.classList.remove('is-overlay-active');
+      props.body.classList.remove('is-fixed');
       props.navWrapper.classList.remove('is-active');
     }
   }
@@ -32,7 +32,7 @@
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
     document.addEventListener('keyup', function (e) {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
         } else {
@@ -46,15 +46,20 @@
     props.overlay.addEventListener('touchstart', function () {
       toggleNav(props, false);
     });
-    props.navWrapper.addEventListener('keydown', function (e) {
-      if (e.key === 'Tab') {
+    props.header.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' && isNavOpen(props.navWrapper)) {
+        var tabbableNavElements = tabbable.tabbable(props.navWrapper);
+        tabbableNavElements.unshift(props.navButton);
+        var firstTabbableEl = tabbableNavElements[0];
+        var lastTabbableEl = tabbableNavElements[tabbableNavElements.length - 1];
+
         if (e.shiftKey) {
-          if (document.activeElement === props.firstFocusableEl && !props.olivero.isDesktopNav()) {
-            props.navButton.focus();
+          if (document.activeElement === firstTabbableEl && !props.olivero.isDesktopNav()) {
+            lastTabbableEl.focus();
             e.preventDefault();
           }
-        } else if (document.activeElement === props.lastFocusableEl && !props.olivero.isDesktopNav()) {
-          props.navButton.focus();
+        } else if (document.activeElement === lastTabbableEl && !props.olivero.isDesktopNav()) {
+          firstTabbableEl.focus();
           e.preventDefault();
         }
       }
@@ -62,8 +67,8 @@
     window.addEventListener('resize', function () {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
-        props.body.classList.remove('js-overlay-active');
-        props.body.classList.remove('js-fixed');
+        props.body.classList.remove('is-overlay-active');
+        props.body.classList.remove('is-fixed');
       }
 
       Drupal.olivero.closeAllSubNav();
@@ -71,31 +76,27 @@
   }
 
   Drupal.behaviors.oliveroNavigation = {
-    attach: function attach(context, settings) {
+    attach: function attach(context) {
+      var headerId = 'header';
+      var header = once('navigation', "#".concat(headerId), context).shift();
       var navWrapperId = 'header-nav';
-      var navWrapper = context.querySelector("#".concat(navWrapperId, ":not(.").concat(navWrapperId, "-processed)"));
 
-      if (navWrapper) {
-        navWrapper.classList.add("".concat(navWrapperId, "-processed"));
+      if (header) {
+        var navWrapper = header.querySelector("#".concat(navWrapperId));
         var olivero = Drupal.olivero;
-        var navButton = context.querySelector('.mobile-nav-button');
+        var navButton = context.querySelector('[data-drupal-selector="mobile-nav-button"]');
         var body = context.querySelector('body');
-        var overlay = context.querySelector('.overlay');
-        var focusableNavElements = navWrapper.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        var firstFocusableEl = focusableNavElements[0];
-        var lastFocusableEl = focusableNavElements[focusableNavElements.length - 1];
+        var overlay = context.querySelector('[data-drupal-selector="overlay"]');
         init({
-          settings: settings,
           olivero: olivero,
+          header: header,
           navWrapperId: navWrapperId,
           navWrapper: navWrapper,
           navButton: navButton,
           body: body,
-          overlay: overlay,
-          firstFocusableEl: firstFocusableEl,
-          lastFocusableEl: lastFocusableEl
+          overlay: overlay
         });
       }
     }
   };
-})(Drupal);
+})(Drupal, once, tabbable);

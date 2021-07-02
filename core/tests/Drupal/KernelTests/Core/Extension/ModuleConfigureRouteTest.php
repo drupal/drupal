@@ -42,7 +42,7 @@ class ModuleConfigureRouteTest extends KernelTestBase {
   }
 
   /**
-   * Test the module configure routes exist.
+   * Tests the module configure routes exist.
    *
    * @dataProvider coreModuleListDataProvider
    */

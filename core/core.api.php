@@ -852,6 +852,12 @@
  * Services can also be defined dynamically, as in the
  * \Drupal\Core\CoreServiceProvider class, but this is less common for modules.
  *
+ * @section sec_define Service autowiring
+ * Instead of specifying arguments explicitly, the container can also autowire
+ * a service's arguments from the constructor's type-hints. See
+ * @link https://symfony.com/doc/current/service_container/autowiring.html the Symfony documentation on defining services dependencies automatically @endlink
+ * for details.
+ *
  * @section sec_tags Service tags
  * Some services have tags, which are defined in the service definition. See
  * @link service_tag Service Tags @endlink for usage.

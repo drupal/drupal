@@ -5,6 +5,7 @@ namespace Drupal\Core\KeyValueStore;
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -286,7 +287,7 @@ class DatabaseStorage extends StorageBase {
 
   /**
    * Defines the schema for the key_value table.
-  */
+   */
   public static function schemaDefinition() {
     return [
       'description' => 'Generic key-value storage table. See the state system for an example.',

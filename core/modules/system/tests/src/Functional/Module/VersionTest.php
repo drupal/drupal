@@ -15,7 +15,7 @@ class VersionTest extends ModuleTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test version dependencies.
+   * Tests version dependencies.
    */
   public function testModuleVersions() {
     $dependencies = [

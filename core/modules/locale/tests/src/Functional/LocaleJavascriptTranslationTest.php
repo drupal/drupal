@@ -107,7 +107,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         $this->assertSame($context, $source_strings[$str]);
       }
 
-      $this->assertSame(count($test_strings), count($source_strings), 'Found correct number of source strings.');
+      $this->assertSameSize($test_strings, $source_strings, 'Found correct number of source strings.');
     }
   }
 
@@ -136,11 +136,13 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
 
     // Set path prefix.
     $edit = ["prefix[$langcode]" => $prefix];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
 
     // This forces locale.admin.js string sources to be imported, which contains
     // the next translation.

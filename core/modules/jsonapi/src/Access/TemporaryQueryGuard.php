@@ -430,7 +430,7 @@ class TemporaryQueryGuard {
    *   hook_jsonapi_entity_filter_access() for details.
    */
   protected static function getAccessResultsFromEntityFilterHook(EntityTypeInterface $entity_type, AccountInterface $account) {
-    /* @var \Drupal\Core\Access\AccessResultInterface[] $combined_access_results */
+    /** @var \Drupal\Core\Access\AccessResultInterface[] $combined_access_results */
     $combined_access_results = [
       JSONAPI_FILTER_AMONG_ALL => AccessResult::neutral(),
       JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::neutral(),

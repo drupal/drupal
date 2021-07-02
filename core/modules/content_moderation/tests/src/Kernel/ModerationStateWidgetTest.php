@@ -54,7 +54,7 @@ class ModerationStateWidgetTest extends KernelTestBase {
   }
 
   /**
-   * Test the widget does not impact a non-moderated entity.
+   * Tests the widget does not impact a non-moderated entity.
    */
   public function testWidgetNonModeratedEntity() {
     // Create an unmoderated entity and build a form display which will include

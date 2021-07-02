@@ -187,7 +187,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       return;
     }
     foreach ($feed->items as $item) {
-      // @todo: The default entity view builder always returns an empty
+      // @todo The default entity view builder always returns an empty
       //   array, which is ignored in aggregator_save_item() currently. Should
       //   probably be fixed.
       if (empty($item['title'])) {
@@ -259,6 +259,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       // Delete all items that are older than flush item timer.
       $age = REQUEST_TIME - $aggregator_clear;
       $result = $this->itemStorage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('fid', $feed->id())
         ->condition('timestamp', $age, '<')
         ->execute();
