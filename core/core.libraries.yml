@@ -142,7 +142,7 @@ drupal.autocomplete:
 drupal.array.find:
   version: VERSION
   js:
-    misc/polyfills/array.find.js: { weight: -20 }
+    misc/polyfills/array.find.js: { weight: -20, attributes: { nomodule: true }  }
 
 drupal.batch:
   version: VERSION
@@ -285,14 +285,14 @@ drupal.dropbutton:
 drupal.element.closest:
   version: VERSION
   js:
-    misc/polyfills/element.closest.js: { weight: -20 }
+    misc/polyfills/element.closest.js: { weight: -20, attributes: { nomodule: true }  }
   dependencies:
     - core/drupal.element.matches
 
 drupal.element.matches:
   version: VERSION
   js:
-    misc/polyfills/element.matches.js: { weight: -20 }
+    misc/polyfills/element.matches.js: { weight: -20, attributes: { nomodule: true }  }
 
 drupal.entity-form:
   version: VERSION
@@ -333,12 +333,12 @@ drupal.message:
 drupal.nodelist.foreach:
   version: VERSION
   js:
-    misc/polyfills/nodelist.foreach.js: { weight: -20 }
+    misc/polyfills/nodelist.foreach.js: { weight: -20, attributes: { nomodule: true }  }
 
 drupal.object.assign:
   version: VERSION
   js:
-    misc/polyfills/object.assign.js: { weight: -20 }
+    misc/polyfills/object.assign.js: { weight: -20, attributes: { nomodule: true }  }
 
 drupal.progress:
   version: VERSION
