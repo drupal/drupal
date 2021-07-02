@@ -76,7 +76,7 @@ abstract class ViewFormBase extends EntityForm {
   /**
    * Adds tabs for navigating across Displays when editing a View.
    *
-   * This function can be called from hook_local_tasks_render_alter() to implement
+   * This function can be called from hook_menu_local_tasks_alter() to implement
    * these tabs as secondary local tasks, or it can be called from elsewhere if
    * having them as secondary local tasks isn't desired. The caller is responsible
    * for setting the active tab's #active property to TRUE.

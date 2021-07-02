@@ -66,7 +66,7 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
    *   - route_name: The route name for the current page used to collect the
    *     local tasks.
    *
-   * @see hook_local_tasks_render_alter()
+   * @see hook_menu_local_tasks_alter()
    */
   public function getLocalTasks($route_name, $level = 0);
 
