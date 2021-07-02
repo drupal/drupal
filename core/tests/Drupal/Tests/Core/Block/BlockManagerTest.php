@@ -130,6 +130,7 @@ class BlockManagerTest extends UnitTestCase {
     $plugin = $this->blockManager->createInstance('invalid');
     $this->assertSame('broken', $plugin->getPluginId());
   }
+
   /**
    * @group legacy
    * @expectedDeprecation Declaring ::build() without an array return typehint in Drupal\Tests\Core\Block\TestBlockManagerNoArrayReturnTypeBlock is deprecated in drupal:9.2.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.
