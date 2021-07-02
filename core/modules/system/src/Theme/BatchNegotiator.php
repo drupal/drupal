@@ -50,9 +50,12 @@ class BatchNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     // Retrieve the current state of the batch.
     $request = $this->requestStack->getCurrentRequest();
-    $batch = &batch_get();
+    $batch = &$batch_processor->getCurrentBatch();
     if (!$batch && $request->request->has('id')) {
       $batch = $this->batchStorage->load($request->request->get('id'));
     }

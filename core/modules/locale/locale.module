@@ -406,6 +406,9 @@ function locale_system_update(array $components) {
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
 
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
@@ -423,7 +426,7 @@ function locale_system_update(array $components) {
         // translations.
         $options = _locale_translation_default_update_options();
         $batch = locale_translation_batch_update_build($list, [], $options);
-        batch_set($batch);
+        $batch_processor->queue($batch);
       }
     }
 
@@ -433,7 +436,7 @@ function locale_system_update(array $components) {
     // configuration may expose new source strings.
     \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
     if ($batch = locale_config_batch_update_components([])) {
-      batch_set($batch);
+      $batch_processor->queue($batch);
     }
   }
 }
@@ -674,10 +677,13 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
     $langcode = $form_state->getValue('predefined_langcode');
   }
 
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
     // Download and import translations for the newly added language.
     $batch = locale_translation_batch_update_build([], [$langcode], $options);
-    batch_set($batch);
+    $batch_processor->queue($batch);
   }
 
   // Create or update all configuration translations for this language. If we
@@ -686,7 +692,7 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
   if (\Drupal::config('locale.settings')->get('translation.import_enabled') || $langcode == 'en') {
     \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
     if ($batch = locale_config_batch_update_components($options, [$langcode])) {
-      batch_set($batch);
+      $batch_processor->queue($batch);
     }
   }
 }

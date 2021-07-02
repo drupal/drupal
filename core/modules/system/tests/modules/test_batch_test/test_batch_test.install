@@ -11,6 +11,9 @@ use Drupal\entity_test\Entity\EntityTest;
  * Implements hook_install().
  */
 function test_batch_test_install() {
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   $total = 2;
   $operations = [];
   for ($i = 1; $i <= $total; $i++) {
@@ -19,10 +22,10 @@ function test_batch_test_install() {
   $batch = [
     'operations' => $operations,
   ];
-  batch_set($batch);
-  $batch =& batch_get();
+  $batch_processor->queue($batch);
+  $batch =& $batch_processor->getCurrentBatch();
   $batch['progressive'] = FALSE;
-  batch_process();
+  $batch_processor->queue($batch);
 }
 
 /**

@@ -337,6 +337,9 @@ class UserController extends ControllerBase {
     $timeout = 86400;
     $current = REQUEST_TIME;
 
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     // Basic validation of arguments.
     $account_data = $this->userData->get('user', $user->id());
     if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
@@ -349,7 +352,7 @@ class UserController extends ControllerBase {
         // Since user_cancel() is not invoked via Form API, batch processing
         // needs to be invoked manually and should redirect to the front page
         // after completion.
-        return batch_process('<front>');
+        return $batch_processor->process('<front>');
       }
       else {
         $this->messenger()->addError($this->t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));

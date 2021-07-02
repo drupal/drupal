@@ -106,6 +106,9 @@ if ($is_allowed) {
 
   $page_title = $request->getSession()->get('authorize_page_title', t('Authorize file system changes'));
 
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   // See if we've run the operation and need to display a report.
   if ($results = $request->getSession()->remove('authorize_results')) {
 
@@ -172,7 +175,7 @@ if ($is_allowed) {
     if (!$request->getSession()->has('authorize_operation') || !$request->getSession()->has('authorize_filetransfer_info')) {
       $content = ['#markup' => t('It appears you have reached this page in error.')];
     }
-    elseif (!$batch = batch_get()) {
+    elseif (!$batch = $batch_processor->getCurrentBatch()) {
       // We have a batch to process, show the filetransfer form.
       try {
         $content = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
@@ -184,7 +187,7 @@ if ($is_allowed) {
     }
   }
   // We defer the display of messages until all operations are done.
-  $show_messages = !(($batch = batch_get()) && isset($batch['running']));
+  $show_messages = !(($batch = $batch_processor->getCurrentBatch()) && isset($batch['running']));
 }
 else {
   \Drupal::logger('access denied')->warning('authorize.php');

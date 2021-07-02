@@ -519,9 +519,12 @@ function system_authorized_run($callback, $file, $arguments = [], $page_title = 
  * @see batch_process()
  */
 function system_authorized_batch_process() {
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   $finish_url = system_authorized_get_url();
   $process_url = system_authorized_batch_processing_url();
-  return batch_process($finish_url->setAbsolute()->toString(), $process_url);
+  return $batch_processor->process($finish_url->setAbsolute()->toString(), $process_url);
 }
 
 /**

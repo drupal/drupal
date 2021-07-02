@@ -392,7 +392,9 @@ class UpdateManagerUpdate extends FormBase {
         $form_state->getValue(['project_downloads', $project]),
       ]);
     }
-    batch_set($batch_builder->toArray());
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+    $batch_processor->queue($batch_builder->toArray());
   }
 
 }

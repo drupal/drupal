@@ -97,8 +97,10 @@ class UpdateController extends ControllerBase {
       ->setProgressMessage(t('Trying to check available update data ...'))
       ->setErrorMessage(t('Error checking available update data.'))
       ->setFinishCallback('update_fetch_data_finished');
-    batch_set($batch_builder->toArray());
-    return batch_process('admin/reports/updates');
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+    $batch_processor->queue($batch_builder->toArray());
+    return $batch_processor->process('admin/reports/updates');
   }
 
 }

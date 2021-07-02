@@ -24,9 +24,12 @@ class ProgrammaticTest extends KernelTestBase {
    * Tests the programmatic form submission workflow.
    */
   public function testSubmissionWorkflow() {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     // Backup the current batch status and reset it to avoid conflicts while
     // processing the dummy form submit handler.
-    $current_batch = $batch =& batch_get();
+    $current_batch = $batch =& $batch_processor->getCurrentBatch();
     $batch = [];
 
     // Test that a programmatic form submission is rejected when a required

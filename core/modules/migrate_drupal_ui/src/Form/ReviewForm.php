@@ -250,7 +250,9 @@ class ReviewForm extends MigrateUpgradeFormBase {
         'run',
       ], [array_keys($this->migrations), $config])
       ->setFinishCallback([MigrateUpgradeImportBatch::class, 'finished']);
-    batch_set($batch_builder->toArray());
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+    $batch_processor->queue($batch_builder->toArray());
     $form_state->setRedirect('<front>');
     $this->store->set('step', 'overview');
     $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);

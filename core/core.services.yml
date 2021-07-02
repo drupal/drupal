@@ -1415,6 +1415,9 @@ services:
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler', '@cache.default', '@language_manager', '@cache_tags.invalidator', '@renderer']
+  batch.processor:
+    class: Drupal\Core\Batch\BatchProcessor
+    arguments: ['%app.root%', '@batch.storage', '@date.formatter', '@form_submitter', '@request_stack', '@path.validator', '@database', '@module_handler', '@theme.manager', '@current_route_match']
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database', '@session', '@csrf_token']

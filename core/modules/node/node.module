@@ -1044,6 +1044,10 @@ function node_access_rebuild($batch_mode = FALSE) {
   /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
   $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
   $access_control_handler->deleteGrants();
+
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   // Only recalculate if the site is using a node_access module.
   if (count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     if ($batch_mode) {
@@ -1051,7 +1055,7 @@ function node_access_rebuild($batch_mode = FALSE) {
         ->setTitle(t('Rebuilding content access permissions'))
         ->addOperation('_node_access_rebuild_batch_operation', [])
         ->setFinishCallback('_node_access_rebuild_batch_finished');
-      batch_set($batch_builder->toArray());
+      $batch_processor->queue($batch_builder->toArray());
     }
     else {
       // Try to allocate enough time to rebuild node grants

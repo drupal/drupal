@@ -67,8 +67,11 @@ class ViewsExposedForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     // Don't show the form when batch operations are in progress.
-    if ($batch = batch_get() && isset($batch['current_set'])) {
+    if ($batch = $batch_processor->getCurrentBatch() && isset($batch['current_set'])) {
       return [
         // Set the theme callback to be nothing to avoid errors in template_preprocess_views_exposed_form().
         '#theme' => '',
