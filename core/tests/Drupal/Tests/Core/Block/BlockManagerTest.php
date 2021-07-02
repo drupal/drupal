@@ -133,9 +133,9 @@ class BlockManagerTest extends UnitTestCase {
 
   /**
    * @group legacy
-   * @expectedDeprecation Declaring ::build() without an array return typehint in Drupal\Tests\Core\Block\TestBlockManagerNoArrayReturnTypeBlock is deprecated in drupal:9.2.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.
    */
   public function testBuildNoReturnType() {
+    $this->expectDeprecation('Declaring ::build() without an array return typehint in Drupal\Tests\Core\Block\TestBlockManagerNoArrayReturnTypeBlock is deprecated in drupal:9.3.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.');
     // Overwrite the definitions from ::setUp() to have a block that does not
     // have a return type for ::build().
     $this->setDefinitions([
@@ -151,9 +151,9 @@ class BlockManagerTest extends UnitTestCase {
 
   /**
    * @group legacy
-   * @expectedDeprecation Extending Drupal\Tests\Core\Block\TestBlockManagerExtendsExistingBlock from a concrete class is deprecated in drupal:9.2.0 and will be disallowed before drupal:10.0.0. Extend the class from an abstract base class instead. See https://www.drupal.org/node/xxxxxxxx.
    */
   public function testExtendsExistingBlock() {
+    $this->expectDeprecation('Extending Drupal\Tests\Core\Block\TestBlockManagerExtendsExistingBlock from a concrete class is deprecated in drupal:9.3.0 and will be disallowed before drupal:10.0.0. Extend the class from an abstract base class instead. See https://www.drupal.org/node/3164649.');
     // Overwrite the definitions from ::setUp() to have a block that extends
     // an existing block.
     $this->setDefinitions([
