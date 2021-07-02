@@ -75,7 +75,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
     }
     $build_method = new \ReflectionMethod($class, 'build');
     if (!$build_method->hasReturnType() || $build_method->getReturnType()->getName() !== 'array') {
-      @trigger_error('Declaring ::build() without an array return typehint in ' . $class . ' is deprecated in drupal:9.3.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.', E_USER_DEPRECATED);
+      @trigger_error('Declaring \\' . $class . '::build() without an array return typehint is deprecated in drupal:9.3.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/3164649.', E_USER_DEPRECATED);
     }
   }
 
