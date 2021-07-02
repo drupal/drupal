@@ -28,9 +28,9 @@ function menu_test_menu_links_discovered_alter(&$links) {
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
+ * Implements hook_local_tasks_render_alter().
  */
-function menu_test_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+function menu_test_local_tasks_render_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
   if (in_array($route_name, ['menu_test.tasks_default'])) {
     $data['tabs'][0]['foo'] = [
       '#theme' => 'menu_local_task',
