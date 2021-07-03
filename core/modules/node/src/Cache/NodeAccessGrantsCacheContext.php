@@ -30,7 +30,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
   protected $entityTypeManager;
 
   /**
-   * Constructs a new UserCacheContextBase class.
+   * Constructs a new cache context instance.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
@@ -40,7 +40,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
   public function __construct(AccountInterface $user, EntityTypeManagerInterface $entity_type_manager = NULL) {
     parent::__construct($user);
     if (!$entity_type_manager) {
-      @trigger_error('The $entity_type_manager parameter will be mandatory before Drupal 9.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
+      @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and the $entity_type_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
       $entity_type_manager = \Drupal::entityTypeManager();
     }
     $this->entityTypeManager = $entity_type_manager;

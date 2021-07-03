@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\node\Cache\NodeAccessGrantsCacheContext;
+
 /**
  * Tests basic node_access functionality.
  *
@@ -134,6 +136,8 @@ class NodeAccessTest extends NodeAccessTestBase {
     node_access_view_all_nodes();
     $this->expectDeprecation("Calling drupal_static_reset() with 'node_access_view_all_nodes' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909");
     drupal_static_reset('node_access_view_all_nodes');
+    $this->expectDeprecation('Calling NodeAccessGrantsCacheContext::__construct() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and the $entity_type_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038909');
+    new NodeAccessGrantsCacheContext($this->createUser());
   }
 
 }
