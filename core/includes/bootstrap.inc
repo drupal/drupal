@@ -625,6 +625,12 @@ function drupal_maintenance_theme() {
  * @return mixed
  *   Returns a variable by reference.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Do not use
+ *   static PHP variables. If in-memory caching is required, use a non-static
+ *   property on a long-lived object such as a service. There is no replacement
+ *   for this function.
+ *
+ * @see https://www.drupal.org/node/2661204
  * @see drupal_static_reset()
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
@@ -671,6 +677,13 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   Name of the static variable to reset. Omit to reset all variables.
  *   Resetting all variables should only be used, for example, for running
  *   unit tests with a clean environment.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Do not use
+ *   static PHP variables. If in-memory caching is required, use a non-static
+ *   property on a long-lived object such as a service. There is no replacement
+ *   for this function.
+ *
+ * @see https://www.drupal.org/node/2661204
  */
 function drupal_static_reset($name = NULL) {
   if ($name !== NULL && !in_array($name, DRUPAL_STATIC_CALLS, TRUE)) {
