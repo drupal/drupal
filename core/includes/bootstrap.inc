@@ -119,6 +119,7 @@ const DRUPAL_STATIC_CALLS = [
   '_batch_needs_update',
   'comment_node_update_index',
   'drupal_attach_tabledrag',
+  'drupal_get_filetransfer_info',
   'drupal_get_updaters',
   'file_get_file_references',
   'file_get_file_references:field_columns',
