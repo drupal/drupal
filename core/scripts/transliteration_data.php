@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -8,11 +9,7 @@
  * - The functions in this file are NOT SECURE, because they use PHP functions
  *   like eval(). Absolutely do not run this script unless you trust the data
  *   files used for input.
- * - You will need to change the name of this file to remove the .txt extension
- *   before running it (it has been given this name so that you cannot run it
- *   by mistake). When you do that, move it out of your web root as well so
- *   that it cannot be run via a URL, and run the script via the PHP command
- *   at a command prompt.
+ * - Run the script via the PHP command at a command prompt.
  * - This script, depending on which portions of it you run, depends on having
  *   input data from various sources in sub-directories below where this file
  *   is located. The data inputs are as follows:
@@ -54,6 +51,10 @@
  *   are defined. Many have parameters that you can use to change the output.
  */
 
+if (PHP_SAPI !== 'cli') {
+  return;
+}
+
 // Commands to read various data sources:
 // $data = read_drupal_data();
 // $data = read_midgard_data();
@@ -72,7 +73,7 @@
 
 // Command to patch Drupal Core data, using the intl data set, and put the
 // resulting changed data files in the 'outdata' directory:
-patch_drupal('outdata');
+// patch_drupal('outdata');
 
 /**
  * Reads in all transliteration data and outputs differences in CSV format.
@@ -97,8 +98,8 @@ patch_drupal('outdata');
  *   and that is the only difference; FALSE (default) to include these rows.
  */
 function read_all_to_csv($print_all = FALSE, $print_missing = FALSE) {
-  $data = array();
-  $types = array('drupal', 'midgard', 'cpan', 'nodejs', 'junidecode', 'intl');
+  $data = [];
+  $types = ['drupal', 'midgard', 'cpan', 'nodejs', 'junidecode', 'intl'];
 
   // Alternatively, if you just want to compare a couple of data sets, you can
   // uncomment and edit the following line:
@@ -122,7 +123,7 @@ function read_all_to_csv($print_all = FALSE, $print_missing = FALSE) {
     for ($chr = $start; $chr < 256; $chr++) {
 
       // Gather the data together for this character.
-      $row = array();
+      $row = [];
       foreach ($types as $type) {
         $row[$type] = (isset($data[$type][$bank][$chr]) && is_string($data[$type][$bank][$chr])) ? $data[$type][$bank][$chr] : '';
       }
@@ -130,7 +131,7 @@ function read_all_to_csv($print_all = FALSE, $print_missing = FALSE) {
       // Only print if there are differences or we are printing all data.
       $print = $print_all;
       $ref = $row['drupal'];
-      $why = array();
+      $why = [];
       foreach ($types as $type) {
         // Try to characterize what the differences are.
         if ($row[$type] != $ref) {
@@ -179,11 +180,11 @@ function read_all_to_csv($print_all = FALSE, $print_missing = FALSE) {
  *   being run).
  */
 function patch_drupal($outdir) {
-  $data = array();
+  $data = [];
 
   // Note that this is hard-wired below. Changing this line will have no
   // effect except to break this function.
-  $types = array('drupal', 'intl');
+  $types = ['drupal', 'intl'];
 
   // Read in all the data.
   foreach ($types as $type) {
@@ -196,7 +197,7 @@ function patch_drupal($outdir) {
 
     // Go through characters in bank; skip pure ASCII characters.
     $start = ($bank == 0) ? 0x80 : 0;
-    $newdata = array();
+    $newdata = [];
     for ($chr = 0; $chr < 256; $chr++) {
       // Fill up the start of the ASCII range.
       if ($chr < $start) {
@@ -244,14 +245,14 @@ function patch_drupal($outdir) {
  */
 function read_drupal_data() {
   $dir = __DIR__ . '/data';
-  $out = array();
+  $out = [];
 
   // Read data files.
   for ($bank = 0; $bank < 256; $bank++) {
-    $base = array();
+    $base = [];
     $file = $dir . '/x' . sprintf('%02x', $bank) . '.php';
     if (is_file($file)) {
-      include($file);
+      include $file;
     }
     $out[$bank] = $base;
   }
@@ -273,16 +274,16 @@ function read_drupal_data() {
  */
 function read_midgard_data() {
   $dir = __DIR__ . '/utf8_to_ascii_db';
-  $out = array();
+  $out = [];
 
   // Read data files.
   for ($bank = 0; $bank < 256; $bank++) {
-    $UTF8_TO_ASCII = array($bank => array());
+    $utf8_to_ascii = [$bank => []];
     $file = $dir . '/x' . sprintf('%02x', $bank) . '.php';
     if (is_file($file)) {
-      include($file);
+      include $file;
     }
-    $base = $UTF8_TO_ASCII[$bank];
+    $base = $utf8_to_ascii[$bank];
 
     // For unknown characters, these files have '[?]' in them. Replace with
     // NULL for compatibility with our data.
@@ -307,11 +308,11 @@ function read_midgard_data() {
  */
 function read_cpan_data() {
   $dir = __DIR__ . '/Unidecode';
-  $out = array();
+  $out = [];
 
   // Read data files.
   for ($bank = 0; $bank < 256; $bank++) {
-    $base = array();
+    $base = [];
     $file = $dir . '/x' . sprintf('%02x', $bank) . '.pm';
     if (is_file($file)) {
       $base = _cpan_read_file($file);
@@ -377,7 +378,9 @@ function _cpan_read_file($file) {
   // Evaluate as an array.
   $save = 'return array(' . $save . ');';
 
+  // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
   $data = @eval($save);
+  // phpcs:enable
   if (isset($data) && is_array($data)) {
     $data = array_map('_replace_hex_with_character', $data);
   }
@@ -385,7 +388,9 @@ function _cpan_read_file($file) {
     // There was a problem, so throw an error and exit.
     print "Problem in evaluating $file\n";
     print $save;
+    // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
     eval($save);
+    // phpcs:enable
     exit();
   }
 
@@ -411,11 +416,11 @@ function _cpan_read_file($file) {
  */
 function read_nodejs_data() {
   $dir = __DIR__ . '/unidecoder_data';
-  $out = array();
+  $out = [];
 
   // Read data files.
   for ($bank = 0; $bank < 256; $bank++) {
-    $base = array();
+    $base = [];
     $file = $dir . '/x' . sprintf('%02x', $bank) . '.yml';
     if (is_file($file)) {
       $base = yaml_parse_file($file);
@@ -490,27 +495,27 @@ function read_intl_data() {
   $ops .= 'NFD; [:Nonspacing Mark:] Remove; NFC;';
 
   $trans = Transliterator::create($ops);
-  $out = array();
+  $out = [];
 
   // Transliterate all possible characters.
   for ($bank = 0; $bank < 256; $bank++) {
-    $data = array();
+    $data = [];
     for ($chr = 0; $chr < 256; $chr++) {
       // Skip the UTF-16 and "private use" ranges completely.
-      $OK = ($bank <= 0xd8 || $bank > 0xf8);
+      $ok = ($bank <= 0xd8 || $bank > 0xf8);
 
-      $result = $OK ? $trans->transliterate(mb_convert_encoding(pack('n', 256 * $bank + $chr), 'UTF-8', 'UTF-16BE')) : '';
+      $result = $ok ? $trans->transliterate(mb_convert_encoding(pack('n', 256 * $bank + $chr), 'UTF-8', 'UTF-16BE')) : '';
 
       // See if we have managed to transliterate this to ASCII or not. If not,
       // return NULL instead of this character.
       $max = chr(127);
       foreach (preg_split('//u', $result, 0, PREG_SPLIT_NO_EMPTY) as $character) {
         if ($character > $max) {
-          $OK = $OK && FALSE;
+          $ok = $ok && FALSE;
           break;
         }
       }
-      $data[$chr] = ($OK) ? $result : NULL;
+      $data[$chr] = ($ok) ? $result : NULL;
     }
     $out[$bank] = $data;
   }
@@ -532,11 +537,11 @@ function read_intl_data() {
  */
 function read_junidecode_data() {
   $dir = __DIR__ . '/junidecode';
-  $out = array();
+  $out = [];
 
   // Read data files.
   for ($bank = 0; $bank < 256; $bank++) {
-    $base = array();
+    $base = [];
     $file = $dir . '/X' . sprintf('%02x', $bank) . '.java';
     if (is_file($file)) {
       $base = _junidecode_read_file($file);
@@ -587,7 +592,9 @@ function _junidecode_read_file($file) {
   // Evaluate as an array.
   $save = 'return array(' . $save . ');';
 
+  // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
   $data = @eval($save);
+  // phpcs:enable
   if (isset($data) && is_array($data)) {
     $data = array_map('_replace_hex_with_character', $data);
     $data = array_map('_replace_question_with_null', $data);
@@ -596,7 +603,9 @@ function _junidecode_read_file($file) {
     // There was a problem, so throw an error and exit.
     print "Problem in evaluating $file\n";
     print $save;
+    // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
     eval($save);
+    // phpcs:enable
     exit();
   }
 
@@ -615,7 +624,9 @@ function _replace_question_with_null($data) {
  */
 function _replace_hex_with_character($item) {
   if (strpos($item, '\x') === 0) {
+    // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
     $item = eval($item);
+    // phpcs:enable
   }
   return $item;
 }
@@ -627,7 +638,7 @@ function _replace_hex_with_character($item) {
  *   Array of data to write out.
  * @param string $bank
  *   Bank of characters it belongs to.
- * @param string $dir
+ * @param string $outdir
  *   Output directory.
  */
 function write_data_file($data, $bank, $outdir) {
@@ -647,7 +658,7 @@ function write_data_file($data, $bank, $outdir) {
   for ($line = $start; $line <= 0xf0; $line += 0x10) {
     $out .= '  0x' . sprintf('%02X', $line) . ' =>';
     $elems = array_values(array_slice($data, $line, 16));
-    for ($i = 0; $i < 16; $i++ ) {
+    for ($i = 0; $i < 16; $i++) {
       if (isset($elems[$i])) {
         $out .= " '" . addcslashes($elems[$i], "'\\") . "',";
       }
