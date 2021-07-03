@@ -107,7 +107,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * drupal_static() and drupal_static_reset(). On each deprecation of a usage,
  * the corresponding static cache ID should be removed from the list.
  *
- * @deprecated in drupal:9.3.x and is removed from drupal:10.0.0. No replacement
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. No replacement
  *   is provided.
  *
  * @see https://www.drupal.org/project/drupal/issues/2260187
