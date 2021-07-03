@@ -121,8 +121,11 @@ const DRUPAL_STATIC_CALLERS = [
   'drupal_attach_tabledrag',
   'drupal_get_updaters',
   'file_get_file_references',
+  'file_get_file_references:field_columns',
   'filter_formats',
   'history_read_multiple',
+  'locale',
+  'locale_get_plural',
   'locale_get_plural:plurals',
   'locale_translation_get_file_history',
   'locale_translation_get_projects',
@@ -135,7 +138,8 @@ const DRUPAL_STATIC_CALLERS = [
   'system_get_module_admin_tasks',
   'template_preprocess',
   'theme_get_setting',
-  'views_ui_add_ajax_trigger',
+  'views_ui_add_ajax_trigger:seen_buttons',
+  'views_ui_add_ajax_trigger:seen_ids',
   'views_ui_contextual_links_suppress',
 ];
 
