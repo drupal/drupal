@@ -34,7 +34,7 @@
       $document.on('tableheaderCreateSticky', () => {
         this.stickyHeader = this.wrapper.querySelector('.sticky-header');
 
-        // Apply clipping to the sticky header so it does not overflow it
+        // Apply clipping to the sticky header so it does not overflow its
         // container.
         this.clipFixedStickyHeader();
 
