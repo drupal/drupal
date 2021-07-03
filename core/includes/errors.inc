@@ -347,8 +347,6 @@ function _drupal_get_error_level() {
  *   The line number in file that emitted the error.
  */
 function _drupal_error_header($message, $type, $function, $file, $line) {
-  // $number does not use drupal_static as it should not be reset
-  // as it uniquely identifies each PHP error.
   static $number = 0;
   $assertion = [
     $message,

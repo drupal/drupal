@@ -88,8 +88,6 @@ trait BookTestTrait {
    *   The nodes that should be displayed in the breadcrumb.
    */
   public function checkBookNode(EntityInterface $node, $nodes, $previous, $up, $next, array $breadcrumb) {
-    // $number does not use drupal_static as it should not be reset
-    // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
     $this->drupalGet('node/' . $node->id());
 
@@ -181,8 +179,6 @@ trait BookTestTrait {
    *   The created node.
    */
   public function createBookNode($book_nid, $parent = NULL, $edit = []) {
-    // $number does not use drupal_static as it should not be reset
-    // since it uniquely identifies each call to createBookNode().
     // Used to ensure that when sorted nodes stay in same order.
     static $number = 0;
 

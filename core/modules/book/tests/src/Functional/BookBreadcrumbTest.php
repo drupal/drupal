@@ -123,9 +123,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
    *   The created node.
    */
   protected function createBookNode($book_nid, $parent = NULL) {
-    // $number does not use drupal_static as it should not be reset since it
-    // uniquely identifies each call to createBookNode(). It is used to ensure
-    // that when sorted nodes stay in same order.
+    // It is used to ensure that when sorted nodes stay in same order.
     static $number = 0;
 
     $edit = [];

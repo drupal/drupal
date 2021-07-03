@@ -960,12 +960,10 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
  * Retrieves the current batch.
  */
 function &batch_get() {
-  // Not drupal_static(), because Batch API operates at a lower level than most
-  // use-cases for resetting static variables, and we specifically do not want a
-  // global drupal_static_reset() resetting the batch information. Functions
-  // that are part of the Batch API and need to reset the batch information may
-  // call batch_get() and manipulate the result by reference. Functions that are
-  // not part of the Batch API can also do this, but shouldn't.
+  // Functions that are part of the Batch API and need to reset the batch
+  // information may call batch_get() and manipulate the result by reference.
+  // Functions that are not part of the Batch API can also do this, but
+  // shouldn't.
   static $batch = [];
   return $batch;
 }

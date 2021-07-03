@@ -42,8 +42,6 @@ class ExceptionTestSiteSubscriber extends HttpExceptionSubscriberBase {
     // When running inside the testing framework, we relay the errors
     // to the tested site by the way of HTTP headers.
     if (DRUPAL_TEST_IN_CHILD_SITE && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
-      // $number does not use drupal_static as it should not be reset
-      // as it uniquely identifies each PHP error.
       static $number = 0;
       $assertion = [
         $error['@message'],

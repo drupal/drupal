@@ -110,8 +110,6 @@ class BookRelationshipTest extends ViewTestBase {
    *   The book node.
    */
   protected function createBookNode($book_nid, $parent = NULL) {
-    // $number does not use drupal_static as it should not be reset
-    // since it uniquely identifies each call to createBookNode().
     // Used to ensure that when sorted nodes stay in same order.
     static $number = 0;
 

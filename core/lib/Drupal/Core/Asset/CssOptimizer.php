@@ -91,7 +91,6 @@ class CssOptimizer implements AssetOptimizerInterface {
    *   Contents of the stylesheet, including any resolved @import commands.
    */
   public function loadFile($file, $optimize = NULL, $reset_basepath = TRUE) {
-    // These statics are not cache variables, so we don't use drupal_static().
     static $_optimize, $basepath;
     if ($reset_basepath) {
       $basepath = '';
