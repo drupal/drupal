@@ -233,6 +233,7 @@ function layout_builder_cron() {
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
 function layout_builder_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  unset($definitions['system_main_block']);
   // @todo Restore the page title block in https://www.drupal.org/node/2938129.
   unset($definitions['page_title_block']);
 }

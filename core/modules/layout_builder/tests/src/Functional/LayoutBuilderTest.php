@@ -876,6 +876,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Verify that blocks explicitly removed are not present.
     $assert_session->linkNotExists('Help');
     $assert_session->linkNotExists('Sticky at top of lists');
+    $assert_session->linkNotExists('Main page content');
     $assert_session->linkNotExists('Page title');
 
     // Verify that Changed block is not present on first section.
