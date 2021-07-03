@@ -17,10 +17,13 @@ class NodeDeprecationTest extends KernelTestBase {
 
   /**
    * @see node_mark()
+   * @see drupal_static_reset()
    */
   public function testNodeMarkDeprecation(): void {
     $this->expectDeprecation("node_mark() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There's no replacement for this function. See https://www.drupal.org/node/3037203");
     node_mark(123, time());
+    $this->expectDeprecation("Calling drupal_static_reset() with 'node_mark' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3037203");
+    drupal_static_reset('node_mark');
   }
 
 }
