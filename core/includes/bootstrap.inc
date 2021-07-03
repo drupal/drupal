@@ -100,19 +100,19 @@ const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
 const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 
 /**
- * A list of Drupal core callbacks that are using drupal_static().
+ * Drupal core static cache IDs used by drupal_static() & drupal_static_reset().
  *
  * Usage of drupal_static() is gradually deprecated in #1577902. This list
- * contains the Drupal core callbacks still authorized to use drupal_static()
- * and drupal_static_reset(). On each deprecation of a usage, the corresponding
- * callable should be removed from the list.
+ * contains the Drupal core static cache IDs still allowed to be passed to
+ * drupal_static() and drupal_static_reset(). On each deprecation of a usage,
+ * the corresponding static cache ID should be removed from the list.
  *
  * @see drupal_static()
  * @see drupal_static_reset()
  * @see https://www.drupal.org/project/drupal/issues/2260187
  * @see https://www.drupal.org/project/drupal/issues/1577902
  */
-const DRUPAL_STATIC_CALLERS = [
+const DRUPAL_STATIC_CALLS = [
   'Drupal\book\BookManager::bookSubtreeData',
   'Drupal\book\BookManager::bookTreeAllData',
   'Drupal\book\BookManager::doBookTreeBuild',
@@ -628,7 +628,7 @@ function drupal_maintenance_theme() {
  * @see drupal_static_reset()
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
-  if ($name !== NULL && !in_array($name, DRUPAL_STATIC_CALLERS, TRUE)) {
+  if ($name !== NULL && !in_array($name, DRUPAL_STATIC_CALLS, TRUE)) {
     @trigger_error("Calling drupal_static() with '{$name}' as first argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/2661204", E_USER_DEPRECATED);
   }
 
@@ -673,7 +673,7 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   unit tests with a clean environment.
  */
 function drupal_static_reset($name = NULL) {
-  if ($name !== NULL && !in_array($name, DRUPAL_STATIC_CALLERS, TRUE)) {
+  if ($name !== NULL && !in_array($name, DRUPAL_STATIC_CALLS, TRUE)) {
     switch ($name) {
       case 'taxonomy_vocabulary_get_names':
         @trigger_error("Calling drupal_static_reset() with 'taxonomy_vocabulary_get_names' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
