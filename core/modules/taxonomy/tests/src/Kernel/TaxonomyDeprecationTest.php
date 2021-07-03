@@ -60,7 +60,7 @@ class TaxonomyDeprecationTest extends KernelTestBase {
     $title = taxonomy_term_title($term1);
     $this->assertSame($term1->label(), $title);
 
-    $this->expectDeprecation("Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041");
+    $this->expectDeprecation("Calling drupal_static_reset() with 'taxonomy_vocabulary_get_names' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041");
     drupal_static_reset('taxonomy_vocabulary_get_names');
   }
 
