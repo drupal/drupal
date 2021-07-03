@@ -135,7 +135,7 @@ class NodeAccessTest extends NodeAccessTestBase {
    * @group legacy
    */
   public function testNodeAccessViewAllNodesCacheResetDeprecation(): void {
-    $this->expectDeprecation("Using drupal_static_reset() with 'node_access_view_all_nodes' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909");
+    $this->expectDeprecation("Calling drupal_static_reset() with 'node_access_view_all_nodes' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache() instead. See https://www.drupal.org/node/3038909");
     drupal_static_reset('node_access_view_all_nodes');
   }
 
