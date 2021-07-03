@@ -624,7 +624,7 @@ function drupal_maintenance_theme() {
  * @see drupal_static_reset()
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
-  if (!in_array($name, DRUPAL_STATIC_CALLERS, TRUE)) {
+  if ($name !== NULL && !in_array($name, DRUPAL_STATIC_CALLERS, TRUE)) {
     @trigger_error("Calling drupal_static() with '{$name}' as first argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/2661204", E_USER_DEPRECATED);
   }
 
