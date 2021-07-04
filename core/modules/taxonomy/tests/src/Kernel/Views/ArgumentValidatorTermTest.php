@@ -8,8 +8,6 @@ use Drupal\views\Views;
  * Tests the plugin of the taxonomy: term argument validator.
  *
  * @group taxonomy
- *
- * @see \Drupal\taxonomy\Plugin\views\argument_validator\Term
  */
 class ArgumentValidatorTermTest extends TaxonomyTestBase {
 

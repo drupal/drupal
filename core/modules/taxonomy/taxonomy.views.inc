@@ -70,16 +70,3 @@ function taxonomy_field_views_data_alter(array &$data, FieldStorageConfigInterfa
     }
   }
 }
-
-/**
- * Implements hook_views_plugins_argument_validator_alter().
- *
- * Extend the generic entity argument validator.
- *
- * @see \Drupal\views\Plugin\views\argument_validator\Entity
- */
-function taxonomy_views_plugins_argument_validator_alter(array &$plugins) {
-  $plugins['entity:taxonomy_term']['title'] = t('Taxonomy term ID');
-  $plugins['entity:taxonomy_term']['class'] = 'Drupal\taxonomy\Plugin\views\argument_validator\Term';
-  $plugins['entity:taxonomy_term']['provider'] = 'taxonomy';
-}
