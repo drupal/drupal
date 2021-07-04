@@ -17,10 +17,6 @@ module.exports = {
   'On scroll, menu collapses to burger 🍔 menu': (browser) => {
     browser
       .drupalRelativeURL('/node')
-      .assert.containsText(
-        '#block-olivero-content h2',
-        'Congratulations and welcome to the Drupal community!',
-      )
       .assert.not.visible(buttonSelector)
       .assert.attributeEquals(buttonSelector, 'aria-checked', 'false')
       .getLocationInView('footer.site-footer', () => {
