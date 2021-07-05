@@ -8,7 +8,6 @@ use Drupal\Component\Attribute\AttributeString;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Random;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
