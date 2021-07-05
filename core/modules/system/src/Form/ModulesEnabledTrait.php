@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
@@ -10,6 +11,16 @@ use Drupal\Core\Url;
  * @internal
  */
 trait ModulesEnabledTrait {
+
+  use StringTranslationTrait;
+
+  /**
+   * Gets the current user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The current user.
+   */
+  abstract protected function currentUser();
 
   /**
    * Provides a confirmation message after modules have been enabled.
