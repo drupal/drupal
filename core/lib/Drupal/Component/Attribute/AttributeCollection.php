@@ -78,10 +78,10 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Constructs a \Drupal\Component\Attribute\AttributeCollection object.
    *
-   * @param array $attributes
+   * @param \Drupal\Component\Attribute\AttributeCollection|array $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
-  public function __construct(array $attributes = []) {
+  public function __construct($attributes = []) {
     foreach ($attributes as $name => $value) {
       $this->offsetSet($name, $value);
     }

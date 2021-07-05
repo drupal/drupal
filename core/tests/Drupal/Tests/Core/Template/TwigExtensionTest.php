@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\Core\Template;
 
+use Drupal\Component\Attribute\AttributeCollection;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
@@ -385,7 +385,7 @@ class TwigExtensionTest extends UnitTestCase {
   public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
     $loader = new StringLoader();
     $twig = new \Twig_Environment($loader);
-    $data = ['attributes' => new Attribute($seed_attributes)];
+    $data = ['attributes' => new AttributeCollection($seed_attributes)];
     $result = $twig->createTemplate($template)->render($data);
     $this->assertEquals($expected, $result);
   }

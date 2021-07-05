@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Template;
 
-use Drupal\Core\Template\Attribute;
+use Drupal\Component\Attribute\AttributeCollection;
 use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
@@ -72,7 +72,7 @@ class TwigSandboxTest extends UnitTestCase {
    * Tests that white listed classes can be extended.
    */
   public function testExtendedClass() {
-    $this->assertEquals(' class=&quot;kitten&quot;', $this->twig->render('{{ attribute.addClass("kitten") }}', ['attribute' => new TestAttribute()]));
+    $this->assertEquals(' class=&quot;kitten&quot;', $this->twig->render('{{ attribute.addClass("kitten") }}', ['attribute' => new TestAttributeCollection()]));
   }
 
   /**
@@ -159,4 +159,4 @@ class TwigSandboxTest extends UnitTestCase {
 
 }
 
-class TestAttribute extends Attribute {}
+class TestAttributeCollection extends AttributeCollection {}

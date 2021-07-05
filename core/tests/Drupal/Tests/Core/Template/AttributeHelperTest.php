@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Core\Template;
 
-use Drupal\Core\Template\Attribute;
+use Drupal\Component\Attribute\AttributeCollection;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Tests\UnitTestCase;
 
@@ -35,7 +35,7 @@ class AttributeHelperTest extends UnitTestCase {
    */
   public function testAttributeExists(array $test_data, $test_attribute, $expected) {
     $this->assertSame($expected, AttributeHelper::attributeExists($test_attribute, $test_data));
-    $attributes = new Attribute($test_data);
+    $attributes = new AttributeCollection($test_data);
     $this->assertSame($expected, AttributeHelper::attributeExists($test_attribute, $attributes));
   }
 
@@ -49,11 +49,11 @@ class AttributeHelperTest extends UnitTestCase {
   public function providerTestMergeCollections() {
     return [
       [[], ['class' => ['class1']], ['class' => ['class1']]],
-      [[], new Attribute(['class' => ['class1']]), ['class' => ['class1']]],
+      [[], new AttributeCollection(['class' => ['class1']]), ['class' => ['class1']]],
       [['class' => ['example-class']], ['class' => ['class1']], ['class' => ['example-class', 'class1']]],
-      [['class' => ['example-class']], new Attribute(['class' => ['class1']]), ['class' => ['example-class', 'class1']]],
+      [['class' => ['example-class']], new AttributeCollection(['class' => ['class1']]), ['class' => ['example-class', 'class1']]],
       [['class' => ['example-class']], ['id' => 'foo', 'href' => 'bar'], ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar']],
-      [['class' => ['example-class']], new Attribute(['id' => 'foo', 'href' => 'bar']), ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar']],
+      [['class' => ['example-class']], new AttributeCollection(['id' => 'foo', 'href' => 'bar']), ['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar']],
     ];
   }
 
@@ -63,14 +63,14 @@ class AttributeHelperTest extends UnitTestCase {
    */
   public function testMergeCollections($original, $merge, $expected) {
     $this->assertEquals($expected, AttributeHelper::mergeCollections($original, $merge));
-    $this->assertEquals(new Attribute($expected), AttributeHelper::mergeCollections(new Attribute($original), $merge));
+    $this->assertEquals(new AttributeCollection($expected), AttributeHelper::mergeCollections(new AttributeCollection($original), $merge));
   }
 
   /**
    * @covers ::mergeCollections
    */
   public function testMergeCollectionsArgumentException() {
-    $attributes = new Attribute(['class' => ['example-class']]);
+    $attributes = new AttributeCollection(['class' => ['example-class']]);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid collection argument');
     AttributeHelper::mergeCollections($attributes, 'not an array');
