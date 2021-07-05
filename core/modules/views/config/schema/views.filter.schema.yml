@@ -30,6 +30,9 @@ views.filter.combine:
       sequence:
         type: string
         label: 'Field'
+    include_extra_field_data:
+      type: boolean
+      label: 'Include Extra Field Data'
 
 views.filter_value.groupby_numeric:
   type: views.filter_value.numeric
