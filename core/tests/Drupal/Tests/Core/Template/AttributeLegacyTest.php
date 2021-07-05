@@ -21,7 +21,7 @@ class AttributeLegacyTest extends UnitTestCase {
   /**
    * Tests deprecation of Attribute* classes.
    */
-  public testCoreAttributeDeprecations(): void {
+  public function testCoreAttributeDeprecations(): void {
     $this->expectDeprecation('\Drupal\Core\Template\AttributeValueBase is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeValueBase instead. See https://www.drupal.org/node/3070485');
     $this->expectDeprecation('\Drupal\Core\Template\AttributeArray is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeArray instead. See https://www.drupal.org/node/3070485');
     $this->expectDeprecation('\Drupal\Core\Template\AttributeBoolean is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeBoolean instead. See https://www.drupal.org/node/3070485');
