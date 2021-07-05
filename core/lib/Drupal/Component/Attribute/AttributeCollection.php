@@ -81,7 +81,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @param array $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
-  public function __construct($attributes = []) {
+  public function __construct(array $attributes = []): void {
     foreach ($attributes as $name => $value) {
       $this->offsetSet($name, $value);
     }
@@ -99,7 +99,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($name, $value) {
+  public function offsetSet($name, $value): void {
     $this->storage[$name] = $this->createAttributeValue($name, $value);
   }
 
@@ -114,7 +114,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @return \Drupal\Component\Attribute\AttributeValueBase
    *   An AttributeValueBase representation of the attribute's value.
    */
-  protected function createAttributeValue($name, $value) {
+  protected function createAttributeValue(string $name, $value): AttributeValueBase {
     // If the value is already an AttributeValueBase object,
     // return a new instance of the same class, but with the new name.
     if ($value instanceof AttributeValueBase) {
@@ -152,14 +152,14 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($name) {
+  public function offsetUnset($name): void {
     unset($this->storage[$name]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($name) {
+  public function offsetExists($name): bool {
     return isset($this->storage[$name]);
   }
 
@@ -171,7 +171,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function addClass() {
+  public function addClass(): AttributeCollection {
     $args = func_get_args();
     if ($args) {
       $classes = [];
@@ -206,7 +206,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function setAttribute($attribute, $value) {
+  public function setAttribute(string $attribute, $value): AttributeCollection {
     $this->offsetSet($attribute, $value);
 
     return $this;
@@ -221,7 +221,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @return bool
    *   Returns TRUE if the attribute exists, or FALSE otherwise.
    */
-  public function hasAttribute($name) {
+  public function hasAttribute(string $name): bool {
     return array_key_exists($name, $this->storage);
   }
 
@@ -233,7 +233,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function removeAttribute() {
+  public function removeAttribute(): AttributeCollection {
     $args = func_get_args();
     foreach ($args as $arg) {
       // Support arrays or multiple arguments.
@@ -258,7 +258,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function removeClass() {
+  public function removeClass(): AttributeCollection {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
       $args = func_get_args();
@@ -288,7 +288,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @see twig_get_attribute()
    */
-  public function getClass() {
+  public function getClass(): AttributeValueBase {
     return $this->offsetGet('class');
   }
 
@@ -301,7 +301,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @return bool
    *   Returns TRUE if the class exists, or FALSE otherwise.
    */
-  public function hasClass($class) {
+  public function hasClass(string $class): bool {
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
       return in_array($class, $this->storage['class']->value());
     }
@@ -313,7 +313,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Implements the magic __toString() method.
    */
-  public function __toString() {
+  public function __toString(): string {
     $return = '';
     /** @var \Drupal\Component\Attribute\AttributeValueBase $value */
     foreach ($this->storage as $name => $value) {
@@ -331,7 +331,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @return array
    *   An associative array of attributes.
    */
-  public function toArray() {
+  public function toArray(): array {
     $return = [];
     foreach ($this->storage as $name => $value) {
       $return[$name] = $value->value();
@@ -343,7 +343,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Implements the magic __clone() method.
    */
-  public function __clone() {
+  public function __clone(): void {
     foreach ($this->storage as $name => $value) {
       $this->storage[$name] = clone $value;
     }
@@ -352,14 +352,14 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     return new \ArrayIterator($this->storage);
   }
 
   /**
    * Returns the whole array.
    */
-  public function storage() {
+  public function storage(): array {
     return $this->storage;
   }
 
@@ -369,7 +369,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @return string
    *   The safe string content.
    */
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return (string) $this;
   }
 
@@ -381,7 +381,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function merge(AttributeCollection $collection) {
+  public function merge(AttributeCollection $collection): AttributeCollection {
     $merged_attributes = NestedArray::mergeDeep($this->toArray(), $collection->toArray());
     foreach ($merged_attributes as $name => $value) {
       $this->storage[$name] = $this->createAttributeValue($name, $value);

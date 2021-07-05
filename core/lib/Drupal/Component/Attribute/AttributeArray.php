@@ -42,7 +42,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value): void {
     if (isset($offset)) {
       $this->value[$offset] = $value;
     }
@@ -54,21 +54,21 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset): void {
     unset($this->value[$offset]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset) {
+  public function offsetExists($offset): bool {
     return isset($this->value[$offset]);
   }
 
   /**
    * Implements the magic __toString() method.
    */
-  public function __toString() {
+  public function __toString(): string {
     // Filter out any empty values before printing.
     $this->value = array_unique(array_filter($this->value));
     return Html::escape(implode(' ', $this->value));
@@ -77,7 +77,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     return new \ArrayIterator($this->value);
   }
 
@@ -92,7 +92,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
    *
    * @see ArrayObject::exchangeArray
    */
-  public function exchangeArray($input) {
+  public function exchangeArray(array $input): array {
     $old = $this->value;
     $this->value = $input;
     return $old;

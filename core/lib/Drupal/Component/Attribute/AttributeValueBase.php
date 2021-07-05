@@ -35,7 +35,7 @@ abstract class AttributeValueBase {
   /**
    * Constructs a \Drupal\Component\Attribute\AttributeValueBase object.
    */
-  public function __construct($name, $value) {
+  public function __construct($name, $value): void {
     $this->name = $name;
     $this->value = $value;
   }
@@ -49,7 +49,7 @@ abstract class AttributeValueBase {
    * @return string
    *   The string representation of the attribute.
    */
-  public function render() {
+  public function render(): string {
     $value = (string) $this;
     if (isset($this->value) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
       return Html::escape($this->name) . '="' . $value . '"';
@@ -66,6 +66,6 @@ abstract class AttributeValueBase {
   /**
    * Implements the magic __toString() method.
    */
-  abstract public function __toString();
+  abstract public function __toString(): string;
 
 }

@@ -24,7 +24,7 @@ class AttributeString extends AttributeValueBase {
   /**
    * Implements the magic __toString() method.
    */
-  public function __toString() {
+  public function __toString(): string {
     return Html::escape($this->value);
   }
 
