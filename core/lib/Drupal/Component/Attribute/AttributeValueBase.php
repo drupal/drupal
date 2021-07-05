@@ -35,7 +35,7 @@ abstract class AttributeValueBase {
   /**
    * Constructs a \Drupal\Component\Attribute\AttributeValueBase object.
    */
-  public function __construct($name, $value): void {
+  public function __construct($name, $value) {
     $this->name = $name;
     $this->value = $value;
   }

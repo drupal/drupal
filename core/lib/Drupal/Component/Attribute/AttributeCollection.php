@@ -81,7 +81,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @param array $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
-  public function __construct(array $attributes = []): void {
+  public function __construct(array $attributes = []) {
     foreach ($attributes as $name => $value) {
       $this->offsetSet($name, $value);
     }
