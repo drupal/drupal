@@ -60,7 +60,7 @@ class AuthenticationCollector implements AuthenticationCollectorInterface {
    * {@inheritdoc}
    */
   public function getProvider($provider_id) {
-    return $this->providers[$provider_id] ?? NULL;
+    return isset($this->providers[$provider_id]) ? $this->providers[$provider_id] : NULL;
   }
 
   /**

@@ -68,7 +68,7 @@ class FileCache implements FileCacheInterface {
   public function get($filepath) {
     $filepaths = [$filepath];
     $cached = $this->getMultiple($filepaths);
-    return $cached[$filepath] ?? NULL;
+    return isset($cached[$filepath]) ? $cached[$filepath] : NULL;
   }
 
   /**

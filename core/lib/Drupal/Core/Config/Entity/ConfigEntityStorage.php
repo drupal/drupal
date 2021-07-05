@@ -470,7 +470,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   public function loadOverrideFree($id) {
     $entities = $this->loadMultipleOverrideFree([$id]);
-    return $entities[$id] ?? NULL;
+    return isset($entities[$id]) ? $entities[$id] : NULL;
   }
 
   /**
