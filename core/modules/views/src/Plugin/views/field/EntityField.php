@@ -320,8 +320,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $field_storage_definition = $this->getFieldStorageDefinition();
     $column = $this->getTableMapping()->getFieldColumnName($field_storage_definition, $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
-      // Column is not in query; add a sort on it (without adding the column).
+      // Column is not in query; add a sort on it.
       $this->aliases[$column] = $this->tableAlias . '.' . $column;
+      // If the query uses DISTINCT we need to add the column too.
+      if (!empty($this->view->getQuery()->options['distinct'])) {
+        $this->query->addField($this->tableAlias, $column);
+      }
     }
     $this->query->addOrderBy(NULL, NULL, $order, $this->aliases[$column]);
   }
