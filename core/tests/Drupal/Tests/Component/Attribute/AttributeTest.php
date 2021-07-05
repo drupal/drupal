@@ -9,6 +9,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,6 +17,8 @@ use PHPUnit\Framework\TestCase;
  * @group Attribute
  */
 class AttributeTest extends TestCase {
+
+  use PhpUnitCompatibilityTrait;
 
   /**
    * Tests the constructor of the attribute class.
@@ -288,8 +291,7 @@ class AttributeTest extends TestCase {
   public function testPrint() {
     $attributes = new AttributeCollection(['class' => ['example-class'], 'id' => 'example-id', 'enabled' => TRUE]);
 
-    $content = (new Random())->name(8, TRUE);
-    $html = '<div' . (string) $attributes . '>' . $content . '</div>';
+    $html = '<div' . (string) $attributes . '>test content</div>';
     $this->assertClass('example-class', $html);
     $this->assertNoClass('example-class2', $html);
 

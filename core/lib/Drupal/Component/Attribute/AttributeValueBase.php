@@ -54,6 +54,7 @@ abstract class AttributeValueBase {
     if (isset($this->value) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
       return Html::escape($this->name) . '="' . $value . '"';
     }
+    return '';
   }
 
   /**
