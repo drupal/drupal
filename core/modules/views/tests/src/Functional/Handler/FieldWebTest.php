@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
@@ -26,12 +27,12 @@ class FieldWebTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_view', 'test_field_classes', 'test_field_output', 'test_click_sort'];
+  public static $testViews = ['test_view', 'test_field_classes', 'test_field_output', 'test_click_sort', 'test_distinct_click_sorting'];
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node'];
+  protected static $modules = ['node', 'language'];
 
   /**
    * {@inheritdoc}
@@ -97,6 +98,24 @@ class FieldWebTest extends ViewTestBase {
     // Check that the output has the expected order (desc).
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEquals(range(5, 1, -1), $ids);
+  }
+
+  /**
+   * Tests the default click sorting functionality with distinct.
+   */
+  public function testClickSortingDistinct() {
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    $node = $this->drupalCreateNode();
+    $this->drupalGet('test_distinct_click_sorting');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Check that the results are ordered by id in ascending order and that the
+    // title click filter is for descending.
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'changed', 'sort' => 'desc']])->toString());
+    $this->assertSession()->pageTextContains($node->getTitle());
+    $this->clickLink('Changed');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($node->getTitle());
   }
 
   /**
