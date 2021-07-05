@@ -87,6 +87,11 @@ libraries-override:
       layout:
         css/node.module.css: false
 
+  node/drupal.node.preview:
+    css:
+      theme:
+        css/node.preview.css: false
+
   node/form:
     css:
       layout:

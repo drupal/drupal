@@ -13,17 +13,24 @@
 :root {
   /**
   * Node preview.
-  */ /* --space-m Ã— 2 */ /* 2px */
+  */ /* --space-m Ã— 2 */ /* 2px */ /* 10px */ /* Layout container spacing */ /* Layout container spacing */
 }
 
 .node-preview-container {
-  position: sticky;
+  position: relative;
   z-index: 499;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
+  padding: 0.625rem 1rem;
+}
+
+@media screen and (min-width: 60em) {
+  .node-preview-container {
+    padding: 0.625rem 3rem;
+  }
 }
 
 .node-preview-form-select {

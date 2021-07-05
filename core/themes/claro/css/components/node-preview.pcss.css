@@ -14,16 +14,26 @@
   --node-preview--fg-color: var(--color-davysgray);
   --node-preview--bg-color: var(--color-white);
   --node-preview--hover-bg-color: var(--color-bgblue-active);
+  --node-preview--padding-vertical: 0.625rem; /* 10px */
+  --node-preview--padding-horizontal: 3rem; /* Layout container spacing */
+  --node-preview--padding-horizontal-sm: 1rem /* Layout container spacing */
 }
 
 .node-preview-container {
-  position: sticky;
+  position: relative;
   z-index: 499;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
+  padding: var(--node-preview--padding-vertical) var(--node-preview--padding-horizontal-sm);
+}
+
+@media screen and (min-width: 60em) {
+  .node-preview-container {
+    padding: var(--node-preview--padding-vertical) var(--node-preview--padding-horizontal);
+  }
 }
 
 .node-preview-form-select {
