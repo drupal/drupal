@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Template;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
@@ -15,6 +16,9 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Source;
+
+// cspell:ignore kangchenjunga nanga parbat manaslu gasherbrum gyachung kang
+// cspell:ignore shishapangma gyachung nuptse himalchuli rakaposhi
 
 /**
  * Tests the twig extension.
@@ -371,6 +375,62 @@ class TwigExtensionTest extends UnitTestCase {
     $build = $this->systemUnderTest->getLink('test', $url, ['class' => ['bar']]);
 
     $this->assertEquals(['foo', 'bar'], $build['#url']->getOption('attributes')['class']);
+  }
+
+  /**
+   * Tests Twig calls to Attribute objects.
+   *
+   * @dataProvider providerTestAttributeClassHelpers
+   */
+  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
+    $loader = new StringLoader();
+    $twig = new \Twig_Environment($loader);
+    $data = ['attributes' => new Attribute($seed_attributes)];
+    $result = $twig->createTemplate($template)->render($data);
+    $this->assertEquals($expected, $result);
+  }
+
+  /**
+   * Provides tests data for testEscaping.
+   *
+   * @return array
+   *   An array of test data each containing of a twig template string,
+   *   a resulting string of classes and an optional array of attributes.
+   */
+  public function providerTestAttributeClassHelpers() {
+    return [
+      ["{{ attributes.class }}", ''],
+      ["{{ attributes.addClass('everest').class }}", 'everest'],
+      ["{{ attributes.addClass(['k2', 'kangchenjunga']).class }}", 'k2 kangchenjunga'],
+      ["{{ attributes.addClass('lhotse', 'makalu', 'cho-oyu').class }}", 'lhotse makalu cho-oyu'],
+      [
+        "{{ attributes.addClass('nanga-parbat').class }}",
+        'dhaulagiri manaslu nanga-parbat',
+        ['class' => ['dhaulagiri', 'manaslu']],
+      ],
+      [
+        "{{ attributes.removeClass('annapurna').class }}",
+        'gasherbrum-i',
+        ['class' => ['annapurna', 'gasherbrum-i']],
+      ],
+      [
+        "{{ attributes.removeClass(['broad peak']).class }}",
+        'gasherbrum-ii',
+        ['class' => ['broad peak', 'gasherbrum-ii']],
+      ],
+      [
+        "{{ attributes.removeClass('gyachung-kang', 'shishapangma').class }}",
+        '',
+        ['class' => ['shishapangma', 'gyachung-kang']],
+      ],
+      [
+        "{{ attributes.removeClass('nuptse').addClass('annapurna-ii').class }}",
+        'himalchuli annapurna-ii',
+        ['class' => ['himalchuli', 'nuptse']],
+      ],
+      // Test for the removal of an empty class name.
+      ["{{ attributes.addClass('rakaposhi', '').class }}", 'rakaposhi'],
+    ];
   }
 
 }
