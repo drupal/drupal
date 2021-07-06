@@ -343,7 +343,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Implements the magic __clone() method.
    */
-  public function __clone(): void {
+  public function __clone() {
     foreach ($this->storage as $name => $value) {
       $this->storage[$name] = clone $value;
     }
