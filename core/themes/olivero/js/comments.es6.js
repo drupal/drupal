@@ -1,14 +1,14 @@
 /**
  * @file
- * Adds show/hide functionality for indented comments.
+ * Customization of comments.
  */
 
 ((Drupal, once) => {
   /**
-   * Init function for comments.
+   * Initialize show/hide button for the comments.
    *
-   * @param {object} comments
-   *   The comment section.
+   * @param {Element} comments
+   *   The comment wrapper element.
    */
   function init(comments) {
     comments
