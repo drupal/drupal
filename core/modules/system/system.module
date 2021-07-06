@@ -597,7 +597,7 @@ function system_page_attachments(array &$page) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
     $page['#attached']['html_head_link'][][] = [
-      'rel' => 'shortcut icon',
+      'rel' => 'icon',
       'href' => UrlHelper::stripDangerousProtocols($favicon),
       'type' => $type,
     ];

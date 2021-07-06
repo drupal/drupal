@@ -29,7 +29,7 @@ class MenuLinkTest extends ViewTestBase {
     'views_ui',
     'user',
     'node',
-    'menu_ui',
+    'menu_link_content',
     'block',
   ];
 

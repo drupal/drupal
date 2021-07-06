@@ -49,6 +49,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $options['expose'] = [
       'contains' => [
         'label' => ['default' => ''],
+        'field_identifier' => ['default' => ''],
       ],
     ];
     return $options;
@@ -226,6 +227,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   public function defaultExposeOptions() {
     $this->options['expose'] = [
       'label' => $this->definition['title'],
+      'field_identifier' => $this->options['id'],
     ];
   }
 
