@@ -46,4 +46,12 @@ class AttributeLegacyTest extends UnitTestCase {
  * Test class for Drupal\Core\Template\AttributeValueBase.
  */
 class TestAttributeValueBase extends CoreAttributeValueBase {
+
+  /**
+   * Implements the magic __toString() method.
+   */
+  public function __toString(): string {
+    return '';
+  }
+
 }

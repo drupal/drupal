@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Attribute\AttributeCollection;
 use Drupal\Core\Site\Settings;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicyInterface;
@@ -49,6 +50,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       // Allow any operations on the Attribute object as it is intended to be
       // changed from a Twig template, for example calling addClass().
       'Drupal\Core\Template\Attribute',
+      AttributeCollection::class,
     ]);
     // Flip the array so we can check using isset().
     $this->allowed_classes = array_flip($allowed_classes);
