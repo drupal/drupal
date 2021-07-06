@@ -468,7 +468,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $page->pressButton('Save');
 
     // Check that a clear error message is shown.
-    $assert_session->pageTextNotContains('This value should not be null');
+    $assert_session->pageTextNotContains('This value should not be null.');
     $assert_session->pageTextContains(sprintf('%s field is required.', $field_config->label()));
 
     // Open the media library, select an item and save the node.
