@@ -1,8 +1,15 @@
+/**
+ * @file
+ * Customization of navigation.
+ */
+
 ((Drupal, once, tabbable) => {
   /**
    * Checks if navWrapper contains "is-active" class.
-   * @param {object} navWrapper
+   *
+   * @param {Element} navWrapper
    *   Header navigation.
+   *
    * @return {boolean}
    *   True if navWrapper contains "is-active" class, false if not.
    */
@@ -12,6 +19,7 @@
 
   /**
    * Opens or closes the header navigation.
+   *
    * @param {object} props
    *   Navigation props.
    * @param {boolean} state
@@ -33,7 +41,8 @@
   }
 
   /**
-   * Init function for header navigation.
+   * Initialize the header navigation.
+   *
    * @param {object} props
    *   Navigation props.
    */
@@ -45,7 +54,7 @@
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
 
-    // Closes any open sub navigation first, then close header navigation.
+    // Close any open sub-navigation first, then close the header navigation.
     document.addEventListener('keyup', (e) => {
       if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
@@ -107,7 +116,12 @@
   }
 
   /**
-   * Initialize the navigation JS.
+   * Initialize the navigation.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach context and settings for navigation.
    */
   Drupal.behaviors.oliveroNavigation = {
     attach(context) {

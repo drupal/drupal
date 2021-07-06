@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides functionality for second level submenu navigation.
+ */
+
 ((Drupal) => {
   const { isDesktopNav } = Drupal.olivero;
   const secondLevelNavMenus = document.querySelectorAll(
@@ -7,8 +12,10 @@
   /**
    * Shows and hides the specified menu item's second level submenu.
    *
-   * @param {element} topLevelMenuItem - the <li> element that is the container for the menu and submenus.
-   * @param {boolean} [toState] - Optional state where we want the submenu to end up.
+   * @param {Element} topLevelMenuItem
+   *   The <li> element that is the container for the menu and submenus.
+   * @param {boolean} [toState]
+   *   Optional state where we want the submenu to end up.
    */
   function toggleSubNav(topLevelMenuItem, toState) {
     const buttonSelector =
@@ -60,7 +67,8 @@
    * Sets a timeout and closes current desktop navigation submenu if it
    * does not contain the focused element.
    *
-   * @param {object} e - event object
+   * @param {Event} e
+   *   The event object.
    */
   function handleBlur(e) {
     if (!Drupal.olivero.isDesktopNav()) return;
@@ -147,7 +155,9 @@
 
   /**
    * Checks if any sub navigation items are currently active.
-   * @return {boolean} If sub nav is currently open.
+   *
+   * @return {boolean}
+   *   If sub navigation is currently open.
    */
   function areAnySubNavsOpen() {
     let subNavsAreOpen = false;
@@ -168,7 +178,7 @@
 
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
 
-  // Ensure that desktop submenus close when ESC key is pressed.
+  // Ensure that desktop submenus close when escape key is pressed.
   document.addEventListener('keyup', (e) => {
     if (e.key === 'Escape' || e.key === 'Esc') {
       if (isDesktopNav()) closeAllSubNav();
