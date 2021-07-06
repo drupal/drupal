@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Fetches and caches oEmbed resources.
@@ -30,18 +31,38 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $providers;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
    *   The HTTP client.
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
    *   The oEmbed provider repository service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   (optional) The cache backend.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, $request_stack = NULL, CacheBackendInterface $cache_backend = NULL) {
+    if (empty($request_stack)) {
+      $request_stack = \Drupal::requestStack();
+      // @todo Trigger a deprecation notice.
+    }
+    elseif ($request_stack instanceof CacheBackendInterface) {
+      $cache_backend = $request_stack;
+      $request_stack = \Drupal::requestStack();
+      // @todo Trigger a deprecation notice.
+    }
+
     $this->httpClient = $http_client;
     $this->providers = $providers;
+    $this->requestStack = $request_stack;
     $this->cacheBackend = $cache_backend;
     $this->useCaches = isset($cache_backend);
   }
@@ -58,7 +79,12 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
 
     try {
-      $response = $this->httpClient->get($url);
+      $options = [
+        RequestOptions::HEADERS => [
+          'Referer' => $this->requestStack->getCurrentRequest()->getHttpHost(),
+        ],
+      ];
+      $response = $this->httpClient->request('GET', $url, $options);
     }
     catch (TransferException $e) {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);

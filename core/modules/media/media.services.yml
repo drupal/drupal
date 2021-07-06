@@ -15,7 +15,7 @@ services:
     arguments: ['@http_client', '@config.factory', '@datetime.time', '@cache.default']
   media.oembed.resource_fetcher:
     class: Drupal\media\OEmbed\ResourceFetcher
-    arguments: ['@http_client', '@media.oembed.provider_repository', '@cache.default']
+    arguments: ['@http_client', '@media.oembed.provider_repository', '@request_stack', '@cache.default']
   media.oembed.iframe_url_helper:
     class: Drupal\media\IFrameUrlHelper
     arguments: ['@router.request_context', '@private_key']
