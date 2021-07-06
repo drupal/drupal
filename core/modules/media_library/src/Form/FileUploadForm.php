@@ -150,7 +150,6 @@ class FileUploadForm extends AddFormBase {
     $form['container']['upload'] = [
       '#type' => 'managed_file',
       '#title' => $this->formatPlural($slots, 'Add file', 'Add files'),
-      // @todo Move validation in https://www.drupal.org/node/2988215
       '#process' => array_merge(['::validateUploadElement'], $process, ['::processUploadElement']),
       '#upload_validators' => $item->getUploadValidators(),
       '#multiple' => $slots > 1 || $slots === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -203,6 +202,23 @@ class FileUploadForm extends AddFormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getSourceValuesFromInput(array $form, FormStateInterface $form_state) {
+    $files = $this->entityTypeManager
+      ->getStorage('file')
+      ->loadMultiple($form_state->getValue('upload', []));
+    return $files;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSourceInputName() {
+    return 'upload';
+  }
+
+  /**
    * Processes an upload (managed_file) element.
    *
    * @param array $element
@@ -214,6 +230,7 @@ class FileUploadForm extends AddFormBase {
    *   The processed upload element.
    */
   public function processUploadElement(array $element, FormStateInterface $form_state) {
+    $element['upload_button']['#validate'] = ['::validateMediaSourceValues'];
     $element['upload_button']['#submit'] = ['::uploadButtonSubmit'];
     // Limit the validation errors to make sure
     // FormValidator::handleErrorsWithLimitedValidation doesn't remove the
@@ -295,10 +312,7 @@ class FileUploadForm extends AddFormBase {
    *   The form state.
    */
   public function uploadButtonSubmit(array $form, FormStateInterface $form_state) {
-    $files = $this->entityTypeManager
-      ->getStorage('file')
-      ->loadMultiple($form_state->getValue('upload', []));
-    $this->processInputValues($files, $form, $form_state);
+    $this->processInputValues($this->getSourceValuesFromInput($form, $form_state), $form, $form_state);
   }
 
   /**

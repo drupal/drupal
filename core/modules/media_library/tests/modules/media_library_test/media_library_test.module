@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\media_library_test\Form\TestConstraintsAddForm;
 use Drupal\media_library_test\Form\TestNodeFormOverride;
 
 /**
@@ -26,4 +27,11 @@ function media_library_test_entity_type_alter(array &$entity_types) {
     $entity_types['node']->setFormClass('default', TestNodeFormOverride::class);
     $entity_types['node']->setFormClass('edit', TestNodeFormOverride::class);
   }
+}
+
+/**
+ * Implements hook_media_source_info_alter().
+ */
+function media_library_test_media_source_info_alter(array &$sources) {
+  $sources['test_constraints']['forms']['media_library_add'] = TestConstraintsAddForm::class;
 }

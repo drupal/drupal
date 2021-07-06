@@ -495,14 +495,8 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *   The current form state.
    */
   protected function processInputValues(array $source_field_values, array $form, FormStateInterface $form_state) {
-    $media_type = $this->getMediaType($form_state);
-    $media_storage = $this->entityTypeManager->getStorage('media');
-    $source_field_name = $this->getSourceFieldName($media_type);
-    $media = array_map(function ($source_field_value) use ($media_type, $media_storage, $source_field_name) {
-      return $this->createMediaFromValue($media_type, $media_storage, $source_field_name, $source_field_value);
-    }, $source_field_values);
-    // Re-key the media items before setting them in the form state.
-    $form_state->set('media', array_values($media));
+    // At this point, ::validateMediaSourceValues() should have already created
+    // and validated media items and placed them in form_state.
     // Save the selected items in the form state so they are remembered when an
     // item is removed.
     $media = $this->entityTypeManager->getStorage('media')
@@ -512,6 +506,70 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
       return $media_item->access('view');
     }));
     $form_state->setRebuild();
+  }
+
+  /**
+   * Get and process form input prior to media creation.
+   *
+   * Each element in return array can be passed as $source_field_value to
+   * ::createMediaFromValue().
+   *
+   * @param array $form
+   *   The complete form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @return array
+   */
+  abstract protected function getSourceValuesFromInput(array $form, FormStateInterface $form_state);
+
+  /**
+   * Get the name of the input that is used to create new media.
+   *
+   * @return string
+   *
+   * @see ::validateMediaSourceValues()
+   */
+  abstract protected function getSourceInputName();
+
+  /**
+   * Creates media items used for validation and add them to form_state.
+   *
+   * This function MUST be included as part of #validate for the submit
+   * button associated with the element created in ::buildInputElement().
+   *
+   * @param array $form
+   *   The complete form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   */
+  public function validateMediaSourceValues(array &$form, FormStateInterface $form_state) {
+    $source_values = $this->getSourceValuesFromInput($form, $form_state);
+    if ($source_values) {
+      $media_type = $this->getMediaType($form_state);
+      $media_storage = $this->entityTypeManager->getStorage('media');
+      $source_field_name = $this->getSourceFieldName($media_type);
+      $valid_media = [];
+      $all_valid = TRUE;
+      foreach ($source_values as $delta => $source_value) {
+        $media = $this->createMediaFromValue($media_type, $media_storage, $source_field_name, $source_value);
+        $violations = $media->validate()->getByField($source_field_name);
+        if (count($violations) > 0) {
+          $form_state->setErrorByName($this->getSourceInputName(), $violations->get(0)->getMessage());
+          $all_valid = FALSE;
+        }
+        else {
+          $valid_media[] = $media;
+        }
+      }
+      if ($all_valid) {
+        $form_state->set('media', array_values($valid_media));
+      }
+    }
+    else {
+      $form_state->setErrorByName('source', t('Source Field cannot be empty'));
+    }
+    return $form;
   }
 
   /**
@@ -651,6 +709,11 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
 
   /**
    * Validate a created media item.
+   *
+   * This is different from ::validateMediaSourceValues() in that
+   * ::validateMediaEntity() validates all fields present on the
+   * media_library form display whereas ::validateMediaSourceValues()
+   * only validates the source field value.
    *
    * @param \Drupal\media\MediaInterface $media
    *   The media item to validate.

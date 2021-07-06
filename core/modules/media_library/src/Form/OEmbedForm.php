@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
@@ -121,9 +120,8 @@ class OEmbedForm extends AddFormBase {
       '#type' => 'submit',
       '#value' => $this->t('Add'),
       '#button_type' => 'primary',
-      '#validate' => ['::validateUrl'],
+      '#validate' => ['::validateMediaSourceValues'],
       '#submit' => ['::addButtonSubmit'],
-      // @todo Move validation in https://www.drupal.org/node/2988215
       '#ajax' => [
         'callback' => '::updateFormCallback',
         'wrapper' => 'media-library-wrapper',
@@ -143,27 +141,6 @@ class OEmbedForm extends AddFormBase {
   }
 
   /**
-   * Validates the oEmbed URL.
-   *
-   * @param array $form
-   *   The complete form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
-   */
-  public function validateUrl(array &$form, FormStateInterface $form_state) {
-    $url = $form_state->getValue('url');
-    if ($url) {
-      try {
-        $resource_url = $this->urlResolver->getResourceUrl($url);
-        $this->resourceFetcher->fetchResource($resource_url);
-      }
-      catch (ResourceException $e) {
-        $form_state->setErrorByName('url', $e->getMessage());
-      }
-    }
-  }
-
-  /**
    * Submit handler for the add button.
    *
    * @param array $form
@@ -172,7 +149,21 @@ class OEmbedForm extends AddFormBase {
    *   The form state.
    */
   public function addButtonSubmit(array $form, FormStateInterface $form_state) {
-    $this->processInputValues([$form_state->getValue('url')], $form, $form_state);
+    $this->processInputValues($this->getSourceValuesFromInput($form, $form_state), $form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSourceValuesFromInput(array $form, FormStateInterface $form_state) {
+    return [$form_state->getValue('url')];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSourceInputName() {
+    return 'url';
   }
 
 }
