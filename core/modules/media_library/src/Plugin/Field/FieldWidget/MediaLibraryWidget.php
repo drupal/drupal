@@ -964,7 +964,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // Trigger error if the field is required and no media is present. Although
     // the Form API's default validation would also catch this, the validation
     // error message is too vague, so a more precise one is provided here.
-    if ($field_state['items_count'] === 0) {
+    if (count($field_state['items']) === 0) {
       $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
     }
   }
