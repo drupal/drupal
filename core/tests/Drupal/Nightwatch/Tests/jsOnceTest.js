@@ -171,17 +171,37 @@ module.exports = {
       )
       .execute(
         function () {
+          once('js_once_test_remove', '[data-drupal-item]');
           // A core script calls once on some elements.
-          once.remove('js_once_test', '[data-drupal-item]');
+          once.remove('js_once_test_remove', '[data-drupal-item]');
           // A contrib module not yet using @drupal/once calls the jQuery Once
           // remove() function.
-          return jQuery('[data-drupal-item]').removeOnce('js_once_test');
+          return jQuery('[data-drupal-item]').removeOnce('js_once_test_remove');
         },
         (result) => {
           browser.assert.strictEqual(
             result.value.length,
             0,
             'Calls to once.remove() are taken into account when using jQuery.removeOnce()',
+          );
+        },
+      )
+      // Once.remove calls don't take into account calls to jQuery.removeOnce by
+      // design.
+      .execute(
+        function () {
+          once('js_once_test_remove_fail', '[data-drupal-item]');
+          // Calling jQuery.removeOnce before @drupal/once will lead to
+          // duplicate processing.
+          jQuery('[data-drupal-item]').removeOnce('js_once_test_remove_fail');
+          // A core script calls once.remove on some elements.
+          return once.remove('js_once_test_remove_fail', '[data-drupal-item]');
+        },
+        (result) => {
+          browser.assert.strictEqual(
+            result.value.length,
+            5,
+            '5 items returned by once.remove() after a call to jQuery.removeOnce()',
           );
         },
       )
