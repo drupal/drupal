@@ -155,7 +155,7 @@ function _update_requirement_check($project, $type) {
     case UpdateFetcherInterface::NOT_CHECKED:
     case UpdateFetcherInterface::NOT_FETCHED:
     case UpdateFetcherInterface::FETCH_PENDING:
-      $requirement_label = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
+      $requirement_label = $project['reason'] ?? t('Can not determine status');
       $requirement['severity'] = REQUIREMENT_WARNING;
       break;
 
