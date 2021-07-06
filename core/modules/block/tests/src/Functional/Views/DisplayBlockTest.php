@@ -102,7 +102,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Change the block category to a random string.
     $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
-    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery('//a[@id="views-block-1-block-category" and normalize-space(text())=:category]', $arguments));
+    $this->assertSession()->elementTextEquals('named', ['id', 'views-block-1-block-category'], 'Lists (Views)');
     $this->clickLink(t('Lists (Views)'));
     $category = $this->randomString();
     $this->submitForm(['block_category' => $category], 'Apply');

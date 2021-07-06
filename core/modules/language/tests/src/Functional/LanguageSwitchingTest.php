@@ -315,13 +315,15 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->drupalGet($path);
 
     // Language code 'none' link should be active.
-    $this->assertSession()->elementExists('xpath', "//a[@id = 'no_lang_link' and @data-drupal-link-system-path = '{$path}']");
+    $this->assertSession()->elementAttributeContains('named', ['id', 'no_lang_link'], 'data-drupal-link-system-path', $path);
 
     // Language code 'en' link should be active.
-    $this->assertSession()->elementExists('xpath', "//a[@id = 'en_link' and @hreflang = 'en' and @data-drupal-link-system-path = '{$path}']");
+    $this->assertSession()->elementAttributeContains('named', ['id', 'en_link'], 'hreflang', 'en');
+    $this->assertSession()->elementAttributeContains('named', ['id', 'en_link'], 'data-drupal-link-system-path', $path);
 
     // Language code 'fr' link should not be active.
-    $this->assertSession()->elementExists('xpath', "//a[@id = 'fr_link' and @hreflang = 'fr' and @data-drupal-link-system-path = '{$path}']");
+    $this->assertSession()->elementAttributeContains('named', ['id', 'fr_link'], 'hreflang', 'fr');
+    $this->assertSession()->elementAttributeContains('named', ['id', 'fr_link'], 'data-drupal-link-system-path', $path);
 
     // Verify that drupalSettings contains the correct values.
     $settings = $this->getDrupalSettings();
@@ -334,13 +336,15 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->drupalGet('fr/language_test/type-link-active-class');
 
     // Language code 'none' link should be active.
-    $this->assertSession()->elementExists('xpath', "//a[@id = 'no_lang_link' and @data-drupal-link-system-path = '{$path}']");
+    $this->assertSession()->elementAttributeContains('named', ['id', 'no_lang_link'], 'data-drupal-link-system-path', $path);
 
     // Language code 'en' link should not be active.
-    $this->assertSession()->elementExists('xpath', "//a[@id = 'en_link' and @hreflang = 'en' and @data-drupal-link-system-path = '{$path}']");
+    $this->assertSession()->elementAttributeContains('named', ['id', 'en_link'], 'hreflang', 'en');
+    $this->assertSession()->elementAttributeContains('named', ['id', 'en_link'], 'data-drupal-link-system-path', $path);
 
     // Language code 'fr' link should be active.
-    $this->assertSession()->elementExists('xpath', "//a[@id = 'fr_link' and @hreflang = 'fr' and @data-drupal-link-system-path = '{$path}']");
+    $this->assertSession()->elementAttributeContains('named', ['id', 'fr_link'], 'hreflang', 'fr');
+    $this->assertSession()->elementAttributeContains('named', ['id', 'fr_link'], 'data-drupal-link-system-path', $path);
 
     // Verify that drupalSettings contains the correct values.
     $settings = $this->getDrupalSettings();
