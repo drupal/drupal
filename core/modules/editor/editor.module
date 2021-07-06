@@ -282,7 +282,7 @@ function editor_load($format_id) {
   // formats for administrators). Loading a small number of editors all at once
   // is more efficient than loading multiple editors individually.
   $editors = Editor::loadMultiple();
-  return isset($editors[$format_id]) ? $editors[$format_id] : NULL;
+  return $editors[$format_id] ?? NULL;
 }
 
 /**
