@@ -147,7 +147,7 @@ class ContentModeration extends WorkflowTypeBase implements ContentModerationInt
    * {@inheritdoc}
    */
   public function getBundlesForEntityType($entity_type_id) {
-    return isset($this->configuration['entity_types'][$entity_type_id]) ? $this->configuration['entity_types'][$entity_type_id] : [];
+    return $this->configuration['entity_types'][$entity_type_id] ?? [];
   }
 
   /**

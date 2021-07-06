@@ -198,7 +198,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
    */
   public function getSortedDefinitions(array $definitions = NULL, $label_key = 'label') {
     // Sort the plugins first by category, then by label.
-    $definitions = isset($definitions) ? $definitions : $this->getDefinitions();
+    $definitions = $definitions ?? $this->getDefinitions();
     // Suppress errors because PHPUnit will indirectly modify the contents,
     // triggering https://bugs.php.net/bug.php?id=50688.
     @uasort($definitions, function (LayoutDefinition $a, LayoutDefinition $b) {
@@ -216,7 +216,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
    * @return \Drupal\Core\Layout\LayoutDefinition[][]
    */
   public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
-    $definitions = $this->getSortedDefinitions(isset($definitions) ? $definitions : $this->getDefinitions(), $label_key);
+    $definitions = $this->getSortedDefinitions($definitions ?? $this->getDefinitions(), $label_key);
     $grouped_definitions = [];
     foreach ($definitions as $id => $definition) {
       $grouped_definitions[(string) $definition->getCategory()][$id] = $definition;

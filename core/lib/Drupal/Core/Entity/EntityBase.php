@@ -104,14 +104,14 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function id() {
-    return isset($this->id) ? $this->id : NULL;
+    return $this->id ?? NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function uuid() {
-    return isset($this->uuid) ? $this->uuid : NULL;
+    return $this->uuid ?? NULL;
   }
 
   /**

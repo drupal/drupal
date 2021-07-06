@@ -446,7 +446,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
           if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
             $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $values['join']['on']);
           }
-          $arguments = isset($values['arguments']) ? $values['arguments'] : [];
+          $arguments = $values['arguments'] ?? [];
           $query->addScore($values['score'], $arguments, $node_rank);
         }
       }
@@ -604,7 +604,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       '#title' => t('Containing any of the words'),
       '#size' => 30,
       '#maxlength' => 255,
-      '#default_value' => isset($defaults['or']) ? $defaults['or'] : '',
+      '#default_value' => $defaults['or'] ?? '',
     ];
 
     $form['advanced']['keywords-fieldset']['keywords']['phrase'] = [
@@ -612,7 +612,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       '#title' => t('Containing the phrase'),
       '#size' => 30,
       '#maxlength' => 255,
-      '#default_value' => isset($defaults['phrase']) ? $defaults['phrase'] : '',
+      '#default_value' => $defaults['phrase'] ?? '',
     ];
 
     $form['advanced']['keywords-fieldset']['keywords']['negative'] = [
@@ -620,7 +620,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       '#title' => t('Containing none of the words'),
       '#size' => 30,
       '#maxlength' => 255,
-      '#default_value' => isset($defaults['negative']) ? $defaults['negative'] : '',
+      '#default_value' => $defaults['negative'] ?? '',
     ];
 
     // Add node types.
@@ -635,7 +635,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       '#prefix' => '<div class="criterion">',
       '#suffix' => '</div>',
       '#options' => $types,
-      '#default_value' => isset($defaults['type']) ? $defaults['type'] : [],
+      '#default_value' => $defaults['type'] ?? [],
     ];
 
     $form['advanced']['submit'] = [
@@ -664,7 +664,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#prefix' => '<div class="criterion">',
         '#suffix' => '</div>',
         '#options' => $language_options,
-        '#default_value' => isset($defaults['language']) ? $defaults['language'] : [],
+        '#default_value' => $defaults['language'] ?? [],
       ];
     }
   }
@@ -847,7 +847,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#type' => 'select',
         '#options' => $options,
         '#attributes' => ['aria-label' => $this->t("Influence of '@title'", ['@title' => $values['title']])],
-        '#default_value' => isset($this->configuration['rankings'][$var]) ? $this->configuration['rankings'][$var] : 0,
+        '#default_value' => $this->configuration['rankings'][$var] ?? 0,
       ];
     }
     return $form;

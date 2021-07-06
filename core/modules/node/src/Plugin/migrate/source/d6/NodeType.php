@@ -132,7 +132,7 @@ class NodeType extends DrupalSqlBase {
       $options[$item] = in_array($item, $source_options);
     }
     $row->setSourceProperty('options', $options);
-    $submitted = isset($this->themeSettings['toggle_node_info_' . $type]) ? $this->themeSettings['toggle_node_info_' . $type] : FALSE;
+    $submitted = $this->themeSettings['toggle_node_info_' . $type] ?? FALSE;
     $row->setSourceProperty('display_submitted', $submitted);
 
     if ($default_node_menu = $this->variableGet('menu_default_node_menu', NULL)) {

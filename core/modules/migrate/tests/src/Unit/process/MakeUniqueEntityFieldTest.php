@@ -72,8 +72,8 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     if ($postfix) {
       $configuration['postfix'] = $postfix;
     }
-    $configuration['start'] = isset($start) ? $start : NULL;
-    $configuration['length'] = isset($length) ? $length : NULL;
+    $configuration['start'] = $start ?? NULL;
+    $configuration['length'] = $length ?? NULL;
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->entityQueryExpects($count);
     $value = $this->randomMachineName(32);

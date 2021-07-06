@@ -188,7 +188,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
           $max_weight = isset($content_method_weights[LanguageNegotiationUrl::METHOD_ID]) ? max($max_weight, $content_method_weights[LanguageNegotiationUrl::METHOD_ID]) : $max_weight;
         }
         else {
-          $max_weight = isset($content_method_weights[LanguageNegotiationUrl::METHOD_ID]) ? $content_method_weights[LanguageNegotiationUrl::METHOD_ID] : PHP_INT_MAX;
+          $max_weight = $content_method_weights[LanguageNegotiationUrl::METHOD_ID] ?? PHP_INT_MAX;
         }
 
         $this->hasLowerLanguageNegotiationWeightResult = $content_method_weights[static::METHOD_ID] < $max_weight;

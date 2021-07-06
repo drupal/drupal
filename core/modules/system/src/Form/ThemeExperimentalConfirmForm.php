@@ -134,8 +134,8 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $args = $form_state->getBuildInfo()['args'];
-    $theme = isset($args[0]) ? $args[0] : NULL;
-    $set_default = isset($args[1]) ? $args[1] : FALSE;
+    $theme = $args[0] ?? NULL;
+    $set_default = $args[1] ?? FALSE;
     $themes = $this->themeList->getList();
     $config = $this->configFactory()->getEditable('system.theme');
     try {

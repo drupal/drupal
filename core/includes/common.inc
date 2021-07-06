@@ -355,8 +355,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
   $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
 
   // If a subgroup or source isn't set, assume it is the same as the group.
-  $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
-  $source = isset($options['source']) ? $options['source'] : $target;
+  $target = $options['subgroup'] ?? $group;
+  $source = $options['source'] ?? $target;
   $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
     'target' => $target,
     'source' => $source,

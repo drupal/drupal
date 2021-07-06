@@ -101,7 +101,7 @@ class FieldConfigStorage extends FieldConfigStorageBase {
    */
   public function loadByProperties(array $conditions = []) {
     // Include deleted fields if specified in the $conditions parameters.
-    $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
+    $include_deleted = $conditions['include_deleted'] ?? FALSE;
     unset($conditions['include_deleted']);
 
     $fields = [];

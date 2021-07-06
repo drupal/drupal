@@ -391,14 +391,14 @@ class Section implements ThirdPartySettingsInterface {
    * {@inheritdoc}
    */
   public function getThirdPartySetting($provider, $key, $default = NULL) {
-    return isset($this->thirdPartySettings[$provider][$key]) ? $this->thirdPartySettings[$provider][$key] : $default;
+    return $this->thirdPartySettings[$provider][$key] ?? $default;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getThirdPartySettings($provider) {
-    return isset($this->thirdPartySettings[$provider]) ? $this->thirdPartySettings[$provider] : [];
+    return $this->thirdPartySettings[$provider] ?? [];
   }
 
   /**

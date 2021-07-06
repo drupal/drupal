@@ -105,7 +105,7 @@ class Datetime extends DateElementBase {
       ];
     }
     else {
-      $date = isset($element['#default_value']) ? $element['#default_value'] : NULL;
+      $date = $element['#default_value'] ?? NULL;
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
         $date->setTimezone(new \DateTimeZone($element['#date_timezone']));
         $input = [

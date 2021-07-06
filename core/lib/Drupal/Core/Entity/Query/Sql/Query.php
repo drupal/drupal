@@ -250,7 +250,7 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlQuery->groupBy($field);
     }
     foreach ($this->sqlFields as $field) {
-      $this->sqlQuery->addField($field[0], $field[1], isset($field[2]) ? $field[2] : NULL);
+      $this->sqlQuery->addField($field[0], $field[1], $field[2] ?? NULL);
     }
     return $this;
   }

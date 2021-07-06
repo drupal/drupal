@@ -250,7 +250,7 @@ abstract class Connection {
     }
 
     // Initialize and prepare the connection prefix.
-    $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
+    $this->setPrefix($connection_options['prefix'] ?? '');
 
     // Set a Statement class, unless the driver opted out.
     // @todo remove this in Drupal 10 https://www.drupal.org/node/3177490
@@ -898,7 +898,7 @@ abstract class Connection {
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:
-          $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
+          $sequence_name = $options['sequence_name'] ?? NULL;
           return $this->connection->lastInsertId($sequence_name);
 
         case Database::RETURN_NULL:

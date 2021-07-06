@@ -313,7 +313,7 @@ class Schema extends DatabaseSchema {
    *   Thrown if field specification is missing.
    */
   protected function getNormalizedIndexes(array $spec) {
-    $indexes = isset($spec['indexes']) ? $spec['indexes'] : [];
+    $indexes = $spec['indexes'] ?? [];
     foreach ($indexes as $index_name => $index_fields) {
       foreach ($index_fields as $index_key => $index_field) {
         // Get the name of the field from the index specification.

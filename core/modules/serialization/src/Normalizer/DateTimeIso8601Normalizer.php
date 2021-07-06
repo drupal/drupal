@@ -58,7 +58,7 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
     // @todo Move the date-only handling out of here in https://www.drupal.org/project/drupal/issues/2958416.
     $field_definition = isset($context['target_instance'])
       ? $context['target_instance']->getFieldDefinition()
-      : (isset($context['field_definition']) ? $context['field_definition'] : NULL);
+      : ($context['field_definition'] ?? NULL);
     if ($field_definition === NULL) {
       throw new InvalidArgumentException('$context[\'target_instance\'] or $context[\'field_definition\'] must be set to denormalize with the DateTimeIso8601Normalizer');
     }

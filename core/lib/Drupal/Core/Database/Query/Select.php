@@ -133,7 +133,7 @@ class Select extends Query implements SelectInterface {
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
-    $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
+    $conjunction = $options['conjunction'] ?? 'AND';
     $this->condition = $this->connection->condition($conjunction);
     $this->having = $this->connection->condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
@@ -180,7 +180,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function getMetaData($key) {
-    return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
+    return $this->alterMetaData[$key] ?? NULL;
   }
 
   /**

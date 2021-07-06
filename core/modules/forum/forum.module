@@ -465,7 +465,7 @@ function template_preprocess_forums(&$variables) {
         $variables['topics'][$id]->submitted = \Drupal::service('renderer')->render($forum_submitted);
         $forum_submitted = [
           '#theme' => 'forum_submitted',
-          '#topic' => isset($topic->last_reply) ? $topic->last_reply : NULL,
+          '#topic' => $topic->last_reply ?? NULL,
         ];
         $variables['topics'][$id]->last_reply = \Drupal::service('renderer')->render($forum_submitted);
 

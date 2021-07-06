@@ -34,7 +34,7 @@ class MockPhpStorage {
    * Gets a single configuration key.
    */
   public function getConfigurationValue($key) {
-    return isset($this->configuration[$key]) ? $this->configuration[$key] : NULL;
+    return $this->configuration[$key] ?? NULL;
   }
 
 }

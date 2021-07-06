@@ -606,7 +606,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
           // $this->defaultLangcode might not be set if we are initializing the
           // default language code cache, in which case there is no valid
           // langcode to assign.
-          $field_langcode = isset($this->defaultLangcode) ? $this->defaultLangcode : LanguageInterface::LANGCODE_NOT_SPECIFIED;
+          $field_langcode = $this->defaultLangcode ?? LanguageInterface::LANGCODE_NOT_SPECIFIED;
         }
         else {
           $field_langcode = $langcode;

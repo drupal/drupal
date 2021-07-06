@@ -105,7 +105,7 @@ class DrupalTranslator implements TranslatorInterface {
     // We do not support domains, so we ignore this parameter.
     // If locale is left NULL, TranslatableMarkup will default to the interface
     // language.
-    $locale = isset($locale) ? $locale : $this->locale;
+    $locale = $locale ?? $this->locale;
     return ['langcode' => $locale];
   }
 

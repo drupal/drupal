@@ -112,7 +112,7 @@ function locale_translation_load_sources(array $projects = NULL, array $langcode
   // Use only the selected projects and languages for update.
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
-      $sources[$project][$langcode] = isset($status[$project][$langcode]) ? $status[$project][$langcode] : NULL;
+      $sources[$project][$langcode] = $status[$project][$langcode] ?? NULL;
     }
   }
   return $sources;
@@ -318,7 +318,7 @@ function locale_translation_build_server_pattern($project, $template) {
     '%project' => $project->name,
     '%version' => $project->version,
     '%core' => $project->core,
-    '%language' => isset($project->langcode) ? $project->langcode : '%language',
+    '%language' => $project->langcode ?? '%language',
   ];
   return strtr($template, $variables);
 }

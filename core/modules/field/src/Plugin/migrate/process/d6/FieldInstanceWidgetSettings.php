@@ -39,9 +39,9 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
    *   A valid array of settings.
    */
   public function getSettings($widget_type, $widget_settings) {
-    $progress = isset($widget_settings['progress_indicator']) ? $widget_settings['progress_indicator'] : 'throbber';
-    $size = isset($widget_settings['size']) ? $widget_settings['size'] : 60;
-    $rows = isset($widget_settings['rows']) ? $widget_settings['rows'] : 5;
+    $progress = $widget_settings['progress_indicator'] ?? 'throbber';
+    $size = $widget_settings['size'] ?? 60;
+    $rows = $widget_settings['rows'] ?? 5;
 
     $settings = [
       'text_textfield' => [
@@ -77,7 +77,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
       ],
     ];
 
-    return isset($settings[$widget_type]) ? $settings[$widget_type] : [];
+    return $settings[$widget_type] ?? [];
   }
 
 }

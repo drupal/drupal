@@ -67,7 +67,7 @@ abstract class StringBase implements StringInterface {
    * {@inheritdoc}
    */
   public function getId() {
-    return isset($this->lid) ? $this->lid : NULL;
+    return $this->lid ?? NULL;
   }
 
   /**
@@ -82,7 +82,7 @@ abstract class StringBase implements StringInterface {
    * {@inheritdoc}
    */
   public function getVersion() {
-    return isset($this->version) ? $this->version : NULL;
+    return $this->version ?? NULL;
   }
 
   /**
@@ -112,7 +112,7 @@ abstract class StringBase implements StringInterface {
    * {@inheritdoc}
    */
   public function getStorage() {
-    return isset($this->storage) ? $this->storage : NULL;
+    return $this->storage ?? NULL;
   }
 
   /**
@@ -158,7 +158,7 @@ abstract class StringBase implements StringInterface {
         $this->locations[$location->type][$location->name] = $location->lid;
       }
     }
-    return isset($this->locations) ? $this->locations : [];
+    return $this->locations ?? [];
   }
 
   /**

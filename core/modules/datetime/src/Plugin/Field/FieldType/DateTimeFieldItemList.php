@@ -36,7 +36,7 @@ class DateTimeFieldItemList extends FieldItemList {
           '#type' => 'select',
           '#title' => t('Default date'),
           '#description' => t('Set a default value for this date.'),
-          '#default_value' => isset($default_value[0]['default_date_type']) ? $default_value[0]['default_date_type'] : '',
+          '#default_value' => $default_value[0]['default_date_type'] ?? '',
           '#options' => [
             static::DEFAULT_VALUE_NOW => t('Current date'),
             static::DEFAULT_VALUE_CUSTOM => t('Relative date'),

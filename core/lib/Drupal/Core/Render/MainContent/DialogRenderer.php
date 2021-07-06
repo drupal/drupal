@@ -58,7 +58,7 @@ class DialogRenderer implements MainContentRendererInterface {
 
     // Determine the title: use the title provided by the main content if any,
     // otherwise get it from the routing information.
-    $title = isset($main_content['#title']) ? $main_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     // Determine the dialog options and the target for the OpenDialogCommand.
     $options = $request->request->get('dialogOptions', []);
