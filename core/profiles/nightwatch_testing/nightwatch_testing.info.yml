@@ -4,4 +4,4 @@ description: 'Minimal profile for running Nightwatch tests. Includes absolutely 
 version: VERSION
 hidden: true
 install:
-  - js_deprecation_log_test
+  - js_testing_log_test
