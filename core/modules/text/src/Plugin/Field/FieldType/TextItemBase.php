@@ -80,7 +80,8 @@ abstract class TextItemBase extends FieldItemBase {
     }
     else {
       // Textfield handling.
-      $value = substr($random->sentences(mt_rand(1, $settings['max_length'] / 3), FALSE), 0, $settings['max_length']);
+      $max = ceil($settings['max_length'] / 3);
+      $value = substr($random->sentences(mt_rand(1, $max), FALSE), 0, $settings['max_length']);
     }
 
     $values = [
