@@ -463,16 +463,24 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     // If the URL didn't give us any clues about the file extension, make a HEAD
     // request to the thumbnail URL and see if the headers will give us a MIME
     // type.
-    $content_type = $this->httpClient->request('HEAD', $thumbnail_url)
-      ->getHeader('Content-Type');
-    if ($content_type) {
-      $extensions = MimeTypes::getDefault()->getExtensions(reset($content_type));
-
-      if ($extensions) {
-        return reset($extensions);
-      }
+    try {
+      $content_type = $this->httpClient->request('HEAD', $thumbnail_url)
+        ->getHeader('Content-Type');
+    }
+    catch (TransferException $e) {
+      $this->logger->warning($e->getMessage());
     }
 
+    // If there was no Content-Type header, there's nothing else we can do.
+    if (empty($content_type)) {
+      return NULL;
+    }
+    $extensions = MimeTypes::getDefault()->getExtensions(reset($content_type));
+    if ($extensions) {
+      return reset($extensions);
+    }
+    // If no file extension could be determined from the Content-Type header,
+    // we're stumped.
     return NULL;
   }
 
