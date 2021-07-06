@@ -233,8 +233,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $graph_object = new Graph($graph);
     $graph = $graph_object->searchAndSort();
     foreach ($graph as $module_name => $data) {
-      $modules[$module_name]->required_by = isset($data['reverse_paths']) ? $data['reverse_paths'] : [];
-      $modules[$module_name]->requires = isset($data['paths']) ? $data['paths'] : [];
+      $modules[$module_name]->required_by = $data['reverse_paths'] ?? [];
+      $modules[$module_name]->requires = $data['paths'] ?? [];
       $modules[$module_name]->sort = $data['weight'];
     }
     return $modules;

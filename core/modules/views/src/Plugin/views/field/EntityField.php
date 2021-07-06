@@ -394,7 +394,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     $options['settings'] = [
-      'default' => isset($this->definition['default_formatter_settings']) ? $this->definition['default_formatter_settings'] : [],
+      'default' => $this->definition['default_formatter_settings'] ?? [],
     ];
     $options['group_column'] = [
       'default' => $default_column,
@@ -455,7 +455,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     if (count($field->getColumns()) == 1) {
       $form['click_sort_column'] = [
         '#type' => 'value',
-        '#value' => isset($column_names[0]) ? $column_names[0] : '',
+        '#value' => $column_names[0] ?? '',
       ];
     }
     else {
@@ -1078,7 +1078,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // Some bundles might not have a specific field, in which case the entity
     // (potentially a fake one) doesn't have it either.
     /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
-    $field_item_list = isset($translated_entity->{$this->definition['field_name']}) ? $translated_entity->{$this->definition['field_name']} : NULL;
+    $field_item_list = $translated_entity->{$this->definition['field_name']} ?? NULL;
 
     if (!isset($field_item_list)) {
       // There isn't anything we can do without a valid field.

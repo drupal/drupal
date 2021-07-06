@@ -101,7 +101,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
    */
   public function loadByProperties(array $conditions = []) {
     // Include deleted fields if specified in the $conditions parameters.
-    $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
+    $include_deleted = $conditions['include_deleted'] ?? FALSE;
     unset($conditions['include_deleted']);
 
     /** @var \Drupal\field\FieldStorageConfigInterface[] $storages */

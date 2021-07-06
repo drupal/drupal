@@ -168,7 +168,7 @@ class LocalActionManagerTest extends UnitTestCase {
         ->will($this->returnValue($plugin_definition['route_name']));
       $plugin->expects($this->any())
         ->method('getRouteParameters')
-        ->will($this->returnValue(isset($plugin_definition['route_parameters']) ? $plugin_definition['route_parameters'] : []));
+        ->will($this->returnValue($plugin_definition['route_parameters'] ?? []));
       $plugin->expects($this->any())
         ->method('getTitle')
         ->will($this->returnValue($plugin_definition['title']));

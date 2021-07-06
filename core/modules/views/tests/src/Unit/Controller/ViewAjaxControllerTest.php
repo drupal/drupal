@@ -76,7 +76,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('render')
       ->will($this->returnCallback(function (array &$elements) {
         $elements['#attached'] = [];
-        return isset($elements['#markup']) ? $elements['#markup'] : '';
+        return $elements['#markup'] ?? '';
       }));
     $this->renderer->expects($this->any())
       ->method('executeInRenderContext')

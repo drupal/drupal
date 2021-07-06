@@ -188,7 +188,7 @@ class MediaTypeForm extends EntityForm {
           '#type' => 'select',
           '#title' => $metadata_attribute_label,
           '#options' => $options,
-          '#default_value' => isset($field_map[$metadata_attribute_name]) ? $field_map[$metadata_attribute_name] : MediaSourceInterface::METADATA_FIELD_EMPTY,
+          '#default_value' => $field_map[$metadata_attribute_name] ?? MediaSourceInterface::METADATA_FIELD_EMPTY,
         ];
       }
     }

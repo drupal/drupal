@@ -729,7 +729,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       return $this->definitions[$id];
     }
     $loaded = $this->loadMultiple([$id]);
-    return isset($loaded[$id]) ? $loaded[$id] : FALSE;
+    return $loaded[$id] ?? FALSE;
   }
 
   /**
@@ -743,7 +743,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    */
   protected function loadFull($id) {
     $loaded = $this->loadFullMultiple([$id]);
-    return isset($loaded[$id]) ? $loaded[$id] : [];
+    return $loaded[$id] ?? [];
   }
 
   /**

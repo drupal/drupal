@@ -258,7 +258,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
       // Even if we do know the name of the source field, there's no
       // guarantee that it exists.
       $fields = $this->entityFieldManager->getFieldStorageDefinitions('media');
-      return isset($fields[$field]) ? $fields[$field] : NULL;
+      return $fields[$field] ?? NULL;
     }
     return NULL;
   }
@@ -273,7 +273,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
       // Even if we do know the name of the source field, there is no
       // guarantee that it already exists.
       $fields = $this->entityFieldManager->getFieldDefinitions('media', $type->id());
-      return isset($fields[$field]) ? $fields[$field] : NULL;
+      return $fields[$field] ?? NULL;
     }
     return NULL;
   }

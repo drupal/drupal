@@ -28,7 +28,7 @@ class TextfieldWidget extends StringTextfieldWidget {
 
     $element = $main_widget['value'];
     $element['#type'] = 'text_format';
-    $element['#format'] = isset($items[$delta]->format) ? $items[$delta]->format : NULL;
+    $element['#format'] = $items[$delta]->format ?? NULL;
     $element['#base_type'] = $main_widget['value']['#type'];
     return $element;
   }

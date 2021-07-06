@@ -260,7 +260,7 @@ class PhpTransliteration implements TransliterationInterface {
       $this->readGenericData($bank);
     }
     $code = $code & 0xff;
-    return isset($this->genericMap[$bank][$code]) ? $this->genericMap[$bank][$code] : $unknown_character;
+    return $this->genericMap[$bank][$code] ?? $unknown_character;
   }
 
   /**

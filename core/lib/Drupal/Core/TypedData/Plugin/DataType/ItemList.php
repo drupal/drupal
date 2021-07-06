@@ -100,7 +100,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
     if (!is_numeric($index)) {
       throw new \InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
     }
-    return isset($this->list[$index]) ? $this->list[$index] : NULL;
+    return $this->list[$index] ?? NULL;
   }
 
   /**
@@ -120,7 +120,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $value = $value->getValue();
     }
     // If needed, create the item at the next position.
-    $item = isset($this->list[$index]) ? $this->list[$index] : $this->appendItem();
+    $item = $this->list[$index] ?? $this->appendItem();
     $item->setValue($value);
     return $this;
   }

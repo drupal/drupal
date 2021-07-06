@@ -42,7 +42,7 @@ class MimeTypePass implements CompilerPassInterface {
           throw new LogicException("Service '$id' does not implement $interface.");
         }
       }
-      $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $handlers[$id] = $attributes[0]['priority'] ?? 0;
       $interfaces[$id] = $handler->getClass();
     }
     if (empty($handlers)) {

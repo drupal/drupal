@@ -115,10 +115,10 @@ class Container implements ContainerInterface, ResetInterface {
       throw new InvalidArgumentException('The non-optimized format is not supported by this class. Use an optimized machine-readable format instead, e.g. as produced by \Drupal\Component\DependencyInjection\Dumper\OptimizedPhpArrayDumper.');
     }
 
-    $this->aliases = isset($container_definition['aliases']) ? $container_definition['aliases'] : [];
-    $this->parameters = isset($container_definition['parameters']) ? $container_definition['parameters'] : [];
-    $this->serviceDefinitions = isset($container_definition['services']) ? $container_definition['services'] : [];
-    $this->frozen = isset($container_definition['frozen']) ? $container_definition['frozen'] : FALSE;
+    $this->aliases = $container_definition['aliases'] ?? [];
+    $this->parameters = $container_definition['parameters'] ?? [];
+    $this->serviceDefinitions = $container_definition['services'] ?? [];
+    $this->frozen = $container_definition['frozen'] ?? FALSE;
 
     // Register the service_container with itself.
     $this->services['service_container'] = $this;
@@ -146,7 +146,7 @@ class Container implements ContainerInterface, ResetInterface {
       throw new ServiceCircularReferenceException($id, array_keys($this->loading));
     }
 
-    $definition = isset($this->serviceDefinitions[$id]) ? $this->serviceDefinitions[$id] : NULL;
+    $definition = $this->serviceDefinitions[$id] ?? NULL;
 
     if (!$definition && $invalid_behavior === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       if (!$id) {

@@ -218,7 +218,7 @@ class ContextDefinition implements ContextDefinitionInterface {
    */
   public function getConstraint($constraint_name) {
     $constraints = $this->getConstraints();
-    return isset($constraints[$constraint_name]) ? $constraints[$constraint_name] : NULL;
+    return $constraints[$constraint_name] ?? NULL;
   }
 
   /**

@@ -774,7 +774,7 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
   protected $validUris;
 
   protected function drupalGetPath($type, $name) {
-    return isset($this->paths[$type][$name]) ? $this->paths[$type][$name] : NULL;
+    return $this->paths[$type][$name] ?? NULL;
   }
 
   public function setPaths($type, $name, $path) {
@@ -782,7 +782,7 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
   }
 
   protected function fileValidUri($source) {
-    return isset($this->validUris[$source]) ? $this->validUris[$source] : FALSE;
+    return $this->validUris[$source] ?? FALSE;
   }
 
   public function setFileValidUri($source, $valid) {

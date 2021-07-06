@@ -192,7 +192,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getProvider() {
-    return isset($this->definition['provider']) ? $this->definition['provider'] : NULL;
+    return $this->definition['provider'] ?? NULL;
   }
 
   /**
@@ -257,7 +257,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    */
   public function getCardinality() {
     // @todo: Allow to control this.
-    return isset($this->definition['cardinality']) ? $this->definition['cardinality'] : 1;
+    return $this->definition['cardinality'] ?? 1;
   }
 
   /**
@@ -408,28 +408,28 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getDisplayOptions($display_context) {
-    return isset($this->definition['display'][$display_context]['options']) ? $this->definition['display'][$display_context]['options'] : NULL;
+    return $this->definition['display'][$display_context]['options'] ?? NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function isDisplayConfigurable($display_context) {
-    return isset($this->definition['display'][$display_context]['configurable']) ? $this->definition['display'][$display_context]['configurable'] : FALSE;
+    return $this->definition['display'][$display_context]['configurable'] ?? FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultValueLiteral() {
-    return isset($this->definition['default_value']) ? $this->definition['default_value'] : [];
+    return $this->definition['default_value'] ?? [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultValueCallback() {
-    return isset($this->definition['default_value_callback']) ? $this->definition['default_value_callback'] : NULL;
+    return $this->definition['default_value_callback'] ?? NULL;
   }
 
   /**
@@ -524,7 +524,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *   The field name.
    */
   public function getInitialValueFromField() {
-    return isset($this->definition['initial_value_from_field']) ? $this->definition['initial_value_from_field'] : NULL;
+    return $this->definition['initial_value_from_field'] ?? NULL;
   }
 
   /**
@@ -620,7 +620,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getTargetEntityTypeId() {
-    return isset($this->definition['entity_type']) ? $this->definition['entity_type'] : NULL;
+    return $this->definition['entity_type'] ?? NULL;
   }
 
   /**
@@ -640,7 +640,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getTargetBundle() {
-    return isset($this->definition['bundle']) ? $this->definition['bundle'] : NULL;
+    return $this->definition['bundle'] ?? NULL;
   }
 
   /**

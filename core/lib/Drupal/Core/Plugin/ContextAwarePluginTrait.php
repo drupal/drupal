@@ -129,7 +129,7 @@ trait ContextAwarePluginTrait {
    */
   public function getContextMapping() {
     $configuration = $this instanceof ConfigurableInterface ? $this->getConfiguration() : $this->configuration;
-    return isset($configuration['context_mapping']) ? $configuration['context_mapping'] : [];
+    return $configuration['context_mapping'] ?? [];
   }
 
   /**

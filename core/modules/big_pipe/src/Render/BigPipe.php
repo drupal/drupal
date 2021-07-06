@@ -282,8 +282,8 @@ class BigPipe {
     $attachments = $response->getAttachments();
 
     // First, gather the BigPipe placeholders that must be replaced.
-    $placeholders = isset($attachments['big_pipe_placeholders']) ? $attachments['big_pipe_placeholders'] : [];
-    $nojs_placeholders = isset($attachments['big_pipe_nojs_placeholders']) ? $attachments['big_pipe_nojs_placeholders'] : [];
+    $placeholders = $attachments['big_pipe_placeholders'] ?? [];
+    $nojs_placeholders = $attachments['big_pipe_nojs_placeholders'] ?? [];
 
     // BigPipe sends responses using "Transfer-Encoding: chunked". To avoid
     // sending already-sent assets, it is necessary to track cumulative assets

@@ -143,7 +143,7 @@ trait AssertContentTrait {
    *   The current URL.
    */
   protected function getUrl() {
-    return isset($this->url) ? $this->url : 'no-url';
+    return $this->url ?? 'no-url';
   }
 
   /**

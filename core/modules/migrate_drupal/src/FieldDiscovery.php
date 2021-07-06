@@ -143,7 +143,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
     foreach ($bundle_fields as $field_name => $field_info) {
       $plugin = $this->getFieldPlugin($field_info['type'], $migration);
       if ($plugin) {
-        $method = isset($plugin_definition['field_plugin_method']) ? $plugin_definition['field_plugin_method'] : 'defineValueProcessPipeline';
+        $method = $plugin_definition['field_plugin_method'] ?? 'defineValueProcessPipeline';
 
         call_user_func_array([
           $plugin,

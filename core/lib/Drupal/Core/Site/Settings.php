@@ -119,7 +119,7 @@ final class Settings {
     if (isset(self::$deprecatedSettings[$name])) {
       @trigger_error(self::$deprecatedSettings[$name]['message'], E_USER_DEPRECATED);
     }
-    return isset(self::$instance->storage[$name]) ? self::$instance->storage[$name] : $default;
+    return self::$instance->storage[$name] ?? $default;
   }
 
   /**

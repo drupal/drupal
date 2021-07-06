@@ -83,7 +83,7 @@ class FieldUiTable extends Table {
             $indentation = [
               '#theme' => 'indentation',
               '#size' => $depth,
-              '#suffix' => isset($row[$cell]['#prefix']) ? $row[$cell]['#prefix'] : '',
+              '#suffix' => $row[$cell]['#prefix'] ?? '',
             ];
             $row[$cell]['#prefix'] = \Drupal::service('renderer')->render($indentation);
           }

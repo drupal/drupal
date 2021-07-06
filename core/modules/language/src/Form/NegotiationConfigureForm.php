@@ -248,7 +248,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
     // Add missing data to the methods lists.
     foreach ($negotiation_info as $method_id => $method) {
       if (!isset($methods_weight[$method_id])) {
-        $methods_weight[$method_id] = isset($method['weight']) ? $method['weight'] : 0;
+        $methods_weight[$method_id] = $method['weight'] ?? 0;
       }
     }
 
@@ -267,7 +267,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
       // List the method only if the current type is defined in its 'types' key.
       // If it is not defined default to all the configurable language types.
-      $types = array_flip(isset($method['types']) ? $method['types'] : $form['#language_types']);
+      $types = array_flip($method['types'] ?? $form['#language_types']);
 
       if (isset($types[$type])) {
         $table_form['#language_negotiation_info'][$method_id] = $method;

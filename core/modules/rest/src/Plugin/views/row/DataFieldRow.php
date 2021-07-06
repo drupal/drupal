@@ -94,14 +94,14 @@ class DataFieldRow extends RowPluginBase {
           '#title' => $this->t('Alias for @id', ['@id' => $id]),
           '#title_display' => 'invisible',
           '#type' => 'textfield',
-          '#default_value' => isset($options[$id]['alias']) ? $options[$id]['alias'] : '',
+          '#default_value' => $options[$id]['alias'] ?? '',
           '#element_validate' => [[$this, 'validateAliasName']],
         ];
         $form['field_options'][$id]['raw_output'] = [
           '#title' => $this->t('Raw output for @id', ['@id' => $id]),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
-          '#default_value' => isset($options[$id]['raw_output']) ? $options[$id]['raw_output'] : '',
+          '#default_value' => $options[$id]['raw_output'] ?? '',
         ];
       }
     }
@@ -189,7 +189,7 @@ class DataFieldRow extends RowPluginBase {
    */
   protected static function extractFromOptionsArray($key, $options) {
     return array_map(function ($item) use ($key) {
-      return isset($item[$key]) ? $item[$key] : NULL;
+      return $item[$key] ?? NULL;
     }, $options);
   }
 

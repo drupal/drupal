@@ -92,7 +92,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     $rewritten_path = trim(str_replace($base_path, '', Url::fromRoute('<front>', [], $options)->toString()), '/');
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
-    $path = isset($segments[1]) ? $segments[1] : $prefix;
+    $path = $segments[1] ?? $prefix;
 
     // If the rewritten URL has not a language prefix we pick a random prefix so
     // we can always check the prefixed URL.
