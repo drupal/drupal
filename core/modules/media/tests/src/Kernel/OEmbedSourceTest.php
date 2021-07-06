@@ -72,7 +72,6 @@ class OEmbedSourceTest extends MediaKernelTestBase {
       'no query string, unknown file extension, exception' => [
         'internal:/core/misc/druplicon',
         '\GuzzleHttp\Exception\TransferException',
-//        new TransferException('Nope nope nope!'),
       ],
     ];
   }
