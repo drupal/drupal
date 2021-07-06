@@ -63,7 +63,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $node . '/edit');
     $this->submitForm($edit, 'Upload');
-    $this->assertFileNotExists($expected_path . '/' . $zero_size_image->filename);
+    $this->assertFileDoesNotExist($expected_path . '/' . $zero_size_image->filename);
 
     // Try uploading an invalid image.
     $invalid_image = $invalid_image_files['invalid-img-test.png'];
@@ -72,7 +72,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $node . '/edit');
     $this->submitForm($edit, 'Upload');
-    $this->assertFileNotExists($expected_path . '/' . $invalid_image->filename);
+    $this->assertFileDoesNotExist($expected_path . '/' . $invalid_image->filename);
 
     // Upload a valid image again.
     $valid_image = $image_files[0];
@@ -182,14 +182,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->uploadNodeImage($image, $field_name, 'article');
 
     // Look for form-required for the alt text.
-    $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-alt" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
-
-    $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required alt text.');
-
-    $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-title" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
-
-    $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required title text.');
-
+    $this->assertSession()->elementExists('xpath', '//label[@for="edit-' . $field_name . '-0-alt" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
+    $this->assertSession()->elementExists('xpath', '//label[@for="edit-' . $field_name . '-0-title" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
     $this->assertSession()->pageTextContains('Alternative text field is required.');
     $this->assertSession()->pageTextContains('Title field is required.');
 

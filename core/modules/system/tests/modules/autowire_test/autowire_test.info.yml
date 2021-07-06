@@ -1,0 +1,5 @@
+name: 'Auto-wiring test'
+type: module
+description: 'Support module for auto-wiring testing.'
+package: Testing
+version: VERSION

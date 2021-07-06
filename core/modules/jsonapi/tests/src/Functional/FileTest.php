@@ -165,6 +165,9 @@ class FileTest extends ResourceTestBase {
           'uid' => [
             'data' => [
               'id' => $this->author->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $this->author->id(),
+              ],
               'type' => 'user--user',
             ],
             'links' => [

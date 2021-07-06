@@ -41,7 +41,6 @@
 .node__author-image img {
   width: 2.8125rem;
   height: 2.8125rem;
-  -o-object-fit: cover;
   object-fit: cover;
   border-radius: 50%;
 }

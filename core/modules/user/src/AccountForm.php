@@ -75,9 +75,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
 
     // For a new account, there are 2 sub-cases:
     // $self_register: A user creates their own, new, account
-    //   (path '/user/register')
+    // (path '/user/register')
     // $admin_create: An administrator creates a new account for another user
-    //   (path '/admin/people/create')
+    // (path '/admin/people/create')
     // If the current user is logged in and has permission to create users
     // then it must be the second case.
     $admin_create = $register && $account->access('create');
@@ -352,7 +352,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
     // Change the roles array to a list of enabled roles.
-    // @todo: Alter the form state as the form values are directly extracted and
+    // @todo Alter the form state as the form values are directly extracted and
     //   set on the field, which throws an exception as the list requires
     //   numeric keys. Allow to override this per field. As this function is
     //   called twice, we have to prevent it from getting the array keys twice.

@@ -153,6 +153,37 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
+   * Tests with a browser that denies cookies.
+   */
+  public function testCookiesNotAccepted() {
+    $this->drupalGet('user/login');
+    $form_build_id = $this->getSession()->getPage()->findField('form_build_id');
+
+    $account = $this->drupalCreateUser([]);
+    $post = [
+      'form_id' => 'user_login_form',
+      'form_build_id' => $form_build_id,
+      'name' => $account->getAccountName(),
+      'pass' => $account->passRaw,
+      'op' => 'Log in',
+    ];
+    $url = $this->buildUrl(Url::fromRoute('user.login'));
+
+    /** @var \Psr\Http\Message\ResponseInterface $response */
+    $response = $this->getHttpClient()->post($url, [
+      'form_params' => $post,
+      'http_errors' => FALSE,
+      'cookies' => FALSE,
+      'allow_redirects' => FALSE,
+    ]);
+
+    // Follow the location header.
+    $this->drupalGet($response->getHeader('location')[0]);
+    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->pageTextContains('To log in to this site, your browser must accept cookies from the domain');
+  }
+
+  /**
    * Make an unsuccessful login attempt.
    *
    * @param \Drupal\user\Entity\User $account

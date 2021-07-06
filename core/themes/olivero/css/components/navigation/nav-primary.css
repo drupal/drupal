@@ -134,7 +134,7 @@
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
     .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
       position: absolute;
-      top: 1.25rem;
+      top: 1.625rem; /* Visually align button with menu link text. */
       width: 1.125rem;
       height: 0;
       content: "";
@@ -287,6 +287,8 @@
   overflow: hidden;
   flex-basis: 100%;
   max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   transition: opacity 0.2s, visibility 0.2s, max-height 0.2s;
   opacity: 0
 }

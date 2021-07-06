@@ -9,7 +9,6 @@ use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
-use PHPUnit\Framework\Error\Error;
 
 /**
  * @coversDefaultClass \Drupal\Core\Database\Query\Condition
@@ -167,7 +166,7 @@ class ConditionTest extends UnitTestCase {
 
     $condition = $connection->condition('AND');
     $condition->condition('name', 'value', $operator);
-    $this->expectException(Error::class);
+    $this->expectError();
     $condition->compile($connection, $query_placeholder);
   }
 

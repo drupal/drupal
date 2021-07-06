@@ -587,9 +587,7 @@
 
 .media-library-item--grid .field--name-thumbnail img {
   height: 11.25rem;
-  -o-object-fit: contain;
   object-fit: contain;
-  -o-object-position: center center;
   object-position: center center;
 }
 

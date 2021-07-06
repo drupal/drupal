@@ -110,6 +110,7 @@ autosave
 autosubmit
 autowire
 autowired
+autowiring
 backend's
 backlink
 backlinks
@@ -1883,6 +1884,7 @@ yearless
 ylen
 yml's
 yokotsoko
+yottabyte
 yottabytes
 yourbackend
 yourmodule
@@ -1892,6 +1894,8 @@ yygroup
 yyyymm
 zartan
 zendframework
+zettabyte
+zettabytes
 zipf's
 znor
 zomg

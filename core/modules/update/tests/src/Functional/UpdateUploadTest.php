@@ -23,7 +23,7 @@ class UpdateUploadTest extends UpdateTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update', 'update_test'];
+  protected static $modules = ['update', 'update_test', 'file'];
 
   /**
    * {@inheritdoc}
@@ -79,7 +79,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $updaters = drupal_get_updaters();
     $moduleUpdater = $updaters['module']['class'];
     $installedInfoFilePath = $this->container->get('update.root') . '/' . $moduleUpdater::getRootDirectoryRelativePath() . '/update_test_new_module/update_test_new_module.info.yml';
-    $this->assertFileNotExists($installedInfoFilePath);
+    $this->assertFileDoesNotExist($installedInfoFilePath);
     $validArchiveFile = __DIR__ . '/../../update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
     $edit = [
       'files[project_upload]' => $validArchiveFile,

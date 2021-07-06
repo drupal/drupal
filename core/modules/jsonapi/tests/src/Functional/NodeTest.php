@@ -187,6 +187,9 @@ class NodeTest extends ResourceTestBase {
           'node_type' => [
             'data' => [
               'id' => NodeType::load('camelids')->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => 'camelids',
+              ],
               'type' => 'node_type--node_type',
             ],
             'links' => [
@@ -201,6 +204,9 @@ class NodeTest extends ResourceTestBase {
           'uid' => [
             'data' => [
               'id' => $author->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $author->id(),
+              ],
               'type' => 'user--user',
             ],
             'links' => [
@@ -215,6 +221,9 @@ class NodeTest extends ResourceTestBase {
           'revision_uid' => [
             'data' => [
               'id' => $author->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $author->id(),
+              ],
               'type' => 'user--user',
             ],
             'links' => [
@@ -407,7 +416,7 @@ class NodeTest extends ResourceTestBase {
       ],
     ]);
     $cached_fields = $cache['#data']['fields'];
-    $this->assertCount(count($field_names), $cached_fields);
+    $this->assertSameSize($field_names, $cached_fields);
     array_walk($field_names, function ($field_name) use ($cached_fields) {
       $this->assertInstanceOf(
         CacheableNormalization::class,
