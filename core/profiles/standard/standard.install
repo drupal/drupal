@@ -7,6 +7,7 @@
 
 use Drupal\user\Entity\User;
 use Drupal\shortcut\Entity\Shortcut;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
  * Implements hook_install().
@@ -37,4 +38,13 @@ function standard_install() {
     'link' => ['uri' => 'internal:/admin/content'],
   ]);
   $shortcut->save();
+
+  // Create contact footer link.
+  $contact_link = MenuLinkContent::create([
+    'id' => 'contact',
+    'title' => t('Contact'),
+    'link' => ['uri' => 'route:contact.site_page'],
+    'menu_name' => 'footer',
+  ]);
+  $contact_link->save();
 }

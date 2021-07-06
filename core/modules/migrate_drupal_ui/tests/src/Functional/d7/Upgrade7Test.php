@@ -103,7 +103,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 6,
       'user' => 4,
       'user_role' => 3,
-      'menu_link_content' => 12,
+      'menu_link_content' => 13,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 24,
@@ -122,7 +122,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $counts['block_content'] = 2;
     $counts['comment'] = 5;
     $counts['file'] = 4;
-    $counts['menu_link_content'] = 13;
+    $counts['menu_link_content'] = 14;
     $counts['node'] = 8;
     $counts['taxonomy_term'] = 26;
     $counts['user'] = 5;
