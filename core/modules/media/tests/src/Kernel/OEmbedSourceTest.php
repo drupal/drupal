@@ -143,7 +143,8 @@ class OEmbedSourceTest extends MediaKernelTestBase {
       $logger = $this->prophesize('\Psr\Log\LoggerInterface');
       $logger->log(RfcLogLevel::WARNING, $thumbnail_headers->getMessage(), Argument::cetera())
         ->shouldBeCalled();
-      $this->container->get('logger.factory')->addLogger($logger->reveal());
+      $this->container->get('logger.factory')->get('media')
+        ->addLogger($logger->reveal());
 
       // If the request fails, we won't be able to determine the thumbnail's
       // extension.
