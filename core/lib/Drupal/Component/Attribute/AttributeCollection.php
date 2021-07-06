@@ -283,12 +283,12 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * This method is implemented to take precedence over hasClass() for Twig 2.0.
    *
-   * @return \Drupal\Component\Attribute\AttributeValueBase
-   *   The class attribute value if set.
+   * @return \Drupal\Component\Attribute\AttributeValueBase|null
+   *   The class attribute value if set, NULL otherwise.
    *
    * @see twig_get_attribute()
    */
-  public function getClass(): AttributeValueBase {
+  public function getClass(): ?AttributeValueBase {
     return $this->offsetGet('class');
   }
 

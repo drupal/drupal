@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\Core\Template;
 
-use Drupal\Component\Array\AttributeArray;
-use Drupal\Component\Array\AttributeBoolean;
-use Drupal\Component\Array\AttributeString;
+use Drupal\Component\Attribute\AttributeArray;
+use Drupal\Component\Attribute\AttributeBoolean;
+use Drupal\Component\Attribute\AttributeString;
 use Drupal\Core\Template\AttributeArray as CoreAttributeArray;
 use Drupal\Core\Template\AttributeBoolean as CoreAttributeBoolean;
 use Drupal\Core\Template\AttributeString as CoreAttributeString;
