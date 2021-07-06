@@ -11,7 +11,7 @@ use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\Core\Extension\ExtensionVersion;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
@@ -75,7 +75,7 @@ final class SecurityAdvisoriesFetcher {
    *   The config factory.
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_factory
    *   The expirable key/value factory.
-   * @param \GuzzleHttp\Client $client
+   * @param \GuzzleHttp\ClientInterface $client
    *   The HTTP client.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
    *   The module extension list.
@@ -88,7 +88,7 @@ final class SecurityAdvisoriesFetcher {
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, Client $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger, Settings $settings) {
+  public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, ClientInterface $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger, Settings $settings) {
     $this->config = $config_factory->get('system.advisories');
     $this->keyValueExpirable = $key_value_factory->get('system');
     $this->httpClient = $client;
