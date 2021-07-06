@@ -10,7 +10,6 @@ use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbed;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 use Prophecy\Argument;
@@ -72,7 +71,8 @@ class OEmbedSourceTest extends MediaKernelTestBase {
       ],
       'no query string, unknown file extension, exception' => [
         'internal:/core/misc/druplicon',
-        new TransferException('Nope nope nope!'),
+        '\GuzzleHttp\Exception\TransferException',
+//        new TransferException('Nope nope nope!'),
       ],
     ];
   }
@@ -83,13 +83,14 @@ class OEmbedSourceTest extends MediaKernelTestBase {
    * @param string $remote_thumbnail_url
    *   The URL of the remote thumbnail. This will be wired up to a mocked
    *   response containing the data from core/misc/druplicon.png.
-   * @param array[]|\Throwable $thumbnail_headers
+   * @param array[]|string $thumbnail_headers
    *   (optional) If the thumbnail's file extension cannot be determined from
    *   its URL, a HEAD request will be made in an attempt to derive its
    *   extension from its Content-Type header. If this is an array, it contains
    *   headers that should be returned by the HEAD request, where the keys are
-   *   header names and the values are arrays of strings. If it's a throwable,
-   *   it is the exception that should be thrown by the HTTP client.
+   *   header names and the values are arrays of strings. If it's the name of a
+   *   throwable class, it is the exception class that should be thrown by the
+   *   HTTP client.
    *
    * @covers ::getLocalThumbnailUri
    *
@@ -134,17 +135,18 @@ class OEmbedSourceTest extends MediaKernelTestBase {
         ->willReturn($response)
         ->shouldBeCalledOnce();
     }
-    elseif ($thumbnail_headers instanceof \Throwable) {
+    elseif (is_a($thumbnail_headers, 'Throwable', TRUE)) {
+      $e = new $thumbnail_headers('Nope!');
+
       $http_client->request('HEAD', $thumbnail_url)
-        ->willThrow($thumbnail_headers)
+        ->willThrow($e)
         ->shouldBeCalledOnce();
 
       // Ensure that the exception is logged.
       $logger = $this->prophesize('\Psr\Log\LoggerInterface');
-      $logger->log(RfcLogLevel::WARNING, $thumbnail_headers->getMessage(), Argument::cetera())
+      $logger->log(RfcLogLevel::WARNING, $e->getMessage(), Argument::cetera())
         ->shouldBeCalled();
-      $this->container->get('logger.factory')->get('media')
-        ->addLogger($logger->reveal());
+      $this->container->get('logger.factory')->addLogger($logger->reveal());
 
       // If the request fails, we won't be able to determine the thumbnail's
       // extension.
