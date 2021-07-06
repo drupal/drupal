@@ -302,7 +302,7 @@ filter:
 ie11-focus:
   version: VERSION
   js:
-    js/ie11-focus.js: {}
+    js/ie11-focus.js: { attributes: { nomodule: true } }
 
 classy.book-navigation:
   version: VERSION
