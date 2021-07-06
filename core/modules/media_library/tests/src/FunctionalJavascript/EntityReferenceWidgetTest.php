@@ -451,9 +451,9 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   }
 
   /**
-   * Tests saving a required media library field without a value.
+   * Tests saving a required media library field.
    */
-  public function testEmptyValue() {
+  public function testRequiredMediaField() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
