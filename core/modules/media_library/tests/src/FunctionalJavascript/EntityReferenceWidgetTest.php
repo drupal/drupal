@@ -474,7 +474,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Open the media library, select an item and save the node.
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item');
+    $this->pressInsertSelected('Added one media item.');
     $page->pressButton('Save');
 
     // Confirm that the node was created.
