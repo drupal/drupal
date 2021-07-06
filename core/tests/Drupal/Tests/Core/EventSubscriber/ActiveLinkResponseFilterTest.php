@@ -277,7 +277,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
         for ($c = 0; $c < count($contents); $c++) {
           $tag_content = $contents[$c];
 
-          $create_markup = function (Attribute $attributes) use ($html_prefix, $html_suffix, $tag, $tag_content) {
+          $create_markup = function (AttributeCollection $attributes) use ($html_prefix, $html_suffix, $tag, $tag_content) {
             return $html_prefix . '<' . $tag . $attributes . '>' . $tag_content . '</' . $tag . '>' . $html_suffix;
           };
 
