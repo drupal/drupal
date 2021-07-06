@@ -63,7 +63,7 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
       // Update the file object with the result data. In case of a redirect we
       // store the resulting uri.
       if (isset($result['last_modified'])) {
-        $remote_file->uri = isset($result['location']) ? $result['location'] : $remote_file->uri;
+        $remote_file->uri = $result['location'] ?? $remote_file->uri;
         $remote_file->timestamp = $result['last_modified'];
         locale_translation_status_save($source->name, $source->langcode, LOCALE_TRANSLATION_REMOTE, $remote_file);
       }
