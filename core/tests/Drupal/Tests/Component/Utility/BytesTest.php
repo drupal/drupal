@@ -190,6 +190,7 @@ class BytesTest extends TestCase {
       [' 5.1 megabytes', FALSE],
       ['5.1 megabytes ', TRUE],
       [' 5.1 megabytes ', FALSE],
+      ['300 0', FALSE],
     ];
   }
 
