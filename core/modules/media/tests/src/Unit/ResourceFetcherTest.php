@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\Unit;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\NullBackend;
 use Drupal\media\OEmbed\ResourceFetcher;
 use Drupal\Tests\UnitTestCase;
 use GuzzleHttp\Client;
@@ -10,6 +11,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -53,7 +55,7 @@ class ResourceFetcherTest extends UnitTestCase {
 
     $fetcher = new ResourceFetcher(
       new Client(['handler' => $handler_stack]),
-      $this->prophesize('\Drupal\media\OEmbed\ProviderRepositoryInterface')->reveal(),
+      $this->createMock('\Drupal\media\OEmbed\ProviderRepositoryInterface'),
       $request_stack
     );
 
@@ -62,6 +64,26 @@ class ResourceFetcherTest extends UnitTestCase {
     $fetcher->fetchResource('https://example.com/fake/resource.json');
     $this->assertNotEmpty($history);
     $this->assertSame($referer, $history[0]['request']->getHeaderLine('Referer'));
+  }
+
+  /**
+   * Tests deprecation messages when constructing a ResourceFetcher.
+   *
+   * @group legacy
+   */
+  public function testParameterDeprecations(): void {
+    $http_client = new Client();
+    $providers = $this->createMock('\Drupal\media\OEmbed\ProviderRepositoryInterface');
+
+    $container = new ContainerBuilder();
+    $container->set('request_stack', new RequestStack());
+    \Drupal::setContainer($container);
+
+    $this->expectDeprecation('Passing NULL for the $request_stack parameter to ' . ResourceFetcher::class . '::__construct() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0.');
+    new ResourceFetcher($http_client, $providers);
+
+    $this->expectDeprecation('Passing an instance of CacheBackendInterface in the $request_stack parameter to ' . ResourceFetcher::class . '::__construct() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Pass a \Symfony\Component\HttpFoundation\RequestStack object instead.');
+    new ResourceFetcher($http_client, $providers, new NullBackend('foo'));
   }
 
 }
