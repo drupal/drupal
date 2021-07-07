@@ -11,18 +11,12 @@
   Drupal.behaviors.drupalAnnounce = {
     attach: function attach(context) {
       if (!liveElement) {
-        let liveElementLandmark = document.createElement('div');
-        liveElementLandmark.setAttribute('role', 'region');
-        liveElementLandmark.setAttribute('aria-labelledby', 'drupal-live-announce');
-
         liveElement = document.createElement('div');
         liveElement.id = 'drupal-live-announce';
         liveElement.className = 'visually-hidden';
         liveElement.setAttribute('aria-live', 'polite');
         liveElement.setAttribute('aria-busy', 'false');
-
-        liveElementLandmark.appendChild(liveElement);
-        document.body.appendChild(liveElementLandmark);
+        document.body.appendChild(liveElement);
       }
     }
   };
