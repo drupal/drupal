@@ -34,9 +34,12 @@
     attach(context) {
       // Create only one aria-live element.
       if (!liveElement) {
-        let liveElementLandmark = document.createElement('div');
+        const liveElementLandmark = document.createElement('div');
         liveElementLandmark.setAttribute('role', 'region');
-        liveElementLandmark.setAttribute('aria-labelledby', 'drupal-live-announce');
+        liveElementLandmark.setAttribute(
+          'aria-labelledby',
+          'drupal-live-announce'
+        );
 
         liveElement = document.createElement('div');
         liveElement.id = 'drupal-live-announce';
