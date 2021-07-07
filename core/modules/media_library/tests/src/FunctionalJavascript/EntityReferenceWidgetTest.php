@@ -464,7 +464,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Visit a node create page.
     $this->drupalGet('node/add/basic_page');
 
-    $page->fillField('title[0][value]', 'My page');
+    $page->fillField('Title', 'My page');
     $page->pressButton('Save');
 
     // Check that a clear error message is shown.
