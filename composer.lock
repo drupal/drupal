@@ -5565,16 +5565,16 @@
         },
         {
             "name": "mglaman/phpstan-drupal",
-            "version": "0.12.9",
+            "version": "0.12.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mglaman/phpstan-drupal.git",
-                "reference": "f2e1446663fe38a12b1270d35bc332d8806f9f75"
+                "reference": "b8b6642861662cefb86bf19d9faab01715f38b68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/f2e1446663fe38a12b1270d35bc332d8806f9f75",
-                "reference": "f2e1446663fe38a12b1270d35bc332d8806f9f75",
+                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/b8b6642861662cefb86bf19d9faab01715f38b68",
+                "reference": "b8b6642861662cefb86bf19d9faab01715f38b68",
                 "shasum": ""
             },
             "require": {
@@ -5646,7 +5646,7 @@
             "description": "Drupal extension and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/mglaman/phpstan-drupal/issues",
-                "source": "https://github.com/mglaman/phpstan-drupal/tree/0.12.9"
+                "source": "https://github.com/mglaman/phpstan-drupal/tree/0.12.10"
             },
             "funding": [
                 {
@@ -5662,7 +5662,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-11T00:17:32+00:00"
+            "time": "2021-05-12T20:49:49+00:00"
         },
         {
             "name": "mikey179/vfsstream",
@@ -6263,16 +6263,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.86",
+            "version": "0.12.91",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "a84fdc53ecca7643dbc89ef8880d8b393a6c155a"
+                "reference": "8226701cd228a0d63c2df995de7ab6070c69ac6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a84fdc53ecca7643dbc89ef8880d8b393a6c155a",
-                "reference": "a84fdc53ecca7643dbc89ef8880d8b393a6c155a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8226701cd228a0d63c2df995de7ab6070c69ac6a",
+                "reference": "8226701cd228a0d63c2df995de7ab6070c69ac6a",
                 "shasum": ""
             },
             "require": {
@@ -6303,11 +6303,15 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.86"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.91"
             },
             "funding": [
                 {
                     "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
                     "type": "github"
                 },
                 {
@@ -6319,7 +6323,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-08T11:29:01+00:00"
+            "time": "2021-07-04T15:31:48+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
