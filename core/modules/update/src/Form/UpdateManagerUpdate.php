@@ -72,12 +72,9 @@ class UpdateManagerUpdate extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
 
-    $last_markup = [
+    $form['last_check'] = [
       '#theme' => 'update_last_check',
       '#last' => $this->state->get('update.last_check', 0),
-    ];
-    $form['last_check'] = [
-      '#markup' => \Drupal::service('renderer')->render($last_markup),
     ];
 
     if (!_update_manager_check_backends($form, 'update')) {
