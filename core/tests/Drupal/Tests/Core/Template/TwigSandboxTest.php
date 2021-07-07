@@ -161,7 +161,7 @@ class TwigSandboxTest extends UnitTestCase {
   /**
    * Tests deprecation of Drupal\Core\Template\Attribute as an allowed class.
    *
-   * #group legacy
+   * @group legacy
    */
   public function testDeprecatedAllowedClass() {
     $this->expectDeprecation('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeCollection instead. See https://www.drupal.org/node/3070485');
@@ -173,6 +173,7 @@ class TwigSandboxTest extends UnitTestCase {
       ->method('getSettings')
       ->with('twig_sandbox_allowed_methods')
       ->willReturn([CoreAttribute::class]);
+    $this->expectException(SecurityError::class);
     $policy->checkMethodAllowed($this, 'add');
   }
 
