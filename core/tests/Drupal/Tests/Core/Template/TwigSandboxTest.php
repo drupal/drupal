@@ -164,12 +164,14 @@ class TwigSandboxTest extends UnitTestCase {
    * #group legacy
    */
   public function testDeprecatedAllowedClass() {
+    $this->expectDeprecation('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeCollection instead. See https://www.drupal.org/node/3070485');
     $policy = $this->getMockBuilder(TwigSandboxPolicy::class)
       ->setMethods(['getSettings'])
       ->disableOriginalConstructor()
       ->getMock();
-    $policy->expects($this->once())
+    $policy->expects($this->any())
       ->method('getSettings')
+      ->with('twig_sandbox_allowed_methods')
       ->willReturn([CoreAttribute::class]);
     $policy->checkMethodAllowed($this, 'add');
   }
