@@ -244,9 +244,8 @@
         // Get a Drupal.editorFeature object that contains all metadata for
         // the feature that was just added or removed. Not every feature has
         // such metadata.
-        let featureName = this.model.get('buttonsToFeatures')[
-          button.toLowerCase()
-        ];
+        let featureName =
+          this.model.get('buttonsToFeatures')[button.toLowerCase()];
         // Features without an associated command do not have a 'feature name' by
         // default, so we use the lowercased button name instead.
         if (!featureName) {

@@ -124,6 +124,13 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
 
 /**
+ * Declare class aliases that will be added by the autoloader.
+ */
+// @todo https://www.drupal.org/project/drupal/issues/3197482 Remove this class
+//   alias once Drupal is running Symfony 5.3 or higher.
+class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\KernelEvent', TRUE);
+
+/**
  * Returns and optionally sets the filename for a system resource.
  *
  * The filename, whether provided, cached, or retrieved from the database, is
@@ -618,6 +625,12 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   unit tests with a clean environment.
  */
 function drupal_static_reset($name = NULL) {
+  switch ($name) {
+    case 'taxonomy_vocabulary_get_names':
+      @trigger_error("Using drupal_static_reset() with 'taxonomy_vocabulary_get_names' as parameter is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
+      break;
+
+  }
   drupal_static($name, NULL, TRUE);
 }
 

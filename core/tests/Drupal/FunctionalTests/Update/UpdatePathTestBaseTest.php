@@ -34,8 +34,10 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Set a value in the cache to prove caches are cleared.
     \Drupal::service('cache.default')->set(__CLASS__, 'Test');
 
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (['user' => 8100, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
-      $this->assertEqual($schema, drupal_get_installed_schema_version($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
+      $this->assertEquals($schema, $update_registry->getInstalledVersion($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
     }
 
     // Ensure that all {router} entries can be unserialized. If they cannot be
@@ -64,23 +66,23 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // be broken.
     $this->runUpdates();
     $this->assertEquals('standard', \Drupal::config('core.extension')->get('profile'));
-    $this->assertEqual('Site-Install', \Drupal::config('system.site')->get('name'));
+    $this->assertEquals('Site-Install', \Drupal::config('system.site')->get('name'));
     $this->drupalGet('<front>');
-    $this->assertText('Site-Install');
+    $this->assertSession()->pageTextContains('Site-Install');
 
     // Ensure that the database tasks have been run during set up. Neither MySQL
     // nor SQLite make changes that are testable.
     $database = $this->container->get('database');
     if ($database->driver() == 'pgsql') {
-      $this->assertEqual('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEqual('escape', $database->query("SHOW bytea_output")->fetchField());
+      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
+      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
     }
     // Ensure the test runners cache has been cleared.
     $this->assertFalse(\Drupal::service('cache.default')->get(__CLASS__));
   }
 
   /**
-   * Test that updates are properly run.
+   * Tests that updates are properly run.
    */
   public function testUpdateHookN() {
     $connection = Database::getConnection();
@@ -97,15 +99,17 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $container_cannot_be_saved_messages = array_filter(iterator_to_array($select->execute()), function ($row) {
       return strpos($row->message, 'Container cannot be saved to cache.') !== FALSE;
     });
-    $this->assertEqual([], $container_cannot_be_saved_messages);
+    $this->assertEquals([], $container_cannot_be_saved_messages);
 
     // Ensure schema has changed.
-    $this->assertEqual(8001, drupal_get_installed_schema_version('update_test_schema', TRUE));
-    $this->assertEqual(8001, drupal_get_installed_schema_version('update_test_semver_update_n', TRUE));
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+    $this->assertEquals(8001, $update_registry->getInstalledVersion('update_test_schema'));
+    $this->assertEquals(8001, $update_registry->getInstalledVersion('update_test_semver_update_n'));
     // Ensure the index was added for column a.
     $this->assertTrue($connection->schema()->indexExists('update_test_schema_table', 'test'), 'Version 8001 of the update_test_schema module is installed.');
     // Ensure update_test_semver_update_n_update_8001 was run.
-    $this->assertEquals(\Drupal::state()->get('update_test_semver_update_n_update_8001'), 'Yes, I was run. Thanks for testing!');
+    $this->assertEquals('Yes, I was run. Thanks for testing!', \Drupal::state()->get('update_test_semver_update_n_update_8001'));
   }
 
   /**
@@ -213,7 +217,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
   }
 
   /**
-   * Test the database fixtures are setup correctly.
+   * Tests the database fixtures are setup correctly.
    */
   public function testFixturesSetup() {
     $this->assertCount(3, $this->databaseDumpFiles);

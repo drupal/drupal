@@ -20,12 +20,25 @@ use Drupal\views\Plugin\views\row\RssPluginBase;
  */
 class Rss extends RssPluginBase {
 
-  // Basic properties that let the row style follow relationships.
+  /**
+   * The base table for this row plugin.
+   *
+   * @var string
+   */
   public $base_table = 'node_field_data';
 
+  /**
+   * The base field for this row plugin.
+   *
+   * @var string
+   */
   public $base_field = 'nid';
 
-  // Stores the nodes loaded with preRender.
+  /**
+   * Stores the nodes loaded with preRender.
+   *
+   * @var array
+   */
   public $nodes = [];
 
   /**
@@ -78,7 +91,6 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $node->link = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $node->rss_namespaces = [];
     $node->rss_elements = [
       [
@@ -125,7 +137,7 @@ class Rss extends RssPluginBase {
       $item->description = $build;
     }
     $item->title = $node->label();
-    $item->link = $node->link;
+    $item->link = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     // Provide a reference so that the render call in
     // template_preprocess_views_view_row_rss() can still access it.
     $item->elements = &$node->rss_elements;

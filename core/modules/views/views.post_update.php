@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
 
 /**
@@ -67,4 +68,22 @@ function views_post_update_rename_default_display_setting() {
  */
 function views_post_update_remove_sorting_global_text_field() {
   // Empty post-update hook.
+}
+
+/**
+ * Rebuild routes to fix view title translations.
+ */
+function views_post_update_title_translations() {
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}
+
+/**
+ * Add the identifier option to all sort handler configurations.
+ */
+function views_post_update_sort_identifier(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsSortFieldIdentifierUpdate($view);
+  });
 }

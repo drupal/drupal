@@ -153,12 +153,12 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $term_storage = $this->getMockBuilder(TermStorageInterface::class)->getMock();
-    $term_storage->expects($this->at(0))
+    $term_storage->expects($this->exactly(2))
       ->method('loadAllParents')
-      ->will($this->returnValue([$term1]));
-    $term_storage->expects($this->at(1))
-      ->method('loadAllParents')
-      ->will($this->returnValue([$term1, $term2]));
+      ->willReturnOnConsecutiveCalls(
+        [$term1],
+        [$term1, $term2],
+      );
 
     $prophecy = $this->prophesize('Drupal\taxonomy\VocabularyInterface');
     $prophecy->label()->willReturn('Forums');

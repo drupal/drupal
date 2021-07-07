@@ -14,6 +14,11 @@
  * - description: The description element containing the following properties:
  *   - content: The description content of the <fieldset>.
  *   - attributes: HTML attributes to apply to the description container.
+ * - description_display: Description display setting. It can have these values:
+ *   - before: The description is output before the element.
+ *   - after: The description is output after the element (default).
+ *   - invisible: The description is output after the element, hidden visually
+ *     but available to screen readers.
  * - children: The rendered child elements of the <fieldset>.
  * - prefix: The content to add before the <fieldset> children.
  * - suffix: The content to add after the <fieldset> children.
@@ -42,6 +47,9 @@
     <span{{ legend_span.attributes.addClass(legend_span_classes) }}>{{ legend.title }}</span>
   </legend>
   <div class="fieldset-wrapper">
+    {% if description_display == 'before' and description.content %}
+      <div{{ description.attributes.addClass('description') }}>{{ description.content }}</div>
+    {% endif %}
     {% if errors %}
       <div>
         {{ errors }}
@@ -54,7 +62,7 @@
     {% if suffix %}
       <span class="field-suffix">{{ suffix }}</span>
     {% endif %}
-    {% if description.content %}
+    {% if description_display in ['after', 'invisible'] and description.content %}
       <div{{ description.attributes.addClass('description') }}>{{ description.content }}</div>
     {% endif %}
   </div>

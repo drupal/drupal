@@ -36,7 +36,7 @@ function views_ui_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_build().
  */
 function views_ui_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['view']
     ->setFormClass('edit', 'Drupal\views_ui\ViewEditForm')
     ->setFormClass('add', 'Drupal\views_ui\ViewAddForm')

@@ -33,7 +33,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
   }
 
   /**
-   * Test the import transformation.
+   * Tests the import transformation.
    */
   public function testTransform() {
     // Get the raw system.site config and set it in the sync storage.
@@ -61,22 +61,18 @@ class ImportStorageTransformerTest extends KernelTestBase {
   }
 
   /**
-   * Test that the import transformer throws an exception.
+   * Tests that the import transformer throws an exception.
    */
   public function testTransformLocked() {
     // Mock the request lock not being available.
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $lock->expects($this->at(0))
+    $lock->expects($this->exactly(2))
       ->method('acquire')
       ->with(ImportStorageTransformer::LOCK_NAME)
       ->will($this->returnValue(FALSE));
-    $lock->expects($this->at(1))
+    $lock->expects($this->once())
       ->method('wait')
       ->with(ImportStorageTransformer::LOCK_NAME);
-    $lock->expects($this->at(2))
-      ->method('acquire')
-      ->with(ImportStorageTransformer::LOCK_NAME)
-      ->will($this->returnValue(FALSE));
 
     // The import transformer under test.
     $transformer = new ImportStorageTransformer(
@@ -92,7 +88,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
   }
 
   /**
-   * Test the import transformer during a running config import.
+   * Tests the import transformer during a running config import.
    */
   public function testTransformWhileImporting() {
     // Set up the database table with the current active config.
@@ -101,7 +97,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
 
     // Mock the persistent lock being unavailable due to a config import.
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $lock->expects($this->at(0))
+    $lock->expects($this->once())
       ->method('lockMayBeAvailable')
       ->with(ConfigImporter::LOCK_NAME)
       ->will($this->returnValue(FALSE));

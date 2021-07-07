@@ -9,7 +9,7 @@
  * Implements hook_entity_type_alter().
  */
 function keyvalue_test_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (isset($entity_types['entity_test_label'])) {
     $entity_types['entity_test_label']->setStorageClass('Drupal\Core\Entity\KeyValueStore\KeyValueContentEntityStorage');
     $entity_keys = $entity_types['entity_test_label']->getKeys();

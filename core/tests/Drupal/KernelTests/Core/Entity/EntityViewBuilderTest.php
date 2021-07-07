@@ -203,7 +203,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $renderer->renderRoot($view);
 
     // Check that the weight is respected.
-    $this->assertEqual(20, $view['label']['#weight'], 'The weight of a display component is respected.');
+    $this->assertEquals(20, $view['label']['#weight'], 'The weight of a display component is respected.');
   }
 
   /**
@@ -341,6 +341,20 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $build = $entity_type_manager->getViewBuilder('entity_test')->view($entity);
     $this->assertEquals($entity, $build['#entity_test']);
     $this->assertArrayNotHasKey('#theme', $build);
+  }
+
+  /**
+   * Tests an entity type with an external canonical rel.
+   */
+  public function testExternalEntity() {
+    $this->installEntitySchema('entity_test_external');
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $entity_test = $this->createTestEntity('entity_test_external');
+    $entity_test->save();
+    $view = $this->container->get('entity_type.manager')->getViewBuilder('entity_test_external')->view($entity_test);
+    $renderer->renderRoot($view);
+    $this->assertArrayNotHasKey('#contextual_links', $view);
   }
 
 }

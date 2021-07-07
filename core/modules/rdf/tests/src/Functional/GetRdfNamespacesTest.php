@@ -49,9 +49,9 @@ class GetRdfNamespacesTest extends BrowserTestBase {
     // Get all RDF namespaces.
     $ns = rdf_get_namespaces();
 
-    $this->assertEqual('http://www.w3.org/2000/01/rdf-schema#', $ns['rdfs'], 'A prefix declared once is included.');
-    $this->assertEqual('http://xmlns.com/foaf/0.1/', $ns['foaf'], 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
-    $this->assertEqual('http://xmlns.com/foaf/0.1/', $ns['foaf1'], 'Two prefixes can be assigned the same namespace.');
+    $this->assertEquals('http://www.w3.org/2000/01/rdf-schema#', $ns['rdfs'], 'A prefix declared once is included.');
+    $this->assertEquals('http://xmlns.com/foaf/0.1/', $ns['foaf'], 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
+    $this->assertEquals('http://xmlns.com/foaf/0.1/', $ns['foaf1'], 'Two prefixes can be assigned the same namespace.');
 
     // Enable rdf_conflicting_namespaces to ensure that an exception is thrown
     // when RDF namespaces are conflicting.

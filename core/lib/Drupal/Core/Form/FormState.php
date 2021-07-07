@@ -1206,8 +1206,11 @@ class FormState implements FormStateInterface {
       // the value corresponding to this button.
       // We iterate over the #parents of this button and move a reference to
       // each parent in self::getValues(). For example, if #parents is:
+      // @code
       //   array('foo', 'bar', 'baz')
+      // @endcode
       // then the corresponding self::getValues() part will look like this:
+      // @code
       // array(
       //   'foo' => array(
       //     'bar' => array(
@@ -1215,6 +1218,7 @@ class FormState implements FormStateInterface {
       //     ),
       //   ),
       // )
+      // @endcode
       // We start by (re)moving 'baz' to $last_parent, so we are able unset it
       // at the end of the iteration. Initially, $values will contain a
       // reference to self::getValues(), but in the iteration we move the

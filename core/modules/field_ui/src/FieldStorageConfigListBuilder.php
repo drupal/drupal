@@ -66,6 +66,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
     $this->bundles = $bundle_info_service->getAllBundleInfo();
     $this->fieldTypeManager = $field_type_manager;
     $this->fieldTypes = $this->fieldTypeManager->getDefinitions();
+    $this->limit = FALSE;
   }
 
   /**

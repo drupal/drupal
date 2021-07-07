@@ -58,14 +58,14 @@ class CommentRestExportTest extends CommentTestBase {
   }
 
   /**
-   * Test comment row.
+   * Tests comment row.
    */
   public function testCommentRestExport() {
     $this->drupalGet(sprintf('node/%d/comments', $this->nodeUserCommented->id()), ['query' => ['_format' => 'hal_json']]);
     $this->assertSession()->statusCodeEquals(200);
     $contents = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual('How much wood would a woodchuck chuck', $contents[0]['subject']);
-    $this->assertEqual('A lot, apparently', $contents[1]['subject']);
+    $this->assertEquals('How much wood would a woodchuck chuck', $contents[0]['subject']);
+    $this->assertEquals('A lot, apparently', $contents[1]['subject']);
     $this->assertCount(2, $contents);
 
     // Ensure field-level access is respected - user shouldn't be able to see

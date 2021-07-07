@@ -27,7 +27,7 @@ class AccessResultNeutralTest extends UnitTestCase {
   }
 
   /**
-   * Test setReason()
+   * Tests setReason()
    *
    * @covers ::setReason
    */

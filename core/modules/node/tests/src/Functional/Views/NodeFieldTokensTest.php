@@ -30,7 +30,7 @@ class NodeFieldTokensTest extends NodeTestBase {
    */
   public function testViewsTokenReplacement() {
     // Create the Article content type with a standard body field.
-    /* @var $node_type \Drupal\node\NodeTypeInterface */
+    /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
     $node_type->save();
     node_add_body_field($node_type);
@@ -40,7 +40,7 @@ class NodeFieldTokensTest extends NodeTestBase {
     $body = $this->randomMachineName(32);
     $summary = $this->randomMachineName(16);
 
-    /** @var $node \Drupal\node\NodeInterface */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
       'type' => 'article',
       'tnid' => 0,

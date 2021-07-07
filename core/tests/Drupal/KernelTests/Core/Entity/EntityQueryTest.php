@@ -155,7 +155,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test basic functionality.
+   * Tests basic functionality.
    */
   public function testEntityQuery() {
     $greetings = $this->greetings;
@@ -178,7 +178,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$figures.color", 'red')
       ->sort('id');
     $count_query = clone $query;
-    $this->assertEqual(12, $count_query->count()->execute());
+    $this->assertEquals(12, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     // Now bit 0 (1, 3, 5, 7, 9, 11, 13, 15) or bit 2 (4, 5, 6, 7, 12, 13, 14,
     // 15) needs to be set.
@@ -377,7 +377,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test sort().
+   * Tests sort().
    *
    * Warning: this is complicated.
    */
@@ -438,7 +438,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // 13 red  tr
     // 15 red  tr
     $count_query = clone $query;
-    $this->assertEqual(15, $count_query->count()->execute());
+    $this->assertEquals(15, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     $this->assertResult(8, 12, 4, 2, 3, 10, 11, 14, 15, 6, 7, 1, 9, 13, 5);
 
@@ -467,13 +467,13 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort("$greetings.format", 'DESC')
       ->sort('id', 'DESC');
     $count_query = clone $query;
-    $this->assertEqual(15, $count_query->count()->execute());
+    $this->assertEquals(15, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     $this->assertResult(15, 13, 7, 5, 11, 9, 3, 1, 14, 6, 10, 2, 12, 4, 8);
   }
 
   /**
-   * Test tablesort().
+   * Tests tablesort().
    */
   public function testTableSort() {
     // While ordering on bundles do not give us a definite order, we can still
@@ -528,7 +528,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test that count queries are separated across entity types.
+   * Tests that count queries are separated across entity types.
    */
   public function testCount() {
     // Create a field with the same name in a different entity type.
@@ -608,7 +608,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual(2, $and_condition_group->count());
+    $this->assertEquals(2, $and_condition_group->count());
 
     // Add an OR condition group with 2 conditions in it.
     $or_condition_group = $query->orConditionGroup()
@@ -616,11 +616,11 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual(2, $or_condition_group->count());
+    $this->assertEquals(2, $or_condition_group->count());
   }
 
   /**
-   * Test queries with delta conditions.
+   * Tests queries with delta conditions.
    */
   public function testDelta() {
     $figures = $this->figures;
@@ -763,23 +763,25 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test adding a tag and metadata to the Entity query object.
+   * Tests adding a tag and metadata to the Entity query object.
    *
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData() {
+    field_test_memorize();
+
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')
       ->execute();
 
-    global $efq_test_metadata;
-    $this->assertEqual('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
+    $mem = field_test_memorize();
+    $this->assertEquals('bar', $mem['field_test_query_efq_metadata_test_alter'][0], 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**
-   * Test case sensitive and in-sensitive query conditions.
+   * Tests case sensitive and in-sensitive query conditions.
    */
   public function testCaseSensitivity() {
     $bundle = $this->randomMachineName();
@@ -1022,7 +1024,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test base fields with multiple columns.
+   * Tests base fields with multiple columns.
    */
   public function testBaseFieldMultipleColumns() {
     $this->enableModules(['taxonomy']);
@@ -1081,7 +1083,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test pending revisions.
+   * Tests pending revisions.
    */
   public function testPendingRevisions() {
     // Ensure entity 14 is returned.
@@ -1120,7 +1122,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
-    $this->assertEqual([14 => '14'], $result);
+    $this->assertEquals([14 => '14'], $result);
     $result = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -1128,7 +1130,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
       ->execute();
-    $this->assertEqual([16 => '14'], $result);
+    $this->assertEquals([16 => '14'], $result);
 
     // Add another pending revision on the same entity and repeat the checks.
     $entity->setNewRevision(TRUE);
@@ -1190,7 +1192,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test against SQL inject of condition field. This covers a
+   * Tests against SQL inject of condition field. This covers a
    * database driver's EntityQuery\Condition class.
    */
   public function testInjectionInCondition() {

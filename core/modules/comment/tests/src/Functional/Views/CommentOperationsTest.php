@@ -22,7 +22,7 @@ class CommentOperationsTest extends CommentTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test the operations field plugin.
+   * Tests the operations field plugin.
    */
   public function testCommentOperations() {
     $admin_account = $this->drupalCreateUser(['administer comments']);

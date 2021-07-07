@@ -32,7 +32,7 @@ class LanguageConfigOverrideInstallTest extends KernelTestBase {
     $event_recorder = \Drupal::state()->get('config_events_test.event', FALSE);
     $this->assertFalse($event_recorder);
     $config = \Drupal::service('language.config_factory_override')->getOverride('de', 'language_config_override_test.settings');
-    $this->assertEqual('Deutsch', $config->get('name'));
+    $this->assertEquals('Deutsch', $config->get('name'));
   }
 
 }
