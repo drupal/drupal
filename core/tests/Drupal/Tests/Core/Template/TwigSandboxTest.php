@@ -165,11 +165,13 @@ class TwigSandboxTest extends UnitTestCase {
    */
   public function testDeprecatedAllowedClass() {
     $policy = $this->getMockBuilder(TwigSandboxPolicy::class)
-      ->setMethods(['getAllowedClasses']);
+      ->setMethods(['getSettings'])
+      ->disableOriginalConstructor()
+      ->getMock();
     $policy->expects($this->once())
-      ->method('getAllowedClasses')
+      ->method('getSettings')
       ->willReturn([CoreAttribute::class]);
-    $policy->getMock();
+    $policy->checkMethodAllowed($this, 'add');
   }
 
 }
