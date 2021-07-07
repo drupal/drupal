@@ -384,10 +384,11 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       return [];
     }
+
     $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
-    if (!empty($this->configuration['default_bundle'])) {
-      $field_definitions += $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $this->configuration['default_bundle']);
-    }
+    $bundle = empty($this->configuration['default_bundle']) ? $entity_type->id() : $this->configuration['default_bundle'];
+    $field_definitions += $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
+
     $fields = [];
     foreach ($field_definitions as $field_name => $definition) {
       $fields[$field_name] = (string) $definition->getLabel();

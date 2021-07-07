@@ -17,11 +17,11 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
-    'user',
-    'node',
     'field',
     'migrate_destination_test',
+    'node',
+    'system',
+    'user',
   ];
 
   /**
@@ -49,9 +49,11 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
    * Test destination fields() method.
    */
   public function testDestinationField() {
+    // Test with a migration with a default bundle that has fields.
     $node_with_fields = $this->getMigration('node_with_fields');
     $destination_fields = $node_with_fields->getDestinationPlugin();
 
+    // Test with a migration with a default bundle that does not have fields.
     $node_no_fields = $this->getMigration('node_no_fields');
     $destination_no_fields = $node_no_fields->getDestinationPlugin();
 
@@ -61,7 +63,7 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
     $this->assertTrue(in_array('nid', array_keys($destination_no_fields->fields())));
     $this->assertFalse(in_array('field_text', array_keys($destination_no_fields->fields())));
 
-    // Create a text field attached to 'test_node_type_2' node-type.
+    // Create a text field attached to 'test_node_type_with_fields' node type.
     FieldStorageConfig::create([
       'type' => 'string',
       'entity_type' => 'node',
@@ -79,6 +81,27 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
     // test_node_type so it shouldn't show the fields on other node types.
     $this->assertFalse(in_array('field_text', array_keys($destination_no_fields->fields())));
 
+    // Test with a user entity.
+    $user_with_fields = $this->getMigration('user_with_fields');
+    $destination_fields = $user_with_fields->getDestinationPlugin();
+
+    $this->assertTrue(in_array('uid', array_keys($destination_fields->fields())));
+    $this->assertFalse(in_array('field_text', array_keys($destination_fields->fields())));
+
+    // Create a text field attached to the user entity.
+    FieldStorageConfig::create([
+      'type' => 'string',
+      'entity_type' => 'user',
+      'field_name' => 'field_text',
+    ])->save();
+
+    FieldConfig::create([
+      'entity_type' => 'user',
+      'bundle' => 'user',
+      'field_name' => 'field_text',
+    ])->save();
+
+    $this->assertTrue(in_array('field_text', array_keys($destination_fields->fields())));
   }
 
 }
