@@ -46,12 +46,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
   public function __construct() {
     // Allow settings.php to override our default allowed classes, methods, and
     // prefixes.
-    $allowed_classes = Settings::get('twig_sandbox_allowed_classes', [
-      // Allow any operations on the AttributeCollection object as it is
-      // intended to be changed from a Twig template, for example calling
-      // addClass().
-      AttributeCollection::class,
-    ]);
+    $allowed_classes = $this->getAllowedClasses();
     // BC layer to support earlier Attribute class.
     if (in_array('Drupal\Core\Template\Attribute', $allowed_classes) && !in_array(AttributeCollection::class, $allowed_classes)) {
       @trigger_error('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeCollection instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
@@ -76,6 +71,21 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       'get',
       'has',
       'is',
+    ]);
+  }
+
+  /**
+   * Return the list of allowed classes from the settings.
+   *
+   * @return string[]
+   *   The list of allowed classes from the settings.
+   */
+  protected function getAllowedClasses(): array {
+    return Settings::get('twig_sandbox_allowed_classes', [
+      // Allow any operations on the AttributeCollection object as it is
+      // intended to be changed from a Twig template, for example calling
+      // addClass().
+      AttributeCollection::class,
     ]);
   }
 

@@ -157,6 +157,22 @@ class TwigSandboxTest extends UnitTestCase {
     $this->assertEquals('http://kittens.cat/are/cute', $result, 'Sandbox policy allows toString() to be called.');
   }
 
-}
+  /**
+   * Tests deprecation of Drupal\Core\Template\Attribute as an allowed class.
+   *
+   * @group legacy
+   */
+  public function testUrlSafeMethods() {
+    $url = $this->getMockBuilder('Drupal\Core\Url')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $url->expects($this->once())
+      ->method('toString')
+      ->willReturn('http://kittens.cat/are/cute');
+    $result = $this->twig->render('{{ url.toString }}', ['url' => $url]);
+    $this->assertEquals('http://kittens.cat/are/cute', $result, 'Sandbox policy allows toString() to be called.');
+  }
+
+}}
 
 class TestAttributeCollection extends AttributeCollection {}
