@@ -161,7 +161,7 @@ class TwigSandboxTest extends UnitTestCase {
   /**
    * Tests deprecation of Drupal\Core\Template\Attribute as an allowed class.
    *
-   * @group legacy
+   * #group legacy
    */
   public function testDeprecatedAllowedClass() {
     $policy = $this->getMockBuilder(TwigSandboxPolicy::class)
@@ -169,7 +169,6 @@ class TwigSandboxTest extends UnitTestCase {
     $policy->expects($this->once())
       ->method('getAllowedClasses')
       ->willReturn([CoreAttribute::class]);
-    ]);
     $policy->getMock();
   }
 
