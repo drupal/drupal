@@ -35,8 +35,8 @@ class AttributeLegacyTest extends UnitTestCase {
    * Tests deprecation of AttributeValueBase.
    */
   public function testCoreAttributeValueBaseDeprecation(): void {
-    require_once __DIR__ . '/../../../../fixtures/CoreAttributeValueBaseTestClass.php';
     $this->expectDeprecation('\Drupal\Core\Template\AttributeValueBase is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Attribute\AttributeValueBase instead. See https://www.drupal.org/node/3070485');
+    require_once __DIR__ . '/../../../../fixtures/CoreAttributeValueBaseTestClass.php';
     $this->assertInstanceOf(AttributeValueBase::class, new CoreAttributeValueBaseTestClass('a', ['test']));
   }
 
