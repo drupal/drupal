@@ -45,24 +45,8 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    */
   public function __construct() {
     $this->allowed_classes = $this->getAllowedClasses();
-
-    $allowed_methods = Settings::get('twig_sandbox_allowed_methods', [
-      // Only allow idempotent methods.
-      'id',
-      'label',
-      'bundle',
-      'get',
-      '__toString',
-      'toString',
-    ]);
-    // Flip the array so we can check using isset().
-    $this->allowed_methods = array_flip($allowed_methods);
-
-    $this->allowed_prefixes = Settings::get('twig_sandbox_allowed_prefixes', [
-      'get',
-      'has',
-      'is',
-    ]);
+    $this->allowed_methods = $this->getAllowedMethods();
+    $this->allowed_prefixes = $this->getAllowedPrefixes();
   }
 
   /**
@@ -90,6 +74,46 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       $this->allowed_classes = array_flip($allowed_classes);
     }
     return $this->allowed_classes;
+  }
+
+  /**
+   * Returns the list of allowed methods from the settings.
+   *
+   * @return string[]
+   *   The list of allowed methods from the settings.
+   */
+  protected function getAllowedMethods(): array {
+    if ($this->allowed_methods === NULL) {
+      $allowed_methods = $this->getSettings('twig_sandbox_allowed_methods', [
+        // Only allow idempotent methods.
+        'id',
+        'label',
+        'bundle',
+        'get',
+        '__toString',
+        'toString',
+      ]);
+      // Flip the array so we can check using isset().
+      $this->allowed_methods = array_flip($allowed_methods);
+    }
+    return $this->allowed_methods;
+  }
+
+  /**
+   * Returns the list of allowed prefixes from the settings.
+   *
+   * @return string[]
+   *   The list of allowed prefixes from the settings.
+   */
+  protected function getAllowedPrefixes(): array {
+    if ($this->allowed_prefixes === NULL) {
+      $this->allowed_prefixes = $this->getSettings('twig_sandbox_allowed_prefixes', [
+        'get',
+        'has',
+        'is',
+      ]);
+    }
+    return $this->allowed_prefixes;
   }
 
   /**
@@ -128,13 +152,13 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
     }
 
     // Return quickly for an exact match of the method name.
-    if (isset($this->allowed_methods[$method])) {
+    if (isset($this->getAllowedMethods()[$method])) {
       return TRUE;
     }
 
     // If the method name starts with an allowed prefix, allow it. Note:
     // strpos() is between 3x and 7x faster than preg_match() in this case.
-    foreach ($this->allowed_prefixes as $prefix) {
+    foreach ($this->getAllowedPrefixes() as $prefix) {
       if (strpos($method, $prefix) === 0) {
         return TRUE;
       }
