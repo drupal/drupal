@@ -5,9 +5,11 @@ namespace Drupal\Tests\media\Unit;
 use Drupal\Component\Serialization\Json;
 use Drupal\media\OEmbed\ResourceFetcher;
 use Drupal\Tests\UnitTestCase;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\RequestOptions;
-use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,8 +24,6 @@ class ResourceFetcherTest extends UnitTestCase {
    * Tests that the resource fetcher sends a Referer header.
    */
   public function testReferer(): void {
-    $http_client = $this->prophesize('\GuzzleHttp\ClientInterface');
-
     // Mock a response containing fake resource data.
     $headers = [
       'Content-Type' => ['application/json'],
@@ -36,26 +36,32 @@ class ResourceFetcherTest extends UnitTestCase {
     $response = new Response(200, $headers, $body);
 
     // Create a request so that we actually have a referer to send.
-    $request = Request::createFromGlobals();
+    $request = Request::create('https://example.com');
     $referer = $request->getHttpHost();
     $this->assertNotEmpty($referer);
-    $options = [
-      RequestOptions::HEADERS => [
-        'Referer' => $referer,
-      ],
-    ];
-    $http_client->request('GET', Argument::type('string'), $options)
-      ->willReturn($response);
 
     $request_stack = new RequestStack();
     $request_stack->push($request);
 
+    // Prepare a mocked HTTP client which will remember the requests and
+    // responses for later analysis.
+    $handler = new MockHandler([$response]);
+    $handler_stack = HandlerStack::create($handler);
+    $history = [];
+    $middleware = Middleware::history($history);
+    $handler_stack->push($middleware);
+
     $fetcher = new ResourceFetcher(
-      $http_client->reveal(),
+      new Client(['handler' => $handler_stack]),
       $this->prophesize('\Drupal\media\OEmbed\ProviderRepositoryInterface')->reveal(),
       $request_stack
     );
-    $fetcher->fetchResource('https://example.com/oembed/resource.json');
+
+    // Ensure that the resource fetcher will send the Referer header to the
+    // oEmbed provider when fetching resource data.
+    $fetcher->fetchResource('https://example.com/fake/resource.json');
+    $this->assertNotEmpty($history);
+    $this->assertSame($referer, $history[0]['request']->getHeaderLine('Referer'));
   }
 
 }
