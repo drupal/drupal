@@ -461,7 +461,6 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $field_config = FieldConfig::loadByName('node', 'basic_page', 'field_unlimited_media');
     $field_config->setRequired(TRUE)->save();
 
-    // Visit a node create page.
     $this->drupalGet('node/add/basic_page');
 
     $page->fillField('Title', 'My page');
