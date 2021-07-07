@@ -48,8 +48,9 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     // Exercise various defaults for textboxes and modifications to ensure
     // appropriate override and correct behavior.
-    $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-and-required" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
-    $this->assertTrue(isset($elements[0]), 'Label precedes textfield, with required marker inside label.');
+
+    // Verify that label precedes textfield, with required marker inside label.
+    $this->assertSession()->elementExists('xpath', '//label[@for="edit-form-textfield-test-title-and-required" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
 
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required" and @class="js-form-required form-required"]');
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="visually-hidden"]');
@@ -58,8 +59,8 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
 
-    $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
-    $this->assertFalse(isset($elements[0]), 'No label tag when title set not to display.');
+    // Verify that no label tag exists when title set not to display.
+    $this->assertSession()->elementNotExists('xpath', '//label[@for="edit-form-textfield-test-title-no-show"]');
 
     // Verify that field class is form-no-label when there is no label.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "js-form-item-form-textfield-test-title-invisible") and contains(@class, "form-no-label")]');

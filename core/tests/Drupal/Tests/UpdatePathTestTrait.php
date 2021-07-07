@@ -58,9 +58,7 @@ trait UpdatePathTestTrait {
         $this->fail('The update failed with the following message: "' . reset($failure)->getText() . '"');
       }
 
-      // Ensure that there are no pending updates. Clear the schema version
-      // static cache first in case it was accessed before running updates.
-      drupal_get_installed_schema_version(NULL, TRUE);
+      // Ensure that there are no pending updates.
       foreach (['update', 'post_update'] as $update_type) {
         switch ($update_type) {
           case 'update':
@@ -162,11 +160,7 @@ trait UpdatePathTestTrait {
   protected function ensureUpdatesToRun() {
     \Drupal::service('module_installer')->install(['update_script_test']);
     // Reset the schema so there is an update to run.
-    \Drupal::database()->update('key_value')
-      ->fields(['value' => serialize(8000)])
-      ->condition('collection', 'system.schema')
-      ->condition('name', 'update_script_test')
-      ->execute();
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_script_test', 8000);
   }
 
 }

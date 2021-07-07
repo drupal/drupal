@@ -1,3 +1,11 @@
+/**
+ * @file
+ * Controls the visibility of desktop navigation.
+ *
+ * Shows and hides the desktop navigation based on scroll position and controls
+ * the functionality of the button that shows/hides the navigation.
+ */
+
 /* eslint-disable no-inner-declarations */
 ((Drupal) => {
   /**
@@ -7,6 +15,12 @@
    */
   Drupal.olivero = {};
 
+  /**
+   * Checks if the mobile navigation button is visible.
+   *
+   * @return {boolean}
+   *   True if navButtons is hidden, false if not.
+   */
   function isDesktopNav() {
     const navButtons = document.querySelector(
       '[data-drupal-selector="mobile-buttons"]',
@@ -25,6 +39,12 @@
     '[data-drupal-selector="site-header-fixable"]',
   );
 
+  /**
+   * Checks if the sticky header is enabled.
+   *
+   * @return {boolean}
+   *   True if sticky header is enabled, false if not.
+   */
   function stickyHeaderIsEnabled() {
     return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
   }
@@ -33,7 +53,8 @@
    * Save the current sticky header expanded state to localStorage, and set
    * it to expire after two weeks.
    *
-   * @param {boolean} expandedState - Current state of the sticky header button.
+   * @param {boolean} expandedState
+   *   Current state of the sticky header button.
    */
   function setStickyHeaderStorage(expandedState) {
     const now = new Date();
@@ -52,7 +73,8 @@
    * Toggle the state of the sticky header between always pinned and
    * only pinned when scrolled to the top of the viewport.
    *
-   * @param {boolean} pinnedState - State to change the sticky header to.
+   * @param {boolean} pinnedState
+   *   State to change the sticky header to.
    */
   function toggleStickyHeaderState(pinnedState) {
     if (isDesktopNav()) {
@@ -70,7 +92,8 @@
   /**
    * Return the sticky header's stored state from localStorage.
    *
-   * @return {boolean} Stored state of the sticky header.
+   * @return {boolean}
+   *   Stored state of the sticky header.
    */
   function getStickyHeaderStorage() {
     const stickyHeaderState = localStorage.getItem(
@@ -91,7 +114,8 @@
     return item.value;
   }
 
-  // Only enable scroll effects if the browser supports Intersection Observer.
+  // Only enable scroll interactivity if the browser supports Intersection
+  // Observer.
   // @see https://github.com/w3c/IntersectionObserver/blob/master/polyfill/intersection-observer.js#L19-L21
   if (
     'IntersectionObserver' in window &&
@@ -106,16 +130,22 @@
       if (!isDesktopNav()) return;
 
       entries.forEach((entry) => {
-        // FF doesn't seem to support entry.isIntersecting properly,
+        // Firefox doesn't seem to support entry.isIntersecting properly,
         // so we check the intersectionRatio.
         if (entry.intersectionRatio < 1) {
-          fixableElements.forEach((el) => el.classList.add('js-fixed'));
+          fixableElements.forEach((el) => el.classList.add('is-fixed'));
         } else {
-          fixableElements.forEach((el) => el.classList.remove('js-fixed'));
+          fixableElements.forEach((el) => el.classList.remove('is-fixed'));
         }
       });
     }
 
+    /**
+     * Gets the root margin by checking for various toolbar classes.
+     *
+     * @return {string}
+     *   Root margin for the Intersection Observer options object.
+     */
     function getRootMargin() {
       let rootMarginTop = 72;
       const { body } = document;
@@ -134,6 +164,9 @@
       return `${rootMarginTop}px 0px 0px 0px`;
     }
 
+    /**
+     * Monitor the navigation position.
+     */
     function monitorNavPosition() {
       const primaryNav = document.querySelector(
         '[data-drupal-selector="site-header"]',

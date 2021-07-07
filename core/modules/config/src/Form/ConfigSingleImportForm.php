@@ -4,6 +4,7 @@ namespace Drupal\config\Form;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\config\StorageReplaceDataWrapper;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigManagerInterface;
@@ -411,19 +412,16 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     else {
       try {
         $sync_steps = $config_importer->initialize();
-        $batch = [
-          'operations' => [],
-          'finished' => [ConfigImporterBatch::class, 'finish'],
-          'title' => $this->t('Importing configuration'),
-          'init_message' => $this->t('Starting configuration import.'),
-          'progress_message' => $this->t('Completed @current step of @total.'),
-          'error_message' => $this->t('Configuration import has encountered an error.'),
-        ];
+        $batch_builder = (new BatchBuilder())
+          ->setTitle($this->t('Importing configuration'))
+          ->setFinishCallback([ConfigImporterBatch::class, 'finish'])
+          ->setInitMessage($this->t('Starting configuration import.'))
+          ->setProgressMessage($this->t('Completed @current step of @total.'))
+          ->setErrorMessage($this->t('Configuration import has encountered an error.'));
         foreach ($sync_steps as $sync_step) {
-          $batch['operations'][] = [[ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]];
+          $batch_builder->addOperation([ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]);
         }
-
-        batch_set($batch);
+        batch_set($batch_builder->toArray());
       }
       catch (ConfigImporterException $e) {
         // There are validation errors.
