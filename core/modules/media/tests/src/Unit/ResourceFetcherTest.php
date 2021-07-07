@@ -79,10 +79,10 @@ class ResourceFetcherTest extends UnitTestCase {
     $container->set('request_stack', new RequestStack());
     \Drupal::setContainer($container);
 
-    $this->expectDeprecation('Passing NULL for the $request_stack parameter to ' . ResourceFetcher::class . '::__construct() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3056124');
+    $this->expectDeprecation('Passing NULL for the $request_stack parameter to ' . ResourceFetcher::class . '::__construct() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3222630.');
     new ResourceFetcher($http_client, $providers);
 
-    $this->expectDeprecation('Passing an instance of CacheBackendInterface in the $request_stack parameter to ' . ResourceFetcher::class . '::__construct() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Pass a \Symfony\Component\HttpFoundation\RequestStack object instead. See https://www.drupal.org/project/drupal/issues/3056124');
+    $this->expectDeprecation('Passing an instance of CacheBackendInterface in the $request_stack parameter to ' . ResourceFetcher::class . '::__construct() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Pass a \Symfony\Component\HttpFoundation\RequestStack object instead. See https://www.drupal.org/node/3222630.');
     new ResourceFetcher($http_client, $providers, new NullBackend('foo'));
   }
 
