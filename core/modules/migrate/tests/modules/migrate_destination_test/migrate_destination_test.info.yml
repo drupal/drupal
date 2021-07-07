@@ -1,0 +1,6 @@
+name: 'Migrate module destination tests'
+type: module
+description: 'Support module destination testing.'
+package: Testing
+version: VERSION
+core: 8.x

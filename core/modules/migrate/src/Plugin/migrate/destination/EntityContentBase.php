@@ -374,4 +374,25 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     return (int) current($values);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function fields(MigrationInterface $migration = NULL) {
+    $entity_type = $this->storage->getEntityType();
+    // Retrieving fields from a non-fieldable content entity will return a
+    // LogicException. Return an empty list of fields instead.
+    if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+      return [];
+    }
+    $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
+    if (!empty($this->configuration['default_bundle'])) {
+      $field_definitions += $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $this->configuration['default_bundle']);
+    }
+    $fields = [];
+    foreach ($field_definitions as $field_name => $definition) {
+      $fields[$field_name] = (string) $definition->getLabel();
+    }
+    return $fields;
+  }
+
 }

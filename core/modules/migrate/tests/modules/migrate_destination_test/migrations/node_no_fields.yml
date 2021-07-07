@@ -1,0 +1,12 @@
+id: node_no_fields
+label: Migrate to no bundle specified destination
+source:
+  plugin: migrate_destination_test
+  constants:
+    type: test_node_type_no_fields
+process:
+  type: constants/type
+  title: title
+destination:
+  plugin: entity:node
+  default_bundle: test_node_type_no_fields
