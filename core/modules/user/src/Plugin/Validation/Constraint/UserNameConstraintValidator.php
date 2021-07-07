@@ -56,6 +56,10 @@ class UserNameConstraintValidator extends ConstraintValidator {
     if (mb_strlen($name) > UserInterface::USERNAME_MAX_LENGTH) {
       $this->context->addViolation($constraint->tooLongMessage, ['%name' => $name, '%max' => UserInterface::USERNAME_MAX_LENGTH]);
     }
+    $anonymous_username = \Drupal::config('user.settings')->get('anonymous');
+    if (mb_strtolower($name) === mb_strtolower($anonymous_username)) {
+      $this->context->addViolation($constraint->reservedUserNameMessage, ['%name' => $name]);
+    }
   }
 
 }

@@ -216,4 +216,18 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertCount(1, $user_mail, 'New user mail to user is sent from configured Notification Email address');
   }
 
+  /**
+   * Test that we can't update anonymous account name similar to existing user.
+   */
+  public function testAnonymousNameValidation() {
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($this->rootUser);
+
+    $edit = [];
+    $this->drupalGet('admin/config/people/accounts');
+    $edit['anonymous'] = $account->getAccountName();
+    $this->submitForm($edit, 'Save configuration');
+    $this->assertSession()->pageTextContains('There is already a registered user ' . $account->getAccountName() . '. You must choose an unused name.');
+  }
+
 }
