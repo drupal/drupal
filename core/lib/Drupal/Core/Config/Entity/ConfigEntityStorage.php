@@ -77,17 +77,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $languageManager;
 
   /**
-   * Static cache of entities, keyed first by entity ID, then by an extra key.
-   *
-   * The additional cache key is to maintain separate caches for different
-   * states of config overrides.
-   *
-   * @var array
-   * @see \Drupal\Core\Config\ConfigFactoryInterface::getCacheKeys().
-   */
-  protected $entities = [];
-
-  /**
    * Determines if the underlying configuration is retrieved override free.
    *
    * @var bool
@@ -190,7 +179,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $records[$id] = $this->overrideFree ? $config->getOriginal(NULL, FALSE) : $config->get();
       $configs[$id] = $config;
     }
-    $entities = $this->mapFromStorageRecords($records, $configs);
+    $entities = $this->mapFromStorageRecords($records);
 
     // Config entities wrap config objects, and therefore they need to inherit
     // the cacheability metadata of config objects (to ensure e.g. additional

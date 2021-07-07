@@ -123,6 +123,10 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param string $theme
    *   The theme name.
    */

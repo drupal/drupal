@@ -1,0 +1,7 @@
+services:
+  # Tests module uninstall
+  plugin.manager.module_test.cache_clear_test:
+    class: Drupal\module_test\PluginManagerCacheClearer
+    arguments: ['@state', '@?logger.dblog']
+    tags:
+      - { name: plugin_manager_cache_clear }

@@ -8,6 +8,10 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 6 i18n vocabularies source from database.
  *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBas
+ *
  * @MigrateSource(
  *   id = "d6_language_content_settings_taxonomy_vocabulary",
  *   source_module = "taxonomy"

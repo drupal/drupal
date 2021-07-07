@@ -64,11 +64,13 @@ details.fieldset-no-legend {
  */
 .form-item-options-expose-required,
 .form-item-options-expose-label,
+.form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
   margin-left: 1.5em; /* LTR */
 }
 [dir="rtl"] .form-item-options-expose-required,
 [dir="rtl"] .form-item-options-expose-label,
+[dir="rtl"] .form-item-options-expose-field-identifier,
 [dir="rtl"] .form-item-options-expose-description {
   margin-right: 1.5em;
   margin-left: 0;
@@ -80,6 +82,7 @@ details.fieldset-no-legend {
 .views-admin-dependent .form-item .form-item,
 .form-item-options-expose-required,
 .form-item-options-expose-label,
+.form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
   margin-top: 6px;
   margin-bottom: 6px;

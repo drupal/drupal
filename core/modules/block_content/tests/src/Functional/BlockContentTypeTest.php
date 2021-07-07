@@ -71,7 +71,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Test the page with no block-types.
     $this->drupalGet('block/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('You have not created any block types yet');
+    $this->assertSession()->pageTextContains('You have not created any block types yet');
     $this->clickLink('block type creation page');
 
     // Create a block type via the user interface.
@@ -88,7 +88,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Check that the block type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual($block_type->language()->getId(), $default_langcode);
+    $this->assertEquals($block_type->language()->getId(), $default_langcode);
 
     // Create block types programmatically.
     $this->createBlockContentType('basic', TRUE);
@@ -149,9 +149,11 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('block_content.add_form', ['block_content_type' => 'basic']));
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete', [], 'Delete');
+    $this->drupalGet('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete');
+    $this->submitForm([], 'Delete');
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic', [], 'Save');
+    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->submitForm([], 'Save');
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
     $this->assertEmpty($this->cssSelect('#edit-body-0-value'), 'Body field was not found.');
@@ -185,7 +187,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the custom block type %type?', ['%type' => $type->id()])
     );
-    $this->assertText('This action cannot be undone.');
+    $this->assertSession()->pageTextContains('This action cannot be undone.');
   }
 
   /**

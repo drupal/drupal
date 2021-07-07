@@ -70,14 +70,10 @@ class SessionCacheContextTest extends UnitTestCase {
     $cache_context = new SessionCacheContext($this->requestStack);
 
     $session1_id = 'pjH_8aSoofyCDQiuVYXJcbfyr-CPtkUY';
-    $this->session->expects($this->at(0))
-      ->method('getId')
-      ->will($this->returnValue($session1_id));
-
     $session2_id = 'aSebeZ52bbM6SvADurQP89SFnEpxY6j8';
-    $this->session->expects($this->at(1))
+    $this->session->expects($this->exactly(2))
       ->method('getId')
-      ->will($this->returnValue($session2_id));
+      ->willReturnOnConsecutiveCalls($session1_id, $session2_id);
 
     $context1 = $cache_context->getContext();
     $context2 = $cache_context->getContext();

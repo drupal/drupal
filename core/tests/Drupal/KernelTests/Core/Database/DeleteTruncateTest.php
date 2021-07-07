@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+
 /**
  * Tests delete and truncate queries.
  *
@@ -32,10 +34,10 @@ class DeleteTruncateTest extends DatabaseTestBase {
       ->condition('pid', $subquery, 'IN');
 
     $num_deleted = $delete->execute();
-    $this->assertEqual(1, $num_deleted, 'Deleted 1 record.');
+    $this->assertEquals(1, $num_deleted, 'Deleted 1 record.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
+    $this->assertEquals($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
   /**
@@ -50,7 +52,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $this->assertSame(1, $num_deleted, 'Deleted 1 record.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
+    $this->assertEquals($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
   /**
@@ -63,7 +65,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $this->connection->truncate('test')->execute();
 
     $num_records_after = $this->connection->query("SELECT COUNT(*) FROM {test}")->fetchField();
-    $this->assertEqual(0, $num_records_after, 'Truncate really deletes everything.');
+    $this->assertEquals(0, $num_records_after, 'Truncate really deletes everything.');
   }
 
   /**
@@ -147,6 +149,22 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
     $this->assertEquals($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
+  }
+
+  /**
+   * Deleting from a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testDeleteFromNonExistingTable(): void {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->connection->delete('a-table-that-does-not-exist')->execute();
+  }
+
+  /**
+   * Truncating a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testTruncateNonExistingTable(): void {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->connection->truncate('a-table-that-does-not-exist')->execute();
   }
 
 }

@@ -326,7 +326,7 @@ class TransactionTest extends DatabaseTestBase {
       $message = new FormattableMarkup('Row %name is present.', ['%name' => $name]);
     }
     $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE [name] = :name', [':name' => $name])->fetchField();
-    return $this->assertTrue($present, $message);
+    $this->assertTrue($present, $message);
   }
 
   /**
@@ -342,7 +342,7 @@ class TransactionTest extends DatabaseTestBase {
       $message = new FormattableMarkup('Row %name is absent.', ['%name' => $name]);
     }
     $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE [name] = :name', [':name' => $name])->fetchField();
-    return $this->assertFalse($present, $message);
+    $this->assertFalse($present, $message);
   }
 
   /**
@@ -566,7 +566,7 @@ class TransactionTest extends DatabaseTestBase {
     unset($transaction);
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
-    $this->assertEqual('24', $saved_age);
+    $this->assertEquals('24', $saved_age);
   }
 
 }

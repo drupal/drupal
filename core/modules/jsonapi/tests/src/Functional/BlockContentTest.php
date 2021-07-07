@@ -132,6 +132,9 @@ class BlockContentTest extends ResourceTestBase {
           'block_content_type' => [
             'data' => [
               'id' => BlockContentType::load('basic')->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => 'basic',
+              ],
               'type' => 'block_content_type--block_content_type',
             ],
             'links' => [

@@ -150,3 +150,9 @@
     border-top: 2px white solid;
   }
 }
+
+#drupal-off-canvas {
+  & .form-type--boolean {
+    margin-left: 0;
+  }
+}

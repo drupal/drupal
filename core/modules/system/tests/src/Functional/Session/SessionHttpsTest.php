@@ -87,7 +87,7 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Verify that user is logged in on secure URL.
     $this->drupalGet($this->httpsUrl('admin/config'));
-    $this->assertText('Configuration');
+    $this->assertSession()->pageTextContains('Configuration');
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify that user is not logged in on non-secure URL.
@@ -159,7 +159,12 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Follow the location header.
     $path = $this->getPathFromLocationHeader($response, FALSE);
-    $this->drupalGet($this->httpUrl($path));
+    $parsed_path = parse_url($path);
+    $query = [];
+    if (isset($parsed_path['query'])) {
+      parse_str($parsed_path['query'], $query);
+    }
+    $this->drupalGet($this->httpUrl($parsed_path['path']), ['query' => $query]);
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -205,7 +210,12 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Follow the location header.
     $path = $this->getPathFromLocationHeader($response, TRUE);
-    $this->drupalGet($this->httpsUrl($path));
+    $parsed_path = parse_url($path);
+    $query = [];
+    if (isset($parsed_path['query'])) {
+      parse_str($parsed_path['query'], $query);
+    }
+    $this->drupalGet($this->httpsUrl($parsed_path['path']), ['query' => $query]);
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -242,19 +252,15 @@ class SessionHttpsTest extends BrowserTestBase {
   }
 
   /**
-   * Test that there exists a session with two specific session IDs.
+   * Tests that there exists a session with two specific session IDs.
    *
    * @param $sid
    *   The insecure session ID to search for.
    * @param $assertion_text
    *   The text to display when we perform the assertion.
-   *
-   * @return
-   *   The result of assertTrue() that there's a session in the system that
-   *   has the given insecure and secure session IDs.
    */
   protected function assertSessionIds($sid, $assertion_text) {
-    return $this->assertNotEmpty(\Drupal::database()->select('sessions', 's')->fields('s', ['timestamp'])->condition('sid', Crypt::hashBase64($sid))->execute()->fetchField(), $assertion_text);
+    $this->assertNotEmpty(\Drupal::database()->select('sessions', 's')->fields('s', ['timestamp'])->condition('sid', Crypt::hashBase64($sid))->execute()->fetchField(), $assertion_text);
   }
 
   /**

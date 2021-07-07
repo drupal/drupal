@@ -49,17 +49,17 @@ class StatisticsReportsTest extends StatisticsTestBase {
 
     // Get some page and check if the block is displayed.
     $this->drupalGet('user');
-    $this->assertText('Popular content');
-    $this->assertText("Today's");
-    $this->assertText('All time');
-    $this->assertText('Last viewed');
+    $this->assertSession()->pageTextContains('Popular content');
+    $this->assertSession()->pageTextContains("Today's");
+    $this->assertSession()->pageTextContains('All time');
+    $this->assertSession()->pageTextContains('Last viewed');
 
     $tags = Cache::mergeTags($node->getCacheTags(), $block->getCacheTags());
     $tags = Cache::mergeTags($tags, $this->blockingUser->getCacheTags());
     $tags = Cache::mergeTags($tags, ['block_view', 'config:block_list', 'node_list', 'rendered', 'user_view']);
     $this->assertCacheTags($tags);
     $contexts = Cache::mergeContexts($node->getCacheContexts(), $block->getCacheContexts());
-    $contexts = Cache::mergeContexts($contexts, ['url.query_args:_wrapper_format']);
+    $contexts = Cache::mergeContexts($contexts, ['url.query_args:_wrapper_format', 'url.site']);
     $this->assertCacheContexts($contexts);
 
     // Check if the node link is displayed.

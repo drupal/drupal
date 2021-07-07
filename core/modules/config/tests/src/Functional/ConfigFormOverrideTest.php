@@ -39,17 +39,16 @@ class ConfigFormOverrideTest extends BrowserTestBase {
     // worked for the actual site name.
     $this->drupalGet('admin/config/system/site-information');
     $this->assertSession()->titleEquals('Basic site settings | ' . $overridden_name);
-    $elements = $this->xpath('//input[@name="site_name"]');
-    $this->assertSame('Drupal', $elements[0]->getValue());
+    $this->assertSession()->fieldValueEquals("site_name", 'Drupal');
 
     // Submit the form and ensure the site name is not changed.
     $edit = [
       'site_name' => 'Custom site name',
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->titleEquals('Basic site settings | ' . $overridden_name);
-    $elements = $this->xpath('//input[@name="site_name"]');
-    $this->assertSame($edit['site_name'], $elements[0]->getValue());
+    $this->assertSession()->fieldValueEquals("site_name", $edit['site_name']);
   }
 
 }

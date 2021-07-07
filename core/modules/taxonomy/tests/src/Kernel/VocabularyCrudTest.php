@@ -40,11 +40,11 @@ class VocabularyCrudTest extends KernelTestBase {
   }
 
   /**
-   * Test deleting a taxonomy that contains terms.
+   * Tests deleting a taxonomy that contains terms.
    */
   public function testTaxonomyVocabularyDeleteWithTerms() {
     $vocabulary = $this->createVocabulary();
-    $query = \Drupal::entityQuery('taxonomy_term')->count();
+    $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE)->count();
 
     // Assert that there are no terms left.
     $this->assertEquals(0, $query->execute());
@@ -92,11 +92,6 @@ class VocabularyCrudTest extends KernelTestBase {
     $this->assertEquals('bar', $vocabulary2->getThirdPartySetting('taxonomy_crud', 'foo'));
     $this->assertEquals('bar', $vocabulary3->getThirdPartySetting('taxonomy_crud', 'foo'));
 
-    // Fetch the names for all vocabularies, confirm that they are keyed by
-    // machine name.
-    $names = taxonomy_vocabulary_get_names();
-    $this->assertEquals($vocabulary1->id(), $names[$vocabulary1->id()]);
-
     // Fetch the vocabularies with Vocabulary::loadMultiple(), specifying IDs.
     // Ensure they are returned in the same order as the original array.
     $vocabularies = Vocabulary::loadMultiple([
@@ -127,7 +122,7 @@ class VocabularyCrudTest extends KernelTestBase {
   }
 
   /**
-   * Test uninstall and reinstall of the taxonomy module.
+   * Tests uninstall and reinstall of the taxonomy module.
    */
   public function testUninstallReinstall() {
     $vocabulary = $this->createVocabulary();

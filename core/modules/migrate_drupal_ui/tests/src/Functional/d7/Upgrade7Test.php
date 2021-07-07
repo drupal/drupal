@@ -5,6 +5,8 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 
+// cspell:ignore Multiupload Imagefield
+
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
  *
@@ -15,22 +17,18 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
-    'language',
-    'config_translation',
-    'content_translation',
-    'migrate_drupal_ui',
-    'telephone',
     'aggregator',
     'book',
+    'config_translation',
+    'content_translation',
     'forum',
-    'rdf',
+    'language',
+    'migrate_drupal_ui',
     'statistics',
+    'telephone',
   ];
 
   /**
@@ -85,8 +83,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 87,
-      'field_storage_config' => 66,
+      'field_config' => 90,
+      'field_storage_config' => 69,
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
@@ -97,14 +95,14 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
-      'action' => 19,
+      'action' => 21,
       'menu' => 7,
       'taxonomy_term' => 25,
       'taxonomy_vocabulary' => 8,
       'path_alias' => 8,
       'tour' => 6,
       'user' => 4,
-      'user_role' => 3,
+      'user_role' => 4,
       'menu_link_content' => 12,
       'view' => 16,
       'date_format' => 11,
@@ -163,6 +161,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'List',
       'Menu',
       'Menu translation',
+      'Multiupload Filefield Widget',
+      'Multiupload Imagefield Widget',
       'Node',
       'Node Reference',
       'Number',
@@ -220,8 +220,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testMigrateUpgradeExecute() {
-    parent::testMigrateUpgradeExecute();
+  public function testUpgradeAndIncremental() {
+    // Perform upgrade followed by an incremental upgrade.
+    $this->doUpgradeAndIncremental();
 
     // Ensure a migrated user can log in.
     $this->assertUserLogIn(2, 'a password');

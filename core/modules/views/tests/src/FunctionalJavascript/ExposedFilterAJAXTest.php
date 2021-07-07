@@ -67,7 +67,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertStringContainsString('Page Two', $html);
 
     // Search for "Page One".
-    $this->submitForm(['title' => 'Page One'], t('Filter'));
+    $this->submitForm(['title' => 'Page One'], 'Filter');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Verify that only the "Page One" Node is present.
@@ -76,7 +76,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertStringNotContainsString('Page Two', $html);
 
     // Search for "Page Two".
-    $this->submitForm(['title' => 'Page Two'], t('Filter'));
+    $this->submitForm(['title' => 'Page Two'], 'Filter');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Verify that only the "Page Two" Node is present.
@@ -89,13 +89,13 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->submitForm([
       'action' => 'node_make_sticky_action',
       'node_bulk_form[0]' => TRUE,
-    ], t('Apply to selected items'));
+    ], 'Apply to selected items');
 
     // Verify that the action was performed.
     $this->assertSession()->pageTextContains('Make content sticky was applied to 1 item.');
 
     // Reset the form.
-    $this->submitForm([], t('Reset'));
+    $this->submitForm([], 'Reset');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->pageTextContains('Page One');
@@ -149,6 +149,49 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertStringContainsString('Page One', $html);
     $this->assertStringNotContainsString('Page Two', $html);
+  }
+
+  /**
+   * Tests exposed filtering via AJAX with a button element.
+   */
+  public function testExposedFilteringWithButtonElement() {
+    // Install theme to test with template system.
+    \Drupal::service('theme_installer')->install(['views_test_theme']);
+
+    // Make base theme default then test for hook invocations.
+    $this->config('system.theme')
+      ->set('default', 'views_test_theme')
+      ->save();
+
+    $this->drupalGet('admin/content');
+
+    $session = $this->getSession();
+    // Ensure that the Content we're testing for is present.
+    $html = $session->getPage()->getHtml();
+    $this->assertStringContainsString('Page One', $html);
+    $this->assertStringContainsString('Page Two', $html);
+    $button_tag = $session->getPage()->findButton('edit-submit-content')->getTagName();
+
+    // Make sure the submit button has been transformed to a button element.
+    $this->assertEquals('button', $button_tag);
+
+    $drupal_settings = $this->getDrupalSettings();
+    $ajax_views_before = $drupal_settings['views']['ajaxViews'];
+
+    // Search for "Page One".
+    $this->submitForm(['title' => 'Page One'], t('Filter'));
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    // Verify that only the "Page One" Node is present.
+    $html = $session->getPage()->getHtml();
+    $this->assertStringContainsString('Page One', $html);
+    $this->assertStringNotContainsString('Page Two', $html);
+    $drupal_settings = $this->getDrupalSettings();
+    $ajax_views_after = $drupal_settings['views']['ajaxViews'];
+
+    // Make sure that the views_dom_id didn't change, which would indicate that
+    // the page reloaded instead of doing an AJAX update.
+    $this->assertSame($ajax_views_before, $ajax_views_after);
   }
 
 }

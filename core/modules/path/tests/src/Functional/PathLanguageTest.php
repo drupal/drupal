@@ -56,11 +56,13 @@ class PathLanguageTest extends PathTestBase {
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
 
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Enable translation for page node.
     $edit = [
@@ -70,7 +72,8 @@ class PathLanguageTest extends PathTestBase {
       'settings[node][page][fields][body]' => 1,
       'settings[node][page][settings][language][language_alterable]' => 1,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
 
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $this->assertTrue($definitions['path']->isTranslatable(), 'Node path is translatable.');
@@ -78,7 +81,7 @@ class PathLanguageTest extends PathTestBase {
   }
 
   /**
-   * Test alias functionality through the admin interfaces.
+   * Tests alias functionality through the admin interfaces.
    */
   public function testAliasTranslation() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -88,11 +91,12 @@ class PathLanguageTest extends PathTestBase {
     // Edit the node to set language and path.
     $edit = [];
     $edit['path[0][alias]'] = '/' . $english_alias;
-    $this->drupalPostForm('node/' . $english_node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Confirm that the alias works.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->body->value);
+    $this->assertSession()->pageTextContains($english_node->body->value);
 
     // Translate the node into French.
     $this->drupalGet('node/' . $english_node->id() . '/translations');
@@ -121,7 +125,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet('fr' . $edit['path[0][alias]']);
-    $this->assertText($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
 
     // Confirm that the alias is returned for the URL. Languages are cached on
     // many levels, and we need to clear those caches.
@@ -139,11 +143,13 @@ class PathLanguageTest extends PathTestBase {
       'language_interface[enabled][language-url]' => 1,
       'language_interface[weight][language-url]' => -8,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Change user language preference.
     $edit = ['preferred_langcode' => 'fr'];
-    $this->drupalPostForm("user/" . $this->webUser->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $this->webUser->id() . "/edit");
+    $this->submitForm($edit, 'Save');
 
     // Check that the English alias works. In this situation French is the
     // current UI and content language, while URL language is English (since we
@@ -154,19 +160,20 @@ class PathLanguageTest extends PathTestBase {
     // path alias for French matching the english alias. So the alias manager
     // needs to use the URL language to check whether the alias is valid.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
 
     // Check that the French alias works.
     $this->drupalGet("fr/$french_alias");
-    $this->assertText($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
 
     // Disable URL language negotiation.
     $edit = ['language_interface[enabled][language-url]' => FALSE];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
 
     // Check that the French alias is not available. We check the unprefixed
     // alias because we disabled URL language negotiation above. In this
@@ -179,17 +186,17 @@ class PathLanguageTest extends PathTestBase {
     // it has the appropriate contents at this point.
     $this->container->get('path_alias.manager')->cacheClear();
     $french_node_path = $this->container->get('path_alias.manager')->getPathByAlias('/' . $french_alias, 'fr');
-    $this->assertEqual('/node/' . $english_node_french_translation->id(), $french_node_path, 'Normal path works.');
+    $this->assertEquals('/node/' . $english_node_french_translation->id(), $french_node_path, 'Normal path works.');
     // Second call should return the same path.
     $french_node_path = $this->container->get('path_alias.manager')->getPathByAlias('/' . $french_alias, 'fr');
-    $this->assertEqual('/node/' . $english_node_french_translation->id(), $french_node_path, 'Normal path is the same.');
+    $this->assertEquals('/node/' . $english_node_french_translation->id(), $french_node_path, 'Normal path is the same.');
 
     // Confirm that the alias works.
     $french_node_alias = $this->container->get('path_alias.manager')->getAliasByPath('/node/' . $english_node_french_translation->id(), 'fr');
-    $this->assertEqual('/' . $french_alias, $french_node_alias, 'Alias works.');
+    $this->assertEquals('/' . $french_alias, $french_node_alias, 'Alias works.');
     // Second call should return the same alias.
     $french_node_alias = $this->container->get('path_alias.manager')->getAliasByPath('/node/' . $english_node_french_translation->id(), 'fr');
-    $this->assertEqual('/' . $french_alias, $french_node_alias, 'Alias is the same.');
+    $this->assertEquals('/' . $french_alias, $french_node_alias, 'Alias is the same.');
 
     // Confirm that the alias is removed if the translation is deleted.
     $english_node->removeTranslation('fr');
@@ -199,7 +206,7 @@ class PathLanguageTest extends PathTestBase {
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
     $this->assertPathAliasExists('/' . $english_alias, 'en', NULL, 'English alias is not deleted when French translation is removed.');
-    $this->assertText($english_node->body->value);
+    $this->assertSession()->pageTextContains($english_node->body->value);
   }
 
 }

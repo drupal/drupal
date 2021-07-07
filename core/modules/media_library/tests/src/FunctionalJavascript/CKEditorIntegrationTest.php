@@ -235,7 +235,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media', 2000));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media'));
     // @todo Inserting media embed should enable undo.
     // @see https://www.drupal.org/project/drupal/issues/3073294
     $this->pressEditorButton('source');
@@ -258,15 +258,15 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // to switch back to the CKEditor iframe.
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media', 1000));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media'));
     $this->assertEditorButtonEnabled('undo');
     $this->pressEditorButton('undo');
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media', 1000));
+    $this->assertEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media'));
     $this->assertEditorButtonDisabled('undo');
     $this->pressEditorButton('redo');
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media', 1000));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media'));
     $this->assertEditorButtonEnabled('undo');
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -101,7 +102,8 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
     $form = parent::buildForm($form, $form_state);
 
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
-    $count = $storage->getQuery()->count()->execute();
+    $count = $storage->getQuery()->accessCheck(FALSE)->count()->execute();
+    $accessible_count = $storage->getQuery()->accessCheck(TRUE)->count()->execute();
 
     $form['entity_type_id'] = [
       '#type' => 'value',
@@ -118,8 +120,9 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
         ),
       ];
     }
-    elseif ($entity_type->hasKey('label')) {
+    elseif ($accessible_count > 0 && $entity_type->hasKey('label')) {
       $recent_entity_ids = $storage->getQuery()
+        ->accessCheck(TRUE)
         ->sort($entity_type->getKey('id'), 'DESC')
         ->pager(10)
         ->execute();
@@ -181,19 +184,12 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
     $entity_type_id = $form_state->getValue('entity_type_id');
 
     $entity_type_plural = $this->entityTypeManager->getDefinition($entity_type_id)->getPluralLabel();
-    $batch = [
-      'title' => $this->t('Deleting @entity_type_plural', [
-        '@entity_type_plural' => $entity_type_plural,
-      ]),
-      'operations' => [
-        [
-          [__CLASS__, 'deleteContentEntities'], [$entity_type_id],
-        ],
-      ],
-      'finished' => [__CLASS__, 'moduleBatchFinished'],
-      'progress_message' => '',
-    ];
-    batch_set($batch);
+    $batch_builder = (new BatchBuilder())
+      ->setTitle($this->t('Deleting @entity_type_plural', ['@entity_type_plural' => $entity_type_plural]))
+      ->setProgressMessage('')
+      ->setFinishCallback([__CLASS__, 'moduleBatchFinished'])
+      ->addOperation([__CLASS__, 'deleteContentEntities'], [$entity_type_id]);
+    batch_set($batch_builder->toArray());
   }
 
   /**
@@ -216,11 +212,12 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
 
     if (!isset($context['sandbox']['progress'])) {
       $context['sandbox']['progress'] = 0;
-      $context['sandbox']['max'] = $storage->getQuery()->count()->execute();
+      $context['sandbox']['max'] = $storage->getQuery()->accessCheck(FALSE)->count()->execute();
     }
 
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     $entity_ids = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->sort($entity_type->getKey('id'), 'ASC')
       ->range(0, 10)
       ->execute();
@@ -229,7 +226,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
     }
     // Sometimes deletes cause secondary deletes. For example, deleting a
     // taxonomy term can cause its children to be deleted too.
-    $context['sandbox']['progress'] = $context['sandbox']['max'] - $storage->getQuery()->count()->execute();
+    $context['sandbox']['progress'] = $context['sandbox']['max'] - $storage->getQuery()->accessCheck(FALSE)->count()->execute();
 
     // Inform the batch engine that we are not finished and provide an
     // estimation of the completion level we reached.

@@ -140,6 +140,7 @@ class MediaRevisionAccessCheck implements AccessInterface {
   protected function countDefaultLanguageRevisions(MediaInterface $media) {
     $entity_type = $media->getEntityType();
     $count = $this->mediaStorage->getQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->condition($entity_type->getKey('id'), $media->id())
       ->condition($entity_type->getKey('default_langcode'), 1)

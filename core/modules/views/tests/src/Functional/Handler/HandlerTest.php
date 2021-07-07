@@ -73,46 +73,46 @@ class HandlerTest extends ViewTestBase {
    */
   public function testBreakString() {
     // Check defaults.
-    $this->assertEqual((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
+    $this->assertEquals((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
 
     // Test ors
     $handler = HandlerBase::breakString('word1 word2+word');
     $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
-    $this->assertEqual('or', $handler->operator);
+    $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('word1+word2+word');
     $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
-    $this->assertEqual('or', $handler->operator);
+    $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('word1 word2 word');
     $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
-    $this->assertEqual('or', $handler->operator);
+    $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('word-1+word-2+word');
     $this->assertEqualValue(['word-1', 'word-2', 'word'], $handler);
-    $this->assertEqual('or', $handler->operator);
+    $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('wõrd1+wõrd2+wõrd');
     $this->assertEqualValue(['wõrd1', 'wõrd2', 'wõrd'], $handler);
-    $this->assertEqual('or', $handler->operator);
+    $this->assertEquals('or', $handler->operator);
 
     // Test ands.
     $handler = HandlerBase::breakString('word1,word2,word');
     $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
-    $this->assertEqual('and', $handler->operator);
+    $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('word1 word2,word');
     $this->assertEqualValue(['word1 word2', 'word'], $handler);
-    $this->assertEqual('and', $handler->operator);
+    $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('word1,word2 word');
     $this->assertEqualValue(['word1', 'word2 word'], $handler);
-    $this->assertEqual('and', $handler->operator);
+    $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('word-1,word-2,word');
     $this->assertEqualValue(['word-1', 'word-2', 'word'], $handler);
-    $this->assertEqual('and', $handler->operator);
+    $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('wõrd1,wõrd2,wõrd');
     $this->assertEqualValue(['wõrd1', 'wõrd2', 'wõrd'], $handler);
-    $this->assertEqual('and', $handler->operator);
+    $this->assertEquals('and', $handler->operator);
 
     // Test a single word
     $handler = HandlerBase::breakString('word');
     $this->assertEqualValue(['word'], $handler);
-    $this->assertEqual('and', $handler->operator);
+    $this->assertEquals('and', $handler->operator);
 
     $s1 = $this->randomMachineName();
     // Generate three random numbers which can be used below;
@@ -123,45 +123,45 @@ class HandlerTest extends ViewTestBase {
     // Test "or"s.
     $handlerBase = HandlerBase::breakString("$s1 $n2+$n3");
     $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1+$n2+$n3");
     $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $n2 $n3");
     $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $n2++$n3");
     $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     // Test "and"s.
     $handlerBase = HandlerBase::breakString("$s1,$n2,$n3");
     $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('and', $handlerBase->operator);
+    $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1,,$n2,$n3");
     $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('and', $handlerBase->operator);
+    $this->assertEquals('and', $handlerBase->operator);
 
     // Enforce int values.
     $handlerBase = HandlerBase::breakString("$n1,$n2,$n3", TRUE);
     $this->assertEqualValue([$n1, $n2, $n3], $handlerBase);
-    $this->assertEqual('and', $handlerBase->operator);
+    $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$n1+$n2+$n3", TRUE);
     $this->assertEqualValue([$n1, $n2, $n3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1,$n2,$n3", TRUE);
     $this->assertEqualValue([(int) $s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('and', $handlerBase->operator);
+    $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1+$n2+$n3", TRUE);
     $this->assertEqualValue([(int) $s1, $n2, $n3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     // Generate three random decimals which can be used below;
     $d1 = rand(0, 10) / 10;
@@ -171,28 +171,28 @@ class HandlerTest extends ViewTestBase {
     // Test "or"s.
     $handlerBase = HandlerBase::breakString("$s1 $d1+$d2");
     $this->assertEqualValue([$s1, $d1, $d2], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1+$d1+$d3");
     $this->assertEqualValue([$s1, $d1, $d3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $d2 $d3");
     $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $d2++$d3");
     $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
-    $this->assertEqual('or', $handlerBase->operator);
+    $this->assertEquals('or', $handlerBase->operator);
 
     // Test "and"s.
     $handlerBase = HandlerBase::breakString("$s1,$d2,$d3");
     $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
-    $this->assertEqual('and', $handlerBase->operator);
+    $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1,,$d2,$d3");
     $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
-    $this->assertEqual('and', $handlerBase->operator);
+    $this->assertEquals('and', $handlerBase->operator);
   }
 
   /**
@@ -275,19 +275,22 @@ class HandlerTest extends ViewTestBase {
       }
     }
     $expected_options = ['none', 'nid'];
-    $this->assertEqual($expected_options, $options);
+    $this->assertEquals($expected_options, $options);
 
     // Remove the relationship and make sure no relationship option appears.
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid', [], 'Remove');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid');
+    $this->submitForm([], 'Remove');
     $this->drupalGet($handler_options_path);
     $this->assertSession()->fieldNotExists($relationship_name);
 
     // Create a view of comments with node relationship.
     View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship', ['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship');
+    $this->submitForm(['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
     $this->submitForm([], 'Apply');
     // Add a content type filter.
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/filter', ['name[node_field_data.type]' => 'node_field_data.type'], 'Add and configure filter criteria');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/filter');
+    $this->submitForm(['name[node_field_data.type]' => 'node_field_data.type'], 'Add and configure filter criteria');
     $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
     $this->submitForm(['options[value][page]' => 'page'], 'Apply');
     // Check content type filter options.
@@ -330,7 +333,7 @@ class HandlerTest extends ViewTestBase {
 
     $view->build();
     $field->setRelationship();
-    $this->assertEqual($field->relationship, $view->relationship['valid_relationship']->alias, 'Make sure that a valid relationship does create the right relationship query alias.');
+    $this->assertEquals($field->relationship, $view->relationship['valid_relationship']->alias, 'Make sure that a valid relationship does create the right relationship query alias.');
   }
 
   /**
@@ -349,9 +352,9 @@ class HandlerTest extends ViewTestBase {
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.
-    $this->assertEqual($string, $handler->getPlaceholder());
-    $this->assertEqual($string . 1, $handler->getPlaceholder());
-    $this->assertEqual($string . 2, $handler->getPlaceholder());
+    $this->assertEquals($string, $handler->getPlaceholder());
+    $this->assertEquals($string . 1, $handler->getPlaceholder());
+    $this->assertEquals($string . 2, $handler->getPlaceholder());
 
     // Set another table/field combination and make sure there are new
     // placeholders.
@@ -360,9 +363,9 @@ class HandlerTest extends ViewTestBase {
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.
-    $this->assertEqual($string, $handler->getPlaceholder());
-    $this->assertEqual($string . 1, $handler->getPlaceholder());
-    $this->assertEqual($string . 2, $handler->getPlaceholder());
+    $this->assertEquals($string, $handler->getPlaceholder());
+    $this->assertEquals($string . 1, $handler->getPlaceholder());
+    $this->assertEquals($string . 2, $handler->getPlaceholder());
   }
 
   /**

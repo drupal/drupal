@@ -39,7 +39,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test decimal field.
+   * Tests decimal field.
    */
   public function testNumberDecimalField() {
     // Create a field with settings to validate.
@@ -86,7 +86,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $this->assertRaw($value);
 
     // Try to create entries with more than one decimal separator; assert fail.
@@ -127,7 +127,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test integer field.
+   * Tests integer field.
    */
   public function testNumberIntegerField() {
     $minimum = rand(-4000, -2000);
@@ -186,7 +186,7 @@ class NumberFieldTest extends BrowserTestBase {
       'indexes' => [],
       'foreign keys' => [],
     ];
-    $this->assertEqual($expected, $storage->getSchema());
+    $this->assertEquals($expected, $storage->getSchema());
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -201,7 +201,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     // Try to set a value below the minimum value
     $this->drupalGet('entity_test/add');
@@ -250,7 +250,7 @@ class NumberFieldTest extends BrowserTestBase {
       $this->submitForm($edit, 'Save');
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
-      $this->assertText('entity_test ' . $id . ' has been created.');
+      $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
       $this->assertRaw($valid_entry);
       // Verify that the "content" attribute is not present since the Prefix is
       // not being displayed.
@@ -274,7 +274,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $this->drupalGet('entity_test/' . $id);
     // Verify that the "content" attribute has been set to the value of the
     // field, and the prefix is being displayed.
@@ -282,8 +282,8 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-  * Test float field.
-  */
+   * Tests float field.
+   */
   public function testNumberFloatField() {
     // Create a field with settings to validate.
     $field_name = mb_strtolower($this->randomMachineName());
@@ -330,7 +330,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     // Ensure that the 'number_decimal' formatter displays the number with the
     // expected rounding.
@@ -434,7 +434,8 @@ class NumberFieldTest extends BrowserTestBase {
     $edit = [
       'settings[min]' => $minimum_value,
     ];
-    $this->drupalPostForm($field_configuration_url, $edit, 'Save settings');
+    $this->drupalGet($field_configuration_url);
+    $this->submitForm($edit, 'Save settings');
     // Check if an error message is shown.
     $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]));
     // Check if a success message is shown.

@@ -19,8 +19,11 @@
     "Backbone": true,
     "Modernizr": true,
     "Popper": true,
+    "Shepherd": true,
     "Sortable": true,
-    "CKEDITOR": true
+    "once": true,
+    "CKEDITOR": true,
+    "tabbable": true
   },
   "settings": {
     "react": {

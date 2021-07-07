@@ -117,7 +117,7 @@ class FileTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function createAnotherEntity($key) {
-    /* @var \Drupal\file\FileInterface $duplicate */
+    /** @var \Drupal\file\FileInterface $duplicate */
     $duplicate = parent::createAnotherEntity($key);
     $duplicate->setFileUri("public://$key.txt");
     $duplicate->save();
@@ -165,6 +165,9 @@ class FileTest extends ResourceTestBase {
           'uid' => [
             'data' => [
               'id' => $this->author->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $this->author->id(),
+              ],
               'type' => 'user--user',
             ],
             'links' => [

@@ -125,7 +125,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     ];
     $settings = $this->getDrupalSettings();
     $expected = $settings['ckeditor']['toolbarAdmin'];
-    $this->assertEqual(
+    $this->assertEquals(
       $expected,
       $this->container->get('renderer')->renderPlain($ckeditor_settings_toolbar),
       'CKEditor toolbar settings are rendered as part of drupalSettings.'
@@ -137,9 +137,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals('editor[settings][toolbar][button_groups]', $expected_buttons_value);
 
     // Ensure the styles textarea exists and is initialized empty.
-    $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
     $this->assertSession()->fieldValueEquals('editor[settings][plugins][stylescombo][styles]', '');
-    $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to save the selection of CKEditor as the chosen editor.
     $this->submitForm($edit, 'Save configuration');
@@ -149,7 +147,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $expected_settings['plugins']['stylescombo']['styles'] = '';
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Configure the Styles plugin, and ensure the updated settings are saved.
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
@@ -160,7 +158,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $expected_settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.callout|Callout\n\n";
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Change the buttons that appear on the toolbar (in JavaScript, this is
     // done via drag and drop, but here we can only emulate the end result of
@@ -176,7 +174,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Check that the markup we're setting for the toolbar buttons (actually in
     // JavaScript's drupalSettings, and Unicode-escaped) is correctly rendered.
@@ -203,7 +201,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertSession()->checkboxNotChecked('editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]');
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Finally, check the "Ultra llama mode" checkbox.
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
@@ -216,7 +214,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = TRUE;
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
-    $this->assertEqual($expected_settings, $editor->getSettings());
+    $this->assertEquals($expected_settings, $editor->getSettings());
 
     $this->drupalGet('admin/config/content/formats/add');
     // Now attempt to add another filter format with the same editor and same
@@ -229,7 +227,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'editor_configure');
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The machine-readable name is already in use. It must be unique.');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
@@ -277,9 +275,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertStringContainsString('<li data-drupal-ckeditor-button-name="Bold" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="bold" aria-label="bold"><span class="cke_button_icon cke_button__bold_icon">bold</span></a></li>', $expected);
 
     // Ensure the styles textarea exists and is initialized empty.
-    $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
     $this->assertSession()->fieldValueEquals('editor[settings][plugins][stylescombo][styles]', '');
-    $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to create both a new text format and an associated text
     // editor.

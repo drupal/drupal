@@ -36,18 +36,18 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test table caption/summary/description.
+   * Tests table caption/summary/description.
    */
   public function testAccessibilitySettings() {
     $this->drupalGet('test-table');
 
     $result = $this->xpath('//caption/child::text()');
     $this->assertNotEmpty($result, 'The caption appears on the table.');
-    $this->assertEqual('caption-text', trim($result[0]->getText()));
+    $this->assertEquals('caption-text', trim($result[0]->getText()));
 
     $result = $this->xpath('//summary/child::text()');
     $this->assertNotEmpty($result, 'The summary appears on the table.');
-    $this->assertEqual('summary-text', trim($result[0]->getText()));
+    $this->assertEquals('summary-text', trim($result[0]->getText()));
     // Check that the summary has the right accessibility settings.
     $summary = $this->xpath('//summary')[0];
     $this->assertTrue($summary->hasAttribute('role'));
@@ -55,7 +55,7 @@ class StyleTableTest extends ViewTestBase {
 
     $result = $this->xpath('//caption/details/child::text()[normalize-space()]');
     $this->assertNotEmpty($result, 'The table description appears on the table.');
-    $this->assertEqual('description-text', trim($result[0]->getText()));
+    $this->assertEquals('description-text', trim($result[0]->getText()));
 
     // Remove the caption and ensure the caption is not displayed anymore.
     $view = View::load('test_table');
@@ -87,7 +87,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test table fields in columns.
+   * Tests table fields in columns.
    */
   public function testFieldInColumns() {
     $this->drupalGet('test-table');
@@ -119,7 +119,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test that a number with the value of "0" is displayed in the table.
+   * Tests that a number with the value of "0" is displayed in the table.
    */
   public function testNumericFieldVisible() {
     // Adds a new datapoint in the views_test_data table to have a person with
@@ -146,7 +146,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test that empty columns are hidden when empty_column is set.
+   * Tests that empty columns are hidden when empty_column is set.
    */
   public function testEmptyColumn() {
     // Empty the 'job' data.

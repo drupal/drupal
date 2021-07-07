@@ -42,10 +42,11 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'custom',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
     // Test validation on missing values.
-    $this->assertText('Language code field is required.');
-    $this->assertText('Language name field is required.');
+    $this->assertSession()->pageTextContains('Language code field is required.');
+    $this->assertSession()->pageTextContains('Language name field is required.');
     $empty_language = new Language();
     $this->assertSession()->checkboxChecked('edit-direction-' . $empty_language->getDirection());
     $this->assertSession()->addressEquals(Url::fromRoute('language.add'));
@@ -57,7 +58,8 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
       'label' => '<strong>evil markup</strong>',
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
 
     $this->assertRaw(t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', [
       '%field' => t('Language code'),
@@ -75,7 +77,8 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
 
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
     $this->assertRaw(t(
       'The language %language has been created and can now be used.',
       ['%language' => $edit['label']]
@@ -91,7 +94,8 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
     ];
 
     // Add the language the first time.
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
     $this->assertRaw(t(
       'The language %language has been created and can now be used.',
       ['%language' => $edit['label']]
@@ -99,7 +103,8 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
 
     // Add the language a second time and confirm that this is not allowed.
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
     $this->assertRaw(t(
       'The language %language (%langcode) already exists.',
       ['%language' => $edit['label'], '%langcode' => $edit['langcode']]

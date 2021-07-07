@@ -49,7 +49,8 @@ class ColorConfigSchemaTest extends BrowserTestBase {
     $settings_path = 'admin/appearance/settings/bartik';
     $edit['scheme'] = '';
     $edit['palette[bg]'] = '#123456';
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
   }
 
 }

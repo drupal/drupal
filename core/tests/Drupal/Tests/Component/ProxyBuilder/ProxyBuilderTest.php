@@ -312,8 +312,12 @@ EOS;
   /**
    * Constructs the expected class output.
    *
+   * @param string $class
+   *   The class name that is being built.
    * @param string $expected_methods_body
    *   The expected body of decorated methods.
+   * @param string $interface_string
+   *   (optional) The expected "implements" clause of the class definition.
    *
    * @return string
    *   The code of the entire proxy.

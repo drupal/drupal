@@ -150,6 +150,12 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $this->user->save();
 
+    $this->anon = User::create([
+      'name' => 'anon',
+      'uid' => 0,
+    ]);
+    $this->anon->save();
+
     $term = Term::create([
       'vid' => $this->vocabulary,
       'name' => 'Apples',
@@ -273,6 +279,7 @@ class ContentEntityTest extends KernelTestBase {
     $user_source = $migration->getSourcePlugin();
     $this->assertSame('users', $user_source->__toString());
     if (!$configuration['include_translations']) {
+      // Confirm that the query does not return a row for the anonymous user.
       $this->assertEquals(1, $user_source->count());
     }
     $this->assertIds($user_source, $configuration);
@@ -463,16 +470,14 @@ class ContentEntityTest extends KernelTestBase {
     $values = $term_source->current()->getSource();
     $this->assertEquals($this->vocabulary, $values['vid'][0]['target_id']);
     $this->assertEquals(1, $values['tid']);
-    // @TODO: Add test coverage for parent in
-    // https://www.drupal.org/project/drupal/issues/2940198
     $this->assertEquals('Apples', $values['name'][0]['value']);
+    $this->assertSame([['target_id' => '0']], $values['parent']);
     $term_source->next();
     $values = $term_source->current()->getSource();
     $this->assertEquals($this->vocabulary, $values['vid'][0]['target_id']);
     $this->assertEquals(2, $values['tid']);
-    // @TODO: Add test coverage for parent in
-    // https://www.drupal.org/project/drupal/issues/2940198
     $this->assertEquals('Granny Smith', $values['name'][0]['value']);
+    $this->assertSame([['target_id' => '1']], $values['parent']);
   }
 
   /**

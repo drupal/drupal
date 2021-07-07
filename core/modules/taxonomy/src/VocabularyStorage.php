@@ -12,16 +12,9 @@ class VocabularyStorage extends ConfigEntityStorage implements VocabularyStorage
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
-    drupal_static_reset('taxonomy_vocabulary_get_names');
-    parent::resetCache($ids);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getToplevelTids($vids) {
     $tids = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(TRUE)
       ->condition('vid', $vids, 'IN')
       ->condition('parent.target_id', 0)
       ->execute();

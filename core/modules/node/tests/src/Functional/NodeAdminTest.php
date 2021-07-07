@@ -153,7 +153,7 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/edit');
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/delete');
       // Verify that we can see the content type label.
-      $this->assertEqual(trim($node_type_labels[$delta]->getText()), $node->type->entity->label());
+      $this->assertEquals(trim($node_type_labels[$delta]->getText()), $node->type->entity->label());
       $delta++;
     }
 

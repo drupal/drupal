@@ -50,16 +50,16 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
     // @todo Remove in https://www.drupal.org/node/540008.
     User::create(['uid' => 1, 'name' => 'user1'])->save();
 
-    /* @var \Drupal\Core\Render\ElementInfoManager $manager */
+    /** @var \Drupal\Core\Render\ElementInfoManager $manager */
     $manager = \Drupal::service('plugin.manager.element_info');
     $manager->clearCachedDefinitions();
     $manager->getDefinitions();
-    /* @var \Drupal\filter\FilterFormatInterface $filter_test_format */
+    /** @var \Drupal\filter\FilterFormatInterface $filter_test_format */
     $filter_test_format = FilterFormat::load('filter_test');
     $full_html_format = FilterFormat::load('full_html');
     $filtered_html_format = FilterFormat::load('filtered_html');
 
-    /* @var \Drupal\user\RoleInterface $role */
+    /** @var \Drupal\user\RoleInterface $role */
     $role = Role::create([
       'id' => 'admin',
       'label' => 'admin',
@@ -120,7 +120,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
    * Tests that values are returned.
    */
   public function testTextFormatElement() {
-    /* @var \Drupal\Core\Form\FormBuilder $form_builder */
+    /** @var \Drupal\Core\Form\FormBuilder $form_builder */
     $form_builder = $this->container->get('form_builder');
     $form = $form_builder->getForm($this);
     $output = $this->render($form);

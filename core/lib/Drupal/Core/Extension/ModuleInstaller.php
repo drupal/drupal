@@ -4,11 +4,14 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Update\UpdateHookRegistry;
 
 /**
  * Default implementation of the module installer.
@@ -45,6 +48,20 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $root;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The update registry service.
+   *
+   * @var \Drupal\Core\Update\UpdateHookRegistry
+   */
+  protected $updateRegistry;
+
+  /**
    * The uninstall validators.
    *
    * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
@@ -60,14 +77,28 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The module handler.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The drupal kernel.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   * @param \Drupal\Core\Update\UpdateHookRegistry|null $update_registry
+   *   (Optional) The update registry service.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL, UpdateHookRegistry $update_registry = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
+    if (!$connection) {
+      @trigger_error('The database connection must be passed to ' . __METHOD__ . '(). Creating ' . __CLASS__ . ' without it is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
+      $connection = \Drupal::service('database');
+    }
+    $this->connection = $connection;
+    if (!$update_registry) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $update_registry argument is deprecated in drupal:9.3.0 and $update_registry argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2124069', E_USER_DEPRECATED);
+      $update_registry = \Drupal::service('update.update_hook_registry');
+    }
+    $this->updateRegistry = $update_registry;
   }
 
   /**
@@ -90,6 +121,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     foreach ($module_list as $module) {
       if (!empty($module_data[$module]->info['core_incompatible'])) {
         throw new MissingDependencyException("Unable to install modules: module '$module' is incompatible with this version of Drupal core.");
+      }
+      if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
+        throw new ObsoleteExtensionException("Unable to install modules: module '$module' is obsolete.");
       }
     }
     if ($enable_dependencies) {
@@ -227,7 +261,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->invokeAll('module_preinstall', [$module]);
 
         // Now install the module's schema if necessary.
-        drupal_install_schema($module);
+        $this->installSchema($module);
 
         // Clear plugin manager caches.
         \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
@@ -235,7 +269,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Set the schema version to the number of the last update provided by
         // the module, or the minimum core schema version.
         $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
-        $versions = drupal_get_schema_versions($module);
+        $versions = $this->updateRegistry->getAvailableUpdates($module);
         if ($versions) {
           $version = max(max($versions), $version);
         }
@@ -295,7 +329,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         if ($last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
           $version = max($version, $last_removed);
         }
-        drupal_set_installed_schema_version($module, $version);
+        $this->updateRegistry->setInstalledVersion($module, $version);
 
         // Ensure that all post_update functions are registered already. This
         // should include existing post-updates, as well as any specified as
@@ -468,7 +502,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Remove the schema.
-      drupal_uninstall_schema($module);
+      $this->uninstallSchema($module);
 
       // Remove the module's entry from the config. Don't check schema when
       // uninstalling a module since we are only clearing a key.
@@ -489,11 +523,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // into its statically cached list.
       \Drupal::service('extension.list.module')->reset();
 
-      // Clear plugin manager caches.
-      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
-
       // Update the kernel to exclude the uninstalled modules.
       $this->updateKernel($module_filenames);
+
+      // Clear plugin manager caches.
+      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
       // Update the theme registry to remove the newly uninstalled module.
       drupal_theme_rebuild();
@@ -506,8 +540,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
 
-      $schema_store = \Drupal::keyValue('system.schema');
-      $schema_store->delete($module);
+      /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+      $update_registry = \Drupal::service('update.update_hook_registry');
+      $update_registry->deleteInstalledVersion($module);
 
       /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
       $post_update_registry = \Drupal::service('update.post_update_registry');
@@ -518,7 +553,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // fastCGI which executes ::destruct() after the Module uninstallation page
     // was sent already.
     \Drupal::service('router.builder')->rebuild();
-    drupal_get_installed_schema_version(NULL, TRUE);
 
     // Let other modules react.
     $this->moduleHandler->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
@@ -585,6 +619,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // dependencies.
     $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
+    $this->connection = $container->get('database');
+    $this->updateRegistry = $container->get('update.update_hook_registry');
   }
 
   /**
@@ -604,6 +640,40 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
     return $reasons;
+  }
+
+  /**
+   * Creates all tables defined in a module's hook_schema().
+   *
+   * @param string $module
+   *   The module for which the tables will be created.
+   *
+   * @internal
+   */
+  protected function installSchema(string $module): void {
+    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
+    $schema = $this->connection->schema();
+    foreach ($tables as $name => $table) {
+      $schema->createTable($name, $table);
+    }
+  }
+
+  /**
+   * Removes all tables defined in a module's hook_schema().
+   *
+   * @param string $module
+   *   The module for which the tables will be removed.
+   *
+   * @internal
+   */
+  protected function uninstallSchema(string $module): void {
+    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
+    $schema = $this->connection->schema();
+    foreach (array_keys($tables) as $table) {
+      if ($schema->tableExists($table)) {
+        $schema->dropTable($table);
+      }
+    }
   }
 
 }

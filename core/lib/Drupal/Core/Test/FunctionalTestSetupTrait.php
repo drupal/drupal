@@ -102,6 +102,16 @@ trait FunctionalTestSetupTrait {
       'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
     ];
+    // Disable fetching of advisories during tests to avoid outbound calls. This
+    // cannot be set in ::initConfig() because it would not stop these calls
+    // during install. Tests that need to have the security advisories
+    // functionality enabled should override this method and unset this
+    // variable.
+    // @see \Drupal\Tests\system\Functional\SecurityAdvisories\SecurityAdvisoryTest::writeSettings()
+    $settings['config']['system.advisories']['enabled'] = (object) [
+      'value' => FALSE,
+      'required' => TRUE,
+    ];
     $this->writeSettings($settings);
     // Allow for test-specific overrides.
     $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSite . '/settings.testing.php';
@@ -188,7 +198,7 @@ trait FunctionalTestSetupTrait {
    * @see TestBase::prepareEnvironment()
    * @see TestBase::restoreEnvironment()
    *
-   * @todo Fix https://www.drupal.org/node/2021959 so that module enable/disable
+   * @todo Fix https://www.drupal.org/node/2941757 so that module enable/disable
    *   changes are immediately reflected in \Drupal::getContainer(). Until then,
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
@@ -377,9 +387,6 @@ trait FunctionalTestSetupTrait {
    */
   protected function initKernel(Request $request) {
     $this->kernel = DrupalKernel::createFromRequest($request, $this->classLoader, 'prod', TRUE);
-    // Force the container to be built from scratch instead of loaded from the
-    // disk. This forces us to not accidentally load the parent site.
-    $this->kernel->invalidateContainer();
     $this->kernel->boot();
     // Add our request to the stack and route context.
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
@@ -557,7 +564,7 @@ trait FunctionalTestSetupTrait {
    * Sets up the base URL based upon the environment variable.
    *
    * @throws \Exception
-   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided.
+   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided or uses an invalid scheme.
    */
   protected function setupBaseUrl() {
     global $base_url;
@@ -576,6 +583,13 @@ trait FunctionalTestSetupTrait {
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
     $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
+
+    $valid_url_schemes = ['http', 'https'];
+    if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
+      throw new \Exception(
+        'You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.'
+      );
+    }
 
     $this->baseUrl = $base_url;
 

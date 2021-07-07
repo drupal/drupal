@@ -13,9 +13,8 @@
  <release>
   <name>bbb_update_test 8.x-1.0</name>
   <version>8.x-1.0</version>
-  <tag>DRUPAL-7--1-0</tag>
   <status>published</status>
-  <release_link>http://example.com/bbb_update_test-7-x-1-0-release</release_link>
+  <release_link>http://example.com/bbb_update_test-8-x-1-0-release</release_link>
   <download_link>http://example.com/bbb_update_test-8.x-1.0.tar.gz</download_link>
   <date>1250424521</date>
   <terms>
