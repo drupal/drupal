@@ -171,8 +171,11 @@ class TwigSandboxTest extends UnitTestCase {
       ->getMock();
     $policy->expects($this->any())
       ->method('getSettings')
-      ->with('twig_sandbox_allowed_methods')
-      ->willReturn([CoreAttribute::class]);
+      ->willReturnMap(
+        ['twig_sandbox_allowed_classes', $this->any(), [CoreAttribute::class]],
+        ['twig_sandbox_allowed_methods', $this->any(), []],
+        ['twig_sandbox_allowed_prefixes', $this->any(), []],
+      );
     $this->expectException(SecurityError::class);
     $policy->checkMethodAllowed($this, 'add');
   }
