@@ -52,12 +52,12 @@ class ResourceFetcher implements ResourceFetcherInterface {
   public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, $request_stack = NULL, CacheBackendInterface $cache_backend = NULL) {
     if (empty($request_stack)) {
       $request_stack = \Drupal::requestStack();
-      @trigger_error('Passing NULL for the $request_stack parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Passing NULL for the $request_stack parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3056124', E_USER_DEPRECATED);
     }
     elseif ($request_stack instanceof CacheBackendInterface) {
       $cache_backend = $request_stack;
       $request_stack = \Drupal::requestStack();
-      @trigger_error('Passing an instance of CacheBackendInterface in the $request_stack parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Pass a \Symfony\Component\HttpFoundation\RequestStack object instead.', E_USER_DEPRECATED);
+      @trigger_error('Passing an instance of CacheBackendInterface in the $request_stack parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Pass a \Symfony\Component\HttpFoundation\RequestStack object instead. See https://www.drupal.org/project/drupal/issues/3056124', E_USER_DEPRECATED);
     }
 
     $this->httpClient = $http_client;
@@ -81,7 +81,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     try {
       $options = [
         RequestOptions::HEADERS => [
-          'Referer' => $this->requestStack->getCurrentRequest()->getHttpHost(),
+          'Referer' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
         ],
       ];
       $response = $this->httpClient->request('GET', $url, $options);
