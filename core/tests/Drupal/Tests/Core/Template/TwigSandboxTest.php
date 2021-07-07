@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Template;
 
 use Drupal\Component\Attribute\AttributeCollection;
+use Drupal\Core\Template\Attribute as CoreAttribute;
 use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
@@ -162,17 +163,16 @@ class TwigSandboxTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testUrlSafeMethods() {
-    $url = $this->getMockBuilder('Drupal\Core\Url')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $url->expects($this->once())
-      ->method('toString')
-      ->willReturn('http://kittens.cat/are/cute');
-    $result = $this->twig->render('{{ url.toString }}', ['url' => $url]);
-    $this->assertEquals('http://kittens.cat/are/cute', $result, 'Sandbox policy allows toString() to be called.');
+  public function testDeprecatedAllowedClass() {
+    $policy = $this->getMockBuilder(TwigSandboxPolicy::class)
+      ->setMethods(['getAllowedClasses']);
+    $policy->expects($this->once())
+      ->method('getAllowedClasses')
+      ->willReturn([CoreAttribute::class]);
+    ]);
+    $policy->getMock();
   }
 
-}}
+}
 
 class TestAttributeCollection extends AttributeCollection {}

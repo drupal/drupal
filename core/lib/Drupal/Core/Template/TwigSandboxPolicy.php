@@ -75,7 +75,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
   }
 
   /**
-   * Return the list of allowed classes from the settings.
+   * Returns the list of allowed classes from the settings.
    *
    * @return string[]
    *   The list of allowed classes from the settings.
