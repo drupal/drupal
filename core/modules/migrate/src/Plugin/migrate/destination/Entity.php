@@ -16,7 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Available configuration keys:
  * - default_bundle: (optional) The bundle to use for this row if 'bundle' is
- *   not defined on the row.
+ *   not defined on the row. Note that setting this also allows the fields()
+ *   method to return bundle fields as well as base fields.
  *
  * Examples:
  *
