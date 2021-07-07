@@ -1413,6 +1413,10 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if (!$original) {
       $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();
       $original = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
+      if (!$original) {
+        // There can be no changes if the original no longer exists.
+        return FALSE;
+      }
     }
 
     // If the current translation has just been added, we have a change.
