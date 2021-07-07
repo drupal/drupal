@@ -476,7 +476,7 @@ services:
       - [setContainer, ['@service_container']]
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
-    arguments: ['@database']
+    arguments: ['@database', '@datetime.time']
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']

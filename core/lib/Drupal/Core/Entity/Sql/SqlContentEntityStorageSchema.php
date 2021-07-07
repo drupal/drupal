@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -104,6 +105,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected $deletedFieldsRepository;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a SqlContentEntityStorageSchema.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -116,8 +124,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, EntityFieldManagerInterface $entity_field_manager, TimeInterface $time = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->storage = clone $storage;
     $this->database = $database;
@@ -125,6 +135,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $this->entityType = $entity_type_manager->getActiveDefinition($entity_type->id());
     $this->fieldStorageDefinitions = $entity_field_manager->getActiveFieldStorageDefinitions($entity_type->id());
+
+    if (!$time) {
+      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\SqlContentEntityStorageSchema::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    $this->time = $time;
   }
 
   /**
@@ -458,7 +474,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_');
     $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
     $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
-    $sandbox['backup_request_time'] = \Drupal::time()->getRequestTime();
+    $sandbox['backup_request_time'] = $this->time->getRequestTime();
 
     // Create temporary tables based on the new entity type and field storage
     // definitions.
@@ -681,7 +697,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     foreach ($field_storage_definitions as $storage_definition) {
       $prefix_parts[] = spl_object_hash($storage_definition);
     }
-    $prefix_parts[] = \Drupal::time()->getRequestTime();
+    $prefix_parts[] = $this->time->getRequestTime();
     $hash = hash('sha256', implode('', $prefix_parts));
 
     return $first_prefix_part . substr($hash, 0, 6);
