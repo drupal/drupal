@@ -52,7 +52,7 @@ class ScaffoldFilePath {
    * ScaffoldFilePath constructor.
    *
    * @param string $path_type
-   *   The type of scaffold file this is, 'src' or 'dest'.
+   *   The type of scaffold file this is, 'autoload', 'dest' or 'src'.
    * @param string $package_name
    *   The name of the package containing the file.
    * @param string $rel_path
