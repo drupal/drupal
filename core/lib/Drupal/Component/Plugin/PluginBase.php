@@ -69,7 +69,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
   public function getBaseId() {
     $plugin_id = $this->getPluginId();
     if (strpos($plugin_id, static::DERIVATIVE_SEPARATOR)) {
-      list($plugin_id) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);
+      [$plugin_id] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);
     }
     return $plugin_id;
   }
@@ -81,7 +81,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
     $plugin_id = $this->getPluginId();
     $derivative_id = NULL;
     if (strpos($plugin_id, static::DERIVATIVE_SEPARATOR)) {
-      list(, $derivative_id) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);
+      [, $derivative_id] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);
     }
     return $derivative_id;
   }

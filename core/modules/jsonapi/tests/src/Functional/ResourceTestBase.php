@@ -2275,7 +2275,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
 
     // DX: 403 when sending PATCH request with updated read-only fields.
-    list($modified_entity, $original_values) = static::getModifiedEntityForPatchTesting($this->entity);
+    [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
     // Send PATCH request by serializing the modified entity, assert the error
     // response, change the modified entity field that caused the error response
     // back to its original value, repeat.
@@ -3149,7 +3149,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ],
     ];
     foreach ($test_relationship_urls as $revision_case) {
-      list($revision_id, $relationship_url, $related_url) = $revision_case;
+      [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
       $revision = is_null($revision_id)
@@ -3174,7 +3174,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     $this->grantPermissionsToTestedRole(['field_jsonapi_test_entity_ref view access']);
     foreach ($test_relationship_urls as $revision_case) {
-      list($revision_id, $relationship_url, $related_url) = $revision_case;
+      [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
       $revision = is_null($revision_id)

@@ -566,7 +566,7 @@ EOD;
 
     // Get the schema and tablename for the old table.
     $old_full_name = str_replace('"', '', $this->connection->prefixTables('{' . $table . '}'));
-    list($old_schema, $old_table_name) = strpos($old_full_name, '.') ? explode('.', $old_full_name) : ['public', $old_full_name];
+    [$old_schema, $old_table_name] = strpos($old_full_name, '.') ? explode('.', $old_full_name) : ['public', $old_full_name];
 
     // Index names and constraint names are global in PostgreSQL, so we need to
     // rename them when renaming the table.

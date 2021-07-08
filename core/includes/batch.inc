@@ -134,7 +134,7 @@ function _batch_needs_update($new_value = NULL) {
  */
 function _batch_do() {
   // Perform actual processing.
-  list($percentage, $message, $label) = _batch_process();
+  [$percentage, $message, $label] = _batch_process();
 
   return new JsonResponse(['status' => TRUE, 'percentage' => $percentage, 'message' => $message, 'label' => $label]);
 }
@@ -179,11 +179,11 @@ function _batch_progress_page() {
     // Just use the content of the response.
     $fallback = $response->getContent();
 
-    list($fallback) = explode('<!--partial-->', $fallback);
+    [$fallback] = explode('<!--partial-->', $fallback);
     print $fallback;
 
     // Perform actual processing.
-    list($percentage, $message, $label) = _batch_process($batch);
+    [$percentage, $message, $label] = _batch_process($batch);
     if ($percentage == 100) {
       $new_op = 'finished';
     }
@@ -283,7 +283,7 @@ function _batch_process() {
     $finished = 1;
 
     if ($item = $queue->claimItem()) {
-      list($callback, $args) = $item->data;
+      [$callback, $args] = $item->data;
 
       // Build the 'context' array and execute the function call.
       $batch_context = [

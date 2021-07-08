@@ -21,7 +21,7 @@ class FieldInstanceDefaults extends ProcessPluginBase {
    * Set the field instance defaults.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($widget_type, $widget_settings) = $value;
+    [$widget_type, $widget_settings] = $value;
     $default = [];
 
     switch ($widget_type) {

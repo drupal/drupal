@@ -58,7 +58,7 @@ class LocalTasksTest extends BrowserTestBase {
     ]);
     $this->assertGreaterThan(0, count($elements), 'Local tasks found.');
     foreach ($routes as $index => $route_info) {
-      list($route_name, $route_parameters) = $route_info;
+      [$route_name, $route_parameters] = $route_info;
       $expected = Url::fromRoute($route_name, $route_parameters)->toString();
       $this->assertEquals($expected, $elements[$index]->getAttribute('href'), "Task " . ($index + 1) . "number href " . $elements[$index]->getAttribute('href') . " equals $expected.");
     }

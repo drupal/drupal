@@ -65,7 +65,7 @@ class SelectTest extends DatabaseTestBase {
 
     $connection = Database::getConnection();
     foreach ($this->makeCommentsProvider() as $test_set) {
-      list($expected, $comments) = $test_set;
+      [$expected, $comments] = $test_set;
       $this->assertEquals($expected, $connection->makeComment($comments));
     }
   }

@@ -88,7 +88,7 @@ function template_preprocess_system_admin_index(&$variables) {
   $stripe = 0;
   // Iterate over all modules.
   foreach ($variables['menu_items'] as $module => $block) {
-    list($description, $items) = $block;
+    [$description, $items] = $block;
     $position = ++$stripe % 2 ? 'left' : 'right';
     // Output links.
     if (count($items)) {

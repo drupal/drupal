@@ -327,7 +327,7 @@ class Views {
     else {
       // Append a ':' to the $exclude_view string so we always have more than one
       // item to explode.
-      list($exclude_view_name, $exclude_view_display) = explode(':', "$exclude_view:");
+      [$exclude_view_name, $exclude_view_display] = explode(':', "$exclude_view:");
     }
 
     $options = [];

@@ -97,7 +97,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $labels = [];
     foreach ($language_switchers as $list_item) {
       $classes = explode(" ", $list_item->getAttribute('class'));
-      list($langcode) = array_intersect($classes, ['en', 'fr']);
+      [$langcode] = array_intersect($classes, ['en', 'fr']);
       $list_items[] = [
         'langcode_class' => $langcode,
         'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
@@ -156,7 +156,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $labels = [];
     foreach ($language_switchers as $list_item) {
       $classes = explode(" ", $list_item->getAttribute('class'));
-      list($langcode) = array_intersect($classes, ['en', 'fr']);
+      [$langcode] = array_intersect($classes, ['en', 'fr']);
       if (in_array('is-active', $classes)) {
         $links['active'][] = $langcode;
       }

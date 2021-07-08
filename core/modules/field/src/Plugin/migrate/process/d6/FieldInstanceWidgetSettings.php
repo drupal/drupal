@@ -23,7 +23,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
    * Get the field instance default/mapped widget settings.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($widget_type, $widget_settings) = $value;
+    [$widget_type, $widget_settings] = $value;
     return $this->getSettings($widget_type, $widget_settings);
   }
 

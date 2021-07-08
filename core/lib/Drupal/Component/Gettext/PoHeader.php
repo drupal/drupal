@@ -254,7 +254,7 @@ class PoHeader {
     $lines = array_map('trim', explode("\n", $header));
     foreach ($lines as $line) {
       if ($line) {
-        list($tag, $contents) = explode(":", $line, 2);
+        [$tag, $contents] = explode(":", $line, 2);
         $header_parsed[trim($tag)] = trim($contents);
       }
     }

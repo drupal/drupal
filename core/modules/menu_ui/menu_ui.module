@@ -331,7 +331,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
       // Decompose the selected menu parent option into 'menu_name' and 'parent',
       // if the form used the default parent selection widget.
       if (!empty($values['menu_parent'])) {
-        list($menu_name, $parent) = explode(':', $values['menu_parent'], 2);
+        [$menu_name, $parent] = explode(':', $values['menu_parent'], 2);
         $values['menu_name'] = $menu_name;
         $values['parent'] = $parent;
       }

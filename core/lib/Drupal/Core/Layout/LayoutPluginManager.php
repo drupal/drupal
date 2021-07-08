@@ -117,7 +117,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
     // Add a dependency on the provider of the library.
     if ($library = $definition->getLibrary()) {
       $config_dependencies = $definition->getConfigDependencies();
-      list($library_provider) = explode('/', $library, 2);
+      [$library_provider] = explode('/', $library, 2);
       if ($this->moduleHandler->moduleExists($library_provider)) {
         $config_dependencies['module'][] = $library_provider;
       }

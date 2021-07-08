@@ -29,7 +29,7 @@ class ContentTranslationEnabledSetting extends ProcessPluginBase {
       throw new MigrateException('Input should be an array');
     }
 
-    list($language_content_type, $entity_translation_entity_types, $entity_type) = $value;
+    [$language_content_type, $entity_translation_entity_types, $entity_type] = $value;
 
     switch ($language_content_type) {
       // In the case of being 0, it will be skipped. We are not actually setting

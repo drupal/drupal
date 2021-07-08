@@ -191,7 +191,7 @@ class UsageTest extends FileManagedUnitTestBase {
    * Ensure that temporary files are removed by default.
    */
   public function testTempFileCleanupDefault() {
-    list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
+    [$temp_old, $temp_new, $perm_old, $perm_new] = $this->createTempFiles();
 
     // Run cron and then ensure that only the old, temp file was deleted.
     $this->container->get('cron')->run();
@@ -205,7 +205,7 @@ class UsageTest extends FileManagedUnitTestBase {
    * Ensure that temporary files are kept as configured.
    */
   public function testTempFileNoCleanup() {
-    list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
+    [$temp_old, $temp_new, $perm_old, $perm_new] = $this->createTempFiles();
 
     // Set the max age to 0, meaning no temporary files will be deleted.
     $this->config('system.file')
@@ -224,7 +224,7 @@ class UsageTest extends FileManagedUnitTestBase {
    * Ensure that temporary files are kept as configured.
    */
   public function testTempFileCustomCleanup() {
-    list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
+    [$temp_old, $temp_new, $perm_old, $perm_new] = $this->createTempFiles();
 
     // Set the max age to older than default.
     $this->config('system.file')

@@ -114,7 +114,7 @@ class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface 
       'id',
     ];
     foreach ($violations->getByFields($field_names) as $violation) {
-      list($field_name) = explode('.', $violation->getPropertyPath(), 2);
+      [$field_name] = explode('.', $violation->getPropertyPath(), 2);
       $form_state->setErrorByName($field_name, $violation->getMessage());
     }
     parent::flagViolations($violations, $form, $form_state);

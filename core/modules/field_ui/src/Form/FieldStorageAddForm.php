@@ -338,7 +338,7 @@ class FieldStorageAddForm extends FormBase {
 
       // Check if we're dealing with a preconfigured field.
       if (strpos($field_storage_values['type'], 'field_ui:') !== FALSE) {
-        list(, $field_type, $option_key) = explode(':', $field_storage_values['type'], 3);
+        [, $field_type, $option_key] = explode(':', $field_storage_values['type'], 3);
         $field_storage_values['type'] = $field_type;
 
         $field_definition = $this->fieldTypePluginManager->getDefinition($field_type);

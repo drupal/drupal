@@ -117,7 +117,7 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
     if ($row->isStub()) {
       return NULL;
     }
-    list($source, $destination) = $value;
+    [$source, $destination] = $value;
 
     // Modify the destination filename if necessary.
     $final_destination = $this->fileSystem->getDestinationFilename($destination, $this->configuration['file_exists']);

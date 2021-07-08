@@ -55,7 +55,7 @@ class WorkflowAccessControlHandler extends EntityAccessControlHandler implements
     /** @var \Drupal\workflows\Entity\Workflow $entity */
     $workflow_type = $entity->getTypePlugin();
     if (strpos($operation, 'delete-state') === 0) {
-      list(, $state_id) = explode(':', $operation, 2);
+      [, $state_id] = explode(':', $operation, 2);
       // Deleting a state is editing a workflow, but also we should forbid
       // access if there is only one state.
       return AccessResult::allowedIf(count($entity->getTypePlugin()->getStates()) > 1)

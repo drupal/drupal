@@ -63,7 +63,7 @@ class Select extends QuerySelect {
 
     // If there is a table alias specified, split it up.
     if (strpos($field, '.') !== FALSE) {
-      list($table, $table_field) = explode('.', $field);
+      [$table, $table_field] = explode('.', $field);
     }
     // Figure out if the field has already been added.
     foreach ($this->fields as $existing_field) {

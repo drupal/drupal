@@ -119,7 +119,7 @@ class YamlFileLoader
         }
         else {
             $basename = basename($file);
-            list($provider, ) = explode('.', $basename, 2);
+            [$provider, ] = explode('.', $basename, 2);
         }
         foreach ($content['services'] as $id => $service) {
             if (is_array($service)) {

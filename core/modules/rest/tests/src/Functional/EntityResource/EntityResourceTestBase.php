@@ -999,7 +999,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when sending PATCH request with updated read-only fields.
     $this->assertPatchProtectedFieldNamesStructure();
-    list($modified_entity, $original_values) = static::getModifiedEntityForPatchTesting($this->entity);
+    [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
     // Send PATCH request by serializing the modified entity, assert the error
     // response, change the modified entity field that caused the error response
     // back to its original value, repeat.

@@ -284,7 +284,7 @@ class Tables implements TablesInterface {
         // Relationship specifier can also contain the entity type ID, i.e.
         // entity:node, entity:user or entity:taxonomy.
         if (strpos($relationship_specifier, ':') !== FALSE) {
-          list($relationship_specifier, $entity_type_id) = explode(':', $relationship_specifier, 2);
+          [$relationship_specifier, $entity_type_id] = explode(':', $relationship_specifier, 2);
         }
         // Check for a valid relationship.
         if (isset($propertyDefinitions[$relationship_specifier]) && $propertyDefinitions[$relationship_specifier] instanceof DataReferenceDefinitionInterface) {

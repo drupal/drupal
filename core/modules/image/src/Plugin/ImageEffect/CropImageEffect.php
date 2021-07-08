@@ -20,7 +20,7 @@ class CropImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
-    list($x, $y) = explode('-', $this->configuration['anchor']);
+    [$x, $y] = explode('-', $this->configuration['anchor']);
     $x = image_filter_keyword($x, $image->getWidth(), $this->configuration['width']);
     $y = image_filter_keyword($y, $image->getHeight(), $this->configuration['height']);
     if (!$image->crop($x, $y, $this->configuration['width'], $this->configuration['height'])) {

@@ -71,7 +71,7 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($theme, $default_theme, $admin_theme) = $value;
+    [$theme, $default_theme, $admin_theme] = $value;
 
     // If the source theme exists on the destination, we're good.
     if (isset($this->themes[$theme])) {

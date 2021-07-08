@@ -413,7 +413,7 @@ class DbUpdateController extends ControllerBase {
     }
     else {
       $last = reset($_SESSION['updates_remaining']);
-      list($module, $version) = array_pop($last);
+      [$module, $version] = array_pop($last);
       $message = '<p class="error">' . $this->t('The update process was aborted prematurely while running <strong>update #@version in @module.module</strong>.', [
         '@version' => $version,
         '@module' => $module,

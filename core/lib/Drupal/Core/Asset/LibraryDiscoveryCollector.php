@@ -96,7 +96,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
         else {
           // Otherwise replace with existing library definition if it exists.
           // Throw an exception if it doesn't.
-          list($replacement_extension, $replacement_name) = explode('/', $definition['override']);
+          [$replacement_extension, $replacement_name] = explode('/', $definition['override']);
           $replacement_definition = $this->get($replacement_extension);
           if (isset($replacement_definition[$replacement_name])) {
             $libraries[$name] = $replacement_definition[$replacement_name];
@@ -145,7 +145,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
           // Only string library names are allowed.
           throw new InvalidLibrariesExtendSpecificationException('The libraries-extend specification for each library must be a list of strings.');
         }
-        list($new_extension, $new_library_name) = explode('/', $library_extend_name, 2);
+        [$new_extension, $new_library_name] = explode('/', $library_extend_name, 2);
         $new_libraries = $this->get($new_extension);
         if (isset($new_libraries[$new_library_name])) {
           $library_definition = NestedArray::mergeDeep($library_definition, $new_libraries[$new_library_name]);

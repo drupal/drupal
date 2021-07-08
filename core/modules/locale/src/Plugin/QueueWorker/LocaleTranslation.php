@@ -80,7 +80,7 @@ class LocaleTranslation extends QueueWorkerBase implements ContainerFactoryPlugi
    */
   public function processItem($data) {
     $this->moduleHandler->loadInclude('locale', 'batch.inc');
-    list($function, $args) = $data;
+    [$function, $args] = $data;
 
     // We execute batch operation functions here to check, download and import
     // the translation files. Batch functions use a context variable as last

@@ -443,7 +443,7 @@ class TermTest extends TaxonomyTestBase {
     // Fetch the created terms in the default alphabetical order, i.e. term1
     // precedes term2 alphabetically, and term2 precedes term3.
     $taxonomy_storage->resetCache();
-    list($term1, $term2, $term3) = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
+    [$term1, $term2, $term3] = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 

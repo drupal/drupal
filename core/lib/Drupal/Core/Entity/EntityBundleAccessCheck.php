@@ -42,7 +42,7 @@ class EntityBundleAccessCheck implements AccessInterface {
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
     @trigger_error('The ' . __NAMESPACE__ . '\EntityBundleAccessCheck is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Specify the list of bundles in the entity parameter, under "bundle" key, as a sequence, instead. See https://www.drupal.org/node/3155569', E_USER_DEPRECATED);
     if ($route->hasRequirement('_entity_bundles')) {
-      list($entity_type, $bundle_definition) = explode(':', $route->getRequirement('_entity_bundles'));
+      [$entity_type, $bundle_definition] = explode(':', $route->getRequirement('_entity_bundles'));
       $bundles = explode('|', $bundle_definition);
       $parameters = $route_match->getParameters();
       if ($parameters->has($entity_type)) {

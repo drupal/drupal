@@ -1144,7 +1144,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         // Allow for indexes and unique keys to specified as an array of column
         // name and length.
         if (is_array($column)) {
-          list($column_name, $length) = $column;
+          [$column_name, $length] = $column;
           $data[$real_key][] = [$column_mapping[$column_name], $length];
         }
         else {

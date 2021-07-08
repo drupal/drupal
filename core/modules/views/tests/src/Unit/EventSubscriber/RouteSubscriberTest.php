@@ -65,7 +65,7 @@ class RouteSubscriberTest extends UnitTestCase {
    * @covers ::routeRebuildFinished
    */
   public function testRouteRebuildFinished() {
-    list($display_1, $display_2) = $this->setupMocks();
+    [$display_1, $display_2] = $this->setupMocks();
 
     $display_1->expects($this->once())
       ->method('collectRoutes')
@@ -96,7 +96,7 @@ class RouteSubscriberTest extends UnitTestCase {
 
     $route_event = new RouteBuildEvent($collection, 'views');
 
-    list($display_1, $display_2) = $this->setupMocks();
+    [$display_1, $display_2] = $this->setupMocks();
 
     // The page_1 display overrides an existing route, so the dynamicRoutes
     // should only call the second display.

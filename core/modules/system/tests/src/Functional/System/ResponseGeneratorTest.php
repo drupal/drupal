@@ -42,7 +42,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
 
     $node = $this->drupalCreateNode();
 
-    list($version) = explode('.', \Drupal::VERSION, 2);
+    [$version] = explode('.', \Drupal::VERSION, 2);
     $expectedGeneratorHeader = 'Drupal ' . $version . ' (https://www.drupal.org)';
 
     // Check to see if the header is added when viewing a normal content page

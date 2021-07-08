@@ -55,7 +55,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
     // $base_plugin_id.
     $plugin_definition = $this->decorated->getDefinition($plugin_id, FALSE);
 
-    list($base_plugin_id, $derivative_id) = $this->decodePluginId($plugin_id);
+    [$base_plugin_id, $derivative_id] = $this->decodePluginId($plugin_id);
     $base_plugin_definition = $this->decorated->getDefinition($base_plugin_id, $exception_on_invalid);
     if ($base_plugin_definition) {
       $deriver = $this->getDeriver($base_plugin_id, $base_plugin_definition);

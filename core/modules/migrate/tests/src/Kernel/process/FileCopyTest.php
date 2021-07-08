@@ -65,7 +65,7 @@ class FileCopyTest extends FileTestBase {
       ],
     ];
     foreach ($data_sets as $data) {
-      list($source_path, $destination_path) = $data;
+      [$source_path, $destination_path] = $data;
       $actual_destination = $this->doTransform($source_path, $destination_path);
       $this->assertFileExists($destination_path);
       // Make sure we didn't accidentally do a move.
@@ -149,7 +149,7 @@ class FileCopyTest extends FileTestBase {
       ],
     ];
     foreach ($data_sets as $data) {
-      list($source_path, $destination_path) = $data;
+      [$source_path, $destination_path] = $data;
       $actual_destination = $this->doTransform($source_path, $destination_path, ['move' => TRUE]);
       $this->assertFileExists($destination_path);
       $this->assertFileDoesNotExist($source_path);

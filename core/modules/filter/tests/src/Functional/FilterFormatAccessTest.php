@@ -97,7 +97,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
       $this->resetFilterCaches();
       $formats[] = FilterFormat::load($edit['format']);
     }
-    list($this->allowedFormat, $this->secondAllowedFormat, $this->disallowedFormat) = $formats;
+    [$this->allowedFormat, $this->secondAllowedFormat, $this->disallowedFormat] = $formats;
     $this->drupalLogout();
 
     // Create a regular user with access to two of the formats.

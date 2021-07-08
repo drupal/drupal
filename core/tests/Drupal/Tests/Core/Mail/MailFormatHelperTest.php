@@ -23,7 +23,7 @@ class MailFormatHelperTest extends UnitTestCase {
     $headers_in_body .= 'Content-Description: ' . $this->randomMachineName(64);
     $body = $this->randomMachineName(76) . ' ' . $this->randomMachineName(6);
     $wrapped_text = MailFormatHelper::wrapMail($headers_in_body . $delimiter . $body);
-    list($processed_headers, $processed_body) = explode($delimiter, $wrapped_text);
+    [$processed_headers, $processed_body] = explode($delimiter, $wrapped_text);
 
     // Check that the body headers were not wrapped even though some exceeded
     // 77 characters.

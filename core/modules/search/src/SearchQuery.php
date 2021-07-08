@@ -316,7 +316,7 @@ class SearchQuery extends SelectExtender {
         $has_new_scores = FALSE;
         $queryor = $this->connection->condition('OR');
         foreach ($key as $or) {
-          list($num_new_scores) = $this->parseWord($or);
+          [$num_new_scores] = $this->parseWord($or);
           $has_new_scores |= $num_new_scores;
           $queryor->condition('d.data', "% $or %", 'LIKE');
         }
@@ -329,7 +329,7 @@ class SearchQuery extends SelectExtender {
       // Single ANDed term.
       else {
         $has_and = TRUE;
-        list($num_new_scores, $num_valid_words) = $this->parseWord($key);
+        [$num_new_scores, $num_valid_words] = $this->parseWord($key);
         $this->conditions->condition('d.data', "% $key %", 'LIKE');
         if (!$num_valid_words) {
           $this->simple = FALSE;

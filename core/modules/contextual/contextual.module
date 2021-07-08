@@ -210,7 +210,7 @@ function _contextual_id_to_links($id) {
   $contextual_links = [];
   $contexts = explode('|', $id);
   foreach ($contexts as $context) {
-    list($group, $route_parameters_raw, $metadata_raw) = explode(':', $context);
+    [$group, $route_parameters_raw, $metadata_raw] = explode(':', $context);
     parse_str($route_parameters_raw, $route_parameters);
     $metadata = [];
     parse_str($metadata_raw, $metadata);

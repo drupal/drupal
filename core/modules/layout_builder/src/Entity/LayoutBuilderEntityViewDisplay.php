@@ -504,7 +504,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       // Builder component. It follows the structure prescribed by the
       // documentation of hook_quickedit_render_field().
       if (count($parts) === 6 && $parts[0] === 'layout_builder') {
-        list(, $delta, $component_uuid, $entity_id) = QuickEditIntegration::deconstructViewModeId($original_mode);
+        [, $delta, $component_uuid, $entity_id] = QuickEditIntegration::deconstructViewModeId($original_mode);
         $entity = $this->entityTypeManager()->getStorage($this->getTargetEntityTypeId())->load($entity_id);
         $sections = $this->getEntitySections($entity);
         if (isset($sections[$delta])) {
@@ -539,7 +539,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         if ($plugin instanceof DerivativeInspectionInterface && in_array($plugin->getBaseId(), ['field_block', 'extra_field_block'], TRUE)) {
           // FieldBlock derivative IDs are in the format
           // [entity_type]:[bundle]:[field].
-          list(, , $field_block_field_name) = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin->getDerivativeId());
+          [, , $field_block_field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin->getDerivativeId());
           if ($field_block_field_name === $field_name) {
             return $component;
           }

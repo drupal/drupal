@@ -211,11 +211,11 @@ class RouteBuilderTest extends UnitTestCase {
       ->will($this->returnCallback(function ($controller) use ($container) {
         $count = substr_count($controller, ':');
         if ($count == 1) {
-          list($service, $method) = explode(':', $controller, 2);
+          [$service, $method] = explode(':', $controller, 2);
           $object = $container->get($service);
         }
         else {
-          list($class, $method) = explode('::', $controller, 2);
+          [$class, $method] = explode('::', $controller, 2);
           $object = new $class();
         }
         return [$object, $method];

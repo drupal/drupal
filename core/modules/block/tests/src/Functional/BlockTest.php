@@ -166,7 +166,7 @@ class BlockTest extends BlockTestBase {
       $this->assertCount(1, $links, 'Found one matching link.');
       $this->assertEquals(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
-      list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
+      [$path, $query_string] = explode('?', $links[0]->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
       $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
 

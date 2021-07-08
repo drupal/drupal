@@ -65,7 +65,7 @@ class VersionNegotiator {
    */
   public function getRevision(EntityInterface $entity, $resource_version_identifier) {
     try {
-      list($version_negotiator_name, $version_argument) = explode(VersionNegotiator::SEPARATOR, $resource_version_identifier, 2);
+      [$version_negotiator_name, $version_argument] = explode(VersionNegotiator::SEPARATOR, $resource_version_identifier, 2);
       if (!isset($this->negotiators[$version_negotiator_name])) {
         static::throwBadRequestHttpException($resource_version_identifier);
       }

@@ -96,7 +96,7 @@ class CacheableMetadataTest extends UnitTestCase {
     ];
 
     foreach ($add_expected as $data) {
-      list($add, $expected) = $data;
+      [$add, $expected] = $data;
       $metadata->addCacheTags($add);
       $this->assertEquals($expected, $metadata->getCacheTags());
     }

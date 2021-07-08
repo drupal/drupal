@@ -28,7 +28,7 @@ trait MenuUiTrait {
 
     // Pull the path from the menu link content.
     if (strpos($menu_plugin_id, 'menu_link_content') === 0) {
-      list(, $uuid) = explode(':', $menu_plugin_id, 2);
+      [, $uuid] = explode(':', $menu_plugin_id, 2);
       /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $entity */
       $entity = \Drupal::service('entity.repository')
         ->loadEntityByUuid('menu_link_content', $uuid);

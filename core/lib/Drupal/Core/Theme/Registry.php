@@ -709,7 +709,7 @@ class Registry implements DestructableInterface {
     // have matching hooks in the registry.
     foreach ($prefixes as $prefix) {
       // Grep only the functions which are within the prefix group.
-      list($first_prefix,) = explode('_', $prefix, 2);
+      [$first_prefix,] = explode('_', $prefix, 2);
       if (!isset($grouped_functions[$first_prefix])) {
         continue;
       }
@@ -821,7 +821,7 @@ class Registry implements DestructableInterface {
     $grouped_functions = [];
     // Splitting user defined functions into groups by the first prefix.
     foreach ($theme_functions as $function) {
-      list($first_prefix,) = explode('_', $function, 2);
+      [$first_prefix,] = explode('_', $function, 2);
       $grouped_functions[$first_prefix][] = $function;
     }
 

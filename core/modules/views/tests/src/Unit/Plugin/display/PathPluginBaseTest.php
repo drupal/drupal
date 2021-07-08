@@ -89,7 +89,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
    */
   public function testCollectRoutes() {
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -117,7 +117,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
    */
   public function testCollectRoutesWithDisplayReturnResponse() {
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -144,7 +144,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
    */
   public function testCollectRoutesWithArguments() {
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -172,7 +172,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
    */
   public function testCollectRoutesWithArgumentsNotSpecifiedInPath() {
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -201,7 +201,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * Tests the collect routes method with an alternative route name in the UI.
    */
   public function testCollectRoutesWithSpecialRouteName() {
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -232,7 +232,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $route_2 = new Route('test_route/example', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content']);
     $collection->add('test_route_2', $route_2);
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -269,7 +269,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $route->setMethods(['POST']);
     $collection->add('test_route', $route);
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -308,7 +308,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $route->setRequirement('_format', 'json');
     $collection->add('test_route', $route);
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -346,7 +346,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $route_2 = new Route('test_route/example', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content']);
     $collection->add('test_route_2', $route_2);
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -381,7 +381,7 @@ class PathPluginBaseTest extends UnitTestCase {
    */
   public function testCollectRoutesWithNamedParameters() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $view->argument = [];
     $view->argument['nid'] = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
@@ -416,7 +416,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $collection = new RouteCollection();
     $collection->add('test_route', new Route('test_route/{parameter}', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content']));
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     // Manually set up an argument handler.
     $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
@@ -453,7 +453,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $collection = new RouteCollection();
     $collection->add('test_route', new Route('test_route/{parameter}', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content'], [], ['parameters' => ['taxonomy_term' => 'entity:entity_test']]));
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     // Manually set up an argument handler.
     $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
@@ -491,7 +491,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $collection = new RouteCollection();
     $collection->add('test_route', new Route('test_route/{parameter}', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content']));
 
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';
@@ -523,7 +523,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * Tests the getRouteName method.
    */
   public function testGetRouteName() {
-    list($view) = $this->setupViewExecutableAccessPlugin();
+    [$view] = $this->setupViewExecutableAccessPlugin();
 
     $display = [];
     $display['display_plugin'] = 'page';

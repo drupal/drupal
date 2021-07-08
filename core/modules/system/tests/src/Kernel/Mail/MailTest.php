@@ -305,7 +305,7 @@ class MailTest extends KernelTestBase {
 
     // Test images.
     foreach ($path_pairs as $test_type => $paths) {
-      list($input_path, $expected_path) = $paths;
+      [$input_path, $expected_path] = $paths;
 
       // Reset the state variable that holds sent messages.
       \Drupal::state()->set('system.test_mail_collector', []);
@@ -336,7 +336,7 @@ class MailTest extends KernelTestBase {
     ];
 
     foreach ($path_pairs as $paths) {
-      list($input_path, $expected_path) = $paths;
+      [$input_path, $expected_path] = $paths;
 
       // Reset the state variable that holds sent messages.
       \Drupal::state()->set('system.test_mail_collector', []);
