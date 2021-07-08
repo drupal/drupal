@@ -85,20 +85,16 @@ class FieldItemTest extends EntityKernelTestBase {
    *   The test entity.
    * @param $expected_value
    *   The expected field item value.
-   *
-   * @return bool
-   *   TRUE if the item value matches expectations, FALSE otherwise.
    */
   protected function assertSavedFieldItemValue(EntityTest $entity, $expected_value) {
     $entity->setNewRevision(TRUE);
     $entity->save();
     $base_field_expected_value = str_replace($this->fieldName, 'field_test_item', $expected_value);
-    $result = $this->assertEquals($base_field_expected_value, $entity->field_test_item->value);
-    $result = $result && $this->assertEquals($expected_value, $entity->{$this->fieldName}->value);
+    $this->assertEquals($base_field_expected_value, $entity->field_test_item->value);
+    $this->assertEquals($expected_value, $entity->{$this->fieldName}->value);
     $entity = $this->reloadEntity($entity);
-    $result = $result && $this->assertEquals($base_field_expected_value, $entity->field_test_item->value);
-    $result = $result && $this->assertEquals($expected_value, $entity->{$this->fieldName}->value);
-    return $result;
+    $this->assertEquals($base_field_expected_value, $entity->field_test_item->value);
+    $this->assertEquals($expected_value, $entity->{$this->fieldName}->value);
   }
 
 }
