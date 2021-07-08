@@ -2451,7 +2451,7 @@ class ViewExecutable {
    */
   public function hasFormElements() {
     foreach ($this->field as $field) {
-      if (property_exists($field, 'views_form_callback') || method_exists($field, 'viewsForm')) {
+      if (method_exists($field, 'viewsForm')) {
         return TRUE;
       }
     }
