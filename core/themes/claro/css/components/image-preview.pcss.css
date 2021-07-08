@@ -6,7 +6,7 @@
 @import "../base/variables.pcss.css";
 
 :root {
-  --color-pattern: var(--color-lightgray);
+  --color-pattern: var(--color-gray-200);
   --size-pattern-square: calc(7rem / 16);
 }
 

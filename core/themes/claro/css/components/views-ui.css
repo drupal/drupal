@@ -87,7 +87,7 @@ details.fieldset-no-legend {
 .views-ui-dialog .form-item:first-of-type.description {
   margin: 0 0 1.5rem 0;
   padding-bottom: 0.75rem;
-  border-bottom: 0.0625rem solid #d4d4d8;
+  border-bottom: 0.0625rem solid #d3d4d9;
   font-weight: bold;
 }
 
@@ -309,7 +309,7 @@ details.fieldset-no-legend {
 
 .views-tabs .add a {
   padding: 0.5625rem 0.8125rem 0.5625rem 0.5625rem;
-  color: #545560;
+  color: #55565b;
   border: none;
   border-radius: 2px;
   background-color: transparent;
@@ -456,7 +456,7 @@ details.fieldset-no-legend {
 }
 
 .views-ui-rearrange-filter-form tr:first-of-type {
-  border-top: 0.0625rem solid #d4d4d8;
+  border-top: 0.0625rem solid #d3d4d9;
 }
 
 .views-ui-rearrange-filter-form tr:not(.draggable):hover {
@@ -577,7 +577,7 @@ details.fieldset-no-legend {
 .views-config-group-region {
   display: table;
   margin: 1.5rem 0;
-  border: 0.0625rem solid #d4d4d8;
+  border: 0.0625rem solid #d3d4d9;
   border-collapse: collapse;
 }
 
@@ -585,7 +585,7 @@ details.fieldset-no-legend {
   position: relative;
   display: table-cell;
   padding: 1.5rem;
-  border: 0.0625rem solid #d4d4d8;
+  border: 0.0625rem solid #d3d4d9;
 }
 
 .views-config-group-region .views-group-box--operator {
@@ -627,7 +627,7 @@ details.fieldset-no-legend {
   width: 0.0625rem;
   height: 100%;
   content: "";
-  border-left: 0.0625rem solid #d4d4d8;
+  border-left: 0.0625rem solid #d3d4d9;
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::before {
@@ -641,8 +641,8 @@ details.fieldset-no-legend {
   left: -1rem; /* LTR */
   padding: 0 0.3rem 0.3rem 0.4rem; /* LTR */
   content: ">";
-  color: #82828c;
-  border: 0.0625rem solid #d4d4d8;
+  color: #828388;
+  border: 0.0625rem solid #d3d4d9;
   background: #fff;
   font-size: 2.027rem;
   font-weight: bold;

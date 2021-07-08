@@ -8,7 +8,7 @@
 :root {
   --card-bg-color: var(--color-white);
   --card-border-size: 1px;
-  --card-border-color: var(--color-lightgray-o-80);
+  --card-border-color: var(--color-gray-200-o-80);
   --card-border-radius-size: var(--base-border-radius);
   --card-image-border-radius-size: calc(var(--card-border-radius-size) - var(--card-border-size));
   --card-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);

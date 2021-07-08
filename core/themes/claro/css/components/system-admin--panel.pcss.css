@@ -9,12 +9,12 @@
   margin-top: 1em;
   margin-bottom: 3em;
   padding: 0;
-  border-bottom: calc(1em / 16) solid var(--color-lightgray);
+  border-bottom: calc(1em / 16) solid var(--color-gray-200);
 }
 .panel__title {
   margin: 0;
   padding: calc(12em / 18) calc(24em / 18);
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
   font-size: calc(18em / 16);
   line-height: calc(24em / 18);
 }
