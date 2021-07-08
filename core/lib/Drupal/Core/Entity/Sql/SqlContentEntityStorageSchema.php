@@ -697,7 +697,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     foreach ($field_storage_definitions as $storage_definition) {
       $prefix_parts[] = spl_object_hash($storage_definition);
     }
-    $prefix_parts[] = $this->time->getRequestTime();
+    $prefix_parts[] = \Drupal::time()->getRequestTime();
     $hash = hash('sha256', implode('', $prefix_parts));
 
     return $first_prefix_part . substr($hash, 0, 6);
