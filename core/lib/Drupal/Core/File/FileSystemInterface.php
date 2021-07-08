@@ -274,7 +274,7 @@ interface FileSystemInterface {
    *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
    *   - FileSystemInterface::EXISTS_RENAME: (default) Append
    *     _{incrementing number} until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
+   *   - FileSystemInterface::EXISTS_ERROR: Throw an exception.
    *
    * @return string
    *   The path to the new file.
