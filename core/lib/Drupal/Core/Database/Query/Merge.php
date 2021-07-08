@@ -351,6 +351,23 @@ class Merge extends Query implements ConditionInterface {
   public function __toString() {
   }
 
+  /**
+   * Executes the merge database query.
+   *
+   * @return
+   *   One of the following values:
+   *   - Merge::STATUS_INSERT: If the entry does not already exist,
+   *     and an INSERT query is executed.
+   *   - Merge::STATUS_UPDATE: If the entry already exists,
+   *     and an UPDATE query is executed.
+   *   - NULL: (deprecated) If there is a problem and
+   *     queryOptions['throw_exception'] is FALSE.
+   *
+   * @throws \Drupal\Core\Database\Query\InvalidMergeQueryException
+   *   When there are no conditions found to merge.
+   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   *   Within the method to catch insert failures and resolve to update.
+   */
   public function execute() {
 
     try {
