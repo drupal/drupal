@@ -40,7 +40,7 @@ class ResourceFetcherTest extends UnitTestCase {
     // Create a request so that we actually have a referer to send.
     $request = Request::create('https://example.com');
     $referer = $request->getSchemeAndHttpHost();
-    $this->assertNotEmpty('https://example.com', $referer);
+    $this->assertNotEmpty($referer);
 
     $request_stack = new RequestStack();
     $request_stack->push($request);
@@ -63,7 +63,7 @@ class ResourceFetcherTest extends UnitTestCase {
     // oEmbed provider when fetching resource data.
     $fetcher->fetchResource('https://example.com/fake/resource.json');
     $this->assertNotEmpty($history);
-    $this->assertSame($referer, $history[0]['request']->getHeaderLine('Referer'));
+    $this->assertSame("$referer/", $history[0]['request']->getHeaderLine('Referer'));
   }
 
   /**

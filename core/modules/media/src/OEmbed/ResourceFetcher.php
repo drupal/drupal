@@ -79,9 +79,11 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
 
     try {
+      $referer = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
       $options = [
         RequestOptions::HEADERS => [
-          'Referer' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
+          // Ensure the referer has a trailing slash.
+          'Referer' => rtrim($referer, '/') . '/',
         ],
       ];
       $response = $this->httpClient->request('GET', $url, $options);
