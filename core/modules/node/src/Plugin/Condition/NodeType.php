@@ -13,11 +13,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Condition(
  *   id = "node_type",
- *   label = @Translation("Node Bundle"),
+ *   label = @Translation("Node Bundle (Deprecated)"),
  *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   }
  * )
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+ *   Use \Drupal\Core\Entity\Plugin\Condition\EntityBundle instead.
+ *
+ * @see https://www.drupal.org/node/2983299
  */
 class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
@@ -45,6 +50,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
    */
   public function __construct(EntityStorageInterface $entity_storage, array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    @trigger_error('\Drupal\node\Plugin\Condition\NodeType is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Plugin\Condition\EntityBundle instead. See https://www.drupal.org/node/2983299', E_USER_DEPRECATED);
     $this->entityStorage = $entity_storage;
   }
 

@@ -141,18 +141,20 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user']);
 
     // Enable the "Powered by Drupal" block only on article nodes.
+    $theme = \Drupal::service('theme_handler')->getDefault();
+    $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
+    $this->assertSession()->pageTextContains('Content type');
+    $this->assertSession()->pageTextNotContains('Content types (Deprecated)');
     $edit = [
       'id' => strtolower($this->randomMachineName()),
       'region' => 'sidebar_first',
-      'visibility[node_type][bundles][article]' => 'article',
+      'visibility[entity_bundle:node][bundles][article]' => 'article',
     ];
-    $theme = \Drupal::service('theme_handler')->getDefault();
-    $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
     $this->submitForm($edit, 'Save block');
 
     $block = Block::load($edit['id']);
     $visibility = $block->getVisibility();
-    $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
+    $this->assertTrue(isset($visibility['entity_bundle:node']['bundles']['article']), 'Visibility settings were saved to configuration');
 
     // Create a page node.
     $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);
@@ -230,6 +232,35 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Check that block is displayed on the admin/structure/block page.
     $this->assertSession()->pageTextContains($label);
     $this->assertSession()->linkByHrefExists($block->toUrl()->toString());
+  }
+
+  /**
+   * Tests customization of deprecated node type condition.
+   *
+   * @group legacy
+   */
+  public function testDeprecatedNodeTypeCondition() {
+    $this->expectDeprecation('\Drupal\node\Plugin\Condition\NodeType is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Plugin\Condition\EntityBundle instead. See https://www.drupal.org/node/2983299');
+    $this->expectDeprecation("The 'condition.plugin.node_type' config schema is deprecated in drupal:9.3.0 and is removed from drupal 10.0.0. Use the 'entity_bundle:node_type' key instead to define a node type condition. See https://www.drupal.org/node/2983299.");
+    $this->drupalLogin($this->adminUser);
+    $this->drupalPlaceBlock('system_powered_by_block', [
+      'id' => 'powered_by_deprecated',
+      'visibility' => [
+        'node_type' => [
+          'bundles' => [
+            'article' => 'article',
+          ],
+        ],
+      ],
+      'context_mapping' => ['node' => '@node.node_route_context:node'],
+    ]);
+
+    // On an existing block with the deprecated plugin, the deprecated
+    // label is shown.
+    $this->drupalGet("admin/structure/block/manage/powered_by_deprecated");
+    $this->assertSession()->pageTextContains('Content type');
+    $this->assertSession()->pageTextContains('Content types (Deprecated)');
+    $this->submitForm([], 'Save');
   }
 
 }

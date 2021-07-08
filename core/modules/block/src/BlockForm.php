@@ -237,6 +237,16 @@ class BlockForm extends EntityForm {
       if ($condition_id == 'language' && !$this->language->isMultilingual()) {
         continue;
       }
+
+      // Don't display the deprecated node type condition unless it has existing
+      // settings.
+      // @todo Make this more generic in
+      //   https://www.drupal.org/project/drupal/issues/2922451. Also remove
+      //   the node_type specific logic below.
+      if ($condition_id == 'node_type' && !isset($visibility[$condition_id])) {
+        continue;
+      }
+
       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
       $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
       $form_state->set(['conditions', $condition_id], $condition);
@@ -248,11 +258,16 @@ class BlockForm extends EntityForm {
     }
 
     if (isset($form['node_type'])) {
-      $form['node_type']['#title'] = $this->t('Content types');
+      $form['node_type']['#title'] = $this->t('Content types (deprecated)');
       $form['node_type']['bundles']['#title'] = $this->t('Content types');
       $form['node_type']['negate']['#type'] = 'value';
       $form['node_type']['negate']['#title_display'] = 'invisible';
       $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
+    }
+    if (isset($form['entity_bundle:node'])) {
+      $form['entity_bundle:node']['negate']['#type'] = 'value';
+      $form['entity_bundle:node']['negate']['#title_display'] = 'invisible';
+      $form['entity_bundle:node']['negate']['#value'] = $form['entity_bundle:node']['negate']['#default_value'];
     }
     if (isset($form['user_role'])) {
       $form['user_role']['#title'] = $this->t('Roles');
