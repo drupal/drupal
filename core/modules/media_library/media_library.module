@@ -31,8 +31,6 @@ use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_help().
- *
- * @todo Update in https://www.drupal.org/project/drupal/issues/2964789
  */
 function media_library_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
