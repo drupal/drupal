@@ -48,7 +48,7 @@ class DialogTest extends WebDriverTestBase {
 
     // Clicking the link triggers an AJAX request/response.
     // Opens a Dialog panel.
-    $link1_dialog_div = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $link1_dialog_div = $this->assertSession()->waitForElementVisible('css', '.ui-dialog');
     $this->assertNotNull($link1_dialog_div, 'Link was used to open a dialog ( modal )');
 
     $link1_modal = $link1_dialog_div->find('css', '#drupal-modal');
@@ -69,7 +69,7 @@ class DialogTest extends WebDriverTestBase {
     // Link 2 is similar to Link 1, except it submits additional width
     // information which must be echoed in the resulting  DOM update.
     $this->getSession()->getPage()->clickLink('Link 2 (modal)');
-    $dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $dialog = $this->assertSession()->waitForElementVisible('css', '.ui-dialog');
     $this->assertNotNull($dialog, 'Link was used to open a dialog ( non-modal, with options )');
     $style = $dialog->getAttribute('style');
     $this->assertStringContainsString('width: 400px;', $style, new FormattableMarkup('Modal respected the dialog-options width parameter.  Style = style', ['%style' => $style]));
@@ -79,7 +79,7 @@ class DialogTest extends WebDriverTestBase {
 
     // Test a non-modal dialog ( with target ).
     $this->clickLink('Link 3 (non-modal)');
-    $non_modal_dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $non_modal_dialog = $this->assertSession()->waitForElementVisible('css', '.ui-dialog');
     $this->assertNotNull($non_modal_dialog, 'Link opens a non-modal dialog.');
 
     // Tests the dialog contains a target element specified in the AJAX request.
@@ -91,7 +91,7 @@ class DialogTest extends WebDriverTestBase {
 
     // Tests a non-modal dialog ( without target ).
     $this->clickLink('Link 7 (non-modal, no target)');
-    $no_target_dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $no_target_dialog = $this->assertSession()->waitForElementVisible('css', '.ui-dialog');
     $this->assertNotNull($no_target_dialog, 'Link opens a non-modal dialog.');
 
     $contents_no_target = $no_target_dialog->find('css', 'div.ui-dialog-content');
@@ -105,7 +105,7 @@ class DialogTest extends WebDriverTestBase {
     $no_target_button->press();
 
     $this->getSession()->getPage()->findButton('Button 1 (modal)')->press();
-    $button1_dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $button1_dialog = $this->assertSession()->waitForElementVisible('css', '.ui-dialog');
     $this->assertNotNull($button1_dialog, 'Button opens a modal dialog.');
 
     $button1_dialog_content = $button1_dialog->find('css', 'div.ui-dialog-content');
@@ -135,7 +135,7 @@ class DialogTest extends WebDriverTestBase {
     $form_dialog_title = $this->assertSession()->waitForElementVisible('css', "span.ui-dialog-title:contains('Ajax Form contents')");
     $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
     // Locate the newly opened dialog.
-    $form_dialog = $this->getSession()->getPage()->find('css', 'div.ui-dialog');
+    $form_dialog = $this->getSession()->getPage()->find('css', '.ui-dialog');
     $this->assertNotNull($form_dialog, 'Form dialog is visible');
 
     $form_contents = $form_dialog->find('css', "p:contains('Ajax Form contents description.')");
@@ -179,7 +179,7 @@ class DialogTest extends WebDriverTestBase {
     $this->drupalGet('ajax-test/dialog');
 
     $this->clickLink('Link 6 (entity form)');
-    $dialog_add = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
+    $dialog_add = $this->assertSession()->waitForElementVisible('css', '.ui-dialog');
     $this->assertNotNull($dialog_add, 'Form dialog is visible');
 
     $form_add = $dialog_add->find('css', 'form.contact-form-add-form');

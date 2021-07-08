@@ -125,3 +125,11 @@
 .ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
   background: none;
 }
+
+/* Native dialog styling */
+dialog + .backdrop,
+dialog::backdrop {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  background: #000;
+}

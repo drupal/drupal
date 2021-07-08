@@ -161,5 +161,20 @@
 }
 
 #drupal-off-canvas .form-type--boolean {
-    margin-left: 0;
-  }
+  margin-left: 0;
+}
+
+/* Native dialog styling */
+
+dialog::-webkit-backdrop {
+  z-index: 1259;
+  opacity: 0.7;
+  background: #222330;
+}
+
+dialog + .backdrop,
+dialog::backdrop {
+  z-index: 1259;
+  opacity: 0.7;
+  background: #222330;
+}

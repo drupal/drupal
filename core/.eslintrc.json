@@ -23,7 +23,8 @@
     "Sortable": true,
     "once": true,
     "CKEDITOR": true,
-    "tabbable": true
+    "tabbable": true,
+    "dialogPolyfill": true
   },
   "settings": {
     "react": {

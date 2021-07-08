@@ -140,6 +140,7 @@
 
     // Open the dialog itself.
     response.dialogOptions = response.dialogOptions || {};
+    response.dialogOptions.triggeringElement = ajax.element;
     const dialog = Drupal.dialog($dialog.get(0), response.dialogOptions);
     if (response.dialogOptions.modal) {
       dialog.showModal();

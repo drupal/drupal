@@ -32,6 +32,17 @@ css.escape:
   js:
     assets/vendor/css-escape/css.escape.js: { weight: -20 }
 
+dialog.polyfill:
+  remote: https://github.com/GoogleChrome/dialog-polyfill
+  version: "0.5.6"
+  license:
+    url: https://raw.githubusercontent.com/GoogleChrome/dialog-polyfill/v0.5.6/LICENSE
+  js:
+    assets/vendor/google-chrome/dialog-polyfill/dialog-polyfill.js: {}
+  css:
+    component:
+      assets/vendor/google-chrome/dialog-polyfill/dialog-polyfill.css: {}
+
 drupal:
   version: VERSION
   js:
@@ -198,15 +209,13 @@ drupal.dialog:
   js:
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
-    misc/dialog/dialog.jquery-ui.js: {}
     # The remaining JavaScript assets previously came from core/jquery.ui, a
     # deprecated library.
     # All weights are based on on the requirements defined within each file.
     # @todo replace with solution in https://drupal.org/node/2158943
-    assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { weight: -11.4, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/button-min.js: { weight: -11.5, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { weight: -11.6, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/draggable-min.js: { weight: -11.6, minified: true }
+    # DIALOG PROTOTYPE: all of these can be removed if its determined resizable
+    # is not needed. Many of these can probably be removed even if resizable is
+    # present, but that can happen when we've moved beyond prototyping.
     assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { weight: -11.6, minified: true }
     assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
@@ -246,6 +255,10 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
+    - core/tabbable
+    - core/dialog.polyfill
+    - core/popperjs
+    - core/drupal.string.includes
     - core/drupal.jquery.position
 
 drupal.dialog.ajax:
@@ -358,6 +371,11 @@ drupal.states:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
+
+drupal.string.includes:
+  version: VERSION
+  js:
+    misc/polyfills/string.includes.js: { weight: -20 }
 
 drupal.tabbingmanager:
   version: VERSION

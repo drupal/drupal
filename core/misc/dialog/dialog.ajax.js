@@ -88,6 +88,7 @@
       $dialog.dialog('option', 'buttons', buttons);
     });
     response.dialogOptions = response.dialogOptions || {};
+    response.dialogOptions.triggeringElement = ajax.element;
     var dialog = Drupal.dialog($dialog.get(0), response.dialogOptions);
 
     if (response.dialogOptions.modal) {

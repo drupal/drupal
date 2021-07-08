@@ -77,7 +77,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       'info' => 'Block with iframe',
       'body' => [
         // Add iframe that should be non-interactive in Layout Builder preview.
-        'value' => '<iframe id="iframe-that-should-be-disabled" width="1" height="1" src="https://www.youtube.com/embed/gODZzSOelss" frameborder="0"></iframe>',
+        'value' => '<iframe id="iframe-that-should-be-disabled" width="100" height="100" src="https://www.youtube.com/embed/gODZzSOelss" frameborder="0"></iframe>',
         'format' => 'full_html',
       ],
     ])->save();

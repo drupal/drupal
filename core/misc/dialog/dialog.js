@@ -5,7 +5,714 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings) {
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+(function ($, Drupal, drupalSettings, Popper, displace, dialogPolyfill) {
+  Element.prototype.dialogObject = {};
+
+  Element.prototype.dialog = function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (_typeof(args[0]) === 'object') {
+      this.dialogObject = new Drupal.Dialog(this, args[0]);
+    }
+
+    if (typeof args[0] === 'string') {
+      if (typeof args[1] !== 'undefined') {
+        if (args[0] === 'option' && typeof args[2] !== 'undefined') {
+          var option = {};
+          option[args[1]] = args[2];
+          return this.dialogObject[args[0]](option);
+        }
+
+        return this.dialogObject[args[0]](args[1]);
+      }
+
+      return this.dialogObject[args[0]]();
+    }
+  };
+
+  $.fn.extend({
+    dialog: function dialog() {
+      var _this$;
+
+      var itReturned = (_this$ = this[0]).dialog.apply(_this$, arguments);
+
+      return itReturned || this;
+    }
+  });
+
+  Drupal.Dialog = function () {
+    function _class(element, settings) {
+      var _this = this;
+
+      _classCallCheck(this, _class);
+
+      this.keyCodes = {
+        ESCAPE: 27,
+        TAB: 9
+      };
+      this.sizeRelatedOptions = {
+        buttons: true,
+        height: true,
+        maxHeight: true,
+        maxWidth: true,
+        minHeight: true,
+        minWidth: true,
+        width: true
+      };
+      this.resizableRelatedOptions = {
+        maxHeight: true,
+        maxWidth: true,
+        minHeight: true,
+        minWidth: true
+      };
+      var defaultSettings = this.constructor.defaultSettings();
+      defaultSettings.classes = _objectSpread(_objectSpread({}, defaultSettings.classes), settings.classes);
+      delete settings.classes;
+      this.dialogOptions = _objectSpread(_objectSpread({}, defaultSettings), settings);
+      this.$element = $(element);
+      this.element = element;
+      this.isOpen = null;
+      this.uiDialog = {};
+
+      this.widget = function () {
+        return _this.uiDialog;
+      };
+
+      this.uiDialogTitle = {};
+      this.uiDialogTitlebar = {};
+      this.uiDialogButtonPane = {};
+      this.uiButtonSet = {};
+
+      this.option = function (args) {
+        return _this.options(args);
+      };
+
+      this.originalCss = {
+        display: this.$element[0].style.display,
+        width: this.$element[0].style.width,
+        minHeight: this.$element[0].style.minHeight,
+        maxHeight: this.$element[0].style.maxHeight,
+        height: this.$element[0].style.height
+      };
+      this.originalPosition = {
+        parent: this.$element.parent(),
+        index: this.$element.parent().children().index(this.element)
+      };
+      this.originalTitle = this.$element.attr('title');
+
+      if (this.dialogOptions.title == null && this.originalTitle != null) {
+        this.dialogOptions.title = this.originalTitle;
+      }
+
+      if (this.dialogOptions.disabled) {
+        this.dialogOptions.disabled = false;
+      }
+
+      this.popper = null;
+      this.create();
+      this.init();
+    }
+
+    _createClass(_class, [{
+      key: "processPosition",
+      value: function processPosition() {
+        var _this2 = this;
+
+        var placement = 'top';
+        var centered = this.dialogOptions.position.at === 'center';
+        var isTop = this.dialogOptions.hasOwnProperty('drupalOffCanvasPosition') && this.dialogOptions.drupalOffCanvasPosition === 'top';
+
+        if (centered) {
+          var centerDialog = function centerDialog() {
+            var top = (window.innerHeight - displace.offsets.top) / 2 - _this2.uiDialog.height() / 2;
+
+            _this2.uiDialog.css({
+              position: 'fixed',
+              top: "".concat(top, "px"),
+              margin: '0 auto',
+              overflow: 'hidden'
+            });
+          };
+
+          centerDialog();
+
+          if (typeof ResizeObserver !== 'undefined') {
+            var ro = new ResizeObserver(function () {
+              centerDialog();
+            });
+            ro.observe(this.uiDialog[0]);
+          } else {}
+        } else if (!isTop) {
+          var additionalTopOffset = 0;
+
+          if (this.dialogOptions.position.at.includes('top+')) {
+            var numIndex = this.dialogOptions.position.at.indexOf('top+') + 4;
+            additionalTopOffset = parseInt(this.dialogOptions.position.at.substr(numIndex), 10);
+          } else if (this.dialogOptions.position.at.includes('top-') > 0) {
+            var _numIndex = this.dialogOptions.position.at.indexOf('top-') + 4;
+
+            additionalTopOffset = parseInt(this.dialogOptions.position.at.substr(_numIndex), 10) * -1;
+          }
+
+          var maxHeight = this.dialogOptions.maxHeight;
+          var yCenterModifier = {
+            name: 'yCenterModifier',
+            enabled: true,
+            phase: 'main',
+            fn: function fn(_ref) {
+              var state = _ref.state;
+              var maxHeightPx = typeof maxHeight === 'string' ? window.innerHeight * parseInt(maxHeight.replace('%', ''), 10) / 100 : maxHeight;
+              var popperHeight = Math.min(state.elements.popper.offsetHeight, maxHeightPx);
+              var centerOffset = centered ? (window.innerHeight - displace.offsets.top) / 2 - popperHeight / 2 : 0;
+              state.modifiersData.popperOffsets.y = centerOffset + additionalTopOffset;
+            }
+          };
+          var modifiers = [yCenterModifier];
+          var rightModifier = {
+            name: 'rightModifier',
+            enabled: true,
+            phase: 'main',
+            fn: function fn(_ref2) {
+              var state = _ref2.state;
+
+              if (state.placement === 'top') {
+                state.modifiersData.popperOffsets.x = window.innerWidth - state.elements.popper.offsetWidth;
+              }
+            }
+          };
+
+          if (this.dialogOptions.position.at.includes('right')) {
+            modifiers.push(rightModifier);
+          }
+
+          var positionAround = this.dialogOptions.position.of === window ? document.querySelector('body') : this.dialogOptions.position.of;
+          this.popper = Popper.createPopper(positionAround, this.widget().get(0), {
+            placement: placement,
+            modifiers: modifiers,
+            strategy: 'fixed'
+          });
+        }
+      }
+    }, {
+      key: "init",
+      value: function init() {
+        if (this.dialogOptions.autoOpen) {
+          this.open();
+        }
+      }
+    }, {
+      key: "options",
+      value: function options() {
+        var _this3 = this;
+
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        if (typeof args[0] === 'undefined') {
+          return this.getOptions();
+        }
+
+        if (_typeof(args[0]) === 'object') {
+          Object.keys(args[0]).forEach(function (option) {
+            _this3[option] = args[0][option];
+
+            _this3.setOption(option, args[0][option]);
+          });
+          return this.$element;
+        }
+
+        if (typeof args[0] === 'string') {
+          if (typeof args[1] === 'string') {
+            this.setOption(args[0], args[1]);
+            return this;
+          }
+
+          return this[args[0]];
+        }
+      }
+    }, {
+      key: "setOption",
+      value: function setOption(key, value) {
+        if (_typeof(value) === 'object') {
+          this.dialogOptions[key] = _objectSpread(_objectSpread({}, this.dialogOptions[key]), value);
+        } else {
+          this.dialogOptions[key] = value;
+        }
+
+        if (key.includes('Height') || key.includes('Width')) {
+          this.size();
+          this.processPosition();
+        }
+
+        if (key.includes('position')) {
+          this.processPosition();
+        }
+
+        if (key === 'buttons') {
+          this.dialogOptions.buttons = value;
+          this.createButtonPane();
+        }
+      }
+    }, {
+      key: "getOptions",
+      value: function getOptions(key) {
+        if (key) {
+          return this.dialogOptions[key];
+        }
+
+        return this.dialogOptions;
+      }
+    }, {
+      key: "open",
+      value: function open() {
+        if (this.isOpen) {
+          if (this.moveToTop()) {
+            console.log('@todo: constrain focus to this open dialog that previously was not focusable because another dialog was prioritized.');
+          }
+
+          return;
+        }
+
+        this.isOpen = true;
+        this.size();
+        this.setPosition();
+        this.moveToTop(null, true);
+
+        if (this.dialogOptions.modal && !this.uiDialog[0].hasAttribute('open')) {
+          this.uiDialog[0].showModal();
+        } else {
+          this.uiDialog[0].show();
+        }
+
+        this.dialogTrigger('open');
+      }
+    }, {
+      key: "setPosition",
+      value: function setPosition() {
+        this.processPosition();
+      }
+    }, {
+      key: "size",
+      value: function size() {
+        var options = this.dialogOptions;
+        this.$element.show().css({
+          width: 'auto',
+          minHeight: 0,
+          maxHeight: 'none',
+          marginTop: '0',
+          height: 0
+        });
+
+        if (options.minWidth > options.width) {
+          options.width = options.minWidth;
+        }
+
+        var nonContentHeight = this.uiDialog.css({
+          width: options.width
+        }).outerHeight();
+        var minContentHeight = Math.max(0, options.minHeight - nonContentHeight);
+        var maxContentHeight = typeof options.maxHeight === 'number' ? Math.max(0, options.maxHeight - nonContentHeight) : 'none';
+
+        if (options.height === 'auto') {
+          this.$element.css({
+            minHeight: minContentHeight,
+            maxHeight: maxContentHeight,
+            height: 'auto'
+          });
+        } else {
+          this.$element.height(Math.max(0, options.height - nonContentHeight));
+        }
+
+        if (this.uiDialog.is(':data(ui-resizable)')) {
+          var minHeight = this.minHeight();
+          this.uiDialog.resizable('option', 'minHeight', minHeight);
+        }
+      }
+    }, {
+      key: "minHeight",
+      value: function minHeight() {
+        var options = this.dialogOptions;
+        return options.height === 'auto' ? options.minHeight : Math.min(options.minHeight, options.height);
+      }
+    }, {
+      key: "create",
+      value: function create() {
+        this.createWrapper();
+        this.$element.show().removeAttr('title').appendTo(this.uiDialog);
+        this.$element.addClass('ui-dialog-content ui-widget-content');
+        this.createTitlebar();
+        this.createButtonPane();
+
+        if (this.dialogOptions.draggable && $.fn.draggable) {
+          console.log('@todo make draggable or decide that draggable is not needed');
+        }
+
+        if (this.dialogOptions.resizable && $.fn.resizable) {
+          this.makeResizable();
+        }
+
+        this.isOpen = false;
+      }
+    }, {
+      key: "createButtonPane",
+      value: function createButtonPane() {
+        if (this.uiDialogButtonPane.length > 0) {
+          this.uiDialogButtonPane.find('.ui-dialog-buttonset').empty();
+        } else {
+          this.uiDialogButtonPane = $('<div>');
+          this.uiDialogButtonPane.addClass('ui-dialog-buttonpane ui-widget-content ui-helper-clearfix');
+        }
+
+        this.uiButtonSet = $('<div>').prependTo(this.uiDialogButtonPane);
+        this.uiButtonSet.addClass('ui-dialog-buttonset');
+        this.createButtons();
+      }
+    }, {
+      key: "createButtons",
+      value: function createButtons() {
+        var that = this;
+        var buttons = this.dialogOptions.buttons;
+        var opts = this.dialogOptions;
+        var primaryIndex;
+        var index;
+        var il = opts.buttons.length;
+
+        for (index = 0; index < il; index++) {
+          if (opts.buttons[index].primary && opts.buttons[index].primary === true) {
+            primaryIndex = index;
+            delete opts.buttons[index].primary;
+            break;
+          }
+        }
+
+        this.uiDialogButtonPane.remove();
+        this.uiButtonSet.empty();
+
+        if ($.isEmptyObject(buttons) || $.isArray(buttons) && !buttons.length) {
+          this.uiDialog.removeClass('ui-dialog-buttons');
+          return;
+        }
+
+        $.each(buttons, function (name, props) {
+          props = typeof props === 'function' ? {
+            click: props,
+            text: name
+          } : props;
+          props = $.extend({
+            type: 'button'
+          }, props);
+          var _props = props,
+              click = _props.click;
+          var buttonOptions = {
+            icon: props.icon,
+            iconPosition: props.iconPosition,
+            showLabel: props.showLabel,
+            icons: props.icons,
+            text: props.text
+          };
+          delete props.click;
+          delete props.icon;
+          delete props.iconPosition;
+          delete props.showLabel;
+          delete props.icons;
+
+          if (typeof props.text === 'boolean') {
+            delete props.text;
+          }
+
+          var buttonText = buttonOptions.text || '';
+          var $button = $("<button type=\"button\">".concat(buttonText, "</button>"));
+
+          if (props.hasOwnProperty('class')) {
+            $button.attr('class', props.class);
+          }
+
+          $button.appendTo(that.uiButtonSet).on('click', function () {
+            click.apply(that.element[0], arguments);
+          });
+        });
+        this.uiDialog.addClass('ui-dialog-buttons');
+        this.uiDialogButtonPane.appendTo(this.uiDialog);
+        var $buttons = this.uiButtonSet.children().addClass(opts.buttonClass);
+
+        if (typeof primaryIndex !== 'undefined') {
+          $buttons.eq(index).addClass(opts.buttonPrimaryClass);
+        }
+      }
+    }, {
+      key: "createTitlebar",
+      value: function createTitlebar() {
+        var _this4 = this;
+
+        this.uiDialogTitlebar = $('<div>');
+        this.uiDialogTitlebar.addClass('ui-dialog-titlebar ui-widget-header ui-helper-clearfix');
+        this.uiDialogTitlebar.addClass(this.dialogOptions.classes['ui-dialog-titlebar']);
+        this.uiDialogTitlebar.on('mousedown', function (event) {
+          if (!$(event.target).closest('.ui-dialog-titlebar-close')) {}
+        });
+        this.uiDialogTitlebarClose = $("<button title=\"".concat(Drupal.t('Close'), "\"><span class=\"ui-button-icon ui-icon ui-icon-closethick\">").concat(this.dialogOptions.closeText, "</span><span class=\"ui-button-icon-space\"> </span></button>")).appendTo(this.uiDialogTitlebar);
+        this.uiDialogTitlebarClose.addClass('ui-button ui-corner-all ui-widget ui-button-icon-only ui-dialog-titlebar-close');
+        this.uiDialogTitlebarClose.on('click', function (event) {
+          event.preventDefault();
+
+          _this4.close(event);
+        });
+        this.uiDialogTitle = $('<span id="">').prependTo(this.uiDialogTitlebar);
+        this.uiDialogTitle.addClass('ui-dialog-title');
+        this.uiDialogTitle.attr('id', this.uiDialog.attr('aria-labelledby'));
+        this.title(this.uiDialogTitle);
+        this.uiDialogTitlebar.prependTo(this.uiDialog);
+        this.uiDialog.attr({
+          'aria-labelledby': this.uiDialogTitle.attr('id')
+        });
+      }
+    }, {
+      key: "title",
+      value: function title(_title) {
+        if (this.dialogOptions.title) {
+          _title.text(this.dialogOptions.title);
+        } else {
+          _title.html('&#160;');
+        }
+      }
+    }, {
+      key: "close",
+      value: function close(event) {
+        if (!this.isOpen || this.dialogTrigger('beforeClose', event) === false) {
+          return;
+        }
+
+        this.isOpen = false;
+        this.uiDialog.open = false;
+        var triggeringElement = this.dialogOptions.triggeringElement;
+
+        if (triggeringElement) {
+          triggeringElement.focus();
+        } else {
+          $(document.body).focus();
+        }
+
+        this.uiDialog[0].close();
+        this.dialogTrigger('close', event);
+      }
+    }, {
+      key: "dialogTrigger",
+      value: function dialogTrigger(type, event, data) {
+        var callback = this.dialogOptions[type];
+        data = data || {};
+        event = $.Event(event);
+        event.type = (type === this.uiDialogEventPrefix ? type : this.uiDialogEventPrefix + type).toLowerCase();
+        event.target = this.element[0];
+        var orig = event.originalEvent;
+
+        if (orig) {
+          Object.keys(orig || {}).forEach(function (prop) {
+            if (!(prop in event)) {
+              event[prop] = orig[prop];
+            }
+          });
+        }
+
+        this.$element.trigger(event, data);
+        return !(typeof callback === 'function' && callback.apply(this.element[0], [event].concat(data)) === false || event.isDefaultPrevented());
+      }
+    }, {
+      key: "createWrapper",
+      value: function createWrapper() {
+        var _this5 = this;
+
+        var id = this.$element.attr('id');
+        var existingWrapper = {};
+
+        if (id) {
+          existingWrapper = $("[data-drupal-dialog-contains=\"".concat(id, "\"]"));
+        } else {
+          var idNum = 0;
+
+          while ($("#drupal-dialog-id-".concat(idNum)).length !== 0) {
+            idNum++;
+          }
+
+          id = "drupal-dialog-id-".concat(idNum);
+        }
+
+        if (existingWrapper.length > 0) {
+          this.uiDialog = existingWrapper;
+          this.uiDialog.find('.ui-dialog-titlebar').remove();
+          this.uiDialog.find('.ui-dialog-buttonpane').remove();
+          this.uiDialog.removeClass();
+          this.uiDialog.attr('style', '');
+        } else {
+          this.uiDialog = $('<dialog/>').attr({
+            'data-drupal-dialog-wrapper': '',
+            'data-drupal-dialog-contains': id,
+            'aria-describedby': id,
+            'aria-labelledby': "".concat(id, "-label")
+          }).appendTo(this.getAppendTo());
+
+          if (!this.constructor.hasNativeDialog()) {
+            dialogPolyfill.registerDialog(this.uiDialog[0]);
+          }
+        }
+
+        this.uiDialog.addClass(this.dialogOptions.dialogClass);
+        this.uiDialog.addClass(this.dialogOptions.classes['ui-dialog']);
+        this.uiDialog.addClass('ui-dialog ui-widget ui-widget-content ui-front');
+        this.uiDialog.on('keydown', function (event) {
+          if (_this5.dialogOptions.closeOnEscape && !event.isDefaultPrevented() && event.keyCode && event.keyCode === _this5.keyCodes.ESCAPE) {
+            event.preventDefault();
+
+            _this5.close(event);
+          }
+        });
+      }
+    }, {
+      key: "moveToTop",
+      value: function moveToTop(event, silent) {
+        var moved = false;
+        var zIndices = this.uiDialog.siblings('.ui-front:visible').map(function () {
+          return +$(this).css('z-index');
+        }).get();
+        var zIndexMax = Math.max.apply(null, zIndices);
+
+        if (zIndexMax >= +this.uiDialog.css('z-index')) {
+          this.uiDialog.css('z-index', zIndexMax + 1);
+          moved = true;
+        }
+
+        if (moved && !silent) {
+          this.trigger('focus', event);
+        }
+
+        return moved;
+      }
+    }, {
+      key: "getAppendTo",
+      value: function getAppendTo() {
+        var element = this.dialogOptions.appendTo;
+
+        if (element && (element.jquery || element.nodeType)) {
+          return $(element);
+        }
+
+        return $(document).find(element || 'body').eq(0);
+      }
+    }, {
+      key: "makeResizable",
+      value: function makeResizable() {
+        var that = this;
+        var options = this.dialogOptions;
+        var handles = options.resizable;
+        var position = this.uiDialog.css('position');
+        var resizeHandles = typeof handles === 'string' ? handles : 'n,e,s,w,se,sw,ne,nw';
+
+        function filteredUi(ui) {
+          return {
+            originalPosition: ui.originalPosition,
+            originalSize: ui.originalSize,
+            position: ui.position,
+            size: ui.size
+          };
+        }
+
+        this.uiDialog.resizable({
+          cancel: '.ui-dialog-content',
+          containment: 'document',
+          alsoResize: this.$element,
+          maxWidth: options.maxWidth,
+          maxHeight: options.maxHeight,
+          minWidth: options.minWidth,
+          minHeight: this.minHeight(),
+          handles: resizeHandles,
+          start: function start(event, ui) {
+            that.uiDialog.addClass('ui-dialog-resizing');
+            that.dialogTrigger('resizeStart', event, filteredUi(ui));
+          },
+          resize: function resize(event, ui) {
+            that.dialogTrigger('resize', event, filteredUi(ui));
+          },
+          stop: function stop(event, ui) {
+            var offset = that.uiDialog.offset();
+            var left = offset.left - $(document).scrollLeft();
+            var top = offset.top - $(document).scrollTop();
+            options.height = that.uiDialog.height();
+            options.width = that.uiDialog.width();
+            options.position = {
+              my: 'left top',
+              at: "left".concat(left >= 0 ? '' : '').concat(left, " top").concat(top >= 0 ? '' : '').concat(top),
+              of: that.window
+            };
+            that.uiDialog.removeClass('ui-dialog-resizing');
+            that.dialogTrigger('resizeStop', event, filteredUi(ui));
+          }
+        }).css('position', position);
+      }
+    }], [{
+      key: "defaultSettings",
+      value: function defaultSettings() {
+        return {
+          appendTo: 'body',
+          autoOpen: true,
+          buttonClass: 'button',
+          buttonPrimaryClass: 'button--primary',
+          buttons: [],
+          classes: {
+            'ui-dialog': 'ui-corner-all',
+            'ui-dialog-titlebar': 'ui-corner-all'
+          },
+          closeOnEscape: true,
+          closeText: 'Close',
+          dialogClass: '',
+          draggable: true,
+          hide: null,
+          height: 'auto',
+          maxHeight: null,
+          maxWidth: null,
+          minHeight: 150,
+          minWidth: 150,
+          modal: false,
+          position: {
+            my: 'center',
+            at: 'center',
+            of: document.querySelector('body')
+          },
+          resizable: true,
+          show: null,
+          title: null,
+          width: 300,
+          close: function close(event) {
+            Drupal.dialog(event.target).close();
+            Drupal.detachBehaviors(event.target, null, 'unload');
+          }
+        };
+      }
+    }, {
+      key: "hasNativeDialog",
+      value: function hasNativeDialog() {
+        return typeof HTMLDialogElement === 'function';
+      }
+    }]);
+
+    return _class;
+  }();
+
   drupalSettings.dialog = {
     autoOpen: true,
     dialogClass: '',
@@ -26,7 +733,7 @@
     };
 
     function openDialog(settings) {
-      settings = $.extend({}, drupalSettings.dialog, options, settings);
+      settings = $.extend(Drupal.Dialog.defaultSettings(), drupalSettings.dialog, options, settings);
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
       $element.dialog(settings);
       dialog.open = true;
@@ -39,6 +746,10 @@
       dialog.returnValue = value;
       dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
+
+      if ($element.closest('[data-drupal-dialog-wrapper]').length !== 0) {
+        $element.closest('[data-drupal-dialog-wrapper]').remove();
+      }
     }
 
     dialog.show = function () {
@@ -56,4 +767,4 @@
     dialog.close = closeDialog;
     return dialog;
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, Popper, Drupal.displace, dialogPolyfill);
