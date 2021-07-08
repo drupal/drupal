@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -112,6 +113,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected $connection;
 
   /**
+   * The time service used in this test.
+   *
+   * @var \Drupal\Component\Datetime\Time|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -126,6 +134,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
     $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
+    $this->time = $this->createMock(Time::class);
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
@@ -1175,7 +1184,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getActiveFieldStorageDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time);
     $this->entityStorage->setModuleHandler($this->moduleHandler);
   }
 
@@ -1374,7 +1383,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getActiveFieldStorageDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time);
 
     $result = $this->entityStorage->hasData();
 
