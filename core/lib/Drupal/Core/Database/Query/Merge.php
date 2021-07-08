@@ -365,8 +365,6 @@ class Merge extends Query implements ConditionInterface {
    *
    * @throws \Drupal\Core\Database\Query\InvalidMergeQueryException
    *   When there are no conditions found to merge.
-   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
-   *   Within the method to catch insert failures and resolve to update.
    */
   public function execute() {
 
