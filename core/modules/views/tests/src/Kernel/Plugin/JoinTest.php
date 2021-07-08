@@ -218,6 +218,20 @@ class JoinTest extends RelationshipJoinTestBase {
     $this->assertStringContainsString("views_test_data.status = :views_join_condition_8", $join_info['condition'], 'Make sure the second extra join condition appears in the query.');
     $this->assertStringContainsString("users6.name = views_test_data.name", $join_info['condition'], 'Make sure the third extra join condition appears in the query.');
     $this->assertEquals(['en', 0], array_values($join_info['arguments']), 'Make sure the arguments are in the right order');
+
+    // A join cannot be constructed without either left_field or left_formula.
+    unset($configuration['left_formula']);
+    $exception = FALSE;
+    try {
+      $join = $this->manager->createInstance('standard', $configuration);
+    }
+    catch (\InvalidArgumentException $e) {
+      $exception = TRUE;
+      $this->assertSame("A join cannot be constructed without either 'left_field' or 'left_formula'.", $e->getMessage());
+    }
+    if (!$exception) {
+      $this->fail('Failed expected exception when creating join without left_field and left_formula');
+    }
   }
 
 }
