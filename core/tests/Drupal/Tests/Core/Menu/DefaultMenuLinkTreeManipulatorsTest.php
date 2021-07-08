@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
-use Drupal\node\NodeInterface;
 
 /**
  * Tests the default menu link tree manipulators.
@@ -294,12 +293,6 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $query->expects($this->once())
       ->method('accessCheck')
       ->with(TRUE);
-    $query->expects($this->exactly(2))
-      ->method('condition')
-      ->withConsecutive(
-        ['nid', [1, 2, 3, 4]],
-        ['status', NodeInterface::PUBLISHED],
-      );
     $query->expects($this->once())
       ->method('execute')
       ->willReturn([1, 2, 4]);
@@ -326,7 +319,6 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
     // On top of the node access checking now run the ordinary route based
     // access checkers.
-
     // Ensure that the access manager is just called for the non-node routes.
     $this->accessManager->expects($this->exactly(2))
       ->method('checkNamedRoute')
