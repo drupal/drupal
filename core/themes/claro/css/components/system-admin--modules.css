@@ -41,7 +41,7 @@
 }
 
 .claro-details__summary.claro-details__summary--package-listing {
-  color: #222330;
+  color: #232429;
   border-radius: 0.25rem;
   background: #f3f4f9;
   font-size: 1.125rem; /* 18px */
@@ -53,7 +53,7 @@
 }
 
 .module-list__module {
-  color: #222330;
+  color: #232429;
   border-bottom: 1px solid #d3d4d9;
   background: none;
 }

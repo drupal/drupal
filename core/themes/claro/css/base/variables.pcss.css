@@ -4,7 +4,7 @@
    */
   --color-absolutezero: #003cc5;
   --color-white: #fff;
-  --color-text: #222330;
+  --color-text: var(--color-gray);
   --color-text-light: var(--color-gray-500);
   --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
   /* Secondary. */

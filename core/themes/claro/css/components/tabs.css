@@ -85,7 +85,7 @@
 
 .tabs__link:hover {
   text-decoration: none;
-  color: #222330;
+  color: #232429;
 }
 
 .tabs__link.is-active {
@@ -112,7 +112,7 @@
 }
 
 .tabs__link.is-active:hover {
-  color: #222330;
+  color: #232429;
 }
 
 /* Active and hover indicator. */
@@ -268,7 +268,7 @@
     margin: 0;
     padding-right: 2rem;
     padding-left: 2rem;
-    color: #222330;
+    color: #232429;
     border: none;
     border-radius: 2px 2px 0 0;
     outline: 2px dotted transparent;

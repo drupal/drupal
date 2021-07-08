@@ -42,7 +42,7 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent !important;  /* 2 */
   border-radius: 2px;
   background-color: #d3d4d9;
@@ -120,7 +120,7 @@
 
 a.button:hover,
 a.button:active {
-  color: #222330;
+  color: #232429;
 }
 
 /* Primary button styles */

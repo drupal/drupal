@@ -150,7 +150,7 @@
 /* Toggler states. */
 
 .dropbutton__toggle:hover {
-  color: #222330;
+  color: #232429;
   background-color: #c1c2c7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
@@ -160,7 +160,7 @@
 }
 
 .dropbutton__toggle:active {
-  color: #222330;
+  color: #232429;
   background-color: #adaeb3;
 }
 
@@ -238,7 +238,7 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent !important; /* 1 */
   border-radius: 2px;
   background-color: #d3d4d9;
@@ -275,7 +275,7 @@
 .dropbutton__item:first-of-type > *:hover,
 .dropbutton__item:first-of-type > .button:hover {
   text-decoration: none;
-  color: #222330;
+  color: #232429;
   background-color: #c1c2c7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
@@ -290,7 +290,7 @@
 }
 
 .dropbutton__item:first-of-type > *:active {
-  color: #222330;
+  color: #232429;
   background-color: #adaeb3;
 }
 
@@ -411,7 +411,7 @@
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > *:hover {
-  color: #222330;
+  color: #232429;
   background: #f3f4f9;
 }
 

@@ -39,7 +39,7 @@
   margin: 0;
   padding-top: 0.5rem;
   list-style: none;
-  color: #222330;
+  color: #232429;
 }
 
 [dir="rtl"] .media-library-menu {
@@ -76,7 +76,7 @@
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent;
   border-width: 1px 0 1px 4px; /* LTR */
   border-radius: 2px 0 0 2px; /* LTR */

@@ -35,7 +35,7 @@ th {
   height: 3rem;
   padding: 0.5rem 1rem;
   text-align: left; /* LTR */
-  color: #222330;
+  color: #232429;
   background: #f3f4f9;
   line-height: 1.25rem; /* 20px */
 }
@@ -163,7 +163,7 @@ tr {
 
 tr,
 .draggable-table.tabledrag-disabled tr {
-  color: #222330;
+  color: #232429;
   background: #fff;
 }
 
@@ -173,19 +173,19 @@ thead tr {
 
 tr:hover,
 tr:focus {
-  color: #222330;
+  color: #232429;
   background: #f0f5fd;
 }
 
 tr.color-warning:hover,
 tr.color-warning:focus {
-  color: #222330;
+  color: #232429;
   background: #fdf8ed;
 }
 
 tr.color-error:hover,
 tr.color-error:focus {
-  color: #222330;
+  color: #232429;
   background: #fcf4f2;
 }
 
