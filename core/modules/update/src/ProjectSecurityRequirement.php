@@ -79,7 +79,7 @@ final class ProjectSecurityRequirement {
     $this->nextMajorMinorVersion = $next_major_minor_version;
 
     if (!$time) {
-      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\SqlContentEntityStorageSchema::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\ProjectSecurityRequirement::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
     $this->time = $time;
