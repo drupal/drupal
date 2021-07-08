@@ -436,7 +436,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($schema_handler));
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time])
       ->setMethods(['getStorageSchema'])
       ->getMock();
 
@@ -1264,7 +1264,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->entityType));
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time])
       ->setMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1322,7 +1322,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->entityType));
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time])
       ->setMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')

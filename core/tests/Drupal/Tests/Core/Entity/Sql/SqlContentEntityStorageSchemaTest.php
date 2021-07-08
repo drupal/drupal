@@ -1229,7 +1229,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository, $this->time])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->time])
       ->setMethods(['installedStorageSchema', 'hasSharedTableStructureChange'])
       ->getMock();
 
@@ -1426,7 +1426,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository, $this->time])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->time])
       ->setMethods(['installedStorageSchema', 'loadEntitySchemaData', 'hasSharedTableNameChanges', 'isTableEmpty', 'getTableMapping'])
       ->getMock();
     $this->storageSchema
