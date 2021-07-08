@@ -58,7 +58,7 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
 
     // Set the d6_book migration to update and re run the migration.
     $id_map = $this->migration->getIdMap();
-    $id_map->prepareUpdate();
+    $id_map->setUpdate();
     $this->executeMigration('d6_book');
   }
 

@@ -737,9 +737,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function prepareUpdate() {
-    $this->getDatabase()->update($this->mapTableName())
-      ->fields(['source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE])
-      ->execute();
+    @trigger_error('Sql::prepareUpdate() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\migrate\Plugin\MigrateIdMapInterface::setUpdate() with no parameter instead. See https://www.drupal.org/node/3188673', E_USER_DEPRECATED);
+    $this->setUpdate();
   }
 
   /**
@@ -850,17 +849,18 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function setUpdate(array $source_id_values) {
-    if (empty($source_id_values)) {
-      throw new MigrateException('No source identifiers provided to update.');
-    }
+  public function setUpdate(?array $source_id_values = NULL) {
     $query = $this->getDatabase()
       ->update($this->mapTableName())
       ->fields(['source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE]);
 
-    foreach ($this->sourceIdFields() as $field_name => $source_id) {
-      $query->condition($source_id, $source_id_values[$field_name]);
+    if ($source_id_values) {
+      // Only filter if a non-empty parameter has been passed.
+      foreach ($this->sourceIdFields() as $field_name => $source_id) {
+        $query->condition($source_id, $source_id_values[$field_name]);
+      }
     }
+
     $query->execute();
   }
 

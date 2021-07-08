@@ -127,6 +127,12 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * unmigrated content (source records not in the map table) being imported,
    * previously-migrated content will also be updated in place by marking all
    * previously-imported content as ready to be re-imported.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal\migrate\Plugin\MigrateIdMapInterface::setUpdate() with no
+   *   parameter instead.
+   *
+   * @see https://www.drupal.org/node/3188673
    */
   public function prepareUpdate();
 
@@ -299,11 +305,14 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
   public function setMessage(MigrateMessageInterface $message);
 
   /**
-   * Sets a specified record to be updated, if it exists.
+   * Sets all or a specified record to be updated.
    *
-   * @param array $source_id_values
-   *   The source identifier values of the record.
+   * All records will be marked for update if $source_id_values is empty.
+   *
+   * @param array|null $source_id_values
+   *   (optional) The source identifier values of the record. If omitted or
+   *   empty, all records are marked for update.
    */
-  public function setUpdate(array $source_id_values);
+  public function setUpdate(?array $source_id_values = NULL);
 
 }

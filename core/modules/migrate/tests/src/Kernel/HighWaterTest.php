@@ -243,7 +243,7 @@ class HighWaterTest extends MigrateTestBase {
 
     // Set all rows as needing an update.
     $id_map = $this->getMigration('high_water_test')->getIdMap();
-    $id_map->prepareUpdate();
+    $id_map->setUpdate();
 
     $this->executeMigration('high_water_test');
 

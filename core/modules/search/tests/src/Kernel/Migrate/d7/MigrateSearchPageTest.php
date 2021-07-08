@@ -73,7 +73,7 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d7_search_page');
     // Indicate we're rerunning a migration that's already run.
-    $migration->getIdMap()->prepareUpdate();
+    $migration->getIdMap()->setUpdate();
     $this->executeMigration($migration);
     $configuration['rankings']['comments'] = 4;
     $this->assertEntity('node_search', 'node', TRUE, $configuration);

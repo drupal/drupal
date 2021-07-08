@@ -57,7 +57,7 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d6_language_content_menu_settings');
     // Indicate we're rerunning a migration that's already run.
-    $migration->getIdMap()->prepareUpdate();
+    $migration->getIdMap()->setUpdate();
     $this->executeMigration($migration);
 
     $config = ContentLanguageSettings::load('menu_link_content.menu_link_content');

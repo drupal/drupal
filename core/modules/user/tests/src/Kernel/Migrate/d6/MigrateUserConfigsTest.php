@@ -75,7 +75,7 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
       /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
       $migration = $this->getMigration('d6_user_settings');
       // Indicate we're rerunning a migration that's already run.
-      $migration->getIdMap()->prepareUpdate();
+      $migration->getIdMap()->setUpdate();
       $this->executeMigration($migration);
       $form = $this->container->get('form_builder')->getForm(AccountSettingsForm::create($this->container));
       $this->assertSame($map[1], $form['registration_cancellation']['user_register']['#value']);
