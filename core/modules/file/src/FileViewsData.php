@@ -313,7 +313,7 @@ class FileViewsData extends EntityViewsData {
       'help' => $this->t('The label of the entity that is related to the file.'),
       'real field' => 'id',
       'field' => [
-        'id' => 'entity_label',
+        'id' => 'file_usage_entity_label',
         'entity type field' => 'type',
       ],
     ];
