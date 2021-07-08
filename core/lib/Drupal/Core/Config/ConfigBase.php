@@ -135,7 +135,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
     else {
       $parts = explode('.', $key);
       if (count($parts) == 1) {
-        return isset($this->data[$key]) ? $this->data[$key] : NULL;
+        return $this->data[$key] ?? NULL;
       }
       else {
         $value = NestedArray::getValue($this->data, $parts, $key_exists);

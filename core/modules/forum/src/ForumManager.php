@@ -329,7 +329,7 @@ class ForumManager implements ForumManagerInterface {
         $this->history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;
       }
     }
-    return isset($this->history[$nid]) ? $this->history[$nid] : HISTORY_READ_LIMIT;
+    return $this->history[$nid] ?? HISTORY_READ_LIMIT;
   }
 
   /**

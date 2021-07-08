@@ -226,7 +226,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $no_active_trail_expectations['level_3_and_beyond'] = [];
     foreach ($blocks as $id => $block) {
       $block_build = $block->build();
-      $items = isset($block_build['#items']) ? $block_build['#items'] : [];
+      $items = $block_build['#items'] ?? [];
       $this->assertSame($no_active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), new FormattableMarkup('Menu block %id with no active trail renders the expected tree.', ['%id' => $id]));
     }
 
@@ -278,7 +278,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $active_trail_expectations['level_3_and_beyond'] = $active_trail_expectations['level_3_only'];
     foreach ($blocks as $id => $block) {
       $block_build = $block->build();
-      $items = isset($block_build['#items']) ? $block_build['#items'] : [];
+      $items = $block_build['#items'] ?? [];
       $this->assertSame($active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), new FormattableMarkup('Menu block %id with an active trail renders the expected tree.', ['%id' => $id]));
     }
   }
@@ -305,7 +305,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $this->container->get('request_stack')->push($request);
 
     $block_build = $block->build();
-    $items = isset($block_build['#items']) ? $block_build['#items'] : [];
+    $items = $block_build['#items'] ?? [];
     $this->assertEquals($expected_items, $this->convertBuiltMenuToIdTree($items));
   }
 

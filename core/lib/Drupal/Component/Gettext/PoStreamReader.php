@@ -526,7 +526,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     }
 
     $item = new PoItem();
-    $item->setContext(isset($value['msgctxt']) ? $value['msgctxt'] : '');
+    $item->setContext($value['msgctxt'] ?? '');
     $item->setSource($value['msgid']);
     $item->setTranslation($value['msgstr']);
     $item->setPlural($plural);

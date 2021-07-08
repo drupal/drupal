@@ -141,7 +141,7 @@ class ResponsiveImageStyleForm extends EntityForm {
             'image_style' => $this->t('Select a single image style.'),
             '_none' => $this->t('Do not use this breakpoint.'),
           ],
-          '#default_value' => isset($image_style_mapping['image_mapping_type']) ? $image_style_mapping['image_mapping_type'] : '_none',
+          '#default_value' => $image_style_mapping['image_mapping_type'] ?? '_none',
           '#description' => $description,
         ];
         $form['keyed_styles'][$breakpoint_id][$multiplier]['image_style'] = [
@@ -159,7 +159,7 @@ class ResponsiveImageStyleForm extends EntityForm {
         $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes'] = [
           '#type' => 'textarea',
           '#title' => $this->t('Sizes'),
-          '#default_value' => isset($image_style_mapping['image_mapping']['sizes']) ? $image_style_mapping['image_mapping']['sizes'] : '100vw',
+          '#default_value' => $image_style_mapping['image_mapping']['sizes'] ?? '100vw',
           '#description' => $this->t('Enter the value for the sizes attribute, for example: %example_sizes.', ['%example_sizes' => '(min-width:700px) 700px, 100vw']),
           '#states' => [
             'visible' => [
@@ -175,7 +175,7 @@ class ResponsiveImageStyleForm extends EntityForm {
           '#type' => 'checkboxes',
           '#options' => array_diff_key($image_styles, ['' => '']),
           '#description' => $this->t('Select image styles with widths that range from the smallest amount of space this image will take up in the layout to the largest, bearing in mind that high resolution screens will need images 1.5x to 2x larger.'),
-          '#default_value' => isset($image_style_mapping['image_mapping']['sizes_image_styles']) ? $image_style_mapping['image_mapping']['sizes_image_styles'] : [],
+          '#default_value' => $image_style_mapping['image_mapping']['sizes_image_styles'] ?? [],
           '#states' => [
             'visible' => [
               ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'sizes'],

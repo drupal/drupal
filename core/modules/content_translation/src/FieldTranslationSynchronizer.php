@@ -155,7 +155,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           foreach ($groups as $group) {
             $info = $column_groups[$group];
             // A missing 'columns' key indicates we have a single-column group.
-            $columns = array_merge($columns, isset($info['columns']) ? $info['columns'] : [$group]);
+            $columns = array_merge($columns, $info['columns'] ?? [$group]);
           }
           if (!empty($columns)) {
             $values = [];
@@ -285,7 +285,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
             // the new values are at least propagated to all the translations.
             // If the value has only been reordered we just move the old one in
             // the new position.
-            $item = isset($original_field_values[$langcode][$old_delta]) ? $original_field_values[$langcode][$old_delta] : $source_items[$new_delta];
+            $item = $original_field_values[$langcode][$old_delta] ?? $source_items[$new_delta];
             // When saving a default revision starting from a pending revision,
             // we may have desynchronized field values, so we make sure that
             // untranslatable properties are synchronized, even if in any other

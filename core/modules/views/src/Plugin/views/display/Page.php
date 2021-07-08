@@ -348,7 +348,7 @@ class Page extends PathPluginBase {
         $form['menu']['weight'] = [
           '#title' => $this->t('Weight'),
           '#type' => 'textfield',
-          '#default_value' => isset($menu['weight']) ? $menu['weight'] : 0,
+          '#default_value' => $menu['weight'] ?? 0,
           '#description' => $this->t('In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
           '#states' => [
             'visible' => [

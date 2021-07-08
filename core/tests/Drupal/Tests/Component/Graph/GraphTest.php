@@ -112,7 +112,7 @@ class GraphTest extends TestCase {
     foreach ($expected_paths as $vertex => $paths) {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
-      $result = isset($graph[$vertex]['paths']) ? $graph[$vertex]['paths'] : [];
+      $result = $graph[$vertex]['paths'] ?? [];
       $this->assertEquals($expected, $result, sprintf('Expected paths for vertex %s: %s, got %s', $vertex, $this->displayArray($expected, TRUE), $this->displayArray($result, TRUE)));
     }
   }
@@ -130,7 +130,7 @@ class GraphTest extends TestCase {
     foreach ($expected_reverse_paths as $vertex => $paths) {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
-      $result = isset($graph[$vertex]['reverse_paths']) ? $graph[$vertex]['reverse_paths'] : [];
+      $result = $graph[$vertex]['reverse_paths'] ?? [];
       $this->assertEquals($expected, $result, sprintf('Expected reverse paths for vertex %s: %s, got %s', $vertex, $this->displayArray($expected, TRUE), $this->displayArray($result, TRUE)));
     }
   }

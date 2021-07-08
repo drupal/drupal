@@ -66,7 +66,7 @@ class RenderCache implements RenderCacheInterface {
     if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$cid = $this->createCacheID($elements)) {
       return FALSE;
     }
-    $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
+    $bin = $elements['#cache']['bin'] ?? 'render';
 
     if (!empty($cid) && ($cache_bin = $this->cacheFactory->get($bin)) && $cache = $cache_bin->get($cid)) {
       $cached_element = $cache->data;
@@ -96,7 +96,7 @@ class RenderCache implements RenderCacheInterface {
 
     $data = $this->getCacheableRenderArray($elements);
 
-    $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
+    $bin = $elements['#cache']['bin'] ?? 'render';
     $cache = $this->cacheFactory->get($bin);
 
     // Calculate the pre-bubbling CID.

@@ -324,7 +324,7 @@ class FieldPluginBaseTest extends UnitTestCase {
       'path' => $path,
     ];
 
-    $final_html = isset($final_html) ? $final_html : $link_html;
+    $final_html = $final_html ?? $link_html;
 
     $this->setUpUrlIntegrationServices();
     $this->setupDisplayWithEmptyArgumentsAndFields();
@@ -398,7 +398,7 @@ class FieldPluginBaseTest extends UnitTestCase {
       'url' => $url,
     ];
 
-    $final_html = isset($final_html) ? $final_html : $link_html;
+    $final_html = $final_html ?? $link_html;
 
     $this->setUpUrlIntegrationServices();
     $this->setupDisplayWithEmptyArgumentsAndFields();

@@ -354,7 +354,7 @@ function _batch_process() {
     // completion level of the current operation.
     $current    = $total - $remaining + $finished;
     $percentage = _batch_api_percentage($total, $current);
-    $elapsed    = isset($current_set['elapsed']) ? $current_set['elapsed'] : 0;
+    $elapsed    = $current_set['elapsed'] ?? 0;
     $values     = [
       '@remaining'  => $remaining,
       '@total'      => $total,

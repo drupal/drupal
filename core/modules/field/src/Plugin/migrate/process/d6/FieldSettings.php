@@ -44,7 +44,7 @@ class FieldSettings extends ProcessPluginBase {
    *   A valid array of settings.
    */
   public function getSettings($field_type, $global_settings, $original_field_type = NULL) {
-    $max_length = isset($global_settings['max_length']) ? $global_settings['max_length'] : '';
+    $max_length = $global_settings['max_length'] ?? '';
     $max_length = empty($max_length) ? 255 : $max_length;
     $allowed_values = [];
     if (isset($global_settings['allowed_values'])) {
@@ -57,7 +57,7 @@ class FieldSettings extends ProcessPluginBase {
         case 'list_float':
           foreach ($list as $value) {
             $value = explode("|", $value);
-            $allowed_values[$value[0]] = isset($value[1]) ? $value[1] : $value[0];
+            $allowed_values[$value[0]] = $value[1] ?? $value[0];
           }
           break;
 
@@ -89,7 +89,7 @@ class FieldSettings extends ProcessPluginBase {
       return ['target_type' => 'user'];
     }
     else {
-      return isset($settings[$field_type]) ? $settings[$field_type] : [];
+      return $settings[$field_type] ?? [];
     }
   }
 

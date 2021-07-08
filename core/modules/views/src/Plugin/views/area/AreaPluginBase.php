@@ -84,7 +84,7 @@ abstract class AreaPluginBase extends HandlerBase {
       $form['empty'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Display even if view has no result'),
-        '#default_value' => isset($this->options['empty']) ? $this->options['empty'] : 0,
+        '#default_value' => $this->options['empty'] ?? 0,
       ];
     }
   }

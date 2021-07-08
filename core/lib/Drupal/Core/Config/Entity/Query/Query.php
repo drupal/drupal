@@ -92,8 +92,8 @@ class Query extends QueryBase implements QueryInterface {
         $properties = explode('.', $field);
         foreach ($properties as $property) {
           if (isset($a[$property]) || isset($b[$property])) {
-            $a = isset($a[$property]) ? $a[$property] : NULL;
-            $b = isset($b[$property]) ? $b[$property] : NULL;
+            $a = $a[$property] ?? NULL;
+            $b = $b[$property] ?? NULL;
           }
         }
         return ($a <= $b) ? $direction : -$direction;

@@ -230,7 +230,7 @@ abstract class StylePluginBase extends PluginBase {
   public function tokenizeValue($value, $row_index) {
     if (strpos($value, '{{') !== FALSE) {
       // Row tokens might be empty, for example for node row style.
-      $tokens = isset($this->rowTokens[$row_index]) ? $this->rowTokens[$row_index] : [];
+      $tokens = $this->rowTokens[$row_index] ?? [];
       if (!empty($this->view->build_info['substitutions'])) {
         $tokens += $this->view->build_info['substitutions'];
       }
@@ -498,7 +498,7 @@ abstract class StylePluginBase extends PluginBase {
     $output = [];
     $theme_functions = $this->view->buildThemeFunctions($this->groupingTheme);
     foreach ($sets as $set) {
-      $level = isset($set['level']) ? $set['level'] : 0;
+      $level = $set['level'] ?? 0;
 
       $row = reset($set['rows']);
       // Render as a grouping set.
@@ -591,8 +591,8 @@ abstract class StylePluginBase extends PluginBase {
         $set = &$sets;
         foreach ($groupings as $level => $info) {
           $field = $info['field'];
-          $rendered = isset($info['rendered']) ? $info['rendered'] : $group_rendered;
-          $rendered_strip = isset($info['rendered_strip']) ? $info['rendered_strip'] : FALSE;
+          $rendered = $info['rendered'] ?? $group_rendered;
+          $rendered_strip = $info['rendered_strip'] ?? FALSE;
           $grouping = '';
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,

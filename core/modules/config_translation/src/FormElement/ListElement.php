@@ -85,7 +85,7 @@ class ListElement implements ElementInterface {
       $element_key = isset($base_key) ? "$base_key.$key" : $key;
       if ($form_element = ConfigTranslationFormBase::createFormElement($element)) {
         // Traverse into the next level of the configuration.
-        $value = isset($config_values[$key]) ? $config_values[$key] : NULL;
+        $value = $config_values[$key] ?? NULL;
         $form_element->setConfig($base_config, $config_translation, $value, $element_key);
       }
     }

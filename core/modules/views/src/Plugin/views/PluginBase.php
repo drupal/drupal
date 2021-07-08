@@ -245,7 +245,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           continue;
         }
 
-        $this->unpackOptions($storage[$key], $value, isset($definition[$key]['contains']) ? $definition[$key]['contains'] : [], $all, FALSE);
+        $this->unpackOptions($storage[$key], $value, $definition[$key]['contains'] ?? [], $all, FALSE);
       }
       elseif ($all || !empty($definition[$key])) {
         $storage[$key] = $value;

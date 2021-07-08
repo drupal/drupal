@@ -102,7 +102,7 @@ class InfoParserDynamic implements InfoParserInterface {
 
       // Determine if the extension is compatible with the current version of
       // Drupal core.
-      $core_version_constraint = isset($parsed_info['core_version_requirement']) ? $parsed_info['core_version_requirement'] : $parsed_info['core'];
+      $core_version_constraint = $parsed_info['core_version_requirement'] ?? $parsed_info['core'];
       $parsed_info['core_incompatible'] = !Semver::satisfies(\Drupal::VERSION, $core_version_constraint);
       if (isset($parsed_info['version']) && $parsed_info['version'] === 'VERSION') {
         $parsed_info['version'] = \Drupal::VERSION;

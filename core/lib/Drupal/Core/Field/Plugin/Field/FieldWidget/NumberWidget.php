@@ -66,7 +66,7 @@ class NumberWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $value = isset($items[$delta]->value) ? $items[$delta]->value : NULL;
+    $value = $items[$delta]->value ?? NULL;
     $field_settings = $this->getFieldSettings();
 
     $element += [

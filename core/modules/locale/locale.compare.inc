@@ -69,7 +69,7 @@ function locale_translation_build_projects() {
     // For every project store information.
     $data += [
       'name' => $name,
-      'version' => isset($data['info']['version']) ? $data['info']['version'] : '',
+      'version' => $data['info']['version'] ?? '',
       'core' => 'all',
       // A project can provide the path and filename pattern to download the
       // gettext file. Use the default if not.

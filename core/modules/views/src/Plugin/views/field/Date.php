@@ -101,13 +101,13 @@ class Date extends FieldPluginBase {
         'inverse time span' => $this->t('Time span (past dates have "-" prepended)'),
         'time span' => $this->t('Time span (with "ago/hence" appended)'),
       ],
-      '#default_value' => isset($this->options['date_format']) ? $this->options['date_format'] : 'small',
+      '#default_value' => $this->options['date_format'] ?? 'small',
     ];
     $form['custom_date_format'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom date format'),
       '#description' => $this->t('If "Custom", see <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
-      '#default_value' => isset($this->options['custom_date_format']) ? $this->options['custom_date_format'] : '',
+      '#default_value' => $this->options['custom_date_format'] ?? '',
     ];
     // Setup #states for all possible date_formats on the custom_date_format form element.
     foreach (['custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'] as $custom_date_possible) {

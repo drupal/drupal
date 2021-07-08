@@ -40,7 +40,7 @@ class OptionsDefaultFormatter extends FormatterBase {
         $value = $item->value;
         // If the stored value is in the current set of allowed values, display
         // the associated label, otherwise just display the raw value.
-        $output = isset($options[$value]) ? $options[$value] : $value;
+        $output = $options[$value] ?? $value;
         $elements[$delta] = [
           '#markup' => $output,
           '#allowed_tags' => FieldFilteredMarkup::allowedTags(),

@@ -112,7 +112,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       // the 'ValidReference' constraint.
       '#validate_reference' => FALSE,
       '#maxlength' => 1024,
-      '#default_value' => isset($referenced_entities[$delta]) ? $referenced_entities[$delta] : NULL,
+      '#default_value' => $referenced_entities[$delta] ?? NULL,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
     ];
@@ -196,7 +196,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    */
   protected function getSelectionHandlerSetting($setting_name) {
     $settings = $this->getFieldSetting('handler_settings');
-    return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
+    return $settings[$setting_name] ?? NULL;
   }
 
   /**

@@ -23,7 +23,7 @@ class RegisterEntityResolversCompilerPass implements CompilerPassInterface {
 
     // Retrieve registered Normalizers and Encoders from the container.
     foreach ($container->findTaggedServiceIds('entity_resolver') as $id => $attributes) {
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priority = $attributes[0]['priority'] ?? 0;
       $resolvers[$priority][] = new Reference($id);
     }
 

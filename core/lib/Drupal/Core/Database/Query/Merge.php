@@ -331,7 +331,7 @@ class Merge extends Query implements ConditionInterface {
   public function key($field, $value = NULL) {
     // @todo D9: Remove this backwards-compatibility shim.
     if (is_array($field)) {
-      $this->keys($field, isset($value) ? $value : []);
+      $this->keys($field, $value ?? []);
     }
     else {
       $this->keys([$field => $value]);

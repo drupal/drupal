@@ -238,7 +238,7 @@ class BlockForm extends EntityForm {
         continue;
       }
       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
-      $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
+      $condition = $this->manager->createInstance($condition_id, $visibility[$condition_id] ?? []);
       $form_state->set(['conditions', $condition_id], $condition);
       $condition_form = $condition->buildConfigurationForm([], $form_state);
       $condition_form['#type'] = 'details';

@@ -80,7 +80,7 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
           case 'bundle':
             foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
               if ($this->contentTranslationManager->isEnabled($entity_type_id, $bundle)) {
-                $t_args['%bundle_label'] = isset($bundle_info['label']) ? $bundle_info['label'] : $bundle;
+                $t_args['%bundle_label'] = $bundle_info['label'] ?? $bundle;
                 $permission["translate $bundle $entity_type_id"] = [
                   'title' => $this->t('Translate %bundle_label @entity_label', $t_args),
                 ];

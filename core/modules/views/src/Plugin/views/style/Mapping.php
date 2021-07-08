@@ -51,7 +51,7 @@ abstract class Mapping extends StylePluginBase {
     foreach ($this->defineMapping() as $key => $value) {
       $default = !empty($value['#multiple']) ? [] : '';
       $options['mapping']['contains'][$key] = [
-        'default' => isset($value['#default_value']) ? $value['#default_value'] : $default,
+        'default' => $value['#default_value'] ?? $default,
       ];
       if (!empty($value['#toggle'])) {
         $options['mapping']['contains']["toggle_$key"] = [
