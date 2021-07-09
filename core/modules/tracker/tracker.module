@@ -113,13 +113,13 @@ function tracker_comment_delete(CommentInterface $comment) {
  * @param int $changed
  *   The node updated timestamp or comment timestamp.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\tracker\TrackerStorageInterface::add() instead.
  *
  * @see https://www.drupal.org/node/3209781
  */
 function _tracker_add($nid, $uid, $changed) {
-  @trigger_error('_tracker_add() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::add() instead. See https://www.drupal.org/node/3209781', E_USER_DEPRECATED);
+  @trigger_error('_tracker_add() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::add() instead. See https://www.drupal.org/node/3209781', E_USER_DEPRECATED);
   \Drupal::service('tracker.storage')->add($nid, $uid, $changed);
 }
 
@@ -136,13 +136,13 @@ function _tracker_add($nid, $uid, $changed) {
  * @todo Check if we should introduce 'language context' here, because the
  *   callers may need different timestamps depending on the users' language?
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\tracker\TrackerStorageInterface::calculateChanged() instead.
  *
  * @see https://www.drupal.org/node/3209781
  */
 function _tracker_calculate_changed($node) {
-  @trigger_error('_tracker_calculate_changed() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::calculateChanged() instead. See https://www.drupal.org/node/3209781', E_USER_DEPRECATED);
+  @trigger_error('_tracker_calculate_changed() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::calculateChanged() instead. See https://www.drupal.org/node/3209781', E_USER_DEPRECATED);
   return \Drupal::service('tracker.storage')->calculateChanged($node);
 }
 
@@ -156,12 +156,12 @@ function _tracker_calculate_changed($node) {
  * @param int $changed
  *   The last changed timestamp of the node.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\tracker\TrackerStorageInterface::remove() instead.
  *
  * @see https://www.drupal.org/node/3209781
  */
 function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
-  @trigger_error('_tracker_remove() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::remove() instead. See https://www.drupal.org/node/3209781', E_USER_DEPRECATED);
+  @trigger_error('_tracker_remove() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::remove() instead. See https://www.drupal.org/node/3209781', E_USER_DEPRECATED);
   \Drupal::service('tracker.storage')->remove($nid, $uid, $changed);
 }

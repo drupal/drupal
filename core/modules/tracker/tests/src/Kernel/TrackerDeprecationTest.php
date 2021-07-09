@@ -66,7 +66,7 @@ class TrackerDeprecationTest extends KernelTestBase {
    * Test the deprecation of _tracker_add().
    */
   public function testDeprecatedTrackerAdd() {
-    $this->expectDeprecation('_tracker_add() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::add() instead. See https://www.drupal.org/node/3209781');
+    $this->expectDeprecation('_tracker_add() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::add() instead. See https://www.drupal.org/node/3209781');
     $this->assertNull(_tracker_add($this->node->id(), $this->user->id(), 0));
   }
 
@@ -74,7 +74,7 @@ class TrackerDeprecationTest extends KernelTestBase {
    * Test the deprecation of _tracker_calculate_changed().
    */
   public function testDeprecatedTrackerCalculateChanged() {
-    $this->expectDeprecation('_tracker_calculate_changed() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::calculateChanged() instead. See https://www.drupal.org/node/3209781');
+    $this->expectDeprecation('_tracker_calculate_changed() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::calculateChanged() instead. See https://www.drupal.org/node/3209781');
     $this->assertGreaterThan(0, _tracker_calculate_changed($this->node));
   }
 
@@ -82,7 +82,7 @@ class TrackerDeprecationTest extends KernelTestBase {
    * Test the deprecation of _tracker_remove().
    */
   public function testDeprecatedTrackerRemove() {
-    $this->expectDeprecation('_tracker_remove() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::remove() instead. See https://www.drupal.org/node/3209781');
+    $this->expectDeprecation('_tracker_remove() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\tracker\TrackerStorageInterface::remove() instead. See https://www.drupal.org/node/3209781');
     $this->assertNull(_tracker_remove($this->node->id(), $this->user->id()));
   }
 
