@@ -277,10 +277,6 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       $this->leftFormula = $configuration['left_formula'];
     }
 
-    if (empty($this->leftField) && empty($this->leftFormula)) {
-      throw new \InvalidArgumentException("A join cannot be constructed without either 'left_field' or 'left_formula'.");
-    }
-
     if (!empty($configuration['extra'])) {
       $this->extra = $configuration['extra'];
     }
