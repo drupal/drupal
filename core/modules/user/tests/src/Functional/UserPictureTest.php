@@ -118,7 +118,7 @@ class UserPictureTest extends BrowserTestBase {
     $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
       ->setImageStyle(ImageStyle::load($image_style_id))
       ->setSourceImageUri($file->getfileUri());
-    $image_url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
+    $image_url =  \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
     // Verify that the image is displayed on the node page.

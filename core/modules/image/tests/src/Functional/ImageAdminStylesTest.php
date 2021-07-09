@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
-use Drupal\file\Entity\File;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -346,11 +346,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $original_uri = File::load($fid)->getFileUri();
 
     // Test that image is displayed using newly created style.
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+
     $this->drupalGet('node/' . $nid);
     $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
-    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomMachineName(10));
@@ -369,7 +372,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
-    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Delete the style and choose a replacement style.
     $edit = [
@@ -385,7 +388,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
       ->setImageStyle($replacement_style)
       ->setSourceImageUri($original_uri);
-    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
   }
 
   /**
@@ -510,7 +513,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
-    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
+    $this->assertRaw(\Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');

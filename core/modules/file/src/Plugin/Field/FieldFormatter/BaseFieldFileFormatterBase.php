@@ -6,13 +6,66 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for file formatters, which allow to link to the file download URL.
  */
 abstract class BaseFieldFileFormatterBase extends FormatterBase {
+
+  /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
+   * Constructs a BaseFieldFileFormatterBase object.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, FileUrlGeneratorInterface $file_url_generator = NULL) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    if (!$file_url_generator) {
+      @trigger_error('Calling BaseFieldFileFormatterBase::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and the $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
+    }
+    $this->fileUrlGenerator = $file_url_generator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('file_url_generator')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -47,9 +100,7 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
     $url = NULL;
     // Add support to link to the entity itself.
     if ($this->getSetting('link_to_file')) {
-      // @todo Wrap in file_url_transform_relative(). This is currently
-      // impossible. See below.
-      $url = file_create_url($items->getEntity()->uri->value);
+      $url = $this->fileUrlGenerator->generate($items->getEntity()->getFileUri());
     }
 
     foreach ($items as $delta => $item) {
@@ -59,17 +110,7 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
         $elements[$delta] = [
           '#type' => 'link',
           '#title' => $view_value,
-          '#url' => Url::fromUri($url),
-          // @todo Remove the 'url.site' cache context by using a relative file
-          // URL (file_url_transform_relative()). This is currently impossible
-          // because #type => link requires a Url object, and Url objects do not
-          // support relative URLs: they require fully qualified URLs. Fix in
-          // https://www.drupal.org/node/2646744.
-          '#cache' => [
-            'contexts' => [
-              'url.site',
-            ],
-          ],
+          '#url' => $url,
         ];
       }
       else {

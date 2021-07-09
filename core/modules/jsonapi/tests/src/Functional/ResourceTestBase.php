@@ -2448,7 +2448,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->grantPermissionsToTestedRole([
       'use editorial transition create_new_draft',
       'use editorial transition archived_published',
-      'use editorial transition published',
+      'use editorial transition publish',
     ]);
 
     // Disallow PATCHing an entity that has a pending revision.

@@ -61,6 +61,8 @@ class ImageUrlFormatter extends ImageFormatter {
 
     /** @var \Drupal\image\ImageStyleInterface $image_style */
     $image_style = $this->imageStyleStorage->load($this->getSetting('image_style'));
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
     /** @var \Drupal\file\FileInterface[] $images */
     foreach ($images as $delta => $image) {
       $image_uri = $image->getFileUri();
@@ -72,9 +74,9 @@ class ImageUrlFormatter extends ImageFormatter {
           ->toString();
       }
       else {
-        $url = file_create_url($image_uri);
+        $url = $file_url_generator->generateString($image_uri);
       }
-      $url = file_url_transform_relative($url);
+      $url = $file_url_generator->transformRelative($url);
 
       // Add cacheability metadata from the image and image style.
       $cacheability = CacheableMetadata::createFromObject($image);

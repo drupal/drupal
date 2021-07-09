@@ -22,8 +22,8 @@ settings:
   views_label: ''
   items_per_page: none
 visibility:
-  node_type:
-    id: node_type
+  entity_bundle:node:
+    id: entity_bundle:node
     bundles:
       article: article
     negate: false

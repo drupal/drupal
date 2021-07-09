@@ -58,7 +58,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   in an <img> tag. Requesting the URL will cause the image to be created.
    *
    * @see \Drupal\image\Controller\ImageStyleDownloadController::deliver()
-   * @see file_url_transform_relative()
+   * @see \Drupal\Core\File\FileUrlGeneratorInterface::transformRelative()
    *
    * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */

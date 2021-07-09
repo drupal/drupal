@@ -26,7 +26,7 @@ class RetrieveFileTest extends BrowserTestBase {
     $file_system->mkdir($sourcedir = 'public://' . $this->randomMachineName());
     // cSpell:disable-next-line
     $filename = 'Файл для тестирования ' . $this->randomMachineName();
-    $url = file_create_url($sourcedir . '/' . $filename);
+    $url = \Drupal::service('file_url_generator')->generateAbsoluteString($sourcedir . '/' . $filename);
     $retrieved_file = system_retrieve_file($url);
     $this->assertFalse($retrieved_file, 'Non-existent file not fetched.');
 
