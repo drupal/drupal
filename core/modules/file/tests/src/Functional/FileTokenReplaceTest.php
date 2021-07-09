@@ -56,7 +56,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:path]'] = Html::escape($file->getFileUri());
     $tests['[file:mime]'] = Html::escape($file->getMimeType());
     $tests['[file:size]'] = format_size($file->getSize());
-    $tests['[file:url]'] = Html::escape(file_create_url($file->getFileUri()));
+    $tests['[file:url]'] = Html::escape($file->createFileUrl(FALSE));
     $tests['[file:created]'] = $date_formatter->format($file->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:created:short]'] = $date_formatter->format($file->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[file:changed]'] = $date_formatter->format($file->getChangedTime(), 'medium', '', NULL, $language_interface->getId());

@@ -5,6 +5,7 @@ namespace Drupal\image\Plugin\Field\FieldFormatter;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -44,6 +45,13 @@ class ImageFormatter extends ImageFormatterBase {
   protected $imageStyleStorage;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Constructs an ImageFormatter object.
    *
    * @param string $plugin_id
@@ -64,11 +72,18 @@ class ImageFormatter extends ImageFormatterBase {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
    *   The image style storage.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
     $this->imageStyleStorage = $image_style_storage;
+    if (!$file_url_generator) {
+      @trigger_error('Calling ImageFormatter::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and the $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
+    }
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -84,7 +99,8 @@ class ImageFormatter extends ImageFormatterBase {
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('current_user'),
-      $container->get('entity_type.manager')->getStorage('image_style')
+      $container->get('entity_type.manager')->getStorage('image_style'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -199,16 +215,9 @@ class ImageFormatter extends ImageFormatterBase {
     }
 
     foreach ($files as $delta => $file) {
-      $cache_contexts = [];
       if (isset($link_file)) {
         $image_uri = $file->getFileUri();
-        // @todo Wrap in file_url_transform_relative(). This is currently
-        // impossible. As a work-around, we currently add the 'url.site' cache
-        // context to ensure different file URLs are generated for different
-        // sites in a multisite setup, including HTTP and HTTPS versions of the
-        // same site. Fix in https://www.drupal.org/node/2646744.
-        $url = Url::fromUri(file_create_url($image_uri));
-        $cache_contexts[] = 'url.site';
+        $url = $this->fileUrlGenerator->generate($image_uri);
       }
       $cache_tags = Cache::mergeTags($base_cache_tags, $file->getCacheTags());
 
@@ -226,7 +235,6 @@ class ImageFormatter extends ImageFormatterBase {
         '#url' => $url,
         '#cache' => [
           'tags' => $cache_tags,
-          'contexts' => $cache_contexts,
         ],
       ];
     }

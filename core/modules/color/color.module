@@ -474,7 +474,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
     }
 
     foreach ($files as $file) {
-      $css_optimizer = new CssOptimizer();
+      $css_optimizer = new CssOptimizer(\Drupal::service('file_url_generator'));
       // Aggregate @imports recursively for each configured top level CSS file
       // without optimization. Aggregation and optimization will be
       // handled by drupal_build_css_cache() only.

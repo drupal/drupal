@@ -87,20 +87,22 @@ class NodeRSSContentTest extends NodeTestBase {
       'type' => 'article',
       'promote' => 1,
     ];
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
     $this->drupalCreateNode($defaults + [
       'body' => [
-        'value' => '<p><a href="' . file_url_transform_relative(file_create_url('public://root-relative')) . '">Root-relative URL</a></p>',
+        'value' => '<p><a href="' . $file_url_generator->generateString('public://root-relative') . '">Root-relative URL</a></p>',
         'format' => 'full_html',
       ],
     ]);
-    $protocol_relative_url = substr(file_create_url('public://protocol-relative'), strlen(\Drupal::request()->getScheme() . ':'));
+    $protocol_relative_url = substr($file_url_generator->generateAbsoluteString('public://protocol-relative'), strlen(\Drupal::request()->getScheme() . ':'));
     $this->drupalCreateNode($defaults + [
       'body' => [
         'value' => '<p><a href="' . $protocol_relative_url . '">Protocol-relative URL</a></p>',
         'format' => 'full_html',
       ],
     ]);
-    $absolute_url = file_create_url('public://absolute');
+    $absolute_url = $file_url_generator->generateAbsoluteString('public://absolute');
     $this->drupalCreateNode($defaults + [
       'body' => [
         'value' => '<p><a href="' . $absolute_url . '">Absolute URL</a></p>',
@@ -110,7 +112,7 @@ class NodeRSSContentTest extends NodeTestBase {
 
     $this->drupalGet('rss.xml');
     // Verify that root-relative URL is transformed to absolute.
-    $this->assertRaw(file_create_url('public://root-relative'));
+    $this->assertSession()->responseContains($file_url_generator->generateAbsoluteString('public://root-relative'));
     // Verify that protocol-relative URL is left untouched.
     $this->assertRaw($protocol_relative_url);
     // Verify that absolute URL is left untouched.

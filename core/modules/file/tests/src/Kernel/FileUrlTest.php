@@ -21,7 +21,7 @@ class FileUrlTest extends FileManagedUnitTestBase {
     $directory_uri = 'public://' . dirname($filepath);
     \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, 'public');
-    $url = file_create_url($file->getFileUri());
+    $url = $file->createFileUrl(FALSE);
     $expected_url = $test_base_url . '/' . basename($filepath);
     $this->assertSame($url, $expected_url);
   }

@@ -42,7 +42,7 @@ class FileHalJsonAnonTest extends FileResourceTestBase {
 
     $normalization = $this->applyHalFieldNormalization($default_normalization);
 
-    $url = file_create_url($this->entity->getFileUri());
+    $url = $this->entity->createFileUrl(FALSE);
     if ($this->config('hal.settings')->get('bc_file_uri_as_url_normalizer')) {
       $normalization['uri'][0]['value'] = $url;
     }

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\CssOptimizer;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -24,10 +25,23 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   protected $optimizer;
 
+  /**
+   * The file URL generator mock.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $fileUrlGenerator;
+
   protected function setUp(): void {
     parent::setUp();
-
-    $this->optimizer = new CssOptimizer();
+    $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
+    $this->fileUrlGenerator->expects($this->any())
+      ->method('generateString')
+      ->with($this->isType('string'))
+      ->willReturnCallback(function ($uri) {
+        return 'generated-relative-url:' . $uri;
+      });
+    $this->optimizer = new CssOptimizer($this->fileUrlGenerator);
   }
 
   /**
@@ -58,7 +72,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // - Proper URLs in imported files. (https://www.drupal.org/node/265719)
       // - A background image with relative paths, which must be rewritten.
       // - The rewritten background image path must also be passed through
-      //   file_create_url(). (https://www.drupal.org/node/1961340)
+      //   FileUrlGeneratorInterface::generate().
+      //   (https://www.drupal.org/node/1961340)
       // - Imported files that are external (protocol-relative URL or not)
       //   should not be expanded. (https://www.drupal.org/node/2014851)
       [
@@ -72,7 +87,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_import.css',
         ],
-        str_replace('url(images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_input_with_import.css.optimized.css')),
+        str_replace('url(images/icon.png)', 'url(generated-relative-url:' . $path . 'images/icon.png)', file_get_contents($absolute_path . 'css_input_with_import.css.optimized.css')),
       ],
       // File. Tests:
       // - Retain comment hacks.
@@ -104,7 +119,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_import.css',
         ],
-        str_replace('url(../images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_subfolder/css_input_with_import.css.optimized.css')),
+        str_replace('url(../images/icon.png)', 'url(generated-relative-url:' . $path . 'images/icon.png)', file_get_contents($absolute_path . 'css_subfolder/css_input_with_import.css.optimized.css')),
       ],
       // File. Tests:
       // - Any @charset declaration at the beginning of a file should be
@@ -267,58 +282,10 @@ class CssOptimizerUnitTest extends UnitTestCase {
 }
 
 /**
- * Temporary mock for file_create_url(), until that is moved into
- * Component/Utility.
- */
-if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
-
-  function file_create_url($uri) {
-    return 'file_create_url:' . $uri;
-  }
-
-}
-
-/**
- * Temporary mock of file_url_transform_relative, until that is moved into
- * Component/Utility.
- */
-if (!function_exists('Drupal\Tests\Core\Asset\file_url_transform_relative')) {
-
-  function file_url_transform_relative($uri) {
-    return 'file_url_transform_relative:' . $uri;
-  }
-
-}
-
-/**
- * CssCollectionRenderer uses file_create_url() & file_url_transform_relative(),
- * which *are* available when using the Simpletest test runner, but not when
- * using the PHPUnit test runner; hence this hack.
+ * CssCollectionRenderer uses file_uri_scheme() which need to be mocked.
  */
 namespace Drupal\Core\Asset;
 
-if (!function_exists('Drupal\Core\Asset\file_create_url')) {
-
-  /**
-   * Temporary mock for file_create_url(), until that is moved into
-   * Component/Utility.
-   */
-  function file_create_url($uri) {
-    return \Drupal\Tests\Core\Asset\file_create_url($uri);
-  }
-
-}
-if (!function_exists('Drupal\Core\Asset\file_url_transform_relative')) {
-
-  /**
-   * Temporary mock of file_url_transform_relative, until that is moved into
-   * Component/Utility.
-   */
-  function file_url_transform_relative($uri) {
-    return \Drupal\Tests\Core\Asset\file_url_transform_relative($uri);
-  }
-
-}
 if (!function_exists('Drupal\Core\Asset\file_uri_scheme')) {
 
   function file_uri_scheme($uri) {

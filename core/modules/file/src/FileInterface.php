@@ -59,8 +59,7 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return string
    *   A string containing a URL that may be used to access the file.
    *
-   * @see file_create_url()
-   * @see file_url_transform_relative()
+   * @see \Drupal\Core\File\FileUrlGeneratorInterface
    */
   public function createFileUrl($relative = TRUE);
 

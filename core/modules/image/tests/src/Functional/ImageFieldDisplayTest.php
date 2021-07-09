@@ -106,6 +106,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
 
     // Test that the default formatter is being used.
+    /** @var \Drupal\file\FileInterface $file */
     $file = $node->{$field_name}->entity;
     $image_uri = $file->getFileUri();
     $image = [
@@ -135,7 +136,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     ];
-    $default_output = '<a href="' . file_create_url($image_uri) . '">' . $renderer->renderRoot($image) . '</a>';
+    $default_output = '<a href="' . $file->createFileUrl() . '">' . $renderer->renderRoot($image) . '</a>';
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // @todo Remove in https://www.drupal.org/node/2646744.
@@ -144,7 +145,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertRaw($default_output);
     // Verify that the image can be downloaded.
-    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
+    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet($file->createFileUrl(FALSE)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
@@ -153,7 +154,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
-      $this->drupalGet(file_create_url($image_uri));
+      $this->drupalGet($file->createFileUrl(FALSE));
       $this->assertSession()->statusCodeEquals(403);
 
       // Log in again.
@@ -178,7 +179,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '//a[@href=:path]/img[@src=:url and @alt=:alt and @width=:width and @height=:height]',
       [
         ':path' => $node->toUrl()->toString(),
-        ':url' => file_url_transform_relative(file_create_url($image['#uri'])),
+        ':url' => $file->createFileUrl(),
         ':width' => $image['#width'],
         ':height' => $image['#height'],
         ':alt' => $alt,
@@ -221,12 +222,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'type' => 'image_url',
       'settings' => ['image_style' => ''],
     ];
-    $expected_url = file_url_transform_relative(file_create_url($image_uri));
+    $expected_url = $file->createFileUrl();
     $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
 
     // Test the image URL formatter with an image style.
     $display_options['settings']['image_style'] = 'thumbnail';
-    $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $expected_url = \Drupal::service('file_url_generator')->transformRelative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
     $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
   }
 
@@ -285,7 +286,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
 
-    $url = file_url_transform_relative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $url = $file_url_generator->transformRelative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
     $this->assertSession()->elementExists('css', 'img[width=40][height=20][class=image-style-medium][src="' . $url . '"]');
 
     // Add alt/title fields to the image and verify that they are displayed.

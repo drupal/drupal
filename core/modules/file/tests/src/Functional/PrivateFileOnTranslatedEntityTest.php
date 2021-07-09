@@ -98,7 +98,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$default_language_node->id()]);
     $node = Node::load($default_language_node->id());
     $node_file = File::load($node->{$this->fieldName}->target_id);
-    $this->drupalGet(file_create_url($node_file->getFileUri()));
+    $this->drupalGet($node_file->createFileUrl(FALSE));
     $this->assertSession()->statusCodeEquals(200);
 
     // Translate the node into French.
@@ -126,7 +126,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     // Ensure the file attached to the translated node can be downloaded.
     $french_node = $default_language_node->getTranslation('fr');
     $node_file = File::load($french_node->{$this->fieldName}->target_id);
-    $this->drupalGet(file_create_url($node_file->getFileUri()));
+    $this->drupalGet($node_file->createFileUrl(FALSE));
     $this->assertSession()->statusCodeEquals(200);
   }
 

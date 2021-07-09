@@ -123,8 +123,8 @@ trait BrowserHtmlDebugTrait {
     $html_output_filename = $this->htmlOutputClassName . '-' . $this->htmlOutputCounter . '-' . $this->htmlOutputTestId . '.html';
     file_put_contents($this->htmlOutputDirectory . '/' . $html_output_filename, $message);
     file_put_contents($this->htmlOutputCounterStorage, $this->htmlOutputCounter++);
-    // Do not use file_create_url() as the module_handler service might not be
-    // available.
+    // Do not use the file_url_generator service as the module_handler service
+    // might not be available.
     $uri = $this->htmlOutputBaseUrl . '/sites/simpletest/browser_output/' . $html_output_filename;
     file_put_contents($this->htmlOutputFile, $uri . "\n", FILE_APPEND);
   }

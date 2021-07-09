@@ -104,7 +104,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
             'media:1',
             'media_view',
           ])
-          ->setCacheContexts(['url.site', 'user.permissions'])
+          ->setCacheContexts(['user.permissions'])
           ->setCacheMaxAge(Cache::PERMANENT),
       ],
       'custom attributes are retained' => [
