@@ -53,6 +53,89 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
+   * Tests the file_validate_extensions() function.
+   *
+   * @param array $file_properties
+   *   The properties of the file being validated.
+   * @param string[] $extensions
+   *   An array of the allowed file extensions.
+   * @param string[] $expected_errors
+   *   The expected error messages as string.
+   *
+   * @dataProvider providerTestFileValidateExtensionsOnUri
+   */
+  public function testFileValidateExtensionsOnUri(array $file_properties, array $extensions, array $expected_errors) {
+    $file = File::create($file_properties);
+    $actual_errors = file_validate_extensions($file, implode(' ', $extensions));
+    $actual_errors_as_string = array_map(function ($error_message) {
+      return (string) $error_message;
+    }, $actual_errors);
+    $this->assertEquals($expected_errors, $actual_errors_as_string);
+  }
+
+  /**
+   * Data provider for ::testFileValidateExtensionsOnUri.
+   *
+   * @return array[][]
+   *   The test cases.
+   */
+  public function providerTestFileValidateExtensionsOnUri(): array {
+    $temporary_txt_file_properties = [
+      'filename' => 'asdf.txt',
+      'uri' => 'temporary://asdf',
+      'status' => 0,
+    ];
+    $permanent_txt_file_properties = [
+      'filename' => 'asdf.txt',
+      'uri' => 'public://asdf_0.txt',
+      'status' => 1,
+    ];
+    $permanent_png_file_properties = [
+      'filename' => 'The Druplicon',
+      'uri' => 'public://druplicon.png',
+      'status' => 1,
+    ];
+    return [
+      'Temporary txt validated with "asdf", "txt", "pork"' => [
+        'File properties' => $temporary_txt_file_properties,
+        'Allowed_extensions' => ['asdf', 'txt', 'pork'],
+        'Expected errors' => [],
+      ],
+      'Temporary txt validated with "exe" and "png"' => [
+        'File properties' => $temporary_txt_file_properties,
+        'Allowed_extensions' => ['exe', 'png'],
+        'Expected errors' => [
+          'Only files with the following extensions are allowed: <em class="placeholder">exe png</em>.',
+        ],
+      ],
+      'Permanent txt validated with "asdf", "txt", "pork"' => [
+        'File properties' => $permanent_txt_file_properties,
+        'Allowed_extensions' => ['asdf', 'txt', 'pork'],
+        'Expected errors' => [],
+      ],
+      'Permanent txt validated with "exe" and "png"' => [
+        'File properties' => $permanent_txt_file_properties,
+        'Allowed_extensions' => ['exe', 'png'],
+        'Expected errors' => [
+          'Only files with the following extensions are allowed: <em class="placeholder">exe png</em>.',
+        ],
+      ],
+      'Permanent png validated with "png", "gif", "jpg", "jpeg"' => [
+        'File properties' => $permanent_png_file_properties,
+        'Allowed_extensions' => ['png', 'gif', 'jpg', 'jpeg'],
+        'Expected errors' => [],
+      ],
+      'Permanent png validated with "exe" and "txt"' => [
+        'File properties' => $permanent_png_file_properties,
+        'Allowed_extensions' => ['exe', 'txt'],
+        'Expected errors' => [
+          'Only files with the following extensions are allowed: <em class="placeholder">exe txt</em>.',
+        ],
+      ],
+    ];
+  }
+
+  /**
    * This ensures a specific file is actually an image.
    */
   public function testFileValidateIsImage() {
