@@ -20,14 +20,14 @@ use Drupal\migrate\Row;
  *
  * Example:
  * Given source keys of foo, bar, and baz:
- *
+ * @code
  * process_key:
  *   plugin: null_coalesce
  *   source:
  *     - foo
  *     - bar
  *     - baz
- *
+ * @endcode
  * This plugin will return the equivalent of `foo ?? bar ?? baz`
  *
  * @MigrateProcessPlugin(
