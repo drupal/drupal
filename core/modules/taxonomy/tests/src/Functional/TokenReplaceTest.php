@@ -22,6 +22,11 @@ class TokenReplaceTest extends TaxonomyTestBase {
   protected $vocabulary;
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node'];
+
+  /**
    * Name of the taxonomy term reference field.
    *
    * @var string

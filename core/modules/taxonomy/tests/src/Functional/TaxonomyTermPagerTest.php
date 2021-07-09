@@ -10,13 +10,6 @@ namespace Drupal\Tests\taxonomy\Functional;
 class TaxonomyTermPagerTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['taxonomy'];
-
-  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
@@ -33,10 +26,7 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer taxonomy',
-      'bypass node access',
-    ]));
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
     $this->vocabulary = $this->createVocabulary();
   }
 

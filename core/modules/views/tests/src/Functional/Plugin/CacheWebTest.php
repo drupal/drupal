@@ -29,7 +29,7 @@ class CacheWebTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy', 'node'];
 
   /**
    * {@inheritdoc}
