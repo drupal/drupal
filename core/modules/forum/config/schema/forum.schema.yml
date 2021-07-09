@@ -43,11 +43,6 @@ block.settings.forum_active_block:
   type: block_settings
   label: 'Active forum topics block'
   mapping:
-    properties:
-      type: sequence
-      label: 'Properties'
-      sequence:
-        type: string
     block_count:
       type: integer
       label: 'Block count'
@@ -56,11 +51,6 @@ block.settings.forum_new_block:
   type: block_settings
   label: 'New forum topics block'
   mapping:
-    properties:
-      type: sequence
-      label: 'Properties'
-      sequence:
-        type: string
     block_count:
       type: integer
       label: 'Block count'
