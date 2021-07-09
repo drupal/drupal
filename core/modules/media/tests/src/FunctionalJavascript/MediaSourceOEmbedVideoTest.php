@@ -4,6 +4,7 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\media\Entity\Media;
+use Drupal\media\Entity\MediaType;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use Drupal\user\Entity\Role;
@@ -163,6 +164,29 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $page->pressButton('Save');
 
     $assert_session->pageTextContains('The CollegeHumor provider is not allowed.');
+
+    // Register a CollegeHumor video as a second oEmbed resource. Note that its
+    // thumbnail URL does not have a file extension.
+    $media_type = MediaType::load($media_type_id);
+    $source_configuration = $media_type->getSource()->getConfiguration();
+    $source_configuration['providers'][] = 'CollegeHumor';
+    $media_type->getSource()->setConfiguration($source_configuration);
+    $media_type->save();
+    $video_url = 'http://www.collegehumor.com/video/40003213/let-not-get-a-drink-sometime';
+    ResourceController::setResourceUrl($video_url, $this->getFixturesDirectory() . '/video_collegehumor.xml');
+
+    // Create a new media item using a CollegeHumor video.
+    $this->drupalGet("media/add/$media_type_id");
+    $assert_session->fieldExists('Remote video URL')->setValue($video_url);
+    $assert_session->buttonExists('Save')->press();
+
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = Media::load(2);
+    $thumbnail = $media->getSource()->getMetadata($media, 'thumbnail_uri');
+    $this->assertFileExists($thumbnail);
+    // Although the resource's thumbnail URL doesn't have a file extension, we
+    // should have deduced the correct one.
+    $this->assertStringEndsWith('.png', $thumbnail);
 
     // Test anonymous access to media via iframe.
     $this->drupalLogout();
