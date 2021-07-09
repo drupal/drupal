@@ -442,7 +442,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager, $this->time])
       ->setMethods(['installedStorageSchema', 'createSharedTableSchema'])
       ->getMock();
     $schema_handler
