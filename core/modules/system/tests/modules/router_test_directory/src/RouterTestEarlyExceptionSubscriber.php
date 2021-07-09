@@ -19,7 +19,7 @@ class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
    * in core, namely DefaultExceptionHtmlSubscriber.
    */
   public function onKernelRequest(GetResponseEvent $event) {
-    if ($event->isMasterRequest() && $event->getRequest()->headers->get('Authorization') === 'Bearer invalid') {
+    if ($event->isMainRequest() && $event->getRequest()->headers->get('Authorization') === 'Bearer invalid') {
       throw new HttpException(
         Response::HTTP_UNAUTHORIZED,
         'This is a common exception during authentication.'
