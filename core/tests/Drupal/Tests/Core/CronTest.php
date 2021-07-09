@@ -90,7 +90,6 @@ class CronTest extends UnitTestCase {
     // Build the container using the resulting mock objects.
     \Drupal::setContainer(new ContainerBuilder());
     \Drupal::getContainer()->set('logger.factory', $logger_factory->reveal());
-    \Drupal::getContainer()->set('datetime.time', $time->reveal());
     \Drupal::getContainer()->set('state', $this->state);
 
     // Create mock objects for constructing the Cron class.
@@ -115,7 +114,7 @@ class CronTest extends UnitTestCase {
     ];
 
     // Create a queue instance for this queue worker.
-    $this->queue = new Memory($queue_worker);
+    $this->queue = new Memory($queue_worker, NULL, $time->reveal());
     $queue_factory->get($queue_worker)->willReturn($this->queue);
 
     // Create a mock queue worker plugin instance based on above definition.

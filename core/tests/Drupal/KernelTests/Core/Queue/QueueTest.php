@@ -19,9 +19,9 @@ class QueueTest extends KernelTestBase {
    */
   public function testSystemQueue() {
     // Create two queues.
-    $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
+    $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection(), \Drupal::time());
     $queue1->createQueue();
-    $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
+    $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection(), \Drupal::time());
     $queue2->createQueue();
 
     $this->runQueueTest($queue1, $queue2);
@@ -32,9 +32,9 @@ class QueueTest extends KernelTestBase {
    */
   public function testMemoryQueue() {
     // Create two queues.
-    $queue1 = new Memory($this->randomMachineName());
+    $queue1 = new Memory($this->randomMachineName(), NULL, \Drupal::time());
     $queue1->createQueue();
-    $queue2 = new Memory($this->randomMachineName());
+    $queue2 = new Memory($this->randomMachineName(), NULL, \Drupal::time());
     $queue2->createQueue();
 
     $this->runQueueTest($queue1, $queue2);
