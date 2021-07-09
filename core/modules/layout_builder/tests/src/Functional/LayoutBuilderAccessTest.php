@@ -66,8 +66,10 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
    *   Whether access is expected for a non-editable override.
    * @param bool $editable_access
    *   Whether access is expected for an editable override.
+   * @param array $permission_dependencies
+   *   An array of expected permission dependencies.
    */
-  public function testAccessWithBundles(array $permissions, $default_access, $non_editable_access, $editable_access) {
+  public function testAccessWithBundles(array $permissions, $default_access, $non_editable_access, $editable_access, array $permission_dependencies) {
     $permissions[] = 'edit own bundle_with_section_field content';
     $permissions[] = 'access content';
     $user = $this->drupalCreateUser($permissions);
@@ -126,6 +128,13 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
 
     $this->drupalGet('node/' . $non_viewable_node->id() . '/layout');
     $this->assertExpectedAccess(FALSE);
+
+    if (!empty($permission_dependencies)) {
+      $permission_definitions = \Drupal::service('user.permissions')->getPermissions();
+      foreach ($permission_dependencies as $permission => $expected_dependencies) {
+        $this->assertSame($expected_dependencies, $permission_definitions[$permission]['dependencies']);
+      }
+    }
   }
 
   /**
@@ -143,18 +152,29 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
       TRUE,
       TRUE,
       TRUE,
+      [],
     ];
     $data['override permissions'] = [
       ['configure all bundle_with_section_field node layout overrides'],
       FALSE,
       TRUE,
       TRUE,
+      [
+        'configure all bundle_with_section_field node layout overrides' => [
+          'config' => ['core.entity_view_display.node.bundle_with_section_field.default'],
+        ],
+      ],
     ];
     $data['editable override permissions'] = [
       ['configure editable bundle_with_section_field node layout overrides'],
       FALSE,
       FALSE,
       TRUE,
+      [
+        'configure editable bundle_with_section_field node layout overrides' => [
+          'config' => ['core.entity_view_display.node.bundle_with_section_field.default'],
+        ],
+      ],
     ];
     return $data;
   }
@@ -164,7 +184,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
    *
    * @dataProvider providerTestAccessWithoutBundles
    */
-  public function testAccessWithoutBundles(array $permissions, $default_access, $non_editable_access, $editable_access) {
+  public function testAccessWithoutBundles(array $permissions, $default_access, $non_editable_access, $editable_access, array $permission_dependencies) {
     $permissions[] = 'access user profiles';
     $user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($user);
@@ -202,6 +222,13 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
 
     $this->drupalGet('user/' . $non_viewable_user->id() . '/layout');
     $this->assertExpectedAccess(FALSE);
+
+    if (!empty($permission_dependencies)) {
+      $permission_definitions = \Drupal::service('user.permissions')->getPermissions();
+      foreach ($permission_dependencies as $permission => $expected_dependencies) {
+        $this->assertSame($expected_dependencies, $permission_definitions[$permission]['dependencies']);
+      }
+    }
   }
 
   /**
@@ -219,18 +246,29 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
       TRUE,
       TRUE,
       TRUE,
+      [],
     ];
     $data['override permissions'] = [
       ['configure all user user layout overrides'],
       FALSE,
       TRUE,
       TRUE,
+      [
+        'configure all user user layout overrides' => [
+          'config' => ['core.entity_view_display.user.user.default'],
+        ],
+      ],
     ];
     $data['editable override permissions'] = [
       ['configure editable user user layout overrides'],
       FALSE,
       FALSE,
       TRUE,
+      [
+        'configure all user user layout overrides' => [
+          'config' => ['core.entity_view_display.user.user.default'],
+        ],
+      ],
     ];
     return $data;
   }

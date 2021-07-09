@@ -59,6 +59,13 @@ class FilterPermissions implements ContainerInjectionInterface {
             '#markup' => $this->t('Warning: This permission may have security implications depending on how the text format is configured.'),
             '#suffix' => '</em>',
           ],
+          // This permission is generated on behalf of $format text format,
+          // therefore add this text format as a config dependency.
+          'dependencies' => [
+            $format->getConfigDependencyKey() => [
+              $format->getConfigDependencyName(),
+            ],
+          ],
         ];
       }
     }

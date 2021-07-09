@@ -27,3 +27,7 @@ entity_test.entity_test_bundle.*:
     description:
       type: text
       label: 'Description'
+
+entity_test.entity_test_mul_bundle.*:
+  type: entity_test.entity_test_bundle.*
+  label: 'Entity test mul bundle'

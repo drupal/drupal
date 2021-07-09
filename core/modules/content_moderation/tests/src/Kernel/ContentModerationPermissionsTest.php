@@ -110,14 +110,29 @@ class ContentModerationPermissionsTest extends KernelTestBase {
           'use simple_workflow transition publish' => [
             'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Publish</em> transition.',
             'description' => 'Move content from <em class="placeholder">Draft, Published</em> states to <em class="placeholder">Published</em> state.',
+            'dependencies' => [
+              'config' => [
+                'workflows.workflow.simple_workflow',
+              ],
+            ],
           ],
           'use simple_workflow transition create_new_draft' => [
             'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Create New Draft</em> transition.',
             'description' => 'Move content from <em class="placeholder">Draft, Published</em> states to <em class="placeholder">Draft</em> state.',
+            'dependencies' => [
+              'config' => [
+                'workflows.workflow.simple_workflow',
+              ],
+            ],
           ],
           'use simple_workflow transition archive' => [
             'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Archive</em> transition.',
             'description' => 'Move content from <em class="placeholder">Published</em> state to <em class="placeholder">Archived</em> state.',
+            'dependencies' => [
+              'config' => [
+                'workflows.workflow.simple_workflow',
+              ],
+            ],
           ],
         ],
       ],

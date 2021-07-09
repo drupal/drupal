@@ -1,6 +1,23 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.article
+    - node.type.page
+    - node.type.recipe
+    - taxonomy.vocabulary.recipe_category
+    - taxonomy.vocabulary.tags
+    - workflows.workflow.editorial
+  module:
+    - content_moderation
+    - contextual
+    - file
+    - node
+    - path
+    - quickedit
+    - system
+    - taxonomy
+    - toolbar
 id: author
 label: Author
 weight: 3

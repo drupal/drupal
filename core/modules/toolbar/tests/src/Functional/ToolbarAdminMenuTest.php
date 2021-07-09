@@ -7,6 +7,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -114,6 +115,16 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
    * implementations.
    */
   public function testModuleStatusChangeSubtreesHashCacheClear() {
+    // Use an admin role to ensure the user has all available permissions. This
+    // results in the admin menu links changing as the taxonomy module is
+    // installed and uninstalled because the role will always have the
+    // 'administer taxonomy' permission if it exists.
+    $role = Role::load($this->createRole([]));
+    $role->setIsAdmin(TRUE);
+    $role->save();
+    $this->adminUser->addRole($role->id());
+    $this->adminUser->save();
+
     // Uninstall a module.
     $edit = [];
     $edit['uninstall[taxonomy]'] = TRUE;

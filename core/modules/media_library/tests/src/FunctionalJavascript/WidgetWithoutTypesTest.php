@@ -129,7 +129,7 @@ class WidgetWithoutTypesTest extends MediaLibraryTestBase {
     // Visit a node create page.
     $this->drupalGet('node/add/basic_page');
 
-    $field_ui_uninstalled_message = 'There are no allowed media types configured for this field. Edit the field settings to select the allowed media types.';
+    $field_ui_uninstalled_message = 'There are no allowed media types configured for this field. Please contact the site administrator.';
 
     // Assert the link is now longer part of the message.
     $assert_session->elementNotExists('named', ['link', 'Edit the field settings']);

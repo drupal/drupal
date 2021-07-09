@@ -1,6 +1,21 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.article
+    - node.type.page
+    - taxonomy.vocabulary.tags
+  module:
+    - comment
+    - contextual
+    - file
+    - node
+    - path
+    - quickedit
+    - system
+    - taxonomy
+    - toolbar
+    - tour
 id: content_editor
 label: 'Content editor'
 weight: 2

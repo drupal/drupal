@@ -79,22 +79,33 @@ class LayoutBuilderOverridesPermissions implements ContainerInjectionInterface {
         '@entity_type_plural' => $entity_type->getPluralLabel(),
         '%bundle' => $this->bundleInfo->getBundleInfo($entity_type_id)[$bundle]['label'],
       ];
+      // These permissions are generated on behalf of $entity_display entity
+      // display, therefore add this entity display as a config dependency.
+      $dependencies = [
+        $entity_display->getConfigDependencyKey() => [
+          $entity_display->getConfigDependencyName(),
+        ],
+      ];
       if ($entity_type->hasKey('bundle')) {
         $permissions["configure all $bundle $entity_type_id layout overrides"] = [
           'title' => $this->t('%entity_type - %bundle: Configure all layout overrides', $args),
           'warning' => $this->t('Warning: Allows configuring the layout even if the user cannot edit the @entity_type_singular itself.', $args),
+          'dependencies' => $dependencies,
         ];
         $permissions["configure editable $bundle $entity_type_id layout overrides"] = [
           'title' => $this->t('%entity_type - %bundle: Configure layout overrides for @entity_type_plural that the user can edit', $args),
+          'dependencies' => $dependencies,
         ];
       }
       else {
         $permissions["configure all $bundle $entity_type_id layout overrides"] = [
           'title' => $this->t('%entity_type: Configure all layout overrides', $args),
           'warning' => $this->t('Warning: Allows configuring the layout even if the user cannot edit the @entity_type_singular itself.', $args),
+          'dependencies' => $dependencies,
         ];
         $permissions["configure editable $bundle $entity_type_id layout overrides"] = [
           'title' => $this->t('%entity_type: Configure layout overrides for @entity_type_plural that the user can edit', $args),
+          'dependencies' => $dependencies,
         ];
       }
     }

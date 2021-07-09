@@ -4,6 +4,7 @@ namespace Drupal\content_translation;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -69,29 +70,25 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
    * @return array
    */
   public function contentPermissions() {
-    $permission = [];
+    $permissions = [];
     // Create a translate permission for each enabled entity type and (optionally)
     // bundle.
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($permission_granularity = $entity_type->getPermissionGranularity()) {
-        $t_args = ['@entity_label' => $entity_type->getSingularLabel()];
-
         switch ($permission_granularity) {
           case 'bundle':
             foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
               if ($this->contentTranslationManager->isEnabled($entity_type_id, $bundle)) {
-                $t_args['%bundle_label'] = isset($bundle_info['label']) ? $bundle_info['label'] : $bundle;
-                $permission["translate $bundle $entity_type_id"] = [
-                  'title' => $this->t('Translate %bundle_label @entity_label', $t_args),
-                ];
+                $permissions["translate $bundle $entity_type_id"] = $this->buildBundlePermission($entity_type, $bundle, $bundle_info);
               }
             }
             break;
 
           case 'entity_type':
             if ($this->contentTranslationManager->isEnabled($entity_type_id)) {
-              $permission["translate $entity_type_id"] = [
-                'title' => $this->t('Translate @entity_label', $t_args),
+              $permissions["translate $entity_type_id"] = [
+                'title' => $this->t('Translate @entity_label', ['@entity_label' => $entity_type->getSingularLabel()]),
+                'dependencies' => ['module' => [$entity_type->getProvider()]],
               ];
             }
             break;
@@ -99,6 +96,38 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
       }
     }
 
+    return $permissions;
+  }
+
+  /**
+   * Builds a content translation permission array for a bundle.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The bundle to build the translation permission for.
+   * @param array $bundle_info
+   *   The bundle info.
+   *
+   * @return array
+   *   The permission details, keyed by 'title' and 'dependencies'.
+   */
+  private function buildBundlePermission(EntityTypeInterface $entity_type, string $bundle, array $bundle_info) {
+    $permission = [
+      'title' => $this->t('Translate %bundle_label @entity_label', [
+        '@entity_label' => $entity_type->getSingularLabel(),
+        '%bundle_label' => $bundle_info['label'] ?? $bundle,
+      ]),
+    ];
+
+    // If the entity type uses bundle entities, add a dependency on the bundle.
+    $bundle_entity_type = $entity_type->getBundleEntityType();
+    if ($bundle_entity_type && $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type)->load($bundle)) {
+      $permission['dependencies'][$bundle_entity->getConfigDependencyKey()][] = $bundle_entity->getConfigDependencyName();
+    }
+    else {
+      $permission['dependencies']['module'][] = $entity_type->getProvider();
+    }
     return $permission;
   }
 

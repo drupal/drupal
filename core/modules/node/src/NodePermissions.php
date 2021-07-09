@@ -2,6 +2,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\NodeType;
 
@@ -9,7 +10,7 @@ use Drupal\node\Entity\NodeType;
  * Provides dynamic permissions for nodes of different types.
  */
 class NodePermissions {
-
+  use BundlePermissionHandlerTrait;
   use StringTranslationTrait;
 
   /**
@@ -20,13 +21,7 @@ class NodePermissions {
    *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
-    $perms = [];
-    // Generate node permissions for all node types.
-    foreach (NodeType::loadMultiple() as $type) {
-      $perms += $this->buildPermissions($type);
-    }
-
-    return $perms;
+    return $this->generatePermissions(NodeType::loadMultiple(), [$this, 'buildPermissions']);
   }
 
   /**

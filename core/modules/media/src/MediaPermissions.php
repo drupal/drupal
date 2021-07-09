@@ -3,6 +3,7 @@
 namespace Drupal\media;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides dynamic permissions for each media type.
  */
 class MediaPermissions implements ContainerInjectionInterface {
-
+  use BundlePermissionHandlerTrait;
   use StringTranslationTrait;
 
   /**
@@ -47,14 +48,9 @@ class MediaPermissions implements ContainerInjectionInterface {
    * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function mediaTypePermissions() {
-    $perms = [];
     // Generate media permissions for all media types.
-    $media_types = $this->entityTypeManager
-      ->getStorage('media_type')->loadMultiple();
-    foreach ($media_types as $type) {
-      $perms += $this->buildPermissions($type);
-    }
-    return $perms;
+    $media_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple();
+    return $this->generatePermissions($media_types, [$this, 'buildPermissions']);
   }
 
   /**

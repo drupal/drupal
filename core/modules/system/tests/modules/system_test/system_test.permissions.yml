@@ -1,2 +1,5 @@
 system test:
   title: 'Administer system test'
+
+pet llamas:
+  title: 'Permission for page cache testing'

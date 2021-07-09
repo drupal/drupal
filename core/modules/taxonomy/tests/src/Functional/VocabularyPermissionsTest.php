@@ -220,6 +220,11 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('No terms available');
     $assert_session->linkExists('Add term');
+
+    // Ensure the dynamic vocabulary permissions have the correct dependencies.
+    $permissions = \Drupal::service('user.permissions')->getPermissions();
+    $this->assertTrue(isset($permissions['create terms in ' . $vocabulary1_id]));
+    $this->assertEquals(['config' => [$vocabulary1->getConfigDependencyName()]], $permissions['create terms in ' . $vocabulary1_id]['dependencies']);
   }
 
   /**
