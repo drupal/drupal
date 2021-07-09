@@ -871,7 +871,7 @@ function hook_views_post_render(ViewExecutable $view, &$output, CachePluginBase 
  *
  * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
- * @param QueryPluginBase $query
+ * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
  *   The query plugin object for the query.
  *
  * @see hook_views_query_substitutions()

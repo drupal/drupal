@@ -4,6 +4,7 @@ namespace Drupal\ckeditor\Plugin\Editor;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
@@ -59,6 +60,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $renderer;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * The state key/value store.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -84,14 +92,21 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The renderer.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
     $this->state = $state;
+    if (!$file_url_generator) {
+      @trigger_error('Calling CKEditor::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
+    }
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -106,7 +121,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('module_handler'),
       $container->get('language_manager'),
       $container->get('renderer'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -307,11 +323,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     ];
 
     // Finally, set Drupal-specific CKEditor settings.
-    $root_relative_file_url = function ($uri) {
-      return file_url_transform_relative(file_create_url($uri));
-    };
     $settings += [
-      'drupalExternalPlugins' => array_map($root_relative_file_url, $external_plugin_files),
+      'drupalExternalPlugins' => array_map([$this->fileUrlGenerator, 'generateString'], $external_plugin_files),
     ];
 
     // Parse all CKEditor plugin JavaScript files for translations.
@@ -444,8 +457,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $query_string_separator = (strpos($item, '?') !== FALSE) ? '&' : '?';
       return $item . $query_string_separator . $query_string;
     }, $css);
-    $css = array_map('file_create_url', $css);
-    $css = array_map('file_url_transform_relative', $css);
+    $css = array_map([$this->fileUrlGenerator, 'generateString'], $css);
 
     return array_values($css);
   }
