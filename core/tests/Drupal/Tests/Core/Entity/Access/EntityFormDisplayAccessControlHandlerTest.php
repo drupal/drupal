@@ -203,7 +203,7 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The account to use for get access.
    */
-  public function assertAllowOperations(array $allow_operations, AccountInterface $user) {
+  public function assertAllowOperations(array $allow_operations, AccountInterface $user): void {
     foreach (['view', 'update', 'delete'] as $operation) {
       $expected = in_array($operation, $allow_operations);
       $actual = $this->accessControlHandler->access($this->entity, $operation, $user);

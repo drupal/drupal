@@ -91,7 +91,7 @@ class DrupalComponentTest extends TestCase {
    * @param string $class_path
    *   The full path to the class that should be checked.
    */
-  protected function assertNoCoreUsage($class_path) {
+  protected function assertNoCoreUsage($class_path): void {
     $contents = file_get_contents($class_path);
     preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches);
     $matches = array_filter($matches[0], function ($line) {

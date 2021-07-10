@@ -791,7 +791,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Assert that the values submitted to a form matches the default values of the elements.
    */
-  public function assertFormValuesDefault($values, $form) {
+  public function assertFormValuesDefault($values, $form): void {
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#default_value'])) {
         if (isset($form[$key]['#expected_value'])) {

@@ -94,7 +94,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
    * @param bool $is_admin
    *   TRUE to test for administrative theme, FALSE otherwise.
    */
-  protected function assertAdminTheme($is_admin) {
+  protected function assertAdminTheme($is_admin): void {
     if ($is_admin) {
       $this->assertRaw('core/themes/' . $this->adminTheme);
     }

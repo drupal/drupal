@@ -301,7 +301,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @param string $expected_entity_type_id
    *   The expected entity type ID.
    */
-  protected function assertEntityType($entity, $expected_entity_type_id) {
+  protected function assertEntityType($entity, $expected_entity_type_id): void {
     $this->assertInstanceOf(EntityTest::class, $entity);
     $this->assertEquals($expected_entity_type_id, $entity->getEntityTypeId());
   }

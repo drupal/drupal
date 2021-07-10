@@ -266,21 +266,18 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *   The library sub key where the given asset is defined.
    * @param string $message
    *   (optional) A message to display with the assertion.
-   *
-   * @return bool
-   *   TRUE if the specified asset is found in the library.
    */
-  protected function assertAssetInLibrary($asset, $extension, $library_name, $sub_key, $message = NULL) {
+  protected function assertAssetInLibrary($asset, $extension, $library_name, $sub_key, $message = NULL): void {
     if (!isset($message)) {
       $message = sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
     }
     $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
-        return TRUE;
+        return;
       }
     }
-    return $this->fail($message);
+    $this->fail($message);
   }
 
   /**
@@ -296,21 +293,17 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *   The library sub key where the given asset is defined.
    * @param string $message
    *   (optional) A message to display with the assertion.
-   *
-   * @return bool
-   *   TRUE if the specified asset is not found in the library.
    */
-  protected function assertNoAssetInLibrary($asset, $extension, $library_name, $sub_key, $message = NULL) {
+  protected function assertNoAssetInLibrary($asset, $extension, $library_name, $sub_key, $message = NULL): void {
     if (!isset($message)) {
       $message = sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
     }
     $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
-        return $this->fail($message);
+        $this->fail($message);
       }
     }
-    return TRUE;
   }
 
 }

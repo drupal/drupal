@@ -137,7 +137,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
   /**
    * Assert that assets are not loaded twice on a page.
    */
-  protected function assertNoDuplicateAssetsOnPage() {
+  protected function assertNoDuplicateAssetsOnPage(): void {
     /** @var \Behat\Mink\Element\NodeElement[] $scripts */
     $scripts = $this->getSession()->getPage()->findAll('xpath', '//script');
     $script_src = [];

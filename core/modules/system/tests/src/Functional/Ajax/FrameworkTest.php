@@ -112,7 +112,7 @@ class FrameworkTest extends BrowserTestBase {
    * @param $needle
    *   Array of info we're expecting in one of those commands.
    */
-  protected function assertCommand($haystack, $needle) {
+  protected function assertCommand($haystack, $needle): void {
     $found = FALSE;
     foreach ($haystack as $command) {
       // If the command has additional settings that we're not testing for, do

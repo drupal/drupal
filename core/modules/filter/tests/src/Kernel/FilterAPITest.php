@@ -433,7 +433,7 @@ class FilterAPITest extends EntityKernelTestBase {
    * @param mixed $invalid_value
    *   The expected invalid value.
    */
-  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, $invalid_value) {
+  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, $invalid_value): void {
     $filter_format_violation_found = FALSE;
     foreach ($violations as $violation) {
       if ($violation->getRoot() instanceof FilterFormatDataType && $violation->getInvalidValue() === $invalid_value) {

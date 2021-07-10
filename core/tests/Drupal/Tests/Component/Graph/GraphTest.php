@@ -108,7 +108,7 @@ class GraphTest extends TestCase {
    * @param $expected_paths
    *   An associative array containing vertices with their expected paths.
    */
-  protected function assertPaths($graph, $expected_paths) {
+  protected function assertPaths($graph, $expected_paths): void {
     foreach ($expected_paths as $vertex => $paths) {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
@@ -126,7 +126,7 @@ class GraphTest extends TestCase {
    *   An associative array containing vertices with their expected reverse
    *   paths.
    */
-  protected function assertReversePaths($graph, $expected_reverse_paths) {
+  protected function assertReversePaths($graph, $expected_reverse_paths): void {
     foreach ($expected_reverse_paths as $vertex => $paths) {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
@@ -143,7 +143,7 @@ class GraphTest extends TestCase {
    * @param $expected_components
    *   An array containing of components defined as a list of their vertices.
    */
-  protected function assertComponents($graph, $expected_components) {
+  protected function assertComponents($graph, $expected_components): void {
     $unassigned_vertices = array_fill_keys(array_keys($graph), TRUE);
     foreach ($expected_components as $component) {
       $result_components = [];
@@ -164,7 +164,7 @@ class GraphTest extends TestCase {
    * @param $expected_orders
    *   An array containing lists of vertices in their expected order.
    */
-  protected function assertWeights($graph, $expected_orders) {
+  protected function assertWeights($graph, $expected_orders): void {
     foreach ($expected_orders as $order) {
       $previous_vertex = array_shift($order);
       foreach ($order as $vertex) {

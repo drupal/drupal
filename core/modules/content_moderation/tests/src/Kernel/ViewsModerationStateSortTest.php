@@ -166,7 +166,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
    * @param array $expected
    *   The expected results array.
    */
-  protected function assertSortResults($view_id, $column, $order, array $expected) {
+  protected function assertSortResults($view_id, $column, $order, array $expected): void {
     // Test with exposed input.
     $view = Views::getView($view_id);
     $view->setExposedInput([

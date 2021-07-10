@@ -49,7 +49,7 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    * @param string $expected_parent
    * @param string|null $body_label
    */
-  protected function assertEntity($id, $label, $description, $help, $display_submitted, $new_revision, $expected_available_menus, $expected_parent, $body_label = NULL) {
+  protected function assertEntity($id, $label, $description, $help, $display_submitted, $new_revision, $expected_available_menus, $expected_parent, $body_label = NULL): void {
     /** @var \Drupal\node\NodeTypeInterface $entity */
     $entity = NodeType::load($id);
     $this->assertInstanceOf(NodeTypeInterface::class, $entity);

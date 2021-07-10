@@ -78,7 +78,7 @@ class MigrateNodeCounterTest extends MigrateDrupal6TestBase {
    * @param int $timestamp
    *   The expected timestamp.
    */
-  protected function assertNodeCounter($nid, $total_count, $day_count, $timestamp) {
+  protected function assertNodeCounter($nid, $total_count, $day_count, $timestamp): void {
     /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
     $statistics = $this->container->get('statistics.storage.node')->fetchView($nid);
     $this->assertSame($total_count, $statistics->getTotalCount());

@@ -71,7 +71,7 @@ class LocalActionTest extends BrowserTestBase {
    * @param array $actions
    *   A list of expected action link titles, keyed by the hrefs.
    */
-  protected function assertLocalAction(array $actions) {
+  protected function assertLocalAction(array $actions): void {
     $elements = $this->xpath('//a[contains(@class, :class)]', [
       ':class' => 'button-action',
     ]);

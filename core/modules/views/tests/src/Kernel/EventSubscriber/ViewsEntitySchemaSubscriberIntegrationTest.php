@@ -549,7 +549,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * @param string[] $updated_view_ids
    *   An array of view IDs.
    */
-  protected function assertUpdatedViews($updated_view_ids) {
+  protected function assertUpdatedViews($updated_view_ids): void {
     $all_view_ids = array_keys($this->entityTypeManager->getStorage('view')->loadMultiple());
 
     $view_save_count = \Drupal::state()->get('views_test_data.view_save_count', []);

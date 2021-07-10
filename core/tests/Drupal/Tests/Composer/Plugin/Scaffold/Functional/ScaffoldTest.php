@@ -357,7 +357,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    * @param bool $is_link
    *   Whether or not symlinking is used.
    */
-  protected function assertDefaultSettingsFromScaffoldOverride($docroot, $is_link) {
+  protected function assertDefaultSettingsFromScaffoldOverride($docroot, $is_link): void {
     $this->assertScaffoldedFile($docroot . '/sites/default/default.settings.php', $is_link, 'scaffolded from the scaffold-override-fixture');
   }
 
@@ -367,7 +367,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    * @param string $docroot
    *   The path to the System-under-Test's docroot.
    */
-  protected function assertHtaccessExcluded($docroot) {
+  protected function assertHtaccessExcluded($docroot): void {
     // Ensure that the .htaccess.txt file was not written, as our
     // top-level composer.json excludes it from the files to scaffold.
     $this->assertFileDoesNotExist($docroot . '/.htaccess');
@@ -385,7 +385,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    * @param bool $is_link
    *   Whether or not symlinking is used.
    */
-  protected function assertCommonDrupalAssetsWereScaffolded($docroot, $is_link) {
+  protected function assertCommonDrupalAssetsWereScaffolded($docroot, $is_link): void {
     // Assert scaffold files are written in the correct locations.
     $this->assertScaffoldedFile($docroot . '/.csslintrc', $is_link, 'Test version of .csslintrc from drupal/core.');
     $this->assertScaffoldedFile($docroot . '/.editorconfig', $is_link, 'Test version of .editorconfig from drupal/core.');
@@ -409,7 +409,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    * @param bool $relocated_docroot
    *   Whether the document root is relocated or now.
    */
-  protected function assertAutoloadFileCorrect($docroot, $relocated_docroot = FALSE) {
+  protected function assertAutoloadFileCorrect($docroot, $relocated_docroot = FALSE): void {
     $autoload_path = $docroot . '/autoload.php';
 
     // Ensure that the autoload.php file was written.

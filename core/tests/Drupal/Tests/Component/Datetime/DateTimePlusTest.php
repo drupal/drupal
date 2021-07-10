@@ -194,7 +194,7 @@ class DateTimePlusTest extends TestCase {
    * @param array $transform
    *   @see testTimestamp()
    */
-  public function assertDateTimestamp($date, $input, $initial, $transform) {
+  public function assertDateTimestamp($date, $input, $initial, $transform): void {
     // Check format.
     $value = $date->format($initial['format']);
     $this->assertEquals($initial['expected_date'], $value, sprintf("Test new DateTimePlus(%s, %s): should be %s, found %s.", $input, $initial['timezone'], $initial['expected_date'], $value));

@@ -145,7 +145,7 @@ class BookJavascriptTest extends WebDriverTestBase {
    *
    * @todo Remove this once https://www.drupal.org/node/2817657 is committed.
    */
-  protected function assertOrderInPage(array $items) {
+  protected function assertOrderInPage(array $items): void {
     $session = $this->getSession();
     $text = $session->getPage()->getHtml();
     $strings = [];

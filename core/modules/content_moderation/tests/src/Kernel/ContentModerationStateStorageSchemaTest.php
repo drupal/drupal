@@ -125,7 +125,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
    * @param bool $has_exception
    *   If an exception should be triggered when saving the entity.
    */
-  protected function assertStorageException(array $values, $has_exception) {
+  protected function assertStorageException(array $values, $has_exception): void {
     $defaults = [
       'moderation_state' => 'draft',
       'workflow' => 'editorial',

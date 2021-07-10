@@ -110,7 +110,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    */
-  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringContainsString($needle, $haystack, $message);
   }
 
@@ -132,7 +132,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    */
-  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 

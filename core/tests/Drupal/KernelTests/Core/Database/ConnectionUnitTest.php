@@ -96,7 +96,7 @@ class ConnectionUnitTest extends KernelTestBase {
    * @param int $id
    *   The connection ID to verify.
    */
-  protected function assertConnection($id) {
+  protected function assertConnection($id): void {
     $list = $this->monitor->query($this->getQuery()['processlist'])->fetchAllKeyed(0, 0);
     $this->assertTrue(isset($list[$id]), new FormattableMarkup('Connection ID @id found.', ['@id' => $id]));
   }
@@ -107,7 +107,7 @@ class ConnectionUnitTest extends KernelTestBase {
    * @param int $id
    *   The connection ID to verify.
    */
-  protected function assertNoConnection($id) {
+  protected function assertNoConnection($id): void {
     $list = $this->monitor->query($this->getQuery()['processlist'])->fetchAllKeyed(0, 0);
     $this->assertFalse(isset($list[$id]), new FormattableMarkup('Connection ID @id not found.', ['@id' => $id]));
   }

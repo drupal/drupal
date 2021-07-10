@@ -454,7 +454,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
    * Asserts the subtrees hash on a fresh page GET is different from the hash
    * from the previous page GET.
    */
-  private function assertDifferentHash() {
+  private function assertDifferentHash(): void {
     // Request a new page to refresh the drupalSettings object.
     $this->drupalGet('test-page');
     $this->assertSession()->statusCodeEquals(200);

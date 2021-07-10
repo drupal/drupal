@@ -322,7 +322,7 @@ class TableDragTest extends WebDriverTestBase {
    *
    * @todo Remove this and use the WebAssert method when #2817657 is done.
    */
-  protected function assertOrder(array $items) {
+  protected function assertOrder(array $items): void {
     $session = $this->getSession();
     $text = $session->getPage()->getHtml();
     $strings = [];
@@ -485,7 +485,7 @@ class TableDragTest extends WebDriverTestBase {
    *   Whether assertions done on missing elements value may be skipped or not.
    *   Defaults to FALSE.
    */
-  protected function assertDraggableTable(array $structure, $table_id = 'tabledrag-test-table', $skip_missing = FALSE) {
+  protected function assertDraggableTable(array $structure, $table_id = 'tabledrag-test-table', $skip_missing = FALSE): void {
     $rows = $this->getSession()->getPage()->findAll('xpath', "//table[@id='$table_id']/tbody/tr");
     $this->assertSession()->elementsCount('xpath', "//table[@id='$table_id']/tbody/tr", count($structure));
 
@@ -514,7 +514,7 @@ class TableDragTest extends WebDriverTestBase {
    *   Whether assertions done on missing elements value may be skipped or not.
    *   Defaults to FALSE.
    */
-  protected function assertTableRow(NodeElement $row, $id, $weight, $parent = '', $indentation = 0, $changed = FALSE, $skip_missing = FALSE) {
+  protected function assertTableRow(NodeElement $row, $id, $weight, $parent = '', $indentation = 0, $changed = FALSE, $skip_missing = FALSE): void {
     // Assert that the row position is correct by checking that the id
     // corresponds.
     $id_name = "table[$id][id]";

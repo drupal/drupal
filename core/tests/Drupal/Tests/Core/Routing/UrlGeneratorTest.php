@@ -540,7 +540,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * @param \Drupal\Core\Render\BubbleableMetadata $expected_bubbleable_metadata
    *   The expected generated bubbleable metadata.
    */
-  protected function assertGenerateFromRoute($route_name, array $route_parameters, array $options, $expected_url, BubbleableMetadata $expected_bubbleable_metadata) {
+  protected function assertGenerateFromRoute($route_name, array $route_parameters, array $options, $expected_url, BubbleableMetadata $expected_bubbleable_metadata): void {
     // First, test with $collect_cacheability_metadata set to the default value.
     $url = $this->generator->generateFromRoute($route_name, $route_parameters, $options);
     $this->assertSame($expected_url, $url);

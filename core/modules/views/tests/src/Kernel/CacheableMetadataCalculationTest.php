@@ -96,7 +96,7 @@ class CacheableMetadataCalculationTest extends KernelTestBase {
    *   TRUE if it is expected that the cacheability metadata has been
    *   calculated. FALSE otherwise.
    */
-  protected function assertCacheableMetadataHasBeenCalculated($expected_result) {
+  protected function assertCacheableMetadataHasBeenCalculated($expected_result): void {
     $this->state->resetCache();
     $this->assertEquals($expected_result, $this->state->get('views_test_cacheable_metadata_has_been_accessed'));
   }

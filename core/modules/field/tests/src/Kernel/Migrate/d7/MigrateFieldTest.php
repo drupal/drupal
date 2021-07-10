@@ -52,7 +52,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
    * @param int $expected_cardinality
    *   The expected cardinality of the field.
    */
-  protected function assertEntity($id, $expected_type, $expected_translatable, $expected_cardinality) {
+  protected function assertEntity($id, $expected_type, $expected_translatable, $expected_cardinality): void {
     list ($expected_entity_type, $expected_name) = explode('.', $id);
 
     /** @var \Drupal\field\FieldStorageConfigInterface $field */

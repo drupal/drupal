@@ -859,7 +859,7 @@ class UpdateContribTest extends UpdateTestBase {
    * @param bool $is_compatible
    *   If the update is compatible with the installed version of Drupal.
    */
-  protected function assertCoreCompatibilityMessage($version, $expected_range, $expected_release_title, $is_compatible = TRUE) {
+  protected function assertCoreCompatibilityMessage($version, $expected_range, $expected_release_title, $is_compatible = TRUE): void {
     $update_element = $this->findUpdateElementByLabel($expected_release_title);
     $this->assertTrue($update_element->hasLink($version));
     $compatibility_details = $update_element->find('css', '.project-update__compatibility-details details');

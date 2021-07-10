@@ -184,7 +184,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
    * @param array $data
    *   An array of revision data.
    */
-  protected function assertRevision(array $revision, array $data) {
+  protected function assertRevision(array $revision, array $data): void {
     /** @var  \Drupal\node\NodeInterface $actual */
     $actual = $this->nodeStorage->loadRevision($revision['vid'])
       ->getTranslation($revision['langcode']);

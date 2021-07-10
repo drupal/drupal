@@ -66,7 +66,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
     $assert_session->addressEquals('admin/content/media');
 
     // Get the media entity view URL from the creation message.
-    $this->drupalGet($this->assertLinkToCreatedMedia());
+    $this->drupalGet($this->getLinkToCreatedMedia());
 
     // Assert the image element is present inside the media element and that its
     // src attribute uses the large image style, the label is visually hidden,
@@ -160,7 +160,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
    * @param string $media_type_id
    *   The media type ID.
    */
-  protected function assertViewDisplayConfigured($media_type_id) {
+  protected function assertViewDisplayConfigured($media_type_id): void {
     $assert_session = $this->assertSession();
     $type = MediaType::load($media_type_id);
     $display = EntityViewDisplay::load('media.' . $media_type_id . '.' . EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);

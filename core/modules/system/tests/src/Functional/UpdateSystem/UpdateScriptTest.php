@@ -804,7 +804,7 @@ class UpdateScriptTest extends BrowserTestBase {
    * @param string $extension_machine_name
    *   The extension machine name.
    */
-  protected function assertInstalledExtensionConfig($extension_type, $extension_machine_name) {
+  protected function assertInstalledExtensionConfig($extension_type, $extension_machine_name): void {
     $extension_config = $this->container->get('config.factory')->getEditable('core.extension');
     $this->assertSame(0, $extension_config->get("$extension_type.$extension_machine_name"));
   }
@@ -821,7 +821,7 @@ class UpdateScriptTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  protected function assertUpdateWithNoError($unexpected_error_text, $extension_type, $extension_machine_name) {
+  protected function assertUpdateWithNoError($unexpected_error_text, $extension_type, $extension_machine_name): void {
     $assert_session = $this->assertSession();
     $this->drupalGet($this->statusReportUrl);
     $this->assertSession()->pageTextNotContains($unexpected_error_text);
@@ -846,7 +846,7 @@ class UpdateScriptTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
-  protected function assertErrorOnUpdate($expected_error_text, $extension_type, $extension_machine_name) {
+  protected function assertErrorOnUpdate($expected_error_text, $extension_type, $extension_machine_name): void {
     $assert_session = $this->assertSession();
     $this->drupalGet($this->statusReportUrl);
     $this->assertSession()->pageTextContains($expected_error_text);

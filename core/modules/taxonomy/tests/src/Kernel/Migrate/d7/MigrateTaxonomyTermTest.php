@@ -78,7 +78,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * @param bool $expected_container_flag
    *   The term should be a container entity.
    */
-  protected function assertEntity($id, $expected_language, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, array $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL, $expected_container_flag = 0) {
+  protected function assertEntity($id, $expected_language, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, array $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL, $expected_container_flag = 0): void {
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load($id);
     $this->assertInstanceOf(TermInterface::class, $entity);
@@ -227,7 +227,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * @param array $parent_ids
    *   The expected parent term IDs.
    */
-  protected function assertHierarchy($vid, $tid, array $parent_ids) {
+  protected function assertHierarchy($vid, $tid, array $parent_ids): void {
     if (!isset($this->treeData[$vid])) {
       $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
       $this->treeData[$vid] = [];

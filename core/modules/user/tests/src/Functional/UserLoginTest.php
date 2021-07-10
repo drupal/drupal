@@ -196,7 +196,7 @@ class UserLoginTest extends BrowserTestBase {
    *   .
    *   - Set to NULL to expect a failed login.
    */
-  public function assertFailedLogin($account, $flood_trigger = NULL) {
+  public function assertFailedLogin($account, $flood_trigger = NULL): void {
     $database = \Drupal::database();
     $edit = [
       'name' => $account->getAccountName(),

@@ -720,7 +720,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   }
 
-  protected function assertResult() {
+  protected function assertResult(): void {
     $assert = [];
     $expected = func_get_args();
     if ($expected && is_array($expected[0])) {
@@ -732,7 +732,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame($assert, $this->queryResults);
   }
 
-  protected function assertRevisionResult($keys, $expected) {
+  protected function assertRevisionResult($keys, $expected): void {
     $assert = [];
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
@@ -741,7 +741,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     return $assert;
   }
 
-  protected function assertBundleOrder($order) {
+  protected function assertBundleOrder($order): void {
     // This loop is for bundle1 entities.
     for ($i = 1; $i <= 15; $i += 2) {
       $ok = TRUE;

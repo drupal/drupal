@@ -76,7 +76,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    * @param bool $status
    *   Whether the block is expected to be enabled or disabled.
    */
-  public function assertEntity($id, $visibility, $region, $theme, $weight, array $settings = NULL, $status = TRUE) {
+  public function assertEntity($id, $visibility, $region, $theme, $weight, array $settings = NULL, $status = TRUE): void {
     $block = Block::load($id);
     $this->assertInstanceOf(Block::class, $block);
     $this->assertSame($visibility, $block->getVisibility());

@@ -211,7 +211,7 @@ class CommentPagerTest extends CommentTestBase {
    * @param array $expected_order
    *   An array of keys from $comments describing the expected order.
    */
-  public function assertCommentOrder(array $comments, array $expected_order) {
+  public function assertCommentOrder(array $comments, array $expected_order): void {
     $expected_cids = [];
 
     // First, rekey the expected order by cid.

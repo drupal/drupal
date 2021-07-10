@@ -91,7 +91,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @param \Drupal\Core\Access\AccessResultInterface $actual
    *   The actual access result.
    */
-  protected function assertAccess(AccessResultInterface $expected_access_result, array $expected_cache_contexts, array $expected_cache_tags, AccessResultInterface $actual) {
+  protected function assertAccess(AccessResultInterface $expected_access_result, array $expected_cache_contexts, array $expected_cache_tags, AccessResultInterface $actual): void {
     $this->assertSame($expected_access_result->isAllowed(), $actual->isAllowed());
     $this->assertSame($expected_access_result->isForbidden(), $actual->isForbidden());
     $this->assertSame($expected_access_result->isNeutral(), $actual->isNeutral());

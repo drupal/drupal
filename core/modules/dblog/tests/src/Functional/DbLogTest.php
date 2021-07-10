@@ -804,7 +804,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $message
    *   The message to pass to simpletest.
    */
-  protected function assertLogMessage($log_message, $message) {
+  protected function assertLogMessage($log_message, $message): void {
     $message_text = Unicode::truncate(Html::decodeEntities(strip_tags($log_message)), 56, TRUE, TRUE);
     $this->assertSession()->linkExists($message_text, 0, $message);
   }

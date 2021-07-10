@@ -147,21 +147,19 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
    *   Id that should exist in the collection.
    * @param $config
    *   Expected configuration for the collection.
-   *
-   * @return bool
    */
-  protected function assertImageEffect($collection, $id, $config) {
+  protected function assertImageEffect($collection, $id, $config): void {
     /** @var \Drupal\image\ConfigurableImageEffectBase $effect */
     foreach ($collection as $effect) {
       $effect_config = $effect->getConfiguration();
 
       if ($effect_config['id'] == $id && $effect_config['data'] == $config) {
-        // We found this effect so succeed and return.
-        return TRUE;
+        // We found this effect so the assertion is successful.
+        return;
       }
     }
     // The loop did not find the effect so we it was not imported correctly.
-    return $this->fail('Effect ' . $id . ' did not import correctly');
+    $this->fail('Effect ' . $id . ' did not import correctly');
   }
 
 }

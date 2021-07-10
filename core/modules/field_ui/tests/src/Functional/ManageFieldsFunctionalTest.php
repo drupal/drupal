@@ -452,7 +452,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    * @param $entity_type
    *   The entity type for the field.
    */
-  public function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
+  public function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node'): void {
     // Assert field storage settings.
     $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
     $this->assertSame($string, $field_storage->getSetting('test_field_storage_setting'), 'Field storage settings were found.');

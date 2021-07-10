@@ -382,7 +382,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @param bool $translatable
    *   Whether the entity type was translatable prior to the update.
    */
-  protected function assertEntityData($revisionable, $translatable) {
+  protected function assertEntityData($revisionable, $translatable): void {
     $entities = $this->entityTypeManager->getStorage($this->entityTypeId)->loadMultiple();
     $this->assertCount(3, $entities);
     foreach ($entities as $entity_id => $entity) {
@@ -457,7 +457,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    *   (optional) Whether a new base field was added as part of the update.
    *   Defaults to FALSE.
    */
-  protected function assertEntityTypeSchema($revisionable, $translatable, $new_base_field = FALSE) {
+  protected function assertEntityTypeSchema($revisionable, $translatable, $new_base_field = FALSE): void {
     // Check whether the 'new_base_field' field has been installed correctly.
     $field_storage_definition = $this->entityDefinitionUpdateManager->getFieldStorageDefinition('new_base_field', $this->entityTypeId);
     if ($new_base_field) {
@@ -486,7 +486,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Asserts the revisionable characteristics of an entity type.
    */
-  protected function assertRevisionable() {
+  protected function assertRevisionable(): void {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityDefinitionUpdateManager->getEntityType($this->entityTypeId);
     $this->assertTrue($entity_type->isRevisionable());
@@ -525,7 +525,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Asserts the translatable characteristics of an entity type.
    */
-  protected function assertTranslatable() {
+  protected function assertTranslatable(): void {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityDefinitionUpdateManager->getEntityType($this->entityTypeId);
     $this->assertTrue($entity_type->isTranslatable());
@@ -554,7 +554,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Asserts the revisionable / translatable characteristics of an entity type.
    */
-  protected function assertRevisionableAndTranslatable() {
+  protected function assertRevisionableAndTranslatable(): void {
     $this->assertRevisionable();
     $this->assertTranslatable();
 
@@ -600,7 +600,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Asserts that an entity type is neither revisionable nor translatable.
    */
-  protected function assertNonRevisionableAndNonTranslatable() {
+  protected function assertNonRevisionableAndNonTranslatable(): void {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityDefinitionUpdateManager->getEntityType($this->entityTypeId);
     $this->assertFalse($entity_type->isRevisionable());
@@ -619,7 +619,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @param bool $revisionable
    *   Whether the entity type is revisionable or not.
    */
-  protected function assertBundleFieldSchema($revisionable) {
+  protected function assertBundleFieldSchema($revisionable): void {
     $entity_type_id = 'entity_test_update';
     $field_storage_definition = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id)['new_bundle_field'];
     $database_schema = $this->database->schema();
@@ -636,7 +636,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Asserts that the backup tables have been kept after a successful update.
    */
-  protected function assertBackupTables() {
+  protected function assertBackupTables(): void {
     $backups = \Drupal::keyValue('entity.update_backup')->getAll();
     $backup = reset($backups);
 

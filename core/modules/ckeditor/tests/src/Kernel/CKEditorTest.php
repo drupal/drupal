@@ -474,7 +474,7 @@ class CKEditorTest extends KernelTestBase {
    *   Language code to assert for. Defaults to French. That is the default
    *   language set in this assertion.
    */
-  protected function assertCKEditorLanguage($langcode = 'fr') {
+  protected function assertCKEditorLanguage($langcode = 'fr'): void {
     // Set French as the site default language.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();

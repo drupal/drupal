@@ -244,7 +244,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    * @param string $group
    *   (optional) The group this message is in.
    */
-  protected function assertTranslations($display, $renderer_id, array $expected, $message = '', $group = 'Other') {
+  protected function assertTranslations($display, $renderer_id, array $expected, $message = '', $group = 'Other'): void {
     $view = Views::getView('test_entity_row_renderers');
     $view->storage->invalidateCaches();
     $view->setDisplay($display);

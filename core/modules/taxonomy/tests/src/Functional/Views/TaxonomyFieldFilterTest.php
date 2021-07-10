@@ -147,7 +147,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
    * @param string $message
    *   Message suffix to display.
    */
-  protected function assertPageCounts($path, $counts, $message) {
+  protected function assertPageCounts($path, $counts, $message): void {
     // Get the text of the page.
     $this->drupalGet($path);
     $text = $this->getTextContent();

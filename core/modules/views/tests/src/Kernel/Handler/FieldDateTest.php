@@ -151,7 +151,7 @@ class FieldDateTest extends ViewsKernelTestBase {
    * @param null $timezone
    *   Optional timezone.
    */
-  protected function assertRenderedDatesEqual($view, $map, $timezone = NULL) {
+  protected function assertRenderedDatesEqual($view, $map, $timezone = NULL): void {
     foreach ($map as $date_format => $expected_result) {
       $view->field['created']->options['date_format'] = $date_format;
       $t_args = [
@@ -179,7 +179,7 @@ class FieldDateTest extends ViewsKernelTestBase {
    * @param array $map
    *   Data map.
    */
-  protected function assertRenderedFutureDatesEqual($view, $map) {
+  protected function assertRenderedFutureDatesEqual($view, $map): void {
     foreach ($map as $format => $result) {
       $view->field['destroyed']->options['date_format'] = $format;
       $view_result = $view->field['destroyed']->advancedRender($view->result[0]);

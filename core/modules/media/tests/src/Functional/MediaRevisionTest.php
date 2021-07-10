@@ -191,7 +191,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
    * @param int $expected_revisions
    *   The expected number of revisions.
    */
-  protected function assertRevisionCount(EntityInterface $entity, $expected_revisions) {
+  protected function assertRevisionCount(EntityInterface $entity, $expected_revisions): void {
     $entity_type = $entity->getEntityType();
 
     $count = $this->container

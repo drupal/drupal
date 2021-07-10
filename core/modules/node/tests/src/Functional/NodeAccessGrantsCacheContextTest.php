@@ -77,7 +77,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
    * @param array $expected
    *   Expected values, keyed by user ID, expected cache contexts as values.
    */
-  protected function assertUserCacheContext(array $expected) {
+  protected function assertUserCacheContext(array $expected): void {
     foreach ($expected as $uid => $context) {
       if ($uid > 0) {
         $this->drupalLogin($this->userMapping[$uid]);

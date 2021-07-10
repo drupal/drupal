@@ -62,7 +62,7 @@ class MediaSourceAudioVideoTest extends MediaSourceTestBase {
     // Verify that there is a creation message and that it contains a link to
     // the media entity.
     $assert_session->pageTextContains("$type_name Audio media asset has been created.");
-    $this->drupalGet($this->assertLinkToCreatedMedia());
+    $this->drupalGet($this->getLinkToCreatedMedia());
 
     // Verify that the <audio> tag is present on the media entity view.
     $assert_session->elementExists('css', "audio > source[type='audio/mpeg']");
@@ -112,7 +112,7 @@ class MediaSourceAudioVideoTest extends MediaSourceTestBase {
     // the media entity.
     $assert_session->pageTextContains("$type_name Video media asset has been created.");
 
-    $this->drupalGet($this->assertLinkToCreatedMedia());
+    $this->drupalGet($this->getLinkToCreatedMedia());
     // Verify that the <video> tag is present on the media entity view.
     $assert_session->elementExists('css', "video > source[type='video/mp4']");
   }

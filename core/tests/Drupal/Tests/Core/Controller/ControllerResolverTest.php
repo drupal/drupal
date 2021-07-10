@@ -183,7 +183,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @param mixed $output
    *   The output expected for this controller.
    */
-  protected function assertCallableController($controller, $class, $output) {
+  protected function assertCallableController($controller, $class, $output): void {
     if ($class) {
       $this->assertIsObject($controller[0]);
       $this->assertInstanceOf($class, $controller[0]);

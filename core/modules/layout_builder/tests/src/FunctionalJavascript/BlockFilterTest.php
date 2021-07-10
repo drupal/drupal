@@ -150,7 +150,7 @@ class BlockFilterTest extends WebDriverTestBase {
    * @param string $expected_message
    *   The text expected to be present in #drupal-live-announce.
    */
-  protected function assertAnnounceContains($expected_message) {
+  protected function assertAnnounceContains($expected_message): void {
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')"));
   }

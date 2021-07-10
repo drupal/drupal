@@ -132,7 +132,7 @@ class CommentThreadingTest extends CommentTestBase {
    * @param int $pid
    *   The expected parent comment ID.
    */
-  protected function assertParentLink($cid, $pid) {
+  protected function assertParentLink($cid, $pid): void {
     // This pattern matches a markup structure like:
     // @code
     // <a id="comment-2"></a>
@@ -153,7 +153,7 @@ class CommentThreadingTest extends CommentTestBase {
    * @param int $cid
    *   The comment ID to check.
    */
-  protected function assertNoParentLink($cid) {
+  protected function assertNoParentLink($cid): void {
     // This pattern matches a markup structure like:
     // @code
     // <a id="comment-2"></a>

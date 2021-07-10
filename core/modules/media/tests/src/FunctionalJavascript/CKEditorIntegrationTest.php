@@ -1417,7 +1417,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    *   Either a string value or if NULL, asserts that <drupal-media> element
    *   doesn't have the attribute.
    */
-  protected function assertSourceAttributeSame($attribute, $value) {
+  protected function assertSourceAttributeSame($attribute, $value): void {
     $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
     if ($value === NULL) {
       $this->assertFalse($drupal_media->hasAttribute($attribute));
@@ -1523,7 +1523,7 @@ JS;
    * @param string $label
    *   The `aria-label` attribute value of the context menu item.
    */
-  protected function assertContextMenuItemExists($label) {
+  protected function assertContextMenuItemExists($label): void {
     $this->assertSession()->elementExists('xpath', '//a[@aria-label="' . $label . '"]');
   }
 
@@ -1533,7 +1533,7 @@ JS;
    * @param string $label
    *   The `aria-label` attribute value of the context menu item.
    */
-  protected function assertContextMenuItemNotExists($label) {
+  protected function assertContextMenuItemNotExists($label): void {
     $this->assertSession()->elementNotExists('xpath', '//a[@aria-label="' . $label . '"]');
   }
 

@@ -45,7 +45,7 @@ class RearrangeFieldsTest extends UITestBase {
    * @param $fields
    *   Array of field names.
    */
-  protected function assertFieldOrder($view_name, $fields) {
+  protected function assertFieldOrder($view_name, $fields): void {
     $this->drupalGet('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field');
 
     foreach ($fields as $idx => $field) {

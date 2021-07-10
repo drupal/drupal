@@ -151,7 +151,7 @@ class OffCanvasTest extends OffCanvasTestBase {
    * @param string $position
    *   The position of the dialog to test.
    */
-  protected function assertOffCanvasDialog($link_index, $position) {
+  protected function assertOffCanvasDialog($link_index, $position): void {
     $page = $this->getSession()->getPage();
     $web_assert = $this->assertSession();
     $link_text = "Open $position panel $link_index";

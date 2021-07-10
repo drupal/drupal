@@ -136,7 +136,7 @@ class FileSystemTest extends UnitTestCase {
    * @param string $uri
    * @param string $message
    */
-  protected function assertFilePermissions($expected_mode, $uri, $message = '') {
+  protected function assertFilePermissions($expected_mode, $uri, $message = ''): void {
     // Mask out all but the last three octets.
     $actual_mode = fileperms($uri) & 0777;
 

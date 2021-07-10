@@ -130,7 +130,7 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
    * @param array $expected
    *   The expected views result.
    */
-  protected function assertTermWithDepthResult($tid, $depth, array $expected) {
+  protected function assertTermWithDepthResult($tid, $depth, array $expected): void {
     $this->view->destroy();
     $this->view->initDisplay();
     $filters = $this->view->displayHandlers->get('default')

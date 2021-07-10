@@ -109,7 +109,7 @@ class JsMessageTest extends WebDriverTestBase {
    * @param string $messagesSelector
    *   The css selector for the containing messages element.
    */
-  protected function assertCurrentMessages(array $expected_messages, $messagesSelector) {
+  protected function assertCurrentMessages(array $expected_messages, $messagesSelector): void {
     $expected_messages = array_values($expected_messages);
     $current_messages = [];
     if ($message_divs = $this->getSession()->getPage()->findAll('css', "$messagesSelector .messages")) {

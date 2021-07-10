@@ -328,7 +328,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    *   (optional) Whether to check that size of the select element is not
    *   greater than 8. Defaults to FALSE.
    */
-  protected function assertFilterStates($states, $check_size = FALSE) {
+  protected function assertFilterStates($states, $check_size = FALSE): void {
     $this->drupalGet('/filter-test-path');
 
     $assert_session = $this->assertSession();
@@ -356,7 +356,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    * @param \Drupal\views\ViewEntityInterface $view
    *   A view configuration object.
    */
-  protected function assertWorkflowDependencies(array $workflow_ids, ViewEntityInterface $view) {
+  protected function assertWorkflowDependencies(array $workflow_ids, ViewEntityInterface $view): void {
     $dependencies = $view->getDependencies();
 
     $expected = [];

@@ -283,7 +283,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    */
-  protected function assertErrorLogged($error_message) {
+  protected function assertErrorLogged($error_message): void {
     $error_log_filename = DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log';
     $this->assertFileExists($error_log_filename);
 
@@ -311,7 +311,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    */
-  protected function assertNoErrorsLogged() {
+  protected function assertNoErrorsLogged(): void {
     // Since PHP only creates the error.log file when an actual error is
     // triggered, it is sufficient to check whether the file exists.
     $this->assertFileDoesNotExist(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');

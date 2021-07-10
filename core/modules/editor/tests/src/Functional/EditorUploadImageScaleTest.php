@@ -220,7 +220,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
    * @param string $height
    *   The expected height of the uploaded image.
    */
-  protected function assertSavedMaxDimensions($width, $height) {
+  protected function assertSavedMaxDimensions($width, $height): void {
     $image_upload_settings = Editor::load('basic_html')->getImageUploadSettings();
     $expected = [
       'width' => $image_upload_settings['max_dimensions']['width'],

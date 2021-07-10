@@ -170,7 +170,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->buttonNotExists('field_single_media_type_settings_edit');
 
     $assert_session->buttonExists('field_twin_media_settings_edit')->press();
-    $this->assertElementExistsAfterWait('css', '#field-twin-media .tabledrag-toggle-weight')->press();
+    $this->getElementExistingAfterWait('css', '#field-twin-media .tabledrag-toggle-weight')->press();
     $assert_session->fieldExists('fields[field_twin_media][settings_edit_form][settings][media_types][type_one][weight]')->selectOption(0);
     $assert_session->fieldExists('fields[field_twin_media][settings_edit_form][settings][media_types][type_three][weight]')->selectOption(1);
     $assert_session->fieldExists('fields[field_twin_media][settings_edit_form][settings][media_types][type_four][weight]')->selectOption(2);
@@ -331,7 +331,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Select the items.
     $this->pressInsertSelected('Added 2 media items.');
     // Assert the open button is disabled.
-    $open_button = $this->assertElementExistsAfterWait('css', '.js-media-library-open-button[name^="field_twin_media"]');
+    $open_button = $this->getElementExistingAfterWait('css', '.js-media-library-open-button[name^="field_twin_media"]');
     $this->assertTrue($open_button->hasAttribute('data-disabled-focus'));
     $this->assertTrue($open_button->hasAttribute('disabled'));
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":disabled")');

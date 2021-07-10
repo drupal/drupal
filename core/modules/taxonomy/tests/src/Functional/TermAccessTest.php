@@ -117,7 +117,7 @@ class TermAccessTest extends TaxonomyTestBase {
    * @param string $access_reason
    *   (optional) The reason of the access result.
    */
-  protected function assertTermAccess(TermInterface $term, $access_operation, $access_allowed, $access_reason = '') {
+  protected function assertTermAccess(TermInterface $term, $access_operation, $access_allowed, $access_reason = ''): void {
     $access_result = $term->access($access_operation, NULL, TRUE);
     $this->assertSame($access_allowed, $access_result->isAllowed());
 

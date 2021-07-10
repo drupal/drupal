@@ -108,7 +108,7 @@ class FieldUIRouteTest extends BrowserTestBase {
   /**
    * Asserts that local tasks exists.
    */
-  public function assertLocalTasks() {
+  public function assertLocalTasks(): void {
     $this->assertSession()->linkExists('Settings');
     $this->assertSession()->linkExists('Manage fields');
     $this->assertSession()->linkExists('Manage display');

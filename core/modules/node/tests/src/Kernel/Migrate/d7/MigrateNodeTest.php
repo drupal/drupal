@@ -103,7 +103,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    * @param bool $sticky
    *   Whether the node is expected to be sticky.
    */
-  protected function assertEntity($id, $type, $langcode, $title, $uid, $status, $created, $changed, $promoted, $sticky) {
+  protected function assertEntity($id, $type, $langcode, $title, $uid, $status, $created, $changed, $promoted, $sticky): void {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::load($id);
     $this->assertInstanceOf(NodeInterface::class, $node);
@@ -134,7 +134,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    * @param int $timestamp
    *   The revision's time stamp.
    */
-  protected function assertRevision($id, $title, $uid, $log, $timestamp) {
+  protected function assertRevision($id, $title, $uid, $log, $timestamp): void {
     $revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision($id);
     $this->assertInstanceOf(NodeInterface::class, $revision);
     $this->assertEquals($title, $revision->getTitle());

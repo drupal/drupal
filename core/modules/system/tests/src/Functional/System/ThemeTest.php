@@ -517,7 +517,7 @@ class ThemeTest extends BrowserTestBase {
    * @param string $expected_text
    *   The expected incompatibility text.
    */
-  private function assertThemeIncompatibleText($theme_name, $expected_text) {
+  private function assertThemeIncompatibleText($theme_name, $expected_text): void {
     $this->assertSession()->elementExists('css', ".theme-info:contains(\"$theme_name\") .incompatible:contains(\"$expected_text\")");
   }
 

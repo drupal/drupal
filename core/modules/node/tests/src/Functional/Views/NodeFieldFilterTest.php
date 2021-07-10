@@ -98,7 +98,7 @@ class NodeFieldFilterTest extends NodeTestBase {
    * @param string $message
    *   Message suffix to display.
    */
-  protected function assertPageCounts($path, $counts, $message) {
+  protected function assertPageCounts($path, $counts, $message): void {
     // Disable read more links.
     \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'page', 'teaser')

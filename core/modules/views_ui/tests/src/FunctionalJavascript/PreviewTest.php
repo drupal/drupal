@@ -284,7 +284,7 @@ class PreviewTest extends WebDriverTestBase {
    * @param int $row_count
    *   The expected number of rows in the preview.
    */
-  protected function assertPreviewAJAX($row_count) {
+  protected function assertPreviewAJAX($row_count): void {
     $elements = $this->getSession()->getPage()->findAll('css', '.view-content .views-row');
     $this->assertCount($row_count, $elements, 'Expected items found on page.');
   }
@@ -299,7 +299,7 @@ class PreviewTest extends WebDriverTestBase {
    * @param string $message
    *   (optional) A verbose message to output.
    */
-  protected function assertClass(NodeElement $element, $class, $message = NULL) {
+  protected function assertClass(NodeElement $element, $class, $message = NULL): void {
     if (!isset($message)) {
       $message = "Class .$class found.";
     }

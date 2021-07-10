@@ -733,7 +733,7 @@ class RendererTest extends RendererTestBase {
    * @param bool $access
    *   Whether the render array is accessible or not.
    */
-  protected function assertAccess($build, $access) {
+  protected function assertAccess($build, $access): void {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
     if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {

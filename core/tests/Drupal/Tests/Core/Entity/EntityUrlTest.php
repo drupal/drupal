@@ -461,7 +461,7 @@ class EntityUrlTest extends UnitTestCase {
    * @param \Drupal\Core\Url $url
    *   The URL option to make the assertions on.
    */
-  protected function assertUrl($expected_route_name, array $expected_route_parameters, $entity, $has_language, Url $url) {
+  protected function assertUrl($expected_route_name, array $expected_route_parameters, $entity, $has_language, Url $url): void {
     $this->assertEquals($expected_route_name, $url->getRouteName());
     $this->assertEquals($expected_route_parameters, $url->getRouteParameters());
     $this->assertEquals($this->entityTypeId, $url->getOption('entity_type'));

@@ -5,6 +5,7 @@ namespace Drupal\Tests\Listeners;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestListenerDefaultImplementation;
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Util\Test as UtilTest;
 use Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait;
@@ -105,6 +106,15 @@ class DrupalListener implements TestListener {
     // Check for incorrect visibility of the $modules property.
     if ($class->hasProperty('modules') && !$class->getProperty('modules')->isProtected()) {
       @trigger_error('The ' . get_class($test) . '::$modules property must be declared protected. See https://www.drupal.org/node/2909426', E_USER_DEPRECATED);
+    }
+    // Check for assert*() methods to ensure they have a void return typehint.
+    foreach ($class->getMethods() as $method) {
+      $method_name = $method->getName();
+      if (strpos($method_name, 'assert') === 0 && !in_array($method_name, ['assertSession', 'assert'])) {
+        if ((!$method->hasReturnType() || $method->getReturnType()->getName() !== 'void') && $method->getDeclaringClass()->getName() !== TestCase::class) {
+          @trigger_error("Declaring ::$method_name without a void return typehint in " . $method->getDeclaringClass()->getName() . " is deprecated in drupal:9.TODO.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+        }
+      }
     }
   }
 

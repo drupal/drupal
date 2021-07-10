@@ -199,7 +199,7 @@ class UserValidationTest extends KernelTestBase {
    * @param int $expected_index
    *   (optional) The index at which to expect the violation. Defaults to 0.
    */
-  protected function assertLengthViolation(EntityInterface $entity, $field_name, $length, $count = 1, $expected_index = 0) {
+  protected function assertLengthViolation(EntityInterface $entity, $field_name, $length, $count = 1, $expected_index = 0): void {
     $violations = $entity->validate();
     $this->assertCount($count, $violations, "Violation found when $field_name is too long.");
     $this->assertEquals("{$field_name}.0.value", $violations[$expected_index]->getPropertyPath());
@@ -215,7 +215,7 @@ class UserValidationTest extends KernelTestBase {
    * @param string $field_name
    *   The name of the field to verify.
    */
-  protected function assertAllowedValuesViolation(EntityInterface $entity, $field_name) {
+  protected function assertAllowedValuesViolation(EntityInterface $entity, $field_name): void {
     $violations = $entity->validate();
     $this->assertCount(1, $violations, "Allowed values violation for $field_name found.");
     $this->assertEquals($field_name === 'langcode' ? "{$field_name}.0" : "{$field_name}.0.value", $violations[0]->getPropertyPath());

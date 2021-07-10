@@ -315,7 +315,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * @param $message
    *   Message to display.
    */
-  public function assertAllowedValuesInput($input_string, $result, $message) {
+  public function assertAllowedValuesInput($input_string, $result, $message): void {
     $edit = ['settings[allowed_values]' => $input_string];
     $this->drupalGet($this->adminPath);
     $this->submitForm($edit, 'Save field settings');

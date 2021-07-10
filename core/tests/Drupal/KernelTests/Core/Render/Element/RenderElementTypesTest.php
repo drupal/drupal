@@ -35,7 +35,7 @@ class RenderElementTypesTest extends KernelTestBase {
    * @param string $message
    *   Assertion message.
    */
-  protected function assertElements(array $elements, $expected_html, $message) {
+  protected function assertElements(array $elements, $expected_html, $message): void {
     $actual_html = (string) \Drupal::service('renderer')->renderRoot($elements);
     $this->assertSame($expected_html, $actual_html, Html::escape($message));
   }

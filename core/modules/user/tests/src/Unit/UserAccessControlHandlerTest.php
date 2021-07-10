@@ -136,7 +136,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Asserts correct field access grants for a field.
    */
-  public function assertFieldAccess($field, $viewer, $target, $view, $edit) {
+  public function assertFieldAccess($field, $viewer, $target, $view, $edit): void {
     $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getName')

@@ -648,12 +648,9 @@ class EntityDisplayTest extends KernelTestBase {
    *   The string to be checked.
    * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $display
    *   The entity display object to get dependencies from.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
-  protected function assertDependency($type, $key, EntityDisplayInterface $display) {
-    return $this->assertDependencyHelper(TRUE, $type, $key, $display);
+  protected function assertDependency($type, $key, EntityDisplayInterface $display): void {
+    $this->assertDependencyHelper(TRUE, $type, $key, $display);
   }
 
   /**
@@ -665,12 +662,9 @@ class EntityDisplayTest extends KernelTestBase {
    *   The string to be checked.
    * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $display
    *   The entity display object to get dependencies from.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
-  protected function assertNoDependency($type, $key, EntityDisplayInterface $display) {
-    return $this->assertDependencyHelper(FALSE, $type, $key, $display);
+  protected function assertNoDependency($type, $key, EntityDisplayInterface $display): void {
+    $this->assertDependencyHelper(FALSE, $type, $key, $display);
   }
 
   /**
@@ -684,11 +678,8 @@ class EntityDisplayTest extends KernelTestBase {
    *   The string to be checked.
    * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $display
    *   The entity display object to get dependencies from.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded.
    */
-  protected function assertDependencyHelper($assertion, $type, $key, EntityDisplayInterface $display) {
+  protected function assertDependencyHelper($assertion, $type, $key, EntityDisplayInterface $display): void {
     $all_dependencies = $display->getDependencies();
     $dependencies = !empty($all_dependencies[$type]) ? $all_dependencies[$type] : [];
     $context = $display instanceof EntityViewDisplayInterface ? 'View' : 'Form';
@@ -696,7 +687,6 @@ class EntityDisplayTest extends KernelTestBase {
     $args = ['@context' => $context, '@id' => $display->id(), '@type' => $type, '@key' => $key];
     $message = $assertion ? new FormattableMarkup("@context display '@id' depends on @type '@key'.", $args) : new FormattableMarkup("@context display '@id' do not depend on @type '@key'.", $args);
     $this->assertTrue($value, $message);
-    return TRUE;
   }
 
 }
