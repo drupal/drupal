@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -248,7 +249,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     }
     // @TODO: Determine a better way to retrieve a valid count for translations.
     // https://www.drupal.org/project/drupal/issues/2937166
-    return -1;
+    return MigrateSourceInterface::NOT_COUNTABLE;
   }
 
   /**

@@ -17,6 +17,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -186,14 +187,14 @@ class MigrateSourceTest extends MigrateTestCase {
 
     // Test the skip argument.
     $source = $this->getSource(['skip_count' => TRUE]);
-    $this->assertEquals(-1, $source->count());
+    $this->assertEquals(MigrateSourceInterface::NOT_COUNTABLE, $source->count());
 
     $this->migrationConfiguration['id'] = 'test_migration';
     $migration = $this->getMigration();
     $source = new StubSourceGeneratorPlugin([], '', [], $migration);
 
     // Test the skipCount property's default value.
-    $this->assertEquals(-1, $source->count());
+    $this->assertEquals(MigrateSourceInterface::NOT_COUNTABLE, $source->count());
 
     // Test the count value using a generator.
     $source = new StubSourceGeneratorPlugin(['skip_count' => FALSE], '', [], $migration);

@@ -85,10 +85,11 @@ use Drupal\migrate\Row;
  * @endcode
  *
  * In this example, skip_count is true which means count() will not attempt to
- * count the available source records, but just always return -1 instead. The
- * high_water_property defines which field marks the last imported row of the
- * migration. This will get converted into a SQL condition that looks like
- * 'n.changed' or 'changed' if no alias.
+ * count the available source records, but just always return
+ * MigrateSourceInterface::NOT_COUNTABLE instead. The high_water_property
+ * defines which field marks the last imported row of the migration. This will
+ * get converted into a SQL condition that looks like 'n.changed' or 'changed'
+ * if no alias.
  *
  * Example:
  *
@@ -473,7 +474,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Gets the source count.
    *
    * Return a count of available source records, from the cache if appropriate.
-   * Returns -1 if the source is not countable.
+   * Returns MigrateSourceInterface::NOT_COUNTABLE if the source is not
+   * countable.
    *
    * @param bool $refresh
    *   (optional) Whether or not to refresh the count. Defaults to FALSE. Not
@@ -486,7 +488,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    */
   public function count($refresh = FALSE) {
     if ($this->skipCount) {
-      return -1;
+      return MigrateSourceInterface::NOT_COUNTABLE;
     }
 
     // Return the cached count if we are caching counts and a refresh is not
