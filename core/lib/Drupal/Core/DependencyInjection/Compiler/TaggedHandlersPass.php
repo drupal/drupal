@@ -69,7 +69,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *     optionally more:
    *     - The handler instance must be the first method parameter, and it must
    *       have a type declaration.
-   *     - If the method has a parameter named $id, in any postion, it will
+   *     - If the method has a parameter named $id, in any position, it will
    *       receive the value of service ID when called.
    *     - If the method has a parameter named $priority, in any position, it
    *       will receive the value of the tag's 'priority' attribute.
