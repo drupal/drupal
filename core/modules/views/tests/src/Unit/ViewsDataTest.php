@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Unit;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsData;
@@ -49,6 +50,13 @@ class ViewsDataTest extends UnitTestCase {
   protected $languageManager;
 
   /**
+   * The mocked database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * The tested views data class.
    *
    * @var \Drupal\views\ViewsData
@@ -71,8 +79,9 @@ class ViewsDataTest extends UnitTestCase {
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(['id' => 'en'])));
+    $this->database = $this->createMock(Connection::class);
 
-    $this->viewsData = new ViewsData($this->cacheBackend, $this->configFactory, $this->moduleHandler, $this->languageManager);
+    $this->viewsData = new ViewsData($this->cacheBackend, $this->configFactory, $this->moduleHandler, $this->languageManager, $this->database);
   }
 
   /**

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
@@ -88,6 +89,13 @@ class ViewsData {
   protected $languageManager;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * Constructs this ViewsData object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
@@ -98,11 +106,18 @@ class ViewsData {
    *   The module handler class to use for invoking hooks.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection which will be used to check the IP against.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactoryInterface $config, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactoryInterface $config, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, Connection $connection) {
     $this->cacheBackend = $cache_backend;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
+    if ($connection === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $connection argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3209606', E_USER_DEPRECATED);
+      $connection = \Drupal::database();
+    }
+    $this->connection = $connection;
 
     $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
     $this->skipCache = $config->get('views.settings')->get('skip_cache');
@@ -244,6 +259,13 @@ class ViewsData {
         $data = NestedArray::mergeDeep($data, $views_data);
       }
       $this->moduleHandler->alter('views_data', $data);
+
+      // Allow the module that is providing the database driver to override the
+      // changes being made by hook_views_data_alter.
+      $function = $this->connection->getProvider() . '_views_data_' . $this->connection->driver() . '_alter';
+      if (function_exists($function)) {
+        call_user_func_array($function, [&$data]);
+      }
 
       $this->processEntityTypes($data);
 

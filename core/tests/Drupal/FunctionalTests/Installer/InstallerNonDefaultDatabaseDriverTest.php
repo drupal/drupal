@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 
+// cspell:ignore databasemodule databasedriver
+
 /**
  * Tests the interactive installer.
  *
@@ -62,7 +64,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
 
     // Assert that the module "driver_test" has been installed.
-    $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml'));
+    $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml', 'driver_test.module'));
 
     // Change the default database connection to use the database driver from
     // the module "driver_test".
@@ -86,6 +88,17 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Restore the old database connection.
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
+
+    \Drupal::service('module_installer')->install(['views']);
+    // Test that the hooks hook_views_data_alter() and
+    // DATABASEMODULE_views_data_DATABASEDRIVER_alter() are called.
+    $this->assertTrue(\Drupal::state()->get('driver_test_views_data_alter'));
+    $this->assertTrue(\Drupal::state()->get('driver_test_views_data_drivertest_alter'));
+
+    // Test that the hook DATABASEMODULE_views_data_DATABASEDRIVER_alter() is
+    // called after the hook hook_views_data_alter().
+    $views_data = \Drupal::service('views.views_data')->get('users');
+    $this->assertSame("The users table description is added by the function 'driver_test_views_data_drivertest_alter'", $views_data['table']['description']);
   }
 
 }

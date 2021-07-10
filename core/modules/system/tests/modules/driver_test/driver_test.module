@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Driver test module.
+ */
+
+// cspell:ignore databasemodule databasedriver
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function driver_test_views_data_alter(&$data) {
+  $data['users']['table']['description'] = "The users table description is added by the function 'driver_test_views_data_alter'";
+  \Drupal::state()->set('driver_test_views_data_alter', TRUE);
+}
+
+/**
+ * Implements DATABASEMODULE_views_data_DATABASEDRIVER_alter().
+ */
+function driver_test_views_data_drivertestmysql_alter(&$data) {
+  $data['users']['table']['description'] = "The users table description is added by the function 'driver_test_views_data_drivertest_alter'";
+  \Drupal::state()->set('driver_test_views_data_drivertest_alter', TRUE);
+}
+
+/**
+ * Implements DATABASEMODULE_views_data_DATABASEDRIVER_alter().
+ */
+function driver_test_views_data_drivertestpgsql_alter(&$data) {
+  $data['users']['table']['description'] = "The users table description is added by the function 'driver_test_views_data_drivertest_alter'";
+  \Drupal::state()->set('driver_test_views_data_drivertest_alter', TRUE);
+}
