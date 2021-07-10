@@ -106,7 +106,8 @@ class DrupalListener implements TestListener {
     if ($class->hasProperty('modules') && !$class->getProperty('modules')->isProtected()) {
       @trigger_error('The ' . get_class($test) . '::$modules property must be declared protected. See https://www.drupal.org/node/2909426', E_USER_DEPRECATED);
     }
-    // Check for assert*() methods to ensure they have a void return typehint.
+    // Check for assert*() methods to ensure they have a void return typehint,
+    // but only for methods not defined in traits or base classes.
     foreach ($class->getMethods() as $method) {
       $method_name = $method->getName();
       if (strpos($method_name, 'assert') === 0 && !in_array($method_name, ['assertSession', 'assert'])) {
