@@ -49,7 +49,7 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('olivero/css/base/base.css');
-    $this->assertSession()->responseContains('olivero/js/scripts.js');
+    $this->assertSession()->responseContains('olivero/js/navigation-utils.js');
   }
 
   /**
