@@ -3,17 +3,13 @@
 namespace Drupal\Tests\jsonapi\Unit\EventSubscriber;
 
 use Drupal\jsonapi\EventSubscriber\ResourceResponseValidator;
-use Drupal\jsonapi\ResourceType\ResourceType;
-use Drupal\jsonapi\Routing\Routes;
 use JsonSchema\Validator;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\rest\ResourceResponse;
+use Drupal\jsonapi\ResourceResponse;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\EventSubscriber\ResourceResponseValidator
@@ -33,36 +29,31 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     // Check that the validation class is available.
-    if (!class_exists("\\JsonSchema\\Validator")) {
-      $this->fail('The JSON Schema validator is missing. You can install it with `composer require justinrainbow/json-schema`.');
+    if (!class_exists(Validator::class)) {
+      static::fail('The JSON Schema validator is missing. You can install it with `composer require justinrainbow/json-schema`.');
     }
 
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module = $this->prophesize(Extension::class);
-    $module_path = dirname(__DIR__, 4);
-    $module->getPath()->willReturn($module_path);
+    $module->getPath()->willReturn(dirname(__DIR__, 4));
+
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module_handler->getModule('jsonapi')->willReturn($module->reveal());
-    $subscriber = new ResourceResponseValidator(
+
+    $this->subscriber = new ResourceResponseValidator(
       $this->prophesize(LoggerInterface::class)->reveal(),
       $module_handler->reveal(),
       ''
     );
-    $subscriber->setValidator();
-    $this->subscriber = $subscriber;
+    $this->subscriber->setValidator();
   }
 
   /**
    * @covers ::doValidateResponse
    */
   public function testDoValidateResponse() {
-    $request = $this->createRequest(
-      'jsonapi.node--article.individual',
-      new ResourceType('node', 'article', NULL)
-    );
-
     $response = $this->createResponse('{"data":null}');
 
     // Capture the default assert settings.
@@ -78,7 +69,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
     // Ensure asset is active.
     ini_set('zend.assertions', 1);
     assert_options(ASSERT_ACTIVE, 1);
-    $this->subscriber->doValidateResponse($response, $request);
+    $this->subscriber->doValidateResponse($response);
 
     // The validator should *not* be called when asserts are inactive.
     $validator = $this->prophesize(Validator::class);
@@ -88,7 +79,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
     // Ensure asset is inactive.
     ini_set('zend.assertions', 0);
     assert_options(ASSERT_ACTIVE, 0);
-    $this->subscriber->doValidateResponse($response, $request);
+    $this->subscriber->doValidateResponse($response);
 
     // Reset the original assert values.
     ini_set('zend.assertions', $zend_assertions_default);
@@ -99,13 +90,12 @@ class ResourceResponseValidatorTest extends UnitTestCase {
    * @covers ::validateResponse
    * @dataProvider validateResponseProvider
    */
-  public function testValidateResponse($request, $response, $expected, $description) {
+  public function testValidateResponse($response, $expected, $description) {
     // Expose protected ResourceResponseSubscriber::validateResponse() method.
-    $object = new \ReflectionObject($this->subscriber);
-    $method = $object->getMethod('validateResponse');
+    $method = new \ReflectionMethod($this->subscriber, 'validateResponse');
     $method->setAccessible(TRUE);
 
-    $this->assertSame($expected, $method->invoke($this->subscriber, $response, $request), $description);
+    static::assertSame($expected, $method->invoke($this->subscriber, $response), $description);
   }
 
   /**
@@ -115,11 +105,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
    *   An array of test cases.
    */
   public function validateResponseProvider() {
-    $defaults = [
-      'route_name' => 'jsonapi.node--article.individual',
-      'resource_type' => new ResourceType('node', 'article', NULL),
-    ];
-
     $test_data = [
       // Test validation success.
       [
@@ -189,35 +174,13 @@ EOD
       ],
     ];
 
-    $test_cases = array_map(function ($input) use ($defaults) {
-      list($json, $expected, $description, $route_name, $resource_type) = array_values($input + $defaults);
+    return array_map(function (array $input): array {
       return [
-        $this->createRequest($route_name, $resource_type),
-        $this->createResponse($json),
-        $expected,
-        $description,
+        $this->createResponse($input['json']),
+        $input['expected'],
+        $input['description'],
       ];
     }, $test_data);
-
-    return $test_cases;
-  }
-
-  /**
-   * Helper method to create a request object.
-   *
-   * @param string $route_name
-   *   The route name with which to construct a request.
-   * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
-   *   The resource type for the requested route.
-   *
-   * @return \Symfony\Component\HttpFoundation\Request
-   *   The mock request object.
-   */
-  protected function createRequest($route_name, ResourceType $resource_type) {
-    $request = new Request();
-    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $route_name);
-    $request->attributes->set(Routes::RESOURCE_TYPE_KEY, $resource_type);
-    return $request;
   }
 
   /**
@@ -226,10 +189,10 @@ EOD
    * @param string|null $json
    *   The JSON with which to create a mock response.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\jsonapi\ResourceResponse
    *   The mock response object.
    */
-  protected function createResponse($json = NULL) {
+  protected function createResponse(string $json = NULL): ResourceResponse {
     $response = new ResourceResponse();
     if ($json) {
       $response->setContent($json);

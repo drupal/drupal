@@ -7,6 +7,9 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\StackMiddleware\NegotiationMiddleware;
 use Drupal\jsonapi\DependencyInjection\Compiler\RegisterSerializationClassesCompilerPass;
+use Drupal\jsonapi\EventSubscriber\ResourceResponseValidator;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds 'api_json' as known format and prevents its use in the REST module.
@@ -36,8 +39,34 @@ class JsonapiServiceProvider implements ServiceModifierInterface, ServiceProvide
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
+    // Avoid registering the validator in production.
+    \assert($this->registerResourceResponseValidator($container));
     $container->addCompilerPass(new RegisterSerializationClassesCompilerPass());
+  }
+
+  /**
+   * Registers the resource response validator in the container.
+   *
+   * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
+   *   The DI container.
+   *
+   * @return bool
+   *   The state of registering the validator.
+   */
+  protected function registerResourceResponseValidator(ContainerBuilder $container): bool {
+    $definition = new Definition(ResourceResponseValidator::class);
+    $definition->addTag('event_subscriber');
+    $definition->addMethodCall('setValidator', []);
+    $definition->setArguments([
+      new Reference('logger.channel.jsonapi'),
+      new Reference('module_handler'),
+      new Reference('app.root'),
+    ]);
+
+    $container->setDefinition('jsonapi.resource_response_validator.subscriber', $definition);
+
+    return TRUE;
   }
 
 }
