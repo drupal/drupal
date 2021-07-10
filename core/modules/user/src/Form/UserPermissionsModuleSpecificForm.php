@@ -13,6 +13,25 @@ use Drupal\Core\Form\FormStateInterface;
 class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
 
   /**
+   * The module list.
+   *
+   * A keyed array of module machine names.
+   *
+   * @var string[]
+   */
+  protected $moduleList;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function permissionsByProvider() {
+    return array_intersect_key(
+      parent::permissionsByProvider(),
+      array_flip($this->moduleList)
+    );
+  }
+
+  /**
    * Builds the user permissions administration form for a specific module(s).
    *
    * @param array $form
