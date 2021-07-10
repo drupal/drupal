@@ -110,7 +110,7 @@ class DrupalListener implements TestListener {
     foreach ($class->getMethods() as $method) {
       $method_name = $method->getName();
       if (strpos($method_name, 'assert') === 0 && !in_array($method_name, ['assertSession', 'assert'])) {
-        if ((!$method->hasReturnType()) && $this->getDeclaringTrait($class->getName, $method_name) === get_class($test)) {
+        if ((!$method->hasReturnType()) && $this->getDeclaringTrait($class->getName(), $method_name) === get_class($test)) {
           @trigger_error("Declaring ::$method_name without a return typehint in " . $method->getDeclaringClass()->getName() . " is deprecated in drupal:9.TODO.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
         }
       }
