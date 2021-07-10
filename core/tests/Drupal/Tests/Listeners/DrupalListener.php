@@ -162,7 +162,7 @@ class DrupalListener implements TestListener {
 
 
     // Let's scan all traits
-    $trait = deepScanTraits($reflectionClass->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
+    $trait = $this->deepScanTraits($reflectionClass->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
     if ($trait != null) {
       return $trait;
     } else {
@@ -189,7 +189,7 @@ class DrupalListener implements TestListener {
               && $trait->getEndLine() >= $methodEndLine) {
         return $trait;
       }
-      return deepScanTraits($trait->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
+      return $this->deepScanTraits($trait->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
     }
     return null;
   }
