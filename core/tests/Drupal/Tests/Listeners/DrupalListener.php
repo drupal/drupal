@@ -5,7 +5,6 @@ namespace Drupal\Tests\Listeners;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestListenerDefaultImplementation;
 use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Util\Test as UtilTest;
 use Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait;
