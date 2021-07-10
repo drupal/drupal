@@ -65,14 +65,18 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *
    * Additional tag attributes supported by 'service_collector' only:
    *   - call: The method name to call on the consumer service. Defaults to
-   *     'addHandler'. The called method receives two arguments:
+   *     'addHandler'. The called method receives at least one argument,
+   *     optionally more:
    *     - The handler instance must be the first method parameter, and it must
-   *       have a type hint.
-   *     - If the method has a parameter named $id, in any position, it will
-   *       receive the value of the tag's 'priority' attribute.
-   *     - Any other method has a parameter whose names match the name of an
-   *       attribute. The order of the method parameters and the order of the
-   *       service tag attributes do not need to match.
+   *       have a type declaration.
+   *     - If the method has a parameter named $id, in any postion, it will
+   *       receive the value of service ID when called.
+   *     - If the method has a parameter named $priority, in any position, it
+   *       will receive the value of the tag's 'priority' attribute.
+   *     - Any other method parameters whose names match the name of an
+   *       attribute of the tag will receive the value of that tag attribute.The
+   *       order of the method parameters and the order of the service tag
+   *       attributes do not need to match.
    *
    * Example (YAML):
    * @code
