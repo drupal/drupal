@@ -391,17 +391,20 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     // built.
     if ($clean_urls === FALSE && $this->streamWrapperManager->getScheme($derivative_uri) == 'public' && !file_exists($derivative_uri)) {
       $validated_uri = 'base:' . $this->streamWrapperManager->getViaUri($derivative_uri)->getDirectoryPath() . '/' . $this->streamWrapperManager->getTarget($derivative_uri);
+      $url = Url::fromUri($validated_uri, [
+        'absolute' => TRUE,
+        'query' => $token_query,
+      ]);
     }
     else {
       // Using clean URLs.
-      $validated_uri = $this->fileUrlGenerator->generateAbsoluteString($derivative_uri);
+      $url = $this->fileUrlGenerator->generate($derivative_uri);
+      $url
+        ->setAbsolute()
+        ->setOption('query', $token_query);
     }
 
-    $pipeline->setVariable('derivativeImageUrl', Url::fromUri($validated_uri, [
-        'absolute' => TRUE,
-        'query' => $token_query,
-      ])
-    );
+    $pipeline->setVariable('derivativeImageUrl', $url);
   }
 
   /**
