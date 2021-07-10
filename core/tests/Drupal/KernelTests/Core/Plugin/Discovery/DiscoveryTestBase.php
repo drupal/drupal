@@ -68,7 +68,6 @@ abstract class DiscoveryTestBase extends KernelTestBase {
    *   The expected definition to test against.
    */
   protected function assertDefinitionIdentical(array $definition, array $expected_definition) {
-    // @todo remove since we are now using MarkupInterfaceComparator
     $func = function (&$item) {
       if ($item instanceof TranslatableMarkup) {
         $item = (string) $item;

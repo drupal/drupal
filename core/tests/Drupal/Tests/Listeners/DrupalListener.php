@@ -149,7 +149,7 @@ class DrupalListener implements TestListener {
   }
 
   /**
-   * Finds the trait that declares $className::$methodName
+   * Finds the trait that declares $className::$methodName.
    *
    * @see http://mouf-php.com/blog/php_reflection_api_traits
    */
@@ -161,12 +161,12 @@ class DrupalListener implements TestListener {
     $methodStartLine = $reflectionMethod->getStartLine();
     $methodEndLine = $reflectionMethod->getEndLine();
 
-
     // Let's scan all traits
     $trait = $this->deepScanTraits($reflectionClass->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
-    if ($trait != null) {
+    if ($trait != NULL) {
       return $trait;
-    } else {
+    }
+    else {
       return $reflectionMethod->getDeclaringClass();
     }
   }
@@ -174,11 +174,17 @@ class DrupalListener implements TestListener {
   /**
    * Recursive method called to detect a method into a nested array of traits.
    *
-   * @param $traits ReflectionClass[]
-   * @param $methodFile string
-   * @param $methodStartLine int
-   * @param $methodEndLine int
+   * @param ReflectionClass[] $traits
+   *   @todo.
+   * @param string $methodFile
+   *   @todo.
+   * @param int $methodStartLine
+   *   @todo.
+   * @param int $methodEndLine
+   *   @todo.
+   *
    * @return ReflectionClass|null
+   *   @todo.
    *
    * @see http://mouf-php.com/blog/php_reflection_api_traits
    */
@@ -192,6 +198,7 @@ class DrupalListener implements TestListener {
       }
       return $this->deepScanTraits($trait->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
     }
-    return null;
+    return NULL;
   }
+
 }
