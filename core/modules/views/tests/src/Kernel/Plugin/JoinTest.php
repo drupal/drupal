@@ -205,6 +205,8 @@ class JoinTest extends RelationshipJoinTestBase {
 
     // Test that joins using 'left_formula' are properly built.
     $configuration['left_formula'] = 'MAX(views_test_data.uid)';
+    // When 'left_formula' is present, 'left_field' is no longer required.
+    unset($configuration['left_field']);
     $join = $this->manager->createInstance('standard', $configuration);
     $table = ['alias' => 'users6'];
     $join->buildJoin($query, $table, $view->query);
