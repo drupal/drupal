@@ -95,6 +95,13 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
   protected $fileSystem;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Constructs a new ImageDerivativeSubscriber.
    *
    * @param \Drupal\Core\Image\ImageFactory $image_factory
@@ -115,8 +122,10 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
    *   The logger service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct(ImageFactory $image_factory, ImageProcessor $image_processor, StreamWrapperManagerInterface $stream_wrapper_manager, PrivateKey $private_key, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, LoggerInterface $logger, FileSystemInterface $file_system) {
+  public function __construct(ImageFactory $image_factory, ImageProcessor $image_processor, StreamWrapperManagerInterface $stream_wrapper_manager, PrivateKey $private_key, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, LoggerInterface $logger, FileSystemInterface $file_system, FileUrlGeneratorInterface $file_url_generator) {
     $this->imageFactory = $image_factory;
     $this->imageProcessor = $image_processor;
     $this->streamWrapperManager = $stream_wrapper_manager;
@@ -126,6 +135,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     $this->currentRequest = $request_stack->getCurrentRequest();
     $this->logger = $logger;
     $this->fileSystem = $file_system;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -383,7 +393,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     }
     else {
       // Using clean URLs.
-      $validated_uri = file_create_url($derivative_uri);
+      $validated_uri = $this->fileUrlGenerator->generateAbsoluteString($derivative_uri);
     }
 
     $pipeline->setVariable('derivativeImageUrl', Url::fromUri($validated_uri, [

@@ -204,7 +204,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   in an <img> tag.
    *
    * @see \Drupal\image\Controller\ImageStyleDownloadController::deliver()
-   * @see file_url_transform_relative()
+   * @see \Drupal\Core\File\FileUrlGeneratorInterface::transformRelative()
    */
   public function getDerivativeImageUrl(): Url {
     $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URL);

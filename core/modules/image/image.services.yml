@@ -11,7 +11,7 @@ services:
       - { name: plugin_manager_cache_clear }
   image.pipeline.derivative.event_subscriber:
     class:  Drupal\image\EventSubscriber\ImageDerivativeSubscriber
-    arguments: ['@image.factory', '@image.processor', '@stream_wrapper_manager', '@private_key', '@module_handler','@config.factory', '@request_stack', '@logger.channel.image', '@file_system']
+    arguments: ['@image.factory', '@image.processor', '@stream_wrapper_manager', '@private_key', '@module_handler','@config.factory', '@request_stack', '@logger.channel.image', '@file_system', '@file_url_generator']
     tags:
       - { name: 'event_subscriber' }
   plugin.manager.image.effect:

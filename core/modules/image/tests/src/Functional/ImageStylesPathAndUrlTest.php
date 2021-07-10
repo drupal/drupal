@@ -638,7 +638,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Check that requesting a nonexistent image does not create any new
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
-    $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
+    $this->drupalGet(\Drupal::service('file_url_generator')->generateAbsoluteString($directory . '/' . $this->randomString()));
     $this->assertFileDoesNotExist($directory, 'New directory was not created in the filesystem when requesting an unauthorized image.');
   }
 

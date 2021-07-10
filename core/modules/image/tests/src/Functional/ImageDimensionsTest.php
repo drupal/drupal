@@ -319,7 +319,7 @@ class ImageDimensionsTest extends BrowserTestBase {
       ->setSourceImageUri($original_uri);
 
     $generated_uri = 'public://styles/test/public/' . $file_system->basename($original_uri);
-    $url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
+    $url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
 
     $variables = [
       '#theme' => 'image_style',
@@ -538,7 +538,7 @@ class ImageDimensionsTest extends BrowserTestBase {
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
-    $url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
+    $url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
 
     $this->assertSame('<img src="' . $url . '" width="100" height="100" alt="" loading="lazy" class="image-style-test-uri" />', $this->getImageTag($variables));
     $this->assertFileDoesNotExist($generated_uri, 'Generated file does not exist.');
@@ -555,7 +555,7 @@ class ImageDimensionsTest extends BrowserTestBase {
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
-    $url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
+    $url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $variables['#uri'] = $original_uri;
     $this->assertSame('<img src="' . $url . '" width="50" height="50" alt="" loading="lazy" class="image-style-test-uri" />', $this->getImageTag($variables));
     $this->assertFileDoesNotExist($generated_uri, 'Generated file does not exist.');
