@@ -342,8 +342,7 @@ class BigPipeTest extends BrowserTestBase {
    *   markup.
    */
   protected function assertBigPipeNoJsPlaceholders(array $expected_big_pipe_nojs_placeholders): void {
-    // @todo fix below in https://www.drupal.org/project/drupal/issues/3144926
-    // $this->assertSetsEqual(array_keys($expected_big_pipe_nojs_placeholders), array_map('rawurldecode', explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-No-Js-Placeholders'))));
+    $this->assertSetsEqual(array_keys($expected_big_pipe_nojs_placeholders), array_map('rawurldecode', explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-No-Js-Placeholders'))));
     foreach ($expected_big_pipe_nojs_placeholders as $big_pipe_nojs_placeholder => $expected_replacement) {
       // Checking whether the replacement for the BigPipe no-JS placeholder
       // $big_pipe_nojs_placeholder is present.
@@ -364,8 +363,7 @@ class BigPipeTest extends BrowserTestBase {
    *   defined in the order that they are expected to be rendered & streamed.
    */
   protected function assertBigPipePlaceholders(array $expected_big_pipe_placeholders, array $expected_big_pipe_placeholder_stream_order): void {
-    // @todo fix below in https://www.drupal.org/project/drupal/issues/3144926
-    // $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-Placeholders')));
+    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-Placeholders')));
     $placeholder_positions = [];
     $placeholder_replacement_positions = [];
     foreach ($expected_big_pipe_placeholders as $big_pipe_placeholder_id => $expected_ajax_response) {
@@ -398,8 +396,7 @@ class BigPipeTest extends BrowserTestBase {
       $expected_big_pipe_placeholders_with_replacements[$big_pipe_placeholder_id] = $expected_big_pipe_placeholders[$big_pipe_placeholder_id];
     }
     $this->assertEquals($expected_big_pipe_placeholders_with_replacements, array_filter($expected_big_pipe_placeholders));
-    // @todo fix below in https://www.drupal.org/project/drupal/issues/3144926
-    // $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
+    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
     $this->assertSame(count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getSession()->getPage()->getContent()));
 
     // Verifying BigPipe start/stop signals.
@@ -472,7 +469,7 @@ class BigPipeTest extends BrowserTestBase {
   protected function assertBigPipeNoJsMetaRefreshRedirect(): void {
     $original_url = $this->getSession()->getCurrentUrl();
 
-    // Disable autosmatic following of redirects by the HTTP client, so that this
+    // Disable automatic following of redirects by the HTTP client, so that this
     // test can analyze the response headers of each redirect response.
     $this->getSession()->getDriver()->getClient()->followRedirects(FALSE);
     $this->performMetaRefresh();

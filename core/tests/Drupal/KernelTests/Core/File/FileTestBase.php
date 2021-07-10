@@ -86,7 +86,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @param $message
    *   Optional message.
    */
-  public function assertFilePermissions($filepath, $expected_mode, $message = NULL): void {
+  public function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $filepath);
 
@@ -121,7 +121,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @param $message
    *   Optional message.
    */
-  public function assertDirectoryPermissions($directory, $expected_mode, $message = NULL): void {
+  public function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $directory);
 
