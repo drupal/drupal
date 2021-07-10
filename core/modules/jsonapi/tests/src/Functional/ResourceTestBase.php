@@ -428,7 +428,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     if ($duplicate instanceof ConfigEntityInterface && $id_key = $duplicate->getEntityType()->getKey('id')) {
       $id = $original->id();
-      $id_key = $duplicate->getEntityType()->getKey('id');
       $duplicate->set($id_key, $id . '_' . $key);
     }
     return $duplicate;
