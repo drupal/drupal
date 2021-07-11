@@ -187,9 +187,6 @@ function node_title_list(StatementInterface $result, $title = NULL) {
  *   One of the MARK constants.
  */
 function node_mark($nid, $timestamp) {
-
-  $cache = &drupal_static(__FUNCTION__, []);
-
   if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
     return MARK_READ;
   }
