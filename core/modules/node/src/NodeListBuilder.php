@@ -19,21 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeListBuilder extends EntityListBuilder {
 
   /**
-   * Mark content as read.
-   */
-  const MARK_READ = 0;
-
-  /**
-   * Mark content as being new.
-   */
-  const MARK_NEW = 1;
-
-  /**
-   * Mark content as being updated.
-   */
-  const MARK_UPDATED = 2;
-
-  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
@@ -156,18 +141,18 @@ class NodeListBuilder extends EntityListBuilder {
    */
   protected function getNodeMark(int $nid, int $timestamp): int {
     if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
-      return static::MARK_READ;
+      return MARK_READ;
     }
     if (!isset($this->nodeMark[$nid])) {
       $this->nodeMark[$nid] = history_read($nid);
     }
     if ($this->nodeMark[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
-      return static::MARK_NEW;
+      return MARK_NEW;
     }
     elseif ($timestamp > $this->nodeMark[$nid] && $timestamp > HISTORY_READ_LIMIT) {
-      return static::MARK_UPDATED;
+      return MARK_UPDATED;
     }
-    return static::MARK_READ;
+    return MARK_READ;
   }
 
 }
