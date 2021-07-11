@@ -30,8 +30,8 @@ class BookManagerDeprecationTest extends KernelTestBase {
    * @covers ::__construct
    */
   public function testOptionalParametersDeprecation(): void {
-    $this->expectDeprecation('Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:9.3.0 and the $book_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
-    $this->expectDeprecation('Calling BookManager::__construct() without the $book_memory_cache argument is deprecated in drupal:9.3.0 and the $book_memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
+    $this->expectDeprecation('Calling BookManager::__construct() without the $backend_chained_cache argument is deprecated in drupal:9.3.0 and the $backend_chained_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
+    $this->expectDeprecation('Calling BookManager::__construct() without the $memory_cache argument is deprecated in drupal:9.3.0 and the $memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439');
     new BookManager(
       $this->container->get('entity_type.manager'),
       $this->container->get('string_translation'),
