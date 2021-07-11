@@ -10,7 +10,6 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\system\AdminHelperTrait;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
@@ -637,7 +636,7 @@ function drupal_static_reset($name = NULL) {
 
     case 'system_get_module_admin_tasks':
       @trigger_error("Using drupal_static_reset() with 'system_get_module_admin_tasks' is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\system\AdminHelperTrait::resetModuleAdminTasksCache() instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
-      AdminHelperTrait::resetModuleAdminTasksCache();
+      break;
 
       break;
   }

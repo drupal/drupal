@@ -8,7 +8,7 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\help\HelpSectionManager;
-use Drupal\system\AdminHelperTrait;
+use Drupal\system\SystemModuleAdminTasksHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -16,8 +16,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Controller routines for help routes.
  */
 class HelpController extends ControllerBase {
-
-  use AdminHelperTrait;
 
   /**
    * The current route match.
@@ -41,6 +39,13 @@ class HelpController extends ControllerBase {
   protected $moduleExtensionList;
 
   /**
+   * The module admin tasks helper service.
+   *
+   * @var \Drupal\system\SystemModuleAdminTasksHelper
+   */
+  protected $moduleAdminTasksHelper;
+
+  /**
    * Creates a new HelpController.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -49,11 +54,18 @@ class HelpController extends ControllerBase {
    *   The help section manager.
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $module_extension_list
    *   The module extension list.
+   * @param \Drupal\system\SystemModuleAdminTasksHelper $module_admin_tasks_helper
+   *   The module admin tasks helper service.
    */
-  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list) {
+  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list, SystemModuleAdminTasksHelper $module_admin_tasks_helper = NULL) {
     $this->routeMatch = $route_match;
     $this->helpManager = $help_manager;
     $this->moduleExtensionList = $module_extension_list;
+    if (!isset($module_admin_tasks_helper)) {
+      @trigger_error('Calling HelpController::__construct() without the $module_admin_tasks_helper argument is deprecated in drupal:9.3.0 and the $module_admin_tasks_helper argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038972', E_USER_DEPRECATED);
+      $module_admin_tasks_helper = \Drupal::service('system.module_admin_tasks_helper');
+    }
+    $this->moduleAdminTasksHelper = $module_admin_tasks_helper;
   }
 
   /**
@@ -63,7 +75,8 @@ class HelpController extends ControllerBase {
     return new static(
       $container->get('current_route_match'),
       $container->get('plugin.manager.help_section'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('system.module_admin_tasks_helper')
     );
   }
 
@@ -153,7 +166,7 @@ class HelpController extends ControllerBase {
 
       // Only print list of administration pages if the module in question has
       // any such pages associated with it.
-      $admin_tasks = static::getModuleAdminTasks($name);
+      $admin_tasks = $this->moduleAdminTasksHelper->getModuleAdminTasks($name);
       if (!empty($admin_tasks)) {
         $links = [];
         foreach ($admin_tasks as $task) {

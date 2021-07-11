@@ -3,7 +3,6 @@
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\system\AdminHelperTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -12,8 +11,6 @@ use Drupal\Tests\BrowserTestBase;
  * @group help
  */
 class HelpTest extends BrowserTestBase {
-
-  use AdminHelperTrait;
 
   /**
    * Modules to enable.
@@ -136,7 +133,7 @@ class HelpTest extends BrowserTestBase {
       if ($response == 200) {
         $this->assertSession()->titleEquals("$name | Drupal");
         $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
-        $admin_tasks = static::getModuleAdminTasks($module);
+        $admin_tasks = \Drupal::service('system.module_admin_tasks_helper')->getModuleAdminTasks($module);
         if (!empty($admin_tasks)) {
           $this->assertSession()->pageTextContains($name . ' administration pages');
         }

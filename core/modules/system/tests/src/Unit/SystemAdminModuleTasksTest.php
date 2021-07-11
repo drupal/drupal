@@ -15,7 +15,7 @@ class SystemAdminModuleTasksTest extends UnitTestCase {
 
   /**
    * @group legacy
-   * @expectedDeprecation system_get_module_admin_tasks() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\system\AdminHelperTrait::getModuleAdminTasks() instead. See https://www.drupal.org/node/3038972
+   * @expectedDeprecation system_get_module_admin_tasks() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\system\SystemModuleAdminTasksHelper::getModuleAdminTasks() instead. See https://www.drupal.org/node/3038972
    * @see system_get_module_admin_tasks()
    */
   public function testSystemGetModuleAdminTasksDeprecation() {
@@ -41,7 +41,7 @@ class SystemAdminModuleTasksTest extends UnitTestCase {
 
   /**
    * @group legacy
-   * @expectedDeprecation Using drupal_static_reset() with 'system_get_module_admin_tasks' is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\system\AdminHelperTrait::resetModuleAdminTasksCache() instead. See https://www.drupal.org/node/3038972
+   * @expectedDeprecation Using drupal_static_reset() with 'system_get_module_admin_tasks' is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\system\SystemModuleAdminTasksHelper::resetModuleAdminTasksCache() instead. See https://www.drupal.org/node/3038972
    * @see drupal_static_reset()
    */
   public function testSystemGetModuleAdminTasksResetCacheDeprecation() {
