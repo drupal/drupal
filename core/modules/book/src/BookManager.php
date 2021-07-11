@@ -140,7 +140,7 @@ class BookManager implements BookManagerInterface {
     $this->entityRepository = $entity_repository;
     if (!$book_cache) {
       @trigger_error('Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:9.3.0 and the $book_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
-      $book_cache = \Drupal::service('book.cache');
+      $book_cache = \Drupal::service('book.backend_chained_cache');
     }
     $this->bookCache = $book_cache;
     if (!$book_memory_cache) {
