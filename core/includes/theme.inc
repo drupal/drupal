@@ -26,31 +26,47 @@ use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\TableSort;
+use Drupal\node\NodeListBuilder;
 
 /**
  * @defgroup content_flags Content markers
  * @{
- * Markers used by mark.html.twig & HistoryNodeListBuilder::getNodeMark() to
- * designate content.
+ * Markers used by mark.html.twig & \Drupal\node\NodeListBuilder::getNodeMark()
+ * to designate content.
  *
  * @see mark.html.twig
- * @see \Drupal\history\HistoryNodeListBuilder::getNodeMark()
+ * @see \Drupal\node\NodeListBuilder::getNodeMark()
  */
 
 /**
  * Mark content as read.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead, use
+ *   \Drupal\node\NodeListBuilder::MARK_READ.
+ *
+ * @see https://www.drupal.org/node/3037203
  */
-const MARK_READ = 0;
+const MARK_READ = NodeListBuilder::MARK_READ;
 
 /**
  * Mark content as being new.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead, use
+ *   \Drupal\node\NodeListBuilder::MARK_NEW.
+ *
+ * @see https://www.drupal.org/node/3037203
  */
-const MARK_NEW = 1;
+const MARK_NEW = NodeListBuilder::MARK_NEW;
 
 /**
  * Mark content as being updated.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead, use
+ *   \Drupal\node\NodeListBuilder::MARK_UPDATED.
+ *
+ * @see https://www.drupal.org/node/3037203
  */
-const MARK_UPDATED = 2;
+const MARK_UPDATED = NodeListBuilder::MARK_UPDATED;
 
 /**
  * A responsive table class; hide table cell on narrow devices.
@@ -2051,7 +2067,7 @@ function drupal_common_theme() {
       'variables' => ['style' => NULL],
     ],
     'mark' => [
-      'variables' => ['status' => MARK_NEW],
+      'variables' => ['status' => NodeListBuilder::MARK_NEW],
     ],
     'item_list' => [
       'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
