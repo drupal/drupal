@@ -4,12 +4,15 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\system\AdminHelperTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for admin section.
  */
 class AdminController extends ControllerBase {
+
+  use AdminHelperTrait;
 
   /**
    * The module extension list.
@@ -55,7 +58,7 @@ class AdminController extends ControllerBase {
 
     foreach ($module_info as $module => $info) {
       // Only display a section if there are any available tasks.
-      if ($admin_tasks = system_get_module_admin_tasks($module, $info->info)) {
+      if ($admin_tasks = static::getModuleAdminTasks($module)) {
         // Sort links by title.
         uasort($admin_tasks, ['\Drupal\Component\Utility\SortArray', 'sortByTitleElement']);
         // Move 'Configure permissions' links to the bottom of each section.

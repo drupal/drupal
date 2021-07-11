@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\help\HelpSectionManager;
+use Drupal\system\AdminHelperTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,6 +16,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Controller routines for help routes.
  */
 class HelpController extends ControllerBase {
+
+  use AdminHelperTrait;
 
   /**
    * The current route match.
@@ -150,7 +153,7 @@ class HelpController extends ControllerBase {
 
       // Only print list of administration pages if the module in question has
       // any such pages associated with it.
-      $admin_tasks = system_get_module_admin_tasks($name, $info);
+      $admin_tasks = static::getModuleAdminTasks($name);
       if (!empty($admin_tasks)) {
         $links = [];
         foreach ($admin_tasks as $task) {

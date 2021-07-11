@@ -10,6 +10,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\system\AdminHelperTrait;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
@@ -634,6 +635,11 @@ function drupal_static_reset($name = NULL) {
       @trigger_error("Calling drupal_static_reset() with 'node_mark' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3037203", E_USER_DEPRECATED);
       break;
 
+    case 'system_get_module_admin_tasks':
+      @trigger_error("Using drupal_static_reset() with 'system_get_module_admin_tasks' is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\system\AdminHelperTrait::resetModuleAdminTasksCache() instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
+      AdminHelperTrait::resetModuleAdminTasksCache();
+
+      break;
   }
   drupal_static($name, NULL, TRUE);
 }
