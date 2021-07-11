@@ -732,7 +732,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame($assert, $this->queryResults);
   }
 
-  protected function assertRevisionResult($keys, $expected): void {
+  protected function assertRevisionResult($keys, $expected) {
     $assert = [];
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);

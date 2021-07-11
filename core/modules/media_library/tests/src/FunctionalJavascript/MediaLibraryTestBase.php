@@ -149,10 +149,30 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The page element node if found. If not found, the test fails.
    *
+   * @todo deprecate.
+   */
+  protected function assertElementExistsAfterWait($selector, $locator, $timeout = 10000) {
+    return $this->getElementExistingAfterWait($selector, $locator, $timeout);
+  }
+
+  /**
+   * Waits for the specified selector and returns it if not empty.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   Timeout in milliseconds, defaults to 10000.
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The page element node if found. If not found, the test fails.
+   *
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function assertElementExistsAfterWait($selector, $locator, $timeout = 10000) {
+  protected function getElementExistingAfterWait(string $selector, $locator, int $timeout = 10000): NodeElement {
     $element = $this->assertSession()->waitForElement($selector, $locator, $timeout);
     $this->assertNotEmpty($element);
     return $element;

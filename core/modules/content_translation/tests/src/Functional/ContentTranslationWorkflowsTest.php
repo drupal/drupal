@@ -415,7 +415,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   /**
    * Assert that the current page does not contain shared form elements.
    */
-  protected function assertNoSharedElements(): void {
+  protected function assertNoSharedElements() {
     $language_none = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     return $this->assertSession()->fieldNotExists("field_test_text[$language_none][0][value]");
   }

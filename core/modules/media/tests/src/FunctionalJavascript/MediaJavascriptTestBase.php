@@ -48,8 +48,20 @@ abstract class MediaJavascriptTestBase extends WebDriverTestBase {
    *
    * @return string
    *   The link URL.
+   *
+   * @todo deprecate.
    */
   protected function assertLinkToCreatedMedia() {
+    return $this->getLinkToCreatedMedia();
+  }
+
+  /**
+   * Returns the link to a new media item displayed in the messages area.
+   *
+   * @return string
+   *   The link URL.
+   */
+  protected function getLinkToCreatedMedia(): string {
     $assert_session = $this->assertSession();
     $selector = '.messages a';
 
