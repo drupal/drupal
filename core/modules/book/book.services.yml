@@ -30,6 +30,7 @@ services:
       - [setContainer, ['@service_container']]
     tags:
       - { name: cache.context}
+
   book.uninstall_validator:
     class: Drupal\book\BookUninstallValidator
     tags:
