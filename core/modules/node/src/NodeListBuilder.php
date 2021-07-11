@@ -139,7 +139,7 @@ class NodeListBuilder extends EntityListBuilder {
    * @return int
    *   One of the MARK constants.
    */
-  protected function getNodeMark(int $nid, int $timestamp): int {
+  protected function getNodeMark($nid, $timestamp) {
     if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
       return MARK_READ;
     }
