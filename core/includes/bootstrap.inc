@@ -631,8 +631,7 @@ function drupal_static_reset($name = NULL) {
       break;
 
     case 'node_mark':
-      @trigger_error("Calling drupal_static_reset() with 'node_mark' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use drupal_static_reset('history_read_multiple') instead. See https://www.drupal.org/node/3037203", E_USER_DEPRECATED);
-      drupal_static_reset('history_read_multiple');
+      @trigger_error("Calling drupal_static_reset() with 'node_mark' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3037203", E_USER_DEPRECATED);
       break;
 
   }
