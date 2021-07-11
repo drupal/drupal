@@ -91,14 +91,14 @@ class BookManager implements BookManagerInterface {
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $bookCache;
+  protected $backendChainedCache;
 
   /**
    * The book memory cache service.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $bookMemoryCache;
+  protected $memoryCache;
 
   /**
    * Constructs a BookManager object.
@@ -117,12 +117,12 @@ class BookManager implements BookManagerInterface {
    *   The language manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface|null $entity_repository
    *   The entity repository service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $book_cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $backend_chained_cache
    *   The book chained backend cache service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $book_memory_cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $memory_cache
    *   The book memory cache service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer, LanguageManagerInterface $language_manager = NULL, EntityRepositoryInterface $entity_repository = NULL, CacheBackendInterface $book_cache = NULL, CacheBackendInterface $book_memory_cache = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer, LanguageManagerInterface $language_manager = NULL, EntityRepositoryInterface $entity_repository = NULL, CacheBackendInterface $backend_chained_cache = NULL, CacheBackendInterface $memory_cache = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;
@@ -138,16 +138,16 @@ class BookManager implements BookManagerInterface {
       $entity_repository = \Drupal::service('entity.repository');
     }
     $this->entityRepository = $entity_repository;
-    if (!$book_cache) {
-      @trigger_error('Calling BookManager::__construct() without the $book_cache argument is deprecated in drupal:9.3.0 and the $book_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
-      $book_cache = \Drupal::service('book.backend_chained_cache');
+    if (!$backend_chained_cache) {
+      @trigger_error('Calling BookManager::__construct() without the $backend_chained_cache argument is deprecated in drupal:9.3.0 and the $backend_chained_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
+      $backend_chained_cache = \Drupal::service('book.backend_chained_cache');
     }
-    $this->bookCache = $book_cache;
-    if (!$book_memory_cache) {
-      @trigger_error('Calling BookManager::__construct() without the $book_memory_cache argument is deprecated in drupal:9.3.0 and the $book_memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
-      $book_memory_cache = \Drupal::service('book.memory_cache');
+    $this->backendChainedCache = $backend_chained_cache;
+    if (!$memory_cache) {
+      @trigger_error('Calling BookManager::__construct() without the $memory_cache argument is deprecated in drupal:9.3.0 and the $memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
+      $memory_cache = \Drupal::service('book.memory_cache');
     }
-    $this->bookMemoryCache = $book_memory_cache;
+    $this->memoryCache = $memory_cache;
   }
 
   /**
@@ -547,7 +547,7 @@ class BookManager implements BookManagerInterface {
     $cid = implode(':', ['book-links', $bid, $nid, $langcode, (int) $max_depth]);
 
     // Get it from cache, if available.
-    if ($cache = $this->bookMemoryCache->get($cid)) {
+    if ($cache = $this->memoryCache->get($cid)) {
       return $cache->data;
     }
 
@@ -567,7 +567,7 @@ class BookManager implements BookManagerInterface {
     $tree_build = $this->bookTreeBuild($bid, $tree_parameters);
 
     // Cache the tree build in memory.
-    $this->bookMemoryCache->set($cid, $tree_build);
+    $this->memoryCache->set($cid, $tree_build);
 
     return $tree_build;
   }
@@ -742,7 +742,7 @@ class BookManager implements BookManagerInterface {
     $cid = implode(':', ['book-links', $bid, 'tree-data', $langcode, hash('sha256', serialize($parameters))]);
 
     // Get it from cache, if available.
-    if ($cache = $this->bookCache->get($cid)) {
+    if ($cache = $this->backendChainedCache->get($cid)) {
       return $cache->data;
     }
 
@@ -761,7 +761,7 @@ class BookManager implements BookManagerInterface {
     $this->bookTreeCollectNodeLinks($data['tree'], $data['node_links']);
 
     // Cache tree data.
-    $this->bookCache->set($cid, $data, Cache::PERMANENT, ['bid:' . $bid]);
+    $this->backendChainedCache->set($cid, $data, Cache::PERMANENT, ['bid:' . $bid]);
 
     return $data;
   }
@@ -1161,7 +1161,7 @@ class BookManager implements BookManagerInterface {
     // Generate a cache ID (cid) specific for this $link.
     $cid = "book-links:subtree-data:{$link['nid']}";
     // Get it from cache, if available.
-    if ($cache = $this->bookCache->get($cid)) {
+    if ($cache = $this->backendChainedCache->get($cid)) {
       return $cache->data;
     }
 
@@ -1178,7 +1178,7 @@ class BookManager implements BookManagerInterface {
     $this->bookTreeCheckAccess($data['tree'], $data['node_links']);
 
     // Cache subtree data.
-    $this->bookCache->set($cid, $data['tree'], Cache::PERMANENT, ['bid:' . $link['bid']]);
+    $this->backendChainedCache->set($cid, $data['tree'], Cache::PERMANENT, ['bid:' . $link['bid']]);
 
     return $data['tree'];
   }
