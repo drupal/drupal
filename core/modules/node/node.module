@@ -186,13 +186,13 @@ function node_title_list(StatementInterface $result, $title = NULL) {
  * @return int
  *   One of the MARK constants.
  *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There's no
- *   replacement for this function.
+ * @deprecated in Drupal 9.3.0 and is removed from  be removed before Drupal 9.0.0. There's
+ *   no replacement for this function.
  *
  * @see https://www.drupal.org/node/3037203
  */
 function node_mark($nid, $timestamp) {
-  @trigger_error("node_mark() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There's no replacement for this function. See https://www.drupal.org/node/3037203", E_USER_DEPRECATED);
+  @trigger_error("node_mark() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. There's no replacement for this function. See https://www.drupal.org/node/3037203.", E_USER_DEPRECATED);
 
   static $cache = [];
 
