@@ -17,6 +17,9 @@ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
@@ -77,6 +80,16 @@ class SectionRenderTest extends UnitTestCase {
     // @todo Refactor this into some better tests in https://www.drupal.org/node/2942605.
     $this->eventDispatcher = (new \ReflectionClass(ContainerAwareEventDispatcher::class))->newInstanceWithoutConstructor();
 
+    $data_definition = DataDefinition::createFromDataType('boolean');
+    $typed_data_manager = $this->prophesize(TypedDataManagerInterface::class);
+    $typed_data_manager->createDataDefinition('boolean')->willReturn($data_definition);
+    $typed_data_manager->getDefaultConstraints($data_definition)->willReturn([]);
+    $typed_data_manager->create($data_definition, Argument::type('bool'))->will(function ($arguments) {
+      $data = new BooleanData($arguments[0]);
+      $data->setValue($arguments[1]);
+      return $data;
+    });
+
     $this->account = $this->prophesize(AccountInterface::class);
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
     $this->eventDispatcher->addSubscriber($subscriber);
@@ -93,6 +106,7 @@ class SectionRenderTest extends UnitTestCase {
     $container->set('context.handler', $this->contextHandler->reveal());
     $container->set('context.repository', $this->contextRepository->reveal());
     $container->set('event_dispatcher', $this->eventDispatcher);
+    $container->set('typed_data_manager', $typed_data_manager->reveal());
     \Drupal::setContainer($container);
   }
 

@@ -3,6 +3,8 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 
@@ -86,6 +88,8 @@ class SectionComponent {
    *   A renderable array representing the content of the component.
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
+    $contexts['in_preview'] = new Context(new ContextDefinition('boolean'), $in_preview);
+
     $event = new SectionComponentBuildRenderArrayEvent($this, $contexts, $in_preview);
     $this->eventDispatcher()->dispatch($event, LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY);
     $output = $event->getBuild();

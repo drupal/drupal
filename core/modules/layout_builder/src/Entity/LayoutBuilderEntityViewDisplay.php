@@ -336,6 +336,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   protected function getContextsForEntity(FieldableEntityInterface $entity) {
     $available_context_ids = array_keys($this->contextRepository()->getAvailableContexts());
     return [
+      'in_preview' => new Context(new ContextDefinition('boolean'), FALSE),
       'view_mode' => new Context(ContextDefinition::create('string'), $this->getMode()),
       'entity' => EntityContext::fromEntity($entity),
       'display' => EntityContext::fromEntity($this),
