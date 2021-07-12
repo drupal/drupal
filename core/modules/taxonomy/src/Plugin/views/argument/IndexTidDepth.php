@@ -110,26 +110,41 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
       $tids = $this->argument;
     }
     // Now build the subqueries.
-    $subquery = Database::getConnection()->select('taxonomy_index', 'tn');
+    $connection = Database::getConnection();
+    $subquery = $connection->select('taxonomy_index', 'tn');
     $subquery->addField('tn', 'nid');
-    $where = ($this->view->query->getConnection()->condition('OR'))->condition('tn.tid', $tids, $operator);
-    $last = "tn";
+    $where = $connection->condition('OR')->condition('tn.tid', $tids, $operator);
 
     if ($this->options['depth'] > 0) {
-      $subquery->leftJoin('taxonomy_term__parent', 'th', "[th].[entity_id] = [tn].[tid]");
-      $last = "th";
       foreach (range(1, abs($this->options['depth'])) as $count) {
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[parent_target_id] = [th$count].[entity_id]");
-        $where->condition("th$count.entity_id", $tids, $operator);
-        $last = "th$count";
+        $last = "th";
+        $inner_subquery = $connection->select('taxonomy_term__parent', 'th');
+        $inner_subquery->addField("th$count", 'entity_id');
+        $inner_where = $connection->condition('OR')->condition("th.entity_id", $tids, $operator);
+        foreach (range(1, $count) as $inner_count) {
+          $inner_subquery->leftJoin('taxonomy_term__parent', "th$inner_count", "[$last].[parent_target_id] = [th$inner_count].[entity_id]");
+          $inner_where->condition("th$inner_count.entity_id", $tids, $operator);
+          $last = "th$inner_count";
+        }
+        $inner_subquery->condition($inner_where);
+        $where->condition('tn.tid', $inner_subquery, 'IN');
       }
     }
     elseif ($this->options['depth'] < 0) {
       foreach (range(1, abs($this->options['depth'])) as $count) {
-        $field = $count == 1 ? 'tid' : 'entity_id';
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[$field] = [th$count].[parent_target_id]");
-        $where->condition("th$count.entity_id", $tids, $operator);
-        $last = "th$count";
+        $last = "th1";
+        $inner_subquery = $connection->select('taxonomy_term__parent', "th1");
+        $inner_subquery->addField("th$count", 'parent_target_id');
+        $inner_where = $connection->condition('OR')->condition("th1.entity_id", $tids, $operator);
+        if ($count > 1) {
+          foreach (range(1, $count) as $inner_count) {
+            $subquery->leftJoin('taxonomy_term__parent', "th$inner_count", "[$last].[entity_id] = [th$inner_count].[parent_target_id]");
+            $where->condition("th$inner_count.entity_id", $tids, $operator);
+            $last = "th$inner_count";
+          }
+        }
+        $inner_subquery->condition($inner_where);
+        $where->condition('tn.tid', $inner_subquery, 'IN');
       }
     }
 

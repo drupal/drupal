@@ -68,7 +68,7 @@ trait MarkupTrait {
    * @return string
    *   The safe string content.
    */
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->__toString();
   }
 
