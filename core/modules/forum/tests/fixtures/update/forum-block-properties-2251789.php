@@ -12,8 +12,8 @@ use Drupal\Core\Serialization\Yaml;
 $connection = Database::getConnection();
 
 $configs = [
-  'block.block.activeforumtopics',
-  'block.block.newforumtopics',
+  'block.block.active_forum_topics',
+  'block.block.new_forum_topics',
 ];
 
 foreach ($configs as $config) {

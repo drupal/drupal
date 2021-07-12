@@ -29,16 +29,16 @@ class ForumUpdatePathTest extends UpdatePathTestBase {
    * @see forum_post_update_remove_properties_key()
    */
   public function testRemovedPropertiesKey() {
-    $config = $this->config('block.block.activeforumtopics');
+    $config = $this->config('block.block.active_forum_topics');
     $this->assertArrayHasKey('properties', $config->get('settings'));
-    $config = $this->config('block.block.newforumtopics');
+    $config = $this->config('block.block.new_forum_topics');
     $this->assertArrayHasKey('properties', $config->get('settings'));
 
     $this->runUpdates();
 
-    $config = $this->config('block.block.activeforumtopics');
+    $config = $this->config('block.block.active_forum_topics');
     $this->assertArrayNotHasKey('properties', $config->get('settings'));
-    $config = $this->config('block.block.newforumtopics');
+    $config = $this->config('block.block.new_forum_topics');
     $this->assertArrayNotHasKey('properties', $config->get('settings'));
   }
 

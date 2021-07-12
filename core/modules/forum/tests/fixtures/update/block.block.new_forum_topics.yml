@@ -5,15 +5,15 @@ dependencies:
     - forum
   theme:
     - bartik
-id: activeforumtopics
+id: new_forum_topics
 theme: bartik
 region: sidebar_first
 weight: 0
 provider: null
-plugin: forum_active_block
+plugin: forum_new_block
 settings:
-  id: forum_active_block
-  label: 'Active forum topics'
+  id: forum_new_block
+  label: 'New forum topics'
   provider: forum
   label_display: visible
   properties:
