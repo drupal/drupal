@@ -187,19 +187,14 @@ function node_title_list(StatementInterface $result, $title = NULL) {
  *   One of the MARK constants.
  */
 function node_mark($nid, $timestamp) {
-
-  $cache = &drupal_static(__FUNCTION__, []);
-
   if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
     return MARK_READ;
   }
-  if (!isset($cache[$nid])) {
-    $cache[$nid] = history_read($nid);
-  }
-  if ($cache[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
+  $read_timestamp = history_read($nid);
+  if ($read_timestamp === 0 && $timestamp > HISTORY_READ_LIMIT) {
     return MARK_NEW;
   }
-  elseif ($timestamp > $cache[$nid] && $timestamp > HISTORY_READ_LIMIT) {
+  elseif ($timestamp > $read_timestamp && $timestamp > HISTORY_READ_LIMIT) {
     return MARK_UPDATED;
   }
   return MARK_READ;
