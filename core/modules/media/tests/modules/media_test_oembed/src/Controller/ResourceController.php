@@ -2,6 +2,7 @@
 
 namespace Drupal\media_test_oembed\Controller;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,9 +31,21 @@ class ResourceController {
     else {
       $content = file_get_contents($resources[$asset_url]);
       $response = new Response($content);
-      $response->headers->set('Content-Type', 'application/json');
+      $response->headers->set('Content-Type', 'application/' . pathinfo($resources[$asset_url], PATHINFO_EXTENSION));
     }
 
+    return $response;
+  }
+
+  /**
+   * Returns an example thumbnail file without an extension.
+   *
+   * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+   *   The response.
+   */
+  public function getThumbnailWithNoExtension() {
+    $response = new BinaryFileResponse('core/misc/druplicon.png');
+    $response->headers->set('Content-Type', 'image/png');
     return $response;
   }
 

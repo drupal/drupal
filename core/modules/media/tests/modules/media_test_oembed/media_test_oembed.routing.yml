@@ -4,3 +4,9 @@ media_test_oembed.resource.get:
     _controller: '\Drupal\media_test_oembed\Controller\ResourceController::get'
   requirements:
     _access: 'TRUE'
+media_test_oembed.resource.thumbnail:
+  path: '/media_test_oembed/thumbnail'
+  defaults:
+    _controller: '\Drupal\media_test_oembed\Controller\ResourceController::getThumbnailWithNoExtension'
+  requirements:
+    _access: 'TRUE'
