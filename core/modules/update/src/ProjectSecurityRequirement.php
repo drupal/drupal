@@ -110,7 +110,7 @@ final class ProjectSecurityRequirement {
    */
   public static function createFromProjectDataAndSecurityCoverageInfo(array $project_data, array $security_coverage_info) {
     if ($project_data['project_type'] !== 'core' || $project_data['name'] !== 'drupal' || empty($security_coverage_info)) {
-      return new static();
+      return new static(NULL, [], NULL, NULL, \Drupal::time());
     }
     if (isset($project_data['existing_version'])) {
       list($major, $minor) = explode('.', $project_data['existing_version']);
