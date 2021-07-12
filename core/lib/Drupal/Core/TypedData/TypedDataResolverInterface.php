@@ -62,10 +62,10 @@ interface TypedDataResolverInterface {
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts from which to extract our token's label.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   * @return string|null
    *   The administrative label of $token.
    */
-  public function getLabelByToken(string $token, array $contexts): ?TranslatableMarkup;
+  public function getLabelByToken(string $token, array $contexts): ?string;
 
   /**
    * Extracts an array of tokens and labels.

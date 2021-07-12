@@ -6,7 +6,6 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\Exception\ContextNotFoundException;
 
 class TypedDataResolver implements TypedDataResolverInterface {
@@ -111,7 +110,7 @@ class TypedDataResolver implements TypedDataResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLabelByToken(string $token, array $contexts): ?TranslatableMarkup {
+  public function getLabelByToken(string $token, array $contexts): ?string {
     // @todo Optimize this by allowing to limit the desired token?
     $tokens = $this->getTokensForContexts($contexts);
     return $tokens[$token] ?? NULL;

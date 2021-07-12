@@ -4,14 +4,13 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\Core\TypedData\TypedDataResolver
+ * @coversDefaultClass \Drupal\Core\TypedData\TypedDataResolverInterface
  *
  * @group TypedData
  */
@@ -23,7 +22,7 @@ class TypedDataResolverTest extends KernelTestBase {
   protected static $modules = ['user', 'system', 'entity_test'];
 
   /**
-   * @var \Drupal\Core\TypedData\TypedDataResolver
+   * @var \Drupal\Core\TypedData\TypedDataResolverInterface
    */
   protected $typedDataResolver;
 
@@ -41,6 +40,8 @@ class TypedDataResolverTest extends KernelTestBase {
 
   /**
    * Tests context extraction from properties.
+   *
+   * @covers ::getContextFromProperty
    */
   public function testGetContextFromProperty() {
     // Create a user and test entity to extract context from.
@@ -71,6 +72,76 @@ class TypedDataResolverTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::convertTokenToContext
+   */
+  public function testConvertTokenToContext() {
+    $user = User::create(['uid' => 2, 'name' => 'username', 'mail' => 'mail@example.org']);
+    $user->enforceIsNew(TRUE);
+    $user->save();
+    $entity_test = EntityTest::create(['user_id' => $user->id(), 'name' => 'Test name']);
+
+    $typed_data_entity = $entity_test->getTypedData();
+    $data_definition = $typed_data_entity->getDataDefinition();
+
+    $context_definition = new EntityContextDefinition($data_definition->getDataType(), 'Context definition label');
+    $contexts['entity_test'] = new Context($context_definition, $entity_test);
+
+    // Test the language property.
+    $context = $this->typedDataResolver->convertTokenToContext('entity_test:langcode:language', $contexts);
+    $this->assertEquals('language', $context->getContextDefinition()->getDataType());
+
+    // Test the reference to the name.
+    $context = $this->typedDataResolver->convertTokenToContext('entity_test:user_id:entity', $contexts);
+    $this->assertEquals('entity:user', $context->getContextDefinition()->getDataType());
+
+    $context = $this->typedDataResolver->convertTokenToContext('entity_test:user_id:entity:mail:value', $contexts);
+    $this->assertEquals('email', $context->getContextDefinition()->getDataType());
+  }
+
+  /**
+   * @covers ::getLabelByToken
+   */
+  public function testGetLabelByToken() {
+    // Create a user and test entity to extract context from.
+    $user = User::create(['uid' => 2, 'name' => 'username', 'mail' => 'mail@example.org']);
+    $user->enforceIsNew(TRUE);
+    $user->save();
+    $entity_test = EntityTest::create(['user_id' => $user->id(), 'name' => 'Test name']);
+
+    $typed_data_entity = $entity_test->getTypedData();
+    $data_definition = $typed_data_entity->getDataDefinition();
+
+    $context_definition = new EntityContextDefinition($data_definition->getDataType(), 'Context definition label');
+    $contexts['entity_test'] = new Context($context_definition, $entity_test);
+
+    // Test the language property.
+    $this->assertEquals('Context definition label: Language', $this->typedDataResolver->getLabelByToken('entity_test:langcode:language', $contexts));
+
+    // Test the reference to the user.
+    $this->assertEquals('Context definition label: User ID', $this->typedDataResolver->getLabelByToken('entity_test:user_id:entity', $contexts));
+  }
+
+  /**
+   * @covers ::getTokensForContexts
+   */
+  public function testGetTokensForContexts() {
+    $user = User::create(['uid' => 2, 'name' => 'username', 'mail' => 'mail@example.org']);
+    $user->enforceIsNew(TRUE);
+    $user->save();
+    $entity_test = EntityTest::create(['user_id' => $user->id(), 'name' => 'Test name']);
+
+    $typed_data_entity = $entity_test->getTypedData();
+    $data_definition = $typed_data_entity->getDataDefinition();
+
+    $context_definition = new EntityContextDefinition($data_definition->getDataType(), 'Context definition label');
+    $contexts['entity_test'] = new Context($context_definition, $entity_test);
+    $this->assertEquals([
+      'entity_test:langcode:language' => 'Context definition label: Language',
+      'entity_test:user_id:entity' => 'Context definition label: User ID',
+    ], $this->typedDataResolver->getTokensForContexts($contexts));
+  }
+
+  /**
    * Asserts that a context for the given property path can be derived.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
@@ -85,12 +156,7 @@ class TypedDataResolverTest extends KernelTestBase {
    */
   protected function assertPropertyPath(ContentEntityInterface $entity, $property_path, $expected_data_type) {
     $typed_data_entity = $entity->getTypedData();
-    if (strpos($typed_data_entity->getDataDefinition()->getDataType(), 'entity:') === 0) {
-      $context_definition = new EntityContextDefinition($typed_data_entity->getDataDefinition()->getDataType());
-    }
-    else {
-      $context_definition = new ContextDefinition($typed_data_entity->getDataDefinition()->getDataType());
-    }
+    $context_definition = new EntityContextDefinition($typed_data_entity->getDataDefinition()->getDataType());
     $context_with_value = new Context($context_definition, $typed_data_entity);
     $context_without_value = new Context($context_definition);
 
