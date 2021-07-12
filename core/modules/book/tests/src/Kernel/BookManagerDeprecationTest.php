@@ -17,13 +17,29 @@ class BookManagerDeprecationTest extends KernelTestBase {
   protected static $modules = ['book'];
 
   /**
+   * @param string $method
+   *   Method to be tested.
+   *
+   * @dataProvider providerTestDrupalStaticResetDeprecation
    * @see drupal_static_reset()
    */
-  public function testDrupalStaticResetDeprecation(): void {
-    foreach (['bookSubtreeData', 'bookTreeAllData', 'doBookTreeBuild'] as $method) {
-      $this->expectDeprecation("Calling drupal_static_reset() with 'Drupal\book\BookManager::{$method}' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.memory_cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
-      drupal_static_reset("Drupal\book\BookManager::{$method}");
-    }
+  public function testDrupalStaticResetDeprecation(string $method): void {
+    $this->expectDeprecation("Calling drupal_static_reset() with '{$method}' as argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Use \Drupal::service('book.memory_cache')->deleteAll() instead. See https://www.drupal.org/node/3039439");
+    drupal_static_reset($method);
+  }
+
+  /**
+   * Provides test cases for ::testDrupalStaticResetDeprecation().
+   *
+   * @return string[][]
+   *   Test cases for ::testDrupalStaticResetDeprecation().
+   */
+  public function providerTestDrupalStaticResetDeprecation(): array {
+    return [
+      ['Drupal\book\BookManager::bookSubtreeData'],
+      ['Drupal\book\BookManager::bookTreeAllData'],
+      ['Drupal\book\BookManager::doBookTreeBuild'],
+    ];
   }
 
   /**
