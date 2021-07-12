@@ -46,14 +46,16 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function open($save_path, $name): bool {
+  #[\ReturnTypeWillChange]
+  public function open($save_path, $name) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function read($sid): string|FALSE {
+  #[\ReturnTypeWillChange]
+  public function read($sid) {
     $data = '';
     if (!empty($sid)) {
       // Read the session data from the database.
@@ -67,7 +69,8 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function write($sid, $value): bool {
+  #[\ReturnTypeWillChange]
+  public function write($sid, $value) {
     // The exception handler is not active at this point, so we need to do it
     // manually.
     try {
@@ -99,14 +102,16 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function close() : bool {
+  #[\ReturnTypeWillChange]
+  public function close() {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function destroy($sid) : bool {
+  #[\ReturnTypeWillChange]
+  public function destroy($sid) {
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
@@ -118,7 +123,8 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function gc($lifetime) : int|FALSE {
+  #[\ReturnTypeWillChange]
+  public function gc($lifetime) {
     // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
     // value. For example, if you want user sessions to stay in your database
     // for three weeks before deleting them, you need to set gc_maxlifetime

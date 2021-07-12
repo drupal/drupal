@@ -369,7 +369,8 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return string
    *   The safe string content.
    */
-  public function jsonSerialize(): string {
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize() {
     return (string) $this;
   }
 
