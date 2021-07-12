@@ -2,7 +2,6 @@
 
 namespace Drupal\media\OEmbed;
 
-use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
@@ -31,20 +30,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $providers;
 
   /**
-   * The fallback resource decoder.
-   *
-   * @var \Drupal\Component\Serialization\SerializationInterface
-   */
-  protected $fallbackDecoder;
-
-  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
    *   The HTTP client.
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
    *   The oEmbed provider repository service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   (optional) The cache backend.
    */
   public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
