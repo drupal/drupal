@@ -11,7 +11,7 @@ abstract class ActionResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user'];
+  protected static $modules = ['action', 'user'];
 
   /**
    * {@inheritdoc}
@@ -67,15 +67,6 @@ abstract class ActionResourceTestBase extends EntityResourceTestBase {
       'status' => TRUE,
       'type' => 'user',
       'uuid' => $this->entity->uuid(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'user.permissions',
     ];
   }
 

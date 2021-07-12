@@ -141,6 +141,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // Ensure the authenticated role has the access tour permission.
     $role = Role::load(Role::AUTHENTICATED_ID);
     $this->assertTrue($role->hasPermission('access tour'), 'The Authenticated role has the "access tour" permission.');
+    $this->assertEquals(['module' => ['tour']], $role->getDependencies());
   }
 
 }

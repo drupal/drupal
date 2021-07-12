@@ -1,6 +1,6 @@
 /**
  * @file
- * Theme override for checkbox.
+ * Customization of checkbox.
  */
 
 ((Drupal) => {

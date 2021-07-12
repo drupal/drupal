@@ -84,7 +84,7 @@ class FileStorageTest extends PhpStorageTestBase {
 
     $this->assertTrue($php->deleteAll(), 'Delete all reported success');
     $this->assertFalse($php->load($name));
-    $this->assertDirectoryNotExists($this->directory . '/test');
+    $this->assertDirectoryDoesNotExist($this->directory . '/test');
 
     // Should still return TRUE if directory has already been deleted.
     $this->assertTrue($php->deleteAll(), 'Delete all succeeds with nothing to delete');

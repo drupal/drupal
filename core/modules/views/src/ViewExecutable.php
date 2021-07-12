@@ -1467,7 +1467,7 @@ class ViewExecutable {
 
     $module_handler = \Drupal::moduleHandler();
 
-    // @TODO In the longrun, it would be great to execute a view without
+    // @todo In the long run, it would be great to execute a view without
     //   the theme system at all. See https://www.drupal.org/node/2322623.
     $active_theme = \Drupal::theme()->getActiveTheme();
     $themes = array_keys($active_theme->getBaseThemeExtensions());
@@ -2451,7 +2451,7 @@ class ViewExecutable {
    */
   public function hasFormElements() {
     foreach ($this->field as $field) {
-      if (property_exists($field, 'views_form_callback') || method_exists($field, 'viewsForm')) {
+      if (method_exists($field, 'viewsForm')) {
         return TRUE;
       }
     }

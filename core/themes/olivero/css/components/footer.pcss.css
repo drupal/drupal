@@ -8,9 +8,7 @@
 .site-footer {
   position: relative; /* stack above left social bar */
   color: var(--color--gray-50);
-
-  /* @todo - #0c0d0e and #171e23 aren't currently variables */
-  background: linear-gradient(180deg, #0c0d0e 0%, #171e23 100%);
+  background: linear-gradient(180deg, var(--color--gray-5) 0%, var(--color--gray-8) 100%);
 
   & .menu {
     margin-inline-start: 0;

@@ -4,8 +4,10 @@ related:
   - core.ui_components
 ---
 <h2>{% trans %}Overview of accessibility{% endtrans %}</h2>
-<p>{% trans %}The core administrative interface has built-in compliance with many accessibility standards, so that most pages are accessible to most users in their default state. However, certain pages become more accessible to some users through the use of a non-default interface. These replacement interfaces include:{% endtrans %}</p>
+<p>{% trans %}The core administrative interface has built-in compliance with many accessibility standards so that most pages are accessible to most users in their default state. However, certain pages become more accessible to some users through the use of a non-default or improved interface. These interfaces include:{% endtrans %}</p>
 <dl>
   <dt>{% trans %}Disabling drag-and-drop functionality{% endtrans %}</dt>
   <dd>{% trans %}The default drag-and-drop user interface for ordering tables in the administrative interface presents a challenge for some users, including keyboard-only users and users of screen readers and other assistive technology. The drag-and-drop interface can be disabled in a table by clicking a link labeled <em>Show row weights</em> above the table. The replacement interface allows users to order the table by choosing numerical weights (with increasing numbers) instead of dragging table rows.{% endtrans %}</dd>
+  <dt>{% trans %}Enabling inline form errors{% endtrans %}</dt>
+  <dd>{% trans %}Errors that occur when you submit a form, such as not filling in a required field, are sometimes difficult for users to understand and locate. In order to make these errors easier to find, the best practice is to put a summary of the errors at the top of the form page. To make them easier to understand, the best practice is to display error messages with the form fields they are related to. Both of these practices are implemented by the core Inline Form Errors module.{% endtrans %}</dd>
 </dl>

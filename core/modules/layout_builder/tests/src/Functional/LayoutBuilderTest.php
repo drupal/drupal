@@ -876,6 +876,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Verify that blocks explicitly removed are not present.
     $assert_session->linkNotExists('Help');
     $assert_session->linkNotExists('Sticky at top of lists');
+    $assert_session->linkNotExists('Main page content');
     $assert_session->linkNotExists('Page title');
 
     // Verify that Changed block is not present on first section.
@@ -1446,6 +1447,50 @@ class LayoutBuilderTest extends BrowserTestBase {
       $assert_session->linkByHrefNotExists("layout_builder/add/section/overrides/node.1/0/$unexpected_layout");
       $assert_session->linkByHrefNotExists("layout_builder/configure/section/overrides/node.1/0/$unexpected_layout");
     }
+  }
+
+  /**
+   * Tests the Layout Builder UI with a context defined at runtime.
+   */
+  public function testLayoutBuilderContexts() {
+    $node_url = 'node/1';
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm([
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
+
+    $this->drupalGet($node_url);
+    $assert_session->linkExists('Layout');
+    $this->clickLink('Layout');
+    $assert_session->linkExists('Add section');
+
+    // Add the testing block.
+    $page->clickLink('Add block');
+    $this->clickLink('Can I have runtime contexts');
+    $page->pressButton('Add block');
+
+    // Ensure the runtime context value is rendered before saving.
+    $assert_session->pageTextContains('for sure you can');
+
+    // Save the layout, and test that the value is rendered after save.
+    $page->pressButton('Save layout');
+    $assert_session->addressEquals($node_url);
+    $assert_session->pageTextContains('for sure you can');
+    $assert_session->elementExists('css', '.layout');
   }
 
 }

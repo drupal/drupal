@@ -88,10 +88,8 @@ class InstallerTest extends InstallerTestBase {
 
     // Assert that we use the by core supported database drivers by default and
     // not the ones from the driver_test module.
-    $elements = $this->xpath('//label[@for="edit-driver-mysql"]');
-    $this->assertEquals('MySQL, MariaDB, Percona Server, or equivalent', current($elements)->getText());
-    $elements = $this->xpath('//label[@for="edit-driver-pgsql"]');
-    $this->assertEquals('PostgreSQL', current($elements)->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-mysql"]', 'MySQL, MariaDB, Percona Server, or equivalent');
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-pgsql"]', 'PostgreSQL');
 
     parent::setUpSettings();
   }
@@ -106,8 +104,8 @@ class InstallerTest extends InstallerTestBase {
     // Test that SiteConfigureForm::buildForm() has made the site directory and
     // the settings file non-writable.
     $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
-    $this->assertDirectoryNotIsWritable($site_directory);
-    $this->assertFileNotIsWritable($site_directory . '/settings.php');
+    $this->assertDirectoryIsNotWritable($site_directory);
+    $this->assertFileIsNotWritable($site_directory . '/settings.php');
 
     parent::setUpSite();
   }

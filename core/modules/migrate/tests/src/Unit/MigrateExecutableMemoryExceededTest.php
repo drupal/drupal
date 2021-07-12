@@ -78,16 +78,20 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
     $this->executable->setMemoryUsage($memory_usage_first ?: $this->memoryLimit, $memory_usage_second ?: $this->memoryLimit);
     $this->executable->setMemoryThreshold(0.85);
     if ($message) {
-      $this->executable->message->expects($this->at(0))
+      $this->executable->message->expects($this->exactly(2))
         ->method('display')
-        ->with($this->callback(function ($subject) {
-            return mb_stripos((string) $subject, 'reclaiming memory') !== FALSE;
-        }));
-      $this->executable->message->expects($this->at(1))
-        ->method('display')
-        ->with($this->callback(function ($subject) use ($message) {
-            return mb_stripos((string) $subject, $message) !== FALSE;
-        }));
+        ->withConsecutive(
+          [
+            $this->callback(function ($subject) {
+              return mb_stripos((string) $subject, 'reclaiming memory') !== FALSE;
+            }),
+          ],
+          [
+            $this->callback(function ($subject) use ($message) {
+              return mb_stripos((string) $subject, $message) !== FALSE;
+            }),
+          ],
+        );
     }
     else {
       $this->executable->message->expects($this->never())
