@@ -31,8 +31,8 @@
     ]
     %}
 
-    <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
-      <div class="messages__container"{% if type == 'error' %} role="alert"{% endif %}>
+    <div role="contentinfo" aria-label="{{ status_headings[type] }}" data-drupal-selector="messages"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+      <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert"{% endif %}>
         {% if status_headings[type] %}
           <div class="messages__header">
            <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
