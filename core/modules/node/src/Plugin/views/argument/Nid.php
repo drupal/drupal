@@ -30,6 +30,7 @@ class Nid extends NumericArgument {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\node\NodeStorageInterface $node_storage
+   *   The node storage handler.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, NodeStorageInterface $node_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);

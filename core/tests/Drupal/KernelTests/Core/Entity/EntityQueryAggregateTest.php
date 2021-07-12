@@ -624,6 +624,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    * @param array $expected
    *   An array of the expected results.
    * @param bool $sorted
+   *   Whether the array keys of the expected are sorted, defaults to FALSE.
    */
   protected function assertResults($expected, $sorted = FALSE) {
     $found = TRUE;

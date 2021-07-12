@@ -30,6 +30,7 @@ class JoinTest extends JoinPluginBase {
    * Sets the joinValue property.
    *
    * @param int $join_value
+   *   The value of the join.
    */
   public function setJoinValue($join_value) {
     $this->joinValue = $join_value;

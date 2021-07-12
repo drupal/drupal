@@ -247,6 +247,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *
@@ -299,6 +300,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *

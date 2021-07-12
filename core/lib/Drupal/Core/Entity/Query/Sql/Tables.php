@@ -66,6 +66,7 @@ class Tables implements TablesInterface {
 
   /**
    * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
+   *   The SQL query.
    */
   public function __construct(SelectInterface $sql_query) {
     $this->sqlQuery = $sql_query;
@@ -454,6 +455,7 @@ class Tables implements TablesInterface {
    * @param string $table
    *   The table name.
    * @param string $entity_type_id
+   *   The entity type ID.
    *
    * @return array|false
    *   An associative array of table field mapping for the given table, keyed by

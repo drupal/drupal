@@ -108,7 +108,9 @@ RSS;
    * @dataProvider providerTestOnResponse
    *
    * @param string $content
+   *   The content for the request.
    * @param string $expected_content
+   *   The expected content from the response.
    */
   public function testOnResponse($content, $expected_content) {
     $event = new ResponseEvent(

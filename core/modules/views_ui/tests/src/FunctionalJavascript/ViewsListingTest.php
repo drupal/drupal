@@ -133,6 +133,7 @@ class ViewsListingTest extends WebDriverTestBase {
    * Removes any non-visible elements from the passed array.
    *
    * @param array $elements
+   *   The elements.
    *
    * @return array
    */

@@ -31,6 +31,7 @@ class TestHelperPlugin extends PluginBase {
    * Allows to set the defined options.
    *
    * @param array $options
+   *   The options to set.
    *
    * @return $this
    */

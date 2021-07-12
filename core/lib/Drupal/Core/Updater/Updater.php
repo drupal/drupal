@@ -155,6 +155,7 @@ class Updater {
    *   provide their canonical name.
    *
    * @param string $directory
+   *   The full directory path.
    *
    * @return string
    *   The name of the project.

@@ -27,6 +27,7 @@ interface DisplayRouterInterface extends DisplayPluginInterface {
    * the method can specify to break the search.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
    *
    * @return array
    *   Returns a list of "$view_id.$display_id" elements which got overridden.

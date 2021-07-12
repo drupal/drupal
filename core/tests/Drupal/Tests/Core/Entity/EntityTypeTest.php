@@ -483,6 +483,7 @@ class EntityTypeTest extends UnitTestCase {
    * Asserts there on no public properties on the object instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
    */
   protected function assertNoPublicProperties(EntityTypeInterface $entity_type) {
     $reflection = new \ReflectionObject($entity_type);

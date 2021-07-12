@@ -102,6 +102,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
    * Adds example files to the filesystem structure.
    *
    * @param array $filesystem_structure
+   *   An associative array where each key represents a directory.
    *
    * @return string[][]
    *   Format: $[$type][$name] = $yml_file
@@ -174,9 +175,11 @@ class ExtensionDiscoveryTest extends UnitTestCase {
 
   /**
    * @param array $filesystem_structure
+   *   An associative array where each key represents a directory.
    * @param string[] $pieces
    *   Fragments of the file path.
    * @param string $content
+   *   The contents of the file.
    */
   protected function addFileToFilesystemStructure(array &$filesystem_structure, array $pieces, $content) {
     $piece = array_shift($pieces);

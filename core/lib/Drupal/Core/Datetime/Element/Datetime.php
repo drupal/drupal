@@ -387,6 +387,7 @@ class Datetime extends DateElementBase {
    * This is centralized for a consistent method of creating these examples.
    *
    * @param string $format
+   *   The date format.
    *
    * @return string
    */

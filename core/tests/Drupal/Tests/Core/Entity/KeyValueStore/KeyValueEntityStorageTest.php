@@ -222,7 +222,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *
+   *   The entity.
    * @return \Drupal\Core\Entity\EntityInterface
    *
    * @depends testCreate
@@ -268,7 +268,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *
+   *   The entity.
    * @return \Drupal\Core\Entity\EntityInterface
    *
    * @depends testSaveInsert

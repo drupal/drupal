@@ -249,6 +249,7 @@ class Random {
    * Generate paragraphs separated by double new line.
    *
    * @param int $paragraph_count
+   *   The number of paragraphs to create. Defaults to 12.
    *
    * @return string
    */

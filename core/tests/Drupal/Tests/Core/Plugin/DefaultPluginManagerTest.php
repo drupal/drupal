@@ -509,6 +509,7 @@ class ObjectDefinition extends PluginDefinition {
    * ObjectDefinition constructor.
    *
    * @param array $definition
+   *   An associative array defining the plugin.
    */
   public function __construct(array $definition) {
     foreach ($definition as $property => $value) {

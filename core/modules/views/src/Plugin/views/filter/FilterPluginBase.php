@@ -748,6 +748,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * @param string $identifier
    *   The identifier to check.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param array $form_group
    *   The form element to set any errors on.
    *

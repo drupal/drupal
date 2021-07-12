@@ -65,6 +65,7 @@ abstract class QuickEditTestBase extends KernelTestBase {
    * @param string $label
    *   The field's label (used everywhere: widget label, formatter label).
    * @param array $field_settings
+   *   The field's settings.
    * @param string $widget_type
    *   The widget type.
    * @param array $widget_settings

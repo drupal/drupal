@@ -122,6 +122,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * Creates a mock content entity.
    *
    * @param $definitions
+   *   The properties the will be returned.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject
    */
@@ -145,8 +146,11 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * Creates a mock field list item.
    *
    * @param bool $access
+   *   The value that access() will return.
    * @param bool $internal
+   *   The value that isInternal() will return.
    * @param \Drupal\Core\Session\AccountInterface $user_context
+   *   The user context used for the access check.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit\Framework\MockObject\MockObject
    */

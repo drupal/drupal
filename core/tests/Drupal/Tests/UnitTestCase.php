@@ -101,8 +101,11 @@ abstract class UnitTestCase extends TestCase {
    * Asserts if two arrays are equal by sorting them first.
    *
    * @param array $expected
+   *   An expected results array.
    * @param array $actual
+   *   The actual array value.
    * @param string $message
+   *   An optional error message.
    *
    * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
    *   ::assertEquals, ::assertEqualsCanonicalizing, or ::assertSame instead.

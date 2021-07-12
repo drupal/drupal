@@ -167,6 +167,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    * Ensures that the config dependencies are calculated the right way.
    *
    * @param \Drupal\views\Entity\View $storage
+   *   The view storage.
    */
   protected function assertConfigDependencies(View $storage) {
     $storage->calculateDependencies();

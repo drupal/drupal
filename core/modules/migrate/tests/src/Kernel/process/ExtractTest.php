@@ -57,7 +57,9 @@ class ExtractTest extends KernelTestBase {
    * @dataProvider multipleValueProviderSource
    *
    * @param array $source_data
+   *   The source data.
    * @param array $expected_data
+   *   The expected results.
    */
   public function testMultipleValueExplode(array $source_data, array $expected_data) {
     $definition = $this->getDefinition();

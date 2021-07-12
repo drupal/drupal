@@ -13,7 +13,9 @@ class ReflectionTest extends TestCase {
 
   /**
    * @param string|null $expected
+   *   The expected value of the parameter.
    * @param \ReflectionParameter $parameter
+   *   The reflection parameter.
    *
    * @covers ::getParameterClassName
    * @dataProvider providerGetParameterClassName

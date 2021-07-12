@@ -61,8 +61,11 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    * SystemMenuOffCanvasForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
+   *   The menu storage handler.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation handler.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */

@@ -675,6 +675,7 @@ class TestConfigNamesMapper extends ConfigNamesMapper {
    * Sets the list of configuration names.
    *
    * @param array $config_names
+   *   The configuration names.
    */
   public function setConfigNames(array $config_names) {
     $this->pluginDefinition['names'] = $config_names;

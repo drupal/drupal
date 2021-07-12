@@ -231,6 +231,7 @@ class DateTimePlusTest extends TestCase {
    * @param string $timezone
    *   Timezone argument for DateTimePlus.
    * @param string $format
+   *   PHP date() type format for parsing the input.
    * @param string $format_date
    *   Format argument for DateTimePlus::format().
    * @param string $expected
