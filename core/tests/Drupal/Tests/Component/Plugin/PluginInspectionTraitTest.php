@@ -34,7 +34,7 @@ class PluginInspectionTraitTest extends TestCase {
    * Provides data for testDeprecated.
    */
   public function providerTestDeprecated() {
-    $message = 'foo';
+    $message = 'This is a deprecation message for PluginInspectionTraitTest.';
     $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)
       ->getMock();
     $plugin_definition->deprecationMessage = $message;

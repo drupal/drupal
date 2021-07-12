@@ -1,6 +1,6 @@
 id: deprecated
 label: deprecated
-deprecation_message: core/modules/migrate/tests/modules/migrate_deprecate_test/migrations/deprecated.yml is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use core/modules/migrate/tests/modules/migrate_deprecate_test/migrations/new.yml instead. See https://www.drupal.org/node/3039240
+deprecation_message: core/modules/migrate/tests/modules/migrate_deprecate_test/migrations/deprecated.yml is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use core/modules/migrate/tests/modules/migrate_deprecate_test/migrations/new.yml instead. See https://www.drupal.org/node/3039240
 source:
   plugin: embedded_data
   data_rows:

@@ -26,7 +26,7 @@ class LayoutDeprecationTest extends KernelTestBase {
    * @group legacy
    */
   public function testLayoutDeprecation() {
-    $this->expectDeprecation('foo');
+    $this->expectDeprecation('This layout is now deprecated. Bye!');
     $this->container->get('plugin.manager.core.layout')
       ->createInstance('layout_deprecation_test', []);
   }
