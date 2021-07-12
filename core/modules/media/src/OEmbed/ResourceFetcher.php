@@ -78,7 +78,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
         throw new ResourceException('Error decoding oEmbed resource: ' . json_last_error_msg(), $url);
       }
     }
-    if (empty($data)) {
+    if (empty($data) || !is_array($data)) {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
