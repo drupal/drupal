@@ -240,10 +240,7 @@ class BlockForm extends EntityForm {
 
       // Don't display the deprecated node type condition unless it has existing
       // settings.
-      // @todo Make this more generic in
-      //   https://www.drupal.org/project/drupal/issues/2922451. Also remove
-      //   the node_type specific logic below.
-      if ($condition_id == 'node_type' && !isset($visibility[$condition_id])) {
+      if (isset($definition['deprecation_message']) && !isset($visibility[$condition_id])) {
         continue;
       }
 
