@@ -156,8 +156,10 @@ class TableDragTest extends WebDriverTestBase {
    * @param array|null $structure
    *   The expected table structure. If this isn't specified or equals NULL,
    *   then the expected structure will be set by this method. Defaults to NULL.
+   *
+   * @internal
    */
-  protected function assertKeyboardAccessibility($drupal_path = 'tabledrag_test', $structure = NULL) {
+  protected function assertKeyboardAccessibility(string $drupal_path = 'tabledrag_test', $structure = NULL): void {
     $expected_table = $structure ?: [
       ['id' => 1, 'weight' => 0, 'parent' => '', 'indentation' => 0, 'changed' => FALSE],
       ['id' => 2, 'weight' => 0, 'parent' => '', 'indentation' => 0, 'changed' => FALSE],

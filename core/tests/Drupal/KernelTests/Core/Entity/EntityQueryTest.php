@@ -720,6 +720,9 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   }
 
+  /**
+   * @internal
+   */
   protected function assertResult(): void {
     $assert = [];
     $expected = func_get_args();
@@ -732,16 +735,21 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame($assert, $this->queryResults);
   }
 
-  protected function assertRevisionResult($keys, $expected) {
+  /**
+   * @internal
+   */
+  protected function assertRevisionResult(array $keys, array $expected): void {
     $assert = [];
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
-    return $assert;
   }
 
-  protected function assertBundleOrder($order): void {
+  /**
+   * @internal
+   */
+  protected function assertBundleOrder(string $order): void {
     // This loop is for bundle1 entities.
     for ($i = 1; $i <= 15; $i += 2) {
       $ok = TRUE;

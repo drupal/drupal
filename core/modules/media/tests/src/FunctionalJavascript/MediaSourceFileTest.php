@@ -65,7 +65,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $assert_session->addressEquals('admin/content/media');
 
     // Get the media entity view URL from the creation message.
-    $this->drupalGet($this->getLinkToCreatedMedia());
+    $this->drupalGet($this->assertLinkToCreatedMedia());
 
     // Make sure a link to the file is displayed.
     $assert_session->linkExists($test_filename);

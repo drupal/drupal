@@ -135,7 +135,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     \Drupal::request()->query->set('page', 1);
     $entities[0]->name->value = $random_name = $this->randomMachineName();
     $entities[0]->save();
-    $build = $this->getViewsCacheTags($view, $tags_page_2, $do_assert_views_caches, $tags_page_2);
+    $build = $this->assertViewsCacheTags($view, $tags_page_2, $do_assert_views_caches, $tags_page_2);
     // @todo Static render arrays don't support different pages yet, see
     //   https://www.drupal.org/node/2500701.
     // $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_2, $do_assert_views_caches);
@@ -147,7 +147,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     \Drupal::request()->query->set('page', 0);
     $entities[1]->name->value = $random_name = $this->randomMachineName();
     $entities[1]->save();
-    $build = $this->getViewsCacheTags($view, $tags_page_1, $do_assert_views_caches, $tags_page_1);
+    $build = $this->assertViewsCacheTags($view, $tags_page_1, $do_assert_views_caches, $tags_page_1);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_1, $do_assert_views_caches);
     $this->assertStringContainsString($random_name, (string) $build['#markup']);
     $view->destroy();
@@ -168,17 +168,17 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     // prepared render array.
     $tags_argument = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
     $view->setArguments([$entities[0]->id()]);
-    $build = $this->getViewsCacheTags($view, $tags_argument, $do_assert_views_caches, $tags_argument);
+    $build = $this->assertViewsCacheTags($view, $tags_argument, $do_assert_views_caches, $tags_argument);
     $single_entity_assertions($build, $entities[0]);
 
     $view->setArguments([$entities[0]->id()]);
-    $build = $this->getViewsCacheTagsFromStaticRenderArray($view, $tags_argument, $do_assert_views_caches);
+    $build = $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_argument, $do_assert_views_caches);
     $single_entity_assertions($build, $entities[0]);
 
     // Set a different argument and ensure that the result is different.
     $tags2_argument = Cache::mergeTags($base_tags, $entities[1]->getCacheTags());
     $view->setArguments([$entities[1]->id()]);
-    $build = $this->getViewsCacheTagsFromStaticRenderArray($view, $tags2_argument, $do_assert_views_caches);
+    $build = $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags2_argument, $do_assert_views_caches);
     $single_entity_assertions($build, $entities[1]);
 
     $view->destroy();

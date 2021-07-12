@@ -319,11 +319,4 @@ class AssertLegacyTraitTest extends UnitTestCase {
     return $this->session->reveal();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function assertSession($name = NULL) {
-    return $this->webAssert->reveal();
-  }
-
 }

@@ -118,7 +118,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $assert_session->addressEquals('admin/content/media');
 
     // Get the media entity view URL from the creation message.
-    $this->drupalGet($this->getLinkToCreatedMedia());
+    $this->drupalGet($this->assertLinkToCreatedMedia());
 
     /** @var \Drupal\media\MediaInterface $media */
     $media = Media::load(1);

@@ -66,7 +66,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
     $assert_session->addressEquals('admin/content/media');
 
     // Get the media entity view URL from the creation message.
-    $this->drupalGet($this->getLinkToCreatedMedia());
+    $this->drupalGet($this->assertLinkToCreatedMedia());
 
     // Assert the image element is present inside the media element and that its
     // src attribute uses the large image style, the label is visually hidden,

@@ -128,7 +128,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $page->pressButton('Save');
 
     // Go to the media entity view.
-    $this->drupalGet($this->getLinkToCreatedMedia());
+    $this->drupalGet($this->assertLinkToCreatedMedia());
 
     // Check if the default media name is generated as expected.
     $assert_session->elementTextContains('css', 'h1', $test_filename);

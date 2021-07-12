@@ -94,8 +94,10 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
    *   The View to check for the term access tag.
    * @param bool $hasTag
    *   The expected existence of taxonomy_term_access tag.
+   *
+   * @internal
    */
-  protected function assertQueriesTermAccessTag(ViewExecutable $view, $hasTag) {
+  protected function assertQueriesTermAccessTag(ViewExecutable $view, bool $hasTag): void {
     $main_query = $view->build_info['query'];
     $count_query = $view->build_info['count_query'];
 
