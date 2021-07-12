@@ -31,13 +31,12 @@ class ResourceFetcherTest extends UnitTestCase {
       'type' => 'video',
       'html' => 'test',
     ]);
-    $good_response = new Response(200, $headers, $body);
-    $bad_response = new Response(200, $headers, rtrim($body, '}'));
+    $valid_response = new Response(200, $headers, $body);
+    // Strip off the trailing '}' to produce a response that will cause a JSON
+    // parse error.
+    $invalid_response = new Response(200, $headers, rtrim($body, '}'));
 
-    $mock_handler = new MockHandler([
-      $good_response,
-      $bad_response,
-    ]);
+    $mock_handler = new MockHandler([$valid_response, $invalid_response]);
     $client = new Client([
       'handler' => HandlerStack::create($mock_handler),
     ]);
