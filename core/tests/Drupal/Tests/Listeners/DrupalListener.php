@@ -110,16 +110,19 @@ class DrupalListener implements TestListener {
     // but only for methods not defined in traits or base classes.
     foreach ($class->getMethods() as $method) {
       $method_name = $method->getName();
-      if (strpos($method_name, 'assert') === 0) {
-        $xx = $method->getDeclaringClass()->getName();
-        if ($xx !== get_class($test)) {
+      if (strpos($method_name, 'assert') === 0 && $method_name !== 'assertSession') {
+        // If the method is not declared in the test class, it's from a base
+        // class.
+        if ($method->getDeclaringClass()->getName() !== get_class($test)) {
           continue;
         }
+        // If the method is declared in a different file that the class one,
+        // it's likely from a trait.
         if ($class->getFileName() !== $method->getFileName()) {
           continue;
         }
-        if (!$method->hasReturnType()) {
-          @trigger_error("Declaring ::$method_name() without a return typehint in " . $method->getDeclaringClass()->getName() . " is deprecated in drupal:9.TODO.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+        if (!$method->hasReturnType() || $method->getReturnType()->getName() !== 'void') {
+          @trigger_error("Declaring ::$method_name() without a void return typehint in " . $method->getDeclaringClass()->getName() . " is deprecated in drupal:9.TODO.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
         }
       }
     }

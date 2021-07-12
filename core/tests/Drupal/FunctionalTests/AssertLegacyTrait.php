@@ -990,4 +990,11 @@ trait AssertLegacyTrait {
     return $element->findAll('xpath', '//option');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function assertSession($name = NULL) {
+    return $this->webAssert->reveal();
+  }
+
 }
