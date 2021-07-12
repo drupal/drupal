@@ -3,7 +3,6 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Core\Plugin\Context\ContextInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines an interface for typed data resolver.
@@ -42,8 +41,8 @@ interface TypedDataResolverInterface {
    * TypedDataResolver which will convert it to an appropriate ContextInterface
    * object.
    *
-   * @param $token
-   *   A ":" delimited set of tokens representing
+   * @param string $token
+   *   A tokenized pattern.
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   The array of available contexts.
    *
