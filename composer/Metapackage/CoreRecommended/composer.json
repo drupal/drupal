@@ -22,7 +22,7 @@
         "laminas/laminas-feed": "2.14.1",
         "laminas/laminas-stdlib": "3.3.1",
         "laminas/laminas-zendframework-bridge": "1.2.0",
-        "masterminds/html5": "2.7.4",
+        "masterminds/html5": "2.7.5",
         "pear/archive_tar": "1.4.13",
         "pear/console_getopt": "v1.4.3",
         "pear/pear-core-minimal": "v1.10.10",
@@ -62,7 +62,7 @@
         "symfony/validator": "v4.4.25",
         "symfony/var-dumper": "v5.3.0",
         "symfony/yaml": "v4.4.25",
-        "twig/twig": "v2.14.6",
+        "twig/twig": "2.x-dev",
         "typo3/phar-stream-wrapper": "v3.1.6"
     }
 }

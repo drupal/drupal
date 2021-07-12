@@ -115,7 +115,8 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return string
    *   The safe string content.
    */
-  public function jsonSerialize(): string {
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize() {
     return $this->__toString();
   }
 

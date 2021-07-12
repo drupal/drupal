@@ -69,4 +69,17 @@ class ThemeRegistryLoader extends FilesystemLoader {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheKey($name) {
+    // The parent implementation does unnecessary work that triggers
+    // deprecations in PHP 8.1.
+    if (NULL === ($path = $this->findTemplate($name)) || FALSE === $path) {
+      return '';
+    }
+
+    return $path;
+  }
+
 }

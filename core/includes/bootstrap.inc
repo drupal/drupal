@@ -136,6 +136,7 @@ class_alias('Drupal\Core\PhpFixes\StaticReflectionClass', 'Doctrine\Common\Refle
 class_alias('Drupal\Core\PhpFixes\AbstractSessionHandler', 'Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler', TRUE);
 class_alias('Drupal\Core\PhpFixes\StrictSessionHandler', 'Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler', TRUE);
 class_alias('Drupal\Core\PhpFixes\SessionHandlerProxy', 'Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy', TRUE);
+class_alias('Drupal\Core\PhpFixes\Inline', 'Symfony\Component\Yaml\Inline', TRUE);
 
 /**
  * Returns and optionally sets the filename for a system resource.
