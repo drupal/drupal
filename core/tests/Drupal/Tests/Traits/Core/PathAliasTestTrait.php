@@ -69,7 +69,7 @@ trait PathAliasTestTrait {
    * @param string|null $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertPathAliasExists($alias, $langcode = NULL, $path = NULL, $message = NULL) {
+  protected function assertPathAliasExists($alias, $langcode = NULL, $path = NULL, $message = '') {
     $query = \Drupal::entityTypeManager()
       ->getStorage('path_alias')
       ->getQuery()
@@ -98,7 +98,7 @@ trait PathAliasTestTrait {
    * @param string|null $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertPathAliasNotExists($alias, $langcode = NULL, $path = NULL, $message = NULL) {
+  protected function assertPathAliasNotExists($alias, $langcode = NULL, $path = NULL, $message = '') {
     $query = \Drupal::entityTypeManager()
       ->getStorage('path_alias')
       ->getQuery()
