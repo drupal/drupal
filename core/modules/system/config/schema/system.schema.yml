@@ -53,14 +53,6 @@ system.maintenance:
       type: text
       label: 'Message to display when in maintenance mode'
 
-system.authorize:
-  type: config_object
-  label: 'Authorize settings'
-  mapping:
-    filetransfer_default:
-      type: string
-      label: 'Default file transfer protocol'
-
 system.cron:
   type: config_object
   label: 'Cron settings'

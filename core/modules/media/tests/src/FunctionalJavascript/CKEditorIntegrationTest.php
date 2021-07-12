@@ -869,7 +869,9 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     if ($drupalimage_is_enabled) {
       // Add an image with a link wrapped around it.
       $uri = $this->media->field_media_image->entity->getFileUri();
-      $src = file_url_transform_relative(file_create_url($uri));
+      /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+      $file_url_generator = \Drupal::service('file_url_generator');
+      $src = $file_url_generator->generateString($uri);
       $this->host->body->value .= '<a href="http://www.drupal.org/association"><img alt="drupalimage test image" data-entity-type="" data-entity-uuid="" src="' . $src . '" /></a></p>';
     }
     $this->host->save();

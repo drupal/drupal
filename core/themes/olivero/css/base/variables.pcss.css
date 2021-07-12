@@ -118,6 +118,8 @@
   --sp12: calc(12 * var(--sp));
   --color--black: #000; /* Black */
   --color--gray-0: #0d1214; /* Black 1 */
+  --color--gray-5: #0c0d0e;
+  --color--gray-8: #171e23;
   --color--gray-10: #313637; /* Black 2 */
   --color--gray-20: #6e7172; /* Black 3 */
   --color--gray-25: #5d7585; /* Gray Dark */
@@ -127,6 +129,7 @@
   --color--gray-45: #afb8be; /* Gray medium 2 */
   --color--gray-50: #9ea0a1; /* Black 4 */
   --color--gray-70: #d7e1e8; /* Gray light */
+  --color--gray-75: #e3e3e5;
   --color--gray-80: #e7edf1; /* Gray light 1 */
   --color--gray-90: #f1f4f7;
   --color--gray-95: #f7f9fa; /* Gray light 2 */

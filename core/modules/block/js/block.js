@@ -28,7 +28,7 @@
         return vals.join(', ');
       }
 
-      $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
+      $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-entity-bundlenode"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
       $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {
         var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
 

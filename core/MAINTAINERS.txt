@@ -260,8 +260,9 @@ JavaScript
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 JSON:API
-- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+- Björn Brala 'bbrala' https://www.drupal.org/u/bbrala
+- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Language
@@ -520,7 +521,6 @@ their responsibilities. The initiative coordinators are:
 
 Decoupled Menus Initiative
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm

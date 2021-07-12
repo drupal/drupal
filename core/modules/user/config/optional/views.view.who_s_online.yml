@@ -165,6 +165,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: access
           granularity: second
           plugin_id: date
           entity_type: user

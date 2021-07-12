@@ -23,7 +23,7 @@ class UpdateUploadTest extends UpdateTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update', 'update_test'];
+  protected static $modules = ['update', 'update_test', 'file'];
 
   /**
    * {@inheritdoc}
