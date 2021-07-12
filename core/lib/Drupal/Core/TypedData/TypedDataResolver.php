@@ -114,11 +114,7 @@ class TypedDataResolver implements TypedDataResolverInterface {
   public function getLabelByToken(string $token, array $contexts): ?TranslatableMarkup {
     // @todo Optimize this by allowing to limit the desired token?
     $tokens = $this->getTokensForContexts($contexts);
-    if (isset($tokens[$token])) {
-      return $tokens[$token];
-    }
-
-    return NULL;
+    return $tokens[$token] ?? NULL;
   }
 
   /**
