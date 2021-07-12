@@ -1,0 +1,4 @@
+layout_deprecation_test:
+  label: deprecation test
+  category: Layout test
+  deprecation_message: foo

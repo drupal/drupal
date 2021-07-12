@@ -7,24 +7,12 @@ namespace Drupal\Component\Plugin;
  */
 abstract class PluginBase implements PluginInspectionInterface, DerivativeInspectionInterface {
 
+  use PluginInspectionTrait;
+
   /**
    * A string which is used to separate base plugin IDs from the derivative ID.
    */
   const DERIVATIVE_SEPARATOR = ':';
-
-  /**
-   * The plugin_id.
-   *
-   * @var string
-   */
-  protected $pluginId;
-
-  /**
-   * The plugin implementation definition.
-   *
-   * @var array
-   */
-  protected $pluginDefinition;
 
   /**
    * Configuration information passed into the plugin.
@@ -54,13 +42,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
     $this->configuration = $configuration;
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPluginId() {
-    return $this->pluginId;
+    $this->checkDeprecation();
   }
 
   /**
@@ -84,13 +66,6 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
       list(, $derivative_id) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);
     }
     return $derivative_id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPluginDefinition() {
-    return $this->pluginDefinition;
   }
 
   /**

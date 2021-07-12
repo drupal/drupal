@@ -102,6 +102,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
+    if ($this->migration->isDeprecated()) {
+      @trigger_error($this->migration->getDeprecationMessage(), E_USER_DEPRECATED);
+    }
     $this->message = $message ?: new MigrateMessage();
     $this->getIdMap()->setMessage($this->message);
     $this->eventDispatcher = $event_dispatcher;

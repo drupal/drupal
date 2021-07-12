@@ -1,0 +1,5 @@
+name: Layout deprecation test
+type: module
+description: Provides a deprecated layout plugin
+package: Testing
+version: VERSION

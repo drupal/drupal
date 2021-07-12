@@ -8,6 +8,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\migrate\MigrateExecutable
@@ -469,6 +470,23 @@ class MigrateExecutableTest extends MigrateTestCase {
     }
     $this->assertCount(2, $row->getDestination());
     $this->assertSame(['test2'], $row->getEmptyDestinationProperties());
+  }
+
+  /**
+   * Tests error is triggered when using a deprecated migration.
+   *
+   * @group legacy
+   */
+  public function testMigrationDeprecation() {
+    $this->expectDeprecation('foo');
+
+    $this->migration->method('isDeprecated')
+      ->willReturn(TRUE);
+    $this->migration->method('getDeprecationMessage')
+      ->willReturn('foo');
+
+    $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+    new TestMigrateExecutable($this->migration, $this->message, $event_dispatcher);
   }
 
   /**

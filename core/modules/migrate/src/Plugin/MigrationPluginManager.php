@@ -113,6 +113,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
 
     foreach ($instances as $migration) {
       $migration->set('migration_dependencies', array_map([$this, 'expandPluginIds'], $migration->getMigrationDependencies()));
+      if ($migration->isDeprecated()) {
+        @trigger_error($migration->getDeprecationMessage(), E_USER_DEPRECATED);
+      }
     }
 
     // Sort the migrations based on their dependencies.

@@ -1,0 +1,5 @@
+name: Migration deprecation test
+type: module
+description: Provide migrations for testing deprecation of migration plugin
+package: Testing
+version: VERSION
