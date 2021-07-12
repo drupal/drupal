@@ -51,7 +51,7 @@ class ResourceFetcherTest extends UnitTestCase {
 
     // Invalid JSON should throw an exception.
     $this->expectException('\Drupal\media\OEmbed\ResourceException');
-    $this->expectExceptionMessage('Syntax error');
+    $this->expectExceptionMessage('Error decoding oEmbed resource: Syntax error');
     $fetcher->fetchResource('test');
   }
 
