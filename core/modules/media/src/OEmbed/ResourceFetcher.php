@@ -4,7 +4,6 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
@@ -47,15 +46,12 @@ class ResourceFetcher implements ResourceFetcherInterface {
    *   The oEmbed provider repository service.
    * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
    *   (optional) The cache backend.
-   * @param \Drupal\Component\Serialization\SerializationInterface|null $fallback_decoder
-   *   (optional) The fallback resource decoder.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL, SerializationInterface $fallback_decoder = NULL) {
+  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
     $this->cacheBackend = $cache_backend;
     $this->useCaches = isset($cache_backend);
-    $this->fallbackDecoder = $fallback_decoder ?: new Json();
   }
 
   /**
@@ -76,26 +72,22 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
     }
 
-    [$format] = $response->getHeader('Content-Type');
+    list($format) = $response->getHeader('Content-Type');
     $content = (string) $response->getBody();
 
     if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
       $data = $this->parseResourceXml($content, $url);
     }
-    elseif (strstr($format, 'text/javascript') || strstr($format, 'application/json')) {
-      $data = Json::decode($content);
-    }
+    // By default, try to parse the resource data as JSON.
     else {
-      try {
-        $data = $this->fallbackDecoder::decode($content);
-      }
-      catch (InvalidDataTypeException $e) {
-        throw new ResourceException($e->getMessage(), $url, [], $e);
-      }
+      $data = Json::decode($content);
 
-      if (empty($data)) {
-        throw new ResourceException('The oEmbed resource could not be decoded.', $url);
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new ResourceException(json_last_error_msg(), $url);
       }
+    }
+    if (empty($data)) {
+      throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
     $this->cacheSet($cache_id, $data);
