@@ -12,7 +12,10 @@
   <height>343</height>
   <html><h1>By the power of Grayskull, CollegeHumor works!</h1>
   </html>
-  <thumbnail_url>internal:/core/misc/druplicon.png</thumbnail_url>
+  <!-- The thumbnail URL does not contain a file extension, so we use
+  this to test the oEmbed source plugin's thumbnail handling;
+  see \Drupal\Tests\media\FunctionalJavascript\MediaSourceOEmbedVideoTest. -->
+  <thumbnail_url>internal:/media_test_oembed/thumbnail</thumbnail_url>
   <thumbnail_width>88</thumbnail_width>
   <thumbnail_height>100</thumbnail_height>
 </oembed>
