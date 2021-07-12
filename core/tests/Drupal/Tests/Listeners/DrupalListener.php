@@ -111,8 +111,14 @@ class DrupalListener implements TestListener {
     foreach ($class->getMethods() as $method) {
       $method_name = $method->getName();
       if (strpos($method_name, 'assert') === 0) {
-        $declaring_class_name = $this->getDeclaringTrait($class->getName(), $method_name)->getName();
-        if ((!$method->hasReturnType()) && $declaring_class_name === get_class($test)) {
+        $xx = $method->getDeclaringClass()->getName();
+        if ($xx !== get_class($test)) {
+          continue;
+        }
+        if ($class->getFileName() !== $method->getFileName()) {
+          continue;
+        }
+        if (!$method->hasReturnType()) {
           @trigger_error("Declaring ::$method_name() without a return typehint in " . $method->getDeclaringClass()->getName() . " is deprecated in drupal:9.TODO.0. Typehinting will be required before drupal:10.0.0. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
         }
       }
@@ -147,59 +153,6 @@ class DrupalListener implements TestListener {
     // handler is potentially removed in
     // \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait::endTest().
     $this->removeErrorHandler();
-  }
-
-  /**
-   * Finds the trait that declares $className::$methodName.
-   *
-   * @see http://mouf-php.com/blog/php_reflection_api_traits
-   */
-  private function getDeclaringTrait($className, $methodName) {
-    $reflectionClass = new \ReflectionClass($className);
-    $reflectionMethod = $reflectionClass->getMethod($methodName);
-
-    $methodFile = $reflectionMethod->getFileName();
-    $methodStartLine = $reflectionMethod->getStartLine();
-    $methodEndLine = $reflectionMethod->getEndLine();
-
-    // Let's scan all traits
-    $trait = $this->deepScanTraits($reflectionClass->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
-    if ($trait != NULL) {
-      return $trait;
-    }
-    else {
-      return $reflectionMethod->getDeclaringClass();
-    }
-  }
-
-  /**
-   * Recursive method called to detect a method into a nested array of traits.
-   *
-   * @param ReflectionClass[] $traits
-   *   @todo.
-   * @param string $methodFile
-   *   @todo.
-   * @param int $methodStartLine
-   *   @todo.
-   * @param int $methodEndLine
-   *   @todo.
-   *
-   * @return ReflectionClass|null
-   *   @todo.
-   *
-   * @see http://mouf-php.com/blog/php_reflection_api_traits
-   */
-  private function deepScanTraits(array $traits, $methodFile, $methodStartLine, $methodEndLine) {
-    foreach ($traits as $trait) {
-      // If the trait has a method, is it the method we see?
-      if ($trait->getFileName() == $methodFile
-              && $trait->getStartLine() <= $methodStartLine
-              && $trait->getEndLine() >= $methodEndLine) {
-        return $trait;
-      }
-      return $this->deepScanTraits($trait->getTraits(), $methodFile, $methodStartLine, $methodEndLine);
-    }
-    return NULL;
   }
 
 }

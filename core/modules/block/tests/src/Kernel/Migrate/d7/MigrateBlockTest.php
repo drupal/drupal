@@ -73,7 +73,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    *   The display region.
    * @param string $theme
    *   The theme.
-   * @param string $weight
+   * @param int $weight
    *   The block weight.
    * @param string $label
    *   The block label.
@@ -84,7 +84,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    *
    * @internal
    */
-  public function assertEntity(string $id, string $plugin_id, array $roles, string $pages, string $region, string $theme, string $weight, string $label, string $label_display, bool $status = TRUE): void {
+  public function assertEntity(string $id, string $plugin_id, array $roles, string $pages, string $region, string $theme, int $weight, string $label, string $label_display, bool $status = TRUE): void {
     $block = Block::load($id);
     $this->assertInstanceOf(Block::class, $block);
     /** @var \Drupal\block\BlockInterface $block */

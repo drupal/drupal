@@ -257,8 +257,10 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    *
    * @param string $expectedVersion
    * @param string $dir
+   *
+   * @internal
    */
-  protected function assertDrupalVersion($expectedVersion, $dir) {
+  protected function assertDrupalVersion(string $expectedVersion, string $dir): void {
     $drupal_php_path = $dir . '/core/lib/Drupal.php';
     $this->assertFileExists($drupal_php_path);
 
