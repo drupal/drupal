@@ -1140,7 +1140,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet("{$field_ui_prefix}/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $node = $this->createNode(['type' => 'bundle_with_section_field']);
 
     // Customize the default view mode.
