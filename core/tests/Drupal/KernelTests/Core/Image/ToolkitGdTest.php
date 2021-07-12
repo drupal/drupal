@@ -118,7 +118,7 @@ class ToolkitGdTest extends KernelTestBase {
     $this->assertEquals('gd', $this->imageFactory->getToolkitId(), 'The image factory is set to use the \'gd\' image toolkit.');
 
     // Test the list of supported extensions.
-    $expected_extensions = ['png', 'gif', 'jpeg', 'jpg', 'jpe', 'webp'];
+    $expected_extensions = ['png', 'gif', 'jpeg', 'jpg', 'jpe', 'webp', 'avif'];
     $supported_extensions = $this->imageFactory->getSupportedExtensions();
     $this->assertEquals($expected_extensions, array_intersect($expected_extensions, $supported_extensions));
 
@@ -131,6 +131,7 @@ class ToolkitGdTest extends KernelTestBase {
       'jpg' => IMAGETYPE_JPEG,
       'jpe' => IMAGETYPE_JPEG,
       'webp' => IMAGETYPE_WEBP,
+      'avif' => IMAGETYPE_AVIF,
     ];
     $image = $this->imageFactory->get();
     foreach ($expected_image_types as $extension => $expected_image_type) {
@@ -149,6 +150,7 @@ class ToolkitGdTest extends KernelTestBase {
       'image-test-no-transparency.gif',
       'image-test.jpg',
       'img-test.webp',
+      'img-test.avif',
     ];
 
     // Setup a list of tests to perform on each type.
@@ -228,6 +230,13 @@ class ToolkitGdTest extends KernelTestBase {
         'width' => 40,
         'height' => 20,
         'arguments' => ['extension' => 'webp'],
+        'corners' => $default_corners,
+      ],
+      'convert_avif' => [
+        'function' => 'convert',
+        'width' => 40,
+        'height' => 20,
+        'arguments' => ['extension' => 'avif'],
         'corners' => $default_corners,
       ],
     ];
@@ -405,7 +414,13 @@ class ToolkitGdTest extends KernelTestBase {
     }
 
     // Test creation of image from scratch, and saving to storage.
-    foreach ([IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_WEBP] as $type) {
+    foreach ([
+      IMAGETYPE_PNG,
+      IMAGETYPE_GIF,
+      IMAGETYPE_JPEG,
+      IMAGETYPE_WEBP,
+      IMAGETYPE_AVIF,
+    ] as $type) {
       $image = $this->imageFactory->get();
       $image->createNew(50, 20, image_type_to_extension($type, FALSE), '#ffff00');
       $file = 'from_null' . image_type_to_extension($type);
