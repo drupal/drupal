@@ -75,21 +75,23 @@ class ThemeTest extends BrowserTestBase {
     $file_relative = strtr($file->uri, ['public:/' => PublicStream::basePath()]);
     $default_theme_path = 'core/themes/classy';
 
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
     $supported_paths = [
       // Raw stream wrapper URI.
       $file->uri => [
         'form' => StreamWrapperManager::getTarget($file->uri),
-        'src' => file_url_transform_relative(file_create_url($file->uri)),
+        'src' => $file_url_generator->generateString($file->uri),
       ],
       // Relative path within the public filesystem.
       StreamWrapperManager::getTarget($file->uri) => [
         'form' => StreamWrapperManager::getTarget($file->uri),
-        'src' => file_url_transform_relative(file_create_url($file->uri)),
+        'src' => $file_url_generator->generateString($file->uri),
       ],
       // Relative path to a public file.
       $file_relative => [
         'form' => $file_relative,
-        'src' => file_url_transform_relative(file_create_url($file->uri)),
+        'src' => $file_url_generator->generateString($file->uri),
       ],
       // Relative path to an arbitrary file.
       'core/misc/druplicon.png' => [
@@ -190,7 +192,7 @@ class ThemeTest extends BrowserTestBase {
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
-    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', file_url_transform_relative(file_create_url($uploaded_filename)));
+    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
 
     $this->container->get('theme_installer')->install(['bartik']);
 

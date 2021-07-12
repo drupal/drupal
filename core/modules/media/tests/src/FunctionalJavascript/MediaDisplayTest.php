@@ -110,7 +110,9 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     // Assert that the image src uses the large image style, the label is
     // visually hidden, and there is no link to the image file.
     $media_image = $assert_session->elementExists('css', '.media--type-image img');
-    $expected_image_src = file_url_transform_relative(file_create_url(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg')));
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $expected_image_src = $file_url_generator->generateString(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg'));
     $this->assertStringContainsString($expected_image_src, $media_image->getAttribute('src'));
     $field = $assert_session->elementExists('css', '.field--name-field-media-image');
     $assert_session->elementExists('css', '.field__label.visually-hidden', $field);
