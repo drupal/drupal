@@ -444,10 +444,12 @@ class BigPipeTest extends BrowserTestBase {
 
   /**
    * Asserts whether arrays A and B are equal, when treated as sets.
+   *
+   * @internal
    */
   protected function assertSetsEqual(array $a, array $b): void {
     $this->assertSameSize($a, $b);
-    $this->assertEmpty(array_diff_assoc($a, $b));
+    $this->assertEquals($a, $b);
   }
 
   /**

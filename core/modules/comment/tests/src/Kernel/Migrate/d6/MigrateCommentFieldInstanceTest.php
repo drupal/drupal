@@ -51,8 +51,10 @@ class MigrateCommentFieldInstanceTest extends MigrateDrupal6TestBase {
    *   The field's form_location setting.
    * @param bool $preview
    *   The field's preview setting.
+   *
+   * @internal
    */
-  protected function assertEntity($bundle, $field_name, $default_value, $default_mode, $per_page, $anonymous, $form_location, $preview): void {
+  protected function assertEntity(string $bundle, string $field_name, int $default_value, int $default_mode, int $per_page, bool $anonymous, int $form_location, bool $preview): void {
     $entity = FieldConfig::load("node.$bundle.$field_name");
     $this->assertInstanceOf(FieldConfig::class, $entity);
     $this->assertSame('node', $entity->getTargetEntityTypeId());
