@@ -534,7 +534,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "538af067d3843f8b7394e98991fcec7c2d45213d"
+                "reference": "a23d81c9b89f366a8f1858989f9de07b38b4b6b9"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -578,7 +578,7 @@
                 "symfony/translation": "^4.4",
                 "symfony/validator": "^4.4",
                 "symfony/yaml": "^4.4.19",
-                "twig/twig": "^2.12.0",
+                "twig/twig": "2.x-dev",
                 "typo3/phar-stream-wrapper": "^3.1.3"
             },
             "conflict": {
@@ -4413,16 +4413,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.14.6",
+            "version": "2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "27e5cf2b05e3744accf39d4c68a3235d9966d260"
+                "reference": "feeaba3fea01ca2e8125600421c9b207c735c83e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/27e5cf2b05e3744accf39d4c68a3235d9966d260",
-                "reference": "27e5cf2b05e3744accf39d4c68a3235d9966d260",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/feeaba3fea01ca2e8125600421c9b207c735c83e",
+                "reference": "feeaba3fea01ca2e8125600421c9b207c735c83e",
                 "shasum": ""
             },
             "require": {
@@ -4432,7 +4432,7 @@
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
+                "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0"
             },
             "type": "library",
             "extra": {
@@ -4476,7 +4476,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v2.14.6"
+                "source": "https://github.com/twigphp/Twig/tree/2.x"
             },
             "funding": [
                 {
@@ -4488,7 +4488,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-16T12:12:47+00:00"
+            "time": "2021-07-08T11:01:04+00:00"
         },
         {
             "name": "typo3/phar-stream-wrapper",
