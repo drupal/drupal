@@ -6,57 +6,16 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
-use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\Exception\ContextNotFoundException;
 
-
-class TypedDataResolver {
-
-  /**
-   * The typed data manager.
-   *
-   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
-   */
-  protected $manager;
+class TypedDataResolver implements TypedDataResolverInterface {
 
   /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   * {@inheritdoc}
    */
-  protected $translation;
-
-  /**
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $manager
-   *   The typed data manager.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
-   *   The string translation service.
-   */
-  public function __construct(TypedDataManagerInterface $manager, TranslationInterface $translation) {
-    $this->manager = $manager;
-    $this->translation = $translation;
-  }
-
-  /**
-   * Convert a property to a context.
-   *
-   * This method will respect the value of contexts as well, so if a context
-   * object is pass that contains a value, the appropriate value will be
-   * extracted and injected into the resulting context object if available.
-   *
-   * @param string $property_path
-   *   The name of the property.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface $context
-   *   The context from which we will extract values if available.
-   *
-   * @return \Drupal\Core\Plugin\Context\Context
-   *   A context object that represents the definition & value of the property.
-   *
-   * @throws \Exception
-   */
-  public function getContextFromProperty($property_path, ContextInterface $context) {
+  public function getContextFromProperty(string $property_path, ContextInterface $context): ContextInterface {
     $value = NULL;
-    $data_definition = NULL;
     if ($context->hasContextValue()) {
       /** @var \Drupal\Core\TypedData\ComplexDataInterface $data */
       $data = $context->getContextData();
@@ -86,7 +45,8 @@ class TypedDataResolver {
       }
 
       $value = $data->getValue();
-      $data_definition = $data instanceof DataReferenceInterface ? $data->getDataDefinition()->getTargetDefinition() : $data->getDataDefinition();
+      $data_definition = $data instanceof DataReferenceInterface ? $data->getDataDefinition()
+        ->getTargetDefinition() : $data->getDataDefinition();
     }
     else {
       /** @var \Drupal\Core\TypedData\ComplexDataDefinitionInterface $data_definition */
@@ -130,74 +90,41 @@ class TypedDataResolver {
   }
 
   /**
-   * Extracts a context from an array of contexts by a tokenized pattern.
-   *
-   * This is more than simple isset/empty checks on the contexts array. The
-   * pattern could be node:uid:name which will iterate over all provided
-   * contexts in the array for one named 'node', it will then load the data
-   * definition of 'node' and check for a property named 'uid'. This will then
-   * set a new (temporary) context on the array and recursively call itself to
-   * navigate through related properties all the way down until the request
-   * property is located. At that point the property is passed to a
-   * TypedDataResolver which will convert it to an appropriate ContextInterface
-   * object.
-   *
-   * @param $token
-   *   A ":" delimited set of tokens representing
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   The array of available contexts.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextInterface
-   *   The requested token as a full Context object.
-   *
-   * @throws \Drupal\Core\TypedData\Exception\ContextNotFoundException
+   * {@inheritdoc}
    */
-  public function convertTokenToContext($token, $contexts) {
+  public function convertTokenToContext(string $token, array $contexts): ContextInterface {
     // If the requested token is already a context, just return it.
     if (isset($contexts[$token])) {
       return $contexts[$token];
     }
-    else {
-      [$base, $property_path] = explode(':', $token, 2);
-      // A base must always be set. This method recursively calls itself
-      // setting bases for this reason.
-      if (!empty($contexts[$base])) {
-        return $this->getContextFromProperty($property_path, $contexts[$base]);
-      }
-      // @todo improve this exception message.
-      throw new ContextNotFoundException("The requested context was not found in the supplied array of contexts.");
+
+    [$base, $property_path] = explode(':', $token, 2);
+    // A base must always be set. This method recursively calls itself
+    // setting bases for this reason.
+    if (!empty($contexts[$base])) {
+      return $this->getContextFromProperty($property_path, $contexts[$base]);
     }
+    // @todo improve this exception message.
+    throw new ContextNotFoundException("The requested context was not found in the supplied array of contexts.");
   }
 
   /**
-   * Provides an administrative label for a tokenized relationship.
-   *
-   * @param string $token
-   *   The token related to a context in the contexts array.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   An array of contexts from which to extract our token's label.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The administrative label of $token.
+   * {@inheritdoc}
    */
-  public function getLabelByToken($token, $contexts) {
+  public function getLabelByToken(string $token, array $contexts): ?TranslatableMarkup {
     // @todo Optimize this by allowing to limit the desired token?
     $tokens = $this->getTokensForContexts($contexts);
     if (isset($tokens[$token])) {
       return $tokens[$token];
     }
+
+    return NULL;
   }
 
   /**
-   * Extracts an array of tokens and labels.
-   *
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   The array of contexts with which we are currently dealing.
-   *
-   * @return array
-   *   An array of token keys and corresponding labels.
+   * {@inheritdoc}
    */
-  public function getTokensForContexts($contexts) {
+  public function getTokensForContexts(array $contexts): array {
     $tokens = [];
     foreach ($contexts as $context_id => $context) {
       $data_definition = $context->getContextDefinition()->getDataDefinition();
@@ -218,7 +145,7 @@ class TypedDataResolver {
    * @return array
    *   An array of token keys and corresponding labels.
    */
-  protected function getTokensFromComplexData(ComplexDataDefinitionInterface $complex_data_definition) {
+  protected function getTokensFromComplexData(ComplexDataDefinitionInterface $complex_data_definition): array {
     $tokens = [];
     // Loop over all properties.
     foreach ($complex_data_definition->getPropertyDefinitions() as $property_name => $property_definition) {
@@ -247,6 +174,7 @@ class TypedDataResolver {
         $tokens[$property_name] = $property_definition->getLabel();
       }
     }
+
     return $tokens;
   }
 
