@@ -152,6 +152,7 @@ class BreadcrumbTest extends BrowserTestBase {
     $node1 = $this->drupalCreateNode();
     $nid1 = $node1->id();
     $trail = $home;
+    // @todo this fails
     $this->assertBreadcrumb("node/$nid1", $trail);
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
     $this->assertSession()->linkNotExists($node1->getTitle());
@@ -398,6 +399,7 @@ class BreadcrumbTest extends BrowserTestBase {
     $trail = $home + ['menu-test' => t('Menu test root')];
 
     // Test a passing assertion.
+    // @todo This fails.
     $this->assertBreadcrumb('menu-test/breadcrumb1', $trail);
 
     // If there is no trail, this assert should fail.

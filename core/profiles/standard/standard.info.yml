@@ -39,5 +39,5 @@ install:
   - tour
   - automated_cron
 themes:
-  - bartik
+  - olivero
   - seven
