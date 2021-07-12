@@ -13,7 +13,7 @@ interface MigrateExecutableInterface {
    *   Returns:
    *     - MigrationInterface::RESULT_COMPLETED: the process has a fatal error.
    *     - MigrationInterface::RESULT_INCOMPLETE: the process has stopped
-   *     itsef (e.g., the memory limit is approaching).
+   *     itself (e.g., the memory limit is approaching).
    *     - MigrationInterface::RESULT_STOPPED: the process was stopped
    *     externally (e.g., via drush migrate-stop).
    *     - MigrationInterface::RESULT_FAILED: the process has a fatal error.
