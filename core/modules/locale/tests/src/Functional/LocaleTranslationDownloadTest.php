@@ -16,7 +16,7 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
   /**
    * The virtual file stream for storing translations.
    *
-   * @var \bovigo\vfs\vfsStreamDirectory
+   * @var \bovigo\vfs\vfsDirectory
    */
   protected $translationsStream;
 

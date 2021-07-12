@@ -182,7 +182,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * The virtual filesystem root directory.
    *
-   * @var \bovigo\vfs\vfsStreamDirectory
+   * @var \bovigo\vfs\vfsDirectory
    */
   protected $vfsRoot;
 

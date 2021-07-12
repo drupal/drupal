@@ -14,8 +14,8 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
 use bovigo\vfs\vfsStream;
-use bovigo\vfs\vfsStreamDirectory;
-use bovigo\vfs\vfsStreamWrapper;
+use bovigo\vfs\vfsDirectory;
+use bovigo\vfs\StreamWrapper;
 
 /**
  * Tests the permission handler.
@@ -90,9 +90,9 @@ class PermissionHandlerTest extends UnitTestCase {
    * @covers ::moduleProvidesPermissions
    */
   public function testBuildPermissionsYaml() {
-    vfsStreamWrapper::register();
-    $root = new vfsStreamDirectory('modules');
-    vfsStreamWrapper::setRoot($root);
+    StreamWrapper::register();
+    $root = new vfsDirectory('modules');
+    StreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
@@ -157,9 +157,9 @@ EOF
    * @covers ::sortPermissions
    */
   public function testBuildPermissionsSortPerModule() {
-    vfsStreamWrapper::register();
-    $root = new vfsStreamDirectory('modules');
-    vfsStreamWrapper::setRoot($root);
+    StreamWrapper::register();
+    $root = new vfsDirectory('modules');
+    StreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
@@ -212,9 +212,9 @@ EOF
    * @covers ::buildPermissionsYaml
    */
   public function testBuildPermissionsYamlCallback() {
-    vfsStreamWrapper::register();
-    $root = new vfsStreamDirectory('modules');
-    vfsStreamWrapper::setRoot($root);
+    StreamWrapper::register();
+    $root = new vfsDirectory('modules');
+    StreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
@@ -276,9 +276,9 @@ EOF
    * Tests a YAML file containing both static permissions and a callback.
    */
   public function testPermissionsYamlStaticAndCallback() {
-    vfsStreamWrapper::register();
-    $root = new vfsStreamDirectory('modules');
-    vfsStreamWrapper::setRoot($root);
+    StreamWrapper::register();
+    $root = new vfsDirectory('modules');
+    StreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())

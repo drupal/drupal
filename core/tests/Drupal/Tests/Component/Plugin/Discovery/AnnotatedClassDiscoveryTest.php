@@ -5,8 +5,8 @@ namespace Drupal\Tests\Component\Plugin\Discovery;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use bovigo\vfs\vfsStream;
-use bovigo\vfs\vfsStreamDirectory;
-use bovigo\vfs\vfsStreamWrapper;
+use bovigo\vfs\vfsDirectory;
+use bovigo\vfs\StreamWrapper;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -58,9 +58,9 @@ class AnnotatedClassDiscoveryTest extends TestCase {
    */
   public function testAutoloadBadAnnotations($annotation) {
     // Set up a class file in vfsStream.
-    vfsStreamWrapper::register();
-    $root = new vfsStreamDirectory('root');
-    vfsStreamWrapper::setRoot($root);
+    StreamWrapper::register();
+    $root = new vfsDirectory('root');
+    StreamWrapper::setRoot($root);
 
     FileCacheFactory::setPrefix(__CLASS__);
 

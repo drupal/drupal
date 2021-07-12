@@ -5,7 +5,7 @@ namespace Drupal\Tests\Component\PhpStorage;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Random;
 use Drupal\Tests\Traits\PhpUnitWarnings;
-use bovigo\vfs\vfsStreamDirectory;
+use bovigo\vfs\vfsDirectory;
 
 /**
  * @coversDefaultClass \Drupal\Component\PhpStorage\FileStorage
@@ -95,7 +95,7 @@ class FileStorageTest extends PhpStorageTestBase {
    * @covers ::createDirectory
    */
   public function testCreateDirectoryFailWarning() {
-    $directory = new vfsStreamDirectory('permissionDenied', 0200);
+    $directory = new vfsDirectory('permissionDenied', 0200);
     $storage = new FileStorage([
       'directory' => $directory->url(),
       'bin' => 'test',

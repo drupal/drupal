@@ -11,8 +11,8 @@ use Drupal\migrate_drupal\MigrationState;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use bovigo\vfs\vfsStream;
-use bovigo\vfs\vfsStreamDirectory;
-use bovigo\vfs\vfsStreamWrapper;
+use bovigo\vfs\vfsDirectory;
+use bovigo\vfs\StreamWrapper;
 
 /**
  * Defines a class for testing \Drupal\migrate_drupal\MigrationState.
@@ -41,9 +41,9 @@ class MigrationStateUnitTest extends UnitTestCase {
     $fieldPluginManager->getDefinitions()->willReturn($field_plugins);
     $moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
     $moduleHandler->getModuleList()->willReturn($modules_to_enable);
-    vfsStreamWrapper::register();
-    $root = new vfsStreamDirectory('modules');
-    vfsStreamWrapper::setRoot($root);
+    StreamWrapper::register();
+    $root = new vfsDirectory('modules');
+    StreamWrapper::setRoot($root);
     $url = vfsStream::url('modules');
 
     foreach ($files as $module => $contents) {
