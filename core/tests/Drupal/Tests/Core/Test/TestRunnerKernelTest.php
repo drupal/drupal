@@ -5,7 +5,7 @@ namespace Drupal\Tests\Core\Test;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Test\TestRunnerKernel;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 /**

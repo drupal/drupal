@@ -6,7 +6,7 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\YamlFileLoader

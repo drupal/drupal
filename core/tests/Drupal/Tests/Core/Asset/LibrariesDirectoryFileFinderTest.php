@@ -5,7 +5,7 @@ namespace Drupal\Tests\Core\Asset;
 use Drupal\Core\Asset\LibrariesDirectoryFileFinder;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Asset\LibrariesDirectoryFileFinder

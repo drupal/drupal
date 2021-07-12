@@ -5,8 +5,8 @@ namespace Drupal\Tests\Component\Gettext;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamFile;
+use bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class PoStreamWriterTest extends TestCase {
   /**
    * The mock po file.
    *
-   * @var \org\bovigo\vfs\vfsStreamFile
+   * @var \bovigo\vfs\vfsStreamFile
    */
   protected $poFile;
 

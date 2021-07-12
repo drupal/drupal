@@ -12,7 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 
 /**

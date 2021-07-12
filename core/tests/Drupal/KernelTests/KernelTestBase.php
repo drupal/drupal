@@ -28,8 +28,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
+use bovigo\vfs\vfsStream;
+use bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\VarDumper\VarDumper;
@@ -182,7 +182,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * The virtual filesystem root directory.
    *
-   * @var \org\bovigo\vfs\vfsStreamDirectory
+   * @var \bovigo\vfs\vfsStreamDirectory
    */
   protected $vfsRoot;
 

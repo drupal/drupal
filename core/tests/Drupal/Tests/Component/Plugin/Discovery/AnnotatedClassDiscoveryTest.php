@@ -4,9 +4,9 @@ namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamWrapper;
+use bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStreamDirectory;
+use bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\TestCase;
 
 /**

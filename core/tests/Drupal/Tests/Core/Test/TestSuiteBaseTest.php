@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\TestSuites\TestSuiteBase;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 // The test suite class is not part of the autoloader, we need to include it

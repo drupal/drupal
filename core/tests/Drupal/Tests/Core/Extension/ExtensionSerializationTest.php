@@ -5,7 +5,7 @@ namespace Drupal\Tests\Core\Extension;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 
 /**
  * Tests Extension serialization.

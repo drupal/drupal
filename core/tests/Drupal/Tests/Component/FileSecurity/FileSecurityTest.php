@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Component\FileSecurity;
 
 use Drupal\Component\FileSecurity\FileSecurity;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 /**

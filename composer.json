@@ -23,7 +23,7 @@
         "drupal/coder": "^8.3.10",
         "fabpot/goutte": "^3.3",
         "instaclick/php-webdriver": "^1.4.1",
-        "mikey179/vfsstream": "^1.6.8",
+        "mikey179/vfsstream": "v1.x-dev",
         "phpunit/phpunit": "^8.5.14 || ^9",
         "phpspec/prophecy": "^1.12",
         "symfony/css-selector": "^4.4",

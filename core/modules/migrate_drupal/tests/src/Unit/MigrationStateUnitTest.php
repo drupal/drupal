@@ -10,9 +10,9 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\MigrationState;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamWrapper;
+use bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStreamDirectory;
+use bovigo\vfs\vfsStreamWrapper;
 
 /**
  * Defines a class for testing \Drupal\migrate_drupal\MigrationState.

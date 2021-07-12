@@ -4,7 +4,7 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\language\Entity\ConfigurableLanguage;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 
 /**
  * Tests locale translation download.
@@ -16,7 +16,7 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
   /**
    * The virtual file stream for storing translations.
    *
-   * @var \org\bovigo\vfs\vfsStreamDirectory
+   * @var \bovigo\vfs\vfsStreamDirectory
    */
   protected $translationsStream;
 

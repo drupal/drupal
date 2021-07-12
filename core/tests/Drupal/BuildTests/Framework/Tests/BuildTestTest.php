@@ -3,7 +3,7 @@
 namespace Drupal\BuildTests\Framework\Tests;
 
 use Drupal\BuildTests\Framework\BuildTestBase;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 

@@ -5,9 +5,9 @@ namespace Drupal\Tests\Component\Discovery;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamWrapper;
+use bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStreamDirectory;
+use bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -14,7 +14,7 @@ use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Layout\LayoutPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
+use bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 
 /**
