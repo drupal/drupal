@@ -6,36 +6,20 @@ use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 
 /**
  * Provides plugin metadata inspection.
+ *
+ * @see \Drupal\Component\Plugin\PluginInspectionInterface
  */
 trait PluginInspectionTrait {
 
   /**
-   * The plugin_id.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $pluginId;
-
-  /**
-   * The plugin implementation definition.
-   *
-   * @var mixed
-   */
-  protected $pluginDefinition;
+  abstract public function getPluginId();
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginId() {
-    return $this->pluginId;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPluginDefinition() {
-    return $this->pluginDefinition;
-  }
+  abstract public function getPluginDefinition();
 
   /**
    * {@inheritdoc}
@@ -48,15 +32,16 @@ trait PluginInspectionTrait {
    * {@inheritdoc}
    */
   public function getDeprecationMessage(): ?string {
-    if (is_array($this->pluginDefinition)) {
-      return $this->pluginDefinition['deprecation_message'] ?? NULL;
+    $plugin_definition = $this->getPluginDefinition();
+    if (is_array($plugin_definition)) {
+      return $plugin_definition['deprecation_message'] ?? NULL;
     }
-    if ($this->pluginDefinition instanceof PluginDefinitionInterface) {
-      if ($this->pluginDefinition->deprecationMessage ?? NULL) {
-        return $this->pluginDefinition->deprecationMessage;
+    if ($plugin_definition instanceof PluginDefinitionInterface) {
+      if ($plugin_definition->deprecationMessage ?? NULL) {
+        return $plugin_definition->deprecationMessage;
       }
-      if (property_exists($this->pluginDefinition, 'additional')) {
-        return $this->pluginDefinition->get('additional')['deprecation_message'] ?? NULL;
+      if (property_exists($plugin_definition, 'additional')) {
+        return $plugin_definition->get('additional')['deprecation_message'] ?? NULL;
       }
     }
     return NULL;
