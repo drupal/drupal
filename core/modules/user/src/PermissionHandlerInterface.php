@@ -34,7 +34,21 @@ interface PermissionHandlerInterface {
    *     permissions to have a clear, consistent security warning that is the
    *     same across the site. Use the 'description' key instead to provide any
    *     information that is specific to the permission you are defining.
-   *   - provider: (optional) The provider name of the permission.
+   *   - dependencies: (optional) An array of dependency entities used when
+   *     building this permission, structured in the same way as the return
+   *     of ConfigEntityInterface::calculateDependencies(). For example, if this
+   *     permission was generated as effect of the existence of node type
+   *     'article', then value of the dependency key is:
+   *     @code
+   *     'dependencies' => ['config' => ['node.type.article']]
+   *     @endcode
+   *     The module providing this permission doesn't have to be added as a
+   *     dependency. It is automatically parsed, stored and retrieved from the
+   *     'provider' key.
+   *   - provider: The provider name of the permission. This is set
+   *     automatically to the module that provides the permission.yml file.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
    */
   public function getPermissions();
 

@@ -191,6 +191,7 @@ buildtest
 bundable
 bundleable
 bundleless
+bundlenode
 buttonpane
 buttonset
 buytaert

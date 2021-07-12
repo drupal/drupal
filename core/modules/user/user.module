@@ -21,6 +21,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\filter\FilterFormatInterface;
 use Drupal\system\Entity\Action;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -1304,4 +1305,18 @@ function user_form_system_regional_settings_submit($form, FormStateInterface $fo
     ->set('timezone.user.warn', $form_state->getValue('empty_timezone_message'))
     ->set('timezone.user.default', $form_state->getValue('user_default_timezone'))
     ->save();
+}
+
+/**
+ * Implements hook_filter_format_disable().
+ */
+function user_filter_format_disable(FilterFormatInterface $filter_format) {
+  // Remove the permission from any roles.
+  $permission = $filter_format->getPermissionName();
+  /** @var \Drupal\user\Entity\Role $role */
+  foreach (Role::loadMultiple() as $role) {
+    if ($role->hasPermission($permission)) {
+      $role->revokePermission($permission)->save();
+    }
+  }
 }
