@@ -4,8 +4,6 @@ namespace Drupal\user;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Menu\MenuLinkTreeInterface;
-use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
