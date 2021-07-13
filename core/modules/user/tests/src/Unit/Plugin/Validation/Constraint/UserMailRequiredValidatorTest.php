@@ -7,12 +7,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TypedData\Validation\ExecutionContext;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\Validation\Constraint\UserMailRequired;
 use Drupal\user\Plugin\Validation\Constraint\UserMailRequiredValidator;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @coversDefaultClass \Drupal\user\Plugin\Validation\Constraint\UserMailRequiredValidator
@@ -60,7 +60,7 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
 
     // If a violation is expected, then the context's addViolation method will
     // be called, otherwise it should not be called.
-    $context = $this->prophesize(ExecutionContextInterface::class);
+    $context = $this->prophesize(ExecutionContext::class);
 
     if ($expected_violation) {
       $context->addViolation('@name field is required.', ['@name' => 'Email'])->shouldBeCalledTimes(1);
