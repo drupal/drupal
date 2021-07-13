@@ -208,7 +208,7 @@ trait MigrationConfigurationTrait {
     // Drupal 5/6/7 can be detected by the schema_version in the system table.
     if ($connection->schema()->tableExists('system')) {
       try {
-        $version_string = $connection
+        $version_string = (string) $connection
           ->query('SELECT [schema_version] FROM {system} WHERE [name] = :module', [':module' => 'system'])
           ->fetchField();
         if ($version_string && $version_string[0] == '1') {

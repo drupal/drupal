@@ -205,7 +205,7 @@ class EntityConfigBase extends Entity {
 
     if ($translation) {
       $config_override = $this->languageManager->getLanguageConfigOverride($row->getDestinationProperty('langcode'), $config);
-      $config_override->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $row->getDestinationProperty('property')), $row->getDestinationProperty('translation'));
+      $config_override->set(str_replace(Row::PROPERTY_SEPARATOR, '.', (string) $row->getDestinationProperty('property')), $row->getDestinationProperty('translation'));
       $config_override->save();
     }
     else {
