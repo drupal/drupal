@@ -54,11 +54,11 @@ class MigrateLookupTest extends MigrateTestBase {
 
     // Test numerically indexed source id.
     $result = $this->migrateLookup->lookup('sample_lookup_migration', [17]);
-    $this->assertSame('1', $result[0]['nid']);
+    $this->assertSame(1, (int) $result[0]['nid']);
 
     // Test associatively indexed source id.
     $result = $this->migrateLookup->lookup('sample_lookup_migration', ['id' => 25]);
-    $this->assertSame('2', $result[0]['nid']);
+    $this->assertSame(2, (int) $result[0]['nid']);
 
     // Test lookup not found.
     $result = $this->migrateLookup->lookup('sample_lookup_migration', [1337]);
@@ -89,7 +89,7 @@ class MigrateLookupTest extends MigrateTestBase {
       26,
     ]);
     $this->assertCount(1, $result);
-    $this->assertSame('3', $result[0]['nid']);
+    $this->assertSame(3, (int) $result[0]['nid']);
 
     // Test with full set of associatively indexed source ids.
     $result = $this->migrateLookup->lookup('sample_lookup_migration_multiple_source_ids', [
@@ -97,7 +97,7 @@ class MigrateLookupTest extends MigrateTestBase {
       'version_id' => 17,
     ]);
     $this->assertCount(1, $result);
-    $this->assertSame('1', $result[0]['nid']);
+    $this->assertSame(1, (int) $result[0]['nid']);
 
     // Test with full set of associatively indexed source ids in the wrong
     // order.
@@ -106,18 +106,18 @@ class MigrateLookupTest extends MigrateTestBase {
       'id' => 25,
     ]);
     $this->assertCount(1, $result);
-    $this->assertSame('3', $result[0]['nid']);
+    $this->assertSame(3, (int) $result[0]['nid']);
 
     // Test with a partial set of numerically indexed ids.
     $result = $this->migrateLookup->lookup('sample_lookup_migration_multiple_source_ids', [25]);
     $this->assertCount(2, $result);
-    $this->assertSame('2', $result[0]['nid']);
-    $this->assertSame('3', $result[1]['nid']);
+    $this->assertSame(2, (int) $result[0]['nid']);
+    $this->assertSame(3, (int) $result[1]['nid']);
 
     // Test with a partial set of associatively indexed ids.
     $result = $this->migrateLookup->lookup('sample_lookup_migration_multiple_source_ids', ['version_id' => 25]);
     $this->assertCount(1, $result);
-    $this->assertSame('2', $result[0]['nid']);
+    $this->assertSame(2, (int) $result[0]['nid']);
   }
 
   /**
@@ -137,11 +137,11 @@ class MigrateLookupTest extends MigrateTestBase {
 
     // Test numerically indexed source id.
     $result = $this->migrateLookup->lookup($migrations, [17]);
-    $this->assertSame('1', $result[0]['nid']);
+    $this->assertSame(1, (int) $result[0]['nid']);
 
     // Test associatively indexed source id.
     $result = $this->migrateLookup->lookup($migrations, ['id' => 35]);
-    $this->assertSame('4', $result[0]['nid']);
+    $this->assertSame(4, (int) $result[0]['nid']);
 
     // Test lookup not found.
     $result = $this->migrateLookup->lookup($migrations, [1337]);
@@ -156,11 +156,11 @@ class MigrateLookupTest extends MigrateTestBase {
 
     // Test numerically indexed source id.
     $result = $this->migrateLookup->lookup('sample_lookup_migration_string_ids', ['node1']);
-    $this->assertSame('10', $result[0]['nid']);
+    $this->assertSame(10, (int) $result[0]['nid']);
 
     // Test associatively indexed source id.
     $result = $this->migrateLookup->lookup('sample_lookup_migration_string_ids', ['id' => 'node2']);
-    $this->assertSame('11', $result[0]['nid']);
+    $this->assertSame(11, (int) $result[0]['nid']);
 
     // Test lookup not found.
     $result = $this->migrateLookup->lookup('sample_lookup_migration_string_ids', ['node1337']);
