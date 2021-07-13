@@ -63,7 +63,7 @@ class ReservedWordTest extends DatabaseTestBase {
 
     // Ensure that we got the right record.
     $this->assertSame('George', $record->name);
-    $this->assertSame('27', $record->age);
+    $this->assertSame(27, (int) $record->age);
   }
 
   /**
@@ -77,7 +77,7 @@ class ReservedWordTest extends DatabaseTestBase {
 
     // Ensure that we got the right record.
     $this->assertSame('George', $record->name);
-    $this->assertSame('27', $record->age);
+    $this->assertSame(27, (int) $record->age);
   }
 
 }
