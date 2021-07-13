@@ -159,7 +159,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
 
     // The location values accepted by PopperJS, the library used for
     // positioning the tip.
-    assert(in_array(trim($location), [
+    assert(in_array(trim($location ?? ''), [
       'auto',
       'auto-start',
       'auto-end',
