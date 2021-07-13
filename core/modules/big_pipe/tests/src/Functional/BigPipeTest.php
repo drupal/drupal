@@ -455,14 +455,17 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @todo This method is broken. Fix it in
    *   https://www.drupal.org/project/drupal/issues/3144926
+   *
+   * @code
+   * protected function assertSetsEqual(array $a, array $b): void {
+   *   return count($a) == count($b) && !array_diff_assoc($a, $b);
+   *   // @todo the following should be the right approach, but it currently
+   *   // fails.
+   *   $this->assertSameSize($a, $b);
+   *   $this->assertEquals($a, $b);
+   * }
+   * @endcode
    */
-  // protected function assertSetsEqual(array $a, array $b) {
-  //   return count($a) == count($b) && !array_diff_assoc($a, $b);
-  //   // @todo the following should be the right approach, but it currently
-  //   // fails.
-  //   $this->assertSameSize($a, $b);
-  //   $this->assertEquals($a, $b);
-  // }
 
   /**
    * Asserts whether a BigPipe no-JS cookie exists or not.
