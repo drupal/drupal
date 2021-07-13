@@ -39,7 +39,7 @@ class TestHttpClientMiddleware {
                 foreach ($header_values as $header_value) {
                   $parameters = unserialize(urldecode($header_value));
                   if (count($parameters) === 3) {
-                    if ($parameters[1] === 'User deprecated function' || $parameters[1] === 'Deprecated function') {
+                    if ($parameters[1] === 'User deprecated function') {
                       // Fire the same deprecation message to allow it to be
                       // collected by
                       // \Symfony\Bridge\PhpUnit\DeprecationErrorHandler::collectDeprecations().
