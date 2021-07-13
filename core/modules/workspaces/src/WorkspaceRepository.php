@@ -62,7 +62,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
 
       // First, sort everything alphabetically.
       uasort($workspaces, function (WorkspaceInterface $a, WorkspaceInterface $b) {
-        return strnatcasecmp($a->label(), $b->label());
+        return strnatcasecmp($a->label() ?: $a->id(), $b->label() ?: $a->id());
       });
 
       $tree_children = [];

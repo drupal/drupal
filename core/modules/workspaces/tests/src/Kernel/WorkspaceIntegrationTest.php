@@ -492,14 +492,14 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $query->pager(1);
     $result = $query->execute();
 
-    $this->assertSame([1 => '1'], $result);
+    $this->assertEquals([1 => '1'], $result);
 
     $query = $this->entityTypeManager->getStorage('node')->getQuery()->accessCheck(FALSE);
     $query->sort('nid', 'DESC');
     $query->pager(10);
     $result = $query->execute();
 
-    $this->assertSame([3 => '2', 1 => '1'], $result);
+    $this->assertEquals([3 => '2', 1 => '1'], $result);
   }
 
   /**
@@ -584,7 +584,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ->condition('field_test_entity.entity.uuid', $entity_test->uuid());
 
     $result = $query->execute();
-    $this->assertSame([$node_2->getRevisionId() => $node_2->id()], $result);
+    $this->assertEquals([$node_2->getRevisionId() => $node_2->id()], $result);
   }
 
   /**
