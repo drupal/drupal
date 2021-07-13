@@ -332,7 +332,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // This matches both the original and new current revisions, multiple
     // revisions are returned for some entities.
     $assert = [16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
-    $this->assertSame($assert, $results);
+    $this->assertEquals($assert, $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -341,7 +341,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
-    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertEquals(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -350,7 +350,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
-    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertEquals(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -361,7 +361,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we get everything.
     $assert = [4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15'];
-    $this->assertSame($assert, $results);
+    $this->assertEquals($assert, $results);
 
     // Check that a query on the latest revisions without any condition returns
     // the correct results.
@@ -373,7 +373,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('revision_id')
       ->execute();
     $expected = [1 => '1', 2 => '2', 3 => '3', 16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
-    $this->assertSame($expected, $results);
+    $this->assertEquals($expected, $results);
   }
 
   /**
@@ -729,7 +729,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected as $binary) {
       $assert[$binary] = strval($binary);
     }
-    $this->assertSame($assert, $this->queryResults);
+    $this->assertEquals($assert, $this->queryResults);
   }
 
   protected function assertRevisionResult($keys, $expected) {
@@ -737,7 +737,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
-    $this->assertSame($assert, $this->queryResults);
+    $this->assertEquals($assert, $this->queryResults);
     return $assert;
   }
 
@@ -1148,7 +1148,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertSame([14 => '14'], $result);
+    $this->assertEquals([14 => '14'], $result);
 
     // Now check an entity query on the latest revision.
     $result = $this->storage
@@ -1158,7 +1158,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->latestRevision()
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertSame([17 => '14'], $result);
+    $this->assertEquals([17 => '14'], $result);
 
     // Verify that field conditions on the default and pending revision still
     // work as expected.
@@ -1168,7 +1168,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
-    $this->assertSame([14 => '14'], $result);
+    $this->assertEquals([14 => '14'], $result);
 
     // Now there are two revisions with same value for the figure color.
     $result = $this->storage
@@ -1178,7 +1178,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
       ->execute();
-    $this->assertSame([16 => '14', 17 => '14'], $result);
+    $this->assertEquals([16 => '14', 17 => '14'], $result);
 
     // Check that querying for the latest revision returns the correct one.
     $result = $this->storage
@@ -1188,7 +1188,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$this->figures.color", 'red')
       ->latestRevision()
       ->execute();
-    $this->assertSame([17 => '14'], $result);
+    $this->assertEquals([17 => '14'], $result);
   }
 
   /**
