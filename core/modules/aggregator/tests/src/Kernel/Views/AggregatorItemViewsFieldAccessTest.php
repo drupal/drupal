@@ -24,6 +24,7 @@ class AggregatorItemViewsFieldAccessTest extends FieldFieldAccessTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
+    $this->installConfig(['aggregator']);
     $this->installEntitySchema('aggregator_feed');
     $this->installEntitySchema('aggregator_item');
   }
