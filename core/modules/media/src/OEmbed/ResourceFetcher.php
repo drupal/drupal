@@ -70,12 +70,16 @@ class ResourceFetcher implements ResourceFetcherInterface {
     if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
       $data = $this->parseResourceXml($content, $url);
     }
-    elseif (strstr($format, 'text/javascript') || strstr($format, 'application/json')) {
-      $data = Json::decode($content);
-    }
-    // If the response is neither XML nor JSON, we are in bat country.
+    // By default, try to parse the resource data as JSON.
     else {
-      throw new ResourceException('The fetched resource did not have a valid Content-Type header.', $url);
+      $data = Json::decode($content);
+
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new ResourceException('Error decoding oEmbed resource: ' . json_last_error_msg(), $url);
+      }
+    }
+    if (empty($data) || !is_array($data)) {
+      throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
     $this->cacheSet($cache_id, $data);
