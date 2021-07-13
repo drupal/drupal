@@ -52,7 +52,7 @@ class UpdateTest extends DatabaseTestBase {
     $this->assertSame(2, $num_updated, 'Updated 2 records.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertSame('2', $num_matches, 'Updated fields successfully.');
+    $this->assertSame(2, (int) $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -66,7 +66,7 @@ class UpdateTest extends DatabaseTestBase {
     $this->assertSame(2, $num_updated, 'Updated 2 records.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertSame('2', $num_matches, 'Updated fields successfully.');
+    $this->assertSame(2, (int) $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -80,7 +80,7 @@ class UpdateTest extends DatabaseTestBase {
     $this->assertSame(2, $num_updated, 'Updated 2 records.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertSame('2', $num_matches, 'Updated fields successfully.');
+    $this->assertSame(2, (int) $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -95,7 +95,7 @@ class UpdateTest extends DatabaseTestBase {
     $this->assertSame(1, $num_updated, 'Updated 1 record.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertSame('1', $num_matches, 'Updated fields successfully.');
+    $this->assertSame(1, (int) $num_matches, 'Updated fields successfully.');
   }
 
   /**
