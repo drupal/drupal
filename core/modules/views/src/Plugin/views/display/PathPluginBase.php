@@ -133,7 +133,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     ];
 
     // @todo How do we apply argument validation?
-    $bits = explode('/', $this->getOption('path'));
+    $bits = explode('/', (string) $this->getOption('path'));
     // @todo Figure out validation/argument loading.
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
