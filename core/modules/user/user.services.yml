@@ -71,3 +71,6 @@ services:
   logger.channel.user:
     parent: logger.channel_base
     arguments: ['user']
+  user.module_permissions_link:
+    class: Drupal\user\ModulePermissionsLink
+    arguments: ['@user.permissions', '@access_manager', '@module_handler']

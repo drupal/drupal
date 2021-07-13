@@ -975,14 +975,19 @@ function system_admin_compact_mode() {
  *   An array of task links.
  *
  * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the
- *   'system.module_admin_tasks_helper' service with the getModuleAdminTasks()
- *   method instead.
+ *   'system.module_admin_links' service with the getModuleAdminLinks() method
+ *   and 'user.module_permissions_link' service with the
+ *   ::getModulePermissionsLink() method instead.
  *
  * @see https://www.drupal.org/node/3038972
  */
 function system_get_module_admin_tasks($module, array $info) {
-  @trigger_error("system_get_module_admin_tasks() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the 'system.module_admin_tasks_helper' service with the getModuleAdminTasks() method instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
-  return \Drupal::service('system.module_admin_tasks_helper')->getModuleAdminTasks($module);
+  @trigger_error("system_get_module_admin_tasks() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the 'system.module_admin_links' service with the getModuleAdminLinks() method and 'user.module_permissions_link' service with the ::getModulePermissionsLink() method instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
+  $module_admin_links = \Drupal::service('system.module_admin_links')->getModuleAdminLinks($module);
+  if ($module_permissions_link = \Drupal::service('user.module_permissions_link')->getModulePermissionsLink($module)) {
+    $module_admin_links["user.admin_permissions.{$module}"] = $module_permissions_link;
+  }
+  return $module_admin_links;
 }
 
 /**

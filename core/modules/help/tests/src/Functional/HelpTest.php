@@ -133,7 +133,10 @@ class HelpTest extends BrowserTestBase {
       if ($response == 200) {
         $this->assertSession()->titleEquals("$name | Drupal");
         $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
-        $admin_tasks = \Drupal::service('system.module_admin_tasks_helper')->getModuleAdminTasks($module);
+        $admin_tasks = \Drupal::service('system.module_admin_links')->getModuleAdminLinks($module);
+        if ($module_permissions_link = \Drupal::service('user.module_permissions_link')->getModulePermissionsLink($module)) {
+          $admin_tasks["user.admin_permissions.{$module}"] = $module_permissions_link;
+        }
         if (!empty($admin_tasks)) {
           $this->assertSession()->pageTextContains($name . ' administration pages');
         }

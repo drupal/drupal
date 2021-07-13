@@ -8,7 +8,8 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\help\HelpSectionManager;
-use Drupal\system\SystemModuleAdminTasksHelper;
+use Drupal\system\ModuleAdminLinks;
+use Drupal\user\ModulePermissionsLink;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -39,11 +40,18 @@ class HelpController extends ControllerBase {
   protected $moduleExtensionList;
 
   /**
-   * The module admin tasks helper service.
+   * The module admin links service.
    *
-   * @var \Drupal\system\SystemModuleAdminTasksHelper
+   * @var \Drupal\system\ModuleAdminLinks
    */
-  protected $moduleAdminTasksHelper;
+  protected $moduleAdminLinks;
+
+  /**
+   * The module permissions link service.
+   *
+   * @var \Drupal\user\ModulePermissionsLink
+   */
+  protected $modulePermissionsLinks;
 
   /**
    * Creates a new HelpController.
@@ -54,18 +62,25 @@ class HelpController extends ControllerBase {
    *   The help section manager.
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $module_extension_list
    *   The module extension list.
-   * @param \Drupal\system\SystemModuleAdminTasksHelper $module_admin_tasks_helper
-   *   The module admin tasks helper service.
+   * @param \Drupal\system\ModuleAdminLinks $module_admin_links
+   *   The module admin links service.
+   * @param \Drupal\user\ModulePermissionsLink $module_permissions_link
+   *   The module permissions link service.
    */
-  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list, SystemModuleAdminTasksHelper $module_admin_tasks_helper = NULL) {
+  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list, ModuleAdminLinks $module_admin_links = NULL, ModulePermissionsLink $module_permissions_link = NULL) {
     $this->routeMatch = $route_match;
     $this->helpManager = $help_manager;
     $this->moduleExtensionList = $module_extension_list;
-    if (!isset($module_admin_tasks_helper)) {
+    if (!isset($module_admin_links)) {
       @trigger_error('Calling HelpController::__construct() without the $module_admin_tasks_helper argument is deprecated in drupal:9.3.0 and the $module_admin_tasks_helper argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038972', E_USER_DEPRECATED);
-      $module_admin_tasks_helper = \Drupal::service('system.module_admin_tasks_helper');
+      $module_admin_links = \Drupal::service('system.module_admin_links');
     }
-    $this->moduleAdminTasksHelper = $module_admin_tasks_helper;
+    $this->moduleAdminLinks = $module_admin_links;
+    if (!isset($module_permissions_link)) {
+      @trigger_error('Calling HelpController::__construct() without the $module_permissions_link argument is deprecated in drupal:9.3.0 and the $module_permissions_link argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038972', E_USER_DEPRECATED);
+      $module_permissions_link = \Drupal::service('user.module_permissions_link');
+    }
+    $this->modulePermissionsLinks = $module_permissions_link;
   }
 
   /**
@@ -76,7 +91,8 @@ class HelpController extends ControllerBase {
       $container->get('current_route_match'),
       $container->get('plugin.manager.help_section'),
       $container->get('extension.list.module'),
-      $container->get('system.module_admin_tasks_helper')
+      $container->get('system.module_admin_links'),
+      $container->get('user.module_permissions_link'),
     );
   }
 
@@ -166,7 +182,11 @@ class HelpController extends ControllerBase {
 
       // Only print list of administration pages if the module in question has
       // any such pages associated with it.
-      $admin_tasks = $this->moduleAdminTasksHelper->getModuleAdminTasks($name);
+      $admin_tasks = $this->moduleAdminLinks->getModuleAdminLinks($name);
+      if ($module_permissions_link = \Drupal::service('user.module_permissions_link')->getModulePermissionsLink($name)) {
+        $admin_tasks["user.admin_permissions.{$name}"] = $module_permissions_link;
+      }
+
       if (!empty($admin_tasks)) {
         $links = [];
         foreach ($admin_tasks as $task) {

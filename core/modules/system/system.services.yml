@@ -64,6 +64,6 @@ services:
     arguments: ['@system.sa_fetcher']
     tags:
       - { name: event_subscriber }
-  system.module_admin_tasks_helper:
-    class: Drupal\system\SystemModuleAdminTasksHelper
-    arguments: ['@menu.link_tree', '@access_manager', '@module_handler']
+  system.module_admin_links:
+    class: Drupal\system\ModuleAdminLinks
+    arguments: ['@menu.link_tree']
