@@ -421,9 +421,6 @@ EOD;
    * @ingroup sanitization
    */
   public static function escape($text) {
-    if (is_null($text)) {
-      return '';
-    }
     return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
   }
 
