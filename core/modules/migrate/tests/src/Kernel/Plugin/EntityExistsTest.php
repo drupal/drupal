@@ -47,7 +47,7 @@ class EntityExistsTest extends KernelTestBase {
 
     // Ensure that the entity ID is returned if it really exists.
     $value = $plugin->transform($uid, $executable, $row, 'buffalo');
-    $this->assertSame($uid, $value);
+    $this->assertSame((int) $uid, (int) $value);
 
     // Ensure that the plugin returns FALSE if the entity doesn't exist.
     $value = $plugin->transform(420, $executable, $row, 'buffalo');
@@ -55,7 +55,7 @@ class EntityExistsTest extends KernelTestBase {
 
     // Make sure the plugin can gracefully handle an array as input.
     $value = $plugin->transform([$uid, 420], $executable, $row, 'buffalo');
-    $this->assertSame($uid, $value);
+    $this->assertSame((int) $uid, (int) $value);
   }
 
 }
