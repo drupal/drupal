@@ -391,7 +391,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
   public function getSubject() {
     // @todo Not sure if this is the best fix but it is adhering to the
     //   interface.
-    return $this->get('subject')->value ?: '';
+    return $this->get('subject')->value ?? '';
   }
 
   /**
