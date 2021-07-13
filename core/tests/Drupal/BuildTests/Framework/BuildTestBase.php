@@ -17,6 +17,9 @@ use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+// @todo Remove when MinK is fixed.
+class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
+
 /**
  * Provides a workspace to test build processes.
  *
@@ -219,8 +222,6 @@ abstract class BuildTestBase extends TestCase {
    * @return \Behat\Mink\Session
    */
   protected function initMink() {
-    // @todo Remove when MinK is fixed.
-    class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
     $client = new DrupalTestBrowser();
     $client->followMetaRefresh(TRUE);
     $driver = new BrowserKitDriver($client);
