@@ -109,6 +109,9 @@ config_test.no_status.default:
     label:
       type: label
       label: 'Label'
+    uuid:
+      type: string
+      label: 'UUID'
 
 config_test.system:
   type: config_object
