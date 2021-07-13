@@ -86,7 +86,9 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
       ->condition('default_langcode', 1);
     $query->addExpression('MAX([thread])', 'thread');
-    return $query->execute()
+    // @todo decide if we should handle this here. It is conforming to the
+    //   interface.
+    return (string) $query->execute()
       ->fetchField();
   }
 
