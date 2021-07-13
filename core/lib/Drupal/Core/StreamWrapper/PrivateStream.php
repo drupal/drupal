@@ -60,7 +60,8 @@ class PrivateStream extends LocalStream {
    *   The base path for private://.
    */
   public static function basePath() {
-    return Settings::get('file_private_path');
+    // @todo what does an empty string / NULL mean here?
+    return Settings::get('file_private_path', '');
   }
 
 }
