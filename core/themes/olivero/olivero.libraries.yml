@@ -69,15 +69,19 @@ global-styling:
     - core/tabbable
 
 book:
+  version: VERSION
   css:
     theme:
       css/components/book.css: {}
 
-local-actions:
+cke-dialog:
+  version: VERSION
   css:
     component:
-      css/components/action-links.css: {}
+      css/components/cke-dialog.css: {}
+
 comments:
+  version: VERSION
   css:
     component:
       css/components/comments.css: {}
@@ -85,66 +89,158 @@ comments:
     js/comments.js: {}
 
 content-below:
+  version: VERSION
   css:
     layout:
       css/layout/region-content-below.css: {}
 
 content_moderation:
+  version: VERSION
   css:
     component:
       css/components/content-moderation.css: {}
 
-filter.theme:
-  css:
-    component:
-      css/theme/filter.theme.css: {}
-
 details:
+  version: VERSION
   css:
     theme:
       css/components/details.css: {}
 
-layout_discovery_section:
+dialog.off_canvas:
+  version: VERSION
   css:
-    layout:
-      css/layout/layout-discovery-section-layout.css: {}
+    component:
+      css/components/off-canvas.css: {}
 
-layout_builder_twocol_section:
+dropbutton:
+  version: VERSION
   css:
-    layout:
-      css/layout/layout-builder-twocol-section.css: {}
-  dependencies:
-    - olivero/layout_discovery_section
+    component:
+      css/components/dropbutton.css: {}
 
-layout_builder_threecol_section:
+drupal.node.preview:
+  version: VERSION
   css:
-    layout:
-      css/layout/layout-builder-threecol-section.css: {}
-  dependencies:
-    - olivero/layout_discovery_section
+    theme:
+      css/components/node-preview-container.css: {}
+
+feed:
+  version: VERSION
+  css:
+    theme:
+      css/components/feed.css: {}
+
+filter.theme:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.theme.css: {}
+
+forum:
+  version: VERSION
+  css:
+    component:
+      css/components/forum.css: {}
 
 layout_builder_fourcol_section:
+  version: VERSION
   css:
     layout:
       css/layout/layout-builder-fourcol-section.css: {}
   dependencies:
     - olivero/layout_discovery_section
 
-messages:
-  js:
-    js/messages.js: {}
+layout_builder_threecol_section:
+  version: VERSION
+  css:
+    layout:
+      css/layout/layout-builder-threecol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+layout_builder_twocol_section:
+  version: VERSION
+  css:
+    layout:
+      css/layout/layout-builder-twocol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+layout_discovery_section:
+  version: VERSION
+  css:
+    layout:
+      css/layout/layout-discovery-section-layout.css: {}
+
+layout-views-grid-horizontal:
+  version: VERSION
+  css:
+    layout:
+      css/layout/layout-views-grid-horizontal.css: {}
+
+layout-views-grid-vertical:
+  version: VERSION
+  css:
+    layout:
+      css/layout/layout-views-grid-vertical.css: {}
+
+local-actions:
+  version: VERSION
+  css:
+    component:
+      css/components/action-links.css: {}
 
 menu-sidebar:
+  version: VERSION
   css:
     component:
       css/components/navigation/menu-sidebar.css: {}
 
+messages:
+  version: VERSION
+  js:
+    js/messages.js: {}
+
+powered-by-block:
+  version: VERSION
+  css:
+    theme:
+      css/components/powered-by-block.css: {}
+
+progress:
+  version: VERSION
+  css:
+    component:
+      css/components/progress.css: {}
+
+search-narrow:
+  version: VERSION
+  css:
+    component:
+      css/components/header-search-narrow.css: {}
+
+search-results:
+  version: VERSION
+  css:
+    theme:
+      css/components/search-results.css: {}
+
+search-wide:
+  version: VERSION
+  css:
+    component:
+      css/components/header-search-wide.css: {}
+  js:
+    js/search.js: {}
+
 sidebar:
+  version: VERSION
   css:
     layout:
       css/layout/layout-sidebar.css: {}
 
 tabs:
+  version: VERSION
   css:
     theme:
       css/components/tabs.css: {}
@@ -152,73 +248,7 @@ tabs:
     js/tabs.js: {}
 
 tags:
+  version: VERSION
   css:
     theme:
       css/components/tags.css: {}
-
-feed:
-  css:
-    theme:
-      css/components/feed.css: {}
-
-search-narrow:
-  css:
-    component:
-      css/components/header-search-narrow.css: {}
-
-search-wide:
-  css:
-    component:
-      css/components/header-search-wide.css: {}
-  js:
-    js/search.js: {}
-
-search-results:
-  css:
-    theme:
-      css/components/search-results.css: {}
-
-drupal.node.preview:
-  css:
-    theme:
-      css/components/node-preview-container.css: {}
-
-powered-by-block:
-  css:
-    theme:
-      css/components/powered-by-block.css: {}
-
-layout-views-grid-horizontal:
-  css:
-    layout:
-      css/layout/layout-views-grid-horizontal.css: {}
-
-layout-views-grid-vertical:
-  css:
-    layout:
-      css/layout/layout-views-grid-vertical.css: {}
-
-cke-dialog:
-  css:
-    component:
-      css/components/cke-dialog.css: {}
-
-progress:
-  css:
-    component:
-      css/components/progress.css: {}
-
-forum:
-  css:
-    component:
-      css/components/forum.css: {}
-
-dropbutton:
-  css:
-    component:
-      css/components/dropbutton.css: {}
-
-dialog.off_canvas:
-  css:
-    component:
-      css/components/off-canvas.css: {}
