@@ -526,6 +526,13 @@ jquery.once:
     gpl-compatible: true
   js:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
+  dependencies:
+    - core/jquery
+    - core/jquery.once.bc
+
+jquery.once.bc:
+  version: VERSION
+  js:
     misc/jquery.once.bc.js: { weight: -19 }
   dependencies:
     - core/jquery
