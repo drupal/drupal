@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media\Kernel;
 
+use Drupal\Core\TypedData\Validation\ExecutionContext;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\media\OEmbed\Provider;
@@ -11,7 +12,6 @@ use Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraint;
 use Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraintValidator;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Prophecy\Argument;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @coversDefaultClass \Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraintValidator
@@ -48,7 +48,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
     // The media item has an empty source value, so the constraint validator
     // should add a violation and return early before invoking the URL resolver.
-    $context = $this->prophesize(ExecutionContextInterface::class);
+    $context = $this->prophesize(ExecutionContext::class);
     $context->addViolation($constraint->invalidResourceMessage)->shouldBeCalled();
 
     $url_resolver = $this->prophesize(UrlResolverInterface::class);
@@ -74,7 +74,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
     $constraint = new OEmbedResourceConstraint();
 
-    $context = $this->prophesize(ExecutionContextInterface::class);
+    $context = $this->prophesize(ExecutionContext::class);
 
     $provider = $this->prophesize(Provider::class);
     $provider->getName()->willReturn('YouTube');
