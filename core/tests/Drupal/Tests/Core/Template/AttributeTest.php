@@ -9,7 +9,6 @@ use Drupal\Core\Template\AttributeArray;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\Render\MarkupInterface;
 use Twig\Environment;
 
 /**
@@ -37,9 +36,8 @@ class AttributeTest extends UnitTestCase {
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
 
     // Test that safe string objects work correctly.
-    $safe_string = $this->prophesize(MarkupInterface::class);
-    $safe_string->__toString()->willReturn('example-class');
-    $attribute = new Attribute(['class' => $safe_string->reveal()]);
+    $safe_string = Markup::create('example-class');
+    $attribute = new Attribute(['class' => $safe_string]);
     $this->assertTrue(isset($attribute['class']));
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
   }
