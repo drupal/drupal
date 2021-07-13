@@ -16,7 +16,7 @@ class CacheableUnauthorizedHttpException extends UnauthorizedHttpException imple
   /**
    * {@inheritdoc}
    */
-  public function __construct(CacheableDependencyInterface $cacheability, $challenge, $message = NULL, \Exception $previous = NULL, $code = 0) {
+  public function __construct(CacheableDependencyInterface $cacheability, $challenge, $message = '', \Exception $previous = NULL, $code = 0) {
     $this->setCacheability($cacheability);
     parent::__construct($challenge, $message, $previous, $code);
   }

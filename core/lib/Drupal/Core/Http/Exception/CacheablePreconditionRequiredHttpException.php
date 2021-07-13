@@ -16,7 +16,7 @@ class CacheablePreconditionRequiredHttpException extends PreconditionRequiredHtt
   /**
    * {@inheritdoc}
    */
-  public function __construct(CacheableDependencyInterface $cacheability, $message = NULL, \Exception $previous = NULL, $code = 0) {
+  public function __construct(CacheableDependencyInterface $cacheability, $message = '', \Exception $previous = NULL, $code = 0) {
     $this->setCacheability($cacheability);
     parent::__construct($message, $previous, $code);
   }

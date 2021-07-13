@@ -362,6 +362,9 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getColumns')
       ->willReturn($columns);
+    $definition->expects($this->any())
+      ->method('getTargetEntityTypeId')
+      ->willReturn('entity_test');
 
     $this->entityType
       ->expects($this->any())

@@ -16,7 +16,7 @@ class CacheableServiceUnavailableHttpException extends ServiceUnavailableHttpExc
   /**
    * {@inheritdoc}
    */
-  public function __construct(CacheableDependencyInterface $cacheability, $retryAfter = NULL, $message = NULL, \Exception $previous = NULL, $code = 0) {
+  public function __construct(CacheableDependencyInterface $cacheability, $retryAfter = NULL, $message = '', \Exception $previous = NULL, $code = 0) {
     $this->setCacheability($cacheability);
     parent::__construct($retryAfter, $message, $previous, $code);
   }

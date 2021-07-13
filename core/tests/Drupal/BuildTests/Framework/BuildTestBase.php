@@ -219,6 +219,8 @@ abstract class BuildTestBase extends TestCase {
    * @return \Behat\Mink\Session
    */
   protected function initMink() {
+    // @todo Remove when MinK is fixed.
+    class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
     $client = new DrupalTestBrowser();
     $client->followMetaRefresh(TRUE);
     $driver = new BrowserKitDriver($client);

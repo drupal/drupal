@@ -404,6 +404,7 @@ class LayoutDeriver extends DeriverBase {
         'id' => 'invalid_provider',
         'provider' => 'invalid_provider',
       ]);
+      $this->derivatives['invalid_provider']->setClass(__CLASS__);
     }
     return $this->derivatives;
   }

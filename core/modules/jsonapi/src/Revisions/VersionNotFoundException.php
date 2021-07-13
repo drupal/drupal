@@ -16,7 +16,7 @@ class VersionNotFoundException extends \InvalidArgumentException {
   /**
    * {@inheritdoc}
    */
-  public function __construct($message = NULL, $code = 0, \Exception $previous = NULL) {
+  public function __construct($message = '', $code = 0, \Exception $previous = NULL) {
     parent::__construct(!is_null($message) ? $message : 'The identified version could not be found.', $code, $previous);
   }
 
