@@ -75,7 +75,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    *
    * @var string
    */
-  protected $name;
+  protected $name = '';
 
   /**
    * Weight of this format in the text format selector.
