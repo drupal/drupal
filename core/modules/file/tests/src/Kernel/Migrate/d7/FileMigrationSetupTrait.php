@@ -70,12 +70,12 @@ trait FileMigrationSetupTrait {
     $this->assertSame($uri, $file->getFileUri());
     $this->assertFileExists($uri);
     $this->assertSame($mime, $file->getMimeType());
-    $this->assertSame($size, $file->getSize());
+    $this->assertSame($size, (int) $file->getSize());
     // isPermanent(), isTemporary(), etc. are determined by the status column.
     $this->assertTrue($file->isPermanent());
-    $this->assertSame($created, $file->getCreatedTime());
-    $this->assertSame($changed, $file->getChangedTime());
-    $this->assertSame($uid, $file->getOwnerId());
+    $this->assertSame($created, (int) $file->getCreatedTime());
+    $this->assertSame($changed, (int) $file->getChangedTime());
+    $this->assertSame($uid, (int) $file->getOwnerId());
   }
 
 }
