@@ -58,6 +58,7 @@ class IntegrationTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
+    $this->installConfig(['aggregator']);
     $this->installEntitySchema('aggregator_item');
     $this->installEntitySchema('aggregator_feed');
 
