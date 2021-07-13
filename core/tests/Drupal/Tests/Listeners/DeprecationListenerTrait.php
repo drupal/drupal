@@ -76,6 +76,13 @@ trait DeprecationListenerTrait {
       // issues and thus were not addressed in time for the 9.0.0 release.
       '%The entity link url update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2857891.%',
       '%The operator defaults update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2869168.%',
+      // PHP 8.1 is not compatible with itself :)
+      // @todo Fix somehow - this feels like we need an upstream fix in
+      //   phpspec/prophecy. These fix fails in Drupal\Tests\Core\Database
+      //   tests.
+      '%Return type of Double\\\\PDO.*%',
+      '%Return type of Mock_StubPDO.*%',
+      '%Return type of Double\\\\Drupal\\\\Tests\\\\Core\\\\Database\\\\Stub\\\\StubPDO.*%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
