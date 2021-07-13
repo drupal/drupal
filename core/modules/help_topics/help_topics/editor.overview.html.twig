@@ -5,19 +5,19 @@ related:
   - field_ui.manage_form
   - filter.overview
 ---
-{% set filters = render_var(url('help.help_topic', {'id': 'filter.overview'})) %}
+{% set filter_overview_topic = render_var(help_topic_link('filter.overview')) %}
 {% set content_url = render_var(url('filter.admin_overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Configure a text format so that when a user is editing text and selects this text format, a text editor installed on your site is shown. Configure the text editor, such as choosing which buttons and functions are available. See <a href="{{ filters }}">Managing text filters and text formats</a> for more about text formats.{% endtrans %}</p>
+<p>{% trans %}Configure a text format so that when a user is editing text and selects this text format, a text editor installed on your site is shown. Configure the text editor, such as choosing which buttons and functions are available. See {{ filter_overview_topic }} for more about text formats.{% endtrans %}</p>
 <h2>{% trans %}What is a text editor?{% endtrans %}</h2>
 <p>{% trans %}A text editor is software (typically, a JavaScript library) that provides buttons and other command mechanisms to make editing HTML text easier. Some editors are called <em>visual</em> or <em>WYSIWYG (What You See Is What You Get)</em> editors; these editors hide the details of HTML from the user, and instead show formatted output on the screen. The core Text Editor module provides a framework for deploying text editors on your site. The core CKEditor module provides CKEditor, which is a widely-used JavaScript WYSIWYG editor that creates clean and valid HTML; the module also enforces the HTML tag restrictions in the associated text format. Various contributed modules provide other editors; to install a new editor, besides installing the module, you may need to download the editor library from a third-party site.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Content Authoring</em> &gt; <a href="{{ content_url }}"><em>Text formats and editors</em></a>. The <em>Text editor</em> column in the table shows the text editor that is currently connected to each text format, if any.{% endtrans %}</li>
-  <li>{% trans %}Follow the steps on <a href="{{ filters }}">Managing text filters and text formats</a> to add a new text format or configure an existing text format; when you reach the step about text editors, return to this topic.{% endtrans %}</li>
+  <li>{% trans %}Follow the steps on {{ filter_overview_topic }} to add a new text format or configure an existing text format; when you reach the step about text editors, return to this topic.{% endtrans %}</li>
   <li>{% trans %}Select <em>CKEditor</em> as the <em>Text editor</em>, or another text editor that you have installed. The rest of these steps assume you selected <em>CKEditor</em>.{% endtrans %}</li>
   <li>{% trans %}Under <em>Toolbar configuration</em>, drag buttons between <em>Available buttons</em> and <em>Active toolbar</em>; only buttons in <em>Active toolbar</em> will be shown to the user. If you are using a mouse, you can hover over a button to see a tooltip explaining what the button does.{% endtrans %}</li>
   <li>{% trans %}Drag buttons within <em>Active toolbar</em> to the desired order, and group buttons by dragging them into the grouping boxes; click <em>Add group</em> to add additional groups.{% endtrans %}</li>
   <li>{% trans %}Under <em>CKEditor plugin settings</em>, configure the buttons that have configuration. This section will not be present if there are no active buttons with configuration.{% endtrans %}</li>
-  <li>{% trans %}Return to <a href="{{ filters }}">Managing text filters and text formats</a> to complete the text format configuration, and be sure to save the text format.{% endtrans %}</li>
+  <li>{% trans %}Return to {{ filter_overview_topic }} to complete the text format configuration, and be sure to save the text format.{% endtrans %}</li>
 </ol>

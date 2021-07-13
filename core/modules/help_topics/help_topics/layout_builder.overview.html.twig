@@ -7,12 +7,12 @@ related:
   - block.overview
 ---
 {% set content_types = render_var(url('entity.node_type.collection')) %}
-{% set entities = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
-{% set blocks = render_var(url('help.help_topic', {'id': 'block.overview'})) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+{% set block_overview_topic = render_var(help_topic_link('block.overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Configure an entity sub-type to have its fields displayed using a layout (see <a href="{{ entities }}">Managing content structure</a> for more on entities and fields).{% endtrans %}</p>
+<p>{% trans %}Configure an entity sub-type to have its fields displayed using a layout (see {{ content_structure_topic }} for more on entities and fields).{% endtrans %}</p>
 <h2>{% trans %}What are the parts of a layout?{% endtrans %}</h2>
-<p>{% trans %}A layout consists of one or more <em>sections</em>. Each section can have from one to four <em>columns</em>. You can place blocks, including special blocks for the fields on the entity sub-type, in each column of each section (see <a href="{{ blocks }}">Managing blocks</a> for more on blocks).{% endtrans %}</p>
+<p>{% trans %}A layout consists of one or more <em>sections</em>. Each section can have from one to four <em>columns</em>. You can place blocks, including special blocks for the fields on the entity sub-type, in each column of each section (see {{ block_overview_topic }} for more on blocks).{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}Navigate to the page for managing the entity type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>

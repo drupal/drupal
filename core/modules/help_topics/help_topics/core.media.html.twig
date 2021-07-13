@@ -8,9 +8,9 @@ related:
   - field_ui.manage_form
   - breakpoint.overview
 ---
-{% set structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 <h2>{% trans %}What are media items?{% endtrans %}</h2>
-<p>{% trans %}Core media items include audio, images, documents, and videos. You can add other media types, such as social media posts, through the use of contributed modules. Media items may be files located in your site's file system, or remote items referenced by a URL. Media items are content entities, and they are divided into media types (which are entity sub-types); media types can have fields. See the <a href="{{ structure }}">Managing content structure</a> topic for more information on content entities and fields.{% endtrans %}</p>
+<p>{% trans %}Core media items include audio, images, documents, and videos. You can add other media types, such as social media posts, through the use of contributed modules. Media items may be files located in your site's file system, or remote items referenced by a URL. Media items are content entities, and they are divided into media types (which are entity sub-types); media types can have fields. See {{ content_structure_topic }} for more information on content entities and fields.{% endtrans %}</p>
 <h2>{% trans %}What is the media library?{% endtrans %}</h2>
 <p>{% trans %}The media library is a visual user interface for managing and reusing media items. Add media items to content using Media reference fields and the Media library field widget.{% endtrans %}</p>
 <h2>{% trans %}What is an image style?{% endtrans %}</h2>

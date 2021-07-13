@@ -4,18 +4,18 @@ top_level: true
 related:
   - block.place
 ---
-{% set create_topic = render_var(url('help.help_topic', {'id': 'aggregator.creating'})) %}
-{% set config_topic = render_var(url('help.help_topic', {'id': 'aggregator.managing'})) %}
+{% set creating_topic = render_var(help_topic_link('aggregator.creating')) %}
+{% set managing_topic = render_var(help_topic_link('aggregator.managing')) %}
 <h2>{% trans %}What is a feed?{% endtrans %}</h2>
 <p>{% trans %}A feed is syndicated content data provided by a source outside of your website, which is imported into your website.{% endtrans %}</p>
 <h2>{% trans %}What is OPML?{% endtrans %}</h2>
 <p>{% trans %}OPML (Outline Processor Markup Language) is a specification for making hierarchical lists, which is commonly used for lists of feeds.{% endtrans %}</p>
 <h2>{% trans %}What are the options for updating feed items?{% endtrans %}</h2>
-<p>{% trans %}Feeds are <em>updated</em> (new items imported) each time your site's cron task runs, if the selected <em>Update interval</em> for the feed has passed. You can also update feeds manually; see <a href="{{ config_topic }}">Managing and configuring an existing feed</a> for details.{% endtrans %}</p>
+<p>{% trans %}Feeds are <em>updated</em> (new items imported) each time your site's cron task runs, if the selected <em>Update interval</em> for the feed has passed. You can also update feeds manually; see {{ managing_topic }} for details.{% endtrans %}</p>
 <h2>{% trans %}What are the options for displaying feeds?{% endtrans %}</h2>
 <p>{% trans %}Using the core Aggregator, Views, Views UI, and Block modules, you can display feed data in your site in various ways (see related topics for more information):{% endtrans %}</p>
 <ul>
-  <li>{% trans %}After creating and updating a feed, view the feed page provided by the core Aggregator module, which displays recent imported items; see <a href="{{ create_topic }}">Creating a feed</a> for details.{% endtrans %}</li>
+  <li>{% trans %}After creating and updating a feed, view the feed page provided by the core Aggregator module, which displays recent imported items; see {{ creating_topic }} for details.{% endtrans %}</li>
   <li>{% trans %}Place the <em>Aggregator feed</em> block in a region of your theme; each block you place lists the most recent items from one feed.{% endtrans %}</li>
   <li>{% trans %}Create a custom view that shows either <em>Aggregator feed</em> (feeds) or <em>Aggregator feed item</em> (items from feeds).{% endtrans %}</li>
 </ul>
