@@ -287,13 +287,13 @@ class Random {
       $color = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
       $x = $width / 2 * ($n % 2);
       $y = $height / 2 * (int) ($n >= 2);
-      imagefilledrectangle($im, $x, $y, $x + $width / 2, $y + $height / 2, $color);
+      imagefilledrectangle($im, (int) $x, (int) $y, (int) ($x + $width / 2), (int) ($y + $height / 2), $color);
     }
 
     // Make a perfect circle in the image middle.
     $color = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
     $smaller_dimension = min($width, $height);
-    imageellipse($im, $width / 2, $height / 2, $smaller_dimension, $smaller_dimension, $color);
+    imageellipse($im, (int) ($width / 2), (int) ($height / 2), $smaller_dimension, $smaller_dimension, $color);
 
     $save_function = 'image' . ($extension == 'jpg' ? 'jpeg' : $extension);
     $save_function($im, $destination);
