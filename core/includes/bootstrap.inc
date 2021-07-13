@@ -638,7 +638,6 @@ function drupal_static_reset($name = NULL) {
       @trigger_error("Calling drupal_static_reset() with 'system_get_module_admin_tasks' as argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
       break;
 
-      break;
   }
   drupal_static($name, NULL, TRUE);
 }
