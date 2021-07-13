@@ -26,6 +26,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
    * Check the enabled Bartik blocks are correctly copied over.
    */
   public function testNewDefaultThemeBlocks() {
+    $this->installConfig(['system']);
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $default_theme = $this->config('system.theme')->get('default');
