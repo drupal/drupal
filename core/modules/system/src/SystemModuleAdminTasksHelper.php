@@ -24,13 +24,6 @@ class SystemModuleAdminTasksHelper {
   protected $menuLinkTree;
 
   /**
-   * The user permissions handler service.
-   *
-   * @var \Drupal\user\PermissionHandlerInterface
-   */
-  protected $permissionHandler;
-
-  /**
    * The access manager service.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface
@@ -56,8 +49,6 @@ class SystemModuleAdminTasksHelper {
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
    *   The menu link tree service.
-   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
-   *   The user permissions handler service.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
