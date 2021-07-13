@@ -113,13 +113,13 @@ class EntityRepositoryTest extends KernelTestBase {
     $revision->save();
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
     $this->assertEntityType($active, $entity_type_id);
-    $this->assertSame($revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $revision2 */
     $revision2 = $storage->createRevision($revision);
     $revision2->save();
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    $this->assertSame($revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     // Check that the correct active variant is returned for a translatable
     // non-revisionable entity.
@@ -154,7 +154,7 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($en_revision);
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
     $this->assertEntityType($active, $entity_type_id);
-    $this->assertSame($en_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $en_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     $revision_translation = $en_revision->addTranslation($langcode, $values);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $it_revision */
@@ -162,11 +162,11 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($it_revision);
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    $this->assertSame($en_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $en_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($en_revision->language()->getId(), $active->language()->getId());
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $it_contexts);
-    $this->assertSame($it_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $it_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($it_revision->language()->getId(), $active->language()->getId());
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $en_revision2 */
@@ -174,11 +174,11 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($en_revision2);
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    $this->assertSame($en_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $en_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($en_revision2->language()->getId(), $active->language()->getId());
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $it_contexts);
-    $this->assertSame($it_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $it_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($it_revision->language()->getId(), $active->language()->getId());
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $it_revision2 */
@@ -186,11 +186,11 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($it_revision2);
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    $this->assertSame($it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($it_revision2->getUntranslated()->language()->getId(), $active->language()->getId());
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $it_contexts);
-    $this->assertSame($it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame((int) $it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($it_revision2->language()->getId(), $active->language()->getId());
 
     /** @var \Drupal\entity_test\Entity\EntityTestMulRev $entity2 */
@@ -198,9 +198,9 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($entity2);
     /** @var \Drupal\Core\Entity\ContentEntityInterface[] $active */
     $active = $this->entityRepository->getActiveMultiple($entity_type_id, [$entity->id(), $entity2->id()], $it_contexts);
-    $this->assertSame($it_revision2->getLoadedRevisionId(), $active[$entity->id()]->getLoadedRevisionId());
+    $this->assertSame((int) $it_revision2->getLoadedRevisionId(), $active[$entity->id()]->getLoadedRevisionId());
     $this->assertSame($it_revision2->language()->getId(), $active[$entity->id()]->language()->getId());
-    $this->assertSame($entity2->getLoadedRevisionId(), $active[$entity2->id()]->getLoadedRevisionId());
+    $this->assertSame((int) $entity2->getLoadedRevisionId(), $active[$entity2->id()]->getLoadedRevisionId());
     $this->assertSame($entity2->language()->getId(), $active[$entity2->id()]->language()->getId());
 
     $this->doTestLanguageFallback('getActive');
