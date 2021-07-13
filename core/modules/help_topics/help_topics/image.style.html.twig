@@ -5,10 +5,10 @@ related:
   - field_ui.manage_display
   - layout_builder.overview
 ---
-{% set overview = render_var(url('help.help_topic', {'id': 'core.media'})) %}
+{% set media_topic = render_var(help_topic_link('core.media')) %}
 {% set styles = render_var(url('entity.image_style.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Add a new image style, which can be used to process and display images. See <a href="{{ overview }}">Managing media</a> for an overview of image styles.{% endtrans %}</p>
+<p>{% trans %}Add a new image style, which can be used to process and display images. See {{ media_topic }} for an overview of image styles.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; <a href="{{ styles }}"><em>Image styles</em></a>.{% endtrans %}</li>

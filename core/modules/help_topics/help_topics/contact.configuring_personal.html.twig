@@ -6,7 +6,7 @@ related:
 ---
 {% set config_url = render_var(url('entity.user.admin_form')) %}
 {% set permission_url = render_var(url('user.admin_permissions')) %}
-{% set add_fields = render_var(url('help.help_topic', {'id': 'contact.adding_fields'})) %}
+{% set adding_fields_topic = render_var(help_topic_link('contact.adding_fields')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure personal contact forms for registered users on the website.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
@@ -17,5 +17,5 @@ related:
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>People</em> &gt; <a href="{{ permission_url }}"><em>Permissions</em></a>.{% endtrans %}</li>
   <li>{% trans %}Verify that permissions are correct for your site's roles, including the generic <em>Anonymous user</em> and <em>Authenticated user</em>. In order to use personal contact forms, users need both <em>View user information</em> (in the <em>User</em> section, which enables them to view user profiles) and <em>Use users' personal contact forms</em> (in the <em>Contact</em> section, which enables them to use contact forms if they can view user profiles).{% endtrans %}</li>
   <li>{% trans %}Click <em>Save permissions</em>.{% endtrans %}</li>
-  <li>{% trans %}The contact form will always have <em>Subject</em> and <em>Message</em> fields. If you want to add more fields, follow the steps in <a href="{{ add_fields }}">Managing the fields of contact forms</a>.{% endtrans %}</li>
+  <li>{% trans %}The contact form will always have <em>Subject</em> and <em>Message</em> fields. If you want to add more fields, follow the steps in {{ adding_fields_topic }}.{% endtrans %}</li>
 </ol>

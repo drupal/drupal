@@ -7,9 +7,9 @@ related:
   - core.ui_accessibility
 ---
 {% set content_types = render_var(url('entity.node_type.collection')) %}
-{% set content_structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Configure the <em>widgets</em> used to edit the fields of an entity sub-type, their order on the form, and the widget settings. See <a href="{{ content_structure }}">Managing content structure</a> for background information.{% endtrans %}</p>
+<p>{% trans %}Configure the <em>widgets</em> used to edit the fields of an entity sub-type, their order on the form, and the widget settings. See {{ content_structure_topic }} for background information.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}Navigate to the page for managing the entity type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>

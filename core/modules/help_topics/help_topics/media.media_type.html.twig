@@ -5,11 +5,11 @@ related:
   - field_ui.add_field
   - field_ui.reference_field
 ---
-{% set structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
-{% set overview = render_var(url('help.help_topic', {'id': 'core.media'})) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
+{% set media_topic = render_var(help_topic_link('core.media')) %}
 {% set media = render_var(url('entity.media_type.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Add a new media type that can be referenced in Media reference fields; media types are a content entity type. See the <a href="{{ overview }}">Managing media</a> topic for an overview of media items and media types, and the <a href="{{ structure }}">Managing content structure</a> topic for more information on content entities and fields.{% endtrans %}</p>
+<p>{% trans %}Add a new media type that can be referenced in Media reference fields; media types are a content entity type. See {{ media_topic }} for an overview of media items and media types, and {{ content_structure_topic }} for more information on content entities and fields.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ media }}"><em>Media types</em></a>.{% endtrans %}</li>

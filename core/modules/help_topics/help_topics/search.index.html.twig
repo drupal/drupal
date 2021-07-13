@@ -4,12 +4,12 @@ related:
   - search.overview
   - search.configuring
 ---
-{% set cron_topic = render_var(url('help.help_topic', {'id': 'core.cron'})) %}
+{% set cron_topic = render_var(help_topic_link('core.cron')) %}
 {% set search_settings = render_var(url('entity.search_page.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Manage the search index, and make sure that the site is fully indexed for searching.{% endtrans %}</p>
 <h2>{% trans %}What is the search index?{% endtrans %}</h2>
-<p>{% trans %}The <em>Content</em> and <em>Help</em> search types provided by the core software pre-index their content and store the results in several database tables that are collectively called the <em>search index</em>. The process of indexing renders the content and breaks it up into words, which can then be matched more efficiently with keyword queries when users perform searches. Search indexing happens during cron runs; see <a href="{{ cron_topic }}">Running and configuring cron</a> for more information about cron.{% endtrans %}</p>
+<p>{% trans %}The <em>Content</em> and <em>Help</em> search types provided by the core software pre-index their content and store the results in several database tables that are collectively called the <em>search index</em>. The process of indexing renders the content and breaks it up into words, which can then be matched more efficiently with keyword queries when users perform searches. Search indexing happens during cron runs; see {{ cron_topic }} for more information about cron.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
 <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Search and Metadata</em> &gt; <a href="{{ search_settings }}"><em>Search pages</em></a>.{% endtrans %}</li>
@@ -18,6 +18,6 @@ related:
 <li>{% trans %}If your site uses Chinese, Japanese, or Korean languages, optionally check <em>Simple CJK handling</em> under <em>Default indexing settings</em> to provide some support for these languages.{% endtrans %}</li>
 <li>{% trans %}Click <em>Save configuration</em>, and you should be returned to the <em>Search pages</em> page.{% endtrans %}</li>
 <li>{% trans %}Click <em>Re-index site</em> if you have changed the indexing configuration, or later on, if you believe that the search index has been corrupted.{% endtrans %}</li>
-<li>{% trans %}Follow the steps in <a href="{{ cron_topic }}">Running and configuring cron</a> to make sure a cron task has been configured.{% endtrans %}</li>
+<li>{% trans %}Follow the steps in {{ cron_topic }} to make sure a cron task has been configured.{% endtrans %}</li>
 <li>{% trans %}After waiting for cron to run several times, verify that the content has been fully indexed for searching. The overall status is listed under <em>Indexing progress</em>, and the status for each search page is shown in the <em>Indexing progress</em> column of the <em>Search pages</em> section.{% endtrans %}</li>
 </ol>

@@ -5,9 +5,9 @@ related:
 ---
 {% set migrate_drupal_upgrade = render_var(url('migrate_drupal_ui.upgrade')) %}
 {% set migrate_drupal_log = render_var(url('dblog.overview')) %}
-{% set overview_topic = render_var(url('help.help_topic', {'id': 'migrate.overview'})) %}
+{% set migrate_overview_topic = render_var(help_topic_link('migrate.overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Migrate data into a new, empty site, as part of an upgrade from an older version of Drupal. See <a href="{{ overview_topic }}">Migrating and upgrading</a> for an overview of migrating and upgrading.{% endtrans %}</p>
+<p>{% trans %}Migrate data into a new, empty site, as part of an upgrade from an older version of Drupal. See {{ migrate_overview_topic }} for an overview of migrating and upgrading.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
 <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em><a href="{{ migrate_drupal_upgrade }}">Upgrade</a></em>.{% endtrans %}</li>
