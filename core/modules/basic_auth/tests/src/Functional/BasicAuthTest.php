@@ -234,7 +234,7 @@ class BasicAuthTest extends BrowserTestBase {
     // If the permissions of the 'anonymous' role change, it may no longer be
     // necessary to be authenticated to access this route. Therefore the cached
     // 401 responses should be invalidated.
-    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), [$this->randomMachineName()]);
+    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), ['access content']);
     $assert_response_cacheability('MISS', 'MISS');
     $assert_response_cacheability('HIT', 'MISS');
     // Idem for when the 'system.site' config changes.

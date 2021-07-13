@@ -57,7 +57,7 @@ global-styling:
 
   js:
     js/checkbox.js: {}
-    js/scripts.js: {}
+    js/navigation-utils.js: {}
     js/navigation.js: {}
     js/second-level-navigation.js: {}
   dependencies:

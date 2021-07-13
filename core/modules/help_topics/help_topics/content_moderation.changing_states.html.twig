@@ -5,12 +5,12 @@ related:
   - content_moderation.configuring_workflows
   - core.content_structure
 ---
-{% set workflow_topic = render_var(url('help.help_topic', {'id': 'workflows.overview'})) %}
-{% set entity_topic = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+{% set workflows_overview_topic = render_var(help_topic_link('workflows.overview')) %}
+{% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 {% set content_moderation_permissions = render_var(url('user.admin_permissions', {}, {'fragment': 'module-content_moderation'})) %}
 {% set content = render_var(url('system.admin_content')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Change the workflow state of a particular entity. See <a href="{{ workflow_topic }}">Managing content moderation workflows</a> for an overview of workflows, and <a href="{{ entity_topic }}">Managing content structure</a> for an overview of content entities.{% endtrans %}</p>
+<p>{% trans %}Change the workflow state of a particular entity. See {{ workflows_overview_topic }} for an overview of workflows, and {{ content_structure_topic }} for an overview of content entities.{% endtrans %}</p>
 <h2>{% trans %}Who can change workflow states?{% endtrans %}</h2>
 <p>{% trans %}Users with the <a href="{{ content_moderation_permissions }}">content moderation permissions</a> can change workflow states. There are separate permissions for each transition.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>

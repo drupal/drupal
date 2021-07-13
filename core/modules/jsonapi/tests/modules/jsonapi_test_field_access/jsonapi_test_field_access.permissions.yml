@@ -1,0 +1,6 @@
+'field_jsonapi_test_entity_ref edit access':
+  title: 'Tests JSON:API field edit access'
+'field_jsonapi_test_entity_ref update access':
+  title: 'Tests JSON:API field update access'
+'field_jsonapi_test_entity_ref view access':
+  title: 'Tests JSON:API field view access'

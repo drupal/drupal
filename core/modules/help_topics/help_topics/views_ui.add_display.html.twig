@@ -5,7 +5,7 @@ related:
   - views_ui.edit
 ---
 {% set views = render_var(url('entity.view.collection')) %}
-{% set view_edit = render_var(url('help.help_topic', {'id': 'views_ui.edit'})) %}
+{% set view_edit_topic = render_var(help_topic_link('views_ui.edit')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Add a new display to an existing view. This will allow you to display similar data to an existing view, using similar settings, in a new block, page, feed, etc.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
@@ -14,5 +14,5 @@ related:
   <li>{% trans %}Under <em>Displays</em>, click <em>Add</em>.{% endtrans %}</li>
   <li>{% trans %}In the pop-up list, click the link for the type of display you want to add; the most common types are <em>Page</em> and <em>Block</em>. The new display will be added to your view, and you will be editing that display.{% endtrans %}</li>
   <li>{% trans %}Optionally, click the link next to <em>Display name</em> and enter a new name to be shown for this display in the administrative interface.{% endtrans %}</li>
-  <li>{% trans %}Follow the steps in <a href="{{ view_edit }}">Editing an existing view display</a> to edit the other settings for the display.{% endtrans %}</li>
+  <li>{% trans %}Follow the steps in {{ view_edit_topic }} to edit the other settings for the display.{% endtrans %}</li>
 </ol>

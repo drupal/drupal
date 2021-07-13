@@ -2,11 +2,11 @@
 label: 'Managing books'
 top_level: true
 ---
-{% set user_topic = render_var(url('help.help_topic', {'id': 'user.overview'})) %}
+{% set user_overview_topic = render_var(help_topic_link('user.overview')) %}
 <h2>{% trans %}What is a book?{% endtrans %}</h2>
 <p>{% trans %}A book is a structured group of content pages, arranged in a hierarchical structure called a <em>book outline</em>. A book hierarchy can be up to nine levels deep, and a book can include <em>Book page</em> content items or other content items. Every book has a default book-specific navigation block, which contains links that lead to the previous and next pages in the book and to the level above the current page in the book's structure.{% endtrans %}</p>
 <h2>{% trans %}What are the permissions for books?{% endtrans %}</h2>
-<p>{% trans %}The following permissions are needed to create and manage books; see <a href="{{ user_topic }}">Managing user accounts and site visitors</a> and its related topics for more about permissions.{% endtrans %}</p>
+<p>{% trans %}The following permissions are needed to create and manage books; see {{ user_overview_topic }} and its related topics for more about permissions.{% endtrans %}</p>
 <dl>
   <dt>{% trans %}Create new books{% endtrans %}</dt>
   <dd>{% trans %}Allows users to add new books to the site.{% endtrans %}</dd>

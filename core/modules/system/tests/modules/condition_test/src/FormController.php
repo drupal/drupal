@@ -31,7 +31,7 @@ class FormController implements FormInterface {
    */
   public function __construct() {
     $manager = new ConditionManager(\Drupal::service('container.namespaces'), \Drupal::cache('discovery'), \Drupal::moduleHandler());
-    $this->condition = $manager->createInstance('node_type');
+    $this->condition = $manager->createInstance('entity_bundle:node');
   }
 
   /**
