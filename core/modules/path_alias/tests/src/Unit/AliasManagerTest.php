@@ -465,6 +465,7 @@ class AliasManagerTest extends UnitTestCase {
     // Clear specific source.
     $this->cache->expects($this->exactly(2))
       ->method('delete');
+    $this->aliasManager->setCacheKey('test');
     $this->aliasManager->cacheClear($path);
 
     // Ensure cache has been cleared (this will be the 2nd call to
