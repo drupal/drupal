@@ -33,7 +33,7 @@ trait AjaxHelperTrait {
    *   The wrapper format.
    */
   protected function getRequestWrapperFormat() {
-    return \Drupal::request()->get(MainContentViewSubscriber::WRAPPER_FORMAT);
+    return \Drupal::request()->get(MainContentViewSubscriber::WRAPPER_FORMAT, '');
   }
 
 }
