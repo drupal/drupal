@@ -155,7 +155,7 @@ class LocaleStringTest extends KernelTestBase {
     // Now try a translation not found.
     $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source3->source, 'context' => $source3->context]);
     $this->assertNotNull($found);
-    $this->assertSame($source3->lid, $found->lid);
+    $this->assertSame((int) $source3->lid, (int) $found->lid);
     $this->assertNull($found->translation);
     $this->assertTrue($found->isNew());
 
