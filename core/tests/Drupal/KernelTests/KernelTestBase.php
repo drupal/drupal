@@ -29,7 +29,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use bovigo\vfs\vfsStream;
-use bovigo\vfs\visitor\vfsStreamPrintVisitor;
+use bovigo\vfs\visitor\Printer;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\VarDumper\VarDumper;
@@ -968,7 +968,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * Dumps the current state of the virtual filesystem to STDOUT.
    */
   protected function vfsDump() {
-    vfsStream::inspect(new vfsStreamPrintVisitor());
+    vfsStream::inspect(new Printer());
   }
 
   /**

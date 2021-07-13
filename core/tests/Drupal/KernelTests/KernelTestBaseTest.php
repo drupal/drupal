@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use bovigo\vfs\vfsStream;
-use bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use bovigo\vfs\visitor\StructureInspector;
 use PHPUnit\Framework\SkippedTestError;
 
 /**
@@ -48,7 +48,7 @@ class KernelTestBaseTest extends KernelTestBase {
           ],
         ],
       ],
-    ], vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure());
+    ], vfsStream::inspect(new StructureInspector())->getStructure());
   }
 
   /**
