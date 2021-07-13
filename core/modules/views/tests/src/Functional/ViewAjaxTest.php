@@ -48,14 +48,12 @@ class ViewAjaxTest extends ViewTestBase {
    */
   public function testNonAjaxViewViaAjax() {
     $client = $this->getHttpClient();
-    $response = $client->request('POST', $this->buildUrl('views/ajax'), [
+    $response = $client->request('POST', $this->buildUrl('views/ajax', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]), [
       'form_params' => ['view_name' => 'test_ajax_view', 'view_display_id' => 'default'],
-      'query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax'],
     ]);
     $this->assertEquals(200, $response->getStatusCode());
-    $response = $client->request('POST', $this->buildUrl('views/ajax'), [
+    $response = $client->request('POST', $this->buildUrl('views/ajax', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]), [
       'form_params' => ['view_name' => 'test_view', 'view_display_id' => 'default'],
-      'query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax'],
       'http_errors' => FALSE,
     ]);
     $this->assertEquals(403, $response->getStatusCode());
