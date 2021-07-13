@@ -4,3 +4,4 @@ services:
     arguments: ['@config.factory', '@logger.log_message_parser']
     tags:
       - { name: logger }
+      - { name: event_subscriber }
