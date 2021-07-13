@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\Core\Field;
 
+use Drupal\Core\Render\Markup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\Component\Render\MarkupInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Field\FieldFilteredMarkup
@@ -39,9 +39,8 @@ class FieldFilteredMarkupTest extends UnitTestCase {
     $data[] = ['<em>teststring', '<em>teststring</em>', TRUE];
 
     // Even safe strings will be escaped.
-    $safe_string = $this->prophesize(MarkupInterface::class);
-    $safe_string->__toString()->willReturn('<script>teststring</script>');
-    $data[] = [$safe_string->reveal(), 'teststring', TRUE];
+    $safe_string = Markup::create('<script>teststring</script>');
+    $data[] = [$safe_string, 'teststring', TRUE];
 
     return $data;
   }
