@@ -132,7 +132,7 @@ function content_translation_language_types_info_alter(array &$language_types) {
  */
 function content_translation_entity_type_alter(array &$entity_types) {
   // Provide defaults for translation info.
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   foreach ($entity_types as $entity_type) {
     if ($entity_type->isTranslatable()) {
       if (!$entity_type->hasHandlerClass('translation')) {
@@ -436,7 +436,7 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
   /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
   $manager = \Drupal::service('content_translation.manager');
   if ($manager->isEnabled($entity_type_id, $entity->bundle())) {
-    /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
+    /** @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
     $handler = \Drupal::entityTypeManager()->getHandler($entity->getEntityTypeId(), 'translation');
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
       $metadata = $manager->getTranslationMetadata($entity->getTranslation($langcode));

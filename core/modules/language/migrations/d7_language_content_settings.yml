@@ -45,4 +45,5 @@ destination:
   plugin: entity:language_content_settings
 migration_dependencies:
   required:
+    - language
     - d7_node_type

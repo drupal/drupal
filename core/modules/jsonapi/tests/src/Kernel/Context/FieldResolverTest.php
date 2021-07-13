@@ -308,17 +308,17 @@ class FieldResolverTest extends JsonapiKernelTestBase {
       'entity reference then no delta with property specifier `target_id`' => [
         'entity_test_with_bundle', 'bundle1',
         'field_test_ref1.target_id',
-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.target_id`, does not exist. Filter by `field_test_ref1`, not `field_test_ref1.target_id` (the JSON:API module elides property names from single-property fields).',
+        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.target_id`, does not exist.',
       ],
       'entity reference then delta 0 with property specifier `target_id`' => [
         'entity_test_with_bundle', 'bundle1',
         'field_test_ref1.0.target_id',
-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.0.target_id`, does not exist. Filter by `field_test_ref1.0`, not `field_test_ref1.0.target_id` (the JSON:API module elides property names from single-property fields).',
+        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.0.target_id`, does not exist.',
       ],
       'entity reference then delta 1 with property specifier `target_id`' => [
         'entity_test_with_bundle', 'bundle1',
         'field_test_ref1.1.target_id',
-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.1.target_id`, does not exist. Filter by `field_test_ref1.1`, not `field_test_ref1.1.target_id` (the JSON:API module elides property names from single-property fields).',
+        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.1.target_id`, does not exist.',
       ],
 
       'entity reference then no reference property then a complex field' => [

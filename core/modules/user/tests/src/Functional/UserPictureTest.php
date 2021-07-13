@@ -76,7 +76,8 @@ class UserPictureTest extends BrowserTestBase {
 
     // Delete the picture.
     $edit = [];
-    $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, 'Remove');
+    $this->drupalGet('user/' . $this->webUser->id() . '/edit');
+    $this->submitForm($edit, 'Remove');
     $this->submitForm([], 'Save');
 
     // Call file_cron() to clean up the file. Make sure the timestamp
@@ -95,7 +96,7 @@ class UserPictureTest extends BrowserTestBase {
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
     clearstatcache(TRUE, $file->getFileUri());
-    $this->assertFileNotExists($file->getFileUri());
+    $this->assertFileDoesNotExist($file->getFileUri());
   }
 
   /**
@@ -115,7 +116,7 @@ class UserPictureTest extends BrowserTestBase {
 
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
     $style = ImageStyle::load($image_style_id);
-    $image_url = file_url_transform_relative($style->buildUrl($file->getfileUri()));
+    $image_url = \Drupal::service('file_url_generator')->transformRelative($style->buildUrl($file->getfileUri()));
     $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
     // Verify that the image is displayed on the node page.
@@ -132,7 +133,8 @@ class UserPictureTest extends BrowserTestBase {
     $edit = [
       'comment_body[0][value]' => $this->randomString(),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+    $this->submitForm($edit, 'Save');
     $elements = $this->cssSelect('.comment__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
     $this->assertCount(1, $elements, 'User picture with alt text found on the comment.');
 
@@ -151,7 +153,8 @@ class UserPictureTest extends BrowserTestBase {
    */
   public function saveUserPicture($image) {
     $edit = ['files[user_picture_0]' => \Drupal::service('file_system')->realpath($image->uri)];
-    $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('user/' . $this->webUser->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Load actual user data from database.
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');

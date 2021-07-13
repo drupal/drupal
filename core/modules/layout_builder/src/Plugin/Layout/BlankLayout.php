@@ -8,8 +8,8 @@ use Drupal\Core\Layout\LayoutDefault;
  * Provides a layout plugin that produces no output.
  *
  * @see \Drupal\layout_builder\Field\LayoutSectionItemList::removeSection()
- * @see \Drupal\layout_builder\SectionStorage\SectionStorageTrait::addBlankSection()
- * @see \Drupal\layout_builder\SectionStorage\SectionStorageTrait::hasBlankSection()
+ * @see \Drupal\layout_builder\SectionListTrait::addBlankSection()
+ * @see \Drupal\layout_builder\SectionListTrait::hasBlankSection()
  *
  * @internal
  *   This layout plugin is intended for internal use by Layout Builder only.

@@ -50,8 +50,8 @@ class InstallerExistingConfigSyncDriectoryProfileMismatchTest extends InstallerE
   public function testConfigSync() {
     $this->htmlOutput(NULL);
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
-    $this->assertText('The configuration synchronization failed validation.');
-    $this->assertText('The selected installation profile minimal does not match the profile stored in configuration testing_config_install_multilingual.');
+    $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
+    $this->assertSession()->pageTextContains('The selected installation profile minimal does not match the profile stored in configuration testing_config_install_multilingual.');
 
     // Ensure there is no continuation button.
     $this->assertNoText('Save and continue');

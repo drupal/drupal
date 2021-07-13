@@ -281,6 +281,9 @@ views_sort_expose:
     label:
       type: label
       label: 'Label'
+    field_identifier:
+      type: string
+      label: 'Field identifier'
 
 views_area:
   type: views_handler

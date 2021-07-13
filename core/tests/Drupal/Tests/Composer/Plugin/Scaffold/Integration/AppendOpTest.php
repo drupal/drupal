@@ -24,7 +24,7 @@ class AppendOpTest extends TestCase {
     $destination = $fixtures->destinationPath('[web-root]/robots.txt');
     $options = ScaffoldOptions::create([]);
     // Assert that there is no target file before we run our test.
-    $this->assertFileNotExists($destination->fullPath());
+    $this->assertFileDoesNotExist($destination->fullPath());
 
     // Create a file.
     file_put_contents($destination->fullPath(), "# This is a test\n");

@@ -136,6 +136,16 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
       $this->assertSame('Bob', $revision->field_user_reference[0]->entity->getAccountName());
     }
 
+    // Test the order in multi-value fields.
+    $revision = $this->nodeStorage->loadRevision(1);
+    $this->assertSame([
+      ['value' => 'default@example.com'],
+      ['value' => 'another@example.com'],
+    ], $revision->get('field_email')->getValue());
+    $this->assertSame([
+      ['target_id' => '17'],
+      ['target_id' => '15'],
+    ], $revision->get('field_term_entityreference')->getValue());
   }
 
   /**
@@ -175,7 +185,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
    *   An array of revision data.
    */
   protected function assertRevision(array $revision, array $data) {
-    /* @var  \Drupal\node\NodeInterface $actual */
+    /** @var  \Drupal\node\NodeInterface $actual */
     $actual = $this->nodeStorage->loadRevision($revision['vid'])
       ->getTranslation($revision['langcode']);
     $this->assertInstanceOf(NodeInterface::class, $actual);

@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\source;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\RollbackAwareInterface;
@@ -84,10 +85,11 @@ use Drupal\migrate\Row;
  * @endcode
  *
  * In this example, skip_count is true which means count() will not attempt to
- * count the available source records, but just always return -1 instead. The
- * high_water_property defines which field marks the last imported row of the
- * migration. This will get converted into a SQL condition that looks like
- * 'n.changed' or 'changed' if no alias.
+ * count the available source records, but just always return
+ * MigrateSourceInterface::NOT_COUNTABLE instead. The high_water_property
+ * defines which field marks the last imported row of the migration. This will
+ * get converted into a SQL condition that looks like 'n.changed' or 'changed'
+ * if no alias.
  *
  * Example:
  *
@@ -246,7 +248,9 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $this->$property = (bool) $configuration[$config_key];
       }
     }
-    $this->cacheKey = !empty($configuration['cache_key']) ? $configuration['cache_key'] : NULL;
+    if ($this->cacheCounts) {
+      $this->cacheKey = $configuration['cache_key'] ?? $plugin_id . '-' . hash('sha256', Json::encode($configuration));
+    }
     $this->idMap = $this->migration->getIdMap();
     $this->highWaterProperty = !empty($configuration['high_water_property']) ? $configuration['high_water_property'] : FALSE;
 
@@ -265,7 +269,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Initializes the iterator with the source data.
    *
    * @return \Iterator
-   *   Returns an iteratable object of data for this source.
+   *   Returns an iterable object of data for this source.
    */
   abstract protected function initializeIterator();
 
@@ -470,7 +474,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Gets the source count.
    *
    * Return a count of available source records, from the cache if appropriate.
-   * Returns -1 if the source is not countable.
+   * Returns MigrateSourceInterface::NOT_COUNTABLE if the source is not
+   * countable.
    *
    * @param bool $refresh
    *   (optional) Whether or not to refresh the count. Defaults to FALSE. Not
@@ -483,32 +488,21 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    */
   public function count($refresh = FALSE) {
     if ($this->skipCount) {
-      return -1;
+      return MigrateSourceInterface::NOT_COUNTABLE;
     }
 
-    if (!isset($this->cacheKey)) {
-      $this->cacheKey = hash('sha256', $this->getPluginId());
-    }
-
-    // If a refresh is requested, or we're not caching counts, ask the derived
-    // class to get the count from the source.
-    if ($refresh || !$this->cacheCounts) {
-      $count = $this->doCount();
-      $this->getCache()->set($this->cacheKey, $count);
-    }
-    else {
-      // Caching is in play, first try to retrieve a cached count.
+    // Return the cached count if we are caching counts and a refresh is not
+    // requested.
+    if ($this->cacheCounts && !$refresh) {
       $cache_object = $this->getCache()->get($this->cacheKey, 'cache');
       if (is_object($cache_object)) {
-        // Success.
-        $count = $cache_object->data;
+        return $cache_object->data;
       }
-      else {
-        // No cached count, ask the derived class to count 'em up, and cache
-        // the result.
-        $count = $this->doCount();
-        $this->getCache()->set($this->cacheKey, $count);
-      }
+    }
+    $count = $this->doCount();
+    // Update the cache if we are caching counts.
+    if ($this->cacheCounts) {
+      $this->getCache()->set($this->cacheKey, $count);
     }
     return $count;
   }

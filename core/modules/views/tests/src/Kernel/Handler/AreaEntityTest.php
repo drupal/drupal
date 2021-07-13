@@ -73,7 +73,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
     foreach (array_keys($expected_entities) as $entity) {
       $this->assertTrue(!empty($data['entity_' . $entity]), new FormattableMarkup('Views entity area data found for @entity', ['@entity' => $entity]));
       // Test that entity_type is set correctly in the area data.
-      $this->assertEqual($data['entity_' . $entity]['area']['entity_type'], $entity, new FormattableMarkup('Correct entity_type set for @entity', ['@entity' => $entity]));
+      $this->assertEquals($data['entity_' . $entity]['area']['entity_type'], $entity, new FormattableMarkup('Correct entity_type set for @entity', ['@entity' => $entity]));
     }
 
     $expected_entities = array_filter($entity_types, function (EntityTypeInterface $type) {
@@ -192,7 +192,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
 
     $dependencies = $view->calculateDependencies()->getDependencies();
     // Ensure that both config and content entity dependencies are calculated.
-    $this->assertEqual([
+    $this->assertEquals([
       'config' => ['block.block.test_block'],
       'content' => ['entity_test:entity_test:aa0c61cb-b7bb-4795-972a-493dabcf529c'],
       'module' => ['views_test_data'],

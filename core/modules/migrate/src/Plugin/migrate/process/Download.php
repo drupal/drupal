@@ -7,7 +7,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -83,10 +83,10 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   The plugin definition.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
-   * @param \GuzzleHttp\Client $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   The HTTP client.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FileSystemInterface $file_system, Client $http_client) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FileSystemInterface $file_system, ClientInterface $http_client) {
     $configuration += [
       'guzzle_options' => [],
     ];

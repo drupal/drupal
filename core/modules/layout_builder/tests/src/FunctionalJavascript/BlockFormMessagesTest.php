@@ -44,7 +44,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
    */
   public function testValidationMessage() {
     // @todo Work out why this fixes random fails in this test.
-    //    https://www.drupal.org/project/drupal/issues/3055982
+    //   https://www.drupal.org/project/drupal/issues/3055982
     $this->getSession()->resizeWindow(800, 1000);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
@@ -57,11 +57,8 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     ]));
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
     // Enable layout builder.
-    $this->drupalPostForm(
-      $field_ui_prefix . '/display/default',
-      ['layout[enabled]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet($field_ui_prefix . '/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->clickElementWhenClickable($page->findLink('Manage layout'));
     $assert_session->addressEquals($field_ui_prefix . '/display/default/layout');
     $this->clickElementWhenClickable($page->findLink('Add block'));

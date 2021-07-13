@@ -14,6 +14,11 @@
  * - description: The description element containing the following properties:
  *   - content: The description content of the <fieldset>.
  *   - attributes: HTML attributes to apply to the description container.
+ * - description_display: Description display setting. It can have these values:
+ *   - before: The description is output before the element.
+ *   - after: The description is output after the element (default).
+ *   - invisible: The description is output after the element, hidden visually
+ *     but available to screen readers.
  * - children: The rendered child elements of the <fieldset>.
  * - prefix: The content to add before the <fieldset> children.
  * - suffix: The content to add after the <fieldset> children.
@@ -75,6 +80,9 @@
       <div class="container-inline">
     {% endif %}
 
+    {% if description_display == 'before' and description.content %}
+      <div{{ description.attributes.addClass(description_classes) }}>{{ description.content }}</div>
+    {% endif %}
     {% if prefix %}
       <span class="fieldset__prefix">{{ prefix }}</span>
     {% endif %}
@@ -87,7 +95,7 @@
         {{ errors }}
       </div>
     {% endif %}
-    {% if description.content %}
+    {% if description_display in ['after', 'invisible'] and description.content %}
       <div{{ description.attributes.addClass(description_classes) }}>{{ description.content }}</div>
     {% endif %}
 

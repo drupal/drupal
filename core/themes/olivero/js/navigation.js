@@ -15,12 +15,12 @@
     props.navButton.setAttribute('aria-expanded', value);
 
     if (value) {
-      props.body.classList.add('js-overlay-active');
-      props.body.classList.add('js-fixed');
+      props.body.classList.add('is-overlay-active');
+      props.body.classList.add('is-fixed');
       props.navWrapper.classList.add('is-active');
     } else {
-      props.body.classList.remove('js-overlay-active');
-      props.body.classList.remove('js-fixed');
+      props.body.classList.remove('is-overlay-active');
+      props.body.classList.remove('is-fixed');
       props.navWrapper.classList.remove('is-active');
     }
   }
@@ -32,7 +32,7 @@
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
     document.addEventListener('keyup', function (e) {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
         } else {
@@ -67,8 +67,8 @@
     window.addEventListener('resize', function () {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
-        props.body.classList.remove('js-overlay-active');
-        props.body.classList.remove('js-fixed');
+        props.body.classList.remove('is-overlay-active');
+        props.body.classList.remove('is-fixed');
       }
 
       Drupal.olivero.closeAllSubNav();
@@ -78,15 +78,15 @@
   Drupal.behaviors.oliveroNavigation = {
     attach: function attach(context) {
       var headerId = 'header';
-      var header = once('olivero-navigation', "#".concat(headerId), context).shift();
+      var header = once('navigation', "#".concat(headerId), context).shift();
       var navWrapperId = 'header-nav';
 
       if (header) {
-        var navWrapper = header.querySelector('#header-nav');
+        var navWrapper = header.querySelector("#".concat(navWrapperId));
         var olivero = Drupal.olivero;
-        var navButton = context.querySelector('.mobile-nav-button');
+        var navButton = context.querySelector('[data-drupal-selector="mobile-nav-button"]');
         var body = context.querySelector('body');
-        var overlay = context.querySelector('.overlay');
+        var overlay = context.querySelector('[data-drupal-selector="overlay"]');
         init({
           olivero: olivero,
           header: header,

@@ -118,12 +118,6 @@ class BlockForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
 
-    // Store theme settings in $form_state for use below.
-    if (!$theme = $entity->getTheme()) {
-      $theme = $this->config('system.theme')->get('default');
-    }
-    $form_state->set('block_theme', $theme);
-
     // Store the gathered contexts in the form state for other objects to use
     // during form building.
     $form_state->setTemporaryValue('gathered_contexts', $this->contextRepository->getAvailableContexts());
@@ -150,13 +144,14 @@ class BlockForm extends EntityForm {
     ];
 
     // Theme settings.
-    if ($entity->getTheme()) {
+    if ($theme = $entity->getTheme()) {
       $form['theme'] = [
         '#type' => 'value',
         '#value' => $theme,
       ];
     }
     else {
+      $theme = $this->config('system.theme')->get('default');
       $theme_options = [];
       foreach ($this->themeHandler->listInfo() as $theme_name => $theme_info) {
         if (!empty($theme_info->status)) {
@@ -242,6 +237,16 @@ class BlockForm extends EntityForm {
       if ($condition_id == 'language' && !$this->language->isMultilingual()) {
         continue;
       }
+
+      // Don't display the deprecated node type condition unless it has existing
+      // settings.
+      // @todo Make this more generic in
+      //   https://www.drupal.org/project/drupal/issues/2922451. Also remove
+      //   the node_type specific logic below.
+      if ($condition_id == 'node_type' && !isset($visibility[$condition_id])) {
+        continue;
+      }
+
       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
       $condition = $this->manager->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
       $form_state->set(['conditions', $condition_id], $condition);
@@ -253,11 +258,16 @@ class BlockForm extends EntityForm {
     }
 
     if (isset($form['node_type'])) {
-      $form['node_type']['#title'] = $this->t('Content types');
+      $form['node_type']['#title'] = $this->t('Content types (deprecated)');
       $form['node_type']['bundles']['#title'] = $this->t('Content types');
       $form['node_type']['negate']['#type'] = 'value';
       $form['node_type']['negate']['#title_display'] = 'invisible';
       $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
+    }
+    if (isset($form['entity_bundle:node'])) {
+      $form['entity_bundle:node']['negate']['#type'] = 'value';
+      $form['entity_bundle:node']['negate']['#title_display'] = 'invisible';
+      $form['entity_bundle:node']['negate']['#value'] = $form['entity_bundle:node']['negate']['#default_value'];
     }
     if (isset($form['user_role'])) {
       $form['user_role']['#title'] = $this->t('Roles');

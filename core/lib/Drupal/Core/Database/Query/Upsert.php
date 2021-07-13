@@ -88,7 +88,12 @@ abstract class Upsert extends Query implements \Countable {
   }
 
   /**
-   * {@inheritdoc}
+   * Executes the UPSERT operation.
+   *
+   * @return int
+   *   An integer indicating the number of rows affected by the operation. Do
+   *   not rely on this value as a precise indication of the actual rows
+   *   affected: different database engines return different values.
    */
   public function execute() {
     if (!$this->preExecute()) {
@@ -103,12 +108,19 @@ abstract class Upsert extends Query implements \Countable {
       }
     }
 
-    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
+    try {
+      $stmt->execute($values, $this->queryOptions);
+      $affected_rows = $stmt->rowCount();
+    }
+    catch (\Exception $e) {
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
+    }
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = [];
 
-    return $last_insert_id;
+    return $affected_rows;
   }
 
 }

@@ -28,7 +28,7 @@ class WeightTest extends KernelTestBase {
   }
 
   /**
-   * Test existing #default_value value in #options list.
+   * Tests existing #default_value value in #options list.
    *
    * @covers ::processWeight
    */
@@ -52,7 +52,7 @@ class WeightTest extends KernelTestBase {
   }
 
   /**
-   * Test transformation from "select" to "number" for MAX_DELTA + 1.
+   * Tests transformation from "select" to "number" for MAX_DELTA + 1.
    *
    * @throws \Exception
    *

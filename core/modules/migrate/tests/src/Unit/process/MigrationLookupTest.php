@@ -101,7 +101,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   }
 
   /**
-   * Test that valid, but technically empty values are not skipped.
+   * Tests that valid, but technically empty values are not skipped.
    *
    * @param mixed $value
    *   A valid value.
@@ -249,6 +249,39 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $result = $migration->transform(['id', 6], $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
+  }
+
+  /**
+   * Tests processing multiple migrations and source IDs.
+   */
+  public function testMultipleMigrations() {
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $this->migrateLookup->lookup('foobaz', [1])->willReturn([[2]]);
+    $this->migrateLookup->lookup('foobaz', [2])->willReturn([]);
+    $this->migrateLookup->lookup('foobar', [1, 2])->willReturn([]);
+    $this->migrateLookup->lookup('foobar', [3, 4])->willReturn([[5]]);
+    $configuration = [
+      'migration' => ['foobar', 'foobaz'],
+      'source_ids' => [
+        'foobar' => ['foo', 'bar'],
+      ],
+    ];
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
+
+    $row1 = $this->row;
+    $row2 = clone $this->row;
+
+    $row1->expects($this->any())
+      ->method('getMultiple')
+      ->willReturn([1, 2]);
+    $result = $migration->transform([1], $this->migrateExecutable, $row1, '');
+    $this->assertEquals(2, $result);
+
+    $row2->expects($this->any())
+      ->method('getMultiple')
+      ->willReturn([3, 4]);
+    $result = $migration->transform([2], $this->migrateExecutable, $row2, '');
+    $this->assertEquals(5, $result);
   }
 
 }

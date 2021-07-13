@@ -62,10 +62,12 @@ class CKEditorToolbarButtonTest extends BrowserTestBase {
     // Install the Arabic language (which is RTL) and configure as the default.
     $edit = [];
     $edit['predefined_langcode'] = 'ar';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
     $edit = ['site_default_language' => 'ar'];
-    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm($edit, 'Save configuration');
     // Once the default language is changed, go to the tested text format
     // configuration page.
     $this->drupalGet('admin/config/content/formats/manage/full_html');
@@ -74,7 +76,9 @@ class CKEditorToolbarButtonTest extends BrowserTestBase {
     $json_encode = function ($html) {
       return trim(Json::encode($html), '"');
     };
-    $markup = $json_encode(file_url_transform_relative(file_create_url('core/modules/ckeditor/js/plugins/drupalimage/icons/drupalimage.png')));
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $markup = $json_encode($file_url_generator->generateString('core/modules/ckeditor/js/plugins/drupalimage/icons/drupalimage.png'));
     $this->assertRaw($markup);
   }
 

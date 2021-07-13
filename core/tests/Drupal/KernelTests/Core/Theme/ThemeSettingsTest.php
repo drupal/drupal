@@ -55,7 +55,7 @@ class ThemeSettingsTest extends KernelTestBase {
   public function testNoDefaultConfig() {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
-    $this->assertFileNotExists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
+    $this->assertFileDoesNotExist("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
     $this->container->get('theme_installer')->install([$name]);
     $this->assertNotNull(theme_get_setting('features.favicon', $name));
   }
@@ -85,7 +85,9 @@ class ThemeSettingsTest extends KernelTestBase {
     theme_settings_convert_to_config($values, $config)->save();
 
     // Tests logo path with scheme.
-    $expected = file_url_transform_relative(file_create_url('public://logo_with_scheme.png'));
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $expected = $file_url_generator->generateString('public://logo_with_scheme.png');
     $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
 
     $values = [

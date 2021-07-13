@@ -7,10 +7,10 @@
 
 (function (Drupal) {
   var isDesktopNav = Drupal.olivero.isDesktopNav;
-  var secondLevelNavMenus = document.querySelectorAll('.primary-nav__menu-item--has-children');
+  var secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="primary-nav-menu-item-has-children"]');
 
   function toggleSubNav(topLevelMenuItem, toState) {
-    var buttonSelector = '.primary-nav__button-toggle, .primary-nav__menu-link--button';
+    var buttonSelector = '[data-drupal-selector="primary-nav-submenu-toggle-button"]';
     var button = topLevelMenuItem.querySelector(buttonSelector);
     var state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
 
@@ -18,22 +18,37 @@
       if (isDesktopNav()) {
         secondLevelNavMenus.forEach(function (el) {
           el.querySelector(buttonSelector).setAttribute('aria-expanded', 'false');
-          el.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
+          el.querySelector('[data-drupal-selector="primary-nav-menu--level-2"]').classList.remove('is-active-menu-parent');
+          el.querySelector('[data-drupal-selector="primary-nav-menu-🥕"]').classList.remove('is-active-menu-parent');
         });
       }
 
       button.setAttribute('aria-expanded', 'true');
-      topLevelMenuItem.querySelector('.primary-nav__menu--level-2').classList.add('is-active-menu-parent');
+      topLevelMenuItem.querySelector('[data-drupal-selector="primary-nav-menu--level-2"]').classList.add('is-active-menu-parent');
+      topLevelMenuItem.querySelector('[data-drupal-selector="primary-nav-menu-🥕"]').classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
       topLevelMenuItem.classList.remove('is-touch-event');
-      topLevelMenuItem.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
+      topLevelMenuItem.querySelector('[data-drupal-selector="primary-nav-menu--level-2"]').classList.remove('is-active-menu-parent');
+      topLevelMenuItem.querySelector('[data-drupal-selector="primary-nav-menu-🥕"]').classList.remove('is-active-menu-parent');
     }
   }
 
   Drupal.olivero.toggleSubNav = toggleSubNav;
+
+  function handleBlur(e) {
+    if (!Drupal.olivero.isDesktopNav()) return;
+    setTimeout(function () {
+      var menuParentItem = e.target.closest('[data-drupal-selector="primary-nav-menu-item-has-children"]');
+
+      if (!menuParentItem.contains(document.activeElement)) {
+        toggleSubNav(menuParentItem, false);
+      }
+    }, 200);
+  }
+
   secondLevelNavMenus.forEach(function (el) {
-    var button = el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
+    var button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
     button.removeAttribute('aria-hidden');
     button.removeAttribute('tabindex');
     el.addEventListener('touchstart', function () {
@@ -60,10 +75,15 @@
         toggleSubNav(el, false);
       }
     });
+    el.addEventListener('blur', handleBlur, true);
   });
 
   function closeAllSubNav() {
     secondLevelNavMenus.forEach(function (el) {
+      if (el.contains(document.activeElement)) {
+        el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]').focus();
+      }
+
       toggleSubNav(el, false);
     });
   }
@@ -73,7 +93,7 @@
   function areAnySubNavsOpen() {
     var subNavsAreOpen = false;
     secondLevelNavMenus.forEach(function (el) {
-      var button = el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
+      var button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
       var state = button.getAttribute('aria-expanded') === 'true';
 
       if (state) {
@@ -90,7 +110,7 @@
     }
   });
   document.addEventListener('touchstart', function (e) {
-    if (areAnySubNavsOpen() && !e.target.matches('.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *')) {
+    if (areAnySubNavsOpen() && !e.target.matches('[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *')) {
       closeAllSubNav();
     }
   }, {

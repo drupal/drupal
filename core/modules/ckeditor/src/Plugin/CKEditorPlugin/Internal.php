@@ -475,8 +475,8 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           // attributes is allowed. However, that may not be the case: the "*"
           // tag may still apply restrictions.
           // Since CKEditor's ACF follows the following principle:
-          //     Once validated, an element or its property cannot be
-          //     invalidated by another rule.
+          // - Once validated, an element or its property cannot be
+          //   invalidated by another rule.
           // That means that the most permissive setting wins. Which means that
           // it will still be allowed by CKEditor, for instance, to define any
           // style, no matter what the "*" tag's restrictions may be. If there

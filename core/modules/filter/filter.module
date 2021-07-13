@@ -768,11 +768,14 @@ function _filter_html_image_secure_process($text) {
 
   $html_dom = Html::load($text);
   $images = $html_dom->getElementsByTagName('img');
+
+  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+  $file_url_generator = \Drupal::service('file_url_generator');
   foreach ($images as $image) {
     $src = $image->getAttribute('src');
     // Transform absolute image URLs to relative image URLs: prevent problems on
     // multisite set-ups and prevent mixed content errors.
-    $image->setAttribute('src', file_url_transform_relative($src));
+    $image->setAttribute('src', $file_url_generator->transformRelative($src));
 
     // Verify that $src starts with $base_path.
     // This also ensures that external images cannot be referenced.

@@ -150,6 +150,12 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $this->user->save();
 
+    $this->anon = User::create([
+      'name' => 'anon',
+      'uid' => 0,
+    ]);
+    $this->anon->save();
+
     $term = Term::create([
       'vid' => $this->vocabulary,
       'name' => 'Apples',
@@ -273,6 +279,7 @@ class ContentEntityTest extends KernelTestBase {
     $user_source = $migration->getSourcePlugin();
     $this->assertSame('users', $user_source->__toString());
     if (!$configuration['include_translations']) {
+      // Confirm that the query does not return a row for the anonymous user.
       $this->assertEquals(1, $user_source->count());
     }
     $this->assertIds($user_source, $configuration);

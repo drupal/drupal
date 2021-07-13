@@ -50,18 +50,18 @@ class FilePrivateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, ['private' => TRUE]);
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
-    /* @var \Drupal\node\NodeInterface $node */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     // Ensure the file can be viewed.
     $this->drupalGet('node/' . $node->id());
     $this->assertRaw($node_file->getFilename());
     // Ensure the file can be downloaded.
-    $this->drupalGet(file_create_url($node_file->getFileUri()));
+    $this->drupalGet($node_file->createFileUrl(FALSE));
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalLogOut();
     // Ensure the file cannot be downloaded after logging out.
-    $this->drupalGet(file_create_url($node_file->getFileUri()));
+    $this->drupalGet($node_file->createFileUrl(FALSE));
     $this->assertSession()->statusCodeEquals(403);
 
     // Create a field with no view access. See
@@ -76,17 +76,18 @@ class FilePrivateTest extends FileFieldTestBase {
     $node_file = File::load($node->{$no_access_field_name}->target_id);
 
     // Ensure the file cannot be downloaded.
-    $file_url = file_create_url($node_file->getFileUri());
+    $file_url = $node_file->createFileUrl(FALSE);
     $this->drupalGet($file_url);
     $this->assertSession()->statusCodeEquals(403);
 
     // Attempt to reuse the file when editing a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
+    $this->drupalGet('node/add/' . $type_name);
+    $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
-    // Can't use drupalPostForm() to set hidden fields.
+    // Can't use submitForm() to set hidden fields.
     $this->drupalGet('node/' . $new_node->id() . '/edit');
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
     $this->getSession()->getPage()->pressButton(t('Save'));
@@ -98,7 +99,7 @@ class FilePrivateTest extends FileFieldTestBase {
     // that access is still denied.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    // Can't use drupalPostForm() to set hidden fields.
+    // Can't use submitForm() to set hidden fields.
     $this->drupalGet('node/add/' . $type_name);
     $this->getSession()->getPage()->find('css', 'input[name="title[0][value]"]')->setValue($edit['title[0][value]']);
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
@@ -150,7 +151,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertEmpty($usage, 'No file usage found.');
-    $file_url = file_create_url($file->getFileUri());
+    $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader has access to the temporary file.
     $this->drupalGet($file_url);
     $this->assertSession()->statusCodeEquals(200);
@@ -180,7 +181,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertEmpty($usage, 'No file usage found.');
-    $file_url = file_create_url($file->getFileUri());
+    $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader has access to the temporary file.
     $this->drupalGet($file_url);
     $this->assertSession()->statusCodeEquals(200);
@@ -203,7 +204,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertCount(1, $usage, 'File usage found.');
-    $file_url = file_create_url($file->getFileUri());
+    $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader has access to the file.
     $this->drupalGet($file_url);
     $this->assertSession()->statusCodeEquals(200);
@@ -230,7 +231,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertCount(1, $usage, 'File usage found.');
-    $file_url = file_create_url($file->getFileUri());
+    $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader cannot access to the file.
     $this->drupalGet($file_url);
     $this->assertSession()->statusCodeEquals(403);
