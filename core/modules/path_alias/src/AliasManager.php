@@ -263,7 +263,9 @@ class AliasManager implements AliasManagerInterface {
     $this->noAlias = [];
     $this->langcodePreloaded = [];
     $this->preloadedPathLookups = [];
-    $this->cache->delete($this->cacheKey);
+    if (!empty($this->cacheKey)) {
+      $this->cache->delete($this->cacheKey);
+    }
     $this->pathAliasWhitelistRebuild($source);
   }
 
