@@ -24,6 +24,13 @@ class SystemModuleAdminTasksHelper {
   protected $menuLinkTree;
 
   /**
+   * The user permissions handler service.
+   *
+   * @var \Drupal\user\PermissionHandlerInterface|null
+   */
+  protected $permissionHandler;
+
+  /**
    * The access manager service.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface
@@ -105,11 +112,11 @@ class SystemModuleAdminTasksHelper {
     }
 
     // Append link for permissions.
-    if (\Drupal::getContainer()->get('user.permissions')->moduleProvidesPermissions($module)) {
+    if ($this->moduleProvidesPermissions($module)) {
       if ($this->accessManager->checkNamedRoute('user.admin_permissions')) {
         $url = new Url('user.admin_permissions');
-        $url->setOption('fragment', 'module-' . $module);
-        $admin_tasks["user.admin_permissions.$module"] = [
+        $url->setOption('fragment', "module-{$module}");
+        $admin_tasks["user.admin_permissions.{$module}"] = [
           'title' => $this->t('Configure @module permissions', [
             '@module' => $this->moduleHandler->getName($module),
           ]),
@@ -120,6 +127,30 @@ class SystemModuleAdminTasksHelper {
     }
 
     return $admin_tasks;
+  }
+
+  /**
+   * Returns user permissions handler service.
+   *
+   * @param string $module_name
+   *   The module name.
+   *
+   * @return bool
+   *   If the given module provides permissions.
+   *
+   * @throws \Exception
+   *   If the 'user.permissions' service doesn't exist in the container.
+   */
+  private function moduleProvidesPermissions(string $module_name): bool {
+    if (!\Drupal::hasService('user.permissions')) {
+      throw new \Exception("Service 'user.permissions' doesn't exist in the container.");
+    }
+
+    if (!isset($this->permissionHandler)) {
+      $this->permissionHandler = \Drupal::service('user.permissions');
+    }
+
+    return $this->permissionHandler->moduleProvidesPermissions($module_name);
   }
 
 }
