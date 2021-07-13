@@ -125,6 +125,11 @@ trait DeprecationListenerTrait {
       'AssertLegacyTrait::assertNoRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738',
       // PHPUnit 9.
       "The \"PHPUnit\TextUI\DefaultResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
+      // PHP 8.1.
+      // @todo work out how to avoid deprecations triggered by Prophecy. This
+      //   one is triggered by
+      //   \Drupal\Tests\Core\TempStore\SharedTempStoreTest::testSerialization().
+      "The Serializable interface is deprecated. Implement __serialize() and __unserialize() instead (or in addition, if support for old PHP versions is necessary)",
     ];
   }
 
@@ -140,7 +145,7 @@ trait DeprecationListenerTrait {
     }
     $deprecation_handler = function ($type, $msg, $file, $line, $context = []) {
       // Skip listed deprecations.
-      if ($type === E_USER_DEPRECATED && static::isDeprecationSkipped($msg)) {
+      if (($type === E_USER_DEPRECATED || $type === E_DEPRECATED) && static::isDeprecationSkipped($msg)) {
         return;
       }
       return call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
