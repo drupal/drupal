@@ -528,6 +528,16 @@ jquery.once:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
   dependencies:
     - core/jquery
+    - core/jquery.once.bc
+
+jquery.once.bc:
+  version: VERSION
+  js:
+    misc/jquery.once.bc.js: { weight: -19 }
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal.object.assign
 
 jquery.ui:
   version: &jquery_ui_version 1.12.1
