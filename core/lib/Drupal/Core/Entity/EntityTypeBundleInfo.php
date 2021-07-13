@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -12,6 +13,8 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  * Provides discovery and retrieval of entity type bundles.
  */
 class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
+
+  use UseCacheBackendTrait;
 
   /**
    * Static cache of bundle information.
@@ -49,13 +52,6 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   protected $entityTypeManager;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a new EntityTypeBundleInfo.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -74,10 +70,6 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
     $this->languageManager = $language_manager;
     $this->moduleHandler = $module_handler;
     $this->typedDataManager = $typed_data_manager;
-    if (empty($cache_backend)) {
-      $cache_backend = \Drupal::cache();
-      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0.', E_USER_DEPRECATED);
-    }
     $this->cacheBackend = $cache_backend;
   }
 
@@ -95,7 +87,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   public function getAllBundleInfo() {
     if (empty($this->bundleInfo)) {
       $langcode = $this->languageManager->getCurrentLanguage()->getId();
-      if ($cache = $this->cacheBackend->get("entity_bundle_info:$langcode")) {
+      if ($cache = $this->cacheGet("entity_bundle_info:$langcode")) {
         $this->bundleInfo = $cache->data;
       }
       else {
@@ -116,7 +108,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
-        $this->cacheBackend->set("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
+        $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }
 

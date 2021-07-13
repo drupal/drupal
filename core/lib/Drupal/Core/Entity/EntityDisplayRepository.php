@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
 
+  use UseCacheBackendTrait;
   use StringTranslationTrait;
 
   /**
@@ -44,13 +46,6 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
   protected $moduleHandler;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a new EntityDisplayRepository.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -65,10 +60,6 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
-    if (empty($cache_backend)) {
-      $cache_backend = \Drupal::cache();
-      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0.', E_USER_DEPRECATED);
-    }
     $this->cacheBackend = $cache_backend;
     $this->languageManager = $language_manager;
   }
@@ -115,7 +106,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
       $key = 'entity_' . $display_type . '_info';
       $entity_type_id = 'entity_' . $display_type;
       $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
-      if ($cache = $this->cacheBackend->get("$key:$langcode")) {
+      if ($cache = $this->cacheGet("$key:$langcode")) {
         $this->displayModeInfo[$display_type] = $cache->data;
       }
       else {
@@ -125,7 +116,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
           $this->displayModeInfo[$display_type][$display_mode_entity_type][$display_mode_name] = $display_mode->toArray();
         }
         $this->moduleHandler->alter($key, $this->displayModeInfo[$display_type]);
-        $this->cacheBackend->set("$key:$langcode", $this->displayModeInfo[$display_type], CacheBackendInterface::CACHE_PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet("$key:$langcode", $this->displayModeInfo[$display_type], CacheBackendInterface::CACHE_PERMANENT, ['entity_types', 'entity_field_info']);
       }
     }
 

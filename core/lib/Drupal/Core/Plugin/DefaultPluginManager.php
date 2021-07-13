@@ -7,6 +7,7 @@ use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
@@ -25,6 +26,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface, CacheableDependencyInterface {
 
   use DiscoveryCachedTrait;
+  use UseCacheBackendTrait;
 
   /**
    * The cache key.
@@ -102,13 +104,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $additionalAnnotationNamespaces = [];
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -155,10 +150,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = []) {
     assert(Inspector::assertAllStrings($cache_tags), 'Cache Tags must be strings.');
-    if (empty($cache_backend)) {
-      $cache_backend = \Drupal::cache();
-      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0.', E_USER_DEPRECATED);
-    }
     $this->cacheBackend = $cache_backend;
     $this->cacheKey = $cache_key;
     $this->cacheTags = $cache_tags;
@@ -213,7 +204,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   and would actually be returned by the getDefinitions() method.
    */
   protected function getCachedDefinitions() {
-    if (!isset($this->definitions) && $cache = $this->cacheBackend->get($this->cacheKey)) {
+    if (!isset($this->definitions) && $cache = $this->cacheGet($this->cacheKey)) {
       $this->definitions = $cache->data;
     }
     return $this->definitions;
@@ -226,7 +217,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   List of definitions to store in cache.
    */
   protected function setCachedDefinitions($definitions) {
-    $this->cacheBackend->set($this->cacheKey, $definitions, Cache::PERMANENT, $this->cacheTags);
+    $this->cacheSet($this->cacheKey, $definitions, Cache::PERMANENT, $this->cacheTags);
     $this->definitions = $definitions;
   }
 

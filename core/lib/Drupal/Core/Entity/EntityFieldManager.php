@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
@@ -20,6 +21,7 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  */
 class EntityFieldManager implements EntityFieldManagerInterface {
 
+  use UseCacheBackendTrait;
   use StringTranslationTrait;
 
   /**
@@ -137,13 +139,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   protected $entityLastInstalledSchemaRepository;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a new EntityFieldManager.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -174,10 +169,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->languageManager = $language_manager;
     $this->keyValueFactory = $key_value_factory;
     $this->moduleHandler = $module_handler;
-    if (empty($cache_backend)) {
-      $cache_backend = \Drupal::cache();
-      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0.', E_USER_DEPRECATED);
-    }
     $this->cacheBackend = $cache_backend;
     if (!$entity_last_installed_schema_repository) {
       @trigger_error('The entity.last_installed_schema.repository service must be passed to EntityFieldManager::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
@@ -194,13 +185,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     if (!isset($this->baseFieldDefinitions[$entity_type_id])) {
       // Not prepared, try to load from cache.
       $cid = 'entity_base_field_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->getId();
-      if ($cache = $this->cacheBackend->get($cid)) {
+      if ($cache = $this->cacheGet($cid)) {
         $this->baseFieldDefinitions[$entity_type_id] = $cache->data;
       }
       else {
         // Rebuild the definitions and put it into the cache.
         $this->baseFieldDefinitions[$entity_type_id] = $this->buildBaseFieldDefinitions($entity_type_id);
-        $this->cacheBackend->set($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
     }
     return $this->baseFieldDefinitions[$entity_type_id];
@@ -351,13 +342,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $base_field_definitions = $this->getBaseFieldDefinitions($entity_type_id);
       // Not prepared, try to load from cache.
       $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $langcode;
-      if ($cache = $this->cacheBackend->get($cid)) {
+      if ($cache = $this->cacheGet($cid)) {
         $bundle_field_definitions = $cache->data;
       }
       else {
         // Rebuild the definitions and put it into the cache.
         $bundle_field_definitions = $this->buildBundleFieldDefinitions($entity_type_id, $bundle, $base_field_definitions);
-        $this->cacheBackend->set($cid, $bundle_field_definitions, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet($cid, $bundle_field_definitions, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
       // Field definitions consist of the bundle specific overrides and the
       // base fields, merge them together. Use array_replace() to replace base
@@ -461,13 +452,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       }
       // Not prepared, try to load from cache.
       $cid = 'entity_field_storage_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->getId();
-      if ($cache = $this->cacheBackend->get($cid)) {
+      if ($cache = $this->cacheGet($cid)) {
         $field_storage_definitions = $cache->data;
       }
       else {
         // Rebuild the definitions and put it into the cache.
         $field_storage_definitions = $this->buildFieldStorageDefinitions($entity_type_id);
-        $this->cacheBackend->set($cid, $field_storage_definitions, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet($cid, $field_storage_definitions, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
       $this->fieldStorageDefinitions[$entity_type_id] += $field_storage_definitions;
     }
@@ -508,7 +499,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     if (!$this->fieldMap) {
       // Not prepared, try to load from cache.
       $cid = 'entity_field_map';
-      if ($cache = $this->cacheBackend->get($cid)) {
+      if ($cache = $this->cacheGet($cid)) {
         $this->fieldMap = $cache->data;
       }
       else {
@@ -549,7 +540,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           }
         }
 
-        $this->cacheBackend->set($cid, $this->fieldMap, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet($cid, $this->fieldMap, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
     }
     return $this->fieldMap;
@@ -657,7 +648,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // hook_entity_extra_field_info_alter() might contain t() calls, we cache
     // per language.
     $cache_id = 'entity_bundle_extra_fields:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->getId();
-    $cached = $this->cacheBackend->get($cache_id);
+    $cached = $this->cacheGet($cache_id);
     if ($cached) {
       $this->extraFields[$entity_type_id][$bundle] = $cached->data;
       return $this->extraFields[$entity_type_id][$bundle];
@@ -673,7 +664,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     // Store in the 'static' and persistent caches.
     $this->extraFields[$entity_type_id][$bundle] = $info;
-    $this->cacheBackend->set($cache_id, $info, Cache::PERMANENT, [
+    $this->cacheSet($cache_id, $info, Cache::PERMANENT, [
       'entity_field_info',
     ]);
 
