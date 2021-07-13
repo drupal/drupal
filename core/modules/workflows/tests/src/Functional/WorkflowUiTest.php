@@ -39,7 +39,7 @@ class WorkflowUiTest extends BrowserTestBase {
    */
   public function testAccess() {
     // Create a minimal workflow for testing.
-    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_test']);
+    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_test', 'label' => 'Test']);
     $workflow
       ->getTypePlugin()
       ->addState('draft', 'Draft')
