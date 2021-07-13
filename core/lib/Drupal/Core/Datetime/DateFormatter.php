@@ -146,6 +146,7 @@ class DateFormatter implements DateFormatterInterface {
    * {@inheritdoc}
    */
   public function formatInterval($interval, $granularity = 2, $langcode = NULL) {
+    $interval = (int) $interval;
     $output = '';
     foreach ($this->units as $key => $value) {
       $key = explode('|', $key);
