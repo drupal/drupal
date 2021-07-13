@@ -83,8 +83,6 @@ trait DeprecationListenerTrait {
       '%Return type of Double\\\\PDO.*%',
       '%Return type of Mock_StubPDO.*%',
       '%Return type of Double\\\\Drupal\\\\Tests\\\\Core\\\\Database\\\\Stub\\\\StubPDO.*%',
-      // @todo "fixes" \Drupal\Tests\Core\Session\WriteSafeSessionHandlerTest
-      '%Return type of Mock_SessionHandlerInterface_.*%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
