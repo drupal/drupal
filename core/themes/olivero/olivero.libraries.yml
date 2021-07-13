@@ -124,17 +124,17 @@ drupal.node.preview:
     theme:
       css/components/node-preview-container.css: {}
 
-filter.theme:
-  version: VERSION
-  css:
-    component:
-      css/theme/filter.theme.css: {}
-
 feed:
   version: VERSION
   css:
     theme:
       css/components/feed.css: {}
+
+filter.theme:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.theme.css: {}
 
 forum:
   version: VERSION
