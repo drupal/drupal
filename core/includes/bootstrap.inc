@@ -134,6 +134,8 @@ class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\
 // @see https://www.drupal.org/project/drupal/issues/3220021
 class_alias('Drupal\Core\PhpFixes\StaticReflectionClass', 'Doctrine\Common\Reflection\StaticReflectionClass', TRUE);
 class_alias('Drupal\Core\PhpFixes\Inline', 'Symfony\Component\Yaml\Inline', TRUE);
+class_alias('Drupal\Core\PhpFixes\BaseConstraint', 'JsonSchema\Constraints\BaseConstraint', TRUE);
+class_alias('Drupal\Core\PhpFixes\Constraint', 'JsonSchema\Constraints\Constraint', TRUE);
 
 /**
  * Returns and optionally sets the filename for a system resource.
