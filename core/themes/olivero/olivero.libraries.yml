@@ -124,6 +124,12 @@ drupal.node.preview:
     theme:
       css/components/node-preview-container.css: {}
 
+filter.theme:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.theme.css: {}
+
 feed:
   version: VERSION
   css:
@@ -184,22 +190,16 @@ local-actions:
     component:
       css/components/action-links.css: {}
 
-filter.theme:
-  version: VERSION
-  css:
-    component:
-      css/theme/filter.theme.css: {}
-
-messages:
-  version: VERSION
-  js:
-    js/messages.js: {}
-
 menu-sidebar:
   version: VERSION
   css:
     component:
       css/components/navigation/menu-sidebar.css: {}
+
+messages:
+  version: VERSION
+  js:
+    js/messages.js: {}
 
 powered-by-block:
   version: VERSION
