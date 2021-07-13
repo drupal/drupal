@@ -71,6 +71,9 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    * {@inheritdoc}
    */
   public function loadOverride($id) {
+    if ($id === NULL) {
+      return [];
+    }
     $all_overrides = $this->getConfig()->get('definitions');
     $id = static::encodeId($id);
     return $id && isset($all_overrides[$id]) ? $all_overrides[$id] : [];
