@@ -66,4 +66,4 @@ services:
       - { name: event_subscriber }
   system.module_admin_tasks_helper:
     class: Drupal\system\SystemModuleAdminTasksHelper
-    arguments: ['@menu.link_tree', '@user.permissions', '@access_manager', '@module_handler']
+    arguments: ['@menu.link_tree', '@access_manager', '@module_handler']

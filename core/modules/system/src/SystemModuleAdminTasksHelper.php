@@ -8,7 +8,6 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\user\PermissionHandlerInterface;
 
 /**
  * Provides a helper service for the admin area.
@@ -64,9 +63,8 @@ class SystemModuleAdminTasksHelper {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(MenuLinkTreeInterface $menu_link_tree, PermissionHandlerInterface $permission_handler, AccessManagerInterface $access_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(MenuLinkTreeInterface $menu_link_tree, AccessManagerInterface $access_manager, ModuleHandlerInterface $module_handler) {
     $this->menuLinkTree = $menu_link_tree;
-    $this->permissionHandler = $permission_handler;
     $this->accessManager = $access_manager;
     $this->moduleHandler = $module_handler;
   }
@@ -116,7 +114,7 @@ class SystemModuleAdminTasksHelper {
     }
 
     // Append link for permissions.
-    if ($this->permissionHandler->moduleProvidesPermissions($module)) {
+    if (\Drupal::getContainer()->get('user.permissions')->moduleProvidesPermissions($module)) {
       if ($this->accessManager->checkNamedRoute('user.admin_permissions')) {
         $url = new Url('user.admin_permissions');
         $url->setOption('fragment', 'module-' . $module);
