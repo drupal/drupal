@@ -611,7 +611,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    *   The filtered field description, with tokens replaced.
    */
   protected function getFilteredDescription() {
-    return FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
+    return FieldFilteredMarkup::create(\Drupal::token()->replace((string) $this->fieldDefinition->getDescription()));
   }
 
 }
