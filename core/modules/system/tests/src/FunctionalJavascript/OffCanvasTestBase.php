@@ -102,7 +102,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    *   Theme names to test.
    */
   protected function getTestThemes() {
-    return ['bartik', 'stark', 'classy', 'stable', 'seven'];
+    return ['olivero', 'stark', 'classy', 'stable', 'seven'];
   }
 
   /**
