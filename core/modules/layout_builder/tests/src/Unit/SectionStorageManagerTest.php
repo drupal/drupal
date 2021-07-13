@@ -126,10 +126,10 @@ class SectionStorageManagerTest extends UnitTestCase {
    */
   public function testFindDefinitions() {
     $this->discovery->getDefinitions()->willReturn([
-      'plugin1' => new SectionStorageDefinition(),
-      'plugin2' => new SectionStorageDefinition(['weight' => -5]),
-      'plugin3' => new SectionStorageDefinition(['weight' => -5]),
-      'plugin4' => new SectionStorageDefinition(['weight' => 10]),
+      'plugin1' => (new SectionStorageDefinition())->setClass(SectionStorageDefinition::class),
+      'plugin2' => (new SectionStorageDefinition(['weight' => -5]))->setClass(SectionStorageDefinition::class),
+      'plugin3' => (new SectionStorageDefinition(['weight' => -5]))->setClass(SectionStorageDefinition::class),
+      'plugin4' => (new SectionStorageDefinition(['weight' => 10]))->setClass(SectionStorageDefinition::class),
     ]);
 
     $expected = [
@@ -156,9 +156,9 @@ class SectionStorageManagerTest extends UnitTestCase {
       'foo' => new Context(new ContextDefinition('foo')),
     ];
     $definitions = [
-      'no_access' => new SectionStorageDefinition(),
-      'missing_contexts' => new SectionStorageDefinition(),
-      'provider_access' => new SectionStorageDefinition(),
+      'no_access' => (new SectionStorageDefinition())->setClass(SectionStorageDefinition::class),
+      'missing_contexts' => (new SectionStorageDefinition())->setClass(SectionStorageDefinition::class),
+      'provider_access' => (new SectionStorageDefinition())->setClass(SectionStorageDefinition::class),
     ];
     $this->discovery->getDefinitions()->willReturn($definitions);
 
@@ -211,8 +211,8 @@ class SectionStorageManagerTest extends UnitTestCase {
     ];
 
     $definitions = [
-      'first' => new SectionStorageDefinition(),
-      'second' => new SectionStorageDefinition(),
+      'first' => (new SectionStorageDefinition())->setClass(SectionStorageDefinition::class),
+      'second' => (new SectionStorageDefinition())->setClass(SectionStorageDefinition::class),
     ];
     $this->discovery->getDefinitions()->willReturn($definitions);
 

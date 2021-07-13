@@ -18,6 +18,10 @@ class PluginDefinition implements PluginDefinitionInterface {
    * A fully qualified class name.
    *
    * @var string
+   *
+   * @todo decide if this should be fixed to have a default value of '' or
+   *   should we change tests like
+   *   \Drupal\Tests\layout_builder\Unit\SectionStorageManagerTest.
    */
   protected $class;
 
