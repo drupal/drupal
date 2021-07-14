@@ -67,7 +67,8 @@ class UpsertTest extends DatabaseTestBase {
 
     // Add a new row.
     $upsert->values([
-      'id' => 2,
+      // Test a non sequence ID for better testing of the default return value.
+      'id' => 3,
       'update' => 'Update value 2',
     ]);
 
@@ -79,6 +80,10 @@ class UpsertTest extends DatabaseTestBase {
 
     $result = $upsert->execute();
     $this->assertIsInt($result);
+    // The upsert returns the number of rows affected. For MySQL the return
+    // value is 3 because the affected-rows value per row is 1 if the row is
+    // inserted as a new row, 2 if an existing row is updated. See
+    // https://dev.mysql.com/doc/c-api/8.0/en/mysql-affected-rows.html.
     $this->assertGreaterThanOrEqual(2, $result, 'The result of the upsert operation should report that at least two rows were affected.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
@@ -87,8 +92,18 @@ class UpsertTest extends DatabaseTestBase {
     $record = $this->connection->query('SELECT * FROM {select} WHERE [id] = :id', [':id' => 1])->fetch();
     $this->assertEquals('Update value 1 updated', $record->update);
 
-    $record = $this->connection->query('SELECT * FROM {select} WHERE [id] = :id', [':id' => 2])->fetch();
+    $record = $this->connection->query('SELECT * FROM {select} WHERE [id] = :id', [':id' => 3])->fetch();
     $this->assertEquals('Update value 2', $record->update);
+
+    // An upsert should be re-usable.
+    $upsert->values([
+      'id' => 4,
+      'update' => 'Another value',
+    ]);
+    $return_value = $upsert->execute();
+    $this->assertSame(1, $return_value);
+    $record = $this->connection->query('SELECT * FROM {select} WHERE [id] = :id', [':id' => 4])->fetch();
+    $this->assertEquals('Another value', $record->update);
   }
 
 }

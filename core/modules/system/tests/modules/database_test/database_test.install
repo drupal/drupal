@@ -320,7 +320,9 @@ function database_test_schema() {
     'fields' => [
       'id' => [
         'description' => 'Simple unique ID.',
-        'type' => 'int',
+        // Using a serial as an ID properly tests
+        // \Drupal\Core\Database\Driver\pgsql\Upsert.
+        'type' => 'serial',
         'not null' => TRUE,
       ],
       'update' => [
