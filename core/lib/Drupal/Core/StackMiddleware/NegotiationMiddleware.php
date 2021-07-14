@@ -2,13 +2,24 @@
 
 namespace Drupal\Core\StackMiddleware;
 
+use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Provides a middleware to determine the content type upon the accept header.
+ * Provides a middleware to determine the content type.
  *
- * @todo This is a temporary solution, remove this in https://www.drupal.org/node/2364011
+ * Due to historically poor support for header-based content negotiation by user
+ * agents, reverse proxies and other infrastructure, Drupal supports the use of
+ * a `_format` query parameter for expressing a content type that would
+ * otherwise be sent in an `accept` HTTP header.
+ *
+ * @see https://www.drupal.org/node/2501221
+ *
+ * For certain applications (JSON:API, for instance) developers may wish to
+ * utilize the `accept` header for content negotiation; this behaviour can be
+ * disabled by configuring the `content_negotiation.config.enabled` container
+ * parameter.
  */
 class NegotiationMiddleware implements HttpKernelInterface {
 
@@ -18,6 +29,13 @@ class NegotiationMiddleware implements HttpKernelInterface {
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
   protected $app;
+
+  /**
+   * The content negotiation config.
+   *
+   * @var array
+   */
+  protected $contentNegotiationConfig;
 
   /**
    * Contains a hashmap of format as key and mimetype as value.
@@ -34,6 +52,16 @@ class NegotiationMiddleware implements HttpKernelInterface {
    */
   public function __construct(HttpKernelInterface $app) {
     $this->app = $app;
+  }
+
+  /**
+   * Sets the content negotiation config.
+   *
+   * @param array $content_negotiation_config
+   *   The content negotiation configuration container parameter.
+   */
+  public function setContentNegotiationConfig(array $content_negotiation_config) {
+    $this->contentNegotiationConfig = $content_negotiation_config;
   }
 
   /**
@@ -88,6 +116,13 @@ class NegotiationMiddleware implements HttpKernelInterface {
 
     if ($request->query->has('_format')) {
       return $request->query->get('_format');
+    }
+
+    if ($this->contentNegotiationConfig['headers']['accept'] ?? FALSE) {
+      $accept = AcceptHeader::fromString($request->headers->get('accept'));
+      if (count($accept->all()) === 1 && $format = $request->getFormat($accept->first()->getValue())) {
+        return $format;
+      }
     }
 
     // No format was specified in the request.

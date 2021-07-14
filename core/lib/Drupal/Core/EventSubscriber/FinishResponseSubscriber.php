@@ -64,6 +64,13 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $debugCacheabilityHeaders = FALSE;
 
   /**
+   * The content negotiation configuration.
+   *
+   * @var array
+   */
+  protected $contentNegotiationConfig;
+
+  /**
    * Constructs a FinishResponseSubscriber object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -78,14 +85,20 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   The cache contexts manager service.
    * @param bool $http_response_debug_cacheability_headers
    *   (optional) Whether to send cacheability headers for debugging purposes.
+   * @param array $content_negotiation_config
+   *   (optional) The content negotiation configuration container parameter.
    */
-  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager, $http_response_debug_cacheability_headers = FALSE) {
+  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager, $http_response_debug_cacheability_headers = FALSE, $content_negotiation_config = NULL) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
     $this->cacheContextsManager = $cache_contexts_manager;
     $this->debugCacheabilityHeaders = $http_response_debug_cacheability_headers;
+    $this->contentNegotiationConfig = $content_negotiation_config ?: [
+      'enabled' => FALSE,
+      'headers' => [],
+    ];
   }
 
   /**
@@ -269,13 +282,26 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     }
     $response->setEtag($timestamp);
 
-    // Allow HTTP proxies to cache pages for anonymous users without a session
-    // cookie. The Vary header is used to indicates the set of request-header
-    // fields that fully determines whether a cache is permitted to use the
-    // response to reply to a subsequent request for a given URL without
-    // revalidation.
-    if (!$response->hasVary() && !Settings::get('omit_vary_cookie')) {
-      $response->setVary('Cookie', FALSE);
+    if (!$response->hasVary()) {
+      // Allow HTTP proxies to cache pages for anonymous users without a session
+      // cookie. The Vary header is used to indicates the set of request-header
+      // fields that fully determines whether a cache is permitted to use the
+      // response to reply to a subsequent request for a given URL without
+      // revalidation.
+      if (!Settings::get('omit_vary_cookie')) {
+        $response->setVary('Cookie', FALSE);
+      }
+      // Allow HTTP proxies to cache pages in a manner that permits proactive
+      // content negotiation.
+      // @see https://tools.ietf.org/html/rfc7231#section-3.4.1
+      if ($this->contentNegotiationConfig['enabled']) {
+        $content_negotiation_headers = $this->contentNegotiationConfig['headers'];
+        // Do not vary by the `accept` header if the request format was
+        // negotiated by query parameter.
+        $content_negotiation_headers['accept'] = $content_negotiation_headers['accept'] && !$request->query->has('_format');
+        $content_negotiation_headers = array_keys(array_filter($content_negotiation_headers));
+        $response->setVary($content_negotiation_headers, FALSE);
+      }
     }
   }
 

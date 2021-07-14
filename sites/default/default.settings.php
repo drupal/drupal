@@ -436,6 +436,28 @@ $settings['update_free_access'] = FALSE;
  */
 # $settings['omit_vary_cookie'] = TRUE;
 
+/**
+ * Whether to permit HTTP content negotiation.
+ *
+ * This is used to inform the HTTP content negotiation middleware that it may
+ * use HTTP content negotiation headers. If unset or FALSE, it will not respect
+ * content negotiation headers such as `accept` or `accept-language`. The
+ * respected headers can be refined via a services.yml file.
+ *
+ * Some HTTP intermediaries, e.g. some CDNs and proxies, do not respect the
+ * `vary` * header in a manner that allows for properly functioning content
+ * negotiation. This is often a configuration that can be enabled in those
+ * intermediary systems. However, if that is not an option, this value can be
+ * set to FALSE and Drupal will not attempt to perform HTTP content negotiations
+ * via the * `accept` or `accept-*` headers.
+ *
+ * This setting is deprecated as of Drupal 8.8, and will be removed in
+ * Drupal 9.0. In Drupal 9.0 and later, the `content_negotiation.config`
+ * container parameter will be the only way to disable content negotiation.
+ *
+ * @see sites/default/default.services.yml
+ */
+$settings['enable_content_negotiation'] = TRUE;
 
 /**
  * Cache TTL for client error (4xx) responses.
