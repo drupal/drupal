@@ -136,6 +136,7 @@ class_alias('Drupal\Core\PhpFixes\StaticReflectionClass', 'Doctrine\Common\Refle
 class_alias('Drupal\Core\PhpFixes\Inline', 'Symfony\Component\Yaml\Inline', TRUE);
 class_alias('Drupal\Core\PhpFixes\BaseConstraint', 'JsonSchema\Constraints\BaseConstraint', TRUE);
 class_alias('Drupal\Core\PhpFixes\Constraint', 'JsonSchema\Constraints\Constraint', TRUE);
+class_alias('Drupal\Core\PhpFixes\FileBag', 'Symfony\Component\HttpFoundation\FileBag', TRUE);
 
 /**
  * Returns and optionally sets the filename for a system resource.
