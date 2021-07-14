@@ -71,7 +71,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
     }
 
-    list($format) = $response->getHeader('Content-Type');
+    [$format] = $response->getHeader('Content-Type');
     $content = (string) $response->getBody();
 
     if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
@@ -240,6 +240,37 @@ class ResourceFetcher implements ResourceFetcherInterface {
     // structure, regardless of any XML attributes or quirks of the XML parser.
     $data = Json::encode($content);
     return Json::decode($data);
+  }
+
+  /**
+   * Backwards-compatible wrapper around CacheBackendInterface::get().
+   *
+   * @param mixed ...$arguments
+   *   The arguments to pass to CacheBackendInterface::get().
+   *
+   * @return false|object
+   *   The cached data, or FALSE if none was found.
+   *
+   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use
+   *   CacheBackendInterface::get() instead.
+   */
+  protected function cacheGet(...$arguments) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::get() instead.', E_USER_DEPRECATED);
+    return $this->cacheBackend->get(...$arguments);
+  }
+
+  /**
+   * Backwards-compatible wrapper around CacheBackendInterface::set().
+   *
+   * @param mixed ...$arguments
+   *   The arguments to pass to CacheBackendInterface::set().
+   *
+   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use
+   *   CacheBackendInterface::set() instead.
+   */
+  protected function cacheSet(...$arguments) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::set() instead.', E_USER_DEPRECATED);
+    return $this->cacheBackend->set(...$arguments);
   }
 
 }

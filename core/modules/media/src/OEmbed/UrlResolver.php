@@ -209,4 +209,35 @@ class UrlResolver implements UrlResolverInterface {
     return $resource_url ?? reset($endpoints)->buildResourceUrl($url);
   }
 
+  /**
+   * Backwards-compatible wrapper around CacheBackendInterface::get().
+   *
+   * @param mixed ...$arguments
+   *   The arguments to pass to CacheBackendInterface::get().
+   *
+   * @return false|object
+   *   The cached data, or FALSE if none was found.
+   *
+   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use
+   *   CacheBackendInterface::get() instead.
+   */
+  protected function cacheGet(...$arguments) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::get() instead.', E_USER_DEPRECATED);
+    return $this->cacheBackend->get(...$arguments);
+  }
+
+  /**
+   * Backwards-compatible wrapper around CacheBackendInterface::set().
+   *
+   * @param mixed ...$arguments
+   *   The arguments to pass to CacheBackendInterface::set().
+   *
+   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use
+   *   CacheBackendInterface::set() instead.
+   */
+  protected function cacheSet(...$arguments) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::set() instead.', E_USER_DEPRECATED);
+    return $this->cacheBackend->set(...$arguments);
+  }
+
 }
