@@ -144,6 +144,9 @@ class WorkflowUiTest extends BrowserTestBase {
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertFalse($workflow->getTypePlugin()->getState('draft')->canTransitionTo('draft'), 'Can not transition from draft to draft');
 
+    // Save form without having any transitions yet.
+    $this->submitForm([], 'Save');
+
     $this->clickLink('Add a new transition');
     $this->submitForm(['id' => 'publish', 'label' => 'Publish', 'from[draft]' => 'draft', 'to' => 'published'], 'Save');
     $this->assertSession()->pageTextContains('Created Publish transition.');
