@@ -32,8 +32,8 @@ class AggregatorTestRssController extends ControllerBase {
     $last_modified = strtotime('Sun, 19 Nov 1978 05:00:00 GMT');
     $etag = Crypt::hashBase64($last_modified);
 
-    $if_modified_since = strtotime($request->server->get('HTTP_IF_MODIFIED_SINCE'));
-    $if_none_match = stripslashes($request->server->get('HTTP_IF_NONE_MATCH'));
+    $if_modified_since = strtotime($request->server->get('HTTP_IF_MODIFIED_SINCE', ''));
+    $if_none_match = stripslashes($request->server->get('HTTP_IF_NONE_MATCH', ''));
 
     // Send appropriate response. We respond with a 304 not modified on either
     // etag or on last modified.
