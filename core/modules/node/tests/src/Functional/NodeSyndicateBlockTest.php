@@ -37,6 +37,9 @@ class NodeSyndicateBlockTest extends NodeTestBase {
     $this->drupalPlaceBlock('node_syndicate_block', ['id' => 'test_syndicate_block']);
     $this->drupalGet('');
     $this->assertSession()->elementExists('xpath', '//div[@id="block-test-syndicate-block"]/*');
+
+    // Verify syndicate block title.
+    $this->assertSession()->pageTextContains('Subscribe to Drupal');
     // Tests the syndicate block RSS link rendered at non-front pages.
     $this->drupalGet('user');
     $this->clickLink('Subscribe to');
