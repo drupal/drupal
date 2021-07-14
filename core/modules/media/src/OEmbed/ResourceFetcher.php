@@ -48,7 +48,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     $this->providers = $providers;
     if (empty($cache_backend)) {
       $cache_backend = \Drupal::cache();
-      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
     }
     $this->cacheBackend = $cache_backend;
   }
@@ -251,11 +251,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @return false|object
    *   The cached data, or FALSE if none was found.
    *
-   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
    *   CacheBackendInterface::get() instead.
+   *
+   * @see https://www.drupal.org/node/3223594
    */
   protected function cacheGet(...$arguments) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::get() instead.', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::get() instead. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
     return $this->cacheBackend->get(...$arguments);
   }
 
@@ -265,11 +267,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @param mixed ...$arguments
    *   The arguments to pass to CacheBackendInterface::set().
    *
-   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
    *   CacheBackendInterface::set() instead.
+   *
+   * @see https://www.drupal.org/node/3223594
    */
   protected function cacheSet(...$arguments) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::set() instead.', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::set() instead. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
     return $this->cacheBackend->set(...$arguments);
   }
 
