@@ -6,3 +6,7 @@
 .help p {
   margin: 0 0 10px;
 }
+
+:not(.region-breadcrumb) + .help p:first-child {
+  margin-top: 10px;
+}
