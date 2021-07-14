@@ -46,7 +46,7 @@ trait EntityDeleteFormTrait {
   public function getQuestion() {
     return $this->t('Are you sure you want to delete the @entity-type %label?', [
       '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(),
-      '%label' => $this->getEntity()->label(),
+      '%label' => $this->getEntity()->label() ?? $this->getEntity()->id(),
     ]);
   }
 
@@ -67,7 +67,7 @@ trait EntityDeleteFormTrait {
     $entity = $this->getEntity();
     return $this->t('The @entity-type %label has been deleted.', [
       '@entity-type' => $entity->getEntityType()->getSingularLabel(),
-      '%label' => $entity->label(),
+      '%label' => $entity->label() ?? $entity->id(),
     ]);
   }
 
