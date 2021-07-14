@@ -528,7 +528,17 @@ jquery.once:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
   dependencies:
     - core/jquery
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.2.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256
+    - core/jquery.once.bc
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256
+
+jquery.once.bc:
+  version: VERSION
+  js:
+    misc/jquery.once.bc.js: { weight: -19 }
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal.object.assign
 
 jquery.ui:
   version: &jquery_ui_version 1.12.1
