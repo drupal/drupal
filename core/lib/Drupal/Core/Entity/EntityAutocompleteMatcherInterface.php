@@ -27,4 +27,40 @@ interface EntityAutocompleteMatcherInterface {
    */
   public function getMatches($target_type, $selection_handler, $selection_settings, $string = '');
 
+  /**
+   * Gets matched entities based on a given search string.
+   *
+   * @param string $target_type
+   *   The ID of the target entity type.
+   * @param string $selection_handler
+   *   The plugin ID of the entity reference selection handler.
+   * @param array $selection_settings
+   *   An array of settings that will be passed to the selection handler.
+   * @param string $string
+   *   (optional) The label of the entity to query by.
+   *
+   * @return array
+   *   A nested array of entities, the first level is keyed by the
+   *   entity bundle, which contains an array of entity labels (escaped),
+   *   keyed by the entity ID.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   Thrown when the current user doesn't have access to the specified entity.
+   */
+  public function getEntities($target_type, $selection_handler, $selection_settings, $string = '');
+
+  /**
+   * Formats matched entities based on a given search string.
+   *
+   * @param array $entities
+   *   A nested array of entities, the first level is keyed by the
+   *   entity bundle, which contains an array of entity labels (escaped),
+   *   keyed by the entity ID.
+   *
+   * @return array
+   *   An array of matched entity labels, in the format required by the AJAX
+   *   autocomplete API (e.g. array('value' => $value, 'label' => $label)).
+   */
+  public function formatMatches(array $entities);
+
 }
