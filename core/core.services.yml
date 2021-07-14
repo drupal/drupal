@@ -4,6 +4,10 @@ parameters:
   # allow IDEs to autocomplete them when writing new service YAML files.
   app.root: ''
   site.path: ''
+  # \Drupal\Core\Cache\ListCacheBinsPass::process() will override this but
+  # before that any other service provider or compiler pass had to be able
+  # access other services that rely on a cached backend.
+  cache_default_bin_backends: []
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -50,6 +54,10 @@ parameters:
     supportsCredentials: false
   tempstore.expire: 604800
 services:
+  # The null cache backend should be also registered because in
+  # container build time it could be necessary.
+  cache.backend.null:
+    class: Drupal\Core\Cache\NullBackendFactory
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
     class: Drupal\Core\Cache\Context\IpCacheContext
