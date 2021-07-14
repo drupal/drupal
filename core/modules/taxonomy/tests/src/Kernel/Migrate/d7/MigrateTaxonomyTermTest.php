@@ -107,15 +107,15 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * Tests the Drupal 7 taxonomy term to Drupal 8 migration.
    */
   public function testTaxonomyTerms() {
-    $this->assertEntity(1, 'en', 'General discussion', 'forums', '', NULL, 2);
+    $this->assertEntity(1, 'en', 'General discussion', 'forums', '', NULL, 2, [0]);
 
     // Tests that terms that used the Drupal 7 Title module and that have their
     // name and description replaced by real fields are correctly migrated.
-    $this->assertEntity(2, 'en', 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, [], NULL, 3);
+    $this->assertEntity(2, 'en', 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, [], NULL, 3, 0, [0]);
 
-    $this->assertEntity(3, 'en', 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html');
+    $this->assertEntity(3, 'en', 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html', 0, [0]);
     $this->assertEntity(4, 'en', 'Term3 in plain old English', 'test_vocabulary', 'The third term in plain old English.', 'full_html', 0, [3], 6);
-    $this->assertEntity(5, 'en', 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3);
+    $this->assertEntity(5, 'en', 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3, [0]);
     $this->assertEntity(6, 'en', 'Games', 'forums', NULL, '', 4, []);
     $this->assertEntity(7, 'en', 'Minecraft', 'forums', '', NULL, 1, [6]);
     $this->assertEntity(8, 'en', 'Half Life 3', 'forums', '', NULL, 0, [6]);
