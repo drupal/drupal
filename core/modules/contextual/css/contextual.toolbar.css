@@ -12,6 +12,7 @@
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item {
   margin: 0;
+  background-color: #0f0f0f;
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item.is-active {
   background-image: -webkit-linear-gradient(rgb(78, 159, 234) 0%, rgb(69, 132, 221) 100%);

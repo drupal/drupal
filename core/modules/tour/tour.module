@@ -50,9 +50,9 @@ function tour_toolbar() {
     'tab' => [
       '#type' => 'html_tag',
       '#tag' => 'button',
-      '#value' => t('Tour'),
+      '#value' => t('Take a tour of this page'),
       '#attributes' => [
-        'class' => ['toolbar-icon', 'toolbar-icon-help'],
+        'class' => ['toolbar-icon', 'toolbar-icon-help', 'button--primary'],
         'aria-pressed' => 'false',
         'type' => 'button',
       ],
