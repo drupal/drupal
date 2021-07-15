@@ -4,6 +4,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -66,6 +67,13 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected $installProfile;
 
   /**
+   * The extension path resolver.
+   *
+   * @var \Drupal\Core\Extension\ExtensionPathResolver
+   */
+  protected $extensionPathResolver;
+
+  /**
    * Constructs the configuration installer.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -80,21 +88,28 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The event dispatcher.
    * @param string $install_profile
    *   The name of the currently active installation profile.
+   * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
+   *   The extension path resolver.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, $install_profile) {
+  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, $install_profile, ExtensionPathResolver $extension_path_resolver = NULL) {
     $this->configFactory = $config_factory;
     $this->activeStorages[$active_storage->getCollectionName()] = $active_storage;
     $this->typedConfig = $typed_config;
     $this->configManager = $config_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->installProfile = $install_profile;
+    if (!$extension_path_resolver) {
+      @trigger_error('Calling ConfigInstaller::__construct() without the $extension_path_resolver argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+      $extension_path_resolver = \Drupal::service('extension.path.resolver');
+    }
+    $this->extensionPathResolver = $extension_path_resolver;
   }
 
   /**
    * {@inheritdoc}
    */
   public function installDefaultConfig($type, $name) {
-    $extension_path = $this->drupalGetPath($type, $name);
+    $extension_path = $this->extensionPathResolver->getPath($type, $name);
     // Refresh the schema cache if the extension provides configuration schema
     // or is a theme.
     if (is_dir($extension_path . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY) || $type == 'theme') {
@@ -179,7 +194,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     }
     elseif (!empty($profile)) {
       // Creates a profile storage to search for overrides.
-      $profile_install_path = $this->drupalGetPath('module', $profile) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
+      $profile_install_path = $this->extensionPathResolver->getPath('module', $profile) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
       $profile_storage = new FileStorage($profile_install_path, StorageInterface::DEFAULT_COLLECTION);
     }
     else {
@@ -672,7 +687,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $profile = $this->drupalGetProfile();
     $profile_storages = [];
     if ($profile && $profile != $installing_name) {
-      $profile_path = $this->drupalGetPath('module', $profile);
+      $profile_path = $this->extensionPathResolver->getPath('module', $profile);
       foreach ([InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::CONFIG_OPTIONAL_DIRECTORY] as $directory) {
         if (is_dir($profile_path . '/' . $directory)) {
           $profile_storages[] = new FileStorage($profile_path . '/' . $directory, StorageInterface::DEFAULT_COLLECTION);
@@ -694,7 +709,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The extension's default configuration directory.
    */
   protected function getDefaultConfigDirectory($type, $name) {
-    return $this->drupalGetPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    return $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
   }
 
   /**
@@ -710,9 +725,15 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @return string
    *   The path to the requested item or an empty string if the item is not
    *   found.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
+   *
+   * @see https://www.drupal.org/node/2940438
    */
   protected function drupalGetPath($type, $name) {
-    return drupal_get_path($type, $name);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionPathResolver::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+    return $this->extensionPathResolver->getPath($type, $name);
   }
 
   /**

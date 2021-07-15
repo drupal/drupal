@@ -288,7 +288,7 @@ function template_preprocess_system_themes_page(&$variables) {
       else {
         $current_theme['screenshot'] = [
           '#theme' => 'image',
-          '#uri' => drupal_get_path('module', 'system') . '/images/no_screenshot.png',
+          '#uri' => \Drupal::service('extension.list.module')->getPath('system') . '/images/no_screenshot.png',
           '#alt' => t('No screenshot'),
           '#title' => t('No screenshot'),
           '#attributes' => new Attribute(['class' => ['no-screenshot']]),

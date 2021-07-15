@@ -22,7 +22,7 @@ function _batch_test_nested_drupal_form_submit_callback($value) {
  */
 function _batch_test_batch_0() {
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_0');
   return $batch_builder->toArray() + ['batch_test_id' => 'batch_0'];
 }
@@ -38,7 +38,7 @@ function _batch_test_batch_1() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_1');
 
   for ($i = 1; $i <= $total; $i++) {
@@ -59,7 +59,7 @@ function _batch_test_batch_2() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->addOperation('_batch_test_callback_2', [1, $total, $sleep])
     ->setFinishCallback('_batch_test_finished_2');
 
@@ -81,7 +81,7 @@ function _batch_test_batch_3() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_3');
   for ($i = 1; $i <= round($total / 2); $i++) {
     $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
@@ -109,7 +109,7 @@ function _batch_test_batch_4() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_4');
   for ($i = 1; $i <= round($total / 2); $i++) {
     $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
@@ -133,7 +133,7 @@ function _batch_test_batch_5() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_5');
   for ($i = 1; $i <= $total; $i++) {
     $batch_builder->addOperation('_batch_test_callback_5', [$i, $sleep]);
@@ -153,7 +153,7 @@ function _batch_test_batch_6() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_6');
   for ($i = 1; $i <= $total; $i++) {
     $batch_builder->addOperation('_batch_test_callback_6', [$i, $sleep]);
@@ -177,7 +177,7 @@ function _batch_test_batch_7() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_7');
   for ($i = 1; $i <= $total / 2; $i++) {
     $batch_builder->addOperation('_batch_test_callback_7', [$i, $sleep]);

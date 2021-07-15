@@ -38,7 +38,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
     $batch_builder = (new BatchBuilder())
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
-      ->setFile(drupal_get_path('module', 'node') . '/node.admin.inc')
+      ->setFile(\Drupal::service('extension.list.module')->getPath('node') . '/node.admin.inc')
       ->addOperation('_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions])
       ->setFinishCallback('_node_mass_update_batch_finished')
       ->setTitle(t('Processing'))

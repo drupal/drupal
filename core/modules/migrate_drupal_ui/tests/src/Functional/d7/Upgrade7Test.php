@@ -53,7 +53,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       ->getStorage('node');
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
+    $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
   }
 
   /**

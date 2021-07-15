@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
  * @group migrate_drupal_ui
  */
 class FilePathTest extends MigrateUpgradeTestBase {
+
+  use ExtensionListTestTrait;
 
   /**
    * {@inheritdoc}
@@ -67,7 +70,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->fs = \Drupal::service('file_system');
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
+    $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
   }
 
   /**

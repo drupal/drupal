@@ -307,7 +307,7 @@ class ThemeSettingsForm extends ConfigFormBase {
           $local_file = strtr($original_path, ['public:/' => PublicStream::basePath()]);
         }
         elseif ($theme) {
-          $local_file = drupal_get_path('theme', $theme) . '/' . $default;
+          $local_file = $this->themeHandler->getTheme($theme)->getPath() . '/' . $default;
         }
         else {
           $local_file = $this->themeManager->getActiveTheme()->getPath() . '/' . $default;
@@ -355,7 +355,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       // Process the theme and all its base themes.
       foreach ($theme_keys as $theme) {
         // Include the theme-settings.php file.
-        $theme_path = drupal_get_path('theme', $theme);
+        $theme_path = $this->themeHandler->getTheme($theme)->getPath();
         $theme_settings_file = $theme_path . '/theme-settings.php';
         $theme_file = $theme_path . '/' . $theme . '.theme';
         $filenames = [$theme_settings_file, $theme_file];

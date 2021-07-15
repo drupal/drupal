@@ -16,6 +16,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\ConfigTestTrait;
+use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
@@ -85,6 +86,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use AssertContentTrait;
   use RandomGeneratorTrait;
   use ConfigTestTrait;
+  use ExtensionListTestTrait;
   use TestRequirementsTrait;
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;

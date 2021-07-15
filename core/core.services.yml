@@ -306,7 +306,7 @@ services:
       - { name: dynamic_page_cache_response_policy }
   config.manager:
     class: Drupal\Core\Config\ConfigManager
-    arguments: ['@entity_type.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher', '@entity.repository']
+    arguments: ['@entity_type.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher', '@entity.repository', '@extension.path.resolver']
   config.factory:
     class: Drupal\Core\Config\ConfigFactory
     tags:
@@ -319,7 +319,7 @@ services:
       - { name: event_subscriber }
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
-    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher', '%install_profile%']
+    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher', '%install_profile%', '@extension.path.resolver']
     lazy: true
   config.storage:
     class: Drupal\Core\Config\CachedStorage
@@ -544,6 +544,9 @@ services:
   extension.list.theme_engine:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
     arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+  extension.path.resolver:
+    class: Drupal\Core\Extension\ExtensionPathResolver
+    arguments: ['@extension.list.module', '@extension.list.profile', '@extension.list.theme', '@extension.list.theme_engine']
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:
@@ -1517,7 +1520,7 @@ services:
     arguments: ['%app.root%', '@theme_handler', '@cache.bootstrap', '@module_handler']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap']
+    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap', '@extension.list.module']
     tags:
       - { name: needs_destruction }
     calls:
@@ -1618,7 +1621,7 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder']
+    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver']
   library.libraries_directory_file_finder:
     class: Drupal\Core\Asset\LibrariesDirectoryFileFinder
     arguments: ['%app.root%', '%site.path%', '@extension.list.profile', '%install_profile%']

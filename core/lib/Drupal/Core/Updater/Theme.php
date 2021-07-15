@@ -13,7 +13,8 @@ class Theme extends Updater implements UpdaterInterface {
   /**
    * Returns the directory where a theme should be installed.
    *
-   * If the theme is already installed, drupal_get_path() will return a valid
+   * If the theme is already installed,
+   * \Drupal::service('extension.list.theme')->getPath() will return a valid
    * path and we should install it there. If we're installing a new theme, we
    * always want it to go into /themes, since that's where all the
    * documentation recommends users install their themes, and there's no way
@@ -25,9 +26,10 @@ class Theme extends Updater implements UpdaterInterface {
    *   The absolute path of the directory.
    */
   public function getInstallDirectory() {
-    if ($this->isInstalled() && ($relative_path = drupal_get_path('theme', $this->name))) {
-      // The return value of drupal_get_path() is always relative to the site,
-      // so prepend DRUPAL_ROOT.
+    if ($this->isInstalled() && ($relative_path = \Drupal::service('extension.list.theme')->getPath($this->name))) {
+      // The return value of
+      // \Drupal::service('extension.list.theme')->getPath() is always relative
+      // to the site, so prepend DRUPAL_ROOT.
       return DRUPAL_ROOT . '/' . dirname($relative_path);
     }
     else {
@@ -71,7 +73,7 @@ class Theme extends Updater implements UpdaterInterface {
    * @return bool
    */
   public static function canUpdate($project_name) {
-    return (bool) drupal_get_path('theme', $project_name);
+    return (bool) \Drupal::service('extension.list.theme')->getPath($project_name);
   }
 
   /**

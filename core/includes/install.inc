@@ -1114,7 +1114,7 @@ function install_profile_info($profile, $langcode = 'en') {
       'php' => \Drupal::MINIMUM_PHP,
       'config_install_path' => NULL,
     ];
-    $profile_path = drupal_get_path('profile', $profile);
+    $profile_path = \Drupal::service('extension.list.profile')->getPath($profile);
     $info = \Drupal::service('info_parser')->parse("$profile_path/$profile.info.yml");
     $info += $defaults;
 

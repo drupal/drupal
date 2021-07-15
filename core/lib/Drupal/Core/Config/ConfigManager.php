@@ -9,6 +9,7 @@ use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -78,6 +79,13 @@ class ConfigManager implements ConfigManagerInterface {
   protected $storages;
 
   /**
+   * The extension path resolver.
+   *
+   * @var \Drupal\Core\Extension\ExtensionPathResolver
+   */
+  protected $extensionPathResolver;
+
+  /**
    * Creates ConfigManager objects.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -94,8 +102,10 @@ class ConfigManager implements ConfigManagerInterface {
    *   The event dispatcher.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
+   * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
+   *   The extension path resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationInterface $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher, EntityRepositoryInterface $entity_repository) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationInterface $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher, EntityRepositoryInterface $entity_repository, ExtensionPathResolver $extension_path_resolver = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->typedConfigManager = $typed_config_manager;
@@ -103,6 +113,11 @@ class ConfigManager implements ConfigManagerInterface {
     $this->activeStorage = $active_storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->entityRepository = $entity_repository;
+    if (!$extension_path_resolver) {
+      @trigger_error('Calling ConfigManager::__construct without the $extension_path_resolver argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+      $extension_path_resolver = \Drupal::service('extension.path.resolver');
+    }
+    $this->extensionPathResolver = $extension_path_resolver;
   }
 
   /**
@@ -210,7 +225,7 @@ class ConfigManager implements ConfigManagerInterface {
       $collection_storage->deleteAll($name . '.');
     }
 
-    $schema_dir = drupal_get_path($type, $name) . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY;
+    $schema_dir = $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY;
     if (is_dir($schema_dir)) {
       // Refresh the schema cache if uninstalling an extension that provides
       // configuration schema.

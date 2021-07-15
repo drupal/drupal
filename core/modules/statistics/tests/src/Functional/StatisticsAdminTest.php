@@ -88,7 +88,7 @@ class StatisticsAdminTest extends BrowserTestBase {
     $nid = $this->testNode->id();
     $post = ['nid' => $nid];
     global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
+    $stats_path = $base_url . '/' . $this->getModulePath('statistics') . '/statistics.php';
     $this->client->post($stats_path, ['form_params' => $post]);
 
     // Hit the node again (the counter is incremented after the hit, so
@@ -124,7 +124,7 @@ class StatisticsAdminTest extends BrowserTestBase {
     $nid = $this->testNode->id();
     $post = ['nid' => $nid];
     global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
+    $stats_path = $base_url . '/' . $this->getModulePath('statistics') . '/statistics.php';
     $this->client->post($stats_path, ['form_params' => $post]);
 
     $connection = Database::getConnection();
@@ -159,7 +159,7 @@ class StatisticsAdminTest extends BrowserTestBase {
     $nid = $this->testNode->id();
     $post = ['nid' => $nid];
     global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
+    $stats_path = $base_url . '/' . $this->getModulePath('statistics') . '/statistics.php';
     $this->client->post($stats_path, ['form_params' => $post]);
     $this->drupalGet('node/' . $this->testNode->id());
     $this->client->post($stats_path, ['form_params' => $post]);

@@ -415,13 +415,13 @@ trait FunctionalTestSetupTrait {
     // not already specified.
     $profile = $container->getParameter('install_profile');
 
-    $default_sync_path = drupal_get_path('profile', $profile) . '/config/sync';
+    $default_sync_path = $container->get('extension.list.profile')->getPath($profile) . '/config/sync';
     $profile_config_storage = new FileStorage($default_sync_path, StorageInterface::DEFAULT_COLLECTION);
     if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
       $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];
     }
 
-    $default_install_path = drupal_get_path('profile', $profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $default_install_path = $container->get('extension.list.profile')->getPath($profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     $profile_config_storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
     if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
       $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];

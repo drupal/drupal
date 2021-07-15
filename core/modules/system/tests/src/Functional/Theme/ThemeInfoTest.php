@@ -64,8 +64,8 @@ class ThemeInfoTest extends BrowserTestBase {
       ->set('default', 'test_subtheme')
       ->save();
 
-    $base = drupal_get_path('theme', 'test_basetheme');
-    $sub = drupal_get_path('theme', 'test_subtheme') . '/css';
+    $base = $this->getThemePath('test_basetheme');
+    $sub = $this->getThemePath('test_subtheme') . '/css';
 
     // All removals are expected to be based on a file's path and name and
     // should work nevertheless.

@@ -4,7 +4,9 @@ namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the "Llama" plugin, with a CKEditor "llama" feature.
@@ -24,7 +26,27 @@ use Drupal\editor\Entity\Editor;
  *   label = @Translation("Llama")
  * )
  */
-class Llama extends PluginBase implements CKEditorPluginInterface {
+class Llama extends PluginBase implements CKEditorPluginInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * The module list service.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+    );
+    $instance->moduleList = $container->get('extension.list.module');
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -51,7 +73,7 @@ class Llama extends PluginBase implements CKEditorPluginInterface {
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor_test') . '/js/llama.js';
+    return $this->moduleList->getPath('ckeditor_test') . '/js/llama.js';
   }
 
   /**

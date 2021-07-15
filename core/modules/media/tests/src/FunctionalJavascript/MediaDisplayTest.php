@@ -29,7 +29,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     parent::setUp();
 
     // Install the optional configs from the standard profile.
-    $extension_path = drupal_get_path('profile', 'standard');
+    $extension_path = $this->container->get('extension.list.profile')->getPath('standard');
     $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
     $storage = new FileStorage($optional_install_path);
     $this->container->get('config.installer')->installOptionalConfig($storage, '');

@@ -7,7 +7,6 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
-use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 use Drupal\KernelTests\KernelTestBase;
@@ -270,7 +269,6 @@ class ConfigCRUDTest extends KernelTestBase {
     $storage = new DatabaseStorage($this->container->get('database'), 'config');
     $name = 'config_test.types';
     $config = $this->config($name);
-    $original_content = file_get_contents(drupal_get_path('module', 'config_test') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.yml");
 
     // Verify variable data types are intact.
     $data = [

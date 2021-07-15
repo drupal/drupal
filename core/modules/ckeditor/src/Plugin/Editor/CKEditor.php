@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor\Plugin\Editor;
 
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -74,6 +75,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $state;
 
   /**
+   * The module list service.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
    * Constructs a \Drupal\ckeditor\Plugin\Editor\CKEditor object.
    *
    * @param array $configuration
@@ -94,8 +102,10 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The state key/value store.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
+   *   The module list service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL, ModuleExtensionList $module_list = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
@@ -107,6 +117,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $file_url_generator = \Drupal::service('file_url_generator');
     }
     $this->fileUrlGenerator = $file_url_generator;
+    if (!$module_list) {
+      @trigger_error('Calling CKEditor::__construct() without the $module_list argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+      $module_list = \Drupal::service('extension.list.module');
+    }
+    $this->moduleList = $module_list;
   }
 
   /**
@@ -122,7 +137,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('language_manager'),
       $container->get('renderer'),
       $container->get('state'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('extension.list.module')
     );
   }
 
@@ -442,8 +458,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    */
   public function buildContentsCssJSSetting(Editor $editor) {
     $css = [
-      drupal_get_path('module', 'ckeditor') . '/css/ckeditor-iframe.css',
-      drupal_get_path('module', 'system') . '/css/components/align.module.css',
+      $this->moduleList->getPath('ckeditor') . '/css/ckeditor-iframe.css',
+      $this->moduleList->getPath('system') . '/css/components/align.module.css',
     ];
     $this->moduleHandler->alter('ckeditor_css', $css, $editor);
     // Get a list of all enabled plugins' iframe instance CSS files.

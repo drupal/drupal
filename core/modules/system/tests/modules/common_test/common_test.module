@@ -252,7 +252,7 @@ function common_test_page_attachments_alter(array &$page) {
  */
 function common_test_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   // Attach alter.js above tableselect.js.
-  $alterjs = drupal_get_path('module', 'common_test') . '/alter.js';
+  $alterjs = \Drupal::service('extension.list.module')->getPath('common_test') . '/alter.js';
   if (array_key_exists($alterjs, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
     $javascript[$alterjs]['weight'] = $javascript['core/misc/tableselect.js']['weight'] - 1;
   }

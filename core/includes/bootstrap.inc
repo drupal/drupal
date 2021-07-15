@@ -160,12 +160,19 @@ class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\
  *
  * @return string
  *   The filename of the requested item or NULL if the item is not found.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Extension\ExtensionPathResolver::getPathname() instead.
+ *
+ * @see https://www.drupal.org/node/2940438
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
+  @trigger_error('drupal_get_filename() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionPathResolver::getPathname() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
   // Type 'core' only exists to simplify application-level logic; it always maps
   // to the /core directory, whereas $name is ignored. It is only requested via
-  // drupal_get_path(). /core/core.info.yml does not exist, but is required
-  // since drupal_get_path() returns the dirname() of the returned pathname.
+  // \Drupal\Core\Extension\ExtensionList::getPath(). The file
+  // /core/core.info.yml does not exist, but is required since
+  // ExtensionList::getPath() returns the dirname() of the returned pathname.
   if ($type === 'core') {
     return 'core/core.info.yml';
   }
@@ -209,8 +216,15 @@ function drupal_get_filename($type, $name, $filename = NULL) {
  *
  * @return string
  *   The path to the requested item or an empty string if the item is not found.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Extension\ExtensionPathResolver::getPath() instead.
+ *
+ * @see https://www.drupal.org/node/2940438
+ * @see \Drupal\Core\Extension\ExtensionList::getPath()
  */
 function drupal_get_path($type, $name) {
+  @trigger_error('drupal_get_path() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionPathResolver::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
   return dirname(drupal_get_filename($type, $name));
 }
 

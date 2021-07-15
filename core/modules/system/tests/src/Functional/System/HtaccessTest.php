@@ -31,7 +31,7 @@ class HtaccessTest extends BrowserTestBase {
    *   for example, 200 or 403.
    */
   protected function getProtectedFiles() {
-    $path = drupal_get_path('module', 'system') . '/tests/fixtures/HtaccessTest';
+    $path = $this->getModulePath('system') . '/tests/fixtures/HtaccessTest';
 
     // Tests the FilesMatch directive which denies access to certain file
     // extensions.

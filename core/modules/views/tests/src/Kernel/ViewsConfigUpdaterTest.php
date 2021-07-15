@@ -48,7 +48,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
   protected function loadTestView($view_id) {
     // We just instantiate the test view from the raw configuration, as it may
     // not be possible to save it, due to its faulty schema.
-    $config_dir = drupal_get_path('module', 'views') . '/tests/fixtures/update';
+    $config_dir = $this->getModulePath('views') . '/tests/fixtures/update';
     $file_storage = new FileStorage($config_dir);
     $values = $file_storage->read($view_id);
     /** @var \Drupal\views\ViewEntityInterface $test_view */

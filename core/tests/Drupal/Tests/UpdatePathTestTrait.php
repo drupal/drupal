@@ -87,8 +87,10 @@ trait UpdatePathTestTrait {
       $modules_installed = FALSE;
       // Modules that are in configuration but not the module handler have been
       // installed.
+      /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+      $module_list = $this->container->get('extension.list.module');
       foreach (array_keys(array_diff_key($config_module_list, $module_handler_list)) as $module) {
-        $module_handler->addModule($module, drupal_get_path('module', $module));
+        $module_handler->addModule($module, $module_list->getPath($module));
         $modules_installed = TRUE;
       }
       $modules_uninstalled = FALSE;

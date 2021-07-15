@@ -24,7 +24,7 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
    * @dataProvider providerSourceProvider
    */
   public function testSourceProvider($path_to_database) {
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . $path_to_database);
+    $this->loadFixture($this->getModulePath('migrate_drupal') . $path_to_database);
 
     $session = $this->assertSession();
 

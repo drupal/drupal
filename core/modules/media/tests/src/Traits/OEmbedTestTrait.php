@@ -17,7 +17,7 @@ trait OEmbedTestTrait {
    * @return string
    */
   protected function getFixturesDirectory() {
-    return drupal_get_path('module', 'media') . '/tests/fixtures/oembed';
+    return \Drupal::service('extension.list.module')->getPath('media') . '/tests/fixtures/oembed';
   }
 
   /**

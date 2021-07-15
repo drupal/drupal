@@ -38,7 +38,7 @@ use Drupal\Core\Url;
  */
 function update_authorize_run_update($filetransfer, $projects) {
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'update') . '/update.authorize.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('update') . '/update.authorize.inc')
     ->setInitMessage(t('Preparing to update your site'))
     ->setFinishCallback('update_authorize_update_batch_finished');
 
@@ -89,7 +89,7 @@ function update_authorize_run_update($filetransfer, $projects) {
 function update_authorize_run_install($filetransfer, $project, $updater_name, $local_url) {
   // @todo Instantiate our Updater to set the human-readable title?
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'update') . '/update.authorize.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('update') . '/update.authorize.inc')
     ->setInitMessage(t('Preparing to install'))
     ->addOperation('update_authorize_batch_copy_project', [
       $project,

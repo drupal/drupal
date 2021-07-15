@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor;
 
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
 
@@ -29,6 +30,44 @@ use Drupal\editor\Entity\Editor;
  * @see plugin_api
  */
 abstract class CKEditorPluginBase extends PluginBase implements CKEditorPluginInterface, CKEditorPluginButtonsInterface {
+
+  /**
+   * The module list service.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
+   * Gets the module list service.
+   *
+   * @return \Drupal\Core\Extension\ModuleExtensionList
+   *   The module extension list service.
+   */
+  protected function getModuleList(): ModuleExtensionList {
+    if (!$this->moduleList) {
+      $this->moduleList = \Drupal::service('extension.list.module');
+    }
+    return $this->moduleList;
+  }
+
+  /**
+   * Gets the Drupal-root relative installation directory of a module.
+   *
+   * @param string $module_name
+   *   The machine name of the module.
+   *
+   * @return string
+   *   The module installation directory.
+   *
+   * @throws \InvalidArgumentException
+   *   If there is no extension with the supplied machine name.
+   *
+   * @see \Drupal\Core\Extension\ExtensionList::getPath()
+   */
+  protected function getModulePath(string $module_name): string {
+    return $this->getModuleList()->getPath($module_name);
+  }
 
   /**
    * {@inheritdoc}

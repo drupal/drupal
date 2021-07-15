@@ -575,7 +575,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The name of the module for which to remove all registered cache bins.
    */
   protected function removeCacheBins($module) {
-    $service_yaml_file = drupal_get_path('module', $module) . "/$module.services.yml";
+    $service_yaml_file = \Drupal::service('extension.list.module')->getPath($module) . "/$module.services.yml";
     if (!file_exists($service_yaml_file)) {
       return;
     }

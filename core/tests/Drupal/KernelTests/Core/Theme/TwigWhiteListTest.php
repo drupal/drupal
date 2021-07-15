@@ -131,7 +131,7 @@ class TwigWhiteListTest extends KernelTestBase {
       'field_term' => $this->term->id(),
     ]);
     $node->save();
-    $template = $environment->loadTemplate(drupal_get_path('theme', 'test_theme') . '/templates/node.html.twig');
+    $template = $environment->loadTemplate($this->getThemePath('test_theme') . '/templates/node.html.twig');
     $markup = $template->render(['node' => $node]);
     $this->setRawContent($markup);
     $this->assertText('Sometimes people are just jerks');

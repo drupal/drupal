@@ -129,7 +129,7 @@ function color_get_info($theme) {
     return $theme_info[$theme];
   }
 
-  $path = drupal_get_path('theme', $theme);
+  $path = \Drupal::service('extension.list.theme')->getPath($theme);
   $file = \Drupal::root() . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
     include $file;
@@ -286,7 +286,13 @@ function template_preprocess_color_scheme_form(&$variables) {
   }
 
   // Attempt to load preview HTML if the theme provides it.
-  $preview_html_path = \Drupal::root() . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');
+  $preview_html_path = \Drupal::root() . '/';
+  if (isset($info['preview_html'])) {
+    $preview_html_path .= \Drupal::service('extension.list.theme')->getPath($theme) . '/' . $info['preview_html'];
+  }
+  else {
+    $preview_html_path .= \Drupal::service('extension.list.module')->getPath('color') . '/preview.html';
+  }
   $variables['html_preview']['#markup'] = file_get_contents($preview_html_path);
 }
 
@@ -386,7 +392,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   // Make sure enough memory is available.
   if (isset($info['base_image'])) {
     // Fetch source image dimensions.
-    $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
+    $source = \Drupal::service('extension.list.theme')->getPath($theme) . '/' . $info['base_image'];
     list($width, $height) = getimagesize($source);
 
     // We need at least a copy of the source and a target buffer of the same
@@ -434,7 +440,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   }
   $paths['target'] = $paths['target'] . '/';
   $paths['id'] = $id;
-  $paths['source'] = drupal_get_path('theme', $theme) . '/';
+  $paths['source'] = \Drupal::service('extension.list.theme')->getPath($theme) . '/';
   $paths['files'] = $paths['map'] = [];
 
   // Save palette and logo location.

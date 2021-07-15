@@ -897,7 +897,7 @@ class DbLogTest extends BrowserTestBase {
       '%type' => 'User warning',
       '@message' => 'Drupal & awesome',
       '%function' => ErrorTestController::class . '->generateWarnings()',
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
 
     // Check if the full message displays on the details page and backtrace is a

@@ -11,5 +11,5 @@ use Drupal\editor\Entity\Editor;
  * Implements hook_ckeditor_css_alter().
  */
 function ckeditor_test_ckeditor_css_alter(array &$css, Editor $editor) {
-  $css[] = drupal_get_path('module', 'ckeditor_test') . '/ckeditor_test.css';
+  $css[] = \Drupal::service('extension.list.module')->getPath('ckeditor_test') . '/ckeditor_test.css';
 }
