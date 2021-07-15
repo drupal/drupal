@@ -265,7 +265,7 @@ class CKEditorTest extends KernelTestBase {
 
     // Enable the editor_test module, which implements hook_ckeditor_css_alter().
     $this->enableModules(['ckeditor_test']);
-    $expected[] = $this->fileUrlGenerator->generateString(drupal_get_path('module', 'ckeditor_test') . '/ckeditor_test.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString($this->getModulePath('ckeditor_test') . '/ckeditor_test.css') . $query_string;
     $this->assertSame($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a hook_ckeditor_css_alter() implementation exists.');
 
     // Enable LlamaCss plugin, which adds an additional CKEditor stylesheet.
@@ -277,7 +277,7 @@ class CKEditorTest extends KernelTestBase {
     $settings['toolbar']['rows'][0][0]['items'][] = 'LlamaCSS';
     $editor->setSettings($settings);
     $editor->save();
-    $expected[] = $this->fileUrlGenerator->generateString(drupal_get_path('module', 'ckeditor_test') . '/css/llama.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString($this->getModulePath('ckeditor_test') . '/css/llama.css') . $query_string;
     $this->assertSame($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a CKEditorPluginInterface implementation exists.');
 
     // Enable the Bartik theme, which specifies a CKEditor stylesheet.

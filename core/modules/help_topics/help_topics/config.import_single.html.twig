@@ -7,10 +7,10 @@ related:
 - config.export_single
 ---
 {% set single_import = render_var(url('config.import_single')) %}
-{% set single_export = render_var(url('help.help_topic', {'id': 'config.export_single'})) %}
-{% set config_overview = render_var(url('help.help_topic', {'id': 'core.config_overview'})) %}
+{% set export_single_topic = render_var(help_topic_link('config.export_single')) %}
+{% set config_overview_topic = render_var(help_topic_link('core.config_overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
-<p>{% trans %}Import a single configuration item in YAML format, such as one that was previously exported (see <a href="{{ single_export }}">Exporting a single configuration item</a>). See <a href="{{ config_overview }}">Managing and deploying configuration</a> for more information about configuration.{% endtrans %}</p>
+<p>{% trans %}Import a single configuration item in YAML format, such as one that was previously exported (see {{ export_single_topic }}). See {{ config_overview_topic }} for more information about configuration.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <em>Import</em> &gt; <a href="{{ single_import }}"><em>Single item</em></a>.{% endtrans %}</li>

@@ -854,7 +854,7 @@ function hook_element_plugin_alter(array &$definitions) {
  */
 function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
   // Swap out jQuery to use an updated version of the library.
-  $javascript['core/assets/vendor/jquery/jquery.min.js']['data'] = drupal_get_path('module', 'jquery_update') . '/jquery.js';
+  $javascript['core/assets/vendor/jquery/jquery.min.js']['data'] = \Drupal::service('extension.list.module')->getPath('jquery_update') . '/jquery.js';
 }
 
 /**
@@ -1000,7 +1000,7 @@ function hook_library_info_alter(&$libraries, $extension) {
       // Since the replaced library files are no longer located in a directory
       // relative to the original extension, specify an absolute path (relative
       // to DRUPAL_ROOT / base_path()) to the new location.
-      $new_path = '/' . drupal_get_path('module', 'farbtastic_update') . '/js';
+      $new_path = '/' . \Drupal::service('extension.list.module')->getPath('farbtastic_update') . '/js';
       $new_js = [];
       $replacements = [
         $old_path . '/farbtastic.js' => $new_path . '/farbtastic-2.0.js',
@@ -1030,7 +1030,8 @@ function hook_library_info_alter(&$libraries, $extension) {
  */
 function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
   // Remove defaults.css file.
-  unset($css[drupal_get_path('module', 'system') . '/defaults.css']);
+  $file_path = \Drupal::service('extension.list.module')->getPath('system') . '/defaults.css';
+  unset($css[$file_path]);
 }
 
 /**

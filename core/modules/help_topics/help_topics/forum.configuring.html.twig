@@ -5,7 +5,7 @@ related:
 ---
 {% set settings = render_var(url('forum.settings')) %}
 {% set overview = render_var(url('forum.overview')) %}
-{% set concept = render_var(url('help.help_topic', {'id': 'forum.concept'})) %}
+{% set forum_concept_topic = render_var(help_topic_link('forum.concept')) %}
 {% set index = render_var(url('forum.index')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure settings for forums, and set up forum structure.{% endtrans %}</p>
@@ -14,7 +14,7 @@ related:
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Forums</em> &gt; <a href="{{ settings }}"><em>Settings</em></a>.{% endtrans %}</li>
   <li>{% trans %}Choose the desired settings for <em>Hot topic threshold</em>, <em>Topics per page</em>, and <em>Default order</em>. Click <em>Save configuration</em> if you have made any changes.{% endtrans %}</li>
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ overview }}"><em>Forums</em></a>.{% endtrans %}</li>
-  <li>{% trans %}Decide on the hierarchy of containers and forums you want for your site; see <a href="{{ concept }}">Creating threaded discussion forums</a> for an overview of forum hierarchy.{% endtrans %}</li>
+  <li>{% trans %}Decide on the hierarchy of containers and forums you want for your site; see {{ forum_concept_topic }} for an overview of forum hierarchy.{% endtrans %}</li>
   <li>{% trans %}Create the containers that you want in your forum hierarchy, starting at the top level, if any. To create a container, click <em>Add container</em>, enter the container name and optionally other settings, and click <em>Save</em>.{% endtrans %}</li>
   <li>{% trans %}Create the forums that you want in your forum hierarchy, starting at the top level. To create a forum, click <em>Add forum</em> and enter the forum name. If your hierarchy has this forum inside a container or another forum, select the parent forum/container in the <em>Parent</em> field. Review and/or edit the other settings, and click <em>Save</em>.{% endtrans %}</li>
   <li>{% trans %}Optionally, delete the provided <em>General discussion</em> forum, if you do not want this forum to be available on your site.{% endtrans %}</li>

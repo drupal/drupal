@@ -240,7 +240,7 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
   $operations = _locale_translation_batch_status_operations($projects, $langcodes, $options);
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setTitle(t('Checking translations'))
     ->setErrorMessage(t('Error checking translation updates.'))
     ->setFinishCallback('locale_translation_batch_status_finished');

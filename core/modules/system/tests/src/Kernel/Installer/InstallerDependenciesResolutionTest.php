@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Installer;
 
+use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -20,11 +21,14 @@ class InstallerDependenciesResolutionTest extends KernelTestBase {
    * Verifies that the exception message in the profile step is correct.
    */
   public function testDependenciesResolution() {
-    // Prime the drupal_get_filename() static cache with the location of the
-    // testing profile as it is not the currently active profile and we don't
-    // yet have any cached way to retrieve its location.
+    // Prime the \Drupal\Core\Extension\ExtensionList::getPathname static cache
+    // with the location of the testing profile as it is not the currently
+    // active profile and we don't yet have any cached way to retrieve its
+    // location.
     // @todo Remove as part of https://www.drupal.org/node/2186491
-    drupal_get_filename('profile', 'testing_missing_dependencies', 'core/profiles/testing_missing_dependencies/testing_missing_dependencies.info.yml');
+    $profile_list = \Drupal::service('extension.list.profile');
+    assert($profile_list instanceof ProfileExtensionList);
+    $profile_list->setPathname('testing_missing_dependencies', 'core/profiles/testing_missing_dependencies/testing_missing_dependencies.info.yml');
 
     $info = drupal_verify_profile([
       'parameters' => ['profile' => 'testing_missing_dependencies'],

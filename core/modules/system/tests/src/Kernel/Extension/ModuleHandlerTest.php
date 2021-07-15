@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Kernel\Extension;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
+use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -162,12 +163,14 @@ class ModuleHandlerTest extends KernelTestBase {
     $dependency = 'dblog';
     $non_dependency = 'ban';
     $this->setInstallProfile($profile);
-    // Prime the drupal_get_filename() static cache with the location of the
-    // testing_install_profile_dependencies profile as it is not the currently
-    // active profile and we don't yet have any cached way to retrieve its
-    // location.
+    // Prime the \Drupal\Core\Extension\ExtensionList::getPathname() static
+    // cache with the location of the testing_install_profile_dependencies
+    // profile as it is not the currently active profile and we don't yet have
+    // any cached way to retrieve its location.
     // @todo Remove as part of https://www.drupal.org/node/2186491
-    drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
+    $profile_list = \Drupal::service('extension.list.profile');
+    assert($profile_list instanceof ProfileExtensionList);
+    $profile_list->setPathname($profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();
@@ -202,14 +205,15 @@ class ModuleHandlerTest extends KernelTestBase {
   public function testProfileAllDependencies() {
     $profile = 'testing_install_profile_all_dependencies';
     $dependencies = ['dblog', 'ban'];
-
     $this->setInstallProfile($profile);
-    // Prime the drupal_get_filename() static cache with the location of the
-    // testing_install_profile_dependencies profile as it is not the currently
-    // active profile and we don't yet have any cached way to retrieve its
-    // location.
+    // Prime the \Drupal\Core\Extension\ExtensionList::getPathname() static
+    // cache with the location of the testing_install_profile_dependencies
+    // profile as it is not the currently active profile and we don't yet have
+    // any cached way to retrieve its location.
     // @todo Remove as part of https://www.drupal.org/node/2186491
-    drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
+    $profile_list = \Drupal::service('extension.list.profile');
+    assert($profile_list instanceof ProfileExtensionList);
+    $profile_list->setPathname($profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();

@@ -36,7 +36,7 @@ class DoubleSlashTest extends MigrateUpgradeExecuteTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
+    $this->loadFixture(\Drupal::service('extension.list.module')->getPath('migrate_drupal') . '/tests/fixtures/drupal7.php');
   }
 
   /**
