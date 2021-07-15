@@ -3,6 +3,8 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
  * Provides a domain object for layout sections.
@@ -74,11 +76,19 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of available contexts.
+   * @param bool $in_preview
+   *   TRUE if the section is being previewed, FALSE otherwise. Deprecated (see
+   *   https://www.drupal.org/node/3223893).
    *
    * @return array
    *   A renderable array representing the content of the section.
    */
-  public function toRenderArray(array $contexts = []) {
+  public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
+    if (!empty($in_preview)) {
+      @trigger_error('Passing \'$in_preview\' to ' . __METHOD__ . ' is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. See https://www.drupal.org/node/3223893', E_USER_DEPRECATED);
+      $contexts['in_preview'] = new Context(new ContextDefinition('boolean'), $in_preview);
+    }
+
     $regions = [];
     foreach ($this->getComponents() as $component) {
       if ($output = $component->toRenderArray($contexts)) {
