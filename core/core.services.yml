@@ -489,6 +489,8 @@ services:
     class: Drupal\Core\Http\HandlerStackConfigurator
     public: false
     arguments: ['@service_container']
+    tags:
+      - { name: service_id_collector, tag: http_client_middleware }
   http_client:
     class: GuzzleHttp\Client
     factory: ['@http_client_factory', 'fromOptions']
