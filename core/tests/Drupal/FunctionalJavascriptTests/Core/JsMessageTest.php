@@ -118,7 +118,30 @@ class JsMessageTest extends WebDriverTestBase {
         $current_messages[] = $message_div->getText();
       }
     }
-    $this->assertEquals($expected_messages, $current_messages);
+    $this->assertStringsArrayContainsStringsArray($expected_messages, $current_messages);
+  }
+
+  /**
+   * Applies ::assertStringContainsString() to arrays of needles + haystacks.
+   *
+   * This will loop over all elements of the arrays passed in, asserting that
+   * the N-th element of the $haystacks array contains the string defined in
+   * the N-th element of the $needles array.
+   *
+   * @param array $needles
+   *   An indexed array of strings to be used as needle.
+   * @param array $haystacks
+   *   An indexed array of strings to be used as haystack.
+   */
+  protected function assertStringsArrayContainsStringsArray(array $needles, array $haystacks) {
+    $needles = array_values($needles);
+    $haystacks = array_values($haystacks);
+    if (count($needles) !== count($haystacks)) {
+      $this->fail('The needles array contains a different number of values than the haystacks array.');
+    }
+    for ($i = 0; $i < count($needles); $i++) {
+      $this->assertStringContainsString($needles[$i], $haystacks[$i]);
+    }
   }
 
 }
