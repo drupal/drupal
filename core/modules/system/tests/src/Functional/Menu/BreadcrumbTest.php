@@ -152,7 +152,6 @@ class BreadcrumbTest extends BrowserTestBase {
     $node1 = $this->drupalCreateNode();
     $nid1 = $node1->id();
     $trail = $home;
-    // @todo this fails
     $this->assertBreadcrumb("node/$nid1", $trail);
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
     $this->assertSession()->linkNotExists($node1->getTitle());
