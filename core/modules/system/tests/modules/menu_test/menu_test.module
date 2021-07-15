@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\Url;
 
 /**
@@ -50,6 +51,23 @@ function menu_test_menu_local_tasks_alter(&$data, $route_name, RefinableCacheabl
     ];
   }
   $cacheability->addCacheTags(['kittens:dwarf-cat']);
+}
+
+/**
+ * Implements hook_local_actions_alter().
+ */
+function menu_test_local_actions_alter(&$local_actions) {
+  $local_actions['menu_test.local_action9'] = [
+    'id' => 'menu_test.local_action9',
+    'title' => 'Hook alter action',
+    'route_name' => 'menu_test.local_action9',
+    'appears_on' => [
+      'menu_test.local_action1',
+    ],
+    'class' => LocalActionDefault::class,
+    'options' => [],
+    'weight' => 50,
+  ];
 }
 
 /**
