@@ -62,7 +62,7 @@ class ExtensionStreamTest extends KernelTestBase {
    *
    * @dataProvider providerInvalidUris
    */
-  public function testInvalidStreamUri($uri) {
+  public function testInvalidStreamUri(string $uri): void {
     // Set 'minimal' as installed profile for the purposes of this test.
     $this->setInstallProfile('minimal');
     $this->enableModules(['minimal']);
@@ -83,7 +83,7 @@ class ExtensionStreamTest extends KernelTestBase {
    * @return array[]
    *   A list of urls to test.
    */
-  public function providerInvalidUris() {
+  public function providerInvalidUris(): array {
     return [
       ['invalid/uri'],
       ['invalid_uri'],
@@ -101,7 +101,7 @@ class ExtensionStreamTest extends KernelTestBase {
   /**
    * Tests call of ::dirname() without setting a URI first.
    */
-  public function testDirnameAsParameter() {
+  public function testDirnameAsParameter(): void  {
     // Set 'minimal' as installed profile for the purposes of this test.
     $this->setInstallProfile('minimal');
     $this->enableModules(['minimal']);
@@ -123,7 +123,7 @@ class ExtensionStreamTest extends KernelTestBase {
    *
    * @dataProvider providerStreamWrapperMethods
    */
-  public function testStreamWrapperMethods($uri, $dirname, $realpath, $getExternalUrl) {
+  public function testStreamWrapperMethods(string $uri, $dirname, $realpath, $getExternalUrl): void {
     // Set 'minimal' as installed profile for the purposes of this test.
     $this->setInstallProfile('minimal');
     $this->enableModules(['minimal']);
@@ -169,7 +169,7 @@ class ExtensionStreamTest extends KernelTestBase {
    *   - The result or the exception when running getExternalUrl() method. The
    *     value is prefixed later, in the test method, with the base url.
    */
-  public function providerStreamWrapperMethods() {
+  public function providerStreamWrapperMethods(): array {
     return [
       // Cases for module:// stream wrapper.
       [
