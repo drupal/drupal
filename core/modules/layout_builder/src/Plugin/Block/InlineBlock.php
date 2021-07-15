@@ -224,7 +224,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    * @return \Drupal\block_content\BlockContentInterface
    *   The block content entity.
    */
-  protected function getEntity() {
+  public function getEntity() {
     if (!isset($this->blockContent)) {
       if (!empty($this->configuration['block_serialized'])) {
         $this->blockContent = unserialize($this->configuration['block_serialized']);

@@ -147,7 +147,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   The entity.
    */
-  protected function getEntity() {
+  public function getEntity() {
     return $this->getContextValue('entity');
   }
 
