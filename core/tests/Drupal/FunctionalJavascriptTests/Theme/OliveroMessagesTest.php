@@ -17,7 +17,11 @@ class OliveroMessagesTest extends JsMessageTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['js_message_test'];
+  protected static $modules = [
+    'js_message_test',
+    'system',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}
@@ -48,7 +52,7 @@ class OliveroMessagesTest extends JsMessageTest {
       $web_assert->elementExists('css', $messagesSelector);
       foreach (JSMessageTestController::getTypes() as $type) {
         $this->click('[id="add-' . $messagesSelector . '-' . $type . '"]');
-        $selector = 'data-drupal-selector="messages"';
+        $selector = '[data-drupal-selector="messages"]';
         $msg_element = $web_assert->waitForElementVisible('css', $selector);
         $this->assertNotEmpty($msg_element, "Message element visible: $selector");
       }
