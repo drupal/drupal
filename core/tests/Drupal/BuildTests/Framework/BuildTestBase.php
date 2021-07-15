@@ -19,6 +19,7 @@ use Symfony\Component\Process\Process;
 
 // @todo Remove when MinK is fixed.
 class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
+class_alias('Drupal\Core\PhpFixes\WebAssert', 'Behat\Mink\WebAssert', TRUE);
 
 /**
  * Provides a workspace to test build processes.
