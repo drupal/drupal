@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Event;
 
 use Drupal\Core\Cache\CacheableResponseTrait;
+use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Component\EventDispatcher\Event;
 
@@ -60,14 +61,11 @@ class SectionComponentBuildRenderArrayEvent extends Event {
    *   The section component whose render array is being built.
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   The available contexts.
-   * @param bool $in_preview
-   *   (optional) Whether the component is in preview mode or not.
    */
-  public function __construct(SectionComponent $component, array $contexts, $in_preview = FALSE) {
+  public function __construct(SectionComponent $component, array $contexts) {
     $this->component = $component;
     $this->contexts = $contexts;
     $this->plugin = $component->getPlugin($contexts);
-    $this->inPreview = $in_preview;
   }
 
   /**
@@ -107,6 +105,14 @@ class SectionComponentBuildRenderArrayEvent extends Event {
    *   Whether the component is in preview mode or not.
    */
   public function inPreview() {
+    if (!isset($this->inPreview)) {
+      $this->inPreview = FALSE;
+
+      if (isset($this->contexts['in_preview']) && $this->contexts['in_preview'] instanceof ContextInterface) {
+        $this->inPreview = $this->contexts['in_preview']->getContextValue();
+      }
+    }
+
     return $this->inPreview;
   }
 

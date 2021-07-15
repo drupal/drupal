@@ -3,8 +3,6 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 
@@ -81,16 +79,12 @@ class SectionComponent {
    *
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of available contexts.
-   * @param bool $in_preview
-   *   TRUE if the component is being previewed, FALSE otherwise.
    *
    * @return array
    *   A renderable array representing the content of the component.
    */
-  public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
-    $contexts['in_preview'] = new Context(new ContextDefinition('boolean'), $in_preview);
-
-    $event = new SectionComponentBuildRenderArrayEvent($this, $contexts, $in_preview);
+  public function toRenderArray(array $contexts = []) {
+    $event = new SectionComponentBuildRenderArrayEvent($this, $contexts);
     $this->eventDispatcher()->dispatch($event, LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY);
     $output = $event->getBuild();
     $event->getCacheableMetadata()->applyTo($output);

@@ -3,8 +3,6 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
  * Provides a domain object for layout sections.
@@ -76,18 +74,14 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   An array of available contexts.
-   * @param bool $in_preview
-   *   TRUE if the section is being previewed, FALSE otherwise.
    *
    * @return array
    *   A renderable array representing the content of the section.
    */
-  public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
-    $contexts['in_preview'] = new Context(new ContextDefinition('boolean'), $in_preview);
-
+  public function toRenderArray(array $contexts = []) {
     $regions = [];
     foreach ($this->getComponents() as $component) {
-      if ($output = $component->toRenderArray($contexts, $in_preview)) {
+      if ($output = $component->toRenderArray($contexts)) {
         $regions[$component->getRegion()][$component->getUuid()] = $output;
       }
     }
