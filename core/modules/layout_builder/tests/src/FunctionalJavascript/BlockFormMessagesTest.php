@@ -44,7 +44,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
    */
   public function testValidationMessage() {
     // @todo Work out why this fixes random fails in this test.
-    //    https://www.drupal.org/project/drupal/issues/3055982
+    //   https://www.drupal.org/project/drupal/issues/3055982
     $this->getSession()->resizeWindow(800, 1000);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();

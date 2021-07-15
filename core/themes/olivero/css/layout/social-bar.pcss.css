@@ -27,7 +27,7 @@
     padding-inline-start: 0;
     padding-inline-end: 0;
 
-    &.js-fixed {
+    &.is-fixed {
       position: fixed;
       inset-block-start: var(--sp6);
       inset-inline-start: 0;

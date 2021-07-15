@@ -1,6 +1,7 @@
 name: Testing
 type: module
-description: 'Deprecated. SimpleTest has been removed from core.'
+description: 'Obsolete. SimpleTest has been removed from core.'
+lifecycle: obsolete
 package: Core
 version: VERSION
 hidden: true

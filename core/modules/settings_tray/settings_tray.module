@@ -180,7 +180,7 @@ function settings_tray_block_alter(&$definitions) {
 function settings_tray_css_alter(&$css, AttachedAssetsInterface $assets) {
   // @todo Remove once conditional ordering is introduced in
   //   https://www.drupal.org/node/1945262.
-  $path = drupal_get_path('module', 'settings_tray') . '/css/settings_tray.theme.css';
+  $path = \Drupal::service('extension.list.module')->getPath('settings_tray') . '/css/settings_tray.theme.css';
   if (isset($css[$path])) {
     // Use 200 to come after CSS_AGGREGATE_THEME.
     $css[$path]['group'] = 200;

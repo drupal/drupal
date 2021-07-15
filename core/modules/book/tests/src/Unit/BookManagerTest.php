@@ -3,6 +3,7 @@
 namespace Drupal\Tests\book\Unit;
 
 use Drupal\book\BookManager;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -79,7 +80,9 @@ class BookManagerTest extends UnitTestCase {
     $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->entityRepository = $this->createMock('Drupal\Core\Entity\EntityRepositoryInterface');
-    $this->bookManager = new BookManager($this->entityTypeManager, $this->translation, $this->configFactory, $this->bookOutlineStorage, $this->renderer, $this->languageManager, $this->entityRepository);
+    // Used for both book manager cache services: backend chain and memory.
+    $cache = $this->createMock(CacheBackendInterface::class);
+    $this->bookManager = new BookManager($this->entityTypeManager, $this->translation, $this->configFactory, $this->bookOutlineStorage, $this->renderer, $this->languageManager, $this->entityRepository, $cache, $cache);
   }
 
   /**

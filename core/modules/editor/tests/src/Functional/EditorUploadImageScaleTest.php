@@ -219,8 +219,6 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
    *   The expected width of the uploaded image.
    * @param string $height
    *   The expected height of the uploaded image.
-   *
-   * @return bool
    */
   protected function assertSavedMaxDimensions($width, $height) {
     $image_upload_settings = Editor::load('basic_html')->getImageUploadSettings();
@@ -228,9 +226,8 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
       'width' => $image_upload_settings['max_dimensions']['width'],
       'height' => $image_upload_settings['max_dimensions']['height'],
     ];
-    $same_width = $this->assertEquals($expected['width'], $width, 'Actual width of "' . $width . '" equals the expected width of "' . $expected['width'] . '"');
-    $same_height = $this->assertEquals($expected['height'], $height, 'Actual height of "' . $height . '" equals the expected width of "' . $expected['height'] . '"');
-    return $same_width && $same_height;
+    $this->assertEquals($expected['width'], $width, 'Actual width of "' . $width . '" equals the expected width of "' . $expected['width'] . '"');
+    $this->assertEquals($expected['height'], $height, 'Actual height of "' . $height . '" equals the expected width of "' . $expected['height'] . '"');
   }
 
 }

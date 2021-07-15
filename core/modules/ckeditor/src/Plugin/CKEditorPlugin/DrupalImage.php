@@ -22,7 +22,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimage/plugin.js';
+    return $this->getModulePath('ckeditor') . '/js/plugins/drupalimage/plugin.js';
   }
 
   /**
@@ -51,7 +51,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
     return [
       'DrupalImage' => [
         'label' => $this->t('Image'),
-        'image' => drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimage/icons/drupalimage.png',
+        'image' => $this->getModulePath('ckeditor') . '/js/plugins/drupalimage/icons/drupalimage.png',
       ],
     ];
   }

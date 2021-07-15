@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Kernel\Installer;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\module_test\PluginManagerCacheClearer;
 
 /**
  * Tests the uninstallation of modules.
@@ -46,6 +47,26 @@ class UninstallKernelTest extends KernelTestBase {
     // as well.
     \Drupal::service('module_installer')->uninstall(['media']);
     \Drupal::service('module_installer')->uninstall(['file']);
+  }
+
+  /**
+   * Tests uninstalling a module with a plugin cache clearer service.
+   */
+  public function testUninstallPluginCacheClear() {
+    \Drupal::service('module_installer')->install(['module_test']);
+    $this->assertFalse($this->container->get('state')->get(PluginManagerCacheClearer::class));
+    \Drupal::service('module_installer')->install(['dblog']);
+    $this->assertTrue($this->container->get('state')->get(PluginManagerCacheClearer::class));
+
+    // The plugin cache clearer service should be called during dblog uninstall
+    // without the dependency.
+    \Drupal::service('module_installer')->uninstall(['dblog']);
+    $this->assertFalse($this->container->get('state')->get(PluginManagerCacheClearer::class));
+
+    // The service should not be called during module_test uninstall.
+    $this->container->get('state')->delete(PluginManagerCacheClearer::class);
+    \Drupal::service('module_installer')->uninstall(['module_test']);
+    $this->assertNull($this->container->get('state')->get(PluginManagerCacheClearer::class));
   }
 
 }

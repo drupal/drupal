@@ -96,7 +96,7 @@ class UserPictureTest extends BrowserTestBase {
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
     clearstatcache(TRUE, $file->getFileUri());
-    $this->assertFileNotExists($file->getFileUri());
+    $this->assertFileDoesNotExist($file->getFileUri());
   }
 
   /**
@@ -116,7 +116,7 @@ class UserPictureTest extends BrowserTestBase {
 
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
     $style = ImageStyle::load($image_style_id);
-    $image_url = file_url_transform_relative($style->buildUrl($file->getfileUri()));
+    $image_url = \Drupal::service('file_url_generator')->transformRelative($style->buildUrl($file->getfileUri()));
     $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
     // Verify that the image is displayed on the node page.

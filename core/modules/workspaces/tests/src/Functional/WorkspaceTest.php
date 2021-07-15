@@ -4,6 +4,7 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Test the workspace entity.
@@ -14,11 +15,20 @@ class WorkspaceTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;
   use ContentTypeCreationTrait;
+  use TaxonomyTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'field_ui', 'node', 'toolbar', 'user', 'workspaces'];
+  protected static $modules = [
+    'block',
+    'field_ui',
+    'node',
+    'taxonomy',
+    'toolbar',
+    'user',
+    'workspaces',
+  ];
 
   /**
    * {@inheritdoc}
@@ -56,6 +66,8 @@ class WorkspaceTest extends BrowserTestBase {
 
     $this->editor1 = $this->drupalCreateUser($permissions);
     $this->editor2 = $this->drupalCreateUser($permissions);
+
+    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**
@@ -151,6 +163,49 @@ class WorkspaceTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the manage workspace page.
+   *
+   * @group failing
+   */
+  public function testWorkspaceManagePage() {
+    $this->drupalLogin($this->rootUser);
+    $this->setupWorkspaceSwitcherBlock();
+    $assert_session = $this->assertSession();
+
+    $test_1 = $this->createWorkspaceThroughUi('Test 1', 'test_1');
+    $test_2 = $this->createWorkspaceThroughUi('Test 2', 'test_2');
+
+    $this->switchToWorkspace($test_1);
+
+    // Check that the 'test_1' workspace doesn't contain any changes initially.
+    $this->drupalGet($test_1->toUrl()->toString());
+    $assert_session->pageTextContains('This workspace has no changes.');
+
+    // Check that the 'Switch to this workspace' action link is not displayed on
+    // the manage page of the currently active workspace.
+    $assert_session->linkNotExists('Switch to this workspace');
+    $this->drupalGet($test_2->toUrl()->toString());
+    $assert_session->linkExists('Switch to this workspace');
+
+    // Create some test content.
+    $this->drupalCreateContentType(['type' => 'test', 'label' => 'Test']);
+    $this->createNodeThroughUi('Node 1', 'test');
+    $this->createNodeThroughUi('Node 2', 'test');
+    $vocabulary = $this->createVocabulary();
+    $edit = [
+      'name[0][value]' => 'Term 1',
+    ];
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
+    $this->submitForm($edit, 'Save');
+
+    $this->drupalGet($test_1->toUrl()->toString());
+    $assert_session->pageTextContains('2 content items, 1 taxonomy term');
+    $assert_session->linkExists('Node 1');
+    $assert_session->linkExists('Node 2');
+    $assert_session->linkExists('Term 1');
+  }
+
+  /**
    * Tests adding new fields to workspace entities.
    */
   public function testWorkspaceFieldUi() {
@@ -211,6 +266,42 @@ class WorkspaceTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $page->findButton('Delete')->click();
     $page->hasContent('The workspace May 4 has been deleted.');
+  }
+
+  /**
+   * Tests the Workspaces listing UI.
+   */
+  public function testWorkspaceList() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Login and create a workspace.
+    $this->drupalLogin($this->editor1);
+    $this->createWorkspaceThroughUi('Summer event', 'summer_event');
+
+    // Check that Live is the current active workspace.
+    $this->drupalGet('/admin/config/workflow/workspaces');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $active_workspace_row = $page->find('css', '.active-workspace');
+    $this->assertTrue($active_workspace_row->hasClass('active-workspace--default'));
+    $this->assertEquals('Live', $active_workspace_row->find('css', 'td:first-of-type')->getText());
+
+    // The 'Switch to Live' operation is not shown when 'Live' is the active
+    // workspace.
+    $assert_session->linkNotExists('Switch to Live');
+
+    // Switch to another workspace and check that it has been marked as active.
+    $page->clickLink('Switch to Summer event');
+    $page->pressButton('Confirm');
+
+    $active_workspace_row = $page->find('css', '.active-workspace');
+    $this->assertTrue($active_workspace_row->hasClass('active-workspace--not-default'));
+    $this->assertEquals('Summer event', $active_workspace_row->find('css', 'td:first-of-type')->getText());
+
+    // 'Live' is no longer the active workspace, so it's 'Switch to Live'
+    // operation should be visible now.
+    $assert_session->linkExists('Switch to Live');
   }
 
 }

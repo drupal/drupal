@@ -2,11 +2,13 @@
 
 namespace Drupal\file\Plugin\views\field;
 
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field handler to provide simple renderer that allows linking to a file.
@@ -16,6 +18,41 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  * @ViewsField("file")
  */
 class File extends FieldPluginBase {
+
+  /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
+   * Constructs a File object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FileUrlGeneratorInterface $file_url_generator = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if (!$file_url_generator) {
+      @trigger_error('Calling File::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and the $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
+    }
+    $this->fileUrlGenerator = $file_url_generator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('file_url_generator'));
+  }
 
   /**
    * {@inheritdoc}
@@ -64,13 +101,7 @@ class File extends FieldPluginBase {
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_file']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      // @todo Wrap in file_url_transform_relative(). This is currently
-      // impossible. As a work-around, we could add the 'url.site' cache context
-      // to ensure different file URLs are generated for different sites in a
-      // multisite setup, including HTTP and HTTPS versions of the same site.
-      // But unfortunately it's impossible to bubble a cache context here.
-      // Fix in https://www.drupal.org/node/2646744.
-      $this->options['alter']['path'] = file_create_url($this->getValue($values, 'uri'));
+      $this->options['alter']['url'] = $this->fileUrlGenerator->generate($this->getValue($values, 'uri'));
     }
 
     return $data;

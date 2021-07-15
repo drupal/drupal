@@ -768,14 +768,16 @@ class EntityQueryTest extends EntityKernelTestBase {
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData() {
+    field_test_memorize();
+
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')
       ->execute();
 
-    global $efq_test_metadata;
-    $this->assertEquals('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
+    $mem = field_test_memorize();
+    $this->assertEquals('bar', $mem['field_test_query_efq_metadata_test_alter'][0], 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**
