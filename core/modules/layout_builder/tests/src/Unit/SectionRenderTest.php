@@ -13,6 +13,7 @@ use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
+use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\PreviewFallbackInterface;
@@ -194,6 +195,11 @@ class SectionRenderTest extends UnitTestCase {
    * @covers ::toRenderArray
    */
   public function testToRenderArrayPreview() {
+    $contexts = [];
+    $context = $this->prophesize(ContextInterface::class);
+    $context->getContextValue()->willReturn(TRUE);
+    $contexts['in_preview'] = $context->reveal();
+
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -235,7 +241,8 @@ class SectionRenderTest extends UnitTestCase {
         'some_uuid' => $render_array,
       ],
     ];
-    $result = (new Section('layout_onecol', [], $section))->toRenderArray([], TRUE);
+    $section = new Section('layout_onecol', [], $section);
+    $result = $section->toRenderArray($contexts);
     $this->assertEquals($expected, $result);
   }
 

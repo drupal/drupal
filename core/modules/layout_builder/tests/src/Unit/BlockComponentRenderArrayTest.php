@@ -3,7 +3,7 @@
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\Component\Plugin\Context\ContextInterface;
+use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
@@ -310,6 +310,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
     $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts);
+    $this->assertEquals(TRUE, $event->inPreview());
 
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
 
@@ -370,6 +371,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
     $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts);
+    $this->assertEquals(TRUE, $event->inPreview());
 
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
     $translation = $this->prophesize(TranslationInterface::class);
