@@ -7,7 +7,7 @@
 
 (function (Drupal, once) {
   var closeMessage = function closeMessage(message) {
-    var messageContainer = message.querySelector('.messages__container');
+    var messageContainer = message.querySelector('[data-drupal-selector="messages-container"]');
     var closeBtnWrapper = document.createElement('div');
     closeBtnWrapper.setAttribute('class', 'messages__button');
     var closeBtn = document.createElement('button');
@@ -31,6 +31,7 @@
     var messagesTypes = Drupal.Message.getMessageTypeLabels();
     var messageWrapper = document.createElement('div');
     messageWrapper.setAttribute('class', "messages-list__item messages messages--".concat(type));
+    messageWrapper.setAttribute('data-drupal-selector', 'messages');
     messageWrapper.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
     messageWrapper.setAttribute('aria-labelledby', "".concat(id, "-title"));
     messageWrapper.setAttribute('data-drupal-message-id', id);
@@ -55,14 +56,14 @@
       svg += '</svg></div>';
     }
 
-    messageWrapper.innerHTML = "\n    <div class=\"messages__container\">\n      <div class=\"messages__header".concat(!svg ? ' no-icon' : '', "\">\n        <h2 class=\"visually-hidden\">").concat(messagesTypes[type], "</h2>\n        ").concat(svg, "\n      </div>\n      <div class=\"messages__content\">\n        ").concat(text, "\n      </div>\n    </div>\n    ");
+    messageWrapper.innerHTML = "\n    <div class=\"messages__container\" data-drupal-selector=\"messages-container\">\n      <div class=\"messages__header".concat(!svg ? ' no-icon' : '', "\">\n        <h2 class=\"visually-hidden\">").concat(messagesTypes[type], "</h2>\n        ").concat(svg, "\n      </div>\n      <div class=\"messages__content\">\n        ").concat(text, "\n      </div>\n    </div>\n    ");
     closeMessage(messageWrapper);
     return messageWrapper;
   };
 
   Drupal.behaviors.messages = {
     attach: function attach(context) {
-      once('olivero-messages', '.messages', context).forEach(closeMessage);
+      once('messages', '[data-drupal-selector="messages"]', context).forEach(closeMessage);
     }
   };
 })(Drupal, once);
