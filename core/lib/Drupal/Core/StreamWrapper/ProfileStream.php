@@ -30,7 +30,7 @@ class ProfileStream extends ThemeStream {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $moduleHandler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $themeHandler
    *   The module handler service.
    * @param string|null $install_profile
    *   The install profile.
@@ -44,7 +44,7 @@ class ProfileStream extends ThemeStream {
    * {@inheritdoc}
    */
   protected function getOwnerName(): string {
-    return $this->installProfile ?? '';
+    return $this->installProfile ?? \Drupal::getContainer()->getParameter('install_profile');
   }
 
   /**

@@ -101,7 +101,7 @@ class ExtensionStreamTest extends KernelTestBase {
   /**
    * Tests call of ::dirname() without setting a URI first.
    */
-  public function testDirnameAsParameter(): void  {
+  public function testDirnameAsParameter(): void {
     // Set 'minimal' as installed profile for the purposes of this test.
     $this->setInstallProfile('minimal');
     $this->enableModules(['minimal']);
