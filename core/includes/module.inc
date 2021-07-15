@@ -60,8 +60,10 @@ function module_load_include($type, $module, $name = NULL) {
     $name = $module;
   }
 
-  if (function_exists('drupal_get_path')) {
-    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$name.$type";
+  if (\Drupal::hasService('extension.list.module')) {
+    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+    $module_list = \Drupal::service('extension.list.module');
+    $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$name.$type";
     if (is_file($file)) {
       require_once $file;
       return $file;

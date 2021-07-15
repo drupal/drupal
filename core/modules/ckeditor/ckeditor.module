@@ -71,7 +71,7 @@ function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
   // editor uses the filter_caption filter. This is used by the included
   // CKEditor DrupalImageCaption plugin.
   if ($editor->getFilterFormat()->filters('filter_caption')->status) {
-    $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
+    $css[] = \Drupal::service('extension.list.module')->getPath('filter') . '/css/filter.caption.css';
   }
 }
 
@@ -91,8 +91,10 @@ function _ckeditor_theme_css($theme = NULL) {
   if (!isset($theme)) {
     $theme = \Drupal::config('system.theme')->get('default');
   }
-  if (isset($theme) && $theme_path = drupal_get_path('theme', $theme)) {
-    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+  /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_list */
+  $theme_list = \Drupal::service('extension.list.theme');
+  if (isset($theme) && $theme_path = $theme_list->getPath($theme)) {
+    $info = $theme_list->getExtensionInfo($theme);
     if (isset($info['ckeditor_stylesheets'])) {
       $css = $info['ckeditor_stylesheets'];
       foreach ($css as $key => $url) {

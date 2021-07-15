@@ -79,7 +79,7 @@ class DefaultConfigTest extends KernelTestBase {
     // this for all tests in case optional configuration depends on it.
     $this->installConfig(['system', 'user']);
 
-    $extension_path = drupal_get_path($type, $name) . '/';
+    $extension_path = \Drupal::service('extension.path.resolver')->getPath($type, $name) . '/';
     $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
     $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
 

@@ -57,7 +57,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // Verify that the original data matches. We have to read the module config
     // file directly, because the install profile default system.cron.yml
     // configuration file was used to create the active configuration.
-    $config_dir = drupal_get_path('module', 'system') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $config_dir = $this->getModulePath('system') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     $this->assertDirectoryExists($config_dir);
     $source_storage = new FileStorage($config_dir);
     $data = $source_storage->read($config_name);
@@ -101,7 +101,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // Ensure that optional configuration from a profile is not created if
     // dependencies are not met. Cannot use the entity system since the entity
     // type does not exist.
-    $optional_dir = drupal_get_path('module', 'testing_config_overrides') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
+    $optional_dir = $this->getModulePath('testing_config_overrides') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
     $optional_storage = new FileStorage($optional_dir);
     foreach (['config_test.dynamic.dotted.default', 'config_test.dynamic.override', 'config_test.dynamic.override_unmet'] as $id) {
       $this->assertTrue(\Drupal::config($id)->isNew(), "The config_test entity $id contained in the profile's optional directory does not exist.");

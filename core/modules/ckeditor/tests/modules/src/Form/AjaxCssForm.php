@@ -107,7 +107,7 @@ class AjaxCssForm extends FormBase {
    */
   protected function generateResponse($editor_id) {
     // Build a URL to the style sheet that will be added.
-    $url = drupal_get_path('module', 'ckeditor_test') . '/css/test.css';
+    $url = \Drupal::service('extension.list.module')->getPath('ckeditor_test') . '/css/test.css';
     $url = $this->fileUrlGenerator->generateString($url);
 
     $response = new AjaxResponse();
