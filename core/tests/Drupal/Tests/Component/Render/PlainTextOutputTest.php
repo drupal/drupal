@@ -2,9 +2,10 @@
 
 namespace Drupal\Tests\Component\Render;
 
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Render\Markup;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -47,10 +48,13 @@ class PlainTextOutputTest extends TestCase {
     $string = 'The &lt;em&gt; tag makes your text look like <em>"this"</em>.';
     $data['escaped-html-with-quotes'] = [$expected, $string];
 
-    $safe_string = Markup::create('<em>"this"</em>');
+    $markup = new class() implements MarkupInterface {
+      use MarkupTrait;
+    };
+    $safe_string = $markup::create('<em>"this"</em>');
     $data['escaped-html-with-quotes-and-placeholders'] = [$expected, 'The @tag tag makes your text look like @result.', ['@tag' => '<em>', '@result' => $safe_string]];
 
-    $safe_string = Markup::create($string);
+    $safe_string = $markup::create($string);
     $data['safe-string'] = [$expected, $safe_string];
 
     return $data;
