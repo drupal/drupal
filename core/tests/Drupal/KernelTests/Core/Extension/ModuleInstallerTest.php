@@ -146,4 +146,21 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->container->get('module_installer')->install(['system_status_obsolete_test']);
   }
 
+  /**
+   * Tests the message when entity storage creation fails on module install.
+   */
+  public function testModuleInstallerErrorMessagesText() {
+    \Drupal::service('module_installer')->install(['dblog', 'dblog_exception_message_test']);
+    $database = Database::getConnection();
+    $results = $database->select('watchdog', 'w')
+      ->fields('w', ['variables'])
+      ->condition('message', 'An error occurred while notifying the creation%', 'LIKE')
+      ->execute()
+      ->fetchCol();
+    // There should be one error message.
+    $this->assertCount(1, $results);
+    $data = unserialize($results[0]);
+    $this->assertSame("Exception thrown while performing a schema update. Cannot add field 'entity_test_no_id.id': table doesn't exist.", $data['@message']);
+  }
+
 }

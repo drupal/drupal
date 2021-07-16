@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Contains custom contact message functionality for ContactStorageTest.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function dblog_exception_message_test_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test_no_id') {
+    $fields = [];
+
+    $fields['id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Message ID'))
+      ->setDescription(t('The message ID.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function dblog_exception_message_test_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  // Set the controller class for nodes to an alternate implementation of the
+  // Drupal\Core\Entity\EntityStorageInterface interface.
+  $entity_types['entity_test_no_id']->setStorageClass('\Drupal\Core\Entity\Sql\SqlContentEntityStorage');
+  $keys = $entity_types['entity_test_no_id']->getKeys();
+  $keys['id'] = 'id';
+  $entity_types['entity_test_no_id']->set('entity_keys', $keys);
+  $entity_types['entity_test_no_id']->set('base_table', 'entity_test');
+}
