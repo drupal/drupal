@@ -154,8 +154,10 @@ function node_access_test_node_access(NodeInterface $node, $op, AccountInterface
     return AccessResult::forbidden()->setCacheMaxAge(0);
   }
 
-  // Grant access if a specific user is specified.
-  if ((int) \Drupal::state()->get('node_access_test.allow_uid') === (int) $account->id()) {
+  // Grant access if a specific user is specified. Convert account ID to a
+  // string to match the data type of the state database table. In PHP 8.1
+  // $account->id() returns an integer.
+  if (\Drupal::state()->get('node_access_test.allow_uid') === (string) $account->id()) {
     return AccessResult::allowed();
   }
 
