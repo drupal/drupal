@@ -13,7 +13,30 @@
   box-sizing: border-box;
 }
 
-.layout-region--node-footer .layout-region__content {
+.layout-region--node-footer__content {
+  margin-top: 1.5em;
+}
+
+/**
+ * Widescreen
+ *
+ * Both of the following media queries must *exactly* match what is in
+ * node.module.css. This is rather crazy.
+ *
+ * @todo Figure out how to reduce media query duplication across files
+ *       and modules. Layout styles only allowed in themes?
+ */
+
+@media
+  screen and (min-width: 48.75rem), (orientation: landscape) and (min-device-height: 48.75rem) {
+  .layout-region--node-footer__content {
+    margin-top: 0.5em;
+  }
+}
+
+/* Push sidebar down to horizontal align with form section */
+
+.layout-region--node-secondary {
   margin-top: 1.5rem;
 }
 
@@ -52,10 +75,5 @@
   }
   [dir="rtl"] .layout-region--node-secondary {
     float: left;
-  }
-
-  /* Push sidebar down to horizontal align with form section */
-  .layout-region--node-secondary {
-    margin-top: 1.5rem;
   }
 }
