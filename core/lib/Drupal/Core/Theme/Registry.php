@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -156,6 +157,13 @@ class Registry implements DestructableInterface {
   protected $runtimeCache;
 
   /**
+   * The module list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
    * Constructs a \Drupal\Core\Theme\Registry object.
    *
    * @param string $root
@@ -174,8 +182,10 @@ class Registry implements DestructableInterface {
    *   (optional) The name of the theme for which to construct the registry.
    * @param \Drupal\Core\Cache\CacheBackendInterface $runtime_cache
    *   The cache backend interface to use for the runtime theme registry data.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
+   *   The module list.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, $theme_name = NULL, CacheBackendInterface $runtime_cache = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, $theme_name = NULL, CacheBackendInterface $runtime_cache = NULL, ModuleExtensionList $module_list = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -184,6 +194,11 @@ class Registry implements DestructableInterface {
     $this->themeHandler = $theme_handler;
     $this->themeInitialization = $theme_initialization;
     $this->runtimeCache = $runtime_cache;
+    if (!$module_list) {
+      @trigger_error('Calling Registry::__construct() without the $module_list argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+      $module_list = \Drupal::service('extension.list.module');
+    }
+    $this->moduleList = $module_list;
   }
 
   /**
@@ -338,7 +353,7 @@ class Registry implements DestructableInterface {
     }
     else {
       foreach ($this->moduleHandler->getImplementations('theme') as $module) {
-        $this->processExtension($cache, $module, 'module', $module, $this->getPath($module));
+        $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
       }
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
@@ -835,9 +850,15 @@ class Registry implements DestructableInterface {
    *   The name of the item for which the path is requested.
    *
    * @return string
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
+   *
+   * @see https://www.drupal.org/node/2940438
    */
   protected function getPath($module) {
-    return drupal_get_path('module', $module);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionList::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+    return $this->moduleList->getPath($module);
   }
 
 }

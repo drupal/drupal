@@ -151,18 +151,22 @@ class InstallStorage extends FileStorage {
     if (!isset($this->folders)) {
       $this->folders = [];
       $this->folders += $this->getCoreNames();
-      // Perform an ExtensionDiscovery scan as we cannot use drupal_get_path()
-      // yet because the system module may not yet be enabled during install.
+      // Perform an ExtensionDiscovery scan as we cannot use
+      // \Drupal\Core\Extension\ExtensionList::getPath() yet because the system
+      // module may not yet be enabled during install.
       // @todo Remove as part of https://www.drupal.org/node/2186491
       $listing = new ExtensionDiscovery(\Drupal::root());
       if ($profile = \Drupal::installProfile()) {
         $profile_list = $listing->scan('profile');
         if (isset($profile_list[$profile])) {
-          // Prime the drupal_get_filename() static cache with the profile info
-          // file location so we can use drupal_get_path() on the active profile
-          // during the module scan.
+          // Prime the \Drupal\Core\Extension\ExtensionList::getPathname static
+          // cache with the profile info file location so we can use
+          // \Drupal\Core\Extension\ExtensionList::getPath() on the active
+          // profile during the module scan.
           // @todo Remove as part of https://www.drupal.org/node/2186491
-          drupal_get_filename('profile', $profile, $profile_list[$profile]->getPathname());
+          /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_extension_list */
+          $profile_extension_list = \Drupal::service('extension.list.profile');
+          $profile_extension_list->setPathname($profile, $profile_list[$profile]->getPathname());
           $this->folders += $this->getComponentNames([$profile_list[$profile]]);
         }
       }
@@ -254,7 +258,7 @@ class InstallStorage extends FileStorage {
    *   The configuration folder name for core.
    */
   protected function getCoreFolder() {
-    return drupal_get_path('core', 'core') . '/' . $this->getCollectionDirectory();
+    return 'core/' . $this->getCollectionDirectory();
   }
 
   /**

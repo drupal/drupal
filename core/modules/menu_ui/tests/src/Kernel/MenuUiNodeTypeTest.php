@@ -4,6 +4,7 @@ namespace Drupal\Tests\menu_ui\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\system\Entity\Menu;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -36,11 +37,9 @@ class MenuUiNodeTypeTest extends KernelTestBase {
   private function assertMenuNamesAreSorted(NodeType $node_type): void {
     // The available menus should be sorted by label, not machine name.
     $expected_options = [
-      'admin' => 'Administration',
-      'footer' => 'Footer',
-      'main' => 'Main navigation',
-      'tools' => 'Tools',
-      'account' => 'User account menu',
+      'b' => 'X',
+      'c' => 'Y',
+      'a' => 'Z',
     ];
     $form = $this->container->get('entity.form_builder')
       ->getForm($node_type, $node_type->isNew() ? 'add' : 'edit');
@@ -51,7 +50,10 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    * Tests node type-specific settings for Menu UI.
    */
   public function testContentTypeMenuSettings(): void {
-    $this->installConfig(['node', 'system']);
+    $this->installConfig(['node']);
+    Menu::create(['id' => 'a', 'label' => 'Z'])->save();
+    Menu::create(['id' => 'b', 'label' => 'X'])->save();
+    Menu::create(['id' => 'c', 'label' => 'Y'])->save();
     $this->assertMenuNamesAreSorted(NodeType::create());
     $this->assertMenuNamesAreSorted($this->createContentType());
   }

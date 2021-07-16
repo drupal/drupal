@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Theme;
 
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
@@ -62,6 +63,13 @@ class RegistryTest extends UnitTestCase {
   protected $themeManager;
 
   /**
+   * The module list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $moduleList;
+
+  /**
    * The list of functions that get_defined_functions() should provide.
    *
    * @var array
@@ -80,7 +88,7 @@ class RegistryTest extends UnitTestCase {
     $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
-
+    $this->moduleList = $this->createMock(ModuleExtensionList::class);
     $this->setupTheme();
   }
 
@@ -136,6 +144,10 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);
+    $this->moduleList->expects($this->exactly(2))
+      ->method('getPath')
+      ->with('theme_test')
+      ->willReturn('core/modules/system/tests/modules/theme_test');
 
     $registry = $this->registry->get();
 
@@ -473,7 +485,7 @@ class RegistryTest extends UnitTestCase {
   protected function setupTheme() {
     $this->registry = $this->getMockBuilder(Registry::class)
       ->setMethods(['getPath'])
-      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization])
+      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList])
       ->getMock();
     $this->registry->expects($this->any())
       ->method('getPath')

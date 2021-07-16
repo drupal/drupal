@@ -65,8 +65,8 @@ class CKEditorPluginManagerTest extends KernelTestBase {
     sort($definitions);
     $this->assertSame(['drupalimage', 'drupalimagecaption', 'drupallink', 'internal', 'language', 'stylescombo'], $definitions, 'No CKEditor plugins found besides the built-in ones.');
     $enabled_plugins = [
-      'drupalimage' => drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimage/plugin.js',
-      'drupallink' => drupal_get_path('module', 'ckeditor') . '/js/plugins/drupallink/plugin.js',
+      'drupalimage' => $this->getModulePath('ckeditor') . '/js/plugins/drupalimage/plugin.js',
+      'drupallink' => $this->getModulePath('ckeditor') . '/js/plugins/drupallink/plugin.js',
     ];
     $this->assertSame($enabled_plugins, $this->manager->getEnabledPluginFiles($editor), 'Only built-in plugins are enabled.');
     $this->assertSame(['internal' => NULL] + $enabled_plugins, $this->manager->getEnabledPluginFiles($editor, TRUE), 'Only the "internal" plugin is enabled.');
@@ -107,10 +107,10 @@ class CKEditorPluginManagerTest extends KernelTestBase {
     $editor->setSettings($settings);
     $editor->save();
     $file = [];
-    $file['b'] = drupal_get_path('module', 'ckeditor_test') . '/js/llama_button.js';
-    $file['c'] = drupal_get_path('module', 'ckeditor_test') . '/js/llama_contextual.js';
-    $file['cb'] = drupal_get_path('module', 'ckeditor_test') . '/js/llama_contextual_and_button.js';
-    $file['css'] = drupal_get_path('module', 'ckeditor_test') . '/js/llama_css.js';
+    $file['b'] = $this->getModulePath('ckeditor_test') . '/js/llama_button.js';
+    $file['c'] = $this->getModulePath('ckeditor_test') . '/js/llama_contextual.js';
+    $file['cb'] = $this->getModulePath('ckeditor_test') . '/js/llama_contextual_and_button.js';
+    $file['css'] = $this->getModulePath('ckeditor_test') . '/js/llama_css.js';
     $expected = $enabled_plugins + ['llama_button' => $file['b'], 'llama_contextual_and_button' => $file['cb']];
     $this->assertSame($expected, $this->manager->getEnabledPluginFiles($editor), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
     $this->assertSame(['internal' => NULL] + $expected, $this->manager->getEnabledPluginFiles($editor, TRUE), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
@@ -157,7 +157,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
 
     // Case 2: CKEditor iframe instance CSS file.
     $expected = [
-      'llama_css' => [drupal_get_path('module', 'ckeditor_test') . '/css/llama.css'],
+      'llama_css' => [$this->getModulePath('ckeditor_test') . '/css/llama.css'],
     ];
     $this->assertSame($expected, $this->manager->getCssFiles($editor), 'Iframe instance CSS file found.');
   }

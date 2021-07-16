@@ -52,10 +52,10 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     // the cache layer.
     $active_config_storage = $this->container->get('config.storage');
 
-    $default_config_storage = new FileStorage(drupal_get_path('profile', 'demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
+    $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
 
-    $default_config_storage = new FileStorage(drupal_get_path('profile', 'demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
+    $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
   }
 

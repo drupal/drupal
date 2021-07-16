@@ -68,7 +68,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $path = $this->getEmptyOpml();
     $edit = [
       'files[upload]' => $path,
-      'remote' => file_create_url($path),
+      'remote' => \Drupal::service('file_url_generator')->generateAbsoluteString($path),
     ];
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->submitForm($edit, 'Import');
@@ -98,7 +98,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertSession()->pageTextContains('No new feed has been added.');
 
     // Attempting to load empty OPML from remote URL
-    $edit = ['remote' => file_create_url($this->getEmptyOpml())];
+    $edit = ['remote' => \Drupal::service('file_url_generator')->generateAbsoluteString($this->getEmptyOpml())];
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->submitForm($edit, 'Import');
     $this->assertSession()->pageTextContains('No new feed has been added.');

@@ -72,6 +72,7 @@ function entity_test_entity_types($filter = NULL) {
     $types[] = 'entity_test_base_field_display';
     $types[] = 'entity_test_string_id';
     $types[] = 'entity_test_no_id';
+    $types[] = 'entity_test_mul_with_bundle';
   }
   $types[] = 'entity_test_mulrev';
   $types[] = 'entity_test_mulrev_changed';
@@ -110,6 +111,9 @@ function entity_test_entity_type_alter(array &$entity_types) {
 
   $entity_test_definition = $entity_types['entity_test'];
   $entity_test_definition->set('entity_keys', $state->get('entity_test.entity_keys', []) + $entity_test_definition->getKeys());
+
+  // Allow tests to alter the permission granularity of entity_test_mul.
+  $entity_types['entity_test_mul']->set('permission_granularity', \Drupal::state()->get('entity_test_mul.permission_granularity', 'entity_type'));
 }
 
 /**
@@ -225,7 +229,7 @@ function entity_test_entity_bundle_info() {
   $bundles = [];
   $entity_types = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_types as $entity_type_id => $entity_type) {
-    if ($entity_type->getProvider() == 'entity_test' && $entity_type_id != 'entity_test_with_bundle') {
+    if ($entity_type->getProvider() == 'entity_test' && !in_array($entity_type_id, ['entity_test_with_bundle', 'entity_test_mul_with_bundle'], TRUE)) {
       $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles', [$entity_type_id => ['label' => 'Entity Test Bundle']]);
     }
   }
