@@ -99,7 +99,7 @@ class ThemeInfoTest extends BrowserTestBase {
 
     // @see theme_test_system_info_alter()
     $this->state->set('theme_test.modify_info_files', TRUE);
-    drupal_flush_all_caches();
+    $this->resetAll();
     $active_theme = $this->themeManager->getActiveTheme();
     $this->assertEquals(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling', 'core/backbone'], $active_theme->getLibraries());
   }

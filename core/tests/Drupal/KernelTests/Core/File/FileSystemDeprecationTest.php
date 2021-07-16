@@ -23,4 +23,12 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $this->assertNotEmpty($url);
   }
 
+  /**
+   * Tests deprecated file_build_uri()
+   */
+  public function testDeprecatedFileBuildUri() {
+    $this->expectDeprecation('file_build_uri() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0 without replacement. See https://www.drupal.org/node/3223091');
+    $this->assertEquals('public://foo/bar.txt', file_build_uri('foo/bar.txt'));
+  }
+
 }
