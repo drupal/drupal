@@ -101,11 +101,11 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // Verify that a single text format hidden input does not exist on the page.
     $this->assertSession()->elementNotExists('xpath', '//input[@type="hidden" and contains(@class, "editor")]');
     // Verify that CKEditor glue JS is absent.
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
+    $this->assertNoRaw($this->getModulePath('ckeditor') . '/js/ckeditor.js');
 
     // On pages where there would never be a text editor, CKEditor JS is absent.
     $this->drupalGet('user');
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
+    $this->assertNoRaw($this->getModulePath('ckeditor') . '/js/ckeditor.js');
 
     // The normal user:
     // - has access to 2 text formats;
@@ -173,7 +173,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
     // Flush all caches then make sure that $settings['ckeditor']['timestamp']
     // still matches.
-    drupal_flush_all_caches();
+    $this->resetAll();
     $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 
