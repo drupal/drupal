@@ -30,7 +30,7 @@ class ProfileStream extends ExtensionStreamBase {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ProfileExtensionList $profileExtensionList;
+   * @param \Drupal\Core\Extension\ProfileExtensionList $profileExtensionList
    *   The profile extension list service.
    */
   public function __construct(RequestStack $requestStack, ProfileExtensionList $profileExtensionList) {
