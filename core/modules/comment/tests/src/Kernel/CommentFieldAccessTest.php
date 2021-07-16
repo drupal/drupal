@@ -4,13 +4,13 @@ namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\Tests\comment\Traits\CommentCreationTrait;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -23,6 +23,7 @@ use Drupal\user\RoleInterface;
  */
 class CommentFieldAccessTest extends EntityKernelTestBase {
 
+  use CommentCreationTrait;
   use CommentTestTrait;
   use GeneratePermutationsTrait;
 
@@ -82,31 +83,32 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
   ];
 
   /**
+   * Testing host entity.
+   *
+   * @var \Drupal\entity_test\Entity\EntityTest
+   */
+  protected $host;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['user', 'comment']);
     $this->installSchema('comment', ['comment_entity_statistics']);
+
+    // Create a comment type and attach a comment field to entity_test.
+    $this->createCommentType('entity_test');
+    $this->addDefaultCommentField('entity_test', 'entity_test', 'comment');
+    // Create a testing host entity.
+    $this->host = EntityTest::create();
+    $this->host->save();
   }
 
   /**
    * Tests permissions on comment fields.
    */
   public function testAccessToAdministrativeFields() {
-    // Create a comment type.
-    $comment_type = CommentType::create([
-      'id' => 'comment',
-      'label' => 'Default comments',
-      'description' => 'Default comment field',
-      'target_entity_type_id' => 'entity_test',
-    ]);
-    $comment_type->save();
-
-    // Create a comment against a test entity.
-    $host = EntityTest::create();
-    $host->save();
-
     // An administrator user. No user exists yet, ensure that the first user
     // does not have UID 1.
     $comment_admin_user = $this->createUser(['uid' => 2, 'name' => 'admin'], [
@@ -136,8 +138,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
 
     $anonymous_user = new AnonymousUserSession();
 
-    // Add two fields.
-    $this->addDefaultCommentField('entity_test', 'entity_test', 'comment');
+    // Add a second field.
     $this->addDefaultCommentField('entity_test', 'entity_test', 'comment_other');
 
     // Change the second field's anonymous contact setting.
@@ -153,7 +154,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       'hostname' => 'magic.example.com',
       'mail' => 'tonythemagicalpony@example.com',
       'subject' => 'Bruce the Mesopotamian moose',
-      'entity_id' => $host->id(),
+      'entity_id' => $this->host->id(),
       'comment_type' => 'comment',
       'field_name' => 'comment',
       'pid' => 0,
@@ -165,7 +166,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       'entity_type' => 'entity_test',
       'hostname' => 'magic.example.com',
       'subject' => 'Brian the messed up lion',
-      'entity_id' => $host->id(),
+      'entity_id' => $this->host->id(),
       'comment_type' => 'comment',
       'field_name' => 'comment',
       'status' => 1,
@@ -179,7 +180,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       // Unpublished.
       'status' => 0,
       'subject' => 'Gail the minky whale',
-      'entity_id' => $host->id(),
+      'entity_id' => $this->host->id(),
       'comment_type' => 'comment',
       'field_name' => 'comment_other',
       'pid' => $comment2->id(),
@@ -193,7 +194,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       // Unpublished.
       'status' => 0,
       'subject' => 'Daniel the Cocker-Spaniel',
-      'entity_id' => $host->id(),
+      'entity_id' => $this->host->id(),
       'comment_type' => 'comment',
       'field_name' => 'comment_other',
       'pid' => 0,
@@ -312,6 +313,50 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       $may_view = $set['comment']->mail->access('view', $set['user']);
       $this->assertEquals($may_view, $set['user']->hasPermission('administer comments'));
     }
+  }
+
+  /**
+   * Tests the comment field item list 'view comment list' access.
+   */
+  public function testFieldViewOnlyOperationAccess(): void {
+    // Enable comment statistics creation.
+    $this->container->get('state')->set('comment.maintain_entity_statistics', TRUE);
+
+    // An initial published comment.
+    $enabled = $this->createComment([
+      'entity_type' => 'entity_test',
+      'entity_id' => $this->host->id(),
+    ]);
+
+    // The last comment is disabled.
+    $this->createComment([
+      'entity_type' => 'entity_test',
+      'entity_id' => $this->host->id(),
+      'status' => FALSE,
+    ]);
+
+    $account = $this->createUser([], ['access comments']);
+
+    // Reload the entity.
+    $this->host = EntityTest::load($this->host->id());
+    /** @var \Drupal\comment\CommentFieldItemList $comment_field */
+    $comment_field = $this->host->get('comment');
+
+    // Check that the 'view comment list' access to the field is permitted.
+    $this->assertTrue($comment_field->access('view comment list', $account));
+    // And the last comment is comment statistic is the enabled comment.
+    $this->assertSame($enabled->id(), $comment_field->cid);
+
+    // Delete the published comment. From now on the field contains only
+    // unpublished comments.
+    $enabled->delete();
+
+    // Reload the entity.
+    $this->host = EntityTest::load($this->host->id());
+    /** @var \Drupal\comment\CommentFieldItemList $comment_field */
+    $comment_field = $this->host->get('comment');
+    // Check that the 'view comment list' access to the field is not permitted.
+    $this->assertFalse($comment_field->access('view comment list', $account));
   }
 
 }

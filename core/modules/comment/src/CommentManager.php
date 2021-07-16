@@ -11,12 +11,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\UserSession;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -151,19 +151,28 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function forbiddenMessage(EntityInterface $entity, $field_name) {
+    // Get comments-field.
+    $field = $entity->get($field_name);
     if (!isset($this->authenticatedCanPostComments)) {
       // We only output a link if we are certain that users will get the
-      // permission to post comments by logging in.
-      $this->authenticatedCanPostComments = $this->entityTypeManager
-        ->getStorage('user_role')
-        ->load(RoleInterface::AUTHENTICATED_ID)
-        ->hasPermission('post comments');
+      // permission to post comments by logging in, so check 'create' access for
+      // authenticated user using CommentAccessControlHandler (proxying over
+      // field). Simulate authenticated user by creating a dummy user session
+      // with uid = '-1', which is actually not valid, but avoid real user
+      // access cache.
+      $dummy_authenticated_user = new UserSession([
+        'uid' => -1,
+        'roles' => [
+          UserInterface::AUTHENTICATED_ROLE,
+        ],
+      ]);
+      $this->authenticatedCanPostComments = $field->access('create', $dummy_authenticated_user);
     }
 
     if ($this->authenticatedCanPostComments) {
       // We cannot use the redirect.destination service here because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == CommentItemInterface::FORM_SEPARATE_PAGE) {
+      if ($field->getFieldDefinition()->getSetting('form_location') == CommentItemInterface::FORM_SEPARATE_PAGE) {
         $comment_reply_parameters = [
           'entity_type' => $entity->getEntityTypeId(),
           'entity' => $entity->id(),
