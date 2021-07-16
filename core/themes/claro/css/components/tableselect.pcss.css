@@ -1,6 +1,6 @@
 /**
  * @file
- * Table select — replaces implementation of Classy theme.
+ * Table select styles for Claro.
  *
  * @see tableselect.js
  */
@@ -19,4 +19,111 @@ th.checkbox {
 
 tr.selected td {
   background-color: var(--color-bgblue-active);
+}
+
+.views-bulk-actions {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  padding: var(--space-m) 2rem;
+  color: var(--color-white);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: 4px;
+  background-color: var(--color-text);
+}
+
+.views-bulk-actions[data-drupal-sticky-vbo="true"] {
+  position: fixed;
+  z-index: calc(var(--dropbutton-widget-z-index) + 1);
+  bottom: 0;
+  left: 0;
+  animation: fadeInBottom 320ms 1 forwards;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+@supports (position: sticky) {
+  .views-bulk-actions[data-drupal-sticky-vbo="true"] {
+    position: sticky;
+  }
+}
+
+@keyframes fadeInBottom {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.views-bulk-actions.views-form__header--bypass-animation {
+  animation: none;
+}
+
+.views-bulk-actions__item {
+  align-self: center;
+  margin: 0 var(--space-l) var(--space-s) 0; /* LTR */
+}
+.views-bulk-actions__item:last-of-type {
+  margin-right: 0; /* LTR */
+}
+[dir="rtl"] .views-bulk-actions__item {
+  margin-right: 0;
+  margin-left: var(--space-l);
+}
+[dir="rtl"] .views-bulk-actions__item:last-of-type {
+  margin-left: 0;
+}
+
+.views-bulk-actions__item--status {
+  width: 100%;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  font-weight: bold;
+}
+
+/**
+ * Labels within a bulk operations form are styled the same as .visually-hidden.
+ * This is done instead of giving them the visually-hidden class as this will
+ * work at any nesting level.
+ */
+.views-bulk-actions__item .form-item__label {
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  word-wrap: normal;
+}
+
+.views-bulk-actions__item input,
+.views-bulk-actions__item .button {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.views-bulk-actions__item .form-element--type-select {
+  min-height: 2rem;
+  padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(1rem - 1px);
+  font-size: var(--font-size-xs);
+  line-height: 1rem;
+}
+
+.views-field__skip-to-bulk-actions {
+  display: block;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+}
+
+@media screen and (min-width: 48em) {
+  .views-bulk-actions {
+    flex-wrap: nowrap;
+  }
+  .views-bulk-actions__item {
+    margin-bottom: 0;
+  }
+  .views-bulk-actions__item--status {
+    width: auto;
+  }
 }

@@ -1442,6 +1442,7 @@ starzzzz
 statuscode
 stdclass
 stdlib
+stickied
 stitle
 streamwrapper
 streamwrappers
@@ -1677,6 +1678,7 @@ unaliased
 unallowed
 unassigning
 unassigns
+unhides
 unban
 unbans
 unbold
