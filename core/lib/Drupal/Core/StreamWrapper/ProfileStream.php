@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @endcode
  * Points to the installed profile root directory.
  */
-class ProfileStream extends ModuleStream {
+class ProfileStream extends ThemeStream {
 
   use LocalStreamTrait;
 
@@ -30,13 +30,13 @@ class ProfileStream extends ModuleStream {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $themeHandler
    *   The module handler service.
    * @param string|null $install_profile
    *   The install profile.
    */
-  public function __construct(RequestStack $requestStack = NULL, ModuleHandlerInterface $moduleHandler = NULL, string $install_profile = NULL) {
-    parent::__construct($requestStack, $moduleHandler);
+  public function __construct(RequestStack $requestStack = NULL, ThemeHandlerInterface $themeHandler = NULL, string $install_profile = NULL) {
+    parent::__construct($requestStack, $themeHandler);
     $this->installProfile = $install_profile ?? \Drupal::getContainer()->getParameter('install_profile');
   }
 
@@ -44,7 +44,7 @@ class ProfileStream extends ModuleStream {
    * {@inheritdoc}
    */
   protected function getOwnerName(): string {
-    return $this->installProfile;
+    return $this->installProfile ?? \Drupal::getContainer()->getParameter('install_profile');
   }
 
   /**
