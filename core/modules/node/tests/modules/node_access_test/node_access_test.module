@@ -155,7 +155,7 @@ function node_access_test_node_access(NodeInterface $node, $op, AccountInterface
   }
 
   // Grant access if a specific user is specified.
-  if (\Drupal::state()->get('node_access_test.allow_uid') === $account->id()) {
+  if ((int) \Drupal::state()->get('node_access_test.allow_uid') === (int) $account->id()) {
     return AccessResult::allowed();
   }
 
