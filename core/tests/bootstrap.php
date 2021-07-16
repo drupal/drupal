@@ -10,6 +10,11 @@
 use Drupal\Component\Assertion\Handle;
 use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
 
+// PHP 8.1 workarounds not final fixes.
+// @see https://www.drupal.org/project/drupal/issues/3220021
+class_alias('Drupal\Core\PhpFixes\BaseConstraint', 'JsonSchema\Constraints\BaseConstraint', TRUE);
+class_alias('Drupal\Core\PhpFixes\Constraint', 'JsonSchema\Constraints\Constraint', TRUE);
+
 /**
  * Finds all valid extension directories recursively within a given directory.
  *
