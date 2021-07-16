@@ -173,7 +173,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
     // Flush all caches then make sure that $settings['ckeditor']['timestamp']
     // still matches.
-    drupal_flush_all_caches();
+    $this->resetAll();
     $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 

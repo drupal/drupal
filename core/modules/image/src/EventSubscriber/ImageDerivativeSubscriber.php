@@ -346,7 +346,11 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     $suppress_itok_output = $this->configFactory->get('image.settings')->get('suppress_itok_output');
     if (!$suppress_itok_output) {
       // The sourceUri property can be either a relative path or a full URI.
-      $original_uri_normalized = $this->streamWrapperManager->getScheme($pipeline->getVariable('sourceImageUri')) ? $this->streamWrapperManager->normalizeUri($pipeline->getVariable('sourceImageUri')) : file_build_uri($pipeline->getVariable('sourceImageUri'));
+      $path = $pipeline->getVariable('sourceImageUri');
+      if (!$stream_wrapper_manager::getScheme($path)) {
+        $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
+      }
+      $original_uri_normalized = $stream_wrapper_manager->normalizeUri($path);
       $encryptable_uri = $pipeline->getVariable('derivativeImageFileExtension') === $pipeline->getVariable('sourceImageFileExtension') ? $original_uri_normalized : $original_uri_normalized . '.' . $pipeline->getVariable('derivativeImageFileExtension');
       // Return the first 8 characters.
       $token_query = [IMAGE_DERIVATIVE_TOKEN => substr(Crypt::hmacBase64($pipeline->getVariable('imageStyle')->id() . ':' . $encryptable_uri, $this->privateKey . Settings::getHashSalt()), 0, 8)];
