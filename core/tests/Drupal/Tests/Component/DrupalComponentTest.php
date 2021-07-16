@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Component;
 
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 

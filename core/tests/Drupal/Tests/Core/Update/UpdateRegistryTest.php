@@ -7,7 +7,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Update\RemovedPostUpdateNameException;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Tests\UnitTestCase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Update\UpdateRegistry

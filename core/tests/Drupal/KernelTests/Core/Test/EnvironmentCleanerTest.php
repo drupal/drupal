@@ -5,7 +5,7 @@ namespace Drupal\KernelTests\Core\Test;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Test\EnvironmentCleaner;
 use Drupal\KernelTests\KernelTestBase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Output\NullOutput;
 
 /**

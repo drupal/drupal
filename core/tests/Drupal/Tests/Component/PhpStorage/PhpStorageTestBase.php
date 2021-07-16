@@ -4,7 +4,7 @@ namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\PhpStorageInterface;
 use Drupal\Component\Utility\Random;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 /**

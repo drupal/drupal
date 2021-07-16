@@ -6,7 +6,7 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Tests\UnitTestCase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Yaml\Yaml;
 
 /**

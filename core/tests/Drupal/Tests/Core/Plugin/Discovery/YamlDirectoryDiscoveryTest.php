@@ -6,7 +6,7 @@ use Drupal\Component\Discovery\YamlDirectoryDiscovery as ComponentYamlDirectoryD
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery

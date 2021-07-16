@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\DrupalKernel;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Tests\UnitTestCase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

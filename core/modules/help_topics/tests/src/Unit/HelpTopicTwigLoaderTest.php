@@ -4,7 +4,7 @@ namespace Drupal\Tests\help_topics\Unit;
 
 use Drupal\help_topics\HelpTopicTwigLoader;
 use Drupal\Tests\UnitTestCase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 use Twig\Error\LoaderError;
 
 /**

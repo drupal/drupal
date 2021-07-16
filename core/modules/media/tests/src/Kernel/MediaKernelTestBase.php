@@ -8,7 +8,7 @@ use Drupal\media\Entity\Media;
 use Drupal\media\MediaTypeInterface;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\user\Entity\User;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Base class for Media kernel tests.

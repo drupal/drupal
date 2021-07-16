@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Site;
 
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Site\Settings

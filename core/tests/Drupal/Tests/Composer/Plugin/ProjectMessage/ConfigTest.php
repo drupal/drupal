@@ -5,7 +5,7 @@ namespace Drupal\Tests\Composer\Plugin\ProjectMessage;
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\ProjectMessage\Message;
 use PHPUnit\Framework\TestCase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass Drupal\Composer\Plugin\ProjectMessage\Message

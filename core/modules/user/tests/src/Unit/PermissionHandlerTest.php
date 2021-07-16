@@ -13,9 +13,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
-use bovigo\vfs\vfsStream;
-use bovigo\vfs\vfsDirectory;
-use bovigo\vfs\StreamWrapper;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamWrapper;
 
 /**
  * Tests the permission handler.
@@ -90,9 +90,9 @@ class PermissionHandlerTest extends UnitTestCase {
    * @covers ::moduleProvidesPermissions
    */
   public function testBuildPermissionsYaml() {
-    StreamWrapper::register();
-    $root = new vfsDirectory('modules');
-    StreamWrapper::setRoot($root);
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
@@ -157,9 +157,9 @@ EOF
    * @covers ::sortPermissions
    */
   public function testBuildPermissionsSortPerModule() {
-    StreamWrapper::register();
-    $root = new vfsDirectory('modules');
-    StreamWrapper::setRoot($root);
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
@@ -212,9 +212,9 @@ EOF
    * @covers ::buildPermissionsYaml
    */
   public function testBuildPermissionsYamlCallback() {
-    StreamWrapper::register();
-    $root = new vfsDirectory('modules');
-    StreamWrapper::setRoot($root);
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
@@ -276,9 +276,9 @@ EOF
    * Tests a YAML file containing both static permissions and a callback.
    */
   public function testPermissionsYamlStaticAndCallback() {
-    StreamWrapper::register();
-    $root = new vfsDirectory('modules');
-    StreamWrapper::setRoot($root);
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())

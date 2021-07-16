@@ -9,7 +9,7 @@ use Drupal\Core\Extension\InfoParserException;
 use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests the behavior of a theme when base_theme info key is missing.

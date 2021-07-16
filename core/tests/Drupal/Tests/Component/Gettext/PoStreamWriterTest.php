@@ -6,8 +6,8 @@ use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
-use bovigo\vfs\vfsStream;
-use bovigo\vfs\vfsFile;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +28,7 @@ class PoStreamWriterTest extends TestCase {
   /**
    * The mock po file.
    *
-   * @var \bovigo\vfs\vfsFile
+   * @var \org\bovigo\vfs\vfsStreamFile
    */
   protected $poFile;
 
@@ -44,7 +44,7 @@ class PoStreamWriterTest extends TestCase {
     $this->poWriter->setHeader($poHeader->reveal());
 
     $root = vfsStream::setup();
-    $this->poFile = new vfsFile('powriter.po');
+    $this->poFile = new vfsStreamFile('powriter.po');
     $root->addChild($this->poFile);
   }
 
