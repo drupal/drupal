@@ -240,7 +240,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
 
     $styles_overrides = [
       'olivero' => [
-        'grid' => '//div[contains(@class, "views-view-grid__item-inner")]'
+        'grid' => '//div[contains(@class, "views-view-grid__item-inner")]',
       ],
     ];
 
