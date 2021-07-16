@@ -27,14 +27,14 @@ class ModuleStream extends ExtensionStreamBase {
   /**
    * Constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
    */
-  public function __construct(RequestStack $requestStack = NULL, ModuleHandlerInterface $moduleHandler = NULL) {
+  public function __construct(RequestStack $requestStack, ModuleHandlerInterface $moduleHandler) {
     parent::__construct($requestStack);
-    $this->moduleHandler = $moduleHandler ?? \Drupal::service('module_handler');
+    $this->moduleHandler = $moduleHandler;
   }
 
   /**
@@ -42,7 +42,7 @@ class ModuleStream extends ExtensionStreamBase {
    */
   protected function getOwnerName(): string {
     $name = parent::getOwnerName();
-    if (!$this->getModuleHandler()->moduleExists($name)) {
+    if (!$this->moduleHandler->moduleExists($name)) {
       // The module does not exist or is not installed.
       throw new \RuntimeException("Module $name does not exist or is not installed");
     }
@@ -53,7 +53,7 @@ class ModuleStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   protected function getDirectoryPath() {
-    return $this->getModuleHandler()->getModule($this->getOwnerName())->getPath();
+    return $this->moduleHandler->getModule($this->getOwnerName())->getPath();
   }
 
   /**
@@ -68,16 +68,6 @@ class ModuleStream extends ExtensionStreamBase {
    */
   public function getDescription() {
     return $this->t('Local files stored under module directory.');
-  }
-
-  /**
-   * Returns the module handler service.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
-   */
-  protected function getModuleHandler() {
-    return $this->moduleHandler;
   }
 
 }

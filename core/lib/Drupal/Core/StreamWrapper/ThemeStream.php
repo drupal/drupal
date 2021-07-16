@@ -28,14 +28,14 @@ class ThemeStream extends ExtensionStreamBase {
   /**
    * Constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $themeHandler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler service.
    */
-  public function __construct(RequestStack $requestStack = NULL, ThemeHandlerInterface $themeHandler = NULL) {
+  public function __construct(RequestStack $requestStack, ThemeHandlerInterface $themeHandler) {
     parent::__construct($requestStack);
-    $this->themeHandler = $themeHandler ?? \Drupal::service('theme_handler');
+    $this->themeHandler = $themeHandler;
   }
 
   /**
@@ -43,7 +43,7 @@ class ThemeStream extends ExtensionStreamBase {
    */
   protected function getOwnerName(): string {
     $name = parent::getOwnerName();
-    if (!$this->getThemeHandler()->themeExists($name)) {
+    if (!$this->themeHandler->themeExists($name)) {
       // The theme does not exist or is not installed.
       throw new \RuntimeException("Theme $name does not exist or is not installed");
     }
@@ -54,7 +54,7 @@ class ThemeStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   protected function getDirectoryPath() {
-    return $this->getThemeHandler()->getTheme($this->getOwnerName())->getPath();
+    return $this->themeHandler->getTheme($this->getOwnerName())->getPath();
   }
 
   /**
@@ -69,16 +69,6 @@ class ThemeStream extends ExtensionStreamBase {
    */
   public function getDescription() {
     return $this->t('Local files stored under theme directory.');
-  }
-
-  /**
-   * Returns the theme handler service.
-   *
-   * @return \Drupal\Core\Extension\ThemeHandlerInterface
-   *   The theme handler service.
-   */
-  protected function getThemeHandler() {
-    return $this->themeHandler;
   }
 
 }

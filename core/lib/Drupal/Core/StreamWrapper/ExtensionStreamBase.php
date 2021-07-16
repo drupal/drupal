@@ -22,11 +22,11 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   /**
    * Constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
    */
-  public function __construct(RequestStack $requestStack = NULL) {
-    $this->requestStack = $requestStack ?? \Drupal::service('request_stack');
+  public function __construct(RequestStack $requestStack) {
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -79,7 +79,7 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
       throw new \RuntimeException("Extension directory for {$this->uri} does not exist.");
     }
     $path = rtrim(base_path() . $dir . '/' . $this->getTarget(), '/');
-    return $this->getRequestStack()->getCurrentRequest()->getUriForPath($path);
+    return $this->requestStack->getCurrentRequest()->getUriForPath($path);
   }
 
   /**
@@ -98,16 +98,6 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
     $dirname = $dirname !== '.' ? rtrim("/$dirname", '/') : '';
 
     return "$scheme://{$this->getOwnerName()}{$dirname}";
-  }
-
-  /**
-   * Returns the request stack object.
-   *
-   * @return \Symfony\Component\HttpFoundation\RequestStack
-   *   The request stack object.
-   */
-  protected function getRequestStack() {
-    return $this->requestStack;
   }
 
 }

@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Extension\ProfileExtensionList;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -14,37 +14,42 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @endcode
  * Points to the installed profile root directory.
  */
-class ProfileStream extends ThemeStream {
+class ProfileStream extends ExtensionStreamBase {
 
   use LocalStreamTrait;
 
   /**
-   * The install profile name.
+   * The profile extension list service.
    *
-   * @var string
+   * @var \Drupal\Core\Extension\ProfileExtensionList
    */
-  protected $installProfile;
+  protected $profileExtensionList;
 
   /**
    * ProfileStream constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $themeHandler
-   *   The module handler service.
-   * @param string|null $install_profile
-   *   The install profile.
+   * @param \Drupal\Core\Extension\ProfileExtensionList $profileExtensionList;
+   *   The profile extension list service.
    */
-  public function __construct(RequestStack $requestStack = NULL, ThemeHandlerInterface $themeHandler = NULL, string $install_profile = NULL) {
-    parent::__construct($requestStack, $themeHandler);
-    $this->installProfile = $install_profile ?? \Drupal::getContainer()->getParameter('install_profile');
+  public function __construct(RequestStack $requestStack, ProfileExtensionList $profileExtensionList) {
+    parent::__construct($requestStack);
+    $this->profileExtensionList = $profileExtensionList;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getOwnerName(): string {
-    return $this->installProfile ?? \Drupal::getContainer()->getParameter('install_profile');
+    return \Drupal::getContainer()->getParameter('install_profile');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDirectoryPath() {
+    return $this->profileExtensionList->getPath($this->getOwnerName());
   }
 
   /**

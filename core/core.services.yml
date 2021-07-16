@@ -1408,7 +1408,7 @@ services:
     class: Drupal\Core\StreamWrapper\ProfileStream
     tags:
       - { name: stream_wrapper, scheme: profile }
-    arguments: ['@request_stack', '@theme_handler', '%install_profile%']
+    arguments: ['@request_stack', '@extension.list.profile']
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:
