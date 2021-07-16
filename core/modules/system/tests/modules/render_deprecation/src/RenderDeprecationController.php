@@ -32,7 +32,7 @@ class RenderDeprecationController implements ContainerAwareInterface {
 
   public function buildRenderService() {
     $build = $this->renderArray();
-    $render = $this->container->get('renderer')->renderElement($build);
+    $render = $this->container->get('renderer')->render($build);
     return Response::create($render);
   }
 
