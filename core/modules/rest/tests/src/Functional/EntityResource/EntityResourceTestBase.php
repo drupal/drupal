@@ -1428,7 +1428,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           }
           // Fields are stored in the database, when read they are represented
           // as strings in PHP memory.
-          $expected_stored_data = static::castToString($expected_stored_data);
+          if (PHP_VERSION_ID < 80100) {
+            $expected_stored_data = static::castToString($expected_stored_data);
+          }
         }
         $this->assertEntityArraySubset($expected_stored_data, $modified_entity->get($field_name)->getValue());
       }
