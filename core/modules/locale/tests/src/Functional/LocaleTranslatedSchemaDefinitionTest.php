@@ -37,7 +37,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
 
     // Clear all caches so that the base field definition, its cache in the
     // entity field manager, the t() cache, etc. are all cleared.
-    drupal_flush_all_caches();
+    $this->resetAll();
   }
 
   /**
