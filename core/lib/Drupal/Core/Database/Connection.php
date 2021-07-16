@@ -67,8 +67,21 @@ abstract class Connection {
    * Index of what driver-specific class to use for various operations.
    *
    * @var array
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+   *   fully qualified class names in the methods that return database
+   *   operations instead.
+   *
+   * @see https://www.drupal.org/node/3217534
    */
   protected $driverClasses = [];
+
+  /**
+   * Index of driver-specific overriding classes to use.
+   *
+   * @var array
+   */
+  protected $driverOverriddenClasses = [];
 
   /**
    * The name of the Statement class for this connection.
@@ -1047,6 +1060,24 @@ abstract class Connection {
   }
 
   /**
+   * Gets a driver-specific override class, if any exists.
+   *
+   * @param string $class_name
+   *   The fully qualified class name for which we want the potentially
+   *   driver-specific class.
+   *
+   * @return string
+   *   The name of the class that should be used for this driver.
+   */
+  public function getDriverOverrideClass(string $class_name): string {
+    $parts = explode('\\', $class_name);
+    if (count($parts) === 1) {
+      throw new \InvalidArgumentException("$class_name must be a fully qualified class name");
+    }
+    return $this->driverOverriddenClasses[end($parts)] ?? $class_name;
+  }
+
+  /**
    * Gets the driver-specific override class if any for the specified class.
    *
    * @param string $class
@@ -1056,6 +1087,7 @@ abstract class Connection {
    *   The name of the class that should be used for this driver.
    */
   public function getDriverClass($class) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use fully qualified class names in the methods that return database operations instead. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     if (empty($this->driverClasses[$class])) {
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
       if (class_exists($driver_class)) {
@@ -1122,6 +1154,7 @@ abstract class Connection {
    *   The database exceptions handler.
    */
   public function exceptionHandler() {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('ExceptionHandler');
     return new $class();
   }
@@ -1146,6 +1179,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Select
    */
   public function select($table, $alias = NULL, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     if (!is_null($alias) && !is_string($alias)) {
       @trigger_error('Passing a non-string \'alias\' argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/3216552', E_USER_DEPRECATED);
     }
@@ -1170,6 +1204,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function insert($table, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Insert');
     return new $class($this, $table, $options);
   }
@@ -1188,6 +1223,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Merge
    */
   public function merge($table, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Merge');
     return new $class($this, $table, $options);
   }
@@ -1206,6 +1242,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Upsert
    */
   public function upsert($table, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Upsert');
     return new $class($this, $table, $options);
   }
@@ -1227,6 +1264,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function update($table, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Update');
     return new $class($this, $table, $options);
   }
@@ -1248,6 +1286,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function delete($table, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Delete');
     return new $class($this, $table, $options);
   }
@@ -1266,6 +1305,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Truncate
    */
   public function truncate($table, array $options = []) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Truncate');
     return new $class($this, $table, $options);
   }
@@ -1279,6 +1319,7 @@ abstract class Connection {
    *   The database Schema object for this connection.
    */
   public function schema() {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     if (empty($this->schema)) {
       $class = $this->getDriverClass('Schema');
       $this->schema = new $class($this);
@@ -1298,6 +1339,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Condition
    */
   public function condition($conjunction) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Condition');
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
     // should only be created from the database layer. This will allow database
@@ -1455,6 +1497,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Transaction
    */
   public function startTransaction($name = '') {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement it explicitly. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     $class = $this->getDriverClass('Transaction');
     return new $class($this, $name);
   }

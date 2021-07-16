@@ -317,8 +317,10 @@ class ConnectionTest extends UnitTestCase {
   /**
    * @covers ::getDriverClass
    * @dataProvider providerGetDriverClass
+   * @group legacy
    */
   public function testGetDriverClass($expected, $namespace, $class) {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::getDriverClass() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use fully qualified class names in the methods that return database operations instead. See https://www.drupal.org/node/3217534');
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");

@@ -5,7 +5,6 @@ namespace Drupal\KernelTests\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 
 /**
@@ -117,12 +116,14 @@ class SelectExtenderTest extends KernelTestBase {
    */
   public function testExtend(string $expected, string $namespace, string $extend): void {
     $additional_class_loader = new ClassLoader();
+    $additional_class_loader->addPsr4("Drupal\\Driver\\Database\\fake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/fake");
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");
     $additional_class_loader->register(TRUE);
 
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
+    $connection_class = "$namespace\\Connection";
+    $connection = new $connection_class($mock_pdo, ['namespace' => $namespace]);
 
     // Tests the method \Drupal\Core\Database\Query\Select::extend().
     $select = $connection->select('test')->extend($extend);

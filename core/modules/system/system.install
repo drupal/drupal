@@ -434,7 +434,8 @@ function system_requirements($phase) {
 
   if ($phase === 'runtime' || $phase === 'update') {
     // Database information.
-    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
+    $connection = Database::getConnection();
+    $class = $connection->getConnectionOptions()['namespace'] . '\\Install\\Tasks';
     /** @var \Drupal\Core\Database\Install\Tasks $tasks */
     $tasks = new $class();
     $requirements['database_system'] = [
@@ -443,7 +444,7 @@ function system_requirements($phase) {
     ];
     $requirements['database_system_version'] = [
       'title' => t('Database system version'),
-      'value' => Database::getConnection()->version(),
+      'value' => $connection->version(),
     ];
 
     $errors = $tasks->engineVersionRequirementsCheck();
