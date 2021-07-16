@@ -78,12 +78,12 @@ function template_preprocess_file_widget_multiple(&$variables) {
     if ($element['#display_field']) {
       unset($widget['display']['#title']);
       $display = [
-        'data' => render($widget['display']),
+        'data' => \Drupal::service('renderer')->renderElement($widget['display']),
         'class' => ['checkbox'],
       ];
     }
     $widget['_weight']['#attributes']['class'] = [$weight_class];
-    $weight = render($widget['_weight']);
+    $weight = \Drupal::service('renderer')->renderElement($widget['_weight']);
 
     // Arrange the row with all of the rendered columns.
     $row = [];

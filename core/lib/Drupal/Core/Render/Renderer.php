@@ -185,6 +185,28 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
+  public function renderElement($element) {
+    if (!$element && $element !== 0) {
+      return NULL;
+    }
+    if (is_array($element)) {
+      // Early return if this element was pre-rendered (no need to re-render).
+      if (isset($element['#printed']) && $element['#printed'] == TRUE && isset($element['#markup']) && strlen($element['#markup']) > 0) {
+        return $element['#markup'];
+      }
+      show($element);
+      return $this->render($element);
+    }
+    else {
+      // Safe-guard for inappropriate use of renderElement() on flat variables:
+      // return the variable as-is.
+      return $element;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render(&$elements, $is_root_call = FALSE) {
     // Since #pre_render, #post_render, #lazy_builder callbacks and theme
     // functions or templates may be used for generating a render array's

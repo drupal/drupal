@@ -382,27 +382,17 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @return
  *   The rendered element.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Render\RendererInterface::renderElement() instead.
+ *
+ * @see https://www.drupal.org/node/2939099
  * @see \Drupal\Core\Render\RendererInterface
  * @see show()
  * @see hide()
  */
 function render(&$element) {
-  if (!$element && $element !== 0) {
-    return NULL;
-  }
-  if (is_array($element)) {
-    // Early return if this element was pre-rendered (no need to re-render).
-    if (isset($element['#printed']) && $element['#printed'] == TRUE && isset($element['#markup']) && strlen($element['#markup']) > 0) {
-      return $element['#markup'];
-    }
-    show($element);
-    return \Drupal::service('renderer')->render($element);
-  }
-  else {
-    // Safe-guard for inappropriate use of render() on flat variables: return
-    // the variable as-is.
-    return $element;
-  }
+  @trigger_error('The render() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\RendererInterface::renderElement() instead. See https://www.drupal.org/node/2939099', E_USER_DEPRECATED);
+  return \Drupal::service('renderer')->renderElement($element);
 }
 
 /**

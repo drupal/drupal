@@ -80,6 +80,25 @@ interface RendererInterface {
   public function renderPlaceholder($placeholder, array $elements);
 
   /**
+   * Renders an element.
+   *
+   * This method renders an element. The top level element is shown with show()
+   * before rendering, so it will always be rendered even if hide() had been
+   * previously used on it.
+   *
+   * @param $element
+   *   The element to be rendered.
+   *
+   * @return mixed
+   *   The rendered element.
+   *
+   * @see \Drupal\Core\Render\RendererInterface
+   * @see show()
+   * @see hide()
+   */
+  public function renderElement($element);
+
+  /**
    * Renders HTML given a structured array tree.
    *
    * Renderable arrays have two kinds of key/value pairs: properties and
