@@ -216,3 +216,15 @@ user.well-known.change_password:
     _controller: '\Drupal\user\Controller\UserController::userEditPage'
   requirements:
     _user_is_logged_in: 'TRUE'
+
+user.mail_change:
+  path: '/user/mail-change/{user}/{new_mail}/{timestamp}/{hash}'
+  defaults:
+    _controller: '\Drupal\user\Controller\MailChangeController::page'
+    _title: 'Change email address'
+  requirements:
+    _custom_access: '\Drupal\user\Controller\MailChangeController::access'
+    user: \d+
+    timestamp: \d+
+  options:
+    no_cache: TRUE
