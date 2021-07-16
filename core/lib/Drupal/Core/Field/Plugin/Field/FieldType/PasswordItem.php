@@ -46,6 +46,11 @@ class PasswordItem extends StringItem {
       // Reset the pre_hashed value since it has now been used.
       $this->pre_hashed = FALSE;
     }
+    elseif (!$entity->isNew() && empty($this->value)) {
+      // If the password is empty, that means it was not changed, so use the
+      // original password.
+      $this->value = $entity->original->{$this->getFieldDefinition()->getName()}->value;
+    }
     elseif ($entity->isNew() || (strlen(trim($this->value)) > 0 && $this->value != $entity->original->{$this->getFieldDefinition()->getName()}->value)) {
       // Allow alternate password hashing schemes.
       $this->value = \Drupal::service('password')->hash(trim($this->value));
@@ -55,13 +60,6 @@ class PasswordItem extends StringItem {
       }
     }
 
-    if (!$entity->isNew()) {
-      // If the password is empty, that means it was not changed, so use the
-      // original password.
-      if (empty($this->value)) {
-        $this->value = $entity->original->{$this->getFieldDefinition()->getName()}->value;
-      }
-    }
     // Ensure that the existing password is unset to minimise risks of it
     // getting serialized and stored somewhere.
     $this->existing = NULL;
