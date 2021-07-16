@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Event;
 
 use Drupal\Core\Cache\CacheableResponseTrait;
+use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Component\EventDispatcher\Event;
 
@@ -61,13 +62,18 @@ class SectionComponentBuildRenderArrayEvent extends Event {
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   The available contexts.
    * @param bool $in_preview
-   *   (optional) Whether the component is in preview mode or not.
+   *   (optional) Whether the component is in preview mode or not. Deprecated
+   *   (see https://www.drupal.org/node/3223893).
    */
   public function __construct(SectionComponent $component, array $contexts, $in_preview = FALSE) {
+    if (!empty($in_preview)) {
+      @trigger_error('Passing \'$in_preview\' to ' . __METHOD__ . ' is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. See https://www.drupal.org/node/3223893', E_USER_DEPRECATED);
+      $this->inPreview = TRUE;
+    }
+
     $this->component = $component;
     $this->contexts = $contexts;
     $this->plugin = $component->getPlugin($contexts);
-    $this->inPreview = $in_preview;
   }
 
   /**
@@ -107,6 +113,14 @@ class SectionComponentBuildRenderArrayEvent extends Event {
    *   Whether the component is in preview mode or not.
    */
   public function inPreview() {
+    if (!isset($this->inPreview)) {
+      $this->inPreview = FALSE;
+
+      if (isset($this->contexts['in_preview']) && $this->contexts['in_preview'] instanceof ContextInterface) {
+        $this->inPreview = $this->contexts['in_preview']->getContextValue();
+      }
+    }
+
     return $this->inPreview;
   }
 

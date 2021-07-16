@@ -1128,6 +1128,47 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the ability of blocks to alter their output based on preview.
+   */
+  public function testBlockPreviewContext() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("{$field_ui_prefix}/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $node = $this->createNode(['type' => 'bundle_with_section_field']);
+
+    // Customize the default view mode.
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+
+    // Add a block whose content is controlled by state and is empty by default.
+    $this->clickLink('Add block');
+    $this->clickLink('In Preview');
+    $page->fillField('settings[label]', 'The block label');
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+
+    $block_content = 'This is not during preview';
+    $preview_fallback = 'This is during preview';
+
+    // On a real node, the fallback is not displayed and the content is visible.
+    $this->drupalGet($node->toUrl());
+    $assert_session->pageTextNotContains($preview_fallback);
+    $assert_session->pageTextContains($block_content);
+
+    // On the preview, the fallback is displayed and there is no content.
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+    $assert_session->pageTextContains($preview_fallback);
+    $assert_session->pageTextNotContains($block_content);
+  }
+
+  /**
    * Tests the usage of placeholders for empty blocks.
    *
    * @see \Drupal\Core\Block\BlockPluginInterface::getPlaceholderString()

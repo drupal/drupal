@@ -199,10 +199,12 @@ class OverridesSectionStorageTest extends KernelTestBase {
 
     $expected = [
       'view_mode',
+      'in_preview',
       'layout_builder.entity',
     ];
     $result = $this->plugin->getContextsDuringPreview();
     $this->assertEquals($expected, array_keys($result));
+    $this->assertSame(TRUE, $result['in_preview']->getContextValue());
     $this->assertSame($context, $result['layout_builder.entity']);
   }
 

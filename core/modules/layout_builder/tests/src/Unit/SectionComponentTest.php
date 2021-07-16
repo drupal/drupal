@@ -7,6 +7,9 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\layout_builder\SectionComponent;
@@ -48,10 +51,17 @@ class SectionComponentTest extends UnitTestCase {
     $layout_manager = $this->prophesize(LayoutPluginManagerInterface::class);
     $layout_manager->createInstance('layout_onecol', [])->willReturn($layout_plugin->reveal());
 
+    $typed_data_manager = $this->prophesize(TypedDataManagerInterface::class);
+    $data_definition = DataDefinition::createFromDataType('boolean');
+    $typed_data_manager->createDataDefinition('boolean')->willReturn($data_definition);
+    $typed_data_manager->getDefaultConstraints($data_definition)->willReturn([]);
+    $typed_data_manager->create($data_definition, FALSE)->willReturn(new BooleanData($data_definition));
+
     $container = new ContainerBuilder();
     $container->set('plugin.manager.block', $block_manager->reveal());
     $container->set('event_dispatcher', $event_dispatcher->reveal());
     $container->set('plugin.manager.core.layout', $layout_manager->reveal());
+    $container->set('typed_data_manager', $typed_data_manager->reveal());
     \Drupal::setContainer($container);
 
     $expected = [

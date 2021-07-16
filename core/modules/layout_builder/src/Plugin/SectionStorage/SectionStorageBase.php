@@ -101,6 +101,9 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
     if (!isset($contexts['view_mode']) || $contexts['view_mode']->validate()->count() || !$contexts['view_mode']->getContextValue()) {
       $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'default');
     }
+
+    $contexts['in_preview'] = new Context(new ContextDefinition('boolean'), TRUE);
+
     return $contexts;
   }
 
