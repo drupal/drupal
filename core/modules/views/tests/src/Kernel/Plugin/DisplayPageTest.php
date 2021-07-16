@@ -238,10 +238,19 @@ class DisplayPageTest extends ViewsKernelTestBase {
 
     $themes = ['olivero', 'bartik', 'classy', 'seven', 'stable', 'stark'];
 
+    $styles_overrides = [
+      'olivero' => [
+        'grid' => '//div[contains(@class, "views-view-grid__item-inner")]'
+      ],
+    ];
+
     foreach ($themes as $theme) {
       \Drupal::service('theme_installer')->install([$theme]);
       \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme($theme));
       foreach ($styles as $type => $xpath) {
+        if (isset($styles_overrides[$theme][$type])) {
+          $xpath = $styles_overrides[$theme][$type];
+        }
         $view = Views::getView('test_page_display');
         $view->storage->invalidateCaches();
         $view->initDisplay();
