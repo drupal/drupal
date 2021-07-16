@@ -197,6 +197,9 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     }
     $cacheability->applyTo($links);
 
+    // Allow modules to alter local actions.
+    $this->moduleHandler->alter('local_actions_render', $links, $route_appears);
+
     return $links;
   }
 

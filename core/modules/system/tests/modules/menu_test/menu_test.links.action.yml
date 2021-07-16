@@ -25,6 +25,7 @@ menu_test.local_action2:
   weight: -10
   appears_on:
     - menu_test.local_action1
+    - menu_test.local_action6
 
 menu_test.local_action4:
   route_name: menu_test.local_action4
