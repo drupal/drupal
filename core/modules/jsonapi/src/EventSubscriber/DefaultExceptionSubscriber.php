@@ -85,7 +85,7 @@ class DefaultExceptionSubscriber extends SerializationDefaultExceptionSubscriber
   protected function isJsonApiExceptionEvent(ExceptionEvent $exception_event) {
     $request = $exception_event->getRequest();
     $parameters = $request->attributes->all();
-    return $request->getRequestFormat() === 'api_json' || (bool) Routes::getResourceTypeNameFromParameters($parameters);
+    return $request->getPreferredFormat() === 'api_json' || (bool) Routes::getResourceTypeNameFromParameters($parameters);
   }
 
 }
