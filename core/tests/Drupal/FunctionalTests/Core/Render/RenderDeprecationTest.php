@@ -27,7 +27,7 @@ class RenderDeprecationTest extends BrowserTestBase {
    * Tests deprecated render() function.
    */
   public function testRenderDeprecation(): void {
-    $this->expectDeprecation('The render() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\RendererInterface::renderElement() instead. See https://www.drupal.org/node/2939099');
+    $this->expectDeprecation('The render() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\RendererInterface::render() instead. See https://www.drupal.org/node/2939099');
     $id = '#render-deprecation-test-result';
     $this->drupalGet(Url::fromRoute('render_deprecation.function')->getInternalPath());
     /** @var \Behat\Mink\Element\NodeElement $function_render */
