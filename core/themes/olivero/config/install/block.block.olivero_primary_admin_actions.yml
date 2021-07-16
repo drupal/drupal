@@ -3,7 +3,7 @@ status: true
 dependencies:
   theme:
     - olivero
-id: primary_admin_actions
+id: olivero_primary_admin_actions
 theme: olivero
 region: highlighted
 weight: -5

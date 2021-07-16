@@ -5,7 +5,7 @@ dependencies:
     - book
   theme:
     - olivero
-id: book_navigation
+id: olivero_book_navigation
 theme: olivero
 region: sidebar
 weight: 0
