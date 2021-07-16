@@ -112,8 +112,8 @@ class EntityRevisionTest extends MigrateTestBase {
       'langcode' => 'fr',
     ]);
     $this->assertNotEmpty($source_ids);
-    $this->assertSame((int) $node->id(), (int) $source_ids['nid']);
-    $this->assertSame((int) $node->getRevisionId(), (int) $source_ids['vid']);
+    $this->assertSame($node->id(), $source_ids['nid']);
+    $this->assertSame($node->getRevisionId(), $source_ids['vid']);
     $this->assertSame('fr', $source_ids['langcode']);
 
     // Confirm the french revision was used in the migration, instead of the

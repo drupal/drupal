@@ -119,7 +119,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')']);
     $this->assertSame($this->webUser->getAccountName(), $comment->getAuthorName());
-    $this->assertSame((int) $this->webUser->id(), (int) $comment->getOwnerId());
+    $this->assertSame($this->webUser->id(), $comment->getOwnerId());
 
     $this->drupalLogout();
 

@@ -88,14 +88,14 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertSame(2, (int) $num_matches, 'Found 2 records.');
+    $this->assertSame('2', $num_matches, 'Found 2 records.');
     // Match only "Ring_" using a LIKE expression with no wildcards.
     $num_matches = $this->connection->select('test', 't')
       ->condition('name', $this->connection->escapeLike('Ring_'), 'LIKE')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertSame(1, (int) $num_matches, 'Found 1 record.');
+    $this->assertSame('1', $num_matches, 'Found 1 record.');
   }
 
   /**
@@ -119,14 +119,14 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertSame(2, (int) $num_matches, 'Found 2 records.');
+    $this->assertSame('2', $num_matches, 'Found 2 records.');
     // Match only the former using a LIKE expression with no wildcards.
     $num_matches = $this->connection->select('test', 't')
       ->condition('name', $this->connection->escapeLike('abc%\_'), 'LIKE')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertSame(1, (int) $num_matches, 'Found 1 record.');
+    $this->assertSame('1', $num_matches, 'Found 1 record.');
   }
 
   /**
@@ -138,7 +138,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertSame(4, (int) $num_matches, 'Found 4 records.');
+    $this->assertSame('4', $num_matches, 'Found 4 records.');
   }
 
   /**

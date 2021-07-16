@@ -169,7 +169,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ]);
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '1']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
+      $this->assertSame(['editor' => ['node' => [1 => '1']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
     }
 
     // Test editor_entity_update(): increment, twice, by creating new revisions.
@@ -179,7 +179,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     $node->setNewRevision(TRUE);
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
@@ -193,7 +193,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Test editor_entity_update(): increment again by creating a new revision:
@@ -204,7 +204,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
@@ -216,7 +216,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Test hook_entity_update(): increment, by modifying the last revision:
@@ -226,13 +226,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test editor_entity_revision_delete(): decrement, by deleting a revision.
     $this->container->get('entity_type.manager')->getStorage('node')->deleteRevision($second_revision_id);
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Populate both the body and summary. Because this will be the same
@@ -243,7 +243,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Empty out the body value, but keep the summary. The number of usages
@@ -254,7 +254,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Empty out the body and summary. The number of usages should decrease by
@@ -265,7 +265,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '1']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
+      $this->assertSame(['editor' => ['node' => [1 => '1']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
     }
 
     // Set the field of a custom field type that is a subclass of
@@ -276,7 +276,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertEquals(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Test editor_entity_delete().

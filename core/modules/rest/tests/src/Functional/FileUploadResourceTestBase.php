@@ -212,7 +212,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $this->assertTrue($this->fileStorage->loadUnchanged(1)->isPermanent());
     $this->assertSame([
       [
-        'target_id' => PHP_VERSION_ID < 80100 ? '1' : 1,
+        'target_id' => '1',
         'display' => NULL,
         'description' => "The most fascinating file ever!",
       ],

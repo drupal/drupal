@@ -307,7 +307,7 @@ class FormTest extends FieldTestBase {
       // We'll need three slightly different formats to check the values.
       $values[$delta] = $value;
       $weights[$delta] = $weight;
-      $field_values[$weight]['value'] = PHP_VERSION_ID < 80100 ? (string) $value : $value;
+      $field_values[$weight]['value'] = (string) $value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
 

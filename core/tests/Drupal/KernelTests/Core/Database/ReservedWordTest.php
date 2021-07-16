@@ -16,7 +16,7 @@ class ReservedWordTest extends DatabaseTestBase {
     $query = $this->connection->select('virtual');
     $num_records = $query->countQuery()->execute()->fetchField();
 
-    $this->assertSame(1, (int) $num_records);
+    $this->assertSame('1', $num_records);
   }
 
   /**
@@ -48,7 +48,7 @@ class ReservedWordTest extends DatabaseTestBase {
     $query = $this->connection->select('test', 'character');
     $num_records = $query->countQuery()->execute()->fetchField();
 
-    $this->assertSame(4, (int) $num_records);
+    $this->assertSame('4', $num_records);
   }
 
   /**
@@ -63,7 +63,7 @@ class ReservedWordTest extends DatabaseTestBase {
 
     // Ensure that we got the right record.
     $this->assertSame('George', $record->name);
-    $this->assertSame(27, (int) $record->age);
+    $this->assertSame('27', $record->age);
   }
 
   /**
@@ -77,7 +77,7 @@ class ReservedWordTest extends DatabaseTestBase {
 
     // Ensure that we got the right record.
     $this->assertSame('George', $record->name);
-    $this->assertSame(27, (int) $record->age);
+    $this->assertSame('27', $record->age);
   }
 
 }

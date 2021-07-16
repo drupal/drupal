@@ -33,13 +33,13 @@ class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
   public function testAggregatorItem() {
     /** @var \Drupal\aggregator\Entity\Item $item */
     $item = Item::load(1);
-    $this->assertSame(1, (int) $item->id());
-    $this->assertSame(5, (int) $item->getFeedId());
+    $this->assertSame('1', $item->id());
+    $this->assertSame('5', $item->getFeedId());
     $this->assertSame('This (three) weeks in Drupal Core - January 10th 2014', $item->label());
     $this->assertSame('larowlan', $item->getAuthor());
     $this->assertSame("<h2 id='new'>What's new with Drupal 8?</h2>", $item->getDescription());
     $this->assertSame('https://groups.drupal.org/node/395218', $item->getLink());
-    $this->assertSame(1389297196, (int) $item->getPostedTime());
+    $this->assertSame('1389297196', $item->getPostedTime());
     $this->assertSame('en', $item->language()->getId());
     $this->assertSame('395218 at https://groups.drupal.org', $item->getGuid());
 

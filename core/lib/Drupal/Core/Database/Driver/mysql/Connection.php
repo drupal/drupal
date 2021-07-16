@@ -150,6 +150,11 @@ class Connection extends DatabaseConnection {
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
       // Limit SQL to a single statement like mysqli.
       \PDO::MYSQL_ATTR_MULTI_STATEMENTS => FALSE,
+      // Convert numeric values to strings when fetching. In PHP 8.1,
+      // \PDO::ATTR_EMULATE_PREPARES now behaves the same way as non emulated
+      // prepares and returns integers. See https://externals.io/message/113294
+      // for further discussion.
+      \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ];
 
     try {

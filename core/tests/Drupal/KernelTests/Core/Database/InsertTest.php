@@ -30,7 +30,7 @@ class InsertTest extends DatabaseTestBase {
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 1, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Yoko'])->fetchField();
-    $this->assertSame(29, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('29', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -65,11 +65,11 @@ class InsertTest extends DatabaseTestBase {
     $num_records_after = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 3, $num_records_after, 'Record inserts correctly.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
-    $this->assertSame(30, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
-    $this->assertSame(31, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('31', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
-    $this->assertSame(32, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('32', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -108,11 +108,11 @@ class InsertTest extends DatabaseTestBase {
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame((int) $num_records_before + 3, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
-    $this->assertSame(30, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
-    $this->assertSame(31, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('31', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
-    $this->assertSame(32, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('32', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -128,11 +128,11 @@ class InsertTest extends DatabaseTestBase {
       ->values(['Moe', '32'])
       ->execute();
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
-    $this->assertSame(30, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
-    $this->assertSame(31, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('31', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
-    $this->assertSame(32, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('32', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -172,7 +172,7 @@ class InsertTest extends DatabaseTestBase {
       ->execute();
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Meredith'])->fetchField();
-    $this->assertSame(30, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -193,7 +193,7 @@ class InsertTest extends DatabaseTestBase {
       ->execute();
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test_people_copy} WHERE [name] = :name', [':name' => 'Meredith'])->fetchField();
-    $this->assertSame(30, (int) $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**

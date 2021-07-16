@@ -67,8 +67,8 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $comment = Comment::load(1);
     $this->assertInstanceOf(Comment::class, $comment);
     $this->assertSame('Subject field in English', $comment->getSubject());
-    $this->assertSame(1421727536, (int) $comment->getCreatedTime());
-    $this->assertSame(1421727536, (int) $comment->getChangedTime());
+    $this->assertSame('1421727536', $comment->getCreatedTime());
+    $this->assertSame('1421727536', $comment->getChangedTime());
     $this->assertTrue($comment->isPublished());
     $this->assertSame('admin', $comment->getAuthorName());
     $this->assertSame('admin@local.host', $comment->getAuthorEmail());
@@ -76,11 +76,11 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertSame('filtered_html', $comment->comment_body->format);
     $this->assertSame('2001:db8:ffff:ffff:ffff:ffff:ffff:ffff', $comment->getHostname());
     $this->assertSame('en', $comment->language()->getId());
-    $this->assertSame(1000000, (int) $comment->field_integer->value);
+    $this->assertSame('1000000', $comment->field_integer->value);
 
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
-    $this->assertSame(1, (int) $node->id());
+    $this->assertSame('1', $node->id());
 
     // Tests that comments that used the Drupal 7 Title module and that have
     // their subject replaced by a real field are correctly migrated.
@@ -96,21 +96,21 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertInstanceOf(Comment::class, $comment);
     $this->assertSame('Comment to IS translation', $comment->getSubject());
     $this->assertSame('This is a comment to an Icelandic translation.', $comment->comment_body->value);
-    $this->assertSame(2, (int) $comment->getCommentedEntityId());
+    $this->assertSame('2', $comment->getCommentedEntityId());
     $this->assertSame('node', $comment->getCommentedEntityTypeId());
     $this->assertSame('is', $comment->language()->getId());
 
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
-    $this->assertSame(2, (int) $node->id());
+    $this->assertSame('2', $node->id());
 
     // Tests a comment migrated from Drupal 6 to Drupal 7 that did not have a
     // language.
     $comment = Comment::load(4);
     $this->assertInstanceOf(Comment::class, $comment);
     $this->assertSame('Comment without language', $comment->getSubject());
-    $this->assertSame(1426781880, (int) $comment->getCreatedTime());
-    $this->assertSame(1426781880, (int) $comment->getChangedTime());
+    $this->assertSame('1426781880', $comment->getCreatedTime());
+    $this->assertSame('1426781880', $comment->getChangedTime());
     $this->assertTrue($comment->isPublished());
     $this->assertSame('Bob', $comment->getAuthorName());
     $this->assertSame('bob@local.host', $comment->getAuthorEmail());
@@ -118,11 +118,11 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertSame('filtered_html', $comment->comment_body->format);
     $this->assertSame('drupal7.local', $comment->getHostname());
     $this->assertSame('und', $comment->language()->getId());
-    $this->assertSame(10, (int) $comment->field_integer->value);
+    $this->assertSame('10', $comment->field_integer->value);
 
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
-    $this->assertSame(1, (int) $node->id());
+    $this->assertSame('1', $node->id());
 
     // Tests the migration of comment entity translations.
     $manager = $this->container->get('content_translation.manager');
@@ -136,26 +136,26 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertSame('Subject field in English', $comment->getSubject());
     $this->assertSame('Subject field in French', $comment_fr->getSubject());
     $this->assertSame('Subject field in Icelandic', $comment_is->getSubject());
-    $this->assertSame(1000000, (int) $comment->field_integer->value);
-    $this->assertSame(2000000, (int) $comment_fr->field_integer->value);
-    $this->assertSame(3000000, (int) $comment_is->field_integer->value);
+    $this->assertSame('1000000', $comment->field_integer->value);
+    $this->assertSame('2000000', $comment_fr->field_integer->value);
+    $this->assertSame('3000000', $comment_is->field_integer->value);
 
     // Test that the French translation metadata is correctly migrated.
     $metadata_fr = $manager->getTranslationMetadata($comment_fr);
     $this->assertFalse($metadata_fr->isPublished());
     $this->assertSame('en', $metadata_fr->getSource());
-    $this->assertSame(1, (int) $metadata_fr->getAuthor()->uid->value);
-    $this->assertSame(1531837764, (int) $metadata_fr->getCreatedTime());
-    $this->assertSame(1531837764, (int) $metadata_fr->getChangedTime());
+    $this->assertSame('1', $metadata_fr->getAuthor()->uid->value);
+    $this->assertSame('1531837764', $metadata_fr->getCreatedTime());
+    $this->assertSame('1531837764', $metadata_fr->getChangedTime());
     $this->assertFalse($metadata_fr->isOutdated());
 
     // Test that the Icelandic translation metadata is correctly migrated.
     $metadata_is = $manager->getTranslationMetadata($comment_is);
     $this->assertTrue($metadata_is->isPublished());
     $this->assertSame('en', $metadata_is->getSource());
-    $this->assertSame(2, (int) $metadata_is->getAuthor()->uid->value);
-    $this->assertSame(1531838064, (int) $metadata_is->getCreatedTime());
-    $this->assertSame(1531838064, (int) $metadata_is->getChangedTime());
+    $this->assertSame('2', $metadata_is->getAuthor()->uid->value);
+    $this->assertSame('1531838064', $metadata_is->getCreatedTime());
+    $this->assertSame('1531838064', $metadata_is->getChangedTime());
     $this->assertTrue($metadata_is->isOutdated());
   }
 
