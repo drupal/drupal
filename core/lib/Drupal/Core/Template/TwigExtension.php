@@ -527,7 +527,7 @@ class TwigExtension extends AbstractExtension {
 
     // Return early for NULL and empty arrays.
     if ($arg == NULL) {
-      return NULL;
+      return '';
     }
 
     // Optimize for scalars as it is likely they come from the escape filter.

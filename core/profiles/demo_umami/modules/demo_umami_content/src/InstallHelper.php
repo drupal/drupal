@@ -379,6 +379,9 @@ class InstallHelper implements ContainerInjectionInterface {
       'field_media_image' => [
         'target_id' => $this->createFileEntity($image_path),
         'alt' => $data['alt'],
+        // @todo Decide if this is the correct fix. Why doesn't this get set to
+        //   the default automatically.
+        'title' => '',
       ],
     ];
     return $values;
