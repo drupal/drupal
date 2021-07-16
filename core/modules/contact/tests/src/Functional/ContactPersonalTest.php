@@ -110,7 +110,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Verify that the correct watchdog message has been logged.
     $this->drupalGet('/admin/reports/dblog');
     $placeholders = [
-      '@sender_name' => $this->webUser->username,
+      '@sender_name' => $this->webUser->getAccountName(),
       '@sender_email' => $this->webUser->getEmail(),
       '@recipient_name' => $this->contactUser->getAccountName(),
     ];
