@@ -191,7 +191,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       'administer taxonomy',
     ]);
 
-    drupal_flush_all_caches();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
