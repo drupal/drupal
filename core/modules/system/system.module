@@ -1175,7 +1175,9 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   if (!isset($destination)) {
-    $path = file_build_uri(\Drupal::service('file_system')->basename($parsed_url['path']));
+    $path = $file_system->basename($parsed_url['path']);
+    $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
+    $path = \Drupal::service('stream_wrapper_manager')->normalizeUri($path);
   }
   else {
     if (is_dir($file_system->realpath($destination))) {
