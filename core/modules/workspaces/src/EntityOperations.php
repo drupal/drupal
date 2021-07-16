@@ -136,11 +136,11 @@ class EntityOperations implements ContainerInjectionInterface {
       // become the default revision only when it is replicated to the default
       // workspace.
       $entity->isDefaultRevision(FALSE);
-
-      // Track the workspaces in which the new revision was saved.
-      $field_name = $entity_type->getRevisionMetadataKey('workspace');
-      $entity->{$field_name}->target_id = $this->workspaceManager->getActiveWorkspace()->id();
     }
+
+    // Track the workspaces in which the new revision was saved.
+    $field_name = $entity_type->getRevisionMetadataKey('workspace');
+    $entity->{$field_name}->target_id = $this->workspaceManager->getActiveWorkspace()->id();
 
     // When a new published entity is inserted in a non-default workspace, we
     // actually want two revisions to be saved:
@@ -231,10 +231,12 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // Disallow any change to an unsupported entity when we are not in the
-    // default workspace.
-    if (!$this->workspaceManager->isEntityTypeSupported($entity_type)) {
-      throw new \RuntimeException('This entity can only be deleted in the default workspace.');
+    // Prevent the entity from being deleted if the entity type does not have
+    // support for workspaces, or if the entity has a published default
+    // revision.
+    $active_workspace = $this->workspaceManager->getActiveWorkspace();
+    if (!$this->workspaceManager->isEntityTypeSupported($entity_type) || !$this->workspaceAssociation->isEntityDeletable($entity, $active_workspace)) {
+      throw new \RuntimeException("This {$entity_type->getSingularLabel()} can only be deleted in the Live workspace.");
     }
   }
 
@@ -269,6 +271,17 @@ class EntityOperations implements ContainerInjectionInterface {
     // be a pending one.
     if ($this->workspaceManager->hasActiveWorkspace()) {
       $form['#entity_builders'][] = [static::class, 'entityFormEntityBuild'];
+    }
+
+    // Prevent entities from being deleted in a workspace if they have a
+    // published default revision.
+    $active_workspace = $this->workspaceManager->getActiveWorkspace();
+    if ($form_state->getFormObject()->getOperation() === 'delete' && $active_workspace && !$this->workspaceAssociation->isEntityDeletable($entity, $active_workspace)) {
+      $form['#markup'] = $this->t('This @entity_type_label can only be deleted in the Live workspace.', [
+        '@entity_type_label' => $entity->getEntityType()->getSingularLabel(),
+      ]);
+      $form['#access'] = FALSE;
+      return;
     }
 
     // Run the workspace conflict validation constraint when the entity form is
