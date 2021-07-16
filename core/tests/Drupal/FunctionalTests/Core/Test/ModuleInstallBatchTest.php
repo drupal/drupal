@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * installation when running tests.
  *
  * @group Test
+ * @group Batch
  * @group FunctionalTestSetupTrait
  *
  * @see \Drupal\simpletest\Tests\SimpleTestInstallBatchTest

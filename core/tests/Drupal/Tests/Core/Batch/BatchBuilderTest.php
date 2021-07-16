@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\Core\Batch\BatchBuilder
  *
  * @group system
+ * @group Batch
  */
 class BatchBuilderTest extends UnitTestCase {
 
@@ -164,8 +165,6 @@ class BatchBuilderTest extends UnitTestCase {
 
   /**
    * Tests setQueue().
-   *
-   * @covers ::setQueue
    */
   public function testSetQueue() {
     $batch = (new BatchBuilder())
