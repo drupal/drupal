@@ -92,7 +92,8 @@ class ReplicaKillSwitch implements EventSubscriberInterface {
     // use the 'database.replica_kill_switch' service's trigger() method to set
     // 'ignore_replica_server' session flag to the timestamp after which the
     // replica can be re-enabled.
-    if ($this->session->has('ignore_replica_server')) {
+    $connection_info = Database::getConnectionInfo();
+    if (count($connection_info) > 1 && $this->session->has('ignore_replica_server')) {
       if ($this->session->get('ignore_replica_server') >= $this->time->getRequestTime()) {
         Database::ignoreTarget('default', 'replica');
       }
