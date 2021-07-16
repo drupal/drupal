@@ -111,12 +111,12 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
     // Tests that terms that used the Drupal 7 Title module and that have their
     // name and description replaced by real fields are correctly migrated.
-    $this->assertEntity(2, 'en', 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, [], NULL, 3, 0, [0]);
+    $this->assertEntity(2, 'en', 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, [0], NULL, 3, 0);
 
     $this->assertEntity(3, 'en', 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html', 0, [0]);
     $this->assertEntity(4, 'en', 'Term3 in plain old English', 'test_vocabulary', 'The third term in plain old English.', 'full_html', 0, [3], 6);
     $this->assertEntity(5, 'en', 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3, [0]);
-    $this->assertEntity(6, 'en', 'Games', 'forums', NULL, '', 4, []);
+    $this->assertEntity(6, 'en', 'Games', 'forums', NULL, '', 4, [0]);
     $this->assertEntity(7, 'en', 'Minecraft', 'forums', '', NULL, 1, [6]);
     $this->assertEntity(8, 'en', 'Half Life 3', 'forums', '', NULL, 0, [6]);
 
@@ -126,27 +126,27 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
     // Reset the forums tree data so this new term is included in the tree.
     unset($this->treeData['forums']);
-    $this->assertEntity(26, 'en', 'Forum Container', 'forums', '', '', 0, [], NULL, NULL, 1);
+    $this->assertEntity(26, 'en', 'Forum Container', 'forums', '', '', 0, [0], NULL, NULL, 1);
 
     // Test taxonomy term language translations.
-    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', 0, [], NULL, NULL, 1);
-    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', 0, [], NULL, NULL, 1);
-    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, 0, [], NULL, NULL, 1);
+    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', 0, [0], NULL, NULL, 1);
+    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', 0, [0], NULL, NULL, 1);
+    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, 0, [0], NULL, NULL, 1);
     $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, 0, [], NULL, NULL, 1);
     $this->assertEntity(23, 'is', 'is - High council', 'vocabtranslate', NULL, NULL, 0, [], NULL, NULL, 1);
     $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, 0, [], NULL, NULL, 1);
 
     // Localized.
-    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', '0', []);
-    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', '0', []);
-    $this->assertEntity(25, 'en', 'Emissary', 'vocablocalized2', 'Pilot episode', 'filtered_html', '0', []);
+    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', '0', [0]);
+    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', '0', [0]);
+    $this->assertEntity(25, 'en', 'Emissary', 'vocablocalized2', 'Pilot episode', 'filtered_html', '0', [0]);
 
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load(20);
     $this->assertSame('Bajor', $entity->field_sector->value);
 
     // Translate.
-    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, '0', [0]);
     $entity = Term::load(21);
     $this->assertSame("K'mpec", $entity->field_chancellor->value);
     $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, '0', []);
@@ -238,7 +238,8 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
     $this->assertArrayHasKey($tid, $this->treeData[$vid], "Term $tid exists in taxonomy tree");
     $term = $this->treeData[$vid][$tid];
-    $this->assertEquals($parent_ids, array_filter($term->parents), "Term $tid has correct parents in taxonomy tree");
+    $actual_parent_ids = $this->getParentIDs($tid);
+    $this->assertEquals($parent_ids, $actual_parent_ids, "Term $tid has correct parents in taxonomy tree");
   }
 
 }
