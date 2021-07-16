@@ -88,7 +88,8 @@ abbr.ajax-changed {
 }
 .form-item input.error,
 .form-item textarea.error,
-.form-item select.error {
+.form-item select.error,
+fieldset .error {
   border: 2px solid red;
 }
 

@@ -21,6 +21,11 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.fieldset.error {
+  border-width: 2px;
+  border-color: #d72222;
+}
+
 .fieldset--group {
   color: inherit;
   border: 0;

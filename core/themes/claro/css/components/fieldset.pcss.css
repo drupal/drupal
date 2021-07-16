@@ -16,6 +16,11 @@
   box-shadow: var(--details-box-shadow);
 }
 
+.fieldset.error {
+  border-width: var(--input--error-border-size);
+  border-color: var(--input--error-border-color);
+}
+
 .fieldset--group {
   color: inherit;
   border: 0;
