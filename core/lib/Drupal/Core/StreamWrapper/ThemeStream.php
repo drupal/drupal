@@ -3,7 +3,6 @@
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines the read-only theme:// stream wrapper for theme files.
@@ -52,7 +51,7 @@ class ThemeStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('Local files stored under a theme\'s directory.');
+    return $this->t("Local files stored under a theme's directory.");
   }
 
   /**

@@ -3,7 +3,6 @@
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines the read-only module:// stream wrapper for module files.
@@ -51,7 +50,7 @@ class ModuleStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('Local files stored under a module\'s directory.');
+    return $this->t("Local files stored under a module's directory.");
   }
 
   /**

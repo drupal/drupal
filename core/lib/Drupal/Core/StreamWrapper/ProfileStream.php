@@ -3,7 +3,6 @@
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Core\Extension\ExtensionList;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines the read-only profile:// stream wrapper for installed profile files.
@@ -50,7 +49,7 @@ class ProfileStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('Local files stored under the installed profile\'s directory.');
+    return $this->t("Local files stored under the installed profile's directory.");
   }
 
   /**
