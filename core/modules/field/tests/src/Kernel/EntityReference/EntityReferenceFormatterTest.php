@@ -15,6 +15,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the formatters functionality.
@@ -228,6 +229,42 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     $renderer->renderRoot($build[1]);
     $this->assertEquals('default | ' . $this->unsavedReferencedEntity->label() . $expected_rendered_name_field_2 . $expected_rendered_body_field_2, $build[1]['#markup'], sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
+  }
+
+  /**
+   * Tests recursive rendering protection failing over single entity N times.
+   */
+  public function testEntityFormatterRecursiveRenderingFailing() {
+    \Drupal::requestStack()->push(Request::create('http://example.com', 'POST'));
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $formatter = 'entity_reference_entity_view';
+    $view_builder = $this->entityTypeManager->getViewBuilder($this->entityType);
+
+    // Set the default view mode to use the 'entity_reference_entity_view'
+    // formatter.
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay($this->entityType, $this->bundle)
+      ->setComponent($this->fieldName, [
+        'type' => $formatter,
+      ])
+      ->save();
+
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityType);
+    $entity = $storage->create(['name' => $this->randomMachineName()]);
+    $entity->save();
+    $referencing_entity = $storage->create([
+      'name' => $this->randomMachineName(),
+      $this->fieldName => $entity->id(),
+    ]);
+    $referencing_entity->save();
+
+    $count = EntityReferenceEntityFormatter::RECURSIVE_RENDER_LIMIT + 1;
+    $build = $view_builder->viewMultiple(array_fill(0, $count, $referencing_entity), 'default');
+    $output = $renderer->renderRoot($build);
+    // The title of entity_test entities is printed twice by default, so we have
+    // to multiply our count by 2.
+    $this->assertSame($count * 2, substr_count($output, $entity->name->value));
   }
 
   /**

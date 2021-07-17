@@ -42,6 +42,13 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
   protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
     $entities = [];
 
+    // Track where this rendering comes from, to prevent recursive rendering.
+    $parent_entity = $items->getEntity();
+    $render_path = $parent_entity->getEntityTypeId() . ':' . $parent_entity->id();
+    if (isset($parent_entity->_render_path)) {
+      $render_path = $parent_entity->_render_path . '/' . $render_path;
+    }
+
     foreach ($items as $delta => $item) {
       // Ignore items where no entity could be loaded in prepareView().
       if (!empty($item->_loaded)) {
@@ -58,6 +65,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
         if ($access->isAllowed()) {
           // Add the referring item, in case the formatter needs it.
           $entity->_referringItem = $items[$delta];
+          $entity->_render_path = $render_path . '/' . $items->getName() . ':' . $entity->id();
           $entities[$delta] = $entity;
         }
       }
