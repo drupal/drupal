@@ -25,35 +25,19 @@ class ModuleStream extends ExtensionStreamBase {
   protected $moduleHandler;
 
   /**
-   * Constructor.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   */
-  public function __construct(RequestStack $requestStack, ModuleHandlerInterface $moduleHandler) {
-    parent::__construct($requestStack);
-    $this->moduleHandler = $moduleHandler;
-  }
-
-  /**
    * {@inheritdoc}
    */
-  protected function getOwnerName(): string {
-    $name = parent::getOwnerName();
-    if (!$this->moduleHandler->moduleExists($name)) {
-      // The module does not exist or is not installed.
-      throw new \RuntimeException("Module $name does not exist or is not installed");
-    }
-    return $name;
+  protected function getExtensionName(): string {
+    $extension_name = parent::getExtensionName();
+    $this->getModuleHandler()->getModule($extension_name);
+    return $extension_name;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getDirectoryPath() {
-    return $this->moduleHandler->getModule($this->getOwnerName())->getPath();
+    return $this->getModuleHandler()->getModule($this->getExtensionName())->getPath();
   }
 
   /**
@@ -67,7 +51,20 @@ class ModuleStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('Local files stored under module directory.');
+    return $this->t('Local files stored under a module\'s directory.');
+  }
+
+  /**
+   * Returns the module handler service.
+   *
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
+   */
+  protected function getModuleHandler(): ModuleHandlerInterface {
+    if (!isset($this->moduleHandler)) {
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
+    return $this->moduleHandler;
   }
 
 }

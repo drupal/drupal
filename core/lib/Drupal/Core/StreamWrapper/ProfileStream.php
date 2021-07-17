@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\ProfileExtensionList;
+use Drupal\Core\Extension\ExtensionList;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -21,27 +21,14 @@ class ProfileStream extends ExtensionStreamBase {
   /**
    * The profile extension list service.
    *
-   * @var \Drupal\Core\Extension\ProfileExtensionList
+   * @var \Drupal\Core\Extension\ExtensionList
    */
   protected $profileExtensionList;
 
   /**
-   * ProfileStream constructor.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack service.
-   * @param \Drupal\Core\Extension\ProfileExtensionList $profileExtensionList
-   *   The profile extension list service.
-   */
-  public function __construct(RequestStack $requestStack, ProfileExtensionList $profileExtensionList) {
-    parent::__construct($requestStack);
-    $this->profileExtensionList = $profileExtensionList;
-  }
-
-  /**
    * {@inheritdoc}
    */
-  protected function getOwnerName(): string {
+  protected function getExtensionName(): string {
     return \Drupal::getContainer()->getParameter('install_profile');
   }
 
@@ -49,7 +36,7 @@ class ProfileStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   protected function getDirectoryPath() {
-    return $this->profileExtensionList->getPath($this->getOwnerName());
+    return $this->getProfileExtensionList()->getPath($this->getExtensionName());
   }
 
   /**
@@ -63,7 +50,20 @@ class ProfileStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('Local files stored under installed profile directory.');
+    return $this->t('Local files stored under the installed profile\'s directory.');
+  }
+
+  /**
+   * Returns the module handler service.
+   *
+   * @return \Drupal\Core\Extension\ExtensionList
+   *   The profile extension list service.
+   */
+  protected function getProfileExtensionList(): ExtensionList {
+    if (!isset($this->profileExtensionList)) {
+      $this->profileExtensionList = \Drupal::service('extension.list.profile');
+    }
+    return $this->profileExtensionList;
   }
 
 }

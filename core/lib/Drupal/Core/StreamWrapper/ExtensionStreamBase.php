@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines a base stream wrapper implementation.
@@ -13,21 +13,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 abstract class ExtensionStreamBase extends LocalReadOnlyStream {
 
   /**
-   * The request stack object.
+   * The request object.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var \Symfony\Component\HttpFoundation\Request
    */
-  protected $requestStack;
-
-  /**
-   * Constructor.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack service.
-   */
-  public function __construct(RequestStack $requestStack) {
-    $this->requestStack = $requestStack;
-  }
+  protected $request;
 
   /**
    * {@inheritdoc}
@@ -37,15 +27,15 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   }
 
   /**
-   * Gets the module, theme, or profile name of the current URI.
+   * Gets the module, theme, or profile name from the URI.
    *
    * This will return the name of the module, theme or profile e.g.:
    * @code
-   * ModuleStream::getOwnerName('module://foo')
+   * ModuleStream::getExtensionName('module://foo')
    * @endcode
    * and
    * @code
-   * ModuleStream::getOwnerName('module://foo/')
+   * ModuleStream::getExtensionName('module://foo/')
    * @endcode
    * will both return
    * @code
@@ -55,7 +45,7 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
    * @return string
    *   The extension name.
    */
-  protected function getOwnerName(): string {
+  protected function getExtensionName(): string {
     $uri_parts = explode('://', $this->uri, 2);
     return strtok($uri_parts[1], '/');
   }
@@ -79,7 +69,7 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
       throw new \RuntimeException("Extension directory for {$this->uri} does not exist.");
     }
     $path = rtrim(base_path() . $dir . '/' . $this->getTarget(), '/');
-    return $this->requestStack->getCurrentRequest()->getUriForPath($path);
+    return $this->getRequest()->getUriForPath($path);
   }
 
   /**
@@ -97,7 +87,20 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
     $dirname = dirname($this->getTarget($uri));
     $dirname = $dirname !== '.' ? rtrim("/$dirname", '/') : '';
 
-    return "$scheme://{$this->getOwnerName()}{$dirname}";
+    return "$scheme://{$this->getExtensionName()}{$dirname}";
+  }
+
+  /**
+   * Returns the current request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   The current request object.
+   */
+  protected function getRequest(): Request {
+    if (!isset($this->request)) {
+      $this->request = \Drupal::service('request_stack')->getCurrentRequest();
+    }
+    return $this->request;
   }
 
 }

@@ -1398,17 +1398,14 @@ services:
     class: Drupal\Core\StreamWrapper\ModuleStream
     tags:
       - { name: stream_wrapper, scheme: module }
-    arguments: ['@request_stack', '@module_handler']
   stream_wrapper.theme:
     class: Drupal\Core\StreamWrapper\ThemeStream
     tags:
       - { name: stream_wrapper, scheme: theme }
-    arguments: ['@request_stack', '@theme_handler']
   stream_wrapper.profile:
     class: Drupal\Core\StreamWrapper\ProfileStream
     tags:
       - { name: stream_wrapper, scheme: profile }
-    arguments: ['@request_stack', '@extension.list.profile']
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:

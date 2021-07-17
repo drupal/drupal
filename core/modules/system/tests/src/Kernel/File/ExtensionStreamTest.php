@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\File;
 
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -137,17 +138,13 @@ class ExtensionStreamTest extends KernelTestBase {
     foreach ($case as $method => $expected) {
       list($scheme,) = explode('://', $uri);
       $this->streamWrappers[$scheme]->setUri($uri);
-      if ($expected instanceof \InvalidArgumentException || $expected instanceof \RuntimeException) {
-        /** @var \Exception $expected */
+      if ($expected instanceof \Exception) {
         $message = sprintf('Exception thrown: %s("%s").', get_class($expected), $expected->getMessage());
         try {
           $this->streamWrappers[$scheme]->$method();
-          $this->fail($message);
+          $this->fail("Should not get here.");
         }
-        catch (\InvalidArgumentException $e) {
-          $this->assertSame($expected->getMessage(), $e->getMessage(), $message);
-        }
-        catch (\RuntimeException $e) {
+        catch (\Exception $e) {
           $this->assertSame($expected->getMessage(), $e->getMessage(), $message);
         }
       }
@@ -198,15 +195,15 @@ class ExtensionStreamTest extends KernelTestBase {
       ],
       [
         'module://ckeditor/ckeditor.info.yml',
-        new \RuntimeException('Module ckeditor does not exist or is not installed'),
-        new \RuntimeException('Module ckeditor does not exist or is not installed'),
-        new \RuntimeException('Module ckeditor does not exist or is not installed'),
+        new UnknownExtensionException('The module ckeditor does not exist.'),
+        new UnknownExtensionException('The module ckeditor does not exist.'),
+        new UnknownExtensionException('The module ckeditor does not exist.'),
       ],
       [
         'module://foo_bar/foo.bar.js',
-        new \RuntimeException('Module foo_bar does not exist or is not installed'),
-        new \RuntimeException('Module foo_bar does not exist or is not installed'),
-        new \RuntimeException('Module foo_bar does not exist or is not installed'),
+        new UnknownExtensionException('The module foo_bar does not exist.'),
+        new UnknownExtensionException('The module foo_bar does not exist.'),
+        new UnknownExtensionException('The module foo_bar does not exist.'),
       ],
       // Cases for theme:// stream wrapper.
       [
@@ -229,15 +226,15 @@ class ExtensionStreamTest extends KernelTestBase {
       ],
       [
         'theme://fifteen/screenshot.png',
-        new \RuntimeException('Theme fifteen does not exist or is not installed'),
-        new \RuntimeException('Theme fifteen does not exist or is not installed'),
-        new \RuntimeException('Theme fifteen does not exist or is not installed'),
+        new UnknownExtensionException('The theme fifteen does not exist.'),
+        new UnknownExtensionException('The theme fifteen does not exist.'),
+        new UnknownExtensionException('The theme fifteen does not exist.'),
       ],
       [
         'theme://stark/stark.info.yml',
-        new \RuntimeException('Theme stark does not exist or is not installed'),
-        new \RuntimeException('Theme stark does not exist or is not installed'),
-        new \RuntimeException('Theme stark does not exist or is not installed'),
+        new UnknownExtensionException('The theme stark does not exist.'),
+        new UnknownExtensionException('The theme stark does not exist.'),
+        new UnknownExtensionException('The theme stark does not exist.'),
       ],
       // Cases for profile:// stream wrapper.
       [
