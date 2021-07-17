@@ -17,9 +17,10 @@ use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-// @todo Remove when MinK is fixed.
+// @todo Remove when Mink and Selenium2Driver is fixed.
 class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
 class_alias('Drupal\Core\PhpFixes\WebAssert', 'Behat\Mink\WebAssert', TRUE);
+class_alias('Drupal\Core\PhpFixes\Selenium2Driver', 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', TRUE);
 
 /**
  * Provides a workspace to test build processes.

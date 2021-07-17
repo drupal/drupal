@@ -27,9 +27,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\VarDumper\VarDumper;
 
-// @todo Remove when MinK is fixed.
+// @todo Remove when Mink and Selenium2Driver is fixed.
 class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
 class_alias('Drupal\Core\PhpFixes\WebAssert', 'Behat\Mink\WebAssert', TRUE);
+class_alias('Drupal\Core\PhpFixes\Selenium2Driver', 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', TRUE);
 
 /**
  * Provides a test case for functional Drupal tests.
