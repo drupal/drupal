@@ -213,7 +213,7 @@ class Selenium2Driver extends CoreDriver
         ));
 
         if (!$hasSyn) {
-            $synJs = file_get_contents(__DIR__.'/Resources/syn.js');
+            $synJs = file_get_contents(__DIR__ . '/../../../../../vendor/behat/mink-selenium2-driver/src/Resources/syn.js');
             $this->wdSession->execute(array(
                 'script' => $synJs,
                 'args'   => array()
