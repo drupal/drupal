@@ -20,7 +20,7 @@ use Symfony\Component\Process\Process;
 // @todo Remove when Mink and Selenium2Driver is fixed.
 class_alias('Drupal\Core\PhpFixes\Mink', 'Behat\Mink\Mink', TRUE);
 class_alias('Drupal\Core\PhpFixes\WebAssert', 'Behat\Mink\WebAssert', TRUE);
-class_alias('Drupal\Core\PhpFixes\Selenium2Driver', 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', TRUE);
+class_alias('Drupal\Core\PhpFixes\Selenium2Driver', 'Behat\Mink\Driver\Selenium2Driver', TRUE);
 
 /**
  * Provides a workspace to test build processes.
