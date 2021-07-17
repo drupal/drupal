@@ -131,7 +131,8 @@ function contact_mail($key, &$message, $params) {
     $variables['@sender-url'] = $sender->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString();
   }
   else {
-    // @todo is this ever not null and is an empty string correct?
+    // @todo PHP 8.1 means the whe getMail() returns a NULL this will generate
+    //   deprecation errors. Is an empty string correct?
     $variables['@sender-url'] = $params['sender']->getEmail() ?? '';
   }
 
