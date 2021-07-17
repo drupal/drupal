@@ -2,8 +2,8 @@
 
 namespace Drupal\FunctionalJavascriptTests;
 
-use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
+use Drupal\Core\PhpFixes\Selenium2Driver;
 use WebDriver\Exception\UnknownError;
 use WebDriver\ServiceFactory;
 
