@@ -6,7 +6,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The migrate entity deriver.
+ * The migration entity deriver.
  */
 class MigrateEntity implements ContainerDeriverInterface {
 

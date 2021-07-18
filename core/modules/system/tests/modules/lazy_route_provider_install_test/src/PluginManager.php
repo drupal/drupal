@@ -10,7 +10,7 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 
 /**
- * Plugin manager for testing the lazy route provider during module install.
+ * Plugin manager mock for testing a bug triggered by the url_generator.
  */
 class PluginManager extends DefaultPluginManager {
 

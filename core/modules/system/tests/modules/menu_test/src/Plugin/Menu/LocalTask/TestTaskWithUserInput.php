@@ -6,7 +6,7 @@ use Drupal\Core\Menu\LocalTaskDefault;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Mock for testing JavaScript in local tasks title.
+ * Mock for testing local tasks.
  */
 class TestTaskWithUserInput extends LocalTaskDefault {
 

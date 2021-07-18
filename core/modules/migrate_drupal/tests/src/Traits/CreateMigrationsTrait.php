@@ -3,7 +3,7 @@
 namespace Drupal\Tests\migrate_drupal\Traits;
 
 /**
- * Test trait that provides instances of Drupal 6 and Drupal 7 migrations.
+ * Test trait that provides instances of Drupal 6 and 7 migrations.
  */
 trait CreateMigrationsTrait {
 
