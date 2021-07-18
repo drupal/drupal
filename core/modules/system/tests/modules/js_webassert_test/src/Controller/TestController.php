@@ -4,6 +4,9 @@ namespace Drupal\js_webassert_test\Controller;
 
 use Drupal\Core\Render\Markup;
 
+/**
+ * A test controller for the js_webassert_test module.
+ */
 class TestController {
 
   public function page() {

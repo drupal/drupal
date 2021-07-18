@@ -4,6 +4,9 @@ namespace Drupal\position_shim_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
+/**
+ * The position shim test ported jQuery tests controller.
+ */
 class PositionShimTestPortedJqueryTestsController extends ControllerBase {
 
   /**
