@@ -135,6 +135,7 @@ class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\
 class_alias('Drupal\Core\PhpFixes\StaticReflectionClass', 'Doctrine\Common\Reflection\StaticReflectionClass', TRUE);
 class_alias('Drupal\Core\PhpFixes\Inline', 'Symfony\Component\Yaml\Inline', TRUE);
 class_alias('Drupal\Core\PhpFixes\FileBag', 'Symfony\Component\HttpFoundation\FileBag', TRUE);
+class_alias('Drupal\Core\PhpFixes\Client', 'GuzzleHttp\Client', TRUE);
 
 /**
  * Returns and optionally sets the filename for a system resource.
