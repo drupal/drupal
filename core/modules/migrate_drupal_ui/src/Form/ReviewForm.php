@@ -284,6 +284,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected function prepareOutput(array $migration_state) {
     $output = [];
     foreach ($migration_state as $source_machine_name => $destination_modules) {
+      $data = NULL;
       if (isset($this->systemData['module'][$source_machine_name]['info'])) {
         $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
       }
