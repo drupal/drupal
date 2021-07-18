@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\ExtensionList;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,13 +18,6 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
    * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $request;
-
-  /**
-   * The extension list service.
-   *
-   * @var \Drupal\Core\Extension\ExtensionList
-   */
-  protected $extensionList;
 
   /**
    * {@inheritdoc}
@@ -85,21 +77,6 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   /**
    * {@inheritdoc}
    */
-  public function getDirectoryPath() {
-    return $this->doGetExtensionList()->getPath($this->getExtensionName());
-  }
-
-  /**
-   * Returns the list service for the extension type.
-   *
-   * @return \Drupal\Core\Extension\ExtensionList
-   *   The extension list service.
-   */
-  abstract protected function doGetExtensionList(): ExtensionList;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getTarget($uri = NULL) {
     if ($target = strstr(parent::getTarget($uri), '/')) {
       return trim($target, '/');
@@ -127,17 +104,11 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
       $uri = $this->uri;
     }
     else {
-      if (strpos($uri, '://') === FALSE) {
-        // The delimiter ('://') was not found in $uri, malformed $uri passed.
-        throw new \InvalidArgumentException("Malformed URI: {$uri}");
-      }
-      $this->uri = $uri;
+      $this->setUri($uri);
     }
-
-    list($scheme) = explode('://', $uri, 2);
+    [$scheme] = explode('://', $uri, 2);
     $dirname = dirname($this->getTarget($uri));
     $dirname = $dirname !== '.' ? rtrim("/$dirname", '/') : '';
-
     return "$scheme://{$this->getExtensionName()}{$dirname}";
   }
 

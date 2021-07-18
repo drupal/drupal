@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\ExtensionList;
-
 /**
  * Defines the read-only module:// stream wrapper for module files.
  *
@@ -34,18 +31,15 @@ class ModuleStream extends ExtensionStreamBase {
   /**
    * {@inheritdoc}
    */
-  protected function validateExtensionInstalled(string $extension_name): void {
-    $installed = $this->doGetExtensionList()->getAllInstalledInfo();
-    if (!array_key_exists($extension_name, $installed)) {
-      throw new UnknownExtensionException("The module $extension_name does not exist.");
-    }
+  public function getDirectoryPath() {
+    return \Drupal::moduleHandler()->getModule($this->getExtensionName())->getPath();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doGetExtensionList(): ExtensionList {
-    return \Drupal::service('extension.list.module');
+  protected function validateExtensionInstalled(string $extension_name): void {
+    \Drupal::moduleHandler()->getModule($extension_name);
   }
 
 }

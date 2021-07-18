@@ -2,14 +2,10 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\ExtensionList;
-
 /**
  * Defines the read-only theme:// stream wrapper for theme files.
  *
  * Usage:
- *
  * @code
  * theme://{name}
  * @endcode
@@ -35,18 +31,15 @@ class ThemeStream extends ExtensionStreamBase {
   /**
    * {@inheritdoc}
    */
-  protected function validateExtensionInstalled(string $extension_name): void {
-    $installed = $this->doGetExtensionList()->getAllInstalledInfo();
-    if (!array_key_exists($extension_name, $installed)) {
-      throw new UnknownExtensionException("The theme $extension_name does not exist.");
-    }
+  public function getDirectoryPath() {
+    return \Drupal::service('theme_handler')->getTheme($this->getExtensionName())->getPath();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doGetExtensionList(): ExtensionList {
-    return \Drupal::service('extension.list.theme');
+  protected function validateExtensionInstalled(string $extension_name): void {
+    \Drupal::service('theme_handler')->getTheme($extension_name);
   }
 
 }

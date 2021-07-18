@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\ExtensionList;
-
 /**
  * Defines the read-only profile:// stream wrapper for installed profile files.
  *
@@ -38,12 +35,8 @@ class ProfileStream extends ExtensionStreamBase {
       $uri = $this->uri;
     }
     else {
-      $this->uri = $uri;
+      $this->setUri($uri);
     }
-
-    $extension_name = \Drupal::getContainer()->getParameter('install_profile');
-    $this->validateExtensionInstalled($extension_name);
-
     [$scheme] = explode('://', $uri, 2);
     $dirname = dirname($this->getTarget($uri));
     $dirname = $dirname !== '.' ? rtrim("$dirname", '/') : '';
@@ -53,13 +46,18 @@ class ProfileStream extends ExtensionStreamBase {
   /**
    * {@inheritdoc}
    */
+  public function getDirectoryPath() {
+    return \Drupal::service('extension.list.profile')->getPath($this->getExtensionName());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getTarget($uri = NULL) {
     if (!isset($uri)) {
       $uri = $this->uri;
     }
-
     [, $target] = explode('://', $uri, 2);
-
     // Remove erroneous leading or trailing, forward-slashes and backslashes.
     return trim($target, '\/');
   }
@@ -68,26 +66,12 @@ class ProfileStream extends ExtensionStreamBase {
    * {@inheritdoc}
    */
   protected function getExtensionName(): string {
-    $extension_name = \Drupal::getContainer()->getParameter('install_profile');
-    $this->validateExtensionInstalled($extension_name);
-    return $extension_name;
+    return \Drupal::getContainer()->getParameter('install_profile');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function validateExtensionInstalled(string $extension_name): void {
-    $installed = $this->doGetExtensionList()->getAllInstalledInfo();
-    if (!array_key_exists($extension_name, $installed)) {
-      throw new UnknownExtensionException("The profile $extension_name does not exist.");
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function doGetExtensionList(): ExtensionList {
-    return \Drupal::service('extension.list.profile');
-  }
+  protected function validateExtensionInstalled(string $extension_name): void {}
 
 }
