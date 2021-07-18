@@ -63,7 +63,7 @@ class LinkSeparateFormatter extends LinkFormatter {
       }
       $url_title = $url->toString();
       if (!empty($settings['trim_length'])) {
-        $link_title = Unicode::truncate($link_title, $settings['trim_length'], FALSE, TRUE);
+        $link_title = $link_title !== NULL ? Unicode::truncate($link_title, $settings['trim_length'], FALSE, TRUE) : NULL;
         $url_title = Unicode::truncate($url_title, $settings['trim_length'], FALSE, TRUE);
       }
 
