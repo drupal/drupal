@@ -506,7 +506,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   }
 
   // Split $text into words, keeping track of where the word boundaries are.
-  $words = preg_split('/' . $boundary . '+/u', $text, NULL, PREG_SPLIT_OFFSET_CAPTURE);
+  $words = preg_split('/' . $boundary . '+/u', $text, -1, PREG_SPLIT_OFFSET_CAPTURE);
   // Add an entry pointing to the end of the string, for the loop below.
   $words[] = ['', strlen($text)];
 
