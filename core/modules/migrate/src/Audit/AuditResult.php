@@ -139,6 +139,7 @@ class AuditResult implements MarkupInterface, \Countable {
    *
    * @return string[]
    */
+  #[\ReturnTypeWillChange]
   public function jsonSerialize() {
     return $this->reasons;
   }
