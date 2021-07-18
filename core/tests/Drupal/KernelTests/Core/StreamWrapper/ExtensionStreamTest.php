@@ -70,7 +70,7 @@ class ExtensionStreamTest extends KernelTestBase {
    */
   public function testInvalidStreamUri(string $uri): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage("Malformed URI: {$uri}"); 
+    $this->expectExceptionMessage("Malformed URI: {$uri}");
     $this->streamWrappers['module']->dirname($uri);
   }
 
