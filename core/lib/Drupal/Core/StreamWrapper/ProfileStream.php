@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ExtensionList;
 
 /**
@@ -14,29 +15,6 @@ use Drupal\Core\Extension\ExtensionList;
  * Points to the installed profile root directory.
  */
 class ProfileStream extends ExtensionStreamBase {
-
-  use LocalStreamTrait;
-
-  /**
-   * The profile extension list service.
-   *
-   * @var \Drupal\Core\Extension\ExtensionList
-   */
-  protected $profileExtensionList;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExtensionName(): string {
-    return \Drupal::getContainer()->getParameter('install_profile');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDirectoryPath() {
-    return $this->getProfileExtensionList()->getPath($this->getExtensionName());
-  }
 
   /**
    * {@inheritdoc}
@@ -53,16 +31,63 @@ class ProfileStream extends ExtensionStreamBase {
   }
 
   /**
-   * Returns the module handler service.
-   *
-   * @return \Drupal\Core\Extension\ExtensionList
-   *   The profile extension list service.
+   * {@inheritdoc}
    */
-  protected function getProfileExtensionList(): ExtensionList {
-    if (!isset($this->profileExtensionList)) {
-      $this->profileExtensionList = \Drupal::service('extension.list.profile');
+  public function dirname($uri = NULL) {
+    if (!isset($uri)) {
+      $uri = $this->uri;
     }
-    return $this->profileExtensionList;
+    else {
+      $this->uri = $uri;
+    }
+
+    $extension_name = \Drupal::getContainer()->getParameter('install_profile');
+    $this->validateExtensionInstalled($extension_name);
+
+    [$scheme] = explode('://', $uri, 2);
+    $dirname = dirname($this->getTarget($uri));
+    $dirname = $dirname !== '.' ? rtrim("$dirname", '/') : '';
+    return "$scheme://{$dirname}";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getTarget($uri = NULL) {
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+
+    [, $target] = explode('://', $uri, 2);
+
+    // Remove erroneous leading or trailing, forward-slashes and backslashes.
+    return trim($target, '\/');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExtensionName(): string {
+    $extension_name = \Drupal::getContainer()->getParameter('install_profile');
+    $this->validateExtensionInstalled($extension_name);
+    return $extension_name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function validateExtensionInstalled(string $extension_name): void {
+    $installed = $this->doGetExtensionList()->getAllInstalledInfo();
+    if (!array_key_exists($extension_name, $installed)) {
+      throw new UnknownExtensionException("The profile $extension_name does not exist.");
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doGetExtensionList(): ExtensionList {
+    return \Drupal::service('extension.list.profile');
   }
 
 }

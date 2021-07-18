@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Kernel\File;
+namespace Drupal\KernelTests\Core\StreamWrapper;
 
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\KernelTests\KernelTestBase;
@@ -69,14 +69,9 @@ class ExtensionStreamTest extends KernelTestBase {
    * @dataProvider providerInvalidUris
    */
   public function testInvalidStreamUri(string $uri): void {
-    $message = "\\InvalidArgumentException thrown on invalid uri $uri.";
-    try {
-      $this->streamWrappers['module']->dirname($uri);
-      $this->fail($message);
-    }
-    catch (\InvalidArgumentException $e) {
-      $this->assertSame($e->getMessage(), "Malformed uri parameter passed: $uri", $message);
-    }
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage("Malformed URI: {$uri}"); 
+    $this->streamWrappers['module']->dirname($uri);
   }
 
   /**

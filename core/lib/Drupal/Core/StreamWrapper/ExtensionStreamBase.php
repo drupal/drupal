@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\Extension\ExtensionList;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,10 +21,28 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   protected $request;
 
   /**
+   * The extension list service.
+   *
+   * @var \Drupal\Core\Extension\ExtensionList
+   */
+  protected $extensionList;
+
+  /**
    * {@inheritdoc}
    */
   public static function getType() {
     return StreamWrapperInterface::LOCAL | StreamWrapperInterface::READ;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUri($uri) {
+    if (strpos($uri, '://') === FALSE) {
+      // The delimiter ('://') was not found in $uri, malformed $uri passed.
+      throw new \InvalidArgumentException("Malformed URI: {$uri}");
+    }
+    $this->uri = $uri;
   }
 
   /**
@@ -47,8 +66,36 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
    */
   protected function getExtensionName(): string {
     $uri_parts = explode('://', $this->uri, 2);
-    return strtok($uri_parts[1], '/');
+    $extension_name = strtok($uri_parts[1], '/');
+    $this->validateExtensionInstalled($extension_name);
+    return $extension_name;
   }
+
+  /**
+   * Checks that a module, theme, or profile is installed.
+   *
+   * @param string $extension_name
+   *   The extension name.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   If the extension is missing.
+   */
+  abstract protected function validateExtensionInstalled(string $extension_name): void;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDirectoryPath() {
+    return $this->doGetExtensionList()->getPath($this->getExtensionName());
+  }
+
+  /**
+   * Returns the list service for the extension type.
+   *
+   * @return \Drupal\Core\Extension\ExtensionList
+   *   The extension list service.
+   */
+  abstract protected function doGetExtensionList(): ExtensionList;
 
   /**
    * {@inheritdoc}
@@ -80,6 +127,10 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
       $uri = $this->uri;
     }
     else {
+      if (strpos($uri, '://') === FALSE) {
+        // The delimiter ('://') was not found in $uri, malformed $uri passed.
+        throw new \InvalidArgumentException("Malformed URI: {$uri}");
+      }
       $this->uri = $uri;
     }
 

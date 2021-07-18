@@ -10,13 +10,10 @@ namespace Drupal\Core\StreamWrapper;
  * "sites/default/files/example.txt" and then PHP filesystem functions are
  * invoked.
  *
- * \Drupal\Core\StreamWrapper\LocalStream implementations need to implement at
- * least the getDirectoryPath() and getExternalUrl() methods.
+ * Drupal\Core\StreamWrapper\LocalStream implementations need to implement at least the
+ * getDirectoryPath() and getExternalUrl() methods.
  */
-abstract class LocalStream extends StreamWrapperBase {
-
-  use LocalStreamTrait;
-
+abstract class LocalStream implements StreamWrapperInterface {
   /**
    * Stream context resource.
    *
@@ -30,6 +27,15 @@ abstract class LocalStream extends StreamWrapperBase {
    * @var resource
    */
   public $handle = NULL;
+
+  /**
+   * Instance URI (stream).
+   *
+   * A stream is referenced as "scheme://target".
+   *
+   * @var string
+   */
+  protected $uri;
 
   /**
    * {@inheritdoc}
@@ -46,13 +52,47 @@ abstract class LocalStream extends StreamWrapperBase {
    * @return string
    *   String specifying the path.
    */
-  abstract protected function getDirectoryPath();
+  abstract public function getDirectoryPath();
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUri($uri) {
+    $this->uri = $uri;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function getUri() {
     return $this->uri;
+  }
+
+  /**
+   * Returns the local writable target of the resource within the stream.
+   *
+   * This function should be used in place of calls to realpath() or similar
+   * functions when attempting to determine the location of a file. While
+   * functions like realpath() may return the location of a read-only file, this
+   * method may return a URI or path suitable for writing that is completely
+   * separate from the URI used for reading.
+   *
+   * @param string $uri
+   *   Optional URI.
+   *
+   * @return string|bool
+   *   Returns a string representing a location suitable for writing of a file,
+   *   or FALSE if unable to write to the file such as with read-only streams.
+   */
+  protected function getTarget($uri = NULL) {
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+
+    list(, $target) = explode('://', $uri, 2);
+
+    // Remove erroneous leading or trailing, forward-slashes and backslashes.
+    return trim($target, '\/');
   }
 
   /**
@@ -97,7 +137,6 @@ abstract class LocalStream extends StreamWrapperBase {
       $realpath = realpath(dirname($path)) . '/' . \Drupal::service('file_system')->basename($path);
     }
     $directory = realpath($this->getDirectoryPath());
-
     if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {
       return FALSE;
     }
@@ -118,7 +157,7 @@ abstract class LocalStream extends StreamWrapperBase {
     }
     $this->handle = ($options & STREAM_REPORT_ERRORS) ? fopen($path, $mode) : @fopen($path, $mode);
 
-    if ((bool) $this->handle && ($options & STREAM_USE_PATH)) {
+    if ((bool) $this->handle && $options & STREAM_USE_PATH) {
       $opened_path = $path;
     }
 

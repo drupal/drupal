@@ -2,7 +2,8 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\ExtensionList;
 
 /**
  * Defines the read-only module:// stream wrapper for module files.
@@ -15,29 +16,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * referred.
  */
 class ModuleStream extends ExtensionStreamBase {
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExtensionName(): string {
-    $extension_name = parent::getExtensionName();
-    $this->getModuleHandler()->getModule($extension_name);
-    return $extension_name;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDirectoryPath() {
-    return $this->getModuleHandler()->getModule($this->getExtensionName())->getPath();
-  }
 
   /**
    * {@inheritdoc}
@@ -54,16 +32,20 @@ class ModuleStream extends ExtensionStreamBase {
   }
 
   /**
-   * Returns the module handler service.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
+   * {@inheritdoc}
    */
-  protected function getModuleHandler(): ModuleHandlerInterface {
-    if (!isset($this->moduleHandler)) {
-      $this->moduleHandler = \Drupal::moduleHandler();
+  protected function validateExtensionInstalled(string $extension_name): void {
+    $installed = $this->doGetExtensionList()->getAllInstalledInfo();
+    if (!array_key_exists($extension_name, $installed)) {
+      throw new UnknownExtensionException("The module $extension_name does not exist.");
     }
-    return $this->moduleHandler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doGetExtensionList(): ExtensionList {
+    return \Drupal::service('extension.list.module');
   }
 
 }
