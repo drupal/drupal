@@ -303,7 +303,7 @@ class ImageDimensionsTest extends BrowserTestBase {
    * re-rendered each time.
    */
   protected function getImageTag($variables) {
-    return str_replace("\n", NULL, \Drupal::service('renderer')->renderRoot($variables));
+    return str_replace("\n", '', \Drupal::service('renderer')->renderRoot($variables));
   }
 
 }
