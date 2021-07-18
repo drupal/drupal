@@ -103,7 +103,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test that tearDown doesn't call cleanupEnvironment if setUp is not called.
+   * Tests that tearDown doesn't call cleanupEnvironment if setUp is not called.
    *
    * @covers ::tearDown
    */

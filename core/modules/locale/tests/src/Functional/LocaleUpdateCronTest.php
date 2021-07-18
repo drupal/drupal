@@ -51,7 +51,8 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Update translations using batch to ensure a clean test starting point.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
+    $this->drupalGet('admin/reports/translations');
+    $this->submitForm([], 'Update translations');
 
     // Store translation status for comparison.
     $initial_history = locale_translation_get_file_history();
@@ -74,14 +75,15 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $edit = [
       'update_interval_days' => 0,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/translate/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     // Execute locale cron tasks to add tasks to the queue.
     locale_cron();
 
     // Check whether no tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEqual(0, $queue->numberOfItems(), 'Queue is empty');
+    $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
 
     // Test: Enable cron update and check if update tasks are added to the
     // queue.
@@ -89,17 +91,18 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $edit = [
       'update_interval_days' => 7,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/translate/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     // Execute locale cron tasks to add tasks to the queue.
     locale_cron();
 
     // Check whether tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
     $item = $queue->claimItem();
     $queue->releaseItem($item);
-    $this->assertEqual('contrib_module_two', $item->data[1][0], 'Queue holds tasks for contrib module one.');
+    $this->assertEquals('contrib_module_two', $item->data[1][0], 'Queue holds tasks for contrib module one.');
 
     // Test: Run cron for a second time and check if tasks are not added to
     // the queue twice.
@@ -107,7 +110,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Check whether no more tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
 
     // Ensure last checked is updated to a greater time than the initial value.
     sleep(1);

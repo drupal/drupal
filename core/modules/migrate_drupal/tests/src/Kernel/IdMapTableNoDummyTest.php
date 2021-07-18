@@ -28,7 +28,7 @@ class IdMapTableNoDummyTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that dummy map tables do not exist.
+   * Tests that dummy map tables do not exist.
    */
   public function testNoDummyTables() {
     $database = \Drupal::database();

@@ -107,7 +107,7 @@ abstract class StorageTestBase extends KernelTestBase {
 
     // Verify that all items in the other collection are different.
     $result = $stores[1]->getAll();
-    $this->assertEqual(['foo' => $this->objects[5]], $result);
+    $this->assertEquals(['foo' => $this->objects[5]], $result);
 
     // Verify that multiple items can be deleted.
     $stores[0]->deleteMultiple(array_keys($values));
@@ -160,7 +160,7 @@ abstract class StorageTestBase extends KernelTestBase {
     for ($i = 0; $i <= 1; $i++) {
       // setIfNotExists() should be TRUE the first time (when $i is 0) and
       // FALSE the second time (when $i is 1).
-      $this->assertEqual(!$i, $stores[0]->setIfNotExists($key, $this->objects[$i]));
+      $this->assertEquals(!$i, $stores[0]->setIfNotExists($key, $this->objects[$i]));
       $this->assertEquals($this->objects[0], $stores[0]->get($key));
       // Verify that the other collection is not affected.
       $this->assertNull($stores[1]->get($key));

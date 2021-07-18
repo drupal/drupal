@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Template;
 
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -61,6 +62,13 @@ class TwigExtensionTest extends UnitTestCase {
   protected $systemUnderTest;
 
   /**
+   * The file URL generator mock.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp(): void {
@@ -70,8 +78,9 @@ class TwigExtensionTest extends UnitTestCase {
     $this->urlGenerator = $this->createMock('\Drupal\Core\Routing\UrlGeneratorInterface');
     $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
     $this->dateFormatter = $this->createMock('\Drupal\Core\Datetime\DateFormatterInterface');
+    $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
 
-    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter);
+    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter, $this->fileUrlGenerator);
   }
 
   /**
@@ -165,6 +174,22 @@ class TwigExtensionTest extends UnitTestCase {
     $timestamp = strtotime('1978-11-19');
     $result = $twig->render('{{ time|format_date("html_date") }}', ['time' => $timestamp]);
     $this->assertEquals('1978-11-19', $result);
+  }
+
+  /**
+   * Tests the file_url filter.
+   */
+  public function testFileUrl() {
+    $this->fileUrlGenerator->expects($this->once())
+      ->method('generateString')
+      ->with('public://picture.jpg')
+      ->willReturn('sites/default/files/picture.jpg');
+
+    $loader = new StringLoader();
+    $twig = new Environment($loader);
+    $twig->addExtension($this->systemUnderTest);
+    $result = $twig->render('{{ file_url(file) }}', ['file' => 'public://picture.jpg']);
+    $this->assertEquals('sites/default/files/picture.jpg', $result);
   }
 
   /**

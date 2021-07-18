@@ -3,9 +3,13 @@
 namespace Drupal\Core\Datetime\Element;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Variable;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
+use Drupal\Core\Security\StaticTrustedCallbackHelper;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Provides a datetime element.
@@ -13,6 +17,8 @@ use Drupal\Core\Datetime\Entity\DateFormat;
  * @FormElement("datetime")
  */
 class Datetime extends DateElementBase {
+
+  use DoTrustedCallbackTrait;
 
   /**
    * @var \DateTimeInterface
@@ -28,11 +34,11 @@ class Datetime extends DateElementBase {
     // Date formats cannot be loaded during install or update.
     if (!defined('MAINTENANCE_MODE')) {
       if ($date_format_entity = DateFormat::load('html_date')) {
-        /** @var $date_format_entity \Drupal\Core\Datetime\DateFormatInterface */
+        /** @var \Drupal\Core\Datetime\DateFormatInterface $date_format_entity */
         $date_format = $date_format_entity->getPattern();
       }
       if ($time_format_entity = DateFormat::load('html_time')) {
-        /** @var $time_format_entity \Drupal\Core\Datetime\DateFormatInterface */
+        /** @var \Drupal\Core\Datetime\DateFormatInterface $time_format_entity */
         $time_format = $time_format_entity->getPattern();
       }
     }
@@ -267,9 +273,8 @@ class Datetime extends DateElementBase {
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_date_callbacks'])) {
         foreach ($element['#date_date_callbacks'] as $callback) {
-          if (is_callable($callback)) {
-            $callback($element, $form_state, $date);
-          }
+          $message = sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. Support for this callback implementation is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
+          StaticTrustedCallbackHelper::callback($callback, [$element, $form_state, $date], $message, TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION);
         }
       }
     }
@@ -299,9 +304,8 @@ class Datetime extends DateElementBase {
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_time_callbacks'])) {
         foreach ($element['#date_time_callbacks'] as $callback) {
-          if (function_exists($callback)) {
-            $callback($element, $form_state, $date);
-          }
+          $message = sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. Support for this callback implementation is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
+          StaticTrustedCallbackHelper::callback($callback, [$element, $form_state, $date], $message, TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION);
         }
       }
     }

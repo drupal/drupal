@@ -67,7 +67,6 @@
 {%
   set classes = [
     'comment',
-    'js-comment',
     not parent_comment ? 'comment--level-1',
     status != 'published' ? 'comment--' ~ status,
     comment.owner.anonymous ? 'by-anonymous',
@@ -75,7 +74,7 @@
   ]
 %}
 {{ attach_library('olivero/comments') }}
-<article {{ attributes.addClass(classes).setAttribute('role', 'article') }}>
+<article {{ attributes.addClass(classes).setAttribute('role', 'article').setAttribute('data-drupal-selector', 'comment') }}>
   <div class="comment__picture-wrapper">
     <div class="comment__picture">
       {{ user_picture }}

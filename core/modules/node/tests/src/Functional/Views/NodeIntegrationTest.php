@@ -66,7 +66,7 @@ class NodeIntegrationTest extends NodeTestBase {
     foreach ($result as $element) {
       $nids[] = (int) $element->getText();
     }
-    $this->assertEqual($expected_nids, $nids);
+    $this->assertEquals($expected_nids, $nids);
   }
 
 }

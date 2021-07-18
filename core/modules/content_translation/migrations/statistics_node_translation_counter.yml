@@ -29,6 +29,7 @@ destination:
   plugin: node_counter
 migration_dependencies:
   required:
+    - language
     - statistics_node_counter
   optional:
     - d6_node_translation

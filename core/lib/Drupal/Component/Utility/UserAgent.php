@@ -40,9 +40,11 @@ class UserAgent {
     // The Accept-Language header contains information about the language
     // preferences configured in the user's user agent / operating system.
     // RFC 2616 (section 14.4) defines the Accept-Language header as follows:
+    // @code
     //   Accept-Language = "Accept-Language" ":"
     //                  1#( language-range [ ";" "q" "=" qvalue ] )
     //   language-range  = ( ( 1*8ALPHA *( "-" 1*8ALPHA ) ) | "*" )
+    // @endcode
     // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5"
     $ua_langcodes = [];
     if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($http_accept_language), $matches, PREG_SET_ORDER)) {

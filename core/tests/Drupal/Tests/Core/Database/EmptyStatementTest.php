@@ -40,7 +40,7 @@ class EmptyStatementTest extends UnitTestCase {
   public function testEmptyFetchAll() {
     $result = new StatementEmpty();
 
-    $this->assertEquals($result->fetchAll(), [], 'Empty array returned from empty result set.');
+    $this->assertEquals([], $result->fetchAll(), 'Empty array returned from empty result set.');
   }
 
 }

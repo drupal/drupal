@@ -103,17 +103,26 @@ class HandlerTest extends UITestBase {
 
       // Area handler types need to use a different handler.
       if (in_array($type, ['header', 'footer', 'empty'])) {
-        $this->drupalPostForm($add_handler_url, ['name[views.area]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+        $this->drupalGet($add_handler_url);
+        $this->submitForm([
+          'name[views.area]' => TRUE,
+        ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'area';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       elseif ($type == 'relationship') {
-        $this->drupalPostForm($add_handler_url, ['name[views_test_data.uid]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+        $this->drupalGet($add_handler_url);
+        $this->submitForm([
+          'name[views_test_data.uid]' => TRUE,
+        ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'uid';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       else {
-        $this->drupalPostForm($add_handler_url, ['name[views_test_data.job]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+        $this->drupalGet($add_handler_url);
+        $this->submitForm([
+          'name[views_test_data.job]' => TRUE,
+        ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'job';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
@@ -137,7 +146,8 @@ class HandlerTest extends UITestBase {
       $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
 
       // Remove the item and check that it's removed
-      $this->drupalPostForm($edit_handler_url, [], 'Remove');
+      $this->drupalGet($edit_handler_url);
+      $this->submitForm([], 'Remove');
       $this->assertSession()->linkByHrefNotExists($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
 
       $this->submitForm([], 'Save');
@@ -149,11 +159,17 @@ class HandlerTest extends UITestBase {
     // Test adding a field of the user table using the uid relationship.
     $type_info = $handler_types['relationship'];
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/relationship";
-    $this->drupalPostForm($add_handler_url, ['name[views_test_data.uid]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+    $this->drupalGet($add_handler_url);
+    $this->submitForm([
+      'name[views_test_data.uid]' => TRUE,
+    ], 'Add and configure ' . $type_info['ltitle']);
 
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/field";
     $type_info = $handler_types['field'];
-    $this->drupalPostForm($add_handler_url, ['name[users_field_data.name]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+    $this->drupalGet($add_handler_url);
+    $this->submitForm([
+      'name[users_field_data.name]' => TRUE,
+    ], 'Add and configure ' . $type_info['ltitle']);
     $id = 'name';
     $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 
@@ -233,7 +249,7 @@ class HandlerTest extends UITestBase {
       ];
 
       foreach ($original_configuration as $key => $value) {
-        $this->assertText($key . ': ' . $value);
+        $this->assertSession()->pageTextContains($key . ': ' . $value);
       }
     }
   }

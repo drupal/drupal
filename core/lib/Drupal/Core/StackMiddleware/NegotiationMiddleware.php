@@ -7,8 +7,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Provides a middleware to determine the content type upon the accept header.
- *
- * @todo This is a temporary solution, remove this in https://www.drupal.org/node/2364011
  */
 class NegotiationMiddleware implements HttpKernelInterface {
 

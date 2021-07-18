@@ -5,6 +5,7 @@
  * Content administration and module settings user interface.
  */
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Link;
 use Drupal\node\NodeInterface;
 
@@ -34,21 +35,18 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
-    $batch = [
-      'operations' => [
-        ['_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions]],
-      ],
-      'finished' => '_node_mass_update_batch_finished',
-      'title' => t('Processing'),
-      // We use a single multi-pass operation, so the default
-      // 'Remaining x of y operations' message will be confusing here.
-      'progress_message' => '',
-      'error_message' => t('The update has encountered an error.'),
+    $batch_builder = (new BatchBuilder())
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
-      'file' => drupal_get_path('module', 'node') . '/node.admin.inc',
-    ];
-    batch_set($batch);
+      ->setFile(\Drupal::service('extension.list.module')->getPath('node') . '/node.admin.inc')
+      ->addOperation('_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions])
+      ->setFinishCallback('_node_mass_update_batch_finished')
+      ->setTitle(t('Processing'))
+      ->setErrorMessage(t('The update has encountered an error.'))
+      // We use a single multi-pass operation, so the default
+      // 'Remaining x of y operations' message will be confusing here.
+      ->setProgressMessage('');
+    batch_set($batch_builder->toArray());
   }
   else {
     $storage = \Drupal::entityTypeManager()->getStorage('node');

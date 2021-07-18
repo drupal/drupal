@@ -17,6 +17,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -163,7 +164,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that the source count is correct.
+   * Tests that the source count is correct.
    *
    * @covers ::count
    */
@@ -186,14 +187,14 @@ class MigrateSourceTest extends MigrateTestCase {
 
     // Test the skip argument.
     $source = $this->getSource(['skip_count' => TRUE]);
-    $this->assertEquals(-1, $source->count());
+    $this->assertEquals(MigrateSourceInterface::NOT_COUNTABLE, $source->count());
 
     $this->migrationConfiguration['id'] = 'test_migration';
     $migration = $this->getMigration();
     $source = new StubSourceGeneratorPlugin([], '', [], $migration);
 
     // Test the skipCount property's default value.
-    $this->assertEquals(-1, $source->count());
+    $this->assertEquals(MigrateSourceInterface::NOT_COUNTABLE, $source->count());
 
     // Test the count value using a generator.
     $source = new StubSourceGeneratorPlugin(['skip_count' => FALSE], '', [], $migration);
@@ -201,7 +202,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that the key can be set for the count cache.
+   * Tests that the key can be set for the count cache.
    *
    * @covers ::count
    */
@@ -220,7 +221,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that we don't get a row if prepareRow() is false.
+   * Tests that we don't get a row if prepareRow() is false.
    */
   public function testPrepareRowFalse() {
     $source = $this->getSource([], ['prepare_row_false' => TRUE]);
@@ -230,7 +231,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that $row->needsUpdate() works as expected.
+   * Tests that $row->needsUpdate() works as expected.
    */
   public function testNextNeedsUpdate() {
     $source = $this->getSource();
@@ -246,7 +247,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that an outdated highwater mark does not cause a row to be imported.
+   * Tests that an outdated highwater mark does not cause a row to be imported.
    */
   public function testOutdatedHighwater() {
     $configuration = [
@@ -263,7 +264,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that a highwater mark newer than our saved one imports a row.
+   * Tests that a highwater mark newer than our saved one imports a row.
    *
    * @throws \Exception
    */
@@ -282,7 +283,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test basic row preparation.
+   * Tests basic row preparation.
    *
    * @covers ::prepareRow
    */
@@ -325,7 +326,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that global prepare hooks can skip rows.
+   * Tests that global prepare hooks can skip rows.
    *
    * @covers ::prepareRow
    */
@@ -354,7 +355,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that migrate specific prepare hooks can skip rows.
+   * Tests that migrate specific prepare hooks can skip rows.
    *
    * @covers ::prepareRow
    */
@@ -383,7 +384,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that a skip exception during prepare hooks correctly skips.
+   * Tests that a skip exception during prepare hooks correctly skips.
    *
    * @covers ::prepareRow
    */
@@ -420,7 +421,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that cacheCounts, skipCount, trackChanges preserve their default
+   * Tests that cacheCounts, skipCount, trackChanges preserve their default
    * values.
    */
   public function testDefaultPropertiesValues() {

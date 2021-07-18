@@ -64,8 +64,8 @@ class ThemeInfoTest extends BrowserTestBase {
       ->set('default', 'test_subtheme')
       ->save();
 
-    $base = drupal_get_path('theme', 'test_basetheme');
-    $sub = drupal_get_path('theme', 'test_subtheme') . '/css';
+    $base = $this->getThemePath('test_basetheme');
+    $sub = $this->getThemePath('test_subtheme') . '/css';
 
     // All removals are expected to be based on a file's path and name and
     // should work nevertheless.
@@ -94,14 +94,14 @@ class ThemeInfoTest extends BrowserTestBase {
 
     $active_theme = $this->themeManager->getActiveTheme();
     // Make sure we are not testing the wrong theme.
-    $this->assertEqual('test_theme', $active_theme->getName());
-    $this->assertEqual(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling'], $active_theme->getLibraries());
+    $this->assertEquals('test_theme', $active_theme->getName());
+    $this->assertEquals(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling'], $active_theme->getLibraries());
 
     // @see theme_test_system_info_alter()
     $this->state->set('theme_test.modify_info_files', TRUE);
-    drupal_flush_all_caches();
+    $this->resetAll();
     $active_theme = $this->themeManager->getActiveTheme();
-    $this->assertEqual(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling', 'core/backbone'], $active_theme->getLibraries());
+    $this->assertEquals(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling', 'core/backbone'], $active_theme->getLibraries());
   }
 
 }

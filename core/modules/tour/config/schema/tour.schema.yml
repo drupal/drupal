@@ -43,9 +43,17 @@ tour.tip:
       type: integer
       label: 'Weight'
     location:
+      deprecated: "The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position'. The value must be a valid placement accepted by PopperJS. See https://www.drupal.org/node/3204093"
       type: string
       label: 'Location'
+    position:
+      type: string
+      label: 'Position'
+    selector:
+      type: string
+      label: 'Selector'
     attributes:
+      deprecated: "The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093"
       type: sequence
       label: 'Attributes'
       sequence:

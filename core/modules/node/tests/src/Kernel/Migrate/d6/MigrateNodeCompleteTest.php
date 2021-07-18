@@ -80,6 +80,13 @@ class MigrateNodeCompleteTest extends MigrateNodeTestBase {
     foreach ($this->expectedNodeFieldRevisionTable() as $key => $revision) {
       $this->assertRevision($revision, $data[$key]);
     }
+
+    // Test the order in multi-value fields.
+    $revision = $this->nodeStorage->loadRevision(21);
+    $this->assertSame([
+      ['target_id' => '15'],
+      ['target_id' => '16'],
+    ], $revision->get('field_company')->getValue());
   }
 
   /**
@@ -91,7 +98,7 @@ class MigrateNodeCompleteTest extends MigrateNodeTestBase {
    *   An array of revision data.
    */
   protected function assertRevision(array $revision, array $data) {
-    /* @var  \Drupal\node\NodeInterface $actual */
+    /** @var  \Drupal\node\NodeInterface $actual */
     $actual = $this->nodeStorage->loadRevision($revision['vid'])
       ->getTranslation($revision['langcode']);
     $this->assertInstanceOf(NodeInterface::class, $actual);
