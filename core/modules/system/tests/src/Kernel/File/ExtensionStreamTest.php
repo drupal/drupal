@@ -44,6 +44,7 @@ class ExtensionStreamTest extends KernelTestBase {
 
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
     $stream_wrapper_manager = $this->container->get('stream_wrapper_manager');
+
     // Get stream wrapper instances.
     foreach (['module', 'theme', 'profile'] as $scheme) {
       $this->streamWrappers[$scheme] = $stream_wrapper_manager->getViaScheme($scheme);
@@ -53,6 +54,10 @@ class ExtensionStreamTest extends KernelTestBase {
     $theme_installer = $this->container->get('theme_installer');
     // Install Bartik and Seven themes.
     $theme_installer->install(['bartik', 'seven']);
+
+    // Set 'minimal' as installed profile for the purposes of this test.
+    $this->setInstallProfile('minimal');
+    $this->enableModules(['minimal']);
   }
 
   /**
@@ -64,10 +69,6 @@ class ExtensionStreamTest extends KernelTestBase {
    * @dataProvider providerInvalidUris
    */
   public function testInvalidStreamUri(string $uri): void {
-    // Set 'minimal' as installed profile for the purposes of this test.
-    $this->setInstallProfile('minimal');
-    $this->enableModules(['minimal']);
-
     $message = "\\InvalidArgumentException thrown on invalid uri $uri.";
     try {
       $this->streamWrappers['module']->dirname($uri);
@@ -103,54 +104,36 @@ class ExtensionStreamTest extends KernelTestBase {
    * Tests call of ::dirname() without setting a URI first.
    */
   public function testDirnameAsParameter(): void {
-    // Set 'minimal' as installed profile for the purposes of this test.
-    $this->setInstallProfile('minimal');
-    $this->enableModules(['minimal']);
-
     $this->assertEquals('module://system', $this->streamWrappers['module']->dirname('module://system/system.admin.css'));
   }
 
   /**
-   * Test the extension stream wrapper methods.
+   * Tests the extension stream wrapper methods.
    *
    * @param string $uri
    *   The uri to be tested.
-   * @param string|\RuntimeException|\InvalidArgumentException $dirname
+   * @param string $dirname
    *   The expectation for dirname() method.
-   * @param string|\RuntimeException|\InvalidArgumentException $realpath
+   * @param string $realpath
    *   The expectation for realpath() method.
-   * @param string|\RuntimeException|\InvalidArgumentException $getExternalUrl
+   * @param string $getExternalUrl
    *   The expectation for getExternalUrl() method.
    *
    * @dataProvider providerStreamWrapperMethods
    */
-  public function testStreamWrapperMethods(string $uri, $dirname, $realpath, $getExternalUrl): void {
-    // Set 'minimal' as installed profile for the purposes of this test.
-    $this->setInstallProfile('minimal');
-    $this->enableModules(['minimal']);
+  public function testStreamWrapperMethods(string $uri, string $dirname, string $realpath, string $getExternalUrl): void {
+    $this->enableModules(['image']);
 
     // Prefix realpath() expected value with Drupal root directory.
-    $realpath = is_string($realpath) ? DRUPAL_ROOT . $realpath : $realpath;
+    $realpath = DRUPAL_ROOT . $realpath;
     // Prefix getExternalUrl() expected value with base url.
-    $getExternalUrl = is_string($getExternalUrl) ? "{$this->baseUrl}$getExternalUrl" : $getExternalUrl;
+    $getExternalUrl = "{$this->baseUrl}$getExternalUrl";
     $case = compact('dirname', 'realpath', 'getExternalUrl');
 
     foreach ($case as $method => $expected) {
-      list($scheme,) = explode('://', $uri);
+      [$scheme] = explode('://', $uri);
       $this->streamWrappers[$scheme]->setUri($uri);
-      if ($expected instanceof \Exception) {
-        $message = sprintf('Exception thrown: %s("%s").', get_class($expected), $expected->getMessage());
-        try {
-          $this->streamWrappers[$scheme]->$method();
-          $this->fail("Should not get here.");
-        }
-        catch (\Exception $e) {
-          $this->assertSame($expected->getMessage(), $e->getMessage(), $message);
-        }
-      }
-      elseif (is_string($expected)) {
-        $this->assertSame($expected, $this->streamWrappers[$scheme]->$method());
-      }
+      $this->assertSame($expected, $this->streamWrappers[$scheme]->$method());
     }
   }
 
@@ -188,22 +171,10 @@ class ExtensionStreamTest extends KernelTestBase {
         'core/modules/file/tests/file_module_test/file_module_test.dummy.inc',
       ],
       [
-        'module://file_module_test/src/file_module_test.dummy.inc',
-        'module://file_module_test/src',
-        '/core/modules/file/tests/file_module_test/src/file_module_test.dummy.inc',
-        'core/modules/file/tests/file_module_test/src/file_module_test.dummy.inc',
-      ],
-      [
-        'module://ckeditor/ckeditor.info.yml',
-        new UnknownExtensionException('The module ckeditor does not exist.'),
-        new UnknownExtensionException('The module ckeditor does not exist.'),
-        new UnknownExtensionException('The module ckeditor does not exist.'),
-      ],
-      [
-        'module://foo_bar/foo.bar.js',
-        new UnknownExtensionException('The module foo_bar does not exist.'),
-        new UnknownExtensionException('The module foo_bar does not exist.'),
-        new UnknownExtensionException('The module foo_bar does not exist.'),
+        'module://image/sample.png',
+        'module://image',
+        '/core/modules/image/sample.png',
+        'core/modules/image/sample.png',
       ],
       // Cases for theme:// stream wrapper.
       [
@@ -223,18 +194,6 @@ class ExtensionStreamTest extends KernelTestBase {
         'theme://bartik/color',
         '/core/themes/bartik/color/preview.js',
         'core/themes/bartik/color/preview.js',
-      ],
-      [
-        'theme://fifteen/screenshot.png',
-        new UnknownExtensionException('The theme fifteen does not exist.'),
-        new UnknownExtensionException('The theme fifteen does not exist.'),
-        new UnknownExtensionException('The theme fifteen does not exist.'),
-      ],
-      [
-        'theme://stark/stark.info.yml',
-        new UnknownExtensionException('The theme stark does not exist.'),
-        new UnknownExtensionException('The theme stark does not exist.'),
-        new UnknownExtensionException('The theme stark does not exist.'),
       ],
       // Cases for profile:// stream wrapper.
       [
@@ -260,6 +219,110 @@ class ExtensionStreamTest extends KernelTestBase {
         'profile://',
         '/core/profiles/minimal/minimal.info.yml',
         'core/profiles/minimal/minimal.info.yml',
+      ],
+    ];
+  }
+
+  /**
+   * Test the dirname method on uninstalled extensions.
+   *
+   * @param string $uri
+   *   The uri to be tested.
+   * @param string $class_name
+   *   The class name of the expected exception.
+   * @param string $expected_message
+   *   The The expected exception message.
+   *
+   * @dataProvider providerStreamWrapperMethodsOnMissingExtensions
+   */
+  public function testStreamWrapperDirnameOnMissingExtensions(string $uri, string $class_name, string $expected_message): void {
+    [$scheme] = explode('://', $uri);
+    $this->streamWrappers[$scheme]->setUri($uri);
+
+    $this->expectException($class_name);
+    $this->expectExceptionMessage($expected_message);
+    $this->streamWrappers[$scheme]->dirname();
+  }
+
+  /**
+   * Test the realpath method on uninstalled extensions.
+   *
+   * @param string $uri
+   *   The uri to be tested.
+   * @param string $class_name
+   *   The class name of the expected exception.
+   * @param string $expected_message
+   *   The The expected exception message.
+   *
+   * @dataProvider providerStreamWrapperMethodsOnMissingExtensions
+   */
+  public function testStreamWrapperRealpathOnMissingExtensions(string $uri, string $class_name, string $expected_message): void {
+    [$scheme] = explode('://', $uri);
+    $this->streamWrappers[$scheme]->setUri($uri);
+
+    $this->expectException($class_name);
+    $this->expectExceptionMessage($expected_message);
+    $this->streamWrappers[$scheme]->realpath();
+  }
+
+  /**
+   * Test the getExternalUrl method on uninstalled extensions.
+   *
+   * @param string $uri
+   *   The uri to be tested.
+   * @param string $class_name
+   *   The class name of the expected exception.
+   * @param string $expected_message
+   *   The The expected exception message.
+   *
+   * @dataProvider providerStreamWrapperMethodsOnMissingExtensions
+   */
+  public function testStreamWrapperGetExternalUrlOnMissingExtensions(string $uri, string $class_name, string $expected_message): void {
+    [$scheme] = explode('://', $uri);
+    $this->streamWrappers[$scheme]->setUri($uri);
+
+    $this->expectException($class_name);
+    $this->expectExceptionMessage($expected_message);
+    $this->streamWrappers[$scheme]->getExternalUrl();
+  }
+
+  /**
+   * Test cases for testing stream wrapper methods on missing extensions.
+   *
+   * @return array[]
+   *   A list of test cases. Each case consists of the following items:
+   *   - The uri to be tested.
+   *   - The class name of the expected exception.
+   *   - The expected exception message.
+   */
+  public function providerStreamWrapperMethodsOnMissingExtensions(): array {
+    return [
+      // Cases for module:// stream wrapper.
+      [
+        'module://ckeditor/ckeditor.info.yml',
+        UnknownExtensionException::class,
+        'The module ckeditor does not exist.',
+      ],
+      [
+        'module://foo_bar/foo.bar.js',
+        UnknownExtensionException::class,
+        'The module foo_bar does not exist.',
+      ],
+      [
+        'module://image/sample.png',
+        UnknownExtensionException::class,
+        'The module image does not exist.',
+      ],
+      // Cases for theme:// stream wrapper.
+      [
+        'theme://fifteen/screenshot.png',
+        UnknownExtensionException::class,
+        'The theme fifteen does not exist.',
+      ],
+      [
+        'theme://stark/stark.info.yml',
+        UnknownExtensionException::class,
+        'The theme stark does not exist.',
       ],
     ];
   }
