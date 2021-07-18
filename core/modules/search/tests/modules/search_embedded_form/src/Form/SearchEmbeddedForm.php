@@ -23,7 +23,7 @@ class SearchEmbeddedForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $count = \Drupal::state()->get('search_embedded_form.submit_count');
+    $count = \Drupal::state()->get('search_embedded_form.submit_count') ?? 0;
 
     $form['name'] = [
       '#type' => 'textfield',
