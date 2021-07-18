@@ -26,6 +26,17 @@ class FileTest extends MigrateSqlSourceTestBase {
     $tests[0]['source_data']['file_managed'] = [
       // A public file.
       [
+        'fid' => '2',
+        'uid' => '1',
+        'filename' => 'cube.jpeg',
+        'uri' => 'public://cube.jpeg',
+        'filemime' => 'image/jpeg',
+        'filesize' => '3620',
+        'status' => '1',
+        'timestamp' => '1421727515',
+      ],
+      // A public file.
+      [
         'fid' => '1',
         'uid' => '1',
         'filename' => 'cube.jpeg',
@@ -87,11 +98,46 @@ class FileTest extends MigrateSqlSourceTestBase {
     // The expected results will include only the first two files, since the
     // plugin will filter out files with either the null URI scheme or the
     // temporary scheme.
-    $tests[0]['expected_data'] = array_slice($tests[0]['source_data']['file_managed'], 0, 2);
+    $tests[0]['expected_data'] = [
+      // A public file.
+      [
+        'fid' => '1',
+        'uid' => '1',
+        'filename' => 'cube.jpeg',
+        'uri' => 'public://cube.jpeg',
+        'filemime' => 'image/jpeg',
+        'filesize' => '3620',
+        'status' => '1',
+        'timestamp' => '1421727515',
+      ],
+      // A private file.
+      [
+        'fid' => '1',
+        'uid' => '1',
+        'filename' => 'cube.jpeg',
+        'uri' => 'private://cube.jpeg',
+        'filemime' => 'image/jpeg',
+        'filesize' => '3620',
+        'status' => '1',
+        'timestamp' => '1421727515',
+      ],
+      // A public file.
+      [
+        'fid' => '2',
+        'uid' => '1',
+        'filename' => 'cube.jpeg',
+        'uri' => 'public://cube.jpeg',
+        'filemime' => 'image/jpeg',
+        'filesize' => '3620',
+        'status' => '1',
+        'timestamp' => '1421727515',
+      ],
+    ];
 
     // The filepath property will vary by URI scheme.
     $tests[0]['expected_data'][0]['filepath'] = 'sites/default/files/cube.jpeg';
     $tests[0]['expected_data'][1]['filepath'] = '/path/to/private/files/cube.jpeg';
+    $tests[0]['expected_data'][2]['filepath'] = $tests[0]['expected_data'][0]['filepath'];
 
     // Do an automatic count.
     $tests[0]['expected_count'] = NULL;
@@ -119,6 +165,16 @@ class FileTest extends MigrateSqlSourceTestBase {
         'timestamp' => '1421727515',
         'filepath' => 'sites/default/files/cube.jpeg',
       ],
+      [
+        'fid' => '2',
+        'uid' => '1',
+        'filename' => 'cube.jpeg',
+        'uri' => 'public://cube.jpeg',
+        'filemime' => 'image/jpeg',
+        'filesize' => '3620',
+        'status' => '1',
+        'timestamp' => '1421727515',
+      ],
     ];
     // Do an automatic count.
     $tests[1]['expected_count'] = NULL;
@@ -137,6 +193,17 @@ class FileTest extends MigrateSqlSourceTestBase {
     $tests[2]['expected_data'] = [
       [
         'fid' => '1',
+        'uid' => '1',
+        'filename' => 'cube.jpeg',
+        'uri' => 'public://cube.jpeg',
+        'filemime' => 'image/jpeg',
+        'filesize' => '3620',
+        'status' => '1',
+        'timestamp' => '1421727515',
+        'filepath' => 'sites/default/files/cube.jpeg',
+      ],
+      [
+        'fid' => '2',
         'uid' => '1',
         'filename' => 'cube.jpeg',
         'uri' => 'public://cube.jpeg',

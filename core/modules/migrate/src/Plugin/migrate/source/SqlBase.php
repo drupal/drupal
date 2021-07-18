@@ -333,6 +333,13 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         // consistent order.
         $this->query->orderBy($high_water_field);
       }
+      // Sort by source IDs if there is no high water mark to get consistent
+      // results across multiple databases.
+      else {
+        foreach ($this->getIds() as $field_name => $field_schema) {
+          $this->query->orderBy($field_schema['alias'] . '.' . $field_name);
+        }
+      }
       if ($condition_added) {
         $this->query->condition($conditions);
       }
