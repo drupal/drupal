@@ -52,12 +52,13 @@ class QueueWorker extends Plugin {
   public $title;
 
   /**
-   * An associative array containing the optional key.
+   * An associative array containing an optional key.
    *
    * This property is optional and it does not need to be declared.
    *
-   *   - time: How much time Drupal cron should spend on calling this worker in
-   *     seconds. Defaults to 15.
+   * Available keys:
+   * - time (optional): How much time Drupal cron should spend on calling this
+   *   worker in seconds. Defaults to 15.
    *
    * @var array
    */
