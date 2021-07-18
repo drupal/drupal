@@ -8,10 +8,10 @@ use Drupal\Core\FileTransfer\FileTransfer;
  * Mock FileTransfer object for test case.
  */
 class TestFileTransfer extends FileTransfer {
-  protected $host = NULL;
-  protected $username = NULL;
-  protected $password = NULL;
-  protected $port = NULL;
+  protected $host = '';
+  protected $username = '';
+  protected $password = '';
+  protected $port = '';
 
   /**
    * This is for testing the CopyRecursive logic.
