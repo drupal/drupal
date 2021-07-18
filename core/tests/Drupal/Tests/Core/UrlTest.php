@@ -121,27 +121,23 @@ class UrlTest extends UnitTestCase {
    * Tests creating a Url from a request.
    */
   public function testUrlFromRequest() {
-    $this->router->expects($this->at(0))
+    $this->router->expects($this->exactly(3))
       ->method('matchRequest')
-      ->with($this->getRequestConstraint('/node'))
-      ->willReturn([
+      ->withConsecutive(
+        [$this->getRequestConstraint('/node')],
+        [$this->getRequestConstraint('/node/1')],
+        [$this->getRequestConstraint('/node/2/edit')],
+      )
+      ->willReturnOnConsecutiveCalls([
           RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
           '_raw_variables' => new ParameterBag(),
+        ], [
+          RouteObjectInterface::ROUTE_NAME => 'node_view',
+          '_raw_variables' => new ParameterBag(['node' => '1']),
+        ], [
+          RouteObjectInterface::ROUTE_NAME => 'node_edit',
+          '_raw_variables' => new ParameterBag(['node' => '2']),
         ]);
-    $this->router->expects($this->at(1))
-      ->method('matchRequest')
-      ->with($this->getRequestConstraint('/node/1'))
-      ->willReturn([
-        RouteObjectInterface::ROUTE_NAME => 'node_view',
-        '_raw_variables' => new ParameterBag(['node' => '1']),
-      ]);
-    $this->router->expects($this->at(2))
-      ->method('matchRequest')
-      ->with($this->getRequestConstraint('/node/2/edit'))
-      ->willReturn([
-        RouteObjectInterface::ROUTE_NAME => 'node_edit',
-        '_raw_variables' => new ParameterBag(['node' => '2']),
-      ]);
 
     $urls = [];
     foreach ($this->map as $index => $values) {

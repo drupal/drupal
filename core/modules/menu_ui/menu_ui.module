@@ -20,6 +20,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
 use Drupal\node\NodeInterface;
+use Drupal\system\MenuInterface;
 
 /**
  * Implements hook_help().
@@ -350,7 +351,10 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
 function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
-  $menu_options = menu_ui_get_menus();
+  $menu_options = array_map(function (MenuInterface $menu) {
+    return $menu->label();
+  }, Menu::loadMultiple());
+  asort($menu_options);
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
   $form['menu'] = [
@@ -429,8 +433,14 @@ function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $ty
  * @return array
  *   An array with the machine-readable names as the keys, and human-readable
  *   titles as the values.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\system\Entity\Menu::loadMultiple() instead.
+ *
+ * @see https://www.drupal.org/node/3027453
  */
 function menu_ui_get_menus($all = TRUE) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\system\Entity\Menu::loadMultiple() instead. See https://www.drupal.org/node/3027453', E_USER_DEPRECATED);
   if ($custom_menus = Menu::loadMultiple()) {
     if (!$all) {
       $custom_menus = array_diff_key($custom_menus, menu_list_system_menus());

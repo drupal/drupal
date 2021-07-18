@@ -46,7 +46,7 @@ class WebAssert extends MinkWebAssert {
   /**
    * {@inheritdoc}
    */
-  protected function cleanUrl($url) {
+  protected function cleanUrl($url, $include_query = FALSE) {
     if ($url instanceof Url) {
       $url = $url->setAbsolute()->toString();
     }
@@ -54,12 +54,17 @@ class WebAssert extends MinkWebAssert {
     if ($this->baseUrl !== '' && strpos($url, $this->baseUrl) === 0) {
       $url = substr($url, strlen($this->baseUrl));
     }
+    $parts = parse_url($url);
     // Make sure there is a forward slash at the beginning of relative URLs for
     // consistency.
-    if (parse_url($url, PHP_URL_HOST) === NULL && strpos($url, '/') !== 0) {
-      $url = "/$url";
+    if (empty($parts['host']) && strpos($url, '/') !== 0) {
+      $parts['path'] = '/' . $parts['path'];
     }
-    return parent::cleanUrl($url);
+    $fragment = empty($parts['fragment']) ? '' : '#' . $parts['fragment'];
+    $path = empty($parts['path']) ? '/' : $parts['path'];
+    $query = $include_query && !empty($parts['query']) ? '?' . $parts['query'] : '';
+
+    return preg_replace('/^\/[^\.\/]+\.php\//', '/', $path) . $query . $fragment;
   }
 
   /**
@@ -754,7 +759,10 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    return parent::addressEquals($page);
+    $expected = $this->cleanUrl($page, TRUE);
+    $actual = $this->cleanUrl($this->session->getCurrentUrl(), strpos($expected, '?') !== FALSE);
+
+    $this->assert($actual === $expected, sprintf('Current page is "%s", but "%s" expected.', $actual, $expected));
   }
 
   /**
@@ -764,7 +772,10 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    return parent::addressNotEquals($page);
+    $expected = $this->cleanUrl($page, TRUE);
+    $actual = $this->cleanUrl($this->session->getCurrentUrl(), strpos($expected, '?') !== FALSE);
+
+    $this->assert($actual !== $expected, sprintf('Current page is "%s", but should not be.', $actual));
   }
 
   /**

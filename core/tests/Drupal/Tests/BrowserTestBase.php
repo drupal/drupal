@@ -74,6 +74,7 @@ abstract class BrowserTestBase extends TestCase {
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
+  use ExtensionListTestTrait;
 
   /**
    * The database prefix of this test run.

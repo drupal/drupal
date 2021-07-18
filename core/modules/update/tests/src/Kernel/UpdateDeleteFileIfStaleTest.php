@@ -51,7 +51,7 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
     // attempt should succeed.
     $deleted = update_delete_file_if_stale($file_path);
     $this->assertTrue($deleted);
-    $this->assertFileNotExists($file_path);
+    $this->assertFileDoesNotExist($file_path);
   }
 
 }

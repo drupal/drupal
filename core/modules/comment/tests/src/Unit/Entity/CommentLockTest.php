@@ -30,11 +30,11 @@ class CommentLockTest extends UnitTestCase {
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $cid = 2;
     $lock_name = "comment:$cid:.00/";
-    $lock->expects($this->at(0))
+    $lock->expects($this->once())
       ->method('acquire')
       ->with($lock_name, 30)
       ->will($this->returnValue(TRUE));
-    $lock->expects($this->at(1))
+    $lock->expects($this->once())
       ->method('release')
       ->with($lock_name);
     $lock->expects($this->exactly(2))

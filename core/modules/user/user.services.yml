@@ -17,9 +17,10 @@ services:
       - { name: access_check, applies_to: _user_is_logged_in }
   user.authentication.cookie:
     class: Drupal\user\Authentication\Provider\Cookie
-    arguments: ['@session_configuration', '@database']
+    arguments: ['@session_configuration', '@database', '@messenger']
     tags:
       - { name: authentication_provider, provider_id: 'cookie', priority: 0, global: TRUE }
+      - { name: event_subscriber }
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']

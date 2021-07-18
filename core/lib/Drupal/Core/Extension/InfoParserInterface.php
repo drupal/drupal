@@ -20,6 +20,8 @@ interface InfoParserInterface {
    * - name: The real name of the module for display purposes. (Required)
    * - description: A brief description of the module.
    * - type: whether it is for a module or theme. (Required)
+   * - lifecycle: [experimental|stable|deprecated|obsolete]. A description of
+   *   the current phase in the lifecycle of the module, theme or profile.
    *
    * Information stored in a module .info.yml file:
    * - dependencies: An array of dependency strings. Each is in the form

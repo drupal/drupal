@@ -142,7 +142,9 @@ class UpdateScriptTest extends BrowserTestBase {
     // successfully.
     $this->drupalLogin($this->updateUser);
     $update_script_test_config->set('requirement_type', REQUIREMENT_WARNING)->save();
-    drupal_set_installed_schema_version('update_script_test', drupal_get_installed_schema_version('update_script_test') - 1);
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+    $update_registry->setInstalledVersion('update_script_test', $update_registry->getInstalledVersion('update_script_test') - 1);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->pageTextContains('This is a requirements warning provided by the update_script_test module.');
     $this->clickLink('try again');
@@ -247,7 +249,7 @@ class UpdateScriptTest extends BrowserTestBase {
     if ($extension_type === 'theme') {
       $base_info['base theme'] = FALSE;
     }
-    $folder_path = \Drupal::service('site.path') . "/{$extension_type}s/$extension_machine_name";
+    $folder_path = \Drupal::getContainer()->getParameter('site.path') . "/{$extension_type}s/$extension_machine_name";
     $file_path = "$folder_path/$extension_machine_name.info.yml";
     mkdir($folder_path, 0777, TRUE);
     file_put_contents($file_path, Yaml::encode($base_info + $correct_info));
@@ -380,7 +382,7 @@ class UpdateScriptTest extends BrowserTestBase {
     if ($extension_type === 'theme') {
       $extension_info['base theme'] = FALSE;
     }
-    $folder_path = \Drupal::service('site.path') . "/{$extension_type}s/$extension_machine_name";
+    $folder_path = \Drupal::getContainer()->getParameter('site.path') . "/{$extension_type}s/$extension_machine_name";
     $file_path = "$folder_path/$extension_machine_name.info.yml";
     mkdir($folder_path, 0777, TRUE);
     file_put_contents($file_path, Yaml::encode($extension_info));
@@ -410,7 +412,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // nonexistent module. This replicates what would happen if you had a module
     // installed and then completely remove it from the filesystem and clear it
     // out of the core.extension config list without uninstalling it cleanly.
-    \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('my_already_removed_module', 8000);
 
     // Visit update.php and make sure we can click through to the 'No pending
     // updates' page without errors.
@@ -424,8 +426,8 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Try again with another orphaned entry, this time for a test module that
     // does exist in the filesystem.
-    \Drupal::keyValue('system.schema')->delete('my_already_removed_module');
-    \Drupal::keyValue('system.schema')->set('update_test_0', 8000);
+    \Drupal::service('update.update_hook_registry')->deleteInstalledVersion('my_already_removed_module');
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_0', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
@@ -435,7 +437,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.');
 
     // Finally, try with both kinds of orphans and make sure we get both warnings.
-    \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('my_already_removed_module', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
@@ -538,12 +540,15 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertEquals($initial_maintenance_mode, $final_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
 
     // Reset the static cache to ensure we have the most current setting.
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $this->resetAll();
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEquals(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
     // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $update_registry->setInstalledVersion('update_script_test', $schema_version - 1);
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEquals(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
     // Click through update.php with 'access administration pages' and
@@ -603,12 +608,14 @@ class UpdateScriptTest extends BrowserTestBase {
     $config->save();
 
     // Reset the static cache to ensure we have the most current setting.
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEquals(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
     // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $update_registry->setInstalledVersion('update_script_test', $schema_version - 1);
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEquals(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
     // Create admin user.
@@ -672,12 +679,14 @@ class UpdateScriptTest extends BrowserTestBase {
    * Helper function to run updates via the browser.
    */
   protected function runUpdates($maintenance_mode) {
-    $schema_version = drupal_get_installed_schema_version('update_script_test');
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEquals(8001, $schema_version, 'update_script_test is initially installed with schema version 8001.');
 
     // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $update_registry->setInstalledVersion('update_script_test', $schema_version - 1);
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEquals(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
     // Click through update.php with 'administer software updates' permission.

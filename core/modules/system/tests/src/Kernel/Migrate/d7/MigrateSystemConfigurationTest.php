@@ -14,9 +14,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
   protected static $modules = ['action', 'file', 'system'];
 
   protected $expectedConfig = [
-    'system.authorize' => [
-      'filetransfer_default' => 'ftp',
-    ],
+    'system.authorize' => [],
     'system.cron' => [
       'threshold' => [
         // autorun is not handled by the migration.
@@ -166,6 +164,9 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       unset($actual['_core']);
       $this->assertSame($actual, $values, $config_id . ' matches expected values.');
     }
+    // The d7_system_authorize migration should not create the system.authorize
+    // config.
+    $this->assertTrue($this->config('system.authorize')->isNew());
   }
 
 }

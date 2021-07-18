@@ -89,14 +89,4 @@ abstract class ViewResourceTestBase extends EntityResourceTestBase {
     // @todo Update in https://www.drupal.org/node/2300677.
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'url.site',
-      'user.permissions',
-    ];
-  }
-
 }

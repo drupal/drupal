@@ -1,0 +1,39 @@
+---
+label: 'Editing a content item'
+related:
+  - node.overview
+  - node.creating_content
+---
+{% set content_link_text %}
+  {% trans %}Content{% endtrans %}
+{% endset %}
+{% set content_link = render_var(help_route_link(content_link_text, 'system.admin_content')) %}
+{% set content_permissions_link_text %}
+  {% trans %}Access the Content overview page{% endtrans %}
+{% endset %}
+{% set content_permissions_link = render_var(help_route_link(content_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-node'})) %}
+{% set node_overview_topic = render_var(help_topic_link('node.overview')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Find a content item and edit it, or update a group of content items in bulk. See {{ node_overview_topic }} for more about content types and content items.{% endtrans %}</p>
+<h2>{% trans %}Who can find and edit content?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ content_permissions_link }}</em> permission can use the <em>Content</em> page to find content. Each content type has its own edit permissions. For example, to edit content of type Article, a user would need the <em>Article: Edit own content</em> permission to edit an article they created, or the <em>Article: Edit any content</em> permission to edit an article someone else created. In addition, users with the <em>Bypass content access control</em> or <em>Administer content</em> permission can edit content items of all types. Some contributed modules change the permission structure for editing content.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>{{ content_link }}</em>.{% endtrans %}</li>
+  <li>{% trans %}Optionally, use filters to reduce the list of content items shown:{% endtrans %}
+    <ul>
+      <li>{% trans %}<em>Title</em>: key word(s) from the title{% endtrans %}</li>
+      <li>{% trans %}<em>Content type</em>{% endtrans %}</li>
+      <li>{% trans %}<em>Published status</em>{% endtrans %}</li>
+      <li>{% trans %}<em>Language</em>{% endtrans %}</li>
+    </ul>
+    {% trans %}If you enter or select filter values, click <em>Filter</em> to apply the filters.{% endtrans %}</li>
+  <li>{% trans %}Optionally, sort the list by clicking a column header. Click again to reverse the order.{% endtrans %}</li>
+  <li>{% trans %}To edit the title or other field values for one content item, click <em>Edit</em> in the row of the content item. Update the values and click <em>Save</em>.{% endtrans %}</li>
+  <li>{% trans %}A few types of edits can be done in bulk to multiple content items. For example, to publish several unpublished content items, check the boxes in the left column (right column in right-to-left languages) to select the desired content items. For <em>Action</em>, select the <em>Publish content</em> action. Click <em>Apply to selected items</em> to make the change. The other actions under <em>Action</em> work in a similar manner.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/user_guide/en/content-chapter.html">{% trans %}User Guide: Basic page management{% endtrans %}</a></li>
+  <li><a href="https://www.drupal.org/docs/user_guide/en/content-edit.html">{% trans %}User Guide: Editing a content item{% endtrans %}</a></li>
+</ul>

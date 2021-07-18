@@ -5,7 +5,12 @@ namespace Drupal\aggregator\Plugin\migrate\source;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal aggregator item source from database.
+ * Drupal 6/7 aggregator item source from database.
+ *
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "aggregator_item",

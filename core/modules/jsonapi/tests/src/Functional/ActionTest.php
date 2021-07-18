@@ -16,7 +16,7 @@ class ActionTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user'];
+  protected static $modules = ['action'];
 
   /**
    * {@inheritdoc}

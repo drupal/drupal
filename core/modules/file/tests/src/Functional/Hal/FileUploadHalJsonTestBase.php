@@ -48,7 +48,7 @@ abstract class FileUploadHalJsonTestBase extends FileUploadResourceTestBase {
           // https://www.drupal.org/project/drupal/issues/2907402 is complete.
           // This link matches what is generated from File::url(), a resource
           // URL is currently not available.
-          'href' => file_create_url($normalization['uri'][0]['value']),
+          'href' => \Drupal::service('file_url_generator')->generateAbsoluteString($normalization['uri'][0]['value']),
         ],
         'type' => [
           'href' => $this->baseUrl . '/rest/type/file/file',

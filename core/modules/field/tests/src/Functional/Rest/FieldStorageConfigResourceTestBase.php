@@ -13,7 +13,7 @@ abstract class FieldStorageConfigResourceTestBase extends EntityResourceTestBase
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node'];
+  protected static $modules = ['field_ui', 'node'];
 
   /**
    * {@inheritdoc}
@@ -89,15 +89,6 @@ abstract class FieldStorageConfigResourceTestBase extends EntityResourceTestBase
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'user.permissions',
-    ];
   }
 
 }

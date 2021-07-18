@@ -14,7 +14,7 @@ abstract class BaseFieldOverrideResourceTestBase extends EntityResourceTestBase 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node'];
+  protected static $modules = ['field', 'field_ui', 'node'];
 
   /**
    * {@inheritdoc}

@@ -277,9 +277,6 @@ class TermTest extends TaxonomyTestBase {
     $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
     $this->assertTrue(empty($tree), 'The terms are not created on preview.');
 
-    // taxonomy.module does not maintain its static caches.
-    taxonomy_terms_static_reset();
-
     // Save, creating the terms.
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
@@ -295,7 +292,9 @@ class TermTest extends TaxonomyTestBase {
     // Get the created terms.
     $term_objects = [];
     foreach ($terms as $key => $term) {
-      $term_objects[$key] = taxonomy_term_load_multiple_by_name($term);
+      $term_objects[$key] = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+        'name' => $term,
+      ]);
       $term_objects[$key] = reset($term_objects[$key]);
     }
 
@@ -346,7 +345,9 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->submitForm($edit, 'Save');
 
-    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
 
@@ -407,6 +408,25 @@ class TermTest extends TaxonomyTestBase {
     // Assert that the term no longer exists.
     $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertSession()->statusCodeEquals(404);
+
+    // Test "save and go to list" action while creating term.
+    // Create the term to edit.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(12),
+      'description[0][value]' => $this->randomMachineName(100),
+    ];
+
+    // Create the term to edit.
+    $this->submitForm($edit, 'Save and go to list');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
+
+    // Validate that "Save and go to list" doesn't exist when destination
+    // parameter is present.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', ['query' => ['destination' => 'node/add']]);
+    $this->assertSession()->pageTextNotContains('Save and go to list');
   }
 
   /**
@@ -495,7 +515,9 @@ class TermTest extends TaxonomyTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the term was successfully created.
-    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
     $this->assertEquals($edit['name[0][value]'], $term->getName(), 'Term name was successfully saved.');
@@ -509,9 +531,13 @@ class TermTest extends TaxonomyTestBase {
 
   /**
    * Tests taxonomy_term_load_multiple_by_name().
+   *
+   * @group legacy
    */
   public function testTaxonomyGetTermByName() {
     $term = $this->createTerm($this->vocabulary);
+
+    $this->expectDeprecation('taxonomy_term_load_multiple_by_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->loadByProperties(["name" => $name, "vid" => $vid]) instead, to get a list of taxonomy term entities having the same name and keyed by their term ID. See https://www.drupal.org/node/3039041');
 
     // Load the term with the exact name.
     $terms = taxonomy_term_load_multiple_by_name($term->getName());
@@ -611,7 +637,9 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->submitForm($edit, 'Save');
 
-    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
 

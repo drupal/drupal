@@ -29,7 +29,7 @@
   align-items: flex-end;
   transition: all 0.5s;
 
-  &.js-fixed {
+  &.is-fixed {
     @media (--nav) {
       &:not(.is-expanded) {
         pointer-events: none;
@@ -40,7 +40,7 @@
 
 @media (--nav) {
   body:not(.is-always-mobile-nav) {
-    & .site-header__fixable.js-fixed {
+    & .site-header__fixable.is-fixed {
       position: fixed;
       z-index: 102; /* Appear above body content that is position: relative */
       inset-block-start: calc(-1 * var(--sp4));
@@ -50,12 +50,12 @@
     /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
     &.toolbar-vertical.toolbar-fixed,
     &.toolbar-horizontal.toolbar-fixed {
-      & .site-header__fixable.js-fixed {
+      & .site-header__fixable.is-fixed {
         inset-block-start: calc(var(--toolbar-height) - var(--sp4));
       }
     }
     /* Toolbar is fixed, and tray is open and horizontal. */
-    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.js-fixed {
+    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.is-fixed {
       inset-block-start: calc(var(--toolbar-tray-height) + var(--toolbar-height) - var(--sp4));
     }
   }
@@ -90,14 +90,14 @@ html.js body:not(.is-always-mobile-nav) .site-header__inner {
 }
 
 /* Hide the desktop nav when it's fixed and not active. */
-body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner {
+body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
   @media (--nav) {
     transform: translateX(-101%); /* LTR */
     opacity: 0;
   }
 }
 
-[dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner {
+[dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
   @media (--nav) {
     transform: translateX(101%);
   }

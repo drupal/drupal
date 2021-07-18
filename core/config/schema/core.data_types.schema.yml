@@ -339,6 +339,14 @@ condition.plugin:
       sequence:
         type: string
 
+condition.plugin.entity_bundle:*:
+  type: condition.plugin
+  mapping:
+    bundles:
+      type: sequence
+      sequence:
+        type: string
+
 display_variant.plugin:
   type: mapping
   label: 'Display variant'

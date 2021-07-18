@@ -66,17 +66,13 @@ class ImportStorageTransformerTest extends KernelTestBase {
   public function testTransformLocked() {
     // Mock the request lock not being available.
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $lock->expects($this->at(0))
+    $lock->expects($this->exactly(2))
       ->method('acquire')
       ->with(ImportStorageTransformer::LOCK_NAME)
       ->will($this->returnValue(FALSE));
-    $lock->expects($this->at(1))
+    $lock->expects($this->once())
       ->method('wait')
       ->with(ImportStorageTransformer::LOCK_NAME);
-    $lock->expects($this->at(2))
-      ->method('acquire')
-      ->with(ImportStorageTransformer::LOCK_NAME)
-      ->will($this->returnValue(FALSE));
 
     // The import transformer under test.
     $transformer = new ImportStorageTransformer(
@@ -101,7 +97,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
 
     // Mock the persistent lock being unavailable due to a config import.
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $lock->expects($this->at(0))
+    $lock->expects($this->once())
       ->method('lockMayBeAvailable')
       ->with(ConfigImporter::LOCK_NAME)
       ->will($this->returnValue(FALSE));

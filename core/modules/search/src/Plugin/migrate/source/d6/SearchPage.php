@@ -5,7 +5,13 @@ namespace Drupal\search\Plugin\migrate\source\d6;
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
 /**
- * Get node search rankings for core modules.
+ * Drupal 6 node search rankings for core modules source from database.
+ *
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate_drupal\Plugin\migrate\source\Variable
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d6_search_page",

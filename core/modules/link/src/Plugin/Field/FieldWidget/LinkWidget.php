@@ -74,7 +74,7 @@ class LinkWidget extends WidgetBase {
       list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
       // Show the 'entity:' URI as the entity autocomplete would.
       // @todo Support entity types other than 'node'. Will be fixed in
-      //    https://www.drupal.org/node/2423093.
+      //   https://www.drupal.org/node/2423093.
       if ($entity_type == 'node' && $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id)) {
         $displayable_string = EntityAutocomplete::getEntityLabels([$entity]);
       }
@@ -111,11 +111,11 @@ class LinkWidget extends WidgetBase {
     $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($string);
     if ($entity_id !== NULL) {
       // @todo Support entity types other than 'node'. Will be fixed in
-      //    https://www.drupal.org/node/2423093.
+      //   https://www.drupal.org/node/2423093.
       $uri = 'entity:node/' . $entity_id;
     }
     // Support linking to nothing.
-    elseif (in_array($string, ['<nolink>', '<none>'], TRUE)) {
+    elseif (in_array($string, ['<nolink>', '<none>', '<button>'], TRUE)) {
       $uri = 'route:' . $string;
     }
     // Detect a schemeless string, map to 'internal:' URI.
@@ -202,7 +202,7 @@ class LinkWidget extends WidgetBase {
     if ($this->supportsInternalLinks()) {
       $element['uri']['#type'] = 'entity_autocomplete';
       // @todo The user should be able to select an entity type. Will be fixed
-      //    in https://www.drupal.org/node/2423093.
+      //   in https://www.drupal.org/node/2423093.
       $element['uri']['#target_type'] = 'node';
       // Disable autocompletion when the first character is '/', '#' or '?'.
       $element['uri']['#attributes']['data-autocomplete-first-character-blacklist'] = '/#?';
@@ -216,12 +216,12 @@ class LinkWidget extends WidgetBase {
     // element prefix and description.
     if (!$this->supportsExternalLinks()) {
       $element['uri']['#field_prefix'] = rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
-      $element['uri']['#description'] = $this->t('This must be an internal path such as %add-node. You can also start typing the title of a piece of content to select it. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%add-node' => '/node/add', '%front' => '<front>', '%nolink' => '<nolink>', '%button' => 'route:<button>']);
+      $element['uri']['#description'] = $this->t('This must be an internal path such as %add-node. You can also start typing the title of a piece of content to select it. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%add-node' => '/node/add', '%front' => '<front>', '%nolink' => '<nolink>', '%button' => '<button>']);
     }
     // If the field is configured to allow both internal and external links,
     // show a useful description.
     elseif ($this->supportsExternalLinks() && $this->supportsInternalLinks()) {
-      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%front' => '<front>', '%add-node' => '/node/add', '%url' => 'http://example.com', '%nolink' => '<nolink>', '%button' => 'route:<button>']);
+      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%front' => '<front>', '%add-node' => '/node/add', '%url' => 'http://example.com', '%nolink' => '<nolink>', '%button' => '<button>']);
     }
     // If the field is configured to allow only external links, show a useful
     // description.

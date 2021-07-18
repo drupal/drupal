@@ -89,7 +89,6 @@
   cursor: pointer;
   vertical-align: top;
   border: 0;
-  border-radius: 50%;
   background: none;
   appearance: none;
 
@@ -122,7 +121,7 @@
 
   &:focus {
     outline: 2px solid var(--color--blue-70);
-    outline-offset: 1px;
+    outline-offset: 2px;
   }
 }
 
