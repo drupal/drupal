@@ -157,6 +157,8 @@ class NumericField extends FieldPluginBase {
       return '';
     }
 
+    // After the hide_empty check NULL values should be treated as a 0 value.
+    $value = $value ?? 0;
     if (!empty($this->options['set_precision'])) {
       $precision = $this->options['precision'];
     }
@@ -168,7 +170,7 @@ class NumericField extends FieldPluginBase {
     }
 
     // Use round first to avoid negative zeros.
-    $value = round($value ?? 0, $precision);
+    $value = round($value, $precision);
     // Test against both integer zero and float zero.
     if ($this->options['empty_zero'] && ($value === 0 || $value === 0.0)) {
       return '';
