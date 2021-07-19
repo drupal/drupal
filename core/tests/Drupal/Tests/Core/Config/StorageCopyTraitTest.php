@@ -134,11 +134,9 @@ class StorageCopyTraitTest extends UnitTestCase {
    * Tests replaceStorageContents() with config with an invalid configuration.
    *
    * @covers ::replaceStorageContents
-   *
-   * @dataProvider providerTestWithInvalidConfiguration
    */
-  public function testWithInvalidConfiguration($use_comparer) {
-    static::$useComparer = $use_comparer;
+  public function testWithInvalidConfiguration() {
+    static::$useComparer = FALSE;
     $source = new TestStorage();
     $this->generateRandomData($source);
 
@@ -181,17 +179,6 @@ class StorageCopyTraitTest extends UnitTestCase {
     // copied.
     $this->assertContains($test_name, $source->listAll());
     $this->assertNotContains($test_name, $target->listAll());
-  }
-
-  /**
-   * Provides data for testWithInvalidConfiguration().
-   */
-  public function providerTestWithInvalidConfiguration() {
-    $data = [];
-    $data[] = [TRUE];
-    $data[] = [FALSE];
-
-    return $data;
   }
 
   /**

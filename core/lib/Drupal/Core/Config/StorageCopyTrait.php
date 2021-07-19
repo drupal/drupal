@@ -35,7 +35,9 @@ trait StorageCopyTrait {
     $comparer = NULL;
     if (static::shouldUseStorageComparer($source, $target)) {
       // At least one of the collections will benefit from the StorageComparer.
-      $comparer = new StorageComparer($source, $target);
+      // We need to pass the storages in their default collection
+      // @see https://www.drupal.org/project/drupal/issues/3224239
+      $comparer = new StorageComparer($source->createCollection(StorageInterface::DEFAULT_COLLECTION), $target->createCollection(StorageInterface::DEFAULT_COLLECTION));
       $comparer->createChangelist();
     }
 
@@ -66,14 +68,8 @@ trait StorageCopyTrait {
         );
         $source_config = $source_collection->readMultiple($names_to_write);
         foreach ($source_config as $name => $data) {
-          if ($data !== FALSE) {
-            $target_collection->write($name, $data);
-          }
-          else {
-            \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
-              '%config' => $name,
-            ]);
-          }
+          // StorageInterface::readMultiple only returns data that exists.
+          $target_collection->write($name, $data);
         }
       }
       else {
