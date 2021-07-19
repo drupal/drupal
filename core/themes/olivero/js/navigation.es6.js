@@ -1,8 +1,15 @@
+/**
+ * @file
+ * Customization of navigation.
+ */
+
 ((Drupal, once, tabbable) => {
   /**
    * Checks if navWrapper contains "is-active" class.
-   * @param {object} navWrapper
+   *
+   * @param {Element} navWrapper
    *   Header navigation.
+   *
    * @return {boolean}
    *   True if navWrapper contains "is-active" class, false if not.
    */
@@ -12,6 +19,7 @@
 
   /**
    * Opens or closes the header navigation.
+   *
    * @param {object} props
    *   Navigation props.
    * @param {boolean} state
@@ -22,18 +30,19 @@
     props.navButton.setAttribute('aria-expanded', value);
 
     if (value) {
-      props.body.classList.add('js-overlay-active');
-      props.body.classList.add('js-fixed');
+      props.body.classList.add('is-overlay-active');
+      props.body.classList.add('is-fixed');
       props.navWrapper.classList.add('is-active');
     } else {
-      props.body.classList.remove('js-overlay-active');
-      props.body.classList.remove('js-fixed');
+      props.body.classList.remove('is-overlay-active');
+      props.body.classList.remove('is-fixed');
       props.navWrapper.classList.remove('is-active');
     }
   }
 
   /**
-   * Init function for header navigation.
+   * Initialize the header navigation.
+   *
    * @param {object} props
    *   Navigation props.
    */
@@ -45,9 +54,9 @@
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
 
-    // Closes any open sub navigation first, then close header navigation.
+    // Close any open sub-navigation first, then close the header navigation.
     document.addEventListener('keyup', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
         } else {
@@ -94,12 +103,11 @@
     });
 
     // Remove overlays when browser is resized and desktop nav appears.
-    // @todo Use core/drupal.debounce library to throttle when we move into theming.
     window.addEventListener('resize', () => {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
-        props.body.classList.remove('js-overlay-active');
-        props.body.classList.remove('js-fixed');
+        props.body.classList.remove('is-overlay-active');
+        props.body.classList.remove('is-fixed');
       }
 
       // Ensure that all sub-navigation menus close when the browser is resized.
@@ -108,24 +116,29 @@
   }
 
   /**
-   * Initialize the navigation JS.
+   * Initialize the navigation.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach context and settings for navigation.
    */
   Drupal.behaviors.oliveroNavigation = {
     attach(context) {
       const headerId = 'header';
-      const header = once(
-        'olivero-navigation',
-        `#${headerId}`,
-        context,
-      ).shift();
+      const header = once('navigation', `#${headerId}`, context).shift();
       const navWrapperId = 'header-nav';
 
       if (header) {
-        const navWrapper = header.querySelector('#header-nav');
+        const navWrapper = header.querySelector(`#${navWrapperId}`);
         const { olivero } = Drupal;
-        const navButton = context.querySelector('.mobile-nav-button');
+        const navButton = context.querySelector(
+          '[data-drupal-selector="mobile-nav-button"]',
+        );
         const body = context.querySelector('body');
-        const overlay = context.querySelector('.overlay');
+        const overlay = context.querySelector(
+          '[data-drupal-selector="overlay"]',
+        );
 
         init({
           olivero,

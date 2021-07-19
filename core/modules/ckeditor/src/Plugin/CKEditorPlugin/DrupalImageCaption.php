@@ -2,11 +2,13 @@
 
 namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginCssInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the "drupalimagecaption" plugin.
@@ -17,7 +19,27 @@ use Drupal\ckeditor\CKEditorPluginCssInterface;
  *   module = "ckeditor"
  * )
  */
-class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, CKEditorPluginContextualInterface, CKEditorPluginCssInterface {
+class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, CKEditorPluginContextualInterface, CKEditorPluginCssInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleList;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+    );
+    $instance->moduleList = $container->get('extension.list.module');
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -46,7 +68,7 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimagecaption/plugin.js';
+    return $this->moduleList->getPath('ckeditor') . '/js/plugins/drupalimagecaption/plugin.js';
   }
 
   /**
@@ -70,7 +92,7 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    */
   public function getCssFiles(Editor $editor) {
     return [
-      drupal_get_path('module', 'ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css',
+      $this->moduleList->getPath('ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css',
     ];
   }
 

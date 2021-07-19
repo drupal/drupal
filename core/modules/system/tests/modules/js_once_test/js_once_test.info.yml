@@ -1,0 +1,5 @@
+name: 'JS once Test'
+type: module
+description: 'Module for the jsOnceTest.'
+package: Testing
+version: VERSION

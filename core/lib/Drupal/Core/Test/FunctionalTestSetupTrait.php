@@ -415,13 +415,13 @@ trait FunctionalTestSetupTrait {
     // not already specified.
     $profile = $container->getParameter('install_profile');
 
-    $default_sync_path = drupal_get_path('profile', $profile) . '/config/sync';
+    $default_sync_path = $container->get('extension.list.profile')->getPath($profile) . '/config/sync';
     $profile_config_storage = new FileStorage($default_sync_path, StorageInterface::DEFAULT_COLLECTION);
     if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
       $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];
     }
 
-    $default_install_path = drupal_get_path('profile', $profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $default_install_path = $container->get('extension.list.profile')->getPath($profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     $profile_config_storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
     if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
       $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];
@@ -564,7 +564,7 @@ trait FunctionalTestSetupTrait {
    * Sets up the base URL based upon the environment variable.
    *
    * @throws \Exception
-   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided.
+   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided or uses an invalid scheme.
    */
   protected function setupBaseUrl() {
     global $base_url;
@@ -583,6 +583,13 @@ trait FunctionalTestSetupTrait {
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
     $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
+
+    $valid_url_schemes = ['http', 'https'];
+    if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
+      throw new \Exception(
+        'You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.'
+      );
+    }
 
     $this->baseUrl = $base_url;
 

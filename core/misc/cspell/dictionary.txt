@@ -110,6 +110,7 @@ autosave
 autosubmit
 autowire
 autowired
+autowiring
 backend's
 backlink
 backlinks
@@ -190,6 +191,7 @@ buildtest
 bundable
 bundleable
 bundleless
+bundlenode
 buttonpane
 buttonset
 buytaert

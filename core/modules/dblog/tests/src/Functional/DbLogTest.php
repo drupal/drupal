@@ -876,9 +876,9 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog');
 
     $entries = $this->getLogEntries();
-    $this->assertEquals($entries[0]['message'], 'Third Entry #0');
-    $this->assertEquals($entries[1]['message'], 'Second Entry #0');
-    $this->assertEquals($entries[2]['message'], 'First Entry #0');
+    $this->assertEquals('Third Entry #0', $entries[0]['message']);
+    $this->assertEquals('Second Entry #0', $entries[1]['message']);
+    $this->assertEquals('First Entry #0', $entries[2]['message']);
   }
 
   /**
@@ -897,7 +897,7 @@ class DbLogTest extends BrowserTestBase {
       '%type' => 'User warning',
       '@message' => 'Drupal & awesome',
       '%function' => ErrorTestController::class . '->generateWarnings()',
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
 
     // Check if the full message displays on the details page and backtrace is a

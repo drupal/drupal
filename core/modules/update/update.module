@@ -547,7 +547,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     && file_exists("$directory/$project/core/modules/system/system.module")
   ) {
     return [
-      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href=":upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', [':upgrade-guide' => 'https://www.drupal.org/upgrade']),
+      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href=":update-guide">Updating Drupal guide</a> for information on how to update Drupal core manually.', [':update-guide' => 'https://www.drupal.org/docs/updating-drupal']),
     ];
   }
 
@@ -609,8 +609,8 @@ function update_storage_clear() {
  *   An eight character string uniquely identifying this Drupal installation.
  */
 function _update_manager_unique_identifier() {
-  $id = &drupal_static(__FUNCTION__, '');
-  if (empty($id)) {
+  static $id;
+  if (!isset($id)) {
     $id = substr(hash('sha256', Settings::getHashSalt()), 0, 8);
   }
   return $id;
@@ -628,8 +628,8 @@ function _update_manager_unique_identifier() {
  *   be extracted.
  */
 function _update_manager_extract_directory($create = TRUE) {
-  $directory = &drupal_static(__FUNCTION__, '');
-  if (empty($directory)) {
+  static $directory;
+  if (!isset($directory)) {
     $directory = 'temporary://update-extraction-' . _update_manager_unique_identifier();
     if ($create && !file_exists($directory)) {
       mkdir($directory);
@@ -650,8 +650,8 @@ function _update_manager_extract_directory($create = TRUE) {
  *   be cached.
  */
 function _update_manager_cache_directory($create = TRUE) {
-  $directory = &drupal_static(__FUNCTION__, '');
-  if (empty($directory)) {
+  static $directory;
+  if (!isset($directory)) {
     $directory = 'temporary://update-cache-' . _update_manager_unique_identifier();
     if ($create && !file_exists($directory)) {
       mkdir($directory);

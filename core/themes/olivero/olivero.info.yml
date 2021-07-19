@@ -41,6 +41,10 @@ libraries-override:
         css/components/ajax-progress.module.css: css/components/ajax-progress.module.css
         css/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
   core/drupal.checkbox: false
+  core/drupal.dropbutton:
+    css:
+      component:
+        misc/dropbutton/dropbutton.css: css/components/dropbutton.css
   core/drupal.vertical-tabs:
     css:
       component:
@@ -58,8 +62,6 @@ libraries-extend:
     - olivero/dialog.off_canvas
   core/drupal.progress:
     - olivero/progress
-  core/drupal.dropbutton:
-    - olivero/dropbutton
   layout_discovery/onecol:
     - olivero/layout_discovery_section
   layout_discovery/twocol_bricks:

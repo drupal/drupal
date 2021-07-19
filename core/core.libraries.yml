@@ -528,6 +528,16 @@ jquery.once:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
   dependencies:
     - core/jquery
+    - core/jquery.once.bc
+
+jquery.once.bc:
+  version: VERSION
+  js:
+    misc/jquery.once.bc.js: { weight: -19 }
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal.object.assign
 
 jquery.ui:
   version: &jquery_ui_version 1.12.1
@@ -742,10 +752,10 @@ normalize:
 
 once:
   remote: https://git.drupalcode.org/project/once
-  version: "1.0.0"
+  version: "1.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://git.drupalcode.org/project/once/-/raw/v1.0.0/LICENSE.md
+    url: https://git.drupalcode.org/project/once/-/raw/v1.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/once/once.min.js: { weight: -19, minified: true }

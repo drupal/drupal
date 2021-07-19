@@ -172,7 +172,7 @@ function views_theme($existing, $type, $theme, $path) {
       ];
 
       // We always use the module directory as base dir.
-      $module_dir = drupal_get_path('module', $def['provider']);
+      $module_dir = \Drupal::service('extension.list.module')->getPath($def['provider']);
       $hooks[$def['theme']]['path'] = $module_dir;
 
       // For the views module we ensure views.theme.inc is included.

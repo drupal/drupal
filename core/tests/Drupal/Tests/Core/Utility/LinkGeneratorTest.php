@@ -419,11 +419,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * @see \Drupal\Core\Utility\LinkGenerator::generate()
    */
   public function testGenerateWithHtml() {
-    $this->urlGenerator->expects($this->at(0))
-      ->method('generateFromRoute')
-      ->with('test_route_5', [], $this->defaultOptions)
-      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-5'));
-    $this->urlGenerator->expects($this->at(1))
+    $this->urlGenerator->expects($this->exactly(2))
       ->method('generateFromRoute')
       ->with('test_route_5', [], $this->defaultOptions)
       ->willReturn((new GeneratedUrl())->setGeneratedUrl('/test-route-5'));

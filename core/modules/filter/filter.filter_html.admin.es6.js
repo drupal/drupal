@@ -267,26 +267,29 @@
      *   tag name.
      */
     _parseSetting(setting) {
-      let node;
       let tag;
       let rule;
       let attributes;
       let attribute;
+
       const allowedTags = setting.match(/(<[^>]+>)/g);
-      const sandbox = document.createElement('div');
       const rules = {};
       for (let t = 0; t < allowedTags.length; t++) {
-        // Let the browser do the parsing work for us.
-        sandbox.innerHTML = allowedTags[t];
-        node = sandbox.firstChild;
-        tag = node.tagName.toLowerCase();
+        // Create a jQuery object, making it possible to easily retrieve the
+        // tag name of the allowed tag, regardless of what attributes are set or
+        // what its required parent elements are.
+        const $tagObject = $(allowedTags[t]);
+
+        // Parse the tag name from the jQuery object.
+        tag = $tagObject.prop('tagName').toLowerCase();
 
         // Build the Drupal.FilterHtmlRule object.
         rule = new Drupal.FilterHTMLRule();
         // We create one rule per allowed tag, so always one tag.
         rule.restrictedTags.tags = [tag];
+
         // Add the attribute restrictions.
-        attributes = node.attributes;
+        attributes = $tagObject.prop('attributes');
         for (let i = 0; i < attributes.length; i++) {
           attribute = attributes.item(i);
           const attributeName = attribute.nodeName;

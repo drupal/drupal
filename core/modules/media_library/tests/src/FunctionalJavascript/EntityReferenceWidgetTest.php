@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+use Drupal\field\Entity\FieldConfig;
+
 /**
  * Tests the Media library entity reference widget.
  *
@@ -446,6 +448,36 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Horse');
     $assert_session->pageTextContains('Turtle');
     $assert_session->pageTextNotContains('Snake');
+  }
+
+  /**
+   * Tests saving a required media library field.
+   */
+  public function testRequiredMediaField() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Make field_unlimited_media required.
+    $field_config = FieldConfig::loadByName('node', 'basic_page', 'field_unlimited_media');
+    $field_config->setRequired(TRUE)->save();
+
+    $this->drupalGet('node/add/basic_page');
+
+    $page->fillField('Title', 'My page');
+    $page->pressButton('Save');
+
+    // Check that a clear error message is shown.
+    $assert_session->pageTextNotContains('This value should not be null.');
+    $assert_session->pageTextContains(sprintf('%s field is required.', $field_config->label()));
+
+    // Open the media library, select an item and save the node.
+    $this->openMediaLibraryForField('field_unlimited_media');
+    $this->selectMediaItem(0);
+    $this->pressInsertSelected('Added one media item.');
+    $page->pressButton('Save');
+
+    // Confirm that the node was created.
+    $this->assertSession()->pageTextContains('Basic page My page has been created.');
   }
 
 }

@@ -186,9 +186,6 @@
         break;
 
       case 3:
-        strength -= 40;
-        break;
-
       case 4:
         strength -= 40;
         break;

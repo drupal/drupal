@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -50,6 +51,13 @@ class Page extends PathPluginBase {
   protected $menuStorage;
 
   /**
+   * The parent form selector service.
+   *
+   * @var \Drupal\Core\Menu\MenuParentFormSelectorInterface
+   */
+  protected $parentFormSelector;
+
+  /**
    * Constructs a Page object.
    *
    * @param array $configuration
@@ -64,10 +72,17 @@ class Page extends PathPluginBase {
    *   The state key value store.
    * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
    *   The menu storage.
+   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $parent_form_selector
+   *   The parent form selector service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage, MenuParentFormSelectorInterface $parent_form_selector = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
     $this->menuStorage = $menu_storage;
+    if (!$parent_form_selector) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $parent_form_selector argument is deprecated in drupal:9.3.0 and the $parent_form_selector argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3027559', E_USER_DEPRECATED);
+      $parent_form_selector = \Drupal::service('menu.parent_form_selector');
+    }
+    $this->parentFormSelector = $parent_form_selector;
   }
 
   /**
@@ -80,7 +95,8 @@ class Page extends PathPluginBase {
       $plugin_definition,
       $container->get('router.route_provider'),
       $container->get('state'),
-      $container->get('entity_type.manager')->getStorage('menu')
+      $container->get('entity_type.manager')->getStorage('menu'),
+      $container->get('menu.parent_form_selector')
     );
   }
 
@@ -311,36 +327,24 @@ class Page extends PathPluginBase {
           '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded.'),
         ];
 
-        // Only display the parent selector if Menu UI module is enabled.
         $menu_parent = $menu['menu_name'] . ':' . $menu['parent'];
-        if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-          $menu_link = 'views_view:views.' . $form_state->get('view')->id() . '.' . $form_state->get('display_id');
-          $form['menu']['parent'] = \Drupal::service('menu.parent_form_selector')->parentSelectElement($menu_parent, $menu_link);
-          $form['menu']['parent'] += [
-            '#title' => $this->t('Parent'),
-            '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
-            '#attributes' => ['class' => ['menu-title-select']],
-            '#states' => [
-              'visible' => [
-                [
-                  ':input[name="menu[type]"]' => ['value' => 'normal'],
-                ],
-                [
-                  ':input[name="menu[type]"]' => ['value' => 'tab'],
-                ],
+        $menu_link = 'views_view:views.' . $form_state->get('view')->id() . '.' . $form_state->get('display_id');
+        $form['menu']['parent'] = $this->parentFormSelector->parentSelectElement($menu_parent, $menu_link);
+        $form['menu']['parent'] += [
+          '#title' => $this->t('Parent'),
+          '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
+          '#attributes' => ['class' => ['menu-title-select']],
+          '#states' => [
+            'visible' => [
+              [
+                ':input[name="menu[type]"]' => ['value' => 'normal'],
+              ],
+              [
+                ':input[name="menu[type]"]' => ['value' => 'tab'],
               ],
             ],
-          ];
-        }
-        else {
-          $form['menu']['parent'] = [
-            '#type' => 'value',
-            '#value' => $menu_parent,
-          ];
-          $form['menu']['markup'] = [
-            '#markup' => $this->t('Menu selection requires the activation of Menu UI module.'),
-          ];
-        }
+          ],
+        ];
         $form['menu']['weight'] = [
           '#title' => $this->t('Weight'),
           '#type' => 'textfield',

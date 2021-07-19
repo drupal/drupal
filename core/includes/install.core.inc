@@ -445,12 +445,17 @@ function install_begin_request($class_loader, &$install_state) {
   $listing->setProfileDirectories([]);
   $install_state['profiles'] += $listing->scan('profile');
 
-  // Prime drupal_get_filename()'s static cache.
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+  $module_list = \Drupal::service('extension.list.module');
+  /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_list */
+  $profile_list = \Drupal::service('extension.list.profile');
+
+  // Prime \Drupal\Core\Extension\ExtensionList::getPathname()'s static cache.
   foreach ($install_state['profiles'] as $name => $profile) {
-    drupal_get_filename('profile', $name, $profile->getPathname());
-    // drupal_get_filename() is called both with 'module' and 'profile', see
+    // Profile path is set in both module and profile lists. See
     // \Drupal\Core\Config\ConfigInstaller::getProfileStorages for example.
-    drupal_get_filename('module', $name, $profile->getPathname());
+    $profile_list->setPathname($name, $profile->getPathname());
+    $module_list->setPathname($name, $profile->getPathname());
   }
 
   if ($profile = _install_select_profile($install_state)) {
@@ -462,10 +467,10 @@ function install_begin_request($class_loader, &$install_state) {
   }
 
   // Before having installed the system module and being able to do a module
-  // rebuild, prime the drupal_get_filename() static cache with the system
-  // module's location.
+  // rebuild, prime the module list static cache with the system module's
+  // location.
   // @todo Remove as part of https://www.drupal.org/node/2186491
-  drupal_get_filename('module', 'system', 'core/modules/system/system.info.yml');
+  $module_list->setPathname('system', 'core/modules/system/system.info.yml');
 
   // Use the language from profile configuration if available.
   if (!empty($install_state['config_install_path']) && $install_state['config']['system.site']) {
@@ -1099,10 +1104,9 @@ function install_base_system(&$install_state) {
   // system.module in order to work.
   \Drupal::service('file.htaccess_writer')->ensure();
 
-  // Prime the drupal_get_filename() static cache with the user module's
-  // exact location.
+  // Prime the module list static cache with the user module's exact location.
   // @todo Remove as part of https://www.drupal.org/node/2186491
-  drupal_get_filename('module', 'user', 'core/modules/user/user.info.yml');
+  \Drupal::service('extension.list.module')->setPathname('user', 'core/modules/user/user.info.yml');
 
   // Install the User module so that installing from configuration works and to
   // ensure the anonymous user is created with a langcode of 'en'.
@@ -1743,7 +1747,7 @@ function install_import_translations(&$install_state) {
       'progress_message' => '',
       'error_message' => t('Error importing translation files'),
       'finished' => 'locale_translation_batch_fetch_finished',
-      'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
+      'file' => \Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc',
     ];
     return $batch;
   }
