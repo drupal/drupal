@@ -5,6 +5,7 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -13,6 +14,8 @@ use GuzzleHttp\Exception\TransferException;
  * Retrieves and caches information about oEmbed providers.
  */
 class ProviderRepository implements ProviderRepositoryInterface {
+
+  use UseCacheBackendTrait;
 
   /**
    * How long the provider data should be cached, in seconds.
@@ -81,7 +84,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
   public function getAll() {
     $cache_id = 'media:oembed_providers';
 
-    $cached = $this->cacheBackend->get($cache_id);
+    $cached = $this->cacheGet($cache_id);
     if ($cached) {
       return $cached->data;
     }
@@ -111,7 +114,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
       }
     }
 
-    $this->cacheBackend->set($cache_id, $keyed_providers, $this->time->getCurrentTime() + $this->maxAge);
+    $this->cacheSet($cache_id, $keyed_providers, $this->time->getCurrentTime() + $this->maxAge);
     return $keyed_providers;
   }
 
@@ -125,60 +128,6 @@ class ProviderRepository implements ProviderRepositoryInterface {
       throw new \InvalidArgumentException("Unknown provider '$provider_name'");
     }
     return $providers[$provider_name];
-  }
-
-  /**
-   * Backwards-compatible wrapper around CacheBackendInterface::get().
-   *
-   * @param string $cid
-   *   The cache ID of the data to retrieve.
-   *
-   * @return false|object
-   *   The cached data, or FALSE if none was found.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   CacheBackendInterface::get() instead.
-   *
-   * @see https://www.drupal.org/node/3223594
-   */
-  protected function cacheGet($cid) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::get() instead. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
-    return $this->cacheBackend->get($cid);
-  }
-
-  /**
-   * Backwards-compatible wrapper around CacheBackendInterface::set().
-   *
-   * @param string $cid
-   *   The cache ID of the data to store.
-   * @param mixed $data
-   *   The data to store in the cache.
-   *   Some storage engines only allow objects up to a maximum of 1MB in size to
-   *   be stored by default. When caching large arrays or similar, take care to
-   *   ensure $data does not exceed this size.
-   * @param int $expire
-   *   One of the following values:
-   *   - CacheBackendInterface::CACHE_PERMANENT: Indicates that the item should
-   *     not be removed unless it is deleted explicitly.
-   *   - A Unix timestamp: Indicates that the item will be considered invalid
-   *     after this time, i.e. it will not be returned by get() unless
-   *     $allow_invalid has been set to TRUE. When the item has expired, it may
-   *     be permanently deleted by the garbage collector at any time.
-   * @param array $tags
-   *   An array of tags to be stored with the cache item. These should normally
-   *   identify objects used to build the cache item, which should trigger
-   *   cache invalidation when updated. For example if a cached item represents
-   *   a node, both the node ID and the author's user ID might be passed in as
-   *   tags. For example array('node' => array(123), 'user' => array(92)).
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   CacheBackendInterface::set() instead.
-   *
-   * @see https://www.drupal.org/node/3223594
-   */
-  protected function cacheSet($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = []) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\CacheBackendInterface::set() instead. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
-    return $this->cacheBackend->set(...func_get_args());
   }
 
 }
