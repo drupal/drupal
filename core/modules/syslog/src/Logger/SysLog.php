@@ -66,6 +66,13 @@ class SysLog implements LoggerInterface, EventSubscriberInterface {
   public function log($level, $message, array $context = []) {
     global $base_url;
 
+    $format = $this->config->get('format');
+
+    // If the format is empty nothing will be logged.
+    if (empty($format)) {
+      return;
+    }
+
     // Ensure we have a connection available.
     $this->openConnection();
 
@@ -73,7 +80,7 @@ class SysLog implements LoggerInterface, EventSubscriberInterface {
     $message_placeholders = $this->parser->parseMessagePlaceholders($message, $context);
     $message = empty($message_placeholders) ? $message : strtr($message, $message_placeholders);
 
-    $entry = strtr($this->config->get('format'), [
+    $entry = strtr($format, [
       '!base_url' => $base_url,
       '!timestamp' => $context['timestamp'],
       '!type' => $context['channel'],
