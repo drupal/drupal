@@ -534,7 +534,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "e10c7f4b44b07a96ac9b2b29cb62680e4af6fdf1"
+                "reference": "5083f0856c5ff99f48a4a719bbc9907689e0aa3a"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -556,7 +556,7 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^7.3.0",
-                "guzzlehttp/psr7": "^2.0.0-rc1",
+                "guzzlehttp/psr7": "^2.0.0",
                 "laminas/laminas-diactoros": "^2.1",
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
@@ -1077,16 +1077,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.0.0-rc1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "148492f9e2e1524317a8aa60875f5b59517a9374"
+                "reference": "1dc8d9cba3897165e16d12bb13d813afb1eb3fe7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/148492f9e2e1524317a8aa60875f5b59517a9374",
-                "reference": "148492f9e2e1524317a8aa60875f5b59517a9374",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/1dc8d9cba3897165e16d12bb13d813afb1eb3fe7",
+                "reference": "1dc8d9cba3897165e16d12bb13d813afb1eb3fe7",
                 "shasum": ""
             },
             "require": {
@@ -1151,9 +1151,9 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.0.0-rc1"
+                "source": "https://github.com/guzzle/psr7/tree/2.0.0"
             },
-            "time": "2021-04-29T07:35:29+00:00"
+            "time": "2021-06-30T20:03:07+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
