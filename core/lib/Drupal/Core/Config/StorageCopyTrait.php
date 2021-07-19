@@ -65,9 +65,9 @@ trait StorageCopyTrait {
           $comparer->getChangelist('update', $collection)
         );
         $source_config = $source_collection->readMultiple($names_to_write);
-        foreach ($names_to_write as $name) {
-          if ($source_config[$name] !== FALSE) {
-            $target_collection->write($name, $source_config[$name]);
+        foreach ($source_config as $name => $data) {
+          if ($data !== FALSE) {
+            $target_collection->write($name, $data);
           }
           else {
             \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
