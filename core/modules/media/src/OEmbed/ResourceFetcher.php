@@ -30,13 +30,6 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $providers;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client

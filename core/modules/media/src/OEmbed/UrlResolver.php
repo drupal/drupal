@@ -56,13 +56,6 @@ class UrlResolver implements UrlResolverInterface {
   protected $urlCache = [];
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a UrlResolver object.
    *
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers

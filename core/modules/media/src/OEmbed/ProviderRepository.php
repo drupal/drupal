@@ -46,13 +46,6 @@ class ProviderRepository implements ProviderRepositoryInterface {
   protected $time;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a ProviderRepository instance.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
