@@ -68,7 +68,11 @@ class User extends DrupalSqlBase {
     }
 
     // Unserialize Data.
-    $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
+    $data = $row->getSourceProperty('data');
+    // @todo should we change data from NULL to FALSE to make old behaviour?
+    if ($data !== NULL) {
+      $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
+    }
 
     return parent::prepareRow($row);
   }
