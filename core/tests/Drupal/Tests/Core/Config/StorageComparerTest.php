@@ -42,12 +42,12 @@ class StorageComparerTest extends UnitTestCase {
     $this->sourceStorage = $this->createMock('Drupal\Core\Config\StorageInterface');
     $this->targetStorage = $this->createMock('Drupal\Core\Config\StorageInterface');
 
-    $this->sourceStorage->expects($this->once())
-      ->method('createCollection')
-      ->will($this->returnValue($this->sourceStorage));
-    $this->targetStorage->expects($this->once())
-      ->method('createCollection')
-      ->will($this->returnValue($this->targetStorage));
+    $this->sourceStorage->expects($this->atLeastOnce())
+      ->method('getCollectionName')
+      ->will($this->returnValue(StorageInterface::DEFAULT_COLLECTION));
+    $this->targetStorage->expects($this->atLeastOnce())
+      ->method('getCollectionName')
+      ->will($this->returnValue(StorageInterface::DEFAULT_COLLECTION));
 
     $this->storageComparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
   }
