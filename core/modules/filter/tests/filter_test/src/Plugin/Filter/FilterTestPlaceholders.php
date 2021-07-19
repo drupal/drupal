@@ -30,7 +30,9 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
   }
 
   /**
-   * #lazy_builder callback; builds a render array containing the dynamic thing.
+   * The #lazy_builder callback.
+   *
+   * Builds a render array containing the dynamic thing.
    *
    * @param string $thing
    *   A "thing" string.

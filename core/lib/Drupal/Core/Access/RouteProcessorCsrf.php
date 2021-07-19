@@ -62,7 +62,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
   }
 
   /**
-   * #lazy_builder callback; gets a CSRF token for the given path.
+   * The #lazy_builder callback; gets a CSRF token for the given path.
    *
    * @param string $path
    *   The path to get a CSRF token for.

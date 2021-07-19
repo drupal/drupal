@@ -13,14 +13,14 @@ use Drupal\Core\Form\FormStateInterface;
 class AjaxFormsTestCommandsForm extends FormBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'ajax_forms_test_ajax_commands_form';
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
@@ -234,7 +234,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }

@@ -86,7 +86,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; builds the comment form.
+   * The #lazy_builder callback; builds the comment form.
    *
    * @param string $commented_entity_type_id
    *   The commented entity type ID.
@@ -113,7 +113,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; builds a comment's links.
+   * The #lazy_builder callback; builds a comment's links.
    *
    * @param string $comment_entity_id
    *   The comment entity ID.

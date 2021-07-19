@@ -1131,6 +1131,8 @@ HTML;
   }
 
   /**
+   * Sets up the theme manager for the <details>-tag.
+   *
    * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\Builder\InvocationMocker
    */
   protected function setupThemeManagerForDetails() {
@@ -1159,7 +1161,7 @@ EOS;
 class RecursivePlaceholdersTest implements TrustedCallbackInterface {
 
   /**
-   * #lazy_builder callback; bubbles another placeholder.
+   * The #lazy_builder callback; bubbles another placeholder.
    *
    * @param string $animal
    *   An animal.

@@ -47,7 +47,7 @@ function stable_element_info_alter(array &$info) {
 }
 
 /**
- * #process callback, for adding classes to filter components.
+ * The #process callback, for adding classes to filter components.
  *
  * @param array $element
  *   Render array for the text_format element.

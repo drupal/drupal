@@ -29,7 +29,7 @@ class StatusReportPage extends RenderElement {
   }
 
   /**
-   * #pre_render callback to get general info out of requirements.
+   * The #pre_render callback to get general info out of requirements.
    */
   public static function preRenderGeneralInfo($element) {
     $element['#general_info'] = [
@@ -69,7 +69,7 @@ class StatusReportPage extends RenderElement {
   }
 
   /**
-   * #pre_render callback to create counter elements.
+   * The #pre_render callback to create counter elements.
    */
   public static function preRenderCounters($element) {
     // Count number of items with different severity for summary.
@@ -125,7 +125,7 @@ class StatusReportPage extends RenderElement {
   }
 
   /**
-   * #pre_render callback to create status report requirements.
+   * The #pre_render callback to create status report requirements.
    */
   public static function preRenderRequirements($element) {
     $element['#requirements'] = [

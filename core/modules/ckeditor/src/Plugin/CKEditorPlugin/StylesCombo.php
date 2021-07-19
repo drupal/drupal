@@ -93,7 +93,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
-   * #element_validate handler for the "styles" element in settingsForm().
+   * The #element_validate handler for the "styles" element in settingsForm().
    */
   public function validateStylesValue(array $element, FormStateInterface $form_state) {
     $styles_setting = $this->generateStylesSetSetting($element['#value']);

@@ -118,7 +118,7 @@ class Table extends FormElement {
   }
 
   /**
-   * #process callback for #type 'table' to add tableselect support.
+   * The #process callback for #type 'table' to add tableselect support.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -244,7 +244,7 @@ class Table extends FormElement {
   }
 
   /**
-   * #element_validate callback for #type 'table'.
+   * The #element_validate callback for #type 'table'.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -272,7 +272,7 @@ class Table extends FormElement {
   }
 
   /**
-   * #pre_render callback to transform children of an element of #type 'table'.
+   * The #pre_render callback to transform children of an element of #type 'table'.
    *
    * This function converts sub-elements of an element of #type 'table' to be
    * suitable for table.html.twig:

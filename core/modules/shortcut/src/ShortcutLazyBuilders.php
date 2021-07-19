@@ -36,7 +36,7 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; builds shortcut toolbar links.
+   * The #lazy_builder callback; builds shortcut toolbar links.
    *
    * @return array
    *   A renderable array of shortcut links.

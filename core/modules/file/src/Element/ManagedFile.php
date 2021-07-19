@@ -158,7 +158,7 @@ class ManagedFile extends FormElement {
   }
 
   /**
-   * #ajax callback for managed_file upload forms.
+   * The #ajax callback for managed_file upload forms.
    *
    * This ajax callback takes care of the following things:
    *   - Ensures that broken requests due to too big files are caught.

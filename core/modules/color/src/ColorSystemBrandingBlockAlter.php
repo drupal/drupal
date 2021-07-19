@@ -13,7 +13,7 @@ use Drupal\Core\Render\Element\RenderCallbackInterface;
 class ColorSystemBrandingBlockAlter implements RenderCallbackInterface {
 
   /**
-   * #pre_render callback: Sets color preset logo.
+   * The #pre_render callback: Sets color preset logo.
    */
   public static function preRender($build) {
     $theme_key = \Drupal::theme()->getActiveTheme()->getName();

@@ -27,7 +27,7 @@ class ViewsTestDataController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; for testing purposes only.
+   * The #lazy_builder callback; for testing purposes only.
    */
   public static function placeholderLazyBuilder() {
     // No-op.

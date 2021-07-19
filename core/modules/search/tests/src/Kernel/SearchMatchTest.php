@@ -70,7 +70,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * _test_: Helper method for generating snippets of content.
+   * Helper to generate lorem ipsum snippets of content.
    *
    * Generated items to test against:
    *   1  ipsum
@@ -87,7 +87,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * _test2_: Helper method for generating snippets of content.
+   * Helper to generate English language snippets of content.
    *
    * Generated items to test against:
    *   8  dear

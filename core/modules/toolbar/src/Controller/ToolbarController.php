@@ -85,7 +85,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
   }
 
   /**
-   * #pre_render callback for toolbar_get_rendered_subtrees().
+   * The #pre_render callback for toolbar_get_rendered_subtrees().
    *
    * @internal
    */
