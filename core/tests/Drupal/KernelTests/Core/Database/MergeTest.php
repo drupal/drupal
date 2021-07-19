@@ -205,21 +205,6 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests deprecation of the 'throw_exception' option.
-   *
-   * @group legacy
-   */
-  public function testLegacyThrowExceptionOption(): void {
-    $this->expectDeprecation("Passing a 'throw_exception' option to %AMerge::execute is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187");
-    // This merge will fail because there is no key field specified.
-    $this->assertNull($this->connection
-      ->merge('test_people', ['throw_exception' => FALSE])
-      ->fields(['age' => 31, 'name' => 'Tiffany'])
-      ->execute()
-    );
-  }
-
-  /**
    * Tests that we can merge-insert with reserved keywords.
    */
   public function testMergeWithReservedWords() {

@@ -551,21 +551,6 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests deprecation of the 'throw_exception' option.
-   *
-   * @group legacy
-   */
-  public function testLegacyThrowExceptionOption(): void {
-    $this->expectDeprecation("Passing a 'throw_exception' option to %AExceptionHandler::handleExecutionException is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187");
-    // This query will fail because the table does not exist.
-    $this->assertNull($this->connection->select('some_table_that_does_not_exist', 't', ['throw_exception' => FALSE])
-      ->fields('t')
-      ->countQuery()
-      ->execute()
-    );
-  }
-
-  /**
    * Tests that an invalid count query throws an exception.
    */
   public function testInvalidSelectCount() {

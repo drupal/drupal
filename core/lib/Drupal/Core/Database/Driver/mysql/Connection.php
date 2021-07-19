@@ -3,9 +3,7 @@
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\DatabaseAccessDeniedException;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
@@ -51,11 +49,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected $statementClass = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
   protected $statementWrapperClass = StatementWrapper::class;
 
   /**
@@ -88,25 +81,6 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   protected $identifierQuotes = ['"', '"'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
-    // In case of attempted INSERT of a record with an undefined column and no
-    // default value indicated in schema, MySql returns a 1364 error code.
-    // Throw an IntegrityConstraintViolationException here like the other
-    // drivers do, to avoid the parent class to throw a generic
-    // DatabaseExceptionWrapper instead.
-    if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
-      @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
-      $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
-      $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-      throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
-    }
-
-    parent::handleQueryException($e, $query, $args, $options);
-  }
 
   /**
    * {@inheritdoc}
@@ -212,16 +186,6 @@ class Connection extends DatabaseConnection {
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function queryTemporary($query, array $args = [], array $options = []) {
-    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
-    $tablename = $this->generateTemporaryTableName();
-    $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY ' . $query, $args, $options);
-    return $tablename;
   }
 
   public function driver() {
