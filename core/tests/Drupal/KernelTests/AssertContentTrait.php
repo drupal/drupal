@@ -732,7 +732,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
-    $this->assertRegExp($pattern, $this->getRawContent(), $message);
+    $this->assertMatchesRegularExpression($pattern, $this->getRawContent(), $message);
     return TRUE;
   }
 
@@ -759,7 +759,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = new FormattableMarkup('Pattern "@pattern" not found', ['@pattern' => $pattern]);
     }
-    $this->assertNotRegExp($pattern, $this->getRawContent(), $message);
+    $this->assertDoesNotMatchRegularExpression($pattern, $this->getRawContent(), $message);
     return TRUE;
   }
 
@@ -783,7 +783,7 @@ trait AssertContentTrait {
     if (!isset($message)) {
       $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
-    $this->assertRegExp($pattern, $this->getTextContent(), $message);
+    $this->assertMatchesRegularExpression($pattern, $this->getTextContent(), $message);
     return TRUE;
   }
 
@@ -802,9 +802,6 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertTitle($title, $message = '', $group = 'Other') {
     // Don't use xpath as it messes with HTML escaping.
@@ -817,9 +814,11 @@ trait AssertContentTrait {
           '@expected' => var_export($title, TRUE),
         ]);
       }
-      return $this->assertEqual($title, $actual, $message, $group);
+      $this->assertEquals($title, $actual, $message);
     }
-    return $this->fail('No title element found on the page.');
+    else {
+      $this->fail('No title element found on the page.');
+    }
   }
 
   /**

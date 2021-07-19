@@ -30,10 +30,12 @@
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
   @media (--grid-md) {
+    -ms-grid-columns: (minmax(0, 1fr))[ calc(var(--grid-col-count--md) - 2) ];
     grid-template-columns: repeat(calc(var(--grid-col-count--md) - 2), minmax(0, 1fr));
   }
 
   @media (--lg) {
+    -ms-grid-columns: (minmax(0, 1fr))[ calc(var(--grid-col-count--lg) - 6) ];
     grid-template-columns: repeat(calc(var(--grid-col-count--lg) - 6), minmax(0, 1fr));
   }
 }
@@ -46,10 +48,12 @@
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
   @media (--grid-md) {
+    -ms-grid-columns: (minmax(0, 1fr))[ calc(var(--grid-col-count--md) - 2) ];
     grid-template-columns: repeat(calc(var(--grid-col-count--md) - 2), minmax(0, 1fr));
   }
 
   @media (--lg) {
+    -ms-grid-columns: (minmax(0, 1fr))[ calc(var(--grid-col-count--md) - 4) ];
     grid-template-columns: repeat(calc(var(--grid-col-count--md) - 4), minmax(0, 1fr));
   }
 }

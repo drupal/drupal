@@ -1,12 +1,30 @@
-((Drupal) => {
-  const searchWideButton = document.querySelector('.header-nav__search-button');
-  const searchWideWrapper = document.querySelector('.search-wide__wrapper');
+/**
+ * @file
+ * Customization of search.
+ */
 
+((Drupal) => {
+  const searchWideButton = document.querySelector(
+    '[data-drupal-selector="block-search-wide-button"]',
+  );
+  const searchWideWrapper = document.querySelector(
+    '[data-drupal-selector="block-search-wide-wrapper"]',
+  );
+
+  /**
+   * Determine if search is visible.
+   *
+   * @return {boolean}
+   *   True if the search wrapper contains "is-active" class, false if not.
+   */
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
   }
   Drupal.olivero.searchIsVisible = searchIsVisible;
 
+  /**
+   * Set focus for the search input element.
+   */
   function handleFocus() {
     if (searchIsVisible()) {
       searchWideWrapper.querySelector('input[type="search"]').focus();
@@ -15,6 +33,12 @@
     }
   }
 
+  /**
+   * Toggle search functionality visibility.
+   *
+   * @param {boolean} visibility
+   *   True if we want to show the form, false if we want to hide it.
+   */
   function toggleSearchVisibility(visibility) {
     searchWideButton.setAttribute('aria-expanded', visibility === true);
     searchWideWrapper.addEventListener('transitionend', handleFocus, {
@@ -40,13 +64,15 @@
   document.addEventListener('click', (e) => {
     if (
       e.target.matches(
-        '.header-nav__search-button, .header-nav__search-button *',
+        '[data-drupal-selector="block-search-wide-button"], [data-drupal-selector="block-search-wide-button"] *',
       )
     ) {
       toggleSearchVisibility(!searchIsVisible());
     } else if (
       searchIsVisible() &&
-      !e.target.matches('.search-wide__wrapper, .search-wide__wrapper *')
+      !e.target.matches(
+        '[data-drupal-selector="block-search-wide-wrapper"], [data-drupal-selector="block-search-wide-wrapper"] *',
+      )
     ) {
       toggleSearchVisibility(false);
     }

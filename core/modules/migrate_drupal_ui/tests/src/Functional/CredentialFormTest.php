@@ -27,7 +27,7 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
    * @dataProvider providerCredentialForm
    */
   public function testCredentialFrom($path_to_database) {
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . $path_to_database);
+    $this->loadFixture($this->getModulePath('migrate_drupal') . $path_to_database);
     $session = $this->assertSession();
 
     // Get valid credentials.

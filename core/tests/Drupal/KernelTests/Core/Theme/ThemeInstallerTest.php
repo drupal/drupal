@@ -70,12 +70,12 @@ class ThemeInstallerTest extends KernelTestBase {
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
-    $this->assertEqual($name, $themes[$name]->getName());
+    $this->assertEquals($name, $themes[$name]->getName());
 
     // Verify that test_basetheme.settings is active.
     $this->assertFalse(theme_get_setting('features.favicon', $name));
-    $this->assertEqual('only', theme_get_setting('base', $name));
-    $this->assertEqual('base', theme_get_setting('override', $name));
+    $this->assertEquals('only', theme_get_setting('base', $name));
+    $this->assertEquals('base', theme_get_setting('override', $name));
   }
 
   /**
@@ -352,7 +352,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->themeInstaller()->install([$name]);
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
-    $this->assertEqual($name, $themes[$name]->getName());
+    $this->assertEquals($name, $themes[$name]->getName());
     $this->assertNotEmpty($this->config("$name.settings")->get());
   }
 

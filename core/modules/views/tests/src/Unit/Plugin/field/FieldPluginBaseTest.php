@@ -210,7 +210,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test rendering as a link without a path.
+   * Tests rendering as a link without a path.
    *
    * @covers ::renderAsLink
    */
@@ -230,7 +230,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test rendering with a more link.
+   * Tests rendering with a more link.
    *
    * @param string $path
    *   An internal or external path.
@@ -313,7 +313,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test rendering of a link with a path and options.
+   * Tests rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsLinkWithPathAndOptions
    * @covers ::renderAsLink
@@ -529,7 +529,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test rendering of a link with a path and options.
+   * Tests rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsLinkWithPathAndTokens
    * @covers ::renderAsLink
@@ -589,7 +589,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test rendering of a link with a path and options.
+   * Tests rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsExternalLinkWithPathAndTokens
    * @covers ::renderAsLink

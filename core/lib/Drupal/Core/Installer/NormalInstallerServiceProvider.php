@@ -6,6 +6,11 @@ use Drupal\Core\Cache\MemoryBackendFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Lock\NullLockBackend;
+use Symfony\Component\DependencyInjection\Compiler\AnalyzeServiceReferencesPass;
+use Symfony\Component\DependencyInjection\Compiler\InlineServiceDefinitionsPass;
+use Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass;
+use Symfony\Component\DependencyInjection\Compiler\ReplaceAliasByActualDefinitionPass;
+use Symfony\Component\DependencyInjection\Compiler\ResolveHotPathPass;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -61,6 +66,24 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
         ->addArgument(new Reference('router.builder'))
         ->addTag('event_subscriber');
     }
+
+    $pass_config = $container->getCompilerPassConfig();
+    $pass_config->setRemovingPasses(array_filter($pass_config->getRemovingPasses(), function ($pass) {
+      // Remove InlineServiceDefinitionsPass, RemoveUnusedDefinitionsPass,
+      // AnalyzeServiceReferencesPass and ReplaceAliasByActualDefinitionPass as
+      // these are not necessary during installation.
+      // @see \Symfony\Component\DependencyInjection\Compiler\PassConfig
+      return !($pass instanceof InlineServiceDefinitionsPass ||
+               $pass instanceof RemoveUnusedDefinitionsPass ||
+               $pass instanceof AnalyzeServiceReferencesPass ||
+               $pass instanceof ReplaceAliasByActualDefinitionPass);
+    }));
+    $pass_config->setAfterRemovingPasses(array_filter($pass_config->getAfterRemovingPasses(), function ($pass) {
+      // Remove ResolveHotPathPass as Drupal's container dumper does not support
+      // it.
+      // @see \Symfony\Component\DependencyInjection\Compiler\PassConfig
+      return !($pass instanceof ResolveHotPathPass);
+    }));
   }
 
 }

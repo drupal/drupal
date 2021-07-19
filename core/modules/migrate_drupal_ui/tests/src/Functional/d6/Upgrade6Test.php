@@ -52,7 +52,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       ->getStorage('node');
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal6.php');
+    $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
   }
 
   /**
@@ -94,14 +94,14 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'search_page' => 2,
       'shortcut' => 2,
       'shortcut_set' => 1,
-      'action' => 25,
+      'action' => 27,
       'menu' => 8,
       'path_alias' => 8,
       'taxonomy_term' => 15,
       'taxonomy_vocabulary' => 7,
       'tour' => 6,
       'user' => 7,
-      'user_role' => 6,
+      'user_role' => 7,
       'menu_link_content' => 10,
       'view' => 16,
       'date_format' => 11,

@@ -56,7 +56,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:path]'] = Html::escape($file->getFileUri());
     $tests['[file:mime]'] = Html::escape($file->getMimeType());
     $tests['[file:size]'] = format_size($file->getSize());
-    $tests['[file:url]'] = Html::escape(file_create_url($file->getFileUri()));
+    $tests['[file:url]'] = Html::escape($file->createFileUrl(FALSE));
     $tests['[file:created]'] = $date_formatter->format($file->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:created:short]'] = $date_formatter->format($file->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[file:changed]'] = $date_formatter->format($file->getChangedTime(), 'medium', '', NULL, $language_interface->getId());
@@ -88,8 +88,8 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
-      $this->assertEqual($expected, $output, new FormattableMarkup('Sanitized file token %token replaced.', ['%token' => $input]));
-      $this->assertEqual($metadata_tests[$input], $bubbleable_metadata);
+      $this->assertEquals($expected, $output, new FormattableMarkup('Sanitized file token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
 
     // Generate and test unsanitized tokens.
@@ -100,7 +100,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId(), 'sanitize' => FALSE]);
-      $this->assertEqual($expected, $output, new FormattableMarkup('Unsanitized file token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($expected, $output, new FormattableMarkup('Unsanitized file token %token replaced.', ['%token' => $input]));
     }
   }
 

@@ -16,23 +16,31 @@ class DownloadTest extends FileManagedTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
   protected function setUp(): void {
     parent::setUp();
+    $this->fileUrlGenerator = $this->container->get('file_url_generator');
     // Clear out any hook calls.
     file_test_reset();
   }
 
   /**
-   * Test the public file transfer system.
+   * Tests the public file transfer system.
    */
   public function testPublicFileTransfer() {
     // Test generating a URL to a created file.
     $file = $this->createFile();
-    $url = file_create_url($file->getFileUri());
+    $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
     // URLs can't contain characters outside the ASCII set so $filename has to be
     // encoded.
     $filename = $GLOBALS['base_url'] . '/' . \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
-    $this->assertEqual($filename, $url, 'Correctly generated a URL for a created file.');
+    $this->assertEquals($filename, $url, 'Correctly generated a URL for a created file.');
     $http_client = $this->getHttpClient();
     $response = $http_client->head($url);
     $this->assertEquals(200, $response->getStatusCode(), 'Confirmed that the generated URL is correct by downloading the created file.');
@@ -40,21 +48,21 @@ class DownloadTest extends FileManagedTestBase {
     // Test generating a URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
     $filepath = 'core/assets/vendor/jquery/jquery.min.js';
-    $url = file_create_url($filepath);
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
+    $url = $this->fileUrlGenerator->generateAbsoluteString($filepath);
+    $this->assertEquals($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
     $response = $http_client->head($url);
     $this->assertEquals(200, $response->getStatusCode(), 'Confirmed that the generated URL is correct by downloading the shipped file.');
   }
 
   /**
-   * Test the private file transfer system.
+   * Tests the private file transfer system.
    */
   public function testPrivateFileTransferWithoutPageCache() {
     $this->doPrivateFileTransferTest();
   }
 
   /**
-   * Test the private file transfer system.
+   * Tests the private file transfer system.
    */
   protected function doPrivateFileTransferTest() {
     // Set file downloads to private so handler functions get called.
@@ -69,7 +77,7 @@ class DownloadTest extends FileManagedTestBase {
     $file->setPermanent();
     $file->save();
 
-    $url = file_create_url($file->getFileUri());
+    $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
 
     // Set file_test access header to allow the download.
     file_test_reset();
@@ -94,7 +102,7 @@ class DownloadTest extends FileManagedTestBase {
 
     // Try non-existent file.
     file_test_reset();
-    $url = file_create_url('private://' . $this->randomMachineName());
+    $url = $this->fileUrlGenerator->generateAbsoluteString('private://' . $this->randomMachineName());
     $response = $http_client->head($url, ['http_errors' => FALSE]);
     $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
     // Assert that hook_file_download is not called.
@@ -109,7 +117,7 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test file_create_url().
+   * Test FileUrlGeneratorInterface::generateString()
    */
   public function testFileCreateUrl() {
     // "Special" ASCII characters.
@@ -139,15 +147,16 @@ class DownloadTest extends FileManagedTestBase {
       $this->checkUrl('public', '', $basename, $base_path . '/' . $public_directory_path . '/' . $basename_encoded);
       $this->checkUrl('private', '', $basename, $base_path . '/' . $script_path . 'system/files/' . $basename_encoded);
     }
-    $this->assertEqual('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', file_create_url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), t('Generated URL matches expected URL.'));
+    $this->assertEquals('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', $this->fileUrlGenerator->generateString('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', FALSE), t('Generated URL matches expected URL.'));
   }
 
   /**
-   * Download a file from the URL generated by file_create_url().
+   * Download a file from the URL generated by generateString().
    *
    * Create a file with the specified scheme, directory and filename; check that
-   * the URL generated by file_create_url() for the specified file equals the
-   * specified URL; fetch the URL and then compare the contents to the file.
+   * the URL generated by FileUrlGeneratorInterface::generateString() for the
+   * specified file equals the specified URL; fetch the URL and then compare the
+   * contents to the file.
    *
    * @param string $scheme
    *   A scheme, e.g. "public".
@@ -167,8 +176,8 @@ class DownloadTest extends FileManagedTestBase {
     \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, $scheme);
 
-    $url = file_create_url($file->getFileUri());
-    $this->assertEqual($expected_url, $url);
+    $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
+    $this->assertEquals($expected_url, $url);
 
     if ($scheme == 'private') {
       // Tell the implementation of hook_file_download() in file_test.module

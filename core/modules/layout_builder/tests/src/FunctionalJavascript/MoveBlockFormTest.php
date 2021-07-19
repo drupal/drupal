@@ -54,11 +54,8 @@ class MoveBlockFormTest extends WebDriverTestBase {
     ]));
 
     // Enable layout builder.
-    $this->drupalPostForm(
-      static::FIELD_UI_PREFIX . '/display/default',
-      ['layout[enabled]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $page->clickLink('Manage layout');
     $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
 
@@ -150,7 +147,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $block_tds = $page->findAll('css', '.layout-builder-components-table__block-label');
-    $this->assertCount(count($block_tds), $expected_block_labels);
+    $this->assertSameSize($block_tds, $expected_block_labels);
     /** @var \Behat\Mink\Element\NodeElement $block_td */
     foreach ($block_tds as $block_td) {
       $this->assertSame(array_shift($expected_block_labels), trim($block_td->getText()));
@@ -217,7 +214,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
 
     // Get all blocks currently in the region.
     $blocks = $page->findAll('css', "$region_selector [data-layout-block-uuid]");
-    $this->assertCount(count($expected_block_selectors), $blocks);
+    $this->assertSameSize($expected_block_selectors, $blocks);
 
     /** @var \Behat\Mink\Element\NodeElement $block */
     foreach ($blocks as $block) {

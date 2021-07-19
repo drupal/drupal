@@ -66,7 +66,8 @@ class MenuUiLanguageTest extends BrowserTestBase {
       'label' => $label,
       'langcode' => 'aa',
     ];
-    $this->drupalPostForm('admin/structure/menu/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/add');
+    $this->submitForm($edit, 'Save');
     ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
       ->setDefaultLangcode('bb')
       ->setLanguageAlterable(TRUE)
@@ -84,7 +85,8 @@ class MenuUiLanguageTest extends BrowserTestBase {
       'title[0][value]' => $link_title,
       'link[0][uri]' => $link_path,
     ];
-    $this->drupalPostForm("admin/structure/menu/manage/$menu_name/add", $edit, 'Save');
+    $this->drupalGet("admin/structure/menu/manage/{$menu_name}/add");
+    $this->submitForm($edit, 'Save');
     // Check the link was added with the correct menu link default language.
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $link_title]);
     $menu_link = reset($menu_links);
@@ -106,7 +108,8 @@ class MenuUiLanguageTest extends BrowserTestBase {
       'title[0][value]' => $link_title,
       'link[0][uri]' => $link_path,
     ];
-    $this->drupalPostForm("admin/structure/menu/manage/$menu_name/add", $edit, 'Save');
+    $this->drupalGet("admin/structure/menu/manage/{$menu_name}/add");
+    $this->submitForm($edit, 'Save');
     // Check the link was added with the correct new menu link default language.
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $link_title]);
     $menu_link = reset($menu_links);
@@ -120,7 +123,8 @@ class MenuUiLanguageTest extends BrowserTestBase {
     $edit = [
       'langcode[0][value]' => 'bb',
     ];
-    $this->drupalPostForm('admin/structure/menu/item/' . $menu_link->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/item/' . $menu_link->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertMenuLink([
       'menu_name' => $menu_name,
       'route_name' => '<front>',

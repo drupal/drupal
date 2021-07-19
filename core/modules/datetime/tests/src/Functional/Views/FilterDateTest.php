@@ -117,7 +117,8 @@ class FilterDateTest extends BrowserTestBase {
    */
   public function testExposedGroupedFilters() {
     // Expose the empty and not empty operators in a grouped filter.
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_datetime/default/filter/' . $this->fieldName . '_value', [], 'Expose filter');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_datetime/default/filter/' . $this->fieldName . '_value');
+    $this->submitForm([], 'Expose filter');
     $this->submitForm([], 'Grouped filters');
 
     $edit = [];
@@ -130,8 +131,10 @@ class FilterDateTest extends BrowserTestBase {
 
     // Test that the exposed filter works as expected.
     $path = 'test_filter_datetime-path';
-    $this->drupalPostForm('admin/structure/views/view/test_filter_datetime/edit', [], 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_datetime/page_1/path', ['path' => $path], 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_filter_datetime/edit');
+    $this->submitForm([], 'Add Page');
+    $this->drupalGet('admin/structure/views/nojs/display/test_filter_datetime/page_1/path');
+    $this->submitForm(['path' => $path], 'Apply');
     $this->submitForm([], 'Save');
 
     $this->drupalGet($path);

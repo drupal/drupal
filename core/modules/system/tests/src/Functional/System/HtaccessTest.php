@@ -31,7 +31,7 @@ class HtaccessTest extends BrowserTestBase {
    *   for example, 200 or 403.
    */
   protected function getProtectedFiles() {
-    $path = drupal_get_path('module', 'system') . '/tests/fixtures/HtaccessTest';
+    $path = $this->getModulePath('system') . '/tests/fixtures/HtaccessTest';
 
     // Tests the FilesMatch directive which denies access to certain file
     // extensions.
@@ -122,14 +122,14 @@ class HtaccessTest extends BrowserTestBase {
     $node->save();
     $this->drupalGet('test.php');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('This is a node');
+    $this->assertSession()->pageTextContains('This is a node');
 
     // Update node's alias to test.php/test.
     $node->path = '/test.php/test';
     $node->save();
     $this->drupalGet('test.php/test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('This is a node');
+    $this->assertSession()->pageTextContains('This is a node');
   }
 
   /**

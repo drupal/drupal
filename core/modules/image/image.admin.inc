@@ -17,6 +17,10 @@ use Drupal\Core\Render\Element;
  *   - style: \Drupal\image\ImageStyleInterface image style being previewed.
  */
 function template_preprocess_image_style_preview(&$variables) {
+
+  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+  $file_url_generator = \Drupal::service('file_url_generator');
+
   // Style information.
   $style = $variables['style'];
   $variables['style_id'] = $style->id();
@@ -34,7 +38,7 @@ function template_preprocess_image_style_preview(&$variables) {
   $original_path = \Drupal::config('image.settings')->get('preview_image');
   $original_image = $image_factory->get($original_path);
   $variables['original'] = [
-    'url' => file_url_transform_relative(file_create_url($original_path)),
+    'url' => $file_url_generator->generateString($original_path),
     'width' => $original_image->getWidth(),
     'height' => $original_image->getHeight(),
   ];
@@ -55,7 +59,7 @@ function template_preprocess_image_style_preview(&$variables) {
   }
   $preview_image = $image_factory->get($preview_file);
   $variables['derivative'] = [
-    'url' => file_url_transform_relative(file_create_url($preview_file)),
+    'url' => $file_url_generator->generateString($preview_file),
     'width' => $preview_image->getWidth(),
     'height' => $preview_image->getHeight(),
   ];

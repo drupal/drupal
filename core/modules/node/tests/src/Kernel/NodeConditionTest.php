@@ -10,6 +10,7 @@ use Drupal\node\Entity\NodeType;
  * Tests that conditions, provided by the node module, are working properly.
  *
  * @group node
+ * @group legacy
  */
 class NodeConditionTest extends EntityKernelTestBase {
 
@@ -31,6 +32,7 @@ class NodeConditionTest extends EntityKernelTestBase {
    * Tests conditions.
    */
   public function testConditions() {
+    $this->expectDeprecation('\Drupal\node\Plugin\Condition\NodeType is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Plugin\Condition\EntityBundle instead. See https://www.drupal.org/node/2983299');
     $manager = $this->container->get('plugin.manager.condition');
     $this->createUser();
 
@@ -49,19 +51,19 @@ class NodeConditionTest extends EntityKernelTestBase {
       ->setContextValue('node', $page);
     $this->assertFalse($condition->execute(), 'Page type nodes fail node type checks for articles.');
     // Check for the proper summary.
-    $this->assertEqual('The node bundle is article', $condition->summary());
+    $this->assertEquals('The node bundle is article', $condition->summary());
 
     // Set the node type check to page.
     $condition->setConfig('bundles', ['page' => 'page']);
     $this->assertTrue($condition->execute(), 'Page type nodes pass node type checks for pages');
     // Check for the proper summary.
-    $this->assertEqual('The node bundle is page', $condition->summary());
+    $this->assertEquals('The node bundle is page', $condition->summary());
 
     // Set the node type check to page or article.
     $condition->setConfig('bundles', ['page' => 'page', 'article' => 'article']);
     $this->assertTrue($condition->execute(), 'Page type nodes pass node type checks for pages or articles');
     // Check for the proper summary.
-    $this->assertEqual('The node bundle is page or article', $condition->summary());
+    $this->assertEquals('The node bundle is page or article', $condition->summary());
 
     // Set the context to the article node.
     $condition->setContextValue('node', $article);
@@ -73,7 +75,7 @@ class NodeConditionTest extends EntityKernelTestBase {
 
     // Check a greater than 2 bundles summary scenario.
     $condition->setConfig('bundles', ['page' => 'page', 'article' => 'article', 'test' => 'test']);
-    $this->assertEqual('The node bundle is page, article or test', $condition->summary());
+    $this->assertEquals('The node bundle is page, article or test', $condition->summary());
   }
 
   /**

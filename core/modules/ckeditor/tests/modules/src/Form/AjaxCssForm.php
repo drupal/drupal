@@ -4,8 +4,10 @@ namespace Drupal\ckeditor_test\Form;
 
 use Drupal\ckeditor\Ajax\AddStyleSheetCommand;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A form for testing delivery of CSS to CKEditor via AJAX.
@@ -13,6 +15,30 @@ use Drupal\Core\Form\FormStateInterface;
  * @internal
  */
 class AjaxCssForm extends FormBase {
+
+  /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
+   * Constructs an AjaxCssForm.
+   *
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
+   */
+  public function __construct(FileUrlGeneratorInterface $file_url_generator) {
+    $this->fileUrlGenerator = $file_url_generator;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('file_url_generator'));
+  }
 
   /**
    * {@inheritdoc}
@@ -81,9 +107,8 @@ class AjaxCssForm extends FormBase {
    */
   protected function generateResponse($editor_id) {
     // Build a URL to the style sheet that will be added.
-    $url = drupal_get_path('module', 'ckeditor_test') . '/css/test.css';
-    $url = file_create_url($url);
-    $url = file_url_transform_relative($url);
+    $url = \Drupal::service('extension.list.module')->getPath('ckeditor_test') . '/css/test.css';
+    $url = $this->fileUrlGenerator->generateString($url);
 
     $response = new AjaxResponse();
     return $response

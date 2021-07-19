@@ -52,10 +52,10 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     // the cache layer.
     $active_config_storage = $this->container->get('config.storage');
 
-    $default_config_storage = new FileStorage(drupal_get_path('profile', 'demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
+    $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
 
-    $default_config_storage = new FileStorage(drupal_get_path('profile', 'demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
+    $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
   }
 
@@ -91,7 +91,8 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the users can log in with the admin password selected at install.
+   * Tests that the users can log in with the admin password selected at
+   * install.
    */
   public function testUser() {
     $password = $this->rootUser->pass_raw;
@@ -162,7 +163,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $nodes = $this->container->get('entity_type.manager')
       ->getStorage('node')
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
-    /* @var \Drupal\node\Entity\Node $recipe_node */
+    /** @var \Drupal\node\Entity\Node $recipe_node */
     $recipe_node = reset($nodes);
 
     // Check when editing a node, the warning is visible.

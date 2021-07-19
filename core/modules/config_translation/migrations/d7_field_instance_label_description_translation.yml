@@ -55,6 +55,7 @@ destination:
   plugin: entity:field_config
 migration_dependencies:
   required:
+    - language
     - d7_field_instance
   optional:
     - d7_node_type

@@ -52,7 +52,7 @@ class PathEncodedTest extends BrowserTestBase {
     foreach ($route_paths as $route_name => $path) {
       // The alias may be only a suffix of the generated path when the test is
       // run with Drupal installed in a subdirectory.
-      $this->assertRegExp('@/' . rawurlencode($aliases[$route_name]) . '$@', Url::fromRoute($route_name)->toString());
+      $this->assertMatchesRegularExpression('@/' . rawurlencode($aliases[$route_name]) . '$@', Url::fromRoute($route_name)->toString());
       $this->drupalGet(Url::fromRoute($route_name));
       $this->assertSession()->pageTextContains('PathEncodedTestController works');
     }

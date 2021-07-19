@@ -13,21 +13,21 @@ class Module extends Updater implements UpdaterInterface {
   /**
    * Returns the directory where a module should be installed.
    *
-   * If the module is already installed, drupal_get_path() will return a valid
-   * path and we should install it there. If we're installing a new module, we
-   * always want it to go into /modules, since that's where all the
-   * documentation recommends users install their modules, and there's no way
-   * that can conflict on a multi-site installation, since the Update manager
-   * won't let you install a new module if it's already found on your system,
-   * and if there was a copy in the top-level we'd see it.
+   * If the module is already installed, ModuleExtensionList::getPath() will
+   * return a valid path and we should install it there. If we're installing a
+   * new module, we always want it to go into /modules, since that's where all
+   * the documentation recommends users install their modules, and there's no
+   * way that can conflict on a multi-site installation, since the Update
+   * manager won't let you install a new module if it's already found on your
+   * system, and if there was a copy in the top-level we'd see it.
    *
    * @return string
    *   The absolute path of the directory.
    */
   public function getInstallDirectory() {
-    if ($this->isInstalled() && ($relative_path = drupal_get_path('module', $this->name))) {
-      // The return value of drupal_get_path() is always relative to the site,
-      // so prepend DRUPAL_ROOT.
+    if ($this->isInstalled() && ($relative_path = \Drupal::service('extension.list.module')->getPath($this->name))) {
+      // The return value of ExtensionList::getPath() is always relative to the
+      // site, so prepend DRUPAL_ROOT.
       return DRUPAL_ROOT . '/' . dirname($relative_path);
     }
     else {
@@ -72,7 +72,7 @@ class Module extends Updater implements UpdaterInterface {
    * @return bool
    */
   public static function canUpdate($project_name) {
-    return (bool) drupal_get_path('module', $project_name);
+    return (bool) \Drupal::service('extension.list.module')->getPath($project_name);
   }
 
   /**
@@ -89,7 +89,7 @@ class Module extends Updater implements UpdaterInterface {
     }
     module_load_include('install', $this->name);
 
-    if (!$updates = drupal_get_schema_versions($this->name)) {
+    if (!\Drupal::service('update.update_hook_registry')->getAvailableUpdates($this->name)) {
       return [];
     }
     $modules_with_updates = update_get_update_list();

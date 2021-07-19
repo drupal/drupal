@@ -66,21 +66,23 @@ class FilterSecurityTest extends BrowserTestBase {
     $body_raw = $node->body->value;
     $format_id = $node->body->format;
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($body_raw);
+    $this->assertSession()->pageTextContains($body_raw);
 
     // Enable the filter_test_replace filter.
     $edit = [
       'filters[filter_test_replace][status]' => 1,
     ];
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
+    $this->submitForm($edit, 'Save configuration');
 
     // Verify that filter_test_replace filter replaced the content.
     $this->drupalGet('node/' . $node->id());
     $this->assertNoText($body_raw);
-    $this->assertText('Filter: Testing filter');
+    $this->assertSession()->pageTextContains('Filter: Testing filter');
 
     // Disable the text format entirely.
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', [], 'Disable');
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id . '/disable');
+    $this->submitForm([], 'Disable');
 
     // Verify that the content is empty, because the text format does not exist.
     $this->drupalGet('node/' . $node->id());
@@ -93,8 +95,8 @@ class FilterSecurityTest extends BrowserTestBase {
   public function testSkipSecurityFilters() {
     $text = "Text with some disallowed tags: <script />, <p><object>unicorn</object></p>, <i><table></i>.";
     $expected_filtered_text = "Text with some disallowed tags: , <p>unicorn</p>, .";
-    $this->assertEqual($expected_filtered_text, check_markup($text, 'filtered_html', '', []), 'Expected filter result.');
-    $this->assertEqual($expected_filtered_text, check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR]), 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
+    $this->assertEquals($expected_filtered_text, check_markup($text, 'filtered_html', '', []), 'Expected filter result.');
+    $this->assertEquals($expected_filtered_text, check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR]), 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
 
 }

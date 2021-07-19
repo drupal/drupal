@@ -31,12 +31,13 @@ class FieldUITest extends UITestBase {
   public function testFieldUI() {
     // Ensure the field is not marked as hidden on the first run.
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertText('Views test: Name');
+    $this->assertSession()->pageTextContains('Views test: Name');
     $this->assertSession()->pageTextNotContains('Views test: Name [hidden]');
 
     // Hides the field and check whether the hidden label is appended.
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
-    $this->drupalPostForm($edit_handler_url, ['options[exclude]' => TRUE], 'Apply');
+    $this->drupalGet($edit_handler_url);
+    $this->submitForm(['options[exclude]' => TRUE], 'Apply');
 
     $this->assertSession()->pageTextContains('Views test: Name [hidden]');
 
@@ -68,14 +69,15 @@ class FieldUITest extends UITestBase {
     $edit = [
       'group_by' => TRUE,
     ];
-    $this->drupalPostForm('/admin/structure/views/nojs/display/test_view/default/group_by', $edit, 'Apply');
+    $this->drupalGet('/admin/structure/views/nojs/display/test_view/default/group_by');
+    $this->submitForm($edit, 'Apply');
 
     $this->assertSession()->linkByHrefExists($edit_groupby_url, 0, 'Aggregation link found.');
 
     $edit_handler_url = '/admin/structure/views/ajax/handler-group/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);
     $data = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual('Configure aggregation settings for field Views test: Name', $data[3]['dialogOptions']['title']);
+    $this->assertEquals('Configure aggregation settings for field Views test: Name', $data[3]['dialogOptions']['title']);
   }
 
   /**
@@ -93,11 +95,12 @@ class FieldUITest extends UITestBase {
     $view['page[style][style_plugin]'] = 'default';
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $view['id'];
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();
-    $this->assertEqual('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
+    $this->assertEquals('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
   }
 
 }

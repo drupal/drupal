@@ -28,6 +28,22 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $this->drupalLogin($user);
     $node = $this->drupalCreateNode(['type' => 'page', 'uid' => $user->id()]);
 
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $this->container->get('date.formatter');
+    $request_time = \Drupal::time()->getRequestTime();
+
+    // Generate and test tokens.
+    $tests = [];
+    $tests['[node:total-count]'] = 0;
+    $tests['[node:day-count]'] = 0;
+    $tests['[node:last-view]'] = t('never');
+    $tests['[node:last-view:short]'] = $date_formatter->format($request_time, 'short');
+
+    foreach ($tests as $input => $expected) {
+      $output = \Drupal::token()->replace($input, ['node' => $node], ['langcode' => $language_interface->getId()]);
+      $this->assertEquals($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
+    }
+
     // Hit the node.
     $this->drupalGet('node/' . $node->id());
     // Manually calling statistics.php, simulating ajax behavior.
@@ -35,7 +51,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $post = http_build_query(['nid' => $nid]);
     $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
     global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
+    $stats_path = $base_url . '/' . $this->getModulePath('statistics') . '/statistics.php';
     $client = \Drupal::httpClient();
     $client->post($stats_path, ['headers' => $headers, 'body' => $post]);
     /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
@@ -45,8 +61,6 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $tests = [];
     $tests['[node:total-count]'] = 1;
     $tests['[node:day-count]'] = 1;
-    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = $this->container->get('date.formatter');
     $tests['[node:last-view]'] = $date_formatter->format($statistics->getTimestamp());
     $tests['[node:last-view:short]'] = $date_formatter->format($statistics->getTimestamp(), 'short');
 
@@ -55,7 +69,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = \Drupal::token()->replace($input, ['node' => $node], ['langcode' => $language_interface->getId()]);
-      $this->assertEqual($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
     }
   }
 

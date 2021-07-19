@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Functions to support testing the Olivero theme.
+ */
+
+/**
+ * Implements hook_preprocess_field_multiple_value_form().
+ */
+function olivero_test_preprocess_field_multiple_value_form(&$variables) {
+  // Set test multiple value form field to disabled
+  if ($variables["element"]["#field_name"] === "field_multiple_value_form_field") {
+    $variables['element']['#disabled'] = TRUE;
+  }
+}

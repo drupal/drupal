@@ -157,7 +157,7 @@ class CollectRoutesTest extends UnitTestCase {
     // Check auth options.
     $auth = $this->routes->get('view.test_view.page_1')->getOption('_auth');
     $this->assertCount(1, $auth, 'View route with rest export has an auth option added');
-    $this->assertEquals($auth[0], 'basic_auth', 'View route with rest export has the correct auth option added');
+    $this->assertEquals('basic_auth', $auth[0], 'View route with rest export has the correct auth option added');
   }
 
 }

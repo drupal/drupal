@@ -116,7 +116,9 @@ class WorkspaceListBuilder extends EntityListBuilder {
       'label' => [
         'data' => [
           '#prefix' => isset($indentation) ? $this->renderer->render($indentation) : '',
-          '#markup' => $entity->label(),
+          '#type' => 'link',
+          '#title' => $entity->label(),
+          '#url' => $entity->toUrl(),
         ],
       ],
       'owner' => $entity->getOwner()->getDisplayname(),
@@ -125,7 +127,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
 
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
     if ($active_workspace && $entity->id() === $active_workspace->id()) {
-      $row['class'] = 'active-workspace';
+      $row['class'] = ['active-workspace', 'active-workspace--not-default'];
     }
     return $row;
   }
@@ -183,6 +185,12 @@ class WorkspaceListBuilder extends EntityListBuilder {
       ];
     }
 
+    $operations['manage'] = [
+      'title' => $this->t('Manage'),
+      'weight' => 5,
+      'url' => $entity->toUrl(),
+    ];
+
     return $operations;
   }
 
@@ -195,6 +203,37 @@ class WorkspaceListBuilder extends EntityListBuilder {
       $this->offCanvasRender($build);
     }
     else {
+      // Add a row for switching to Live.
+      $has_active_workspace = $this->workspaceManager->hasActiveWorkspace();
+      $row_live = [
+        'data' => [
+          'label' => [
+            'data' => [
+              '#markup' => $this->t('Live'),
+            ],
+          ],
+          'owner' => '',
+          'operations' => [
+            'data' => [
+              '#type' => 'operations',
+              '#links' => [
+                'activate' => [
+                  'title' => 'Switch to Live',
+                  'weight' => 0,
+                  'url' => Url::fromRoute('workspaces.switch_to_live', [], ['query' => $this->getDestinationArray()]),
+                ],
+              ],
+              '#access' => $has_active_workspace,
+            ],
+          ],
+        ],
+      ];
+
+      if (!$has_active_workspace) {
+        $row_live['class'] = ['active-workspace', 'active-workspace--default'];
+      }
+      array_unshift($build['table']['#rows'], $row_live);
+
       $build['#attached'] = [
         'library' => ['workspaces/drupal.workspaces.overview'],
       ];
@@ -248,7 +287,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
       $build['active_workspace']['label']['manage'] = [
         '#type' => 'link',
         '#title' => $this->t('Manage workspace'),
-        '#url' => $active_workspace->toUrl('edit-form'),
+        '#url' => $active_workspace->toUrl('canonical'),
         '#attributes' => [
           'class' => ['active-workspace__manage'],
         ],
@@ -300,7 +339,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
         $url = Url::fromRoute('entity.workspace.activate_form', ['workspace' => $id], ['query' => $this->getDestinationArray()]);
         $items[] = [
           '#type' => 'link',
-          '#title' => ltrim($row['data']['label']['data']['#markup']),
+          '#title' => ltrim($row['data']['label']['data']['#title']),
           '#url' => $url,
           '#attributes' => [
             'class' => ['use-ajax', 'workspaces__item', 'workspaces__item--not-default'],

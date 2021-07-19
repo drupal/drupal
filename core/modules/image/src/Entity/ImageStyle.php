@@ -222,7 +222,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $token_query = [];
     if (!\Drupal::config('image.settings')->get('suppress_itok_output')) {
       // The passed $path variable can be either a relative path or a full URI.
-      $original_uri = $stream_wrapper_manager::getScheme($path) ? $stream_wrapper_manager->normalizeUri($path) : file_build_uri($path);
+      if (!$stream_wrapper_manager::getScheme($path)) {
+        $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
+      }
+      $original_uri = $stream_wrapper_manager->normalizeUri($path);
       $token_query = [IMAGE_DERIVATIVE_TOKEN => $this->getPathToken($original_uri)];
     }
 
@@ -247,7 +250,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       return Url::fromUri('base:' . $directory_path . '/' . $stream_wrapper_manager::getTarget($uri), ['absolute' => TRUE, 'query' => $token_query])->toString();
     }
 
-    $file_url = file_create_url($uri);
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $file_url = $file_url_generator->generateAbsoluteString($uri);
     // Append the query string with the token, if necessary.
     if ($token_query) {
       $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($token_query);

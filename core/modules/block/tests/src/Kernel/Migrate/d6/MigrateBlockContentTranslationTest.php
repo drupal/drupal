@@ -24,6 +24,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
     'block_content',
     'config_translation',
     'language',
+    'locale',
     'path_alias',
     'statistics',
     'taxonomy',
@@ -39,6 +40,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
     $this->installConfig(['block_content']);
 
     $this->executeMigrations([
+      'language',
       'd6_filter_format',
       'block_content_type',
       'block_content_body_field',

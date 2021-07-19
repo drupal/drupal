@@ -11,5 +11,4 @@ tips:
     label: 'The quick brown fox'
     body: 'Per lo più in pianura.'
     weight: 2
-    attributes:
-      data-id: tour-test-2
+    selector: '#tour-test-2'

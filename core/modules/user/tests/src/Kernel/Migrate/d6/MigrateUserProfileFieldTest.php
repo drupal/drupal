@@ -41,7 +41,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
     $field_storage = FieldStorageConfig::load('user.profile_sold_to');
     $this->assertSame('list_string', $field_storage->getType(), 'Field type is list_string.');
     $settings = $field_storage->getSettings();
-    $this->assertEqual(['Pill spammers' => 'Pill spammers', 'Fitness spammers' => 'Fitness spammers', 'Back\\slash' => 'Back\\slash', 'Forward/slash' => 'Forward/slash', 'Dot.in.the.middle' => 'Dot.in.the.middle', 'Faithful servant' => 'Faithful servant', 'Anonymous donor' => 'Anonymous donor'], $settings['allowed_values']);
+    $this->assertEquals(['Pill spammers' => 'Pill spammers', 'Fitness spammers' => 'Fitness spammers', 'Back\\slash' => 'Back\\slash', 'Forward/slash' => 'Forward/slash', 'Dot.in.the.middle' => 'Dot.in.the.middle', 'Faithful servant' => 'Faithful servant', 'Anonymous donor' => 'Anonymous donor'], $settings['allowed_values']);
     $this->assertSame('list_string', $field_storage->getType(), 'Field type is list_string.');
 
     // Migrated list field.

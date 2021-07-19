@@ -93,7 +93,7 @@ class CacheWebTest extends ViewTestBase {
 
     $uncached_block = $view->buildRenderable('block_1', [], FALSE);
     $cached_block = $view->buildRenderable('block_1', [], TRUE);
-    $this->assertEqual($uncached_block['#cache']['contexts'], $cached_block['#cache']['contexts'], 'Cache contexts are the same when you render the view cached and uncached.');
+    $this->assertEquals($uncached_block['#cache']['contexts'], $cached_block['#cache']['contexts'], 'Cache contexts are the same when you render the view cached and uncached.');
   }
 
 }

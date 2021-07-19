@@ -41,7 +41,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test the resolve method with no matching resolvers.
+   * Tests the resolve method with no matching resolvers.
    *
    * @covers ::__construct
    * @covers ::resolve
@@ -58,7 +58,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test the resolve method with no matching resolvers, using addResolver.
+   * Tests the resolve method with no matching resolvers, using addResolver.
    *
    * @covers ::addResolver
    * @covers ::resolve
@@ -72,7 +72,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test the resolve method with a matching resolver first.
+   * Tests the resolve method with a matching resolver first.
    *
    * @covers ::__construct
    * @covers ::resolve
@@ -89,7 +89,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test the resolve method with a matching resolver last.
+   * Tests the resolve method with a matching resolver last.
    *
    * @covers ::__construct
    * @covers ::resolve
@@ -106,7 +106,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test the resolve method where one resolver returns 0.
+   * Tests the resolve method where one resolver returns 0.
    *
    * @covers ::__construct
    * @covers ::resolve

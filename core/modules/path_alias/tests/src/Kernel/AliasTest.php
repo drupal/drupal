@@ -153,7 +153,7 @@ class AliasTest extends KernelTestBase {
 
     // Destruct the whitelist so that the caches are written.
     $whitelist->destruct();
-    $this->assertEqual(1, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
     $memoryCounterBackend->resetCounter();
 
     // Re-initialize the whitelist using the same cache backend, should load
@@ -162,13 +162,13 @@ class AliasTest extends KernelTestBase {
     $this->assertNull($whitelist->get('user'));
     $this->assertTrue($whitelist->get('admin'));
     $this->assertNull($whitelist->get($this->randomMachineName()));
-    $this->assertEqual(1, $memoryCounterBackend->getCounter('get', 'path_alias_whitelist'));
-    $this->assertEqual(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('get', 'path_alias_whitelist'));
+    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
 
     // Destruct the whitelist, should not attempt to write the cache again.
     $whitelist->destruct();
-    $this->assertEqual(1, $memoryCounterBackend->getCounter('get', 'path_alias_whitelist'));
-    $this->assertEqual(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('get', 'path_alias_whitelist'));
+    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
   }
 
   /**
@@ -194,7 +194,7 @@ class AliasTest extends KernelTestBase {
 
     // Destruct the whitelist so it persists its cache.
     $whitelist->destruct();
-    $this->assertEquals($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 1);
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
     // Cache data should have data for 'user' and 'admin', even though just
     // 'admin' was looked up. This is because the cache is primed with all
     // menu router base paths.
@@ -217,7 +217,7 @@ class AliasTest extends KernelTestBase {
     // from underneath it and not save anything to cache, to protect from
     // cache corruption.
     $whitelist->destruct();
-    $this->assertEquals($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 0);
+    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
     $this->assertFalse($memoryCounterBackend->get('path_alias_whitelist'));
     $memoryCounterBackend->resetCounter();
   }

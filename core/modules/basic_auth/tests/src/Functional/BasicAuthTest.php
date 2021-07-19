@@ -35,7 +35,7 @@ class BasicAuthTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test http basic authentication.
+   * Tests http basic authentication.
    */
   public function testBasicAuth() {
     // Enable page caching.
@@ -48,7 +48,7 @@ class BasicAuthTest extends BrowserTestBase {
 
     // Ensure we can log in with valid authentication details.
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
-    $this->assertText($account->getAccountName());
+    $this->assertSession()->pageTextContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(200);
     $this->mink->resetSessions();
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
@@ -91,7 +91,7 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Test the global login flood control.
+   * Tests the global login flood control.
    */
   public function testGlobalLoginFloodControl() {
     $this->config('user.flood')
@@ -116,7 +116,7 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Test the per-user login flood control.
+   * Tests the per-user login flood control.
    */
   public function testPerUserLoginFloodControl() {
     $this->config('user.flood')
@@ -164,7 +164,7 @@ class BasicAuthTest extends BrowserTestBase {
     $url = Url::fromRoute('router_test.11');
 
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
-    $this->assertText($account->getAccountName());
+    $this->assertSession()->pageTextContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -180,26 +180,26 @@ class BasicAuthTest extends BrowserTestBase {
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(401);
     $this->assertNoText('Exception');
-    $this->assertText('Please log in to access this page.');
+    $this->assertSession()->pageTextContains('Please log in to access this page.');
 
     // Case when empty credentials are passed, a user friendly access denied
     // message is displayed.
     $this->basicAuthGet($url, NULL, NULL);
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
 
     // Case when wrong credentials are passed, a user friendly access denied
     // message is displayed.
     $this->basicAuthGet($url, $account->getAccountName(), $this->randomMachineName());
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
 
     // Case when correct credentials but hasn't access to the route, an user
     // friendly access denied message is displayed.
     $url = Url::fromRoute('router_test.15');
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
   }
 
   /**
@@ -234,7 +234,7 @@ class BasicAuthTest extends BrowserTestBase {
     // If the permissions of the 'anonymous' role change, it may no longer be
     // necessary to be authenticated to access this route. Therefore the cached
     // 401 responses should be invalidated.
-    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), [$this->randomMachineName()]);
+    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), ['access content']);
     $assert_response_cacheability('MISS', 'MISS');
     $assert_response_cacheability('HIT', 'MISS');
     // Idem for when the 'system.site' config changes.

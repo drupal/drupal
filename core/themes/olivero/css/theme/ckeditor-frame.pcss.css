@@ -46,3 +46,7 @@ figure.cke_widget_element {
 figcaption.cke_widget_editable {
   background-color: var(--color--white);
 }
+
+.cke_panel_list {
+  margin-inline-start: 0;
+}

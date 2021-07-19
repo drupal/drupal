@@ -37,7 +37,7 @@ class AddFeedTest extends AggregatorTestBase {
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the feed label is present in the page title.
-    $this->assertText($feed->label());
+    $this->assertSession()->pageTextContains($feed->label());
     $this->assertRaw($feed->getWebsiteUrl());
 
     // Try to add a duplicate.
@@ -46,7 +46,8 @@ class AddFeedTest extends AggregatorTestBase {
       'url[0][value]' => $feed->getUrl(),
       'refresh' => '900',
     ];
-    $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
+    $this->drupalGet('aggregator/sources/add');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('A feed named %feed already exists. Enter a unique title.', ['%feed' => $feed->label()]));
     $this->assertRaw(t('A feed with this URL %url already exists. Enter a unique URL.', ['%url' => $feed->getUrl()]));
 
@@ -94,7 +95,7 @@ class AddFeedTest extends AggregatorTestBase {
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the feed label is present in the page title.
-    $this->assertText($feed->label());
+    $this->assertSession()->pageTextContains($feed->label());
 
     // Delete feeds.
     $this->deleteFeed($feed);
