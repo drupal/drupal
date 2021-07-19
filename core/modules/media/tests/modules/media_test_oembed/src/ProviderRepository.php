@@ -16,7 +16,7 @@ class ProviderRepository extends BaseProviderRepository {
   /**
    * {@inheritdoc}
    */
-  protected function cacheGet(...$arguments) {
+  protected function cacheGet($cid) {
     return FALSE;
   }
 
