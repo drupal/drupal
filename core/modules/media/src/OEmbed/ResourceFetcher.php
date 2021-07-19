@@ -67,7 +67,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
     }
 
-    [$format] = $response->getHeader('Content-Type');
+    list($format) = $response->getHeader('Content-Type');
     $content = (string) $response->getBody();
 
     if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {

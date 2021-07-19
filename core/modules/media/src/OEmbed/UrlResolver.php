@@ -177,7 +177,7 @@ class UrlResolver implements UrlResolverInterface {
     $resource_url = $parsed_url['path'] . '?' . rawurldecode(UrlHelper::buildQuery($parsed_url['query']));
 
     $this->urlCache[$url] = $resource_url;
-    $this->cacheBackend->set($cache_id, $resource_url);
+    $this->cacheSet($cache_id, $resource_url);
 
     return $resource_url;
   }
