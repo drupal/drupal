@@ -1287,8 +1287,9 @@ function _system_is_claro_admin_and_not_active() {
  */
 function system_library_info_alter(&$libraries, $extension) {
   // If Claro is the admin theme but not the active theme, grant Claro the
-  // ability to override the toolbar library with its own assets.
-  if ($extension === 'toolbar' && _system_is_claro_admin_and_not_active()) {
+  // ability to override the toolbar and contextual libraries with its own
+  // assets.
+  if (in_array($extension, ['toolbar', 'contextual']) && _system_is_claro_admin_and_not_active()) {
     require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
     claro_system_module_invoked_library_info_alter($libraries, $extension);
   }
