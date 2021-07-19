@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Helper module for jQuery UI asset load order test compatibility.
+ */
+
+/**
+ * Implements hook_library_info_build().
+ */
+function jqueryui_library_assets_test_library_info_build() {
+  $libraries = [];
+  // Load the local javascript as an "external" asset varied by query string.
+  $base_javascript = base_path() . drupal_get_path('module', 'jqueryui_library_assets_test') . '/js/noop.js';
+  // Build a library dependency containing 100 javascript assets.
+  for ($i = 1; $i <= 100; $i++) {
+    $libraries['many-dependencies']['js'][$base_javascript . '?dep' . $i] = [
+      'type' => 'external',
+    ];
+  }
+
+  return $libraries;
+}
