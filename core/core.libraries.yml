@@ -349,6 +349,21 @@ drupal.progress:
     - core/jquery
     - core/drupalSettings
 
+drupal.splitbutton:
+  version: VERSION
+  js:
+    misc/splitbutton/splitbutton.js: {}
+    misc/splitbutton/splitbutton-init.js: {}
+  css:
+    component:
+      misc/splitbutton/splitbutton.css: {}
+  dependencies:
+    - core/drupal
+    - core/popperjs
+    - core/jquery
+    - core/jquery.once
+
+
 drupal.states:
   version: VERSION
   js:

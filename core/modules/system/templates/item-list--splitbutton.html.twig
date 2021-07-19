@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an item list used by splitbuttons.
+ *
+ * Available variables:
+ * - items: A list of items. Each item contains:
+ *   - attributes: HTML attributes to be applied to each list item.
+ *   - value: The content of the list element.
+ * - list_type: The tag for list element ("ul" or "ol").
+ * - attributes: HTML attributes to be applied to the list.
+ *
+ * @ingroup themeable
+ */
+#}
+{% if items %}
+    <{{ list_type }} {{ attributes }}>
+        {%- for item in items -%}
+            <li{{ item.attributes }}>{{ item.value }}</li>
+        {%- endfor -%}
+    </{{ list_type }}>
+{%- endif %}

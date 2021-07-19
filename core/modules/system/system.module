@@ -252,6 +252,17 @@ function system_theme() {
       'file' => 'system.theme.inc',
       'variables' => ['error_message' => []],
     ],
+    'item_list__splitbutton' => [
+      'variables' => [
+        'items' => [],
+        'title' => '',
+        'list_type' => 'ul',
+        'wrapper_attributes' => [],
+        'attributes' => [],
+        'empty' => NULL,
+        'context' => [],
+      ],
+    ],
   ]);
 }
 

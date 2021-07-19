@@ -1,0 +1,124 @@
+/**
+ * @file
+ * General styles for splitbuttons.
+ */
+
+.splitbutton * {
+  box-sizing: border-box;
+}
+
+.splitbutton *:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #0071b3;
+}
+
+.splitbutton__main {
+  font-size: 0.889rem;
+}
+
+.splitbutton__main .button {
+  margin: 0;
+}
+
+.js .splitbutton__toggle {
+  position: relative;
+  margin: 0;
+  border-radius: 0 20em 20em 0; /* LTR */
+  background-color: #e8e8e8;
+  background-image: -webkit-linear-gradient(top, #e8e8e8, #d2d2d2);
+  background-image: linear-gradient(to bottom, #e8e8e8, #d2d2d2);
+}
+[dir="rtl"].js .splitbutton__toggle {
+  border-radius: 20em 0 0 20em;
+}
+
+.js .splitbutton__toggle--with-title,
+[dir="rtl"].js .splitbutton__toggle--with-title {
+  border-radius: 20em;
+}
+
+.splitbutton__toggle:focus {
+  z-index: 5;
+}
+
+.splitbutton__toggle--with-title {
+  position: relative;
+  padding-right: 2.5em; /* LTR */
+}
+[dir="rtl"] .splitbutton__toggle--with-title {
+  padding-right: 1.063em;
+  padding-left: 2.5em;
+}
+
+.splitbutton__toggle::after {
+  position: absolute;
+  top: 52%;
+  right: calc(14px + (0.3333em / 4)); /* LTR */
+  width: 0;
+  height: 0;
+  content: "";
+  transform: translate(50%, -50%) rotate(0);
+  border-width: 0.3333em 0.3333em 0;
+  border-style: solid;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+[dir="rtl"] .splitbutton__toggle::after {
+  right: auto;
+  left: 7px;
+}
+[data-drupal-splitbutton-open] .splitbutton__toggle::after {
+  top: 48%;
+  transform: translate(50%, -50%) rotate(180deg);
+}
+
+.js .splitbutton--multiple .splitbutton__main-button {
+  border-radius: 20em 0 0 20em;
+}
+[dir="rtl"].js .splitbutton--multiple .splitbutton__main-button {
+  border-radius: 0 20em 20em 0;
+}
+
+.js .splitbutton__operation-list {
+  padding: 2px 0 0;
+  list-style: none;
+}
+
+.js .splitbutton__operation-list li:first-child {
+  border-radius: 0.5em 0.5em 0 0;
+}
+.js .splitbutton__operation-list li:last-child {
+  border-radius: 0 0 0.5em 0.5em;
+}
+
+.js .splitbutton__operation-list-item {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.25em 1.063em;
+  text-align: left;
+  color: #3a3a3a;
+  border: 1px solid #a6a6a6;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  border-radius: 0;
+  background-color: #fff;
+  background-image: -webkit-linear-gradient(top, #f3f3f3, #e8e8e8);
+  background-image: linear-gradient(to bottom, #f3f3f3, #e8e8e8);
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
+  font-size: 0.875rem;
+  font-weight: normal;
+}
+.js .splitbutton__operation-list-item:hover {
+  background: #dedede;
+}
+
+.js .splitbutton__operation-list li:first-child .splitbutton__operation-list-item {
+  border-top-width: 1px;
+  border-radius: 0.5em 0.5em 0 0;
+}
+.js .splitbutton__operation-list li:last-child .splitbutton__operation-list-item {
+  border-bottom-width: 1px;
+  border-radius: 0 0 0.5em 0.5em;
+}

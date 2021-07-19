@@ -1,0 +1,157 @@
+/**
+ * @file
+ * General styles for splitbuttons.
+ */
+
+.splitbutton * {
+  box-sizing: border-box;
+}
+
+.js .splitbutton__main .button:focus {
+  box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
+}
+
+.js .splitbutton__toggle:focus {
+  z-index: 5;
+}
+
+.js .splitbutton__toggle {
+  position: relative;
+  margin: 0;
+}
+
+.js .splitbutton__toggle--no-title {
+  padding: 0 14px;
+  border: 1px solid #a6a6a6; /* LTR */
+  border-left-width: 0; /* LTR */
+  border-radius: 0 20em 20em 0;
+}
+[dir="rtl"].js .splitbutton__toggle--no-title {
+  border-right-width: 0;
+  border-left-width: 1px;
+}
+
+.js .splitbutton__toggle--with-title {
+  padding-right: 2.5em; /* LTR */
+}
+[dir="rtl"].js .splitbutton__toggle--with-title {
+  padding-right: 1.5em;
+  padding-left: 2.5em;
+}
+
+.js .splitbutton__toggle::after {
+  position: absolute;
+  top: 52%;
+  right: calc(14px + (0.3333em / 4)); /* LTR */
+  width: 0;
+  height: 0;
+  content: "";
+  transform: translate(50%, -50%) rotate(0);
+  border-width: 0.3333em 0.3333em 0;
+  border-style: solid;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+[dir="rtl"].js .splitbutton__toggle::after {
+  right: auto;
+  left: 6.5px;
+}
+
+.js [data-drupal-splitbutton-open] .splitbutton__toggle::after {
+  top: 48%;
+  transform: translate(50%, -50%) rotate(180deg);
+}
+
+.js .splitbutton--multiple .splitbutton__toggle--no-title.button,
+[dir="rtl"].js .splitbutton--multiple .splitbutton__main-button.button {
+  border-radius: 0 20em 20em 0; /* LTR */
+}
+
+.js .splitbutton--multiple .splitbutton__main-button.button,
+[dir="rtl"].js .splitbutton--multiple .splitbutton__toggle--no-title.button {
+  border-radius: 20em 0 0 20em; /* LTR */
+}
+
+.js .splitbutton__operation-list {
+  overflow: hidden;
+  margin: 0;
+  padding: 2px 0 0 0;
+  list-style: none;
+}
+.js .splitbutton__operation-list li:first-child {
+  border-radius: 0.5em 0.5em 0 0;
+}
+.js .splitbutton__operation-list li:last-child {
+  border-radius: 0 0 0.5em 0.5em;
+}
+
+.js .splitbutton__operation-list-item {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 4px 10px;
+  text-align: left;
+  color: #333;
+  border: 1px solid #a6a6a6;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  border-radius: 0;
+  background: #fff;
+  font-size: 0.875rem;
+  font-weight: normal;
+}
+
+.js .splitbutton__operation-list-item:hover,
+.js .splitbutton__operation-list-item:focus {
+  text-decoration: none;
+  background: #aae0fe;
+  box-shadow: none;
+  text-shadow: 0.1px 0 0.1px, -0.1px 0 0.1px;
+}
+
+.js .splitbutton__operation-list li:first-child .splitbutton__operation-list-item {
+  border-top-width: 1px;
+  border-radius: 0.5em 0.5em 0 0;
+}
+
+.js .splitbutton__operation-list li:last-child .splitbutton__operation-list-item {
+  border-bottom-width: 1px;
+  border-radius: 0 0 0.5em 0.5em;
+}
+
+/* Variants */
+
+.js .splitbutton__toggle--with-title.button--small {
+  padding-right: 2em;
+}
+
+.js .splitbutton--multiple .splitbutton__main-button.button--danger {
+  border-radius: 20em 0 0 20em;
+}
+
+.js .splitbutton .button--danger {
+  padding: 4px 1.5em;
+  text-decoration: none;
+  border: 1px solid #a6a6a6;
+  border-radius: 20em;
+}
+
+.js .splitbutton .splitbutton__toggle--no-title.button--danger {
+  padding: 0 14px;
+  border-left-width: 0; /* LTR */
+  border-radius: 0 20em 20em 0;
+}
+[dir="rtl"].js .splitbutton .splitbutton__toggle--no-title.button--danger {
+  border-right-width: 0;
+  border-left-width: 1px;
+}
+
+.js .splitbutton__toggle--with-title.button--danger {
+  padding-right: 2.5em;
+}
+
+.splitbutton--primary .splitbutton__toggle {
+  border-color: #1e5c90;
+  background-color: #0071b8;
+}

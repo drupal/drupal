@@ -132,6 +132,8 @@ libraries-extend:
     - claro/messages
   core/drupal.progress:
     - claro/progress
+  core/drupal.splitbutton:
+    - claro/splitbutton
   core/drupal.tabbingmanager:
     - claro/claro.jquery.ui
   core/drupal.tabledrag:

@@ -181,6 +181,12 @@ filter:
     component:
       css/theme/filter.admin.css: {}
 
+splitbutton:
+  version: VERSION
+  css:
+    component:
+      css/components/splitbutton.css: {}
+
 classy.book-navigation:
   version: VERSION
   css:

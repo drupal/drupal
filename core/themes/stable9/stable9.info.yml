@@ -84,6 +84,10 @@ libraries-override:
     css:
       component:
         misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
+  core/drupal.splitbutton:
+    css:
+      component:
+        misc/splitbutton/splitbutton.css: css/core/splitbutton/splitbutton.css
   core/drupal.vertical-tabs:
     css:
       component:

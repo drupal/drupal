@@ -14,14 +14,6 @@
  *    contrast mode Firefox.
  */
 
-:root {
-  /**
-  * Dropbutton
-  */
-  /* Variant variables: small. */
-  /* Variant variables: extra small. */
-}
-
 .dropbutton-wrapper {
   display: inline-flex;
   border-radius: 2px;

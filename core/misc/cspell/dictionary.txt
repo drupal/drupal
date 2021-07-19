@@ -508,6 +508,7 @@ entityreference
 entitytype
 entityviewedit
 entrypoint
+ercim
 eridani
 errmode
 errored
@@ -1423,7 +1424,10 @@ spdx
 specialchar
 specialchars
 spiffiness
+splitbutton
 splitbuttons
+splitbutton's
+splittextfield
 spreadsheetml
 sqlpassword
 sqlusername

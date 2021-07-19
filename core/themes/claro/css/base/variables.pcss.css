@@ -157,6 +157,38 @@
   --button-bg-color--danger: var(--color-maximumred);
   --button--hover-bg-color--danger: var(--color-maximumred-hover);
   --button--active-bg-color--danger: var(--color-maximumred-active);
+  --button--vertical-padding: calc(var(--space-m) - 1px);
+  --button--horizontal-padding: calc(var(--space-l) - 1px);
+  --button--small--vertical-padding: calc(var(--space-xs) - 1px);
+  --button--small--horizontal-padding: calc(var(--space-m) - 1px);
+  --button--extrasmall--vertical-padding: calc(calc(var(--space-xs) / 2) - 1px);
+  --button--extrasmall--horizontal-padding: calc(var(--space-s) - 1px);
+  --dropbutton-spacing-size: var(--space-m);
+  --dropbutton-font-size: var(--font-size-base);
+  --dropbutton-line-height: var(--space-m);
+  --dropbutton-toggle-size: 3rem;
+  --dropbutton-border-size: 1px;
+  --dropbutton-item-padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
+  --dropbutton-toggle-size-spacing: var(--dropbutton-border-size);
+  --dropbutton-border-radius-size: 2px;
+  --dropbutton-small-spacing-size: 0.625rem;
+  --dropbutton-small-font-size: var(--font-size-xs);
+  --dropbutton-small-line-height: 0.75rem;
+  --dropbutton-small-toggle-size: calc((2 * var(--dropbutton-small-spacing-size)) + var(--dropbutton-small-line-height));
+  --dropbutton-extrasmall-spacing-size: 0.375rem;
+  --dropbutton-extrasmall-font-size: var(--font-size-xs);
+  --dropbutton-extrasmall-line-height: 0.75rem;
+  --dropbutton-extrasmall-toggle-size: calc((2 * var(--dropbutton-extrasmall-spacing-size)) + var(--dropbutton-extrasmall-line-height));
+  --splitbutton-item-border-size: var(--dropbutton-border-size);
+  --splitbutton-item-border-size--focus: 3px;
+  --splitbutton-item-font-size: var(--font-size-base);
+  --splitbutton-item-line-height: var(--font-size-base);
+  --splitbutton-item-padding: var(--dropbutton-item-padding);
+  --splitbutton-item-padding-vertical--small: var(--dropbutton-small-spacing-size);
+  --splitbutton-item-padding-vertical--extrasmall: var(--dropbutton-extrasmall-spacing-size);
+  --splitbutton-item-padding--focus: calc(var(--splitbutton-item-padding) - var(--splitbutton-item-border-size--focus) + var(--splitbutton-item-border-size));
+  --splitbutton-item-padding-vertical--focus--small: calc(var(--splitbutton-item-padding-vertical--small) - var(--splitbutton-item-border-size--focus) + var(--splitbutton-item-border-size));
+  --splitbutton-item-padding-vertical--focus--extrasmall: calc(var(--splitbutton-item-padding-vertical--extrasmall) - var(--splitbutton-item-border-size--focus) + var(--splitbutton-item-border-size));
   /**
    * jQuery.UI dropdown.
    */
