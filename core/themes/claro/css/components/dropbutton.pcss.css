@@ -298,7 +298,7 @@
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   border: var(--dropbutton-border-size) solid var(--color-lightgray);
   border-bottom: 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-z1);
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item ~ .dropbutton__item {

@@ -61,7 +61,7 @@
   border: var(--contextual-links-border-size) solid var(--color-lightgray);
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-z1);
 }
 [dir="rtl"] .contextual-links {
   right: auto;
