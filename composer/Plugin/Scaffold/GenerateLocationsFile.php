@@ -12,9 +12,11 @@ use Composer\IO\IOInterface;
  * can symlink packages in, and PHP's file location constants such as __DIR__
  * resolve symlinks.
  *
- * The authority on the location of packages is Composer, and the authority on
- * the location of the webroot is this scaffolding plugin. Therefore, we write
- * a PHP file which defines the locations as constants.
+ * The authority on the location of packages is Composer, since it puts them in
+ * their locations, and the authority on the location of the webroot is this
+ * scaffolding plugin, since it reads it from the composer.json file. Therefore,
+ * during the scaffold process when we have access to both of these pieces of
+ * data, we write a PHP file which defines the locations as constants.
  *
  * @internal
  */
