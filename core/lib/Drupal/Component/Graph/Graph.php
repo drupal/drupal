@@ -17,7 +17,7 @@ class Graph {
   /**
    * Instantiates the depth first search object.
    *
-   * @param $graph
+   * @param array $graph
    *   A three dimensional associated array, with the first keys being the names
    *   of the vertices, these can be strings or numbers. The second key is
    *   'edges' and the third one are again vertices, each such key representing

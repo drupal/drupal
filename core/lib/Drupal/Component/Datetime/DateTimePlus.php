@@ -111,7 +111,7 @@ class DateTimePlus {
   /**
    * The value of the language code passed to the constructor.
    *
-   * @var string[]
+   * @var string[]|null
    */
   protected $langcode = NULL;
 
