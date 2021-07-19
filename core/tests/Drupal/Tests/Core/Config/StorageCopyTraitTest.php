@@ -19,12 +19,25 @@ class StorageCopyTraitTest extends UnitTestCase {
 
   use StorageCopyTrait;
 
+  protected static $useComparer;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function shouldUseStorageComparer(StorageInterface $source, StorageInterface $target, string $collection = NULL, bool $optimistic = TRUE): bool
+  {
+    // We test both branches in replaceStorageContents by explicitly selecting it.
+    return static::$useComparer;
+  }
+
+
   /**
    * @covers ::replaceStorageContents
    *
    * @dataProvider providerTestReplaceStorageContents
    */
-  public function testReplaceStorageContents($source_collections, $target_collections) {
+  public function testReplaceStorageContents($source_collections, $target_collections, $use_comparer) {
+    static::$useComparer = $use_comparer;
     $source = new MemoryStorage();
     $target = new MemoryStorage();
     // Empty the storage should be the same.
@@ -68,10 +81,14 @@ class StorageCopyTraitTest extends UnitTestCase {
    */
   public function providerTestReplaceStorageContents() {
     $data = [];
-    $data[] = [TRUE, TRUE];
-    $data[] = [TRUE, FALSE];
-    $data[] = [FALSE, TRUE];
-    $data[] = [FALSE, FALSE];
+    $data[] = [TRUE, TRUE, TRUE];
+    $data[] = [TRUE, TRUE, FALSE];
+    $data[] = [TRUE, FALSE, TRUE];
+    $data[] = [TRUE, FALSE, FALSE];
+    $data[] = [FALSE, TRUE, TRUE];
+    $data[] = [FALSE, TRUE, FALSE];
+    $data[] = [FALSE, FALSE, TRUE];
+    $data[] = [FALSE, FALSE, FALSE];
 
     return $data;
   }
@@ -119,8 +136,11 @@ class StorageCopyTraitTest extends UnitTestCase {
    * Tests replaceStorageContents() with config with an invalid configuration.
    *
    * @covers ::replaceStorageContents
+   *
+   * @dataProvider providerTestWithInvalidConfiguration
    */
-  public function testWithInvalidConfiguration() {
+  public function testWithInvalidConfiguration($use_comparer) {
+    static::$useComparer = $use_comparer;
     $source = new TestStorage();
     $this->generateRandomData($source);
 
@@ -165,6 +185,38 @@ class StorageCopyTraitTest extends UnitTestCase {
     $this->assertNotContains($test_name, $target->listAll());
   }
 
+  /**
+   * Provides data for testWithInvalidConfiguration().
+   */
+  public function providerTestWithInvalidConfiguration() {
+    $data = [];
+    $data[] = [TRUE];
+    $data[] = [FALSE];
+
+    return $data;
+  }
+
+  /**
+   * Tests the default implementation of shouldUseStorageComparer().
+   *
+   * @covers ::shouldUseStorageComparer
+   */
+  public function testShouldUseStorageComparer() {
+    $empty = new MemoryStorage();
+    $default = new MemoryStorage();
+    $this->generateRandomData($default, FALSE);
+    $collections = new MemoryStorage();
+    $this->generateRandomData($collections, TRUE);
+
+    // When copying to an empty storage, it should not use the comparer.
+    $this->assertFalse(TestDecider::usesComparer($default, $empty));
+    $this->assertFalse(TestDecider::usesComparer($collections, $empty));
+
+    // When copying storages that have the same content it should use it.
+    $this->assertTrue(TestDecider::usesComparer($default, $default));
+    $this->assertTrue(TestDecider::usesComparer($collections, $collections));
+  }
+
 }
 
 /**
@@ -182,4 +234,30 @@ class TestStorage extends MemoryStorage {
     $this->config[$this->collection][$name] = $value;
   }
 
+}
+
+/**
+ * Uses the trait under test and makes the decider method public.
+ */
+class TestDecider {
+  use StorageCopyTrait;
+
+  /**
+   * Make the protected method public under a new name.
+   *
+   * @param \Drupal\Core\Config\StorageInterface $source
+   *   The configuration storage to copy from.
+   * @param \Drupal\Core\Config\StorageInterface $target
+   *   The configuration storage to copy to.
+   * @param string|null $collection
+   *   The collection name to check, null to check all collections.
+   * @param bool $optimistic
+   *   True for when the StorageComparer is already set up anyway.
+   *
+   * @return bool
+   *   Whether or not to use the StorageComparer for making the storages equal.
+   */
+  public static function usesComparer(StorageInterface $source, StorageInterface $target, string $collection = NULL, bool $optimistic = TRUE) {
+    return static::shouldUseStorageComparer($source, $target, $collection, $optimistic);
+  }
 }
