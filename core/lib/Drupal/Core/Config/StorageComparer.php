@@ -94,12 +94,12 @@ class StorageComparer implements StorageComparerInterface {
     // raw configuration object are not costly.
     $this->sourceCacheStorage = new MemoryBackend();
     $this->sourceStorage = new CachedStorage(
-      $source_storage,
+      $source_storage->createCollection(StorageInterface::DEFAULT_COLLECTION),
       $this->sourceCacheStorage
     );
     $this->targetCacheStorage = new MemoryBackend();
     $this->targetStorage = new CachedStorage(
-      $target_storage,
+      $target_storage->createCollection(StorageInterface::DEFAULT_COLLECTION),
       $this->targetCacheStorage
     );
     $this->changelist[StorageInterface::DEFAULT_COLLECTION] = $this->getEmptyChangelist();
