@@ -360,8 +360,6 @@ class Merge extends Query implements ConditionInterface {
    *     and an INSERT query is executed.
    *   - Merge::STATUS_UPDATE: If the entry already exists,
    *     and an UPDATE query is executed.
-   *   - NULL: (deprecated) If there is a problem and
-   *     queryOptions['throw_exception'] is FALSE.
    *
    * @throws \Drupal\Core\Database\Query\InvalidMergeQueryException
    *   When there are no conditions found to merge.
