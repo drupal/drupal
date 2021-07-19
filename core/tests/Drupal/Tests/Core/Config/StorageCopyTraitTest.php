@@ -24,12 +24,10 @@ class StorageCopyTraitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected static function shouldUseStorageComparer(StorageInterface $source, StorageInterface $target, string $collection = NULL, bool $optimistic = TRUE): bool
-  {
+  protected static function shouldUseStorageComparer(StorageInterface $source, StorageInterface $target, string $collection = NULL, bool $optimistic = TRUE): bool {
     // We test both branches in replaceStorageContents by explicitly selecting it.
     return static::$useComparer;
   }
-
 
   /**
    * @covers ::replaceStorageContents
@@ -260,4 +258,5 @@ class TestDecider {
   public static function usesComparer(StorageInterface $source, StorageInterface $target, string $collection = NULL, bool $optimistic = TRUE) {
     return static::shouldUseStorageComparer($source, $target, $collection, $optimistic);
   }
+
 }
