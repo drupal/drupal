@@ -24,7 +24,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+   * @var string[]
    */
   protected static $modules = [
     'taxonomy',
@@ -43,46 +43,64 @@ class ForumTest extends BrowserTestBase {
 
   /**
    * A user with various administrative privileges.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 
   /**
    * A user that can create forum topics and edit its own topics.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $editOwnTopicsUser;
 
   /**
    * A user that can create, edit, and delete forum topics.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $editAnyTopicsUser;
 
   /**
    * A user with no special privileges.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $webUser;
 
   /**
    * An administrative user who can bypass comment approval.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $postCommentUser;
 
   /**
    * An array representing a forum container.
+   *
+   * @var object[]
    */
   protected $forumContainer;
 
   /**
    * An array representing a forum.
+   *
+   * @var object[]
    */
   protected $forum;
 
   /**
    * An array representing a root forum.
+   *
+   * @var array
    */
   protected $rootForum;
 
   /**
    * An array of forum topic node IDs.
+   *
+   * @var array
    */
   protected $nids;
 

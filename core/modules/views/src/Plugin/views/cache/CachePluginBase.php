@@ -30,6 +30,8 @@ abstract class CachePluginBase extends PluginBase {
 
   /**
    * Contains all data that should be written/read from cache.
+   *
+   * @var array
    */
   public $storage = [];
 

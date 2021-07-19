@@ -38,6 +38,8 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
 
   /**
    * Array of access checks which only will be run on the incoming request.
+   *
+   * @var string[]
    */
   protected $checksNeedsRequest = [];
 

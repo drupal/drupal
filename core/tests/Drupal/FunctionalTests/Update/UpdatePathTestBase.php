@@ -48,6 +48,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
   /**
    * Modules to enable after the database is loaded.
+   *
+   * @var string[]
    */
   protected static $modules = [];
 

@@ -18,11 +18,15 @@ class MTimeProtectedFastFileStorageTest extends MTimeProtectedFileStorageBase {
    * The first iteration does not change the directory mtime so this class will
    * include the hacked file on the first try but the second test will change
    * the directory mtime and so on the second try the file will not be included.
+   *
+   * @var bool[]
    */
   protected $expected = [TRUE, FALSE];
 
   /**
    * The PHP storage class to test.
+   *
+   * @var string
    */
   protected $storageClass = 'Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage';
 

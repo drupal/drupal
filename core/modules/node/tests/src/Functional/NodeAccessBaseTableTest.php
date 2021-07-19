@@ -55,6 +55,8 @@ class NodeAccessBaseTableTest extends NodeTestBase {
 
   /**
    * A web user.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $webUser;
 

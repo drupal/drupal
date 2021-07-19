@@ -13,11 +13,15 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
 
   /**
    * This is set by the profile in the core.extension extracted.
+   *
+   * @var string|null
    */
   protected $profile = NULL;
 
   /**
    * @todo
+   *
+   * @var bool
    */
   protected $existingSyncDirectory = FALSE;
 

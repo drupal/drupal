@@ -79,10 +79,9 @@
   <rule ref="Drupal.Commenting.GenderNeutralComment"/>
   <rule ref="Drupal.Commenting.InlineVariableComment"/>
   <rule ref="Drupal.Commenting.VariableComment">
-    <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName, WrongStyle -->
+    <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName, MissingVar, WrongStyle -->
     <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
     <exclude name="Drupal.Commenting.VariableComment.Missing"/>
-    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
     <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
   </rule>
   <rule ref="Drupal.Commenting.InlineComment">

@@ -37,6 +37,8 @@ class RouteProviderTest extends KernelTestBase {
 
   /**
    * Modules to enable.
+   *
+   * @var string[]
    */
   protected static $modules = [
     'url_alter_test',

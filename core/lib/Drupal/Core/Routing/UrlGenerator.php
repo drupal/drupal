@@ -59,6 +59,8 @@ class UrlGenerator implements UrlGeneratorInterface {
    * if you override this variable you can also use arrays for the encoded
    * and decoded characters.
    *
+   * @var string[]
+   *
    * @see \Symfony\Component\Routing\Generator\UrlGenerator
    */
   protected $decodedChars = [

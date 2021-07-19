@@ -31,6 +31,8 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
 
   /**
    * The complete theme registry array.
+   *
+   * @var array
    */
   protected $completeRegistry;
 

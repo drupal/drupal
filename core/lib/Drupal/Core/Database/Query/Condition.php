@@ -12,6 +12,8 @@ class Condition implements ConditionInterface, \Countable {
 
   /**
    * Provides a map of condition operators to condition operator options.
+   *
+   * @var string[][]
    */
   protected static $conditionOperatorMap = [
     'BETWEEN' => ['delimiter' => ' AND '],

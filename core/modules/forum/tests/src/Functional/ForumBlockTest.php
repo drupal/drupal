@@ -28,6 +28,8 @@ class ForumBlockTest extends BrowserTestBase {
 
   /**
    * A user with various administrative privileges.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 
