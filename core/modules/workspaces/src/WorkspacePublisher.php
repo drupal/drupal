@@ -79,7 +79,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
   public function publish() {
     $publish_access = $this->sourceWorkspace->access('publish', NULL, TRUE);
     if (!$publish_access->isAllowed()) {
-      $message = $publish_access instanceof AccessResultReasonInterface ? $publish_access->getReason() : '';
+      $message = $publish_access instanceof AccessResultReasonInterface ? $publish_access->getReason() ?? '' : '';
       throw new WorkspaceAccessException($message);
     }
 
