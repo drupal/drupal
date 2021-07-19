@@ -69,10 +69,12 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
   protected function doCheckAccess(AccountInterface $account, ConfigMapperInterface $mapper, $source_language = NULL, $target_language = NULL) {
     $base_access_result = parent::doCheckAccess($account, $mapper, $source_language);
 
+    // @todo use dependency injection.
+    $translate_source = \Drupal::config('config_translation.settings')->get('translate_source');
     $access =
       $target_language &&
       !$target_language->isLocked() &&
-      (!$source_language || ($target_language->getId() !== $source_language->getId()));
+      ($translate_source || !$source_language || ($target_language->getId() !== $source_language->getId()));
 
     return $base_access_result->andIf(AccessResult::allowedIf($access));
 

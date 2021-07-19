@@ -1,3 +1,14 @@
 config_translation.local_tasks:
   deriver: 'Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks'
   weight: 100
+
+config_translation.mapper_list:
+  route_name: config_translation.mapper_list
+  base_route: config_translation.mapper_list
+  title: Translate
+
+config_translation.settings:
+  route_name: config_translation.settings
+  base_route: config_translation.mapper_list
+  title: Settings
+  weight: 100

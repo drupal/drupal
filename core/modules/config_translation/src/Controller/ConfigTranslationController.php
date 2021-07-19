@@ -197,7 +197,8 @@ class ConfigTranslationController extends ControllerBase {
 
       // Prepare the language name and the operations depending on whether this
       // is the original language or not.
-      if ($langcode == $original_langcode) {
+      $translate_source = $this->config('config_translation.settings')->get('translate_source');
+      if (!$translate_source && $langcode == $original_langcode) {
         $language_name = '<strong>' . $this->t('@language (original)', ['@language' => $language->getName()]) . '</strong>';
 
         // Check access for the path/route for editing, so we can decide to

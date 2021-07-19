@@ -1,3 +1,11 @@
+config_translation.settings:
+  path: '/admin/config/regional/config-translation/settings'
+  defaults:
+    _form: '\Drupal\config_translation\Form\ConfigTranslationSettingsForm'
+    _title: 'Configuration translation settings'
+  requirements:
+    _permission: 'translate configuration'
+
 config_translation.mapper_list:
   path: '/admin/config/regional/config-translation'
   defaults:
