@@ -234,6 +234,9 @@ class Token {
    *   An associative array of discovered tokens, grouped by type.
    */
   public function scan($text) {
+    if ($text === NULL) {
+      xdebug_break();
+    }
     // Matches tokens with the following pattern: [$type:$name]
     // $type and $name may not contain [ ] characters.
     // $type may not contain : or whitespace characters, but $name may.
