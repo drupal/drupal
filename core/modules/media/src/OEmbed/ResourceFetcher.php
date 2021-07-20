@@ -4,7 +4,6 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 
@@ -12,8 +11,6 @@ use GuzzleHttp\Exception\TransferException;
  * Fetches and caches oEmbed resources.
  */
 class ResourceFetcher implements ResourceFetcherInterface {
-
-  use UseCacheBackendTrait;
 
   /**
    * The HTTP client.
@@ -28,6 +25,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @var \Drupal\media\OEmbed\ProviderRepositoryInterface
    */
   protected $providers;
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
 
   /**
    * Constructs a ResourceFetcher object.
@@ -55,7 +59,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
   public function fetchResource($url) {
     $cache_id = "media:oembed_resource:$url";
 
-    $cached = $this->cacheGet($cache_id);
+    $cached = $this->cacheBackend->get($cache_id);
     if ($cached) {
       return $this->createResource($cached->data, $url);
     }
@@ -85,7 +89,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
-    $this->cacheSet($cache_id, $data);
+    $this->cacheBackend->set($cache_id, $data);
 
     return $this->createResource($data, $url);
   }

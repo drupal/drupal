@@ -5,7 +5,6 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -14,8 +13,6 @@ use GuzzleHttp\Exception\TransferException;
  * Converts oEmbed media URLs into endpoint-specific resource URLs.
  */
 class UrlResolver implements UrlResolverInterface {
-
-  use UseCacheBackendTrait;
 
   /**
    * The HTTP client.
@@ -54,6 +51,13 @@ class UrlResolver implements UrlResolverInterface {
    * @var string[]
    */
   protected $urlCache = [];
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
 
   /**
    * Constructs a UrlResolver object.
@@ -154,7 +158,7 @@ class UrlResolver implements UrlResolverInterface {
     // Try to get the resource URL from the persistent cache.
     $cache_id = "media:oembed_resource_url:$url:$max_width:$max_height";
 
-    $cached = $this->cacheGet($cache_id);
+    $cached = $this->cacheBackend->get($cache_id);
     if ($cached) {
       $this->urlCache[$url] = $cached->data;
       return $this->urlCache[$url];
@@ -177,7 +181,7 @@ class UrlResolver implements UrlResolverInterface {
     $resource_url = $parsed_url['path'] . '?' . rawurldecode(UrlHelper::buildQuery($parsed_url['query']));
 
     $this->urlCache[$url] = $resource_url;
-    $this->cacheSet($cache_id, $resource_url);
+    $this->cacheBackend->set($cache_id, $resource_url);
 
     return $resource_url;
   }
