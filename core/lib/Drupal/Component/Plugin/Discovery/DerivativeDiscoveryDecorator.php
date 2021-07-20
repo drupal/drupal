@@ -73,9 +73,15 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
           if ($derivative_id && isset($base_plugin_definitions[$plugin_id])) {
             $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
           }
-          // It is vital that derivative plugin definitions contain derivative
-          // plugin IDs. Enforce it here, because not all derivers do it.
-          $this->setPluginIdOnDefinition($derivative_definition, $plugin_id, $base_plugin_id);
+
+          // @todo Solve object-based definitions.
+          if (is_array($derivative_definition)) {
+            // Overwrite the base plugin ID with the correct derivative-based ID.
+            $derivative_definition['id'] = $plugin_id;
+            // @todo Decide if adding this is a good idea.
+            $derivative_definition['base_id'] = $base_plugin_id;
+          }
+
           $plugin_definitions[$plugin_id] = $derivative_definition;
         }
       }
@@ -212,26 +218,6 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
     $derivative_definition = $filtered_base + ($derivative_definition ?: []);
     // Add back any empty keys that the derivative didn't have.
     return $derivative_definition + $base_plugin_definition;
-  }
-
-  /**
-   * Sets the plugin ID on a plugin definition.
-   *
-   * @param mixed[]|\Drupal\Component\Plugin\Definition\PluginDefinitionInterface $plugin_definition
-   *   The plugin definition.
-   * @param string $plugin_id
-   *   The plugin ID to set.
-   * @param string $base_plugin_id
-   *   The base plugin ID to set.
-   */
-  protected function setPluginIdOnDefinition(&$plugin_definition, $plugin_id, $base_plugin_id) {
-    if (is_array($plugin_definition)) {
-      if ($plugin_definition['id'] !== $plugin_id) {
-        @trigger_error(sprintf('The plugin ID "%s" was incorrectly stored as "%s". Fix your plugin deriver!', $plugin_id, $plugin_definition['id']), E_USER_DEPRECATED);
-      }
-      $plugin_definition['id'] = $plugin_id;
-      $plugin_definition['base_id'] = $base_plugin_id;
-    }
   }
 
   /**
