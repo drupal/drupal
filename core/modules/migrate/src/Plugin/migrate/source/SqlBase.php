@@ -337,7 +337,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       // results across multiple databases.
       else {
         foreach ($this->getIds() as $field_name => $field_schema) {
-          $field_name = $field_schema['alias'] ?? $field_schema['alias'] . '.' . $field_name;
+          $field_name = isset($field_schema['alias']) ? $field_schema['alias'] . '.' . $field_name : $field_name;
           $this->query->orderBy($field_name);
         }
       }
