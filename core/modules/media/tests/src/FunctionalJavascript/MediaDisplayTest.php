@@ -20,6 +20,13 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = [
+    'path',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'classy';
 
   /**
@@ -126,9 +133,17 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $doc_media_id = $this->container
+      ->get('entity_type.manager')
+      ->getStorage('media')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->sort('mid', 'DESC')
+      ->execute();
+    $doc_media_id = reset($doc_media_id);
 
     // Go to the media entity view.
-    $this->drupalGet($this->assertLinkToCreatedMedia());
+    $this->drupalGet('/media/' . $doc_media_id);
 
     // Check if the default media name is generated as expected.
     $assert_session->elementTextContains('css', 'h1', $test_filename);

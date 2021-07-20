@@ -6,6 +6,7 @@ dependencies:
     - media.type.document
   module:
     - file
+    - path
 id: media.document.default
 targetEntityType: media
 bundle: document
@@ -24,6 +25,12 @@ content:
     type: file_generic
     weight: 0
     region: content
+  path:
+    type: path
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
