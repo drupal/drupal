@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_discovery\Kernel;
 
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -31,6 +32,33 @@ class LayoutTest extends KernelTestBase {
     parent::setUp();
 
     $this->layoutPluginManager = $this->container->get('plugin.manager.core.layout');
+  }
+
+  /**
+   * Tests that layout derivatives work as expected.
+   */
+  public function testDerivedLayouts() {
+    $definitions = $this->layoutPluginManager->getDefinitions();
+    $expected = [
+      'layout_onecol',
+      'layout_twocol',
+      'layout_twocol_bricks',
+      'layout_threecol_25_50_25',
+      'layout_threecol_33_34_33',
+      'layout_test_1col',
+      'layout_test_2col',
+      'layout_test_1col_no_template',
+      'layout_test_derivatives_plugin:one',
+      'layout_test_derivatives_plugin:two',
+      'layout_test_derivatives_plugin:three',
+      'layout_test_plugin',
+      'layout_test_dependencies_plugin',
+    ];
+    $expected = array_combine($expected, $expected);
+    $definition_ids = array_map(function (LayoutDefinition $definition) {
+      return $definition->id();
+    }, $definitions);
+    $this->assertSame($expected, $definition_ids);
   }
 
   /**
