@@ -48,43 +48,6 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    *   Thrown if the 'deriver' class specified in the plugin definition
    *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
    */
-  public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
-    // This check is only for derivative plugins that have explicitly provided
-    // an ID. This is not common, and can be expected to fail. Therefore, opt
-    // out of the thrown exception, which will be handled when checking the
-    // $base_plugin_id.
-    $plugin_definition = $this->decorated->getDefinition($plugin_id, FALSE);
-
-    list($base_plugin_id, $derivative_id) = $this->decodePluginId($plugin_id);
-    $base_plugin_definition = $this->decorated->getDefinition($base_plugin_id, $exception_on_invalid);
-    if ($base_plugin_definition) {
-      $deriver = $this->getDeriver($base_plugin_id, $base_plugin_definition);
-      if ($deriver) {
-        $derivative_plugin_definition = $deriver->getDerivativeDefinition($derivative_id, $base_plugin_definition);
-        // If a plugin defined itself as a derivative, merge in possible
-        // defaults from the derivative.
-        if ($derivative_id && isset($plugin_definition)) {
-          $plugin_definition = $this->mergeDerivativeDefinition($plugin_definition, $derivative_plugin_definition);
-        }
-        else {
-          $plugin_definition = $derivative_plugin_definition;
-        }
-        // It is vital that derivative plugin definitions contain derivative
-        // plugin IDs. Enforce it here, because not all derivers do it.
-        $this->setPluginIdOnDefinition($plugin_definition, $plugin_id, $base_plugin_id);
-      }
-    }
-
-    return $plugin_definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidDeriverException
-   *   Thrown if the 'deriver' class specified in the plugin definition
-   *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
-   */
   public function getDefinitions() {
     $plugin_definitions = $this->decorated->getDefinitions();
     return $this->getDerivatives($plugin_definitions);

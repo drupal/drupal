@@ -240,17 +240,12 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
       'null_value' => NULL,
     ];
 
-    $this->discoveryMain->expects($this->exactly(2))
-      ->method('getDefinition')
-      ->withConsecutive(
-        ['non_container_aware_discovery:test_discovery_1'],
-        ['non_container_aware_discovery'],
-      )
-      ->willReturnOnConsecutiveCalls(
-        $derivative_definition,
-        $base_definition,
-      );
-
+    $this->discoveryMain->expects($this->exactly(1))
+      ->method('getDefinitions')
+      ->willReturn([
+        'non_container_aware_discovery:test_discovery_1' => $derivative_definition,
+        'non_container_aware_discovery' => $base_definition,
+      ]);
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
 
     $expected = $base_definition;
