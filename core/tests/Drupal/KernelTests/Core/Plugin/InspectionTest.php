@@ -30,9 +30,6 @@ class InspectionTest extends PluginTestBase {
     foreach (['user_login', 'layout'] as $id) {
       $plugin = $this->mockBlockManager->createInstance($id);
       $expected_definition = $this->mockBlockExpectedDefinitions[$id];
-      if ($id == 'layout') {
-        $expected_definition['base_id'] = 'layout';
-      }
       $this->assertSame($id, $plugin->getPluginId());
       $this->assertEquals($expected_definition, $this->mockBlockManager->getDefinition($id));
       $this->assertEquals($expected_definition, $plugin->getPluginDefinition());
