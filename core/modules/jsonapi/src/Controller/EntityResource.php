@@ -866,7 +866,7 @@ class EntityResource {
     $entity_type = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId());
     $entity_storage = $this->entityTypeManager->getStorage($resource_type->getEntityTypeId());
 
-    $query = $entity_storage->getQuery();
+    $query = $entity_storage->getQuery()->addTag('jsonapi_collection');
 
     // Ensure that access checking is performed on the query.
     $query->accessCheck(TRUE);
