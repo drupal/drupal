@@ -24,6 +24,10 @@
   -webkit-touch-callout: none;
 }
 
+.cke_chrome {
+  max-width: 100%;
+}
+
 /**
  * Adjust the style of in-place editing CKEditor instances.
  */
