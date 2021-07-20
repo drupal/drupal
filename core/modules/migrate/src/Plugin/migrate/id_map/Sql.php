@@ -1015,7 +1015,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $migration_manager = $this->getMigrationPluginManager();
       $migrations = $migration_manager->getDefinitions();
       foreach ($migrations as $migration_id => $migration) {
-        if ($migration['id'] === $base_id) {
+        if ($base_id === substr($migration_id, 0, strpos($migration_id, $this::DERIVATIVE_SEPARATOR))) {
           // Get this derived migration's mapping table and add it to the list
           // of mapping tables to look in for the highest ID.
           $stub = $migration_manager->createInstance($migration_id);

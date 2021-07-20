@@ -554,7 +554,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     // Confirm with only 1 type the "Create custom block" link goes directly t
     // block add form.
-    $assert_session->linkNotExists('Basic block');
+    $assert_session->linkExists('Basic block');
     $this->clickLink('Create custom block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->fieldExists('Title');
@@ -567,8 +567,8 @@ class InlineBlockTest extends InlineBlockTestBase {
     // Confirm that, when more than 1 type exists, "Create custom block" shows a
     // list of block types.
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->linkNotExists('Basic block');
-    $assert_session->linkNotExists('Advanced block');
+    $assert_session->linkExists('Basic block');
+    $assert_session->linkExists('Advanced block');
     $this->clickLink('Create custom block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->fieldNotExists('Title');

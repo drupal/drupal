@@ -69,6 +69,9 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
         else {
           $plugin_definition = $derivative_plugin_definition;
         }
+        // It is vital that derivative plugin definitions contain derivative
+        // plugin IDs. Enforce it here, because not all derivers do it.
+        $this->setPluginIdOnDefinition($plugin_definition, $plugin_id, $base_plugin_id);
       }
     }
 
@@ -99,14 +102,17 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
       $deriver = $this->getDeriver($base_plugin_id, $plugin_definition);
       if ($deriver) {
         $derivative_definitions = $deriver->getDerivativeDefinitions($plugin_definition);
-        foreach ($derivative_definitions as $derivative_id => $derivative_definition) {
+        foreach ($derivative_definitions as $derivative_id => $derivative_plugin_definition) {
           $plugin_id = $this->encodePluginId($base_plugin_id, $derivative_id);
           // Use this definition as defaults if a plugin already defined
           // itself as this derivative.
           if ($derivative_id && isset($base_plugin_definitions[$plugin_id])) {
-            $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
+            $derivative_plugin_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_plugin_definition);
           }
-          $plugin_definitions[$plugin_id] = $derivative_definition;
+          // It is vital that derivative plugin definitions contain derivative
+          // plugin IDs. Enforce it here, because not all derivers do it.
+          $this->setPluginIdOnDefinition($derivative_plugin_definition, $plugin_id, $base_plugin_id);
+          $plugin_definitions[$plugin_id] = $derivative_plugin_definition;
         }
       }
       // If a plugin already defined itself as a derivative it might already
@@ -242,6 +248,23 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
     $derivative_definition = $filtered_base + ($derivative_definition ?: []);
     // Add back any empty keys that the derivative didn't have.
     return $derivative_definition + $base_plugin_definition;
+  }
+
+  /**
+   * Sets the plugin ID on a plugin definition.
+   *
+   * @param mixed[]|\Drupal\Component\Plugin\Definition\PluginDefinitionInterface $plugin_definition
+   *   The plugin definition.
+   * @param string $plugin_id
+   *   The plugin ID to set.
+   * @param string $base_plugin_id
+   *   The base plugin ID to set.
+   */
+  protected function setPluginIdOnDefinition(&$plugin_definition, $plugin_id, $base_plugin_id) {
+    if (is_array($plugin_definition)) {
+      $plugin_definition['id'] = $plugin_id;
+      $plugin_definition['base_id'] = $base_plugin_id;
+    }
   }
 
   /**

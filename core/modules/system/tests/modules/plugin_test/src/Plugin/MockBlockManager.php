@@ -55,7 +55,7 @@ class MockBlockManager extends PluginManagerBase {
     ]);
     // A plugin defining itself as a derivative.
     $this->discovery->setDefinition('menu:foo', [
-      'id' => 'menu',
+      'id' => 'menu:foo',
       'label' => t('Base label'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
     ]);

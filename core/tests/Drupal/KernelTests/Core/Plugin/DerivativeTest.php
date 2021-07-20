@@ -19,10 +19,16 @@ class DerivativeTest extends PluginTestBase {
    */
   public function testDerivativeDecorator() {
     // Ensure that getDefinitions() returns the expected definitions.
-    $this->assertEquals($this->mockBlockExpectedDefinitions, $this->mockBlockManager->getDefinitions());
+    $expected = $this->mockBlockExpectedDefinitions;
+    $expected['menu:main_menu']['base_id'] = 'menu';
+    $expected['menu:navigation']['base_id'] = 'menu';
+    $expected['menu:foo']['base_id'] = 'menu';
+    $expected['layout']['base_id'] = 'layout';
+    $expected['layout:foo']['base_id'] = 'layout';
+    $this->assertEquals($this->mockBlockManager->getDefinitions(), $expected);
 
     // Ensure that getDefinition() returns the expected definition.
-    foreach ($this->mockBlockExpectedDefinitions as $id => $definition) {
+    foreach ($expected as $id => $definition) {
       $this->assertEquals($definition, $this->mockBlockManager->getDefinition($id));
     }
 

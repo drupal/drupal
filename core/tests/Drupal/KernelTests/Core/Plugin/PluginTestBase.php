@@ -24,7 +24,14 @@ abstract class PluginTestBase extends KernelTestBase {
 
   protected $testPluginManager;
   protected $testPluginExpectedDefinitions;
+
+  /**
+   * The mock plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
   protected $mockBlockManager;
+
   protected $mockBlockExpectedDefinitions;
   protected $defaultsTestPluginManager;
   protected $defaultsTestPluginExpectedDefinitions;
@@ -63,17 +70,17 @@ abstract class PluginTestBase extends KernelTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
       ],
       'menu:main_menu' => [
-        'id' => 'menu',
+        'id' => 'menu:main_menu',
         'label' => 'Main menu',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       ],
       'menu:navigation' => [
-        'id' => 'menu',
+        'id' => 'menu:navigation',
         'label' => 'Navigation',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       ],
       'menu:foo' => [
-        'id' => 'menu',
+        'id' => 'menu:foo',
         'label' => 'Base label',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
         'setting' => 'default',
@@ -84,7 +91,7 @@ abstract class PluginTestBase extends KernelTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       ],
       'layout:foo' => [
-        'id' => 'layout',
+        'id' => 'layout:foo',
         'label' => 'Layout Foo',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       ],
