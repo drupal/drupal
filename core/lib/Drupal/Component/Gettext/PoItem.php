@@ -261,8 +261,10 @@ class PoItem {
    */
   private function formatSingular() {
     $output = '';
-    $output .= 'msgid ' . $this->formatString($this->source);
-    $output .= 'msgstr ' . (isset($this->translation) ? $this->formatString($this->translation) : '""');
+    if (!empty($this->source)) {
+      $output .= 'msgid ' . $this->formatString($this->source);
+      $output .= 'msgstr ' . (isset($this->translation) ? $this->formatString($this->translation) : '""');
+    }
     return $output;
   }
 
