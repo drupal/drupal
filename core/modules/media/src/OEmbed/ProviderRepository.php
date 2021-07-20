@@ -5,7 +5,6 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -14,8 +13,6 @@ use GuzzleHttp\Exception\TransferException;
  * Retrieves and caches information about oEmbed providers.
  */
 class ProviderRepository implements ProviderRepositoryInterface {
-
-  use UseCacheBackendTrait;
 
   /**
    * How long the provider data should be cached, in seconds.
@@ -46,6 +43,13 @@ class ProviderRepository implements ProviderRepositoryInterface {
   protected $time;
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * Constructs a ProviderRepository instance.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -55,7 +59,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   (optional) The cache backend.
+   *   The cache backend.
    * @param int $max_age
    *   (optional) How long the cache data should be kept. Defaults to a week.
    */
@@ -63,6 +67,10 @@ class ProviderRepository implements ProviderRepositoryInterface {
     $this->httpClient = $http_client;
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
+    if (empty($cache_backend)) {
+      $cache_backend = \Drupal::cache();
+      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
+    }
     $this->cacheBackend = $cache_backend;
     $this->maxAge = (int) $max_age;
   }
@@ -73,7 +81,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
   public function getAll() {
     $cache_id = 'media:oembed_providers';
 
-    $cached = $this->cacheGet($cache_id);
+    $cached = $this->cacheBackend->get($cache_id);
     if ($cached) {
       return $cached->data;
     }
@@ -103,7 +111,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
       }
     }
 
-    $this->cacheSet($cache_id, $keyed_providers, $this->time->getCurrentTime() + $this->maxAge);
+    $this->cacheBackend->set($cache_id, $keyed_providers, $this->time->getCurrentTime() + $this->maxAge);
     return $keyed_providers;
   }
 
