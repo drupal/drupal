@@ -4,6 +4,7 @@ namespace Drupal\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Exception\InvalidDeriverException;
+use Drupal\Component\Plugin\PluginBase;
 
 /**
  * Base class providing the tools for a plugin discovery to be derivative aware.
@@ -102,8 +103,8 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
     // Try and split the passed plugin definition into a plugin and a
     // derivative id. We don't need to check for !== FALSE because a leading
     // colon would break the derivative system and doesn't makes sense.
-    if (strpos($plugin_id, ':')) {
-      return explode(':', $plugin_id, 2);
+    if (strpos($plugin_id, PluginBase::DERIVATIVE_SEPARATOR)) {
+      return explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id, 2);
     }
 
     return [$plugin_id, NULL];
@@ -122,7 +123,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    */
   protected function encodePluginId($base_plugin_id, $derivative_id) {
     if ($derivative_id) {
-      return "$base_plugin_id:$derivative_id";
+      return $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $derivative_id;
     }
 
     // By returning the unmerged plugin_id, we are able to support derivative
