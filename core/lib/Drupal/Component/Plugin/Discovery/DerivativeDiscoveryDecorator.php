@@ -102,17 +102,17 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
       $deriver = $this->getDeriver($base_plugin_id, $plugin_definition);
       if ($deriver) {
         $derivative_definitions = $deriver->getDerivativeDefinitions($plugin_definition);
-        foreach ($derivative_definitions as $derivative_id => $derivative_plugin_definition) {
+        foreach ($derivative_definitions as $derivative_id => $derivative_definition) {
           $plugin_id = $this->encodePluginId($base_plugin_id, $derivative_id);
           // Use this definition as defaults if a plugin already defined
           // itself as this derivative.
           if ($derivative_id && isset($base_plugin_definitions[$plugin_id])) {
-            $derivative_plugin_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_plugin_definition);
+            $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
           }
           // It is vital that derivative plugin definitions contain derivative
           // plugin IDs. Enforce it here, because not all derivers do it.
-          $this->setPluginIdOnDefinition($derivative_plugin_definition, $plugin_id, $base_plugin_id);
-          $plugin_definitions[$plugin_id] = $derivative_plugin_definition;
+          $this->setPluginIdOnDefinition($derivative_definition, $plugin_id, $base_plugin_id);
+          $plugin_definitions[$plugin_id] = $derivative_definition;
         }
       }
       // If a plugin already defined itself as a derivative it might already
