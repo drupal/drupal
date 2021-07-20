@@ -30,7 +30,7 @@ interface DeriverInterface {
   /**
    * Gets the definition of all derivatives of a base plugin.
    *
-   * @param array $base_plugin_definition
+   * @param array|\Drupal\Component\Plugin\Definition\PluginDefinitionInterface $base_plugin_definition
    *   The definition array of the base plugin.
    *
    * @return array

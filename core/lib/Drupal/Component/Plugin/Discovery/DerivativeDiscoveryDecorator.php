@@ -74,12 +74,14 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
             $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
           }
 
-          // @todo Solve object-based definitions.
+          // Overwrite the base plugin ID with the correct derivative-based ID.
           if (is_array($derivative_definition)) {
-            // Overwrite the base plugin ID with the correct derivative-based ID.
             $derivative_definition['id'] = $plugin_id;
             // @todo Decide if adding this is a good idea.
             $derivative_definition['base_id'] = $base_plugin_id;
+          }
+          elseif ($derivative_definition instanceof DerivablePluginDefinitionInterface) {
+            $derivative_definition->setId($plugin_id);
           }
 
           $plugin_definitions[$plugin_id] = $derivative_definition;

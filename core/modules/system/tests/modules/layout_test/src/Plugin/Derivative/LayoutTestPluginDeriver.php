@@ -14,9 +14,9 @@ class LayoutTestPluginDeriver extends DeriverBase {
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     if (!$this->derivatives) {
-      $this->derivatives['one'] = $base_plugin_definition;
-      $this->derivatives['two'] = $base_plugin_definition;
-      $this->derivatives['three'] = $base_plugin_definition;
+      foreach (['one', 'two', 'three'] as $number) {
+        $this->derivatives[$number] = clone $base_plugin_definition;
+      }
     }
     return $this->derivatives;
   }

@@ -558,4 +558,12 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setId(string $id) {
+    $this->id = $id;
+    return $this;
+  }
+
 }
