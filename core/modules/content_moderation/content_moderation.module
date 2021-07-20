@@ -350,10 +350,14 @@ function content_moderation_action_info_alter(&$definitions) {
   // moderated entity. If another module has already swapped out those classes,
   // though, we'll be polite and do nothing.
   foreach ($definitions as &$definition) {
-    if ($definition['id'] === 'entity:publish_action' && $definition['class'] == PublishAction::class) {
+    if (!isset($definition['base_id'])) {
+      continue;
+    }
+
+    if ($definition['base_id'] === 'entity:publish_action' && $definition['class'] == PublishAction::class) {
       $definition['class'] = ModerationOptOutPublish::class;
     }
-    if ($definition['id'] === 'entity:unpublish_action' && $definition['class'] == UnpublishAction::class) {
+    if ($definition['base_id'] === 'entity:unpublish_action' && $definition['class'] == UnpublishAction::class) {
       $definition['class'] = ModerationOptOutUnpublish::class;
     }
   }
