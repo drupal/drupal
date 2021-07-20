@@ -91,7 +91,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
    */
   public function testDeleteTranslation() {
     $config_name = 'locale_test.translation';
-    $this->deleteLanguageOverride($config_name, 'test', 'English test', 'de');
+    $this->deleteLanguageOverride($config_name, 'test', 'de');
     // The German translation in this case will be forced to the Hungarian
     // source so its not overwritten with locale data later.
     $this->assertTranslation($config_name, 'Hungarian test', 'de');
@@ -112,7 +112,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
    */
   public function testLocaleDeleteActiveTranslation() {
     $config_name = 'locale_test.translation';
-    $this->deleteLocaleTranslationData($config_name, 'test', 'English test', 'hu');
+    $this->deleteLocaleTranslationData($config_name, 'English test', 'hu');
     // Deleting the locale translation should not change active config.
     $this->assertEquals('Hungarian test', $this->configFactory->getEditable($config_name)->get('test'));
   }
@@ -134,7 +134,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
     $this->saveLanguageOverride($config_name, 'test', 'Updated English', 'en');
     $this->assertTranslation($config_name, 'Updated English', 'en');
 
-    $this->deleteLocaleTranslationData($config_name, 'test', 'English test', 'en');
+    $this->deleteLocaleTranslationData($config_name, 'English test', 'en');
     $this->assertNoConfigOverride($config_name, 'en');
   }
 
