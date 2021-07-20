@@ -262,6 +262,9 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    */
   protected function setPluginIdOnDefinition(&$plugin_definition, $plugin_id, $base_plugin_id) {
     if (is_array($plugin_definition)) {
+      if ($plugin_definition['id'] !== $plugin_id) {
+        @trigger_error(sprintf('The plugin ID "%s" was incorrectly stored as "%s". Fix your plugin deriver!', $plugin_id, $plugin_definition['id']), E_USER_DEPRECATED);
+      }
       $plugin_definition['id'] = $plugin_id;
       $plugin_definition['base_id'] = $base_plugin_id;
     }
