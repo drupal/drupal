@@ -95,6 +95,10 @@ class HtaccessTest extends BrowserTestBase {
     $file_paths["$path/.htaccess"] = 403;
     $file_paths["$path/web.config"] = 403;
 
+    // Tests that dot-files in the root directory are blocked.
+    $file_paths['.gitattributes'] = 403;
+    $file_paths['.editorconfig'] = 403;
+
     return $file_paths;
   }
 
