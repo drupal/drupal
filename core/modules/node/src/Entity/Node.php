@@ -40,7 +40,8 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\node\Entity\NodeRouteProvider",
  *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
- *     "translation" = "Drupal\node\NodeTranslationHandler"
+ *     "translation" = "Drupal\node\NodeTranslationHandler",
+ *     "user_cancel" = "Drupal\user\Entity\Handler\BatchCancellationHandler",
  *   },
  *   base_table = "node",
  *   data_table = "node_field_data",

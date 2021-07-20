@@ -31,7 +31,6 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -601,53 +600,6 @@ function node_ranking() {
     ];
   }
   return $ranking;
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function node_user_cancel($edit, UserInterface $account, $method) {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish nodes (current revisions).
-      $nids = \Drupal::entityQuery('node')
-        ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
-        ->execute();
-      module_load_include('inc', 'node', 'node.admin');
-      node_mass_update($nids, ['status' => 0], NULL, TRUE);
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize all of the nodes for this old account.
-      module_load_include('inc', 'node', 'node.admin');
-      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
-      node_mass_update($vids, [
-        'uid' => 0,
-        'revision_uid' => 0,
-      ], NULL, TRUE, TRUE);
-      break;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function node_user_predelete($account) {
-  // Delete nodes (current revisions).
-  // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-  $nids = \Drupal::entityQuery('node')
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  // Delete old revisions.
-  $storage_controller = \Drupal::entityTypeManager()->getStorage('node');
-  $nodes = $storage_controller->loadMultiple($nids);
-  $storage_controller->delete($nodes);
-  $revisions = $storage_controller->userRevisionIds($account);
-  foreach ($revisions as $revision) {
-    node_revision_delete($revision);
-  }
 }
 
 /**

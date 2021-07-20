@@ -39,7 +39,8 @@ use Drupal\user\EntityOwnerTrait;
  *       "default" = "Drupal\comment\CommentForm",
  *       "delete" = "Drupal\comment\Form\DeleteForm"
  *     },
- *     "translation" = "Drupal\comment\CommentTranslationHandler"
+ *     "translation" = "Drupal\comment\CommentTranslationHandler",
+ *     "user_cancel" = "Drupal\comment\Entity\Handler\CancellationHandler",
  *   },
  *   base_table = "comment",
  *   data_table = "comment_field_data",

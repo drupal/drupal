@@ -23,6 +23,7 @@ use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\system\Entity\Action;
+use Drupal\user\CancellationHandlerInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -618,6 +619,14 @@ function user_cancel($edit, $uid, $method) {
     ->setTitle(t('Cancelling account'));
   batch_set($batch_builder->toArray());
 
+  $entity_type_manager = \Drupal::entityTypeManager();
+  foreach ($entity_type_manager->getDefinitions() as $entity_type) {
+    if ($entity_type->hasHandlerClass('user_cancel')) {
+      $entity_type_manager->getHandler($entity_type->id(), 'user_cancel')
+        ->cancelAccount($account, $method);
+    }
+  }
+
   // When the 'user_cancel_delete' method is used, user_delete() is called,
   // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete()
   // for the user entity. Modules should use those hooks to respond to the
@@ -727,19 +736,19 @@ function user_cancel_methods() {
   $user_settings = \Drupal::config('user.settings');
   $anonymous_name = $user_settings->get('anonymous');
   $methods = [
-    'user_cancel_block' => [
+    CancellationHandlerInterface::METHOD_BLOCK => [
       'title' => t('Disable the account and keep its content.'),
       'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.'),
     ],
-    'user_cancel_block_unpublish' => [
+    CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH => [
       'title' => t('Disable the account and unpublish its content.'),
       'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.'),
     ],
-    'user_cancel_reassign' => [
+    CancellationHandlerInterface::METHOD_REASSIGN => [
       'title' => t('Delete the account and make its content belong to the %anonymous-name user.', ['%anonymous-name' => $anonymous_name]),
       'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $anonymous_name]),
     ],
-    'user_cancel_delete' => [
+    CancellationHandlerInterface::METHOD_DELETE => [
       'title' => t('Delete the account and its content.'),
       'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
       'access' => \Drupal::currentUser()->hasPermission('administer users'),
