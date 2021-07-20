@@ -124,9 +124,15 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
               // http://www.w3.org/TR/REC-CSS2/cascade.html#at-import, @import
               // rules must precede any other style, so we move those to the
               // top.
-              $regexp = '/@import[^;]+;/i';
+              $regexp = '/@import\s*(?:url\(\s*)?[\'"]?([^\'"\()]+)([\'")]+\)?.*;)/iU';
               preg_match_all($regexp, $data, $matches);
-              $data = preg_replace($regexp, '', $data);
+              // If certain import statements were replaced with actual content
+              // while others were not, they may not all be next to one another;
+              // individually null them out and then add as a group in the
+              // order found.
+              foreach ($matches[0] as $match) {
+                $data = str_replace($match, '', $data);
+              }
               $data = implode('', $matches[0]) . $data;
               // Dump the optimized CSS for this group into an aggregate file.
               $uri = $this->dumper->dump($data, 'css');
