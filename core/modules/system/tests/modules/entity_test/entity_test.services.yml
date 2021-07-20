@@ -8,3 +8,7 @@ services:
     class: Drupal\entity_test\Cache\EntityTestViewGrantsCacheContext
     tags:
       - { name: cache.context }
+  entity_test.list_builder.subscriber:
+    class: Drupal\entity_test\TestEntityListBuilderRowSubscriber
+    tags:
+      - { name: event_subscriber }

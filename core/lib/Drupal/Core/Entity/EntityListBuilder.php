@@ -6,6 +6,7 @@ use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a generic implementation to build a listing of entities.
@@ -37,6 +38,13 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
+
+  /**
+   * The event dispatcher service.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
 
   /**
    * The number of entities to list per page, or FALSE to list all entities.
@@ -217,7 +225,9 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
     ];
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {
-        $build['table']['#rows'][$entity->id()] = $row;
+        $event = new EntityListBuilderRowEvent($row, $entity);
+        $this->getEventDispatcher()->dispatch($event);
+        $build['table']['#rows'][$entity->id()] = $event->getRow();
       }
     }
 
@@ -246,6 +256,19 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    */
   protected function ensureDestination(Url $url) {
     return $url->mergeOptions(['query' => $this->getRedirectDestination()->getAsArray()]);
+  }
+
+  /**
+   * Returns the event dispatcher service.
+   *
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher service.
+   */
+  protected function getEventDispatcher(): EventDispatcherInterface {
+    if (!isset($this->eventDispatcher)) {
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
+    return $this->eventDispatcher;
   }
 
 }
