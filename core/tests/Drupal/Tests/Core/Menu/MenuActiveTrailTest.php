@@ -145,7 +145,7 @@ class MenuActiveTrailTest extends UnitTestCase {
       $this->menuLinkManager->expects($this->exactly(2))
         ->method('loadLinksbyRoute')
         ->with('baby_llama')
-        ->will($this->returnValue($links));
+        ->willReturn($links);
     }
     // Test with menu name.
     $this->assertSame($expected_link, $this->menuActiveTrail->getActiveLink($menu_name));
@@ -169,13 +169,13 @@ class MenuActiveTrailTest extends UnitTestCase {
       $this->menuLinkManager->expects($this->exactly(2))
         ->method('loadLinksbyRoute')
         ->with('baby_llama')
-        ->will($this->returnValue($links));
+        ->willReturn($links);
       if ($expected_link !== NULL) {
         $this->menuLinkManager->expects($this->exactly(2))
           ->method('getParentIds')
-          ->will($this->returnValueMap([
+          ->willReturnMap([
             [$expected_link->getPluginId(), $expected_trail_ids],
-          ]));
+          ]);
       }
     }
 
@@ -205,7 +205,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->menuLinkManager->expects($this->any())
       ->method('loadLinksbyRoute')
       ->with('baby_llama')
-      ->will($this->returnValue($data[1]));
+      ->willReturn($data[1]);
 
     $expected_link = $data[3];
     $expected_trail = $data[4];
@@ -213,9 +213,9 @@ class MenuActiveTrailTest extends UnitTestCase {
 
     $this->menuLinkManager->expects($this->any())
       ->method('getParentIds')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         [$expected_link->getPluginId(), $expected_trail_ids],
-      ]));
+      ]);
 
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($data[2]));
 

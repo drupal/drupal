@@ -33,29 +33,32 @@ class RolesRidTest extends UnitTestCase {
     $role_storage = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityStorageInterface');
     $role_storage->expects($this->any())
       ->method('loadMultiple')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         [[], []],
         [['test_rid_1'], ['test_rid_1' => $role1]],
-        [['test_rid_1', 'test_rid_2'], ['test_rid_1' => $role1, 'test_rid_2' => $role2]],
-      ]));
+        [
+          ['test_rid_1', 'test_rid_2'],
+          ['test_rid_1' => $role1, 'test_rid_2' => $role2],
+        ],
+      ]);
 
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->any())
       ->method('getKey')
       ->with('label')
-      ->will($this->returnValue('label'));
+      ->willReturn('label');
 
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getDefinition')
       ->with($this->equalTo('user_role'))
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     $entity_type_manager
       ->expects($this->once())
       ->method('getStorage')
       ->with($this->equalTo('user_role'))
-      ->will($this->returnValue($role_storage));
+      ->willReturn($role_storage);
 
     // Set up a minimal container to satisfy Drupal\Core\Entity\EntityBase's
     // dependency on it.

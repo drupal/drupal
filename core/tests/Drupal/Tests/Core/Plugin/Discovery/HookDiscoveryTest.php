@@ -43,7 +43,7 @@ class HookDiscoveryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->once())
       ->method('getImplementations')
       ->with('test_plugin')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->assertCount(0, $this->hookDiscovery->getDefinitions());
   }
@@ -57,7 +57,7 @@ class HookDiscoveryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->once())
       ->method('getImplementations')
       ->with('test_plugin')
-      ->will($this->returnValue(['hook_discovery_test', 'hook_discovery_test2']));
+      ->willReturn(['hook_discovery_test', 'hook_discovery_test2']);
 
     $this->moduleHandler->expects($this->exactly(2))
       ->method('invoke')
@@ -88,15 +88,24 @@ class HookDiscoveryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->exactly(4))
       ->method('getImplementations')
       ->with('test_plugin')
-      ->will($this->returnValue(['hook_discovery_test', 'hook_discovery_test2']));
+      ->willReturn(['hook_discovery_test', 'hook_discovery_test2']);
 
     $this->moduleHandler->expects($this->any())
       ->method('invoke')
-      ->will($this->returnValueMap([
-          ['hook_discovery_test', 'test_plugin', [], $this->hookDiscoveryTestTestPlugin()],
-          ['hook_discovery_test2', 'test_plugin', [], $this->hookDiscoveryTest2TestPlugin()],
-        ]
-      ));
+      ->willReturnMap([
+        [
+          'hook_discovery_test',
+          'test_plugin',
+          [],
+          $this->hookDiscoveryTestTestPlugin(),
+        ],
+        [
+          'hook_discovery_test2',
+          'test_plugin',
+          [],
+          $this->hookDiscoveryTest2TestPlugin(),
+        ],
+      ]);
 
     $this->assertNull($this->hookDiscovery->getDefinition('test_non_existent', FALSE));
 
@@ -121,7 +130,7 @@ class HookDiscoveryTest extends UnitTestCase {
   public function testGetDefinitionWithUnknownID() {
     $this->moduleHandler->expects($this->once())
       ->method('getImplementations')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->expectException(PluginNotFoundException::class);
     $this->hookDiscovery->getDefinition('test_non_existent', TRUE);

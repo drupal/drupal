@@ -21,16 +21,19 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTestBase {
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->any())
       ->method('getLinkTemplate')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['canonical', 'entity.node.canonical'],
-        ['drupal:content-translation-overview', 'entity.node.content_translation_overview'],
-      ]));
+        [
+          'drupal:content-translation-overview',
+          'entity.node.content_translation_overview',
+        ],
+      ]);
     $content_translation_manager = $this->createMock('Drupal\content_translation\ContentTranslationManagerInterface');
     $content_translation_manager->expects($this->any())
       ->method('getSupportedEntityTypes')
-      ->will($this->returnValue([
+      ->willReturn([
         'node' => $entity_type,
-      ]));
+      ]);
     \Drupal::getContainer()->set('content_translation.manager', $content_translation_manager);
     \Drupal::getContainer()->set('string_translation', $this->getStringTranslationStub());
   }

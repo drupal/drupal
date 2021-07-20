@@ -33,26 +33,26 @@ class CommentBulkFormTest extends UnitTestCase {
       $action = $this->createMock('\Drupal\system\ActionConfigEntityInterface');
       $action->expects($this->any())
         ->method('getType')
-        ->will($this->returnValue('comment'));
+        ->willReturn('comment');
       $actions[$i] = $action;
     }
 
     $action = $this->createMock('\Drupal\system\ActionConfigEntityInterface');
     $action->expects($this->any())
       ->method('getType')
-      ->will($this->returnValue('user'));
+      ->willReturn('user');
     $actions[] = $action;
 
     $entity_storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $entity_storage->expects($this->any())
       ->method('loadMultiple')
-      ->will($this->returnValue($actions));
+      ->willReturn($actions);
 
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->once())
       ->method('getStorage')
       ->with('action')
-      ->will($this->returnValue($entity_storage));
+      ->willReturn($entity_storage);
 
     $entity_repository = $this->createMock(EntityRepositoryInterface::class);
 
@@ -66,7 +66,7 @@ class CommentBulkFormTest extends UnitTestCase {
     $views_data->expects($this->any())
       ->method('get')
       ->with('comment')
-      ->will($this->returnValue(['table' => ['entity type' => 'comment']]));
+      ->willReturn(['table' => ['entity type' => 'comment']]);
     $container = new ContainerBuilder();
     $container->set('views.views_data', $views_data);
     $container->set('string_translation', $this->getStringTranslationStub());
@@ -76,7 +76,7 @@ class CommentBulkFormTest extends UnitTestCase {
     $storage->expects($this->any())
       ->method('get')
       ->with('base_table')
-      ->will($this->returnValue('comment'));
+      ->willReturn('comment');
 
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()

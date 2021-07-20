@@ -477,11 +477,11 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->urlGenerator->expects($this->exactly(4))
       ->method('getPathFromRoute')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['test_route_1', [], 'test-route-1'],
         ['test_route_3', [], 'test-route-3'],
         ['test_route_4', ['object' => '1'], 'test-route-4/1'],
-      ]));
+      ]);
 
     $this->moduleHandler->expects($this->exactly(5))
       ->method('alter');
@@ -553,9 +553,15 @@ class LinkGeneratorTest extends UnitTestCase {
     $options = ['query' => [], 'language' => NULL, 'set_active_class' => FALSE, 'absolute' => FALSE];
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValueMap([
-        ['test_route_1', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-1')],
-      ]));
+      ->willReturnMap([
+        [
+          'test_route_1',
+          [],
+          $options,
+          TRUE,
+          (new GeneratedUrl())->setGeneratedUrl('/test-route-1'),
+        ],
+      ]);
 
     $url = new Url('test_route_1');
     $url->setUrlGenerator($this->urlGenerator);
@@ -584,10 +590,22 @@ class LinkGeneratorTest extends UnitTestCase {
     $options = ['query' => [], 'language' => NULL, 'set_active_class' => FALSE, 'absolute' => FALSE];
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValueMap([
-        ['test_route_1', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-1')],
-        ['test_route_2', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-2')],
-      ]));
+      ->willReturnMap([
+        [
+          'test_route_1',
+          [],
+          $options,
+          TRUE,
+          (new GeneratedUrl())->setGeneratedUrl('/test-route-1'),
+        ],
+        [
+          'test_route_2',
+          [],
+          $options,
+          TRUE,
+          (new GeneratedUrl())->setGeneratedUrl('/test-route-2'),
+        ],
+      ]);
 
     $url = new Url('test_route_2');
     $url->setUrlGenerator($this->urlGenerator);
@@ -610,7 +628,7 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateTwice() {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValue((new GeneratedUrl())->setGeneratedUrl('/')));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/'));
 
     $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo', 'bar']]]);
     $url->setUrlGenerator($this->urlGenerator);

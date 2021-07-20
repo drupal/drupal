@@ -140,7 +140,7 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
       ->with('theme')
-      ->will($this->returnValue(['theme_test']));
+      ->willReturn(['theme_test']);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);

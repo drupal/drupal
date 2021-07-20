@@ -26,28 +26,28 @@ class CommentManagerTest extends UnitTestCase {
     $entity_type = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $entity_type->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Node'));
+      ->willReturn('Node');
     $entity_type->expects($this->any())
       ->method('entityClassImplements')
       ->with(FieldableEntityInterface::class)
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $entity_field_manager = $this->createMock(EntityFieldManagerInterface::class);
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
 
     $entity_field_manager->expects($this->once())
       ->method('getFieldMapByFieldType')
-      ->will($this->returnValue([
+      ->willReturn([
         'node' => [
           'field_foobar' => [
             'type' => 'comment',
           ],
         ],
-      ]));
+      ]);
 
     $entity_type_manager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     $comment_manager = new CommentManager(
       $entity_type_manager,

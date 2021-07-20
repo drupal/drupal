@@ -52,7 +52,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
     $forum_manager->expects($this->any())
       ->method('checkNodeType')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $translation_manager = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
 
@@ -72,10 +72,10 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $route_match->expects($this->once())
       ->method('getRouteName')
-      ->will($this->returnValue($route_name));
+      ->willReturn($route_name);
     $route_match->expects($this->any())
       ->method('getParameter')
-      ->will($this->returnValueMap($parameter_map));
+      ->willReturnMap($parameter_map);
 
     $this->assertEquals($expected, $builder->applies($route_match));
   }
@@ -169,19 +169,19 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $vocab_storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $vocab_storage->expects($this->any())
       ->method('load')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['forums', $prophecy->reveal()],
-      ]));
+      ]);
 
     $entity_type_manager = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $entity_type_manager->expects($this->any())
       ->method('getStorage')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['taxonomy_vocabulary', $vocab_storage],
         ['taxonomy_term', $term_storage],
-      ]));
+      ]);
 
     $config_factory = $this->getConfigFactoryStub(
       [
@@ -211,7 +211,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $route_match->expects($this->exactly(2))
       ->method('getParameter')
       ->with('node')
-      ->will($this->returnValue($forum_node));
+      ->willReturn($forum_node);
 
     // First test.
     $expected1 = [

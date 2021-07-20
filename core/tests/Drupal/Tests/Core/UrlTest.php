@@ -99,12 +99,12 @@ class UrlTest extends UnitTestCase {
     $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValueMap($generate_from_route_map));
+      ->willReturnMap($generate_from_route_map);
 
     $this->pathAliasManager = $this->createMock('Drupal\path_alias\AliasManagerInterface');
     $this->pathAliasManager->expects($this->any())
       ->method('getPathByAlias')
-      ->will($this->returnValueMap($alias_map));
+      ->willReturnMap($alias_map);
 
     $this->router = $this->createMock('Drupal\Tests\Core\Routing\TestRouterInterface');
     $this->pathValidator = $this->createMock('Drupal\Core\Path\PathValidatorInterface');
@@ -265,7 +265,7 @@ class UrlTest extends UnitTestCase {
     $this->router->expects($this->once())
       ->method('matchRequest')
       ->with($request)
-      ->will($this->returnValue($attributes));
+      ->willReturn($attributes);
 
     $url = Url::createFromRequest($request);
     $expected = new Url('the_route_name', ['color' => 'chartreuse']);

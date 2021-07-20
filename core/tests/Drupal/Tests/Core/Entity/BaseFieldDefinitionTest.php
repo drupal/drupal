@@ -51,19 +51,19 @@ class BaseFieldDefinitionTest extends UnitTestCase {
 
     $field_type_manager->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue([$this->fieldType => $this->fieldTypeDefinition]));
+      ->willReturn([$this->fieldType => $this->fieldTypeDefinition]);
     $field_type_manager->expects($this->any())
       ->method('getDefinition')
       ->with($this->fieldType)
-      ->will($this->returnValue($this->fieldTypeDefinition));
+      ->willReturn($this->fieldTypeDefinition);
     $field_type_manager->expects($this->any())
       ->method('getDefaultStorageSettings')
       ->with($this->fieldType)
-      ->will($this->returnValue($this->fieldTypeDefinition['storage_settings']));
+      ->willReturn($this->fieldTypeDefinition['storage_settings']);
     $field_type_manager->expects($this->any())
       ->method('getDefaultFieldSettings')
       ->with($this->fieldType)
-      ->will($this->returnValue($this->fieldTypeDefinition['field_settings']));
+      ->willReturn($this->fieldTypeDefinition['field_settings']);
 
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
@@ -176,7 +176,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
       ->getMock();
     $data_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Core\Field\FieldItemBase'));
+      ->willReturn('Drupal\Core\Field\FieldItemBase');
     $definition->setItemDefinition($data_definition);
 
     // Set default value only with a literal.
@@ -223,7 +223,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
       ->getMock();
     $data_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Core\Field\FieldItemBase'));
+      ->willReturn('Drupal\Core\Field\FieldItemBase');
     $definition->setItemDefinition($data_definition);
 
     // Set default value only with a literal.

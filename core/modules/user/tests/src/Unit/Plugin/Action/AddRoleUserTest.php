@@ -20,7 +20,7 @@ class AddRoleUserTest extends RoleUserTestBase {
     $this->account->expects($this->any())
       ->method('hasRole')
       ->with($this->equalTo('test_role_1'))
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $config = ['rid' => 'test_role_1'];
     $add_role_plugin = new AddRoleUser($config, 'user_add_role_action', ['type' => 'user'], $this->userRoleEntityType);
@@ -38,7 +38,7 @@ class AddRoleUserTest extends RoleUserTestBase {
     $this->account->expects($this->any())
       ->method('hasRole')
       ->with($this->equalTo('test_role_1'))
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $config = ['rid' => 'test_role_1'];
     $add_role_plugin = new AddRoleUser($config, 'user_add_role_action', ['type' => 'user'], $this->userRoleEntityType);

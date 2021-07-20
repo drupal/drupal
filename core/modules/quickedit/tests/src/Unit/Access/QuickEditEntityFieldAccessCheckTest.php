@@ -82,11 +82,11 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
     $entity_with_field->expects($this->any())
       ->method('get')
       ->with($field_name)
-      ->will($this->returnValue($field_storage));
+      ->willReturn($field_storage);
     $entity_with_field->expects($this->once())
       ->method('hasTranslation')
       ->with(LanguageInterface::LANGCODE_NOT_SPECIFIED)
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $access = $this->editAccessCheck->access($entity_with_field, $field_name, LanguageInterface::LANGCODE_NOT_SPECIFIED, $account);
@@ -132,16 +132,16 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
 
     $entity->expects($this->any())
       ->method('hasTranslation')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         [LanguageInterface::LANGCODE_NOT_SPECIFIED, TRUE],
         ['xx-lolspeak', FALSE],
-      ]));
+      ]);
     $entity->expects($this->any())
       ->method('hasField')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['valid', TRUE],
         ['not_valid', FALSE],
-      ]));
+      ]);
 
     return $entity;
   }

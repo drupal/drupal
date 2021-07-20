@@ -99,7 +99,7 @@ class RouteBuilderTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('router_rebuild')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->lock->expects($this->once())
       ->method('release')
@@ -107,7 +107,7 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->yamlDiscovery->expects($this->any())
       ->method('findAll')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }
@@ -119,7 +119,7 @@ class RouteBuilderTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('router_rebuild')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $this->lock->expects($this->once())
       ->method('wait')
@@ -143,14 +143,14 @@ class RouteBuilderTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('router_rebuild')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $routing_fixtures = new RoutingFixtures();
     $routes = $routing_fixtures->staticSampleRouteCollection();
 
     $this->yamlDiscovery->expects($this->once())
       ->method('findAll')
-      ->will($this->returnValue(['test_module' => $routes]));
+      ->willReturn(['test_module' => $routes]);
 
     $route_collection = $routing_fixtures->sampleRouteCollection();
     foreach ($route_collection->all() as $route) {
@@ -191,35 +191,36 @@ class RouteBuilderTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('router_rebuild')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->yamlDiscovery->expects($this->once())
       ->method('findAll')
-      ->will($this->returnValue([
+      ->willReturn([
         'test_module' => [
           'route_callbacks' => [
             '\Drupal\Tests\Core\Routing\TestRouteSubscriber::routesFromArray',
             'test_module.route_service:routesFromCollection',
           ],
         ],
-      ]));
+      ]);
 
     $container = new ContainerBuilder();
     $container->set('test_module.route_service', new TestRouteSubscriber());
     $this->controllerResolver->expects($this->any())
       ->method('getControllerFromDefinition')
-      ->will($this->returnCallback(function ($controller) use ($container) {
+      ->willReturnCallback(function ($controller) use ($container) {
         $count = substr_count($controller, ':');
         if ($count == 1) {
-          list($service, $method) = explode(':', $controller, 2);
+          [$service, $method] = explode(':', $controller, 2);
           $object = $container->get($service);
         }
         else {
-          list($class, $method) = explode('::', $controller, 2);
+          [$class, $method] = explode('::', $controller, 2);
           $object = new $class();
         }
+
         return [$object, $method];
-      }));
+      });
 
     $route_collection_filled = new RouteCollection();
     $route_collection_filled->add('test_route.1', new Route('/test-route/1'));
@@ -257,7 +258,7 @@ class RouteBuilderTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('router_rebuild')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->lock->expects($this->once())
       ->method('release')
@@ -265,7 +266,7 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->yamlDiscovery->expects($this->any())
       ->method('findAll')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->routeBuilder->setRebuildNeeded();
 
@@ -285,10 +286,10 @@ class RouteBuilderTest extends UnitTestCase {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('router_rebuild')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->yamlDiscovery->expects($this->once())
       ->method('findAll')
-      ->will($this->returnValue([
+      ->willReturn([
         'test_module' => [
           'test_route.override' => [
             'path' => '/test_route_override',
@@ -300,7 +301,7 @@ class RouteBuilderTest extends UnitTestCase {
             'path' => '/test_route',
           ],
         ],
-      ]));
+      ]);
 
     $container = new ContainerBuilder();
     $container->set('test_module.route_service', new TestRouteSubscriber());

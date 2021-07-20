@@ -163,7 +163,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->elementInfo->expects($this->any())
       ->method('getInfo')
-      ->will($this->returnCallback([$this, 'getInfo']));
+      ->willReturnCallback([$this, 'getInfo']);
 
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
@@ -219,12 +219,12 @@ abstract class FormTestBase extends UnitTestCase {
     $form = $this->createMock('Drupal\Core\Form\FormInterface');
     $form->expects($this->once())
       ->method('getFormId')
-      ->will($this->returnValue($form_id));
+      ->willReturn($form_id);
 
     if ($expected_form) {
       $form->expects($this->exactly($count))
         ->method('buildForm')
-        ->will($this->returnValue($expected_form));
+        ->willReturn($expected_form);
     }
     return $form;
   }

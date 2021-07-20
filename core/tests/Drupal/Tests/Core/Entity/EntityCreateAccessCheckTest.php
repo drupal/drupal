@@ -87,11 +87,11 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       $access_control_handler->expects($this->once())
         ->method('createAccess')
         ->with($entity_bundle)
-        ->will($this->returnValue($access_result));
+        ->willReturn($access_result);
 
       $this->entityTypeManager->expects($this->any())
         ->method('getAccessControlHandler')
-        ->will($this->returnValue($access_control_handler));
+        ->willReturn($access_control_handler);
     }
 
     $applies_check = new EntityCreateAccessCheck($this->entityTypeManager);
@@ -102,7 +102,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $route->expects($this->any())
       ->method('getRequirement')
       ->with('_entity_create_access')
-      ->will($this->returnValue($requirement));
+      ->willReturn($requirement);
 
     $raw_variables = new ParameterBag();
     if ($entity_bundle) {
@@ -112,7 +112,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $route_match->expects($this->any())
       ->method('getRawParameters')
-      ->will($this->returnValue($raw_variables));
+      ->willReturn($raw_variables);
 
     $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->assertEquals($expected_access_result, $applies_check->access($route, $route_match, $account));

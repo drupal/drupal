@@ -140,7 +140,7 @@ class DrupalTest extends UnitTestCase {
     $keyvalue->expects($this->once())
       ->method('get')
       ->with('test_collection')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->setMockContainerService('keyvalue.expirable', $keyvalue);
 
     $this->assertNotNull(\Drupal::keyValueExpirable('test_collection'));
@@ -166,7 +166,7 @@ class DrupalTest extends UnitTestCase {
     $config->expects($this->once())
       ->method('get')
       ->with('test_config')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->setMockContainerService('config.factory', $config);
 
     // Test \Drupal::config(), not $this->config().
@@ -185,7 +185,7 @@ class DrupalTest extends UnitTestCase {
     $queue->expects($this->once())
       ->method('get')
       ->with('test_queue', TRUE)
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->setMockContainerService('queue', $queue);
 
     $this->assertNotNull(\Drupal::queue('test_queue', TRUE));
@@ -215,7 +215,7 @@ class DrupalTest extends UnitTestCase {
     $keyvalue->expects($this->once())
       ->method('get')
       ->with('test_collection')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->setMockContainerService('keyvalue', $keyvalue);
 
     $this->assertNotNull(\Drupal::keyValue('test_collection'));
@@ -447,10 +447,10 @@ class DrupalTest extends UnitTestCase {
       ->with($service_name);
 
     if (isset($return)) {
-      $expects->will($this->returnValue($return));
+      $expects->willReturn($return);
     }
     else {
-      $expects->will($this->returnValue(TRUE));
+      $expects->willReturn(TRUE);
     }
 
     \Drupal::setContainer($this->container);

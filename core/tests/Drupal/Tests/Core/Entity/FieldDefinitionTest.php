@@ -205,7 +205,7 @@ class FieldDefinitionTest extends UnitTestCase {
       ->getMock();
     $data_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Core\Field\FieldItemBase'));
+      ->willReturn('Drupal\Core\Field\FieldItemBase');
     $definition->setItemDefinition($data_definition);
 
     // Set default value only with a literal.

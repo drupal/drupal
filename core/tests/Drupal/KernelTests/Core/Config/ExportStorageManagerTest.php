@@ -82,7 +82,7 @@ class ExportStorageManagerTest extends KernelTestBase {
     $lock->expects($this->exactly(2))
       ->method('acquire')
       ->with(ExportStorageManager::LOCK_NAME)
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $lock->expects($this->once())
       ->method('wait')
       ->with(ExportStorageManager::LOCK_NAME);
