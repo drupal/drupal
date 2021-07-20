@@ -264,6 +264,7 @@ JSON:API
 - Björn Brala 'bbrala' https://www.drupal.org/u/bbrala
 - Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Björn Brala 'bbrala' https://www.drupal.org/u/bbrala
 
 Language
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
