@@ -83,7 +83,7 @@ class UserSession implements AccountInterface {
    * {@inheritdoc}
    */
   public function id() {
-    return $this->uid;
+    return (int) $this->uid;
   }
 
   /**
@@ -104,7 +104,7 @@ class UserSession implements AccountInterface {
    */
   public function hasPermission($permission) {
     // User #1 has all privileges.
-    if ((int) $this->id() === 1) {
+    if ($this->id() === 1) {
       return TRUE;
     }
 

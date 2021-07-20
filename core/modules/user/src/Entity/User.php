@@ -76,6 +76,16 @@ class User extends ContentEntityBase implements UserInterface {
   protected static $anonymousUser;
 
   /**
+   * Returns the user ID.
+   *
+   * @return int
+   *   The user ID.
+   */
+  public function id() {
+    return (int) parent::id();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isNew() {
@@ -209,7 +219,7 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function hasPermission($permission) {
     // User #1 has all privileges.
-    if ((int) $this->id() === 1) {
+    if ($this->id() === 1) {
       return TRUE;
     }
 
