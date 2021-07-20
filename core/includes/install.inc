@@ -280,101 +280,107 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
     // are in the passed-in array.
     $buffer = '';
     $state = 'default';
-    foreach (token_get_all($contents) as $token) {
-      if (is_array($token)) {
-        list($type, $value) = $token;
-      }
-      else {
-        $type = -1;
-        $value = $token;
-      }
-      // Do not operate on whitespace.
-      if (!in_array($type, [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
-        switch ($state) {
-          case 'default':
-            if ($type === T_VARIABLE && isset($variable_names[$value])) {
-              // This will be necessary to unset the dumped variable.
-              $parent = &$settings;
-              // This is the current index in parent.
-              $index = $variable_names[$value];
-              // This will be necessary for descending into the array.
-              $current = &$parent[$index];
-              $state = 'candidate_left';
-            }
-            break;
-
-          case 'candidate_left':
-            if ($value == '[') {
-              $state = 'array_index';
-            }
-            if ($value == '=') {
-              $state = 'candidate_right';
-            }
-            break;
-
-          case 'array_index':
-            if (_drupal_rewrite_settings_is_array_index($type, $value)) {
-              $index = trim($value, '\'"');
-              $state = 'right_bracket';
-            }
-            else {
-              // $a[foo()] or $a[$bar] or something like that.
-              throw new Exception('invalid array index');
-            }
-            break;
-
-          case 'right_bracket':
-            if ($value == ']') {
-              if (isset($current[$index])) {
-                // If the new settings has this index, descend into it.
-                $parent = &$current;
+    if (!function_exists('token_get_all')) {
+      $message = t('Drupal requires the <a href="@url">Tokenizer</a> PHP extension to be enabled.', ['@url' => 'http://php.net/tokenizer']);
+      \Drupal::messenger()->addError($message);
+    }
+    else {
+      foreach (token_get_all($contents) as $token) {
+        if (is_array($token)) {
+          list($type, $value) = $token;
+        }
+        else {
+          $type = -1;
+          $value = $token;
+        }
+        // Do not operate on whitespace.
+        if (!in_array($type, [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
+          switch ($state) {
+            case 'default':
+              if ($type === T_VARIABLE && isset($variable_names[$value])) {
+                // This will be necessary to unset the dumped variable.
+                $parent = &$settings;
+                // This is the current index in parent.
+                $index = $variable_names[$value];
+                // This will be necessary for descending into the array.
                 $current = &$parent[$index];
                 $state = 'candidate_left';
               }
+              break;
+
+            case 'candidate_left':
+              if ($value == '[') {
+                $state = 'array_index';
+              }
+              if ($value == '=') {
+                $state = 'candidate_right';
+              }
+              break;
+
+            case 'array_index':
+              if (_drupal_rewrite_settings_is_array_index($type, $value)) {
+                $index = trim($value, '\'"');
+                $state = 'right_bracket';
+              }
               else {
-                // Otherwise, jump back to the default state.
+                // $a[foo()] or $a[$bar] or something like that.
+                throw new Exception('invalid array index');
+              }
+              break;
+
+            case 'right_bracket':
+              if ($value == ']') {
+                if (isset($current[$index])) {
+                  // If the new settings has this index, descend into it.
+                  $parent = &$current;
+                  $current = &$parent[$index];
+                  $state = 'candidate_left';
+                }
+                else {
+                  // Otherwise, jump back to the default state.
+                  $state = 'wait_for_semicolon';
+                }
+              }
+              else {
+                // $a[1 + 2].
+                throw new Exception('] expected');
+              }
+              break;
+
+            case 'candidate_right':
+              if (_drupal_rewrite_settings_is_simple($type, $value)) {
+                $value = _drupal_rewrite_settings_dump_one($current);
+                // Unsetting $current would not affect $settings at all.
+                unset($parent[$index]);
+                // Skip the semicolon because _drupal_rewrite_settings_dump_one() added one.
+                $state = 'semicolon_skip';
+              }
+              else {
                 $state = 'wait_for_semicolon';
               }
-            }
-            else {
-              // $a[1 + 2].
-              throw new Exception('] expected');
-            }
-            break;
+              break;
 
-          case 'candidate_right':
-            if (_drupal_rewrite_settings_is_simple($type, $value)) {
-              $value = _drupal_rewrite_settings_dump_one($current);
-              // Unsetting $current would not affect $settings at all.
-              unset($parent[$index]);
-              // Skip the semicolon because _drupal_rewrite_settings_dump_one() added one.
-              $state = 'semicolon_skip';
-            }
-            else {
-              $state = 'wait_for_semicolon';
-            }
-            break;
+            case 'wait_for_semicolon':
+              if ($value == ';') {
+                $state = 'default';
+              }
+              break;
 
-          case 'wait_for_semicolon':
-            if ($value == ';') {
-              $state = 'default';
-            }
-            break;
-
-          case 'semicolon_skip':
-            if ($value == ';') {
-              $value = '';
-              $state = 'default';
-            }
-            else {
-              // If the expression was $a = 1 + 2; then we replaced 1 and
-              // the + is unexpected.
-              throw new Exception('Unexpected token after replacing value.');
-            }
-            break;
+            case 'semicolon_skip':
+              if ($value == ';') {
+                $value = '';
+                $state = 'default';
+              }
+              else {
+                // If the expression was $a = 1 + 2; then we replaced 1 and
+                // the + is unexpected.
+                throw new Exception('Unexpected token after replacing value.');
+              }
+              break;
+          }
         }
+        $buffer .= $value;
       }
-      $buffer .= $value;
     }
     foreach ($settings as $name => $setting) {
       $buffer .= _drupal_rewrite_settings_dump($setting, '$' . $name);
@@ -1028,10 +1034,10 @@ function drupal_requirements_severity(&$requirements) {
  */
 function drupal_check_module($module) {
   module_load_install($module);
-  // Check requirements
+  // Check requirements.
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
   if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
-    // Print any error messages
+    // Print any error messages.
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
         $message = $requirement['description'];
