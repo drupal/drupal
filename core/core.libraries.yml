@@ -259,6 +259,8 @@ drupal.dialog.ajax:
     - core/drupal.ajax
     - core/drupal.dialog
     - core/tabbable
+    - core/jquery.once
+    - core/jquery.ui.dialog
 
 drupal.displace:
   version: VERSION

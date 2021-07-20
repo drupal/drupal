@@ -82,6 +82,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   protected $defaultTheme = 'classy';
 
   /**
+   * The Editor config entity used for testing.
+   *
+   * @var \Drupal\editor\Entity\Editor
+   */
+  protected $editor;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -96,7 +103,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         'media_embed' => ['status' => TRUE],
       ],
     ])->save();
-    Editor::create([
+    $this->editor = Editor::create([
       'editor' => 'ckeditor',
       'format' => 'test_format',
       'settings' => [
@@ -118,7 +125,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
           ],
         ],
       ],
-    ])->save();
+    ]);
+    $this->editor->save();
 
     // Note that media_install() grants 'view media' to all users by default.
     $this->adminUser = $this->drupalCreateUser([
@@ -1325,6 +1333,34 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->getSession()->switchToIFrame('ckeditor');
     // Wait for preview to load with default view mode.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1'));
+  }
+
+  /**
+   * Tests CKEditor table in a dialog.
+   */
+  public function testCkeditorTableInDialog() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Add the table button.
+    $settings = $this->editor->getSettings();
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Table';
+    $this->editor->setSettings($settings);
+    $this->editor->save();
+
+    $this->drupalGet('/ckeditor_test/dialog');
+
+    // Open the dialog modal.
+    $page->clickLink('Add Node');
+    $assert_session->waitForElementVisible('css', '.ui-dialog');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Click the table button.
+    $assert_session->elementExists('css', '.cke_button__table');
+    $this->click('.cke_button__table');
+
+    // Fill the rows field.
+    $page->fillField('Rows', 4);
   }
 
   /**
