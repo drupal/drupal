@@ -59,18 +59,17 @@ class ContactPageAccess implements AccessInterface {
     if ($contact_account->isAnonymous()) {
       return AccessResult::forbidden();
     }
+    // User administrators should always have access to personal contact forms.
+    $permission_access = AccessResult::allowedIfHasPermission($account, 'administer users');
+    if ($permission_access->isAllowed()) {
+      return $permission_access;
+    }
 
     // Users may not contact themselves by default, hence this requires user
     // granularity for caching.
     $access = AccessResult::neutral()->cachePerUser();
     if ($account->id() == $contact_account->id()) {
       return $access;
-    }
-
-    // User administrators should always have access to personal contact forms.
-    $permission_access = AccessResult::allowedIfHasPermission($account, 'administer users');
-    if ($permission_access->isAllowed()) {
-      return $access->orIf($permission_access);
     }
 
     // If requested user has been blocked, do not allow users to contact them.

@@ -144,11 +144,11 @@ class ContactPersonalTest extends BrowserTestBase {
     // Check the page title is properly displayed.
     $this->assertRaw(t('Contact @username', ['@username' => $this->adminUser->getDisplayName()]));
 
-    // Test denied access to admin user's own contact form.
+    // Test allowed access to admin user's own contact form.
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test allowed access to user with contact form enabled.
     $this->drupalLogin($this->webUser);
