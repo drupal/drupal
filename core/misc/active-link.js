@@ -11,11 +11,32 @@
       var path = drupalSettings.path;
       var queryString = JSON.stringify(path.currentQuery);
       var querySelector = path.currentQuery ? "[data-drupal-link-query='".concat(queryString, "']") : ':not([data-drupal-link-query])';
-      var originalSelectors = ["[data-drupal-link-system-path=\"".concat(path.currentPath, "\"]")];
+      var originalSelectors = [];
+      var currentPathSelector = "[data-drupal-link-system-path=\"".concat(path.currentPath, "\"]");
+      var queryMatchSelector = "[data-drupal-link-query='".concat(queryString, "']");
+      var queryEmptySelector = "[data-drupal-link-query='']";
+      var noQuerySelector = ':not([data-drupal-link-query])';
+
+      if (path.currentQuery) {
+        originalSelectors.push("".concat(currentPathSelector).concat(queryMatchSelector));
+        originalSelectors.push("".concat(currentPathSelector).concat(queryEmptySelector));
+        originalSelectors.push("".concat(currentPathSelector).concat(noQuerySelector));
+      } else {
+        originalSelectors.push("".concat(currentPathSelector).concat(queryEmptySelector));
+        originalSelectors.push("".concat(currentPathSelector).concat(noQuerySelector));
+      }
+
       var selectors;
 
       if (path.isFront) {
-        originalSelectors.push('[data-drupal-link-system-path="<front>"]');
+        if (path.currentQuery) {
+          originalSelectors.push("[data-drupal-link-system-path=\"<front>\"]".concat(queryMatchSelector));
+          originalSelectors.push("[data-drupal-link-system-path=\"<front>\"]".concat(queryEmptySelector));
+          originalSelectors.push("[data-drupal-link-system-path=\"<front>\"]".concat(noQuerySelector));
+        } else {
+          originalSelectors.push("[data-drupal-link-system-path=\"<front>\"]".concat(queryEmptySelector));
+          originalSelectors.push("[data-drupal-link-system-path=\"<front>\"]".concat(noQuerySelector));
+        }
       }
 
       selectors = [].concat(originalSelectors.map(function (selector) {
@@ -23,9 +44,9 @@
       }), originalSelectors.map(function (selector) {
         return "".concat(selector, "[hreflang=\"").concat(path.currentLanguage, "\"]");
       }));
-      selectors = selectors.map(function (current) {
+      selectors = selectors.concat(selectors.map(function (current) {
         return current + querySelector;
-      });
+      }));
       var activeLinks = context.querySelectorAll(selectors.join(','));
       var il = activeLinks.length;
 
