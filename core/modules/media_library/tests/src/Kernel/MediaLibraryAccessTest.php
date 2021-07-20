@@ -375,16 +375,27 @@ class MediaLibraryAccessTest extends KernelTestBase {
    */
   public function testAddFormAccess(): void {
     // Access is denied if the media library is trying to create media whose
-    // type name is 'deny_access'.
+    // type name is 'deny_access'. Also created a second media type that we
+    // *can* add, so we can be certain that the add form is otherwise visible.
     // @see media_library_test_media_create_access()
-    $this->createMediaType('image', ['id' => 'deny_access']);
+    $media_types = [
+      $this->createMediaType('image', ['id' => 'deny_access'])->id(),
+      $this->createMediaType('image')->id(),
+    ];
 
     $account = $this->createUser(['create media']);
     $this->setCurrentUser($account);
 
-    $state = MediaLibraryState::create('test', ['deny_access'], 'deny_access', 1);
-    $build = $this->container->get('media_library.ui_builder')->buildUi($state);
+    /** @var \Drupal\media_library\MediaLibraryUiBuilder $ui_builder */
+    $ui_builder = $this->container->get('media_library.ui_builder');
+
+    $state = MediaLibraryState::create('test', $media_types, $media_types[0], 1);
+    $build = $ui_builder->buildUi($state);
     $this->assertEmpty($build['content']['form']);
+
+    $state = MediaLibraryState::create('test', $media_types, $media_types[1], 1);
+    $build = $ui_builder->buildUi($state);
+    $this->assertNotEmpty($build['content']['form']);
   }
 
   /**
