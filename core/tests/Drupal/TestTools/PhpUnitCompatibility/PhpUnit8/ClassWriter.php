@@ -109,8 +109,8 @@ final class ClassWriter {
     // Only write when necessary.
     if (!file_exists($full_path) || md5_file($full_path) !== md5($altered_code)) {
       // Create directory when necessary.
-      if (!file_exists($directory)) {
-        mkdir($directory, 0777, TRUE);
+      if (!is_dir($directory) && !@mkdir($directory, 0777, TRUE) && !is_dir($directory)) {
+        throw new \RuntimeException('Unable to create directory: ' . $directory);
       }
       file_put_contents($full_path, $altered_code);
     }
