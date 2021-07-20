@@ -4,15 +4,13 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\node\Entity\NodeType;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests comment administration and preview access.
  *
  * @group comment
  */
-class CommentAccessTest extends BrowserTestBase {
+class CommentAccessTest extends CommentTestBase {
 
   use CommentTestTrait;
 
@@ -42,11 +40,6 @@ class CommentAccessTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $node_type = NodeType::create([
-      'type' => 'article',
-      'name' => 'Article',
-    ]);
-    $node_type->save();
     $node_author = $this->drupalCreateUser([
       'create article content',
       'access comments',
@@ -58,6 +51,7 @@ class CommentAccessTest extends BrowserTestBase {
       'post comments',
       'access comments',
       'access content',
+      'administer comments',
     ]));
 
     $this->addDefaultCommentField('node', 'article');
@@ -120,6 +114,56 @@ class CommentAccessTest extends BrowserTestBase {
     $this->unpublishedNode->setPublished()->save();
     $this->drupalGet($comment_url);
     $assert->statusCodeEquals(200);
+  }
+
+  /**
+   * Tests to ensure that reply form is accessible on unpublished comment
+   * for comment administrators.
+   */
+  public function testUnpublishedCommentReplyForCommentAdministrators() {
+    $assert = $this->assertSession();
+
+    // Publish the node.
+    $this->unpublishedNode->setPublished()->save();
+    $node_id = $this->unpublishedNode->id();
+
+    // Create a comment on an published node.
+    $comment = Comment::create([
+      'entity_type' => 'node',
+      'name' => 'Tony',
+      'hostname' => 'magic.example.com',
+      'mail' => 'foo@example.com',
+      'subject' => 'Unpublished comment on published node',
+      'entity_id' => $node_id,
+      'comment_type' => 'comment',
+      'field_name' => 'comment',
+      'pid' => 0,
+      'uid' => $this->unpublishedNode->getOwnerId(),
+      'status' => 0,
+    ]);
+    $comment->save();
+
+    $comment_url = 'comment/reply/node/' . $node_id . '/comment/' . $comment->id();
+
+    // Replying to an unpublished node as a user who has "administer comment"
+    // permissions.
+    $this->drupalGet($comment_url);
+    $assert->statusCodeEquals(200);
+
+    // Submit the comment and ensure that comment reply remains unpublished.
+    $edit = [
+      'subject[0][value]' => 'Comment reply subject',
+      'comment_body[0][value]' => 'Comment body',
+    ];
+    $this->submitForm($edit, 'Save');
+    $reply_cid = $this->getUnapprovedComment('Comment reply subject');
+    $reply = Comment::load($reply_cid);
+    $this->assertEquals(0, $reply->isPublished());
+
+    // Logout and visit as an anonymous user.
+    $this->drupalLogout();
+    $this->drupalGet($comment_url);
+    $assert->statusCodeEquals(403);
   }
 
 }
