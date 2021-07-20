@@ -201,7 +201,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $permutations = $this->generatePermutations($combinations);
     foreach ($permutations as $combination) {
       $case = [
-        $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']),
+        $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count'], $combination['has_access_comments'], $combination['has_post_comments']),
         ['view_mode' => $combination['view_mode']],
         $combination['has_access_comments'],
         $combination['history_exists'],
@@ -268,7 +268,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @return \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject
    *   Mock node for testing.
    */
-  protected function getMockNode($has_field, $comment_status, $form_location, $comment_count) {
+  protected function getMockNode($has_field, $comment_status, $form_location, $comment_count, $has_access_comments = FALSE, $has_post_comments = FALSE) {
     $node = $this->createMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('hasField')
@@ -277,11 +277,33 @@ class CommentLinkBuilderTest extends UnitTestCase {
     if (empty($this->timestamp)) {
       $this->timestamp = time();
     }
-    $field_item = (object) [
-      'status' => $comment_status,
-      'comment_count' => $comment_count,
-      'last_comment_timestamp' => $this->timestamp,
-    ];
+    $field_item = $this->getMockBuilder('\Drupal\Core\Field\FieldItemListInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $field_item->expects($this->any())
+      ->method('__get')
+      ->will($this->returnValueMap([
+        ['status', $comment_status],
+        ['comment_count', $comment_count],
+        ['last_comment_timestamp', $this->timestamp],
+      ]));
+    $field_item->expects($this->any())
+      ->method('access')
+      ->will($this->returnCallback(function ($operation, $account) use ($has_access_comments, $has_post_comments) {
+        switch ($operation) {
+          case 'view only':
+            return $account->hasPermission('access comments');
+
+          case 'view':
+            return $account->hasPermission('access comments') || $account->hasPermission('post comments');
+
+          case 'create':
+            return $account->hasPermission('post comments');
+
+          default:
+            return FALSE;
+        }
+      }));
     $node->expects($this->any())
       ->method('get')
       ->with('comment')

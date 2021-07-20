@@ -232,7 +232,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
       'langcode' => LanguageInterface::LANGCODE_DEFAULT,
     ];
 
-    $cid = $entity_bundle ? 'create:' . $entity_bundle : 'create';
+    $cid = $this->buildCreateAccessCid($entity_bundle, $context);
     if (($access = $this->getCache($cid, 'create', $context['langcode'], $account)) !== NULL) {
       // Cache hit, no work necessary.
       return $return_as_object ? $access : $access->isAllowed();
@@ -380,6 +380,21 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    */
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
     return AccessResult::allowed();
+  }
+
+  /**
+   * Builds the create access result cache ID.
+   *
+   * @param string|null $entity_bundle
+   *   The entity bundle, if any.
+   * @param array $context
+   *   The create access context.
+   *
+   * @return string
+   *   The create access result cache ID.
+   */
+  protected function buildCreateAccessCid(?string $entity_bundle, array $context): string {
+    return $entity_bundle ? 'create:' . $entity_bundle : 'create';
   }
 
 }

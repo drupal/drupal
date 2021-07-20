@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerTrait;
@@ -519,6 +520,25 @@ class Comment extends ContentEntityBase implements CommentInterface {
       $user->homepage = $this->getHomepage();
     }
     return $user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    if ($operation === 'create') {
+      // The commented entity and, when replying, the parent comment entity are
+      // valuable information when comment entity 'create access' handler makes
+      // the decision.
+      $context = ['commented_entity' => $this->getCommentedEntity()];
+      if ($this->hasParentComment()) {
+        $context += ['parent_comment' => $this->getParentComment()];
+      }
+      return $this->entityTypeManager()
+        ->getAccessControlHandler($this->entityTypeId)
+        ->createAccess($this->bundle(), $account, $context, $return_as_object);
+    }
+    return parent::access($operation, $account, $return_as_object);
   }
 
   /**

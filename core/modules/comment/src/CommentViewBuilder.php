@@ -84,7 +84,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     $build['#comment_threaded'] =
       is_null($commented_entity)
       || $commented_entity->getFieldDefinition($entity->getFieldName())
-        ->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED;
+        ->getSetting('default_mode') !== CommentManagerInterface::COMMENT_MODE_FLAT;
     // If threading is enabled, don't render cache individual comments, but do
     // keep the cacheability metadata, so it can bubble up.
     if ($build['#comment_threaded']) {
@@ -116,6 +116,22 @@ class CommentViewBuilder extends EntityViewBuilder {
     }
     $this->entityTypeManager->getStorage('user')->loadMultiple(array_unique($uids));
 
+    // Commented entities already loaded after self::getBuildDefaults().
+    $commented_entity = $entity->getCommentedEntity();
+
+    // Compute the comment maximum indent if any.
+    $max_indent = NULL;
+    // The maximum indent can only be determined for non-orphan comments.
+    if ($commented_entity) {
+      $field_settings = $commented_entity
+        ->getFieldDefinition($entity->getFieldName())
+        ->getSettings();
+      if ($field_settings['default_mode'] === CommentManagerInterface::COMMENT_MODE_THREADED_DEPTH_LIMIT) {
+        assert($field_settings['thread_limit']['depth'] >= 2, 'Thread depth limit should be greater than or equal to 2.');
+        $max_indent = $field_settings['thread_limit']['depth'] - 1;
+      }
+    }
+
     parent::buildComponents($build, $entities, $displays, $view_mode);
 
     // A counter to track the indentation level.
@@ -125,7 +141,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     foreach ($entities as $id => $entity) {
       if ($build[$id]['#comment_threaded']) {
         $comment_indent = count(explode('.', $entity->getThread())) - 1;
-        if ($comment_indent > $current_indent) {
+        if ($comment_indent > $current_indent && (!$max_indent || $comment_indent <= $max_indent)) {
           // Set 1 to indent this comment from the previous one (its parent).
           // Set only one extra level of indenting even if the difference in
           // depth is higher.
@@ -137,11 +153,15 @@ class CommentViewBuilder extends EntityViewBuilder {
           // or negative value to point an amount indents to close.
           $build[$id]['#comment_indent'] = $comment_indent - $current_indent;
           $current_indent = $comment_indent;
+          // Adjust indentation relative to the defined thread depth.
+          if ($max_indent && ($comment_indent > $max_indent)) {
+            $indent_adjustment = $comment_indent - $max_indent;
+            $build[$id]['#comment_indent'] -= $indent_adjustment;
+            $current_indent -= $indent_adjustment;
+          }
         }
       }
 
-      // Commented entities already loaded after self::getBuildDefaults().
-      $commented_entity = $entity->getCommentedEntity();
       // Set defaults if the commented_entity does not exist.
       $bundle = $commented_entity ? $commented_entity->bundle() : '';
       $is_node = $commented_entity ? $commented_entity->getEntityTypeId() === 'node' : NULL;

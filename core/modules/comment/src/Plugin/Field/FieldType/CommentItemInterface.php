@@ -32,4 +32,14 @@ interface CommentItemInterface {
    */
   const FORM_BELOW = 1;
 
+  /**
+   * Replying to the deepest comment creates a new comment on the same level.
+   */
+  const THREAD_DEPTH_REPLY_MODE_ALLOW = 0;
+
+  /**
+   * Replying to the deepest comment is not allowed.
+   */
+  const THREAD_DEPTH_REPLY_MODE_DENY = 1;
+
 }

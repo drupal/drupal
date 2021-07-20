@@ -43,24 +43,88 @@ class CommentFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $account = $account ?: \Drupal::currentUser();
     if ($operation === 'edit') {
       // Only users with administer comments permission can edit the comment
       // status field.
-      $result = AccessResult::allowedIfHasPermission($account ?: \Drupal::currentUser(), 'administer comments');
+      $result = AccessResult::allowedIfHasPermission($account, 'administer comments');
       return $return_as_object ? $result : $result->isAllowed();
     }
     if ($operation === 'view') {
-      // Only users with "post comments" or "access comments" permission can
-      // view the field value. The formatter,
-      // Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter,
-      // takes care of showing the thread and form based on individual
-      // permissions, so if a user only has ‘post comments’ access, only the
-      // form will be shown and not the comments.
-      $result = AccessResult::allowedIfHasPermission($account ?: \Drupal::currentUser(), 'access comments')
-        ->orIf(AccessResult::allowedIfHasPermission($account ?: \Drupal::currentUser(), 'post comments'));
+      // This operation is only used by EntityViewDisplay::buildMultiple(). In
+      // this case check both: 'view' or 'create' access, since this field is
+      // considered a composition of listed comments and comment form. The
+      // decision to show only comments, only comment form or both will be made
+      // by CommentDefaultFormatter::viewElements() later. Uses recursive calls
+      // on same method invoking lower operations.
+      $result = $this->access('view only', $account, TRUE);
+      if (!$result->isAllowed()) {
+        $result = $result->orIf($this->access('create', $account, TRUE));
+      }
+
+      return $return_as_object ? $result : $result->isAllowed();
+    }
+    if ($operation === 'view only') {
+      // In contrast to 'view', this operation is used as the lowest operation
+      // by various methods to check only a single permission on last comment.
+      return $this->lastPublishedCommentAccess($account, $return_as_object);
+    }
+
+    // Replying to an existing comment is also comment creation. Normalize the
+    // operation name after extracting the parent comment ID.
+    $parent_comment_id = NULL;
+    if (strpos($operation, 'reply to ') === 0) {
+      $parent_comment_id = (int) substr($operation, 9);
+      $operation = 'create';
+    }
+    if ($operation === 'create') {
+      $entity_type_manager = \Drupal::entityTypeManager();
+
+      // In contrast to 'view', this operation is used as the lowest operation
+      // by various methods to check only the single 'create' permission on the
+      // comment entity.
+      $bundle = $this->getSetting('comment_type');
+      $access_control_handler = $entity_type_manager->getAccessControlHandler('comment');
+
+      // The commented entity and, when replying, the parent comment are
+      // valuable information when comment entity 'create access' handler makes
+      // the decision.
+      $context = ['commented_entity' => $this->getEntity()];
+      if ($parent_comment_id) {
+        $context += [
+          'parent_comment' => $entity_type_manager->getStorage('comment')->load($parent_comment_id),
+        ];
+      }
+      $result = $access_control_handler->createAccess($bundle, $account, $context, TRUE);
+
       return $return_as_object ? $result : $result->isAllowed();
     }
     return parent::access($operation, $account, $return_as_object);
+  }
+
+  /**
+   * Checks the access on the last published comment.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user for which to check access.
+   * @param bool $return_as_object
+   *   If the method's return is an access result object or a boolean.
+   *
+   * @return bool|\Drupal\Core\Access\AccessResultInterface
+   *   The access result either as an access result object or a boolean,
+   *   depending on $return_as_object
+   */
+  protected function lastPublishedCommentAccess(AccountInterface $account, bool $return_as_object) {
+    // Load the last published comment in the thread.
+    $last_published_comment_id = $this->first()->getValue()['cid'] ?? NULL;
+    if ($last_published_comment_id) {
+      if ($comment = \Drupal::entityTypeManager()->getStorage('comment')->load($last_published_comment_id)) {
+        // Allow if access on comment is allowed.
+        return $comment->access('view', $account, $return_as_object);
+      }
+    }
+    // If there are no comments, make no opinion.
+    return $return_as_object ? AccessResult::neutral() : FALSE;
   }
 
 }

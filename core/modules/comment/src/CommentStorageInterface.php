@@ -57,8 +57,9 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    * @param \Drupal\comment\CommentInterface $comment
    *   The comment to use as a reference point.
    * @param int $comment_mode
-   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT or
-   *   CommentManagerInterface::COMMENT_MODE_THREADED.
+   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT,
+   *   CommentManagerInterface::COMMENT_MODE_THREADED or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED_DEPTH_LIMIT.
    * @param int $divisor
    *   Defaults to 1, which returns the display ordinal for a comment. If the
    *   number of comments per page is provided, the returned value will be the
@@ -89,8 +90,9 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    * @param string $field_name
    *   The field_name whose comment(s) needs rendering.
    * @param int $mode
-   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT or
-   *   CommentManagerInterface::COMMENT_MODE_THREADED.
+   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT,
+   *   CommentManagerInterface::COMMENT_MODE_THREADED or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED_DEPTH_LIMIT.
    * @param int $comments_per_page
    *   (optional) The amount of comments to display per page.
    *   Defaults to 0, which means show all comments.

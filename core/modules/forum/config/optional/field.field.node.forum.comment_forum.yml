@@ -25,6 +25,9 @@ default_value:
 default_value_callback: ''
 settings:
   default_mode: 0
+  thread_limit:
+    depth: 2
+    mode: 0
   per_page: 50
   form_location: true
   anonymous: 0

@@ -5,8 +5,11 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_uninstall().
@@ -115,4 +118,20 @@ function comment_schema() {
  */
 function comment_update_last_removed() {
   return 8701;
+}
+
+/**
+ * Set the default value of 'thread_limit' setting for all comment fields.
+ */
+function comment_update_9200(array &$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config): bool {
+    if ($field_config->getType() === 'comment') {
+      $field_config->setSetting('thread_limit', [
+        'depth' => 2,
+        'mode' => CommentItemInterface::THREAD_DEPTH_REPLY_MODE_ALLOW,
+      ]);
+      return TRUE;
+    }
+    return FALSE;
+  });
 }
