@@ -2,6 +2,8 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -181,7 +183,9 @@ class LinkWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\link\LinkItemInterface $item */
+    $default_values = [];
     $item = $items[$delta];
+    $default_values = !empty($item->getFieldDefinition()->getDefaultValueLiteral()) ? $item->getFieldDefinition()->getDefaultValueLiteral() : [];
 
     $element['uri'] = [
       '#type' => 'url',
@@ -233,7 +237,7 @@ class LinkWidget extends WidgetBase {
       '#type' => 'textfield',
       '#title' => $this->t('Link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
-      '#default_value' => isset($items[$delta]->title) ? $items[$delta]->title : NULL,
+      '#default_value' => isset($default_values[$delta]['title']) ? $default_values[$delta]['title'] : NULL,
       '#maxlength' => 255,
       '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
       '#required' => $this->getFieldSetting('title') === DRUPAL_REQUIRED && $element['#required'],
@@ -431,6 +435,62 @@ class LinkWidget extends WidgetBase {
       }
     }
     parent::flagErrors($items, $violations, $form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * We duplicate extractFormValues()
+   * so that it does not call filterEmptyItems()
+   * when in the default value form.
+   * This way, we can save a default value with only a text and not URI.
+   */
+  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state) {
+    if ($this->isDefaultValueWidget($form_state)) {
+      $field_name = $this->fieldDefinition->getName();
+
+      // Extract the values from $form_state->getValues().
+      $path = array_merge($form['#parents'], [$field_name]);
+      $key_exists = NULL;
+      $values = NestedArray::getValue($form_state->getValues(), $path, $key_exists);
+
+      if ($key_exists) {
+        // Account for drag-and-drop reordering if needed.
+        if (!$this->handlesMultipleValues()) {
+          // Remove the 'value' of the 'add more' button.
+          unset($values['add_more']);
+
+          // The original delta, before drag-and-drop reordering, is needed to
+          // route errors to the correct form element.
+          foreach ($values as $delta => &$value) {
+            $value['_original_delta'] = $delta;
+            if ($value['uri'] == NULL && $value['title'] == NULL) {
+              unset($values[$delta]);
+            }
+          }
+
+          usort($values, function ($a, $b) {
+            return SortArray::sortByKeyInt($a, $b, '_weight');
+          });
+        }
+
+        // Let the widget massage the submitted values.
+        $values = $this->massageFormValues($values, $form, $form_state);
+        // Assign the values and remove the empty ones.
+        $items->setValue($values);
+
+        // Put delta mapping in $form_state, so that flagErrors() can use it.
+        $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
+        foreach ($items as $delta => $item) {
+          $field_state['original_deltas'][$delta] = isset($item->_original_delta) ? $item->_original_delta : $delta;
+          unset($item->_original_delta, $item->_weight);
+        }
+        static::setWidgetState($form['#parents'], $field_name, $form_state, $field_state);
+      }
+    }
+    else {
+      parent::extractFormValues($items, $form, $form_state);
+    }
   }
 
 }
