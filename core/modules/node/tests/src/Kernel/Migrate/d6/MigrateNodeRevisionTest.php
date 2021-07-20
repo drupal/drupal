@@ -69,7 +69,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $this->assertSame('Test title rev 3', $node->getTitle());
     $this->assertSame('body test rev 3', $node->body->value);
     $this->assertSame('teaser test rev 3', $node->body->summary);
-    $this->assertSame('2', $node->getRevisionUser()->id());
+    $this->assertSame(2, $node->getRevisionUser()->id());
     $this->assertSame('modified rev 3', $node->revision_log->value);
     $this->assertSame('1420861423', $node->getRevisionCreationTime());
 

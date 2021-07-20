@@ -157,7 +157,7 @@ class HistoryTest extends BrowserTestBase {
     // Additional check to ensure that we did not forget to verify anything.
     $rows = \Drupal::database()->query('SELECT * FROM {history}')->fetchAll();
     $this->assertCount(1, $rows);
-    $this->assertSame($this->user->id(), $rows[0]->uid);
+    $this->assertSame($this->user->id(), (int) $rows[0]->uid);
     $this->assertSame($this->testNode->id(), $rows[0]->nid);
     $this->assertSame($timestamp, (int) $rows[0]->timestamp);
   }

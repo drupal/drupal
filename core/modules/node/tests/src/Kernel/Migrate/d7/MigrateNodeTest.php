@@ -153,7 +153,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertSame(9, $results['node']);
     $this->assertSame(0, $results['node_complete']);
 
-    $this->assertEntity(1, 'test_content_type', 'en', 'An English Node', '2', TRUE, '1421727515', '1441032132', TRUE, FALSE);
+    $this->assertEntity(1, 'test_content_type', 'en', 'An English Node', 2, TRUE, '1421727515', '1441032132', TRUE, FALSE);
     $this->assertRevision(1, 'An English Node', '1', NULL, '1441032132');
 
     $node = Node::load(1);
@@ -270,7 +270,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $metadata_fr = $manager->getTranslationMetadata($node_fr);
     $this->assertSame('en', $metadata_fr->getSource());
     $this->assertTrue($metadata_fr->isOutdated());
-    $this->assertSame('2', $node_fr->getOwnerId());
+    $this->assertSame(2, $node_fr->getOwnerId());
     $this->assertSame('1529615802', $node_fr->getCreatedTime());
     $this->assertSame('1529615802', $node_fr->getChangedTime());
     $this->assertTrue($node_fr->isPublished());
@@ -279,7 +279,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $metadata_is = $manager->getTranslationMetadata($node_is);
     $this->assertSame('en', $metadata_is->getSource());
     $this->assertFalse($metadata_is->isOutdated());
-    $this->assertSame('1', $node_is->getOwnerId());
+    $this->assertSame(1, $node_is->getOwnerId());
     $this->assertSame('1529615813', $node_is->getCreatedTime());
     $this->assertSame('1529615813', $node_is->getChangedTime());
     $this->assertFalse($node_is->isPublished());
