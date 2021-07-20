@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\File\Exception\NotRegularDirectoryException;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -237,7 +238,12 @@ class ThemeInstaller implements ThemeInstallerInterface {
       $this->logger->info('%theme theme installed.', ['%theme' => $key]);
     }
 
-    $this->cssCollectionOptimizer->deleteAll();
+    try {
+      $this->cssCollectionOptimizer->deleteAll();
+    }
+    catch (NotRegularDirectoryException $e) {
+      // Do not crash and burn if the CSS directory does not exist.
+    }
     $this->resetSystem();
 
     // Invoke hook_themes_installed() after the themes have been installed.
@@ -274,7 +280,12 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
     }
 
-    $this->cssCollectionOptimizer->deleteAll();
+    try {
+      $this->cssCollectionOptimizer->deleteAll();
+    }
+    catch (NotRegularDirectoryException $e) {
+      // Nothing to delete, but this is not fatal.
+    }
     foreach ($theme_list as $key) {
       // The value is not used; the weight is ignored for themes currently.
       $extension_config->clear("theme.$key");
