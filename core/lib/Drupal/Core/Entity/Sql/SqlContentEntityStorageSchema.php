@@ -2246,6 +2246,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         'not null' => TRUE,
         'description' => 'The entity id this data is attached to',
       ];
+      // Set size from field settings, if different from default 'normal' value.
+      if (!empty($id_definition->getSetting('size')) && $id_definition->getSetting('size') !== 'normal') {
+        $id_schema['size'] = $id_definition->getSetting('size');
+      }
     }
     else {
       $id_schema = [

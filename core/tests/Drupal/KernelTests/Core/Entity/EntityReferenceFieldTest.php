@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_test\Entity\EntityTestBigintId;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
@@ -187,6 +188,46 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
         // the target entities set.
         $this->assertFalse(isset($entities[$delta]));
       }
+    }
+  }
+
+  /**
+   * Tests referencing entities with bigint IDs.
+   */
+  public function testReferencedEntitiesBigintId() {
+    $field_name = 'entity_reference_bigint_id';
+    $this->installEntitySchema('entity_test_bigint_id');
+    $this->createEntityReferenceField(
+      $this->entityType,
+      $this->bundle,
+      $field_name,
+      'Field test',
+      'entity_test_bigint_id',
+      'default',
+      ['target_bundles' => [$this->bundle]],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    // Create the parent entity.
+    $entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityType)
+      ->create(['type' => $this->bundle]);
+
+    // Create the default target entity.
+    $target_entity = EntityTestBigintId::create([
+      'id' => 4294967295 + 1,
+      'type' => $this->bundle,
+    ]);
+    $target_entity->save();
+
+    // Set the field value.
+    $entity->{$field_name}->setValue([['target_id' => $target_entity->id()]]);
+
+    try {
+      $message = 'The entity with bigint entity_reference field can\'t be saved to database.';
+      $entity->save();
+    }
+    catch (EntityStorageException $e) {
+      $this->fail($message);
     }
   }
 
