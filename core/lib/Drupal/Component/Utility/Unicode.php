@@ -475,9 +475,7 @@ EOD;
    *   TRUE if the text is valid UTF-8, FALSE if not.
    */
   public static function validateUtf8($text) {
-    // @todo I think better code would to return FALSE if $text is NULL, BUT
-    //   that would be a return value change.
-    if ($text === NULL || strlen($text) == 0) {
+    if (strlen($text) == 0) {
       return TRUE;
     }
     // With the PCRE_UTF8 modifier 'u', preg_match() fails silently on strings

@@ -66,7 +66,7 @@ class Xss {
       return '';
     }
     // Remove NULL characters (ignored by some browsers).
-    $string = str_replace(chr(0), '', (string) $string);
+    $string = str_replace(chr(0), '', $string);
     // Remove Netscape 4 JS entities.
     $string = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
 

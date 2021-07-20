@@ -211,7 +211,6 @@ class UrlHelper {
    *   TRUE or FALSE, where TRUE indicates an external path.
    */
   public static function isExternal($path) {
-    $path = $path ?? '';
     $colonpos = strpos($path, ':');
     // Some browsers treat \ as / so normalize to forward slashes.
     $path = str_replace('\\', '/', $path);
