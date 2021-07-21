@@ -1151,6 +1151,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       $duplicate->loadedRevisionId = NULL;
     }
 
+    $duplicate->duplicateSource = $this;
+
     return $duplicate;
   }
 
