@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\views\Unit\Plugin\field;
+namespace Drupal\Tests\views\Kernel\Plugin\field;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\field\Entity\FieldConfig;
