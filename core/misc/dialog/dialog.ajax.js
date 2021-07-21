@@ -78,7 +78,7 @@
     response.method = 'html';
     ajax.commands.insert(ajax, response, status);
 
-    if (!response.dialogOptions.buttons) {
+    if (!response.dialogOptions.buttons && response.dialogOptions.drupalAutoButtons !== false) {
       response.dialogOptions.drupalAutoButtons = true;
       response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
