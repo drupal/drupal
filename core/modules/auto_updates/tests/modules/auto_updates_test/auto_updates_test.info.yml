@@ -1,0 +1,5 @@
+name: 'Automatic Updates Test module 1'
+type: module
+description: 'Module for testing Automatic Updates.'
+package: Testing
+version: VERSION

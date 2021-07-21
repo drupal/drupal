@@ -1,0 +1,6 @@
+name: 'Automatic Updates'
+type: module
+description: 'Experimental module to develop automatic updates. Currently the module provides checks for update readiness but does not yet provide update functionality.'
+package: Core (Experimental)
+version: VERSION
+hidden: true

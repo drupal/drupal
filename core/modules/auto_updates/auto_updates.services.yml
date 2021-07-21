@@ -1,0 +1,6 @@
+services:
+  auto_updates.readiness_checker_manager:
+    class: Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
+    arguments: ['@keyvalue.expirable', '@datetime.time', 24]
+    tags:
+      - { name: service_collector, tag: auto_updates.readiness_checker, call: addChecker }

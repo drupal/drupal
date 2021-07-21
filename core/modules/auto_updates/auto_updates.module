@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for Automatic Updates.
+ */
+
+use Drupal\auto_updates\ReadinessChecker\AdminReadinessMessages;
+
+/**
+ * Implements hook_page_top().
+ */
+function auto_updates_page_top() {
+  /** @var \Drupal\auto_updates\ReadinessChecker\AdminReadinessMessages $readiness_messages */
+  $readiness_messages = \Drupal::classResolver(AdminReadinessMessages::class);
+  $readiness_messages->displayAdminPageMessages();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function auto_updates_cron() {
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+  $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+  $last_results = $checker_manager->getResults();
+  $last_run_time = $checker_manager->getLastRunTime();
+  // Do not run readiness checks more than once an hour unless there are no
+  // results available.
+  if ($last_results === NULL || !$last_run_time || \Drupal::time()->getRequestTime() - $last_run_time > 3600) {
+    $checker_manager->run();
+  }
+
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function auto_updates_modules_installed() {
+  // Run the readiness checkers if needed when any modules are installed in
+  // case they provide readiness checker services.
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+  $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+  $checker_manager->runIfNoStoredResults();
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function auto_updates_modules_uninstalled() {
+  // Run the readiness checkers if needed when any modules are uninstalled in
+  // case they provided readiness checker services.
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+  $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+  $checker_manager->runIfNoStoredResults();
+}
