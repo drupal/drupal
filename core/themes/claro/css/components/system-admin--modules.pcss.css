@@ -12,7 +12,7 @@
 
 .modules-table-filter {
   padding: 0.25rem var(--space-l);
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -42,7 +42,7 @@
 .claro-details__summary.claro-details__summary--package-listing {
   color: var(--color-text);
   border-radius: 4px;
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
   font-size: 1.125rem; /* 18px */
   line-height: 1.424rem; /* 23px */
 }
@@ -53,7 +53,7 @@
 
 .module-list__module {
   color: var(--color-text);
-  border-bottom: 1px solid var(--color-lightgray);
+  border-bottom: 1px solid var(--color-gray-200);
   background: none;
 }
 
@@ -179,6 +179,6 @@ td.module-list__description {
 .claro-details .tableresponsive-toggle-columns button {
   margin-top: var(--space-xs);
   text-decoration: none;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   font-weight: bold;
 }

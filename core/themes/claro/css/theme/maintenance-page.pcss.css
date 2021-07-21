@@ -7,13 +7,13 @@
 
 .maintenance-page {
   min-height: 100%;
-  background-color: var(--color-lightdiamond);
+  background-color: var(--color-gray-100);
 }
 
 .site-name {
   margin-top: var(--space-m);
   word-wrap: break-word;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   font-size: var(--font-size-h4);
 }
 
@@ -24,7 +24,7 @@
 
 .content {
   margin-bottom: var(--space-m);
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
 }
 
 .site-name,

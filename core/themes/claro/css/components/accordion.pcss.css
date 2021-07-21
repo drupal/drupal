@@ -36,6 +36,6 @@
 
 .accordion__item .claro-details__summary .summary {
   display: block;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   font-weight: normal;
 }

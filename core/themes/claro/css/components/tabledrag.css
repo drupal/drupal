@@ -27,7 +27,7 @@ body.drag {
 /* Empty region message row in table. */
 
 .region-message {
-  color: #82828c;
+  color: #828388;
 }
 
 /* If the region is populated, we shouldn't display the empty message. */

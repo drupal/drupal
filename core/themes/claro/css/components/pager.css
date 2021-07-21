@@ -54,7 +54,7 @@
   padding-right: 0.5rem;
   padding-left: 0.5rem;
   text-decoration: none;
-  color: #545560;
+  color: #55565b;
   border-radius: 1rem; /* Pager size ÷ 2 */
   background: #fff; /* Make sure that the text is visible on dark background. */
   line-height: 1;
@@ -68,7 +68,7 @@
 
 .pager__link:hover,
 .pager__link.is-active:hover {
-  color: #545560;
+  color: #55565b;
   background: #e6ecf8;
 }
 

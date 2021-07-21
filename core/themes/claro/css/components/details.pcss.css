@@ -78,7 +78,7 @@
   transition: background-color var(--details-bg-color-transition-duration) ease-in-out;
   word-wrap: break-word;
   hyphens: auto;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   border-radius: var(--size-summary-border-radius);
   background-color: transparent;
   line-height: var(--space-m);
@@ -388,7 +388,7 @@
 .claro-details__wrapper--accordion-item,
 .claro-details__wrapper--vertical-tabs-item {
   border-top: var(--details-border-size) solid var(--details-border-color);
-  background-color: var(--color-whitesmoke-o-40);
+  background-color: var(--color-gray-050-o-40);
 }
 
 @media screen and (min-width: 48em) {
@@ -525,7 +525,7 @@
 
 .claro-details__summary-summary {
   display: block;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   font-size: var(--font-size-s);
   font-weight: normal;
 }

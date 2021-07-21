@@ -158,7 +158,7 @@ _:-ms-fullscreen, /* Only IE 11 */
 }
 
 tr {
-  border-bottom: 0.0625rem solid #d4d4d8;
+  border-bottom: 0.0625rem solid #d3d4d9;
 }
 
 tr,
@@ -227,7 +227,7 @@ td > .ajax-new-content > .form-item > .form-element {
 /* Win over table-file-multiple-widget. */
 
 th.is-disabled.is-disabled {
-  color: #82828c;
+  color: #828388;
 }
 
 /* Force browsers to calculate the width of a 'select all' <th> element. */
@@ -253,7 +253,7 @@ tfoot tr:last-child {
 }
 
 tfoot tr:first-child td {
-  border-top: 0.0625rem solid #8e929c;
+  border-top: 0.0625rem solid #919297;
 }
 
 /**
