@@ -1795,3 +1795,94 @@ function _views_file_status($choice = NULL) {
 
   return $status;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Injects the file sanitization options into /admin/config/media/file-system.
+ *
+ * These settings are enforced during upload by the FileEventSubscriber that
+ * listens to the FileUploadEvent::UPLOAD event.
+ *
+ * @see \Drupal\system\Form\FileSystemForm
+ * @see \Drupal\file\Event\FileUploadEvent
+ * @see \Drupal\file\EventSubscriber\FileEventSubscriber
+ */
+function file_form_system_file_system_settings_alter(array &$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('file.settings');
+  $form['filename_sanitization'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Filename sanitization'),
+    '#tree' => TRUE,
+  ];
+
+  // Place a helpful description at the top of the fieldset. Prevents it
+  // from clashing with the description on the final form element.
+  // @todo This could use '#description_display' => 'above', but that's broken.
+  // @see https://www.drupal.org/project/drupal/issues/2396145
+  $form['filename_sanitization']['help'] = [
+    '#type' => 'markup',
+    '#prefix' => '<div class="description">',
+    '#suffix' => '</div>',
+    '#markup' => t('These settings only apply to new files as they are uploaded. Changes here do not affect existing file names.'),
+  ];
+
+  $form['filename_sanitization']['transliterate'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Transliterate'),
+    '#default_value' => $config->get('filename_sanitization.transliterate'),
+    '#description' => t('Transliteration ensures filenames contain only ASCII characters. It is recommended to keep transliteration enabled.'),
+  ];
+
+  $form['filename_sanitization']['replace_whitespace'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Replace whitespace with the replacement character'),
+    '#default_value' => $config->get('filename_sanitization.replace_whitespace'),
+  ];
+
+  $form['filename_sanitization']['replace_non_alphanumeric'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Replace non-alphanumeric characters with the replacement character'),
+    '#default_value' => $config->get('filename_sanitization.replace_non_alphanumeric'),
+    '#description' => t('Alphanumeric characters, dots (.), underscores (_) and dashes (-) are preserved.'),
+    '#states' => [
+      'visible' => [
+        ':input[name="filename_sanitization[transliterate]"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  $form['filename_sanitization']['dedupe_separators'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Remove duplicate dots (..), underscores (__) or dashes (--)'),
+    '#default_value' => $config->get('filename_sanitization.dedupe_separators'),
+  ];
+
+  $form['filename_sanitization']['lowercase'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Convert to lowercase'),
+    '#default_value' => $config->get('filename_sanitization.lowercase'),
+  ];
+
+  $form['filename_sanitization']['replacement_character'] = [
+    '#type' => 'select',
+    '#title' => t('Replacement character'),
+    '#default_value' => $config->get('filename_sanitization.replacement_character'),
+    '#options' => [
+      '-' => t('Dash (-)'),
+      '_' => t('Underscore (_)'),
+    ],
+    '#description' => t('Used when replacing whitespace, replacing non-alphanumeric characters or transliterating unknown characters.'),
+  ];
+
+  $form['#submit'][] = 'file_system_settings_submit';
+}
+
+/**
+ * Form submission handler for file system settings form.
+ */
+function file_system_settings_submit(array &$form, FormStateInterface $form_state) {
+  $config = \Drupal::configFactory()->getEditable('file.settings')
+    ->set('filename_sanitization', $form_state->getValue('filename_sanitization'));
+  $config->save();
+}
