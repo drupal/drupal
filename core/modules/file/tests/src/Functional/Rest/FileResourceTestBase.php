@@ -208,13 +208,19 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    if ($method === 'GET') {
-      return "The 'access content' permission is required.";
+    switch ($method) {
+      case 'GET':
+        return "The 'access content' permission is required.";
+
+      case 'PATCH':
+        return "The 'edit any files' permission is required.";
+
+      case 'DELETE':
+        return "The 'delete any files' permission is required.";
+
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
     }
-    if ($method === 'PATCH' || $method === 'DELETE') {
-      return 'Only the file owner can update or delete the file entity.';
-    }
-    return parent::getExpectedUnauthorizedAccessMessage($method);
   }
 
 }

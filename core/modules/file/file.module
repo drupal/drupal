@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
@@ -16,6 +17,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
@@ -636,6 +638,31 @@ function file_theme() {
       'file' => 'file.field.inc',
     ],
   ];
+}
+
+/**
+ * Implements hook_file_access().
+ */
+function file_file_access(FileInterface $file, $op, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  switch ($op) {
+    case 'update':
+      $access = AccessResult::allowedIfHasPermission($account, 'edit any files');
+      if (!$access->isAllowed() && $account->hasPermission('edit own files')) {
+        $access = $access->orIf(AccessResult::allowedIf($account->id() == $file->getOwnerId())->cachePerUser()->addCacheableDependency($file));
+      }
+      break;
+
+    case 'delete':
+      $access = AccessResult::allowedIfHasPermission($account, 'delete any files');
+      if (!$access->isAllowed() && $account->hasPermission('delete own files')) {
+        $access = $access->orIf(AccessResult::allowedIf($account->id() == $file->getOwnerId()))->cachePerUser()->addCacheableDependency($file);
+      }
+      break;
+  }
+
+  return $access;
 }
 
 /**
