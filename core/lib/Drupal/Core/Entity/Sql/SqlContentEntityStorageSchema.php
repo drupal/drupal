@@ -1506,7 +1506,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // after a field storage has been created.
     foreach ($field_storage_schema as $table_name => $table_schema) {
       foreach ($table_schema['fields'] as $key => $schema) {
-        unset($field_storage_schema[$table_name]['fields'][$key]['initial']);
+        unset($field_storage_schema[$table_name]['fields'][$key]['default']);
         unset($field_storage_schema[$table_name]['fields'][$key]['initial_from_field']);
       }
     }
@@ -2121,6 +2121,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
       // Use the initial value of the field storage, if available.
       if ($initial_value && isset($initial_value[$field_column_name])) {
+        $schema['fields'][$schema_field_name]['default'] = SqlContentEntityStorageSchema::castValue($column_schema, $initial_value[$field_column_name]);
         $schema['fields'][$schema_field_name]['initial'] = SqlContentEntityStorageSchema::castValue($column_schema, $initial_value[$field_column_name]);
       }
       if (!empty($initial_value_from_field)) {
