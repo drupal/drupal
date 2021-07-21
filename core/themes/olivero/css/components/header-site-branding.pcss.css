@@ -59,11 +59,12 @@
 }
 
 .site-branding__inner {
-  display: flex;
-  align-items: center;
-
-  & a {
-    text-decoration: none;
+  & .site-branding__wrapper {
+    display: flex;
+    align-items: center;
+    & a {
+      text-decoration: none;
+    }
   }
 
   @media (--nav) {
@@ -98,10 +99,10 @@
 }
 
 .site-branding__text {
+  padding-block-end: var(--sp);
   color: var(--color--white);
   font-size: 18px;
   font-weight: bold;
-
   & a {
     color: inherit;
   }
@@ -118,6 +119,12 @@
   }
 }
 
+.site-branding__slogan {
+  color: var(--color--white);
+  font-weight: bold;
+  line-height: var(--line-height-s);
+}
+
 .site-branding--bg-gray .site-branding__text,
 .site-branding--bg-white .site-branding__text {
   color: var(--color--blue-50);
@@ -125,4 +132,5 @@
 
 .site-branding__logo + .site-branding__text {
   margin-inline-start: 12px;
+  padding-block-end: 0;
 }
