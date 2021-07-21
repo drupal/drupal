@@ -275,8 +275,10 @@ class WorkflowEditForm extends EntityForm {
     foreach ($values['states'] as $state_id => $state_values) {
       $entity->getTypePlugin()->setStateWeight($state_id, $state_values['weight']);
     }
-    foreach ($values['transitions'] as $transition_id => $transition_values) {
-      $entity->getTypePlugin()->setTransitionWeight($transition_id, $transition_values['weight']);
+    if (!empty($values['transitions'])) {
+      foreach ($values['transitions'] as $transition_id => $transition_values) {
+        $entity->getTypePlugin()->setTransitionWeight($transition_id, $transition_values['weight']);
+      }
     }
   }
 
