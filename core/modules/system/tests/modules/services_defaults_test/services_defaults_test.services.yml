@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+    tags: ['foo.tag1', 'bar.tag2']
+  # Use an alias so the interface autowiring is tested.
+  Drupal\services_defaults_test\TestInjectionInterface: '@Drupal\services_defaults_test\TestInjection'
+  # A service that implements TestInjectionInterface.
+  Drupal\services_defaults_test\TestInjection:
+    public: true
+  Drupal\services_defaults_test\TestInjection2:
+    public: true
+    tags: ['zee.bang']
+  Drupal\services_defaults_test\TestService:
+    public: true
+  Drupal\services_defaults_test\TestPrivateService: ~

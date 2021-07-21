@@ -1,0 +1,5 @@
+name: 'Services _defaults test'
+type: module
+description: 'Support module for services _defaults'
+package: Testing
+version: VERSION
