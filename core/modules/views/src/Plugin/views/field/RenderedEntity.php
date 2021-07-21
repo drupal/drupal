@@ -153,17 +153,31 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * {@inheritdoc}
    */
   public function getCacheTags() {
+    // Get cache tags for the entity view display associated with the selected
+    // view mode. This will be the view display config entity created for the
+    // view mode for each bundle of the entity type. If there is no view display
+    // config entity for the view mode, the default display will be used.
     $view_display_storage = $this->entityTypeManager->getStorage('entity_view_display');
-    $view_displays = $view_display_storage->loadMultiple($view_display_storage
-      ->getQuery()
-      ->condition('targetEntityType', $this->getEntityTypeId())
-      ->execute());
+    $view_displays = $view_display_storage->loadByProperties([
+      'targetEntityType' => $this->getEntityTypeId(),
+      'mode' => [$this->options['view_mode'], 'default'],
+    ]);
 
     $tags = [];
+    // Create an multidimensional array of cache tags indexed by entity bundle
+    // name.
     foreach ($view_displays as $view_display) {
-      $tags = array_merge($tags, $view_display->getCacheTags());
+      if ($view_display->getMode() == $this->options['view_mode']) {
+        $tags[$view_display->getTargetBundle()] = $view_display->getCacheTags();
+      }
+      elseif (!isset($tags[$view_display->getTargetBundle()])) {
+        // Add the default display cache tags as fallback if no display for
+        // view mode.
+        $tags[$view_display->getTargetBundle()] = $view_display->getCacheTags();
+      }
     }
-    return $tags;
+    // Flatten the tags array.
+    return $tags ? array_merge(...array_values($tags)) : [];
   }
 
   /**
