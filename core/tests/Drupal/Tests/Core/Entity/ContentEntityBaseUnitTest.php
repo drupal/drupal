@@ -151,13 +151,20 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
 
     $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
+    $this->entityTypeBundleInfo->expects($this->any())
+      ->method('getBundleInfo')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue([
+        $this->bundle => [
+          'translatable' => TRUE,
+        ],
+      ]));
 
     $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
 
     $this->typedDataManager = $this->createMock(TypedDataManagerInterface::class);
     $this->typedDataManager->expects($this->any())
       ->method('getDefinition')
-      ->with('entity')
       ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
 
     $english = new Language(['id' => 'en']);
@@ -292,14 +299,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::isTranslatable
    */
   public function testIsTranslatable() {
-    $this->entityTypeBundleInfo->expects($this->any())
-      ->method('getBundleInfo')
-      ->with($this->entityTypeId)
-      ->will($this->returnValue([
-        $this->bundle => [
-          'translatable' => TRUE,
-        ],
-      ]));
     $this->languageManager->expects($this->any())
       ->method('isMultilingual')
       ->will($this->returnValue(TRUE));
@@ -331,6 +330,86 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $record = new \stdClass();
     // Our mocked entity->preSaveRevision() returns NULL, so assert that.
     $this->assertNull($this->entity->preSaveRevision($storage, $record));
+  }
+
+  /**
+   * @covers ::getTypedData
+   */
+  public function testTypedData() {
+    // The goal of this test is to cover each condition in
+    // EntityBase::getTypedData(). The following will be tested in order:
+    //
+    // 1. entity:$entity_type:$bundle
+    // 2. entity:$entity_type
+    // 3. entity
+    //
+    // To accomplish this, the first calls to bundle info and typed data should
+    // return more than one bundle and a valid typed data plugin definition,
+    // respectively.
+    //
+    // The second calls to each of these should return an empty bundle list and
+    // a valid typed data plugin definition to cause only an entity type
+    // derivative to be valid.
+    //
+    // The third calls to each of these should return an empty bundle list and
+    // NULL respectively to result in the default EntityAdapter.
+    //
+    // A fourth call can be expected to typed data for the base data type.
+    $entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
+    $entityTypeBundleInfo->expects($this->at(0))
+      ->method('getBundleInfo')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue([
+        $this->randomMachineName() => TRUE,
+        $this->randomMachineName() => TRUE,
+      ]));
+    $entityTypeBundleInfo->expects($this->at(1))
+      ->method('getBundleInfo')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue([]));
+    $entityTypeBundleInfo->expects($this->at(2))
+      ->method('getBundleInfo')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue([]));
+
+    $typedDataManager = $this->createMock(TypedDataManagerInterface::class);
+    $typedDataManager->expects($this->at(0))
+      ->method('getDefinition')
+      ->with("entity:{$this->entityTypeId}:{$this->bundle}")
+      ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
+    $typedDataManager->expects($this->at(1))
+      ->method('getDefinition')
+      ->with("entity:{$this->entityTypeId}")
+      ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
+    $typedDataManager->expects($this->at(2))
+      ->method('getDefinition')
+      ->with("entity:{$this->entityTypeId}")
+      ->will($this->returnValue(NULL));
+    $typedDataManager->expects($this->at(3))
+      ->method('getDefinition')
+      ->with("entity")
+      ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
+
+    // Temporarily replace the appropriate services in the container.
+    $container = \Drupal::getContainer();
+    $container->set('entity_type.bundle.info', $entityTypeBundleInfo);
+    $container->set('typed_data_manager', $typedDataManager);
+    \Drupal::setContainer($container);
+
+    // Call ::getTypedData() three times, once per typed data plugin ID.
+    // Assert that the returned data type is an instance of EntityAdapter.
+    $expected = '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter';
+    $arguments = [[], $this->entityTypeId, $this->bundle];
+    for ($i = 0; $i < 3; ++$i) {
+      $entity = $this->getMockForAbstractClass(ContentEntityBase::class, $arguments, '', TRUE, TRUE, TRUE, ['isNew']);
+      $this->assertInstanceOf($expected, $entity->getTypedData());
+    }
+
+    // Put back the original services in the container.
+    $container = \Drupal::getContainer();
+    $container->set('entity_type.bundle.info', $this->entityTypeBundleInfo);
+    $container->set('typed_data_manager', $this->typedDataManager);
+    \Drupal::setContainer($container);
   }
 
   /**
