@@ -41,6 +41,9 @@ class MenuUiNodeTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -179,6 +182,14 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->drupalGet('test-page');
     $this->assertSession()->linkNotExists($node_title, 'Found no menu link with the node unpublished');
+
+    // Assert that the unpublished node can be selected as a parent menu link.
+    $this->drupalGet('node/add/page');
+    $link_id = menu_ui_get_menu_link_defaults($node)['entity_id'];
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $link */
+    $link = MenuLinkContent::load($link_id);
+    $this->assertSession()->optionExists('edit-menu-menu-parent', 'main:' . $link->getPluginId());
+
     // Assert that the link exists if published.
     $edit['status[value]'] = TRUE;
     $this->drupalGet('node/' . $node->id() . '/edit');
