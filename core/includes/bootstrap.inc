@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -384,7 +385,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
   $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
   if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
-    list(, $prefix, $time, $salt, $hmac) = $matches;
+    [, $prefix, $time, $salt, $hmac] = $matches;
     $check_string = $prefix . ':' . $time . ':' . $salt;
     // Read the hash salt prepared by drupal_generate_test_ua().
     // This function is called before settings.php is read and Drupal's error
@@ -423,39 +424,22 @@ function drupal_valid_test_ua($new_prefix = NULL) {
 
 /**
  * Generates a user agent string with a HMAC and timestamp for simpletest.
+ *
+ * @param string $prefix
+ *   The testing database prefix.
+ *
+ * @return string
+ *   User agent string.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Test\UserAgent::generate().
+ *
+ * @see https://www.drupal.org/node/3044173
+ * @see TestHttpClientMiddleware::generate()
  */
 function drupal_generate_test_ua($prefix) {
-  static $key, $last_prefix;
-
-  if (!isset($key) || $last_prefix != $prefix) {
-    $last_prefix = $prefix;
-    $test_db = new TestDatabase($prefix);
-    $key_file = DRUPAL_ROOT . '/' . $test_db->getTestSitePath() . '/.htkey';
-    // When issuing an outbound HTTP client request from within an inbound test
-    // request, then the outbound request has to use the same User-Agent header
-    // as the inbound request. A newly generated private key for the same test
-    // prefix would invalidate all subsequent inbound requests.
-    // @see \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware
-    if (DRUPAL_TEST_IN_CHILD_SITE && $parent_prefix = drupal_valid_test_ua()) {
-      if ($parent_prefix != $prefix) {
-        throw new \RuntimeException("Malformed User-Agent: Expected '$parent_prefix' but got '$prefix'.");
-      }
-      // If the file is not readable, a PHP warning is expected in this case.
-      $private_key = file_get_contents($key_file);
-    }
-    else {
-      // Generate and save a new hash salt for a test run.
-      // Consumed by drupal_valid_test_ua() before settings.php is loaded.
-      $private_key = Crypt::randomBytesBase64(55);
-      file_put_contents($key_file, $private_key);
-    }
-    // The file properties add more entropy not easily accessible to others.
-    $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
-  }
-  // Generate a moderately secure HMAC based on the database credentials.
-  $salt = uniqid('', TRUE);
-  $check_string = $prefix . ':' . time() . ':' . $salt;
-  return 'simple' . $check_string . ':' . Crypt::hmacBase64($check_string, $key);
+  @trigger_error('drupal_generate_test_ua() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::generate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
+  return TestHttpClientMiddleware::generate($prefix);
 }
 
 /**

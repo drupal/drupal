@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Test\RefreshVariablesTrait;
 use Drupal\Core\Url;
 use Symfony\Component\CssSelector\CssSelectorConverter;
@@ -439,7 +440,7 @@ trait UiHelperTrait {
    */
   protected function prepareRequest() {
     $session = $this->getSession();
-    $session->setCookie('SIMPLETEST_USER_AGENT', drupal_generate_test_ua($this->databasePrefix));
+    $session->setCookie('SIMPLETEST_USER_AGENT', TestHttpClientMiddleware::generate($this->databasePrefix));
   }
 
   /**

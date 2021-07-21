@@ -4,6 +4,7 @@ namespace Drupal\TestSite\Commands;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\TestSite\TestPreinstallInterface;
@@ -98,7 +99,7 @@ class TestSiteInstallCommand extends Command {
     // Manage site fixture.
     $this->setup($input->getOption('install-profile'), $class_name, $input->getOption('langcode'));
 
-    $user_agent = drupal_generate_test_ua($this->databasePrefix);
+    $user_agent = TestHttpClientMiddleware::generate($this->databasePrefix);
     if ($input->getOption('json')) {
       $output->writeln(json_encode([
         'db_prefix' => $this->databasePrefix,

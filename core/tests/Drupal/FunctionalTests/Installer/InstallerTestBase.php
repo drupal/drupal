@@ -175,11 +175,12 @@ abstract class InstallerTestBase extends BrowserTestBase {
       Settings::initialize($this->container->getParameter('app.root'), DrupalKernel::findSitePath($request), $class_loader);
 
       // After writing settings.php, the installer removes write permissions
-      // from the site directory. To allow drupal_generate_test_ua() to write
-      // a file containing the private key for drupal_valid_test_ua(), the site
-      // directory has to be writable.
+      // from the site directory. To allow TestHttpClientMiddleware::generate()
+      // to write a file containing the private key for drupal_valid_test_ua(),
+      // the site directory has to be writable.
       // BrowserTestBase::tearDown() will delete the entire test site directory.
       // Not using File API; a potential error must trigger a PHP warning.
+      /* @see Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware::generate() */
       chmod($this->container->getParameter('app.root') . '/' . $this->siteDirectory, 0777);
       $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
       $this->kernel->boot();
