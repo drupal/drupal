@@ -54,8 +54,20 @@ class ListElement implements ElementInterface {
 
       if ($form_element = ConfigTranslationFormBase::createFormElement($element)) {
         $element_parents = array_merge($parents, [$key]);
-        $sub_build += $form_element->getTranslationBuild($source_language, $translation_language, $source_config[$key], $translation_config[$key], $element_parents, $element_key);
 
+        $source_config_item = NULL;
+        $translation_config_item = NULL;
+
+        if (is_array($source_config) && array_key_exists($key, $source_config)) {
+          $source_config_item = $source_config[$key];
+        }
+
+        if (is_array($translation_config) && array_key_exists($key, $translation_config)) {
+          $translation_config_item = $translation_config[$key];
+        }
+
+        $sub_build += $form_element->getTranslationBuild($source_language, $translation_language, $source_config_item, $translation_config_item, $element_parents, $element_key);
+       
         if (empty($sub_build)) {
           continue;
         }
