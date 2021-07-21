@@ -250,6 +250,10 @@ function entity_test_entity_bundle_info_alter(&$bundles) {
       }
     }
   }
+  // @see \Drupal\KernelTests\Core\Entity\EntityBundleLabelTest::testLabelAltering()
+  if (isset($bundles['entity_test_with_bundle']['bundle_with_alterable_label'])) {
+    $bundles['entity_test_with_bundle']['bundle_with_alterable_label']['label'] = 'Altered';
+  }
 }
 
 /**
