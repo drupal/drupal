@@ -204,12 +204,14 @@ class ContentTranslationController extends ControllerBase {
           $cacheability = $cacheability
             ->merge(CacheableMetadata::createFromObject($update_access))
             ->merge(CacheableMetadata::createFromObject($translation_access));
-          if ($update_access->isAllowed() && $entity_type->hasLinkTemplate('edit-form')) {
+          if (!$is_original) {
+            if ($translation_access->isAllowed()) {
+              $links['edit']['url'] = $edit_url;
+            }
+          }
+          elseif ($update_access->isAllowed() && $entity_type->hasLinkTemplate('edit-form')) {
             $links['edit']['url'] = $entity->toUrl('edit-form');
             $links['edit']['language'] = $language;
-          }
-          elseif (!$is_original && $translation_access->isAllowed()) {
-            $links['edit']['url'] = $edit_url;
           }
 
           if (isset($links['edit'])) {
@@ -243,14 +245,7 @@ class ContentTranslationController extends ControllerBase {
                 ->addCacheableDependency($delete_access)
                 ->addCacheableDependency($translation_access);
 
-              if ($delete_access->isAllowed() && $entity_type->hasLinkTemplate('delete-form')) {
-                $links['delete'] = [
-                  'title' => $this->t('Delete'),
-                  'url' => $entity->toUrl('delete-form'),
-                  'language' => $language,
-                ];
-              }
-              elseif ($translation_access->isAllowed()) {
+              if ($translation_access->isAllowed()) {
                 $links['delete'] = [
                   'title' => $this->t('Delete'),
                   'url' => $delete_url,

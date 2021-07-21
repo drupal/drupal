@@ -152,7 +152,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
    *   The edit URL.
    */
   protected function getEditUrl(ContentEntityInterface $entity) {
-    if ($entity->access('update', $this->loggedInUser)) {
+    if ($entity->access('update', $this->loggedInUser) && $entity->getUntranslated()->language()->getId() == $entity->language()->getId()) {
       $url = $entity->toUrl('edit-form');
     }
     else {
@@ -172,7 +172,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
    *   The delete translation URL.
    */
   protected function getDeleteUrl(ContentEntityInterface $entity) {
-    if ($entity->access('delete', $this->loggedInUser)) {
+    if ($entity->access('delete', $this->loggedInUser) && $entity->getUntranslated()->language()->getId() == $entity->language()->getId()) {
       $url = $entity->toUrl('delete-form');
     }
     else {

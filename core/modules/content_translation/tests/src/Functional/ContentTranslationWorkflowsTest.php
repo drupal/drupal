@@ -217,8 +217,8 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       'delete' => 200,
       'overview' => 200,
       'add_translation' => 200,
-      'edit_translation' => 403,
-      'delete_translation' => 403,
+      'edit_translation' => 200,
+      'delete_translation' => 200,
       'view_unpublished_translation' => 200,
       'view_unpublished_translation_reference' => TRUE,
     ];
@@ -348,22 +348,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $edit_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_edit", [$this->entityTypeId => $this->entity->id(), 'language' => $langcode], $options);
     if ($expected_status['edit_translation'] == 200) {
       $this->drupalGet($translations_url);
-      $editor = $expected_status['edit'] == 200;
-
-      if ($editor) {
-        $this->clickLink('Edit', 1);
-        // An editor should be pointed to the entity form in multilingual mode.
-        // We need a new expected edit path with a new language.
-        $expected_edit_path = $this->entity->toUrl('edit-form', $options)->toString();
-        $this->assertSession()->addressEquals($expected_edit_path);
-      }
-      else {
-        $this->clickLink('Edit');
-        // While a translator should be pointed to the translation form.
-        $this->assertSession()->addressEquals($edit_translation_url);
-        // Check that the translation form does not contain shared elements.
-        $this->assertNoSharedElements();
-      }
+      $this->clickLink('Edit', intval($expected_status['edit'] == 200));
+      $this->assertSession()->addressEquals($edit_translation_url->toString());
+      // Check that the translation form does not contain shared elements.
+      $this->assertNoSharedElements();
     }
     else {
       $this->drupalGet($edit_translation_url);
@@ -389,22 +377,8 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $delete_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_delete", [$this->entityTypeId => $this->entity->id(), 'language' => $langcode], $options);
     if ($expected_status['delete_translation'] == 200) {
       $this->drupalGet($translations_url);
-      $editor = $expected_status['delete'] == 200;
-
-      if ($editor) {
-        $this->clickLink('Delete', 1);
-        // An editor should be pointed to the entity deletion form in
-        // multilingual mode. We need a new expected delete path with a new
-        // language.
-        $expected_delete_path = $this->entity->toUrl('delete-form', $options)->toString();
-        $this->assertSession()->addressEquals($expected_delete_path);
-      }
-      else {
-        $this->clickLink('Delete');
-        // While a translator should be pointed to the translation deletion
-        // form.
-        $this->assertSession()->addressEquals($delete_translation_url);
-      }
+      $this->clickLink('Delete');
+      $this->assertSession()->addressEquals($delete_translation_url->toString());
     }
     else {
       $this->drupalGet($delete_translation_url);

@@ -228,8 +228,20 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $language = new Language(['id' => $langcode]);
         $view_url = $entity->toUrl('canonical', ['language' => $language])->toString();
         $elements = $this->xpath('//table//a[@href=:href]', [':href' => $view_url]);
-        $this->assertEquals($entity->getTranslation($langcode)->label(), $elements[0]->getText(), new FormattableMarkup('Label correctly shown for %language translation.', ['%language' => $langcode]));
-        $edit_path = $entity->toUrl('edit-form', ['language' => $language])->toString();
+
+        $this->assertEquals($elements[0]->getText(), $entity->getTranslation($langcode)->label(), new FormattableMarkup('Label correctly shown for %language translation.', ['%language' => $langcode]));
+
+        if ($langcode == $entity->getUntranslated()->language()->getId()) {
+          $edit_path = $entity->toUrl('edit-form', [
+            'language' => $language,
+          ])->toString();
+        }
+        else {
+          $edit_path = $entity->toUrl('drupal:content-translation-edit', [
+            'language' => $language,
+          ])->setRouteParameter('language', $langcode)->toString();
+        }
+
         $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a[@href=:href]', [':href' => $edit_path]);
         $this->assertEquals(t('Edit'), $elements[0]->getText(), new FormattableMarkup('Edit link correct for %language translation.', ['%language' => $langcode]));
       }
