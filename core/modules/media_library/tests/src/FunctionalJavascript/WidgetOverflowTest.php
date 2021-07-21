@@ -53,39 +53,51 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   }
 
   /**
+   * Uploads multiple test images into the media library.
+   *
+   * @param int $number
+   *   The number of images to upload.
+   */
+  private function uploadFiles(int $number): void {
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = $this->container->get('file_system');
+
+    // Create a list of new files to upload.
+    $filenames = $remote_paths = [];
+    for ($i = 0; $i < $number; $i++) {
+      $path = $file_system->copy($this->image->uri, 'public://');
+      $path = $file_system->realpath($path);
+      $this->assertNotEmpty($path);
+      $this->assertFileExists($path);
+
+      $filenames[] = $file_system->basename($path);
+      $remote_paths[] = $this->getSession()
+        ->getDriver()
+        ->uploadFileAndGetRemoteFilePath($path);
+    }
+    $page = $this->getSession()->getPage();
+    $page->fillField('Add files', implode("\n", $remote_paths));
+    $this->assertMediaAdded();
+    $assert_session = $this->assertSession();
+    foreach ($filenames as $i => $filename) {
+      $assert_session->fieldValueEquals("media[$i][fields][name][0][value]", $filename);
+      $page->fillField("media[$i][fields][field_media_test_image][0][alt]", $filename);
+    }
+  }
+
+  /**
    * Tests overflow validation.
    *
-   * @dataProvider overflowProvider
+   * @dataProvider providerWidgetOverflow
    */
   public function testWidgetOverflow($advanced_ui, $button_text) {
     $this->config('media_library.settings')->set('advanced_ui', $advanced_ui)->save();
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $driver = $this->getSession()->getDriver();
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = $this->container->get('file_system');
     // Visit a node create page and open the media library.
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_twin_media');
-    $assert_session->pageTextContains('Add or select media');
-    $assert_session->fieldExists('Add files');
-    // Create a list of new files to upload.
-    $filenames = [];
-    $remote_paths = [];
-    foreach (range(1, 5) as $i) {
-      $path = $file_system->copy($this->image->uri, 'public://');
-      $filenames[] = $file_system->basename($path);
-      $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
-    }
-    $page->findField('Add files')->setValue(implode("\n", $remote_paths));
-    // Assert the media item fields are shown and the vertical tabs are no
-    // longer shown.
-    $this->assertMediaAdded();
-    // Assert all files have been added.
-    foreach (range(0, 4) as $i) {
-      $assert_session->fieldValueEquals("media[$i][fields][name][0][value]", $filenames[$i]);
-      $page->fillField("media[$i][fields][field_media_test_image][0][alt]", $filenames[$i]);
-    }
+    $this->uploadFiles(5);
     // When the user uploads more items than allowed, the media items are
     // saved but when the user is returned to the media library there is a
     // warning message.
@@ -109,7 +121,7 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   /**
    * Tests overflow validation skips fields with unlimited cardinality.
    *
-   * @dataProvider overflowProvider
+   * @dataProvider providerWidgetOverflow
    */
   public function testUnlimitedCardinality($advanced_ui, $button_text) {
     $this->config('media_library.settings')->set('advanced_ui', $advanced_ui)->save();
@@ -122,25 +134,7 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->switchToMediaType('Three');
-    $assert_session->pageTextContains('Add or select media');
-    $assert_session->fieldExists('Add files');
-    // Create a list of new files to upload.
-    $filenames = [];
-    $remote_paths = [];
-    foreach (range(1, 5) as $i) {
-      $path = $file_system->copy($this->image->uri, 'public://');
-      $filenames[] = $file_system->basename($path);
-      $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
-    }
-    $page->findField('Add files')->setValue(implode("\n", $remote_paths));
-    // Assert the media item fields are shown and the vertical tabs are no
-    // longer shown.
-    $this->assertMediaAdded();
-    // Assert all files have been added.
-    foreach (range(0, 4) as $i) {
-      $assert_session->fieldValueEquals("media[$i][fields][name][0][value]", $filenames[$i]);
-      $page->fillField("media[$i][fields][field_media_test_image][0][alt]", $filenames[$i]);
-    }
+    $this->uploadFiles(5);
     // When the user is returned to the media library there should not
     // be a warning message.
     $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
@@ -169,7 +163,7 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
    * @return array
    *   Test data.
    */
-  public function overflowProvider() {
+  public function providerWidgetOverflow() {
     return [
       'Save button' => [
         'advancedUi' => FALSE,
