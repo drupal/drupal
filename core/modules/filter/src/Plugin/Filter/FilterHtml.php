@@ -251,9 +251,9 @@ class FilterHtml extends FilterBase {
     // tags more specific.
     $restrictions = ['allowed' => []];
 
-    // Make all the tags self-closing, so they will be parsed into direct
-    // children of the body tag in the DomDocument.
-    $html = str_replace('>', ' />', $this->settings['allowed_html']);
+    // Close all tags, so they will be parsed into direct children of the body
+    // tag in the DomDocument.
+    $html = preg_replace('/<(\w+)[^>]*>/', '\0 </\1>', $this->settings['allowed_html']);
     // Protect any trailing * characters in attribute names, since DomDocument
     // strips them as invalid.
     $star_protector = '__zqh6vxfbk3cg__';
