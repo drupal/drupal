@@ -10,3 +10,4 @@ media.add:
   weight: 10
   appears_on:
     - entity.media.collection
+    - media.admin

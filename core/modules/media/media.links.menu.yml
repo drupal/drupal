@@ -9,3 +9,9 @@ media.settings:
   parent: system.admin_config_media
   description: 'Manage media settings.'
   route_name: media.settings
+
+media.admin:
+  title: Media
+  route_name: view.media.page_1
+  parent: system.admin_content
+  description: 'List and edit site media.'
