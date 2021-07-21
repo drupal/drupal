@@ -3,6 +3,7 @@
 namespace Drupal\config_translation\Form;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
+use Drupal\config_translation\FormElement\Textfield;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -246,6 +247,13 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       }
       $class = $definition['form_element_class'];
       return $class::create($schema);
+    }
+    // Translatable elements with unknown form element use textfield fallbacks.
+    elseif (!empty($definition['translatable'])) {
+      if (!$definition->getLabel()) {
+        $definition->setLabel(t('n/a'));
+      }
+      return Textfield::create($schema);
     }
   }
 
