@@ -61,10 +61,6 @@
   margin: 0;
 }
 
-.js .dropbutton {
-  height: 3rem;
-}
-
 /* Variants. */
 
 .js.no-touchevents .dropbutton--small {
@@ -79,31 +75,31 @@
  * First dropbutton list item.
  */
 
-.js .dropbutton--multiple .dropbutton__item:first-of-type {
+.js .dropbutton--multiple .dropbutton__main-item {
   margin-right: calc(3rem + 1px); /* LTR */
 }
 
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type {
+[dir="rtl"].js .dropbutton--multiple .dropbutton__main-item {
   margin-right: 0;
   margin-left: calc(3rem + 1px);
 }
 
 /* First dropbutton list item variants */
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
   margin-right: calc(2rem + 1px); /* LTR */
 }
 
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
   margin-right: 0;
   margin-left: calc(2rem + 1px);
 }
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__main-item {
   margin-right: calc(1.5rem + 1px); /* LTR */
 }
 
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__main-item {
   margin-right: 0;
   margin-left: calc(1.5rem + 1px);
 }
@@ -119,7 +115,6 @@
   right: 0; /* LTR */
   bottom: 0;
   width: 3rem;
-  height: 3rem;
   border: 1px solid transparent !important; /* 1 */
   border-radius: 0 2px 2px 0; /* LTR */
   background: #d4d4d8;
@@ -176,12 +171,10 @@
 
 .no-touchevents .dropbutton--small .dropbutton__toggle {
   width: 2rem;
-  height: 2rem;
 }
 
 .no-touchevents .dropbutton--extrasmall .dropbutton__toggle {
   width: 1.5rem;
-  height: 1.5rem;
 }
 
 .no-touchevents .dropbutton--small .dropbutton__toggle::before,
@@ -231,7 +224,7 @@
  * Duplicates base button styles.
  */
 
-.dropbutton__item:first-of-type > * {
+.dropbutton .dropbutton__main-item > * {
   display: inline-block;
   margin: 0;
   padding: calc(1rem - 1px) calc(1.5rem - 1px);
@@ -251,55 +244,57 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.dropbutton--multiple .dropbutton__item:first-of-type > * {
+.dropbutton--multiple .dropbutton__main-item > * {
   padding-right: calc(1rem - 1px);
   padding-left: calc(1rem - 1px);
 }
 
 /* Variants */
 
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type > * {
+.no-touchevents .dropbutton .dropbutton__main-item.dropbutton__item--small > * {
   padding-top: calc(0.625rem - 1px);
   padding-bottom: calc(0.625rem - 1px);
   font-size: 0.79rem;
   line-height: 0.75rem;
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type > * {
+.no-touchevents .dropbutton .dropbutton__main-item.dropbutton__item--extrasmall > * {
   padding-top: calc(0.375rem - 1px);
   padding-bottom: calc(0.375rem - 1px);
   font-size: 0.79rem;
   line-height: 0.75rem;
 }
 
-.dropbutton__item:first-of-type > *:hover,
-.dropbutton__item:first-of-type > .button:hover {
+.dropbutton .dropbutton__main-item > *:hover,
+.dropbutton .dropbutton__main-item > .button:hover {
   text-decoration: none;
   color: #222330;
   background-color: #c2c3ca;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.dropbutton__item:first-of-type > *:focus:hover,
-.dropbutton__item:first-of-type > .button:focus:hover {
+.dropbutton .dropbutton__main-item > *:focus:hover,
+.dropbutton .dropbutton__main-item > .button:focus:hover {
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
 }
 
-.dropbutton__item:first-of-type > *:focus {
+.dropbutton .dropbutton__item > *:hover,
+.dropbutton .dropbutton__item > *:focus {
   text-decoration: none;
 }
 
-.dropbutton__item:first-of-type > *:active {
+.dropbutton .dropbutton__main-item > *:active {
   color: #222330;
   background-color: #adaeb3;
 }
 
-.dropbutton--multiple .dropbutton__item:first-of-type > * {
+.dropbutton--multiple .dropbutton__main-item > * {
   position: relative;
   z-index: 3;
 }
 
-.dropbutton--multiple .dropbutton__item:first-of-type > *:focus {
+.dropbutton--multiple .dropbutton__item:first-of-type > *:focus,
+.js .dropbutton--multiple .dropbutton__main-item > * {
   z-index: 2;
 }
 
@@ -307,12 +302,13 @@
   border-radius: 2px 0 0 2px; /* LTR */
 }
 
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > * {
+[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > *,
+[dir="rtl"].js .dropbutton--multiple .dropbutton__main-item > * {
   border-radius: 0 2px 2px 0;
 }
 
-.dropbutton > .dropbutton__item > a,
-.dropbutton > .dropbutton__item > .button {
+[dir="rtl"] .dropbutton .dropbutton__item > a,
+[dir="rtl"] .dropbutton .dropbutton__item > .button {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -330,20 +326,41 @@
 }
 
 /**
- * Non-first dropbutton list elements.
+ * List of the other dropbutton items.
  */
 
-.dropbutton__item:first-of-type ~ .dropbutton__item {
+.dropbutton__subitems {
+  margin: 0;
+  list-style: none;
+  color: #545560;
+  background: #fff;
+}
+
+[dir="rtl"] .dropbutton__subitems {
+  margin: 0;
+}
+
+.dropbutton__subitems-wrapper {
+  position: relative;
+  z-index: 1;
+  height: 0;
+}
+
+.js .dropbutton-wrapper:not(.open) .dropbutton__subitems-wrapper {
+  display: none;
+}
+
+.dropbutton__sub-item {
   border: 1px solid #d4d4d8;
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item ~ .dropbutton__item {
+.dropbutton__sub-item ~ .dropbutton__sub-item {
   border-top: 0;
 }
 
-.dropbutton__item ~ .dropbutton__item:last-child {
+.dropbutton__sub-item ~ .dropbutton__sub-item:last-child {
   border-bottom: 1px solid #d4d4d8;
   border-radius: 0 0 2px 2px;
 }
@@ -352,9 +369,10 @@
  * Dropbutton items of non-first dropbutton list elements.
  */
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.dropbutton .dropbutton__sub-item > a,
+.dropbutton .dropbutton__sub-item > .button {
   position: relative;
+  display: block;
   padding: calc(1rem - 1px);
   text-decoration: none;
   color: #545560;
@@ -374,29 +392,29 @@
  */
 
 @media screen and (-ms-high-contrast: active) {
-  .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-  .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+  .dropbutton .dropbutton__sub-item > a,
+  .dropbutton .dropbutton__sub-item > .button {
     border-color: transparent !important;
   }
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > a:not(:focus),
-.dropbutton__item:first-of-type ~ .dropbutton__item > .button:not(:focus) {
+.dropbutton .dropbutton__sub-item > a:not(:focus),
+.dropbutton .dropbutton__sub-item > .button:not(:focus) {
   z-index: 1;
 }
 
 /* Variants. */
 
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.no-touchevents .dropbutton .dropbutton__sub-item.dropbutton__item--small > a,
+.no-touchevents .dropbutton__sub-item.dropbutton__item--small > .button {
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
   font-size: 0.79rem;
   line-height: 0.75rem;
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.no-touchevents .dropbutton .dropbutton__sub-item.dropbutton__item--extrasmall > a,
+.no-touchevents .dropbutton__sub-item.dropbutton__item--extrasmall > .button {
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
   font-size: 0.79rem;
@@ -405,21 +423,21 @@
 
 /* States. */
 
-.dropbutton__item > *:focus {
+.dropbutton .dropbutton__item > *:focus {
   position: relative;
   z-index: 3;
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > *:hover {
+.dropbutton .dropbutton__sub-item > *:hover {
   color: #222330;
   background: #f3f4f9;
 }
 
-.dropbutton__item > .button:not(:focus) {
+.dropbutton .dropbutton__item > .button:not(:focus) {
   box-shadow: none;
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > *:focus {
+.dropbutton .dropbutton__sub-item > *:focus {
   border-color: #26a769 !important; /* 1 */
   box-shadow: inset 0 0 0 1px #26a769, 0 0 0 1px #26a769;
 }
