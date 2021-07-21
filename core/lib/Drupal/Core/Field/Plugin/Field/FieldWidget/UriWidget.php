@@ -9,6 +9,11 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Plugin implementation of the 'uri' widget.
  *
+ * While this widget is the default for the 'uri' entity field type, it uses the
+ * 'url' form element, which by default validates only URLs. If you intend to
+ * validate true RFC 3986 URIs, disable this validation or implement a custom
+ * widget.
+ *
  * @FieldWidget(
  *   id = "uri",
  *   label = @Translation("URI field"),

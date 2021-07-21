@@ -9,9 +9,9 @@ use Drupal\Core\TypedData\DataDefinition;
 /**
  * Defines the 'uri' entity field type.
  *
- * URIs are not length limited by RFC 2616, but we need to provide a sensible
- * default. There is a de-facto limit of 2000 characters in browsers and other
- * implementors, so we go with 2048.
+ * HTTP URLs are not length limited by RFC 2616, but we need to provide a
+ * sensible default. There is a de-facto limit of 2000 characters in browsers
+ * and other implementors, so we go with 2048.
  *
  * @FieldType(
  *   id = "uri",
