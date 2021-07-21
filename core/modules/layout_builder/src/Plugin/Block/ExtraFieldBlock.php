@@ -111,7 +111,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
    * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   The entity.
    */
-  protected function getEntity() {
+  public function getEntity() {
     return $this->getContextValue('entity');
   }
 
