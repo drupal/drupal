@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the manifest generation tests.
+ */
+
+/**
+ * Implements hook_manifest_alter().
+ */
+function manifest_test_manifest_alter(&$variables) {
+  if (\Drupal::state()->get('manifest_generation_test_link_alter', FALSE)) {
+    $new_data = $variables->toArray();
+    $new_data['altered'] = 'Owl';
+    $variables = $variables->overwriteWithNewData($new_data);
+  }
+}

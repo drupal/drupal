@@ -12,3 +12,7 @@ logo:
   path: ''
   url: ''
   use_default: true
+manifest:
+  orientation: null
+  theme_color: ''
+  background_color: ''

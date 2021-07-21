@@ -496,6 +496,9 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     elseif (substr($key, 0, 7) == 'toggle_') {
       $config->set('features.' . mb_substr($key, 7), $value);
     }
+    elseif (substr($key, 0, 9) === 'manifest_') {
+      $config->set('manifest.' . mb_substr($key, 9), $value);
+    }
     elseif (!in_array($key, ['theme', 'logo_upload'])) {
       $config->set($key, $value);
     }

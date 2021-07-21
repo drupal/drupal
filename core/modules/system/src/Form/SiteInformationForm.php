@@ -7,6 +7,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Url;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -118,12 +119,63 @@ class SiteInformationForm extends ConfigFormBase {
       '#description' => $this->t("The <em>From</em> address in automated emails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this email being flagged as spam.)"),
       '#required' => TRUE,
     ];
+    $front_page = $site_config->get('page.front') != '/user/login' ? $this->aliasManager->getAliasByPath($site_config->get('page.front')) : '';
+    $theme_config_url = Url::fromRoute('system.theme_settings')->toString();
+    $form['site_information']['manifest'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Site manifest'),
+      '#description' => $this->t('Global values for the site manifest file. This is only part of the data needed for generating the manifest file, the rest of the configuration is <a href=":theme_config_url">theme specific</a>', [':theme_config_url' => $theme_config_url]),
+      '#open' => FALSE,
+    ];
+    $form['site_information']['manifest']['start_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default start url'),
+      '#default_value' => $site_config->get('manifest.start_url') ?: $front_page,
+      '#size' => 40,
+      '#description' => $this->t('Optionally, specify a relative URL to use as the start url.'),
+      '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
+    ];
+    $form['site_information']['manifest']['name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Name'),
+      '#description' => $this->t('The site name.'),
+      '#size' => 50,
+      '#default_value' => $site_config->get('manifest.name') ?: $site_config->get('name'),
+      '#required' => TRUE,
+    ];
+    $form['site_information']['manifest']['short_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Short name'),
+      '#description' => $this->t('The short name of the site.'),
+      '#size' => 12,
+      '#default_value' => $site_config->get('manifest.short_name'),
+    ];
+    $form['site_information']['manifest']['display'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Display'),
+      '#options' => [
+        'blank' => $this->t('Leave Empty'),
+        'fullscreen' => $this->t('Fullscreen'),
+        'standalone' => $this->t('Standalone'),
+        'minimal-ui' => $this->t('Minimal UI'),
+        'browser' => $this->t('Browser'),
+      ],
+      '#default_value' => $site_config->get('manifest.display'),
+    ];
+    $form['site_information']['manifest']['manifest_version'] = [
+      '#type' => 'textfield',
+      '#attributes' => [
+        'data-type' => 'number',
+      ],
+      '#title' => $this->t('Manifest Version'),
+      '#default_value' => $site_config->get('manifest.manifest_version'),
+      '#required' => TRUE,
+    ];
     $form['front_page'] = [
       '#type' => 'details',
       '#title' => $this->t('Front page'),
       '#open' => TRUE,
     ];
-    $front_page = $site_config->get('page.front') != '/user/login' ? $this->aliasManager->getAliasByPath($site_config->get('page.front')) : '';
     $form['front_page']['site_frontpage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default front page'),
@@ -205,14 +257,28 @@ class SiteInformationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.site')
+    $config = $this->config('system.site');
+    $config
       ->set('name', $form_state->getValue('site_name'))
       ->set('mail', $form_state->getValue('site_mail'))
       ->set('slogan', $form_state->getValue('site_slogan'))
       ->set('page.front', $form_state->getValue('site_frontpage'))
       ->set('page.403', $form_state->getValue('site_403'))
       ->set('page.404', $form_state->getValue('site_404'))
-      ->save();
+      ->set('manifest.name', $form_state->getValue('name'))
+      ->set('manifest.short_name', $form_state->getValue('short_name'))
+      ->set('manifest.start_url', $form_state->getValue('start_url'))
+      ->set('manifest.manifest_version', $form_state->getValue('manifest_version'));
+
+    $display = $form_state->getValue('display');
+    if ($display === 'blank') {
+      $config->clear('manifest.display');
+    }
+    else {
+      $config->set('manifest.display', $display);
+    }
+
+    $config->save();
 
     parent::submitForm($form, $form_state);
   }

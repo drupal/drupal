@@ -1527,6 +1527,9 @@ services:
       - { name: needs_destruction }
     calls:
       - [setThemeManager, ['@theme.manager']]
+  theme.manifest_generator:
+    class: Drupal\Core\Theme\ManifestGenerator
+    arguments: ['@language_manager', '@config.factory', '@module_handler']
   authentication:
     class: Drupal\Core\Authentication\AuthenticationManager
     arguments: ['@authentication_collector']

@@ -1509,3 +1509,18 @@ function _system_advisories_requirements(array &$requirements): void {
     }
   }
 }
+
+/**
+ * Set the new system.site manifest configuration.
+ */
+function system_update_9101() {
+  $site = \Drupal::configFactory()->getEditable('system.site');
+  $site->set('manifest', [
+    'start_url' => $site->get('page.front'),
+    'display' => NULL,
+    'short_name' => $site->get('name'),
+    'name' => $site->get('name'),
+    'manifest_version' => 2,
+  ])
+    ->save();
+}

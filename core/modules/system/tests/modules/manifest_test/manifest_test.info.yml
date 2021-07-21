@@ -1,0 +1,5 @@
+name: 'Manifest file test support'
+type: module
+description: 'Test hooks fired in manifest generation.'
+package: Testing
+version: VERSION
