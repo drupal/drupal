@@ -80,6 +80,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertEquals($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
     $this->assertEquals($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_four']['de']->type, 'Translation of contrib_module_four found');
+    $this->assertEquals($this->timestampOld, $result['contrib_module_four']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
 
@@ -99,6 +101,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertEquals($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
     $this->assertEquals($this->timestampOld, $result['contrib_module_three']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_four']['de']->type, 'Translation of contrib_module_four found');
+    $this->assertEquals($this->timestampOld, $result['contrib_module_four']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
   }
@@ -131,7 +135,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check the status on the Available translation status page.
     $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
-    $this->assertSession()->pageTextContains('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test');
+    $this->assertSession()->pageTextContains('Updates for: Contributed module four, Contributed module one, Contributed module two, Custom module one, Locale test');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
     $this->assertSession()->pageTextContains('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
