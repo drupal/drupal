@@ -1,171 +1,268 @@
 /**
- * @file toolbar.theme.css
- *
- * If Claro is the admin theme, this stylesheet will be used by the active theme
- * even if the active theme is not Claro.
+ * @file
+ * Toolbar theme styles.
  */
+
+@import "../base/variables.pcss.css";
+
 .toolbar {
-  font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
-  /* Set base font size to 13px based on root ems. */
-  font-size: 0.8125rem;
-  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
-  -o-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  tap-highlight-color: rgba(0, 0, 0, 0);
-  -moz-touch-callout: none;
-  -o-touch-callout: none;
-  -webkit-touch-callout: none;
-  touch-callout: none;
+  font-size: var(--toolbar-font-size);
 }
-.toolbar .toolbar-item {
-  padding: 1em 1.3333em;
+
+.toolbar-item,
+.toolbar button {
   cursor: pointer;
   text-decoration: none;
-  line-height: 1em;
-}
-.toolbar .toolbar-item:hover,
-.toolbar .toolbar-item:focus {
-  text-decoration: underline;
 }
 
-/**
- * Toolbar bar.
- */
-.toolbar .toolbar-bar {
-  color: #ddd;
-  background-color: #0f0f0f;
-  box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+.toolbar-toggle-orientation > .toolbar-lining {
+  text-align: right; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-bar {
-  box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
-}
-.toolbar .toolbar-bar .toolbar-item {
-  color: #fff;
-}
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item {
-  font-weight: bold;
-}
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
-}
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+[dir="rtl"] .toolbar-toggle-orientation > .toolbar-lining {
+  text-align: left;
 }
 
-/**
- * Toolbar tray.
- */
-.toolbar .toolbar-tray {
-  background-color: #fff;
+.toolbar-bar {
+  display: flex;
+  flex-wrap: wrap;
+  color: var(--toolbar-tab-fg-color);
+  background: var(--toolbar-tab-bg-color);
+  box-shadow: none;
 }
+
+.toolbar-tray {
+  color: var(--toolbar-tray-fg-color);
+  background: var(--toolbar-tray-bg-color);
+}
+.toolbar-tray-vertical {
+  color: var(--toolbar-tray-fg-color);
+  border: 0; /* No border for unoriented mode (below 16.5em). */
+  background: var(--toolbar-tray-bg-color);
+  box-shadow: none;
+}
+[dir="rtl"] .toolbar-tray-vertical {
+  border: 0;
+}
+.toolbar-tray-vertical.is-active {
+  border-right: var(--toolbar-tray-border-size) solid var(--toolbar-tray-border-color);
+}
+[dir="rtl"] .toolbar-tray-vertical.is-active {
+  border-left: var(--toolbar-tray-border-size) solid var(--toolbar-tray-border-color);
+}
+
+.toolbar-horizontal .toolbar-tray,
+[dir="rtl"] .toolbar-horizontal .toolbar-tray {
+  color: var(--toolbar-tray-fg-color);
+  border-bottom: 1px solid var(--toolbar-tray-border-color--horizontal);
+  background: var(--toolbar-tray-bg-color);
+  box-shadow: none;
+}
+
+/* Padding that provides space for the orientation toggle. */
 .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-right: 5em; /* LTR */
+  padding-right: var(--toolbar-orientation-toggle-size);
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray > .toolbar-lining {
   padding-right: 0;
-  padding-left: 5em;
+  padding-left: var(--toolbar-orientation-toggle-size);
 }
-.toolbar .toolbar-tray-vertical {
-  border-right: 1px solid #aaa; /* LTR */
-  background-color: #f5f5f5;
-  box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
+
+.toolbar-item {
+  min-height: var(--toolbar-tab-height);
+  padding: var(--toolbar-tab-padding--vertical) var(--toolbar-tab-padding--horizontal);
+  white-space: nowrap;
+  color: var(--toolbar-tab-fg-color);
+  font-weight: bold;
+  line-height: var(--toolbar-tab-line-height); /* Inherited font size is --font-size-s. */
+  -webkit-font-smoothing: antialiased;
 }
-[dir="rtl"] .toolbar .toolbar-tray-vertical {
-  border-right: 0 none;
-  border-left: 1px solid #aaa;
-  box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
+
+.toolbar-item:hover,
+.toolbar-item.is-active:hover {
+  color: var(--toolbar-tab-fg-color);
+  background: var(--toolbar-tab-bg-color--hover);
 }
-.toolbar-horizontal .toolbar-tray {
-  border-bottom: 1px solid #aaa;
-  box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+.toolbar-item:active,
+.toolbar-item.is-active:active {
+  color: var(--toolbar-tab-fg-color);
+  background: var(--toolbar-tab-bg-color--active);
 }
-[dir="rtl"] .toolbar-horizontal .toolbar-tray {
-  box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
+.toolbar-item.is-active {
+  color: var(--toolbar-tab-fg-color);
+  background: var(--toolbar-tab-bg-color--is-active);
 }
-.toolbar .toolbar-tray-horizontal .toolbar-tray {
-  background-color: #f5f5f5;
+
+@media only screen and (min-width: 48em) {
+  .toolbar-item {
+    min-height: var(--toolbar-tab-height--large);
+    padding-top: var(--toolbar-tab-padding--vertical--large);
+    padding-bottom: var(--toolbar-tab-padding--vertical--large);
+    line-height: var(--toolbar-tab-line-height--large);
+  }
 }
+
+@media only screen and (-ms-high-contrast: active) {
+  .toolbar-item {
+    border-bottom: 1px solid white;
+  }
+}
+
+/**
+ * Handle.
+ */
+.toolbar-tray .toolbar-icon.toolbar-handle {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0; /* LTR */
+  bottom: 0;
+  display: block;
+  height: 100%;
+  padding: 0;
+}
+[dir="rtl"] .toolbar-icon.toolbar-handle {
+  right: auto;
+  left: 0;
+  padding: 0;
+}
+
+.toolbar-box .toolbar-handle,
+[dir="rtl"] .toolbar-box .toolbar-handle {
+  width: var(--toolbar-icon-item-width--only-icon);
+}
+
+.toolbar-icon.toolbar-handle {
+  width: var(--toolbar-icon-item-width--only-icon);
+  padding: 0 var(--toolbar-tab-padding--horizontal);
+  text-indent: -9999px;
+}
+.toolbar-icon.toolbar-handle:hover {
+  background: var(--toolbar-handle-bg-color--hover);
+}
+.toolbar-icon.toolbar-handle:active {
+  background: var(--toolbar-handle-bg-color--active);
+}
+
+/* Every menu-item link in the tray. */
 .toolbar-tray a {
-  padding: 1em 1.3333em;
-  cursor: pointer;
+  position: relative;
+  padding: var(--toolbar-tray-link-padding--vertical) var(--toolbar-tray-link-padding--horizontal);
   text-decoration: none;
-  color: #565656;
+  color: var(--toolbar-tray-link-fg-color);
+  background: var(--toolbar-tray-link-bg-color);
+  line-height: var(--toolbar-tray-link-line-height);
+  -webkit-font-smoothing: antialiased;
 }
+
+/* No underlined links. */
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
 .toolbar-tray a.is-active {
-  text-decoration: underline;
-  color: #000;
-}
-.toolbar .toolbar-menu {
-  background-color: #fff;
-}
-.toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-left: 1px solid #ddd; /* LTR */
-}
-[dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-right: 1px solid #ddd;
-  border-left: 0 none;
-}
-.toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-right: 1px solid #ddd; /* LTR */
-}
-[dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-left: 1px solid #ddd;
-}
-.toolbar .toolbar-tray-vertical .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
-}
-.toolbar .toolbar-tray-vertical .menu-item:last-child {
-  border-bottom: 1px solid #ddd;
-}
-.toolbar .toolbar-tray-vertical .menu-item .menu-item {
-  border: 0 none;
-}
-.toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-}
-.toolbar .toolbar-tray-vertical .menu-item:last-child > ul {
-  border-bottom: 0;
-}
-.toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-left: 0.25em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-right: 0.25em;
-  margin-left: 0;
-}
-.toolbar .toolbar-menu .toolbar-menu a {
-  color: #434343;
+  text-decoration: none;
 }
 
-/**
- * Orientation toggle.
- */
-.toolbar .toolbar-toggle-orientation {
-  height: 100%;
-  padding: 0;
-  background-color: #f5f5f5;
+.toolbar .level-2 a,
+.toolbar .level-2 .toolbar-handle {
+  color: var(--toolbar-tray-link-fg-color);
+  background: var(--toolbar-tray-link-bg-color--level2);
 }
-.toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-left: 1px solid #c9c9c9; /* LTR */
+.toolbar .level-3 a,
+.toolbar .level-3 .toolbar-handle {
+  color: var(--toolbar-tray-link-fg-color);
+  background: var(--toolbar-tray-link-bg-color--level3);
 }
-[dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-right: 1px solid #c9c9c9;
-  border-left: 0 none;
+.toolbar .level-4 a {
+  color: var(--toolbar-tray-link-fg-color);
+  background: var(--toolbar-tray-link-bg-color--level4);
 }
-.toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: right; /* LTR */
+
+/* Current page and in-trail styles */
+.toolbar-tray a.is-active,
+.menu-item--active-trail > .toolbar-box a {
+  color: var(--toolbar-tray-link-fg-color--is-active);
+  background: var(--toolbar-tray-link-bg-color);
+  font-weight: bold;
 }
-[dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: left;
+.level-2.menu-item--active-trail > .toolbar-box a {
+  color: var(--toolbar-tray-link-fg-color--is-active);
+  background: var(--toolbar-tray-link-bg-color--level2);
 }
-.toolbar .toolbar-toggle-orientation button {
-  display: inline-block;
-  cursor: pointer;
+.level-3.menu-item--active-trail > .toolbar-box a {
+  color: var(--toolbar-tray-link-fg-color--is-active);
+  background: var(--toolbar-tray-link-bg-color--level3);
+}
+.level-4.menu-item--active-trail > .toolbar-box a {
+  color: var(--toolbar-tray-link-fg-color--is-active);
+  background: var(--toolbar-tray-link-bg-color--level4);
+}
+
+/* Hover states with the same selector strength as the current page states. */
+.toolbar-tray a:hover,
+.toolbar .toolbar-tray a.is-active:hover,
+.toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a:hover {
+  color: var(--toolbar-tray-link-fg-color--hover);
+  background: var(--toolbar-tray-link-bg-color--hover);
+}
+
+.toolbar-tray-horizontal a {
+  font-weight: bold;
+}
+.toolbar-tray-horizontal a:hover,
+.toolbar-tray-horizontal a:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Active (pressed) state */
+.toolbar-tray a:active,
+.toolbar-tray a.is-active:active,
+.toolbar-tray .menu-item--active-trail > .toolbar-box a:active {
+  color: var(--toolbar-tray-link-fg-color--active);
+  background: var(--toolbar-tray-link-bg-color--active);
+}
+
+/* Box shadow to help indicate a new menu level. */
+.toolbar-menu:not(.root) .menu-item:first-child > .toolbar-box > a,
+.toolbar-menu:not(.root) .menu-item:first-child > .toolbar-box > button {
+  box-shadow: inset 0 6px 6px -3px rgba(0, 0, 0, 0.05);
+}
+
+.level-1 > .toolbar-menu {
+  border-top: var(--toolbar-tray-border-size) solid var(--toolbar-tray-border-color);
+}
+
+.level-2 .toolbar-menu {
+  border: var(--toolbar-tray-border-size) solid var(--toolbar-tray-border-color);
+  border-width: var(--toolbar-tray-border-size) 0;
+}
+
+.toolbar-tray-vertical .toolbar-menu__menu-item {
+  border: var(--toolbar-tray-border-size) solid var(--toolbar-tray-border-color);
+  border-width: 0 0 var(--toolbar-tray-border-size);
+}
+
+/* No border for deeper levels. */
+.toolbar-tray-vertical .toolbar-menu__menu-item .toolbar-menu__menu-item {
+  border: 0;
+}
+
+.toolbar .toolbar-tray.is-active {
+  /**
+   * If the toolbar wraps to more than one line, the icon buttons
+   * will appear on top of the horizontal tray unless z-index is boosted.
+  */
+  z-index: var(--toolbar-tray-z-index--active);
+}
+
+@media screen and (max-width: 319px) {
+  .toolbar .toolbar-tray-vertical.is-active {
+    width: 100%;
+  }
+}
+
+@media only screen and (-ms-high-contrast: active) {
+  .toolbar a:hover,
+  .toolbar button:hover {
+    text-decoration: underline;
+  }
 }

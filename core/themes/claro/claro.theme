@@ -440,6 +440,12 @@ function claro_preprocess_links(&$variables) {
       }
     }
   }
+
+  if (isset($variables['theme_hook_original']) && substr($variables['theme_hook_original'], 0, 14) === 'links__toolbar') {
+    foreach ($variables['links'] as &$link) {
+      $link['link']['#options']['attributes']['class'][] = 'toolbar-menu__link';
+    }
+  }
 }
 
 /**
@@ -1625,6 +1631,23 @@ function claro_form_views_ui_add_handler_form_alter(array &$form, FormStateInter
  */
 function claro_preprocess_toolbar(&$variables, $hook, $info) {
   $variables['attributes']['data-drupal-claro-processed-toolbar'] = TRUE;
+  // Move items that should appear last to the end of the array so they are also
+  // last in the DOM.
+  // @todo revisit in https://drupal.org/node/3167438. This can potentially be
+  // removed as part of that issue.
+  $push_right_class = TRUE;
+  foreach (['workspace', 'contextual', 'tour'] as $item_name) {
+    if (isset($variables['tabs'][$item_name])) {
+      $item = $variables['tabs'][$item_name];
+      unset($variables['tabs'][$item_name]);
+      $variables['tabs'][$item_name] = $item;
+      // Add a class to the first item to move the items to the right.
+      if ($push_right_class) {
+        $variables['tabs'][$item_name]['attributes']->addClass('toolbar-tab--push-end');
+        $push_right_class = FALSE;
+      }
+    }
+  }
 }
 
 /**

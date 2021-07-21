@@ -1,10 +1,7 @@
 {#
 /**
  * @file
- * Theme override to display a toolbar menu.
- *
- * If Claro is the admin theme, this template will be used by the active theme
- * even if the active theme is not Claro.
+ * Default theme implementation to display a toolbar menu.
  *
  * Available variables:
  * - menu_name: The machine name of the menu.
@@ -19,6 +16,8 @@
  *   - is_collapsed: TRUE if the link has children within the current menu tree
  *     that are not currently visible.
  *   - in_active_trail: TRUE if the link is in the active trail.
+ *
+ * @ingroup themeable
  */
 #}
 {% import _self as menus %}
@@ -33,7 +32,7 @@
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
-      <ul{{ attributes.addClass('toolbar-menu', 'claro-toolbar-menu') }}>
+      <ul{{ attributes.addClass('toolbar-menu claro-toolbar-menu') }}>
     {% else %}
       <ul class="toolbar-menu">
     {% endif %}
@@ -41,13 +40,21 @@
       {%
         set classes = [
           'menu-item',
+          'toolbar-menu__menu-item',
           item.is_expanded ? 'menu-item--expanded',
           item.is_collapsed ? 'menu-item--collapsed',
           item.in_active_trail ? 'menu-item--active-trail',
         ]
       %}
       <li{{ item.attributes.addClass(classes) }}>
-        {{ link(item.title, item.url) }}
+        {%
+          set link_classes = [
+            'toolbar-menu__link',
+            'toolbar-menu__link--admin-menu',
+            (menu_level == 0 and (item.is_expanded or item.is_collapsed)) or item.below ? 'toolbar-menu__link--collapsible',
+          ]
+        %}
+        {{ link(item.title, item.url, { 'class': link_classes } ) }}
         {% if item.below %}
           {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
         {% endif %}

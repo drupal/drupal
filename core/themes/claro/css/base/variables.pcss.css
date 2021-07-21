@@ -208,8 +208,58 @@
    */
   --breadcrumb-height: 1.25rem;
   /**
-    * Vertical Tabs.
-    */
+   * Toolbar.
+   */
+  --toolbar-font-size: var(--font-size-s);
+  --toolbar-tray-fg-color: var(--color-text);
+  --toolbar-tray-bg-color: var(--color-white);
+  --toolbar-tray-border-color: var(--color-lightgray);
+  --toolbar-tray-border-color--horizontal: #d8d9e0;
+  --toolbar-tray-border-size: 1px;
+  --toolbar-tab-fg-color: var(--color-white);
+  --toolbar-tab-bg-color: var(--color-text);
+  --toolbar-tab-bg-color--hover: var(--color-oldsilver);
+  --toolbar-tab-bg-color--active: var(--color-grayblue);
+  --toolbar-tab-bg-color--is-active: var(--color-davysgray);
+  --toolbar-tab-padding--horizontal: calc(var(--space-m) - 1px);
+  --toolbar-tab-padding--vertical: var(--space-s);
+  --toolbar-tab-padding--vertical--large: 0.889rem;
+  --toolbar-tab-line-height: var(--space-m);
+  --toolbar-tab-line-height--large: var(--space-m);
+  --toolbar-tab-height: calc(var(--toolbar-tab-line-height) + (var(--toolbar-tab-padding--vertical) * 2));
+  --toolbar-tab-height--large: calc(var(--toolbar-tab-line-height--large) + (var(--toolbar-tab-padding--vertical--large) * 2));
+  --toolbar-tray-link-fg-color: var(--color-davysgray);
+  --toolbar-tray-link-fg-color--is-active: var(--color-absolutezero);
+  --toolbar-tray-link-fg-color--hover: var(--color-absolutezero-hover);
+  --toolbar-tray-link-fg-color--active: var(--color-absolutezero-active);
+  --toolbar-tray-link-bg-color: var(--color-white);
+  --toolbar-tray-link-bg-color--level2: var(--color-whitesmoke-light);
+  --toolbar-tray-link-bg-color--level3: var(--color-whitesmoke);
+  --toolbar-tray-link-bg-color--level4: #d8d9e0;
+  --toolbar-tray-link-bg-color--hover: var(--color-bgblue-hover);
+  --toolbar-tray-link-bg-color--active: var(--color-bgblue-active);
+  --toolbar-tray-link-padding--vertical: calc(var(--toolbar-tab-padding--vertical--large) - 0.125rem);
+  --toolbar-tray-link-padding--horizontal: var(--space-l);
+  --toolbar-tray-link-padding-start--level2: var(--toolbar-icon-item-padding-start);
+  --toolbar-tray-link-padding-start--level3: calc(var(--toolbar-icon-item-padding-start) + var(--toolbar-tray-link-padding--vertical));
+  --toolbar-tray-link-padding-start--level4: calc(var(--toolbar-tray-link-padding-start--level3) + var(--toolbar-tray-link-padding--vertical));
+  --toolbar-tray-link-line-height: 1.25rem; /* Line height must be higher than horizontal to account for text wrapping. */
+  --toolbar-icon-item-width--only-icon: calc(var(--toolbar-icon-width) * 3);
+  --toolbar-icon-item-padding-start: calc(var(--space-m) + var(--space-xs) + var(--toolbar-icon-position-start));
+  --toolbar-icon-item-padding-end: calc(var(--toolbar-icon-item-width--only-icon) + var(--space-m));
+  --toolbar-icon-width: var(--space-m);
+  --toolbar-icon-position-start: calc(var(--space-m) - 1px);
+  --toolbar-orientation-toggle-bg-color: var(--color-white);
+  --toolbar-orientation-toggle-size: 2.75rem;
+  --toolbar-handle-bg-color--hover: var(--color-bgblue-hover);
+  --toolbar-handle-bg-color--active: var(--color-bgblue-active);
+  --toolbar-tray-z-index: 501;
+  --toolbar-icon-z-index: calc(var(--toolbar-tray-z-index) + 1);
+  --toolbar-bar-z-index: calc(var(--toolbar-tray-z-index) + 1);
+  --toolbar-tray-z-index--active: calc(var(--toolbar-icon-z-index) + 1);
+  /**
+  * Vertical Tabs.
+  */
   --vertical-tabs-margin-vertical: var(--space-s);
   --vertical-tabs-border-radius: var(--details-accordion-border-size-radius);
   --vertical-tabs-shadow: var(--details-box-shadow);

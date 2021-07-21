@@ -4,169 +4,296 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
- * @file toolbar.theme.css
- *
- * If Claro is the admin theme, this stylesheet will be used by the active theme
- * even if the active theme is not Claro.
+ * @file
+ * Toolbar theme styles.
  */
+
 .toolbar {
-  font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
-  /* Set base font size to 13px based on root ems. */
-  font-size: 0.8125rem;
-  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
-  -o-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  tap-highlight-color: rgba(0, 0, 0, 0);
-  -moz-touch-callout: none;
-  -o-touch-callout: none;
-  -webkit-touch-callout: none;
-  touch-callout: none;
+  font-size: 0.889rem;
 }
-.toolbar .toolbar-item {
-  padding: 1em 1.3333em;
+
+.toolbar-item,
+.toolbar button {
   cursor: pointer;
   text-decoration: none;
-  line-height: 1em;
 }
-.toolbar .toolbar-item:hover,
-.toolbar .toolbar-item:focus {
-  text-decoration: underline;
+
+.toolbar-toggle-orientation > .toolbar-lining {
+  text-align: right; /* LTR */
 }
-/**
- * Toolbar bar.
- */
-.toolbar .toolbar-bar {
-  color: #ddd;
-  background-color: #0f0f0f;
-  box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+
+[dir="rtl"] .toolbar-toggle-orientation > .toolbar-lining {
+  text-align: left;
 }
-[dir="rtl"] .toolbar .toolbar-bar {
-  box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
-}
-.toolbar .toolbar-bar .toolbar-item {
+
+.toolbar-bar {
+  display: flex;
+  flex-wrap: wrap;
   color: #fff;
+  background: #222330;
+  box-shadow: none;
 }
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item {
-  font-weight: bold;
+
+.toolbar-tray {
+  color: #222330;
+  background: #fff;
 }
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+
+.toolbar-tray-vertical {
+  color: #222330;
+  border: 0; /* No border for unoriented mode (below 16.5em). */
+  background: #fff;
+  box-shadow: none;
 }
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+
+[dir="rtl"] .toolbar-tray-vertical {
+  border: 0;
 }
-/**
- * Toolbar tray.
- */
-.toolbar .toolbar-tray {
-  background-color: #fff;
+
+.toolbar-tray-vertical.is-active {
+  border-right: 1px solid #d4d4d8;
 }
+
+[dir="rtl"] .toolbar-tray-vertical.is-active {
+  border-left: 1px solid #d4d4d8;
+}
+
+.toolbar-horizontal .toolbar-tray,
+[dir="rtl"] .toolbar-horizontal .toolbar-tray {
+  color: #222330;
+  border-bottom: 1px solid #d8d9e0;
+  background: #fff;
+  box-shadow: none;
+}
+
+/* Padding that provides space for the orientation toggle. */
+
 .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-right: 5em; /* LTR */
+  padding-right: 2.75rem;
 }
+
 [dir="rtl"] .toolbar-horizontal .toolbar-tray > .toolbar-lining {
   padding-right: 0;
-  padding-left: 5em;
+  padding-left: 2.75rem;
 }
-.toolbar .toolbar-tray-vertical {
-  border-right: 1px solid #aaa; /* LTR */
-  background-color: #f5f5f5;
-  box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
+
+.toolbar-item {
+  min-height: 2.5rem;
+  padding: 0.75rem calc(1rem - 1px);
+  white-space: nowrap;
+  color: #fff;
+  font-weight: bold;
+  line-height: 1rem; /* Inherited font size is --font-size-s. */
+  -webkit-font-smoothing: antialiased;
 }
-[dir="rtl"] .toolbar .toolbar-tray-vertical {
-  border-right: 0 none;
-  border-left: 1px solid #aaa;
-  box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
+
+.toolbar-item:hover,
+.toolbar-item.is-active:hover {
+  color: #fff;
+  background: #82828c;
 }
-.toolbar-horizontal .toolbar-tray {
-  border-bottom: 1px solid #aaa;
-  box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
+
+.toolbar-item:active,
+.toolbar-item.is-active:active {
+  color: #fff;
+  background: #8e929c;
 }
-[dir="rtl"] .toolbar-horizontal .toolbar-tray {
-  box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
+
+.toolbar-item.is-active {
+  color: #fff;
+  background: #545560;
 }
-.toolbar .toolbar-tray-horizontal .toolbar-tray {
-  background-color: #f5f5f5;
+
+@media only screen and (min-width: 48em) {
+  .toolbar-item {
+    min-height: 2.778rem;
+    padding-top: 0.889rem;
+    padding-bottom: 0.889rem;
+    line-height: 1rem;
+  }
 }
+
+@media only screen and (-ms-high-contrast: active) {
+  .toolbar-item {
+    border-bottom: 1px solid white;
+  }
+}
+
+/**
+ * Handle.
+ */
+
+.toolbar-tray .toolbar-icon.toolbar-handle {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0; /* LTR */
+  bottom: 0;
+  display: block;
+  height: 100%;
+  padding: 0;
+}
+
+[dir="rtl"] .toolbar-icon.toolbar-handle {
+  right: auto;
+  left: 0;
+  padding: 0;
+}
+
+.toolbar-box .toolbar-handle,
+[dir="rtl"] .toolbar-box .toolbar-handle {
+  width: 3rem;
+}
+
+.toolbar-icon.toolbar-handle {
+  width: 3rem;
+  padding: 0 calc(1rem - 1px);
+  text-indent: -624.9375rem;
+}
+
+.toolbar-icon.toolbar-handle:hover {
+  background: #f0f5fd;
+}
+
+.toolbar-icon.toolbar-handle:active {
+  background: #e6ecf8;
+}
+
+/* Every menu-item link in the tray. */
+
 .toolbar-tray a {
-  padding: 1em 1.3333em;
-  cursor: pointer;
+  position: relative;
+  padding: 0.764rem 1.5rem;
   text-decoration: none;
-  color: #565656;
+  color: #545560;
+  background: #fff;
+  line-height: 1.25rem;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* No underlined links. */
+
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
 .toolbar-tray a.is-active {
-  text-decoration: underline;
-  color: #000;
+  text-decoration: none;
 }
-.toolbar .toolbar-menu {
-  background-color: #fff;
+
+.toolbar .level-2 a,
+.toolbar .level-2 .toolbar-handle {
+  color: #545560;
+  background: #fafbfd;
 }
-.toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-left: 1px solid #ddd; /* LTR */
+
+.toolbar .level-3 a,
+.toolbar .level-3 .toolbar-handle {
+  color: #545560;
+  background: #f3f4f9;
 }
-[dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-right: 1px solid #ddd;
-  border-left: 0 none;
+
+.toolbar .level-4 a {
+  color: #545560;
+  background: #d8d9e0;
 }
-.toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-right: 1px solid #ddd; /* LTR */
+
+/* Current page and in-trail styles */
+
+.toolbar-tray a.is-active,
+.menu-item--active-trail > .toolbar-box a {
+  color: #003cc5;
+  background: #fff;
+  font-weight: bold;
 }
-[dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-left: 1px solid #ddd;
+
+.level-2.menu-item--active-trail > .toolbar-box a {
+  color: #003cc5;
+  background: #fafbfd;
 }
-.toolbar .toolbar-tray-vertical .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
+
+.level-3.menu-item--active-trail > .toolbar-box a {
+  color: #003cc5;
+  background: #f3f4f9;
 }
-.toolbar .toolbar-tray-vertical .menu-item:last-child {
-  border-bottom: 1px solid #ddd;
+
+.level-4.menu-item--active-trail > .toolbar-box a {
+  color: #003cc5;
+  background: #d8d9e0;
 }
-.toolbar .toolbar-tray-vertical .menu-item .menu-item {
-  border: 0 none;
+
+/* Hover states with the same selector strength as the current page states. */
+
+.toolbar-tray a:hover,
+.toolbar .toolbar-tray a.is-active:hover,
+.toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a:hover {
+  color: #0036b1;
+  background: #f0f5fd;
 }
-.toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+
+.toolbar-tray-horizontal a {
+  font-weight: bold;
 }
-.toolbar .toolbar-tray-vertical .menu-item:last-child > ul {
-  border-bottom: 0;
+
+.toolbar-tray-horizontal a:hover,
+.toolbar-tray-horizontal a:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 }
-.toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-left: 0.25em; /* LTR */
+
+/* Active (pressed) state */
+
+.toolbar-tray a:active,
+.toolbar-tray a.is-active:active,
+.toolbar-tray .menu-item--active-trail > .toolbar-box a:active {
+  color: #00339a;
+  background: #e6ecf8;
 }
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-right: 0.25em;
-  margin-left: 0;
+
+/* Box shadow to help indicate a new menu level. */
+
+.toolbar-menu:not(.root) .menu-item:first-child > .toolbar-box > a,
+.toolbar-menu:not(.root) .menu-item:first-child > .toolbar-box > button {
+  box-shadow: inset 0 6px 6px -3px rgba(0, 0, 0, 0.05);
 }
-.toolbar .toolbar-menu .toolbar-menu a {
-  color: #434343;
+
+.level-1 > .toolbar-menu {
+  border-top: 1px solid #d4d4d8;
 }
-/**
- * Orientation toggle.
- */
-.toolbar .toolbar-toggle-orientation {
-  height: 100%;
-  padding: 0;
-  background-color: #f5f5f5;
+
+.level-2 .toolbar-menu {
+  border: 1px solid #d4d4d8;
+  border-width: 1px 0;
 }
-.toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-left: 1px solid #c9c9c9; /* LTR */
+
+.toolbar-tray-vertical .toolbar-menu__menu-item {
+  border: 1px solid #d4d4d8;
+  border-width: 0 0 1px;
 }
-[dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-right: 1px solid #c9c9c9;
-  border-left: 0 none;
+
+/* No border for deeper levels. */
+
+.toolbar-tray-vertical .toolbar-menu__menu-item .toolbar-menu__menu-item {
+  border: 0;
 }
-.toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: right; /* LTR */
+
+.toolbar .toolbar-tray.is-active {
+  /**
+   * If the toolbar wraps to more than one line, the icon buttons
+   * will appear on top of the horizontal tray unless z-index is boosted.
+  */
+  z-index: 503;
 }
-[dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: left;
+
+@media screen and (max-width: 19.9375rem) {
+  .toolbar .toolbar-tray-vertical.is-active {
+    width: 100%;
+  }
 }
-.toolbar .toolbar-toggle-orientation button {
-  display: inline-block;
-  cursor: pointer;
+
+@media only screen and (-ms-high-contrast: active) {
+  .toolbar a:hover,
+  .toolbar button:hover {
+    text-decoration: underline;
+  }
 }

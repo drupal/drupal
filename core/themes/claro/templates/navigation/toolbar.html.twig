@@ -1,10 +1,7 @@
 {#
 /**
  * @file
- * Theme override for the administrative toolbar.
- *
- * If Claro is the admin theme, this template will be used by the active theme
- * even if the active theme is not Claro.
+ * Default theme implementation for the administrative toolbar.
  *
  * Available variables:
  * - attributes: HTML attributes for the wrapper.
@@ -21,10 +18,12 @@
  * - remainder: Any non-tray, non-tab elements left to be rendered.
  *
  * @see template_preprocess_toolbar()
+ *
+ * @ingroup themeable
  */
 #}
 <div{{ attributes.addClass('toolbar', 'claro-toolbar') }}>
-  <nav{{ toolbar_attributes.addClass('toolbar-bar', 'clearfix') }}>
+  <nav{{ toolbar_attributes.addClass('toolbar-bar') }}>
     <h2 class="visually-hidden">{{ toolbar_heading }}</h2>
     {% for key, tab in tabs %}
       {% set tray = trays[key] %}
