@@ -26,4 +26,14 @@ class EntityKernelTestBaseTest extends EntityKernelTestBase {
     $this->assertSame($account->id(), $current_user->id());
   }
 
+  /**
+   * Ensure references to DI objects are kept in sync.
+   */
+  public function testEnsureContainerIntegrity() {
+    $storage = new \SplObjectStorage();
+    $this->disableModules(['user']);
+    $storage->attach($this->entityTypeManager);
+    $this->assertTrue($storage->contains(\Drupal::entityTypeManager()));
+  }
+
 }
