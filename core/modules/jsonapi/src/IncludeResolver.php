@@ -172,8 +172,12 @@ class IncludeResolver {
    *   included. Array keys are the field names. Leaves are empty arrays.
    */
   protected static function toIncludeTree(ResourceObjectData $data, $include_parameter) {
-    // $include_parameter: 'one.two.three, one.two.four'.
-    $include_paths = array_map('trim', explode(',', $include_parameter));
+    // $include_parameter: 'one.two.three, one.two.four' or
+    // ['one.two.three', 'one.two.four'].
+    if (!is_array($include_parameter)) {
+      $include_parameter = explode(',', $include_parameter);
+    }
+    $include_paths = array_map('trim', $include_parameter);
     // $exploded_paths: [['one', 'two', 'three'], ['one', 'two', 'four']].
     $exploded_paths = array_map(function ($include_path) {
       return array_map('trim', explode('.', $include_path));
