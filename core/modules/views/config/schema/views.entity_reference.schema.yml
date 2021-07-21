@@ -20,3 +20,9 @@ entity_reference_selection.views:
           sequence:
             type: string
             label: 'Argument'
+    auto_create:
+      type: boolean
+      label: 'Create referenced entities if they don''t already exist'
+    auto_create_bundle:
+      type: string
+      label: 'Bundle assigned to the auto-created entities.'
