@@ -36,3 +36,17 @@ workflow.type_settings.content_moderation:
     default_moderation_state:
       type: string
       label: 'Default moderation state'
+
+action.configuration.moderation_state_change:*:
+  type: mapping
+  label: 'Change moderation state'
+  mapping:
+    workflow:
+      type: string
+      label: 'The ID of the workflow'
+    state:
+      type: string
+      label: 'The ID of the state'
+    revision_log_message:
+      type: label
+      label: 'Revision log message'
