@@ -111,6 +111,7 @@ autosubmit
 autowire
 autowired
 autowiring
+avif
 backend's
 backlink
 backlinks
