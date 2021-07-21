@@ -86,7 +86,7 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   }
 
   /**
-   * Tests overflow validation.
+   * Tests that the media library constrains selection size.
    *
    * @param string|null $save_and
    *   The operation of the button to click. For example, if this is "insert",
@@ -130,38 +130,40 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   }
 
   /**
-   * Tests overflow validation skips fields with unlimited cardinality.
+   * Tests that fields of unlimited cardinality don't constrain selection size.
+   *
+   * @param string|null $save_and
+   *   The operation of the button to click. For example, if this is "insert",
+   *   the "Save and insert" button will be pressed. If NULL, the "Save" button
+   *   will be pressed.
    *
    * @dataProvider providerWidgetOverflow
    */
-  public function testUnlimitedCardinality($advanced_ui, $button_text) {
-    $this->config('media_library.settings')->set('advanced_ui', $advanced_ui)->save();
+  public function testUnlimitedCardinality(?string $save_and): void {
+    if ($save_and) {
+    $this->config('media_library.settings')->set('advanced_ui', TRUE)->save();
+    }
+
     $assert_session = $this->assertSession();
     // Visit a node create page and open the media library.
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->switchToMediaType('Three');
     $this->uploadFiles(5);
-    // When the user is returned to the media library there should not
-    // be a warning message.
-    $buttons = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
-    $buttons->pressButton($button_text);
-
-    if ($button_text === 'Save and insert') {
-      $this->waitForText('Added 5 media items.');
+    if ($save_and) {
+      $this->saveAnd($save_and);
     }
     else {
-      $result = $buttons->waitFor(10, function ($buttons) {
-        /** @var \Behat\Mink\Element\NodeElement $buttons */
-        return $buttons->findButton('Insert selected');
-      });
-      $this->assertNotEmpty($result);
-      $assert_session->elementNotExists('css', '.messages--warning');
-      // When the user tries insert more items than allowed,
-      // the user is returned
-      // to the media library with an error message.
-      $this->pressInsertSelected('Added 5 media items.');
+      $this->pressSaveButton();
     }
+
+    if ($save_and !== 'insert') {
+      $this->pressInsertSelected();
+    }
+    // There should not be any warnings or errors.
+    $assert_session->elementNotExists('css', '.messages--error');
+    $assert_session->elementNotExists('css', '.messages--warning');
+    $this->waitForText('Added 5 media items.');
   }
 
   /**
