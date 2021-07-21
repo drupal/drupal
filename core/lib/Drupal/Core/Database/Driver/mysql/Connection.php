@@ -5,6 +5,7 @@ namespace Drupal\Core\Database\Driver\mysql;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
@@ -197,19 +198,6 @@ class Connection extends DatabaseConnection {
     }
 
     return $pdo;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function serialize() {
-    // Cleanup the connection, much like __destruct() does it as well.
-    if ($this->needsCleanup) {
-      $this->nextIdDelete();
-    }
-    $this->needsCleanup = FALSE;
-
-    return parent::serialize();
   }
 
   /**

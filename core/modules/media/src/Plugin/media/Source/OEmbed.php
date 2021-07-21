@@ -26,6 +26,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Provides a media source plugin for oEmbed resources.
@@ -388,21 +389,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     if (!$remote_thumbnail_url) {
       return NULL;
     }
-    $remote_thumbnail_url = $remote_thumbnail_url->toString();
 
-    // Remove the query string, since we do not want to include it in the local
-    // thumbnail URI.
-    $local_thumbnail_url = parse_url($remote_thumbnail_url, PHP_URL_PATH);
-
-    // Compute the local thumbnail URI, regardless of whether or not it exists.
+    // Ensure that we can write to the local directory where thumbnails are
+    // stored.
     $configuration = $this->getConfiguration();
     $directory = $configuration['thumbnails_directory'];
-    $local_thumbnail_uri = "$directory/" . Crypt::hashBase64($local_thumbnail_url) . '.' . pathinfo($local_thumbnail_url, PATHINFO_EXTENSION);
-
-    // If the local thumbnail already exists, return its URI.
-    if (file_exists($local_thumbnail_uri)) {
-      return $local_thumbnail_uri;
-    }
 
     // The local thumbnail doesn't exist yet, so try to download it. First,
     // ensure that the destination directory is writable, and if it's not,
@@ -414,8 +405,20 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       return NULL;
     }
 
+    // The local filename of the thumbnail is always a hash of its remote URL.
+    // If a file with that name already exists in the thumbnails directory,
+    // regardless of its extension, return its URI.
+    $remote_thumbnail_url = $remote_thumbnail_url->toString();
+    $hash = Crypt::hashBase64($remote_thumbnail_url);
+    $files = $this->fileSystem->scanDirectory($directory, "/^$hash\..*/");
+    if (count($files) > 0) {
+      return reset($files)->uri;
+    }
+
+    // The local thumbnail doesn't exist yet, so we need to download it.
+    $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url);
     try {
-      $response = $this->httpClient->get($remote_thumbnail_url);
+      $response = $this->httpClient->request('GET', $remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {
         $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileSystemInterface::EXISTS_REPLACE);
         return $local_thumbnail_uri;
@@ -429,6 +432,49 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         'url' => $remote_thumbnail_url,
       ]);
     }
+    return NULL;
+  }
+
+  /**
+   * Tries to determine the file extension of a thumbnail.
+   *
+   * @param string $thumbnail_url
+   *   The remote URL of the thumbnail.
+   *
+   * @return string|null
+   *   The file extension, or NULL if it could not be determined.
+   */
+  protected function getThumbnailFileExtensionFromUrl(string $thumbnail_url): ?string {
+    // First, try to glean the extension from the URL path.
+    $path = parse_url($thumbnail_url, PHP_URL_PATH);
+    if ($path) {
+      $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+      if ($extension) {
+        return $extension;
+      }
+    }
+
+    // If the URL didn't give us any clues about the file extension, make a HEAD
+    // request to the thumbnail URL and see if the headers will give us a MIME
+    // type.
+    try {
+      $content_type = $this->httpClient->request('HEAD', $thumbnail_url)
+        ->getHeader('Content-Type');
+    }
+    catch (TransferException $e) {
+      $this->logger->warning($e->getMessage());
+    }
+
+    // If there was no Content-Type header, there's nothing else we can do.
+    if (empty($content_type)) {
+      return NULL;
+    }
+    $extensions = MimeTypes::getDefault()->getExtensions(reset($content_type));
+    if ($extensions) {
+      return reset($extensions);
+    }
+    // If no file extension could be determined from the Content-Type header,
+    // we're stumped.
     return NULL;
   }
 

@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\jsonapi\JsonApiResource\ErrorCollection;
+use Drupal\jsonapi\JsonApiResource\LabelOnlyResourceObject;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
@@ -54,6 +55,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     'file',
     'image',
     'jsonapi_test_normalizers_kernel',
+    'jsonapi_test_resource_type_building',
   ];
 
   /**
@@ -76,6 +78,13 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @var \Drupal\jsonapi\IncludeResolver
    */
   protected $includeResolver;
+
+  /**
+   * The JSON:API resource type repository under test.
+   *
+   * @var \Drupal\jsonapi\ResourceType\ResourceTypeRepository
+   */
+  protected $resourceTypeRepository;
 
   /**
    * {@inheritdoc}
@@ -178,6 +187,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     ])->save();
 
     $this->includeResolver = $this->container->get('jsonapi.include_resolver');
+    $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
   }
 
   /**
@@ -243,8 +253,8 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $normalized = $jsonapi_doc_object->getNormalization();
 
     // @see http://jsonapi.org/format/#document-jsonapi-object
-    $this->assertEquals($normalized['jsonapi']['version'], '1.0');
-    $this->assertEquals($normalized['jsonapi']['meta']['links']['self']['href'], 'http://jsonapi.org/format/1.0/');
+    $this->assertEquals('1.0', $normalized['jsonapi']['version']);
+    $this->assertEquals('http://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
 
     $this->assertSame($normalized['data']['attributes']['title'], 'dummy_title');
     $this->assertEquals($normalized['data']['id'], $this->node->uuid());
@@ -328,7 +338,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $normalized = $jsonapi_doc_object->getNormalization();
     $this->assertSame($normalized['data']['attributes']['name'], 'user1');
     $this->assertEquals($normalized['data']['id'], User::load(1)->uuid());
-    $this->assertEquals($normalized['data']['type'], 'user--user');
+    $this->assertEquals('user--user', $normalized['data']['type']);
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
     $this->assertSame(['user:1'], $jsonapi_doc_object->getCacheTags());
@@ -406,6 +416,70 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       ],
       'via' => ['href' => 'http://localhost/'],
     ], $normalized['errors'][0]['links']);
+  }
+
+  /**
+   * Test the message and exceptions thrown when we are requesting additional
+   * field values for Label only resource.
+   */
+  public function testAliasFieldRouteException() {
+    $this->assertSame('uid', $this->resourceTypeRepository->getByTypeName('node--article')->getPublicName('uid'));
+    $this->assertSame('roles', $this->resourceTypeRepository->getByTypeName('user--user')->getPublicName('roles'));
+    $resource_type_field_aliases = [
+      'node--article' => [
+        'uid' => 'author',
+      ],
+      'user--user' => [
+        'roles' => 'user_roles',
+      ],
+    ];
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.resource_type_field_aliases', $resource_type_field_aliases);
+    Cache::invalidateTags(['jsonapi_resource_types']);
+    $this->assertSame('author', $this->resourceTypeRepository->getByTypeName('node--article')->getPublicName('uid'));
+    $this->assertSame('user_roles', $this->resourceTypeRepository->getByTypeName('user--user')->getPublicName('roles'));
+
+    // Create the request to fetch the articles and fetch included user.
+    list($request, $resource_type) = $this->generateProphecies('node', 'article');
+    $user = User::load($this->node->getOwnerId());
+
+    $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
+    list($request, $user_resource_type) = $this->generateProphecies('user', 'user');
+    $resource_object_user = LabelOnlyResourceObject::createFromEntity($user_resource_type, $user);
+    $includes = $this->includeResolver->resolve($resource_object_user, 'user_roles');
+
+    /** @var \Drupal\jsonapi\Normalizer\Value\CacheableNormalization $jsonapi_doc_object */
+    $jsonapi_doc_object = $this
+      ->getNormalizer()
+      ->normalize(
+        new JsonApiDocumentTopLevel(new ResourceObjectData([$resource_object, $resource_object_user], 2), $includes, new LinkCollection([])),
+        'api_json',
+        [
+          'resource_type' => $resource_type,
+          'account' => NULL,
+          'sparse_fieldset' => [
+            'node--article' => [
+              'title',
+              'node_type',
+              'uid',
+            ],
+            'user--user' => [
+              'user_roles',
+            ],
+          ],
+          'include' => [
+            'user_roles',
+          ],
+        ],
+      )->getNormalization();
+    $this->assertNotEmpty($jsonapi_doc_object['meta']['omitted']);
+    foreach ($jsonapi_doc_object['meta']['omitted']['links'] as $key => $link) {
+      if (strpos($key, 'item--') === 0) {
+        // Ensure that resource link contains url with the alias field.
+        $resource_link = Url::fromUri('internal:/jsonapi/user/user/' . $user->uuid() . '/user_roles')->setAbsolute()->toString(TRUE);
+        $this->assertEquals($resource_link->getGeneratedUrl(), $link['href']);
+        $this->assertEquals("The current user is not allowed to view this relationship. The user only has authorization for the 'view label' operation.", $link['meta']['detail']);
+      }
+    }
   }
 
   /**
@@ -529,7 +603,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
         continue;
       }
 
-      /* @var \Drupal\node\Entity\Node $node */
+      /** @var \Drupal\node\Entity\Node $node */
       $this->assertInstanceOf(Node::class, $node);
       $this->assertSame('Testing article', $node->getTitle());
       if (!empty($expected['user_id'])) {

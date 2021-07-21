@@ -21,7 +21,6 @@ use Drupal\file\Entity\File;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\file\FileInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
@@ -340,7 +339,14 @@ function file_validate_extensions(FileInterface $file, $extensions) {
   $errors = [];
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
-  if (!preg_match($regex, $file->getFilename())) {
+  // Filename may differ from the basename, for instance in case files migrated
+  // from D7 file entities. Because of that new files are saved temporarily with
+  // a generated file name, without the original extension, we will use the
+  // generated filename property for extension validation only in case of
+  // temporary files; and use the file system file name in case of permanent
+  // files.
+  $subject = $file->isTemporary() ? $file->getFilename() : $file->getFileUri();
+  if (!preg_match($regex, $subject)) {
     $errors[] = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => $extensions]);
   }
   return $errors;
@@ -594,10 +600,8 @@ function file_save_data($data, $destination = NULL, $replace = FileSystemInterfa
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers(FileInterface $file) {
-  $type = Unicode::mimeHeaderEncode($file->getMimeType());
-
   return [
-    'Content-Type' => $type,
+    'Content-Type' => $file->getMimeType(),
     'Content-Length' => $file->getSize(),
     'Cache-Control' => 'private',
   ];

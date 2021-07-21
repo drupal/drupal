@@ -269,15 +269,12 @@
           };
 
           // Unsuccessfully saved; validation errors.
-          self.formSaveAjax.commands.quickeditFieldFormValidationErrors = function (
-            ajax,
-            response,
-            status,
-          ) {
-            removeHiddenForm();
-            editorModel.set('validationErrors', response.data);
-            fieldModel.set('state', 'invalid');
-          };
+          self.formSaveAjax.commands.quickeditFieldFormValidationErrors =
+            function (ajax, response, status) {
+              removeHiddenForm();
+              editorModel.set('validationErrors', response.data);
+              fieldModel.set('state', 'invalid');
+            };
 
           // The quickeditFieldForm AJAX command is only called upon loading the
           // form for the first time, and when there are validation errors in the

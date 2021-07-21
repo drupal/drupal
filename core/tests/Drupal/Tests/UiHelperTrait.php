@@ -135,7 +135,8 @@ trait UiHelperTrait {
    *   @code
    *   // First step in form.
    *   $edit = array(...);
-   *   $this->drupalPostForm('some_url', $edit, 'Save');
+   *   $this->drupalGet('some_url');
+   *   $this->submitForm($edit, 'Save');
    *
    *   // Second step in form.
    *   $edit = array(...);
@@ -254,7 +255,7 @@ trait UiHelperTrait {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);

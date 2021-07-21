@@ -75,7 +75,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
     // Verify that \Drupal::service('entity.repository')->loadEntityByUuid() loads the same entity.
     $entity_loaded_by_uuid = \Drupal::service('entity.repository')->loadEntityByUuid($entity_type, $uuid, TRUE);
     $this->assertSame($uuid, $entity_loaded_by_uuid->uuid());
-    $this->assertEqual($entity_loaded->id(), $entity_loaded_by_uuid->id());
+    $this->assertEquals($entity_loaded->id(), $entity_loaded_by_uuid->id());
 
     // Creating a duplicate needs to result in a new UUID.
     $entity_duplicate = $entity->createDuplicate();
@@ -101,7 +101,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
           break;
 
         default:
-          $this->assertEqual($entity->{$property}->getValue(), $entity_duplicate->{$property}->getValue());
+          $this->assertEquals($entity->{$property}->getValue(), $entity_duplicate->{$property}->getValue());
       }
     }
     $entity_duplicate->save();

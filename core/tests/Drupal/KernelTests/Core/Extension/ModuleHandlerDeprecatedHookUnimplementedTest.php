@@ -22,7 +22,7 @@ class ModuleHandlerDeprecatedHookUnimplementedTest extends KernelTestBase {
   public function testUnimplementedHooks() {
     $unimplemented_hook_name = 'unimplemented_hook_name';
 
-    /* @var $module_handler \Drupal\Core\Extension\ModuleHandlerInterface */
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     $this->assertInstanceOf(ModuleHandlerInterface::class, $module_handler);
 

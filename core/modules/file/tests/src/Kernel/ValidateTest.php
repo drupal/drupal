@@ -10,13 +10,13 @@ namespace Drupal\Tests\file\Kernel;
 class ValidateTest extends FileManagedUnitTestBase {
 
   /**
-   * Test that the validators passed into are checked.
+   * Tests that the validators passed into are checked.
    */
   public function testCallerValidation() {
     $file = $this->createFile();
 
     // Empty validators.
-    $this->assertEqual([], file_validate($file, []), 'Validating an empty array works successfully.');
+    $this->assertEquals([], file_validate($file, []), 'Validating an empty array works successfully.');
     $this->assertFileHooksCalled(['validate']);
 
     // Use the file_test.module's test validator to ensure that passing tests
@@ -24,14 +24,14 @@ class ValidateTest extends FileManagedUnitTestBase {
     file_test_reset();
     file_test_set_return('validate', []);
     $passing = ['file_test_validator' => [[]]];
-    $this->assertEqual([], file_validate($file, $passing), 'Validating passes.');
+    $this->assertEquals([], file_validate($file, $passing), 'Validating passes.');
     $this->assertFileHooksCalled(['validate']);
 
     // Now test for failures in validators passed in and by hook_validate.
     file_test_reset();
     file_test_set_return('validate', ['Epic fail']);
     $failing = ['file_test_validator' => [['Failed', 'Badly']]];
-    $this->assertEqual(['Failed', 'Badly', 'Epic fail'], file_validate($file, $failing), 'Validating returns errors.');
+    $this->assertEquals(['Failed', 'Badly', 'Epic fail'], file_validate($file, $failing), 'Validating returns errors.');
     $this->assertFileHooksCalled(['validate']);
   }
 

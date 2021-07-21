@@ -7,6 +7,14 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Base class for D7 source plugins which need to collect field values from
  * the Field API.
+ *
+ * Refer to the existing implementations for examples:
+ * @see \Drupal\node\Plugin\migrate\source\d7\Node
+ * @see \Drupal\user\Plugin\migrate\source\d7\User
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
 abstract class FieldableEntity extends DrupalSqlBase {
 
@@ -51,7 +59,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    *   (optional) The field language.
    *
    * @return array
-   *   The raw field values, keyed by delta.
+   *   The raw field values, keyed and sorted by delta.
    */
   protected function getFieldValues($entity_type, $field, $entity_id, $revision_id = NULL, $language = NULL) {
     $table = (isset($revision_id) ? 'field_revision_' : 'field_data_') . $field;
@@ -59,7 +67,8 @@ abstract class FieldableEntity extends DrupalSqlBase {
       ->fields('t')
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $entity_id)
-      ->condition('deleted', 0);
+      ->condition('deleted', 0)
+      ->orderBy('delta');
     if (isset($revision_id)) {
       $query->condition('revision_id', $revision_id);
     }

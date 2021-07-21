@@ -53,7 +53,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
           "fields[$field_name][region]" => 'content',
         ];
       }
-      $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, 'Save');
+      $this->drupalGet("admin/structure/types/manage/{$type_name}/display");
+      $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
       // Verify that the field label is hidden when no file is attached.
       $this->assertNoText($field_name);
@@ -83,7 +84,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Turn the "display" option off and check that the file is no longer displayed.
     $edit = [$field_name . '[0][display]' => FALSE];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
 
     $this->assertNoRaw($default_output);
 
@@ -93,8 +95,9 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[0][description]' => $description,
       $field_name . '[0][display]' => TRUE,
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
-    $this->assertText($description);
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains($description);
 
     // Ensure the filename in the link's title attribute is escaped.
     $this->assertRaw('title="escaped-&amp;-text.txt"');
@@ -103,7 +106,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Add a second file.
     $name = 'files[' . $field_name . '_1][]';
     $edit_upload[$name] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
-    $this->drupalPostForm("node/$nid/edit", $edit_upload, 'Upload');
+    $this->drupalGet("node/{$nid}/edit");
+    $this->submitForm($edit_upload, 'Upload');
 
     // Uncheck the display checkboxes and go to the preview.
     $edit[$field_name . '[0][display]'] = FALSE;
@@ -159,14 +163,16 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'name' => $type_name,
       'type' => $type_name,
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
+    $this->drupalGet('admin/structure/types/add');
+    $this->submitForm($edit, 'Save and manage fields');
     $field_label = $this->randomString();
     $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
       'label' => $field_label,
     ];
-    $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, 'Save and continue');
+    $this->drupalGet('/admin/structure/types/manage/' . $type_name . '/fields/add-field');
+    $this->submitForm($edit, 'Save and continue');
     $this->submitForm([], 'Save field settings');
     // Ensure the description field is selected on the field instance settings
     // form. That's what this test is all about.
@@ -181,10 +187,11 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'title[0][value]' => $title,
       'files[field_' . $field_name . '_0]' => \Drupal::service('file_system')->realpath($file->uri),
     ];
-    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
+    $this->drupalGet('node/add/' . $type_name);
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertText('The description may be used as the label of the link to the file.');
+    $this->assertSession()->pageTextContains('The description may be used as the label of the link to the file.');
 
     // Set the description field as required.
     $edit = ['settings[description_field_required]' => TRUE];
@@ -221,7 +228,10 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Add file description.
     $description = 'This is the test file description';
-    $this->drupalPostForm("node/$nid/edit", [$field_name . '[0][description]' => $description], 'Save');
+    $this->drupalGet("node/{$nid}/edit");
+    $this->submitForm([
+      $field_name . '[0][description]' => $description,
+    ], 'Save');
 
     // Load uncached node.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);

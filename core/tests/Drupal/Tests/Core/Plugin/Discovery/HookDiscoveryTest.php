@@ -59,26 +59,24 @@ class HookDiscoveryTest extends UnitTestCase {
       ->with('test_plugin')
       ->will($this->returnValue(['hook_discovery_test', 'hook_discovery_test2']));
 
-    $this->moduleHandler->expects($this->at(1))
+    $this->moduleHandler->expects($this->exactly(2))
       ->method('invoke')
-      ->with('hook_discovery_test', 'test_plugin')
-      ->will($this->returnValue($this->hookDiscoveryTestTestPlugin()));
-    $this->moduleHandler->expects($this->at(2))
-      ->method('invoke')
-      ->with('hook_discovery_test2', 'test_plugin')
-      ->will($this->returnValue($this->hookDiscoveryTest2TestPlugin()));
+      ->willReturnMap([
+        ['hook_discovery_test', 'test_plugin', [], $this->hookDiscoveryTestTestPlugin()],
+        ['hook_discovery_test2', 'test_plugin', [], $this->hookDiscoveryTest2TestPlugin()],
+      ]);
 
     $definitions = $this->hookDiscovery->getDefinitions();
 
     $this->assertCount(3, $definitions);
-    $this->assertEquals($definitions['test_id_1']['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple');
-    $this->assertEquals($definitions['test_id_2']['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange');
-    $this->assertEquals($definitions['test_id_3']['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry');
+    $this->assertEquals('Drupal\plugin_test\Plugin\plugin_test\fruit\Apple', $definitions['test_id_1']['class']);
+    $this->assertEquals('Drupal\plugin_test\Plugin\plugin_test\fruit\Orange', $definitions['test_id_2']['class']);
+    $this->assertEquals('Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry', $definitions['test_id_3']['class']);
 
     // Ensure that the module was set.
-    $this->assertEquals($definitions['test_id_1']['provider'], 'hook_discovery_test');
-    $this->assertEquals($definitions['test_id_2']['provider'], 'hook_discovery_test');
-    $this->assertEquals($definitions['test_id_3']['provider'], 'hook_discovery_test2');
+    $this->assertEquals('hook_discovery_test', $definitions['test_id_1']['provider']);
+    $this->assertEquals('hook_discovery_test', $definitions['test_id_2']['provider']);
+    $this->assertEquals('hook_discovery_test2', $definitions['test_id_3']['provider']);
   }
 
   /**
@@ -103,16 +101,16 @@ class HookDiscoveryTest extends UnitTestCase {
     $this->assertNull($this->hookDiscovery->getDefinition('test_non_existent', FALSE));
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_1');
-    $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple');
-    $this->assertEquals($plugin_definition['provider'], 'hook_discovery_test');
+    $this->assertEquals('Drupal\plugin_test\Plugin\plugin_test\fruit\Apple', $plugin_definition['class']);
+    $this->assertEquals('hook_discovery_test', $plugin_definition['provider']);
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_2');
-    $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange');
-    $this->assertEquals($plugin_definition['provider'], 'hook_discovery_test');
+    $this->assertEquals('Drupal\plugin_test\Plugin\plugin_test\fruit\Orange', $plugin_definition['class']);
+    $this->assertEquals('hook_discovery_test', $plugin_definition['provider']);
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_3');
-    $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry');
-    $this->assertEquals($plugin_definition['provider'], 'hook_discovery_test2');
+    $this->assertEquals('Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry', $plugin_definition['class']);
+    $this->assertEquals('hook_discovery_test2', $plugin_definition['provider']);
   }
 
   /**

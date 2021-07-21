@@ -33,6 +33,13 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   protected $viewer;
 
   /**
+   * The mock user account with 'view user email addresses' permission.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $emailViewer;
+
+  /**
    * The mock user account that is able to change their own account name.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -95,6 +102,18 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->expects($this->any())
       ->method('hasPermission')
       ->will($this->returnValue(TRUE));
+
+    $this->emailViewer = $this->createMock('\Drupal\Core\Session\AccountInterface');
+    $this->emailViewer
+      ->expects($this->any())
+      ->method('hasPermission')
+      ->will($this->returnValueMap([
+        ['view user email addresses', TRUE],
+      ]));
+    $this->emailViewer
+      ->expects($this->any())
+      ->method('id')
+      ->will($this->returnValue(3));
 
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
 
@@ -238,6 +257,14 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
+        'edit' => TRUE,
+      ];
+      $access_info[] = [
+        'field' => $field,
+        'viewer' => 'emailViewer',
+        'target' => 'owner',
+        'view' => $field === 'mail',
+        // See note above.
         'edit' => TRUE,
       ];
     }

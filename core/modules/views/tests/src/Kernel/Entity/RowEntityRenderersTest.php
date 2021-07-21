@@ -243,9 +243,6 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *   (optional) A message to display with the assertion.
    * @param string $group
    *   (optional) The group this message is in.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertTranslations($display, $renderer_id, array $expected, $message = '', $group = 'Other') {
     $view = Views::getView('test_entity_row_renderers');
@@ -270,7 +267,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       }
     }
 
-    return $this->assertTrue($result, $message, $group);
+    $this->assertTrue($result, $message, $group);
   }
 
 }

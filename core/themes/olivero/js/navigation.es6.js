@@ -1,8 +1,15 @@
-((Drupal) => {
+/**
+ * @file
+ * Customization of navigation.
+ */
+
+((Drupal, once, tabbable) => {
   /**
    * Checks if navWrapper contains "is-active" class.
-   * @param {object} navWrapper
+   *
+   * @param {Element} navWrapper
    *   Header navigation.
+   *
    * @return {boolean}
    *   True if navWrapper contains "is-active" class, false if not.
    */
@@ -12,6 +19,7 @@
 
   /**
    * Opens or closes the header navigation.
+   *
    * @param {object} props
    *   Navigation props.
    * @param {boolean} state
@@ -22,18 +30,19 @@
     props.navButton.setAttribute('aria-expanded', value);
 
     if (value) {
-      props.body.classList.add('js-overlay-active');
-      props.body.classList.add('js-fixed');
+      props.body.classList.add('is-overlay-active');
+      props.body.classList.add('is-fixed');
       props.navWrapper.classList.add('is-active');
     } else {
-      props.body.classList.remove('js-overlay-active');
-      props.body.classList.remove('js-fixed');
+      props.body.classList.remove('is-overlay-active');
+      props.body.classList.remove('is-fixed');
       props.navWrapper.classList.remove('is-active');
     }
   }
 
   /**
-   * Init function for header navigation.
+   * Initialize the header navigation.
+   *
    * @param {object} props
    *   Navigation props.
    */
@@ -45,9 +54,9 @@
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
 
-    // Closes any open sub navigation first, then close header navigation.
+    // Close any open sub-navigation first, then close the header navigation.
     document.addEventListener('keyup', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
         } else {
@@ -64,34 +73,41 @@
       toggleNav(props, false);
     });
 
-    // Focus trap.
-    props.navWrapper.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab') {
+    // Focus trap. This is added to the header element because the navButton
+    // element is not a child element of the navWrapper element, and the keydown
+    // event would not fire if focus is on the navButton element.
+    props.header.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab' && isNavOpen(props.navWrapper)) {
+        const tabbableNavElements = tabbable.tabbable(props.navWrapper);
+        tabbableNavElements.unshift(props.navButton);
+        const firstTabbableEl = tabbableNavElements[0];
+        const lastTabbableEl =
+          tabbableNavElements[tabbableNavElements.length - 1];
+
         if (e.shiftKey) {
           if (
-            document.activeElement === props.firstFocusableEl &&
+            document.activeElement === firstTabbableEl &&
             !props.olivero.isDesktopNav()
           ) {
-            props.navButton.focus();
+            lastTabbableEl.focus();
             e.preventDefault();
           }
         } else if (
-          document.activeElement === props.lastFocusableEl &&
+          document.activeElement === lastTabbableEl &&
           !props.olivero.isDesktopNav()
         ) {
-          props.navButton.focus();
+          firstTabbableEl.focus();
           e.preventDefault();
         }
       }
     });
 
     // Remove overlays when browser is resized and desktop nav appears.
-    // @todo Use core/drupal.debounce library to throttle when we move into theming.
     window.addEventListener('resize', () => {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
-        props.body.classList.remove('js-overlay-active');
-        props.body.classList.remove('js-fixed');
+        props.body.classList.remove('is-overlay-active');
+        props.body.classList.remove('is-fixed');
       }
 
       // Ensure that all sub-navigation menus close when the browser is resized.
@@ -100,39 +116,40 @@
   }
 
   /**
-   * Initialize the navigation JS.
+   * Initialize the navigation.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach context and settings for navigation.
    */
   Drupal.behaviors.oliveroNavigation = {
-    attach(context, settings) {
+    attach(context) {
+      const headerId = 'header';
+      const header = once('navigation', `#${headerId}`, context).shift();
       const navWrapperId = 'header-nav';
-      const navWrapper = context.querySelector(
-        `#${navWrapperId}:not(.${navWrapperId}-processed)`,
-      );
-      if (navWrapper) {
-        navWrapper.classList.add(`${navWrapperId}-processed`);
+
+      if (header) {
+        const navWrapper = header.querySelector(`#${navWrapperId}`);
         const { olivero } = Drupal;
-        const navButton = context.querySelector('.mobile-nav-button');
-        const body = context.querySelector('body');
-        const overlay = context.querySelector('.overlay');
-        const focusableNavElements = navWrapper.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        const navButton = context.querySelector(
+          '[data-drupal-selector="mobile-nav-button"]',
         );
-        const firstFocusableEl = focusableNavElements[0];
-        const lastFocusableEl =
-          focusableNavElements[focusableNavElements.length - 1];
+        const body = context.querySelector('body');
+        const overlay = context.querySelector(
+          '[data-drupal-selector="overlay"]',
+        );
 
         init({
-          settings,
           olivero,
+          header,
           navWrapperId,
           navWrapper,
           navButton,
           body,
           overlay,
-          firstFocusableEl,
-          lastFocusableEl,
         });
       }
     },
   };
-})(Drupal);
+})(Drupal, once, tabbable);

@@ -1,11 +1,11 @@
 /**
  * @file
- * Messages.
+ * Customization of messages.
  */
 
-((Drupal) => {
+((Drupal, once) => {
   /**
-   * Adds close button to the message.
+   * Adds a close button to the message.
    *
    * @param {object} message
    *   The message object.
@@ -27,8 +27,6 @@
     messageContainer.appendChild(closeBtnWrapper);
     closeBtnWrapper.appendChild(closeBtn);
     closeBtn.appendChild(closeBtnText);
-
-    message.classList.add('messages-processed');
 
     closeBtn.addEventListener('click', () => {
       message.classList.add('hidden');
@@ -58,7 +56,7 @@
 
     messageWrapper.setAttribute(
       'class',
-      `messages-list__item messages messages--${type} messages-processed`,
+      `messages-list__item messages messages--${type}`,
     );
     messageWrapper.setAttribute(
       'role',
@@ -110,17 +108,16 @@
   };
 
   /**
-   * Getting messages from context.
+   * Get messages from context.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the close button behavior for messages.
    */
   Drupal.behaviors.messages = {
     attach(context) {
-      const messages = context.querySelectorAll(
-        '.messages:not(.messages-processed)',
-      );
-
-      messages.forEach((message) => {
-        closeMessage(message);
-      });
+      once('olivero-messages', '.messages', context).forEach(closeMessage);
     },
   };
-})(Drupal);
+})(Drupal, once);

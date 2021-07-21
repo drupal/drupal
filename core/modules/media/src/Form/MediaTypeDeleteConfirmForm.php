@@ -45,6 +45,7 @@ class MediaTypeDeleteConfirmForm extends EntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $num_entities = $this->entityTypeManager->getStorage('media')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('bundle', $this->entity->id())
       ->count()
       ->execute();

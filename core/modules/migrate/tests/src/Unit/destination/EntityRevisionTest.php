@@ -60,7 +60,7 @@ class EntityRevisionTest extends UnitTestCase {
   }
 
   /**
-   * Test that passed old destination values are used by default.
+   * Tests that passed old destination values are used by default.
    *
    * @covers ::getEntity
    */
@@ -78,7 +78,7 @@ class EntityRevisionTest extends UnitTestCase {
   }
 
   /**
-   * Test that revision updates update.
+   * Tests that revision updates update.
    *
    * @covers ::getEntity
    */
@@ -105,7 +105,7 @@ class EntityRevisionTest extends UnitTestCase {
   }
 
   /**
-   * Test that new revisions are flagged to be written as new.
+   * Tests that new revisions are flagged to be written as new.
    *
    * @covers ::getEntity
    */
@@ -135,7 +135,7 @@ class EntityRevisionTest extends UnitTestCase {
   }
 
   /**
-   * Test entity load failure.
+   * Tests entity load failure.
    *
    * @covers ::getEntity
    */
@@ -158,7 +158,7 @@ class EntityRevisionTest extends UnitTestCase {
   }
 
   /**
-   * Test entity revision save.
+   * Tests entity revision save.
    *
    * @covers ::save
    */

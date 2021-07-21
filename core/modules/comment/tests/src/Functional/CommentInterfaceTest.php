@@ -85,8 +85,8 @@ class CommentInterfaceTest extends CommentTestBase {
     // Check comment display.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertText($subject_text);
-    $this->assertText($comment_text);
+    $this->assertSession()->pageTextContains($subject_text);
+    $this->assertSession()->pageTextContains($comment_text);
     $arguments = [
       ':link' => base_path() . 'comment/' . $comment->id() . '#comment-' . $comment->id(),
     ];
@@ -132,34 +132,34 @@ class CommentInterfaceTest extends CommentTestBase {
     // Verify we were correctly redirected.
     $this->assertSession()->addressEquals(Url::fromRoute('comment.reply', ['entity_type' => 'node', 'entity' => $this->node->id(), 'field_name' => 'comment']));
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
-    $this->assertText($subject_text);
-    $this->assertText($comment_text);
+    $this->assertSession()->pageTextContains($subject_text);
+    $this->assertSession()->pageTextContains($comment_text);
     $reply = $this->postComment(NULL, $this->randomMachineName(), '', TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
-    $this->assertEqual($comment->id(), $reply_loaded->getParentComment()->id(), 'Pid of a reply to a comment is set correctly.');
+    $this->assertEquals($comment->id(), $reply_loaded->getParentComment()->id(), 'Pid of a reply to a comment is set correctly.');
     // Check the thread of reply grows correctly.
-    $this->assertEqual(rtrim($comment->getThread(), '/') . '.00/', $reply_loaded->getThread());
+    $this->assertEquals(rtrim($comment->getThread(), '/') . '.00/', $reply_loaded->getThread());
 
     // Second reply to comment #2 creating comment #4.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
-    $this->assertText($comment->getSubject());
-    $this->assertText($comment->comment_body->value);
+    $this->assertSession()->pageTextContains($comment->getSubject());
+    $this->assertSession()->pageTextContains($comment->comment_body->value);
     $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of second reply grows correctly.
-    $this->assertEqual(rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
+    $this->assertEquals(rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
 
     // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
-    $this->assertText($reply_loaded->getSubject());
-    $this->assertText($reply_loaded->comment_body->value);
+    $this->assertSession()->pageTextContains($reply_loaded->getSubject());
+    $this->assertSession()->pageTextContains($reply_loaded->comment_body->value);
     $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of reply to second reply grows correctly.
-    $this->assertEqual(rtrim($comment->getThread(), '/') . '.01.00/', $reply_loaded->getThread());
+    $this->assertEquals(rtrim($comment->getThread(), '/') . '.01.00/', $reply_loaded->getThread());
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id() . '/edit');
@@ -230,7 +230,7 @@ class CommentInterfaceTest extends CommentTestBase {
   }
 
   /**
-   * Test that the subject is automatically filled if disabled or left blank.
+   * Tests that the subject is automatically filled if disabled or left blank.
    *
    * When the subject field is blank or disabled, the first 29 characters of the
    * comment body are used for the subject. If this would break within a word,
@@ -244,16 +244,16 @@ class CommentInterfaceTest extends CommentTestBase {
     $body_text = 'Lorem ipsum Lorem ipsum Loreming ipsum Lorem ipsum';
     $comment1 = $this->postComment(NULL, $body_text, '', TRUE);
     $this->assertTrue($this->commentExists($comment1), 'Form comment found.');
-    $this->assertEqual('Lorem ipsum Lorem ipsum…', $comment1->getSubject());
+    $this->assertEquals('Lorem ipsum Lorem ipsum…', $comment1->getSubject());
 
     // Break at 29 characters where there's no boundary before that.
     $body_text2 = 'LoremipsumloremipsumLoremingipsumLoremipsum';
     $comment2 = $this->postComment(NULL, $body_text2, '', TRUE);
-    $this->assertEqual('LoremipsumloremipsumLoreming…', $comment2->getSubject());
+    $this->assertEquals('LoremipsumloremipsumLoreming…', $comment2->getSubject());
   }
 
   /**
-   * Test that automatic subject is correctly created from HTML comment text.
+   * Tests that automatic subject is correctly created from HTML comment text.
    *
    * This is the same test as in CommentInterfaceTest::testAutoFilledSubject()
    * with the additional check that HTML is stripped appropriately prior to
@@ -293,7 +293,7 @@ class CommentInterfaceTest extends CommentTestBase {
       'comment_body[0][format]' => 'filtered_html',
     ];
     $this->submitForm($edit1, 'Save');
-    $this->assertEqual('Hello World', Comment::load(1)->getSubject());
+    $this->assertEquals('Hello World', Comment::load(1)->getSubject());
 
     // If there's nothing other than HTML, the subject should be '(No subject)'.
     $body_text2 = '<span></span><strong> </strong><span> </span><strong></strong> <br />';
@@ -302,7 +302,7 @@ class CommentInterfaceTest extends CommentTestBase {
       'comment_body[0][format]' => 'filtered_html',
     ];
     $this->submitForm($edit2, 'Save');
-    $this->assertEqual('(No subject)', Comment::load(2)->getSubject());
+    $this->assertEquals('(No subject)', Comment::load(2)->getSubject());
   }
 
   /**

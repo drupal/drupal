@@ -476,20 +476,17 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::createDuplicate
    */
   public function testCreateDuplicate() {
-    $this->entityType->expects($this->at(0))
+    $this->entityType->expects($this->exactly(2))
       ->method('getKey')
-      ->with('id')
-      ->will($this->returnValue('id'));
+      ->willReturnMap([
+        ['id', 'id'],
+        ['uuid', 'uuid'],
+      ]);
 
-    $this->entityType->expects($this->at(1))
+    $this->entityType->expects($this->once())
       ->method('hasKey')
       ->with('uuid')
       ->will($this->returnValue(TRUE));
-
-    $this->entityType->expects($this->at(2))
-      ->method('getKey')
-      ->with('uuid')
-      ->will($this->returnValue('uuid'));
 
     $new_uuid = '8607ef21-42bc-4913-978f-8c06207b0395';
     $this->uuid->expects($this->once())

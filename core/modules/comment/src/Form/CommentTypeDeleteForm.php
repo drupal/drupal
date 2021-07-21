@@ -64,8 +64,10 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $comments = $this->entityTypeManager->getStorage('comment')->getQuery()
+    $comment_count = $this->entityTypeManager->getStorage('comment')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('comment_type', $this->entity->id())
+      ->count()
       ->execute();
     $entity_type = $this->entity->getTargetEntityTypeId();
     $caption = '';
@@ -79,8 +81,8 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
       }
     }
 
-    if (!empty($comments)) {
-      $caption .= '<p>' . $this->formatPlural(count($comments), '%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', '%label is used by @count comments on your site. You may not remove %label until you have removed all of the %label comments.', ['%label' => $this->entity->label()]) . '</p>';
+    if ($comment_count) {
+      $caption .= '<p>' . $this->formatPlural($comment_count, '%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', '%label is used by @count comments on your site. You may not remove %label until you have removed all of the %label comments.', ['%label' => $this->entity->label()]) . '</p>';
     }
     if ($caption) {
       $form['description'] = ['#markup' => $caption];

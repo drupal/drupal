@@ -77,6 +77,10 @@ class EditorMediaDialog extends FormBase {
   /**
    * {@inheritdoc}
    *
+   * @param array $form
+   *   A nested array form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\editor\EditorInterface $editor
    *   The text editor to which this dialog corresponds.
    */
@@ -172,7 +176,7 @@ class EditorMediaDialog extends FormBase {
       '#access' => $filter_caption->status && ($filter_html->status === FALSE || !empty($allowed_attributes['data-caption'])),
     ];
 
-    $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptions('media'), $media_embed_filter->settings['allowed_view_modes']);
+    $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $media->bundle()), $media_embed_filter->settings['allowed_view_modes']);
     $default_view_mode = static::getViewModeDefaultValue($view_mode_options, $media_embed_filter, $media_embed_element['data-view-mode'] ?? NULL);
 
     $form['view_mode'] = [

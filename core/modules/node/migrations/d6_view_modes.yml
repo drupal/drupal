@@ -6,7 +6,7 @@ migration_tags:
 source:
   plugin: d6_view_mode
   constants:
-    targetEntityType: node
+    entity_type: node
     status: true
 process:
   mode:
@@ -33,7 +33,7 @@ process:
       5: "Print"
       teaser: "Teaser"
       full: "Full"
-  targetEntityType: 'constants/targetEntityType'
+  targetEntityType: 'constants/entity_type'
   status: 'constants/status'
 destination:
   plugin: entity:entity_view_mode

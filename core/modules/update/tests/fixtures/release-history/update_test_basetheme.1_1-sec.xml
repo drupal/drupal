@@ -13,9 +13,8 @@
  <release>
   <name>update_test_basetheme 8.x-1.1</name>
   <version>8.x-1.1</version>
-  <tag>DRUPAL-7--1-1</tag>
   <status>published</status>
-  <release_link>http://example.com/update_test_basetheme-7-x-1-1-release</release_link>
+  <release_link>http://example.com/update_test_basetheme-8-x-1-1-release</release_link>
   <download_link>http://example.com/update_test_basetheme-8.x-1.1.tar.gz</download_link>
   <date>1250624521</date>
   <terms>
@@ -27,9 +26,8 @@
  <release>
   <name>update_test_basetheme 8.x-1.0</name>
   <version>8.x-1.0</version>
-  <tag>DRUPAL-7--1-0</tag>
   <status>published</status>
-  <release_link>http://example.com/update_test_basetheme-7-x-1-0-release</release_link>
+  <release_link>http://example.com/update_test_basetheme-8-x-1-0-release</release_link>
   <download_link>http://example.com/update_test_basetheme-8.x-1.0.tar.gz</download_link>
   <date>1250524521</date>
   <terms>

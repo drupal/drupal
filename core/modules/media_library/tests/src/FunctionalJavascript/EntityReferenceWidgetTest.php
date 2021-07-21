@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+use Drupal\field\Entity\FieldConfig;
+
 /**
  * Tests the Media library entity reference widget.
  *
@@ -113,7 +115,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->assertTrue($menu->hasLink('Show Type Three media (selected)'));
     // Assert the focus is set to the first tabbable element when a vertical tab
     // is clicked.
-    $this->assertJsCondition('jQuery("#media-library-content :tabbable:first").is(":focus")');
+    $this->assertJsCondition('jQuery(tabbable.tabbable(document.getElementById("media-library-content"))[0]).is(":focus")');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert that there are no links in the media library view.
@@ -163,6 +165,12 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $expected_link_titles = ['Show Type Three media (selected)', 'Show Type One media', 'Show Type Two media', 'Show Type Four media'];
     $this->assertSame($link_titles, $expected_link_titles);
     $this->drupalGet('admin/structure/types/manage/basic_page/form-display');
+
+    // Ensure that the widget settings form is not displayed when only
+    // one media type is allowed.
+    $assert_session->pageTextContains('Single media type');
+    $assert_session->buttonNotExists('field_single_media_type_settings_edit');
+
     $assert_session->buttonExists('field_twin_media_settings_edit')->press();
     $this->assertElementExistsAfterWait('css', '#field-twin-media .tabledrag-toggle-weight')->press();
     $assert_session->fieldExists('fields[field_twin_media][settings_edit_form][settings][media_types][type_one][weight]')->selectOption(0);
@@ -440,6 +448,36 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Horse');
     $assert_session->pageTextContains('Turtle');
     $assert_session->pageTextNotContains('Snake');
+  }
+
+  /**
+   * Tests saving a required media library field.
+   */
+  public function testRequiredMediaField() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Make field_unlimited_media required.
+    $field_config = FieldConfig::loadByName('node', 'basic_page', 'field_unlimited_media');
+    $field_config->setRequired(TRUE)->save();
+
+    $this->drupalGet('node/add/basic_page');
+
+    $page->fillField('Title', 'My page');
+    $page->pressButton('Save');
+
+    // Check that a clear error message is shown.
+    $assert_session->pageTextNotContains('This value should not be null.');
+    $assert_session->pageTextContains(sprintf('%s field is required.', $field_config->label()));
+
+    // Open the media library, select an item and save the node.
+    $this->openMediaLibraryForField('field_unlimited_media');
+    $this->selectMediaItem(0);
+    $this->pressInsertSelected('Added one media item.');
+    $page->pressButton('Save');
+
+    // Confirm that the node was created.
+    $this->assertSession()->pageTextContains('Basic page My page has been created.');
   }
 
 }

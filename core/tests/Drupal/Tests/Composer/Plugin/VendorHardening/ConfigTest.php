@@ -116,7 +116,7 @@ class ConfigTest extends TestCase {
     $plugin_config = $ref_plugin_config->invoke($config);
 
     foreach (array_keys($plugin_config) as $package_name) {
-      $this->assertNotRegExp('/[A-Z]/', $package_name);
+      $this->assertDoesNotMatchRegularExpression('/[A-Z]/', $package_name);
     }
   }
 

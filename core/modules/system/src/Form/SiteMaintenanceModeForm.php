@@ -25,10 +25,10 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   protected $state;
 
   /**
-  * The permission handler.
-  *
-  * @var \Drupal\user\PermissionHandlerInterface
-  */
+   * The permission handler.
+   *
+   * @var \Drupal\user\PermissionHandlerInterface
+   */
   protected $permissionHandler;
 
   /**

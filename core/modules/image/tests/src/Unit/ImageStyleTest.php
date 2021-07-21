@@ -40,6 +40,8 @@ class ImageStyleTest extends UnitTestCase {
    *   The image effect ID.
    * @param \Drupal\image\ImageEffectInterface|\PHPUnit\Framework\MockObject\MockObject $image_effect
    *   The image effect used for testing.
+   * @param array $stubs
+   *   An array of additional method names to mock.
    *
    * @return \Drupal\image\ImageStyleInterface
    *   The mocked image style.
@@ -111,7 +113,7 @@ class ImageStyleTest extends UnitTestCase {
     $extensions = ['jpeg', 'gif', 'png'];
     foreach ($extensions as $extension) {
       $extensionReturned = $image_style->getDerivativeExtension($extension);
-      $this->assertEquals($extensionReturned, 'png');
+      $this->assertEquals('png', $extensionReturned);
     }
   }
 

@@ -506,8 +506,8 @@ function template_preprocess_node(&$variables) {
   $variables['url'] = !$node->isNew() ? $node->toUrl('canonical')->toString() : NULL;
 
   // The 'page' variable is set to TRUE in two occasions:
-  //   - The view mode is 'full' and we are on the 'node.view' route.
-  //   - The node is in preview and view mode is either 'full' or 'default'.
+  // - The view mode is 'full' and we are on the 'node.view' route.
+  // - The node is in preview and view mode is either 'full' or 'default'.
   $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])));
 
   // Helpful $content variable for templates.
@@ -615,6 +615,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
       $nids = \Drupal::entityQuery('node')
+        ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
       module_load_include('inc', 'node', 'node.admin');

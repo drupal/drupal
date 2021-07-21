@@ -11,7 +11,7 @@ user.logout:
   defaults:
     _controller: '\Drupal\user\Controller\UserController::logout'
   requirements:
-    _access: 'TRUE'
+    _user_is_logged_in: 'TRUE'
 
 user.admin_index:
   path: '/admin/config/people'

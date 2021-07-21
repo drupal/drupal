@@ -91,11 +91,13 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the users can log in with the admin password selected at install.
+   * Tests that the users can log in with the admin password selected at
+   * install.
    */
   public function testUser() {
     $password = $this->rootUser->pass_raw;
     $ids = \Drupal::entityQuery('user')
+      ->accessCheck(FALSE)
       ->condition('roles', ['author', 'editor'], 'IN')
       ->execute();
 
@@ -161,7 +163,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $nodes = $this->container->get('entity_type.manager')
       ->getStorage('node')
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
-    /* @var \Drupal\node\Entity\Node $recipe_node */
+    /** @var \Drupal\node\Entity\Node $recipe_node */
     $recipe_node = reset($nodes);
 
     // Check when editing a node, the warning is visible.
@@ -228,7 +230,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $password,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);

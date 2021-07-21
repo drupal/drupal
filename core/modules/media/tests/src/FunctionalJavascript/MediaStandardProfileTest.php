@@ -93,7 +93,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test the standard profile configuration for media type 'audio'.
+   * Tests the standard profile configuration for media type 'audio'.
    */
   protected function audioTest() {
     $assert_session = $this->assertSession();
@@ -124,6 +124,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $audio_media_id = reset($audio_media_id);
@@ -184,7 +185,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test the standard profile configuration for media type 'image'.
+   * Tests the standard profile configuration for media type 'image'.
    */
   protected function imageTest() {
     $assert_session = $this->assertSession();
@@ -209,6 +210,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $image_media_id = reset($image_media_id);
@@ -277,7 +279,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test the standard profile configuration for media type 'document'.
+   * Tests the standard profile configuration for media type 'document'.
    */
   protected function documentTest() {
     $assert_session = $this->assertSession();
@@ -308,6 +310,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $file_media_id = reset($file_media_id);
@@ -366,7 +369,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test the standard profile configuration for media type 'remote_video'.
+   * Tests the standard profile configuration for media type 'remote_video'.
    */
   protected function remoteVideoTest() {
     $assert_session = $this->assertSession();
@@ -395,6 +398,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $remote_video_media_id = reset($remote_video_media_id);
@@ -460,7 +464,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test the standard profile configuration for media type 'video'.
+   * Tests the standard profile configuration for media type 'video'.
    */
   protected function videoTest() {
     $assert_session = $this->assertSession();
@@ -491,6 +495,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $video_media_id = reset($video_media_id);

@@ -233,6 +233,7 @@ function layout_builder_cron() {
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
 function layout_builder_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  unset($definitions['system_main_block']);
   // @todo Restore the page title block in https://www.drupal.org/node/2938129.
   unset($definitions['page_title_block']);
 }
@@ -336,6 +337,9 @@ function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMa
   if ($route_match->getRouteObject()->hasOption('_layout_builder') && $route_match->getParameter('section_storage_type') === 'defaults') {
     $links = array_filter($breadcrumb->getLinks(), function (Link $link) use ($route_match) {
       $entity_type_id = $route_match->getParameter('entity_type_id');
+      if (!$link->getUrl()->isRouted()) {
+        return TRUE;
+      }
       return $link->getUrl()->getRouteName() !== "entity.entity_view_display.$entity_type_id.default";
     });
     // Links cannot be removed from an existing breadcrumb object. Create a new

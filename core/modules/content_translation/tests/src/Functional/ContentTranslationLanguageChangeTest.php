@@ -68,7 +68,8 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'settings[node][article][translatable]' => TRUE,
       'settings[node][article][settings][language][language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
 
     // Add an image field.
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
@@ -83,7 +84,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
   }
 
   /**
-   * Test that the source language is properly set when changing.
+   * Tests that the source language is properly set when changing.
    */
   public function testLanguageChange() {
     // Create a node in English.
@@ -118,7 +119,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
   }
 
   /**
-   * Test that title does not change on ajax call with new language value.
+   * Tests that title does not change on ajax call with new language value.
    */
   public function testTitleDoesNotChangesOnChangingLanguageWidgetAndTriggeringAjaxCall() {
     // Create a node in English.
@@ -128,7 +129,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'test_field_only_en_fr' => 'node created',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertEqual('node created', \Drupal::state()->get('test_field_only_en_fr'));
+    $this->assertEquals('node created', \Drupal::state()->get('test_field_only_en_fr'));
 
     // Create a translation in French.
     $this->clickLink('Translate');

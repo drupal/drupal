@@ -49,7 +49,7 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('olivero/css/base/base.css');
-    $this->assertSession()->responseContains('olivero/js/scripts.js');
+    $this->assertSession()->responseContains('olivero/js/navigation-utils.js');
   }
 
   /**
@@ -84,7 +84,7 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->cssSelect('a[title="Install Bartik as default theme"]')[0]->click();
     $this->cssSelect('a[title="Uninstall Olivero theme"]')[0]->click();
-    $this->assertText('The Olivero theme has been uninstalled.');
+    $this->assertSession()->pageTextContains('The Olivero theme has been uninstalled.');
   }
 
 }

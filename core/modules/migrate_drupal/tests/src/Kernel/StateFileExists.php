@@ -99,7 +99,7 @@ class StateFileExists extends MigrateDrupalTestBase {
     foreach ($this->stateFileRequired as $module) {
       $this->assertArrayHasKey($module, $has_state_file, sprintf("Module '%s' should have a migrate_drupal.yml file", $module));
     }
-    $this->assertSame(count($this->stateFileRequired), count($has_state_file));
+    $this->assertSameSize($this->stateFileRequired, $has_state_file);
   }
 
 }

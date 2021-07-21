@@ -38,7 +38,7 @@ class RenderTest extends KernelTestBase {
         'test/specific_preprocess',
       ],
     ];
-    $this->assertEqual($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
+    $this->assertEquals($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
 
     \Drupal::state()->set('theme_preprocess_attached_test', FALSE);
   }

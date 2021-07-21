@@ -51,6 +51,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
   $paths = [
     $root . '/core/modules',
     $root . '/core/profiles',
+    $root . '/core/themes',
     $root . '/modules',
     $root . '/profiles',
     $root . '/themes',
@@ -153,6 +154,7 @@ function drupal_phpunit_populate_class_loader() {
 
 // Do class loader population.
 $loader = drupal_phpunit_populate_class_loader();
+class_alias('\Drupal\Tests\DocumentElement', '\Behat\Mink\Element\DocumentElement', TRUE);
 
 ClassWriter::mutateTestBase($loader);
 

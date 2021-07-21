@@ -77,6 +77,7 @@
   padding-block: calc((var(--sp2-5) - var(--line-height-s)) / 2);
   padding-inline: var(--sp);
   font-size: var(--font-size-base);
+  line-height: normal;
 }
 
 .button--primary {
@@ -102,6 +103,9 @@
 }
 
 .button--icon-back {
+  display: inline-flex;
+  align-items: center;
+
   &:before {
     display: block;
     width: 0.5em;

@@ -62,9 +62,8 @@
           return;
         }
         const action = tray === null ? Drupal.t('closed') : Drupal.t('opened');
-        const trayNameElement = relevantTray.querySelector(
-          '.toolbar-tray-name',
-        );
+        const trayNameElement =
+          relevantTray.querySelector('.toolbar-tray-name');
         let text;
         if (trayNameElement !== null) {
           text = Drupal.t('Tray "@tray" @action.', {

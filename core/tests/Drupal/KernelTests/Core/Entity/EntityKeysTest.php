@@ -13,7 +13,7 @@ use Drupal\entity_test\Entity\EntityTest;
 class EntityKeysTest extends EntityKernelTestBase {
 
   /**
-   * Test the cache when multiple keys reference a single field.
+   * Tests the cache when multiple keys reference a single field.
    *
    * @dataProvider multipleKeysCacheTestCases
    */
@@ -25,7 +25,7 @@ class EntityKeysTest extends EntityKernelTestBase {
       'key_1' => 'test_field',
       'key_2' => 'test_field',
     ]);
-    drupal_flush_all_caches();
+
     $this->installEntitySchema('entity_test');
 
     $entity = EntityTest::create([]);
