@@ -1,0 +1,5 @@
+name: 'Test Deprecated Theme'
+type: theme
+description: 'Test a theme that is deprecated.'
+version: VERSION
+base theme: stark

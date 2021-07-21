@@ -194,4 +194,25 @@ class ThemeTest extends BrowserTestBase {
     }
   }
 
+  /**
+   * Tests that themes can trigger deprecation errors.
+   */
+  public function testDeprecatedTheme() {
+    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line, $context) use (&$previous_error_handler) {
+      // Convert theme deprecation error into a catchable exception.
+      if ($severity === E_USER_DEPRECATED && strpos($message, 'test_deprecated_theme') !== FALSE) {
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+      }
+      if ($previous_error_handler) {
+        return $previous_error_handler($severity, $message, $file, $line, $context);
+      }
+    });
+
+    $this->expectException(\ErrorException::class);
+    $this->expectExceptionMessage('The "test_deprecated_theme" Theme is deprecated in drupal:8.9.0 and is removed from drupal:10.0.0. Use the theoretical contrib theme instead. See https://www.drupal.org/node/3084816');
+    \Drupal::service('theme_installer')->install(['test_deprecated_theme']);
+    $this->config('system.theme')->set('default', 'test_deprecated_theme')->save();
+    $this->drupalGet('');
+  }
+
 }
