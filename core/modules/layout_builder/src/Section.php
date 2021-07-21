@@ -3,6 +3,8 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Provides a domain object for layout sections.
@@ -88,7 +90,21 @@ class Section implements ThirdPartySettingsInterface {
       }
     }
 
-    return $this->getLayout($contexts)->build($regions);
+    $build = $this->getLayout($contexts)->build($regions);
+
+    // Find the first non-global entity context value and add it to the build.
+    if (!Element::isEmpty($build)) {
+      foreach ($contexts as $context_id => $context) {
+        if (strpos($context_id, '@') !== 0 && $context->hasContextValue()) {
+          $value = $context->getContextValue();
+          if ($value instanceof EntityInterface) {
+            $build['#entity'] = $value;
+            break;
+          }
+        }
+      }
+    }
+    return $build;
   }
 
   /**
