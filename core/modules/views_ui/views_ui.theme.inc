@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Render\Element\Radios;
+use Drupal\Core\Render\Element\Table;
 use Drupal\Core\Url;
 use Drupal\Core\Template\Attribute;
 
@@ -219,7 +220,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
         'group' => 'views-group-select',
         'subgroup' => 'views-group-select-' . $group_id,
       ];
-      drupal_attach_tabledrag($form['override'], $options);
+      Table::attachTabledrag($form['override'], $options);
 
       // Title row, spanning all columns.
       $row = [];
