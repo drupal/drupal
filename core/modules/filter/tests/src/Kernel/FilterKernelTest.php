@@ -121,26 +121,26 @@ class FilterKernelTest extends KernelTestBase {
 
     // Data-caption attribute.
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
 
     // Empty data-caption attribute.
     $input = '<img src="llama.jpg" data-caption="" />';
-    $expected = '<img src="llama.jpg" />';
+    $expected = '<img src="llama.jpg">';
     $this->assertSame($expected, $test($input)->getProcessedText());
 
     // HTML entities in the caption.
     $input = '<img src="llama.jpg" data-caption="&ldquo;Loquacious llama!&rdquo;" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>“Loquacious llama!”</figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>“Loquacious llama!”</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
 
     // HTML encoded as HTML entities in data-caption attribute.
     $input = '<img src="llama.jpg" data-caption="&lt;em&gt;Loquacious llama!&lt;/em&gt;" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption><em>Loquacious llama!</em></figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
@@ -149,21 +149,21 @@ class FilterKernelTest extends KernelTestBase {
     // not allowed by the HTML spec, but may happen when people manually write
     // HTML, so we explicitly support it.
     $input = '<img src="llama.jpg" data-caption="<em>Loquacious llama!</em>" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption><em>Loquacious llama!</em></figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
 
     // Security test: attempt an XSS.
     $input = '<img src="llama.jpg" data-caption="<script>alert(\'Loquacious llama!\')</script>" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>alert(\'Loquacious llama!\')</figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>alert(\'Loquacious llama!\')</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
 
     // Ensure the filter also works with uncommon yet valid attribute quoting.
     $input = '<img src=llama.jpg data-caption=\'Loquacious llama!\' />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
@@ -182,7 +182,7 @@ class FilterKernelTest extends KernelTestBase {
 
     // Ensure the caption filter works for linked images.
     $input = '<a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" /></a>';
-    $expected = '<figure role="group"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg"></a><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
@@ -215,46 +215,46 @@ class FilterKernelTest extends KernelTestBase {
 
     // All the tricky cases encountered at https://www.drupal.org/node/2105841.
     // A plain URL preceded by text.
-    $input = '<img data-caption="See https://www.drupal.org" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>See https://www.drupal.org</figcaption></figure>';
+    $input = '<img data-caption="See https://www.drupal.org" src="llama.jpg">';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>See https://www.drupal.org</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // An anchor.
     $input = '<img data-caption="This is a &lt;a href=&quot;https://www.drupal.org&quot;&gt;quick&lt;/a&gt; test…" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>This is a <a href="https://www.drupal.org">quick</a> test…</figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>This is a <a href="https://www.drupal.org">quick</a> test…</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // A plain URL surrounded by parentheses.
-    $input = '<img data-caption="(https://www.drupal.org)" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>(https://www.drupal.org)</figcaption></figure>';
+    $input = '<img data-caption="(https://www.drupal.org)" src="llama.jpg">';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>(https://www.drupal.org)</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // A source being credited.
-    $input = '<img data-caption="Source: Wikipedia" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Source: Wikipedia</figcaption></figure>';
+    $input = '<img data-caption="Source: Wikipedia" src="llama.jpg">';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>Source: Wikipedia</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // A source being credited, without a space after the colon.
-    $input = '<img data-caption="Source:Wikipedia" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Source:Wikipedia</figcaption></figure>';
+    $input = '<img data-caption="Source:Wikipedia" src="llama.jpg">';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>Source:Wikipedia</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // A pretty crazy edge case where we have two colons.
-    $input = '<img data-caption="Interesting (Scope resolution operator ::)" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Interesting (Scope resolution operator ::)</figcaption></figure>';
+    $input = '<img data-caption="Interesting (Scope resolution operator ::)" src="llama.jpg">';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>Interesting (Scope resolution operator ::)</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
     $this->assertSame($input, $test_editor_xss_filter($input));
 
     // An evil anchor (to ensure XSS filtering is applied to the caption also).
-    $input = '<img data-caption="This is an &lt;a href=&quot;javascript:alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>This is an <a href="alert();">evil</a> test…</figcaption></figure>';
+    $input = '<img data-caption="This is an &lt;a href=&quot;javascript:alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg">';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>This is an <a href="alert();">evil</a> test…</figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
-    $expected_xss_filtered = '<img data-caption="This is an &lt;a href=&quot;alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg" />';
+    $expected_xss_filtered = '<img data-caption="This is an &lt;a href=&quot;alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg">';
     $this->assertSame($expected_xss_filtered, $test_editor_xss_filter($input));
   }
 
@@ -282,17 +282,17 @@ class FilterKernelTest extends KernelTestBase {
     // Both data-caption and data-align attributes: all 3 allowed values for the
     // data-align attribute.
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="left" />';
-    $expected = '<figure role="group" class="align-left"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group" class="align-left"><img src="llama.jpg"><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" />';
-    $expected = '<figure role="group" class="align-center"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group" class="align-center"><img src="llama.jpg"><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="right" />';
-    $expected = '<figure role="group" class="align-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group" class="align-right"><img src="llama.jpg"><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
@@ -300,14 +300,14 @@ class FilterKernelTest extends KernelTestBase {
     // Both data-caption and data-align attributes, but a disallowed data-align
     // attribute value.
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="left foobar" />';
-    $expected = '<figure role="group"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group"><img src="llama.jpg"><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
 
     // Ensure both filters together work for linked images.
     $input = '<a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" /></a>';
-    $expected = '<figure role="group" class="align-center"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure role="group" class="align-center"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg"></a><figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
