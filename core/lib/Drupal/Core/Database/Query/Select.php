@@ -125,12 +125,15 @@ class Select extends Query implements SelectInterface {
    *   Database connection object.
    * @param string|\Drupal\Core\Database\Query\SelectInterface $table
    *   The table name or subquery that is being queried.
-   * @param string $alias
+   * @param string|null $alias
    *   The alias for the table.
    * @param array $options
    *   Array of query options.
    */
-  public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
+  public function __construct(Connection $connection, /* string|SelectInterface */ $table, ?string $alias = NULL, array $options = []) {
+    if (!is_string($table) && !$table instanceof SelectInterface) {
+      @trigger_error('Not passing a string or a SelectInterface object as $table argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/1234567', E_USER_DEPRECATED);
+    }
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
