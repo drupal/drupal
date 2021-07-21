@@ -54,3 +54,20 @@ function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $d
   // We need the values of the entity as keys.
   return array_combine($values, $values);
 }
+
+/**
+ * Implements hook_options_list_alter().
+ *
+ * For testing, return options that map context keys to their classes.
+ */
+function options_test_options_list_alter(array &$options, array $context) {
+  _options_test_options_list_alter_args(func_get_args());
+}
+
+function _options_test_options_list_alter_args(array $args = NULL) {
+  static $static = NULL;
+  if (isset($args)) {
+    $static = $args;
+  }
+  return $static;
+}
