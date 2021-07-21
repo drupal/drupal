@@ -699,7 +699,7 @@ services:
     lazy: true
   menu.tree_storage:
     class: Drupal\Core\Menu\MenuTreeStorage
-    arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
+    arguments: ['@database', '@cache.menu', '@cache_tags.invalidator','@router.no_access_checks', '@config.factory', 'menu_tree']
     public: false  # Private to plugin.manager.menu.link and menu.link_tree
     tags:
       - { name: backend_overridable }

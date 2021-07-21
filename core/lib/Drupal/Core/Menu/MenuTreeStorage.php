@@ -7,10 +7,12 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Provides a menu tree storage using the database.
@@ -42,6 +44,20 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
   protected $cacheTagsInvalidator;
+
+  /**
+   * The routing service.
+   *
+   * @var \Symfony\Component\Routing\RouterInterface
+   */
+  protected $router;
+
+  /**
+   * The configuration factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
 
   /**
    * The database table name.
@@ -103,6 +119,13 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   ];
 
   /**
+   * The route name and raw parameters of the front page.
+   *
+   * @var array
+   */
+  protected $frontRouteInfo = [];
+
+  /**
    * Constructs a new \Drupal\Core\Menu\MenuTreeStorage.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -116,10 +139,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, $table, array $options = []) {
+  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, RouterInterface $router, ConfigFactoryInterface $config_factory, $table, array $options = []) {
     $this->connection = $connection;
     $this->menuCacheBackend = $menu_cache_backend;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
+    $this->router = $router;
+    $this->configFactory = $config_factory;
     $this->table = $table;
     $this->options = $options;
   }
@@ -680,6 +705,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   public function loadByRoute($route_name, array $route_parameters = [], $menu_name = NULL) {
     // Sort the route parameters so that the query string will be the same.
     asort($route_parameters);
+    // Determine whether or not the passed route name/params is effectively the front page.
+    $include_front = $this->includeFront($route_name, $route_parameters);
     // Since this will be urlencoded, it's safe to store and match against a
     // text field.
     // @todo Standardize an efficient way to load by route name and parameters
@@ -687,8 +714,19 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $param_key = $route_parameters ? UrlHelper::buildQuery($route_parameters) : '';
     $query = $this->connection->select($this->table, $this->options);
     $query->fields($this->table, $this->definitionFields());
-    $query->condition('route_name', $route_name);
-    $query->condition('route_param_key', $param_key);
+    if ($include_front) {
+      $and_group = $query->andConditionGroup()
+        ->condition('route_name', $route_name)
+        ->condition('route_param_key', $param_key);
+      $or_group = $query->orConditionGroup()
+        ->condition($and_group)
+        ->condition('route_name', '<front>');
+      $query->condition($or_group);
+    }
+    else {
+      $query->condition('route_name', $route_name);
+      $query->condition('route_param_key', $param_key);
+    }
     if ($menu_name) {
       $query->condition('menu_name', $menu_name);
     }
@@ -1490,6 +1528,36 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $this->connection->delete($this->table, $this->options)
       ->condition('id', $ids, 'IN')
       ->execute();
+  }
+
+  /**
+   * Determines whether or not the passed route name/params is the front page.
+   *
+   * @param string $route_name
+   *   The route name.
+   * @param array $route_parameters
+   *   The route parameters.
+   *
+   * @return bool
+   *   TRUE if the route name/params represents the front page, FALSE otherwise.
+   */
+  protected function includeFront(string $route_name, array $route_parameters) {
+    if (empty($this->frontRouteInfo)) {
+      $this->frontRouteInfo['route_name'] = '';
+      $this->frontRouteInfo['route_parameters'] = [];
+      $front_path = $this->configFactory->get('system.site')->get('page.front');
+      if (!empty($front_path)) {
+        $match = $this->router->match($front_path);
+        if (!empty($match['_route']) && !empty($match['_raw_variables'])) {
+          $this->frontRouteInfo['route_name'] = $match['_route'];
+          $this->frontRouteInfo['route_parameters'] = $match['_raw_variables']->all();
+          asort($this->frontRouteInfo['route_parameters']);
+        }
+      }
+    }
+    $route_name_matches = strcmp($route_name, $this->frontRouteInfo['route_name']) === 0;
+    $parameters_match = $route_parameters == $this->frontRouteInfo['route_parameters'];
+    return $route_name_matches && $parameters_match;
   }
 
 }
