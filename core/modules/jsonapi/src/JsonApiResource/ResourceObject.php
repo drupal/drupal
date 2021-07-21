@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\Core\Url;
@@ -212,10 +213,14 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   entity, the fields will be scalar values or arrays.
    */
   protected static function extractFieldsFromEntity(ResourceType $resource_type, EntityInterface $entity) {
-    assert($entity instanceof ContentEntityInterface || $entity instanceof ConfigEntityInterface);
-    return $entity instanceof ContentEntityInterface
-      ? static::extractContentEntityFields($resource_type, $entity)
-      : static::extractConfigEntityFields($resource_type, $entity);
+    if ($entity instanceof FieldableEntityInterface) {
+      return static::extractFieldableEntityFields($resource_type, $entity);
+    }
+    elseif ($entity instanceof ConfigEntityInterface) {
+      return static::extractConfigEntityFields($resource_type, $entity);
+    }
+
+    return [];
   }
 
   /**
@@ -268,12 +273,32 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
    *   The JSON:API resource type of the given entity.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The config entity from which fields should be extracted.
+   *   The content entity from which fields should be extracted.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface[]
+   *   The fields extracted from a content entity.
+   *
+   * @deprecated in Drupal 8.8.x and will be removed before Drupal 9.0.0.
+   * Use \Drupal\jsonapi\JsonApiResource\ResourceObject::extractFieldableEntityFields()
+   * instead.
+   */
+  protected static function extractContentEntityFields(ResourceType $resource_type, ContentEntityInterface $entity) {
+    @trigger_error('\Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields() has been deprecated in favor of \Drupal\jsonapi\JsonApiResource\ResourceObject::extractFieldableEntityFields(). Use that instead.');
+    return static::extractFieldableEntityFields($resource_type, $entity);
+  }
+
+  /**
+   * Extracts a fieldable entity's fields.
+   *
+   * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
+   *   The JSON:API resource type of the given entity.
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The fieldable entity from which fields should be extracted.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface[]
    *   The fields extracted from a content entity.
    */
-  protected static function extractContentEntityFields(ResourceType $resource_type, ContentEntityInterface $entity) {
+  protected static function extractFieldableEntityFields(ResourceType $resource_type, FieldableEntityInterface $entity) {
     $output = [];
     $fields = TypedDataInternalPropertiesHelper::getNonInternalProperties($entity->getTypedData());
     // Filter the array based on the field names.

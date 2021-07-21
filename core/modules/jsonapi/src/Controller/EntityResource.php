@@ -8,7 +8,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -1071,8 +1070,9 @@ class EntityResource {
    *   types.
    */
   protected function updateEntityField(ResourceType $resource_type, EntityInterface $origin, EntityInterface $destination, $field_name) {
-    // The update is different for configuration entities and content entities.
-    if ($origin instanceof ContentEntityInterface && $destination instanceof ContentEntityInterface) {
+    // The update is different for configuration entities and fieldable
+    // entities.
+    if ($origin instanceof FieldableEntityInterface && $destination instanceof FieldableEntityInterface) {
       // First scenario: both are content entities.
       $field_name = $resource_type->getInternalName($field_name);
       $destination_field_list = $destination->get($field_name);

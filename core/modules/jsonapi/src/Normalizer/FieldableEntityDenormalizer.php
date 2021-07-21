@@ -2,9 +2,7 @@
 
 namespace Drupal\jsonapi\Normalizer;
 
-@trigger_error('\Drupal\jsonapi\Normalizer\ContentEntityDenormalizer has been deprecated in favor of \Drupal\jsonapi\Normalizer\FieldableEntityDenormalizer. Use that instead.');
-
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
@@ -14,15 +12,15 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
  * @internal JSON:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
- * @see https://www.drupal.org/project/drupal/issues/3032787
+ * @see https://www.drupal.org/project/jsonapi/issues/3032787
  * @see jsonapi.api.php
  */
-final class ContentEntityDenormalizer extends EntityDenormalizerBase {
+final class FieldableEntityDenormalizer extends EntityDenormalizerBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = ContentEntityInterface::class;
+  protected $supportedInterfaceOrClass = FieldableEntityInterface::class;
 
   /**
    * Prepares the input data to create the entity.
@@ -48,14 +46,6 @@ final class ContentEntityDenormalizer extends EntityDenormalizerBase {
     $entity_type_definition = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundle_key = $entity_type_definition->getKey('bundle');
     $uuid_key = $entity_type_definition->getKey('uuid');
-
-    // User resource objects contain a read-only attribute that is not a real
-    // field on the user entity type.
-    // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
-    if ($entity_type_id === 'user') {
-      $data = array_diff_key($data, array_flip([$resource_type->getPublicName('display_name')]));
-    }
 
     // Translate the public fields into the entity fields.
     foreach ($data as $public_field_name => $field_value) {

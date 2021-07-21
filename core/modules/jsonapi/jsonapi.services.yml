@@ -54,7 +54,10 @@ services:
     tags:
       - { name: event_subscriber }
   serializer.normalizer.content_entity.jsonapi:
-    class: Drupal\jsonapi\Normalizer\ContentEntityDenormalizer
+    alias: serializer.normalizer.fieldable_entity.jsonapi
+    deprecated: The "%alias_id%" service is deprecated. You should use the 'serializer.normalizer.fieldable_entity.jsonapi' service instead.
+  serializer.normalizer.fieldable_entity.jsonapi:
+    class: Drupal\jsonapi\Normalizer\FieldableEntityDenormalizer
     arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
     tags:
       - { name: jsonapi_normalizer }

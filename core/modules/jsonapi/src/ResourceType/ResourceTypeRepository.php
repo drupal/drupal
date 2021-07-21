@@ -5,9 +5,9 @@ namespace Drupal\jsonapi\ResourceType;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -206,7 +206,6 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    */
   protected function getFields(array $field_names, EntityTypeInterface $entity_type, $bundle) {
     assert(Inspector::assertAllStrings($field_names));
-    assert($entity_type instanceof ContentEntityTypeInterface || $entity_type instanceof ConfigEntityTypeInterface);
     assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
 
     // JSON:API resource identifier objects are sufficient to identify
@@ -302,14 +301,14 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   All field names.
    */
   protected function getAllFieldNames(EntityTypeInterface $entity_type, $bundle) {
-    if ($entity_type instanceof ContentEntityTypeInterface) {
+    if (is_a($entity_type->getClass(), FieldableEntityInterface::class, TRUE)) {
       $field_definitions = $this->entityFieldManager->getFieldDefinitions(
         $entity_type->id(),
         $bundle
       );
       return array_keys($field_definitions);
     }
-    elseif ($entity_type instanceof ConfigEntityTypeInterface) {
+    elseif (is_a($entity_type->getClass(), ConfigEntityInterface::class, TRUE)) {
       // @todo Uncomment the first line, remove everything else once https://www.drupal.org/project/drupal/issues/2483407 lands.
       // return array_keys($entity_type->getPropertiesToExport());
       $export_properties = $entity_type->getPropertiesToExport();
@@ -320,9 +319,8 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
         return ['id', 'type', 'uuid', '_core'];
       }
     }
-    else {
-      throw new \LogicException("Only content and config entity types are supported.");
-    }
+
+    return [];
   }
 
   /**
