@@ -138,7 +138,7 @@ class DateTimeDatelistWidget extends DateTimeWidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
 
     $summary[] = t('Date part order: @order', ['@order' => $this->getSetting('date_order')]);
     if ($this->getFieldSetting('datetime_type') == 'datetime') {

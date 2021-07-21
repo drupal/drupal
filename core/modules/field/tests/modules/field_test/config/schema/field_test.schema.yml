@@ -37,6 +37,9 @@ field.widget.settings.test_field_widget:
   type: mapping
   label: 'Test field widget settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     test_widget_setting:
       type: string
       label: 'Test setting'
@@ -51,6 +54,9 @@ field.widget.settings.test_field_widget_multiple:
   type: mapping
   label: 'Test multiple field widget settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     test_widget_setting_multiple:
       type: string
       label: 'Test setting'
@@ -59,6 +65,9 @@ field.widget.settings.test_field_widget_multiple_single_value:
   type: mapping
   label: 'Test multiple field widget settings: single values'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     test_widget_setting_multiple:
       type: string
       label: 'Test setting'

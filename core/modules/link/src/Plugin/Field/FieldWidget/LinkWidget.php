@@ -376,7 +376,7 @@ class LinkWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
 
     $placeholder_title = $this->getSetting('placeholder_title');
     $placeholder_url = $this->getSetting('placeholder_url');

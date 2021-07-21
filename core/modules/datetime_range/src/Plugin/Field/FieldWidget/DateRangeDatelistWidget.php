@@ -143,7 +143,7 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
 
     $summary[] = $this->t('Date part order: @order', ['@order' => $this->getSetting('date_order')]);
     if ($this->getFieldSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATETIME) {

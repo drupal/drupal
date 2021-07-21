@@ -33,6 +33,8 @@ class StringTextareaWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $element['rows'] = [
       '#type' => 'number',
       '#title' => t('Rows'),
@@ -53,7 +55,7 @@ class StringTextareaWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
 
     $summary[] = t('Number of rows: @rows', ['@rows' => $this->getSetting('rows')]);
     $placeholder = $this->getSetting('placeholder');

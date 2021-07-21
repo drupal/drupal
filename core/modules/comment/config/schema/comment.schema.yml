@@ -21,6 +21,10 @@ field.formatter.settings.comment_default:
 field.widget.settings.comment_default:
   type: mapping
   label: 'Comment display format settings'
+  mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
 
 action.configuration.comment_unpublish_by_keyword_action:
   type: mapping

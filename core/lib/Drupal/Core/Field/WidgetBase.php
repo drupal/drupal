@@ -241,7 +241,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     if ($elements) {
       $elements += [
-        '#theme' => 'field_multiple_value_form',
+        '#theme' => $this->getSetting('orderable') ? 'field_multiple_value_form' : 'field_multiple_value_without_order_form',
         '#field_name' => $field_name,
         '#cardinality' => $cardinality,
         '#cardinality_multiple' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple(),
@@ -523,15 +523,42 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    return [
+      'orderable' => TRUE,
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    return [];
+    $element = [];
+    if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() != 1) {
+      $element['orderable'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Orderable'),
+        '#default_value' => $this->getSetting('orderable'),
+        '#weight' => -5,
+        '#description' => $this->t('Orderable multiple fields widgets are in a table with drag and drop.'),
+      ];
+    }
+
+    return $element;
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    return [];
+    $summary = [];
+
+    if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() != 1) {
+      $orderable = $this->getSetting('orderable');
+      $summary[] = t('Orderable: @orderable', ['@orderable' => ($orderable ? t('Yes') : t('No'))]);
+    }
+
+    return $summary;
   }
 
   /**

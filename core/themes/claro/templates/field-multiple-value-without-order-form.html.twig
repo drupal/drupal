@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * Theme override for an individual form element.
+ *
+ * Available variables for all fields:
+ * - multiple: Whether there are multiple instances of the field.
+ *
+ * Available variables for single cardinality fields:
+ * - elements: Form elements to be rendered.
+ *
+ * Available variables when there are multiple fields.
+ * - table: Table of field items.
+ * - description: The description element containing the following properties:
+ *   - content: The description content of the form element.
+ *   - attributes: HTML attributes to apply to the description container.
+ * - description_display: Description display setting. It can have these values:
+ *   - before: The description is output before the element.
+ *   - after: The description is output after the element. This is the default
+ *     value.
+ *   - invisible: The description is output after the element, hidden visually
+ *     but available to screen readers.
+ * - button: "Add another item" button.
+ *
+ * @see template_preprocess_field_multiple_value_without_order_form()
+ */
+#}
+{%
+  set title_classes = [
+    'label',
+    required ? 'js-form-required',
+    required ? 'form-required',
+  ]
+%}
+{%
+  set description_classes = [
+  'form-item__description',
+  description_display == 'invisible' ? 'visually-hidden',
+]
+%}
+{% if multiple %}
+  <div class="js-form-item form-item">
+    {% if title %}
+      {{ title }}
+    {% endif %}
+    {% if description_display == 'before' and description.content %}
+      <div{{ description.attributes.addClass(description_classes) }}>
+        {{ description.content }}
+      </div>
+    {% endif %}
+    {{ items }}
+    {% if description_display in ['after', 'invisible'] and description.content %}
+      <div{{ description.attributes.addClass(description_classes) }}>
+        {{ description.content }}
+      </div>
+    {% endif %}
+    {% if button %}
+      <div class="clearfix">{{ button }}</div>
+    {% endif %}
+  </div>
+{% else %}
+  {% for element in elements %}
+    {{ element }}
+  {% endfor %}
+{% endif %}

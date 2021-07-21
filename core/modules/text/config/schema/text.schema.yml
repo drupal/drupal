@@ -103,6 +103,9 @@ field.widget.settings.text_textarea:
   type: mapping
   label: 'Text area (multiple rows) display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     rows:
       type: integer
       label: 'Rows'
@@ -114,6 +117,9 @@ field.widget.settings.text_textarea_with_summary:
   type: mapping
   label: 'Text area with a summary display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     rows:
       type: integer
       label: 'Rows'
@@ -131,6 +137,9 @@ field.widget.settings.text_textfield:
   type: mapping
   label: 'Text field display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     size:
       type: integer
       label: 'Size of textfield'

@@ -99,13 +99,16 @@ class EntityFormDisplayTest extends ResourceTestBase {
               'type' => 'datetime_timestamp',
               'weight' => 10,
               'region' => 'content',
-              'settings' => [],
+              'settings' => [
+                'orderable' => TRUE,
+              ],
               'third_party_settings' => [],
             ],
             'promote' => [
               'type' => 'boolean_checkbox',
               'settings' => [
                 'display_label' => TRUE,
+                'orderable' => TRUE,
               ],
               'weight' => 15,
               'region' => 'content',
@@ -117,6 +120,7 @@ class EntityFormDisplayTest extends ResourceTestBase {
               'region' => 'content',
               'settings' => [
                 'display_label' => TRUE,
+                'orderable' => TRUE,
               ],
               'third_party_settings' => [],
             ],
@@ -124,6 +128,7 @@ class EntityFormDisplayTest extends ResourceTestBase {
               'type' => 'boolean_checkbox',
               'settings' => [
                 'display_label' => TRUE,
+                'orderable' => TRUE,
               ],
               'weight' => 16,
               'region' => 'content',
@@ -134,6 +139,7 @@ class EntityFormDisplayTest extends ResourceTestBase {
               'weight' => -5,
               'region' => 'content',
               'settings' => [
+                'orderable' => TRUE,
                 'size' => 60,
                 'placeholder' => '',
               ],
@@ -143,6 +149,7 @@ class EntityFormDisplayTest extends ResourceTestBase {
               'type' => 'entity_reference_autocomplete',
               'weight' => 5,
               'settings' => [
+                'orderable' => TRUE,
                 'match_operator' => 'CONTAINS',
                 'match_limit' => 10,
                 'size' => 60,

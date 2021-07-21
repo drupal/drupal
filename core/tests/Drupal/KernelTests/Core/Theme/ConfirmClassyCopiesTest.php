@@ -847,6 +847,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'block--local-actions-block.html.twig' => '6afe8adb14d3f37ec374400fecd5b809',
         'block--system-menu-block.html.twig' => '242f41ff8a0f71bbccece61bf8e29e2f',
         'block--local-tasks-block.html.twig' => 'd462897ef5c9b6935ce801de122bce30',
+        'field-multiple-value-without-order-form.html.twig' => 'cc44ccff358713c90230ad4d4f093e40',
       ],
     ];
     $this->assertArrayHasKey($type, $hashes);

@@ -33,6 +33,8 @@ class UriWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $element['size'] = [
       '#type' => 'number',
       '#title' => $this->t('Size of URI field'),
@@ -53,7 +55,7 @@ class UriWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $summary = parent::settingsSummary();
 
     $summary[] = $this->t('URI field size: @size', ['@size' => $this->getSetting('size')]);
     $placeholder = $this->getSetting('placeholder');

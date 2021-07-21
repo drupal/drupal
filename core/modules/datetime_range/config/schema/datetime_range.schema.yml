@@ -58,6 +58,9 @@ field.widget.settings.daterange_datelist:
   type: mapping
   label: 'Date range select list display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     increment:
       type: integer
       label: 'Time increments'
@@ -71,3 +74,7 @@ field.widget.settings.daterange_datelist:
 field.widget.settings.daterange_default:
   type: mapping
   label: 'Date range default display format settings'
+  mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'

@@ -12,6 +12,9 @@ field.widget.settings.telephone_default:
   type: mapping
   label: 'Telephone default format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     placeholder:
       type: label
       label: 'Placeholder'

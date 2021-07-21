@@ -68,6 +68,9 @@ field.widget.settings.datetime_datelist:
   type: mapping
   label: 'Datetime select list display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     increment:
       type: integer
       label: 'Time increments'
@@ -81,3 +84,7 @@ field.widget.settings.datetime_datelist:
 field.widget.settings.datetime_default:
   type: mapping
   label: 'Datetime default display format settings'
+  mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'

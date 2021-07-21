@@ -23,6 +23,7 @@ content:
     weight: 1
     region: content
     settings:
+      orderable: true
       rows: 9
       summary_rows: 3
       placeholder: ''
@@ -38,7 +39,8 @@ content:
     type: datetime_timestamp
     weight: 10
     region: content
-    settings: {  }
+    settings:
+      orderable: true
     third_party_settings: {  }
   field_image:
     type: image_image
@@ -62,11 +64,13 @@ content:
     type: path
     weight: 30
     region: content
-    settings: {  }
+    settings:
+      orderable: true
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
     settings:
+      orderable: true
       display_label: true
     weight: 15
     region: content
@@ -81,6 +85,7 @@ content:
   sticky:
     type: boolean_checkbox
     settings:
+      orderable: true
       display_label: true
     weight: 16
     region: content
@@ -98,6 +103,7 @@ content:
     weight: 5
     region: content
     settings:
+      orderable: true
       match_operator: CONTAINS
       match_limit: 10
       size: 60

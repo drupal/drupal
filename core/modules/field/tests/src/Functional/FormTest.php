@@ -100,6 +100,7 @@ class FormTest extends FieldTestBase {
       'description' => '[site:name]_description',
       'weight' => mt_rand(0, 127),
       'settings' => [
+        'orderable' => TRUE,
         'test_field_setting' => $this->randomMachineName(),
       ],
     ];

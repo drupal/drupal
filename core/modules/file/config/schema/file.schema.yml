@@ -129,6 +129,9 @@ field.widget.settings.file_generic:
   type: mapping
   label: 'File format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     progress_indicator:
       type: string
       label: 'Progress indicator'

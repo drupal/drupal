@@ -1741,6 +1741,92 @@ function template_preprocess_field_multiple_value_form(&$variables) {
 }
 
 /**
+ * Prepares variables for individual form element templates.
+ *
+ * Default template: field-multiple-value-without-order-form.html.twig.
+ *
+ * Combines multiple values.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: A render element representing the form element.
+ */
+function template_preprocess_field_multiple_value_without_order_form(&$variables) {
+  $element = $variables['element'];
+  $variables['multiple'] = $element['#cardinality_multiple'];
+
+  if ($variables['multiple']) {
+    $items = [];
+    $variables['button'] = [];
+    foreach (Element::children($element) as $key) {
+      if ($key === 'add_more') {
+        $variables['button'] = &$element[$key];
+      }
+      else {
+        $items[$key] = &$element[$key];
+        if (isset($items[$key]['_weight'])) {
+          $items[$key]['_weight']['#access'] = FALSE;
+        }
+      }
+    }
+    usort($items, '_field_multiple_value_form_sort_helper');
+
+    if (isset($element['#file_upload_title'])) {
+      // @see template_preprocess_file_widget_multiple()
+      foreach ($items as $key => &$widget) {
+        // Save the uploading row for last.
+        if (empty($widget['#files'])) {
+          $widget['#title'] = $element['#file_upload_title'];
+          $widget['#title_display'] = 'hidden';
+          $widget['#description'] = \Drupal::service('renderer')->renderPlain($element['#file_upload_description']);
+          continue;
+        }
+
+        // Delay rendering of the "Display" option and the weight selector, so that
+        // each can be rendered later in its own column.
+        if ($element['#display_field']) {
+          hide($widget['display']);
+        }
+
+        // Render everything else together in a column, without the normal wrappers.
+        $widget['#theme_wrappers'] = [];
+        if ($element['#display_field']) {
+          unset($widget['display']['#title']);
+        }
+      }
+    }
+
+    $variables['title'] = [];
+    if (!empty($element['#title'])) {
+      $variables['title'] = [
+        '#type' => 'label',
+        '#title' => $element['#title'],
+        '#required' => !empty($element['#required']) ? $element['#required'] : FALSE,
+        '#title_display' => 'before',
+      ];
+    }
+    $variables['items'] = $items;
+
+    if (!empty($element['#description'])) {
+      $variables['description_display'] = $element['#description_display'];
+      $description_id = $element['#attributes']['aria-describedby'];
+      $description_attributes['id'] = $description_id;
+      $variables['description']['attributes'] = new Attribute($description_attributes);
+      $variables['description']['content'] = $element['#description'];
+
+      // Add the description's id to the items aria attributes.
+      $variables['items']['#attributes']['aria-describedby'] = $element['#attributes']['aria-describedby'];
+    }
+  }
+  else {
+    $variables['elements'] = [];
+    foreach (Element::children($element) as $key) {
+      $variables['elements'][] = $element[$key];
+    }
+  }
+}
+
+/**
  * Prepares variables for breadcrumb templates.
  *
  * Default template: breadcrumb.html.twig.
@@ -2131,6 +2217,9 @@ function drupal_common_theme() {
       'render element' => 'element',
     ],
     'field_multiple_value_form' => [
+      'render element' => 'element',
+    ],
+    'field_multiple_value_without_order_form' => [
       'render element' => 'element',
     ],
   ];

@@ -155,6 +155,9 @@ field.widget.settings.image_image:
   type: mapping
   label: 'Image field display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     progress_indicator:
       type: string
       label: 'Progress indicator'

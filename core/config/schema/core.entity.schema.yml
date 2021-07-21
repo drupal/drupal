@@ -150,11 +150,18 @@ field.formatter.settings.*:
 # Default schema for entity form display field with undefined type.
 field.widget.settings.*:
   type: mapping
+  mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
 
 field.widget.settings.string_textfield:
   type: mapping
   label: 'Text field display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     size:
       type: integer
       label: 'Size of textfield'
@@ -166,6 +173,9 @@ field.widget.settings.string_textarea:
   type: mapping
   label: 'Textarea display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     rows:
       type: integer
       label: 'Rows'
@@ -177,6 +187,9 @@ field.widget.settings.uri:
   type: mapping
   label: 'URI field'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     size:
       type: integer
       label: 'Size of URI field'
@@ -188,6 +201,9 @@ field.widget.settings.email_default:
   type: mapping
   label: 'Email field display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     placeholder:
       type: label
       label: 'Placeholder'
@@ -198,11 +214,18 @@ field.widget.settings.email_default:
 field.widget.settings.datetime_timestamp:
   type: mapping
   label: 'Datetime timestamp display format settings'
+  mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
 
 field.widget.settings.boolean_checkbox:
   type: mapping
   label: 'Boolean checkbox display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     display_label:
       type: boolean
       label: 'Display label'
@@ -215,6 +238,9 @@ field.widget.settings.number:
   type: mapping
   label: 'Number default display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     placeholder:
       type: label
       label: 'Placeholder'
@@ -223,6 +249,9 @@ field.widget.settings.checkbox:
   type: mapping
   label: 'Single on/off checkbox format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     display_label:
       type: boolean
       label: 'Use field label instead of the "On value" as label'
@@ -231,6 +260,9 @@ field.widget.settings.entity_reference_autocomplete_tags:
   type: mapping
   label: 'Entity reference autocomplete (Tags style) display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     match_operator:
       type: string
       label: 'Autocomplete matching'
@@ -248,6 +280,9 @@ field.widget.settings.entity_reference_autocomplete:
   type: mapping
   label: 'Entity reference autocomplete display format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     match_operator:
       type: string
       label: 'Autocomplete matching'

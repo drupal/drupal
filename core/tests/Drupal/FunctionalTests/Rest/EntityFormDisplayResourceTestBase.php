@@ -64,13 +64,16 @@ abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase 
           'type' => 'datetime_timestamp',
           'weight' => 10,
           'region' => 'content',
-          'settings' => [],
+          'settings' => [
+            'orderable' => TRUE,
+          ],
           'third_party_settings' => [],
         ],
         'promote' => [
           'type' => 'boolean_checkbox',
           'settings' => [
             'display_label' => TRUE,
+            'orderable' => TRUE,
           ],
           'weight' => 15,
           'region' => 'content',
@@ -82,6 +85,7 @@ abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase 
           'region' => 'content',
           'settings' => [
             'display_label' => TRUE,
+            'orderable' => TRUE,
           ],
           'third_party_settings' => [],
         ],
@@ -89,6 +93,7 @@ abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase 
           'type' => 'boolean_checkbox',
           'settings' => [
             'display_label' => TRUE,
+            'orderable' => TRUE,
           ],
           'weight' => 16,
           'region' => 'content',
@@ -99,6 +104,7 @@ abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase 
           'weight' => -5,
           'region' => 'content',
           'settings' => [
+            'orderable' => TRUE,
             'size' => 60,
             'placeholder' => '',
           ],
@@ -110,6 +116,7 @@ abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase 
           'settings' => [
             'match_operator' => 'CONTAINS',
             'match_limit' => 10,
+            'orderable' => TRUE,
             'size' => 60,
             'placeholder' => '',
           ],

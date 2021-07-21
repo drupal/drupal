@@ -28,6 +28,9 @@ field.widget.settings.link_default:
   type: mapping
   label: 'Link format settings'
   mapping:
+    orderable:
+      type: boolean
+      label: 'Orderable'
     placeholder_url:
       type: string
       label: 'Placeholder for URL'
