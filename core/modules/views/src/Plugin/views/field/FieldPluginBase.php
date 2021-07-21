@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Field\Plugin\Field\FieldType\NumericItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url as CoreUrl;
 use Drupal\views\Plugin\views\HandlerBase;
@@ -1253,6 +1254,15 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // @see \Drupal\views\Plugin\views\PluginBase::viewsTokenReplace()
       // @see \Drupal\Component\Utility\Xss::filterAdmin()
       $value_is_safe = TRUE;
+    }
+    if ($this->options['empty_zero']) {
+      if (isset($alter['raw']) && $alter['raw'] instanceof NumericItemBase) {
+        $raw_value = $alter['raw']->value;
+        $scale = $this->options['settings']['scale'];
+        if (round($raw_value, $scale) === 0.0) {
+          $value = '';
+        }
+      }
     }
 
     if (!empty($this->options['alter']['trim_whitespace'])) {

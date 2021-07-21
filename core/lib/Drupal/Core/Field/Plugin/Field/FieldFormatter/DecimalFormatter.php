@@ -52,6 +52,7 @@ class DecimalFormatter extends NumericFormatterBase {
       '#title' => t('Scale', [], ['context' => 'decimal places']),
       '#min' => 0,
       '#max' => 10,
+      '#required' => TRUE,
       '#default_value' => $this->getSetting('scale'),
       '#description' => t('The number of digits to the right of the decimal.'),
       '#weight' => 6,
