@@ -115,13 +115,15 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementVisible($selector, $locator, $timeout = 10000) {
-    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       $element = $page->find($selector, $locator);
       if (!empty($element) && $element->isVisible()) {
         return $element;
       }
       return NULL;
     });
+    Assert::assertInstanceOf(NodeElement::class, $element);
+    return $element;
   }
 
   /**
