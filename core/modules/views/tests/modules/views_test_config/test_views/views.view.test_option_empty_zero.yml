@@ -1,4 +1,3 @@
-uuid: 99cb4b0c-91f7-4ae9-b7f9-a6106de34d95
 langcode: en
 status: true
 dependencies:
@@ -14,7 +13,6 @@ description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: 8.x
 display:
   default:
     display_plugin: default
