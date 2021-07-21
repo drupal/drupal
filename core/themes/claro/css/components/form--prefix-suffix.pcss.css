@@ -1,0 +1,181 @@
+/**
+ * @file
+ * Form prefix and suffix styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.form-item__affix {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: calc(var(--space-xs) / 2) var(--space-xs);
+  white-space: nowrap;
+  color: var(--color-davysgray);
+  border: 1px solid var(--color-lightgray);
+  background: var(--color-whitesmoke);
+}
+
+.form-item__affix.is-disabled {
+  color: var(--input--disabled-fg-color);
+}
+
+/**
+ * Prefix and suffix border radii are different depending if they are next to or
+ * above the form element they are affixed to.
+ */
+.js .form-item__prefix {
+  border-right-width: 0;
+  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius);
+}
+.js .form-item__suffix {
+  border-left-width: 0;
+  border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
+}
+.js .form-item__prefix--stacked {
+  order: -1; /* This enforces stacking and does not change focus order */
+  border-right-width: 1px;
+  border-bottom-width: 0;
+  border-radius: var(--base-border-radius) var(--base-border-radius) 0 0;
+}
+.js .form-item__suffix--stacked {
+  order: 1; /* This enforces stacking and does not change focus order */
+  border-top-width: 0;
+  border-left-width: 1px;
+  border-radius: 0 0 var(--base-border-radius) var(--base-border-radius);
+}
+
+.form-item__affix--stacked {
+  position: relative;
+  white-space: normal;
+}
+
+.form-item--error .form-item__affix {
+  color: var(--color-maximumred);
+  border-color: var(--color-maximumred);
+  background: var(--color-minimumred);
+}
+
+.form-item__wrapper--with-affix {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  box-sizing: border-box;
+  max-width: 100%;
+  border-radius: 2px;
+}
+
+/* Ensures the focus ring is not covered by the suffix. */
+.form-item__wrapper--with-affix .form-element:focus {
+  z-index: 1;
+}
+
+/* These full width pseudo elements are used for enforcing consistent wrapping. */
+.form-item__wrapper--with-affix::after,
+.form-item__wrapper--with-affix::before {
+  width: 100%;
+  content: "";
+}
+
+/**
+ * Remove border radii and other styling for elements that are adjacent to a
+ * prefix and/or suffix.
+ */
+.form-item__wrapper--with-prefix:not(.form-item__wrapper--stacked-prefix) > .form-element,
+.form-item__wrapper--with-prefix:not(.form-item__wrapper--stacked-prefix) > .form-textarea-wrapper,
+.form-item__wrapper--with-prefix:not(.form-item__wrapper--stacked-prefix) > .form-textarea-wrapper .cke.cke_chrome {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-item__wrapper--stacked-prefix > .form-element,
+.form-item__wrapper--stacked-prefix > .form-textarea-wrapper,
+.form-item__wrapper--stacked-prefix > .form-textarea-wrapper .cke.cke_chrome {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-item__wrapper--with-suffix:not(.form-item__wrapper--stacked-suffix) > .form-element,
+.form-item__wrapper--with-suffix:not(.form-item__wrapper--stacked-suffix) > .form-textarea-wrapper,
+.form-item__wrapper--with-suffix:not(.form-item__wrapper--stacked-suffix) > .form-textarea-wrapper .cke.cke_chrome {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-item__wrapper--stacked-suffix > .form-element,
+.form-item__wrapper--stacked-suffix > .form-textarea-wrapper,
+.form-item__wrapper--stacked-suffix > .form-textarea-wrapper .cke.cke_chrome {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/**
+ * Machine name should not receive affix borders or background.
+ * @todo remove this style in https://drupal.org/node/3166429
+ */
+.machine-name-source + .form-item__suffix {
+  padding-right: var(--space-m);
+  padding-left: var(--space-m);
+  border: none;
+  background: none;
+}
+.machine-name-source + .form-item__suffix--stacked {
+  padding: var(--space-xs) 0;
+}
+
+@media screen and (max-width: 600px) {
+  /**
+   * For browsers without JavaScript, allow wrapping to ensure longer affix
+   * content is still fully visible at narrower widths.
+   */
+  html:not(.js) .form-item__affix {
+    white-space: normal;
+  }
+  .form-item__affix {
+    font-size: var(--font-size-xs);
+  }
+
+  /**
+   * This overrides the `width: 100%` in form--text.css due JavaScript not being
+   * able to get the correct width of number inputs when set to `width: 100%`.
+   * This incorrect number would result in stacked affixes not assuming the
+   * width of their input. The end result is preferable visually, too, as
+   * number inputs are rarely wide, and this allows affixes to remain on the
+   * same line in most instances.
+   */
+  .form-item__wrapper--with-affix .form-element--type-number {
+    width: auto;
+  }
+}
+
+@media screen and (-ms-high-contrast: active) and (max-width: 48em), screen and (-ms-high-contrast: none) and (max-width: 48em) {
+  /**
+   * Internet Explorer 11 has difficulty aligning affixes and properly judging
+   * element widths when the prefixes are stacked inside a container set to
+   * `display: inline-flex`. Since the elements are already stacked, the wrapper
+   * can be changed to `display: block` without altering the experience, and this
+   * addresses the width + alignment problem.
+   */
+  .form-item__wrapper--stacked-prefix,
+  .form-item__wrapper--stacked-suffix,
+  .form-item__affix--stacked {
+    display: block;
+  }
+
+  /**
+   * In the style above this one, stacked prefixes and suffixes are changed to
+   * display: block to address width calculation problems problems in IE11. This
+   * can result in the focus ring of the affixed form input being partially
+   * obscured. This is addressed by adding a top/bottom margin to the input when
+   * focused. A more elegant solution may exist, but note that this covers a
+   * fairly uncommon use case: Using IE11, a desktop-only browser, at mobile
+   * widths.
+   */
+  .form-item__wrapper--stacked-prefix .form-element.form-element:focus {
+    margin-top: 5px;
+  }
+  .form-item__wrapper--stacked-suffix .form-element.form-element:focus {
+    margin-bottom: 5px;
+  }
+}

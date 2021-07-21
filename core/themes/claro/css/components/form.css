@@ -131,24 +131,6 @@ tr .form-item,
   line-height: 1.0625rem; /* 17px */
 }
 
-.form-item__prefix.is-disabled,
-.form-item__suffix.is-disabled {
-  color: #82828c;
-}
-
-/* Add some spacing so that the focus ring and suffix don't overlap. */
-
-@media screen and (min-width: 37.5625rem) {
-  .form-item__suffix {
-    margin-left: 0.5rem; /* LTR */
-  }
-
-  [dir="rtl"] .form-item__suffix {
-    margin-right: 0.5rem;
-    margin-left: 0;
-  }
-}
-
 /**
  * Form actions.
  */
@@ -202,21 +184,18 @@ tr .form-item,
 }
 
 .form-item--editor-format .form-item__label,
-.form-item--editor-format .form-item__prefix,
-.form-item--editor-format .form-item__suffix,
+.form-item--editor-format .form-item__affix,
 .form-item--editor-format .form-element--editor-format {
   min-width: 1px;
 }
 
 .form-item--editor-format .form-item__label,
-.form-item--editor-format .form-item__prefix,
-.form-item--editor-format .form-item__suffix {
+.form-item--editor-format .form-item__affix {
   margin-right: 0.5rem; /* LTR */
 }
 
 [dir="rtl"] .form-item--editor-format .form-item__label,
-[dir="rtl"] .form-item--editor-format .form-item__prefix,
-[dir="rtl"] .form-item--editor-format .form-item__suffix {
+[dir="rtl"] .form-item--editor-format .form-item__affix {
   margin-right: 0;
   margin-left: 0.5rem;
 }

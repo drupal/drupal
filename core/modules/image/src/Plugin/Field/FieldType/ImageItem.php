@@ -211,8 +211,14 @@ class ImageItem extends FileItem {
       '#title_display' => 'invisible',
       '#default_value' => $max_resolution[0],
       '#min' => 1,
-      '#field_suffix' => ' × ',
       '#prefix' => '<div class="form--inline clearfix">',
+    ];
+    $element['max_resolution']['ex'] = [
+      '#type' => 'item',
+      '#markup' => ' × ',
+      '#wrapper_attributes' => [
+        'class' => ['form-inline-separator'],
+      ],
     ];
     $element['max_resolution']['y'] = [
       '#type' => 'number',
@@ -220,7 +226,13 @@ class ImageItem extends FileItem {
       '#title_display' => 'invisible',
       '#default_value' => $max_resolution[1],
       '#min' => 1,
-      '#field_suffix' => ' ' . t('pixels'),
+    ];
+    $element['max_resolution']['pixels'] = [
+      '#type' => 'item',
+      '#markup' => ' ' . t('pixels'),
+      '#wrapper_attributes' => [
+        'class' => ['form-inline-separator'],
+      ],
       '#suffix' => '</div>',
     ];
 
@@ -238,8 +250,14 @@ class ImageItem extends FileItem {
       '#title_display' => 'invisible',
       '#default_value' => $min_resolution[0],
       '#min' => 1,
-      '#field_suffix' => ' × ',
       '#prefix' => '<div class="form--inline clearfix">',
+    ];
+    $element['min_resolution']['ex'] = [
+      '#type' => 'item',
+      '#markup' => ' × ',
+      '#wrapper_attributes' => [
+        'class' => ['form-inline-separator'],
+      ],
     ];
     $element['min_resolution']['y'] = [
       '#type' => 'number',
@@ -247,7 +265,13 @@ class ImageItem extends FileItem {
       '#title_display' => 'invisible',
       '#default_value' => $min_resolution[1],
       '#min' => 1,
-      '#field_suffix' => ' ' . t('pixels'),
+    ];
+    $element['min_resolution']['pixels'] = [
+      '#type' => 'item',
+      '#markup' => ' ' . t('pixels'),
+      '#wrapper_attributes' => [
+        'class' => ['form-inline-separator'],
+      ],
       '#suffix' => '</div>',
     ];
 

@@ -10,7 +10,6 @@ global-styling:
       css/classy/components/exposed-filters.css: {}
       css/classy/components/field.css: {}
       css/classy/components/icons.css: {}
-      css/classy/components/inline-form.css: {}
       css/classy/components/item-list.css: {}
       css/classy/components/link.css: {}
       css/classy/components/links.css: {}
@@ -36,9 +35,11 @@ global-styling:
       css/components/form--checkbox-radio--ie.css: {}
       css/components/form--field-multiple.css: {}
       css/components/form--managed-file.css: {}
+      css/components/form--prefix-suffix.css: {}
       css/components/form--text.css: {}
       css/components/form--select.css: {}
       css/components/help.css: {}
+      css/components/inline-form.css: {}
       css/components/image-preview.css: {}
       css/components/menus-and-lists.css: {}
       css/components/modules-page.css: {}
@@ -175,6 +176,14 @@ media-form:
       css/components/media.css: {}
   dependencies:
     - media/form
+
+prefix.suffix:
+  js:
+    js/prefix-suffix.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.debounce
+    - core/jquery.once
 
 system.admin:
   version: VERSION

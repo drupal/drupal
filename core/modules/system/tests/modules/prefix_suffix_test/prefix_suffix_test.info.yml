@@ -1,0 +1,5 @@
+name: 'Prefix Suffix Test'
+type: module
+description: 'Support module for prefix suffix tests.'
+package: Testing
+version: VERSION

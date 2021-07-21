@@ -151,6 +151,9 @@ class FieldStorageAddForm extends FormBase {
       $form['add']['separator'] = [
         '#type' => 'item',
         '#markup' => $this->t('or'),
+        '#wrapper_attributes' => [
+          'class' => ['form-inline-separator'],
+        ],
       ];
       $form['add']['existing_storage_name'] = [
         '#type' => 'select',

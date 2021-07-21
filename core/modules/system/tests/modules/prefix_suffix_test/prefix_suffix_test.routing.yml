@@ -1,0 +1,7 @@
+prefix_suffix_test.form:
+  path: '/prefix-suffix-test/form'
+  defaults:
+    _title: 'Prefix Suffix Form'
+    _form: '\Drupal\prefix_suffix_test\Form\PrefixSuffixForm'
+  requirements:
+    _access: 'TRUE'

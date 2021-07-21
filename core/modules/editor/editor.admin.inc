@@ -106,9 +106,14 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#min' => 1,
     '#max' => 99999,
     '#placeholder' => t('width'),
-    '#field_suffix' => ' x ',
     '#states' => $show_if_image_uploads_enabled,
     '#prefix' => '<div class="form--inline clearfix">',
+  ];
+
+  // @todo change #type to 'item' in https://drupal.org/node/3165290
+  $form['max_dimensions']['ex'] = [
+    '#type' => 'inline_template',
+    '#template' => '<div class="form-item form-inline-separator"> × </div>',
   ];
   $form['max_dimensions']['height'] = [
     '#title' => t('Height'),
@@ -120,9 +125,13 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#min' => 1,
     '#max' => 99999,
     '#placeholder' => t('height'),
-    '#field_suffix' => t('pixels'),
     '#states' => $show_if_image_uploads_enabled,
-    '#suffix' => '</div>',
+  ];
+
+  // @todo change #type to 'item' in https://drupal.org/node/3165290
+  $form['max_dimensions']['pixels'] = [
+    '#type' => 'inline_template',
+    '#template' => '<div class="form-item form-inline-separator"> ' . t('pixels') . ' </div></div>',
   ];
 
   return $form;
