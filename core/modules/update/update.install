@@ -87,6 +87,8 @@ function update_uninstall() {
 
   $queue = \Drupal::queue('update_fetch_tasks');
   $queue->deleteQueue();
+
+  \Drupal::keyValue('update_fetch_task')->deleteAll();
 }
 
 /**

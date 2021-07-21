@@ -115,7 +115,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     if (empty($this->fetchTasks)) {
       $this->fetchTasks = $this->fetchTaskStore->getAll();
     }
-    if (empty($this->fetchTasks[$project['name']])) {
+    if (empty($this->fetchTasks[$project['name']]) || $this->fetchTasks[$project['name']] !== $project) {
       $this->fetchQueue->createItem($project);
       $this->fetchTaskStore->set($project['name'], $project);
       $this->fetchTasks[$project['name']] = REQUEST_TIME;

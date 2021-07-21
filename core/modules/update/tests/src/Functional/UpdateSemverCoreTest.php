@@ -427,12 +427,12 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
     update_create_fetch_task($projecta);
-    $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
+    $this->assertEquals(3, $queue->numberOfItems(), 'Queue still contains three items');
 
     // Clear storage and try again.
     update_storage_clear();
     update_create_fetch_task($projecta);
-    $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
+    $this->assertEquals(4, $queue->numberOfItems(), 'Queue contains four items');
   }
 
   /**
