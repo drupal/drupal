@@ -180,8 +180,8 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
       $output = $view->style_plugin->getField($index, 'delete_node');
       $this->assertEquals($expected, $output);
       $expected = $access ? '  <div class="dropbutton-wrapper"><div class="dropbutton-widget"><ul class="dropbutton">' .
-        '<li><a href="' . $node_url . '/edit?destination=/" hreflang="en">Edit</a></li>' .
-        '<li><a href="' . $node_url . '/delete?destination=/" hreflang="en">Delete</a></li>' .
+        '<li><a href="' . $node_url . '/edit?destination=/" hreflang="en">Edit <span class="visually-hidden">"' . $node->label() . '"</span></a></li>' .
+        '<li><a href="' . $node_url . '/delete?destination=/" hreflang="en">Delete <span class="visually-hidden">"' . $node->label() . '"</span></a></li>' .
         '</ul></div></div>' : '';
       $output = $view->style_plugin->getField($index, 'operations');
       $this->assertEquals($expected, $output);

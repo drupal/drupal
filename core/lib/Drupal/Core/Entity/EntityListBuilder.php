@@ -131,14 +131,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
     $operations = [];
     if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
       $operations['edit'] = [
-        'title' => $this->t('Edit'),
+        'title' => $this->t('Edit <span class="visually-hidden">"@label"</span>', ['@label' => $entity->label()]),
         'weight' => 10,
         'url' => $this->ensureDestination($entity->toUrl('edit-form')),
       ];
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
       $operations['delete'] = [
-        'title' => $this->t('Delete'),
+        'title' => $this->t('Delete <span class="visually-hidden">"@label"</span>', ['@label' => $entity->label()]),
         'weight' => 100,
         'url' => $this->ensureDestination($entity->toUrl('delete-form')),
       ];

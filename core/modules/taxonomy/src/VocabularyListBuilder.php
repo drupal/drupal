@@ -107,12 +107,12 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Edit vocabulary');
+      $operations['edit']['title'] = t('Edit vocabulary <span class="visually-hidden">"@label"</span>', ['@label' => $entity->label()]);
     }
 
     if ($entity->access('access taxonomy overview')) {
       $operations['list'] = [
-        'title' => t('List terms'),
+        'title' => t('List terms <span class="visually-hidden">in vocabulary "@label"</span>', ['@label' => $entity->label()]),
         'weight' => 0,
         'url' => $entity->toUrl('overview-form'),
       ];
@@ -121,7 +121,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $taxonomy_term_access_control_handler = $this->entityTypeManager->getAccessControlHandler('taxonomy_term');
     if ($taxonomy_term_access_control_handler->createAccess($entity->id())) {
       $operations['add'] = [
-        'title' => t('Add terms'),
+        'title' => t('Add terms <span class="visually-hidden">to vocabulary "@label"</span>', ['@label' => $entity->label()]),
         'weight' => 10,
         'url' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $entity->id()]),
       ];

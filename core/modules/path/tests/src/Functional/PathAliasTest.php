@@ -179,8 +179,8 @@ class PathAliasTest extends PathTestBase {
     $truncated_alias = substr($alias, 0, 47);
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit, 'Save');
-    // The untruncated alias should not be found.
-    $this->assertNoText($alias);
+    // The untruncated alias should be found.
+    $this->assertSession()->pageTextContains($alias);
     // The 'truncated' alias will always be found.
     $this->assertSession()->pageTextContains($truncated_alias);
 

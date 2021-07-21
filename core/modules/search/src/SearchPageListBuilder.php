@@ -326,7 +326,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     }
     else {
       $operations['default'] = [
-        'title' => $this->t('Set as default'),
+        'title' => $this->t('Set <span class="visually-hidden">"@label"</span> as default', ['@label' => $entity->label()]),
         'url' => Url::fromRoute('entity.search_page.set_default', [
           'search_page' => $entity->id(),
         ]),

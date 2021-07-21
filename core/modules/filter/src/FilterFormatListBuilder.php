@@ -135,7 +135,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = $this->t('Configure');
+      $operations['edit']['title'] = $this->t('Configure <span class="visually-hidden">filter format "@label"</span>', ['@label' => $entity->label()]);
     }
 
     // The fallback format may not be disabled.

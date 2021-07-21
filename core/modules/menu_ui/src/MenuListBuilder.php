@@ -44,15 +44,15 @@ class MenuListBuilder extends ConfigEntityListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Edit menu');
+      $operations['edit']['title'] = $this->t('Edit menu <span class="visually-hidden">"@label"</span>', ['@label' => $entity->label()]);
       $operations['add'] = [
-        'title' => t('Add link'),
+        'title' => t('Add link <span class="visually-hidden">in "@label"</span>', ['@label' => $entity->label()]),
         'weight' => 20,
         'url' => $entity->toUrl('add-link-form'),
       ];
     }
     if (isset($operations['delete'])) {
-      $operations['delete']['title'] = t('Delete menu');
+      $operations['delete']['title'] = t('Delete menu <span class="visually-hidden">"@label"</span>', ['@label' => $entity->label()]);
     }
     return $operations;
   }

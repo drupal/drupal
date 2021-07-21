@@ -99,7 +99,10 @@ class ActionListBuilder extends ConfigEntityListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = $entity->isConfigurable() ? parent::getDefaultOperations($entity) : [];
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Configure');
+      $operations['edit']['title'] = t('Configure <span class="visually-hidden">action "@label"</span>', ['@label' => $entity->label()]);
+    }
+    if (isset($operations['delete'])) {
+      $operations['delete']['title'] = t('Delete <span class="visually-hidden">action "@label"</span>', ['@label' => $entity->label()]);
     }
     return $operations;
   }

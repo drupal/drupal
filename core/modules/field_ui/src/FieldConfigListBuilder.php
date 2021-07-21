@@ -174,7 +174,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
 
     if ($entity->access('update') && $entity->hasLinkTemplate("{$entity->getTargetEntityTypeId()}-field-edit-form")) {
       $operations['edit'] = [
-        'title' => $this->t('Edit'),
+        'title' => $this->t('Edit <span class="visually-hidden">field "@label"</span>', ['@label' => $entity->label()]),
         'weight' => 10,
         'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-field-edit-form"),
         'attributes' => [
@@ -184,7 +184,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate("{$entity->getTargetEntityTypeId()}-field-delete-form")) {
       $operations['delete'] = [
-        'title' => $this->t('Delete'),
+        'title' => $this->t('Delete <span class="visually-hidden">field "@label"</span>', ['@label' => $entity->label()]),
         'weight' => 100,
         'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-field-delete-form"),
         'attributes' => [
@@ -194,7 +194,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     }
 
     $operations['storage-settings'] = [
-      'title' => $this->t('Storage settings'),
+      'title' => $this->t('Storage settings <span class="visually-hidden">for field "@label"</span>', ['@label' => $entity->label()]),
       'weight' => 20,
       'attributes' => ['title' => $this->t('Edit storage settings.')],
       'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-storage-edit-form"),
