@@ -18,6 +18,7 @@
 .page-wrapper {
   max-width: var(--max-bg-color);
   background: var(--color--white);
+  margin: 0 auto;
 }
 
 /* Contains the social sidebar, and the primary content area. */

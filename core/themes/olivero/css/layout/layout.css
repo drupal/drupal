@@ -28,6 +28,7 @@
 .page-wrapper {
   max-width: 98.125rem;
   background: #fff;
+  margin: 0 auto;
 }
 
 /* Contains the social sidebar, and the primary content area. */
