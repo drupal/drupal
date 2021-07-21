@@ -175,7 +175,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $assert_session = $this->assertSession();
-    $this->assertEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000));
+    $assert_session->assertNoElementAfterWait('css', 'img[src*="image-test.png"]', 1000);
     $assert_session->elementNotExists('css', 'figure');
 
     $this->host->body->value = $original_value;
@@ -205,7 +205,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $assert_session = $this->assertSession();
-    $this->assertEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000));
+    $assert_session->assertNoElementAfterWait('css', 'img[src*="image-test.png"]', 1000);
     $assert_session->elementNotExists('css', 'figure');
     $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Please save your work and reload this page.'));
     // Now assert that the error doesn't appear when the override to force an
