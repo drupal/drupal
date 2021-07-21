@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -42,6 +43,13 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   protected $entityRepository;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a NodeController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
@@ -50,11 +58,14 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   The renderer service.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler;
    */
-  public function __construct(DateFormatterInterface $date_formatter, RendererInterface $renderer, EntityRepositoryInterface $entity_repository) {
+  public function __construct(DateFormatterInterface $date_formatter, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, ModuleHandlerInterface $module_handler) {
     $this->dateFormatter = $date_formatter;
     $this->renderer = $renderer;
     $this->entityRepository = $entity_repository;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -64,7 +75,8 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     return new static(
       $container->get('date.formatter'),
       $container->get('renderer'),
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('module_handler')
     );
   }
 
@@ -169,6 +181,8 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $delete_permission = (($account->hasPermission("delete $type revisions") || $account->hasPermission('delete all revisions') || $account->hasPermission('administer nodes')) && $node->access('delete'));
 
     $rows = [];
+    $all_revisions = [];
+    $displayed_revisions = [];
     $default_revision = $node->getRevisionId();
     $current_revision_displayed = FALSE;
 
@@ -177,7 +191,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       $revision = $node_storage->loadRevision($vid);
       // Only show revisions that are affected by the language that is being
       // displayed.
+      $all_revisions[$vid] = $revision;
       if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)->isRevisionTranslationAffected()) {
+        $displayed_revisions[$vid] = $revision;
         $username = [
           '#theme' => 'username',
           '#account' => $revision->getRevisionUser(),
@@ -259,7 +275,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       }
     }
 
-    $build['node_revisions_table'] = [
+    $build['entity_revisions_table'] = [
       '#theme' => 'table',
       '#rows' => $rows,
       '#header' => $header,
@@ -270,6 +286,12 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     ];
 
     $build['pager'] = ['#type' => 'pager'];
+
+    $context = [
+      'all_revisions' => $all_revisions,
+      'displayed_revisions' => $displayed_revisions,
+    ];
+    $this->moduleHandler->alter(['entity_revision_overview', 'entity_node_revision_overview'], $build, $node, $context);
 
     return $build;
   }
