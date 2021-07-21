@@ -109,6 +109,7 @@ class UserLoginForm extends FormBase {
         'autocapitalize' => 'none',
         'spellcheck' => 'false',
         'autofocus' => 'autofocus',
+        'autocomplete' => ['username'],
       ],
     ];
 
@@ -118,6 +119,9 @@ class UserLoginForm extends FormBase {
       '#size' => 60,
       '#description' => $this->t('Enter the password that accompanies your username.'),
       '#required' => TRUE,
+      '#attributes' => [
+        'autocomplete' => ['current-password'],
+      ],
     ];
 
     $form['actions'] = ['#type' => 'actions'];

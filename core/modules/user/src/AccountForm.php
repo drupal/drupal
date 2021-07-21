@@ -99,6 +99,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
+      '#attributes' => [
+        'autocomplete' => ['username'],
+      ],
     ];
 
     // Only show name field on registration form or user can change own username.
@@ -113,6 +116,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         'autocorrect' => 'off',
         'autocapitalize' => 'off',
         'spellcheck' => 'false',
+        'autocomplete' => ['username'],
       ],
       '#default_value' => (!$register ? $account->getAccountName() : ''),
       '#access' => $account->name->access('edit'),
@@ -168,6 +172,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         '#size' => 25,
         '#description' => $this->t('Provide a password for the new account in both fields.'),
         '#required' => TRUE,
+        '#attributes' => [
+          'autocomplete' => ['new-password'],
+        ],
       ];
     }
 

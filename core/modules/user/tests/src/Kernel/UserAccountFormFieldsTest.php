@@ -62,7 +62,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     // Verify that web browsers may autocomplete the email value and
     // autofill/prefill the name and pass values.
     foreach (['mail', 'name', 'pass'] as $key) {
-      $this->assertFalse(isset($form['account'][$key]['#attributes']['autocomplete']), "'$key' field: 'autocomplete' attribute not found.");
+      $this->assertTrue(isset($form['account'][$key]['#attributes']['autocomplete']), "'$key' field: 'autocomplete' attribute not found.");
     }
   }
 
