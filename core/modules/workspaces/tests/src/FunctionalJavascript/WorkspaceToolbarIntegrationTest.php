@@ -80,10 +80,14 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
     $page->clickLink('Stage');
     $this->assertElementVisibleAfterWait('css', '.workspace-activate-form.workspace-confirm-form');
     $page->find('css', '.ui-dialog-buttonset .button--primary')->click();
-    $assert_session->waitForElementVisible('css', '.messages--status');
 
     // Make sure we stay on same page after switch.
-    $assert_session->responseContains('<em class="placeholder">Stage</em> is now the active workspace.');
+    $location = $this->getSession()
+      ->getPage()
+      ->waitFor(10, function ($page) {
+        return strpos($page->getContent(), '<em class="placeholder">Stage</em> is now the active workspace.');
+      });
+    $this->assertIsInt($location);
     $assert_session->addressEquals('admin');
   }
 
