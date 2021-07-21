@@ -81,6 +81,41 @@ class ContextTest extends TestCase {
   }
 
   /**
+   * Data provider for testHasContextValue.
+   */
+  public function providerHasContextValue() {
+    return [
+      [TRUE, FALSE],
+      [TRUE, 0],
+      [TRUE, -0],
+      [TRUE, 0.0],
+      [TRUE, -0.0],
+      [TRUE, ''],
+      [TRUE, '0'],
+      [TRUE, []],
+      [FALSE, NULL],
+    ];
+  }
+
+  /**
+   * @covers ::hasContextValue
+   * @dataProvider providerHasContextValue
+   */
+  public function testHasContextValue($has_context_value, $default_value): void {
+    $mock_definition = $this->getMockBuilder('Drupal\Component\Plugin\Context\ContextDefinitionInterface')
+      ->setMethods(['getDefaultValue'])
+      ->getMockForAbstractClass();
+
+    $mock_definition->expects($this->atLeastOnce())
+      ->method('getDefaultValue')
+      ->willReturn($default_value);
+
+    $context = new Context($mock_definition);
+    $this->assertEquals($has_context_value, $context->hasContextValue());
+    $this->assertEquals($default_value, $context->getContextValue());
+  }
+
+  /**
    * @covers ::getContextValue
    */
   public function testDefaultValue() {
