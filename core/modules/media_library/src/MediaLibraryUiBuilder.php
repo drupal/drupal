@@ -116,6 +116,9 @@ class MediaLibraryUiBuilder {
     if ($state->get('media_library_content') === '1') {
       return $this->buildLibraryContent($state);
     }
+    elseif ($state->get('media_library_selection') === '1') {
+      return $this->buildLibraryContentSelection($state);
+    }
     else {
       return [
         '#theme' => 'media_library_wrapper',
@@ -158,7 +161,42 @@ class MediaLibraryUiBuilder {
         'id' => 'media-library-content',
       ],
       'form' => $this->buildMediaTypeAddForm($state),
-      'view' => $this->buildMediaLibraryView($state),
+      'view' => $this->buildMediaLibraryView(
+          $state,
+          $state->get('views_display_id', 'widget'),
+          [$state->getSelectedTypeId()]
+      ),
+    ];
+  }
+
+  /**
+   * Build the current selection overview.
+   *
+   * @param \Drupal\media_library\MediaLibraryState $state
+   *   The current state of the media library, derived from the current request.
+   *
+   * @return array
+   *   The render array for the media library.
+   */
+  protected function buildLibraryContentSelection(MediaLibraryState $state) {
+    $args = [];
+    $selection_ids = $state->get('media_library_selection_ids');
+    if ($selection_ids) {
+      $args[] = $selection_ids;
+    }
+
+    return [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'id' => 'media-library-content',
+        'class' => ['media-library-content'],
+      ],
+      'view' => $this->buildMediaLibraryView(
+        $state,
+        'widget_selection',
+        $args
+      ),
     ];
   }
 
@@ -267,6 +305,34 @@ class MediaLibraryUiBuilder {
       ];
     }
 
+    $opener_id = $state->getOpenerId();
+    $allowed_media_type_ids = $state->getAllowedTypeIds();
+    $selected_type_id = reset($allowed_media_type_ids);
+    $remaining_slots = $state->getAvailableSlots();
+    $opener_parameters = $state->getOpenerParameters();
+    $link_state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining_slots, $opener_parameters);
+    // Add the 'media_library_selection' parameter so the response will contain
+    // only the updated content for the selection tab.
+    // @see self::buildUi()
+    $link_state->set('media_library_selection', 1);
+
+    $title = $this->t('Selection');
+    $display_title = [
+      '#markup' => $title,
+    ];
+
+    $menu['#links']['media-library-menu-selection'] = [
+      'title' => $display_title,
+      'url' => Url::fromRoute('media_library.ui', [], [
+        'query' => $link_state->all(),
+      ]),
+      'attributes' => [
+        'class' => ['media-library-menu__link'],
+        'role' => 'button',
+        'data-title' => $title,
+      ],
+    ];
+
     // Set the active menu item.
     $menu['#links']['media-library-menu-' . $selected_type_id]['attributes']['class'][] = 'active';
 
@@ -314,24 +380,25 @@ class MediaLibraryUiBuilder {
    *
    * @param \Drupal\media_library\MediaLibraryState $state
    *   The current state of the media library, derived from the current request.
+   * @param string $display_id
+   *   The view display to build.
+   * @param array $args
+   *   The view arguments.
    *
    * @return array
    *   The render array for the media library view.
    */
-  protected function buildMediaLibraryView(MediaLibraryState $state) {
+  protected function buildMediaLibraryView(MediaLibraryState $state, $display_id, $args = []) {
     // @todo Make the view configurable in
     //   https://www.drupal.org/project/drupal/issues/2971209
     $view = $this->entityTypeManager->getStorage('view')->load('media_library');
     $view_executable = $this->viewsExecutableFactory->get($view);
-    $display_id = $state->get('views_display_id', 'widget');
 
     // Make sure the state parameters are set in the request so the view can
     // pass the parameters along in the pager, filters etc.
     $view_request = $view_executable->getRequest();
     $view_request->query->add($state->all());
     $view_executable->setRequest($view_request);
-
-    $args = [$state->getSelectedTypeId()];
 
     // Make sure the state parameters are set in the request so the view can
     // pass the parameters along in the pager, filters etc.

@@ -178,7 +178,10 @@
       // @todo Add media library specific classes and data attributes to the
       //    media library display links when we can alter display links.
       //    https://www.drupal.org/project/drupal/issues/3036694
-      $('.views-display-link-widget, .views-display-link-widget_table', context)
+      $(
+        '.views-display-link-widget, .views-display-link-widget_table, .views-display-link-widget_selection, .views-display-link-widget_selection_table',
+        context,
+      )
         .once('media-library-views-display-link')
         .on('click', (e) => {
           e.preventDefault();
@@ -267,6 +270,11 @@
         $form,
       );
 
+      const $currentSelectionLink = $(
+        '.media-library-menu-selection a',
+        context,
+      );
+
       /**
        * Disable media items.
        *
@@ -323,6 +331,27 @@
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
+      /**
+       * Update the selected items in the selection tab URL.
+       */
+      function updateSelectionTabUrl() {
+        const currentSelectionLink = $currentSelectionLink[0];
+        const search = new URLSearchParams(currentSelectionLink.search);
+        search.set('media_library_selection_ids', currentSelection.join('+'));
+
+        const href = [
+          currentSelectionLink.protocol,
+          '//',
+          currentSelectionLink.host,
+          currentSelectionLink.pathname,
+          '?',
+          search.toString(),
+          currentSelectionLink.hash,
+        ];
+
+        $currentSelectionLink.attr('href', href.join());
+      }
+
       // Update the selection array and the hidden form field when a media item
       // is selected.
       $mediaItems.once('media-item-change').on('change', (e) => {
@@ -359,7 +388,7 @@
         .once('media-library-selection-change')
         .on('change', (e) => {
           updateSelectionCount(settings.media_library.selection_remaining);
-
+          updateSelectionTabUrl();
           // Prevent users from selecting more items than allowed.
           if (
             currentSelection.length ===
