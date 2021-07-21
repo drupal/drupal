@@ -88,33 +88,44 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   /**
    * Tests overflow validation.
    *
+   * @param string|null $save_and
+   *   The operation of the button to click. For example, if this is "insert",
+   *   the "Save and insert" button will be pressed. If NULL, the "Save" button
+   *   will be pressed.
+   *
    * @dataProvider providerWidgetOverflow
    */
-  public function testWidgetOverflow($advanced_ui, $button_text) {
-    $this->config('media_library.settings')->set('advanced_ui', $advanced_ui)->save();
+  public function testWidgetOverflow(?string $save_and): void {
+    // If we want to press the "Save and insert" or "Save and select" buttons,
+    // we need to enable the advanced UI.
+    if ($save_and) {
+      $this->config('media_library.settings')->set('advanced_ui', TRUE)->save();
+    }
+
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    // Visit a node create page and open the media library.
     $this->drupalGet('node/add/basic_page');
+    // Upload 5 files into a media field that only allows 2.
     $this->openMediaLibraryForField('field_twin_media');
     $this->uploadFiles(5);
-    // When the user uploads more items than allowed, the media items are
-    // saved but when the user is returned to the media library there is a
-    // warning message.
-    $assert_session->elementExists('css', '.ui-dialog-buttonpane')
-      ->pressButton($button_text);
-    $this->waitForText('Please remove 3 items from the selection.');
-    $assert_session->elementTextContains('css', '.messages--warning', 'There are currently 5 items selected. The maximum number of items for the field is 2. Please remove 3 items from the selection.');
-    // When the user tries insert more items than allowed, the user is returned
-    // to the media library with an error message.
-    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $assert_session->waitForElement('css', '.messages--error');
+    // Save the media items and ensure that the user is warned that they have
+    // selected too many items.
+    if ($save_and) {
+      $this->saveAnd($save_and);
+    }
+    else {
+      $this->pressSaveButton();
+    }
+    $this->waitForElementTextContains('.messages--warning', 'There are currently 5 items selected. The maximum number of items for the field is 2. Please remove 3 items from the selection.');
+    // If the user tries to insert the selected items anyway, they should get
+    // an error.
+    $this->pressInsertSelected(NULL, FALSE);
+    $this->waitForElementTextContains('.messages--error', 'There are currently 5 items selected. The maximum number of items for the field is 2. Please remove 3 items from the selection.');
     $assert_session->elementNotExists('css', '.messages--warning');
-    $assert_session->elementTextContains('css', '.messages--error', 'There are currently 5 items selected. The maximum number of items for the field is 2. Please remove 3 items from the selection.');
-    // Uncheck the extra items.
-    $page->uncheckField('media_library_select_form[2]');
-    $page->uncheckField('media_library_select_form[3]');
-    $page->uncheckField('media_library_select_form[4]');
+    // Once the extra items are deselected, all should be well.
+    $this->unselectMediaItem(2);
+    $this->unselectMediaItem(3);
+    $this->unselectMediaItem(4);
     $this->pressInsertSelected('Added 2 media items.');
   }
 
@@ -126,10 +137,6 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   public function testUnlimitedCardinality($advanced_ui, $button_text) {
     $this->config('media_library.settings')->set('advanced_ui', $advanced_ui)->save();
     $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
-    $driver = $this->getSession()->getDriver();
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = $this->container->get('file_system');
     // Visit a node create page and open the media library.
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_unlimited_media');
@@ -158,25 +165,16 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
   }
 
   /**
-   * Data provider for ::testWidgetOverflow().
+   * Data provider for ::testWidgetOverflow() and ::testUnlimitedCardinality().
    *
-   * @return array
-   *   Test data.
+   * @return array[]
+   *   Sets of arguments to pass to the test method.
    */
-  public function providerWidgetOverflow() {
+  public function providerWidgetOverflow(): array {
     return [
-      'Save button' => [
-        'advancedUi' => FALSE,
-        'buttonText' => 'Save',
-      ],
-      'Save and insert button' => [
-        'advancedUi' => TRUE,
-        'buttonText' => 'Save and insert',
-      ],
-      'Save and select button' => [
-        'advancedUi' => TRUE,
-        'buttonText' => 'Save and select',
-      ],
+      'Save' => [NULL],
+      'Save and insert' => ['insert'],
+      'Save and select' => ['select'],
     ];
   }
 
