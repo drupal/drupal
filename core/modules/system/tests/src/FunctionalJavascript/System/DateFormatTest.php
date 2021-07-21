@@ -61,7 +61,7 @@ class DateFormatTest extends WebDriverTestBase {
     $assert->assertEscaped('<em>' . date("Y") . '</em>');
     $page->fillField('label', 'date_html_pattern');
     // Wait for the machine name ID to be completed.
-    $assert->waitForLink('Edit');
+    $assert->waitForElementVisible('named', ['button', 'Edit']);
     $page->pressButton('Add format');
     $assert->pageTextContains('Custom date format added.');
     $assert->assertEscaped('<em>' . date("Y") . '</em>');
