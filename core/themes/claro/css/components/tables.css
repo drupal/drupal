@@ -224,6 +224,13 @@ td > .ajax-new-content > .form-item > .form-element {
   width: 100%;
 }
 
+/* Force browsers to take auto width for 'select' element. */
+
+td > .form-item > .form-element--type-select,
+td > .ajax-new-content > .form-item > .form-element--type-select {
+  width: auto;
+}
+
 /* Win over table-file-multiple-widget. */
 
 th.is-disabled.is-disabled {
