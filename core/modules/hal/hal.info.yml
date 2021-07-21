@@ -1,6 +1,7 @@
 name: 'HAL'
 type: module
 description: 'Serializes entities using Hypertext Application Language.'
+lifecycle: deprecated
 package: Web services
 version: VERSION
 dependencies:
