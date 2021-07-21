@@ -5,6 +5,7 @@ dependencies:
     - core.entity_view_mode.media.responsive_3x2
   module:
     - editor
+    - image
     - media
 name: 'Full HTML'
 format: full_html
@@ -55,3 +56,10 @@ filters:
       allowed_media_types:
         image: image
         remote_video: remote_video
+  filter_image_style:
+    id: filter_image_style
+    provider: image
+    status: true
+    weight: 12
+    settings:
+      allowed_styles: {  }

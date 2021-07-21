@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for image_style_filter_test module.
+ */
+
+use Drupal\image_style_filter_test\FilterTestImageStyle;
+
+/**
+ * Implements hook_filter_info_alter().
+ */
+function image_style_filter_test_filter_info_alter(array &$info) {
+  $info['filter_image_style']['class'] = FilterTestImageStyle::class;
+}

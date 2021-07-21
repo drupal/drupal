@@ -277,11 +277,25 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *   (FALSE), or whether a more elaborate filter tips should be returned for
    *   template_preprocess_filter_tips() (TRUE).
    *
-   * @return string|null
-   *   Translated text to display as a tip, or NULL if this filter has no tip.
+   * @return array|\Drupal\Component\Render\MarkupInterface|string|null
+   *   Translated text to display as a tip. Can be a render array, a translated
+   *   markup, a string or NULL if this filter has no tip.
    *
    * @todo Split into getSummaryItem() and buildGuidelines().
    */
   public function tips($long = FALSE);
+
+  /**
+   * Allows the plugin to react when one of its dependencies are deleted.
+   *
+   * @param array $dependencies
+   *   An array of dependencies that will be deleted keyed by dependency type.
+   *
+   * @return bool
+   *   TRUE if the plugin settings have been changed, FALSE if not.
+   *
+   * @todo Move to a generic interface in https://www.drupal.org/node/2579743.
+   */
+  public function onDependencyRemoval(array $dependencies): bool;
 
 }

@@ -5,6 +5,7 @@ dependencies:
     - core.entity_view_mode.media.responsive_3x2
   module:
     - editor
+    - image
     - media
 name: 'Basic HTML'
 format: basic_html
@@ -16,7 +17,7 @@ filters:
     status: true
     weight: -10
     settings:
-      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br> <span> <img src alt height width data-entity-type data-entity-uuid data-align data-caption> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title>'
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br> <span> <img src alt height width data-entity-type data-entity-uuid data-align data-caption data-image-style> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title>'
       filter_html_help: false
       filter_html_nofollow: false
   filter_align:
@@ -61,3 +62,10 @@ filters:
       allowed_media_types:
         image: image
         remote_video: remote_video
+  filter_image_style:
+    id: filter_image_style
+    provider: image
+    status: true
+    weight: 12
+    settings:
+      allowed_styles: {  }

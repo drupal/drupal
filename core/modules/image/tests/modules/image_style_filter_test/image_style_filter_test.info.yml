@@ -1,0 +1,5 @@
+name: 'Image Style Filter views'
+type: module
+description: 'Testing module for Filter integration.'
+package: Testing
+version: VERSION

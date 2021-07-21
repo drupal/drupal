@@ -316,7 +316,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  * @return array
  *   An associative array of filtering tips, keyed by filter name. Each
  *   filtering tip is an associative array with elements:
- *   - tip: Tip text.
+ *   - tip: Tip text as render array, translated markup object or string.
  *   - id: Filter ID.
  */
 function _filter_tips($format_id, $long = FALSE) {
@@ -334,8 +334,9 @@ function _filter_tips($format_id, $long = FALSE) {
       if ($filter->status) {
         $tip = $filter->tips($long);
         if (isset($tip)) {
+          $tip_render_array = is_array($tip) ? $tip : ['#markup' => $tip];
           $tips[$format->label()][$name] = [
-            'tip' => ['#markup' => $tip],
+            'tip' => $tip_render_array,
             'id' => $name,
           ];
         }

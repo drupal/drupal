@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - editor
+    - image
 name: 'Full HTML'
 format: full_html
 weight: 2
@@ -33,3 +34,10 @@ filters:
     status: true
     weight: 11
     settings: {  }
+  filter_image_style:
+    id: filter_image_style
+    provider: image
+    status: true
+    weight: 12
+    settings:
+      allowed_styles: {  }

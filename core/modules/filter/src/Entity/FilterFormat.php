@@ -4,6 +4,7 @@ namespace Drupal\filter\Entity;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\DependencyRemovalTrait;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -54,6 +55,8 @@ use Drupal\filter\Plugin\FilterInterface;
  * )
  */
 class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, EntityWithPluginCollectionInterface {
+
+  use DependencyRemovalTrait;
 
   /**
    * Unique machine name of the format.
@@ -415,7 +418,28 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   public function onDependencyRemoval(array $dependencies) {
     $changed = parent::onDependencyRemoval($dependencies);
     $filters = $this->filters();
+    /** @var \Drupal\filter\Plugin\FilterInterface $filter */
     foreach ($filters as $filter) {
+      // Give this filter the opportunity to react on dependency removal.
+      $filter_removed_dependencies = $this->getPluginRemovedDependencies($filter->calculateDependencies(), $dependencies);
+      if ($filter_removed_dependencies) {
+        if ($filter->onDependencyRemoval($filter_removed_dependencies)) {
+          $this->setFilterConfig($filter->getPluginId(), $filter->getConfiguration());
+          $changed = TRUE;
+        }
+      }
+      // If there are unresolved deleted dependencies left, disable this filter
+      // to avoid the removal of the entire text format entity.
+      if ($this->getPluginRemovedDependencies($filter->calculateDependencies(), $dependencies)) {
+        $this->removeFilter($filter->getPluginId());
+        filter_formats_reset();
+        $this->getLogger()->warning("The '@format' filter '@filter' has been disabled because its configuration depends on removed dependencies.", [
+          '@format' => $this->id(),
+          '@filter' => $filter->getPluginId(),
+        ]);
+        $changed = TRUE;
+      }
+
       // Remove disabled filters, so that this FilterFormat config entity can
       // continue to exist.
       if (!$filter->status && in_array($filter->provider, $dependencies['module'])) {
@@ -437,6 +461,16 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
     if (isset($this->filters[$instance->getPluginId()])) {
       parent::calculatePluginDependencies($instance);
     }
+  }
+
+  /**
+   * Provides the 'filter' channel logger service.
+   *
+   * @return \Psr\Log\LoggerInterface
+   *   The 'filter' channel logger.
+   */
+  private function getLogger() {
+    return \Drupal::logger('filter');
   }
 
 }
