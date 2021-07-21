@@ -87,8 +87,8 @@ class TestRunnerKernel extends DrupalKernel {
 
     // Create the build/artifacts directory if necessary.
     include_once $this->getAppRoot() . '/core/includes/file.inc';
-    if (!is_dir('public://simpletest')) {
-      mkdir('public://simpletest', 0777, TRUE);
+    if (!is_dir('public://simpletest') && !@mkdir('public://simpletest', 0777, TRUE) && !is_dir('public://simpletest')) {
+      throw new \RuntimeException('Unable to create directory: public://simpletest');
     }
   }
 
