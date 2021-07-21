@@ -267,44 +267,49 @@ class FileUploadResource extends ResourceBase {
       throw new HttpException(503, sprintf('File "%s" is already locked for writing', $file_uri), NULL, ['Retry-After' => 1]);
     }
 
-    // Begin building file entity.
-    $file = File::create([]);
-    $file->setOwnerId($this->currentUser->id());
-    $file->setFilename($prepared_filename);
-    if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
-      $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
-    }
-    else {
-      $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
-      @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-    }
-    $file->setFileUri($file_uri);
-    // Set the size. This is done in File::preSave() but we validate the file
-    // before it is saved.
-    $file->setSize(@filesize($temp_file_path));
-
-    // Validate the file entity against entity-level validation and field-level
-    // validators.
-    $this->validate($file, $validators);
-
-    // Move the file to the correct location after validation. Use
-    // FileSystemInterface::EXISTS_ERROR as the file location has already been
-    // determined above in FileSystem::getDestinationFilename().
     try {
-      $this->fileSystem->move($temp_file_path, $file_uri, FileSystemInterface::EXISTS_ERROR);
+      // Begin building file entity.
+      $file = File::create([]);
+      $file->setOwnerId($this->currentUser->id());
+      $file->setFilename($prepared_filename);
+      if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
+        $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
+      }
+      else {
+        $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
+        @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+      }
+      $file->setFileUri($file_uri);
+      // Set the size. This is done in File::preSave() but we validate the file
+      // before it is saved.
+      $file->setSize(@filesize($temp_file_path));
+
+      // Validate the file entity against entity-level validation and field-level
+      // validators.
+      $this->validate($file, $validators);
+
+      // Move the file to the correct location after validation. Use
+      // FileSystemInterface::EXISTS_ERROR as the file location has already been
+      // determined above in FileSystem::getDestinationFilename().
+      try {
+        $this->fileSystem->move($temp_file_path, $file_uri, FileSystemInterface::EXISTS_ERROR);
+      }
+      catch (FileException $e) {
+        throw new HttpException(500, 'Temporary file could not be moved to file location');
+      }
+
+      $file->save();
+
+      // 201 Created responses return the newly created entity in the response
+      // body. These responses are not cacheable, so we add no cacheability
+      // metadata here.
+      return new ModifiedResourceResponse($file, 201);
     }
-    catch (FileException $e) {
-      throw new HttpException(500, 'Temporary file could not be moved to file location');
+    finally {
+      // This will always be executed before any return statement or exception
+      // in the try {} block.
+      $this->lock->release($lock_id);
     }
-
-    $file->save();
-
-    $this->lock->release($lock_id);
-
-    // 201 Created responses return the newly created entity in the response
-    // body. These responses are not cacheable, so we add no cacheability
-    // metadata here.
-    return new ModifiedResourceResponse($file, 201);
   }
 
   /**
