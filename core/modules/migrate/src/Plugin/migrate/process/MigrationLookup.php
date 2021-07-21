@@ -143,7 +143,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
   /**
    * The migrate stub service.
    *
-   * @var \Drupal\migrate\MigrateStubInterface
+   * @var \Drupal\migrate\MigrateStub
    */
   protected $migrateStub;
 
