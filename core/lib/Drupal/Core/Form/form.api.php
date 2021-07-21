@@ -180,20 +180,43 @@ function hook_ajax_render_alter(array &$data) {
  * The call order is as follows: all existing form alter functions are called
  * for module A, then all for module B, etc., followed by all for any base
  * theme(s), and finally for the theme itself. The module order is determined
- * by system weight, then by module name.
+ * by system weight, then by module name (the hook order can further be altered
+ * by hook_module_implements_alter()) i.e. hook_module_implements_alter()
+ * doesn't change module weight.
  *
  * Within each module, form alter hooks are called in the following order:
  * first, hook_form_alter(); second, hook_form_BASE_FORM_ID_alter(); third,
  * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
  * called first followed by the more specific.
  *
- * @param $form
+ * For some use cases, form alter hooks may not provide an adequate glimpse at
+ * the form array. Forms are built in phases and the form alter hooks are some
+ * of the earliest places to alter the form. Your desired change may require
+ * later changes to already be in place for them to work properly. For example,
+ * each element #type has default properties that are added during rendering;
+ * see \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
+ *
+ * After all form_alter hooks are run, here are the later-stage ways forms
+ * can be altered during the form build process:
+ * - A form element's #process property contains an array of functions. These
+ *   functions allow for elements to expand to multiple elements, for example,
+ *   radios, checkboxes and files.
+ * - The form's or form element's #after_build property contains an array of
+ *   functions. These functions allow the form to be altered before the form
+ *   finishes building and is cached.
+ *
+ * Lastly, any form element can be altered after the build process and during
+ * the render process if it has a #pre_render property. See the documentation
+ * for #pre_render in the
+ * @link theme_render Render API topic @endlink for details.
+ *
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form. The arguments that
  *   \Drupal::formBuilder()->getForm() was originally called with are available
  *   in the array $form_state->getBuildInfo()['args'].
- * @param $form_id
+ * @param string $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
  *
@@ -202,7 +225,7 @@ function hook_ajax_render_alter(array &$data) {
  *
  * @ingroup form_api
  */
-function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function hook_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, string $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
     $upload_enabled_types = \Drupal::config('mymodule.settings')->get('upload_enabled_types');
     $form['workflow']['upload_' . $form['type']['#value']] = [

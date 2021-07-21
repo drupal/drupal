@@ -335,6 +335,20 @@
  *
  * Modules can define render elements by defining an element plugin.
  *
+ * @section altering Altering
+ * For some use cases, examining a render array before it is rendered may not
+ * provide an adequate glimpse at its properties. Render arrays are rendered in
+ * phases and your desired alteration may require properties that are not added
+ * to render arrays until after rendering starts. For example, each element
+ * #type has default properties that are added during rendering; see
+ * \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
+ *
+ * Any element in a render array can have a #pre_render property that contains
+ * an array of functions. During rendering, these functions are called
+ * sequentially to modify or decorate the element before rendering.
+ *
+ * @see \Drupal\Core\Render\RendererInterface::render()
+ *
  * @section sec_caching Caching
  * The Drupal rendering process has the ability to cache rendered output at any
  * level in a render array hierarchy. This allows expensive calculations to be
