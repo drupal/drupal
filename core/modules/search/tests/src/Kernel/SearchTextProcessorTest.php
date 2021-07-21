@@ -6,11 +6,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchTextProcessorInterface;
 
 /**
- * Tests that the search_simply() function works as intended.
+ * Test search text preprocessing functionality.
  *
  * @group search
  */
-class SearchSimplifyTest extends KernelTestBase {
+class SearchTextProcessorTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
