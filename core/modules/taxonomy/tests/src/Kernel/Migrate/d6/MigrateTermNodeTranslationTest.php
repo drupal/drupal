@@ -19,6 +19,7 @@ class MigrateTermNodeTranslationTest extends MigrateDrupal6TestBase {
     'config_translation',
     'content_translation',
     'language',
+    'locale',
     'menu_ui',
     'taxonomy',
   ];

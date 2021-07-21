@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Implements hook_install().
  */
 function media_install() {
-  $source = drupal_get_path('module', 'media') . '/images/icons';
+  $source = \Drupal::service('extension.list.module')->getPath('media') . '/images/icons';
   $destination = \Drupal::config('media.settings')->get('icon_base_uri');
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');

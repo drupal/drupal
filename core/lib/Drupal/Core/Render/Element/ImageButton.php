@@ -70,7 +70,7 @@ class ImageButton extends Submit {
     $element['#attributes']['type'] = 'image';
     Element::setAttributes($element, ['id', 'name', 'value']);
 
-    $element['#attributes']['src'] = file_url_transform_relative(file_create_url($element['#src']));
+    $element['#attributes']['src'] = \Drupal::service('file_url_generator')->generateString($element['#src']);
     if (!empty($element['#title'])) {
       $element['#attributes']['alt'] = $element['#title'];
       $element['#attributes']['title'] = $element['#title'];

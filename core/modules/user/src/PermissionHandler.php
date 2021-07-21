@@ -36,11 +36,15 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  *
  * # An array of callables used to generate dynamic permissions.
  * permission_callbacks:
- *   # Each item in the array should return an associative array with one or
- *   # more permissions following the same keys as the permission defined above.
+ *   # The callable should return an associative array with one or more
+ *   # permissions. Each permission array can use the same keys as the example
+ *   # permission defined above. Additionally, a dependencies key is supported.
+ *   # For more information about permission dependencies see
+ *   # PermissionHandlerInterface::getPermissions().
  *   - Drupal\filter\FilterPermissions::permissions
  * @endcode
  *
+ * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
  * @see filter.permissions.yml
  * @see \Drupal\filter\FilterPermissions
  * @see user_api
@@ -130,10 +134,10 @@ class PermissionHandler implements PermissionHandlerInterface {
    * Builds all permissions provided by .permissions.yml files.
    *
    * @return array[]
-   *   Each return permission is an array with the following keys:
-   *   - title: The title of the permission.
-   *   - description: The description of the permission, defaults to NULL.
-   *   - provider: The provider of the permission.
+   *   An array with the same structure as
+   *   PermissionHandlerInterface::getPermissions().
+   *
+   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   protected function buildPermissionsYaml() {
     $all_permissions = [];
@@ -193,10 +197,10 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The permissions to be sorted.
    *
    * @return array[]
-   *   Each return permission is an array with the following keys:
-   *   - title: The title of the permission.
-   *   - description: The description of the permission, defaults to NULL.
-   *   - provider: The provider of the permission.
+   *   An array with the same structure as
+   *   PermissionHandlerInterface::getPermissions().
+   *
+   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   protected function sortPermissions(array $all_permissions = []) {
     // Get a list of all the modules providing permissions and sort by

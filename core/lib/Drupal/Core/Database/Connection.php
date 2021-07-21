@@ -1129,10 +1129,10 @@ abstract class Connection {
   /**
    * Prepares and returns a SELECT query object.
    *
-   * @param string $table
-   *   The base table for this query, that is, the first table in the FROM
-   *   clause. This table will also be used as the "base" table for query_alter
-   *   hook implementations.
+   * @param string|\Drupal\Core\Database\Query\SelectInterface $table
+   *   The base table name or subquery for this query, used in the FROM clause.
+   *   If a string, the table specified will also be used as the "base" table
+   *   for query_alter hook implementations.
    * @param string $alias
    *   (optional) The alias of the base table of this query.
    * @param $options
@@ -1146,6 +1146,9 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Select
    */
   public function select($table, $alias = NULL, array $options = []) {
+    if (!is_null($alias) && !is_string($alias)) {
+      @trigger_error('Passing a non-string \'alias\' argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/3216552', E_USER_DEPRECATED);
+    }
     $class = $this->getDriverClass('Select');
     return new $class($this, $table, $alias, $options);
   }

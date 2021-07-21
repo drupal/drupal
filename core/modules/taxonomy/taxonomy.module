@@ -12,7 +12,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_help().
@@ -50,42 +49,15 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Entity URI callback.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   $term->toUrl() instead.
+ *
+ * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_term_uri($term) {
-  return new Url('entity.taxonomy_term.canonical', [
-    'taxonomy_term' => $term->id(),
-  ]);
-}
-
-/**
- * Implements hook_page_attachments_alter().
- */
-function taxonomy_page_attachments_alter(array &$page) {
-  $route_match = \Drupal::routeMatch();
-  if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical' && ($term = $route_match->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
-    foreach ($term->uriRelationships() as $rel) {
-      // Set the URI relationships, like canonical.
-      $page['#attached']['html_head_link'][] = [
-        [
-          'rel' => $rel,
-          'href' => $term->toUrl($rel)->toString(),
-        ],
-        TRUE,
-      ];
-
-      // Set the term path as the canonical URL to prevent duplicate content.
-      if ($rel == 'canonical') {
-        // Set the non-aliased canonical path as a default shortlink.
-        $page['#attached']['html_head_link'][] = [
-          [
-            'rel' => 'shortlink',
-            'href' => $term->toUrl($rel, ['alias' => TRUE])->toString(),
-          ],
-          TRUE,
-        ];
-      }
-    }
-  }
+  @trigger_error('taxonomy_term_uri() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use $term->toUrl() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
+  return $term->toUrl();
 }
 
 /**
@@ -181,8 +153,15 @@ function taxonomy_term_is_page(Term $term) {
 
 /**
  * Clear all static cache variables for terms.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_terms_static_reset() {
+  @trigger_error("taxonomy_terms_static_reset() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache() instead. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
   \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
 }
 
@@ -191,8 +170,15 @@ function taxonomy_terms_static_reset() {
  *
  * @param $ids
  *   An array of ids to reset in the entity cache.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->resetCache($ids)
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_vocabulary_static_reset(array $ids = NULL) {
+  @trigger_error('taxonomy_vocabulary_static_reset() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->resetCache($ids) instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
   \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->resetCache($ids);
 }
 
@@ -201,20 +187,15 @@ function taxonomy_vocabulary_static_reset(array $ids = NULL) {
  *
  * @return array
  *   A list of existing vocabulary IDs.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal::entityQuery('taxonomy_vocabulary')->execute() instead.
+ *
+ * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_vocabulary_get_names() {
-  $names = &drupal_static(__FUNCTION__);
-
-  if (!isset($names)) {
-    $names = [];
-    $config_names = \Drupal::configFactory()->listAll('taxonomy.vocabulary.');
-    foreach ($config_names as $config_name) {
-      $id = substr($config_name, strlen('taxonomy.vocabulary.'));
-      $names[$id] = $id;
-    }
-  }
-
-  return $names;
+  @trigger_error("taxonomy_vocabulary_get_names() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityQuery('taxonomy_vocabulary')->execute() instead. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
+  return \Drupal::entityQuery('taxonomy_vocabulary')->execute();
 }
 
 /**
@@ -230,18 +211,19 @@ function taxonomy_vocabulary_get_names() {
  *
  * @return
  *   An array of matching term objects.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->loadByProperties(['name' => $name, 'vid' => $vid])
+ *   instead, to get a list of taxonomy term entities having the same name and
+ *   keyed by their term ID.
+ *
+ * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
+  @trigger_error('taxonomy_term_load_multiple_by_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->loadByProperties(["name" => $name, "vid" => $vid]) instead, to get a list of taxonomy term entities having the same name and keyed by their term ID. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
   $values = ['name' => trim($name)];
   if (isset($vocabulary)) {
-    $vocabularies = taxonomy_vocabulary_get_names();
-    if (isset($vocabularies[$vocabulary])) {
-      $values['vid'] = $vocabulary;
-    }
-    else {
-      // Return an empty array when filtering by a non-existing vocabulary.
-      return [];
-    }
+    $values['vid'] = $vocabulary;
   }
   return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties($values);
 }
@@ -249,9 +231,14 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
 /**
  * Implodes a list of tags of a certain vocabulary into a string.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead.
+ *
+ * @see https://www.drupal.org/node/3039041
  * @see \Drupal\Component\Utility\Tags::explode()
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
+  @trigger_error('taxonomy_implode_tags() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
   $typed_tags = [];
   foreach ($tags as $tag) {
     // Extract terms belonging to the vocabulary in question.
@@ -274,9 +261,15 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
  *
  * @return
  *   The term name to be used as the page title.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   $term->label() instead.
+ *
+ * @see https://www.drupal.org/node/3039041
  */
 function taxonomy_term_title(Term $term) {
-  return $term->getName();
+  @trigger_error('taxonomy_term_title() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use $term->label() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
+  return $term->label();
 }
 
 /**

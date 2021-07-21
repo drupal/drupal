@@ -337,13 +337,13 @@ class FieldResolver {
           $is_data_reference_definition = $property_definition instanceof DataReferenceTargetDefinition;
           if (!$property_definition->isInternal()) {
             // Entity reference fields are special: their reference property
-            // (usually `target_id`) is never exposed in the JSON:API
-            // representation. Hence it must also not be exposed in 400
-            // responses' error messages.
+            // (usually `target_id`) is exposed in the JSON:API representation
+            // with a prefix.
             $property_names[] = $is_data_reference_definition ? 'id' : $property_name;
           }
           if ($is_data_reference_definition) {
             $at_least_one_entity_reference_field = TRUE;
+            $property_names[] = "drupal_internal__$property_name";
           }
           return $property_names;
         }, []);
@@ -447,7 +447,9 @@ class FieldResolver {
    */
   protected function constructInternalPath(array $references, array $property_path = []) {
     // Reconstruct the path parts that are referencing sub-properties.
-    $field_path = implode('.', $property_path);
+    $field_path = implode('.', array_map(function ($part) {
+      return str_replace('drupal_internal__', '', $part);
+    }, $property_path));
 
     // This rebuilds the path from the real, internal field names that have
     // been traversed so far. It joins them with the "entity" keyword as
@@ -670,8 +672,15 @@ class FieldResolver {
   protected static function isCandidateDefinitionProperty($part, array $candidate_definitions) {
     $part = static::getPathPartPropertyName($part);
     foreach ($candidate_definitions as $definition) {
-      if ($definition->getPropertyDefinition($part)) {
-        return TRUE;
+      $property_definitions = $definition->getPropertyDefinitions();
+
+      foreach ($property_definitions as $property_name => $property_definition) {
+        $property_name = $property_definition instanceof DataReferenceTargetDefinition
+          ? "drupal_internal__$property_name"
+          : $property_name;
+        if ($part === $property_name) {
+          return TRUE;
+        }
       }
     }
     return FALSE;

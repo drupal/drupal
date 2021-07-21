@@ -6,7 +6,13 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
 /**
- * Get search_active_modules and rankings for core modules.
+ * Drupal 7 search active core modules and rankings source from database.
+ *
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate_drupal\Plugin\migrate\source\Variable
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d7_search_page",

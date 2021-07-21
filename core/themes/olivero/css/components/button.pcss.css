@@ -102,13 +102,6 @@
   }
 }
 
-#drupal-off-canvas input[type="submit"] {
-  &.button {
-    float: left;
-    width: auto;
-  }
-}
-
 .button--icon-back {
   display: inline-flex;
   align-items: center;

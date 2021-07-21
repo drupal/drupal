@@ -89,7 +89,6 @@
   cursor: pointer;
   vertical-align: top;
   border: 0;
-  border-radius: 50%;
   background: none;
   appearance: none;
 
@@ -100,9 +99,9 @@
     left: 50%;
     display: block;
     width: 33px;
-    height: 2px;
+    height: 0;
     content: "";
-    background-color: var(--color--gray-30);
+    border-top: solid 2px var(--color--gray-30);
   }
 
   &:before {
@@ -116,13 +115,13 @@
   &:hover {
     &::before,
     &::after {
-      background-color: var(--color--white);
+      border-color: var(--color--white);
     }
   }
 
   &:focus {
     outline: 2px solid var(--color--blue-70);
-    outline-offset: 1px;
+    outline-offset: 2px;
   }
 }
 

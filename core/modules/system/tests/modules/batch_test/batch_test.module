@@ -5,6 +5,7 @@
  * Helper module for the Batch API tests.
  */
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Form\FormState;
 
 /**
@@ -20,13 +21,10 @@ function _batch_test_nested_drupal_form_submit_callback($value) {
  * Batch 0: Does nothing.
  */
 function _batch_test_batch_0() {
-  $batch = [
-    'operations' => [],
-    'finished' => '_batch_test_finished_0',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_0',
-  ];
-  return $batch;
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_0');
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_0'];
 }
 
 /**
@@ -39,17 +37,15 @@ function _batch_test_batch_1() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_1');
+
   for ($i = 1; $i <= $total; $i++) {
-    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
   }
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_1',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_1',
-  ];
-  return $batch;
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_1'];
 }
 
 /**
@@ -62,16 +58,12 @@ function _batch_test_batch_2() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [
-    ['_batch_test_callback_2', [1, $total, $sleep]],
-  ];
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_2',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_2',
-  ];
-  return $batch;
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->addOperation('_batch_test_callback_2', [1, $total, $sleep])
+    ->setFinishCallback('_batch_test_finished_2');
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_2'];
 }
 
 /**
@@ -88,22 +80,19 @@ function _batch_test_batch_3() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_3');
   for ($i = 1; $i <= round($total / 2); $i++) {
-    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
   }
-  $operations[] = ['_batch_test_callback_2', [1, $total / 2, $sleep]];
+  $batch_builder->addOperation('_batch_test_callback_2', [1, $total / 2, $sleep]);
   for ($i = round($total / 2) + 1; $i <= $total; $i++) {
-    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
   }
-  $operations[] = ['_batch_test_callback_2', [6, $total / 2, $sleep]];
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_3',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_3',
-  ];
-  return $batch;
+  $batch_builder->addOperation('_batch_test_callback_2', [6, $total / 2, $sleep]);
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_3'];
 }
 
 /**
@@ -119,21 +108,18 @@ function _batch_test_batch_4() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_4');
   for ($i = 1; $i <= round($total / 2); $i++) {
-    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
   }
-  $operations[] = ['_batch_test_nested_batch_callback', [[2]]];
+  $batch_builder->addOperation('_batch_test_nested_batch_callback', [[2]]);
   for ($i = round($total / 2) + 1; $i <= $total; $i++) {
-    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
   }
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_4',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_4',
-  ];
-  return $batch;
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_4'];
 }
 
 /**
@@ -146,17 +132,14 @@ function _batch_test_batch_5() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_5');
   for ($i = 1; $i <= $total; $i++) {
-    $operations[] = ['_batch_test_callback_5', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_5', [$i, $sleep]);
   }
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_5',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_5',
-  ];
-  return $batch;
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_5'];
 }
 
 /**
@@ -169,17 +152,14 @@ function _batch_test_batch_6() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_6');
   for ($i = 1; $i <= $total; $i++) {
-    $operations[] = ['_batch_test_callback_6', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_6', [$i, $sleep]);
   }
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_6',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_6',
-  ];
-  return $batch;
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_6'];
 }
 
 /**
@@ -196,21 +176,18 @@ function _batch_test_batch_7() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_7');
   for ($i = 1; $i <= $total / 2; $i++) {
-    $operations[] = ['_batch_test_callback_7', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_7', [$i, $sleep]);
   }
-  $operations[] = ['_batch_test_nested_batch_callback', [[6, 5]]];
+  $batch_builder->addOperation('_batch_test_nested_batch_callback', [[6, 5]]);
   for ($i = ($total / 2) + 1; $i <= $total; $i++) {
-    $operations[] = ['_batch_test_callback_7', [$i, $sleep]];
+    $batch_builder->addOperation('_batch_test_callback_7', [$i, $sleep]);
   }
-  $batch = [
-    'operations' => $operations,
-    'finished' => '_batch_test_finished_7',
-    'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-    'batch_test_id' => 'batch_7',
-  ];
-  return $batch;
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_7'];
 }
 
 /**

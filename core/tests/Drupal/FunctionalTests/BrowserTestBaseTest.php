@@ -57,6 +57,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $text = $this->getTextContent();
     $this->assertStringContainsString('Test page text.', $text);
     $this->assertStringNotContainsString('</html>', $text);
+    // Ensure Drupal Javascript settings are not part of the page text.
+    $this->assertArrayHasKey('currentPathIsAdmin', $this->getDrupalSettings()['path']);
+    $this->assertStringNotContainsString('currentPathIsAdmin', $text);
 
     // Response includes cache tags that we can assert.
     $this->assertSession()->responseHeaderExists('X-Drupal-Cache-Tags');
@@ -997,6 +1000,16 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">permissions</span>: []', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">uuid</span>: "', $body);
     $this->assertStringContainsString('</samp>}', $body);
+  }
+
+  /**
+   * Test if setting an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
+   */
+  public function testSimpleTestBaseUrlValidation() {
+    putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.');
+    $this->setupBaseUrl();
   }
 
 }

@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,22 +89,20 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertSame($stream_wrapper_manager::getTarget('public://'), '');
     $this->assertSame($stream_wrapper_manager::getTarget('data:'), '');
 
-    // Test file_build_uri() and
-    // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
-    $this->assertEquals('public://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Expected scheme was added.');
+    // Test Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEquals(PublicStream::basePath(), $stream_wrapper_manager->getViaScheme('public')->getDirectoryPath(), 'Expected default directory path was returned.');
     $file_system = \Drupal::service('file_system');
     assert($file_system instanceof FileSystemInterface);
     $this->assertEquals($file_system->getTempDirectory(), $stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), 'Expected temporary directory path was returned.');
-    $config->set('default_scheme', 'private')->save();
-    $this->assertEquals('private://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Got a valid URI from foo/bar.txt.');
 
-    // Test file_create_url()
+    // Test FileUrlGeneratorInterface::generateString()
     // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs
     // route information to work.
-    $this->assertStringContainsString('system/temporary?file=test.txt', file_create_url('temporary://test.txt'), 'Temporary external URL correctly built.');
-    $this->assertStringContainsString(Settings::get('file_public_path') . '/test.txt', file_create_url('public://test.txt'), 'Public external URL correctly built.');
-    $this->assertStringContainsString('system/files/test.txt', file_create_url('private://test.txt'), 'Private external URL correctly built.');
+    $file_url_generator = $this->container->get('file_url_generator');
+    assert($file_url_generator instanceof FileUrlGeneratorInterface);
+    $this->assertStringContainsString('system/temporary?file=test.txt', $file_url_generator->generateString('temporary://test.txt'), 'Temporary external URL correctly built.');
+    $this->assertStringContainsString(Settings::get('file_public_path') . '/test.txt', $file_url_generator->generateString('public://test.txt'), 'Public external URL correctly built.');
+    $this->assertStringContainsString('system/files/test.txt', $file_url_generator->generateString('private://test.txt'), 'Private external URL correctly built.');
   }
 
   /**

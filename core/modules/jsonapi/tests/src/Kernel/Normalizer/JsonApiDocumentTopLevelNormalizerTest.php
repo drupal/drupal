@@ -87,6 +87,11 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   protected $resourceTypeRepository;
 
   /**
+   * @var \Drupal\file\Entity\File
+   */
+  private $file;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -253,8 +258,8 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $normalized = $jsonapi_doc_object->getNormalization();
 
     // @see http://jsonapi.org/format/#document-jsonapi-object
-    $this->assertEquals($normalized['jsonapi']['version'], '1.0');
-    $this->assertEquals($normalized['jsonapi']['meta']['links']['self']['href'], 'http://jsonapi.org/format/1.0/');
+    $this->assertEquals('1.0', $normalized['jsonapi']['version']);
+    $this->assertEquals('http://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
 
     $this->assertSame($normalized['data']['attributes']['title'], 'dummy_title');
     $this->assertEquals($normalized['data']['id'], $this->node->uuid());
@@ -262,6 +267,9 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       'data' => [
         'type' => 'node_type--node_type',
         'id' => NodeType::load('article')->uuid(),
+        'meta' => [
+          'drupal_internal__target_id' => 'article',
+        ],
       ],
       'links' => [
         'related' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/node_type', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
@@ -274,12 +282,16 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       'title' => 'test title',
       'width' => 10,
       'height' => 11,
+      'drupal_internal__target_id' => $this->file->id(),
     ], $normalized['data']['relationships']['field_image']['data']['meta']);
     $this->assertSame('node--article', $normalized['data']['type']);
     $this->assertEquals([
       'data' => [
         'type' => 'user--user',
         'id' => $this->user->uuid(),
+        'meta' => [
+          'drupal_internal__target_id' => $this->user->id(),
+        ],
       ],
       'links' => [
         'self' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/relationships/uid', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
@@ -338,7 +350,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $normalized = $jsonapi_doc_object->getNormalization();
     $this->assertSame($normalized['data']['attributes']['name'], 'user1');
     $this->assertEquals($normalized['data']['id'], User::load(1)->uuid());
-    $this->assertEquals($normalized['data']['type'], 'user--user');
+    $this->assertEquals('user--user', $normalized['data']['type']);
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
     $this->assertSame(['user:1'], $jsonapi_doc_object->getCacheTags());

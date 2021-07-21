@@ -216,6 +216,10 @@ function template_preprocess_fieldset(&$variables) {
   if (!empty($element['#description'])) {
     $description_id = $element['#attributes']['id'] . '--description';
     $description_attributes['id'] = $description_id;
+    $variables['description_display'] = $element['#description_display'];
+    if ($element['#description_display'] === 'invisible') {
+      $description_attributes['class'][] = 'visually-hidden';
+    }
     $description_attributes['data-drupal-field-elements'] = 'description';
     $variables['description']['attributes'] = new Attribute($description_attributes);
     $variables['description']['content'] = $element['#description'];
@@ -716,7 +720,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   - file: Path to the file containing the definitions of the 'operations' and
  *     'finished' functions, for instance if they don't reside in the main
  *     .module file. The path should be relative to base_path(), and thus should
- *     be built using drupal_get_path().
+ *     be built using ModuleExtensionList::getPath().
  *   - library: An array of batch-specific CSS and JS libraries.
  *   - url_options: options passed to the \Drupal\Core\Url object when
  *     constructing redirect URLs for the batch.

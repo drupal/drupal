@@ -5,6 +5,8 @@
  * The API for download and import of translations from remote and local sources.
  */
 
+use Drupal\Core\Batch\BatchBuilder;
+
 /**
  * Load the common translation API.
  */
@@ -33,20 +35,20 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
   $status_options = $options;
   $status_options['finish_feedback'] = FALSE;
 
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
+    ->setTitle(t('Updating translations'))
+    ->setErrorMessage(t('Error importing translation files'))
+    ->setFinishCallback('locale_translation_batch_fetch_finished');
   // Check status of local and remote translation files.
   $operations = _locale_translation_batch_status_operations($projects, $langcodes, $status_options);
   // Download and import translations.
   $operations = array_merge($operations, _locale_translation_fetch_operations($projects, $langcodes, $options));
+  array_walk($operations, function ($operation) use ($batch_builder) {
+    call_user_func_array([$batch_builder, 'addOperation'], $operation);
+  });
 
-  $batch = [
-    'operations' => $operations,
-    'title' => t('Updating translations'),
-    'progress_message' => '',
-    'error_message' => t('Error importing translation files'),
-    'finished' => 'locale_translation_batch_fetch_finished',
-    'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
-  ];
-  return $batch;
+  return $batch_builder->toArray();
 }
 
 /**
@@ -67,15 +69,16 @@ function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
-  $batch = [
-    'operations' => _locale_translation_fetch_operations($projects, $langcodes, $options),
-    'title' => t('Updating translations.'),
-    'progress_message' => '',
-    'error_message' => t('Error importing translation files'),
-    'finished' => 'locale_translation_batch_fetch_finished',
-    'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
-  ];
-  return $batch;
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Updating translations.'))
+    ->setErrorMessage(t('Error importing translation files'))
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
+    ->setFinishCallback('locale_translation_batch_fetch_finished');
+  $operations = _locale_translation_fetch_operations($projects, $langcodes, $options);
+  array_walk($operations, function ($operation) use ($batch_builder) {
+    call_user_func_array([$batch_builder, 'addOperation'], $operation);
+  });
+  return $batch_builder->toArray();
 }
 
 /**

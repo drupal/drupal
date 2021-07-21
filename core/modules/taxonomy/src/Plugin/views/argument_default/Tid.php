@@ -7,8 +7,6 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\taxonomy\TermInterface;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -70,24 +68,6 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
       $container->get('current_route_match'),
       $container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
-    parent::init($view, $display, $options);
-
-    // @todo Remove the legacy code.
-    // Convert legacy vids option to machine name vocabularies.
-    if (!empty($this->options['vids'])) {
-      $vocabularies = taxonomy_vocabulary_get_names();
-      foreach ($this->options['vids'] as $vid) {
-        if (isset($vocabularies[$vid], $vocabularies[$vid]->machine_name)) {
-          $this->options['vocabularies'][$vocabularies[$vid]->machine_name] = $vocabularies[$vid]->machine_name;
-        }
-      }
-    }
   }
 
   /**

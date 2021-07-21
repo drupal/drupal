@@ -306,7 +306,7 @@ services:
       - { name: dynamic_page_cache_response_policy }
   config.manager:
     class: Drupal\Core\Config\ConfigManager
-    arguments: ['@entity_type.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher', '@entity.repository']
+    arguments: ['@entity_type.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher', '@entity.repository', '@extension.path.resolver']
   config.factory:
     class: Drupal\Core\Config\ConfigFactory
     tags:
@@ -319,7 +319,7 @@ services:
       - { name: event_subscriber }
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
-    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher', '%install_profile%']
+    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher', '%install_profile%', '@extension.path.resolver']
     lazy: true
   config.storage:
     class: Drupal\Core\Config\CachedStorage
@@ -392,6 +392,9 @@ services:
   file_system:
     class: Drupal\Core\File\FileSystem
     arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file']
+  file_url_generator:
+    class: Drupal\Core\File\FileUrlGenerator
+    arguments: ['@stream_wrapper_manager', '@request_stack', '@module_handler']
   form_builder:
     class: Drupal\Core\Form\FormBuilder
     arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token']
@@ -486,6 +489,8 @@ services:
     class: Drupal\Core\Http\HandlerStackConfigurator
     public: false
     arguments: ['@service_container']
+    tags:
+      - { name: service_id_collector, tag: http_client_middleware }
   http_client:
     class: GuzzleHttp\Client
     factory: ['@http_client_factory', 'fromOptions']
@@ -527,7 +532,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel', '@database']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry']
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
@@ -541,6 +546,9 @@ services:
   extension.list.theme_engine:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
     arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+  extension.path.resolver:
+    class: Drupal\Core\Extension\ExtensionPathResolver
+    arguments: ['@extension.list.module', '@extension.list.profile', '@extension.list.theme', '@extension.list.theme_engine']
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:
@@ -1514,7 +1522,7 @@ services:
     arguments: ['%app.root%', '@theme_handler', '@cache.bootstrap', '@module_handler']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap']
+    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap', '@extension.list.module']
     tags:
       - { name: needs_destruction }
     calls:
@@ -1580,12 +1588,13 @@ services:
     arguments: ['@settings']
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
-    arguments: [ '@state' ]
+    arguments: [ '@state', '@file_url_generator' ]
   asset.css.collection_optimizer:
     class: Drupal\Core\Asset\CssCollectionOptimizer
     arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@asset.css.dumper', '@state', '@file_system']
   asset.css.optimizer:
     class: Drupal\Core\Asset\CssOptimizer
+    arguments: ['@file_url_generator']
   asset.css.collection_grouper:
     class: Drupal\Core\Asset\CssCollectionGrouper
   asset.css.dumper:
@@ -1593,7 +1602,7 @@ services:
     arguments: ['@file_system']
   asset.js.collection_renderer:
     class: Drupal\Core\Asset\JsCollectionRenderer
-    arguments: [ '@state' ]
+    arguments: [ '@state', '@file_url_generator' ]
   asset.js.collection_optimizer:
     class: Drupal\Core\Asset\JsCollectionOptimizer
     arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@asset.js.dumper', '@state', '@file_system']
@@ -1614,7 +1623,7 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder']
+    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver']
   library.libraries_directory_file_finder:
     class: Drupal\Core\Asset\LibrariesDirectoryFileFinder
     arguments: ['%app.root%', '%site.path%', '@extension.list.profile', '%install_profile%']
@@ -1634,7 +1643,7 @@ services:
       - { name: service_collector, tag: 'twig.extension', call: addExtension }
   twig.extension:
     class: Drupal\Core\Template\TwigExtension
-    arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter']
+    arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter', '@file_url_generator']
     tags:
       - { name: twig.extension, priority: 100 }
   # @todo Figure out what to do about debugging functions.
@@ -1714,6 +1723,12 @@ services:
       - { name: placeholder_strategy, priority: -1000 }
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
+  update.update_hook_registry:
+    class: Drupal\Core\Update\UpdateHookRegistry
+    factory: ['@update.update_hook_registry_factory', create]
+  update.update_hook_registry_factory:
+    class: Drupal\Core\Update\UpdateHookRegistryFactory
+    parent: container.trait
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     factory: ['@update.post_update_registry_factory', create]

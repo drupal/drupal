@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
@@ -78,7 +79,7 @@ class DefaultConfigTest extends KernelTestBase {
     // this for all tests in case optional configuration depends on it.
     $this->installConfig(['system', 'user']);
 
-    $extension_path = drupal_get_path($type, $name) . '/';
+    $extension_path = \Drupal::service('extension.path.resolver')->getPath($type, $name) . '/';
     $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
     $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
 
@@ -165,7 +166,7 @@ class DefaultConfigTest extends KernelTestBase {
       }
       else {
         $info = $this->container->get('extension.list.module')->getExtensionInfo($module);
-        if (!isset($info['package']) || $info['package'] !== 'Core (Experimental)') {
+        if (!isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL) {
           $this->fail("$config_name provided by $module does not exist after installing all dependencies");
         }
       }
