@@ -56,19 +56,20 @@ class IntegerItem extends NumericItemBase {
       ->setRequired(TRUE);
 
     // Add reverse references for content entities.
-    // @todo Add support for config entities.
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_type_id = $field_definition->getTargetEntityTypeId();
-    $id_key = $entity_type_manager->getDefinition($entity_type_id)
-      ->getKey('id');
-    if ($id_key && $id_key == $field_definition->getName()) {
-      $properties['referenced_by'] = DataReferenceDefinition::create('entity')
-        ->setLabel(new TranslatableMarkup('Referenced by'))
-        ->setDescription(new TranslatableMarkup('The referencing entity'))
-        ->setComputed(TRUE)
-        ->setReadOnly(TRUE)
-        ->setTargetDefinition(EntityDataDefinition::create($entity_type_id))
-        ->addConstraint('EntityType', $entity_type_id);
+    if ($entity_type_id && $entity_type_manager->hasDefinition($entity_type_id)) {
+      $id_key = $entity_type_manager->getDefinition($entity_type_id)
+        ->getKey('id');
+      if ($id_key && $id_key == $field_definition->getName()) {
+        $properties['referenced_by'] = DataReferenceDefinition::create('entity')
+          ->setLabel(new TranslatableMarkup('Referenced by'))
+          ->setDescription(new TranslatableMarkup('The referencing entity'))
+          ->setComputed(TRUE)
+          ->setReadOnly(TRUE)
+          ->setTargetDefinition(EntityDataDefinition::create($entity_type_id))
+          ->addConstraint('EntityType', $entity_type_id);
+      }
     }
 
     return $properties;
