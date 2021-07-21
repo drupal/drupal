@@ -4,7 +4,6 @@ namespace Drupal\Component\Bridge;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Laminas\Feed\Reader\ExtensionManagerInterface as ReaderManagerInterface;
 use Laminas\Feed\Writer\ExtensionManagerInterface as WriterManagerInterface;
 
@@ -69,25 +68,20 @@ class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterMan
    * {@inheritdoc}
    */
   public function get($extension) {
-    try {
-      return $this->container->get($this->prefix . $this->canonicalizeName($extension));
+    if ($this->standalone && $this->standalone->has($extension)) {
+      return $this->standalone->get($extension);
     }
-    catch (ServiceNotFoundException $e) {
-      if ($this->standalone && $this->standalone->has($extension)) {
-        return $this->standalone->get($extension);
-      }
-      throw $e;
-    }
+    return $this->container->get($this->prefix . $this->canonicalizeName($extension));
   }
 
   /**
    * {@inheritdoc}
    */
   public function has($extension) {
-    if ($this->container->has($this->prefix . $this->canonicalizeName($extension))) {
+    if ($this->standalone && $this->standalone->has($extension)) {
       return TRUE;
     }
-    return $this->standalone && $this->standalone->has($extension);
+    return $this->container->has($this->prefix . $this->canonicalizeName($extension));
   }
 
   /**
