@@ -207,7 +207,8 @@ img {
  *   active for non-interactive elements in Internet Explorer 11.
  */
 .page-wrapper *:focus,
-.ui-dialog *:focus {
+.ui-dialog *:focus,
+.node-preview-container *:focus {
   outline: var(--focus-outline);
   box-shadow: var(--focus-box-shadow);
 }

@@ -1,0 +1,108 @@
+/**
+ * @file
+ * Node preview container styling.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  /**
+  * Node preview.
+  */
+  --node-preview--size: 2rem; /* --space-m Ã— 2 */
+  --node-preview--border-width: 0.125rem; /* 2px */
+  --node-preview--fg-color: var(--color-davysgray);
+  --node-preview--bg-color: var(--color-white);
+  --node-preview--hover-bg-color: var(--color-bgblue-active);
+  --node-preview--padding-vertical: 0.625rem; /* 10px */
+  --node-preview--padding-horizontal: 3rem; /* Layout container spacing */
+  --node-preview--padding-horizontal-sm: 1rem /* Layout container spacing */
+}
+
+.node-preview-container {
+  position: relative;
+  z-index: 499;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--node-preview--padding-vertical) var(--node-preview--padding-horizontal-sm);
+}
+
+@media screen and (min-width: 60em) {
+  .node-preview-container {
+    padding: var(--node-preview--padding-vertical) var(--node-preview--padding-horizontal);
+  }
+}
+
+.node-preview-form-select {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.node-preview-form-select .form-item--view-mode {
+  margin-left: var(--space-l); /* LTR */
+}
+
+[dir="rtl"] .node-preview-form-select .form-item--view-mode {
+  margin-right: var(--space-l);
+  margin-left: 0;
+}
+
+.node-preview-backlink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--node-preview--size);
+  height: var(--node-preview--size);
+  padding-right: var(--space-xs);
+  padding-left: var(--space-xs);
+  text-decoration: none;
+  color: var(--node-preview--fg-color);
+  border-radius: var(--node-preview--border-width);
+  background: var(--node-preview--bg-color); /* Make sure that the text is visible on dark background. */
+  font-weight: bold;
+  line-height: 1;
+}
+
+.node-preview-backlink:hover,
+.node-preview-backlink:focus,
+.node-preview-backlink:active {
+  text-decoration: none;
+}
+
+.node-preview-backlink:hover,
+.node-preview-backlink.is-active:hover {
+  color: var(--node-preview--fg-color);
+  background: var(--node-preview--hover-bg-color);
+}
+
+.node-preview-backlink::before {
+  position: relative;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  content: "";
+  background-image: url(../../images/icons/545560/pager-prev.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.node-preview-backlink::before {
+  margin-right: 0.5rem; /* LTR */
+}
+[dir="rtl"] .node-preview-backlink::before {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+@media (-ms-high-contrast: active) {
+  .node-preview-backlink:hover {
+    text-decoration: underline;
+  }
+}

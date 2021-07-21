@@ -144,6 +144,12 @@ claro.tabledrag:
   js:
     js/tabledrag.js: {}
 
+drupal.node.preview:
+  version: VERSION
+  css:
+    theme:
+      css/components/node-preview.css: {}
+
 ckeditor-admin:
   version: VERSION
   css:
