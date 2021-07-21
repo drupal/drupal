@@ -61,11 +61,31 @@ class ContextHandler implements ContextHandlerInterface {
    */
   public function checkRequirements(array $contexts, array $requirements) {
     foreach ($requirements as $requirement) {
-      if ($requirement->isRequired() && !$this->getMatchingContexts($contexts, $requirement)) {
+      if ($requirement->isRequired() && !$this->isAnyContextMatching($contexts, $requirement)) {
         return FALSE;
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Determines if any contexts satisfy the constraints of a given definition.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
+   *   An array of contexts.
+   * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface $definition
+   *   The definition to satisfy.
+   *
+   * @return bool
+   *   TRUE if any of the contexts satisfy the constraints, FALSE otherwise.
+   */
+  private function isAnyContextMatching(array $contexts, ContextDefinitionInterface $definition): bool {
+    foreach ($contexts as $context) {
+      if ($definition->isSatisfiedBy($context)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**
