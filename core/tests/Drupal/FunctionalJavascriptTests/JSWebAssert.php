@@ -8,6 +8,7 @@ use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
+use PHPUnit\Framework\Assert;
 use WebDriver\Exception\CurlExec;
 
 /**
@@ -66,9 +67,11 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElement($selector, $locator, $timeout = 10000) {
-    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
+    Assert::assertInstanceOf(NodeElement::class, $element);
+    return $element;
   }
 
   /**
@@ -88,9 +91,11 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementRemoved($selector, $locator, $timeout = 10000) {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $not_found = (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return !$page->find($selector, $locator);
     });
+    Assert::assertTrue($not_found);
+    return $not_found;
   }
 
   /**
@@ -110,13 +115,15 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementVisible($selector, $locator, $timeout = 10000) {
-    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       $element = $page->find($selector, $locator);
       if (!empty($element) && $element->isVisible()) {
         return $element;
       }
       return NULL;
     });
+    Assert::assertInstanceOf(NodeElement::class, $element);
+    return $element;
   }
 
   /**
@@ -131,11 +138,13 @@ JS;
    *   TRUE if not found, FALSE if found.
    */
   public function waitForText($text, $timeout = 10000) {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
+    $text_exists = (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
       $regex = '/' . preg_quote($text, '/') . '/ui';
       return (bool) preg_match($regex, $actual);
     });
+    Assert::assertTrue($text_exists, "The text '$text' was not found on the page.");
+    return $text_exists;
   }
 
   /**

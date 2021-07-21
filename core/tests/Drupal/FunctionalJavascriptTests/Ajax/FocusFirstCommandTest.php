@@ -66,7 +66,7 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     $page->pressButton('SelectorMultipleMatches');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-inside-same-selector-container-1[data-has-focus]'));
     $this->assertNotNull($page->findById('edit-inside-same-selector-container-2'));
-    $this->assertNull($assert_session->waitForElementVisible('css', '#edit-inside-same-selector-container-2[data-has-focus]'));
+    $assert_session->assertNoElementAfterWait('css', '#edit-inside-same-selector-container-2[data-has-focus]');
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-inside-same-selector-container-1', $has_focus_id);
 

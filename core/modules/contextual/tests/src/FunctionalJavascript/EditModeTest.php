@@ -104,7 +104,7 @@ class EditModeTest extends WebDriverTestBase {
   protected function assertAnnounceEditMode() {
     $web_assert = $this->assertSession();
     // Wait for contextual trigger button.
-    $web_assert->waitForElementVisible('css', '.contextual trigger');
+    $web_assert->waitForElementVisible('css', '.contextual .trigger');
     $web_assert->elementContains('css', static::ANNOUNCE_SELECTOR, 'Tabbing is constrained to a set of');
     $web_assert->elementNotContains('css', static::ANNOUNCE_SELECTOR, 'Tabbing is no longer constrained by the Contextual module.');
   }

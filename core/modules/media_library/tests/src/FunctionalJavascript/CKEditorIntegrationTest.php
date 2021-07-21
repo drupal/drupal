@@ -262,7 +262,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertEditorButtonEnabled('undo');
     $this->pressEditorButton('undo');
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media'));
+    $assert_session->assertNoElementAfterWait('css', '.cke_widget_drupalmedia drupal-media .media');
     $this->assertEditorButtonDisabled('undo');
     $this->pressEditorButton('redo');
     $this->getSession()->switchToIFrame('ckeditor');

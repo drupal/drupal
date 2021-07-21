@@ -81,7 +81,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
       for ($delta = 0; $delta < 3; $delta++) {
         $page->attachFileToField('files[' . $each_field_name . '_' . $delta . '][]', $test_file_path);
         $this->assertNotNull($assert_session->waitForElementVisible('css', '[name="' . $each_field_name . '_' . $delta . '_remove_button"]'));
-        $this->assertNull($assert_session->waitForButton($each_field_name . '_' . $delta . '_upload_button'));
+        $assert_session->assertNoElementAfterWait('named', ['button', $each_field_name . '_' . $delta . '_upload_button']);
       }
     }
 

@@ -70,7 +70,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $assert_session->buttonExists('Show row weights')->press();
     $this->assertSession()->waitForElementVisible('css', '[name="fields[name][region]"]');
     $page->selectFieldOption('fields[name][region]', 'content');
-    $assert_session->waitForElementVisible('css', '#edit-fields-name-settings-edit');
+    $assert_session->waitForElementVisible('named', ['button', 'name_settings_edit']);
     $page->pressButton('Save');
     $this->drupalGet('media/' . $media->id());
     // Verify the name is present, and its text matches what is expected.
