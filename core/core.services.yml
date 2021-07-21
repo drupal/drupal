@@ -854,6 +854,8 @@ services:
       - [setValidationConstraintManager, ['@validation.constraint']]
     tags:
       - { name: plugin_manager_cache_clear }
+  typed_data_resolver:
+    class: Drupal\Core\TypedData\TypedDataResolver
   validation.constraint:
     class: Drupal\Core\Validation\ConstraintManager
     parent: default_plugin_manager
