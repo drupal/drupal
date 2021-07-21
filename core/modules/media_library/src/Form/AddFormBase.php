@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\FocusFirstCommand;
 use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -696,15 +697,21 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
       return $form;
     }
 
+    $media_items = $this->getAddedMediaItems($form_state);
     $media_ids = array_map(function (MediaInterface $media) {
       return $media->id();
-    }, $this->getAddedMediaItems($form_state));
+    }, $media_items);
 
     $response = new AjaxResponse();
     $response->addCommand(new UpdateSelectionCommand($media_ids));
-    $media_id_to_focus = array_pop($media_ids);
+    $media_id_to_focus = end($media_ids);
     $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $this->buildMediaLibraryUi($form_state)));
     $response->addCommand(new InvokeCommand("#media-library-content [value=$media_id_to_focus]", 'focus'));
+    $entity_type = current($media_items)->getEntityType();
+    $message = $this->t('Added @label.', ['@label' => $entity_type->getCountLabel(count($media_ids))]);
+    // Setting priority to assertive so when passed to Drupal.Announce() it
+    // is read to screen readers.
+    $response->addCommand(new MessageCommand($message, '.js-media-library-messages', ['priority' => 'assertive']));
     return $response;
   }
 
