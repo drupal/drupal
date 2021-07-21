@@ -114,7 +114,11 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
 
     // Construct the node and image URIs for testing.
     $node_uri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();
-    $image_uri = ImageStyle::load('medium')->buildUrl($this->file->getFileUri());
+    $image_uri = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('medium'))
+      ->setSourceImageUri($this->file->getFileUri())
+      ->getDerivativeImageUrl()
+      ->toString();
 
     // Test relations from node to image.
     $expected_value = [

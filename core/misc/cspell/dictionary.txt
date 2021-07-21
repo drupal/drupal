@@ -486,6 +486,7 @@ elit
 embed's
 encapsed
 encoding's
+encryptable
 endapply
 endautoescape
 endcode

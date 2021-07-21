@@ -115,8 +115,10 @@ class UserPictureTest extends BrowserTestBase {
     $this->config('system.theme.global')->set('features.node_user_picture', TRUE)->save();
 
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
-    $style = ImageStyle::load($image_style_id);
-    $image_url = \Drupal::service('file_url_generator')->transformRelative($style->buildUrl($file->getfileUri()));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load($image_style_id))
+      ->setSourceImageUri($file->getfileUri());
+    $image_url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
     // Verify that the image is displayed on the node page.

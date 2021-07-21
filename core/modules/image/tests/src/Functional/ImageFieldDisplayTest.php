@@ -195,7 +195,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
-    $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('thumbnail'))
+      ->setSourceImageUri($image_uri);
+    $this->drupalGet($pipeline->getDerivativeImageUrl()->toString());
     $image_style = [
       '#theme' => 'image_style',
       '#uri' => $image_uri,
@@ -213,7 +216,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
-      $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+      $this->drupalGet($pipeline->getDerivativeImageUrl()->toString());
       $this->assertSession()->statusCodeEquals(403);
     }
 
@@ -227,7 +230,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test the image URL formatter with an image style.
     $display_options['settings']['image_style'] = 'thumbnail';
-    $expected_url = \Drupal::service('file_url_generator')->transformRelative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $expected_url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
   }
 
@@ -286,8 +289,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
 
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('medium'))
+      ->setSourceImageUri($file->getFileUri());
     $file_url_generator = \Drupal::service('file_url_generator');
-    $url = $file_url_generator->transformRelative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
+    $url = $file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $this->assertSession()->elementExists('css', 'img[width=40][height=20][class=image-style-medium][src="' . $url . '"]');
 
     // Add alt/title fields to the image and verify that they are displayed.
