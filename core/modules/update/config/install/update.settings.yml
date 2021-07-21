@@ -1,5 +1,6 @@
 check:
   disabled_extensions: false
+  update_system_notifications: true
   interval_days: 1
 fetch:
   url: ''

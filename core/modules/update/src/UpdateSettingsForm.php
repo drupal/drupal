@@ -68,6 +68,20 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       '#default_value' => $config->get('check.disabled_extensions'),
     ];
 
+    $update_system_notifications = $config->get('check.update_system_notifications');
+    $form['update_system_notifications'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show system notifications for module updates'),
+      '#default_value' => $config->get('check.update_system_notifications'),
+      '#description' => $this->t(
+        '%action to %result system notifications for available updates. <strong>Hiding it may have security implications.</strong>',
+        [
+          '%action' => $update_system_notifications ? $this->t('Uncheck') : $this->t('Check'),
+          '%result' => $update_system_notifications ? $this->t('hide') : $this->t('show'),
+        ]
+      ),
+    ];
+
     $notification_emails = $config->get('notification.emails');
     $form['update_notify_emails'] = [
       '#type' => 'textarea',
@@ -137,6 +151,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
 
     $config
       ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
+      ->set('check.update_system_notifications', $form_state->getValue('update_system_notifications'))
       ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
       ->set('notification.emails', $form_state->get('notify_emails'))
       ->set('notification.threshold', $form_state->getValue('update_notification_threshold'))

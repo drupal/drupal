@@ -11,6 +11,9 @@ update.settings:
         disabled_extensions:
           type: boolean
           label: 'Check for updates of uninstalled modules and themes'
+        update_system_notifications:
+          type: boolean
+          label: 'Show system notifications for module updates'
         interval_days:
           type: integer
           label: 'Days since last check'
