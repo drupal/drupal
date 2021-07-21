@@ -7,3 +7,4 @@ configure: aggregator.admin_settings
 dependencies:
   - drupal:file
   - drupal:options
+lifecycle: deprecated
