@@ -280,7 +280,7 @@ class BigPipePlaceholderTestCases {
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
         '#create_placeholder' => TRUE,
       ],
-      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" arguments token="PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></drupal-render-placeholder>',
+      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" token="PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></drupal-render-placeholder>',
       [
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
       ]
