@@ -258,6 +258,14 @@ class PreviewTest extends WebDriverTestBase {
    *   The expected number of rows in the preview.
    */
   protected function getPreviewAJAX($view_name, $panel_id, $row_count) {
+    $this->getSession()->resizeWindow(1024, 768);
+    $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/' . $panel_id);
+    $this->getSession()->getPage()->pressButton('Update preview');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertPreviewAJAX($row_count);
+
+    // Test wider than 1600px screens which display view preview on the side.
+    $this->getSession()->resizeWindow(1601, 1080);
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/' . $panel_id);
     $this->getSession()->getPage()->pressButton('Update preview');
     $this->assertSession()->assertWaitOnAjaxRequest();

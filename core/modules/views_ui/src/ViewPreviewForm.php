@@ -18,19 +18,13 @@ class ViewPreviewForm extends ViewFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
 
-    $form['#prefix'] = '<div id="views-preview-wrapper" class="views-preview-wrapper views-admin clearfix">';
+    $form['#prefix'] = '<div id="views-preview-wrapper"><h2 class="view-preview-form__title">' . $this->t('Preview') . '</h2><div class="views-preview-wrapper views-admin clearfix">';
     $form['#suffix'] = '</div>';
     $form['#id'] = 'views-ui-preview-form';
 
     $form_state->disableCache();
 
     $form['controls']['#attributes'] = ['class' => ['clearfix']];
-
-    $form['controls']['title'] = [
-      '#prefix' => '<h2 class="view-preview-form__title">',
-      '#markup' => $this->t('Preview'),
-      '#suffix' => '</h2>',
-    ];
 
     // Add a checkbox controlling whether or not this display auto-previews.
     $form['controls']['live_preview'] = [

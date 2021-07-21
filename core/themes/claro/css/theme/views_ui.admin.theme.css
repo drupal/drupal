@@ -175,7 +175,8 @@ details.box-padding {
   margin-bottom: 1.3125rem;
 }
 
-.views-admin .unit-title {
+.views-admin .unit-title,
+.view-preview-form__title {
   margin-top: 1.125rem;
   margin-bottom: 0;
   font-size: 0.9375rem;
@@ -312,25 +313,18 @@ td.group-title {
   padding-left: 0.625rem;
 }
 
-.views-displays {
-  padding-bottom: 2.25rem;
-  border-top: 1px solid rgba(212, 212, 218, 0.8);
-  border-right: 1px solid rgba(212, 212, 218, 0.8);
-  border-left: 1px solid rgba(212, 212, 218, 0.8);
-}
-
 .views-display-top {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0.75rem 0.75rem calc(0.75rem - 0.3125rem);
-  border-bottom: 1px solid rgba(212, 212, 218, 0.8);
+  border: 1px solid rgba(212, 212, 218, 0.8);
   background-color: #f3f4f9;
 }
 
 .form-edit .form-actions {
-  margin-top: 0;
+  margin: 0;
   padding: 0.75rem 1rem;
   border-right: 1px solid rgba(212, 212, 218, 0.8);
   border-bottom: 1px solid rgba(212, 212, 218, 0.8);
@@ -339,7 +333,9 @@ td.group-title {
 }
 
 .edit-display-settings {
-  margin: 1.5rem 1.5rem 0 1.5rem;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  border-left: 1px solid rgba(212, 212, 218, 0.8);
+  border-right: 1px solid rgba(212, 212, 218, 0.8);
 }
 
 .edit-display-settings-top.views-ui-display-tab-bucket.views-ui-display-tab-bucket {
@@ -495,10 +491,6 @@ td.group-title {
 .label--separator.label--separator {
   margin-right: 0.5rem;
   margin-left: 0.5rem;
-}
-
-.views-edit-view {
-  margin-bottom: 0.9375rem;
 }
 
 /* The contents of the popup dialog on the views edit form. */
@@ -684,26 +676,9 @@ td.group-title {
   position: relative;
 }
 
-.view-preview-form__title {
-  margin-top: 0;
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid #ccc;
-  background-color: #f3f4f9;
-}
-
 .view-preview-form .form-item--live-preview {
-  position: absolute;
-  top: 0.6875rem;
-  right: 0.75rem;
-  margin-top: 2px;
-  margin-left: 2px; /* LTR */
-}
-
-[dir="rtl"] .view-preview-form .form-item--live-preview {
-  right: auto;
-  left: 0.75rem;
-  margin-right: 2px;
-  margin-left: 0;
+  margin-left: 3rem;
+  margin-right: 3rem;
 }
 
 .views-live-preview {
@@ -761,7 +736,8 @@ td.group-title {
   font-size: 0.889rem;
 }
 
-.messages {
+.views-displays .messages {
+  margin-top: 0;
   margin-bottom: 1.125rem;
   line-height: 1.4555;
 }

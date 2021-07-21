@@ -143,8 +143,18 @@ class ViewEditForm extends ViewFormBase {
 
     $form['#attributes']['class'] = ['form-edit'];
 
+    $form['displays'] = [
+      '#prefix' => '<h1 class="unit-title clearfix">' . $this->t('Displays') . '</h1>',
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'views-displays',
+        ],
+      ],
+    ];
+
     if ($view->isLocked()) {
-      $form['locked'] = [
+      $form['displays']['locked'] = [
         '#type' => 'container',
         '#attributes' => ['class' => ['view-locked', 'messages', 'messages--warning']],
         '#weight' => -10,
@@ -157,26 +167,16 @@ class ViewEditForm extends ViewFormBase {
       ];
     }
     else {
-      $form['changed'] = [
+      $form['displays']['changed'] = [
         '#type' => 'container',
         '#attributes' => ['class' => ['view-changed', 'messages', 'messages--warning']],
         '#children' => $this->t('You have unsaved changes.'),
         '#weight' => -10,
       ];
       if (empty($view->changed)) {
-        $form['changed']['#attributes']['class'][] = 'js-hide';
+        $form['displays']['changed']['#attributes']['class'][] = 'js-hide';
       }
     }
-
-    $form['displays'] = [
-      '#prefix' => '<h1 class="unit-title clearfix">' . $this->t('Displays') . '</h1>',
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => [
-          'views-displays',
-        ],
-      ],
-    ];
 
     $form['displays']['top'] = $this->renderDisplayTop($view);
 

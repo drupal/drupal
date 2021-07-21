@@ -227,6 +227,9 @@ class ViewsUIController extends ControllerBase {
     }
     $build['#title'] = $name;
 
+    $build['#prefix'] = "<div class='views-edit-wrapper'>";
+    $build['#suffix'] = "</div>";
+
     $build['edit'] = $this->entityFormBuilder()->getForm($view, 'edit', ['display_id' => $display_id]);
     $build['preview'] = $this->entityFormBuilder()->getForm($view, 'preview', ['display_id' => $display_id]);
     return $build;

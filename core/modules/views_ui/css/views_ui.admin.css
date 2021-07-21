@@ -143,27 +143,17 @@
 .views-display-column {
   box-sizing: border-box;
 }
-.views-display-columns > * {
-  margin-bottom: 2em;
-}
 
 @media screen and (min-width: 45em) { /* 720px */
-  .views-display-columns > * {
-    float: left; /* LTR */
-    width: 32%;
-    margin-bottom: 0;
-    margin-left: 2%; /* LTR */
+  .views-display-columns {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "left right"
+                         "bottom bottom";
   }
-  [dir="rtl"] .views-display-columns > * {
-    float: right;
-    margin-right: 2%;
-    margin-left: 0;
-  }
-  .views-display-columns > *:first-child {
-    margin-left: 0; /* LTR */
-  }
-  [dir="rtl"] .views-display-columns > *:first-child {
-    margin-right: 0;
+  .views-display-columns *:last-child {
+    grid-area: bottom;
   }
 }
 
@@ -205,4 +195,15 @@ html.js span.js-only {
 }
 .js .views-edit-view .dropbutton-wrapper {
   width: auto;
+}
+
+/* Display preview on the side on large screens */
+.views-edit-wrapper {
+  display: grid;
+  grid-gap: 1rem;
+}
+@media screen and (min-width: 100em) { /* 1600px */
+  .views-edit-wrapper {
+    grid-template-columns: 2fr 3fr;
+  }
 }

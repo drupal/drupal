@@ -177,7 +177,8 @@ details.box-padding {
 .view-changed {
   margin-bottom: 21px;
 }
-.views-admin .unit-title {
+.views-admin .unit-title,
+.view-preview-form__title {
   margin-top: 18px;
   margin-bottom: 0;
   font-size: 15px;
@@ -289,14 +290,10 @@ td.group-title {
   padding-right: 0;
   padding-left: 10px;
 }
-.views-displays {
-  padding-bottom: 36px;
-  border: 1px solid #ccc;
-}
 .views-display-top {
   position: relative;
   padding: 8px 8px 3px;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid #ccc;
   background-color: #e1e2dc;
 }
 .views-display-top .tabs {
@@ -323,7 +320,7 @@ td.group-title {
   margin-left: 0;
 }
 .form-edit .form-actions {
-  margin-top: 0;
+  margin: 0;
   padding: 8px 12px;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -431,7 +428,10 @@ td.group-title {
   background-color: #ddd;
 }
 .edit-display-settings {
-  margin: 12px 12px 0 12px;
+  padding: 12px 12px 0 12px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
 }
 .edit-display-settings-top.views-ui-display-tab-bucket {
   position: relative;
@@ -443,9 +443,7 @@ td.group-title {
 }
 .views-display-column {
   border: 1px solid #f3f3f3;
-}
-.views-display-column + .views-display-column {
-  margin-top: 0;
+  margin: 0;
 }
 .view-preview-form .form-item-view-args,
 .view-preview-form .form-actions {
@@ -454,10 +452,12 @@ td.group-title {
 .view-preview-form .arguments-preview {
   font-size: 1em;
 }
+.view-preview-form .form-item-live-preview,
 .view-preview-form .arguments-preview,
 .view-preview-form .form-item-view-args {
   margin-left: 10px; /* LTR */
 }
+[dir="rtl"] .view-preview-form .form-item-live-preview,
 [dir="rtl"] .view-preview-form .arguments-preview,
 [dir="rtl"] .view-preview-form .form-item-view-args {
   margin-right: 10px;
@@ -474,7 +474,6 @@ td.group-title {
   margin-right: 0.2em;
   margin-left: 0.75em;
 }
-.form-item-live-preview,
 .form-item-view-args,
 .preview-submit-wrapper {
   display: inline-block;
@@ -564,9 +563,6 @@ td.group-title {
 [dir="rtl"] .views-display-setting .label {
   margin-right: 0;
   margin-left: 3px;
-}
-.views-edit-view {
-  margin-bottom: 15px;
 }
 
 /* The contents of the popup dialog on the views edit form. */
@@ -699,25 +695,6 @@ td.group-title {
 .view-preview-form {
   position: relative;
 }
-.view-preview-form__title {
-  margin-top: 0;
-  padding: 8px 12px;
-  border-bottom: 1px solid #ccc;
-  background-color: #e1e2dc;
-}
-.view-preview-form .form-item-live-preview {
-  position: absolute;
-  top: 3px;
-  right: 12px;
-  margin-top: 2px;
-  margin-left: 2px; /* LTR */
-}
-[dir="rtl"] .view-preview-form .form-item-live-preview {
-  right: auto;
-  left: 12px;
-  margin-right: 2px;
-  margin-left: 0;
-}
 .views-live-preview {
   padding: 12px;
 }
@@ -763,7 +740,8 @@ td.group-title {
   padding: 4px 10px;
   color: #666;
 }
-.messages {
+.views-displays .messages {
+  margin-top: 0;
   margin-bottom: 18px;
   line-height: 1.4555;
 }
