@@ -24,6 +24,7 @@ use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -101,6 +102,13 @@ class TemporaryJsonapiFileFieldUploader {
   protected $systemFileConfig;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * The event dispatcher.
    *
    * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
@@ -122,16 +130,19 @@ class TemporaryJsonapiFileFieldUploader {
    *   The lock service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, RequestStack $requestStack, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->token = $token;
     $this->lock = $lock;
     $this->systemFileConfig = $config_factory->get('system.file');
+    $this->requestStack = $requestStack;
     if (!$event_dispatcher) {
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
@@ -237,6 +248,12 @@ class TemporaryJsonapiFileFieldUploader {
    *   Thrown when the 'Content-Disposition' request header is invalid.
    */
   public function validateAndParseContentDispositionHeader(Request $request) {
+    if ($request->getContentType() === 'bin_multipart') {
+      /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+      $file = $request->files->get('file');
+      return basename($file->getClientOriginalName());
+    }
+
     // First, check the header exists.
     if (!$request->headers->has('content-disposition')) {
       throw new BadRequestHttpException('"Content-Disposition" header is required. A file name in the format "filename=FILENAME" must be provided.');
@@ -304,6 +321,11 @@ class TemporaryJsonapiFileFieldUploader {
    *   opened, or the temporary file cannot be written.
    */
   protected function streamUploadData() {
+    if ($this->requestStack->getCurrentRequest()->getContentType() === 'bin_multipart') {
+      $file = \Drupal::request()->files->get('file');
+      return $file->getRealPath();
+    }
+
     // 'rb' is needed so reading works correctly on Windows environments too.
     $file_data = fopen('php://input', 'rb');
 

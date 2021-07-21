@@ -121,7 +121,7 @@ class Routes implements ContainerInjectionInterface {
     // Require the JSON:API media type header on every route, except on file
     // upload routes, where we require `application/octet-stream`.
     $routes->addRequirements(['_content_type_format' => 'api_json']);
-    $upload_routes->addRequirements(['_content_type_format' => 'bin']);
+    $upload_routes->addRequirements(['_content_type_format' => 'bin|bin_multipart']);
 
     $routes->addCollection($upload_routes);
 

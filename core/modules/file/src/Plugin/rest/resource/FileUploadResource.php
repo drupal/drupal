@@ -256,7 +256,7 @@ class FileUploadResource extends ResourceBase {
     // Create the file.
     $file_uri = "{$destination}/{$prepared_filename}";
 
-    $temp_file_path = $this->streamUploadData();
+    $temp_file_path = $this->streamUploadData($request);
 
     $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_RENAME);
 
@@ -317,7 +317,15 @@ class FileUploadResource extends ResourceBase {
    *   Thrown when input data cannot be read, the temporary file cannot be
    *   opened, or the temporary file cannot be written.
    */
-  protected function streamUploadData() {
+  protected function streamUploadData(Request $request) {
+    if ($request->getContentType() === 'bin_multipart') {
+      $fileKey = 'file';
+      /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+      $file = $request->files->get($fileKey);
+
+      return $file->getRealPath();
+    }
+
     // 'rb' is needed so reading works correctly on Windows environments too.
     $file_data = fopen('php://input', 'rb');
 
@@ -375,6 +383,14 @@ class FileUploadResource extends ResourceBase {
    *   Thrown when the 'Content-Disposition' request header is invalid.
    */
   protected function validateAndParseContentDispositionHeader(Request $request) {
+    if ($request->getContentType() === 'bin_multipart') {
+      $fileKey = 'file';
+      /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+      $file = $request->files->get($fileKey);
+
+      return basename($file->getClientOriginalName());
+    }
+
     // Firstly, check the header exists.
     if (!$request->headers->has('content-disposition')) {
       throw new BadRequestHttpException('"Content-Disposition" header is required. A file name in the format "filename=FILENAME" must be provided');
@@ -574,7 +590,7 @@ class FileUploadResource extends ResourceBase {
     // Add the content type format access check. This will enforce that all
     // incoming requests can only use the 'application/octet-stream'
     // Content-Type header.
-    $requirements['_content_type_format'] = 'bin';
+    $requirements['_content_type_format'] = 'bin|bin_multipart';
 
     return $requirements;
   }
