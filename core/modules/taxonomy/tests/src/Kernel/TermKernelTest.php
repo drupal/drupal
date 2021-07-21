@@ -168,4 +168,30 @@ class TermKernelTest extends KernelTestBase {
     $this->assertTrue(!empty(trim($rendered)), 'Term is able to be rendered.');
   }
 
+  /**
+   * Tests if all the parents are loaded for a taxonomy term.
+   *
+   * @covers \Drupal\taxonomy\TermStorage::loadParents()
+   */
+  public function testLoadParents() {
+    /** @var \Drupal\taxonomy\TermStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
+    $vocabulary = $this->createVocabulary();
+    $parent = $this->createTerm($vocabulary, ['weight' => 10]);
+    $term = $this->createTerm($vocabulary);
+
+    // Make <root> and $parent parents of $term.
+    $term->parent = [$parent->id(), 0];
+    $term->save();
+
+    // Load the parents from the backend.
+    $parents = $storage->loadParents($term->id());
+
+    // Both parents should have been loaded.
+    $this->assertSame(count($parents), 2);
+    $this->assertTrue(array_key_exists(0, $parents));
+    $this->assertNull($parents[0]);
+    $this->assertSame($parents[1]->id(), $parent->id());
+  }
+
 }

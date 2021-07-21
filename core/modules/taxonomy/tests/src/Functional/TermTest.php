@@ -525,7 +525,9 @@ class TermTest extends TaxonomyTestBase {
     // Check that the parent tid is still there. The other parent (<root>) is
     // not added by \Drupal\taxonomy\TermStorageInterface::loadParents().
     $parents = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadParents($term->id());
-    $parent = reset($parents);
+    $parent = key($parents);
+    $this->assertEquals($edit['parent[]'][0], $parent);
+    $parent = $parents[1];
     $this->assertEquals($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
   }
 

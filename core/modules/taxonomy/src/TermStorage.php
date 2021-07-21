@@ -109,9 +109,8 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       foreach ($this->getParents($term) as $id => $parent) {
         // This method currently doesn't return the <root> parent.
         // @see https://www.drupal.org/node/2019905
-        if (!empty($id)) {
-          $terms[$id] = $parent;
-        }
+        // Add the <root> parent and any taxonomy term parent.
+        $terms[$id] = $id !== 0 ? $parent : NULL;
       }
     }
 

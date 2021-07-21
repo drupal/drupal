@@ -127,14 +127,8 @@ class ForumForm extends TermForm {
    */
   protected function forumParentSelect($tid, $title) {
     $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-    $parents = $taxonomy_storage->loadParents($tid);
-    if ($parents) {
-      $parent = array_shift($parents);
-      $parent = $parent->id();
-    }
-    else {
-      $parent = 0;
-    }
+    $parents = array_keys($taxonomy_storage->loadParents($tid));
+    $parent = reset($parents);
 
     $vid = $this->config('forum.settings')->get('vocabulary');
     $children = $taxonomy_storage->loadTree($vid, $tid, NULL, TRUE);

@@ -94,10 +94,10 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     // All terms back at the root level, no indentation should be present.
     $this->assertSession()->responseNotMatches('|<div class="js-indentation indentation">&nbsp;</div>|');
 
-    // Check explicitly that term 2 has no parents.
+    // Check explicitly that term 2 has no other parents than the <root> parent.
     \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertTrue(empty($parents), 'Term 2 has no parents now');
+    $this->assertSame($parents, [0 => NULL]);
   }
 
 }

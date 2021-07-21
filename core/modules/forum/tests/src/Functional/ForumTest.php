@@ -467,9 +467,10 @@ class ForumTest extends BrowserTestBase {
 
     // Verify forum hierarchy.
     $tid = $term->id();
-    $parent_tid = $taxonomy_term_storage->loadParents($tid);
-    $parent_tid = empty($parent_tid) ? 0 : array_shift($parent_tid)->id();
-    $this->assertSame($parent, $parent_tid, 'The ' . $type . ' is linked to its container');
+    $parent_terms = $taxonomy_term_storage->loadParents($tid);
+    $parent_tid = array_keys($parent_terms);
+    $parent = intval($parent);
+    $this->assertSame([$parent], $parent_tid, 'The ' . $type . ' is linked to its container');
 
     $forum = $taxonomy_term_storage->load($tid);
     $this->assertEquals(($type == 'forum container'), (bool) $forum->forum_container->value);
