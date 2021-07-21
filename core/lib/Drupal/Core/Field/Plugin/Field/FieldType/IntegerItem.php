@@ -4,7 +4,10 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\DataReferenceDefinition;
+use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 
 /**
  * Defines the 'integer' field type.
@@ -51,6 +54,22 @@ class IntegerItem extends NumericItemBase {
     $properties['value'] = DataDefinition::create('integer')
       ->setLabel(t('Integer value'))
       ->setRequired(TRUE);
+
+    // Add reverse references for content entities.
+    // @todo Add support for config entities.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_type_id = $field_definition->getTargetEntityTypeId();
+    $id_key = $entity_type_manager->getDefinition($entity_type_id)
+      ->getKey('id');
+    if ($id_key && $id_key == $field_definition->getName()) {
+      $properties['referenced_by'] = DataReferenceDefinition::create('entity')
+        ->setLabel(new TranslatableMarkup('Referenced by'))
+        ->setDescription(new TranslatableMarkup('The referencing entity'))
+        ->setComputed(TRUE)
+        ->setReadOnly(TRUE)
+        ->setTargetDefinition(EntityDataDefinition::create($entity_type_id))
+        ->addConstraint('EntityType', $entity_type_id);
+    }
 
     return $properties;
   }
