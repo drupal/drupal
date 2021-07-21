@@ -362,7 +362,7 @@ system.themes_page:
   path: '/admin/appearance'
   defaults:
     _title: 'Appearance'
-    _controller: '\Drupal\system\Controller\SystemController::themesPage'
+    _controller: '\Drupal\system\Controller\ThemeController::themesPage'
   requirements:
     _permission: 'administer themes'
 
