@@ -13,9 +13,7 @@
  * - attributes: HTML attributes to be applied to the list.
  * - empty: A message to display when there are no items. Allowed value is a
  *   string or render array.
- * - context: An list of contextual data associated with the list. For search
- *   results, the following data is set:
- *   - plugin: The search plugin ID, for example "node_search".
+ * - search_plugin: The search plugin ID, for example "node_search".
  *
  * @see template_preprocess_item_list()
  */
@@ -23,7 +21,7 @@
 {%
   set classes = [
   'search-results',
-  context.plugin ~ '-results',
+  search_plugin ~ '-results',
 ]
 %}
 {%

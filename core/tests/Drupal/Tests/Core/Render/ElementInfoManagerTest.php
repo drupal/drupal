@@ -124,6 +124,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#type' => 'page',
         '#theme' => 'page',
         '#defaults_loaded' => TRUE,
+        '#context' => [],
       ],
     ];
 
@@ -135,6 +136,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#input' => TRUE,
         '#value_callback' => ['TestElementPlugin', 'valueCallback'],
         '#defaults_loaded' => TRUE,
+        '#context' => [],
       ],
     ];
     return $data;

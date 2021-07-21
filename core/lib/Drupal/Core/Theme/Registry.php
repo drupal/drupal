@@ -379,6 +379,11 @@ class Registry implements DestructableInterface {
       if (empty($info['preprocess functions'])) {
         unset($cache[$hook]['preprocess functions']);
       }
+
+      // Ensure every theme hook has a default context array.
+      $cache[$hook] += [
+        'context' => [],
+      ];
     }
     $this->registry[$this->theme->getName()] = $cache;
 
@@ -392,6 +397,7 @@ class Registry implements DestructableInterface {
    *   The theme registry that will eventually be cached; It is an associative
    *   array keyed by theme hooks, whose values are associative arrays
    *   describing the hook:
+   *   - 'context': An array of predefined contextual data.
    *   - 'type': The passed-in $type.
    *   - 'theme path': The passed-in $path.
    *   - 'function': The name of the function generating output for this theme

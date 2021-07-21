@@ -27,6 +27,7 @@ interface ElementInfoManagerInterface extends DiscoveryInterface {
    *   array contains a sub-array for each element type, with the
    *   machine-readable type name as the key. Each sub-array has a number of
    *   possible attributes:
+   *   - #context: array containing possible pre-populated contextual data.
    *   - #input: boolean indicating whether or not this element carries a value
    *     (even if it's hidden).
    *   - #process: array of callback functions taking $element, $form_state,

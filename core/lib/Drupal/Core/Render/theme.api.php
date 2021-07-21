@@ -275,6 +275,23 @@
  *   and to discover available theme hooks, see the documentation of
  *   hook_theme() and the
  *   @link themeable Default theme implementations topic. @endlink
+ * - #context: (array) May contain contextual data that pertains to the
+ *   surroundings with which the render array itself was created. Its primary
+ *   purpose is to aid with rendering variations. This is most often used when
+ *   there is a need to pass along information that would normally not be
+ *   accessible after the render array has been initially created. While it is
+ *   possible to pass entire objects as context, it is highly recommended to
+ *   pass only scalar values (such as an entity type and an identifier to
+ *   reconstruct the entity on a per needed basis). This will maximize
+ *   compatibility, reduce database size and risk of any future complications
+ *   from potential API changes. If you plan on or need to pass an entire
+ *   object, ensure the object can be properly serialized in the database.
+ *   Render caching may store the entire render array, which will include
+ *   objects inside #context. The easiest way to ensure an object can be
+ *   properly serialized and unserialized from the database is to use the
+ *   DependencySerializationTrait, however doing this may not be enough and may
+ *   still lead to unforeseen complications. See:
+ *   \Drupal\Core\DependencyInjection\DependencySerializationTrait
  * - #markup: Specifies that the array provides HTML markup directly. Unless
  *   the markup is very simple, such as an explanation in a paragraph tag, it
  *   is normally preferable to use #theme or #type instead, so that the theme
@@ -555,42 +572,38 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
  *
- * @param $variables
- *   The variables array (modify in place).
- * @param $hook
+ * @param array $variables
+ *   An associative array of variables passed to the theme hook, passed by
+ *   reference. The actual contents of this array varies by what was defined in
+ *   hook_theme() and any preprocess hooks previously invoked. In addition to
+ *   normal variables, this parameter includes:
+ *   - context: (array) The context pertaining to the theme hook being invoked.
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. Also, any
+ *     alterations made to this variable will be ignored. Any context that is an
+ *     object, instead of a scalar, should use the DependencySerializationTrait;
+ *     see the @link theme_render Render API overview @endlink for more
+ *     information. Context includes:
+ *     - theme_hook: (string) The name of the theme hook that is currently being
+ *       invoked.
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
+ *       being invoked.
+ *     - theme_hook_info: (array) The implementation info for the theme hook.
+ *     - theme_suggestions: (array) An array of theme hook suggestions.
+ *     - Any additional context that was passed from the render array.
+ * @param string $hook
  *   The name of the theme hook.
+ * @param array $info
+ *   The theme hook definition.
  */
-function hook_preprocess(&$variables, $hook) {
-  static $hooks;
-
-  // Add contextual links to the variables, if the user has permission.
-
-  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
-    return;
-  }
-
-  if (!isset($hooks)) {
-    $hooks = theme_get_registry();
-  }
-
-  // Determine the primary theme function argument.
-  if (isset($hooks[$hook]['variables'])) {
-    $keys = array_keys($hooks[$hook]['variables']);
-    $key = $keys[0];
-  }
-  else {
-    $key = $hooks[$hook]['render element'];
-  }
-
-  if (isset($variables[$key])) {
-    $element = $variables[$key];
-  }
-
-  if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
-    $variables['title_suffix']['contextual_links'] = contextual_links_view($element);
-    if (!empty($variables['title_suffix']['contextual_links'])) {
-      $variables['attributes']['class'][] = 'contextual-links-region';
-    }
+function hook_preprocess(array &$variables, $hook, array $info) {
+  // This example is from https://www.drupal.org/node/2971707.
+  // Add an entity bundle specific class.
+  if (!empty($variables['context']['entityTypeId']) && empty($variables['context']['entityId'])) {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = \Drupal::service('entity_type.manager')->getStorage($variables['context']['entityTypeId'])->load($variables['context']['entityId']);
+    $variables['attributes']['class'][] = \Drupal\Component\Utility\Html::getClass('entity--' . $entity->bundle());
   }
 }
 
@@ -604,10 +617,32 @@ function hook_preprocess(&$variables, $hook) {
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
  *
- * @param $variables
- *   The variables array (modify in place).
+ * @param array $variables
+ *   An associative array of variables passed to the theme hook, passed by
+ *   reference. The actual contents of this array varies by what was defined in
+ *   hook_theme() and any preprocess hooks previously invoked. In addition to
+ *   normal variables, this parameter includes:
+ *   - context: (array) The context pertaining to the theme hook being invoked.
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. Also, any
+ *     alterations made to this variable will be ignored. Any context that is an
+ *     object, instead of a scalar, should use the DependencySerializationTrait;
+ *     see the @link theme_render Render API overview @endlink for more
+ *     information. Context includes:
+ *     - theme_hook: (string) The name of the theme hook that is currently being
+ *       invoked.
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
+ *       being invoked.
+ *     - theme_hook_info: (array) The implementation info for the theme hook.
+ *     - theme_suggestions: (array) An array of theme hook suggestions.
+ *     - Any additional context that was passed from the render array.
+ * @param string $hook
+ *   The name of the theme hook.
+ * @param array $info
+ *   The theme hook definition.
  */
-function hook_preprocess_HOOK(&$variables) {
+function hook_preprocess_HOOK(array &$variables, $hook, array $info) {
   // This example is from rdf_preprocess_image(). It adds an RDF attribute
   // to the image hook's variables.
   $variables['attributes']['typeof'] = ['foaf:Image'];
@@ -623,7 +658,7 @@ function hook_preprocess_HOOK(&$variables) {
  * '#theme' => 'node__article' is called, then hook_theme_suggestions_node()
  * will be invoked, not hook_theme_suggestions_node__article(). The specific
  * hook called (in this case 'node__article') is available in
- * $variables['theme_hook_original'].
+ * $variables['context']['theme_hook'].
  *
  * Implementations of this hook must be placed in *.module or *.theme files, or
  * must otherwise make sure that the hook implementation is available at
@@ -632,8 +667,23 @@ function hook_preprocess_HOOK(&$variables) {
  * @todo Add @code sample.
  *
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any preprocessing.
+ *   An associative array of variables passed to the theme hook. Any alterations
+ *   made to variables will be ignored. Note that this hook is invoked before
+ *   any variable preprocessing. This "variables" array will also include:
+ *   - context: (array) The context pertaining to the theme hook being invoked.
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. It
+ *     includes:
+ *     - theme_hook: (string) The name of the theme hook that is currently being
+ *       invoked. This value may change after we finish building the list of
+ *       theme suggestions.
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
+ *       being invoked.
+ *     - theme_hook_info: (array) The implementation info for the theme hook.
+ *     - theme_suggestions: (array) The list of theme hook suggestions derived
+ *       from the #theme property of the render array.
+ *     - Any additional context that was passed from the render array.
  *
  * @return array
  *   An array of theme suggestions.
@@ -643,7 +693,7 @@ function hook_preprocess_HOOK(&$variables) {
 function hook_theme_suggestions_HOOK(array $variables) {
   $suggestions = [];
 
-  $suggestions[] = 'hookname__' . $variables['elements']['#langcode'];
+  $suggestions[] = $variables['context']['theme_hook'] . '__' . $variables['elements']['#langcode'];
 
   return $suggestions;
 }
@@ -679,16 +729,28 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   An array of alternate, more specific names for template files or theme
  *   functions.
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any variable preprocessing.
+ *   An associative array of variables passed to the theme hook. Any alterations
+ *   made to variables will be ignored. Note that this hook is invoked before
+ *   any variable preprocessing. This "variables" array will also include:
+ *   - context: (array) The context pertaining to the theme hook being invoked.
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. It
+ *     includes:
+ *     - theme_hook: (string) The name of the theme hook that is currently being
+ *       invoked. This value may change after we finish building the list of
+ *       theme suggestions.
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
+ *       being invoked.
+ *     - theme_hook_info: (array) The implementation info for the theme hook.
+ *     - theme_suggestions: (array) The list of theme hook suggestions derived
+ *       from the #theme property of the render array.
+ *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
  *   then $hook will be 'node', not 'node__article'. The specific hook called
  *   (in this case 'node__article') is available in
- *   $variables['theme_hook_original'].
- *
- * @return array
- *   An array of theme suggestions.
+ *   $variables['context']['theme_hook'].
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
@@ -708,7 +770,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * '#theme' => 'node__article' is called, then node_theme_suggestions_node()
  * will be invoked, not node_theme_suggestions_node__article(). The specific
  * hook called (in this case 'node__article') is available in
- * $variables['theme_hook_original'].
+ * $context['theme_hook'].
  *
  * Implementations of this hook must be placed in *.module or *.theme files, or
  * must otherwise make sure that the hook implementation is available at
@@ -719,15 +781,35 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * @param array $suggestions
  *   An array of theme suggestions.
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any preprocessing.
+ *   An associative array of variables passed to the theme hook. Any alterations
+ *   made to variables will be ignored. Note that this hook is invoked before
+ *   any variable preprocessing. This "variables" array will also include:
+ *   - context: (array) The context pertaining to the theme hook being invoked.
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. It
+ *     includes:
+ *     - theme_hook: (string) The name of the theme hook that is currently being
+ *       invoked. This value may change after we finish building the list of
+ *       theme suggestions.
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
+ *       being invoked.
+ *     - theme_hook_info: (array) The implementation info for the theme hook.
+ *     - theme_suggestions: (array) The list of theme hook suggestions derived
+ *       from the #theme property of the render array.
+ *     - Any additional context that was passed from the render array.
+ * @param string $hook
+ *   The base hook name. For example, if '#theme' => 'node__article' is called,
+ *   then $hook will be 'node', not 'node__article'. The specific hook called
+ *   (in this case 'node__article') is available in
+ *   $variables['context']['theme_hook'].
  *
  * @see hook_theme_suggestions_alter()
  * @see hook_theme_suggestions_HOOK()
  */
-function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables) {
+function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables, $hook) {
   if (empty($variables['header'])) {
-    $suggestions[] = 'hookname__no_header';
+    $suggestions[] = $hook . '__no_header';
   }
 }
 
@@ -791,12 +873,22 @@ function hook_extension() {
  *   theme engine is responsible for passing all the variables to the template.
  *   Depending on the code in the template, all or just a subset of the
  *   variables might be used in the template.
+ * @param array $context
+ *   An associative array of contextual information pertaining to the template
+ *   being invoked:
+ *   - theme_hook: (string) The name of the theme hook that is currently being
+ *     invoked.
+ *   - theme_base_hook: (string) The base hook of the theme hook currently
+ *     being invoked.
+ *   - theme_hook_info: (array) The implementation info for the theme hook.
+ *   - theme_suggestions: (array) An array of theme hook suggestions.
+ *   - Any additional context that was passed from the render array.
  *
  * @return string
  *   The output generated from the template. In most cases this will be a string
  *   containing HTML markup.
  */
-function hook_render_template($template_file, $variables) {
+function hook_render_template($template_file, array $variables, array $context) {
   $twig_service = \Drupal::service('twig');
 
   return $twig_service->loadTemplate($template_file)->render($variables);
@@ -1145,6 +1237,8 @@ function hook_page_bottom(array &$page_bottom) {
  *   - variables: Only used for #theme in render array: an array of variables,
  *     where the array keys are the names of the variables, and the array
  *     values are the default values if they are not given in the render array.
+ *     If a theme hook defines variables, it will contain an empty array
+ *     variable named "context" by default. You may pre-populate it as needed.
  *     Template implementations receive each array key as a variable in the
  *     template file (so they must be legal PHP/Twig variable names). Function
  *     implementations are passed the variables in a single $variables function
@@ -1310,7 +1404,7 @@ function hook_theme_registry_alter(&$theme_registry) {
  * @see template_preprocess()
  * @see _template_preprocess_default_variables()
  */
-function hook_template_preprocess_default_variables_alter(&$variables) {
+function hook_template_preprocess_default_variables_alter(array &$variables) {
   $variables['is_admin'] = \Drupal::currentUser()->hasPermission('access administration pages');
 }
 

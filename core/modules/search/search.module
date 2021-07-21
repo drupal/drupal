@@ -109,6 +109,13 @@ function search_preprocess_block(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function search_preprocess_item_list__search_results(array &$variables) {
+  $variables['search_plugin'] = isset($variables['context']['plugin']) ? $variables['context']['plugin'] : '';
+}
+
+/**
  * Implements hook_cron().
  *
  * Fires updateIndex() in the plugins for all indexable active search pages,

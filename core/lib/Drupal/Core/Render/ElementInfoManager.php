@@ -115,14 +115,19 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
       // will receive input, and assign the value callback.
       if ($element instanceof FormElementInterface) {
         $element_info['#input'] = TRUE;
-        $element_info['#value_callback'] = [$definition['class'], 'valueCallback'];
+        $element_info['#value_callback'] = [
+          $definition['class'],
+          'valueCallback',
+        ];
       }
-      $info[$element_type] = $element_info;
+
+      // Normalize element info so alters have fully filled definitions.
+      $info[$element_type] = $element_info + [
+        '#context' => [],
+        '#type' => $element_type,
+      ];
     }
 
-    foreach ($info as $element_type => $element) {
-      $info[$element_type]['#type'] = $element_type;
-    }
     // Allow modules to alter the element type defaults.
     $this->moduleHandler->alter('element_info', $info);
     $this->themeManager->alter('element_info', $info);

@@ -61,6 +61,32 @@ class RenderTest extends KernelTestBase {
   }
 
   /**
+   * Ensures that render array element context is processed correctly.
+   */
+  public function testRenderElementContext() {
+    $build = [
+      '#type' => 'theme_test_render_element_context',
+      '#context' => ['foo' => 'Has render element context'],
+    ];
+    $this->render($build);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<div data-render-element-context="Has render element context"></div>');
+  }
+
+  /**
+   * Ensures that theme hook variable context is processed correctly.
+   */
+  public function testRenderThemeHookVariableContext() {
+    $build = [
+      '#theme' => 'theme_test_theme_hook_variable_context',
+      '#context' => ['foo' => 'Has theme hook variable context'],
+    ];
+    $this->render($build);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<div data-theme-hook-variable-context="Has theme hook variable context"></div>');
+  }
+
+  /**
    * Tests that we get an exception when we try to attach an illegal type.
    */
   public function testProcessAttached() {

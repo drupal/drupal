@@ -13,16 +13,15 @@
  * - attributes: HTML attributes to be applied to the list.
  * - empty: A message to display when there are no items. Allowed value is a
  *   string or render array.
- * - context: A list of contextual data associated with the list. May contain:
- *   - list_style: The custom list style.
+ * - list_style: The custom list style.
  *
  * @see template_preprocess_item_list()
  *
  * @ingroup themeable
  */
 #}
-{% if context.list_style %}
-  {%- set attributes = attributes.addClass('item-list__' ~ context.list_style) %}
+{% if list_style %}
+  {%- set attributes = attributes.addClass('item-list__' ~ list_style) %}
 {% endif %}
 {% if items or empty %}
   {%- if title is not empty -%}

@@ -1180,6 +1180,7 @@ function template_preprocess_item_list(&$variables) {
       'attributes' => new Attribute($attributes),
     ];
   }
+  $variables['list_style'] = isset($variables['context']['list_style']) ? $variables['context']['list_style'] : '';
 }
 
 /**
@@ -2047,7 +2048,7 @@ function drupal_common_theme() {
       'variables' => ['status' => MARK_NEW],
     ],
     'item_list' => [
-      'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
+      'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL],
     ],
     'feed_icon' => [
       'variables' => ['url' => NULL, 'title' => NULL],
