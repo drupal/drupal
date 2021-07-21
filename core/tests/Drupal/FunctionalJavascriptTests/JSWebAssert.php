@@ -67,9 +67,11 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElement($selector, $locator, $timeout = 10000) {
-    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
+    Assert::assertInstanceOf(NodeElement::class, $element);
+    return $element;
   }
 
   /**
