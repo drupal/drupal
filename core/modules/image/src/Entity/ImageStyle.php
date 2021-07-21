@@ -175,6 +175,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function buildUri($uri) {
     $source_scheme = $scheme = StreamWrapperManager::getScheme($uri);
+    if (!$source_scheme) {
+      @trigger_error('Passing a path argument is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. Pass a valid URI instead. See https://www.drupal.org/node/3218514', E_USER_DEPRECATED);
+    }
     $default_scheme = $this->fileDefaultScheme();
 
     if ($source_scheme) {
