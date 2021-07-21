@@ -8,7 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Test\EnvironmentCleaner;
-use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Symfony\Component\Console\Output\NullOutput;
 
 /**
@@ -34,7 +34,7 @@ function simpletest_requirements($phase) {
  * Implements hook_schema().
  */
 function simpletest_schema() {
-  return TestDatabase::testingSchema();
+  return SimpletestTestRunResultsStorage::testingResultsSchema();
 }
 
 /**
@@ -49,7 +49,7 @@ function simpletest_uninstall() {
     $cleaner = new EnvironmentCleaner(
       DRUPAL_ROOT,
       Database::getConnection(),
-      TestDatabase::getConnection(),
+      new SimpletestTestRunResultsStorage(),
       new NullOutput(),
       \Drupal::service('file_system')
     );

@@ -27,6 +27,7 @@ class TestDatabaseTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getDatabasePrefix
    * @covers ::getTestSitePath
+   * @covers ::getPhpErrorLogPath
    *
    * @dataProvider providerTestConstructor
    */
@@ -34,6 +35,7 @@ class TestDatabaseTest extends UnitTestCase {
     $test_db = new TestDatabase($db_prefix);
     $this->assertEquals($expected_db_prefix, $test_db->getDatabasePrefix());
     $this->assertEquals($expected_site_path, $test_db->getTestSitePath());
+    $this->assertEquals($expected_site_path . '/error.log', $test_db->getPhpErrorLogPath());
   }
 
   /**
@@ -50,6 +52,9 @@ class TestDatabaseTest extends UnitTestCase {
    * Verify that a test lock is generated if there is no provided prefix.
    *
    * @covers ::__construct
+   * @covers ::getDatabasePrefix
+   * @covers ::getTestSitePath
+   * @covers ::getPhpErrorLogPath
    */
   public function testConstructorNullPrefix() {
     // We use a stub class here because we can't mock getTestLock() so that it's
@@ -58,6 +63,7 @@ class TestDatabaseTest extends UnitTestCase {
 
     $this->assertEquals('test23', $test_db->getDatabasePrefix());
     $this->assertEquals('sites/simpletest/23', $test_db->getTestSitePath());
+    $this->assertEquals('sites/simpletest/23/error.log', $test_db->getPhpErrorLogPath());
   }
 
 }
@@ -67,7 +73,7 @@ class TestDatabaseTest extends UnitTestCase {
  */
 class TestTestDatabase extends TestDatabase {
 
-  protected function getTestLock($create_lock = FALSE) {
+  protected function getTestLock(bool $create_lock = FALSE): int {
     return 23;
   }
 
