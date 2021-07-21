@@ -2,6 +2,7 @@
 
 namespace Drupal\update;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
@@ -49,6 +50,13 @@ final class ProjectSecurityRequirement {
   private $existingMajorMinorVersion;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a ProjectSecurityRequirement object.
    *
    * @param string|null $project_title
@@ -61,12 +69,20 @@ final class ProjectSecurityRequirement {
    * @param string|null $next_major_minor_version
    *   The next version after the installed version in the format
    *   [MAJOR].[MINOR].
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  private function __construct($project_title = NULL, array $security_coverage_info = [], $existing_major_minor_version = NULL, $next_major_minor_version = NULL) {
+  private function __construct($project_title = NULL, array $security_coverage_info = [], $existing_major_minor_version = NULL, $next_major_minor_version = NULL, TimeInterface $time = NULL) {
     $this->projectTitle = $project_title;
     $this->securityCoverageInfo = $security_coverage_info;
     $this->existingMajorMinorVersion = $existing_major_minor_version;
     $this->nextMajorMinorVersion = $next_major_minor_version;
+
+    if (!$time) {
+      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\ProjectSecurityRequirement::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    $this->time = $time;
   }
 
   /**
@@ -94,15 +110,15 @@ final class ProjectSecurityRequirement {
    */
   public static function createFromProjectDataAndSecurityCoverageInfo(array $project_data, array $security_coverage_info) {
     if ($project_data['project_type'] !== 'core' || $project_data['name'] !== 'drupal' || empty($security_coverage_info)) {
-      return new static();
+      return new static(NULL, [], NULL, NULL, \Drupal::time());
     }
     if (isset($project_data['existing_version'])) {
       list($major, $minor) = explode('.', $project_data['existing_version']);
       $existing_version = "$major.$minor";
       $next_version = "$major." . ((int) $minor + 1);
-      return new static($project_data['title'], $security_coverage_info, $existing_version, $next_version);
+      return new static($project_data['title'], $security_coverage_info, $existing_version, $next_version, \Drupal::time());
     }
-    return new static($project_data['title'], $security_coverage_info);
+    return new static($project_data['title'], $security_coverage_info, NULL, NULL, \Drupal::time());
   }
 
   /**
@@ -201,8 +217,6 @@ final class ProjectSecurityRequirement {
    */
   private function getDateEndRequirement() {
     $requirement = [];
-    /** @var \Drupal\Component\Datetime\Time $time */
-    $time = \Drupal::service('datetime.time');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = \Drupal::service('date.formatter');
     // 'security_coverage_end_date' will either be in format 'Y-m-d' or 'Y-m'.
@@ -220,7 +234,7 @@ final class ProjectSecurityRequirement {
       $full_security_coverage_end_date = $this->securityCoverageInfo['security_coverage_end_date'] . '-15';
     }
 
-    $comparable_request_date = $date_formatter->format($time->getRequestTime(), 'custom', $date_format);
+    $comparable_request_date = $date_formatter->format($this->time->getRequestTime(), 'custom', $date_format);
     if ($this->securityCoverageInfo['security_coverage_end_date'] <= $comparable_request_date) {
       // Security coverage is over.
       $requirement['value'] = $this->t('Coverage has ended');
@@ -240,7 +254,7 @@ final class ProjectSecurityRequirement {
       $requirement['severity'] = REQUIREMENT_INFO;
       // 'security_coverage_ending_warn_date' will always be in the format
       // 'Y-m-d'.
-      $request_date = $date_formatter->format($time->getRequestTime(), 'custom', 'Y-m-d');
+      $request_date = $date_formatter->format($this->time->getRequestTime(), 'custom', 'Y-m-d');
       if (!empty($this->securityCoverageInfo['security_coverage_ending_warn_date']) && $this->securityCoverageInfo['security_coverage_ending_warn_date'] <= $request_date) {
         $requirement['description']['coverage_message'] = [
           '#markup' => $this->t('Update to a supported minor version soon to continue receiving security updates.'),

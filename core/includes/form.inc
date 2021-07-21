@@ -1025,7 +1025,7 @@ function _batch_queue($batch_set) {
     $class = $batch_set['queue']['class'];
 
     if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name, \Drupal::database());
+      $queues[$class][$name] = new $class($name, \Drupal::database(), \Drupal::time());
     }
     return $queues[$class][$name];
   }

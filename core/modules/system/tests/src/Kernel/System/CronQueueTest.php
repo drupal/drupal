@@ -58,14 +58,11 @@ class CronQueueTest extends KernelTestBase {
     $time = $this->prophesize('Drupal\Component\Datetime\TimeInterface');
     $time->getCurrentTime()->willReturn($this->currentTime);
     $time->getRequestTime()->willReturn($this->currentTime);
-    \Drupal::getContainer()->set('datetime.time', $time->reveal());
-    $this->assertEquals($this->currentTime, \Drupal::time()->getCurrentTime());
-    $this->assertEquals($this->currentTime, \Drupal::time()->getRequestTime());
 
     $realQueueFactory = $this->container->get('queue');
     $queue_factory = $this->prophesize(get_class($realQueueFactory));
-    $database = new DatabaseQueue('cron_queue_test_database_delay_exception', $this->connection);
-    $memory = new Memory('cron_queue_test_memory_delay_exception');
+    $database = new DatabaseQueue('cron_queue_test_database_delay_exception', $this->connection, $time->reveal());
+    $memory = new Memory('cron_queue_test_memory_delay_exception', NULL, $time->reveal());
     $queue_factory->get('cron_queue_test_database_delay_exception', Argument::cetera())->willReturn($database);
     $queue_factory->get('cron_queue_test_memory_delay_exception', Argument::cetera())->willReturn($memory);
     $queue_factory->get(Argument::any(), Argument::cetera())->will(function ($args) use ($realQueueFactory) {

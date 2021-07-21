@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Queue;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
+
 /**
  * Static queue implementation.
  *
@@ -28,14 +31,31 @@ class Memory implements QueueInterface {
   protected $idSequence;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a Memory object.
    *
    * @param string $name
    *   An arbitrary string. The name of the queue to work with.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The Connection object containing the key-value tables.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct($name) {
+  public function __construct($name, Connection $connection = NULL, TimeInterface $time = NULL) {
     $this->queue = [];
     $this->idSequence = 0;
+
+    if (!$time) {
+      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\Memory::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    $this->time = $time;
   }
 
   /**
@@ -45,7 +65,7 @@ class Memory implements QueueInterface {
     $item = new \stdClass();
     $item->item_id = $this->idSequence++;
     $item->data = $data;
-    $item->created = \Drupal::time()->getCurrentTime();
+    $item->created = $this->time->getCurrentTime();
     $item->expire = 0;
     $this->queue[$item->item_id] = $item;
     return $item->item_id;
@@ -64,7 +84,7 @@ class Memory implements QueueInterface {
   public function claimItem($lease_time = 30) {
     foreach ($this->queue as $key => $item) {
       if ($item->expire == 0) {
-        $item->expire = \Drupal::time()->getCurrentTime() + $lease_time;
+        $item->expire = $this->time->getCurrentTime() + $lease_time;
         $this->queue[$key] = $item;
         return $item;
       }

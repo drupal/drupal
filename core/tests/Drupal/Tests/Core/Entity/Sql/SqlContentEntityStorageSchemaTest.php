@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -74,6 +75,13 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   protected $storageSchema;
 
   /**
+   * The time service used in this test.
+   *
+   * @var \Drupal\Component\Datetime\Time|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -83,6 +91,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->time = $this->createMock(Time::class);
 
     $this->storage->expects($this->any())
       ->method('getBaseTable')
@@ -1220,7 +1229,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->time])
       ->setMethods(['installedStorageSchema', 'hasSharedTableStructureChange'])
       ->getMock();
 
@@ -1417,7 +1426,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->time])
       ->setMethods(['installedStorageSchema', 'loadEntitySchemaData', 'hasSharedTableNameChanges', 'isTableEmpty', 'getTableMapping'])
       ->getMock();
     $this->storageSchema
