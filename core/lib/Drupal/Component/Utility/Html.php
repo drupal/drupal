@@ -2,6 +2,8 @@
 
 namespace Drupal\Component\Utility;
 
+use Masterminds\HTML5;
+
 /**
  * Provides DOMDocument helpers for parsing and serializing HTML strings.
  *
@@ -273,9 +275,9 @@ class Html {
    */
   public static function load($html) {
     $document = <<<EOD
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
 <body>!html</body>
 </html>
 EOD;
@@ -284,11 +286,8 @@ EOD;
     // newlines before injecting the actual HTML body to be processed.
     $document = strtr($document, ["\n" => '', '!html' => $html]);
 
-    $dom = new \DOMDocument();
-    // Ignore warnings during HTML soup loading.
-    @$dom->loadHTML($document);
-
-    return $dom;
+    $html5 = new HTML5();
+    return $html5->loadHTML($document);
   }
 
   /**
@@ -316,8 +315,9 @@ EOD;
       foreach ($body_node->getElementsByTagName('style') as $node) {
         static::escapeCdataElement($node, '/*', '*/');
       }
+      $html5 = new HTML5();
       foreach ($body_node->childNodes as $node) {
-        $html .= $document->saveXML($node);
+        $html .= $html5->saveHTML($node);
       }
     }
     return $html;
