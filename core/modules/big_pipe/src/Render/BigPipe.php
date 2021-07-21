@@ -589,12 +589,13 @@ class BigPipe {
         }
       }
 
-      // Send this embedded AJAX response.
+      // Send this embedded AJAX response and execute it immediately to aviod race condition on asset loading.
       $json = $ajax_response->getContent();
       $output = <<<EOF
     <script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
     $json
     </script>
+    <script>window.bigPipeProcessDocument(document)</script>
 EOF;
       $this->sendChunk($output);
 
