@@ -356,7 +356,7 @@
             const $element = $(element);
 
             // Hide everything in block that isn't contextual link related.
-            $element.children(':not([data-contextual-id])').hide(0);
+            $element.children(':not([data-contextual-id])').hide();
 
             const contentPreviewPlaceholderText = $element.attr(
               'data-layout-content-preview-placeholder-label',

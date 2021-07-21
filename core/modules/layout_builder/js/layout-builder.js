@@ -156,7 +156,7 @@
         $layoutBuilder.addClass('layout-builder--content-preview-disabled');
         $('[data-layout-content-preview-placeholder-label]', context).each(function (i, element) {
           var $element = $(element);
-          $element.children(':not([data-contextual-id])').hide(0);
+          $element.children(':not([data-contextual-id])').hide();
           var contentPreviewPlaceholderText = $element.attr('data-layout-content-preview-placeholder-label');
           var contentPreviewPlaceholderLabel = Drupal.theme('layoutBuilderPrependContentPreviewPlaceholderLabel', contentPreviewPlaceholderText);
           $element.prepend(contentPreviewPlaceholderLabel);

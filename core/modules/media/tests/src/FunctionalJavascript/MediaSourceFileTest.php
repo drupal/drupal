@@ -75,9 +75,10 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     // Make sure checkbox changes the visibility of log message field.
     $this->drupalGet("media/1/edit");
     $page->uncheckField('revision');
-    $assert_session->elementAttributeContains('css', '.field--name-revision-log-message', 'style', 'display: none');
+    $log_message = $page->find('css', '.field--name-revision-log-message');
+    $this->assertTrue($log_message->hasAttribute('hidden'));
     $page->checkField('revision');
-    $assert_session->elementAttributeNotContains('css', '.field--name-revision-log-message', 'style', 'display');
+    $this->assertFalse($log_message->hasAttribute('hidden'));
 
     // Load the media and check that all the fields are properly populated.
     $media = Media::load(1);

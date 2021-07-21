@@ -294,6 +294,11 @@ drupal.element.matches:
   js:
     misc/polyfills/element.matches.js: { weight: -20 }
 
+drupal.element.toggleAttribute:
+  version: VERSION
+  js:
+    misc/polyfills/element.toggleAttribute.js: { weight: -20, attributes: { nomodule: true } }
+
 drupal.entity-form:
   version: VERSION
   js:
@@ -450,6 +455,8 @@ jquery:
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
+  dependencies:
+    - core/jquery.show-hide
 
 jquery.cookie:
   version: VERSION
@@ -460,6 +467,13 @@ jquery.cookie:
     - core/drupal
     - core/js-cookie
   deprecated: The %library_id% asset library is deprecated in Drupal 9.0.0 and will be removed in Drupal 10.0.0. Use the core/js-cookie library instead. See https://www.drupal.org/node/3104677
+
+jquery.show-hide:
+  version: VERSION
+  js:
+    misc/jquery.show-hide.shim.js: {}
+  dependencies:
+    - core/drupal.element.toggleAttribute
 
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
