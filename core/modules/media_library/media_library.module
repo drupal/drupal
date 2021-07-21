@@ -178,7 +178,7 @@ function media_library_views_pre_render(ViewExecutable $view) {
 
     $add_classes($view->style_plugin->options['row_class'], ['js-media-library-item', 'js-click-to-select']);
 
-    if ($view->display_handler->options['defaults']['css_class']) {
+    if (isset($view->display_handler->options['defaults']['css_class'])) {
       $add_classes($view->displayHandlers->get('default')->options['css_class'], ['js-media-library-view']);
     }
     else {
