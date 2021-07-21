@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Core\Utility;
 
+use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\Core\Database\Log;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Utility\Error;
 
@@ -10,6 +12,48 @@ use Drupal\Core\Utility\Error;
  * @group Utility
  */
 class ErrorTest extends UnitTestCase {
+
+  /**
+   * Tests that database logging utils work properly with no databases defined.
+   *
+   * @dataProvider providerTestDatabaseLoggingUtilsWhenNoDatabasesConfigured
+   */
+  public function testDatabaseLoggingUtilsWhenNoDatabasesConfigured(\Closure $assert_error): void {
+    try {
+      $db_path = '/tmp/broken.sqlite';
+      static::assertSame(18, \file_put_contents($db_path, 'not a DB, sorry :('));
+      $config = [
+        'database' => $db_path,
+      ];
+
+      new Connection(Connection::open($config), $config);
+      static::fail('The invalid SQLite database must not be connected.');
+    }
+    catch (\Exception $error) {
+      $assert_error($error);
+    }
+  }
+
+  /**
+   * Returns the test cases.
+   *
+   * @return array[]
+   *   The test cases.
+   */
+  public function providerTestDatabaseLoggingUtilsWhenNoDatabasesConfigured(): array {
+    return [
+      [
+        static function () {
+          static::assertIsArray((new Log())->findCaller());
+        },
+      ],
+      [
+        static function (\Exception $error) {
+          static::assertIsArray(Error::decodeException($error));
+        },
+      ],
+    ];
+  }
 
   /**
    * Tests the getLastCaller() method.
