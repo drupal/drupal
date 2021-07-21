@@ -1013,7 +1013,6 @@ class BookManager implements BookManagerInterface {
    *   The book tree to operate on.
    */
   protected function doBookTreeCheckAccess(&$tree) {
-    $new_tree = [];
     foreach ($tree as $key => $v) {
       $item = &$tree[$key]['link'];
       $this->bookLinkTranslate($item);
@@ -1021,16 +1020,19 @@ class BookManager implements BookManagerInterface {
         if ($tree[$key]['below']) {
           $this->doBookTreeCheckAccess($tree[$key]['below']);
         }
-        // The weights are made a uniform 5 digits by adding 50000 as an offset.
-        // After calling $this->bookLinkTranslate(), $item['title'] has the
-        // translated title. Adding the nid to the end of the index insures that
-        // it is unique.
-        $new_tree[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['nid']] = $tree[$key];
       }
     }
     // Sort siblings in the tree based on the weights and localized titles.
-    ksort($new_tree);
-    $tree = $new_tree;
+    uasort($tree, function (array $a, array $b): int {
+      $item_a = &$a['link'];
+      $item_b = &$b['link'];
+      if (($cmp_weight = $item_a['weight'] - $item_b['weight']) !== 0) {
+        // Weights differ
+        return $cmp_weight;
+      }
+
+      return strnatcmp($item_a['title'], $item_b['title']);
+    });
   }
 
   /**
@@ -1048,8 +1050,13 @@ class BookManager implements BookManagerInterface {
       // The node label will be the value for the current language.
       $node = $this->entityRepository->getTranslationFromContext($node);
       $link['title'] = $node->label();
-      $link['options'] = [];
     }
+    else {
+      // Ensure keys are always present
+      $link['title'] = '';
+    }
+    $link['options'] = [];
+
     return $link;
   }
 

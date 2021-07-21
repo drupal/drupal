@@ -356,6 +356,7 @@ class BookTest extends BrowserTestBase {
      *   |- Node 1
      *   |- Node 2
      *    |- Node 5
+     *   |- Node 12
      *  |- Node 3
      *   |- Node 6
      *    |- Node 7
@@ -365,7 +366,19 @@ class BookTest extends BrowserTestBase {
      *        |- Node 11
      *  |- Node 4
      */
-    foreach ([5 => 2, 6 => 3, 7 => 6, 8 => 7, 9 => 8, 10 => 9, 11 => 10] as $child => $parent) {
+    $added_nodes = [
+      5 => 2,
+      6 => 3,
+      7 => 6,
+      8 => 7,
+      9 => 8,
+      10 => 9,
+      11 => 10,
+      // Node 12's title starts with a larger number than nodes 1 and 2 for
+      // checking sort order is natural
+      12 => 0,
+    ];
+    foreach ($added_nodes as $child => $parent) {
       $nodes[$child] = $this->createBookNode($book->id(), $nodes[$parent]->id());
     }
     $this->drupalGet($nodes[0]->toUrl('edit-form'));
@@ -381,12 +394,28 @@ class BookTest extends BrowserTestBase {
     $manager = $this->container->get('book.manager');
     $options = $manager->getTableOfContents($book->id(), 3);
     // Verify that all expected option keys are present.
-    $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[3]->id(), $nodes[6]->id(), $nodes[4]->id()];
+    $expected_nids = [
+      $book->id(),
+      $nodes[0]->id(),
+      $nodes[1]->id(),
+      $nodes[2]->id(),
+      $nodes[12]->id(),
+      $nodes[3]->id(),
+      $nodes[6]->id(),
+      $nodes[4]->id(),
+    ];
     $this->assertEquals($expected_nids, array_keys($options));
     // Exclude Node 3.
     $options = $manager->getTableOfContents($book->id(), 3, [$nodes[3]->id()]);
     // Verify that expected option keys are present after excluding Node 3.
-    $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[4]->id()];
+    $expected_nids = [
+      $book->id(),
+      $nodes[0]->id(),
+      $nodes[1]->id(),
+      $nodes[2]->id(),
+      $nodes[12]->id(),
+      $nodes[4]->id(),
+    ];
     $this->assertEquals($expected_nids, array_keys($options));
   }
 
