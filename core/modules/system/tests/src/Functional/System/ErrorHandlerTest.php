@@ -33,19 +33,19 @@ class ErrorHandlerTest extends BrowserTestBase {
       '%type' => 'Notice',
       '@message' => 'Object of class stdClass could not be converted to int',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
     $error_warning = [
       '%type' => 'Warning',
       '@message' => 'var_export does not handle circular references',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
     $error_user_notice = [
       '%type' => 'User warning',
       '@message' => 'Drupal & awesome',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
 
     // Set error reporting to display verbose notices.
@@ -101,21 +101,21 @@ class ErrorHandlerTest extends BrowserTestBase {
       '@message' => 'Drupal & awesome',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerException()',
       '%line' => 56,
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
     $error_pdo_exception = [
       '%type' => 'DatabaseExceptionWrapper',
       '@message' => 'SELECT "b".* FROM {bananas_are_awesome} "b"',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
     $error_renderer_exception = [
       '%type' => 'Exception',
       '@message' => 'This is an exception that occurs during rendering',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
       '%line' => 82,
-      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+      '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
 
     $this->drupalGet('error-test/trigger-exception');

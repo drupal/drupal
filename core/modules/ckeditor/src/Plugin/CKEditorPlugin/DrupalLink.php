@@ -20,7 +20,7 @@ class DrupalLink extends CKEditorPluginBase {
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor') . '/js/plugins/drupallink/plugin.js';
+    return $this->getModulePath('ckeditor') . '/js/plugins/drupallink/plugin.js';
   }
 
   /**
@@ -46,7 +46,7 @@ class DrupalLink extends CKEditorPluginBase {
    * {@inheritdoc}
    */
   public function getButtons() {
-    $path = drupal_get_path('module', 'ckeditor') . '/js/plugins/drupallink';
+    $path = $this->getModulePath('ckeditor') . '/js/plugins/drupallink';
     return [
       'DrupalLink' => [
         'label' => $this->t('Link'),
