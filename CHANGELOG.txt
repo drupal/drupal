@@ -1,3 +1,8 @@
+Drupal 7.82, 2021-07-21
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2021-004
+
 Drupal 7.81, 2021-06-02
 -----------------------
 - Block Google FLoC by default
