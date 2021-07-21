@@ -91,9 +91,11 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementRemoved($selector, $locator, $timeout = 10000) {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $not_found = (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return !$page->find($selector, $locator);
     });
+    Assert::assertTrue($not_found);
+    return $not_found;
   }
 
   /**
