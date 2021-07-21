@@ -99,6 +99,30 @@ class ElementsLabelsTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that the label's 'for' element references the correct id.
+   */
+  public function testLabelAssociation() {
+    $page = $this->getSession()->getPage();
+    $this->drupalGet('form_test/form-labels');
+
+    $elements = [];
+
+    $elements['id_set_with_property'] = $page->find('css', '.form-item-id-set-with-id-property');
+    $elements['id_set_in_attributes'] = $page->find('css', '.form-item-id-set-within-attributes');
+    foreach ($elements as $key => $wrapper) {
+      $this->assertNotNull($wrapper, "$key wrapper not found");
+      $label = $wrapper->find('css', 'label');
+      $input = $wrapper->find('css', 'input');
+      $this->assertNotNull($label, "$key label not found");
+      $this->assertNotNull($input, "$key input not found");
+      $for = $label->getAttribute('for');
+      $input = $input->getAttribute('id');
+      $this->assertSame($for, $input, "$key label for attribute does not match label id");
+    }
+
+  }
+
+  /**
    * Tests different display options for form element descriptions.
    */
   public function testFormDescriptions() {

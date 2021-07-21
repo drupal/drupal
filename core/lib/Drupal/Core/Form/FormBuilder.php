@@ -977,6 +977,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $element['#array_parents'] = [];
     }
 
+    if (!empty($element['#attributes']['id']) && is_array($element['#attributes']['id'])) {
+      @trigger_error('IDs cannot be provided as an array, only a single string', E_USER_DEPRECATED);
+      $element['#attributes']['id'] = reset($element['#attributes']['id']);
+    }
+
+    // If an ID is set in #attributes, copy to $element['#id'] as there is
+    // rendering logic that only checks there for explicitly set IDs.
+    if (!isset($element['#id']) && !empty($element['#attributes']['id'])) {
+      $element['#id'] = $element['#attributes']['id'];
+    }
+
     if (!isset($element['#id'])) {
       $unprocessed_id = 'edit-' . implode('-', $element['#parents']);
       $element['#id'] = Html::getUniqueId($unprocessed_id);

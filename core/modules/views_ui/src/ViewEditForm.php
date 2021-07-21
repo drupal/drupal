@@ -718,7 +718,7 @@ class ViewEditForm extends ViewFormBase {
     $display_id = $this->displayID;
     $element['#theme_wrappers'][] = 'views_ui_container';
     $element['#attributes']['class'] = ['views-display-top', 'clearfix'];
-    $element['#attributes']['id'] = ['views-display-top'];
+    $element['#attributes']['id'] = 'views-display-top';
 
     // Extra actions for the display
     $element['extra_actions'] = [
