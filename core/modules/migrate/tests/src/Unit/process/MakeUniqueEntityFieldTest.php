@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField
@@ -215,6 +216,42 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     // Entity 'test_vocab' was migrated, value should be unique.
     $actual = $plugin->transform('test_vocab', $this->migrateExecutable, $this->row, 'testproperty');
     $this->assertEquals('test_vocab1', $actual, 'Migrated name is deduplicated');
+  }
+
+  /**
+   * Tests making a value unique only within its bundle.
+   */
+  public function testMakeUniqueEntityFieldEntityBundle() {
+    $configuration = [
+      'entity_type' => 'test_entity_type',
+      'field' => 'test_field',
+      'bundle' => 'test_bundle',
+    ];
+    $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
+
+    $entity_type_interface = $this->createMock(EntityTypeInterface::class);
+    $entity_type_interface
+      ->expects($this->exactly(1))
+      ->method('getKey')
+      ->willReturn('another_bundle');
+    $this->entityTypeManager
+      ->expects($this->exactly(1))
+      ->method('getDefinition')
+      ->willReturn($entity_type_interface);
+
+    $this->entityQuery
+      ->method('condition')
+      ->will($this->returnValue($this->entityQuery));
+    $this->entityQuery
+      ->method('count')
+      ->will($this->returnValue($this->entityQuery));
+    $this->entityQuery
+      ->method('execute')
+      ->will($this->returnValue(0));
+
+    $value = $this->randomMachineName(32);
+    $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
+    $this->assertEquals($value, $actual);
   }
 
 }

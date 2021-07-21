@@ -19,6 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * if the value is foo and there is already an entity where the field value is
  * foo, then the plugin will return foo1.
  *
+ * The optional configuration key bundle will restrict the process to the given
+ * bundle. For example if the name should only be unique for a specific
+ * vocabulary, you need to set the key bundle to the vocabulary machine name.
+ *
  * The optional configuration key postfix which will be added between the number
  * and the original value, for example, foo_1 for postfix: _. Note that the
  * value of postfix is ignored if the value is not changed, if it was already
@@ -29,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * migration.
  *
  * Available configuration keys
+ *   - bundle: Restrict the uniqueness of the value to the given bundle.
  *   - entity_type: The entity type.
  *   - field: The entity field for the given value.
  *   - migrated: (optional) A boolean to indicate that making the field unique
@@ -73,6 +78,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This will create a format machine name out the human readable name and make
  * sure it's unique if the entity was migrated. The postfix character is
  * inserted between the added number and the original value.
+ *
+ * @code
+ * process:
+ *   format:
+ *   -
+ *     plugin: machine_name
+ *     source: name
+ *   -
+ *     plugin: make_unique_entity_field
+ *     entity_type: taxonomy_term
+ *     field: name
+ *     bundle: tags
+ *
+ * @endcode
+ *
+ * This will create a taxonomy term machine name out the human readable name and
+ * make sure it's unique in the tags vocabulary.
  *
  * @see \Drupal\migrate\Plugin\migrate\process\MakeUniqueBase
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
@@ -130,6 +152,10 @@ class MakeUniqueEntityField extends MakeUniqueBase implements ContainerFactoryPl
       ->getQuery()
       ->accessCheck(FALSE)
       ->condition($this->configuration['field'], $value);
+    if (isset($this->configuration['bundle'])) {
+      $entity_type = $this->entityTypeManager->getDefinition($this->configuration['entity_type']);
+      $query->condition($entity_type->getKey('bundle'), $this->configuration['bundle']);
+    }
     if (!empty($this->configuration['migrated'])) {
       // Check if each entity is in the ID map.
       $idMap = $this->migration->getIdMap();
