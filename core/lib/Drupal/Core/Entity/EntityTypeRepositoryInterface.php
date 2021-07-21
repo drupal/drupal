@@ -34,6 +34,8 @@ interface EntityTypeRepositoryInterface {
    *
    * @throws \Drupal\Core\Entity\Exception\AmbiguousEntityClassException
    *   Thrown when multiple subclasses correspond to the called class.
+   * @throws \Drupal\Core\Entity\Exception\AmbiguousBundleClassException
+   *   Thrown when multiple subclasses correspond to the called bundle class.
    * @throws \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException
    *   Thrown when no entity class corresponds to the called class.
    *
