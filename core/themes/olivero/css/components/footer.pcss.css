@@ -32,6 +32,13 @@
   }
 }
 
+/* Avoid a 1px line at the bottom of the page when the toolbar is visible */
+.user-logged-in.toolbar-fixed {
+  & .site-footer {
+    margin-bottom: -1px;
+  }
+}
+
 @media (--nav) {
   body:not(.is-always-mobile-nav) .site-footer {
     border-inline-start: solid var(--content-left) var(--color--black);
