@@ -1213,11 +1213,16 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
     $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
 
+    $storage->create()->save();
+
     // Check that the initial values have been applied.
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+
     $entities = $storage->loadMultiple();
     $this->assertEquals('test value', $entities[1]->get('new_base_field')->value);
     $this->assertEquals('test value', $entities[2]->get('new_base_field')->value);
+
+    $this->assertEquals('test value', $entities[3]->get('new_base_field')->value, 'Initial value is not applied to new entities, created after field creation');
   }
 
   /**
