@@ -284,6 +284,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       // @see \Drupal\KernelTests\KernelTestBase::register()
     ];
     new Settings($settings);
+    $this->addFileScanDirectoryIgnoresSetting();
 
     $this->setUpFilesystem();
 
@@ -291,6 +292,20 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       Database::removeConnection($key);
     }
     Database::addConnectionInfo('default', 'default', $this->getDatabaseConnectionInfo()['default']);
+  }
+
+  /**
+   * Sets up the file_scan_ignore_directories settings.
+   */
+  protected function addFileScanDirectoryIgnoresSetting() {
+    $settings = [];
+    $testing_setting_path = $this->root . '/sites/default/setting.testing.php';
+    if (is_readable($testing_setting_path)) {
+      require $testing_setting_path;
+    }
+    if (array_key_exists('file_scan_ignore_directories', $settings)) {
+      $this->setSetting('file_scan_ignore_directories', $settings['file_scan_ignore_directories']);
+    }
   }
 
   /**
