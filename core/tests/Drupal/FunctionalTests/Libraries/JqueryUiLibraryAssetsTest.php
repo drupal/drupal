@@ -225,7 +225,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * @dataProvider providerTestAssetLoading
    */
   public function testLibraryAssetLoadingOrder($library) {
-    $this->drupalGet("jqueryui_library_assets_test/$library");
+    $this->drupalGet('jqueryui_library_assets_test', ['query' => ['library' => $library]]);
     $this->assertSession()->statusCodeEquals(200);
 
     // A pipe character in $libraries is delimiting multiple library names.
@@ -236,6 +236,10 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     // libraries being tested. This will be used to confirm the configured
     // assets actually load on the test page.
     foreach ($libraries as $library_name) {
+      if (strpos($library_name, '/') !== FALSE) {
+        // Ignore if it's an external library.
+        continue;
+      }
       foreach (['css', 'js'] as $type) {
         $assets = $this->coreLibrariesWithJqueryUiAssets[$library_name][$type];
         foreach ($assets as $asset) {
@@ -306,7 +310,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * @dataProvider providerTestAssetLoading
    */
   public function testAssetLoadingUnchanged($library, array $expected_css, array $expected_js) {
-    $this->drupalGet("jqueryui_library_assets_test/$library");
+    $this->drupalGet('jqueryui_library_assets_test', ['query' => ['library' => $library]]);
     $this->assertSession()->statusCodeEquals(200);
 
     // Find all jQuery UI CSS files loaded to the page.
@@ -354,6 +358,90 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    */
   public function providerTestAssetLoading() {
     return [
+      'drupal.dialog|drupal.autocomplete' => [
+        'library' => 'drupal.dialog|drupal.autocomplete',
+        'expected_css' => [
+          'core/assets/vendor/jquery.ui/themes/base/core.css',
+          'core/assets/vendor/jquery.ui/themes/base/controlgroup.css',
+          'core/assets/vendor/jquery.ui/themes/base/autocomplete.css',
+          'core/assets/vendor/jquery.ui/themes/base/menu.css',
+          'core/assets/vendor/jquery.ui/themes/base/checkboxradio.css',
+          'core/assets/vendor/jquery.ui/themes/base/resizable.css',
+          'core/assets/vendor/jquery.ui/themes/base/button.css',
+          'core/assets/vendor/jquery.ui/themes/base/dialog.css',
+          'core/assets/vendor/jquery.ui/themes/base/theme.css',
+        ],
+        'expected_js' => [
+          'core/assets/vendor/jquery.ui/ui/data-min.js',
+          'core/assets/vendor/jquery.ui/ui/disable-selection-min.js',
+          'core/assets/vendor/jquery.ui/ui/escape-selector-min.js',
+          'core/assets/vendor/jquery.ui/ui/focusable-min.js',
+          'core/assets/vendor/jquery.ui/ui/form-min.js',
+          'core/assets/vendor/jquery.ui/ui/form-reset-mixin-min.js',
+          'core/assets/vendor/jquery.ui/ui/ie-min.js',
+          'core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js',
+          'core/assets/vendor/jquery.ui/ui/keycode-min.js',
+          'core/assets/vendor/jquery.ui/ui/labels-min.js',
+          'core/assets/vendor/jquery.ui/ui/plugin-min.js',
+          'core/assets/vendor/jquery.ui/ui/safe-active-element-min.js',
+          'core/assets/vendor/jquery.ui/ui/safe-blur-min.js',
+          'core/assets/vendor/jquery.ui/ui/scroll-parent-min.js',
+          'core/assets/vendor/jquery.ui/ui/unique-id-min.js',
+          'core/assets/vendor/jquery.ui/ui/version-min.js',
+          'core/assets/vendor/jquery.ui/ui/widget-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/button-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/draggable-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/menu-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/mouse-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/resizable-min.js',
+        ],
+      ],
+      'drupal.dialog|jqueryui_library_assets_test/many-dependencies|drupal.autocomplete' => [
+        'library' => 'drupal.dialog|jqueryui_library_assets_test/many-dependencies|drupal.autocomplete',
+        'expected_css' => [
+          'core/assets/vendor/jquery.ui/themes/base/core.css',
+          'core/assets/vendor/jquery.ui/themes/base/controlgroup.css',
+          'core/assets/vendor/jquery.ui/themes/base/autocomplete.css',
+          'core/assets/vendor/jquery.ui/themes/base/menu.css',
+          'core/assets/vendor/jquery.ui/themes/base/checkboxradio.css',
+          'core/assets/vendor/jquery.ui/themes/base/resizable.css',
+          'core/assets/vendor/jquery.ui/themes/base/button.css',
+          'core/assets/vendor/jquery.ui/themes/base/dialog.css',
+          'core/assets/vendor/jquery.ui/themes/base/theme.css',
+        ],
+        'expected_js' => [
+          'core/assets/vendor/jquery.ui/ui/data-min.js',
+          'core/assets/vendor/jquery.ui/ui/disable-selection-min.js',
+          'core/assets/vendor/jquery.ui/ui/escape-selector-min.js',
+          'core/assets/vendor/jquery.ui/ui/focusable-min.js',
+          'core/assets/vendor/jquery.ui/ui/form-min.js',
+          'core/assets/vendor/jquery.ui/ui/form-reset-mixin-min.js',
+          'core/assets/vendor/jquery.ui/ui/ie-min.js',
+          'core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js',
+          'core/assets/vendor/jquery.ui/ui/keycode-min.js',
+          'core/assets/vendor/jquery.ui/ui/labels-min.js',
+          'core/assets/vendor/jquery.ui/ui/plugin-min.js',
+          'core/assets/vendor/jquery.ui/ui/safe-active-element-min.js',
+          'core/assets/vendor/jquery.ui/ui/safe-blur-min.js',
+          'core/assets/vendor/jquery.ui/ui/scroll-parent-min.js',
+          'core/assets/vendor/jquery.ui/ui/unique-id-min.js',
+          'core/assets/vendor/jquery.ui/ui/version-min.js',
+          'core/assets/vendor/jquery.ui/ui/widget-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/button-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/draggable-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/menu-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/mouse-min.js',
+          'core/assets/vendor/jquery.ui/ui/widgets/resizable-min.js',
+        ],
+      ],
       'drupal.autocomplete' => [
         'library' => 'drupal.autocomplete',
         'expected_css' => [

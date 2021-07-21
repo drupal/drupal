@@ -1,0 +1,7 @@
+many-dependencies:
+  version: VERSION
+  # JS dependencies will be populated in jqueryui_library_assets_test_library_info_build().
+  js: {  }
+  dependencies:
+    - core/jquery
+    - core/drupal

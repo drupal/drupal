@@ -1,7 +1,15 @@
 jqueryui_library_asset_test_page:
-  path: '/jqueryui_library_assets_test/{library}'
+  path: '/jqueryui_library_assets_test'
   defaults:
     _controller: '\Drupal\jqueryui_library_assets_test\Controller\JqueryUiTestAssetsController::build'
     _title: 'Test jQuery UI asset loading order'
+  requirements:
+    _access: 'TRUE'
+
+jqueryui_library_asset_test_external:
+  path: '/jqueryui_library_assets_test_large'
+  defaults:
+    _controller: '\Drupal\jqueryui_library_assets_test\Controller\JqueryUiTestAssetsController::largeJavascriptDependencies'
+    _title: 'Test jQuery UI asset loading order with lots of intermediate assets'
   requirements:
     _access: 'TRUE'
