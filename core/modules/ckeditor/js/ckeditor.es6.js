@@ -382,6 +382,27 @@
       }
     };
   }
+
+  const origBeforeSubmit = Drupal.Ajax.prototype.beforeSubmit;
+  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, ...args) {
+    if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances) {
+      const instances = Object.values(CKEDITOR.instances);
+      instances.forEach((editor) => {
+        formValues.forEach((formField) => {
+          // Get field name from the id in the editor so that it covers all
+          // fields using ckeditor.
+          const element = document.querySelector(`#${editor.name}`);
+          if (element) {
+            const fieldName = element.getAttribute('name');
+            if (formField.name === fieldName && editor.mode === 'source') {
+              formField.value = editor.getData();
+            }
+          }
+        });
+      });
+    }
+    return origBeforeSubmit.apply(this, [formValues, element, ...args]);
+  };
 })(
   Drupal,
   Drupal.debounce,
