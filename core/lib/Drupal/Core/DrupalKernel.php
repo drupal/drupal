@@ -299,17 +299,29 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Determine the application root directory based on this file's location.
+   * Returns the application root directory.
+   *
+   * This relies on the DRUPAL_ROOT constant defined in the scaffolded
+   * locations.inc file, with a fallback to manipulating the directory location
+   * of the current file.
    *
    * @return string
    *   The application root.
+   *
+   * @see \Drupal\Composer\Plugin\Scaffold\GenerateAutoloadReferenceFile
    */
   protected static function guessApplicationRoot() {
-    // Determine the application root by:
-    // - Removing the namespace directories from the path.
-    // - Getting the path to the directory two levels up from the path
-    //   determined in the previous step.
-    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    if (!defined('DRUPAL_ROOT')) {
+      @trigger_error("The DRUPAL_ROOT constant defined in Drupal's autoload.php is the authoritative definition of the application root as of drupal:9.2.0. Relying on the fallback is deprecated and will be removed in drupal:10.0.0.", E_USER_DEPRECATED);
+
+      // Determine the application root by:
+      // - Removing the namespace directories from the path.
+      // - Getting the path to the directory two levels up from the path
+      //   determined in the previous step.
+      define('DRUPAL_ROOT', dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2));
+    }
+
+    return DRUPAL_ROOT;
   }
 
   /**

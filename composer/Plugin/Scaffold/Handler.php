@@ -4,6 +4,7 @@ namespace Drupal\Composer\Plugin\Scaffold;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventDispatcher;
+use Composer\Factory;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
@@ -172,6 +173,29 @@ class Handler {
     $web_root = $this->manageOptions->getOptions()->getLocation('web-root');
     if (!GenerateAutoloadReferenceFile::autoloadFileCommitted($this->io, $this->rootPackageName(), $web_root)) {
       $scaffold_results[] = GenerateAutoloadReferenceFile::generateAutoload($this->io, $this->rootPackageName(), $web_root, $this->getVendorPath());
+    }
+
+    // Generate a file to define location constants in core/includes.
+    // This allows Drupal to find the web root once the Composer autoloader is
+    // loaded.
+    $drupal_package = $this->composer->getRepositoryManager()->getLocalRepository()->findPackage('drupal/core', '*');
+    // In some tests, the drupal/core package is not present, as they use
+    // fixture packages instead.
+    if ($drupal_package) {
+      $drupal_core_install_path = $this->composer->getInstallationManager()->getInstallPath($drupal_package);
+
+      // Get the project root's absolute path from the root composer file path.
+      // This is given as a relative path.
+      $composer_file_path = Factory::getComposerFile();
+      $project_root_path = realpath(dirname($composer_file_path));
+
+      // Append the webroot. This is set in the drupal-scaffold configuration in
+      // the form 'web/', so we remove the trailing slash.
+      $drupal_root = $project_root_path . '/' . rtrim($web_root, '/');
+
+      // The locations.inc file does not need to be added dynamically to a
+      // .gitignore because it is written to a fixed location.
+      GenerateLocationsFile::generateLocations($this->io, $drupal_core_install_path, $drupal_root);
     }
 
     // Add the managed scaffold files to .gitignore if applicable.
