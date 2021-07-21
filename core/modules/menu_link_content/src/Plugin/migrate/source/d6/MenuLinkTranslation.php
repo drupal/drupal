@@ -7,7 +7,13 @@ use Drupal\migrate\Row;
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 
 /**
- * Gets Menu link translations from source database.
+ * Drupal 6 i18n menu link translations source from database.
+ *
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d6_menu_link_translation",
