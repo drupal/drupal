@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
@@ -43,7 +42,8 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
     $output = $exposed_form->renderExposedForm();
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($output));
 
-    $this->assertFieldByXpath('//form/@id', Html::cleanCssIdentifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display), 'Expected form ID found.');
+    $result = $this->xpath('//form[@data-drupal-target-view=:target]', [':target' => $view->dom_id]);
+    $this->assertCount(1, $result, 'Expected form "data-drupal-target-view" attribute found.');
 
     $view->setDisplay('page_1');
     $expected_action = $view->display_handler->getUrlInfo()->toString();

@@ -144,7 +144,21 @@ class ViewsExposedForm extends FormBase {
 
     $form['#action'] = $form_action;
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
-    $form['#id'] = Html::cleanCssIdentifier('views_exposed_form-' . $view->storage->id() . '-' . $display['id']);
+
+    // There is no way to determine the relation between a particular view
+    // and the corresponding exposed form, because the form can be built
+    // outside of the view processing pipeline, e.g. as a exposed form block.
+
+    // If a view has the dom ID already set, rely on it.
+    if (!empty($view->dom_id)) {
+      $form['#attributes']['data-drupal-target-view'] = $view->dom_id;
+    }
+    // Otherwise, rely on the view ID + display ID combination, assuming that
+    // multiple exposed form blocks will be controlling the very same views.
+    else {
+      $form['#attributes']['data-drupal-target-view'] = $view->storage->id() . '-' . $display['id'];
+    }
+    $form['#id'] = Html::getUniqueId(Html::cleanCssIdentifier('views_exposed_form-' . $view->storage->id() . '-' . $display['id']));
 
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface $exposed_form_plugin */
     $exposed_form_plugin = $view->display_handler->getPlugin('exposed_form');

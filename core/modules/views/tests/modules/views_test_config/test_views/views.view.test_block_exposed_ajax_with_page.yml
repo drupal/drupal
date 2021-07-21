@@ -93,3 +93,20 @@ display:
         - url.query_args
         - 'user.node_grants:view'
       tags: {  }
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Page
+    position: 2
+    display_options:
+      display_extenders: {  }
+      path: some-other-path
+      exposed_block: true
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }
