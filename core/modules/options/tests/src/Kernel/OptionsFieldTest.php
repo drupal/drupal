@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\options\Kernel;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\WidgetInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -19,7 +22,10 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
    *
    * @var array
    */
-  protected static $modules = ['options'];
+  protected static $modules = [
+    'options',
+    'options_test',
+  ];
 
   /**
    * Tests that allowed values can be updated.
@@ -91,6 +97,24 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
+
+    // Test hook_options_list_alter context.
+    // It should be populated by the form builder calls above.
+    $context = _options_test_options_list_alter_args()[1];
+    $expected_context = [
+      'fieldDefinition' => FieldDefinitionInterface::class,
+      'entity' => EntityInterface::class,
+      'widget' => WidgetInterface::class,
+    ];
+    foreach ($expected_context as $key => $interface) {
+      if (!isset($context[$key])) {
+        throw new \UnexpectedValueException("Missing context key $key.");
+      }
+      if (!$context[$key] instanceof $interface) {
+        $class = get_class($context[$key]);
+        throw new \UnexpectedValueException("Unexpected context key $key of type $class, expected interface $interface.");
+      }
+    }
 
     // Test the generateSampleValue() method.
     $entity = EntityTest::create();
