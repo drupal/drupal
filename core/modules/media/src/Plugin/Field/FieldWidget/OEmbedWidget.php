@@ -36,7 +36,7 @@ class OEmbedWidget extends StringTextfieldWidget {
     $source = $items->getEntity()->getSource();
     $message = $this->t('You can link to media from the following services: @providers', ['@providers' => implode(', ', $source->getProviders())]);
 
-    if (!empty($element['#value']['#description'])) {
+    if (!empty($element['value']['#description'])) {
       $element['value']['#description'] = [
         '#theme' => 'item_list',
         '#items' => [$element['value']['#description'], $message],
