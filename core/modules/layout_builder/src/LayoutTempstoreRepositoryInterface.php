@@ -23,6 +23,17 @@ interface LayoutTempstoreRepositoryInterface {
   public function get(SectionStorageInterface $section_storage);
 
   /**
+   * Returns the lock object.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
+   *
+   * @return \Drupal\Core\TempStore\Lock|null
+   *   The lock object, or NULL if none exists.
+   */
+  public function getLock(SectionStorageInterface $section_storage);
+
+  /**
    * Stores this section storage in tempstore.
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage

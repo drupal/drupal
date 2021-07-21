@@ -229,6 +229,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $requirements = $collection->get("entity.$entity_type_id.canonical")->getRequirements();
 
       $options = [];
+      $options['no_cache'] = TRUE;
+
       // Ensure that upcasting is run in the correct order.
       $options['parameters']['section_storage'] = [];
       $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;

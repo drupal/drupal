@@ -2,6 +2,11 @@ services:
   layout_builder.tempstore_repository:
     class: Drupal\layout_builder\LayoutTempstoreRepository
     arguments: ['@tempstore.shared']
+  access_check.entity.layout_builder_lock_access:
+    class: Drupal\layout_builder\Access\LayoutBuilderLockAccessCheck
+    arguments: ['@layout_builder.tempstore_repository']
+    tags:
+      - { name: access_check, applies_to: _layout_builder_lock_access }
   access_check.entity.layout_builder_access:
     class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
     tags:
@@ -53,6 +58,6 @@ services:
     arguments: ['@layout_builder.controller.entity_form.inner']
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
-    arguments: ['@layout_builder.tempstore_repository', '@messenger']
+    arguments: ['@layout_builder.tempstore_repository']
     tags:
       - { name: event_subscriber }
