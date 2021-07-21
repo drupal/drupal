@@ -58,14 +58,37 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
     // content. It is up to the #ajax['callback'] function of the element (may
     // or may not be a button) that triggered the Ajax request to determine what
     // needs to be rendered.
-    $callback = NULL;
-    if (($triggering_element = $form_state->getTriggeringElement()) && isset($triggering_element['#ajax']['callback'])) {
-      $callback = $triggering_element['#ajax']['callback'];
+    $triggering_element = $form_state->getTriggeringElement();
+    if (empty($triggering_element)) {
+      throw new HttpException(500, 'No triggering element found for the Ajax request.');
     }
+
+    if (!empty($triggering_element['#array_parents'])) {
+      $array_parents_string = implode(':', $triggering_element['#array_parents']);
+    }
+    else {
+      $array_parents_string = '';
+    }
+
+    // Sanity check the callback.
+    if (empty($triggering_element['#ajax']['callback'])) {
+      throw new HttpException(500, sprintf('The specified #ajax callback is empty for triggering form element "%s" with array parents "%s".',
+        $triggering_element['#name'],
+        $array_parents_string
+      ));
+    }
+
+    $callback = $triggering_element['#ajax']['callback'];
     $callback = $form_state->prepareCallback($callback);
-    if (empty($callback) || !is_callable($callback)) {
-      throw new HttpException(500, 'The specified #ajax callback is empty or not callable.');
+
+    if (!is_callable($callback)) {
+      throw new HttpException(500, sprintf('The specified #ajax callback %s is not callable for triggering form element "%s" with array parents "%s".',
+        print_r($callback, TRUE),
+        $triggering_element['#name'],
+        $array_parents_string
+      ));
     }
+
     $result = call_user_func_array($callback, [&$form, &$form_state, $request]);
 
     // If the callback is an #ajax callback, the result is a render array, and

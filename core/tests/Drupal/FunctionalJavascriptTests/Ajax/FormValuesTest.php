@@ -65,7 +65,12 @@ class FormValuesTest extends WebDriverTestBase {
     // We don't need to check for the X-Drupal-Ajax-Token header with these
     // invalid requests.
     $this->assertAjaxHeader = FALSE;
-    foreach (['null', 'empty', 'nonexistent'] as $key) {
+    $invalid_callbacks = [
+      'null' => NULL,
+      'empty' => '',
+      'nonexistent' => 'some_function_that_does_not_exist',
+    ];
+    foreach ($invalid_callbacks as $key => $value) {
       $element_name = 'select_' . $key . '_callback';
       // Updating the field will trigger an AJAX request/response.
       $session->getPage()->selectFieldOption($element_name, 'green');
@@ -76,7 +81,12 @@ class FormValuesTest extends WebDriverTestBase {
       // The select element is enabled as the response is received.
       $this->assertSession()->waitForElement('css', "select[name=\"$element_name\"]:enabled");
       $this->assertFileExists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
-      $this->assertStringContainsString('"The specified #ajax callback is empty or not callable."', file_get_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'));
+      if ($value) {
+        $this->assertStringContainsString(sprintf('"The specified #ajax callback %s is not callable for triggering form element with array parents "%s"."', $value, $element_name), file_get_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'));
+      }
+      else {
+        $this->assertStringContainsString(sprintf('"The specified #ajax callback is empty for triggering form element with array parents "%s"."', $element_name), file_get_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'));
+      }
       // The exceptions are expected. Do not interpret them as a test failure.
       // Not using File API; a potential error must trigger a PHP warning.
       unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
