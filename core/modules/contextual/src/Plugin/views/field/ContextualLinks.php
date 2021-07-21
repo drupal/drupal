@@ -2,9 +2,7 @@
 
 namespace Drupal\contextual\Plugin\views\field;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
@@ -36,7 +34,6 @@ class ContextualLinks extends FieldPluginBase {
     $options = parent::defineOptions();
 
     $options['fields'] = ['default' => []];
-    $options['destination'] = ['default' => 1];
 
     return $options;
   }
@@ -54,17 +51,21 @@ class ContextualLinks extends FieldPluginBase {
       '#description' => $this->t('Fields to be included as contextual links.'),
       '#options' => $field_options,
       '#default_value' => $this->options['fields'],
+      '#element_validate' => [[static::class, 'validateOptions']],
     ];
-    $form['destination'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Include destination'),
-      '#description' => $this->t('Include a "destination" parameter in the link to return the user to the original view upon completing the contextual action.'),
-      '#options' => [
-        '0' => $this->t('No'),
-        '1' => $this->t('Yes'),
-      ],
-      '#default_value' => $this->options['destination'],
-    ];
+  }
+
+  /**
+   * Form API #element_validate for options.
+   *
+   * @todo Make this reusable (or replace with reusable method).
+   * @see \Drupal\Core\Render\Element\Checkboxes::getCheckedCheckboxes
+   */
+  public static function validateOptions(&$element, FormStateInterface $form_state, &$complete_form) {
+    $value = array_filter($element['#value'], function ($value) {
+      return $value !== 0;
+    });
+    $form_state->setValueForElement($element, $value);
   }
 
   /**
@@ -95,7 +96,7 @@ class ContextualLinks extends FieldPluginBase {
   public function render(ResultRow $values) {
     $links = [];
     foreach ($this->options['fields'] as $field) {
-      $rendered_field = $this->view->style_plugin->getField($values->index, $field);
+      $rendered_field = $this->view->field[$field]->last_render;
       if (empty($rendered_field)) {
         continue;
       }
@@ -112,25 +113,25 @@ class ContextualLinks extends FieldPluginBase {
         $tokens = $this->getRenderTokens([]);
         $path = strip_tags(Html::decodeEntities(strtr($path, $tokens)));
 
-        $links[$field] = [
-          'href' => $path,
+        $link_key = "{$this->view->id()}__{$this->view->current_display}__$field";
+        $links[$link_key] = [
+          'path' => $path,
           'title' => $title,
         ];
         if (!empty($this->options['destination'])) {
-          $links[$field]['query'] = $this->getDestinationArray();
+          $links[$link_key]['options']['query'] = $this->getDestinationArray();
         }
       }
     }
 
     // Renders a contextual links placeholder.
+    // Links must be a nested array of strings, so that _contextual_links_to_id
+    // can serialize them.
+    // @see \Drupal\contextual\Element\ContextualLinks::preRenderLinks
     if (!empty($links)) {
       $contextual_links = [
         'contextual' => [
-          '',
-          [],
-          [
-            'contextual-views-field-links' => UrlHelper::encodePath(Json::encode($links)),
-          ],
+          'route_parameters' => $links,
         ],
       ];
 
