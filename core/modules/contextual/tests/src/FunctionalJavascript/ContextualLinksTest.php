@@ -39,13 +39,11 @@ class ContextualLinksTest extends WebDriverTestBase {
    */
   public function testContextualLinksVisibility() {
     $this->drupalGet('user');
-    $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
-    $this->assertEmpty($contextualLinks);
+    $this->assertSession()->assertNoElementAfterWait('css', '.contextual button');
 
     // Ensure visibility remains correct after cached paged load.
     $this->drupalGet('user');
-    $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
-    $this->assertEmpty($contextualLinks);
+    $this->assertSession()->assertNoElementAfterWait('css', '.contextual button');
 
     // Grant permissions to use contextual links on blocks.
     $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), [
