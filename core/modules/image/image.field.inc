@@ -53,7 +53,7 @@ function template_preprocess_image_formatter(&$variables) {
       '#theme' => 'image',
     ];
   }
-  $variables['image']['#attributes'] = $variables['item_attributes'];
+  $variables['image']['#attributes'] = (array) $variables['item_attributes'];
 
   $item = $variables['item'];
 
