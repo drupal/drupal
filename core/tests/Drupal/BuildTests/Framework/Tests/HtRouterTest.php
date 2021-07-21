@@ -21,7 +21,7 @@ class HtRouterTest extends QuickStartTestBase {
     }
 
     $this->copyCodebase();
-    $this->executeCommand('COMPOSER_DISCARD_CHANGES=true composer install --no-dev --no-interaction');
+    $this->executeCommand('COMPOSER_DISCARD_CHANGES=true vendor/bin/composer install --no-dev --no-interaction');
     $this->assertErrorOutputContains('Generating autoload files');
     $this->installQuickStart('minimal');
     $this->formLogin($this->adminUsername, $this->adminPassword);

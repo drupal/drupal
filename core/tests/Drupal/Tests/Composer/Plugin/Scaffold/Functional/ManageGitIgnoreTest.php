@@ -212,7 +212,7 @@ EOT;
     $this->assertEquals(127, $status);
     // Run the scaffold command.
     $output = [];
-    exec('composer drupal:scaffold', $output, $status);
+    exec('vendor/bin/composer drupal:scaffold', $output, $status);
 
     putenv('PATH=' . $oldPath . ':' . getenv('PATH'));
 

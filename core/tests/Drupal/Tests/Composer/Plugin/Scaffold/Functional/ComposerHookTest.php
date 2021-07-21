@@ -110,7 +110,7 @@ class ComposerHookTest extends TestCase {
     $sut = $this->fixturesDir . '/create-project-test';
     $filesystem = new Filesystem();
     $filesystem->remove($sut);
-    $stdout = $this->mustExec("composer create-project --repository=packages.json fixtures/drupal-drupal {$sut}", $this->fixturesDir, ['COMPOSER_MIRROR_PATH_REPOS' => 1]);
+    $stdout = $this->mustExec("vendor/bin/composer create-project --repository=packages.json fixtures/drupal-drupal {$sut}", $this->fixturesDir, ['COMPOSER_MIRROR_PATH_REPOS' => 1]);
     $this->assertDirectoryExists($sut);
     $this->assertStringContainsString('Scaffolding files for fixtures/drupal-drupal', $stdout);
     $this->assertScaffoldedFile($sut . '/index.php', FALSE, 'Test version of index.php from drupal/core');
