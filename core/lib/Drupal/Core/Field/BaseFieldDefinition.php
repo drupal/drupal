@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
@@ -662,7 +663,16 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function getSchema() {
     if (!isset($this->schema)) {
       // Get the schema from the field item class.
-      $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getType());
+      try {
+        $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getType());
+      }
+      catch (PluginNotFoundException $e) {
+        throw new FieldException(sprintf("Field type %s for field %s on entity type %s does not exist.",
+          $this->getType(),
+          $this->getName(),
+          $this->getTargetEntityTypeId()
+        ));
+      }
       $class = $definition['class'];
       $schema = $class::schema($this);
       // Fill in default values.
