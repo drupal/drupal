@@ -19,7 +19,9 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
 use Drupal\Core\Plugin\Context\ContextHandler;
+use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
@@ -122,6 +124,31 @@ class ContextHandlerTest extends UnitTestCase {
     $data[] = [[$context_specific], [$requirement_specific], TRUE];
 
     return $data;
+  }
+
+  /**
+   * @covers ::checkRequirements
+   */
+  public function testCheckRequirementsEarlyReturn() {
+    // Set up three contexts.
+    $context1 = $this->prophesize(ContextInterface::class);
+    $context2 = $this->prophesize(ContextInterface::class);
+    $context3 = $this->prophesize(ContextInterface::class);
+    $contexts[] = $context1->reveal();
+    $contexts[] = $context2->reveal();
+    $contexts[] = $context3->reveal();
+
+    $requirement = $this->prophesize(ContextDefinitionInterface::class);
+    $requirement->isRequired()->willReturn(TRUE);
+
+    // Set the second context to satisfy the requirement. The third context
+    // should not be checked.
+    $requirement->isSatisfiedBy($context1)->willReturn(FALSE);
+    $requirement->isSatisfiedBy($context2)->willReturn(TRUE);
+    $requirement->isSatisfiedBy($context3)->shouldNotBeCalled();
+
+    $requirements[] = $requirement->reveal();
+    $this->contextHandler->checkRequirements($contexts, $requirements);
   }
 
   /**
