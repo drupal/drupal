@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -26,13 +27,23 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
   protected $entityTypeManager;
 
   /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * MediaLibraryFieldWidgetOpener constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -71,10 +82,12 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
 
     if (!empty($parameters['revision_id'])) {
       $entity = $storage->loadRevision($parameters['revision_id']);
+      $entity = $this->entityRepository->getTranslationFromContext($entity);
       $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
     }
     elseif ($parameters['entity_id']) {
       $entity = $storage->load($parameters['entity_id']);
+      $entity = $this->entityRepository->getTranslationFromContext($entity);
       $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
     }
     else {
