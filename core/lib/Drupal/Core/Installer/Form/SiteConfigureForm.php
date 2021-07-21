@@ -8,8 +8,8 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\user\UserStorageInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -62,6 +62,13 @@ class SiteConfigureForm extends ConfigFormBase {
   protected $root;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
    * Constructs a new SiteConfigureForm.
    *
    * Note, for BC reasons, we cannot typehint the last 2 parameters since this
@@ -75,8 +82,8 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The app root.
    * @param string $site_path
    *   The site path.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
    *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
@@ -86,10 +93,15 @@ class SiteConfigureForm extends ConfigFormBase {
    *   Thrown when either the $module_installer or $country_manager parameters
    *   are not of the correct type.
    */
-  public function __construct($root, $site_path, UserStorageInterface $user_storage, $module_installer, $country_manager) {
+  public function __construct($root, $site_path, $entity_type_manager, $module_installer, $country_manager) {
     $this->root = $root;
     $this->sitePath = $site_path;
-    $this->userStorage = $user_storage;
+    if ($entity_type_manager instanceof UserStorageInterface) {
+      // @todo Add CR link.
+      @trigger_error('Passing the user storage to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be removed before drupal:10.0.0. Only pass the entity type manager instead.', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::entityTypeManager();
+      $this->userStorage = $entity_type_manager->getStorage('user');
+    }
     if (!$module_installer instanceof ModuleInstallerInterface) {
       @trigger_error('Passing the state service to ' . __METHOD__ . '() is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Only pass five parameters instead. See https://www.drupal.org/node/3158440', E_USER_DEPRECATED);
       $module_installer = $country_manager;
@@ -103,6 +115,7 @@ class SiteConfigureForm extends ConfigFormBase {
     }
     $this->moduleInstaller = $module_installer;
     $this->countryManager = $country_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -112,7 +125,7 @@ class SiteConfigureForm extends ConfigFormBase {
     return new static(
       $container->getParameter('app.root'),
       $container->getParameter('site.path'),
-      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('entity_type.manager'),
       $container->get('module_installer'),
       $container->get('country_manager')
     );
@@ -323,7 +336,7 @@ class SiteConfigureForm extends ConfigFormBase {
     }
 
     // We precreated user 1 with placeholder values. Let's save the real values.
-    $account = $this->userStorage->load(1);
+    $account = $this->entityTypeManager->getStorage('user')->load(1);
     $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();
     $account->activate();
