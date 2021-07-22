@@ -185,6 +185,21 @@ abstract class BrowserTestBase extends TestCase {
   protected $runTestInSeparateProcess = TRUE;
 
   /**
+   * Whether to preserve the site DB tables and directory when the test is done.
+   *
+   * If a site is preserved, it may be accessed with a browser after the test
+   * for debugging and development. To access the site, set up sites.php
+   * to return the test site folder.
+   *
+   * When this is set to TRUE, the password of the admin user in the test site
+   * is set to 'admin' to allow logging in.
+   *
+   * @see sites/example.sites.php
+   * @see \Drupal\Core\DrupalKernel::findSitePath()
+   */
+  protected $preserveSiteInTearDown = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected $preserveGlobalState = FALSE;
@@ -451,7 +466,9 @@ abstract class BrowserTestBase extends TestCase {
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
-      $this->cleanupEnvironment();
+      if (!$this->preserveSiteInTearDown) {
+        $this->cleanupEnvironment();
+      }
       $this->kernel->shutdown();
     }
 
