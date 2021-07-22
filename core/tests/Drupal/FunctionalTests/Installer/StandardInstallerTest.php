@@ -20,11 +20,11 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
   public function testInstaller() {
     // Verify that Olivero's default frontpage appears.
     $this->assertRaw('Congratulations and welcome to the Drupal community!');
-    // Ensure that the contact link enabled in standard_install() works as
-    // expected.
-    $this->clickLink('Contact');
+    // Ensure that the contact form works.
+    $this->drupalGet('/contact');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('contact');
+    $this->assertSession()->pageTextContains('Website feedback');
   }
 
   /**
