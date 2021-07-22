@@ -111,11 +111,13 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @param string $field_name
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
+   * @param string $submit_button_label
+   *   (optional) The label for the submit button. Defaults to "Save".
    *
    * @return \Drupal\comment\CommentInterface|null
    *   The posted comment or NULL when posted comment was not found.
    */
-  public function postComment($entity, $comment, $subject = '', $contact = NULL, $field_name = 'comment') {
+  public function postComment($entity, $comment, $subject = '', $contact = NULL, $field_name = 'comment', $submit_button_label = 'Save') {
     $edit = [];
     $edit['comment_body[0][value]'] = $comment;
 
@@ -148,20 +150,20 @@ abstract class CommentTestBase extends BrowserTestBase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertSession()->buttonNotExists(t('Save'));
+        $this->assertSession()->buttonNotExists($submit_button_label);
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
         $this->assertSession()->buttonExists(t('Preview'));
-        $this->assertSession()->buttonExists(t('Save'));
-        $this->submitForm($edit, 'Save');
+        $this->assertSession()->buttonExists($submit_button_label);
+        $this->submitForm($edit, $submit_button_label);
         break;
 
       case DRUPAL_DISABLED:
         $this->assertSession()->buttonNotExists(t('Preview'));
-        $this->assertSession()->buttonExists(t('Save'));
-        $this->submitForm($edit, 'Save');
+        $this->assertSession()->buttonExists($submit_button_label);
+        $this->submitForm($edit, $submit_button_label);
         break;
     }
     $match = [];

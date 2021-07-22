@@ -6,11 +6,11 @@ dependencies:
   module:
     - system
   theme:
-    - bartik
-id: bartik_account_menu
-theme: bartik
+    - olivero
+id: olivero_account_menu
+theme: olivero
 region: secondary_menu
-weight: 0
+weight: -4
 provider: null
 plugin: 'system_menu_block:account'
 settings:
