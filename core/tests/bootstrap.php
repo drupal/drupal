@@ -52,8 +52,8 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
     $root . '/core/modules',
     $root . '/core/profiles',
     $root . '/core/themes',
-    $root . '/modules',
     $root . '/profiles',
+    $root . '/modules',
     $root . '/themes',
   ];
   $sites_path = $root . '/sites';
