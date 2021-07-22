@@ -250,21 +250,32 @@ class FilterHtml extends FilterBase {
     // Parse the allowed HTML setting, and gradually make the list of allowed
     // tags more specific.
     $restrictions = ['allowed' => []];
+    $html = $this->settings['allowed_html'];
 
-    // Close all tags, so they will be parsed into direct children of the body
-    // tag in the DomDocument.
-    $html = preg_replace('/<(\w+)[^>]*>/', '\0 </\1>', $this->settings['allowed_html']);
     // Protect any trailing * characters in attribute names, since DomDocument
     // strips them as invalid.
     $star_protector = '__zqh6vxfbk3cg__';
     $html = str_replace('*', $star_protector, $html);
-    $body_child_nodes = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
 
-    foreach ($body_child_nodes as $node) {
-      if ($node->nodeType !== XML_ELEMENT_NODE) {
-        // Skip the empty text nodes inside tags.
-        continue;
+    // The allowed HTML setting is a list of unclosed tags. The HTML5 parser
+    // nests tags according to spec, so flatten the DOM tree back into a single
+    // array of nodes.
+    $child_nodes[] = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
+    $nodes = [];
+    while ($child_nodes) {
+      foreach (array_shift($child_nodes) as $node) {
+        if ($node->nodeType !== XML_ELEMENT_NODE) {
+          // Skip any empty text nodes between or inside tags.
+          continue;
+        }
+        $nodes[] = $node;
+        if ($node->hasChildNodes()) {
+          $child_nodes[] = $node->childNodes;
+        }
       }
+    }
+
+    foreach ($nodes as $node) {
       $tag = $node->tagName;
       if ($node->hasAttributes()) {
         // Mark the tag as allowed, assigning TRUE for each attribute name if
