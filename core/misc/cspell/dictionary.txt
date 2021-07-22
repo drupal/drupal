@@ -1026,6 +1026,7 @@ noindex
 nojs
 nolink
 nomask
+nomodule
 nonamespace
 nonconfigurable
 nonexistingfilename
@@ -1231,6 +1232,7 @@ quickediting
 quickeditor
 quicklinks
 quickstart
+quicktime
 quinlan
 quux
 quxqux
