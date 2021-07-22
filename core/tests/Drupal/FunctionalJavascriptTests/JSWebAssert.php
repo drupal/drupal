@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Element\Element;
+use Behat\Mink\Element\ElementInterface;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
@@ -69,6 +70,16 @@ JS;
     return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function elementExists($selector, $locator, ElementInterface $container = NULL, int $timeout = 10000) {
+    if ($timeout) {
+      $this->waitForElement($selector, $locator, $timeout);
+    }
+    return parent::elementExists($selector, $locator, $container);
   }
 
   /**
