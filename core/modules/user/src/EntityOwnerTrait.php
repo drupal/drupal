@@ -46,7 +46,8 @@ trait EntityOwnerTrait {
    * {@inheritdoc}
    */
   public function getOwnerId() {
-    return $this->getEntityKey('owner');
+    $ownerId = $this->getEntityKey('owner');
+    return !is_null($ownerId) ? (int) $ownerId : NULL;
   }
 
   /**

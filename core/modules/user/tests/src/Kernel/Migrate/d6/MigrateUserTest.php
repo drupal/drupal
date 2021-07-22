@@ -97,7 +97,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
 
       /** @var \Drupal\user\UserInterface $user */
       $user = User::load($source->uid);
-      $this->assertSame($source->uid, $user->id());
+      $this->assertSame((int) $source->uid, $user->id());
       $this->assertSame($source->name, $user->label());
       $this->assertSame($source->mail, $user->getEmail());
       $this->assertSame($source->created, $user->getCreatedTime());

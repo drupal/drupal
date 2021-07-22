@@ -97,7 +97,7 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionUserId().
    */
   public function getRevisionUserId() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->target_id;
+    return (int) $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->target_id;
   }
 
   /**
