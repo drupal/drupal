@@ -6,13 +6,15 @@
  or your current system user. See core/tests/README.md and
  https://www.drupal.org/node/2116263 for details.
 -->
-<phpunit bootstrap="tests/bootstrap.php" colors="true"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/bootstrap.php" colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          failOnWarning="true"
          printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
-         cacheResult="false">
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
@@ -59,25 +61,22 @@
     <listener class="\Drupal\Tests\Listeners\DrupalListener">
     </listener>
   </listeners>
-  <!-- Filter for coverage reports. -->
-  <filter>
-    <whitelist>
+  <!-- Settings for coverage reports. -->
+  <coverage>
+    <include>
       <directory>./includes</directory>
       <directory>./lib</directory>
-      <!-- Extensions can have their own test directories, so exclude those. -->
       <directory>./modules</directory>
-      <exclude>
-        <directory>./modules/*/src/Tests</directory>
-        <directory>./modules/*/tests</directory>
-      </exclude>
       <directory>../modules</directory>
-      <exclude>
-        <directory>../modules/*/src/Tests</directory>
-        <directory>../modules/*/tests</directory>
-        <directory>../modules/*/*/src/Tests</directory>
-        <directory>../modules/*/*/tests</directory>
-      </exclude>
       <directory>../sites</directory>
-     </whitelist>
-  </filter>
+    </include>
+    <exclude>
+      <directory>./modules/*/src/Tests</directory>
+      <directory>./modules/*/tests</directory>
+      <directory>../modules/*/src/Tests</directory>
+      <directory>../modules/*/tests</directory>
+      <directory>../modules/*/*/src/Tests</directory>
+      <directory>../modules/*/*/tests</directory>
+    </exclude>
+  </coverage>
 </phpunit>
