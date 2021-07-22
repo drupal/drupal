@@ -2,7 +2,6 @@
 
 namespace Drupal\content_translation;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -284,20 +283,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * {@inheritdoc}
    */
   public function getTranslationAccess(EntityInterface $entity, $op) {
-    // @todo Move this logic into a translation access control handler checking also
-    //   the translation language and the given account.
-    $entity_type = $entity->getEntityType();
-    $translate_permission = TRUE;
-    // If no permission granularity is defined this entity type does not need an
-    // explicit translate permission.
-    if (!$this->currentUser->hasPermission('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
-      $translate_permission = $this->currentUser->hasPermission($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
-    }
-    $access = AccessResult::allowedIf(($translate_permission && $this->currentUser->hasPermission("$op content translations")))->cachePerPermissions();
-    if (!$access->isAllowed()) {
-      return AccessResult::allowedIfHasPermission($this->currentUser, 'translate editable entities')->andIf($entity->access('update', $this->currentUser, TRUE));
-    }
-    return $access;
+    return $entity->access("$op translation", $this->currentUser, TRUE);
   }
 
   /**

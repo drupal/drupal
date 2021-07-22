@@ -17,6 +17,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\language\ContentLanguageSettingsInterface;
 
@@ -372,12 +373,75 @@ function content_translation_menu_links_discovered_alter(array &$links) {
  *   The access result.
  */
 function content_translation_translate_access(EntityInterface $entity) {
+  $entity_can_be_viewed = $entity instanceof ContentEntityInterface && $entity->access('view');
+  $entity_is_translatable = !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable();
+
+  // @todo Remove when this module's access layer receives a proper overhaul
+  //    that introduces better permission names and alterable return values. For
+  //    now, this function is mainly called to determine overview access for
+  //    accounts that do NOT have the 'translate any', entity type or bundle
+  //    permission, which would otherwise grant them overview access even if
+  //    they could not do anything on said overview.
+  //    See: \Drupal\content_translation\AccessContentTranslationOverviewAccess.
+  //    Furthermore, this function checks for a number of permissions in
+  //    combination with entity access, which makes it hard to alter the return
+  //    value, whereas full use of the entity access layer (operation checks)
+  //    would make it a walk in the park.
+  //    The old way is represented by $has_any_permissions and the new way by
+  //    $has_access. The goal is to shift to a more alterable access layer
+  //    entirely, it being the entity access layer at the time of writing.
   $account = \Drupal::currentUser();
-  $condition = $entity instanceof ContentEntityInterface && $entity->access('view') &&
-    !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
-    ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations') ||
-    ($account->hasPermission('translate editable entities') && $entity->access('update')));
+  $has_any_permission = $account->hasPermission('create content translations')
+    || $account->hasPermission('update content translations')
+    || $account->hasPermission('delete content translations')
+    || ($account->hasPermission('translate editable entities') && $entity->access('update'));
+
+  $has_access = $entity->access('create translation') || $entity->access('update translation') || $entity->access('delete translation');
+
+  $condition = $entity_can_be_viewed && $entity_is_translatable && ($has_any_permission || $has_access);
   return AccessResult::allowedIf($condition)->cachePerPermissions()->addCacheableDependency($entity);
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function content_translation_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $operation_to_permission_map = [
+    'create translation' => 'create content translations',
+    'update translation' => 'update content translations',
+    'delete translation' => 'delete content translations',
+  ];
+
+  if (!in_array($operation, array_keys($operation_to_permission_map), TRUE)) {
+    return AccessResult::neutral();
+  }
+
+  $entity_type = $entity->getEntityType();
+  $entity_type_id = $entity->getEntityTypeId();
+
+  $has_entity_type_access = $account->hasPermission('translate any entity');
+  if (!$has_entity_type_access) {
+    $entity_type_access_permission = $entity_type->getPermissionGranularity() === 'bundle'
+      ? "translate {$entity->bundle()} $entity_type_id"
+      : "translate $entity_type_id";
+    $has_entity_type_access = $account->hasPermission($entity_type_access_permission);
+  }
+
+  $access = AccessResult::allowedIf($has_entity_type_access && $account->hasPermission($operation_to_permission_map[$operation]))->cachePerPermissions();
+  if (!$access->isAllowed()) {
+    $update_access = $entity->access('update', $account, TRUE);
+
+    // Check for allowed update access. If not, we risk returning Forbidden
+    // rather than Neutral simply because our fallback checking for update
+    // access resulted in a Forbidden (to update) result.
+    if ($update_access->isAllowed()) {
+      $access = AccessResult::allowedIfHasPermission($account, 'translate editable entities');
+    }
+
+    $access->addCacheableDependency($update_access);
+  }
+
+  return $access;
 }
 
 /**

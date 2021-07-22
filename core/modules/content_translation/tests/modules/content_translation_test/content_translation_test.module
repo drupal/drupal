@@ -31,11 +31,14 @@ function content_translation_test_entity_bundle_info_alter(&$bundles) {
  */
 function content_translation_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
   $access = \Drupal::state()->get('content_translation.entity_access.' . $entity->getEntityTypeId());
-  if (!empty($access[$operation])) {
+  if (!isset($access[$operation])) {
+    return AccessResult::neutral();
+  }
+  elseif (!empty($access[$operation])) {
     return AccessResult::allowed();
   }
   else {
-    return AccessResult::neutral();
+    return AccessResult::forbidden();
   }
 }
 

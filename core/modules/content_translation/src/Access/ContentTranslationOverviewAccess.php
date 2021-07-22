@@ -47,29 +47,27 @@ class ContentTranslationOverviewAccess implements AccessInterface {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
     if ($entity && $entity->isTranslatable()) {
-      // Get entity base info.
-      $bundle = $entity->bundle();
+      // @todo Remove when this module's access layer receives a proper overhaul
+      //    that introduces better permission names and alterable return values.
+      //    For now the idea is that you only need to have the 'translate any',
+      //    entity type or bundle permission to access the overview, even if you
+      //    can't do anything there. A better solution would be to introduce an
+      //    'access translation overview' permission.
+      if ($account->hasPermission('translate any entity')) {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+      $entity_type_access_permission = $entity->getEntityType()->getPermissionGranularity() == 'bundle'
+        ? "translate {$entity->bundle()} $entity_type_id"
+        : "translate $entity_type_id";
+      if ($account->hasPermission($entity_type_access_permission)) {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
 
       // Get entity access callback.
       $definition = $this->entityTypeManager->getDefinition($entity_type_id);
       $translation = $definition->get('translation');
       $access_callback = $translation['content_translation']['access_callback'];
-      $access = call_user_func($access_callback, $entity);
-      if ($access->isAllowed()) {
-        return $access;
-      }
-
-      // Check "translate any entity" permission.
-      if ($account->hasPermission('translate any entity')) {
-        return AccessResult::allowed()->cachePerPermissions()->inheritCacheability($access);
-      }
-
-      // Check per entity permission.
-      $permission = "translate {$entity_type_id}";
-      if ($definition->getPermissionGranularity() == 'bundle') {
-        $permission = "translate {$bundle} {$entity_type_id}";
-      }
-      return AccessResult::allowedIfHasPermission($account, $permission)->inheritCacheability($access);
+      return call_user_func($access_callback, $entity);
     }
 
     // No opinion.
