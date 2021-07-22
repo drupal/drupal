@@ -10,6 +10,7 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -805,7 +806,16 @@ class ConfigImporter {
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op([$name], FALSE);
+      try {
+        $this->moduleInstaller->$op([$name], FALSE);
+      }
+      catch (UnknownExtensionException $e) {
+        throw new ConfigImporterException(sprintf(
+          "Failed to %s %s %s, with message '%s'.",
+          $op, $type, $name, $e->getMessage()
+        ), 0, $e);
+      }
+
       // Installing a module can cause a kernel boot therefore reinject all the
       // services.
       $this->reInjectMe();
