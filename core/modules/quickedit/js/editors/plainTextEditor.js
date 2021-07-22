@@ -17,6 +17,12 @@
 
       var $fieldItems = this.$el.find('.quickedit-field');
       var $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
+      if ($textElement.find('.field__label').length > 0) {
+        $textElement = $textElement.find('.field__item').first();
+      }
+      else if ($textElement.find('.field--label').length > 0) {
+        $textElement = $textElement.find('.field--item').first();
+      }
       this.$textElement = $textElement;
       editorModel.set('originalValue', $.trim(this.$textElement.text()));
 

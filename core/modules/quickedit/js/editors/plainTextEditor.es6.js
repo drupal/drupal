@@ -28,7 +28,13 @@
         // Store the original value of this field. Necessary for reverting
         // changes.
         const $fieldItems = this.$el.find('.quickedit-field');
-        const $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
+        let $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
+        if ($textElement.find('.field__label').length) {
+          $textElement = $textElement.find('.field__item').first();
+        }
+        if ($textElement.find('.field--label').length) {
+          $textElement = $textElement.find('.field--item').first();
+        }
         this.$textElement = $textElement;
         editorModel.set('originalValue', $.trim(this.$textElement.text()));
 
