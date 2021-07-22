@@ -239,7 +239,6 @@ display:
           settings:
             image_style: thumbnail
             image_link: ''
-          group_column: ''
           group_columns: {  }
           group_rows: true
           delta_limit: 0

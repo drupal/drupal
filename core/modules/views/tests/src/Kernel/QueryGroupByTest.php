@@ -3,10 +3,14 @@
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
@@ -21,7 +25,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality', 'test_group_by_field_not_within_bundle'];
+  public static $testViews = ['test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality', 'test_group_by_field_not_within_bundle', 'entity_test_fields'];
 
   /**
    * Modules to enable.
@@ -34,6 +38,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     'field',
     'user',
     'language',
+    'file',
+    'image',
   ];
 
   /**
@@ -335,6 +341,86 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     // The second result is coming from entity_test_mul, so its field value
     // could be rendered.
     $this->assertEquals('1', $view->getStyle()->getField(1, 'field_test'));
+  }
+
+  /**
+   * Tests aggregation on fields with multiple columns.
+   */
+  public function testGroupByFieldWithMultipleColumns() {
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('file');
+    $this->installSchema('file', 'file_usage');
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    $style = ImageStyle::create(['name' => 'foo']);
+    $style->save();
+
+    // Create a new image field 'bar' to be used in 'entity_test_fields' view.
+    FieldStorageConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'image_field',
+      'type' => 'image',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'field_name' => 'image_field',
+      'settings' => [
+        'file_extensions' => 'jpg',
+      ],
+    ])->save();
+
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $view = View::load('entity_test_fields');
+    $display =& $view->getDisplay('default');
+
+    // Set the image field as the only field so it should be used for grouping
+    // when aggregation is enabled.
+    $display['display_options']['fields'] = [
+      'image_field' => [
+        'id' => 'image_field',
+        'field' => 'image_field',
+        'plugin_id' => 'field',
+        'table' => 'entity_test__image_field',
+        'entity_type' => 'entity_test',
+        'entity_field' => 'image_field',
+        'type' => 'image',
+        'settings' => ['image_style' => 'foo', 'image_link' => ''],
+      ],
+    ];
+    $display['display_options']['arguments'] = [];
+    $display['display_options']['sorts'] = [];
+    $display['display_options']['group_by'] = TRUE;
+    $view->save();
+
+    $file = File::create([
+      'filename' => 'druplicon.jpg',
+      'uri' => "public://druplicon.jpg",
+      'filemime' => 'image/jpeg',
+      'status' => FILE_STATUS_PERMANENT,
+    ]);
+    $file_two = File::create([
+      'filename' => 'druplicon-two.jpg',
+      'uri' => "public://druplicon-two.jpg",
+      'filemime' => 'image/jpeg',
+      'status' => FILE_STATUS_PERMANENT,
+    ]);
+
+    $entity_one = EntityTest::create();
+    $entity_one->set('image_field', $file);
+    $entity_one->save();
+
+    $entity_two = EntityTest::create();
+    $entity_two->set('image_field', $file);
+    $entity_two->save();
+
+    $entity_three = EntityTest::create();
+    $entity_three->set('image_field', $file_two);
+    $entity_three->save();
+
+    $view_executable = $view->getExecutable();
+    $this->executeView($view_executable);
+    // By default the rows should now be grouped by target_id.
+    $this->assertCount(2, $view_executable->result);
   }
 
 }

@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
+use Drupal\views\Entity\View;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -474,6 +475,55 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
 
       default:
         return $single_operator;
+    }
+  }
+
+  /**
+   * Fixes empty group columns.
+   *
+   * Some fields could be saved without a group column, this assures that every
+   * field has a default group column.
+   *
+   * @param \Drupal\views\Entity\View $view
+   *   The view to fix against with.
+   */
+  public function fixEmptyGroupColumn(View $view) {
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $displays = $view->get('display');
+    foreach ($displays as $display_name => &$display) {
+      if (isset($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => &$field) {
+          // Only update fields that have group_column set to an empty value.
+          if (!empty($field['plugin_id']) && $field['plugin_id'] === 'field' && isset($field['group_column']) && empty($field['group_column'])) {
+            @trigger_error($field_name . " has its 'group_column' set to an empty value. This is deprecated in Drupal 9.0.x, will be disallowed before Drupal 10.0.0.", E_USER_DEPRECATED);
+            // Attempt to load the field storage definition of the field.
+            $executable = $view->getExecutable();
+            $executable->setDisplay($display_name);
+            /** @var \Drupal\views\Plugin\views\field\FieldHandlerInterface $field_handler */
+            $field_handler = $executable->getDisplay()->getHandler('field', $field['id']);
+            if ($entity_type_id = $field_handler->getEntityType()) {
+              $field_storage_definitions = $entity_field_manager->getFieldStorageDefinitions($entity_type_id);
+
+              $field_storage = NULL;
+              if (isset($field['field']) && isset($field_storage_definitions[$field['field']])) {
+                $field_storage = $field_storage_definitions[$field['field']];
+              }
+              if ($field_storage !== NULL) {
+                // Use the field's main property as default column. If the field
+                // item does not define a main property, use the first column as
+                // default column.
+                $default_column = $field_storage->getMainPropertyName();
+                if (empty($default_column)) {
+                  $column_names = array_keys($field_storage->getColumns());
+                  $default_column = $column_names[0];
+                }
+                $field['group_column'] = $default_column;
+              }
+            }
+          }
+        }
+      }
     }
   }
 

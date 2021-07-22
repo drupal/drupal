@@ -10,6 +10,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewEntityInterface;
+use Drupal\views\ViewsConfigUpdater;
 
 /**
  * Defines a View configuration entity class.
@@ -293,6 +294,9 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $displays = $this->get('display');
 
+    /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
+    $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+    $config_updater->fixEmptyGroupColumn($this);
     // Sort the displays.
     ksort($displays);
     $this->set('display', ['default' => $displays['default']] + $displays);
