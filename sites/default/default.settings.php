@@ -200,12 +200,17 @@
  * Advanced users can add or override initial commands to execute when
  * connecting to the database server, as well as PDO connection settings. For
  * example, to enable MySQL SELECT queries to exceed the max_join_size system
- * variable, and to reduce the database connection timeout to 5 seconds:
+ * variable, and to reduce the database connection timeout to 5 seconds.
+ *
+ * NOTE: NO_AUTO_CREATE_USER was removed in MySQL 8.0.11.
+ * Some hosting providers/MySQL packages may report the wrong MySQL version.
+ * If this is the case, set 'sql_mode' manually:
  *
  * @code
  * $databases['default']['default'] = array(
  *   'init_commands' => array(
  *     'big_selects' => 'SET SQL_BIG_SELECTS=1',
+ *     'sql_mode' => "SET sql_mode = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO",
  *   ),
  *   'pdo' => array(
  *     PDO::ATTR_TIMEOUT => 5,
