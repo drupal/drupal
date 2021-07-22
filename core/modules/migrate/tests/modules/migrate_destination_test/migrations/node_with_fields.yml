@@ -1,0 +1,12 @@
+id: node_with_fields
+label: Migrate to bundle specified destination
+source:
+  plugin: migrate_destination_test
+  constants:
+    type: test_node_type_with_fields
+process:
+  type: constants/type
+  title: title
+destination:
+  plugin: entity:node
+  default_bundle: test_node_type_with_fields

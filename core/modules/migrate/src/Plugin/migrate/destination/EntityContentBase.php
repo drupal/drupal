@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
@@ -104,6 +105,13 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
   protected $fieldTypeManager;
 
   /**
+   * Entity type bundle info.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
    * Constructs a content entity.
    *
    * @param array $configuration
@@ -122,11 +130,14 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
    *   The entity field manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type plugin manager service.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->entityFieldManager = $entity_field_manager;
     $this->fieldTypeManager = $field_type_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
@@ -142,7 +153,8 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       $container->get('entity_type.manager')->getStorage($entity_type),
       array_keys($container->get('entity_type.bundle.info')->getBundleInfo($entity_type)),
       $container->get('entity_field.manager'),
-      $container->get('plugin.manager.field.field_type')
+      $container->get('plugin.manager.field.field_type'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -372,6 +384,52 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       ->range(0, 1)
       ->execute();
     return (int) current($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fields(MigrationInterface $migration = NULL) {
+    $entity_type = $this->storage->getEntityType();
+    // Retrieving fields from a non-fieldable content entity will return a
+    // LogicException. Return an empty list of fields instead.
+    if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+      return [];
+    }
+
+    // Try to determine the bundle to use when getting fields.
+    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type->id());
+
+    if (!empty($this->configuration['default_bundle'])) {
+      // If the migration destination configuration specifies a default_bundle,
+      // then use that.
+      $bundle = $this->configuration['default_bundle'];
+
+      if (!isset($bundle_info[$bundle])) {
+        throw new MigrateException(sprintf("The default_bundle value '%s' is not a valid bundle for the destination entity type '%s'.", $bundle, $entity_type->id()));
+      }
+    }
+    else {
+      // If the destination entity type has only one bundle, use that.
+      if (count($bundle_info) == 1) {
+        $bundle = array_key_first($bundle_info);
+      }
+    }
+
+    if (isset($bundle)) {
+      // If we have a bundle, get all the fields.
+      $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
+    }
+    else {
+      // Without a bundle, we can only get the base fields.
+      $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
+    }
+
+    $fields = [];
+    foreach ($field_definitions as $field_name => $definition) {
+      $fields[$field_name] = (string) $definition->getLabel();
+    }
+    return $fields;
   }
 
 }
