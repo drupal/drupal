@@ -79,6 +79,9 @@ class CreateNew extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function execute(array $arguments) {
+    // Check if enough memory is available.
+    $this->getToolkit()->isMemoryAvailable($this->getPluginId(), $arguments['width'], $arguments['height']);
+
     // Get the image type.
     $type = $this->getToolkit()->extensionToImageType($arguments['extension']);
 

@@ -3,6 +3,7 @@
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Component\Utility\Color;
+use Drupal\Component\Utility\Rectangle;
 
 /**
  * Defines GD2 rotate operation.
@@ -92,6 +93,10 @@ class Rotate extends GDImageToolkitOperationBase {
       $this->logger->notice('The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', ['%file' => $this->getToolkit()->getSource()]);
       return FALSE;
     }
+
+    // Check if enough memory is available.
+    $rect = (new Rectangle($this->getToolkit()->getWidth(), $this->getToolkit()->getHeight()))->rotate($arguments['degrees']);
+    $this->getToolkit()->isMemoryAvailable($this->getPluginId(), $rect->getBoundingWidth(), $rect->getBoundingHeight());
 
     // Stores the original GD resource.
     $original_res = $this->getToolkit()->getResource();

@@ -185,6 +185,9 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
    *
    * @return bool
    *   TRUE if the operation was performed successfully, FALSE otherwise.
+   *
+   * @throws \RuntimeException
+   *   If the operation can not be performed.
    */
   abstract protected function execute(array $arguments);
 

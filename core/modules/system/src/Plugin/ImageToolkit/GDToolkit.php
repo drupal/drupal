@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Plugin\ImageToolkit;
 
+use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Color;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\Exception\FileException;
@@ -197,31 +198,55 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
 
+    // Invalidate the image object and return if there's no function to load the
+    // image file.
     $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
-    if (function_exists($function) && $resource = $function($this->getSource())) {
-      $this->setResource($resource);
-      if (imageistruecolor($resource)) {
-        return TRUE;
-      }
-      else {
-        // Convert indexed images to truecolor, copying the image to a new
-        // truecolor resource, so that filters work correctly and don't result
-        // in unnecessary dither.
-        $data = [
-          'width' => imagesx($resource),
-          'height' => imagesy($resource),
-          'extension' => image_type_to_extension($this->getType(), FALSE),
-          'transparent_color' => $this->getTransparentColor(),
-          'is_temp' => TRUE,
-        ];
-        if ($this->apply('create_new', $data)) {
-          imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
-          imagedestroy($resource);
-        }
-      }
-      return (bool) $this->getResource();
+    if (!function_exists($function)) {
+      $this->logger->error("The image toolkit '@toolkit' can not process image '@image'.", [
+        '@toolkit' => $this->getPluginId(),
+        '@image' => $this->getSource(),
+      ]);
+      $this->preLoadInfo = NULL;
+      return FALSE;
     }
-    return FALSE;
+
+    // Invalidate the image object and return if the load fails.
+    try {
+      $this->isMemoryAvailable('load', $this->getWidth(), $this->getHeight());
+      $resource = $function($this->getSource());
+    }
+    catch (\Throwable $t) {
+      $this->logger->error("The image toolkit '@toolkit' failed loading image '@image'. Reported error: @class - @message", [
+        '@toolkit' => $this->getPluginId(),
+        '@image' => $this->getSource(),
+        '@class' => get_class($t),
+        '@message' => $t->getMessage(),
+      ]);
+      $this->preLoadInfo = NULL;
+      return FALSE;
+    }
+
+    $this->setResource($resource);
+    if (imageistruecolor($resource)) {
+      return TRUE;
+    }
+    else {
+      // Convert indexed images to truecolor, copying the image to a new
+      // truecolor resource, so that filters work correctly and don't result
+      // in unnecessary dither.
+      $data = [
+        'width' => imagesx($resource),
+        'height' => imagesy($resource),
+        'extension' => image_type_to_extension($this->getType(), FALSE),
+        'transparent_color' => $this->getTransparentColor(),
+        'is_temp' => TRUE,
+      ];
+      if ($this->apply('create_new', $data)) {
+        imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
+        imagedestroy($resource);
+      }
+    }
+    return (bool) $this->getResource();
   }
 
   /**
@@ -468,6 +493,62 @@ class GDToolkit extends ImageToolkitBase {
    */
   protected static function supportedTypes() {
     return [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_WEBP];
+  }
+
+  /**
+   * Checks that there is enough memory available for a GD operation.
+   *
+   * GD functions that create new GD resources will fail fatally if there is
+   * not enough memory available to perform the operation. This method checks
+   * if there is enough memory available before calling the GD function. The
+   * algorithm implemented follows the one described in
+   * http://php.net/manual/en/function.imagecreatetruecolor.php#99623.
+   *
+   * @param string $operation
+   *   The operation for which memory is checked.
+   * @param int $width
+   *   The image width.
+   * @param int $height
+   *   The image height.
+   * @param int $bits_per_pixel
+   *   (optional) The bits per pixel of the image. Defaults to 31, as GD
+   *   internally manages RGB with 8 bits each color + 7 bits for the alpha
+   *   channel.
+   * @param float $tweak_factor
+   *   (optional) A tweak factor as described in
+   *   http://php.net/manual/en/function.imagecreatetruecolor.php#99623.
+   *   Defaults to 1.7.
+   *
+   * @see http://php.net/manual/en/function.imagecreatetruecolor.php#99623
+   *
+   * @throws \RuntimeException
+   *   If the operation can not be performed.
+   */
+  public function isMemoryAvailable(string $operation, int $width, int $height, int $bits_per_pixel = 31, float $tweak_factor = 1.7): void {
+    // Bytes per pixel need to accommodate enough bytes to store all the bits
+    // needed.
+    $bytes_per_pixel = ceil($bits_per_pixel / 8);
+
+    // ini_get() may return -1 or null for memory_limit to indicate there is no
+    // limit set.
+    $size = ini_get('memory_limit');
+    if (!$size || (int) $size === -1) {
+      return;
+    }
+
+    $total = Bytes::toNumber($size);
+    $free = $total - memory_get_usage(TRUE);
+    $required = (int) ($width * $height * $bytes_per_pixel * $tweak_factor);
+
+    if ($required > $free) {
+      throw new \RuntimeException(sprintf("Not enough memory (required: %s, free: %s, total: %s) to perform '%s' for file '%s'",
+        format_size($required),
+        format_size($free),
+        format_size($total),
+        $operation,
+        $this->getSource()
+      ));
+    }
   }
 
 }
