@@ -51,10 +51,10 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     // Ensure that both test derivatives got added.
     $this->assertCount(2, $definitions);
-    $this->assertEquals('non_container_aware_discovery', $definitions['non_container_aware_discovery:test_discovery_0']['id']);
+    $this->assertEquals('non_container_aware_discovery:test_discovery_0', $definitions['non_container_aware_discovery:test_discovery_0']['id']);
     $this->assertEquals('\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery', $definitions['non_container_aware_discovery:test_discovery_0']['deriver']);
 
-    $this->assertEquals('non_container_aware_discovery', $definitions['non_container_aware_discovery:test_discovery_1']['id']);
+    $this->assertEquals('non_container_aware_discovery:test_discovery_1', $definitions['non_container_aware_discovery:test_discovery_1']['id']);
     $this->assertEquals('\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery', $definitions['non_container_aware_discovery:test_discovery_1']['deriver']);
   }
 
@@ -212,6 +212,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $expected = $definitions['non_container_aware_discovery'];
     $expected['id'] = 'non_container_aware_discovery:test_discovery_1';
+    $expected['base_id'] = 'non_container_aware_discovery';
     $this->assertEquals($expected, $returned_definitions['non_container_aware_discovery:test_discovery_1']);
   }
 
@@ -239,21 +240,17 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
       'null_value' => NULL,
     ];
 
-    $this->discoveryMain->expects($this->exactly(2))
-      ->method('getDefinition')
-      ->withConsecutive(
-        ['non_container_aware_discovery:test_discovery_1'],
-        ['non_container_aware_discovery'],
-      )
-      ->willReturnOnConsecutiveCalls(
-        $derivative_definition,
-        $base_definition,
-      );
-
+    $this->discoveryMain->expects($this->exactly(1))
+      ->method('getDefinitions')
+      ->willReturn([
+        'non_container_aware_discovery:test_discovery_1' => $derivative_definition,
+        'non_container_aware_discovery' => $base_definition,
+      ]);
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
 
     $expected = $base_definition;
     $expected['id'] = 'non_container_aware_discovery:test_discovery_1';
+    $expected['base_id'] = 'non_container_aware_discovery';
     $this->assertEquals($expected, $discovery->getDefinition('non_container_aware_discovery:test_discovery_1'));
   }
 

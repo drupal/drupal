@@ -4,6 +4,7 @@ namespace Drupal\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Exception\InvalidDeriverException;
+use Drupal\Component\Plugin\PluginBase;
 
 /**
  * Base class providing the tools for a plugin discovery to be derivative aware.
@@ -48,40 +49,6 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    *   Thrown if the 'deriver' class specified in the plugin definition
    *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
    */
-  public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
-    // This check is only for derivative plugins that have explicitly provided
-    // an ID. This is not common, and can be expected to fail. Therefore, opt
-    // out of the thrown exception, which will be handled when checking the
-    // $base_plugin_id.
-    $plugin_definition = $this->decorated->getDefinition($plugin_id, FALSE);
-
-    list($base_plugin_id, $derivative_id) = $this->decodePluginId($plugin_id);
-    $base_plugin_definition = $this->decorated->getDefinition($base_plugin_id, $exception_on_invalid);
-    if ($base_plugin_definition) {
-      $deriver = $this->getDeriver($base_plugin_id, $base_plugin_definition);
-      if ($deriver) {
-        $derivative_plugin_definition = $deriver->getDerivativeDefinition($derivative_id, $base_plugin_definition);
-        // If a plugin defined itself as a derivative, merge in possible
-        // defaults from the derivative.
-        if ($derivative_id && isset($plugin_definition)) {
-          $plugin_definition = $this->mergeDerivativeDefinition($plugin_definition, $derivative_plugin_definition);
-        }
-        else {
-          $plugin_definition = $derivative_plugin_definition;
-        }
-      }
-    }
-
-    return $plugin_definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidDeriverException
-   *   Thrown if the 'deriver' class specified in the plugin definition
-   *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
-   */
   public function getDefinitions() {
     $plugin_definitions = $this->decorated->getDefinitions();
     return $this->getDerivatives($plugin_definitions);
@@ -106,6 +73,17 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
           if ($derivative_id && isset($base_plugin_definitions[$plugin_id])) {
             $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
           }
+
+          // Overwrite the base plugin ID with the correct derivative-based ID.
+          if (is_array($derivative_definition)) {
+            $derivative_definition['id'] = $plugin_id;
+            // @todo Decide if adding this is a good idea.
+            $derivative_definition['base_id'] = $base_plugin_id;
+          }
+          elseif ($derivative_definition instanceof DerivablePluginDefinitionInterface) {
+            $derivative_definition->setId($plugin_id);
+          }
+
           $plugin_definitions[$plugin_id] = $derivative_definition;
         }
       }
@@ -133,8 +111,8 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
     // Try and split the passed plugin definition into a plugin and a
     // derivative id. We don't need to check for !== FALSE because a leading
     // colon would break the derivative system and doesn't makes sense.
-    if (strpos($plugin_id, ':')) {
-      return explode(':', $plugin_id, 2);
+    if (strpos($plugin_id, PluginBase::DERIVATIVE_SEPARATOR)) {
+      return explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id, 2);
     }
 
     return [$plugin_id, NULL];
@@ -153,7 +131,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    */
   protected function encodePluginId($base_plugin_id, $derivative_id) {
     if ($derivative_id) {
-      return "$base_plugin_id:$derivative_id";
+      return $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $derivative_id;
     }
 
     // By returning the unmerged plugin_id, we are able to support derivative

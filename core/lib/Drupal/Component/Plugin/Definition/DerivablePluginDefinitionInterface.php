@@ -28,4 +28,16 @@ interface DerivablePluginDefinitionInterface extends PluginDefinitionInterface {
    */
   public function setDeriver($deriver);
 
+  /**
+   * Sets the ID of the plugin.
+   *
+   * Only for use while deriving plugin definitions.
+   *
+   * @param string $id
+   *   The full plugin ID, including the derivative ID.
+   *
+   * @return $this
+   */
+  public function setId(string $id);
+
 }

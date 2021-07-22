@@ -246,7 +246,7 @@ function layout_builder_plugin_filter_block_alter(array &$definitions, array $ex
   //   of layout_builder https://www.drupal.org/node/2979142.
   if ($consumer !== 'layout_builder' || !isset($extra['list']) || $extra['list'] !== 'inline_blocks') {
     foreach ($definitions as $id => $definition) {
-      if ($definition['id'] === 'inline_block') {
+      if (isset($definition['base_id']) && $definition['base_id'] === 'inline_block') {
         unset($definitions[$id]);
       }
     }
