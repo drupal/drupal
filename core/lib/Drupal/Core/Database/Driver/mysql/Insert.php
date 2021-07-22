@@ -9,6 +9,19 @@ use Drupal\Core\Database\Query\Insert as QueryInsert;
  */
 class Insert extends QueryInsert {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(Connection $connection, string $table, array $options = []) {
+    // @todo Remove the __construct in D10.
+    // @see https://www.drupal.org/project/drupal/issues/3210310
+    parent::__construct($connection, $table, $options);
+    unset($this->queryOptions['return']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     if (!$this->preExecute()) {
       return NULL;
@@ -29,7 +42,14 @@ class Insert extends QueryInsert {
       $values = $this->fromQuery->getArguments();
     }
 
-    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+    try {
+      $stmt->execute($values, $this->queryOptions);
+      $last_insert_id = $this->connection->lastInsertId();
+    }
+    catch (\Exception $e) {
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
+    }
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = [];
