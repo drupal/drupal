@@ -374,6 +374,30 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $expected = [1 => '1', 2 => '2', 3 => '3', 16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
     $this->assertSame($expected, $results);
+
+    $results = $this->queryResults = $this->storage
+      ->getQuery()
+      ->latestRevision()
+      ->notExists("$figures.color")
+      ->accessCheck(TRUE)
+      ->execute();
+    $expected = [16 => '4', 8 => '8', 20 => '12'];
+    $this->assertSame($expected, $results);
+
+    // Update an entity.
+    $entity = EntityTestMulRev::load(4);
+    $entity->setNewRevision();
+    $entity->$figures->color = 'red';
+    $entity->save();
+
+    $results = $this->queryResults = $this->storage
+      ->getQuery()
+      ->latestRevision()
+      ->notExists("$figures.color")
+      ->accessCheck(TRUE)
+      ->execute();
+    $expected = [8 => '8', 20 => '12'];
+    $this->assertSame($expected, $results);
   }
 
   /**
