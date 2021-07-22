@@ -256,26 +256,18 @@ class FilterHtml extends FilterBase {
     // strips them as invalid.
     $star_protector = '__zqh6vxfbk3cg__';
     $html = str_replace('*', $star_protector, $html);
+    $body_child_nodes = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
 
     // The allowed HTML setting is a list of unclosed tags. The HTML5 parser
-    // nests tags according to spec, so flatten the DOM tree back into a single
-    // array of nodes.
-    $child_nodes[] = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
-    $nodes = [];
-    while ($child_nodes) {
-      foreach (array_shift($child_nodes) as $node) {
-        if ($node->nodeType !== XML_ELEMENT_NODE) {
-          // Skip any empty text nodes between or inside tags.
-          continue;
-        }
-        $nodes[] = $node;
-        if ($node->hasChildNodes()) {
-          $child_nodes[] = $node->childNodes;
-        }
-      }
-    }
+    // nests tags according to spec, so recursively check all nodes in the DOM.
+    $nodes = iterator_to_array($body_child_nodes);
+    while ($node = array_shift($nodes)) {
+      $nodes = array_merge($nodes, iterator_to_array($node->childNodes));
 
-    foreach ($nodes as $node) {
+      if ($node->nodeType !== XML_ELEMENT_NODE) {
+        // Skip empty text nodes between or inside tags.
+        continue;
+      }
       $tag = $node->tagName;
       if ($node->hasAttributes()) {
         // Mark the tag as allowed, assigning TRUE for each attribute name if
