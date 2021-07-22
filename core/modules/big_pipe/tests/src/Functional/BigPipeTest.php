@@ -327,7 +327,10 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertNoRaw('The count is 3.');
   }
 
-  protected function assertBigPipeResponseHeadersPresent() {
+  /**
+   * @internal
+   */
+  protected function assertBigPipeResponseHeadersPresent(): void {
     // Check that Cache-Control header set to "private".
     $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
     $this->assertSession()->responseHeaderEquals('Surrogate-Control', 'no-store, content="BigPipe/1.0"');
@@ -340,9 +343,13 @@ class BigPipeTest extends BrowserTestBase {
    * @param array $expected_big_pipe_nojs_placeholders
    *   Keys: BigPipe no-JS placeholder markup. Values: expected replacement
    *   markup.
+   *
+   * @internal
    */
-  protected function assertBigPipeNoJsPlaceholders(array $expected_big_pipe_nojs_placeholders) {
-    $this->assertSetsEqual(array_keys($expected_big_pipe_nojs_placeholders), array_map('rawurldecode', explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-No-Js-Placeholders'))));
+  protected function assertBigPipeNoJsPlaceholders(array $expected_big_pipe_nojs_placeholders): void {
+    // @todo This method is broken. Fix it in
+    //   https://www.drupal.org/project/drupal/issues/3144926
+    // $this->assertSetsEqual(array_keys($expected_big_pipe_nojs_placeholders), array_map('rawurldecode', explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-No-Js-Placeholders'))));
     foreach ($expected_big_pipe_nojs_placeholders as $big_pipe_nojs_placeholder => $expected_replacement) {
       // Checking whether the replacement for the BigPipe no-JS placeholder
       // $big_pipe_nojs_placeholder is present.
@@ -361,9 +368,13 @@ class BigPipeTest extends BrowserTestBase {
    * @param array $expected_big_pipe_placeholder_stream_order
    *   Keys: BigPipe placeholder IDs. Values: expected AJAX response. Keys are
    *   defined in the order that they are expected to be rendered & streamed.
+   *
+   * @internal
    */
-  protected function assertBigPipePlaceholders(array $expected_big_pipe_placeholders, array $expected_big_pipe_placeholder_stream_order) {
-    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-Placeholders')));
+  protected function assertBigPipePlaceholders(array $expected_big_pipe_placeholders, array $expected_big_pipe_placeholder_stream_order): void {
+    // @todo This method is broken. Fix it in
+    //   https://www.drupal.org/project/drupal/issues/3144926
+    // $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-Placeholders')));
     $placeholder_positions = [];
     $placeholder_replacement_positions = [];
     foreach ($expected_big_pipe_placeholders as $big_pipe_placeholder_id => $expected_ajax_response) {
@@ -396,7 +407,9 @@ class BigPipeTest extends BrowserTestBase {
       $expected_big_pipe_placeholders_with_replacements[$big_pipe_placeholder_id] = $expected_big_pipe_placeholders[$big_pipe_placeholder_id];
     }
     $this->assertEquals($expected_big_pipe_placeholders_with_replacements, array_filter($expected_big_pipe_placeholders));
-    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
+    // @todo This method is broken. Fix it in
+    //   https://www.drupal.org/project/drupal/issues/3144926
+    // $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
     $this->assertSame(count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getSession()->getPage()->getContent()));
 
     // Verifying BigPipe start/stop signals.
@@ -437,36 +450,56 @@ class BigPipeTest extends BrowserTestBase {
 
   /**
    * Asserts whether arrays A and B are equal, when treated as sets.
+   *
+   * @internal
+   *
+   * @todo This method is broken. Fix it in
+   *   https://www.drupal.org/project/drupal/issues/3144926
+   *
+   * @code
+   * protected function assertSetsEqual(array $a, array $b): void {
+   *   return count($a) == count($b) && !array_diff_assoc($a, $b);
+   *   // @todo the following should be the right approach, but it currently
+   *   // fails.
+   *   $this->assertSameSize($a, $b);
+   *   $this->assertEquals($a, $b);
+   * }
+   * @endcode
    */
-  protected function assertSetsEqual(array $a, array $b) {
-    return count($a) == count($b) && !array_diff_assoc($a, $b);
-  }
 
   /**
    * Asserts whether a BigPipe no-JS cookie exists or not.
+   *
+   * @internal
    */
-  protected function assertBigPipeNoJsCookieExists($expected) {
+  protected function assertBigPipeNoJsCookieExists(string $expected): void {
     $this->assertCookieExists('big_pipe_nojs', $expected, 'BigPipe no-JS');
   }
 
   /**
    * Asserts whether a session cookie exists or not.
+   *
+   * @internal
    */
-  protected function assertSessionCookieExists($expected) {
+  protected function assertSessionCookieExists(string $expected): void {
     $this->assertCookieExists($this->getSessionName(), $expected, 'Session');
   }
 
   /**
    * Asserts whether a cookie exists on the client or not.
+   *
+   * @internal
    */
-  protected function assertCookieExists($cookie_name, $expected, $cookie_label) {
+  protected function assertCookieExists(string $cookie_name, string $expected, string $cookie_label): void {
     $this->assertEquals($expected, !empty($this->getSession()->getCookie($cookie_name)), $expected ? "$cookie_label cookie exists." : "$cookie_label cookie does not exist.");
   }
 
   /**
    * Calls ::performMetaRefresh() and asserts the responses.
+   *
+   * @internal
    */
-  protected function assertBigPipeNoJsMetaRefreshRedirect() {
+  protected function assertBigPipeNoJsMetaRefreshRedirect(): void {
     $original_url = $this->getSession()->getCurrentUrl();
 
     // Disable automatic following of redirects by the HTTP client, so that this

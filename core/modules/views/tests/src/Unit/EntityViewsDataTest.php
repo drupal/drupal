@@ -956,7 +956,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param string $field_name
    *   The entity field name.
    */
-  protected function assertField($data, $field_name) {
+  protected function assertField($data, $field_name): void {
     $this->assertEquals($field_name, $data['entity field']);
   }
 
@@ -1047,7 +1047,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param $data
    *   The views data to check.
    */
-  protected function assertStringField($data) {
+  protected function assertStringField($data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('string', $data['filter']['id']);
     $this->assertEquals('string', $data['argument']['id']);
@@ -1060,7 +1060,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param $data
    *   The views data to check.
    */
-  protected function assertUriField($data) {
+  protected function assertUriField($data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('string', $data['field']['default_formatter']);
     $this->assertEquals('string', $data['filter']['id']);
@@ -1076,7 +1076,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param $field_name
    *   The name of the field being checked.
    */
-  protected function assertLongTextField($data, $field_name) {
+  protected function assertLongTextField($data, $field_name): void {
     $value_field = $data[$field_name . '__value'];
     $this->assertEquals('field', $value_field['field']['id']);
     $this->assertEquals($field_name . '__format', $value_field['field']['format']);
@@ -1093,7 +1093,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param array $data
    *   The views data to check.
    */
-  protected function assertUuidField($data) {
+  protected function assertUuidField($data): void {
     // @todo Can we provide additional support for UUIDs in views?
     $this->assertEquals('field', $data['field']['id']);
     $this->assertFalse($data['field']['click sortable']);
@@ -1108,7 +1108,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param array $data
    *   The views data to check.
    */
-  protected function assertNumericField($data) {
+  protected function assertNumericField($data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
     $this->assertEquals('numeric', $data['argument']['id']);
@@ -1121,7 +1121,7 @@ class EntityViewsDataTest extends UnitTestCase {
    * @param array $data
    *   The views data to check.
    */
-  protected function assertLanguageField($data) {
+  protected function assertLanguageField($data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
@@ -1131,7 +1131,7 @@ class EntityViewsDataTest extends UnitTestCase {
   /**
    * Tests views data for an entity reference field.
    */
-  protected function assertEntityReferenceField($data) {
+  protected function assertEntityReferenceField($data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
     $this->assertEquals('numeric', $data['argument']['id']);
@@ -1141,7 +1141,7 @@ class EntityViewsDataTest extends UnitTestCase {
   /**
    * Tests views data for a bundle field.
    */
-  protected function assertBundleField($data) {
+  protected function assertBundleField($data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('bundle', $data['filter']['id']);
     $this->assertEquals('string', $data['argument']['id']);

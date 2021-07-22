@@ -248,7 +248,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
    *   Whether to assume a sample of the optional default configuration is
    *   present.
    */
-  protected function assertNodeConfig($required, $optional) {
+  protected function assertNodeConfig($required, $optional): void {
     // Check the required default configuration in node module.
     $string = $this->storage->findString(['source' => 'Make content sticky', 'context' => '', 'type' => 'configuration']);
     if ($required) {

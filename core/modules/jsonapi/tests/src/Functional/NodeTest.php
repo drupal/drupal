@@ -371,7 +371,7 @@ class NodeTest extends ResourceTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function assertCacheableNormalizations() {
+  protected function assertCacheableNormalizations(): void {
     // Save the entity to invalidate caches.
     $this->entity->save();
     $uuid = $this->entity->uuid();
@@ -408,7 +408,7 @@ class NodeTest extends ResourceTestBase {
    * @param string[] $field_names
    *   The field names.
    */
-  protected function assertNormalizedFieldsAreCached($field_names) {
+  protected function assertNormalizedFieldsAreCached($field_names): void {
     $cache = \Drupal::service('render_cache')->get([
       '#cache' => [
         'keys' => ['node--camelids', $this->entity->uuid()],

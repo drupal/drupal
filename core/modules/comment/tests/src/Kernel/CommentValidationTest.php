@@ -189,8 +189,10 @@ class CommentValidationTest extends EntityKernelTestBase {
    *   The field that violates the maximum length.
    * @param int $length
    *   Number of characters that was exceeded.
+   *
+   * @internal
    */
-  protected function assertLengthViolation(CommentInterface $comment, $field_name, $length) {
+  protected function assertLengthViolation(CommentInterface $comment, string $field_name, int $length): void {
     $violations = $comment->validate();
     $this->assertCount(1, $violations, "Violation found when $field_name is too long.");
     $this->assertEquals("{$field_name}.0.value", $violations[0]->getPropertyPath());

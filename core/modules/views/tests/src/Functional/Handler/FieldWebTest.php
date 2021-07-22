@@ -145,7 +145,7 @@ class FieldWebTest extends ViewTestBase {
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
    */
-  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringContainsString($needle, $haystack, $message);
   }
 
@@ -161,7 +161,7 @@ class FieldWebTest extends ViewTestBase {
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
    */
-  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 

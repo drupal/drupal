@@ -86,7 +86,7 @@ class FieldItemTest extends EntityKernelTestBase {
    * @param $expected_value
    *   The expected field item value.
    */
-  protected function assertSavedFieldItemValue(EntityTest $entity, $expected_value) {
+  protected function assertSavedFieldItemValue(EntityTest $entity, $expected_value): void {
     $entity->setNewRevision(TRUE);
     $entity->save();
     $base_field_expected_value = str_replace($this->fieldName, 'field_test_item', $expected_value);

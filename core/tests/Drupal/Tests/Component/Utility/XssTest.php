@@ -597,7 +597,7 @@ class XssTest extends TestCase {
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
    */
-  protected function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNormalized($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
@@ -619,7 +619,7 @@ class XssTest extends TestCase {
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
    */
-  protected function assertNotNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotNormalized($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 

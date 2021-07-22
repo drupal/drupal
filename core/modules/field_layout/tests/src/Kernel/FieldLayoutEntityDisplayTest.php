@@ -179,7 +179,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
    * @param array $values
    * @param string $message
    */
-  public static function assertEntityValues($expected, array $values, $message = '') {
+  public static function assertEntityValues($expected, array $values, $message = ''): void {
 
     static::assertArrayHasKey('uuid', $values);
     unset($values['uuid']);

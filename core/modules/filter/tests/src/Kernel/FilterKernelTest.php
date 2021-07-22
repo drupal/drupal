@@ -874,7 +874,7 @@ www.example.com with a newline in comments -->
    *   );
    *   @endcode
    */
-  public function assertFilteredString($filter, $tests) {
+  public function assertFilteredString($filter, $tests): void {
     foreach ($tests as $source => $tasks) {
       $result = $filter->process($source, $filter)->getProcessedText();
       foreach ($tasks as $value => $is_expected) {
@@ -1140,7 +1140,7 @@ body {color:red}
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
    */
-  public function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  public function assertNormalized($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
@@ -1162,7 +1162,7 @@ body {color:red}
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
    */
-  public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other'): void {
     $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 

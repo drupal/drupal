@@ -224,13 +224,10 @@ class ProcessingTest extends BrowserTestBase {
    *   Array of raw strings to look for .
    * @param $message
    *   Message to display.
-   *
-   * @return
-   *   TRUE on pass, FALSE on fail.
    */
-  public function assertBatchMessages($texts, $message) {
+  public function assertBatchMessages($texts, $message): void {
     $pattern = '|' . implode('.*', $texts) . '|s';
-    return $this->assertSession()->responseMatches($pattern);
+    $this->assertSession()->responseMatches($pattern);
   }
 
   /**

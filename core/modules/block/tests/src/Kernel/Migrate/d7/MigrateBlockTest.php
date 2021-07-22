@@ -73,7 +73,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    *   The display region.
    * @param string $theme
    *   The theme.
-   * @param string $weight
+   * @param int $weight
    *   The block weight.
    * @param string $label
    *   The block label.
@@ -81,8 +81,10 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    *   The block label display setting.
    * @param bool $status
    *   Whether the block is expected to be enabled or disabled.
+   *
+   * @internal
    */
-  public function assertEntity($id, $plugin_id, array $roles, $pages, $region, $theme, $weight, $label, $label_display, $status = TRUE) {
+  public function assertEntity(string $id, string $plugin_id, array $roles, string $pages, string $region, string $theme, int $weight, string $label, string $label_display, bool $status = TRUE): void {
     $block = Block::load($id);
     $this->assertInstanceOf(Block::class, $block);
     /** @var \Drupal\block\BlockInterface $block */

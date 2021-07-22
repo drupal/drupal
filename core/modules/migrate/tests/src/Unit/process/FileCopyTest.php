@@ -51,7 +51,7 @@ class FileCopyTest extends MigrateProcessTestCase {
    * @param $expected
    *   The expected value of the plugin configuration.
    */
-  protected function assertPlugin($configuration, $expected) {
+  protected function assertPlugin($configuration, $expected): void {
     $stream_wrapper_manager = $this->prophesize(StreamWrapperManagerInterface::class)->reveal();
     $file_system = $this->prophesize(FileSystemInterface::class)->reveal();
     $download_plugin = $this->prophesize(MigrateProcessInterface::class)->reveal();

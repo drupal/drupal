@@ -129,7 +129,7 @@ class MediaLibraryWidgetTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  protected function assertMediaLibraryStateAccess($access, $user, $state) {
+  protected function assertMediaLibraryStateAccess($access, $user, $state): void {
     $ui_builder = $this->container->get('media_library.ui_builder');
     $access_result = $ui_builder->checkAccess($user, $state);
     $this->assertEquals($access, $access_result->isAllowed());

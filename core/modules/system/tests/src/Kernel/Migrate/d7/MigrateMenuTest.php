@@ -33,7 +33,7 @@ class MigrateMenuTest extends MigrateDrupal7TestBase {
    * @param $description
    *   The menu description.
    */
-  protected function assertEntity($id, $language, $label, $description) {
+  protected function assertEntity($id, $language, $label, $description): void {
     $navigation_menu = Menu::load($id);
     $this->assertSame($id, $navigation_menu->id());
     $this->assertSame($language, $navigation_menu->language()->getId());

@@ -675,7 +675,7 @@ class SchemaTest extends KernelTestBase {
    * @param $field_spec
    *   The schema specification of the field.
    */
-  protected function assertFieldAdditionRemoval($field_spec) {
+  protected function assertFieldAdditionRemoval($field_spec): void {
     // Try creating the field on a new table.
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = [
@@ -738,7 +738,7 @@ class SchemaTest extends KernelTestBase {
   /**
    * Asserts that a newly added field has the correct characteristics.
    */
-  protected function assertFieldCharacteristics($table_name, $field_name, $field_spec) {
+  protected function assertFieldCharacteristics($table_name, $field_name, $field_spec): void {
     // Check that the initial value has been registered.
     if (isset($field_spec['initial'])) {
       // There should be no row with a value different then $field_spec['initial'].
@@ -1014,7 +1014,7 @@ class SchemaTest extends KernelTestBase {
    * @param $test_data
    *   (optional) A test value to insert and test, if specified.
    */
-  protected function assertFieldChange($old_spec, $new_spec, $test_data = NULL) {
+  protected function assertFieldChange($old_spec, $new_spec, $test_data = NULL): void {
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = [
       'fields' => [

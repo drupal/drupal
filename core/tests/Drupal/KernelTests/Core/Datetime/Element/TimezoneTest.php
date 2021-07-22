@@ -253,7 +253,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
    *
    * @throws \Exception
    */
-  protected function assertTimesUnderstoodCorrectly($elementType, array $inputs) {
+  protected function assertTimesUnderstoodCorrectly($elementType, array $inputs): void {
     $this->elementType = $elementType;
 
     // Simulate the form being saved, with the user adding the date for any
@@ -327,7 +327,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
    *
    * @throws \Exception
    */
-  public function assertDateTimezonePropertyProcessed($elementType) {
+  public function assertDateTimezonePropertyProcessed($elementType): void {
     $this->elementType = $elementType;
     // Simulate form being loaded and default values displayed to user.
     $form_state = new FormState();

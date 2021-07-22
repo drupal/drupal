@@ -95,7 +95,7 @@ class CommandsTest extends KernelTestBase {
    * @param $message
    *   An assertion message.
    */
-  protected function assertCommand($haystack, $needle, $message) {
+  protected function assertCommand($haystack, $needle, $message): void {
     $found = FALSE;
     foreach ($haystack as $command) {
       // If the command has additional settings that we're not testing for, do

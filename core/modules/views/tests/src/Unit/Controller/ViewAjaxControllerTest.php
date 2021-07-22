@@ -437,7 +437,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
    * @param int $position
    *   The position where the view content command is expected.
    */
-  protected function assertViewResultCommand(ViewAjaxResponse $response, $position = 0) {
+  protected function assertViewResultCommand(ViewAjaxResponse $response, $position = 0): void {
     $commands = $this->getCommands($response);
     $this->assertEquals('insert', $commands[$position]['command']);
     $this->assertEquals('View result', $commands[$position]['data']);

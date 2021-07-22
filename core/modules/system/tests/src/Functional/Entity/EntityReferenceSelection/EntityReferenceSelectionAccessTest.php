@@ -92,7 +92,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
    * @param string $handler_name
    *   The name of the entity type selection handler being tested.
    */
-  protected function assertReferenceable(array $selection_options, $tests, $handler_name) {
+  protected function assertReferenceable(array $selection_options, $tests, $handler_name): void {
     $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($selection_options);
 
     foreach ($tests as $test) {

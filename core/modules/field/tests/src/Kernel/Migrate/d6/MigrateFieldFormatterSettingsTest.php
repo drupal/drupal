@@ -35,7 +35,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
    * @param string $component_id
    *   The component ID.
    */
-  protected function assertComponentNotExists($display_id, $component_id) {
+  protected function assertComponentNotExists($display_id, $component_id): void {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertNull($component);
   }

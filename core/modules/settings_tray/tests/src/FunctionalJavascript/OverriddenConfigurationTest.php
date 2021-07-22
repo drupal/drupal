@@ -157,7 +157,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
    * @param string $override_text
    *   The override text that should appear in the block.
    */
-  protected function assertOverriddenBlockDisabled(Block $overridden_block, $override_text) {
+  protected function assertOverriddenBlockDisabled(Block $overridden_block, $override_text): void {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     $block_selector = $this->getBlockSelector($overridden_block);

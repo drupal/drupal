@@ -146,7 +146,7 @@ JS;
    * @param string $text
    *   A needle text.
    */
-  protected function assertWaitPageContains($text) {
+  protected function assertWaitPageContains($text): void {
     $page = $this->getSession()->getPage();
     $page->waitFor(10, function () use ($page, $text) {
       return stripos($page->getContent(), $text) !== FALSE;

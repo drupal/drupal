@@ -154,7 +154,7 @@ class TrackChangesTest extends MigrateTestBase {
    * @param string $value
    *   Value to evaluate.
    */
-  protected function assertTermExists($property, $value) {
+  protected function assertTermExists($property, $value): void {
     self::assertTrue($this->termExists($property, $value));
   }
 
@@ -166,7 +166,7 @@ class TrackChangesTest extends MigrateTestBase {
    * @param string $value
    *   Value to evaluate.
    */
-  protected function assertTermDoesNotExist($property, $value) {
+  protected function assertTermDoesNotExist($property, $value): void {
     self::assertFalse($this->termExists($property, $value));
   }
 

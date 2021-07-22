@@ -334,7 +334,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
    * @param $setter_callback
    *   A callback setting the target entity on the referencing entity.
    */
-  protected function assertUserAutocreate(EntityInterface $entity, $setter_callback) {
+  protected function assertUserAutocreate(EntityInterface $entity, $setter_callback): void {
     $storage = $this->entityTypeManager->getStorage('user');
     $user_id = $this->generateRandomEntityId();
     $user = $storage->create(['uid' => $user_id, 'name' => $this->randomString()]);
@@ -353,7 +353,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
    * @param $setter_callback
    *   A callback setting the target entity on the referencing entity.
    */
-  protected function assertUserRoleAutocreate(EntityInterface $entity, $setter_callback) {
+  protected function assertUserRoleAutocreate(EntityInterface $entity, $setter_callback): void {
     $storage = $this->entityTypeManager->getStorage('user_role');
     $role_id = $this->generateRandomEntityId(TRUE);
     $role = $storage->create(['id' => $role_id, 'label' => $this->randomString()]);

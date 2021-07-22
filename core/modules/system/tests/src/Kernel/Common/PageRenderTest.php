@@ -37,7 +37,7 @@ class PageRenderTest extends KernelTestBase {
    * @param string $hook
    *   The page render hook to assert expected exceptions for.
    */
-  public function assertPageRenderHookExceptions($module, $hook) {
+  public function assertPageRenderHookExceptions($module, $hook): void {
     $html_renderer = \Drupal::getContainer()->get('main_content_renderer.html');
 
     // Assert a valid hook implementation doesn't trigger an exception.

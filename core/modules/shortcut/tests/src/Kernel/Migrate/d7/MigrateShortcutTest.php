@@ -49,7 +49,7 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
    * @param string $url
    *   The expected URL of the shortcut.
    */
-  protected function assertEntity($id, $title, $weight, $url) {
+  protected function assertEntity($id, $title, $weight, $url): void {
     $shortcut = Shortcut::load($id);
     $this->assertInstanceOf(ShortcutInterface::class, $shortcut);
     /** @var \Drupal\shortcut\ShortcutInterface $shortcut */

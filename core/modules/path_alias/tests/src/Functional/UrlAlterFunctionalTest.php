@@ -98,7 +98,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
    * @param $final
    *   A string with the expected result after generateFrommPath().
    */
-  protected function assertUrlOutboundAlter($original, $final) {
+  protected function assertUrlOutboundAlter($original, $final): void {
     // Test outbound altering.
     $result = $this->container->get('path_processor_manager')->processOutbound($original);
     $this->assertSame($final, $result, new FormattableMarkup('Altered outbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
@@ -112,7 +112,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
    * @param $final
    *   A string with the expected result.
    */
-  protected function assertUrlInboundAlter($original, $final) {
+  protected function assertUrlInboundAlter($original, $final): void {
     // Test inbound altering.
     $result = $this->container->get('path_alias.manager')->getPathByAlias($original);
     $this->assertSame($final, $result, new FormattableMarkup('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));

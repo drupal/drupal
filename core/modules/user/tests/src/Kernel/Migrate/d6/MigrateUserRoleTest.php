@@ -34,7 +34,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map
    *   The map table plugin.
    */
-  protected function assertRole($id, array $permissions, $lookupId, MigrateIdMapInterface $id_map) {
+  protected function assertRole($id, array $permissions, $lookupId, MigrateIdMapInterface $id_map): void {
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load($id);
     $this->assertInstanceOf(RoleInterface::class, $role);
@@ -50,7 +50,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map
    *   The map table plugin.
    */
-  protected function assertRoles(MigrateIdMapInterface $id_map) {
+  protected function assertRoles(MigrateIdMapInterface $id_map): void {
 
     // The permissions for each role are found in the two tables in the Drupal 6
     // source database. One is the permission table and the other is the

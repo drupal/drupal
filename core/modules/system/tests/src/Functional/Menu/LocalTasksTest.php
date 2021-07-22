@@ -52,7 +52,7 @@ class LocalTasksTest extends BrowserTestBase {
    *   (optional) The local tasks level to assert; 0 for primary, 1 for
    *   secondary. Defaults to 0.
    */
-  protected function assertLocalTasks(array $routes, $level = 0) {
+  protected function assertLocalTasks(array $routes, $level = 0): void {
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
     ]);
@@ -69,16 +69,13 @@ class LocalTasksTest extends BrowserTestBase {
    *
    * @param string $title
    *   The expected title.
-   *
-   * @return bool
-   *   TRUE if the local task exists on the page.
    */
-  protected function assertLocalTaskAppears($title) {
+  protected function assertLocalTaskAppears($title): void {
     // SimpleXML gives us the unescaped text, not the actual escaped markup,
     // so use a pattern instead to check the raw content.
     // This behavior is a bug in libxml, see
     // https://bugs.php.net/bug.php?id=49437.
-    return $this->assertSession()->responseMatches('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
+    $this->assertSession()->responseMatches('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
   }
 
   /**
@@ -88,7 +85,7 @@ class LocalTasksTest extends BrowserTestBase {
    *   (optional) The local tasks level to assert; 0 for primary, 1 for
    *   secondary. Defaults to 0.
    */
-  protected function assertNoLocalTasks($level = 0) {
+  protected function assertNoLocalTasks($level = 0): void {
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
     ]);

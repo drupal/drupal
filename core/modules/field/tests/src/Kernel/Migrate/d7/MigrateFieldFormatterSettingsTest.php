@@ -43,7 +43,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    * @param string $id
    *   The view display ID.
    */
-  protected function assertEntity($id) {
+  protected function assertEntity($id): void {
     $display = EntityViewDisplay::load($id);
     $this->assertInstanceOf(EntityViewDisplayInterface::class, $display);
   }
@@ -62,7 +62,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    * @param int $weight
    *   The expected weight of the component.
    */
-  protected function assertComponent($display_id, $component_id, $type, $label, $weight) {
+  protected function assertComponent($display_id, $component_id, $type, $label, $weight): void {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertIsArray($component);
     $this->assertSame($type, $component['type']);
@@ -78,7 +78,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    * @param string $component_id
    *   The component ID.
    */
-  protected function assertComponentNotExists($display_id, $component_id) {
+  protected function assertComponentNotExists($display_id, $component_id): void {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertNull($component);
   }

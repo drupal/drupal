@@ -43,7 +43,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    * @param string|array $bundle
    *   Bundle/bundles to use as constraint option.
    */
-  protected function assertValidation($bundle) {
+  protected function assertValidation($bundle): void {
     // Create a typed data definition with a Bundle constraint.
     $definition = DataDefinition::create('entity_reference')
       ->addConstraint('Bundle', $bundle);

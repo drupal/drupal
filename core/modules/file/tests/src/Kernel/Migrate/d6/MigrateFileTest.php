@@ -50,7 +50,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
    * @param int $uid
    *   The expected file owner ID.
    */
-  protected function assertEntity($fid, $name, $size, $uri, $type, $uid) {
+  protected function assertEntity($fid, $name, $size, $uri, $type, $uid): void {
     /** @var \Drupal\file\FileInterface $file */
     $file = File::load($fid);
     $this->assertInstanceOf(FileInterface::class, $file);

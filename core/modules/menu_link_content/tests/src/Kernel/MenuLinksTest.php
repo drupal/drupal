@@ -121,7 +121,7 @@ class MenuLinksTest extends KernelTestBase {
   /**
    * Assert that at set of links is properly parented.
    */
-  public function assertMenuLinkParents($links, $expected_hierarchy) {
+  public function assertMenuLinkParents($links, $expected_hierarchy): void {
     foreach ($expected_hierarchy as $id => $parent) {
       /** @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);

@@ -163,7 +163,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Assert the set of expectations when the moderation state field is emptied.
    */
-  protected function assertEmptiedModerationFieldItemList() {
+  protected function assertEmptiedModerationFieldItemList(): void {
     $this->assertTrue($this->testNode->moderation_state->isEmpty());
     // Test the empty value causes a violation in the entity.
     $violations = $this->testNode->validate();

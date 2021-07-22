@@ -47,7 +47,7 @@ class EntityApiTest extends EntityKernelTestBase {
    * @param \Drupal\user\UserInterface $user1
    *   The user to run the tests with.
    */
-  protected function assertCRUD($entity_type, UserInterface $user1) {
+  protected function assertCRUD($entity_type, UserInterface $user1): void {
     // Create some test entities.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)

@@ -189,7 +189,7 @@ class SectionTest extends UnitTestCase {
    * @param \Drupal\layout_builder\Section $section
    *   The section storage to check.
    */
-  protected function assertComponents(array $expected, Section $section) {
+  protected function assertComponents(array $expected, Section $section): void {
     $result = $section->getComponents();
     $this->assertEquals($expected, $result);
     $this->assertSame(array_keys($expected), array_keys($result));

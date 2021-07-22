@@ -321,7 +321,7 @@ class TransactionTest extends DatabaseTestBase {
    * @param $message
    *   The message to log for the assertion.
    */
-  public function assertRowPresent($name, $message = NULL) {
+  public function assertRowPresent($name, $message = NULL): void {
     if (!isset($message)) {
       $message = new FormattableMarkup('Row %name is present.', ['%name' => $name]);
     }
@@ -337,7 +337,7 @@ class TransactionTest extends DatabaseTestBase {
    * @param $message
    *   The message to log for the assertion.
    */
-  public function assertRowAbsent($name, $message = NULL) {
+  public function assertRowAbsent($name, $message = NULL): void {
     if (!isset($message)) {
       $message = new FormattableMarkup('Row %name is absent.', ['%name' => $name]);
     }

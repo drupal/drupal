@@ -474,15 +474,11 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded.
    */
-  protected function assertShortcutQuickLink($label, $index = 0, $message = '', $group = 'Other') {
+  protected function assertShortcutQuickLink($label, $index = 0, $message = '', $group = 'Other'): void {
     $links = $this->xpath('//a[normalize-space()=:label]', [':label' => $label]);
     $message = ($message ? $message : new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
     $this->assertArrayHasKey($index, $links, $message);
-    return TRUE;
   }
 
 }

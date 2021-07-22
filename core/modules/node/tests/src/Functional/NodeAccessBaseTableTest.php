@@ -212,7 +212,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    *   TRUE, all nodes should be listed. If FALSE, only public nodes and the
    *   user's own private nodes should be listed.
    */
-  protected function assertTaxonomyPage($is_admin) {
+  protected function assertTaxonomyPage($is_admin): void {
     foreach ([$this->publicTid, $this->privateTid] as $tid_is_private => $tid) {
       $this->drupalGet("taxonomy/term/$tid");
       $this->nidsVisible = [];

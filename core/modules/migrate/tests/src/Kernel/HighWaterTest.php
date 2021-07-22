@@ -266,7 +266,7 @@ class HighWaterTest extends MigrateTestBase {
    * @param string $title
    *   Title of the node.
    */
-  protected function assertNodeExists($title) {
+  protected function assertNodeExists($title): void {
     self::assertTrue($this->nodeExists($title));
   }
 
@@ -276,7 +276,7 @@ class HighWaterTest extends MigrateTestBase {
    * @param string $title
    *   Title of the node.
    */
-  protected function assertNodeDoesNotExist($title) {
+  protected function assertNodeDoesNotExist($title): void {
     self::assertFalse($this->nodeExists($title));
   }
 

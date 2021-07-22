@@ -176,7 +176,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   /**
    * Assert entity reference display.
    */
-  protected function assertEntityReferenceDisplay() {
+  protected function assertEntityReferenceDisplay(): void {
     $url = $this->referrerEntity->toUrl();
     $translation_url = $this->referrerEntity->toUrl('canonical', ['language' => ConfigurableLanguage::load($this->translateToLangcode)]);
 
@@ -193,7 +193,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   /**
    * Assert entity reference form display.
    */
-  protected function assertEntityReferenceFormDisplay() {
+  protected function assertEntityReferenceFormDisplay(): void {
     $this->drupalLogin($this->webUser);
     $url = $this->referrerEntity->toUrl('edit-form');
     $translation_url = $this->referrerEntity->toUrl('edit-form', ['language' => ConfigurableLanguage::load($this->translateToLangcode)]);

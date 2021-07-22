@@ -85,7 +85,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
    * @param bool $has_picture
    *   (optional) Whether the user is expected to have a picture attached.
    */
-  protected function assertEntity($id, $label, $mail, $password, $created, $access, $login, $blocked, $entity_langcode, $prefered_langcode, $timezone, $init, $roles, $field_integer, $field_file_target_id = FALSE, $has_picture = FALSE) {
+  protected function assertEntity($id, $label, $mail, $password, $created, $access, $login, $blocked, $entity_langcode, $prefered_langcode, $timezone, $init, $roles, $field_integer, $field_file_target_id = FALSE, $has_picture = FALSE): void {
     /** @var \Drupal\user\UserInterface $user */
     $user = User::load($id);
     $this->assertInstanceOf(UserInterface::class, $user);

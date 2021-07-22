@@ -317,7 +317,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    * @param array $content
    *   The content items to assert on the page.
    */
-  protected function assertNodeRevisionContent($revision_id, array $content) {
+  protected function assertNodeRevisionContent($revision_id, array $content): void {
     $this->drupalGet("node/1/revisions/$revision_id/view");
     foreach ($content as $content_item) {
       $this->assertSession()->pageTextContains($content_item);
@@ -332,7 +332,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    * @param int $expected_revision_count
    *   The revision count.
    */
-  protected function assertBlockRevisionCountByTitle($block_title, $expected_revision_count) {
+  protected function assertBlockRevisionCountByTitle($block_title, $expected_revision_count): void {
     $actual_revision_count = $this->blockStorage->getQuery()
       ->accessCheck(FALSE)
       ->condition('info', $block_title)

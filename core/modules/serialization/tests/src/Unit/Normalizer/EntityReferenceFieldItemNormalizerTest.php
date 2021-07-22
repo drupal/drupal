@@ -428,7 +428,7 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
    * @param array $data
    *   The data to denormalize.
    */
-  protected function assertDenormalize(array $data) {
+  protected function assertDenormalize(array $data): void {
     $this->fieldItem->getParent()
       ->willReturn($this->prophesize(FieldItemListInterface::class)->reveal());
     $this->fieldItem->getFieldDefinition()->willReturn($this->fieldDefinition->reveal());

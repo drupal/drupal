@@ -107,11 +107,8 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
    *   Expected cache contexts for both users.
    * @param string $message
    *   (optional) A verbose message to output.
-   *
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
-  protected function assertToolbarCacheContexts(array $cache_contexts, $message = NULL) {
+  protected function assertToolbarCacheContexts(array $cache_contexts, $message = NULL): void {
     // Default cache contexts that should exist on all test cases.
     $default_cache_contexts = [
       'languages:language_interface',
@@ -132,7 +129,6 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
     $return = $return && $this->assertCacheContexts($cache_contexts);
 
     $this->assertTrue($return, $message);
-    return $return;
   }
 
   /**

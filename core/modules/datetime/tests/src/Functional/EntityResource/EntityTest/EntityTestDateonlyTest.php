@@ -117,7 +117,7 @@ class EntityTestDateonlyTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {
+  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options): void {
     parent::assertNormalizationEdgeCases($method, $url, $request_options);
 
     if ($this->entity->getEntityType()->hasKey('bundle')) {

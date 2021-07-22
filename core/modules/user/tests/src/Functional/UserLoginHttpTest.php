@@ -328,7 +328,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param mixed $expected_body
    *   The expected response body.
    */
-  protected function assertHttpResponse(ResponseInterface $response, $expected_code, $expected_body) {
+  protected function assertHttpResponse(ResponseInterface $response, $expected_code, $expected_body): void {
     $this->assertEquals($expected_code, $response->getStatusCode());
     $this->assertEquals($expected_body, (string) $response->getBody());
   }
@@ -345,7 +345,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param string $format
    *   The format that the response is encoded in.
    */
-  protected function assertHttpResponseWithMessage(ResponseInterface $response, $expected_code, $expected_message, $format = 'json') {
+  protected function assertHttpResponseWithMessage(ResponseInterface $response, $expected_code, $expected_message, $format = 'json'): void {
     $this->assertEquals($expected_code, $response->getStatusCode());
     $this->assertEquals($expected_message, $this->getResultValue($response, 'message', $format));
   }

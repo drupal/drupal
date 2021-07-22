@@ -260,7 +260,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    * @param array $edit
    *   An array of values to submit to the content translation settings page.
    */
-  protected function assertSettings($entity_type, $bundle, $enabled, $edit) {
+  protected function assertSettings($entity_type, $bundle, $enabled, $edit): void {
     $this->drupalGet('admin/config/regional/content-language');
     $this->submitForm($edit, 'Save configuration');
     $args = ['@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled'];

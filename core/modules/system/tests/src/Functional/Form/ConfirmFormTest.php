@@ -82,7 +82,7 @@ class ConfirmFormTest extends BrowserTestBase {
    * @param string $group
    *   The assertion group.
    */
-  public function assertCancelLinkUrl(Url $url, $message = '', $group = 'Other') {
+  public function assertCancelLinkUrl(Url $url, $message = '', $group = 'Other'): void {
     $links = $this->xpath('//a[@href=:url]', [':url' => $url->toString()]);
     $message = ($message ? $message : new FormattableMarkup('Cancel link with URL %url found.', ['%url' => $url->toString()]));
     $this->assertTrue(isset($links[0]), $message, $group);

@@ -390,7 +390,7 @@ class ManageDisplayTest extends WebDriverTestBase {
    * @param null $selected
    *   The default value to validate.
    */
-  protected function assertFieldSelectOptions($field, array $expected_options, $selected = NULL) {
+  protected function assertFieldSelectOptions($field, array $expected_options, $selected = NULL): void {
     /** @var \Behat\Mink\Element\NodeElement[] $select_options */
     $select_options = $field->findAll('xpath', 'option');
 

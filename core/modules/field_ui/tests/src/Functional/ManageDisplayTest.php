@@ -225,12 +225,9 @@ class ManageDisplayTest extends BrowserTestBase {
    *   Plain text to look for.
    * @param $message
    *   Message to display.
-   *
-   * @return
-   *   TRUE on pass, FALSE on fail.
    */
-  public function assertNodeViewText(EntityInterface $node, $view_mode, $text, $message) {
-    return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
+  public function assertNodeViewText(EntityInterface $node, $view_mode, $text, $message): void {
+    $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
   }
 
   /**
@@ -244,12 +241,9 @@ class ManageDisplayTest extends BrowserTestBase {
    *   Plain text to look for.
    * @param $message
    *   Message to display.
-   *
-   * @return
-   *   TRUE on pass, FALSE on fail.
    */
-  public function assertNodeViewNoText(EntityInterface $node, $view_mode, $text, $message) {
-    return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
+  public function assertNodeViewNoText(EntityInterface $node, $view_mode, $text, $message): void {
+    $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
   }
 
   /**
@@ -269,7 +263,7 @@ class ManageDisplayTest extends BrowserTestBase {
    * @param $not_exists
    *   TRUE if this text should not exist, FALSE if it should.
    */
-  public function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
+  public function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists): void {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -297,7 +291,7 @@ class ManageDisplayTest extends BrowserTestBase {
    * @param array $expected_options
    *   An array of expected options.
    */
-  protected function assertFieldSelectOptions($name, array $expected_options) {
+  protected function assertFieldSelectOptions($name, array $expected_options): void {
     $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
     $fields = $this->xpath($xpath);
     if ($fields) {

@@ -167,7 +167,7 @@ class FrontPageTest extends ViewTestBase {
    * @param string $message
    *   (optional) A custom message to display with the assertion.
    */
-  protected function assertNotInResultSet(ViewExecutable $view, array $not_expected_nids, $message = '') {
+  protected function assertNotInResultSet(ViewExecutable $view, array $not_expected_nids, $message = ''): void {
     $found_nids = array_filter($view->result, function ($row) use ($not_expected_nids) {
       return in_array($row->nid, $not_expected_nids);
     });

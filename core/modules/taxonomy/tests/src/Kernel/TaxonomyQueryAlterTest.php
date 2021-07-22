@@ -135,7 +135,7 @@ class TaxonomyQueryAlterTest extends KernelTestBase {
    *   The number of times the tag-specific query_alter hooks are expected to
    *   have been invoked.
    */
-  protected function assertQueryTagTestResult($expected_generic_invocations, $expected_specific_invocations) {
+  protected function assertQueryTagTestResult($expected_generic_invocations, $expected_specific_invocations): void {
     $state = $this->container->get('state');
     $this->assertEquals($expected_generic_invocations, $state->get('taxonomy_test_query_alter'));
     $this->assertEquals($expected_specific_invocations, $state->get('taxonomy_test_query_term_access_alter'));

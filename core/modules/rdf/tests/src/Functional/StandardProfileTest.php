@@ -339,7 +339,7 @@ class StandardProfileTest extends BrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  protected function assertRdfaCommonNodeProperties(NodeInterface $node, $message_prefix) {
+  protected function assertRdfaCommonNodeProperties(NodeInterface $node, $message_prefix): void {
     $this->drupalGet($node->toUrl());
     $uri = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
 
@@ -391,7 +391,7 @@ class StandardProfileTest extends BrowserTestBase {
    * @param string $message_prefix
    *   The word to use in the test assertion message.
    */
-  protected function assertRdfaArticleProperties($message_prefix) {
+  protected function assertRdfaArticleProperties($message_prefix): void {
     // Tags.
     $expected_value = [
       'type' => 'uri',
@@ -416,7 +416,7 @@ class StandardProfileTest extends BrowserTestBase {
   /**
    * Tests output for comment properties on nodes in full page view mode.
    */
-  protected function assertRdfaNodeCommentProperties() {
+  protected function assertRdfaNodeCommentProperties(): void {
 
     $this->drupalGet($this->article->toUrl());
     // Relationship between node and comment.

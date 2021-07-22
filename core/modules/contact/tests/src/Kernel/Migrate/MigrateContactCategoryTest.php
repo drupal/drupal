@@ -42,7 +42,7 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
    * @param int $expected_weight
    *   The contact form's expected weight.
    */
-  protected function assertEntity($id, $expected_label, array $expected_recipients, $expected_reply, $expected_weight) {
+  protected function assertEntity($id, $expected_label, array $expected_recipients, $expected_reply, $expected_weight): void {
     /** @var \Drupal\contact\ContactFormInterface $entity */
     $entity = ContactForm::load($id);
     $this->assertInstanceOf(ContactFormInterface::class, $entity);

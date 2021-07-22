@@ -52,7 +52,7 @@ class HtmlToTextTest extends BrowserTestBase {
    *   set of tags supported by
    *   \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
-  protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
+  protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL): void {
     preg_match_all('/<([a-z0-6]+)/', mb_strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';

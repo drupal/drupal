@@ -223,7 +223,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    * @param string $id
    *   A contextual link id.
    */
-  protected function assertContextualLinkPlaceHolder($id) {
+  protected function assertContextualLinkPlaceHolder($id): void {
     $this->assertSession()->elementAttributeContains(
       'css',
       'div[data-contextual-id="' . $id . '"]',
@@ -238,7 +238,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    * @param string $id
    *   A contextual link id.
    */
-  protected function assertNoContextualLinkPlaceHolder($id) {
+  protected function assertNoContextualLinkPlaceHolder($id): void {
     $this->assertSession()->elementNotExists('css', 'div[data-contextual-id="' . $id . '"]');
   }
 

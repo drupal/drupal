@@ -232,17 +232,13 @@ class HandlerTest extends ViewTestBase {
    *   The message to display along with the assertion.
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded.
    */
-  protected function assertEqualValue($expected, $handler, $message = '', $group = 'Other') {
+  protected function assertEqualValue($expected, $handler, $message = '', $group = 'Other'): void {
     if (empty($message)) {
       $message = t('Comparing @first and @second', ['@first' => implode(',', $expected), '@second' => implode(',', $handler->value)]);
     }
 
     $this->assertEquals($expected, $handler->value, $message);
-    return TRUE;
   }
 
   /**

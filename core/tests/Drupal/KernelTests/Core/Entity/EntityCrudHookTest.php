@@ -71,7 +71,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
    * @param $messages
    *   An array of plain-text messages in the order they should appear.
    */
-  protected function assertHookMessageOrder($messages) {
+  protected function assertHookMessageOrder($messages): void {
     $positions = [];
     foreach ($messages as $message) {
       // Verify that each message is found and record its position.

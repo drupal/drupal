@@ -259,7 +259,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @param $assertion_text
    *   The text to display when we perform the assertion.
    */
-  protected function assertSessionIds($sid, $assertion_text) {
+  protected function assertSessionIds($sid, $assertion_text): void {
     $this->assertNotEmpty(\Drupal::database()->select('sessions', 's')->fields('s', ['timestamp'])->condition('sid', Crypt::hashBase64($sid))->execute()->fetchField(), $assertion_text);
   }
 

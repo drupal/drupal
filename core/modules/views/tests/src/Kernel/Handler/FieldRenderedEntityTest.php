@@ -143,7 +143,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    * @param array $build
    *   The render array
    */
-  protected function assertCacheabilityMetadata($build) {
+  protected function assertCacheabilityMetadata($build): void {
     $this->assertEquals([
       'config:core.entity_view_display.entity_test.entity_test.foobar',
       'config:views.view.test_field_entity_test_rendered',
@@ -168,7 +168,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    *
    * @param \Drupal\views\Entity\View $storage
    */
-  protected function assertConfigDependencies(View $storage) {
+  protected function assertConfigDependencies(View $storage): void {
     $storage->calculateDependencies();
     $this->assertEquals([
       'config' => ['core.entity_view_mode.entity_test.foobar'],

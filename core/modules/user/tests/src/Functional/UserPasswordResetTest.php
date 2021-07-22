@@ -488,7 +488,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Helper function to make assertions about a valid password reset.
    */
-  public function assertValidPasswordReset($name) {
+  public function assertValidPasswordReset($name): void {
     $this->assertSession()->pageTextContains("If $name is a valid account, an email will be sent with instructions to reset your password.");
     $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
     $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => \Drupal::config('system.site')->get('name')]);
@@ -500,7 +500,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    *
    * @param string $name
    */
-  public function assertNoValidPasswordReset($name) {
+  public function assertNoValidPasswordReset($name): void {
     // This message is the same as the valid reset for privacy reasons.
     $this->assertSession()->pageTextContains("If $name is a valid account, an email will be sent with instructions to reset your password.");
     // The difference is that no email is sent.
@@ -510,14 +510,14 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Makes assertions about a password reset triggering IP flood control.
    */
-  public function assertPasswordIpFlood() {
+  public function assertPasswordIpFlood(): void {
     $this->assertSession()->pageTextContains('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.');
   }
 
   /**
    * Makes assertions about a password reset not triggering IP flood control.
    */
-  public function assertNoPasswordIpFlood() {
+  public function assertNoPasswordIpFlood(): void {
     $this->assertNoText('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.');
   }
 
