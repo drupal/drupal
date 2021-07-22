@@ -656,7 +656,6 @@
  */
 
 .ui-autocomplete {
-  overflow: hidden;
   color: #545560;
   border: 1px solid rgba(216, 217, 224, 0.8);
   border-top: 0;
