@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - forum
+  theme:
+    - bartik
+id: active_forum_topics
+theme: bartik
+region: sidebar_first
+weight: 0
+provider: null
+plugin: forum_active_block
+settings:
+  id: forum_active_block
+  label: 'Active forum topics'
+  provider: forum
+  label_display: visible
+  properties:
+    administrative: '1'
+  block_count: 5
+visibility: {  }

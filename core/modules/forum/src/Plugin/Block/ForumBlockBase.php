@@ -44,9 +44,6 @@ abstract class ForumBlockBase extends BlockBase {
    */
   public function defaultConfiguration() {
     return [
-      'properties' => [
-        'administrative' => TRUE,
-      ],
       'block_count' => 5,
     ];
   }

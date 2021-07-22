@@ -46,6 +46,7 @@ block.settings.forum_active_block:
     properties:
       type: sequence
       label: 'Properties'
+      deprecated: "The 'properties' config schema is deprecated in drupal:9.3.0 and and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/2251789."
       sequence:
         type: string
     block_count:
@@ -59,6 +60,7 @@ block.settings.forum_new_block:
     properties:
       type: sequence
       label: 'Properties'
+      deprecated: "The 'properties' config schema is deprecated in drupal:9.3.0 and and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/2251789."
       sequence:
         type: string
     block_count:
