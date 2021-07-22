@@ -37,6 +37,13 @@ final class ExportStorageManager implements StorageManagerInterface {
   protected $storage;
 
   /**
+   * The drupal database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * The event dispatcher.
    *
    * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
@@ -64,6 +71,7 @@ final class ExportStorageManager implements StorageManagerInterface {
    */
   public function __construct(StorageInterface $active, Connection $connection, EventDispatcherInterface $event_dispatcher, LockBackendInterface $lock) {
     $this->active = $active;
+    $this->connection = $connection;
     $this->eventDispatcher = $event_dispatcher;
     $this->lock = $lock;
     // The point of this service is to provide the storage and dispatch the
@@ -84,7 +92,10 @@ final class ExportStorageManager implements StorageManagerInterface {
       }
     }
 
+    $transaction = $this->connection->startTransaction();
     self::replaceStorageContents($this->active, $this->storage);
+    $this->connection->popTransaction($transaction->name());
+
     $this->eventDispatcher->dispatch(new StorageTransformEvent($this->storage), ConfigEvents::STORAGE_TRANSFORM_EXPORT);
 
     return new ReadOnlyStorage($this->storage);
