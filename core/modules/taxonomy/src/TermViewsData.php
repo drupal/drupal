@@ -25,6 +25,10 @@ class TermViewsData extends EntityViewsData {
         'field' => 'tid',
         'left_field' => 'tid',
       ],
+      'taxonomy_term_field_data' => [
+        'field' => 'tid',
+        'left_field' => 'tid',
+      ],
     ];
 
     $data['taxonomy_term_field_data']['tid']['help'] = $this->t('The tid of a taxonomy term.');
