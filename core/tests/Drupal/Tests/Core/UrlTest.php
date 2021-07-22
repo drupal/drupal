@@ -330,6 +330,16 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getUri() method for external URLs with parameters.
+   *
+   * @covers ::getUri
+   */
+  public function testGetUriForExternalUrlWithParameters() {
+    $url = Url::fromUri('http://www.example.com/my/path?single.value=&single value=&single_value=&multi.value[first]=&multi.value[second]=&multi value[third]=&multi value[fourth]=&multi_value[fifth]=&multi_value[sixth]=');
+    $this->assertEquals('http://www.example.com/my/path?single.value=&single value=&single_value=&multi.value[first]=&multi.value[second]=&multi value[third]=&multi value[fourth]=&multi_value[fifth]=&multi_value[sixth]=', $url->getUri());
+  }
+
+  /**
    * Tests the getUri() and isExternal() methods for protocol-relative URLs.
    *
    * @covers ::getUri

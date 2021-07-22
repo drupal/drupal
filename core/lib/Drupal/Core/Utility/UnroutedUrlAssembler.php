@@ -74,11 +74,6 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     $parsed = UrlHelper::parse($uri);
     $uri = $parsed['path'];
 
-    $parsed += ['query' => []];
-    $options += ['query' => []];
-
-    $options['query'] = NestedArray::mergeDeepArray([$parsed['query'], $options['query']], TRUE);
-
     if ($parsed['fragment'] && !$options['fragment']) {
       $options['fragment'] = '#' . $parsed['fragment'];
     }
@@ -92,8 +87,14 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       }
     }
     // Append the query.
-    if ($options['query']) {
+    if (!empty($options['query'])) {
+      // Merge the parsed query parameters array with the new parameters
+      $options['query'] = NestedArray::mergeDeepArray([$parsed['query'], $options['query']], TRUE);
       $uri .= '?' . UrlHelper::buildQuery($options['query']);
+    }
+    elseif ($parsed['query_raw']) {
+      // Since no new query params are being merged in, use the unprocessed query string for better fidelity.
+      $uri .= '?' . $parsed['query_raw'];
     }
     // Reassemble.
     $url = $uri . $options['fragment'];

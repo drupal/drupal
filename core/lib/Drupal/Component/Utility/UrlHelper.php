@@ -134,6 +134,7 @@ class UrlHelper {
     $options = [
       'path' => NULL,
       'query' => [],
+      'query_raw' => NULL,
       'fragment' => '',
     ];
 
@@ -160,7 +161,8 @@ class UrlHelper {
       }
       // If there is a query string, transform it into keyed query parameters.
       if (isset($parts[1])) {
-        parse_str($parts[1], $options['query']);
+        $options['query_raw'] = $parts[1];
+        $options['query'] = static::parseQueryString($parts[1]);
       }
     }
     // Internal URLs.
@@ -171,7 +173,8 @@ class UrlHelper {
       // Strip the leading slash that was just added.
       $options['path'] = substr($parts['path'], 1);
       if (isset($parts['query'])) {
-        parse_str($parts['query'], $options['query']);
+        $options['query_raw'] = $parts['query'];
+        $options['query'] = static::parseQueryString($parts['query']);
       }
       if (isset($parts['fragment'])) {
         $options['fragment'] = $parts['fragment'];
@@ -179,6 +182,42 @@ class UrlHelper {
     }
 
     return $options;
+  }
+
+  /**
+   * A wrapper for parse_str() that restores original parameter names.
+   *
+   * The parse_str() function can be used to set variables in the current scope,
+   * although this is deprecated. Because variables in PHP cannot have periods
+   * and spaces in their names, parse_str() converts them to underscores. This
+   * breaks external links and front end libraries that require specific
+   * parameter names. It can also cause name collisions.
+   *
+   * @param string $query
+   *   A query string to parse.
+   *
+   * @return array
+   *   The result of parse_str() with original parameter names restored.
+   */
+  public static function parseQueryString($query) {
+    // Create an array to map parsed parameters to original names.
+    $parsed = [];
+    foreach (explode('&', $query) as $param) {
+      list($name) = explode('=', $param, 2);
+      $name = rawurldecode($name);
+      // Extract the first item of a potentially nested parameter name.
+      $name = strstr($name, '[', TRUE) ?: $name;
+      // Parse the query parameter.
+      parse_str($param, $param);
+      // Merge the parameter into the parsed array.
+      if (isset($parsed[$name]) && is_array($parsed[$name])) {
+        $parsed[$name] = NestedArray::mergeDeepArray([$parsed[$name], reset($param)], TRUE);
+      }
+      else {
+        $parsed[$name] = reset($param);
+      }
+    }
+    return $parsed;
   }
 
   /**
