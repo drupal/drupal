@@ -25,7 +25,21 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
+ *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}},
+ *   column_groups = {
+ *     "description_field" = {
+ *       "label" = @Translation("Description"),
+ *       "translatable" = TRUE,
+ *     },
+ *     "display" = {
+ *       "label" = @Translation("Display"),
+ *       "translatable" = FALSE,
+ *     },
+ *     "target_id" = {
+ *       "label" = @Translation("Target Entity ID"),
+ *       "translatable" = FALSE,
+ *     },
+ *   },
  * )
  */
 class FileItem extends EntityReferenceItem {
