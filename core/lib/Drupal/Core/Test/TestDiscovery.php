@@ -271,6 +271,18 @@ class TestDiscovery {
    * @see https://www.drupal.org/node/2296635
    */
   public static function scanDirectory($namespace_prefix, $path) {
+    static $skipped_classes;
+
+    if (!isset($skipped_classes)) {
+      $env = getenv();
+      if (isset($env['PHPUNIT_SKIP_CLASS'])) {
+        $skipped_classes = json_decode($env['PHPUNIT_SKIP_CLASS']);
+      }
+      else {
+        $skipped_classes = [];
+      }
+    }
+
     if (substr($namespace_prefix, -1) !== '\\') {
       throw new \InvalidArgumentException("Namespace prefix for $path must contain a trailing namespace separator.");
     }
@@ -301,6 +313,9 @@ class TestDiscovery {
         $class .= strtr($subpath, '/', '\\') . '\\';
       }
       $class .= $fileinfo->getBasename('.php');
+      if (in_array($class, $skipped_classes)) {
+        continue;
+      }
       $classes[$class] = $fileinfo->getPathname();
     }
     return $classes;
