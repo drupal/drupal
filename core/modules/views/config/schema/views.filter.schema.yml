@@ -128,6 +128,20 @@ views.filter.many_to_one:
       type: boolean
       label: 'Reduce duplicate'
 
+views.filter.entity_reference:
+  type: views.filter.many_to_one
+  label: 'Entity reference'
+  mapping:
+    handler:
+      type: string
+      label: 'Selection handler'
+    widget:
+      type: string
+      label: 'Selection type'
+    handler_settings:
+      type: entity_reference_selection.[%parent.handler]
+      label: 'Selection handler settings'
+
 views.filter.standard:
   type: views_filter
   label: 'Standard'

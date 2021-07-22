@@ -1133,7 +1133,7 @@ class EntityViewsDataTest extends UnitTestCase {
    */
   protected function assertEntityReferenceField($data) {
     $this->assertEquals('field', $data['field']['id']);
-    $this->assertEquals('numeric', $data['filter']['id']);
+    $this->assertEquals('entity_reference', $data['filter']['id']);
     $this->assertEquals('numeric', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);
   }
