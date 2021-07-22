@@ -135,9 +135,9 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
       ->method('getContext')
       ->willReturn($request_context);
 
-    $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
+    $this->kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
       return new HtmlResponse($request->getMethod());
-    }));
+    });
 
     $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
 
@@ -162,9 +162,9 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
       ->method('getContext')
       ->willReturn($request_context);
 
-    $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
+    $this->kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
       return new Response($request->getMethod() . ' ' . UrlHelper::buildQuery($request->query->all()));
-    }));
+    });
 
     $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
     $this->customPageSubscriber->onException($event);

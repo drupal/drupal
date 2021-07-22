@@ -381,14 +381,14 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(['id' => 'id']));
     $this->entityType->expects($this->any())
       ->method('hasKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         // SqlContentEntityStorageSchema::initializeBaseTable()
         ['revision', FALSE],
         ['id', TRUE],
-      ]));
+      ]);
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         // EntityStorageBase::__construct()
         ['id', 'id'],
         // ContentEntityStorageBase::__construct()
@@ -397,7 +397,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         // SqlContentEntityStorageSchema::initializeBaseTable()
         ['id' => 'id'],
         ['id' => 'id'],
-      ]));
+      ]);
 
     $this->setUpEntityStorage();
 
@@ -478,11 +478,11 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   public function testGetTableMappingSimple(array $entity_keys) {
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['id', $entity_keys['id']],
         ['uuid', $entity_keys['uuid']],
         ['bundle', $entity_keys['bundle']],
-      ]));
+      ]);
 
     $this->setUpEntityStorage();
 
@@ -596,12 +596,12 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['id', $entity_keys['id']],
         ['uuid', $entity_keys['uuid']],
         ['bundle', $entity_keys['bundle']],
         ['revision', $entity_keys['revision']],
-      ]));
+      ]);
     $this->entityType->expects($this->any())
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue([]));
@@ -669,12 +669,12 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         ->will($this->returnValue(TRUE));
       $this->entityType->expects($this->any())
         ->method('getKey')
-        ->will($this->returnValueMap([
+        ->willReturnMap([
           ['id', $entity_keys['id']],
           ['uuid', $entity_keys['uuid']],
           ['bundle', $entity_keys['bundle']],
           ['revision', $entity_keys['revision']],
-        ]));
+        ]);
 
       $this->entityType->expects($this->any())
         ->method('getRevisionMetadataKeys')
@@ -723,12 +723,12 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['id', $entity_keys['id']],
         ['uuid', $entity_keys['uuid']],
         ['bundle', $entity_keys['bundle']],
         ['langcode', $entity_keys['langcode']],
-      ]));
+      ]);
 
     $this->setUpEntityStorage();
 
@@ -783,12 +783,12 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['id', $entity_keys['id']],
         ['uuid', $entity_keys['uuid']],
         ['bundle', $entity_keys['bundle']],
         ['langcode', $entity_keys['langcode']],
-      ]));
+      ]);
 
     $this->setUpEntityStorage();
 
@@ -853,13 +853,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue('entity_test_field_data'));
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['id', $entity_keys['id']],
         ['uuid', $entity_keys['uuid']],
         ['bundle', $entity_keys['bundle']],
         ['revision', $entity_keys['revision']],
         ['langcode', $entity_keys['langcode']],
-      ]));
+      ]);
     $this->entityType->expects($this->any())
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue($revision_metadata_keys));
@@ -980,13 +980,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         ->will($this->returnValue('entity_test_field_data'));
       $this->entityType->expects($this->any())
         ->method('getKey')
-        ->will($this->returnValueMap([
+        ->willReturnMap([
           ['id', $entity_keys['id']],
           ['uuid', $entity_keys['uuid']],
           ['bundle', $entity_keys['bundle']],
           ['revision', $entity_keys['revision']],
           ['langcode', $entity_keys['langcode']],
-        ]));
+        ]);
       $this->entityType->expects($this->any())
         ->method('getRevisionMetadataKeys')
         ->will($this->returnValue($revision_metadata_field_names));
@@ -1424,9 +1424,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->entityType->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap(
-        [['id', 'id']]
-      ));
+      ->willReturnMap([['id', 'id']]);
 
     $method = new \ReflectionMethod($this->entityStorage, 'cleanIds');
     $method->setAccessible(TRUE);
@@ -1456,10 +1454,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected function setUpModuleHandlerNoImplementations() {
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['entity_load', []],
         [$this->entityTypeId . '_load', []],
-      ]));
+      ]);
 
     $this->container->set('module_handler', $this->moduleHandler);
   }

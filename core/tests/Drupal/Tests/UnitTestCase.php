@@ -159,7 +159,7 @@ abstract class UnitTestCase extends TestCase {
         ->getMock();
       $immutable_config_object->expects($this->any())
         ->method('get')
-        ->will($this->returnCallback($config_get));
+        ->willReturnCallback($config_get);
       $config_get_map[] = [$config_name, $immutable_config_object];
 
       $mutable_config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
@@ -167,7 +167,7 @@ abstract class UnitTestCase extends TestCase {
         ->getMock();
       $mutable_config_object->expects($this->any())
         ->method('get')
-        ->will($this->returnCallback($config_get));
+        ->willReturnCallback($config_get);
       $config_editable_map[] = [$config_name, $mutable_config_object];
     }
     // Construct a config factory with the array of configuration object stubs
@@ -175,10 +175,10 @@ abstract class UnitTestCase extends TestCase {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->any())
       ->method('get')
-      ->will($this->returnValueMap($config_get_map));
+      ->willReturnMap($config_get_map);
     $config_factory->expects($this->any())
       ->method('getEditable')
-      ->will($this->returnValueMap($config_editable_map));
+      ->willReturnMap($config_editable_map);
     return $config_factory;
   }
 
@@ -265,14 +265,14 @@ abstract class UnitTestCase extends TestCase {
     $class_resolver = $this->createMock('Drupal\Core\DependencyInjection\ClassResolverInterface');
     $class_resolver->expects($this->any())
       ->method('getInstanceFromDefinition')
-      ->will($this->returnCallback(function ($class) {
+      ->willReturnCallback(function ($class) {
         if (is_subclass_of($class, 'Drupal\Core\DependencyInjection\ContainerInjectionInterface')) {
           return $class::create(new ContainerBuilder());
         }
         else {
           return new $class();
         }
-      }));
+      });
     return $class_resolver;
   }
 

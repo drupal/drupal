@@ -189,7 +189,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
     $this->requestMatcher->expects($this->exactly(1))
       ->method('matchRequest')
-      ->will($this->returnCallback(function (Request $request) use ($route_1) {
+      ->willReturnCallback(function (Request $request) use ($route_1) {
         if ($request->getPathInfo() == '/example') {
           return [
             RouteObjectInterface::ROUTE_NAME => 'example',
@@ -197,7 +197,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
             '_raw_variables' => new ParameterBag([]),
           ];
         }
-      }));
+      });
 
     $this->setupAccessManagerToAllow();
 
@@ -229,7 +229,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
     $this->requestMatcher->expects($this->exactly(2))
       ->method('matchRequest')
-      ->will($this->returnCallback(function (Request $request) use ($route_1, $route_2) {
+      ->willReturnCallback(function (Request $request) use ($route_1, $route_2) {
         if ($request->getPathInfo() == '/example/bar') {
           return [
             RouteObjectInterface::ROUTE_NAME => 'example_bar',
@@ -244,7 +244,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
             '_raw_variables' => new ParameterBag([]),
           ];
         }
-      }));
+      });
 
     $this->accessManager->expects($this->any())
       ->method('check')
@@ -364,7 +364,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
     $this->requestMatcher->expects($this->exactly(1))
       ->method('matchRequest')
-      ->will($this->returnCallback(function (Request $request) use ($route_1) {
+      ->willReturnCallback(function (Request $request) use ($route_1) {
         if ($request->getPathInfo() == '/user/1') {
           return [
             RouteObjectInterface::ROUTE_NAME => 'user_page',
@@ -372,7 +372,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
             '_raw_variables' => new ParameterBag([]),
           ];
         }
-      }));
+      });
 
     $this->setupAccessManagerToAllow();
     $this->titleResolver->expects($this->once())

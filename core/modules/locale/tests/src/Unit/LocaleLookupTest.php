@@ -157,16 +157,17 @@ class LocaleLookupTest extends UnitTestCase {
     // cSpell:enable
     $this->storage->expects($this->any())
       ->method('findTranslation')
-      ->will($this->returnCallback(function ($argument) use ($translations) {
+      ->willReturnCallback(function ($argument) use ($translations) {
         if (isset($translations[$argument['language']][$argument['source']])) {
           return (object) ['translation' => $translations[$argument['language']][$argument['source']]];
         }
+
         return TRUE;
-      }));
+      });
 
     $this->languageManager->expects($this->any())
       ->method('getFallbackCandidates')
-      ->will($this->returnCallback(function (array $context = []) {
+      ->willReturnCallback(function (array $context = []) {
         switch ($context['langcode']) {
           case 'pl':
             return ['cs', 'en'];
@@ -177,7 +178,7 @@ class LocaleLookupTest extends UnitTestCase {
           default:
             return [];
         }
-      }));
+      });
 
     $this->cache->expects($this->once())
       ->method('get')
@@ -289,20 +290,21 @@ class LocaleLookupTest extends UnitTestCase {
   public function testFixOldPluralStyleTranslations($translations, $langcode, $string, $is_fix) {
     $this->storage->expects($this->any())
       ->method('findTranslation')
-      ->will($this->returnCallback(function ($argument) use ($translations) {
+      ->willReturnCallback(function ($argument) use ($translations) {
         if (isset($translations[$argument['language']][$argument['source']])) {
           return (object) ['translation' => $translations[$argument['language']][$argument['source']]];
         }
+
         return TRUE;
-      }));
+      });
     $this->languageManager->expects($this->any())
       ->method('getFallbackCandidates')
-      ->will($this->returnCallback(function (array $context = []) {
+      ->willReturnCallback(function (array $context = []) {
         switch ($context['langcode']) {
           case 'by':
             return ['ru'];
         }
-      }));
+      });
     $this->cache->expects($this->once())
       ->method('get')
       ->with('locale:' . $langcode . '::anonymous', FALSE);
