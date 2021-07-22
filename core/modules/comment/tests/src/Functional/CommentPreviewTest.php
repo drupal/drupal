@@ -160,7 +160,7 @@ class CommentPreviewTest extends CommentTestBase {
     $expected_text_date = $this->container->get('date.formatter')->format($raw_date);
     $expected_form_date = $date->format('Y-m-d');
     $expected_form_time = $date->format('H:i:s');
-    $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE);
+    $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE, 'comment', 'Post comment');
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $this->submitForm($edit, 'Preview');
 

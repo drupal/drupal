@@ -37,11 +37,8 @@ class StandardTest extends BrowserTestBase {
    * Tests Standard installation profile.
    */
   public function testStandard() {
-    /* @todo Footer menu block with contact link is not exposed in Olivero. Should it?
     $this->drupalGet('');
-    $this->assertSession()->linkExists('Contact');
-    $this->clickLink(t('Contact'));
-    $this->assertSession()->statusCodeEquals(200);*/
+    $this->assertSession()->pageTextContains('Powered by Drupal');
 
     // Test anonymous user can access 'Main navigation' block.
     $this->adminUser = $this->drupalCreateUser([
@@ -88,7 +85,7 @@ class StandardTest extends BrowserTestBase {
     $this->submitForm([
       'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
-    ], 'Save');
+    ], 'Post comment');
     // Fetch the feed.
     $this->drupalGet('rss.xml');
     $this->assertSession()->responseContains('Foobar');
