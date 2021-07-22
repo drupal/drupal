@@ -30,7 +30,7 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return [
       '#type' => 'status_messages',
       '#include_fallback' => TRUE,

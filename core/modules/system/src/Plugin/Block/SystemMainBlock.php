@@ -4,6 +4,7 @@ namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 
 /**
  * Provides a 'Main page content' block.
@@ -17,6 +18,8 @@ use Drupal\Core\Block\MainContentBlockPluginInterface;
  * )
  */
 class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterface {
+
+  use LoggerChannelTrait;
 
   /**
    * The render array representing the main page content.
@@ -35,7 +38,11 @@ class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
+    if (!is_array($this->mainContent)) {
+      $this->getLogger('system')->error('The system_main_block was placed but ::setMainContent() was not called.');
+      return [];
+    }
     return $this->mainContent;
   }
 

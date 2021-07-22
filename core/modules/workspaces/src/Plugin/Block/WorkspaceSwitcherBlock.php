@@ -70,7 +70,7 @@ class WorkspaceSwitcherBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $build = [
       'form' => $this->formBuilder->getForm(WorkspaceSwitcherForm::class),
       '#cache' => [

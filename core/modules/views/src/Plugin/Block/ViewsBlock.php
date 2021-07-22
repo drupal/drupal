@@ -21,7 +21,7 @@ class ViewsBlock extends ViewsBlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $this->view->display_handler->preBlockBuild($this);
 
     $args = [];

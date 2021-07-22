@@ -182,7 +182,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     if ($block = $this->getEntity()) {
       return $this->entityTypeManager->getViewBuilder($block->getEntityTypeId())->view($block, $this->configuration['view_mode']);
     }

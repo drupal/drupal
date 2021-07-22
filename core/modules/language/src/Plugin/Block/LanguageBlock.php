@@ -81,7 +81,7 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $build = [];
     $route_name = $this->pathMatcher->isFrontPage() ? '<front>' : '<current>';
     $type = $this->getDerivativeId();

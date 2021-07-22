@@ -82,7 +82,7 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $config = $this->configuration;
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheableDependency($this->localTaskManager);

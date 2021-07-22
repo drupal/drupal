@@ -17,7 +17,7 @@ class TestCacheBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $content = \Drupal::state()->get('block_test.content');
 
     $build = [];

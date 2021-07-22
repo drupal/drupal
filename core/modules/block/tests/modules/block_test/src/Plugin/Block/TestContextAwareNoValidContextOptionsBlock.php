@@ -20,7 +20,7 @@ class TestContextAwareNoValidContextOptionsBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return [
       '#markup' => 'Rendered block with no valid context options',
     ];

@@ -77,7 +77,7 @@ class SyndicateBlock extends BlockBase implements ContainerFactoryPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $title = $this->configFactory->get('system.site')->get('name');
     return [
       '#theme' => 'feed_icon',

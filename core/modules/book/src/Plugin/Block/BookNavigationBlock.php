@@ -120,7 +120,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $current_bid = 0;
 
     $node = $this->routeMatch->getParameter('node');

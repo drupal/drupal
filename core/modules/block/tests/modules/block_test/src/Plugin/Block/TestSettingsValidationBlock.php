@@ -34,7 +34,7 @@ class TestSettingsValidationBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return ['#markup' => 'foo'];
   }
 

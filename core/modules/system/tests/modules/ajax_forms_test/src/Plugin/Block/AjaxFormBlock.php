@@ -71,7 +71,7 @@ class AjaxFormBlock extends BlockBase implements FormInterface, ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return $this->formBuilder->getForm($this);
   }
 

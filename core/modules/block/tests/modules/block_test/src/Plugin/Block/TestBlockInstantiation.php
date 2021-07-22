@@ -55,7 +55,7 @@ class TestBlockInstantiation extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return [
       '#children' => $this->configuration['display_message'],
     ];

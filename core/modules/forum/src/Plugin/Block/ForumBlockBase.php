@@ -17,7 +17,7 @@ abstract class ForumBlockBase extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $result = $this->buildForumQuery()->execute();
     $elements = [];
     if ($node_title_list = node_title_list($result)) {

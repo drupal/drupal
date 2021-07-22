@@ -125,7 +125,8 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
+    $build = [];
     // Load the selected feed.
     if (!$feed = $this->feedStorage->load($this->configuration['feed'])) {
       return [];
@@ -158,8 +159,8 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
         '#url' => $feed->toUrl(),
         '#attributes' => ['title' => $this->t("View this feed's recent news.")],
       ];
-      return $build;
     }
+    return $build;
   }
 
   /**

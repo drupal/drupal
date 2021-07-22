@@ -43,7 +43,7 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     return [
       '#type' => 'page_title',
       '#title' => $this->title,

@@ -154,7 +154,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $display_settings = $this->getConfiguration()['formatter'];
     $display_settings['third_party_settings']['layout_builder']['view_mode'] = $this->getContextValue('view_mode');
     $entity = $this->getEntity();
