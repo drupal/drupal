@@ -57,14 +57,13 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
     ])
       ->setThirdPartySetting('content_translation', 'enabled', TRUE)
       ->save();
-
-    $this->createDefaultContent(5, 5, TRUE, TRUE, static::IS_MULTILINGUAL, FALSE);
   }
 
   /**
    * Tests reading multilingual content.
    */
   public function testReadMultilingual() {
+    $this->createDefaultContent(5, 5, TRUE, TRUE, static::IS_MULTILINGUAL, FALSE);
     // Different databases have different sort orders, so a sort is required so
     // test expectations do not need to vary per database.
     $default_sort = ['sort' => 'drupal_internal__nid'];
@@ -98,6 +97,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests updating a translation.
    */
   public function testPatchTranslation() {
+    $this->createDefaultContent(5, 5, TRUE, TRUE, static::IS_MULTILINGUAL, FALSE);
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $node = $this->nodes[0];
     $uuid = $node->uuid();
@@ -197,6 +197,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests updating a translation fallback.
    */
   public function testPatchTranslationFallback() {
+    $this->createDefaultContent(5, 5, TRUE, TRUE, static::IS_MULTILINGUAL, FALSE);
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $node = $this->nodes[0];
     $uuid = $node->uuid();
@@ -238,6 +239,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests creating a translation.
    */
   public function testPostTranslation() {
+    $this->createDefaultContent(5, 5, TRUE, TRUE, static::IS_MULTILINGUAL, FALSE);
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
       'bypass node access',
@@ -302,6 +304,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests deleting multilingual content.
    */
   public function testDeleteMultilingual() {
+    $this->createDefaultContent(5, 5, TRUE, TRUE, static::IS_MULTILINGUAL, FALSE);
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
       'bypass node access',
@@ -320,6 +323,61 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
     $response = $this->request('DELETE', Url::fromUri('base:/jsonapi/node/article/' . $this->nodes[0]->uuid()), []);
     $this->assertSame(204, $response->getStatusCode());
     $this->assertNull(Node::load($this->nodes[0]->id()));
+  }
+
+  /**
+   * Tests multilingual JSON:API calls.
+   */
+  public function testMultilingualGet() {
+    $titles = [
+      [
+        'en' => 'Apple',
+        'ca' => 'Z-Apple',
+      ],
+      [
+        'en' => 'Blackberry',
+        'ca' => 'Y-Blackberry',
+      ],
+      [
+        'en' => 'Google',
+        'ca' => 'X-Google',
+      ],
+      [
+        'en' => 'Motorola',
+        'ca' => 'W-Motorola',
+      ],
+    ];
+
+    $expected_english_order = ['Apple', 'Blackberry', 'Google', 'Motorola'];
+    $expected_ca_order = ['W-Motorola', 'X-Google', 'Y-Blackberry', 'Z-Apple'];
+    foreach ($titles as $title) {
+      $node = Node::create(['title' => $title['en'], 'type' => 'article', 'langcode' => 'en']);
+      $node->addTranslation('ca', ['title' => $title['ca']]);
+      $node->save();
+    }
+
+    $output = Json::decode($this->drupalGet('/jsonapi/node/article', [
+      'query' => [
+        'sort' => 'title',
+      ],
+    ]));
+    $output_titles = array_map(function ($result) {
+      return $result['attributes']['title'];
+    }, $output['data']);
+    $this->assertCount(4, $output_titles);
+    $this->assertSame($expected_english_order, $output_titles);
+
+    // Check the nodes with the langcode url.
+    $output = Json::decode($this->drupalGet('/ca/jsonapi/node/article', [
+      'query' => [
+        'sort' => 'title',
+      ],
+    ]));
+    $output_titles = array_map(function ($result) {
+      return $result['attributes']['title'];
+    }, $output['data']);
+    $this->assertCount(4, $output_titles);
+    $this->assertSame($expected_ca_order, $output_titles);
   }
 
 }

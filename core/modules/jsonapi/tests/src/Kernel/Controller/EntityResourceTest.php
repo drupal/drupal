@@ -2,11 +2,22 @@
 
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\jsonapi\Access\EntityAccessChecker;
 use Drupal\jsonapi\CacheableResourceResponse;
+use Drupal\jsonapi\Context\FieldResolver;
+use Drupal\jsonapi\Controller\EntityResource;
+use Drupal\jsonapi\IncludeResolver;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\JsonApiResource\Data;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
+use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
@@ -15,6 +26,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\Controller\EntityResource
@@ -227,6 +239,27 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $this->assertInstanceOf(Data::class, $response->getResponseData()->getData());
     $this->assertEquals(0, $response->getResponseData()->getData()->count());
     $this->assertEquals(['node_list'], $response->getCacheableMetadata()->getCacheTags());
+  }
+
+  /**
+   * Test the language_manager argument deprecation.
+   *
+   * @group legacy
+   */
+  public function testEntityResourceNewParameterDeprecation() {
+    $this->expectDeprecation('The language_manager service must be passed to ' . EntityResource::class . '::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0.');
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $field_manager = $this->prophesize(EntityFieldManagerInterface::class);
+    $resource_type_repository = $this->prophesize(ResourceTypeRepositoryInterface::class);
+    $module_renderer_handler = $this->prophesize(RendererInterface::class);
+    $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
+    $include_resolver = $this->prophesize(IncludeResolver::class);
+    $entity_access_checker = $this->prophesize(EntityAccessChecker::class);
+    $field_resolver = $this->prophesize(FieldResolver::class);
+    $serializer = $this->prophesize(SerializerInterface::class);
+    $time = $this->prophesize(TimeInterface::class);
+    $user = $this->prophesize(AccountInterface::class);
+    $this->assertNotNull(new EntityResource($entity_type_manager->reveal(), $field_manager->reveal(), $resource_type_repository->reveal(), $module_renderer_handler->reveal(), $entity_repository->reveal(), $include_resolver->reveal(), $entity_access_checker->reveal(), $field_resolver->reveal(), $serializer->reveal(), $time->reveal(), $user->reveal()));
   }
 
 }
