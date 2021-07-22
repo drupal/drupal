@@ -832,7 +832,20 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (isset($build_info['base_form_id'])) {
       $hooks[] = 'form_' . $build_info['base_form_id'];
     }
-    $hooks[] = 'form_' . $form_id;
+
+    // Allow forms to skip alter hook for the actual form id.
+    // To allowing having same form multiple times on a page via blocks or
+    // listing of entities we might add entity ids in the form id.
+    // (for example webform submission form).
+    // This means module_implements cache entry in cache bootstrap will
+    // be updated for each and every entity.
+    // To avoid this we allow the forms to stop invoking the alter hook for the
+    // dynamic form id, ideally these forms will already have the base_form_id
+    // set and alter hooks will be triggered for them.
+    if (empty($form['#skip_form_id_hook_alter'])) {
+      $hooks[] = 'form_' . $form_id;
+    }
+
     $this->moduleHandler->alter($hooks, $form, $form_state, $form_id);
     $this->themeManager->alter($hooks, $form, $form_state, $form_id);
   }
