@@ -123,6 +123,10 @@ trait MigrationConfigurationTrait {
     $version_tag = 'Drupal ' . $drupal_version;
     /** @var \Drupal\migrate\Plugin\MigrationInterface[] $all_migrations */
     $all_migrations = $this->getMigrationPluginManager()->createInstancesByTag($version_tag);
+    $all_migrations = array_filter($all_migrations, function ($migration) {
+      // Filter out deprecated migrations.
+      return !$migration->isDeprecated();
+    });
 
     // Unset the node migrations that should not run based on the type of node
     // migration. That is, if this is a complete node migration then unset the

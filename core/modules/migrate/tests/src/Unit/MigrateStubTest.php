@@ -58,6 +58,7 @@ class MigrateStubTest extends UnitTestCase {
     $migration->getProcess()->willReturn([]);
     $migration->getSourceConfiguration()->willReturn([]);
     $migration->getSourcePlugin()->willReturn($source_plugin->reveal());
+    $migration->isDeprecated()->willReturn(FALSE);
 
     $this->migrationPluginManager->createInstances(['test_migration'])->willReturn([$migration->reveal()]);
 

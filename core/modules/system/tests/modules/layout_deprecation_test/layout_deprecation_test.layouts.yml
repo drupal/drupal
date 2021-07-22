@@ -1,0 +1,4 @@
+layout_deprecation_test:
+  label: deprecation test
+  category: Layout test
+  deprecation_message: This layout is now deprecated. Bye!

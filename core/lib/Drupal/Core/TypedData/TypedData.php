@@ -3,6 +3,7 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Component\Plugin\PluginInspectionTrait;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -16,6 +17,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 abstract class TypedData implements TypedDataInterface, PluginInspectionInterface {
   use DependencySerializationTrait;
+  use PluginInspectionTrait;
   use StringTranslationTrait;
   use TypedDataTrait;
 

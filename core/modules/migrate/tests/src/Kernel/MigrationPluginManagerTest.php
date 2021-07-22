@@ -70,4 +70,15 @@ class MigrationPluginManagerTest extends MigrateTestBase {
 
   }
 
+  /**
+   * Tests error is triggered when creating a deprecated migration.
+   *
+   * @group legacy
+   */
+  public function testMigrationDeprecation() {
+    $this->enableModules(['migrate_deprecate_test']);
+    $this->expectDeprecation('core/modules/migrate/tests/modules/migrate_deprecate_test/migrations/deprecated.yml is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use core/modules/migrate/tests/modules/migrate_deprecate_test/migrations/new.yml instead. See https://www.drupal.org/node/3039240');
+    $this->migrationPluginManager->createInstance('deprecated');
+  }
+
 }

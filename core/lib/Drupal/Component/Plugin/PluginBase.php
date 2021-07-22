@@ -7,6 +7,8 @@ namespace Drupal\Component\Plugin;
  */
 abstract class PluginBase implements PluginInspectionInterface, DerivativeInspectionInterface {
 
+  use PluginInspectionTrait;
+
   /**
    * A string which is used to separate base plugin IDs from the derivative ID.
    */
@@ -54,6 +56,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
     $this->configuration = $configuration;
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
+    $this->checkDeprecation();
   }
 
   /**
