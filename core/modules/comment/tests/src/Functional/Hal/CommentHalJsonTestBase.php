@@ -8,7 +8,7 @@ use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\user\Entity\User;
 
 /**
- * {@inheritdoc}
+ * Comment resource test base for hal+json feeds.
  */
 abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
 
