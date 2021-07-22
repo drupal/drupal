@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
@@ -75,6 +76,13 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
+    if ($data === FALSE) {
+      // For a typed config the data MUST exist.
+      $data = [];
+      trigger_error(new FormattableMarkup('Missing required data for typed configuration: @config', [
+        '@config' => $name,
+      ]), E_USER_ERROR);
+    }
     return $this->createFromNameAndData($name, $data);
   }
 
