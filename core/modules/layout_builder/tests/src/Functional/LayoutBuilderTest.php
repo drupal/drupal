@@ -19,6 +19,7 @@ class LayoutBuilderTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'field_ui',
     'views',
     'layout_builder',
     'layout_builder_views_test',

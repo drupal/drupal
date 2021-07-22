@@ -25,6 +25,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'block',
+    'field_ui',
     'node',
     'layout_builder',
     'layout_builder_form_block_test',

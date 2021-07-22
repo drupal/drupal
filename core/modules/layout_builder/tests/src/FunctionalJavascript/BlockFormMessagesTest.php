@@ -4,6 +4,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use WebDriver\Exception\UnknownError;
 
@@ -37,6 +38,11 @@ class BlockFormMessagesTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->createContentType(['type' => 'bundle_with_section_field']);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+    $this->createNode(['type' => 'bundle_with_section_field']);
   }
 
   /**
@@ -52,15 +58,8 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
       'configure any layout',
-      'administer node display',
-      'administer node fields',
     ]));
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    // Enable layout builder.
-    $this->drupalGet($field_ui_prefix . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $this->clickElementWhenClickable($page->findLink('Manage layout'));
-    $assert_session->addressEquals($field_ui_prefix . '/display/default/layout');
+    $this->drupalGet('node/1/layout');
     $this->clickElementWhenClickable($page->findLink('Add block'));
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas .block-categories'));
     $this->clickElementWhenClickable($page->findLink('Powered by Drupal'));
@@ -77,10 +76,11 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $this->drupalGet($this->getUrl());
     $this->clickElementWhenClickable($page->findButton('Save layout'));
-    $this->assertNotEmpty($assert_session->waitForElement('css', 'div:contains("The layout has been saved")'));
+    $this->htmlOutput($page->getContent());
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'div:contains("The layout override has been saved")'));
 
     // Ensure that message are displayed when configuring an existing block.
-    $this->drupalGet($field_ui_prefix . '/display/default/layout');
+    $this->drupalGet('node/1/layout');
     $assert_session->assertWaitOnAjaxRequest();
     $this->clickContextualLink($block_css_locator, 'Configure', TRUE);
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas [name="settings[label]"]'));

@@ -18,6 +18,13 @@ class InlineBlockTest extends InlineBlockTestBase {
   protected $defaultTheme = 'classy';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'field_ui',
+  ];
+
+  /**
    * Tests adding and editing of inline blocks.
    */
   public function testInlineBlocks() {

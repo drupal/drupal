@@ -4,6 +4,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
@@ -62,21 +63,10 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    */
   public function testPrivateFiles() {
     $assert_session = $this->assertSession();
-    $this->drupalLogin($this->drupalCreateUser([
-      'access contextual links',
-      'configure any layout',
-      'administer node display',
-      'administer node fields',
-      'create and edit custom blocks',
-    ]));
-
-    // Enable layout builder and overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm([
-      'layout[enabled]' => TRUE,
-      'layout[allow_custom]' => TRUE,
-    ], 'Save');
-    $this->drupalLogout();
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     // Log in as user you can only configure layouts and access content.
     $this->drupalLogin($this->drupalCreateUser([
