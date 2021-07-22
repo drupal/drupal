@@ -5,6 +5,124 @@
 
 (function ($, Drupal) {
   /**
+   * Utility methods for color manipulation taken from farbtastic.
+   *
+   * @see https://github.com/mattfarina/farbtastic
+   *
+   * @namespace
+   */
+  Drupal.colorUtils = {
+    /**
+     *
+     * @param dec
+     *
+     * @return {string}
+     */
+    dec2hex(dec) {
+      return (dec < 16 ? '0' : '') + dec.toString(16);
+    },
+    /**
+     *
+     * @param rgb
+     *
+     * @return {string}
+     */
+    pack(rgb) {
+      const r = Math.round(rgb[0] * 255);
+      const g = Math.round(rgb[1] * 255);
+      const b = Math.round(rgb[2] * 255);
+      return `#${this.dec2hex(r)}${this.dec2hex(g)}${this.dec2hex(b)}`;
+    },
+    /**
+     *
+     * @param color
+     *
+     * @return {*[]}
+     */
+    unpack(color) {
+      if (color.length === 7) {
+        // eslint-disable-next-line no-inner-declarations
+        function x(i) {
+          return parseInt(color.substring(i, i + 2), 16) / 255;
+        }
+        return [x(1), x(3), x(5)];
+      }
+      if (color.length === 4) {
+        // eslint-disable-next-line no-inner-declarations
+        function x(i) {
+          return parseInt(color.substring(i, i + 1), 16) / 15;
+        }
+        return [x(1), x(2), x(3)];
+      }
+    },
+    /**
+     *
+     * @param m1
+     * @param m2
+     * @param h
+     *
+     * @return {*}
+     */
+    hueToRGB(m1, m2, h) {
+      h = (h + 1) % 1;
+      if (h * 6 < 1) return m1 + (m2 - m1) * h * 6;
+      if (h * 2 < 1) return m2;
+      if (h * 3 < 2) return m1 + (m2 - m1) * (0.66666 - h) * 6;
+      return m1;
+    },
+    /**
+     *
+     * @param rgb
+     *
+     * @return {*[]}
+     */
+    RGBToHSL(rgb) {
+      const [r, g, b] = rgb;
+      const min = Math.min(r, g, b);
+      const max = Math.max(r, g, b);
+      const delta = max - min;
+      let h = 0;
+      let s = 0;
+      const l = (min + max) / 2;
+      if (l > 0 && l < 1) {
+        s = delta / (l < 0.5 ? 2 * l : 2 - 2 * l);
+      }
+      if (delta > 0) {
+        if (max === r && max !== g) h += (g - b) / delta;
+        if (max === g && max !== b) h += 2 + (b - r) / delta;
+        if (max === b && max !== r) h += 4 + (r - g) / delta;
+        h /= 6;
+      }
+      return [h, s, l];
+    },
+    /**
+     *
+     * @param hsl
+     *
+     * @return {*[]}
+     */
+    HSLToRGB(hsl) {
+      const [h, s, l] = hsl;
+      const m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
+      const m1 = l * 2 - m2;
+      return [
+        this.hueToRGB(m1, m2, h + 0.33333),
+        this.hueToRGB(m1, m2, h),
+        this.hueToRGB(m1, m2, h - 0.33333),
+      ];
+    },
+    /**
+     *
+     * @param hex
+     *
+     * @return {*[]}
+     */
+    hexToHSL(hex) {
+      return this.RGBToHSL(this.unpack(hex));
+    },
+  };
+
+  /**
    * Displays farbtastic color selector and initialize color administration UI.
    *
    * @type {Drupal~behavior}
@@ -21,22 +139,28 @@
       const form = $(context)
         .find('#system-theme-settings .color-form')
         .once('color');
+
       if (form.length === 0) {
         return;
       }
       const inputs = [];
       const hooks = [];
       const locks = [];
-      let focused = null;
 
-      // Add Farbtastic.
-      $('<div class="color-placeholder"></div>').once('color').prependTo(form);
-      const farb = $.farbtastic('.color-placeholder');
+      if (!Modernizr.inputtypes.color) {
+        $(`<div class="messages messages--warning">
+          ${Drupal.t(
+            'Update colors by changing the hex value in an input. To use a color picker instead, use a browser that supports them natively such as Edge, Chrome, Firefox, Opera or Safari',
+          )}.
+          </div>`)
+          .once('color')
+          .prependTo(form);
+      }
 
       // Decode reference colors to HSL.
-      const reference = settings.color.reference;
+      const { reference } = settings.color;
       Object.keys(reference || {}).forEach((color) => {
-        reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
+        reference[color] = Drupal.colorUtils.hexToHSL(reference[color]);
       });
 
       // Build a preview.
@@ -47,7 +171,7 @@
        * Renders the preview.
        */
       function preview() {
-        Drupal.color.callback(context, settings, form, farb, height, width);
+        Drupal.color.callback(context, settings, form, height, width);
       }
 
       /**
@@ -83,13 +207,12 @@
       function shiftColor(given, ref1, ref2) {
         let d;
         // Convert to HSL.
-        given = farb.RGBToHSL(farb.unpack(given));
-
+        given = Drupal.colorUtils.hexToHSL(given);
         // Hue: apply delta.
         given[0] += ref2[0] - ref1[0];
-
         // Saturation: interpolate.
         if (ref1[1] === 0 || ref2[1] === 0) {
+          // eslint-disable-next-line prefer-destructuring
           given[1] = ref2[1];
         } else {
           d = ref1[1] / ref2[1];
@@ -102,6 +225,7 @@
 
         // Luminance: interpolate.
         if (ref1[2] === 0 || ref2[2] === 0) {
+          // eslint-disable-next-line prefer-destructuring
           given[2] = ref2[2];
         } else {
           d = ref1[2] / ref2[2];
@@ -112,70 +236,54 @@
           }
         }
 
-        return farb.pack(farb.HSLToRGB(given));
+        return Drupal.colorUtils.HSLToRGB(given);
       }
 
-      /**
-       * Callback for Farbtastic when a new color is chosen.
-       *
-       * @param {HTMLElement} input
-       *   The input element where the color is chosen.
-       * @param {string} color
-       *   The color that was chosen through the input.
-       * @param {bool} propagate
-       *   Whether or not to propagate the color to a locked pair value
-       * @param {bool} colorScheme
-       *   Flag to indicate if the user is using a color scheme when changing
-       *   the color.
-       */
-      function callback(input, color, propagate, colorScheme) {
+      function updateLocked(input, color) {
         let matched;
-        // Set background/foreground colors.
-        $(input).css({
-          backgroundColor: color,
-          color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff',
-        });
 
-        // Change input value.
-        if ($(input).val() && $(input).val() !== color) {
-          $(input).val(color);
-
-          // Update locked values.
-          if (propagate) {
-            i = input.i;
-            for (j = i + 1; ; ++j) {
-              if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
-                break;
-              }
-              matched = shiftColor(
-                color,
-                reference[input.key],
-                reference[inputs[j].key],
-              );
-              callback(inputs[j], matched, false);
-            }
-            for (j = i - 1; ; --j) {
-              if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
-                break;
-              }
-              matched = shiftColor(
-                color,
-                reference[input.key],
-                reference[inputs[j].key],
-              );
-              callback(inputs[j], matched, false);
-            }
-
-            // Update preview.
-            preview();
+        // Update locked values.
+        i = input.i;
+        for (j = i + 1; ; ++j) {
+          if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
+            break;
           }
-
-          // Reset colorScheme selector.
-          if (!colorScheme) {
-            resetScheme();
+          matched = shiftColor(
+            color,
+            reference[input.key],
+            reference[inputs[j].key],
+          );
+          inputs[j].value = Drupal.colorUtils.pack(matched);
+        }
+        for (j = i - 1; ; --j) {
+          if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
+            break;
           }
+          matched = shiftColor(
+            color,
+            reference[input.key],
+            reference[inputs[j].key],
+          );
+          inputs[j].value = Drupal.colorUtils.pack(matched);
         }
       }
+
+      $('.form-color')
+        .once('color-inputs')
+        .each((index, input) => {
+          $(input).on('input', (e) => {
+            // preview();
+            const { value } = e.target;
+
+            // Because IE11 uses text inputs due to not supporting
+            // `type=[color]`, we must first confirm the value is valid hex.
+            if (/^#([0-9A-F]{3}){1,2}$/i.test(value)) {
+              updateLocked(e.target, value);
+              preview();
+              resetScheme();
+            }
+          });
+        });
 
       // Loop through all defined gradients.
       Object.keys(settings.gradients || {}).forEach((i) => {
@@ -206,125 +314,76 @@
 
       // Set up colorScheme selector.
       form.find('#edit-scheme').on('change', function () {
-        const schemes = settings.color.schemes;
+        const { schemes } = settings.color;
         const colorScheme = this.options[this.selectedIndex].value;
         if (colorScheme !== '' && schemes[colorScheme]) {
           // Get colors of active scheme.
           colors = schemes[colorScheme];
           Object.keys(colors || {}).forEach((fieldName) => {
-            callback(
-              $(`#edit-palette-${fieldName}`),
-              colors[fieldName],
-              false,
-              true,
-            );
+            $(`#edit-palette-${fieldName}`).val(colors[fieldName]);
           });
           preview();
         }
       });
 
-      /**
-       * Focuses Farbtastic on a particular field.
-       *
-       * @param {jQuery.Event} e
-       *   The focus event on the field.
-       */
-      function focus(e) {
-        const input = e.target;
-        // Remove old bindings.
-        if (focused) {
-          $(focused)
-            .off('keyup', farb.updateValue)
-            .off('keyup', preview)
-            .off('keyup', resetScheme)
-            .parent()
-            .removeClass('item-selected');
+      form.find('.js-color-palette input.form-color').each(function () {
+        // Extract palette field name.
+        this.key = this.id.substring(13);
+
+        // Add lock.
+        const i = inputs.length;
+        if (inputs.length) {
+          let toggleClick = true;
+          const lock = $(
+            `<button class="color-palette__lock">${Drupal.t(
+              'Unlock',
+            )}</button>`,
+          ).on('click', function (e) {
+            e.preventDefault();
+            if (toggleClick) {
+              $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
+              $(hooks[i - 1]).attr(
+                'class',
+                locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)')
+                  ? 'color-palette__hook is-up'
+                  : 'color-palette__hook',
+              );
+              $(hooks[i]).attr(
+                'class',
+                locks[i] && $(locks[i]).is(':not(.is-unlocked)')
+                  ? 'color-palette__hook is-down'
+                  : 'color-palette__hook',
+              );
+            } else {
+              $(this).removeClass('is-unlocked').html(Drupal.t('Unlock'));
+              $(hooks[i - 1]).attr(
+                'class',
+                locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)')
+                  ? 'color-palette__hook is-both'
+                  : 'color-palette__hook is-down',
+              );
+              $(hooks[i]).attr(
+                'class',
+                locks[i] && $(locks[i]).is(':not(.is-unlocked)')
+                  ? 'color-palette__hook is-both'
+                  : 'color-palette__hook is-up',
+              );
+            }
+            toggleClick = !toggleClick;
+          });
+          $(this).after(lock);
+          locks.push(lock);
         }
 
-        // Add new bindings.
-        focused = input;
-        farb.linkTo((color) => {
-          callback(input, color, true, false);
-        });
-        farb.setColor(input.value);
-        $(focused)
-          .on('keyup', farb.updateValue)
-          .on('keyup', preview)
-          .on('keyup', resetScheme)
-          .parent()
-          .addClass('item-selected');
-      }
+        // Add hook.
+        const hook = $('<div class="color-palette__hook"></div>');
+        $(this).after(hook);
+        hooks.push(hook);
 
-      // Initialize color fields.
-      form
-        .find('.js-color-palette input.form-text')
-        .each(function () {
-          // Extract palette field name.
-          this.key = this.id.substring(13);
-
-          // Link to color picker temporarily to initialize.
-          farb
-            .linkTo(() => {})
-            .setColor('#000')
-            .linkTo(this);
-
-          // Add lock.
-          const i = inputs.length;
-          if (inputs.length) {
-            let toggleClick = true;
-            const lock = $(
-              `<button class="color-palette__lock">${Drupal.t(
-                'Unlock',
-              )}</button>`,
-            ).on('click', function (e) {
-              e.preventDefault();
-              if (toggleClick) {
-                $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
-                $(hooks[i - 1]).attr(
-                  'class',
-                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)')
-                    ? 'color-palette__hook is-up'
-                    : 'color-palette__hook',
-                );
-                $(hooks[i]).attr(
-                  'class',
-                  locks[i] && $(locks[i]).is(':not(.is-unlocked)')
-                    ? 'color-palette__hook is-down'
-                    : 'color-palette__hook',
-                );
-              } else {
-                $(this).removeClass('is-unlocked').html(Drupal.t('Unlock'));
-                $(hooks[i - 1]).attr(
-                  'class',
-                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)')
-                    ? 'color-palette__hook is-both'
-                    : 'color-palette__hook is-down',
-                );
-                $(hooks[i]).attr(
-                  'class',
-                  locks[i] && $(locks[i]).is(':not(.is-unlocked)')
-                    ? 'color-palette__hook is-both'
-                    : 'color-palette__hook is-up',
-                );
-              }
-              toggleClick = !toggleClick;
-            });
-            $(this).after(lock);
-            locks.push(lock);
-          }
-
-          // Add hook.
-          const hook = $('<div class="color-palette__hook"></div>');
-          $(this).after(hook);
-          hooks.push(hook);
-
-          $(this).parent().find('.color-palette__lock').trigger('click');
-          this.i = i;
-          inputs.push(this);
-        })
-        .on('focus', focus);
-
-      form.find('.js-color-palette label');
+        $(this).parent().find('.color-palette__lock').trigger('click');
+        this.i = i;
+        inputs.push(this);
+      });
 
       // Focus first color.
       inputs[0].focus();

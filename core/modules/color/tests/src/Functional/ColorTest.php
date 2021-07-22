@@ -81,7 +81,7 @@ class ColorTest extends BrowserTestBase {
       '#00' => FALSE,
       '#0000' => FALSE,
       '#00000' => FALSE,
-      '123456' => FALSE,
+      '123456' => TRUE,
       '#00000g' => FALSE,
     ];
   }
@@ -179,7 +179,7 @@ class ColorTest extends BrowserTestBase {
         $this->assertSession()->pageTextContains('The configuration options have been saved.');
       }
       else {
-        $this->assertSession()->pageTextContains('You must enter a valid hexadecimal color value for Main background.');
+        $this->assertSession()->pageTextContains('Main background must be a valid color.');
       }
     }
   }

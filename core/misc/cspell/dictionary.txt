@@ -400,6 +400,9 @@ deserialization
 deserializes
 destid
 destructable
+destructure
+destructured
+desynchronized
 deutsch
 deutscher
 devel

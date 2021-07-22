@@ -3,7 +3,7 @@
  * Attaches preview-related behavior for the Color module.
  */
 
-(function ($, Drupal) {
+(($, Drupal) => {
   /**
    * Namespace for color-related functionality for Drupal.
    *
@@ -19,14 +19,12 @@
      *   Settings for the color functionality.
      * @param {HTMLFormElement} form
      *   The form to initiate the color behavior on.
-     * @param {object} farb
-     *   The farbtastic object.
      * @param {number} height
      *   Height of gradient.
      * @param {number} width
      *   Width of gradient.
      */
-    callback(context, settings, form, farb, height, width) {
+    callback(context, settings, form, height, width) {
       let accum;
       let delta;
       // Solid background.
@@ -55,21 +53,21 @@
         Object.keys(accum || {}).forEach((k) => {
           accum[k] += delta[k];
         });
-        element.style.backgroundColor = farb.pack(accum);
+        element.style.backgroundColor = Drupal.colorUtils.pack(accum);
       }
 
       // Set up gradients if there are some.
       let colorStart;
       let colorEnd;
       Object.keys(settings.gradients || {}).forEach((i) => {
-        colorStart = farb.unpack(
+        colorStart = Drupal.colorUtils.unpack(
           form
             .find(
               `.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`,
             )
             .val(),
         );
-        colorEnd = farb.unpack(
+        colorEnd = Drupal.colorUtils.unpack(
           form
             .find(
               `.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`,

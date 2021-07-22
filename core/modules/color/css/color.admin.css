@@ -19,13 +19,13 @@
 [dir="rtl"] .color-form label {
   clear: right;
 }
-.color-form .form-text {
+.color-form .form-color {
   float: left; /* LTR */
-  width: 86%;
+  padding: 0;
   cursor: pointer;
   text-align: center;
 }
-[dir="rtl"] .color-form .form-text {
+[dir="rtl"] .color-form .form-color {
   float: right;
 }
 .color-palette__hook {
@@ -65,7 +65,7 @@
 button.color-palette__lock,
 .color-palette__lock {
   position: relative;
-  top: -1.7em;
+  top: -1em;
   left: -10px;
   float: left; /* LTR */
   width: 20px;
@@ -110,18 +110,17 @@ button.is-unlocked,
     float: right;
     clear: right;
   }
-  .color-form .form-text,
+  .color-form .form-color,
   .color-form .form-select {
     float: left; /* LTR */
-    width: auto;
   }
-  [dir="rtl"] .color-form .form-text,
+  [dir="rtl"] .color-form .form-color,
   [dir="rtl"] .color-form .form-select {
     float: right;
   }
   .color-palette__hook {
     float: left; /* LTR */
-    margin-top: 3px;
+    margin-top: 1em;
   }
   [dir="rtl"] .color-palette__hook {
     float: right;

@@ -63,7 +63,6 @@ function color_form_system_theme_settings_alter(&$form, FormStateInterface $form
       '#theme' => 'color_scheme_form',
     ];
     $form['color'] += color_scheme_form($form, $form_state, $theme);
-    $form['#validate'][] = 'color_scheme_form_validate';
     // Ensure color submission happens first so we can unset extra values.
     array_unshift($form['#submit'], 'color_scheme_form_submit');
   }
@@ -180,7 +179,6 @@ function color_get_palette($theme, $default = FALSE) {
  * @param $theme
  *   The machine name of the theme whose color settings are being configured.
  *
- * @see color_scheme_form_validate()
  * @see color_scheme_form_submit()
  */
 function color_scheme_form($complete_form, FormStateInterface $form_state, $theme) {
@@ -247,7 +245,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
   foreach ($palette as $name => $value) {
     if (isset($names[$name])) {
       $form['palette'][$name] = [
-        '#type' => 'textfield',
+        '#type' => 'color',
         '#title' => $names[$name],
         '#value_callback' => 'color_palette_color_value',
         '#default_value' => $value,
@@ -344,23 +342,7 @@ function color_valid_hexadecimal_string($color) {
 }
 
 /**
- * Form validation handler for color_scheme_form().
- *
- * @see color_scheme_form_submit()
- */
-function color_scheme_form_validate($form, FormStateInterface $form_state) {
-  // Only accept hexadecimal CSS color strings to avoid XSS upon use.
-  foreach ($form_state->getValue('palette') as $key => $color) {
-    if (!color_valid_hexadecimal_string($color)) {
-      $form_state->setErrorByName('palette][' . $key, t('You must enter a valid hexadecimal color value for %name.', ['%name' => $form['color']['palette'][$key]['#title']]));
-    }
-  }
-}
-
-/**
  * Form submission handler for color_scheme_form().
- *
- * @see color_scheme_form_validate()
  */
 function color_scheme_form_submit($form, FormStateInterface $form_state) {
 
