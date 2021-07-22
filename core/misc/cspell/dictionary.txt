@@ -1036,6 +1036,7 @@ nonworditem
 noquotes
 normalizer's
 noschema
+nomodule
 noslash
 nosniff
 nostart
