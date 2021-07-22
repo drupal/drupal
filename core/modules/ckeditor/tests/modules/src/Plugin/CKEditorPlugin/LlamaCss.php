@@ -32,7 +32,7 @@ class LlamaCss extends Llama implements CKEditorPluginButtonsInterface, CKEditor
    */
   public function getCssFiles(Editor $editor) {
     return [
-      drupal_get_path('module', 'ckeditor_test') . '/css/llama.css',
+      $this->moduleList->getPath('ckeditor_test') . '/css/llama.css',
     ];
   }
 
@@ -40,7 +40,7 @@ class LlamaCss extends Llama implements CKEditorPluginButtonsInterface, CKEditor
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('module', 'ckeditor_test') . '/js/llama_css.js';
+    return $this->moduleList->getPath('ckeditor_test') . '/js/llama_css.js';
   }
 
 }

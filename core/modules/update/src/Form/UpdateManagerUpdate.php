@@ -379,7 +379,7 @@ class UpdateManagerUpdate extends FormBase {
       }
     }
     $batch_builder = (new BatchBuilder())
-      ->setFile(drupal_get_path('module', 'update') . '/update.manager.inc')
+      ->setFile($this->moduleHandler->getModule('update')->getPath() . '/update.manager.inc')
       ->setTitle($this->t('Downloading updates'))
       ->setInitMessage($this->t('Preparing to download selected updates'))
       ->setFinishCallback('update_manager_download_batch_finished');

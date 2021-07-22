@@ -5,7 +5,7 @@ related:
   - system.cache
 ---
 {% set maintenance_url = render_var(url('system.site_maintenance_mode')) %}
-{% set cache_help = render_var(url('help.help_topic', {'id': 'system.cache'})) %}
+{% set cache_topic = render_var(help_topic_link('system.cache')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Put your site in maintenance mode to perform maintenance operations, and then return to normal mode when finished.{% endtrans %}</p>
 <h2>{% trans %}What is maintenance mode?{% endtrans %}</h2>
@@ -17,5 +17,5 @@ related:
   <li>{% trans %}Perform your maintenance operations.{% endtrans %}</li>
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em><a href="{{ maintenance_url }}">Maintenance mode</a></em>.{% endtrans %}</li>
   <li>{% trans %}Uncheck <em>Put site into maintenance mode</em> and click <em>Save configuration</em>. Your site will be back in normal operation mode.{% endtrans %}</li>
-  <li>{% trans %}Clear the site cache. See <a href="{{ cache_help }}">Clearing the site cache</a> for instructions.{% endtrans %}</li>
+  <li>{% trans %}Clear the site cache. See {{ cache_topic }} for instructions.{% endtrans %}</li>
 </ol>
