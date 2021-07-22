@@ -20,6 +20,7 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
+use Drupal\jsonapi\Routing\Routes;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -179,13 +180,14 @@ class FileUpload {
       throw new UnprocessableEntityHttpException($message);
     }
 
+    $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($resource_type->getPublicName($file_field_name));
+    $file_resource_type = reset($relatable_resource_types);
+
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
-    $self_link = new Link(new CacheableMetadata(), Url::fromRoute('jsonapi.file--file.individual', ['entity' => $file->uuid()]), 'self');
+    $self_link = new Link(new CacheableMetadata(), Url::fromRoute(Routes::getRouteName($file_resource_type, 'individual'), ['entity' => $file->uuid()]), 'self');
     /* $self_link = new Link(new CacheableMetadata(), $this->entity->toUrl('jsonapi'), ['self']); */
     $links = new LinkCollection(['self' => $self_link]);
 
-    $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($resource_type->getPublicName($file_field_name));
-    $file_resource_type = reset($relatable_resource_types);
     $resource_object = ResourceObject::createFromEntity($file_resource_type, $file);
     return new ResourceResponse(new JsonApiDocumentTopLevel(new ResourceObjectData([$resource_object], 1), new NullIncludedData(), $links), 201, []);
   }
