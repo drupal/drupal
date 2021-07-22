@@ -103,6 +103,11 @@ abstract class Connection {
    * An index used to generate unique temporary table names.
    *
    * @var int
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3211781
    */
   protected $temporaryNameIndex = 0;
 
