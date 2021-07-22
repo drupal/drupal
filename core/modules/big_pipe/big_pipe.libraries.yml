@@ -6,6 +6,6 @@ big_pipe:
     bigPipePlaceholderIds: []
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal.ajax
     - core/drupalSettings

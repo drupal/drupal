@@ -11,9 +11,10 @@
    */
   Drupal.behaviors.detailsAria = {
     attach() {
-      $('body')
-        .once('detailsAria')
-        .on('click.detailsAria', 'summary', (event) => {
+      $(once('detailsAria', 'body')).on(
+        'click.detailsAria',
+        'summary',
+        (event) => {
           const $summary = $(event.currentTarget);
           const open =
             $(event.currentTarget.parentNode).attr('open') === 'open'
@@ -24,7 +25,8 @@
             'aria-expanded': open,
             'aria-pressed': open,
           });
-        });
+        },
+      );
     },
   };
 })(jQuery, Drupal);

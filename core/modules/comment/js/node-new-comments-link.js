@@ -18,11 +18,11 @@
     return $placeholder.closest('.comment-new-comments').prev().removeClass('last').end().show();
   }
 
-  function processNodeNewCommentLinks($placeholders) {
+  function processNodeNewCommentLinks(placeholders) {
     var $placeholdersToUpdate = {};
     var fieldName = 'comment';
     var $placeholder;
-    $placeholders.each(function (index, placeholder) {
+    placeholders.forEach(function (placeholder) {
       $placeholder = $(placeholder);
       var timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
       fieldName = $placeholder.attr('data-history-node-field-name');
@@ -69,8 +69,8 @@
   Drupal.behaviors.nodeNewCommentsLink = {
     attach: function attach(context) {
       var nodeIDs = [];
-      var $placeholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
-        var $placeholder = $(this);
+      var placeholders = once('history', '[data-history-node-last-comment-timestamp]', context).filter(function (placeholder) {
+        var $placeholder = $(placeholder);
         var lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
         var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
 
@@ -84,12 +84,12 @@
         return false;
       });
 
-      if ($placeholders.length === 0) {
+      if (placeholders.length === 0) {
         return;
       }
 
       Drupal.history.fetchTimestamps(nodeIDs, function () {
-        processNodeNewCommentLinks($placeholders);
+        processNodeNewCommentLinks(placeholders);
       });
     }
   };

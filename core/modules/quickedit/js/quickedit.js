@@ -283,19 +283,15 @@
 
   Drupal.behaviors.quickedit = {
     attach: function attach(context) {
-      $('body').once('quickedit-init').each(initQuickEdit);
-      var $fields = $(context).find('[data-quickedit-field-id]').once('quickedit');
+      once('quickedit-init', 'body').forEach(initQuickEdit);
+      var fields = once('quickedit', '[data-quickedit-field-id]', context);
 
-      if ($fields.length === 0) {
+      if (fields.length === 0) {
         return;
       }
 
-      $(context).find('[data-quickedit-entity-id]').once('quickedit').each(function (index, entityElement) {
-        processEntity(entityElement);
-      });
-      $fields.each(function (index, fieldElement) {
-        processField(fieldElement);
-      });
+      once('quickedit', '[data-quickedit-entity-id]', context).forEach(processEntity);
+      fields.forEach(processField);
       contextualLinksQueue = _.filter(contextualLinksQueue, function (contextualLink) {
         return !initializeEntityContextualLink(contextualLink);
       });
@@ -367,7 +363,7 @@
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     if (data.$region.is('[data-quickedit-entity-id]')) {
       if (!data.$region.is('[data-quickedit-entity-instance-id]')) {
-        data.$region.once('quickedit');
+        once('quickedit', data.$region);
         processEntity(data.$region.get(0));
       }
 

@@ -25,7 +25,7 @@ toolbar:
     - core/drupal.ajax
     - core/drupal.announce
     - core/backbone
-    - core/jquery.once
+    - core/once
     - core/drupal.displace
     - toolbar/toolbar.menu
 
@@ -39,7 +39,7 @@ toolbar.menu:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
 
 toolbar.escapeAdmin:
   version: VERSION
@@ -49,4 +49,4 @@ toolbar.escapeAdmin:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once

@@ -9,14 +9,15 @@
   var dateFormats = drupalSettings.dateFormats;
   Drupal.behaviors.dateFormat = {
     attach: function attach(context) {
-      var $context = $(context);
-      var $source = $context.find('[data-drupal-date-formatter="source"]').once('dateFormat');
-      var $target = $context.find('[data-drupal-date-formatter="preview"]').once('dateFormat');
-      var $preview = $target.find('em');
+      var source = once('dateFormat', '[data-drupal-date-formatter="source"]', context);
+      var target = once('dateFormat', '[data-drupal-date-formatter="preview"]', context);
 
-      if (!$source.length || !$target.length) {
+      if (!source.length || !target.length) {
         return;
       }
+
+      var $target = $(target);
+      var $preview = $target.find('em');
 
       function dateFormatHandler(e) {
         var baseValue = $(e.target).val() || '';
@@ -27,7 +28,7 @@
         $target.toggleClass('js-hide', !dateString.length);
       }
 
-      $source.on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');
+      $(source).on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');
     }
   };
 })(jQuery, Drupal, drupalSettings);

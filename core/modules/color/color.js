@@ -11,7 +11,7 @@
       var i;
       var j;
       var colors;
-      var form = $(context).find('#system-theme-settings .color-form').once('color');
+      var form = $(once('color', '#system-theme-settings .color-form', context));
 
       if (form.length === 0) {
         return;
@@ -21,7 +21,7 @@
       var hooks = [];
       var locks = [];
       var focused = null;
-      $('<div class="color-placeholder"></div>').once('color').prependTo(form);
+      $(once('color', $('<div class="color-placeholder"></div>'))).prependTo(form);
       var farb = $.farbtastic('.color-placeholder');
       var reference = settings.color.reference;
       Object.keys(reference || {}).forEach(function (color) {
@@ -113,7 +113,7 @@
       }
 
       Object.keys(settings.gradients || {}).forEach(function (i) {
-        $('.color-preview').once('color').append("<div id=\"gradient-".concat(i, "\"></div>"));
+        $(once('color', '.color-preview')).append("<div id=\"gradient-".concat(i, "\"></div>"));
         var gradient = $(".color-preview #gradient-".concat(i));
         height.push(parseInt(gradient.css('height'), 10) / 10);
         width.push(parseInt(gradient.css('width'), 10) / 10);

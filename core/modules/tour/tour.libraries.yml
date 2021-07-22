@@ -4,7 +4,7 @@ tour:
     js/tour.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
     - core/backbone
     - core/shepherd

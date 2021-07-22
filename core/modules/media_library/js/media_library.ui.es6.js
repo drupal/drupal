@@ -55,9 +55,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach(context) {
       const $menu = $('.js-media-library-menu');
-      $menu
-        .find('a', context)
-        .once('media-library-menu-item')
+      $(once('media-library-menu-item', $menu.find('a')))
         .on('keypress', (e) => {
           // The AJAX link has the button role, so we need to make sure the link
           // is also triggered when pressing the spacebar.
@@ -178,67 +176,71 @@
       // @todo Add media library specific classes and data attributes to the
       //    media library display links when we can alter display links.
       //    https://www.drupal.org/project/drupal/issues/3036694
-      $('.views-display-link-widget, .views-display-link-widget_table', context)
-        .once('media-library-views-display-link')
-        .on('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+      $(
+        once(
+          'media-library-views-display-link',
+          '.views-display-link-widget, .views-display-link-widget_table',
+          context,
+        ),
+      ).on('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-          const $link = $(e.currentTarget);
+        const $link = $(e.currentTarget);
 
-          // Add a loading and display announcement for screen reader users.
-          let loadingAnnouncement = '';
-          let displayAnnouncement = '';
-          let focusSelector = '';
-          if ($link.hasClass('views-display-link-widget')) {
-            loadingAnnouncement = Drupal.t('Loading grid view.');
-            displayAnnouncement = Drupal.t('Changed to grid view.');
-            focusSelector = '.views-display-link-widget';
-          } else if ($link.hasClass('views-display-link-widget_table')) {
-            loadingAnnouncement = Drupal.t('Loading table view.');
-            displayAnnouncement = Drupal.t('Changed to table view.');
-            focusSelector = '.views-display-link-widget_table';
-          }
+        // Add a loading and display announcement for screen reader users.
+        let loadingAnnouncement = '';
+        let displayAnnouncement = '';
+        let focusSelector = '';
+        if ($link.hasClass('views-display-link-widget')) {
+          loadingAnnouncement = Drupal.t('Loading grid view.');
+          displayAnnouncement = Drupal.t('Changed to grid view.');
+          focusSelector = '.views-display-link-widget';
+        } else if ($link.hasClass('views-display-link-widget_table')) {
+          loadingAnnouncement = Drupal.t('Loading table view.');
+          displayAnnouncement = Drupal.t('Changed to table view.');
+          focusSelector = '.views-display-link-widget_table';
+        }
 
-          // Replace the library view.
-          const ajaxObject = Drupal.ajax({
-            wrapper: 'media-library-view',
-            url: e.currentTarget.href,
-            dialogType: 'ajax',
-            progress: {
-              type: 'fullscreen',
-              message: loadingAnnouncement || Drupal.t('Please wait...'),
-            },
-          });
-
-          // Override the AJAX success callback to announce the updated content
-          // to screen readers.
-          if (displayAnnouncement || focusSelector) {
-            const success = ajaxObject.success;
-            ajaxObject.success = function (response, status) {
-              success.bind(this)(response, status);
-              // The AJAX link replaces the whole view, including the clicked
-              // link. Move the focus back to the clicked link when the view is
-              // replaced.
-              if (focusSelector) {
-                $(focusSelector).focus();
-              }
-              // Announce the new view is loaded to screen readers.
-              if (displayAnnouncement) {
-                Drupal.announce(displayAnnouncement);
-              }
-            };
-          }
-
-          ajaxObject.execute();
-
-          // Announce the new view is being loaded to screen readers.
-          // @todo Replace custom announcement when
-          //   https://www.drupal.org/project/drupal/issues/2973140 is in.
-          if (loadingAnnouncement) {
-            Drupal.announce(loadingAnnouncement);
-          }
+        // Replace the library view.
+        const ajaxObject = Drupal.ajax({
+          wrapper: 'media-library-view',
+          url: e.currentTarget.href,
+          dialogType: 'ajax',
+          progress: {
+            type: 'fullscreen',
+            message: loadingAnnouncement || Drupal.t('Please wait...'),
+          },
         });
+
+        // Override the AJAX success callback to announce the updated content
+        // to screen readers.
+        if (displayAnnouncement || focusSelector) {
+          const success = ajaxObject.success;
+          ajaxObject.success = function (response, status) {
+            success.bind(this)(response, status);
+            // The AJAX link replaces the whole view, including the clicked
+            // link. Move the focus back to the clicked link when the view is
+            // replaced.
+            if (focusSelector) {
+              $(focusSelector).focus();
+            }
+            // Announce the new view is loaded to screen readers.
+            if (displayAnnouncement) {
+              Drupal.announce(displayAnnouncement);
+            }
+          };
+        }
+
+        ajaxObject.execute();
+
+        // Announce the new view is being loaded to screen readers.
+        // @todo Replace custom announcement when
+        //   https://www.drupal.org/project/drupal/issues/2973140 is in.
+        if (loadingAnnouncement) {
+          Drupal.announce(loadingAnnouncement);
+        }
+      });
     },
   };
 
@@ -325,7 +327,7 @@
 
       // Update the selection array and the hidden form field when a media item
       // is selected.
-      $mediaItems.once('media-item-change').on('change', (e) => {
+      $(once('media-item-change', $mediaItems)).on('change', (e) => {
         const id = e.currentTarget.value;
 
         // Update the selection.
@@ -355,22 +357,24 @@
       });
 
       // The hidden selection form field changes when the selection is updated.
-      $('#media-library-modal-selection', $form)
-        .once('media-library-selection-change')
-        .on('change', (e) => {
-          updateSelectionCount(settings.media_library.selection_remaining);
+      $(
+        once(
+          'media-library-selection-change',
+          $form.find('#media-library-modal-selection'),
+        ),
+      ).on('change', (e) => {
+        updateSelectionCount(settings.media_library.selection_remaining);
 
-          // Prevent users from selecting more items than allowed.
-          if (
-            currentSelection.length ===
-            settings.media_library.selection_remaining
-          ) {
-            disableItems($mediaItems.not(':checked'));
-            enableItems($mediaItems.filter(':checked'));
-          } else {
-            enableItems($mediaItems);
-          }
-        });
+        // Prevent users from selecting more items than allowed.
+        if (
+          currentSelection.length === settings.media_library.selection_remaining
+        ) {
+          disableItems($mediaItems.not(':checked'));
+          enableItems($mediaItems.filter(':checked'));
+        } else {
+          enableItems($mediaItems);
+        }
+      });
 
       // Apply the current selection to the media library view. Changing the
       // checkbox values triggers the change event for the media items. The
@@ -384,20 +388,21 @@
 
       // Add the selection count to the button pane when a media library dialog
       // is created.
-      $(window)
-        .once('media-library-selection-info')
-        .on('dialog:aftercreate', () => {
-          // Since the dialog HTML is not part of the context, we can't use
-          // context here.
-          const $buttonPane = $(
-            '.media-library-widget-modal .ui-dialog-buttonpane',
-          );
-          if (!$buttonPane.length) {
-            return;
-          }
-          $buttonPane.append(Drupal.theme('mediaLibrarySelectionCount'));
-          updateSelectionCount(settings.media_library.selection_remaining);
-        });
+      if (!once('media-library-selection-info', 'html').length) {
+        return;
+      }
+      $(window).on('dialog:aftercreate', () => {
+        // Since the dialog HTML is not part of the context, we can't use
+        // context here.
+        const $buttonPane = $(
+          '.media-library-widget-modal .ui-dialog-buttonpane',
+        );
+        if (!$buttonPane.length) {
+          return;
+        }
+        $buttonPane.append(Drupal.theme('mediaLibrarySelectionCount'));
+        updateSelectionCount(settings.media_library.selection_remaining);
+      });
     },
   };
 
@@ -411,11 +416,12 @@
    */
   Drupal.behaviors.MediaLibraryModalClearSelection = {
     attach() {
-      $(window)
-        .once('media-library-clear-selection')
-        .on('dialog:afterclose', () => {
-          Drupal.MediaLibrary.currentSelection = [];
-        });
+      if (!once('media-library-clear-selection', 'html').length) {
+        return;
+      }
+      $(window).on('dialog:afterclose', () => {
+        Drupal.MediaLibrary.currentSelection = [];
+      });
     },
   };
 

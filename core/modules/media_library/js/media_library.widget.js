@@ -28,21 +28,19 @@
         show: Drupal.t('Show media item weights'),
         hide: Drupal.t('Hide media item weights')
       };
-      $('.js-media-library-widget-toggle-weight', context).once('media-library-toggle').on('click', function (e) {
+      $(once('media-library-toggle', '.js-media-library-widget-toggle-weight', context)).on('click', function (e) {
         e.preventDefault();
         $(e.currentTarget).toggleClass('active').text($(e.currentTarget).hasClass('active') ? strings.hide : strings.show).closest('.js-media-library-widget').find('.js-media-library-item-weight').parent().toggle();
       }).text(strings.show);
-      $('.js-media-library-item-weight', context).once('media-library-toggle').parent().hide();
+      $(once('media-library-toggle', '.js-media-library-item-weight', context)).parent().hide();
     }
   };
   Drupal.behaviors.MediaLibraryWidgetDisableButton = {
     attach: function attach(context) {
-      $('.js-media-library-open-button[data-disabled-focus="true"]', context).once('media-library-disable').each(function () {
-        var _this = this;
-
-        $(this).focus();
+      once('media-library-disable', '.js-media-library-open-button[data-disabled-focus="true"]', context).forEach(function (button) {
+        $(button).focus();
         setTimeout(function () {
-          $(_this).attr('disabled', 'disabled');
+          $(button).attr('disabled', 'disabled');
         }, 50);
       });
     }

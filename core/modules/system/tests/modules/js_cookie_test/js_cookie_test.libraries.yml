@@ -6,4 +6,4 @@ with_shim_test:
     - core/jquery
     - core/drupal
     - core/jquery.cookie
-    - core/jquery.once
+    - core/once

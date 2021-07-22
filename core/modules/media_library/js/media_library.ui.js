@@ -20,7 +20,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach: function attach(context) {
       var $menu = $('.js-media-library-menu');
-      $menu.find('a', context).once('media-library-menu-item').on('keypress', function (e) {
+      $(once('media-library-menu-item', $menu.find('a'))).on('keypress', function (e) {
         if (e.which === 32) {
           e.preventDefault();
           e.stopPropagation();
@@ -85,7 +85,7 @@
     attach: function attach(context) {
       var $view = $(context).hasClass('.js-media-library-view') ? $(context) : $('.js-media-library-view', context);
       $view.closest('.views-element-container').attr('id', 'media-library-view');
-      $('.views-display-link-widget, .views-display-link-widget_table', context).once('media-library-views-display-link').on('click', function (e) {
+      $(once('media-library-views-display-link', '.views-display-link-widget, .views-display-link-widget_table', context)).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $link = $(e.currentTarget);
@@ -163,7 +163,7 @@
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
-      $mediaItems.once('media-item-change').on('change', function (e) {
+      $(once('media-item-change', $mediaItems)).on('change', function (e) {
         var id = e.currentTarget.value;
         var position = currentSelection.indexOf(id);
 
@@ -178,7 +178,7 @@
         $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
         $('.js-media-library-add-form-current-selection').val(currentSelection.join());
       });
-      $('#media-library-modal-selection', $form).once('media-library-selection-change').on('change', function (e) {
+      $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {
@@ -191,7 +191,12 @@
       currentSelection.forEach(function (value) {
         $form.find("input[type=\"checkbox\"][value=\"".concat(value, "\"]")).prop('checked', true).trigger('change');
       });
-      $(window).once('media-library-selection-info').on('dialog:aftercreate', function () {
+
+      if (!once('media-library-selection-info', 'html').length) {
+        return;
+      }
+
+      $(window).on('dialog:aftercreate', function () {
         var $buttonPane = $('.media-library-widget-modal .ui-dialog-buttonpane');
 
         if (!$buttonPane.length) {
@@ -205,7 +210,11 @@
   };
   Drupal.behaviors.MediaLibraryModalClearSelection = {
     attach: function attach() {
-      $(window).once('media-library-clear-selection').on('dialog:afterclose', function () {
+      if (!once('media-library-clear-selection', 'html').length) {
+        return;
+      }
+
+      $(window).on('dialog:afterclose', function () {
         Drupal.MediaLibrary.currentSelection = [];
       });
     }

@@ -117,17 +117,11 @@
       if (Modernizr.details) {
         return;
       }
-      const $collapsibleDetails = $(context)
-        .find('details')
-        .once('collapse')
-        .addClass('collapse-processed');
-      if ($collapsibleDetails.length) {
-        for (let i = 0; i < $collapsibleDetails.length; i++) {
-          CollapsibleDetails.instances.push(
-            new CollapsibleDetails($collapsibleDetails[i]),
-          );
-        }
-      }
+      once('collapse', 'details', context).forEach((detail) => {
+        // This class is used for styling purpose only.
+        detail.classList.add('collapse-processed');
+        CollapsibleDetails.instances.push(new CollapsibleDetails(detail));
+      });
     },
   };
 

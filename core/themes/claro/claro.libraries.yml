@@ -114,7 +114,7 @@ drupal.nav-tabs:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
     - core/drupal.debounce
     - core/collapse
 
@@ -124,7 +124,7 @@ drupal.responsive-detail:
     js/responsive-details.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/collapse
 
 claro.jquery.ui:
@@ -286,6 +286,10 @@ media_library.ui:
       css/components/media-library.ui.css : {}
   js:
     js/media-library.ui.js: { weight: -1 }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
 
 progress:
   version: VERSION

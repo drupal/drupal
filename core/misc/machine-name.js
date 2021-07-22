@@ -51,7 +51,7 @@
 
       Object.keys(settings.machineName).forEach(function (sourceId) {
         var options = settings.machineName[sourceId];
-        var $source = $context.find(sourceId).addClass('machine-name-source').once('machine-name');
+        var $source = $(once('machine-name', $context.find(sourceId).addClass('machine-name-source')));
         var $target = $context.find(options.target).addClass('machine-name-target');
         var $suffix = $context.find(options.suffix);
         var $wrapper = $target.closest('.js-form-item');

@@ -128,7 +128,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    * behaviors to the new content.
    *
    * Behaviors should use `var elements =
-   * $(context).find(selector).once('behavior-name');` to ensure the behavior is
+   * once('behavior-name', selector, context);` to ensure the behavior is
    * attached only once to a given element. (Doing so enables the reprocessing
    * of given elements, which may be needed on occasion despite the ability to
    * limit behavior attachment to a particular element.)
@@ -178,10 +178,10 @@ window.Drupal = { behaviors: {}, locale: {} };
    * before page content is about to be removed, feeding in an element to be
    * processed, in order to allow special behaviors to detach from the content.
    *
-   * Such implementations should use `.findOnce()` and `.removeOnce()` to find
+   * Such implementations should use `once.filter()` and `once.remove()` to find
    * elements with their corresponding `Drupal.behaviors.behaviorName.attach`
-   * implementation, i.e. `.removeOnce('behaviorName')`, to ensure the behavior
-   * is detached only from previously processed elements.
+   * implementation, i.e. `once.remove('behaviorName', selector, context)`,
+   * to ensure the behavior is detached only from previously processed elements.
    *
    * @param {HTMLDocument|HTMLElement} [context=document]
    *   An element to detach behaviors from.

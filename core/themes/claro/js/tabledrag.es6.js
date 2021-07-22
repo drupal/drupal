@@ -73,7 +73,7 @@
        *
        * @todo this may be removable as part of https://drupal.org/node/3083044
        */
-      const createItemWrapBoundaries = (index, row) => {
+      const createItemWrapBoundaries = (row) => {
         const $row = $(row);
         const $firstCell = $row
           .find('td:first-of-type')
@@ -99,11 +99,12 @@
       // Find each row in a draggable table and process it with
       // createItemWrapBoundaries().
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        $(context)
-          .find(`#${base}`)
-          .find('> tr.draggable, > tbody > tr.draggable')
-          .once('claroTabledrag')
-          .each(createItemWrapBoundaries);
+        once(
+          'claroTabledrag',
+          $(context)
+            .find(`#${base}`)
+            .find('> tr.draggable, > tbody > tr.draggable'),
+        ).forEach(createItemWrapBoundaries);
       });
     },
   };

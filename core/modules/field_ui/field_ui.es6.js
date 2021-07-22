@@ -12,10 +12,13 @@
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach(context) {
-      const $form = $(context)
-        .find('[data-drupal-selector="field-ui-field-storage-add-form"]')
-        .once('field_ui_add');
-      if ($form.length) {
+      const form = once(
+        'field_ui_add',
+        '[data-drupal-selector="field-ui-field-storage-add-form"]',
+        context,
+      );
+      if (form.length) {
+        const $form = $(form);
         // Add a few 'js-form-required' and 'form-required' css classes here.
         // We can not use the Form API '#required' property because both label
         // elements for "add new" and "re-use existing" can never be filled and
@@ -80,16 +83,17 @@
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach(context, settings) {
-      $(context)
-        .find('table#field-display-overview')
-        .once('field-display-overview')
-        .each(function () {
-          Drupal.fieldUIOverview.attach(
-            this,
-            settings.fieldUIRowsData,
-            Drupal.fieldUIDisplayOverview,
-          );
-        });
+      once(
+        'field-display-overview',
+        'table#field-display-overview',
+        context,
+      ).forEach((overview) => {
+        Drupal.fieldUIOverview.attach(
+          overview,
+          settings.fieldUIRowsData,
+          Drupal.fieldUIDisplayOverview,
+        );
+      });
     },
   };
 

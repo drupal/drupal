@@ -5,4 +5,4 @@ show_message:
   dependencies:
     - core/drupalSettings
     - core/drupal.message
-    - core/jquery.once
+    - core/once
