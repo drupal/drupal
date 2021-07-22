@@ -8,6 +8,19 @@ interface MigrateExecutableInterface {
 
   /**
    * Performs an import operation - migrate items from source to destination.
+   *
+   * @return int
+   *   Returns:
+   *     - MigrationInterface::RESULT_COMPLETED: the process has a fatal error.
+   *     - MigrationInterface::RESULT_INCOMPLETE: the process has stopped
+   *     itself (e.g., the memory limit is approaching).
+   *     - MigrationInterface::RESULT_STOPPED: the process was stopped
+   *     externally (e.g., via drush migrate-stop).
+   *     - MigrationInterface::RESULT_FAILED: the process has a fatal error.
+   *     - MigrationInterface::RESULT_SKIPPED: dependencies are unfulfilled -
+   *     skip the process.
+   *     - MigrationInterface::RESULT_DISABLED: this migration is disabled,
+   *     skipping.
    */
   public function import();
 
