@@ -262,6 +262,15 @@ class FileUploadTest extends ResourceTestBase {
         'description' => "The most fascinating file ever!",
       ],
     ], EntityTest::load(2)->get('field_rest_file_test')->getValue());
+
+    // Test the 'FileDescriptionRequired' constraint.
+    // @see \Drupal\file\Plugin\Validation\Constraint\FileDescriptionRequired
+    $this->field->setSetting('description_field_required', TRUE)->save();
+    $post_document = $this->getPostDocument();
+    $post_document['data']['relationships']['field_rest_file_test']['data']['meta']['description'] = '';
+    $request_options[RequestOptions::BODY] = Json::encode($post_document);
+    $response = $this->request('POST', $entity_test_post_url, $request_options);
+    $this->assertResourceErrorResponse(422, 'field_rest_file_test.0: The Test file field field description is required.', NULL, $response, '/data/attributes/field_rest_file_test/0');
   }
 
   /**

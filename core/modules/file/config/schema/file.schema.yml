@@ -69,6 +69,9 @@ field.field_settings.file:
     description_field:
       type: boolean
       label: 'Enable Description field'
+    description_field_required:
+      type: boolean
+      label: 'Require Description field'
 
 file.formatter.media:
   type: mapping

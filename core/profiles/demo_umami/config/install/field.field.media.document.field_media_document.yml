@@ -26,4 +26,5 @@ settings:
   handler: 'default:file'
   handler_settings: {  }
   description_field: false
+  description_field_required: false
 field_type: file

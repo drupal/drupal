@@ -84,6 +84,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
       'max_filesize' => '200KB',
       'target_type' => 'file',
       'display_field' => FALSE,
+      'description_field_required' => FALSE,
       'display_default' => FALSE,
       'uri_scheme' => 'public',
       'handler' => 'default:file',

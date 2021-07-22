@@ -10,6 +10,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Validation\ConstraintManager;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -210,9 +211,10 @@ class FileWidget extends WidgetBase {
     // widget is a base class for other widgets (e.g., ImageWidget) that may act
     // on field types without these expected settings.
     $field_settings += [
-      'display_default' => NULL,
-      'display_field' => NULL,
-      'description_field' => NULL,
+      'display_default' => FALSE,
+      'display_field' => FALSE,
+      'description_field' => FALSE,
+      'description_field_required' => FALSE,
     ];
 
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
@@ -240,6 +242,7 @@ class FileWidget extends WidgetBase {
       '#display_field' => (bool) $field_settings['display_field'],
       '#display_default' => $field_settings['display_default'],
       '#description_field' => $field_settings['description_field'],
+      '#description_field_required' => $field_settings['description_field_required'],
       '#cardinality' => $cardinality,
     ];
 
@@ -412,6 +415,7 @@ class FileWidget extends WidgetBase {
         '#value' => isset($item['description']) ? $item['description'] : '',
         '#maxlength' => $config->get('description.length'),
         '#description' => t('The description may be used as the label of the link to the file.'),
+        '#required' => !empty($element['#description_field_required']),
       ];
     }
 
@@ -588,11 +592,44 @@ class FileWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
-    // Never flag validation errors for the remove button.
     $clicked_button = end($form_state->getTriggeringElement()['#parents']);
+
+    // Don't account potential 'FileDescriptionRequired' constraint violations
+    // when the form is posted via 'Upload' button and the file description is
+    // enforced in field settings.
+    // @see \Drupal\file\Plugin\Validation\Constraint\FileDescriptionRequired
+    if ($clicked_button === 'upload_button' && $this->getFieldSetting('description_field_required')) {
+      $required_description_definition = $this->getConstraintManager()->getDefinition('FileDescriptionRequired');
+      /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+      foreach ($violations as $offset => $violation) {
+        // Constraint plugins are Symfony classes so they don't implement the
+        // \Drupal\Component\Plugin\PluginInspectionInterface interface, thus we
+        // cannot rely on plugin ID.
+        if (get_class($violation->getConstraint()) === $required_description_definition['class']) {
+          $violations->remove($offset);
+        }
+      }
+    }
+
+    // Never flag validation errors for the remove button.
     if ($clicked_button !== 'remove_button') {
       parent::flagErrors($items, $violations, $form, $form_state);
     }
+  }
+
+  /**
+   * Returns the constraint plugin manager service.
+   *
+   * Cannot inject this service as this plugin is extended by other plugins,
+   * such as \Drupal\image\Plugin\Field\FieldWidget\ImageWidget.
+   *
+   * @return \Drupal\Core\Validation\ConstraintManager
+   *   The constraint plugin manager service.
+   *
+   * @see \Drupal\image\Plugin\Field\FieldWidget\ImageWidget
+   */
+  private function getConstraintManager(): ConstraintManager {
+    return \Drupal::service('validation.constraint');
   }
 
 }

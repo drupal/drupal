@@ -8,6 +8,7 @@
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\FieldConfigInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
 /**
@@ -39,4 +40,13 @@ function file_post_update_add_txt_if_allows_insecure_extensions(&$sandbox = NULL
     }
   };
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', $updater);
+}
+
+/**
+ * Add the 'require description' file field setting.
+ */
+function file_post_update_description_required(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config): bool {
+    return $field_config->getType() === 'file';
+  });
 }
