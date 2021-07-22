@@ -21,6 +21,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
     'update_test',
     'aaa_update_test',
     'bbb_update_test',
+    'ddd_update_test',
   ];
 
   /**
@@ -231,6 +232,29 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
       // Verify there is no incompatible updates table.
       $assert_session->elementNotExists('css', $incompatible_table_locator);
     }
+  }
+
+  /**
+   * Tests that module names are correctly html decoded on the update form.
+   */
+  public function testModuleNameWithSpecialChars() {
+    $system_info = [
+      'ddd_update_test' => [
+        'project' => 'DDD Update test &amp; special chars',
+        'version' => '8.x-1.0',
+        'hidden' => FALSE,
+        'package' => 'ddd_update_test',
+      ],
+    ];
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+
+    $xml_mapping = [
+      'ddd_update_test' => '1_1',
+    ];
+    $this->refreshUpdateStatus($xml_mapping);
+
+    $this->drupalGet('admin/reports/updates/update');
+    $this->assertSession()->pageTextContains('DDD Update test & special chars');
   }
 
 }

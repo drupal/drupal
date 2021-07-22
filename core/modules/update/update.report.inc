@@ -147,7 +147,7 @@ function template_preprocess_update_project_status(&$variables) {
   $project = &$variables['project'];
 
   // Set the project title and URL.
-  $variables['title'] = (isset($project['title'])) ? $project['title'] : $project['name'];
+  $variables['title'] = html_entity_decode($project['title'] ?? $project['name'], ENT_QUOTES | ENT_HTML5, 'utf-8');
   $variables['url'] = (isset($project['link'])) ? Url::fromUri($project['link'])->toString() : NULL;
 
   $variables['install_type'] = $project['install_type'];

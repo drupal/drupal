@@ -36,6 +36,7 @@ class UpdateContribTest extends UpdateTestBase {
     'aaa_update_test',
     'bbb_update_test',
     'ccc_update_test',
+    'ddd_update_test',
   ];
 
   /**
@@ -130,6 +131,26 @@ class UpdateContribTest extends UpdateTestBase {
       ]
     );
     $this->assertRaw($project_link);
+  }
+
+  /**
+   * Tests that module names are correctly html decoded on the status report.
+   */
+  public function testUpdateContribSpecialChars() {
+    $system_info = [
+      '#all' => [
+        'version' => '8.0.0',
+      ],
+      'ddd_update_test' => [
+        'project' => 'DDD Update test &amp; special chars',
+        'version' => '8.x-1.0',
+        'hidden' => FALSE,
+        'package' => 'ddd_update_test',
+      ],
+    ];
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->drupalGet('admin/reports/updates');
+    $this->assertSession()->pageTextContains('DDD Update test & special chars');
   }
 
   /**

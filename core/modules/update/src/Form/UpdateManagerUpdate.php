@@ -118,7 +118,7 @@ class UpdateManagerUpdate extends FormBase {
       // The project name to display can vary based on the info we have.
       if (!empty($project['title'])) {
         if (!empty($project['link'])) {
-          $project_name = Link::fromTextAndUrl($project['title'], Url::fromUri($project['link']))->toString();
+          $project_name = Link::fromTextAndUrl(html_entity_decode($project['title'], ENT_QUOTES | ENT_HTML5, 'utf-8'), Url::fromUri($project['link']))->toString();
         }
         else {
           $project_name = $project['title'];
