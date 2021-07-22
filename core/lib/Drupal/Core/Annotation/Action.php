@@ -39,9 +39,11 @@ class Action extends Plugin {
   /**
    * The route name for a confirmation form for this action.
    *
+   * This property is optional and it does not need to be declared.
+   *
    * @todo Provide a more generic way to allow an action to be confirmed first.
    *
-   * @var string (optional)
+   * @var string
    */
   public $confirm_form_route_name = '';
 

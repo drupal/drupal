@@ -59,14 +59,14 @@ class SharedTempStoreTest extends UnitTestCase {
   /**
    * A tempstore object belonging to the owner.
    *
-   * @var \stdClass
+   * @var object
    */
   protected $ownObject;
 
   /**
    * A tempstore object not belonging to the owner.
    *
-   * @var \stdClass
+   * @var object
    */
   protected $otherObject;
 

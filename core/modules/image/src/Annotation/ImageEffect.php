@@ -44,11 +44,13 @@ class ImageEffect extends Plugin {
   /**
    * A brief description of the image effect.
    *
+   * This property is optional and it does not need to be declared.
+   *
    * This will be shown when adding or configuring this image effect.
    *
    * @ingroup plugin_translatable
    *
-   * @var \Drupal\Core\Annotation\Translation (optional)
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $description = '';
 

@@ -21,7 +21,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * Test data passed to the resolve method.
    *
-   * @var \stdClass
+   * @var object
    */
   protected $testData;
 
