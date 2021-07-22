@@ -299,6 +299,17 @@ filter:
     component:
       css/theme/filter.theme.css: {}
 
+tablescroll:
+  version: VERSION
+  js:
+    js/tablescroll-init.js: {}
+    js/tablescroll.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.debounce
+
 classy.book-navigation:
   version: VERSION
   css:

@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * A wrapper template for tables configured to be horizontally scrollable.
+ *
+ * To make a table scrollable, its template should extend this one and the table
+ * should be wrapped in {% block table %}.
+ */
+#}
+{{ attach_library('claro/tablescroll') }}
+
+<div class="scrollable-table-outline">
+  <div class="scrollable-table-wrapper" data-drupal-scrollable-table-wrapper>
+    {% block table %}
+      'This block should contain the table to be made scrollable.'
+    {% endblock table %}
+  </div>
+</div>

@@ -193,6 +193,29 @@ class ClaroPreRender implements TrustedCallbackInterface {
   }
 
   /**
+   * Prerender callback for `table` render elements.
+   *
+   * @param array $element
+   *   The table render array.
+   *
+   * @return array
+   *   The updated table render array.
+   */
+  public static function table(array $element) {
+    // Tables default to being horizontally scrollable unless the element
+    // explicitly sets the `#scrollable` property to FALSE.
+    $element['#scrollable'] = $element['#scrollable'] ?? TRUE;
+
+    // The #responsive property is not used in Claro, but should be FALSE
+    // instead of removed as this overrides the default value of #responsive
+    // from being used in \Drupal\Core\Render\Element\Table::preRenderTable().
+    // This prevents unnecessary responsive table classes from being added.
+    $element['#responsive'] = FALSE;
+
+    return $element;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
@@ -203,6 +226,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
       'container',
       'textFormat',
       'messagePlaceholder',
+      'table',
     ];
   }
 
