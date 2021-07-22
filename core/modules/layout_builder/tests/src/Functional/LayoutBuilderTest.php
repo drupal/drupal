@@ -640,6 +640,34 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that block plugins can provide custom attributes.
+   */
+  public function testPluginsProvidingCustomAttributes() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Test Attributes');
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+
+    $this->drupalGet('node/1');
+
+    $assert_session->elementExists('css', '.attribute-test-class');
+    $assert_session->elementExists('css', '[custom-attribute=test]');
+  }
+
+  /**
    * Tests the interaction between full and default view modes.
    *
    * @see \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::getDefaultSectionStorage()
