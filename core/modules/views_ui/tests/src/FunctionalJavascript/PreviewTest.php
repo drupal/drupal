@@ -155,8 +155,8 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertNotEmpty($elements[4]->find('css', 'a'), 'Link to last page found.');
 
     // Navigate to next page.
-    $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--next']);
-    $this->clickPreviewLinkAJAX($elements[0], 5);
+    $element = $this->assertSession()->elementExists('xpath', '//li[contains(@class, "pager__item--next")]/a');
+    $this->clickPreviewLinkAJAX($element, 5);
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
@@ -203,8 +203,8 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertNotEmpty($elements[1]->find('css', 'a'), 'Link to next page found.');
 
     // Navigate to next page.
-    $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--next']);
-    $this->clickPreviewLinkAJAX($elements[0], 3);
+    $element = $this->assertSession()->elementExists('xpath', '//li[contains(@class, "pager__item--next")]/a');
+    $this->clickPreviewLinkAJAX($element, 3);
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
@@ -231,14 +231,13 @@ class PreviewTest extends WebDriverTestBase {
     $this->getPreviewAJAX('test_click_sort_ajax', 'page_1', 0);
 
     // Test that the header label is present.
-    $elements = $this->xpath('//th[contains(@class, :class)]/a', [':class' => 'views-field views-field-name']);
-    $this->assertTrue(!empty($elements), 'The header label is present.');
+    $element = $this->assertSession()->elementExists('xpath', '//th[contains(@class, "views-field views-field-name")]/a');
 
     // Verify link.
     $this->assertSession()->linkByHrefExists('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=desc', 0, 'The output URL is as expected.');
 
     // Click link to sort.
-    $elements[0]->click();
+    $element->click();
     $sort_link = $this->assertSession()->waitForElement('xpath', '//th[contains(@class, \'views-field views-field-name is-active\')]/a');
 
     $this->assertNotEmpty($sort_link);

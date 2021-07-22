@@ -127,9 +127,8 @@ class LocalTasksTest extends BrowserTestBase {
     $this->assertLocalTaskAppears($title);
 
     // Ensure the view tab is active.
-    $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a');
-    $this->assertCount(1, $result, 'There is just a single active tab.');
-    $this->assertEquals('View(active tab)', $result[0]->getText(), 'The view tab is active.');
+    $this->assertSession()->elementsCount('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a', 1);
+    $this->assertSession()->elementTextEquals('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a', 'View(active tab)');
 
     // Verify that local tasks in the second level appear.
     $sub_tasks = [
@@ -142,17 +141,17 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
     $this->assertLocalTasks($sub_tasks, 1);
 
-    $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a');
-    $this->assertCount(1, $result, 'There is just a single active tab.');
-    $this->assertEquals('Settings(active tab)', $result[0]->getText(), 'The settings tab is active.');
+    $this->assertSession()->elementsCount('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a', 1);
+    $this->assertSession()->elementTextEquals('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a', 'Settings(active tab)');
 
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings_sub1'));
     $this->assertLocalTasks($sub_tasks, 1);
 
-    $result = $this->xpath('//ul[contains(@class, "tabs")]//a[contains(@class, "active")]');
-    $this->assertCount(2, $result, 'There are tabs active on both levels.');
-    $this->assertEquals('Settings(active tab)', $result[0]->getText(), 'The settings tab is active.');
-    $this->assertEquals('Dynamic title for TestTasksSettingsSub1(active tab)', $result[1]->getText(), 'The sub1 tab is active.');
+    $xpath = '//ul[contains(@class, "tabs")]//a[contains(@class, "active")]';
+    $this->assertSession()->elementsCount('xpath', $xpath, 2);
+    $links = $this->xpath($xpath);
+    $this->assertEquals('Settings(active tab)', $links[0]->getText(), 'The settings tab is active.');
+    $this->assertEquals('Dynamic title for TestTasksSettingsSub1(active tab)', $links[1]->getText(), 'The sub1 tab is active.');
 
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'kittens:ragdoll');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'kittens:dwarf-cat');

@@ -192,8 +192,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertSession()->pageTextContains('Added a shortcut for Create Basic page.');
     // Assure that Article does not have its shortcut indicated as set.
     $this->drupalGet('node/add/article');
-    $link = $this->xpath('//a[normalize-space()=:label]', [':label' => 'Remove from Default shortcuts']);
-    $this->assertTrue(empty($link), 'Link Remove to Default shortcuts not found for Create Article page.');
+    $this->assertSession()->elementNotExists('xpath', "//a[normalize-space()='Remove from Default shortcuts']");
     // Add Shortcut for Article.
     $this->clickLink('Add to Default shortcuts');
     $this->assertSession()->pageTextContains('Added a shortcut for Create Article.');
@@ -325,24 +324,21 @@ class ShortcutLinksTest extends ShortcutTestBase {
       ->save();
 
     $this->drupalGet('page-that-does-not-exist');
-    $result = $this->xpath('//a[contains(@class, "shortcut-action--add")]');
-    $this->assertTrue(empty($result), 'Add to shortcuts link was not shown on a page not found.');
+    // Test that add to shortcuts link is not shown on a page not found.
+    $this->assertSession()->elementNotExists('xpath', '//a[contains(@class, "shortcut-action--add")]');
 
     // The user does not have access to this path.
     $this->drupalGet('admin/modules');
-    $result = $this->xpath('//a[contains(@class, "shortcut-action--add")]');
-    $this->assertTrue(empty($result), 'Add to shortcuts link was not shown on a page the user does not have access to.');
+    $this->assertSession()->elementNotExists('xpath', '//a[contains(@class, "shortcut-action--add")]');
 
     // Verify that the testing mechanism works by verifying the shortcut link
     // appears on admin/content.
     $this->drupalGet('admin/content');
-    $result = $this->xpath('//a[contains(@class, "shortcut-action--remove")]');
-    $this->assertTrue(!empty($result), 'Remove from shortcuts link was shown on a page the user does have access to.');
+    $this->assertSession()->elementExists('xpath', '//a[contains(@class, "shortcut-action--remove")]');
 
     // Verify that the shortcut link appears on routing only pages.
     $this->drupalGet('router_test/test2');
-    $result = $this->xpath('//a[contains(@class, "shortcut-action--add")]');
-    $this->assertTrue(!empty($result), 'Add to shortcuts link was shown on a page the user does have access to.');
+    $this->assertSession()->elementExists('xpath', '//a[contains(@class, "shortcut-action--add")]');
   }
 
   /**
