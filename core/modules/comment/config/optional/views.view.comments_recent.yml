@@ -27,6 +27,7 @@ display:
         type: tag
       query:
         type: views_query
+        options: {  }
       exposed_form:
         type: basic
       pager:

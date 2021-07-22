@@ -2,15 +2,15 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\views\Views;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface;
 use Drupal\views\Plugin\views\pager\PagerPluginBase;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\Plugin\views\row\RowPluginBase;
+use Drupal\views\Plugin\views\style\StylePluginBase;
+use Drupal\views\Views;
 
 /**
  * Drupal unit tests for the DisplayPluginBase class.
@@ -24,7 +24,13 @@ class DisplayKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'field', 'user'];
+  public static $modules = [
+    'block',
+    'field',
+    'node',
+    'user',
+    'views_test_data',
+  ];
 
   /**
    * Views plugin types to test.
@@ -57,6 +63,18 @@ class DisplayKernelTest extends ViewsKernelTestBase {
    * @var array
    */
   public static $testViews = ['test_display_defaults', 'test_view'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function viewsData() {
+    $data = parent::viewsData();
+
+    // Use the test query plugin.
+    $data['views_test_data']['table']['base']['query_id'] = 'query_test';
+
+    return $data;
+  }
 
   /**
    * Tests the default display options.
@@ -113,6 +131,13 @@ class DisplayKernelTest extends ViewsKernelTestBase {
     $first = spl_object_hash($display_handler->getPlugin('style'));
     $second = spl_object_hash($display_handler->getPlugin('style'));
     $this->assertIdentical($first, $second, 'The same plugin instance was returned.');
+
+    // Verify that the query plugin ID is properly set in the view.
+    $view = Views::getView('test_view');
+    $view->initDisplay();
+    $display_handler = $view->display_handler;
+    $query_options = $display_handler->getOption('query');
+    $this->assertSame('query_test', $query_options['type']);
   }
 
   /**
