@@ -28,6 +28,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - overwrite_properties: (optional) A list of properties that will be
  *   overwritten if an entity with the same ID already exists. Any properties
  *   that are not listed will not be overwritten.
+ * - new_translation_overwrite_all_properties: (optional) Boolean, instructs
+ *   not to use the overwrite_properties option when a new translation is added,
+ *   achieving the same behaviour for new entities and new translations.
  * - validate: (optional) Boolean, indicates whether an entity should be
  *   validated, defaults to FALSE.
  *
@@ -251,6 +254,9 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     // By default, an update will be preserved.
     $rollback_action = MigrateIdMapInterface::ROLLBACK_PRESERVE;
 
+    // Keep track of the status of the translation.
+    $new_translation = FALSE;
+
     // Make sure we have the right translation.
     if ($this->isTranslationDestination()) {
       $property = $this->storage->getEntityType()->getKey('langcode');
@@ -258,6 +264,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
         $language = $row->getDestinationProperty($property);
         if (!$entity->hasTranslation($language)) {
           $entity->addTranslation($language);
+          $new_translation = TRUE;
 
           // We're adding a translation, so delete it on rollback.
           $rollback_action = MigrateIdMapInterface::ROLLBACK_DELETE;
@@ -269,7 +276,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     // If the migration has specified a list of properties to be overwritten,
     // clone the row with an empty set of destination values, and re-add only
     // the specified properties.
-    if (isset($this->configuration['overwrite_properties'])) {
+    if (isset($this->configuration['overwrite_properties']) && (!isset($this->configuration['new_translation_overwrite_all_properties']) && !$new_translation)) {
       $empty_destinations = array_intersect($empty_destinations, $this->configuration['overwrite_properties']);
       $clone = $row->cloneWithoutDestination();
       foreach ($this->configuration['overwrite_properties'] as $property) {
