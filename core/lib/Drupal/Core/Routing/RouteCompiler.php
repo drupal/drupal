@@ -12,6 +12,11 @@ use Symfony\Component\Routing\RouteCompiler as SymfonyRouteCompiler;
 class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterface {
 
   /**
+   * Flag the path as having unlimited parts.
+   */
+  const UNLIMITED_PARTS = -1;
+
+  /**
    * Compiles the current route instance.
    *
    * Because so much of the parent class is private, we need to call the parent
@@ -38,6 +43,20 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     // We count the number of parts including any optional trailing parts. This
     // allows the RouteProvider to filter candidate routes more efficiently.
     $num_parts = count(explode('/', trim($route->getPath(), '/')));
+
+    $unlimited_requirements = array_filter($route->getRequirements(), function ($it, $key) use ($stripped_path) {
+      if ($it !== '.*' && $it !== '.+') {
+        return FALSE;
+      }
+
+      $needle = "{{$key}}";
+      // Only the last parameter can be set to include '/' and only if the path ends with this parameter.
+      return substr_compare($stripped_path, $needle, -strlen($needle)) === 0;
+    }, ARRAY_FILTER_USE_BOTH);
+
+    if (count($unlimited_requirements) > 0) {
+      $num_parts = static::UNLIMITED_PARTS;
+    }
 
     return new CompiledRoute(
       $fit,
