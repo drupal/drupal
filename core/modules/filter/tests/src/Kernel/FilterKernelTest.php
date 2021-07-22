@@ -1033,7 +1033,7 @@ www.example.com with a newline in comments -->
     $html = '<p><script>alert("test")</script></p>';
     $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- nested script element');
 
-    $html= '<p><style> /* Styling */ body {color:red}</style></p>';
+    $html = '<p><style> /* Styling */ body {color:red}</style></p>';
     $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- style element.');
 
     $html = '<p><style>
