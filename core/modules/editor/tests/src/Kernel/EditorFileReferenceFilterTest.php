@@ -107,10 +107,9 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     $this->assertEquals($cache_tag, $output->getCacheTags());
 
     // One data-entity-uuid attribute with an invalid value.
-    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="invalid-' . $uuid . '" />';
-    $expected_output = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="invalid-' . $uuid . '">';
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="invalid-' . $uuid . '">';
     $output = $test($input);
-    $this->assertSame($expected_output, $output->getProcessedText());
+    $this->assertSame($input, $output->getProcessedText());
     $this->assertEquals([], $output->getCacheTags());
 
     // Two different data-entity-uuid attributes.

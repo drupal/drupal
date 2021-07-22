@@ -1027,71 +1027,44 @@ www.example.com with a newline in comments -->
     $this->assertEquals('<p>دروبال</p>', $f, 'HTML corrector -- Encoding is correctly kept.');
     // cSpell:enable
 
-    $f = Html::normalize('<script>alert("test")</script>');
-    $this->assertEquals('<script>alert("test")</script>', $f, 'HTML corrector -- script element');
+    $html = '<script>alert("test")</script>';
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- script element');
 
-    $f = Html::normalize('<p><script>alert("test")</script></p>');
-    $this->assertEquals('<p><script>alert("test")</script></p>', $f, 'HTML corrector -- nested script element');
+    $html = '<p><script>alert("test")</script></p>';
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- nested script element');
 
-    $f = Html::normalize('<p><style> /* Styling */ body {color:red}</style></p>');
-    $this->assertEquals('<p><style> /* Styling */ body {color:red}</style></p>', $f, 'HTML corrector -- style element.');
+    $html= '<p><style> /* Styling */ body {color:red}</style></p>';
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- style element.');
 
-    $filtered_data = Html::normalize('<p><style>
+    $html = '<p><style>
 /*<![CDATA[*/
 /* Styling */
 body {color:red}
 /*]]>*/
-</style></p>');
-    $this->assertEquals('<p><style>
-/*<![CDATA[*/
-/* Styling */
-body {color:red}
-/*]]>*/
-</style></p>', $filtered_data,
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
-    );
+</style></p>';
+    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/']));
 
-    $filtered_data = Html::normalize('<p><style>
+    $html = '<p><style>
   <!--/*--><![CDATA[/* ><!--*/
   /* Styling */
   body {color:red}
   /*--><!]]>*/
-</style></p>');
-    $this->assertEquals('<p><style>
-  <!--/*--><![CDATA[/* ><!--*/
-  /* Styling */
-  body {color:red}
-  /*--><!]]>*/
-</style></p>', $filtered_data,
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
-    );
+</style></p>';
+    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/']));
 
-    $filtered_data = Html::normalize('<p><script>
+    $html = '<p><script>
 <!--//--><![CDATA[// ><!--
   alert("test");
 //--><!]]>
-</script></p>');
-    $this->assertEquals('<p><script>
-<!--//--><![CDATA[// ><!--
-  alert("test");
-//--><!]]>
-</script></p>', $filtered_data,
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
-    );
+</script></p>';
+    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--']));
 
-    $filtered_data = Html::normalize('<p><script>
+    $html = '<p><script>
 // <![CDATA[
   alert("test");
 // ]]>
-</script></p>');
-    $this->assertEquals('<p><script>
-// <![CDATA[
-  alert("test");
-// ]]>
-</script></p>', $filtered_data,
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
-    );
-
+</script></p>';
+    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA[']));
   }
 
   /**
