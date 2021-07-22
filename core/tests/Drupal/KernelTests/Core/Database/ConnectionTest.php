@@ -166,6 +166,39 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests the deprecation of the per-table prefix connection option.
+   *
+   * @todo deprecate the 'prefix' option as an array in 9.3.x.
+   */
+  public function testPerTablePrefixOptionDeprecation() {
+    $connection_info = Database::getConnectionInfo('default');
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+      'test_table' => $connection_info['default']['prefix'] . '_bar',
+    ];
+    Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->assertInstanceOf(Connection::class, $foo_connection);
+  }
+
+  /**
+   * Tests the deprecation of the prefix connection option in array form.
+   *
+   * @todo deprecate the 'prefix' option as an array in 9.3.x.
+   */
+  public function testPrefixArrayOptionDeprecation() {
+    $connection_info = Database::getConnectionInfo('default');
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+    ];
+    Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->assertInstanceOf(Connection::class, $foo_connection);
+  }
+
+  /**
    * Ensure that you cannot execute multiple statements on MySQL.
    */
   public function testMultipleStatementsForNewPhp() {

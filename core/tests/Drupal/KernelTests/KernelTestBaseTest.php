@@ -56,7 +56,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testGetDatabaseConnectionInfoWithOutManualSetDbUrl() {
     $options = $this->container->get('database')->getConnectionOptions();
-    $this->assertSame($this->databasePrefix, $options['prefix']['default']);
+    $this->assertSame($this->databasePrefix, $options['prefix']);
   }
 
   /**

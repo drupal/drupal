@@ -49,7 +49,7 @@ class DbCommandBase extends Command {
     $prefix = $input->getOption('prefix');
     if ($prefix) {
       $info = Database::getConnectionInfo($key)['default'];
-      $info['prefix']['default'] = $prefix;
+      $info['prefix'] = $prefix;
 
       Database::removeConnection($key);
       Database::addConnectionInfo($key, 'default', $info);

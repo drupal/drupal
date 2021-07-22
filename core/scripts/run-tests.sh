@@ -644,9 +644,7 @@ function simpletest_script_setup_database($new = FALSE) {
     $databases['test-runner']['default'] = [
       'driver' => 'sqlite',
       'database' => $sqlite,
-      'prefix' => [
-        'default' => '',
-      ],
+      'prefix' => '',
     ];
     // Create the test runner SQLite database, unless it exists already.
     if ($new && !file_exists($sqlite)) {
