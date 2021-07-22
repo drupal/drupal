@@ -210,7 +210,7 @@ class LinkFormatter extends FormatterBase {
         $element[$delta] = [
           '#type' => 'link',
           '#title' => $link_title,
-          '#options' => $url->getOptions(),
+          '#options' => [],
         ];
         $element[$delta]['#url'] = $url;
 
