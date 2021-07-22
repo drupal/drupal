@@ -140,7 +140,12 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
       return NULL;
     }
 
-    throw new PluginNotFoundException($entity_type_id, sprintf('The "%s" entity type does not exist.', $entity_type_id));
+    if (empty($entity_type)) {
+      throw new PluginNotFoundException($entity_type_id, sprintf('The "%s" entity type does not exist.', $entity_type_id));
+    }
+    if (!class_exists($entity_type->getClass())) {
+      throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type specifies a class "%s" which does not exist.', $entity_type_id, $entity_type->getClass()));
+    }
   }
 
   /**
