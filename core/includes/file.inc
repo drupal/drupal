@@ -95,8 +95,14 @@ function file_url_transform_relative($file_url) {
 
 /**
  * Constructs a URI to Drupal's default files location given a relative path.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0 without
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3223091
  */
 function file_build_uri($path) {
+  @trigger_error('file_build_uri() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0 without replacement. See https://www.drupal.org/node/3223091', E_USER_DEPRECATED);
   $uri = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
   /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
   $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
