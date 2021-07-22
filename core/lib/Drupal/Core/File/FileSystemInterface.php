@@ -270,11 +270,11 @@ interface FileSystemInterface {
    *   A URI containing the destination that $source should be copied to. The
    *   URI may be a bare filepath (without a scheme).
    * @param int $replace
-   *   Replace behavior when the destination file already exists:
-   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
-   *     until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
+   *   (optional) Replace behavior when the destination file already exists:
+   *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
+   *   - FileSystemInterface::EXISTS_RENAME: (default) Append
+   *     _{incrementing number} until the filename is unique.
+   *   - FileSystemInterface::EXISTS_ERROR: Throw an exception.
    *
    * @return string
    *   The path to the new file.
