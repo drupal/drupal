@@ -3,6 +3,8 @@
 namespace Drupal\Tests\rdf\Functional;
 
 use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\Tests\taxonomy\Functional\TaxonomyTestBase;
 use Drupal\Tests\rdf\Traits\RdfParsingTrait;
 
@@ -20,7 +22,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'views'];
+  protected static $modules = ['rdf'];
 
   /**
    * {@inheritdoc}
@@ -43,6 +45,10 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
 
   protected function setUp(): void {
     parent::setUp();
+
+    $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $user_role->grantPermission('access content');
+    $user_role->save();
 
     $this->vocabulary = $this->createVocabulary();
 

@@ -33,7 +33,7 @@ class TermTest extends TaxonomyTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block'];
+  protected static $modules = ['block', 'node'];
 
   /**
    * {@inheritdoc}

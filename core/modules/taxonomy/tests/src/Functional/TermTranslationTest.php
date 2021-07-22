@@ -36,7 +36,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'language', 'content_translation'];
+  protected static $modules = ['taxonomy', 'language', 'content_translation', 'node'];
 
   /**
    * {@inheritdoc}

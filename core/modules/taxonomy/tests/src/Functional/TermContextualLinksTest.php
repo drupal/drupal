@@ -29,7 +29,7 @@ class TermContextualLinksTest extends TaxonomyTestBase {
     $term = $this->createTerm($vocabulary);
 
     $user = $this->drupalCreateUser([
-      'administer taxonomy',
+      'access content',
       'access contextual links',
     ]);
     $this->drupalLogin($user);

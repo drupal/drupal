@@ -92,8 +92,9 @@ class TermAccessTest extends TaxonomyTestBase {
     $assert_session->statusCodeEquals(403);
     $this->assertTermAccess($unpublished_term, 'delete', FALSE, "The following permissions are required: 'delete terms in {$vocabulary->id()}' OR 'administer taxonomy'.");
 
-    // Install the Views module and repeat the checks for the 'view' permission.
-    \Drupal::service('module_installer')->install(['views'], TRUE);
+    // Install the Views and node modules and repeat the checks for the 'view'
+    // permission.
+    \Drupal::service('module_installer')->install(['views', 'node'], TRUE);
     $this->rebuildContainer();
 
     $this->drupalGet('taxonomy/term/' . $published_term->id());

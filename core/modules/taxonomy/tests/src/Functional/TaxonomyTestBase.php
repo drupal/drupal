@@ -28,9 +28,19 @@ abstract class TaxonomyTestBase extends BrowserTestBase {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
-    // Create Basic page and Article node types.
+    // Create Basic page and Article node types if node module is installed.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+      $class = get_class($this);
+      $modules = [];
+      while ($class) {
+        if (property_exists($class, 'modules')) {
+          $modules = array_merge($modules, $class::$modules);
+        }
+        $class = get_parent_class($class);
+      }
+      if ($modules && in_array('node', $modules)) {
+        $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+      }
     }
   }
 

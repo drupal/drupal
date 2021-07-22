@@ -235,7 +235,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $vocabulary = $this->createVocabulary();
 
     // Test as admin user.
-    $user = $this->drupalCreateUser(['administer taxonomy']);
+    $user = $this->drupalCreateUser(['administer taxonomy', 'access content']);
     $this->drupalLogin($user);
 
     // Visit the main taxonomy administration page.
@@ -305,7 +305,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $assert_session->statusCodeEquals(403);
 
     // Test as user with "edit" permissions.
-    $user = $this->drupalCreateUser(["edit terms in {$vocabulary->id()}"]);
+    $user = $this->drupalCreateUser(["edit terms in {$vocabulary->id()}", 'access content']);
     $this->drupalLogin($user);
 
     // Ensure the taxonomy term add form is denied.
