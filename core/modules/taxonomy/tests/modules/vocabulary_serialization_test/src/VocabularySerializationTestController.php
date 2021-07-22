@@ -4,6 +4,9 @@ namespace Drupal\vocabulary_serialization_test;
 
 use Drupal\taxonomy\VocabularyInterface;
 
+/**
+ * Controller for testing vocabulary serialization.
+ */
 class VocabularySerializationTestController {
 
   public function vocabularyResponse(VocabularyInterface $taxonomy_vocabulary) {

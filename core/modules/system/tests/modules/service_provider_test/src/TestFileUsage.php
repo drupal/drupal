@@ -5,6 +5,9 @@ namespace Drupal\service_provider_test;
 use Drupal\file\FileInterface;
 use Drupal\file\FileUsage\FileUsageBase;
 
+/**
+ * Test class of database file usage backend implementation.
+ */
 class TestFileUsage extends FileUsageBase {
 
   /**

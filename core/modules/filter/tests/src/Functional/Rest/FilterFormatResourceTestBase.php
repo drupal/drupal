@@ -5,6 +5,9 @@ namespace Drupal\Tests\filter\Functional\Rest;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * Resource test base for the filter_format entity.
+ */
 abstract class FilterFormatResourceTestBase extends EntityResourceTestBase {
 
   /**

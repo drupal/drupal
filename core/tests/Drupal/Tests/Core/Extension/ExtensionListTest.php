@@ -319,6 +319,9 @@ class ExtensionListTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing ExtensionList.
+ */
 class TestExtension extends ExtensionList {
 
   /**

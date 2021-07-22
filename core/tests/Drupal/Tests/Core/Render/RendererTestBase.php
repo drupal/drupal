@@ -257,7 +257,9 @@ abstract class RendererTestBase extends UnitTestCase {
 
 }
 
-
+/**
+ * Placeholders test class with implemented trusted callbacks.
+ */
 class PlaceholdersTest implements TrustedCallbackInterface {
 
   /**

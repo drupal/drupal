@@ -11,6 +11,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Test class used as an event listener for testing service provider.
+ */
 class TestClass implements EventSubscriberInterface, DestructableInterface, ContainerAwareInterface {
 
   use ContainerAwareTrait;

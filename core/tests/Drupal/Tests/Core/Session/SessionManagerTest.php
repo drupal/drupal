@@ -37,6 +37,9 @@ class SessionManagerTest extends UnitTestCase {
 
 }
 
+/**
+ * A fake abstract proxy.
+ */
 class FakeAbstractProxy extends AbstractProxy {
 
   /**

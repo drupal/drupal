@@ -125,4 +125,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
 
 }
 
+/**
+ * Empty test class for testing invalid content handling.
+ */
 class NonPrintable {}

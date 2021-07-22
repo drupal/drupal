@@ -633,7 +633,9 @@ class RendererBubblingTest extends RendererTestBase {
 
 }
 
-
+/**
+ * Test class with implemented trusted callbacks.
+ */
 class BubblingTest implements TrustedCallbackInterface {
 
   /**

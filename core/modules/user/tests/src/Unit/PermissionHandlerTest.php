@@ -347,6 +347,9 @@ EOF
 
 }
 
+/**
+ * Provider for testing permissions callbacks.
+ */
 class TestPermissionCallbacks {
 
   public function singleDescription() {

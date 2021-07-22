@@ -2,6 +2,9 @@
 
 namespace Drupal\Component\Plugin\Discovery;
 
+/**
+ * Trait for accessing cached definitions of the plugin discovery component.
+ */
 trait DiscoveryCachedTrait {
 
   use DiscoveryTrait;

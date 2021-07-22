@@ -327,6 +327,9 @@ class BigPipePlaceholderTestCases {
 
 }
 
+/**
+ * Provides a placeholder for the BigPipe placeholder test cases.
+ */
 class BigPipePlaceholderTestCase {
 
   /**

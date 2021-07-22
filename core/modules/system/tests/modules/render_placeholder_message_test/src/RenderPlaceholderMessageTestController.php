@@ -7,6 +7,9 @@ use Drupal\Core\Render\RenderContext;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * Controller for testing placeholder message setting.
+ */
 class RenderPlaceholderMessageTestController implements ContainerAwareInterface, TrustedCallbackInterface {
 
   use ContainerAwareTrait;

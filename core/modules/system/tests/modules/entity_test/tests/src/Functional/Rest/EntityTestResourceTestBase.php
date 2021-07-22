@@ -7,6 +7,9 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\user\Entity\User;
 
+/**
+ * Resource test base for the entity_test entity.
+ */
 abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
 
   use EntityDefinitionTestTrait;

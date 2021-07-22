@@ -6,6 +6,9 @@ use Drupal\node\Entity\NodeType;
 use Drupal\rdf\Entity\RdfMapping;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * Resource test base for the rdf_mapping entity.
+ */
 abstract class RdfMappingResourceTestBase extends EntityResourceTestBase {
 
   /**

@@ -6,7 +6,7 @@ use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for ShortcutSet entity.
+ * Resource test base for ShortcutSet entity.
  */
 abstract class ShortcutSetResourceTestBase extends EntityResourceTestBase {
 

@@ -8,6 +8,9 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Provides test assertions for testing views-level cache tags.
+ */
 trait AssertViewsCacheTagsTrait {
 
   use AssertPageCacheContextsAndTagsTrait;

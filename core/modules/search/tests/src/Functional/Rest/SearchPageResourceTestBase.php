@@ -5,6 +5,9 @@ namespace Drupal\Tests\search\Functional\Rest;
 use Drupal\search\Entity\SearchPage;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * Resource test base for the search_page entity.
+ */
 abstract class SearchPageResourceTestBase extends EntityResourceTestBase {
 
   /**

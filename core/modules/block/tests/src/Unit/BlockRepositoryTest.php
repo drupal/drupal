@@ -192,5 +192,8 @@ class BlockRepositoryTest extends UnitTestCase {
 
 }
 
+/**
+ * Test context aware block interface.
+ */
 interface TestContextAwareBlockInterface extends BlockPluginInterface, ContextAwarePluginInterface {
 }

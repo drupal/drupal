@@ -780,6 +780,9 @@ class RouteProviderTest extends KernelTestBase {
 
 }
 
+/**
+ * Stub class for testing RouteProvider.
+ */
 class TestRouteProvider extends RouteProvider {
 
   public function getCandidateOutlines(array $parts) {

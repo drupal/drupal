@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Cache;
 
+/**
+ * Defines a PHP cache backend factory.
+ */
 class PhpBackendFactory implements CacheFactoryInterface {
 
   /**

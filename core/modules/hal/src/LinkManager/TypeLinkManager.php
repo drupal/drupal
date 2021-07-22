@@ -11,6 +11,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Type link manager for handling bundle URIs.
+ */
 class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterface {
 
   /**

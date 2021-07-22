@@ -5,6 +5,9 @@ namespace Drupal\migrate\Plugin\Derivative;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * The migrate entity deriver.
+ */
 class MigrateEntity implements ContainerDeriverInterface {
 
   /**

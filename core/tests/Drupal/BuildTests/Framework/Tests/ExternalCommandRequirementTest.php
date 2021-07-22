@@ -125,6 +125,9 @@ class ExternalCommandRequirementTest extends TestCase {
 
 }
 
+/**
+ * Test class with ExternalCommandRequirementsTrait.
+ */
 class UsesCommandRequirements {
 
   use ExternalCommandRequirementsTrait;
@@ -157,6 +160,9 @@ class ClassRequiresUnavailable {
 
 }
 
+/**
+ * Test class with ExternalCommandRequirementsTrait trait.
+ */
 class MethodRequires {
 
   use ExternalCommandRequirementsTrait;

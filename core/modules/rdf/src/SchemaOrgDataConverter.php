@@ -2,6 +2,9 @@
 
 namespace Drupal\rdf;
 
+/**
+ * Contains methods for Schema.org data conversions.
+ */
 class SchemaOrgDataConverter {
 
   /**

@@ -413,10 +413,16 @@ EOS;
 
 }
 
+/**
+ * Test service without methods.
+ */
 class TestServiceNoMethod {
 
 }
 
+/**
+ * Test service with simple method.
+ */
 class TestServiceSimpleMethod {
 
   public function method() {
@@ -425,6 +431,9 @@ class TestServiceSimpleMethod {
 
 }
 
+/**
+ * Test service with method without parameter.
+ */
 class TestServiceMethodWithParameter {
 
   public function methodWithParameter($parameter) {
@@ -433,6 +442,9 @@ class TestServiceMethodWithParameter {
 
 }
 
+/**
+ * Test service with complex method.
+ */
 class TestServiceComplexMethod {
 
   public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
@@ -441,6 +453,9 @@ class TestServiceComplexMethod {
 
 }
 
+/**
+ * Test service with nullable typehint self.
+ */
 class TestServiceNullableTypehintSelf {
 
   public function typehintSelf(?self $parameter): ?self {
@@ -449,6 +464,9 @@ class TestServiceNullableTypehintSelf {
 
 }
 
+/**
+ * Test service with void returning method.
+ */
 class TestServiceMethodReturnsVoid {
 
   public function methodReturnsVoid(string $parameter): void {
@@ -457,6 +475,9 @@ class TestServiceMethodReturnsVoid {
 
 }
 
+/**
+ * Test service with method that returns reference.
+ */
 class TestServiceReturnReference {
 
   public function &returnReference() {
@@ -465,12 +486,18 @@ class TestServiceReturnReference {
 
 }
 
+/**
+ * Test interface.
+ */
 interface TestInterface {
 
   public function testMethod($parameter);
 
 }
 
+/**
+ * Test service that implements test interface.
+ */
 class TestServiceWithInterface implements TestInterface {
 
   public function testMethod($parameter) {
@@ -479,6 +506,9 @@ class TestServiceWithInterface implements TestInterface {
 
 }
 
+/**
+ * Test service with protected methods.
+ */
 class TestServiceWithProtectedMethods {
 
   public function testMethod($parameter) {
@@ -495,6 +525,9 @@ class TestServiceWithProtectedMethods {
 
 }
 
+/**
+ * Test service with public static method.
+ */
 class TestServiceWithPublicStaticMethod {
 
   public static function testMethod($parameter) {
@@ -502,14 +535,23 @@ class TestServiceWithPublicStaticMethod {
 
 }
 
+/**
+ * Test base interface.
+ */
 interface TestBaseInterface {
 
 }
 
+/**
+ * Test child interface.
+ */
 interface TestChildInterface extends TestBaseInterface {
 
 }
 
+/**
+ * Test service that implements test child interface.
+ */
 class TestServiceWithChildInterfaces implements TestChildInterface {
 
 }

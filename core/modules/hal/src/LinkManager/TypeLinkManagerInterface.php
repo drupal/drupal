@@ -2,6 +2,9 @@
 
 namespace Drupal\hal\LinkManager;
 
+/**
+ * Defines an interface for the type link manager.
+ */
 interface TypeLinkManagerInterface extends ConfigurableLinkManagerInterface {
 
   /**

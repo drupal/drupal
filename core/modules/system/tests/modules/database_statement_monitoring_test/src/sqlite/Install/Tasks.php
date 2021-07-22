@@ -4,5 +4,8 @@ namespace Drupal\database_statement_monitoring_test\sqlite\Install;
 
 use Drupal\Core\Database\Driver\sqlite\Install\Tasks as BaseTasks;
 
+/**
+ * Specifies installation tasks for SQLite databases.
+ */
 class Tasks extends BaseTasks {
 }

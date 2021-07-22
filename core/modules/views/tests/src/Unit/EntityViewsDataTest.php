@@ -1169,6 +1169,9 @@ class EntityViewsDataTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing EntityViewsData methods.
+ */
 class TestEntityViewsData extends EntityViewsData {
 
   public function setEntityType(EntityTypeInterface $entity_type) {
@@ -1177,6 +1180,9 @@ class TestEntityViewsData extends EntityViewsData {
 
 }
 
+/**
+ * Stub class of ContentEntityType for testing.
+ */
 class TestEntityType extends ContentEntityType {
 
   /**

@@ -38,6 +38,9 @@ class YamlTest extends UnitTestCase {
 
 }
 
+/**
+ * Proxy class of YAML parser for testing.
+ */
 class YamlParserProxy implements SerializationInterface {
 
   /**

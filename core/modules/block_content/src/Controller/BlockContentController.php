@@ -10,6 +10,9 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Controller routines for custom block routes.
+ */
 class BlockContentController extends ControllerBase {
 
   /**

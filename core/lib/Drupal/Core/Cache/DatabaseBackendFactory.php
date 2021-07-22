@@ -5,6 +5,9 @@ namespace Drupal\Core\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
 
+/**
+ * Defines a default cache backend factory.
+ */
 class DatabaseBackendFactory implements CacheFactoryInterface {
 
   /**

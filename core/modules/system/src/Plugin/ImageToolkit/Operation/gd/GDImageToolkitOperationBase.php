@@ -4,6 +4,9 @@ namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Core\ImageToolkit\ImageToolkitOperationBase;
 
+/**
+ * Provides a GD base class with correctly typed image toolkit.
+ */
 abstract class GDImageToolkitOperationBase extends ImageToolkitOperationBase {
 
   /**

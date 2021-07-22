@@ -5,6 +5,9 @@ namespace Drupal\views_ui\Form\Ajax;
 use Drupal\Core\Form\FormInterface;
 use Drupal\views\ViewEntityInterface;
 
+/**
+ * Provides an interface for the Views UI AJAX forms.
+ */
 interface ViewsFormInterface extends FormInterface {
 
   /**

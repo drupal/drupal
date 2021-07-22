@@ -6,6 +6,9 @@ use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * Resource test base for BaseFieldOverride entity.
+ */
 abstract class BaseFieldOverrideResourceTestBase extends EntityResourceTestBase {
 
   /**

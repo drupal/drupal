@@ -100,6 +100,9 @@ class TranslationManagerTest extends UnitTestCase {
 
 }
 
+/**
+ * A chained translation implementation used for testing.
+ */
 class TestTranslationManager extends TranslationManager {
 
   public function __construct() {

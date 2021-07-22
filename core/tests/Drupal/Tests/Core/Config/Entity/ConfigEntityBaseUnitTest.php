@@ -642,6 +642,9 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing.
+ */
 class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCollections {
 
   protected $pluginCollection;

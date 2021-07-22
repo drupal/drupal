@@ -7,6 +7,9 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Event subscriber for testing configuration collection.
+ */
 class EventSubscriber implements EventSubscriberInterface {
 
   /**

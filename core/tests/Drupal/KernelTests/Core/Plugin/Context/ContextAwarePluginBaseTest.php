@@ -90,6 +90,9 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
 
 }
 
+/**
+ * A plugin definition test class.
+ */
 class TestPluginDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
 
   use ContextAwarePluginDefinitionTrait;

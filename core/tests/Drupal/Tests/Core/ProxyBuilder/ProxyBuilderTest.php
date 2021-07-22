@@ -164,10 +164,16 @@ EOS;
 
 }
 
+/**
+ * Test service without methods.
+ */
 class TestServiceNoMethod {
 
 }
 
+/**
+ * Test service with complex method.
+ */
 class TestServiceComplexMethod {
 
   public function complexMethod($parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []) {

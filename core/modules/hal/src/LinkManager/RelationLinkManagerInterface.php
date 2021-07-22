@@ -2,6 +2,9 @@
 
 namespace Drupal\hal\LinkManager;
 
+/**
+ * Interface implemented by relation link managers.
+ */
 interface RelationLinkManagerInterface extends ConfigurableLinkManagerInterface {
 
   /**

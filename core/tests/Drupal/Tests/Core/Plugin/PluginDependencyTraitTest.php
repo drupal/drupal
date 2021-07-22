@@ -166,6 +166,9 @@ class PluginDependencyTraitTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing PluginDependencyTrait.
+ */
 class TestPluginDependency {
 
   use PluginDependencyTrait {

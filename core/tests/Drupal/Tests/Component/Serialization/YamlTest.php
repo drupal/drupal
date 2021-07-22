@@ -137,6 +137,9 @@ class YamlTest extends TestCase {
 
 }
 
+/**
+ * Stub class for testing Yaml.
+ */
 class YamlStub extends Yaml {
 
   public static function getSerializer() {
@@ -145,6 +148,9 @@ class YamlStub extends Yaml {
 
 }
 
+/**
+ * A YAML parser proxy for testing.
+ */
 class YamlParserProxy implements SerializationInterface {
 
   /**

@@ -35,6 +35,9 @@ EOT;
 
 }
 
+/**
+ * Provides a test class using the assert content trait.
+ */
 class TestClass {
   use AssertContentTrait;
 

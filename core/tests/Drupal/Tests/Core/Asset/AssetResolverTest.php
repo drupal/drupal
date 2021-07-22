@@ -161,6 +161,9 @@ if (!defined('JS_DEFAULT')) {
   define('JS_DEFAULT', 0);
 }
 
+/**
+ * Stub class with memory cache implementation for testing.
+ */
 class TestMemoryBackend extends MemoryBackend {
 
   public function getAllCids() {

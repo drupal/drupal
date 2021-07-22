@@ -7,6 +7,9 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\rdf\Traits\RdfParsingTrait;
 
+/**
+ * Base class for the RDFa integration tests.
+ */
 abstract class FieldRdfaTestBase extends FieldKernelTestBase {
 
   use RdfParsingTrait;

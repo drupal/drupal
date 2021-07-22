@@ -6,6 +6,9 @@ use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
+/**
+ * Controller routines for BigPipe routes.
+ */
 class BigPipeTestController implements TrustedCallbackInterface {
 
   /**

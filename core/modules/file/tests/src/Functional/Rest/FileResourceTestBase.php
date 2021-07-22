@@ -6,6 +6,9 @@ use Drupal\file\Entity\File;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 
+/**
+ * Resource test base for the file entity.
+ */
 abstract class FileResourceTestBase extends EntityResourceTestBase {
 
   /**

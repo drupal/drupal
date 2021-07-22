@@ -50,6 +50,9 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
 
 }
 
+/**
+ * Mock class that imports one component of an entity display.
+ */
 class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
   const MODE_NAME = 'form_mode';
   protected $testValues;

@@ -2,6 +2,9 @@
 
 namespace Drupal\block;
 
+/**
+ * Provides an interface for the block repository.
+ */
 interface BlockRepositoryInterface {
 
   /**

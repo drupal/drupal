@@ -4,6 +4,9 @@ namespace Drupal\Core\Cache;
 
 use Drupal\Core\Site\Settings;
 
+/**
+ * Defines the APCU backend factory.
+ */
 class ApcuBackendFactory implements CacheFactoryInterface {
 
   /**

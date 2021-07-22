@@ -6,6 +6,9 @@ use Drupal\Core\Menu\LocalTaskDefault;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Mock for testing local tasks.
+ */
 class TestTasksSettingsSub1 extends LocalTaskDefault {
 
   use StringTranslationTrait;

@@ -5,6 +5,9 @@ namespace Drupal\big_pipe_regression_test;
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
+/**
+ * Provides routes for BigPipe regression testing.
+ */
 class BigPipeRegressionTestController implements TrustedCallbackInterface {
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';

@@ -6,6 +6,9 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * Resource test base for the entity_view_display entity.
+ */
 abstract class EntityViewDisplayResourceTestBase extends EntityResourceTestBase {
 
   /**

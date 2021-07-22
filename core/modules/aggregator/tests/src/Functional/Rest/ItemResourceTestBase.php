@@ -7,7 +7,7 @@ use Drupal\aggregator\Entity\Item;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for Item entity.
+ * Resource test base for Item entity.
  */
 abstract class ItemResourceTestBase extends EntityResourceTestBase {
 

@@ -51,6 +51,9 @@ class PluginWithFormsTraitTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing PluginWithFormsTrait.
+ */
 class TestClass extends PluginBase implements PluginWithFormsInterface, PluginFormInterface {
   use PluginWithFormsTrait;
 

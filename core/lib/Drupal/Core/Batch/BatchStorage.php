@@ -7,6 +7,9 @@ use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 
+/**
+ * Defines the storage handler class for batches.
+ */
 class BatchStorage implements BatchStorageInterface {
 
   /**

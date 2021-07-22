@@ -2,6 +2,9 @@
 
 namespace Drupal\hal\LinkManager;
 
+/**
+ * The hypermedia link manager.
+ */
 class LinkManager implements LinkManagerInterface {
 
   /**

@@ -128,6 +128,9 @@ class VfsThemeExtensionList extends ThemeExtensionList {
 
 }
 
+/**
+ * Mock for the InfoParser.
+ */
 class VfsInfoParser extends InfoParser {
 
   /**

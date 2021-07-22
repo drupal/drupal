@@ -4,6 +4,9 @@ namespace Drupal\migrate;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 
+/**
+ * Interface for the migration executable.
+ */
 interface MigrateExecutableInterface {
 
   /**

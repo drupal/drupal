@@ -49,6 +49,9 @@ class MimeTypePassTest extends UnitTestCase {
 
 }
 
+/**
+ * New mime type guesser.
+ */
 class NewMimeTypeGuesser implements MimeTypeGuesserInterface {
 
   public function guessMimeType(string $string): string {}
@@ -57,6 +60,9 @@ class NewMimeTypeGuesser implements MimeTypeGuesserInterface {
 
 }
 
+/**
+ * Legacy mime type guesser.
+ */
 class LegacyMimeTypeGuesser implements LegacyMimeTypeGuesserInterface {
 
   public function guess($string) {}

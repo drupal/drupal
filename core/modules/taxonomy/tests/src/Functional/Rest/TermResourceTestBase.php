@@ -8,6 +8,9 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use GuzzleHttp\RequestOptions;
 
+/**
+ * Resource test base for the taxonomy_term entity.
+ */
 abstract class TermResourceTestBase extends EntityResourceTestBase {
 
   /**

@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Cache;
 
+/**
+ * Defines the memory counter backend factory.
+ */
 class MemoryCounterBackendFactory implements CacheFactoryInterface {
 
   /**

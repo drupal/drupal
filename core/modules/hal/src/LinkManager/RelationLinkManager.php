@@ -12,6 +12,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * The relation link manager.
+ */
 class RelationLinkManager extends LinkManagerBase implements RelationLinkManagerInterface {
 
   /**

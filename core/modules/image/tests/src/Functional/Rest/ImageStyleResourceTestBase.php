@@ -6,7 +6,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for ImageStyle entity.
+ * Resource test base for ImageStyle entity.
  */
 abstract class ImageStyleResourceTestBase extends EntityResourceTestBase {
 

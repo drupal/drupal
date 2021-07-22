@@ -52,6 +52,9 @@ class ConcatTest extends MigrateProcessTestCase {
 
 }
 
+/**
+ * Mock class for the concat process plugin.
+ */
 class TestConcat extends Concat {
 
   public function __construct() {

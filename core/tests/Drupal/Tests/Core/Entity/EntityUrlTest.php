@@ -503,4 +503,7 @@ class EntityUrlTest extends UnitTestCase {
 
 }
 
+/**
+ * Mock base class for an entity that supports revisions.
+ */
 abstract class RevisionableEntity extends EntityBase implements RevisionableInterface {}
