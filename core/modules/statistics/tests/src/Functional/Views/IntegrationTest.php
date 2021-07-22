@@ -81,7 +81,7 @@ class IntegrationTest extends ViewTestBase {
     // Manually calling statistics.php, simulating ajax behavior.
     // @see \Drupal\statistics\Tests\StatisticsLoggingTest::testLogging().
     global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
+    $stats_path = $base_url . '/' . $this->getModulePath('statistics') . '/statistics.php';
     $client = $this->getHttpClient();
     $client->post($stats_path, ['form_params' => ['nid' => $this->node->id()]]);
     $this->drupalGet('test_statistics_integration');

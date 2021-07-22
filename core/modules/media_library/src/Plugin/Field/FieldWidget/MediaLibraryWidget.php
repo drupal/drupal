@@ -21,8 +21,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
-use Drupal\media_library\MediaLibraryUiBuilder;
 use Drupal\media_library\MediaLibraryState;
+use Drupal\media_library\MediaLibraryUiBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -320,6 +320,10 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
         'fieldset__media_library_widget',
       ],
     ];
+
+    if ($this->fieldDefinition->isRequired()) {
+      $element['#element_validate'][] = [static::class, 'validateRequired'];
+    }
 
     // When the list of allowed types in the field configuration is null,
     // ::getAllowedMediaTypeIdsSorted() returns all existing media types. When
@@ -938,6 +942,31 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    */
   protected static function setFieldState(array $element, FormStateInterface $form_state, array $field_state) {
     static::setWidgetState($element['#field_parents'], $element['#field_name'], $form_state, $field_state);
+  }
+
+  /**
+   * Validates whether the widget is required and contains values.
+   *
+   * @param array $element
+   *   The form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   * @param array $form
+   *   The form array.
+   */
+  public static function validateRequired(array $element, FormStateInterface $form_state, array $form) {
+    // If a remove button triggered submit, this validation isn't needed.
+    if (in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {
+      return;
+    }
+
+    $field_state = static::getFieldState($element, $form_state);
+    // Trigger error if the field is required and no media is present. Although
+    // the Form API's default validation would also catch this, the validation
+    // error message is too vague, so a more precise one is provided here.
+    if (count($field_state['items']) === 0) {
+      $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
+    }
   }
 
 }

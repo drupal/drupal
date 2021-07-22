@@ -36,7 +36,7 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
   $status_options['finish_feedback'] = FALSE;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setTitle(t('Updating translations'))
     ->setErrorMessage(t('Error importing translation files'))
     ->setFinishCallback('locale_translation_batch_fetch_finished');
@@ -72,7 +72,7 @@ function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $
   $batch_builder = (new BatchBuilder())
     ->setTitle(t('Updating translations.'))
     ->setErrorMessage(t('Error importing translation files'))
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setFinishCallback('locale_translation_batch_fetch_finished');
   $operations = _locale_translation_fetch_operations($projects, $langcodes, $options);
   array_walk($operations, function ($operation) use ($batch_builder) {
