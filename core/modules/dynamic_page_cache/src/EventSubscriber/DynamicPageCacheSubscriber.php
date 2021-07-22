@@ -227,6 +227,10 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    * @see \Drupal\Core\Render\Renderer::shouldAutomaticallyPlaceholder()
    */
   protected function shouldCacheResponse(CacheableResponseInterface $response) {
+    // Avoid notices.
+    if (!isset($this->rendererConfig['auto_placeholder_conditions'])) {
+      return FALSE;
+    }
     $conditions = $this->rendererConfig['auto_placeholder_conditions'];
 
     $cacheability = $response->getCacheableMetadata();

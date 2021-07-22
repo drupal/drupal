@@ -43,6 +43,10 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
    * {@inheritdoc}
    */
   public function shouldAutomaticallyPlaceholder(array $element) {
+    // Avoid notices.
+    if (!isset($this->rendererConfig['auto_placeholder_conditions'])) {
+      return FALSE;
+    }
     // Auto-placeholder if the max-age, cache context or cache tag is specified
     // in the auto-placeholder conditions in the 'renderer.config' container
     // parameter.
