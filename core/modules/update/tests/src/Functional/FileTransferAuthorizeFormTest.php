@@ -52,7 +52,7 @@ class FileTransferAuthorizeFormTest extends UpdateTestBase {
 
     // Ensure the module does not already exist.
     $this->drupalGet('admin/modules');
-    $this->assertNoText('Update test new module');
+    $this->assertSession()->pageTextNotContains('Update test new module');
 
     $edit = [
       'project_url' => $url,

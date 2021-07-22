@@ -128,10 +128,10 @@ class FormTest extends FieldTestBase {
 
     // Check that hook_field_widget_single_element_form_alter() does not believe
     // this is the default value form.
-    $this->assertNoText('From hook_field_widget_single_element_form_alter(): Default form is true.');
+    $this->assertSession()->pageTextNotContains('From hook_field_widget_single_element_form_alter(): Default form is true.');
     // Check that hook_field_widget_single_element_form_alter() does not believe
     // this is the default value form.
-    $this->assertNoText('From hook_field_widget_complete_form_alter(): Default form is true.');
+    $this->assertSession()->pageTextNotContains('From hook_field_widget_complete_form_alter(): Default form is true.');
 
     // Submit with invalid value (field-level validation).
     $edit = [

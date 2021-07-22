@@ -193,7 +193,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw(
      t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', ['%type' => $type->label()])
     );
-    $this->assertNoText('This action cannot be undone.');
+    $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the node.
     $node->delete();

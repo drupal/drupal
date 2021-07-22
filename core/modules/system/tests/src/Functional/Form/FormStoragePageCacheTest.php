@@ -103,8 +103,8 @@ class FormStoragePageCacheTest extends BrowserTestBase {
     // that initial build ID.
     $edit = ['title' => 'something'];
     $this->submitForm($edit, 'Rebuild');
-    $this->assertNoText('No old build id');
-    $this->assertNoText($build_id_initial);
+    $this->assertSession()->pageTextNotContains('No old build id');
+    $this->assertSession()->pageTextNotContains($build_id_initial);
     $build_id_first_rebuild = $this->getFormBuildId();
     $this->assertNotEquals($build_id_initial, $build_id_first_rebuild, 'Build id changes on first rebuild.');
 

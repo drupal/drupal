@@ -100,10 +100,10 @@ class UserRoleAdminTest extends BrowserTestBase {
     // interface.
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::ANONYMOUS_ID);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Delete role');
+    $this->assertSession()->pageTextNotContains('Delete role');
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::AUTHENTICATED_ID);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Delete role');
+    $this->assertSession()->pageTextNotContains('Delete role');
   }
 
   /**

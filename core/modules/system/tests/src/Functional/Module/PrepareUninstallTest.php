@@ -109,7 +109,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->submitForm(['uninstall[taxonomy]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
-    $this->assertNoText('Enables the categorization of content.');
+    $this->assertSession()->pageTextNotContains('Enables the categorization of content.');
 
     // Check Node cannot be uninstalled yet, there is content to be removed.
     $this->drupalGet('admin/modules/uninstall');
@@ -136,7 +136,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     }
 
     // Ensures there is no more count when not necessary.
-    $this->assertNoText('And 0 more content');
+    $this->assertSession()->pageTextNotContains('And 0 more content');
     $this->assertSession()->pageTextContains('This action cannot be undone.');
     $this->assertSession()->pageTextContains('Make a backup of your database if you want to be able to restore these items.');
 
@@ -170,7 +170,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->submitForm(['uninstall[node]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
-    $this->assertNoText('Allows content to be submitted to the site and displayed on pages.');
+    $this->assertSession()->pageTextNotContains('Allows content to be submitted to the site and displayed on pages.');
 
     // Ensure a 404 is returned when accessing a non-existent entity type.
     $this->drupalGet('admin/modules/uninstall/entity/node');

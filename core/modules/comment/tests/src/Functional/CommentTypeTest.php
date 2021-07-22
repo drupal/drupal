@@ -170,7 +170,7 @@ class CommentTypeTest extends CommentTestBase {
         '%field' => 'node.foo',
       ])
     );
-    $this->assertNoText('This action cannot be undone.');
+    $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the comment and the field.
     $comment->delete();

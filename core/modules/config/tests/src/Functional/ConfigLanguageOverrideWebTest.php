@@ -69,7 +69,7 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
 
     // The home page in English should not have the override.
     $this->drupalGet('');
-    $this->assertNoText('XX site name');
+    $this->assertSession()->pageTextNotContains('XX site name');
 
     // During path resolution the system.site configuration object is used to
     // determine the front page. This occurs before language negotiation causing

@@ -67,8 +67,8 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     // Check that neither of them are visible in Live.
     $this->switchToLive();
     $this->drupalGet('<front>');
-    $this->assertNoText('First article');
-    $this->assertNoText('Second article');
+    $this->assertSession()->pageTextNotContains('First article');
+    $this->assertSession()->pageTextNotContains('Second article');
 
     // Switch back to Stage.
     $this->switchToWorkspace($stage);

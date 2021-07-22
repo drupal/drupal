@@ -116,7 +116,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
     $this->node->setUnpublished()->save();
     $this->drupalGet('admin/content/comment');
-    $this->assertNoText(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextNotContains(Html::escape($this->node->label()));
   }
 
   /**

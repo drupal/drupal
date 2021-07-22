@@ -273,7 +273,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_update);
     $this->assertRaw($message_delete);
-    $this->assertNoText($label1);
+    $this->assertSession()->pageTextNotContains($label1);
     $this->assertSession()->linkByHrefNotExists("admin/structure/config_test/manage/$id");
 
     // Re-create a configuration entity.
@@ -297,8 +297,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText($label1);
-    $this->assertNoText($label2);
+    $this->assertSession()->pageTextNotContains($label1);
+    $this->assertSession()->pageTextNotContains($label2);
     $this->assertSession()->pageTextContains($label3);
     $this->assertSession()->linkByHrefNotExists("admin/structure/config_test/manage/$id");
     $id = $edit['id'];

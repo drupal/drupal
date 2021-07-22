@@ -35,7 +35,7 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerExistingConfigTes
     $this->assertSession()->pageTextContains('This import does not contain system.site configuration, so has been rejected.');
 
     // Ensure there is no continuation button.
-    $this->assertNoText('Save and continue');
+    $this->assertSession()->pageTextNotContains('Save and continue');
     $this->assertSession()->buttonNotExists('edit-submit');
   }
 

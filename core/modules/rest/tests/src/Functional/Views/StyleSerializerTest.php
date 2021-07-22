@@ -589,7 +589,7 @@ class StyleSerializerTest extends ViewTestBase {
     }
     // Test that the excluded field is not shown in the row options.
     $this->drupalGet('admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/row_options');
-    $this->assertNoText('created');
+    $this->assertSession()->pageTextNotContains('created');
   }
 
   /**

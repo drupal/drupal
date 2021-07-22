@@ -80,7 +80,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestTitleCallbackFalse() {
     $this->drupalGet('test-page');
     $this->assertSession()->pageTextContains('A title with @placeholder', 'Raw text found on the page');
-    $this->assertNoText('A title with some other text', 'Text with placeholder substitutions not found.');
+    $this->assertSession()->pageTextNotContains('A title with some other text', 'Text with placeholder substitutions not found.');
   }
 
   /**
@@ -89,7 +89,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestTitleMenuCallback() {
     // Verify that the menu router item title is not visible.
     $this->drupalGet('');
-    $this->assertNoText('Menu Callback Title');
+    $this->assertSession()->pageTextNotContains('Menu Callback Title');
     // Verify that the menu router item title is output as page title.
     $this->drupalGet('menu_callback_title');
     $this->assertSession()->pageTextContains('Menu Callback Title');
@@ -200,7 +200,7 @@ class MenuRouterTest extends BrowserTestBase {
       "éøïвβ中國書۞";
     $this->drupalGet($path);
     $this->assertRaw('This is the menuTestCallback content.');
-    $this->assertNoText('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
   }
 
   /**

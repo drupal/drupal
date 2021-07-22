@@ -457,7 +457,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet($node->toUrl());
 
     // The format is not used anymore.
-    $this->assertNoText('filtered text');
+    $this->assertSession()->pageTextNotContains('filtered text');
     // The text is not displayed unfiltered or escaped.
     $this->assertNoRaw($body_value);
     $this->assertSession()->assertNoEscaped($body_value);

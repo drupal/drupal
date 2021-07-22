@@ -48,7 +48,7 @@ class HelpBlockTest extends BrowserTestBase {
 
     $this->drupalGet('help_page_test/no_help');
     // The help block should not appear when there is no help.
-    $this->assertNoText($this->helpBlock->label());
+    $this->assertSession()->pageTextNotContains($this->helpBlock->label());
 
     // Ensure that if two hook_help() implementations both return a render array
     // the output is as expected.

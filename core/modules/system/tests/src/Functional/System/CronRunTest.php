@@ -117,7 +117,7 @@ class CronRunTest extends BrowserTestBase {
     // Don't use REQUEST to calculate the exact time, because that will
     // fail randomly. Look for the word 'years', because without a timestamp,
     // the time will start at 1 January 1970.
-    $this->assertNoText('years');
+    $this->assertSession()->pageTextNotContains('years');
 
     $cron_last = time() - 200;
     \Drupal::state()->set('system.cron_last', $cron_last);

@@ -76,7 +76,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertSession()->pageTextContains('Hola');
     $this->assertSession()->pageTextContains('Hello');
     // The user entity reference field is access restricted.
-    $this->assertNoText('Test 12');
+    $this->assertSession()->pageTextNotContains('Test 12');
     // Make sure all other field labels are there.
     for ($i = 1; $i <= 23; $i++) {
       if ($i != 12) {
@@ -140,7 +140,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure the user is translated.
     $this->drupalGet('user/3/translations');
-    $this->assertNoText('Not translated');
+    $this->assertSession()->pageTextNotContains('Not translated');
 
     // Make sure the custom field on the user is still there.
     $this->drupalGet('admin/config/people/accounts/fields');

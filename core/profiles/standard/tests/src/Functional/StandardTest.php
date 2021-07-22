@@ -91,7 +91,7 @@ class StandardTest extends BrowserTestBase {
     // Fetch the feed.
     $this->drupalGet('rss.xml');
     $this->assertSession()->responseContains('Foobar');
-    $this->assertNoText('Then she picked out two somebodies, Sally and me');
+    $this->assertSession()->responseNotContains('Then she picked out two somebodies, Sally and me');
 
     // Ensure block body exists.
     $this->drupalGet('block/add');
@@ -155,10 +155,10 @@ class StandardTest extends BrowserTestBase {
 
     // Make sure the optional image styles are not installed.
     $this->drupalGet('admin/config/media/image-styles');
-    $this->assertNoText('Max 325x325');
-    $this->assertNoText('Max 650x650');
-    $this->assertNoText('Max 1300x1300');
-    $this->assertNoText('Max 2600x2600');
+    $this->assertSession()->pageTextNotContains('Max 325x325');
+    $this->assertSession()->pageTextNotContains('Max 650x650');
+    $this->assertSession()->pageTextNotContains('Max 1300x1300');
+    $this->assertSession()->pageTextNotContains('Max 2600x2600');
 
     // Make sure the optional image styles are installed after enabling
     // the responsive_image module.

@@ -84,8 +84,8 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Search');
     $title_source = 'Search for @keywords | Drupal';
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
-    $this->assertNoText('Node');
-    $this->assertNoText('Node');
+    $this->assertSession()->pageTextNotContains('Node');
+    $this->assertSession()->pageTextNotContains('Node');
     $this->assertSession()->pageTextContains('Content');
 
     $this->clickLink('About searching');
@@ -155,12 +155,12 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->submitForm([
       'or' => $this->randomMachineName() . ' ' . $this->randomMachineName(),
     ], 'edit-submit--2');
-    $this->assertNoText('Please enter some keywords');
+    $this->assertSession()->pageTextNotContains('Please enter some keywords');
     $this->drupalGet('search/node');
     $this->submitForm([
       'phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"',
     ], 'edit-submit--2');
-    $this->assertNoText('Please enter some keywords');
+    $this->assertSession()->pageTextNotContains('Please enter some keywords');
 
     // Verify that if you search for a too-short keyword, you get the right
     // message, and that if after that you search for a longer keyword, you
@@ -168,9 +168,9 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertSession()->pageTextContains('You must include at least one keyword');
-    $this->assertNoText('Please enter some keywords');
+    $this->assertSession()->pageTextNotContains('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search');
-    $this->assertNoText('You must include at least one keyword');
+    $this->assertSession()->pageTextNotContains('You must include at least one keyword');
 
     // Test that if you search for a URL with .. in it, you still end up at
     // the search page. See issue https://www.drupal.org/node/890058.

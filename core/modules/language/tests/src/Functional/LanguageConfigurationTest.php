@@ -101,7 +101,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[fr]' => '',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.');
+    $this->assertSession()->pageTextNotContains('The prefix may only be left blank for the selected detection fallback language.');
 
     // Change default negotiation language.
     $this->config('language.negotiation')->set('selected_langcode', 'fr')->save();

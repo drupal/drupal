@@ -49,7 +49,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->cssSelect('a[title="Install <strong>Test theme</strong> theme"]')[0]->click();
     $this->assertSession()->pageTextContains('The <strong>Test theme</strong> theme has been installed.');
-    $this->assertNoText('Experimental modules are provided for testing purposes only.');
+    $this->assertSession()->pageTextNotContains('Experimental modules are provided for testing purposes only.');
 
     // Next, test installing an experimental theme with no dependencies.
     // There should be a confirmation form with an experimental warning, but no
@@ -60,11 +60,11 @@ class ExperimentalThemeTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('The Experimental Test theme has been installed.');
+    $this->assertSession()->pageTextNotContains('The Experimental Test theme has been installed.');
     $this->assertSession()->pageTextContains('Experimental themes are provided for testing purposes only.');
 
     // There should be no message about enabling dependencies.
-    $this->assertNoText('You must enable');
+    $this->assertSession()->pageTextNotContains('You must enable');
 
     // Enable the theme and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -72,9 +72,9 @@ class ExperimentalThemeTest extends BrowserTestBase {
 
     // Setting it as the default should not ask for another confirmation.
     $this->cssSelect('a[title="Set Experimental test as default theme"]')[0]->click();
-    $this->assertNoText('Experimental themes are provided for testing purposes only. Use at your own risk.');
+    $this->assertSession()->pageTextNotContains('Experimental themes are provided for testing purposes only. Use at your own risk.');
     $this->assertSession()->pageTextContains('Experimental test is now the default theme.');
-    $this->assertNoText(sprintf('Experimental test %s                (experimental theme)', \Drupal::VERSION));
+    $this->assertSession()->pageTextNotContains(sprintf('Experimental test %s                (experimental theme)', \Drupal::VERSION));
     $this->assertSession()->responseContains(sprintf('Experimental test %s                (default theme, administration theme, experimental theme)', \Drupal::VERSION));
 
     // Uninstall the theme.
@@ -96,13 +96,13 @@ class ExperimentalThemeTest extends BrowserTestBase {
 
     // The theme should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('The Experimental dependency test theme has been installed.');
+    $this->assertSession()->pageTextNotContains('The Experimental dependency test theme has been installed.');
     $this->assertSession()->pageTextContains('Experimental themes are provided for testing purposes only. Use at your own risk.');
     $this->assertSession()->pageTextContains('The following themes are experimental: Experimental test');
 
     // Ensure the non-experimental theme is not listed as experimental.
-    $this->assertNoText('The following themes are experimental: Experimental test, Experimental dependency test');
-    $this->assertNoText('The following themes are experimental: Experimental dependency test');
+    $this->assertSession()->pageTextNotContains('The following themes are experimental: Experimental test, Experimental dependency test');
+    $this->assertSession()->pageTextNotContains('The following themes are experimental: Experimental dependency test');
 
     // There should be a message about enabling dependencies.
     $this->assertSession()->pageTextContains('You must enable the Experimental test theme to install Experimental dependency test');
@@ -115,7 +115,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
 
     // Setting it as the default should not ask for another confirmation.
     $this->cssSelect('a[title="Set Experimental dependency test as default theme"]')[0]->click();
-    $this->assertNoText('Experimental themes are provided for testing purposes only. Use at your own risk.');
+    $this->assertSession()->pageTextNotContains('Experimental themes are provided for testing purposes only. Use at your own risk.');
     $this->assertSession()->pageTextContains('Experimental dependency test is now the default theme.');
     $this->assertSession()->responseContains(sprintf('Experimental test %s                (experimental theme)', \Drupal::VERSION));
     $this->assertSession()->responseContains(sprintf('Experimental dependency test %s                (default theme, administration theme)', \Drupal::VERSION));

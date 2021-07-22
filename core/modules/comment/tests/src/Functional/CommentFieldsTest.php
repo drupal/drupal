@@ -183,7 +183,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment/storage');
     $this->submitForm($edit, 'Save field settings');
     // We shouldn't get an error message.
-    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
   }
 
   /**

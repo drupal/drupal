@@ -231,7 +231,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalGet('node/preview/' . $uuid . '/full');
     $this->submitForm($view_mode_edit, 'Switch');
     $this->assertRaw('view-mode-teaser');
-    $this->assertNoText($edit[$body_key]);
+    $this->assertSession()->pageTextNotContains($edit[$body_key]);
 
     // Check that the title, body and term fields are displayed with the
     // values after going back to the content edit page.
@@ -300,7 +300,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertRaw('>' . $newterm1 . '<');
     $this->assertRaw('>' . $newterm2 . '<');
     $this->assertRaw('>' . $newterm3 . '<');
-    $this->assertNoText($this->term->getName());
+    $this->assertSession()->pageTextNotContains($this->term->getName());
     $this->assertSession()->linkExists($newterm1);
     $this->assertSession()->linkExists($newterm2);
     $this->assertSession()->linkNotExists($newterm3);

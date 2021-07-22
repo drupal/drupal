@@ -143,7 +143,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertSession()->linkByHrefExists($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
     $this->assertSession()->addressEquals($path_prefix . '/block_1');
     $this->assertSession()->pageTextContains('Block settings');
-    $this->assertNoText('Page settings');
+    $this->assertSession()->pageTextNotContains('Page settings');
 
     $this->submitForm([], 'Save');
     $view = Views::getView($view['id']);

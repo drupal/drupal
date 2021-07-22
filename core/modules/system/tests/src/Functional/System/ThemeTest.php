@@ -111,7 +111,7 @@ class ThemeTest extends BrowserTestBase {
       ];
       $this->drupalGet('admin/appearance/settings');
       $this->submitForm($edit, 'Save configuration');
-      $this->assertNoText('The custom logo path is invalid.');
+      $this->assertSession()->pageTextNotContains('The custom logo path is invalid.');
       $this->assertSession()->fieldValueEquals('logo_path', $expected['form']);
 
       // Verify logo path examples.
@@ -231,8 +231,8 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/appearance/settings');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertNoText('The custom logo path is invalid.');
-    $this->assertNoText('The custom favicon path is invalid.');
+    $this->assertSession()->pageTextNotContains('The custom logo path is invalid.');
+    $this->assertSession()->pageTextNotContains('The custom favicon path is invalid.');
   }
 
   /**
@@ -255,8 +255,8 @@ class ThemeTest extends BrowserTestBase {
     // module is not enabled.
     \Drupal::service('module_installer')->uninstall(['file']);
     $this->drupalGet('admin/appearance/settings');
-    $this->assertNoText('Logo image settings');
-    $this->assertNoText('Shortcut icon settings');
+    $this->assertSession()->pageTextNotContains('Logo image settings');
+    $this->assertSession()->pageTextNotContains('Shortcut icon settings');
   }
 
   /**
@@ -483,7 +483,7 @@ class ThemeTest extends BrowserTestBase {
       $this->assertEquals($theme_machine_name, $this->config('system.theme')->get('default'));
 
       // This checks for a regression. See https://www.drupal.org/node/2498691.
-      $this->assertNoText("The $theme_machine_name theme was not found.");
+      $this->assertSession()->pageTextNotContains("The $theme_machine_name theme was not found.");
 
       $themes = \Drupal::service('theme_handler')->rebuildThemeData();
       $version = $themes[$theme_machine_name]->info['version'];

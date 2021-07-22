@@ -60,7 +60,7 @@ class StatusTest extends BrowserTestBase {
     }
 
     // If a module is fully installed no pending updates exists.
-    $this->assertNoText('Out of date');
+    $this->assertSession()->pageTextNotContains('Out of date');
 
     // The setting config_sync_directory is not properly formed.
     $this->assertRaw(t("Your %file file must define the %setting setting", ['%file' => $this->siteDirectory . '/settings.php', '%setting' => "\$settings['config_sync_directory']"]));

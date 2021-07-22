@@ -310,7 +310,7 @@ class BookTest extends BrowserTestBase {
     // Link to book root.
     $this->assertSession()->pageTextContains($this->book->label());
     // No links to individual book pages.
-    $this->assertNoText($nodes[0]->label());
+    $this->assertSession()->pageTextNotContains($nodes[0]->label());
 
     // Ensure that an unpublished node does not appear in the navigation for a
     // user without access. By unpublishing a parent page, child pages should
@@ -419,7 +419,7 @@ class BookTest extends BrowserTestBase {
 
     // Test the 'book pages' block_mode setting.
     $this->drupalGet('<front>');
-    $this->assertNoText($block->label());
+    $this->assertSession()->pageTextNotContains($block->label());
   }
 
   /**

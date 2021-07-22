@@ -263,7 +263,7 @@ class DateTimeTest extends BrowserTestBase {
     $edit['field_dt[0][value][day]'] = '29';
     $this->drupalGet('node/add/page_with_date');
     $this->submitForm($edit, 'Save');
-    $this->assertNoText('Selected combination of day and month is not valid.');
+    $this->assertSession()->pageTextNotContains('Selected combination of day and month is not valid.');
 
     $this->drupalGet('node/1');
     $this->assertSession()->pageTextContains('Mon, 02/29/2016 - 01:30');

@@ -82,7 +82,7 @@ class TranslatedViewTest extends UITestBase {
     // Check if the label is translated.
     $this->drupalGet($edit_url, ['language' => \Drupal::languageManager()->getLanguage('fr')]);
     $this->assertSession()->titleEquals('Files (File) | Drupal');
-    $this->assertNoText('Fichiers');
+    $this->assertSession()->pageTextNotContains('Fichiers');
   }
 
 }

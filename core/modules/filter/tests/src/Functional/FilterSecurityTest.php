@@ -77,7 +77,7 @@ class FilterSecurityTest extends BrowserTestBase {
 
     // Verify that filter_test_replace filter replaced the content.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($body_raw);
+    $this->assertSession()->pageTextNotContains($body_raw);
     $this->assertSession()->pageTextContains('Filter: Testing filter');
 
     // Disable the text format entirely.
@@ -86,7 +86,7 @@ class FilterSecurityTest extends BrowserTestBase {
 
     // Verify that the content is empty, because the text format does not exist.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($body_raw);
+    $this->assertSession()->pageTextNotContains($body_raw);
   }
 
   /**

@@ -80,7 +80,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $block->save();
     // Check that the block is no longer displayed.
     $this->drupalGet('test-page');
-    $this->assertNoText($block->label());
+    $this->assertSession()->pageTextNotContains($block->label());
   }
 
   /**
