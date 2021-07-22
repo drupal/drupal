@@ -29,7 +29,7 @@ th {
   padding: var(--space-xs) var(--space-m);
   text-align: left; /* LTR */
   color: var(--color-text);
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
   line-height: 1.25rem; /* 20px */
 }
 [dir="rtl"] th {
@@ -128,7 +128,7 @@ _:-ms-fullscreen, /* Only IE 11 */
 }
 
 tr {
-  border-bottom: 0.0625rem solid var(--color-lightgray);
+  border-bottom: 0.0625rem solid var(--color-gray-200);
 }
 tr,
 .draggable-table.tabledrag-disabled tr {
@@ -207,7 +207,7 @@ tfoot tr:last-child {
   border-bottom: 0;
 }
 tfoot tr:first-child td {
-  border-top: 0.0625rem solid var(--color-grayblue);
+  border-top: 0.0625rem solid var(--color-gray-500);
 }
 
 /**

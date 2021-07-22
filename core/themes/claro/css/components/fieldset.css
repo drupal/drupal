@@ -14,7 +14,7 @@
   min-width: 0;
   margin: 1rem 0;
   padding: 0;
-  color: #222330;
+  color: #232429;
   border: 1px solid #dedfe4;
   border-radius: 2px;
   background-color: #fff;
@@ -49,7 +49,7 @@ _:-ms-fullscreen,
   float: left; /* iOS Safari, Android Chrome, Edge. */
   width: 100%; /* iOS Safari, Android Chrome, Edge. */
   margin-bottom: 1rem;
-  color: #545560;
+  color: #55565b;
   font-weight: bold;
 }
 
@@ -95,7 +95,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: #82828c;
+  color: #828388;
 }
 
 .fieldset__label.has-error {
@@ -105,13 +105,13 @@ _:-ms-fullscreen,
 .fieldset__description {
   margin-top: 0.375rem; /* 6px */
   margin-bottom: 0.375rem; /* 6px */
-  color: #545560;
+  color: #55565b;
   font-size: 0.79rem; /* ~13px */
   line-height: 1.0625rem; /* 17px */
 }
 
 .fieldset__description.is-disabled {
-  color: #82828c;
+  color: #828388;
 }
 
 /* Error message (Inline form errors). */

@@ -39,7 +39,7 @@
   display: block;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  color: #222330;
+  color: #232429;
   border: 1px solid #dedfe4;
   border-radius: 2px;
   background-color: #fff;
@@ -79,7 +79,7 @@
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  color: #545560;
+  color: #55565b;
   border-radius: 1px;
   background-color: transparent;
   line-height: 1rem;
@@ -445,13 +445,13 @@
 
 .claro-details__description {
   margin-bottom: 1rem;
-  color: #545560;
+  color: #55565b;
   font-size: 0.79rem; /* ~13px */
   line-height: 1.0625rem; /* 17px */
 }
 
 .claro-details__description.is-disabled {
-  color: #82828c;
+  color: #828388;
 }
 
 /**
@@ -549,7 +549,7 @@
 
 .claro-details__summary-summary {
   display: block;
-  color: #545560;
+  color: #55565b;
   font-size: 0.889rem;
   font-weight: normal;
 }

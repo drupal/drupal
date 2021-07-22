@@ -15,8 +15,8 @@
   max-width: 100%;
   min-height: 3rem; /* iOS. */
   padding: calc(0.75rem - 1px) calc(1rem - 1px);
-  color: #222330;
-  border: 1px solid #8e929c;
+  color: #232429;
+  border: 1px solid #919297;
   border-radius: 0.125rem;
   background: #fff;
   font-size: 1rem;
@@ -109,8 +109,8 @@ _:-ms-fullscreen,
 }
 
 .form-element:hover {
-  border-color: #222330;
-  box-shadow: inset 0 0 0 1px #222330;
+  border-color: #232429;
+  box-shadow: inset 0 0 0 1px #232429;
 }
 
 .form-element:focus {
@@ -118,7 +118,7 @@ _:-ms-fullscreen,
 }
 
 .form-element:hover:focus {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #222330;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #232429;
 }
 
 .form-element.error {
@@ -139,12 +139,12 @@ _:-ms-fullscreen,
 }
 
 .form-element[disabled] {
-  color: #82828c;
+  color: #828388;
   border-color: #bababf;
   background-color: #f2f2f3;
   box-shadow: none;
   /* https://stackoverflow.com/q/262158#answer-23511280 */
-  -webkit-text-fill-color: #82828c;
+  -webkit-text-fill-color: #828388;
 }
 
 /**

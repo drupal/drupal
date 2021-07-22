@@ -4,26 +4,17 @@
    */
   --color-absolutezero: #003cc5;
   --color-white: #fff;
-  --color-text: #222330;
-  --color-text-light: var(--color-grayblue);
-  --color-whitesmoke: #f3f4f9;
-  --color-whitesmoke-light: #fafbfd;
-  --color-whitesmoke-o-40: rgba(243, 244, 249, 0.4);
+  --color-text: var(--color-gray);
+  --color-text-light: var(--color-gray-500);
+  --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
   /* Secondary. */
-  --color-lightdiamond: #dedfe4;
-  --color-lightgray: #d4d4d8;
-  --color-lightgray-o-80: rgba(212, 212, 218, 0.8);
-  --color-grayblue: #8e929c;
-  --color-oldsilver: #82828c;
-  --color-davysgray: #545560;
+  --color-gray-200-o-80: rgba(212, 212, 218, 0.8);
   --color-maximumred: #d72222;
   --color-sunglow: #ffd23f;
   --color-sunglow-shaded: #977405;
   --color-lightninggreen: #26a769;
   --color-focus: var(--color-lightninggreen);
   /* Variations. */
-  --color-lightgray-hover: #c2c3ca; /* 5% darker than base. */
-  --color-lightgray-active: #adaeb3; /* 10% darker than base. */
   --color-absolutezero-hover: #0036b1; /* 10% darker than base. */
   --color-absolutezero-active: #00339a; /* 20% darker than base. */
   --color-maximumred-hover: #c11f1f; /* 5% darker than base. */
@@ -32,6 +23,19 @@
   --color-bgblue-active: #e6ecf8; /* 10% darker than base. */
   --color-bgred-hover: #fdf5f5; /* 5% darker than base. */
   --color-bgred-active: #fceded; /* 10% darker than base. */
+  /* Gray variations. */
+  --color-gray: #232429;
+  --color-gray-900: #393a3f;
+  --color-gray-800: #55565b;
+  --color-gray-700: #75767b;
+  --color-gray-600: #828388;
+  --color-gray-500: #919297;
+  --color-gray-400: #adaeb3;
+  --color-gray-300: #c1c2c7;
+  --color-gray-200: #d3d4d9;
+  --color-gray-100: #dedfe4;
+  --color-gray-050: #f3f4f9;
+  --color-gray-025: #f9faff;
   /*
    * Base.
    */
@@ -88,16 +92,16 @@
    */
   --input-fg-color: var(--color-fg);
   --input-bg-color: var(--color-bg);
-  --input-fg-color--description: var(--color-davysgray);
-  --input-fg-color--placeholder: var(--color-grayblue);
-  --input-border-color: var(--color-grayblue);
+  --input-fg-color--description: var(--color-gray-800);
+  --input-fg-color--placeholder: var(--color-gray-500);
+  --input-border-color: var(--color-gray-500);
   --input--hover-border-color: var(--color-text);
   --input--focus-border-color: var(--color-absolutezero);
   --input--focus-shadow-color: rgba(0, 74, 220, 0.3); /* Absolute zero with opacity. */
   --input--error-color: var(--color-maximumred);
   --input--error-border-color: var(--color-maximumred);
   --input--disabled-color: rgba(84, 85, 96, 0.6); /* Davy's gray with 0.6 opacity. */
-  --input--disabled-fg-color: var(--color-oldsilver);
+  --input--disabled-fg-color: var(--color-gray-600);
   --input--disabled-bg-color: #f2f2f3; /* Light gray with 0.3 opacity on white bg. */
   --input--disabled-border-color: #bababf; /* Old silver with 0.5 opacity on white bg. */
   --input--disabled-border-opacity: 0.5;
@@ -122,7 +126,7 @@
    * Details.
    */
   --details-bg-color: rgba(243, 244, 249, 0.4);
-  --details-border-color: var(--color-lightdiamond);
+  --details-border-color: var(--color-gray-100);
   --details-summary-shadow-color: var(--color-focus);
   --details-summary-focus-border-size: var(--focus-border-size);
   --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));
@@ -141,18 +145,18 @@
   --button--focus-border-color: #5a8bed;
   --button-border-radius-size: var(--base-border-radius);
   --button-fg-color: var(--color-text);
-  --button-bg-color: var(--color-lightgray);
-  --button--hover-bg-color: var(--color-lightgray-hover);
-  --button--active-bg-color: var(--color-lightgray-active);
+  --button-bg-color: var(--color-gray-200);
+  --button--hover-bg-color: var(--color-gray-300);
+  --button--active-bg-color: var(--color-gray-400);
   --button--disabled-bg-color: #ebebed;
-  --button--disabled-fg-color: var(--color-grayblue);
+  --button--disabled-fg-color: var(--color-gray-500);
   --button-fg-color--primary: var(--color-white);
   --button-bg-color--primary: var(--color-absolutezero);
   --button--hover-bg-color--primary: var(--color-absolutezero-hover);
   --button--active-bg-color--primary: var(--color-absolutezero-active);
   --button--focus-bg-color--primary: var(--button-bg-color--primary);
-  --button--disabled-bg-color--primary: var(--color-lightgray);
-  --button--disabled-fg-color--primary: var(--color-oldsilver);
+  --button--disabled-bg-color--primary: var(--color-gray-200);
+  --button--disabled-fg-color--primary: var(--color-gray-600);
   --button-fg-color--danger: var(--color-white);
   --button-bg-color--danger: var(--color-maximumred);
   --button--hover-bg-color--danger: var(--color-maximumred-hover);
@@ -160,7 +164,7 @@
   /**
    * jQuery.UI dropdown.
    */
-  --jui-dropdown-fg-color: var(--color-davysgray);
+  --jui-dropdown-fg-color: var(--color-gray-800);
   --jui-dropdown-bg-color: var(--color-white);
   --jui-dropdown--active-fg-color: var(--color-white);
   --jui-dropdown--active-bg-color: var(--color-absolutezero);
@@ -191,10 +195,10 @@
   --progress-bar-spacing-size: var(--space-xs);
   --progress-bar-transition: width 0.5s ease-out;
   --progress-bar-label-color: var(--color-text);
-  --progress-bar-description-color: var(--color-davysgray);
+  --progress-bar-description-color: var(--color-gray-800);
   --progress-bar-description-font-size: var(--font-size-xs);
-  --progress-track-border-color: var(--color-grayblue);
-  --progress-track-bg-color: var(--color-lightgray);
+  --progress-track-border-color: var(--color-gray-500);
+  --progress-track-bg-color: var(--color-gray-200);
   /**
    * Tabledrag icon size.
    */
@@ -221,7 +225,7 @@
   --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size) * -1);
   --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
   --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
-  --vertical-tabs-menu-separator-color: var(--color-lightgray);
+  --vertical-tabs-menu-separator-color: var(--color-gray-200);
   --vertical-tabs-menu-separator-size: 1px;
   --vertical-tabs-menu-width: 20em;
   --vertical-tabs-pane-width: calc(100% - var(--vertical-tabs-menu-width));

@@ -17,7 +17,7 @@
   height: 1.125rem;
   vertical-align: text-bottom;
   color: transparent; /* IE */
-  border: 1px solid #8e929c;
+  border: 1px solid #919297;
   border-radius: 2px;
   background: #fff no-repeat 50% 50%;
   background-image: url("data:image/svg+xml,%3csvg width='12' height='10' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M4.182 6.966L1.977 4.649l-.182-.19-.18.19-.796.835-.164.173.164.172L4 9.172l.18.19.182-.19 6.818-7.164.164-.172-.164-.173-.795-.835-.181-.19-.182.19-5.841 6.138z' fill='%23FFF'/%3e%3c/svg%3e");
@@ -37,13 +37,13 @@
 
 .form-boolean:active::-ms-check,
 .form-boolean:hover::-ms-check {
-  border-color: #222330;
-  box-shadow: inset 0 0 0 1px #222330;
+  border-color: #232429;
+  box-shadow: inset 0 0 0 1px #232429;
 }
 
 .form-boolean:focus:active::-ms-check,
 .form-boolean:focus:hover::-ms-check {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #222330;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #232429;
 }
 
 .form-boolean--type-checkbox:checked::-ms-check {
@@ -55,8 +55,8 @@
 
 .form-boolean--type-checkbox:checked:active::-ms-check,
 .form-boolean--type-checkbox:checked:hover::-ms-check {
-  border-color: #222330;
-  background-color: #222330;
+  border-color: #232429;
+  background-color: #232429;
 }
 
 .form-boolean--type-radio:checked::-ms-check {
@@ -68,8 +68,8 @@
 
 .form-boolean--type-checkbox:checked:active::-ms-check,
 .form-boolean--type-checkbox:checked:hover::-ms-check {
-  border-color: #222330;
-  background-color: #222330;
+  border-color: #232429;
+  background-color: #232429;
 }
 
 .form-boolean--type-radio:checked::-ms-check {
@@ -84,14 +84,14 @@
 
 .form-boolean--type-radio:checked:active::-ms-check,
 .form-boolean--type-radio:checked:hover::-ms-check {
-  border-color: #222330;
+  border-color: #232429;
   background-image: url("data:image/svg+xml,%3csvg width='17' height='17' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle r='4.5' cx='8.5' cy='8.5' fill='%23222330'/%3e%3c/svg%3e");
-  box-shadow: inset 0 0 0 1px #222330;
+  box-shadow: inset 0 0 0 1px #232429;
 }
 
 .form-boolean--type-radio:checked:focus:active::-ms-check,
 .form-boolean--type-radio:checked:focus:hover::-ms-check {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #222330;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #232429;
 }
 
 /**
