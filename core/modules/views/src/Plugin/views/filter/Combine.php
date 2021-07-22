@@ -21,6 +21,7 @@ class Combine extends StringFilter {
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['fields'] = ['default' => []];
+    $options['include_extra_field_data'] = ['default' => FALSE];
 
     return $options;
   }
@@ -48,6 +49,12 @@ class Combine extends StringFilter {
           '#options' => $options,
           '#default_value' => $this->options['fields'],
         ];
+        $form['include_extra_field_data'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Include all extra field data in the search'),
+          '#description' => $this->t("This will add all extra field data in the search, for instance summary of a text with summary field."),
+          '#default_value' => $this->options['include_extra_field_data'],
+        ];
       }
       else {
         $form_state->setErrorByName('', $this->t('You have to add some fields to be able to use this filter.'));
@@ -74,7 +81,15 @@ class Combine extends StringFilter {
       if (!empty($field->field_alias) && !empty($field->field_alias)) {
         $fields[] = "$field->tableAlias.$field->realField";
       }
+
+      if ($field->additional_fields && $this->options['include_extra_field_data']) {
+        $fieldFull = array_map(function ($additional_fields) use ($field) {
+          return "$field->tableAlias.$additional_fields";
+        }, $field->additional_fields);
+        $fields += $fieldFull;
+      }
     }
+
     if ($fields) {
       // We do not use the CONCAT_WS operator when there is only a single field.
       // Using the CONCAT_WS operator with a single field is not a problem for

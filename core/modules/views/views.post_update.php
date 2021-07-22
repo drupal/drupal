@@ -35,6 +35,41 @@ function views_removed_post_updates() {
 }
 
 /**
+ * Set default FALSE for include_extra_field_data in combine filters settings.
+ */
+function views_post_update_combine_filter_include_extra_field_data() {
+  // Load all views.
+  $views = \Drupal::entityTypeManager()->getStorage('view')->loadMultiple();
+  /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
+  $filter_manager = \Drupal::service('plugin.manager.views.filter');
+
+  /** @var \Drupal\views\Entity\View[] $views */
+  foreach ($views as $view) {
+    $displays = $view->get('display');
+    $save = FALSE;
+    foreach ($displays as $display_name => &$display) {
+      if (isset($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as $filter_name => &$filter) {
+          if ($filter['plugin_id'] !== 'combine') {
+            continue;
+          }
+          // Any of the children of the modified classes will also be inheriting
+          // the new settings.
+          if (!isset($filter['include_extra_field_data'])) {
+            $filter['include_extra_field_data'] = FALSE;
+            $save = TRUE;
+          }
+        }
+      }
+    }
+    if ($save) {
+      $view->set('display', $displays);
+      $view->save();
+    }
+  }
+}
+
+/**
  * Update field names for multi-value base fields.
  */
 function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
