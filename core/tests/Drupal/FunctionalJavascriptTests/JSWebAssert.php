@@ -5,6 +5,7 @@ namespace Drupal\FunctionalJavascriptTests;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\ElementInterface;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
@@ -150,6 +151,16 @@ JS;
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function pageTextContains($text, int $timeout = 10000) {
+    if ($timeout) {
+      $this->waitForText($text, $timeout);
+    }
+    parent::pageTextContains($text);
+  }
+
+  /**
    * Wraps waits in a function to catch curl exceptions to continue waiting.
    *
    * @param int $timeout
@@ -192,6 +203,16 @@ JS;
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function buttonExists($button, TraversableElement $container = NULL, int $timeout = 10000) {
+    if ($timeout) {
+      $this->waitForButton($button, $timeout);
+    }
+    return parent::buttonExists($button, $container);
+  }
+
+  /**
    * Waits for a link with specified locator and returns it when available.
    *
    * @param string $locator
@@ -207,6 +228,16 @@ JS;
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function linkExists($label, $index = 0, $message = '', int $timeout = 10000) {
+    if ($timeout) {
+      $this->waitForLink($label, $timeout);
+    }
+    parent::linkExists($label, $index, $message);
+  }
+
+  /**
    * Waits for a field with specified locator and returns it when available.
    *
    * @param string $locator
@@ -219,6 +250,16 @@ JS;
    */
   public function waitForField($locator, $timeout = 10000) {
     return $this->waitForElement('named', ['field', $locator], $timeout);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldExists($field, TraversableElement $container = NULL, int $timeout = 10000) {
+    if ($timeout) {
+      $this->waitForField($field, $timeout);
+    }
+    return parent::fieldExists($field, $container);
   }
 
   /**
