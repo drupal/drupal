@@ -2,9 +2,7 @@
 
 namespace Drupal\jsonapi\Controller;
 
-use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Environment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -431,9 +429,6 @@ class TemporaryJsonapiFileFieldUploader {
   /**
    * Retrieves the upload validators for a field definition.
    *
-   * This is copied from \Drupal\file\Plugin\Field\FieldType\FileItem as there
-   * is no entity instance available here that a FileItem would exist for.
-   *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition for which to get validators.
    *
@@ -442,25 +437,14 @@ class TemporaryJsonapiFileFieldUploader {
    *   element's '#upload_validators' property.
    */
   protected function getUploadValidators(FieldDefinitionInterface $field_definition) {
-    $validators = [
-      // Add in our check of the file name length.
-      'file_validate_name_length' => [],
-    ];
-    $settings = $field_definition->getSettings();
+    $item_definition = $field_definition->getItemDefinition();
+    $class = $item_definition->getClass();
+    /** @var \Drupal\file\Plugin\Field\FieldType\FileItem $item */
+    $item = new $class($item_definition);
 
-    // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toNumber(Environment::getUploadMaxSize());
-    if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
-    }
-
-    // There is always a file size limit due to the PHP server limit.
-    $validators['file_validate_size'] = [$max_filesize];
-
-    // Add the extension check if necessary.
-    if (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = [$settings['file_extensions']];
-    }
+    $validators = $item->getUploadValidators();
+    // Add in our check of the file name length.
+    $validators['file_validate_name_length'] = [];
 
     return $validators;
   }

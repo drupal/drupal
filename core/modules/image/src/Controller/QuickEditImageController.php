@@ -110,13 +110,7 @@ class QuickEditImageController extends ControllerBase {
   public function upload(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
     $field = $this->getField($entity, $field_name, $langcode);
     $field_validators = $field->getUploadValidators();
-    $field_settings = $field->getFieldDefinition()->getSettings();
     $destination = $field->getUploadLocation();
-
-    // Add upload resolution validation.
-    if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
-      $field_validators['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
-    }
 
     // Create the destination directory if it does not already exist.
     if (isset($destination) && !$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {

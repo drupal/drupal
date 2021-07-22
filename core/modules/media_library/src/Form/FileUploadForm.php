@@ -5,7 +5,6 @@ namespace Drupal\media_library\Form;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -16,7 +15,6 @@ use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
-use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\MediaLibraryUiBuilder;
@@ -333,9 +331,10 @@ class FileUploadForm extends AddFormBase {
    *   A created file item.
    */
   protected function createFileItem(MediaTypeInterface $media_type) {
-    $field_definition = $media_type->getSource()->getSourceFieldDefinition($media_type);
-    $data_definition = FieldItemDataDefinition::create($field_definition);
-    return new FileItem($data_definition);
+    $data_definition = $media_type->getSource()->getSourceFieldDefinition($media_type)
+      ->getItemDefinition();
+    $class = $data_definition->getClass();
+    return new $class($data_definition);
   }
 
   /**
