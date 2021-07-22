@@ -397,10 +397,49 @@ class GDToolkit extends ImageToolkitBase {
       'value' => $info['GD Version'],
     ];
 
+    $descriptions = [];
+
+    // Verify supported image formats.
+    $check_formats = [
+      'imagecreatefromgif' => 'GIF',
+      'imagecreatefromjpeg' => 'JPEG',
+      'imagecreatefrompng' => 'PNG',
+      'imagecreatefromwebp' => 'WEBP',
+    ];
+    $supported_formats = [];
+    // We verify if an image format is supported by checking if its image
+    // creation function from a file exists.
+    foreach ($check_formats as $function => $format) {
+      if (function_exists($function)) {
+        $supported_formats[] = $format;
+      }
+      else {
+        $requirements['version']['severity'] = REQUIREMENT_WARNING;
+        $descriptions[] = $this->t('The GD library was compiled without %format image type support. Check the <a href="https://www.php.net/manual/en/image.installation.php">PHP GD installation documentation</a> for information on how to correct this.', [
+          '%format' => $format,
+        ]);
+      }
+    }
+    if ($supported_formats) {
+      $descriptions[] = $this->t("Supported image file formats: %formats", [
+        '%formats' => implode(', ', $supported_formats),
+      ]);
+    }
+
     // Check for filter and rotate support.
     if (!function_exists('imagefilter') || !function_exists('imagerotate')) {
       $requirements['version']['severity'] = REQUIREMENT_WARNING;
-      $requirements['version']['description'] = t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from http://www.libgd.org instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="http://php.net/manual/book.image.php">the PHP manual</a>.');
+      $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from the <a href="https://libgd.github.io/">gdLibrary site</a> instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="https://www.php.net/manual/book.image.php">the PHP manual</a>.');
+    }
+
+    if (count($descriptions) > 1) {
+      $requirements['version']['description'] = [
+        '#theme' => 'item_list',
+        '#items' => $descriptions,
+      ];
+    }
+    else {
+      $requirements['version']['description'] = $descriptions[0];
     }
 
     return $requirements;
