@@ -53,6 +53,9 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #1 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit1($form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     batch_test_stack(NULL, TRUE);
 
     batch_test_stack('submit handler 1');
@@ -60,7 +63,7 @@ class BatchTestChainedForm extends FormBase {
 
     $value = &$form_state->getValue('value');
     $value++;
-    batch_set(_batch_test_batch_1());
+    $batch_processor->queue(_batch_test_batch_1());
 
     $form_state->setRedirect('batch_test.redirect');
   }
@@ -69,12 +72,15 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #2 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit2($form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     batch_test_stack('submit handler 2');
     batch_test_stack('value = ' . $form_state->getValue('value'));
 
     $value = &$form_state->getValue('value');
     $value++;
-    batch_set(_batch_test_batch_2());
+    $batch_processor->queue(_batch_test_batch_2());
 
     $form_state->setRedirect('batch_test.redirect');
   }
@@ -96,12 +102,15 @@ class BatchTestChainedForm extends FormBase {
    * Form submission handler #4 for batch_test_chained_form.
    */
   public static function batchTestChainedFormSubmit4($form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     batch_test_stack('submit handler 4');
     batch_test_stack('value = ' . $form_state->getValue('value'));
 
     $value = &$form_state->getValue('value');
     $value++;
-    batch_set(_batch_test_batch_3());
+    $batch_processor->queue(_batch_test_batch_3());
 
     $form_state->setRedirect('batch_test.redirect');
   }

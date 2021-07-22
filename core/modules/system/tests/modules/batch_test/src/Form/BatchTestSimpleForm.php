@@ -49,11 +49,14 @@ class BatchTestSimpleForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     batch_test_stack(NULL, TRUE);
 
     foreach ($form_state->getValue('batch') as $batch) {
       $function = '_batch_test_' . $batch;
-      batch_set($function());
+      $batch_processor->queue($function());
     }
 
     $form_state->setRedirect('batch_test.redirect');

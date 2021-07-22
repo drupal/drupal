@@ -189,7 +189,9 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
       ->setProgressMessage('')
       ->setFinishCallback([__CLASS__, 'moduleBatchFinished'])
       ->addOperation([__CLASS__, 'deleteContentEntities'], [$entity_type_id]);
-    batch_set($batch_builder->toArray());
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_process */
+    $batch_process = \Drupal::service('batch.processor');
+    $batch_process->queue($batch_builder->toArray());
   }
 
   /**

@@ -32,6 +32,9 @@ use Drupal\node\NodeInterface;
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  */
 function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE) {
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
@@ -46,7 +49,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
       // We use a single multi-pass operation, so the default
       // 'Remaining x of y operations' message will be confusing here.
       ->setProgressMessage('');
-    batch_set($batch_builder->toArray());
+    $batch_processor->queue($batch_builder->toArray());
   }
   else {
     $storage = \Drupal::entityTypeManager()->getStorage('node');

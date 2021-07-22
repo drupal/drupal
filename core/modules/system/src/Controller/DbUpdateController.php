@@ -628,11 +628,12 @@ class DbUpdateController extends ControllerBase {
         $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
     }
-
-    batch_set($batch_builder->toArray());
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+    $batch_processor->queue($batch_builder->toArray());
 
     // @todo Revisit once https://www.drupal.org/node/2548095 is in.
-    return batch_process(Url::fromUri('base://results'), Url::fromUri('base://start'));
+    return $batch_processor->process(Url::fromUri('base://results'), Url::fromUri('base://start'));
   }
 
   /**

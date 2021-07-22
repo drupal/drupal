@@ -211,7 +211,10 @@ function locale_translation_check_projects($projects = [], $langcodes = []) {
 function locale_translation_check_projects_batch($projects = [], $langcodes = []) {
   // Build and set the batch process.
   $batch = locale_translation_batch_status_build($projects, $langcodes);
-  batch_set($batch);
+
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  $batch_processor->queue($batch);
 }
 
 /**

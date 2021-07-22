@@ -186,12 +186,16 @@ class ImportForm extends FormBase {
     ]);
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');
     $file = locale_translate_file_attach_properties($this->file, $options);
+
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     $batch = locale_translate_batch_build([$file->uri => $file], $options);
-    batch_set($batch);
+    $batch_processor->queue($batch);
 
     // Create or update all configuration translations for this language.
     if ($batch = locale_config_batch_update_components($options, [$form_state->getValue('langcode')])) {
-      batch_set($batch);
+      $batch_processor->queue($batch);
     }
 
     $form_state->setRedirect('locale.translate_page');

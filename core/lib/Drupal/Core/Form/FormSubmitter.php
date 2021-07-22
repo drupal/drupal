@@ -59,7 +59,11 @@ class FormSubmitter implements FormSubmitterInterface {
       $batch['form_state'] = $form_state;
 
       $batch['progressive'] = !$form_state->isProgrammed();
-      $response = batch_process();
+
+      /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+      $batch_processor = \Drupal::service('batch.processor');
+
+      $response = $batch_processor->process();
       // If the batch has been completed and _batch_finished() called then
       // $batch will be NULL.
       if ($batch && $batch['progressive']) {
@@ -149,7 +153,9 @@ class FormSubmitter implements FormSubmitterInterface {
    * Wraps batch_get().
    */
   protected function &batchGet() {
-    return batch_get();
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+    return $batch_processor->getCurrentBatch();
   }
 
 }

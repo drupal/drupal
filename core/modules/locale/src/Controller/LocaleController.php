@@ -26,10 +26,13 @@ class LocaleController extends ControllerBase {
     locale_translation_flush_projects();
     locale_translation_check_projects();
 
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     // Execute a batch if required. A batch is only used when remote files
     // are checked.
-    if (batch_get()) {
-      return batch_process('admin/reports/translations');
+    if ($batch_processor->getCurrentBatch()) {
+      return $batch_processor->process('admin/reports/translations');
     }
 
     return $this->redirect('locale.translate_status');

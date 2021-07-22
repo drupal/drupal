@@ -612,11 +612,12 @@ function user_cancel($edit, $uid, $method) {
     \Drupal::logger('user')->error('Attempted to cancel non-existing user account: %id.', ['%id' => $uid]);
     return;
   }
-
   // Initialize batch (to set title).
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
   $batch_builder = (new BatchBuilder())
     ->setTitle(t('Cancelling account'));
-  batch_set($batch_builder->toArray());
+  $batch_processor->queue($batch_builder->toArray());
 
   // When the 'user_cancel_delete' method is used, user_delete() is called,
   // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete()
@@ -639,7 +640,7 @@ function user_cancel($edit, $uid, $method) {
     $batch_builder->setFinishCallback('_user_cancel_session_regenerate');
   }
 
-  batch_set($batch_builder->toArray());
+  $batch_processor->queue($batch_builder->toArray());
 
   // Batch processing is either handled via Form API or has to be invoked
   // manually.

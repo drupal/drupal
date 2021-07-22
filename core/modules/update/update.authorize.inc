@@ -51,11 +51,14 @@ function update_authorize_run_update($filetransfer, $projects) {
     ]);
   }
 
-  batch_set($batch_builder->toArray());
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_process */
+  $batch_process = \Drupal::service('batch.processor');
+  $batch_process->queue($batch_builder->toArray());
 
   // Since authorize.php has its own method for setting the page title, set it
-  // manually here rather than passing it in to batch_set() as would normally
-  // be done.
+  // manually here rather than passing it in to
+  // \Drupal\Core\Batch\BatchProcessorInterface::queue() as would normally be
+  // done.
   \Drupal::request()->getSession()->set('authorize_page_title', t('Installing updates'));
 
   // Invoke the batch via authorize.php.
@@ -99,11 +102,14 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
     ])
     // @todo Use a different finished callback for different messages?
     ->setFinishCallback('update_authorize_install_batch_finished');
-  batch_set($batch_builder->toArray());
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_process */
+  $batch_process = \Drupal::service('batch.processor');
+  $batch_process->queue($batch_builder->toArray());
 
   // Since authorize.php has its own method for setting the page title, set it
-  // manually here rather than passing it in to batch_set() as would normally
-  // be done.
+  // manually here rather than passing it in to
+  // \Drupal\Core\Batch\BatchProcessorInterface::queue() as would normally be
+  // done.
   \Drupal::request()->getSession()->set('authorize_page_title', t('Adding %project', ['%project' => $project]));
 
   // Invoke the batch via authorize.php.

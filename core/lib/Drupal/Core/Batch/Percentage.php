@@ -24,7 +24,7 @@ class Percentage {
    *   until we are finished, but we also never print more decimal places than
    *   are meaningful.
    *
-   * @see _batch_process()
+   * @see \Drupal\Core\Batch\BatchProcessorInterface::processQueue()
    */
   public static function format($total, $current) {
     if (!$total || $total == $current) {
