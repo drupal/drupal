@@ -66,6 +66,7 @@ class UserValidationTest extends KernelTestBase {
       // CR.
       'foo' . chr(13) . 'bar'  => ['Invalid username containing chr(13)', 'assertNotNull'],
       str_repeat('x', UserInterface::USERNAME_MAX_LENGTH + 1) => ['Invalid excessively long username', 'assertNotNull'],
+      \Drupal::configFactory()->get('user.settings')->get('anonymous') => ['Invalid user name as it is reserved.', 'assertNotNull'],
     ];
     // cSpell:enable
     foreach ($test_cases as $name => $test_case) {

@@ -23,6 +23,10 @@ class UserAdminSettingsFormTest extends ConfigFormTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('user');
+    // Make sure that the default roles exist.
+    $this->installConfig(['user']);
+
     $this->form = AccountSettingsForm::create($this->container);
     $this->values = [
       'anonymous' => [
