@@ -382,11 +382,16 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @return
  *   The rendered element.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Render\RendererInterface::render() instead.
+ *
+ * @see https://www.drupal.org/node/2939099
  * @see \Drupal\Core\Render\RendererInterface
  * @see show()
  * @see hide()
  */
 function render(&$element) {
+  @trigger_error('The render() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\RendererInterface::render() instead. See https://www.drupal.org/node/2939099', E_USER_DEPRECATED);
   if (!$element && $element !== 0) {
     return NULL;
   }
