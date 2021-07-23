@@ -71,6 +71,12 @@ class EntityUntranslatableFieldsConstraintValidator extends ConstraintValidator 
     // in default revisions.
     if ($this->hasUntranslatableFieldsChanges($entity)) {
       if ($entity->isDefaultTranslationAffectedOnly()) {
+        // Verify the original entity is set before calling
+        // hasTranslationChanges() over multiple entity translations.
+        if (!$entity->original) {
+          $id = $entity->getOriginalId() !== NULL ? $entity->getOriginalId() : $entity->id();
+          $entity->original = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($id);
+        }
         foreach ($entity->getTranslationLanguages(FALSE) as $langcode => $language) {
           if ($entity->getTranslation($langcode)->hasTranslationChanges()) {
             $this->context->addViolation($constraint->defaultTranslationMessage);
