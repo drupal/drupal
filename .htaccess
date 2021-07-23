@@ -175,6 +175,9 @@ AddEncoding gzip svgz
 
 # Various header fixes.
 <IfModule mod_headers.c>
+  # This header is also set in FinishResponseSubscriber. Unset before adding to
+  # ensure there is no header duplication.
+  Header unset X-Content-Type-Options
   # Disable content sniffing, since it's an attack vector.
   Header always set X-Content-Type-Options nosniff
   # Disable Proxy header, since it's an attack vector.
