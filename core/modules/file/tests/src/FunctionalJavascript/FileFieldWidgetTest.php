@@ -151,6 +151,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
 
     $this->drupalGet("node/add/$type_name");
 
+    $assert_session->elementExists('css', '.js-form-managed-file [data-drupal-messages]');
     $page->findField('title[0][value]')->setValue($this->randomString());
 
     $page->attachFileToField('files[' . $field_name . '_0]', $test_file_path);
@@ -174,7 +175,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
 
     $page->findField('title[0][value]')->setValue($this->randomString());
     $page->attachFileToField('files[' . $field_name . '_0]', $test_image_path);
-    $messages = $assert_session->waitForElementVisible('css', '.file-upload-js-error');
+    $messages = $assert_session->waitForElementVisible('css', '.js-form-managed-file .file-upload-js-error');
     $this->assertEquals('The selected file image-test.png cannot be uploaded. Only files with the following extensions are allowed: txt.', $messages->getText());
     // Make sure the error disappears when a valid file is uploaded.
     $page->attachFileToField('files[' . $field_name . '_0]', $test_file_path);

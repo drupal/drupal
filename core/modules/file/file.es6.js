@@ -24,6 +24,21 @@
       let elements;
 
       function initFileValidation(selector) {
+        if (
+          $context
+            .find(selector)
+            .closest('div.js-form-managed-file')
+            .find('[data-drupal-messages]').length === 0
+        ) {
+          const $wrapper = $('<div/>', {
+            'data-drupal-messages': '',
+          });
+          $context
+            .find(selector)
+            .once('fileMessages')
+            .closest('div.js-form-managed-file')
+            .prepend($wrapper);
+        }
         $context
           .find(selector)
           .once('fileValidate')
@@ -156,9 +171,9 @@
      */
     validateExtension(event) {
       event.preventDefault();
-      // Remove any previous errors.
-      $('.file-upload-js-error').remove();
-
+      const $messageWrapper = $(this)
+        .closest('div.js-form-managed-file')
+        .find('[data-drupal-messages]');
       // Add client side validation for the input[type=file].
       const extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
       if (extensionPattern.length > 1 && this.value.length > 0) {
@@ -178,11 +193,15 @@
               '%extensions': extensionPattern.replace(/\|/g, ', '),
             },
           );
-          $(this)
-            .closest('div.js-form-managed-file')
-            .prepend(
-              `<div class="messages messages--error file-upload-js-error" aria-live="polite">${error}</div>`,
-            );
+
+          const $messages = new Drupal.Message($messageWrapper[0]);
+          $messages.clear();
+          const messagesId = $messages.add(error, {
+            type: 'error',
+          });
+          $(`[data-drupal-message-id=${messagesId}]`).addClass(
+            'file-upload-js-error',
+          );
           this.value = '';
           // Cancel all other change event handlers.
           event.stopImmediatePropagation();

@@ -6,4 +6,5 @@ drupal.file:
     - core/jquery
     - core/jquery.once
     - core/drupal
+    - core/drupal.message
     - core/drupalSettings

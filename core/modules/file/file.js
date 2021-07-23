@@ -12,6 +12,13 @@
       var elements;
 
       function initFileValidation(selector) {
+        if ($context.find(selector).closest('div.js-form-managed-file').find('[data-drupal-messages]').length === 0) {
+          var $wrapper = $('<div/>', {
+            'data-drupal-messages': ''
+          });
+          $context.find(selector).once('fileMessages').closest('div.js-form-managed-file').prepend($wrapper);
+        }
+
         $context.find(selector).once('fileValidate').on('change.fileValidate', {
           extensions: elements[selector]
         }, Drupal.file.validateExtension);
@@ -71,7 +78,7 @@
   Drupal.file = Drupal.file || {
     validateExtension: function validateExtension(event) {
       event.preventDefault();
-      $('.file-upload-js-error').remove();
+      var $messageWrapper = $(this).closest('div.js-form-managed-file').find('[data-drupal-messages]');
       var extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
 
       if (extensionPattern.length > 1 && this.value.length > 0) {
@@ -82,7 +89,12 @@
             '%filename': this.value.replace('C:\\fakepath\\', ''),
             '%extensions': extensionPattern.replace(/\|/g, ', ')
           });
-          $(this).closest('div.js-form-managed-file').prepend("<div class=\"messages messages--error file-upload-js-error\" aria-live=\"polite\">".concat(error, "</div>"));
+          var $messages = new Drupal.Message($messageWrapper[0]);
+          $messages.clear();
+          var messagesId = $messages.add(error, {
+            type: 'error'
+          });
+          $("[data-drupal-message-id=".concat(messagesId, "]")).addClass('file-upload-js-error');
           this.value = '';
           event.stopImmediatePropagation();
         }
