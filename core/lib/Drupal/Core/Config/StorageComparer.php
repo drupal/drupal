@@ -90,6 +90,13 @@ class StorageComparer implements StorageComparerInterface {
    *   Storage object used to write configuration.
    */
   public function __construct(StorageInterface $source_storage, StorageInterface $target_storage) {
+    if ($source_storage->getCollectionName() !== StorageInterface::DEFAULT_COLLECTION) {
+      $source_storage = $source_storage->createCollection(StorageInterface::DEFAULT_COLLECTION);
+    }
+    if ($target_storage->getCollectionName() !== StorageInterface::DEFAULT_COLLECTION) {
+      $target_storage = $target_storage->createCollection(StorageInterface::DEFAULT_COLLECTION);
+    }
+
     // Wrap the storages in a static cache so that multiple reads of the same
     // raw configuration object are not costly.
     $this->sourceCacheStorage = new MemoryBackend();
