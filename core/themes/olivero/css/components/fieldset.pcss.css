@@ -19,6 +19,15 @@
   background-color: var(--color--white);
 }
 
+.fieldset.error {
+  border: solid 2px var(--color--red);
+}
+
+.fieldset.error:focus {
+  outline-color: var(--color--red);
+  outline-offset: -2px;
+}
+
 .fieldset--group {
   width: 100%;
   color: inherit;

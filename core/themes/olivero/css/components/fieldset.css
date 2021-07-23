@@ -54,6 +54,15 @@
   background-color: #fff;
 }
 
+.fieldset.error {
+  border: solid 2px #e33f1e;
+}
+
+.fieldset.error:focus {
+  outline-color: #e33f1e;
+  outline-offset: -2px;
+}
+
 .fieldset--group {
   width: 100%;
   color: inherit;

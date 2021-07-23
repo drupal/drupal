@@ -115,7 +115,8 @@ label[for] {
 }
 .form-item input.error,
 .form-item textarea.error,
-.form-item select.error {
+.form-item select.error,
+fieldset.error {
   color: #a51b00;
   border-width: 1px;
   border-color: #e62600;
