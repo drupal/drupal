@@ -42,6 +42,10 @@ interface QueryInterface extends AlterableInterface {
    *   usually "entity", for reference fields and that can be followed
    *   similarly by a field name and so on. Additionally, the target entity type
    *   can be specified by appending the ":target_entity_type_id" to "entity".
+   *   A reverse reference, usually on a content entity's id field, can be
+   *   queried using the reference property "referenced_by". In that case, the
+   *   referencing field name and target entity type need to be appended as
+   *   ":field_name:target_entity_type_id".
    *   Some examples:
    *   - nid
    *   - tags.value
@@ -50,6 +54,7 @@ interface QueryInterface extends AlterableInterface {
    *   - tags.entity:taxonomy_term.name
    *   - uid.entity.name
    *   - uid.entity:user.name
+   *   - tid.referenced_by:tags:node.nid
    *   "tags" "is the same as "tags.value" as value is the default column.
    *   If two or more conditions have the same field names they apply to the
    *   same delta within that field. In order to limit the condition to a

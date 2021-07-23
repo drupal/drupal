@@ -285,7 +285,81 @@ class Tables implements TablesInterface {
         // entity:node, entity:user or entity:taxonomy.
         if (strpos($relationship_specifier, ':') !== FALSE) {
           list($relationship_specifier, $entity_type_id) = explode(':', $relationship_specifier, 2);
+          if ($relationship_specifier == 'referenced_by') {
+            if (strpos($entity_type_id, ':') === FALSE) {
+              throw new QueryException("Reverse reference '$entity_type_id' must specify both field name and entity type.");
+            }
+            list($relationship_field, $entity_type_id) = explode(':', $entity_type_id, 2);
+
+            $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
+            if (isset($field_storage_definitions[$relationship_field])) {
+              $field_storage = $field_storage_definitions[$relationship_field];
+              $column = $field_storage->getMainPropertyName();
+            }
+            else {
+              // @todo
+              $field_storage = FALSE;
+              $column = NULL;
+            }
+
+            // If there is a field storage (some specifiers are not) and a field
+            // column, check for case sensitivity.
+            if ($field_storage && $column) {
+              $property_definitions = $field_storage->getPropertyDefinitions();
+              if (isset($property_definitions[$column])) {
+                $this->caseSensitiveFields[$field] = $property_definitions[$column]->getSetting('case_sensitive');
+              }
+            }
+
+            /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+            $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
+
+            // Check whether this field is stored in a dedicated table.
+            if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
+              $delta = NULL;
+
+              $target_sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
+              $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $target_sql_column, $delta);
+              $sql_column = $field_id_field;
+            }
+            // The field is stored in a shared table.
+            else {
+              // ensureEntityTable() decides whether an entity property will be
+              // queried from the data table or the base table based on where it
+              // finds the property first. The data table is preferred, which is why
+              // it gets added before the base table.
+              $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
+              $entity_tables = [];
+              $revision_table = NULL;
+              $query_revisions = $all_revisions && $field_storage && ($field_storage->isRevisionable() || $field_storage->getName() === $entity_type->getKey('revision'));
+              if ($query_revisions) {
+                $data_table = $entity_type->getRevisionDataTable();
+                $entity_base_table = $entity_type->getRevisionTable();
+              }
+              else {
+                $data_table = $entity_type->getDataTable();
+                $entity_base_table = $entity_type->getBaseTable();
+
+                if ($field_storage && $field_storage->isRevisionable() && in_array($field_storage->getName(), $entity_type->getRevisionMetadataKeys())) {
+                  $revision_table = $entity_type->getRevisionTable();
+                }
+              }
+              if ($data_table) {
+                $this->sqlQuery->addMetaData('simple_query', FALSE);
+                $entity_tables[$data_table] = $this->getTableMapping($data_table, $entity_type_id);
+              }
+              if ($revision_table) {
+                $entity_tables[$revision_table] = $this->getTableMapping($revision_table, $entity_type_id);
+              }
+              $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
+              $sql_column = $relationship_field;
+
+              $table = $this->ensureEntityTable($index_prefix, $sql_column, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
+              $sql_column = $entity_type->getKey('id');
+            }
+          }
         }
+
         // Check for a valid relationship.
         if (isset($propertyDefinitions[$relationship_specifier]) && $propertyDefinitions[$relationship_specifier] instanceof DataReferenceDefinitionInterface) {
           // If it is, use the entity type if specified already, otherwise use
