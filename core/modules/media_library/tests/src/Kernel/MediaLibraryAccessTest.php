@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 
@@ -22,6 +23,7 @@ use Drupal\views\Views;
 class MediaLibraryAccessTest extends KernelTestBase {
 
   use UserCreationTrait;
+  use MediaTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -366,6 +368,23 @@ class MediaLibraryAccessTest extends KernelTestBase {
     Views::getView('media_library')->storage->delete();
     $access_result = $ui_builder->checkAccess($allowed_account, $state);
     $this->assertAccess($access_result, FALSE, 'The media library view does not exist.');
+  }
+
+  /**
+   * Tests that the media library UI builder respects arbitrary access.
+   */
+  public function testAddFormAccess(): void {
+    // Access is denied if the media library is trying to create media whose
+    // type name is 'deny_access'.
+    // @see media_library_test_media_create_access()
+    $this->createMediaType('image', ['id' => 'deny_access']);
+
+    $account = $this->createUser(['create media']);
+    $this->setCurrentUser($account);
+
+    $state = MediaLibraryState::create('test', ['deny_access'], 'deny_access', 1);
+    $build = $this->container->get('media_library.ui_builder')->buildUi($state);
+    $this->assertEmpty($build['content']['form']);
   }
 
   /**
