@@ -4,6 +4,7 @@ namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
+use Drupal\user\Entity\User;
 
 /**
  * Tests follow-up migrations.
@@ -44,8 +45,8 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('comment');
     $this->installSchema('node', ['node_access']);
 
-    $this->migrateUsers();
     $this->migrateFields();
+    $this->migrateUsers();
     $this->executeMigrations([
       'language',
       'd7_language_content_settings',
@@ -86,6 +87,9 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
     $this->assertSame('2', $translation->get('field_reference')->target_id);
     $this->assertSame('2', $translation->get('field_reference_2')->target_id);
 
+    $user = User::load(2);
+    $this->assertSame('3', $user->get('field_reference')->target_id);
+
     // Run the follow-up migrations.
     $migration_plugin_manager = $this->container->get('plugin.manager.migration');
     $migration_plugin_manager->clearCachedDefinitions();
@@ -106,6 +110,9 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
     $translation = $node->getTranslation('en');
     $this->assertSame('2', $translation->get('field_reference')->target_id);
     $this->assertSame('2', $translation->get('field_reference_2')->target_id);
+
+    $user = User::load(2);
+    $this->assertSame('2', $user->get('field_reference')->target_id);
   }
 
 }
