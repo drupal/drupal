@@ -8654,6 +8654,16 @@ $connection->insert('field_data_field_reference')
   'delta' => '0',
   'field_reference_target_id' => '2',
 ))
+->values(array(
+  'entity_type' => 'user',
+  'bundle' => 'user',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_reference_target_id' => '3',
+))
 ->execute();
 $connection->schema()->createTable('field_data_field_reference_2', array(
   'fields' => array(
@@ -15242,6 +15252,16 @@ $connection->insert('field_revision_field_reference')
   'language' => 'und',
   'delta' => '0',
   'field_reference_target_id' => '2',
+))
+->values(array(
+  'entity_type' => 'user',
+  'bundle' => 'user',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_reference_target_id' => '3',
 ))
 ->execute();
 $connection->schema()->createTable('field_revision_field_reference_2', array(
