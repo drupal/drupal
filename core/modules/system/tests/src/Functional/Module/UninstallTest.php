@@ -95,7 +95,7 @@ class UninstallTest extends BrowserTestBase {
 
     // Uninstall node testing that the configuration that will be deleted is
     // listed.
-    $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('module', ['node']);
+    $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependenciesAsEntities('module', ['node']);
     $edit = [];
     $edit['uninstall[node]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');

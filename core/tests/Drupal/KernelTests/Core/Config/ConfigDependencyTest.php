@@ -29,12 +29,12 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   public function testNonEntity() {
     $this->installConfig(['system']);
     $config_manager = \Drupal::service('config.manager');
-    $dependents = $config_manager->findConfigEntityDependents('module', ['system']);
+    $dependents = $config_manager->findConfigEntityDependencies('module', ['system']);
     $this->assertTrue(isset($dependents['system.site']), 'Simple configuration system.site has a UUID key even though it is not a configuration entity and therefore is found when looking for dependencies of the System module.');
     // Ensure that calling
-    // \Drupal\Core\Config\ConfigManager::findConfigEntityDependentsAsEntities()
+    // \Drupal\Core\Config\ConfigManager::findConfigEntityDependenciesAsEntities()
     // does not try to load system.site as an entity.
-    $config_manager->findConfigEntityDependentsAsEntities('module', ['system']);
+    $config_manager->findConfigEntityDependenciesAsEntities('module', ['system']);
   }
 
   /**
@@ -57,11 +57,11 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     );
     $entity1->save();
 
-    $dependents = $config_manager->findConfigEntityDependents('module', ['node']);
+    $dependents = $config_manager->findConfigEntityDependencies('module', ['node']);
     $this->assertTrue(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 has a dependency on the Node module.');
-    $dependents = $config_manager->findConfigEntityDependents('module', ['config_test']);
+    $dependents = $config_manager->findConfigEntityDependencies('module', ['config_test']);
     $this->assertTrue(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 has a dependency on the config_test module.');
-    $dependents = $config_manager->findConfigEntityDependents('module', ['views']);
+    $dependents = $config_manager->findConfigEntityDependencies('module', ['views']);
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the Views module.');
     // Ensure that the provider of the config entity is not actually written to
     // the dependencies array.
@@ -78,14 +78,14 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $entity4->save();
 
     // Test getting $entity1's dependencies as configuration dependency objects.
-    $dependents = $config_manager->findConfigEntityDependents('config', [$entity1->getConfigDependencyName()]);
+    $dependents = $config_manager->findConfigEntityDependencies('config', [$entity1->getConfigDependencyName()]);
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on itself.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on config_test.dynamic.entity1.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on config_test.dynamic.entity1.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity4']), 'config_test.dynamic.entity4 has a dependency on config_test.dynamic.entity1.');
 
     // Test getting $entity2's dependencies as entities.
-    $dependents = $config_manager->findConfigEntityDependentsAsEntities('config', [$entity2->getConfigDependencyName()]);
+    $dependents = $config_manager->findConfigEntityDependenciesAsEntities('config', [$entity2->getConfigDependencyName()]);
     $dependent_ids = $this->getDependentIds($dependents);
     $this->assertNotContains('config_test:entity1', $dependent_ids, 'config_test.dynamic.entity1 does not have a dependency on config_test.dynamic.entity1.');
     $this->assertNotContains('config_test:entity2', $dependent_ids, 'config_test.dynamic.entity2 does not have a dependency on itself.');
@@ -94,7 +94,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
 
     // Test getting node module's dependencies as configuration dependency
     // objects.
-    $dependents = $config_manager->findConfigEntityDependents('module', ['node']);
+    $dependents = $config_manager->findConfigEntityDependencies('module', ['node']);
     $this->assertTrue(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 has a dependency on the Node module.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on the Node module.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on the Node module.');
@@ -105,7 +105,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // no longer depend on node module.
     $entity1->setEnforcedDependencies([])->save();
     $entity3->setEnforcedDependencies(['module' => ['node'], 'config' => [$entity2->getConfigDependencyName()]])->save();
-    $dependents = $config_manager->findConfigEntityDependents('module', ['node']);
+    $dependents = $config_manager->findConfigEntityDependencies('module', ['node']);
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the Node module.');
     $this->assertFalse(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 does not have a dependency on the Node module.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on the Node module.');
@@ -118,7 +118,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     ]);
     $entity_test->save();
     $entity2->setEnforcedDependencies(['config' => [$entity1->getConfigDependencyName()], 'content' => [$entity_test->getConfigDependencyName()]])->save();
-    $dependents = $config_manager->findConfigEntityDependents('content', [$entity_test->getConfigDependencyName()]);
+    $dependents = $config_manager->findConfigEntityDependencies('content', [$entity_test->getConfigDependencyName()]);
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the content entity.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity2']), 'config_test.dynamic.entity2 has a dependency on the content entity.');
     $this->assertTrue(isset($dependents['config_test.dynamic.entity3']), 'config_test.dynamic.entity3 has a dependency on the content entity (via entity2).');
@@ -130,7 +130,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $alt_storage->create(['id' => 'entity1', 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]])->save();
     $alt_storage->create(['id' => 'entity2', 'dependencies' => ['enforced' => ['module' => ['views']]]])->save();
 
-    $dependents = $config_manager->findConfigEntityDependentsAsEntities('config', [$entity1->getConfigDependencyName()]);
+    $dependents = $config_manager->findConfigEntityDependenciesAsEntities('config', [$entity1->getConfigDependencyName()]);
     $dependent_ids = $this->getDependentIds($dependents);
     $this->assertNotContains('config_test:entity1', $dependent_ids, 'config_test.dynamic.entity1 does not have a dependency on itself.');
     $this->assertContains('config_test:entity2', $dependent_ids, 'config_test.dynamic.entity2 has a dependency on config_test.dynamic.entity1.');
@@ -139,7 +139,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertContains('config_query_test:entity1', $dependent_ids, 'config_query_test.dynamic.entity1 has a dependency on config_test.dynamic.entity1.');
     $this->assertNotContains('config_query_test:entity2', $dependent_ids, 'config_query_test.dynamic.entity2 does not have a dependency on config_test.dynamic.entity1.');
 
-    $dependents = $config_manager->findConfigEntityDependentsAsEntities('module', ['node', 'views']);
+    $dependents = $config_manager->findConfigEntityDependenciesAsEntities('module', ['node', 'views']);
     $dependent_ids = $this->getDependentIds($dependents);
     $this->assertNotContains('config_test:entity1', $dependent_ids, 'config_test.dynamic.entity1 does not have a dependency on Views or Node.');
     $this->assertNotContains('config_test:entity2', $dependent_ids, 'config_test.dynamic.entity2 does not have a dependency on Views or Node.');
@@ -148,7 +148,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertNotContains('config_query_test:entity1', $dependent_ids, 'config_test.query.entity1 does not have a dependency on Views or Node.');
     $this->assertContains('config_query_test:entity2', $dependent_ids, 'config_test.query.entity2 has a dependency on Views or Node.');
 
-    $dependents = $config_manager->findConfigEntityDependentsAsEntities('module', ['config_test']);
+    $dependents = $config_manager->findConfigEntityDependenciesAsEntities('module', ['config_test']);
     $dependent_ids = $this->getDependentIds($dependents);
     $this->assertContains('config_test:entity1', $dependent_ids, 'config_test.dynamic.entity1 has a dependency on config_test module.');
     $this->assertContains('config_test:entity2', $dependent_ids, 'config_test.dynamic.entity2 has a dependency on config_test module.');
@@ -636,6 +636,26 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertEquals($entity2->uuid(), $config_entities['delete'][0]->uuid(), 'Entity 2 will be deleted.');
     $this->assertTrue(empty($config_entities['update']), 'No dependencies of the content entity will be updated.');
     $this->assertTrue(empty($config_entities['unchanged']), 'No dependencies of the content entity will be unchanged.');
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testFindConfigEntityDependentsDeprecation() {
+    $this->expectDeprecation('ConfigManagerInterface::findConfigEntityDependents() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead you should use ConfigManagerInterface::findConfigEntityDependencies(). See https://www.drupal.org/node/3225357');
+    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+    $config_manager = \Drupal::service('config.manager');
+    $config_manager->findConfigEntityDependents('module', ['system']);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testFindConfigEntityDependentsAsEntitiesDeprecation() {
+    $this->expectDeprecation('ConfigManagerInterface::findConfigEntityDependentsAsEntities() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead you should use ConfigManagerInterface::findConfigEntityDependenciesAsEntities(). See https://www.drupal.org/node/3225357');
+    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+    $config_manager = \Drupal::service('config.manager');
+    $config_manager->findConfigEntityDependentsAsEntities('module', ['system']);
   }
 
   /**

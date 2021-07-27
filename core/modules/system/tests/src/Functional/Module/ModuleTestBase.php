@@ -93,7 +93,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     $this->assertNotEmpty($all_names);
 
-    $module_config_dependencies = \Drupal::service('config.manager')->findConfigEntityDependents('module', [$module]);
+    $module_config_dependencies = \Drupal::service('config.manager')->findConfigEntityDependencies('module', [$module]);
     // Look up each default configuration object name in the active
     // configuration, and if it exists, remove it from the stack.
     $names = $module_file_storage->listAll();

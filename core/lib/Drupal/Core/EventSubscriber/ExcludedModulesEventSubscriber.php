@@ -169,7 +169,7 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
     }
 
     // Find all configuration that depends on the configuration found above.
-    foreach ($this->manager->findConfigEntityDependents('config', array_unique($config)) as $dependent) {
+    foreach ($this->manager->findConfigEntityDependencies('config', array_unique($config)) as $dependent) {
       $config[] = $dependent->getConfigDependencyName();
     }
 
