@@ -137,10 +137,10 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->provider = $provider;
     $this->provider->expects($this->any())
       ->method('getRouteByName')
-      ->will($this->returnValueMap($route_name_return_map));
+      ->willReturnMap($route_name_return_map);
     $provider->expects($this->any())
       ->method('getRoutesByNames')
-      ->will($this->returnValueMap($routes_names_return_map));
+      ->willReturnMap($routes_names_return_map);
 
     // Create an alias manager stub.
     $alias_manager = $this->getMockBuilder('Drupal\path_alias\AliasManager')
@@ -149,7 +149,7 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $alias_manager->expects($this->any())
       ->method('getAliasByPath')
-      ->will($this->returnCallback([$this, 'aliasManagerCallback']));
+      ->willReturnCallback([$this, 'aliasManagerCallback']);
 
     $this->aliasManager = $alias_manager;
 

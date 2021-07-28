@@ -38,7 +38,7 @@ class ViewListBuilderTest extends UnitTestCase {
 
     $display_manager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         [
           'default',
           TRUE,
@@ -73,7 +73,7 @@ class ViewListBuilderTest extends UnitTestCase {
             'admin' => 'Embed admin label',
           ],
         ],
-      ]));
+      ]);
 
     $default_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DefaultDisplay')
       ->setMethods(['initDisplay'])
@@ -125,13 +125,13 @@ class ViewListBuilderTest extends UnitTestCase {
 
     $display_manager->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['default', $values['display']['default'], $default_display],
         ['page', $values['display']['page_1'], $page_display],
         ['page', $values['display']['page_2'], $page_display],
         ['page', $values['display']['page_3'], $page_display],
         ['embed', $values['display']['embed'], $embed_display],
-      ]));
+      ]);
 
     $container = new ContainerBuilder();
     $user = $this->createMock('Drupal\Core\Session\AccountInterface');

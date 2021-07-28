@@ -171,11 +171,11 @@ EOF
       ]);
     $this->moduleHandler->expects($this->exactly(3))
       ->method('getName')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['module_a', 'Module a'],
         ['module_b', 'Module b'],
         ['module_c', 'A Module'],
-      ]));
+      ]);
 
     $url = vfsStream::url('modules');
     mkdir($url . '/module_a');

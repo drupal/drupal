@@ -22,9 +22,9 @@ class EntityViewDisplayAccessControlHandlerTest extends EntityFormDisplayAccessC
     $this->member
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['administer foobar display', TRUE],
-      ]));
+      ]);
     $this->member
       ->expects($this->any())
       ->method('id')

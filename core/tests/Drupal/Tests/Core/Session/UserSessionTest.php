@@ -64,11 +64,11 @@ class UserSessionTest extends UnitTestCase {
       ->getMock();
     $roles['role_one']->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['example permission', TRUE],
         ['another example permission', FALSE],
         ['last example permission', FALSE],
-      ]));
+      ]);
 
     $roles['role_two'] = $this->getMockBuilder('Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
@@ -76,11 +76,11 @@ class UserSessionTest extends UnitTestCase {
       ->getMock();
     $roles['role_two']->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['example permission', TRUE],
         ['another example permission', TRUE],
         ['last example permission', FALSE],
-      ]));
+      ]);
 
     $roles['anonymous'] = $this->getMockBuilder('Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
@@ -88,11 +88,11 @@ class UserSessionTest extends UnitTestCase {
       ->getMock();
     $roles['anonymous']->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['example permission', FALSE],
         ['another example permission', FALSE],
         ['last example permission', FALSE],
-      ]));
+      ]);
 
     $role_storage = $this->getMockBuilder('Drupal\user\RoleStorage')
       ->setConstructorArgs(['role', new MemoryCache()])
@@ -101,14 +101,17 @@ class UserSessionTest extends UnitTestCase {
       ->getMock();
     $role_storage->expects($this->any())
       ->method('loadMultiple')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         [[], []],
         [NULL, $roles],
         [['anonymous'], [$roles['anonymous']]],
         [['anonymous', 'role_one'], [$roles['role_one']]],
         [['anonymous', 'role_two'], [$roles['role_two']]],
-        [['anonymous', 'role_one', 'role_two'], [$roles['role_one'], $roles['role_two']]],
-      ]));
+        [
+          ['anonymous', 'role_one', 'role_two'],
+          [$roles['role_one'], $roles['role_two']],
+        ],
+      ]);
 
     $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $entity_type_manager->expects($this->any())

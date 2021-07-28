@@ -134,9 +134,9 @@ class LinkTest extends UnitTestCase {
     $url_assembler = $this->getMockBuilder(UnroutedUrlAssemblerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $url_assembler->method('assemble')->will($this->returnCallback(function ($uri) {
+    $url_assembler->method('assemble')->willReturnCallback(function ($uri) {
       return (new GeneratedUrl())->setGeneratedUrl($uri);
-    }));
+    });
 
     $container = new ContainerBuilder();
     $container->set('unrouted_url_assembler', $url_assembler);

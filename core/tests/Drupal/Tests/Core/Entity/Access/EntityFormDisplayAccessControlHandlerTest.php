@@ -99,9 +99,9 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $this->member
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['administer foobar form display', TRUE],
-      ]));
+      ]);
     $this->member
       ->expects($this->any())
       ->method('id')
@@ -111,9 +111,9 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $this->parent_member
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['Llama', TRUE],
-      ]));
+      ]);
     $this->parent_member
       ->expects($this->any())
       ->method('id')
@@ -126,9 +126,9 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $entity_form_display_entity_type
       ->expects($this->any())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['langcode', 'langcode'],
-      ]));
+      ]);
     $entity_form_display_entity_type->expects($this->any())
       ->method('entityClassImplements')
       ->will($this->returnValue(TRUE));

@@ -92,11 +92,20 @@ class HookDiscoveryTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->any())
       ->method('invoke')
-      ->will($this->returnValueMap([
-          ['hook_discovery_test', 'test_plugin', [], $this->hookDiscoveryTestTestPlugin()],
-          ['hook_discovery_test2', 'test_plugin', [], $this->hookDiscoveryTest2TestPlugin()],
-        ]
-      ));
+      ->willReturnMap([
+        [
+          'hook_discovery_test',
+          'test_plugin',
+          [],
+          $this->hookDiscoveryTestTestPlugin(),
+        ],
+        [
+          'hook_discovery_test2',
+          'test_plugin',
+          [],
+          $this->hookDiscoveryTest2TestPlugin(),
+        ],
+      ]);
 
     $this->assertNull($this->hookDiscovery->getDefinition('test_non_existent', FALSE));
 
