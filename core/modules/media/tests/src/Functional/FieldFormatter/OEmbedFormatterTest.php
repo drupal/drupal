@@ -98,7 +98,11 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
       'tweet' => [
         'https://twitter.com/drupaldevdays/status/935643039741202432',
         'rich_twitter.json',
-        [],
+        [
+          // The tweet resource does not specify a height, so the formatter
+          // should default to the configured maximum height.
+          'max_height' => 360,
+        ],
         [
           'iframe' => [
             'src' => '/media/oembed?url=https%3A//twitter.com/drupaldevdays/status/935643039741202432',
