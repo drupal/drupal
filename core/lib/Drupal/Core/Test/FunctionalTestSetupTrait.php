@@ -292,7 +292,11 @@ trait FunctionalTestSetupTrait {
    */
   protected function doInstall() {
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-    install_drupal($this->classLoader, $this->installParameters());
+    $parameters = $this->installParameters();
+    // Simulate a real install which does not start with the any connections set
+    // in \Drupal\Core\Database\Database::$connections.
+    Database::removeConnection('default');
+    install_drupal($this->classLoader, $parameters);
   }
 
   /**
