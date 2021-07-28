@@ -1393,9 +1393,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             return $expected_table_schemas[$invocation_count] == $table_schema;
           })
         )
-        ->will($this->returnCallback(function () use (&$invocation_count) {
+        ->willReturnCallback(function () use (&$invocation_count) {
           $invocation_count++;
-        }));
+        });
     }
 
     $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')

@@ -145,9 +145,9 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->getMockForm($form_id, $expected_form);
     $form_arg->expects($this->any())
       ->method('submitForm')
-      ->will($this->returnCallback(function ($form, FormStateInterface $form_state) use ($response, $form_state_key) {
+      ->willReturnCallback(function ($form, FormStateInterface $form_state) use ($response, $form_state_key) {
         $form_state->setFormState([$form_state_key => $response]);
-      }));
+      });
 
     $form_state = new FormState();
     try {
@@ -192,11 +192,11 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->getMockForm($form_id, $expected_form);
     $form_arg->expects($this->any())
       ->method('submitForm')
-      ->will($this->returnCallback(function ($form, FormStateInterface $form_state) use ($response, $redirect) {
+      ->willReturnCallback(function ($form, FormStateInterface $form_state) use ($response, $redirect) {
         // Set both the response and the redirect.
         $form_state->setResponse($response);
         $form_state->set('redirect', $redirect);
-      }));
+      });
 
     $form_state = new FormState();
     try {

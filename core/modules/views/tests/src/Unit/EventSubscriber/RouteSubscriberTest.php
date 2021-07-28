@@ -164,11 +164,11 @@ class RouteSubscriberTest extends UnitTestCase {
 
     $executable->expects($this->any())
       ->method('setDisplay')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['page_1', TRUE],
         ['page_2', TRUE],
         ['page_3', FALSE],
-      ]));
+      ]);
 
     // Ensure that only the first two displays are actually called.
     $display_1 = $this->createMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
@@ -179,10 +179,10 @@ class RouteSubscriberTest extends UnitTestCase {
       ->getMock();
     $display_collection->expects($this->any())
       ->method('get')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['page_1', $display_1],
         ['page_2', $display_2],
-      ]));
+      ]);
     $executable->displayHandlers = $display_collection;
 
     $this->routeSubscriber->applicableViews = [];

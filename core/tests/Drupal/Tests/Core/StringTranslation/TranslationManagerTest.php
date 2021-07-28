@@ -56,9 +56,9 @@ class TranslationManagerTest extends UnitTestCase {
     $translator->expects($this->once())
       ->method('getStringTranslation')
       ->with($langcode, $this->anything(), $this->anything())
-      ->will($this->returnCallback(function ($langcode, $string, $context) {
+      ->willReturnCallback(function ($langcode, $string, $context) {
         return $string;
-      }));
+      });
     $this->translationManager->setDefaultLangcode('fr');
     $this->translationManager->addTranslator($translator);
     $result = $this->translationManager->formatPlural($count, $singular, $plural, $args, $options);

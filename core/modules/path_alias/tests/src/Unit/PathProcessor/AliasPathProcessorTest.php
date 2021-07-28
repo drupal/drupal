@@ -42,10 +42,10 @@ class AliasPathProcessorTest extends UnitTestCase {
   public function testProcessInbound() {
     $this->aliasManager->expects($this->exactly(2))
       ->method('getPathByAlias')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['urlalias', NULL, 'internal-url'],
         ['url', NULL, 'url'],
-      ]));
+      ]);
 
     $request = Request::create('/urlalias');
     $this->assertEquals('internal-url', $this->pathProcessor->processInbound('urlalias', $request));
@@ -61,10 +61,10 @@ class AliasPathProcessorTest extends UnitTestCase {
   public function testProcessOutbound($path, array $options, $expected_path) {
     $this->aliasManager->expects($this->any())
       ->method('getAliasByPath')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['internal-url', NULL, 'urlalias'],
         ['url', NULL, 'url'],
-      ]));
+      ]);
 
     $bubbleable_metadata = new BubbleableMetadata();
     $this->assertEquals($expected_path, $this->pathProcessor->processOutbound($path, $options, NULL, $bubbleable_metadata));

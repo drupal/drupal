@@ -78,9 +78,9 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
     $this->member
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['administer node fields', TRUE],
-      ]));
+      ]);
     $this->member
       ->expects($this->any())
       ->method('id')

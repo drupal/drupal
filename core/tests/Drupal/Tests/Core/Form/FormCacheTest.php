@@ -105,10 +105,10 @@ class FormCacheTest extends UnitTestCase {
     $this->keyValueExpirableFactory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface');
     $this->keyValueExpirableFactory->expects($this->any())
       ->method('get')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['form', $this->formCacheStore],
         ['form_state', $this->formStateCacheStore],
-      ]));
+      ]);
 
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()

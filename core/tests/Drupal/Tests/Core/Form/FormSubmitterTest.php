@@ -138,10 +138,17 @@ class FormSubmitterTest extends UnitTestCase {
     $form_submitter = $this->getFormSubmitter();
     $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
-      ->will($this->returnValueMap([
+      ->willReturnMap(
+        [
           ['test_route_a', [], ['absolute' => TRUE], FALSE, 'test-route'],
-          ['test_route_b', ['key' => 'value'], ['absolute' => TRUE], FALSE, 'test-route/value'],
-        ])
+          [
+            'test_route_b',
+            ['key' => 'value'],
+            ['absolute' => TRUE],
+            FALSE,
+            'test-route/value',
+          ],
+        ]
       );
 
     $form_state = $this->createMock('Drupal\Core\Form\FormStateInterface');

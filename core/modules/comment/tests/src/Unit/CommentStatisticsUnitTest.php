@@ -57,7 +57,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
     $this->statement->expects($this->any())
       ->method('fetchObject')
-      ->will($this->returnCallback([$this, 'fetchObjectCallback']));
+      ->willReturnCallback([$this, 'fetchObjectCallback']);
 
     $this->select = $this->getMockBuilder('Drupal\Core\Database\Query\Select')
       ->disableOriginalConstructor()

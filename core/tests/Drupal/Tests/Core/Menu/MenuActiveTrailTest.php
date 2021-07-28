@@ -173,9 +173,9 @@ class MenuActiveTrailTest extends UnitTestCase {
       if ($expected_link !== NULL) {
         $this->menuLinkManager->expects($this->exactly(2))
           ->method('getParentIds')
-          ->will($this->returnValueMap([
+          ->willReturnMap([
             [$expected_link->getPluginId(), $expected_trail_ids],
-          ]));
+          ]);
       }
     }
 
@@ -213,9 +213,9 @@ class MenuActiveTrailTest extends UnitTestCase {
 
     $this->menuLinkManager->expects($this->any())
       ->method('getParentIds')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         [$expected_link->getPluginId(), $expected_trail_ids],
-      ]));
+      ]);
 
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($data[2]));
 

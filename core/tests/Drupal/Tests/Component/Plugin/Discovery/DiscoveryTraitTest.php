@@ -136,10 +136,10 @@ class DiscoveryTraitTest extends TestCase {
     // for 'not_valid'.
     $trait->expects($this->once())
       ->method('getDefinition')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['valid', FALSE, TRUE],
         ['not_valid', FALSE, FALSE],
-      ]));
+      ]);
     // Call hasDefinition().
     $this->assertSame(
       $expected,
