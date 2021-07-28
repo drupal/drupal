@@ -96,7 +96,7 @@ function drupal_phpunit_get_extension_namespaces($dirs) {
           $namespaces['Drupal\\Tests\\' . $extension . '\\' . $suite_name . '\\'][] = $suite_dir;
         }
       }
-      // Extensions can have a \Drupal\extension\Traits namespace for
+      // Extensions can have a \Drupal\Tests\extension\Traits namespace for
       // cross-suite trait code.
       $trait_dir = $test_dir . '/Traits';
       if (is_dir($trait_dir)) {
