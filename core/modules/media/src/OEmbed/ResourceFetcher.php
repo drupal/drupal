@@ -4,7 +4,6 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 
@@ -12,8 +11,6 @@ use GuzzleHttp\Exception\TransferException;
  * Fetches and caches oEmbed resources.
  */
 class ResourceFetcher implements ResourceFetcherInterface {
-
-  use UseCacheBackendTrait;
 
   /**
    * The HTTP client.
@@ -30,6 +27,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $providers;
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -37,13 +41,16 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
    *   The oEmbed provider repository service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   (optional) The cache backend.
+   *   The cache backend.
    */
   public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
+    if (empty($cache_backend)) {
+      $cache_backend = \Drupal::cache();
+      @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
+    }
     $this->cacheBackend = $cache_backend;
-    $this->useCaches = isset($cache_backend);
   }
 
   /**
@@ -52,7 +59,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
   public function fetchResource($url) {
     $cache_id = "media:oembed_resource:$url";
 
-    $cached = $this->cacheGet($cache_id);
+    $cached = $this->cacheBackend->get($cache_id);
     if ($cached) {
       return $this->createResource($cached->data, $url);
     }
@@ -82,7 +89,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
-    $this->cacheSet($cache_id, $data);
+    $this->cacheBackend->set($cache_id, $data);
 
     return $this->createResource($data, $url);
   }

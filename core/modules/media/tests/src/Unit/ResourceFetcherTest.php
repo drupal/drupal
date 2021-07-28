@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\Unit;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\NullBackend;
 use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcher;
 use Drupal\Tests\UnitTestCase;
@@ -50,7 +51,7 @@ class ResourceFetcherTest extends UnitTestCase {
     ]);
     $providers = $this->createMock('\Drupal\media\OEmbed\ProviderRepositoryInterface');
 
-    $fetcher = new ResourceFetcher($client, $providers);
+    $fetcher = new ResourceFetcher($client, $providers, new NullBackend('default'));
     /** @var \Drupal\media\OEmbed\Resource $resource */
     $resource = $fetcher->fetchResource('valid');
     // The resource should have been successfully decoded as JSON.
