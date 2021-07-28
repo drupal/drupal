@@ -284,7 +284,10 @@ interface QueryInterface extends AlterableInterface {
   public function orConditionGroup();
 
   /**
-   * Queries the current revision.
+   * Limits the query to only default revisions.
+   *
+   * See the @link entity_api Entity API topic @endlink for information about
+   * the current revision.
    *
    * @return $this
    */
