@@ -50,7 +50,7 @@ class AdminController extends ControllerBase {
       $module_info[$module]->info = $info;
     }
 
-    uasort($module_info, 'system_sort_modules_by_info_name');
+    uasort($module_info, 'system_sort_by_info_name');
     $menu_items = [];
 
     foreach ($module_info as $module => $info) {

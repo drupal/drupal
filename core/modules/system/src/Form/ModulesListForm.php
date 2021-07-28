@@ -170,7 +170,7 @@ class ModulesListForm extends FormBase {
       // The module list needs to be reset so that it can re-scan and include
       // any new modules that may have been added directly into the filesystem.
       $modules = $this->moduleExtensionList->reset()->getList();
-      uasort($modules, 'system_sort_modules_by_info_name');
+      uasort($modules, 'system_sort_by_info_name');
     }
     catch (InfoParserException $e) {
       $this->messenger()->addError($this->t('Modules could not be listed due to an error: %error', ['%error' => $e->getMessage()]));

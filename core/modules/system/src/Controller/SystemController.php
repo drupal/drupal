@@ -203,7 +203,7 @@ class SystemController extends ControllerBase {
     $config = $this->config('system.theme');
     // Get all available themes.
     $themes = $this->themeHandler->rebuildThemeData();
-    uasort($themes, 'system_sort_modules_by_info_name');
+    uasort($themes, 'system_sort_by_info_name');
 
     $theme_default = $config->get('default');
     $theme_groups = ['installed' => [], 'uninstalled' => []];
