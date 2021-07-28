@@ -19,7 +19,7 @@ class BlockInstallTest extends BrowserTestBase {
   public function testCacheTagInvalidationUponInstallation() {
     // Warm the page cache.
     $this->drupalGet('');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:block_list');
 
     // Install the block module, and place the "Powered by Drupal" block.

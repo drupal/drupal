@@ -53,7 +53,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->assertEquals('published', $node->moderation_state->value);
 
     // Verify that the state field is not shown.
-    $this->assertNoText('Published');
+    $this->assertSession()->pageTextNotContains('Published');
 
     // Delete the node.
     $this->drupalGet('node/' . $node->id() . '/delete');

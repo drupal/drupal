@@ -215,7 +215,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // default revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Status');
+    $this->assertSession()->pageTextNotContains('Status');
 
     // The latest version page should not show, because there is still no
     // pending revision.
@@ -230,7 +230,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // default revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Status');
+    $this->assertSession()->pageTextNotContains('Status');
 
     // The latest version page should show the moderation form and have "Draft"
     // status, because the pending revision is in "Draft".

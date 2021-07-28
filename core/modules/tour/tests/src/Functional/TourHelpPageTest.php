@@ -87,7 +87,7 @@ class TourHelpPageTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains('Tours guide you through workflows');
     }
     else {
-      $this->assertNoText('Tours guide you through workflows');
+      $this->assertSession()->pageTextNotContains('Tours guide you through workflows');
     }
 
     $titles = $this->getTourList();
@@ -115,7 +115,7 @@ class TourHelpPageTest extends BrowserTestBase {
         $this->assertSession()->linkNotExistsExact($title);
       }
       else {
-        $this->assertNoText($title);
+        $this->assertSession()->pageTextNotContains($title);
         // Just test the first item in the list of text that should not
         // be there, because the second matches part of the name of a module
         // that is in the Module overviews section, so the text will be there

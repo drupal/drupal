@@ -87,8 +87,8 @@ class NodeCreationTest extends NodeTestBase {
 
     // Verify that pages do not show submitted information by default.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($node->getOwner()->getAccountName());
-    $this->assertNoText($this->container->get('date.formatter')->format($node->getCreatedTime()));
+    $this->assertSession()->pageTextNotContains($node->getOwner()->getAccountName());
+    $this->assertSession()->pageTextNotContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
 
     // Change the node type setting to show submitted by information.
     /** @var \Drupal\node\NodeTypeInterface $node_type */

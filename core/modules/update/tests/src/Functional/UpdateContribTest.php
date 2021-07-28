@@ -72,7 +72,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertRaw(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString());
     $this->assertSession()->pageTextContains('Up to date');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
-    $this->assertNoText('Update available');
+    $this->assertSession()->pageTextNotContains('Update available');
     $this->assertSession()->pageTextContains('No available releases found');
     $this->assertNoRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
@@ -105,7 +105,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->standardTests();
     $this->assertSession()->pageTextContains('Up to date');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
-    $this->assertNoText('Update available');
+    $this->assertSession()->pageTextNotContains('Update available');
     $this->assertRaw($project_link);
 
     // Since aaa_update_test is installed the fact it is hidden and in the
@@ -182,7 +182,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
     $this->assertSession()->pageTextContains('Up to date');
-    $this->assertNoText('Update available');
+    $this->assertSession()->pageTextNotContains('Update available');
     // We want to see all 3 module names listed, since they'll show up either
     // as project names or as modules under the "Includes" listing.
     $this->assertSession()->pageTextContains('AAA Update test');
@@ -396,14 +396,15 @@ class UpdateContribTest extends UpdateTestBase {
       $this->refreshUpdateStatus($xml_mapping);
       // In neither case should we see the "Themes" heading for installed
       // themes.
-      $this->assertNoText('Themes');
+      // Use regex pattern because we need to match 'Themes' case sensitively.
+      $this->assertSession()->pageTextNotMatches('/Themes/');
       if ($check_disabled) {
         $this->assertSession()->pageTextContains('Uninstalled themes');
         $this->assertRaw($base_theme_project_link);
         $this->assertRaw($sub_theme_project_link);
       }
       else {
-        $this->assertNoText('Uninstalled themes');
+        $this->assertSession()->pageTextNotContains('Uninstalled themes');
         $this->assertNoRaw($base_theme_project_link);
         $this->assertNoRaw($sub_theme_project_link);
       }
@@ -483,7 +484,7 @@ class UpdateContribTest extends UpdateTestBase {
     // hope that 'Up to date' is not unique.
     $this->assertSession()->pageTextMatchesCount(3, '/Up to date/');
     // It should say we failed to get data, not that we're missing an update.
-    $this->assertNoText('Update available');
+    $this->assertSession()->pageTextNotContains('Update available');
 
     // We need to check that this string is found as part of a project row, not
     // just in the "Failed to get available update data" message at the top of
@@ -549,7 +550,7 @@ class UpdateContribTest extends UpdateTestBase {
     $update_test_config->set('update_status', [])->save();
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
-    $this->assertNoText('Security update required!');
+    $this->assertSession()->pageTextNotContains('Security update required!');
     $this->assertRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     // Turn the altering back on and visit the Update manager UI.
@@ -560,7 +561,7 @@ class UpdateContribTest extends UpdateTestBase {
     // Turn the altering back off and visit the Update manager UI.
     $update_test_config->set('update_status', [])->save();
     $this->drupalGet('admin/modules/update');
-    $this->assertNoText('Security update');
+    $this->assertSession()->pageTextNotContains('Security update');
   }
 
   /**

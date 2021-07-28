@@ -178,7 +178,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', ['%label' => $type->label()])
     );
-    $this->assertNoText('This action cannot be undone.');
+    $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the block.
     $block->delete();

@@ -59,7 +59,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
     // Verify that the requested theme is used.
     $this->assertRaw('bartik');
     // Verify that the "Choose profile" step does not appear.
-    $this->assertNoText('profile');
+    $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpLanguage();
   }

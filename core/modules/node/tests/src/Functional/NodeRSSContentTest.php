@@ -57,7 +57,7 @@ class NodeRSSContentTest extends NodeTestBase {
     // Check that content added in view modes other than 'rss' doesn't
     // appear in RSS feed.
     $non_rss_content = 'Extra data that should appear everywhere except the RSS feed for node ' . $node->id() . '.';
-    $this->assertNoText($non_rss_content);
+    $this->assertSession()->responseNotContains($non_rss_content);
 
     // Check that extra RSS elements and namespaces are added to RSS feed.
     $test_element = '<testElement>' . t('Value of testElement RSS element for node @nid.', ['@nid' => $node->id()]) . '</testElement>';
@@ -68,7 +68,7 @@ class NodeRSSContentTest extends NodeTestBase {
     // Check that content added in 'rss' view mode doesn't appear when
     // viewing node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($rss_only_content);
+    $this->assertSession()->responseNotContains($rss_only_content);
   }
 
   /**

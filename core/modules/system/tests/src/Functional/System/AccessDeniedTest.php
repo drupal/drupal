@@ -131,7 +131,7 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->config('system.site')->set('page.403', '/system-test/custom-4xx')->save();
 
     $this->drupalGet('/system-test/always-denied');
-    $this->assertNoText('Admin-only 4xx response');
+    $this->assertSession()->pageTextNotContains('Admin-only 4xx response');
     $this->assertSession()->pageTextContains('You are not authorized to access this page.');
     $this->assertSession()->statusCodeEquals(403);
     // Verify the access cacheability metadata for custom 403 is bubbled.

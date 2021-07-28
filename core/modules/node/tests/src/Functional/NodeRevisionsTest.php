@@ -236,7 +236,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Verify that revision body text is not present on default version of node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($new_body);
+    $this->assertSession()->pageTextNotContains($new_body);
 
     // Verify that the new body text is present on the revision.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $new_node_revision->getRevisionId() . "/view");
@@ -308,17 +308,17 @@ class NodeRevisionsTest extends NodeTestBase {
     // View the revision UI in 'IT', only the original node revision is shown.
     $this->drupalGet("it/node/" . $node->id() . "/revisions");
     $this->assertSession()->pageTextContains('Simple revision message (EN)');
-    $this->assertNoText('New revision message (DE)');
+    $this->assertSession()->pageTextNotContains('New revision message (DE)');
 
     // View the revision UI in 'DE', only the translated node revision is shown.
     $this->drupalGet("de/node/" . $node->id() . "/revisions");
-    $this->assertNoText('Simple revision message (EN)');
+    $this->assertSession()->pageTextNotContains('Simple revision message (EN)');
     $this->assertSession()->pageTextContains('New revision message (DE)');
 
     // View the revision UI in 'EN', only the original node revision is shown.
     $this->drupalGet("node/" . $node->id() . "/revisions");
     $this->assertSession()->pageTextContains('Simple revision message (EN)');
-    $this->assertNoText('New revision message (DE)');
+    $this->assertSession()->pageTextNotContains('New revision message (DE)');
   }
 
   /**

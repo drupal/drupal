@@ -220,9 +220,12 @@ class ExposedFormTest extends ViewTestBase {
     $block->getPlugin()->setConfigurationValue('label_display', TRUE);
     $block->save();
 
-    // Test that the block label is found.
+    // Assert that the only two occurrences of `$view->getTitle()` are the title
+    // and h2 tags.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->pageTextContains($view->getTitle());
+    $this->assertSession()->elementContains('css', 'title', $view->getTitle());
+    $this->assertSession()->elementExists('xpath', '//h2[text()="' . $view->getTitle() . '"]');
+    $this->assertSession()->pageTextMatchesCount(2, '/' . $view->getTitle() . '/');
 
     // Set a custom label on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
@@ -237,9 +240,12 @@ class ExposedFormTest extends ViewTestBase {
     $block->save();
 
     // Test that the label is removed.
+    // Assert that the only occurrence of `$view->getTitle()` is the title tag
+    // now that label has been removed.
     $this->drupalGet('test_exposed_block');
     $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
-    $this->assertNoText($view->getTitle());
+    $this->assertSession()->elementContains('css', 'title', $view->getTitle());
+    $this->assertSession()->pageTextMatchesCount(1, '/' . $view->getTitle() . '/');
 
     // Test there is an exposed form in a block.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);
@@ -333,7 +339,7 @@ class ExposedFormTest extends ViewTestBase {
     // Ensure that the "on demand text" is not displayed when an exposed filter
     // is applied.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
-    $this->assertNoText($on_demand_text);
+    $this->assertSession()->pageTextNotContains($on_demand_text);
   }
 
   /**

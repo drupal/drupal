@@ -193,7 +193,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->submitForm([], 'Cancel account');
     $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
     $this->assertSession()->pageTextContains('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.');
-    $this->assertNoText('Select the method to cancel the account above.');
+    $this->assertSession()->pageTextNotContains('Select the method to cancel the account above.');
 
     // Confirm account cancellation.
     $timestamp = time();

@@ -89,7 +89,7 @@ ENDPO;
       $this->assertSession()->pageTextContains('English');
     }
     else {
-      $this->assertNoText('English');
+      $this->assertSession()->pageTextNotContains('English');
     }
 
     // Verify the strings from the translation files were imported.

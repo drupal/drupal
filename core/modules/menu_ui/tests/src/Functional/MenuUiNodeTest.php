@@ -95,7 +95,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Verify that no menu settings are displayed and nodes can be created.
     $this->drupalGet('node/add/page');
     $this->assertSession()->pageTextContains('Create Basic page');
-    $this->assertNoText('Menu settings');
+    $this->assertSession()->pageTextNotContains('Menu settings');
     $node_title = $this->randomMachineName();
     $edit = [
       'title[0][value]' => $node_title,

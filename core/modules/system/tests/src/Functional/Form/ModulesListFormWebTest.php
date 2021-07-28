@@ -161,7 +161,7 @@ BROKEN,
 
       file_put_contents($file_path, Yaml::encode($compatible_info));
       $this->drupalGet('admin/modules');
-      $this->assertNoText($incompatible_modules_message);
+      $this->assertSession()->pageTextNotContains($incompatible_modules_message);
     }
     // Uninstall the module and ensure that incompatible modules message is not
     // displayed for modules that are not installed.
@@ -174,7 +174,7 @@ BROKEN,
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/modules');
-      $this->assertNoText($incompatible_modules_message);
+      $this->assertSession()->pageTextNotContains($incompatible_modules_message);
     }
   }
 

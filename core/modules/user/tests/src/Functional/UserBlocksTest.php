@@ -77,7 +77,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit['pass'] = $user->passRaw;
     $this->drupalGet('admin/people/permissions');
     $this->submitForm($edit, 'Log in');
-    $this->assertNoText('User login');
+    $this->assertSession()->pageTextNotContains('User login');
 
     // Check that we are still on the same page.
     $this->assertSession()->addressEquals(Url::fromRoute('user.admin_permissions'));
@@ -87,7 +87,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalGet('filter/tips');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
     $this->submitForm($edit, 'Log in');
-    $this->assertNoText('User login');
+    $this->assertSession()->pageTextNotContains('User login');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
 
@@ -96,7 +96,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'bar']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     $this->submitForm($edit, 'Log in');
-    $this->assertNoText('User login');
+    $this->assertSession()->pageTextNotContains('User login');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
     $this->assertStringContainsString('/filter/tips?foo=bar', $this->getUrl(), 'Correct query arguments are displayed after login');
@@ -106,7 +106,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'baz']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     $this->submitForm($edit, 'Log in');
-    $this->assertNoText('User login');
+    $this->assertSession()->pageTextNotContains('User login');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
     $this->assertStringContainsString('/filter/tips?foo=baz', $this->getUrl(), 'Correct query arguments are displayed after login');
@@ -129,7 +129,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->submitForm($edit, 'Log in');
     $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
     $this->drupalGet('filter/tips');
-    $this->assertNoText('Unrecognized username or password. Forgot your password?');
+    $this->assertSession()->pageTextNotContains('Unrecognized username or password. Forgot your password?');
   }
 
 }

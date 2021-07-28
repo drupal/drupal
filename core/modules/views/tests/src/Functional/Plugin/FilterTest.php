@@ -171,7 +171,7 @@ class FilterTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/test_filter_in_operator_ui/edit/default');
     $this->submitForm([], 'Save');
     $this->submitForm([], 'Update preview');
-    $this->assertNoText('An illegal choice has been detected.');
+    $this->assertSession()->pageTextNotContains('An illegal choice has been detected.');
   }
 
   /**

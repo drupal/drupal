@@ -71,7 +71,7 @@ class ConfigurationTest extends BrowserTestBase {
     // Make sure that the action updated properly.
     $this->assertSession()->pageTextContains('The action has been successfully saved.');
     // The old action label does NOT appear on the configuration page.
-    $this->assertNoText($action_label);
+    $this->assertSession()->pageTextNotContains($action_label);
     // The action label appears on the configuration page after we've updated
     // the complex action.
     $this->assertSession()->pageTextContains($new_action_label);
@@ -93,7 +93,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/actions');
     $this->assertSession()->statusCodeEquals(200);
     // The action label does not appear on the overview page.
-    $this->assertNoText($new_action_label);
+    $this->assertSession()->pageTextNotContains($new_action_label);
 
     $action = Action::load($action_id);
     $this->assertNull($action, 'Make sure the action is gone after being deleted.');

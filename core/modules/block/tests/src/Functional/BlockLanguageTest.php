@@ -84,7 +84,7 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Check that a page doesn't has a block for the current language anymore.
     $this->drupalGet('fr');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
   }
 
   /**
@@ -162,7 +162,7 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Interface negotiation depends on request arguments.
     $this->drupalGet('node', ['query' => ['language' => 'en']]);
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->drupalGet('node', ['query' => ['language' => 'fr']]);
     $this->assertSession()->pageTextContains('Powered by Drupal');
 
@@ -174,9 +174,9 @@ class BlockLanguageTest extends BrowserTestBase {
     // Content language does not depend on session/request arguments.
     // It will fall back on English (site default) and not display the block.
     $this->drupalGet('en');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->drupalGet('fr');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
 
     // Change visibility to now depend on content language for this block.
     $edit = [
@@ -188,13 +188,13 @@ class BlockLanguageTest extends BrowserTestBase {
     // Content language negotiation does not depend on request arguments.
     // It will fall back on English (site default) and not display the block.
     $this->drupalGet('node', ['query' => ['language' => 'en']]);
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->drupalGet('node', ['query' => ['language' => 'fr']]);
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
 
     // Content language negotiation depends on path prefix.
     $this->drupalGet('en');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->drupalGet('fr');
     $this->assertSession()->pageTextContains('Powered by Drupal');
   }

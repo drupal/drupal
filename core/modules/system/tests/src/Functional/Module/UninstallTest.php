@@ -87,7 +87,7 @@ class UninstallTest extends BrowserTestBase {
     $edit['uninstall[module_test]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
-    $this->assertNoText('Configuration deletions');
+    $this->assertSession()->pageTextNotContains('Configuration deletions');
     $this->assertSession()->pageTextContains('Configuration updates');
     $this->assertSession()->pageTextContains($node_type->label());
     $this->submitForm([], 'Uninstall');
@@ -101,7 +101,7 @@ class UninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->assertSession()->pageTextContains('Configuration deletions');
-    $this->assertNoText('Configuration updates');
+    $this->assertSession()->pageTextNotContains('Configuration updates');
 
     $entity_types = [];
     foreach ($node_dependencies as $entity) {
@@ -173,7 +173,7 @@ class UninstallTest extends BrowserTestBase {
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
-    $this->assertNoText('Module installer config test');
+    $this->assertSession()->pageTextNotContains('Module installer config test');
   }
 
 }

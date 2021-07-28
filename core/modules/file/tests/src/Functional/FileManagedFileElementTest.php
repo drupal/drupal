@@ -215,7 +215,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     // allowed to reference an unused file.
     $this->drupalGet('file/test/1/0/1/' . $file->id());
     $this->submitForm([], 'Save');
-    $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertSession()->pageTextNotContains('The file used in the Managed file & butter field may not be referenced.');
     $this->assertSession()->pageTextContains('The file ids are ' . $file->id());
 
     // Enable marking unused files as temporary, unused permanent files must not
@@ -226,7 +226,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->drupalGet('file/test/1/0/1/' . $file->id());
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('The file used in the Managed file & butter field may not be referenced.');
-    $this->assertNoText('The file ids are ' . $file->id());
+    $this->assertSession()->pageTextNotContains('The file ids are ' . $file->id());
 
     // Make the file temporary, now using it is allowed.
     $file->setTemporary();
@@ -234,7 +234,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     $this->drupalGet('file/test/1/0/1/' . $file->id());
     $this->submitForm([], 'Save');
-    $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertSession()->pageTextNotContains('The file used in the Managed file & butter field may not be referenced.');
     $this->assertSession()->pageTextContains('The file ids are ' . $file->id());
 
     // Make the file permanent again and add a usage from itself, referencing is
@@ -248,7 +248,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     $this->drupalGet('file/test/1/0/1/' . $file->id());
     $this->submitForm([], 'Save');
-    $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertSession()->pageTextNotContains('The file used in the Managed file & butter field may not be referenced.');
     $this->assertSession()->pageTextContains('The file ids are ' . $file->id());
   }
 

@@ -92,7 +92,7 @@ class ForumIndexTest extends BrowserTestBase {
 
     // Verify that the node no longer appears on the index.
     $this->drupalGet('forum/' . $tid);
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
   }
 
 }

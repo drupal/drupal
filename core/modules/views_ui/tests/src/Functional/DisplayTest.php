@@ -36,12 +36,14 @@ class DisplayTest extends UITestBase {
    */
   public function testAddDisplay() {
     $view = $this->randomView();
-    $this->assertNoText('Block');
-    $this->assertNoText('Block 2');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(0, '/Block name:/');
 
     $this->submitForm([], 'Add Block');
-    $this->assertSession()->pageTextContains('Block');
-    $this->assertNoText('Block 2');
+    $this->assertSession()->elementTextContains('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]', 'Block*');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(1, '/Block name:/');
   }
 
   /**
@@ -285,7 +287,7 @@ class DisplayTest extends UITestBase {
     $this->submitForm([], 'Save');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertNoText('All displays');
+    $this->assertSession()->pageTextNotContains('All displays');
 
     // Test that the override option is shown when default display is on.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();

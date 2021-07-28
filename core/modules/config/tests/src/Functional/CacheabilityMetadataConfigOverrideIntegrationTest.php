@@ -48,7 +48,7 @@ class CacheabilityMetadataConfigOverrideIntegrationTest extends BrowserTestBase 
     // Check the default (disabled) state of the cache context. The block label
     // should not be overridden.
     $this->drupalGet('<front>');
-    $this->assertNoText('Overridden block label');
+    $this->assertSession()->pageTextNotContains('Overridden block label');
 
     // Both the cache context and tag should be present.
     $this->assertCacheContext('config_override_integration_test');

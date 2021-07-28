@@ -137,7 +137,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[value]", '');
     $this->assertRaw($on);
-    $this->assertNoText($this->field->label());
+    $this->assertSession()->pageTextNotContains($this->field->label());
 
     // Test if we can change the on label.
     $on = $this->randomMachineName();

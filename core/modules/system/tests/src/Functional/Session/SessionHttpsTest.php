@@ -92,7 +92,7 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Verify that user is not logged in on non-secure URL.
     $this->drupalGet($this->httpUrl('admin/config'));
-    $this->assertNoText('Configuration');
+    $this->assertSession()->pageTextNotContains('Configuration');
     $this->assertSession()->statusCodeEquals(403);
 
     // Verify that empty SID cannot be used on the non-secure site.

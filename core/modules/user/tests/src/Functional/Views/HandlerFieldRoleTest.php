@@ -49,7 +49,7 @@ class HandlerFieldRoleTest extends UserTestBase {
     $this->assertSession()->responseContains($rolename_b . Html::escape('<em>' . $rolename_a . '</em>'));
     // Verify that the view test_views_handler_field_role does not render a role
     // not assigned to a user.
-    $this->assertNoText($rolename_not_assigned);
+    $this->assertSession()->pageTextNotContains($rolename_not_assigned);
   }
 
 }

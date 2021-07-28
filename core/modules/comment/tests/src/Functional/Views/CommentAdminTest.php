@@ -170,7 +170,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->assertFalse($this->node->isPublished(), 'Node is unpublished now.');
     $this->drupalGet('admin/content/comment');
     // Verify that comment admin cannot see the title of an unpublished node.
-    $this->assertNoText(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextNotContains(Html::escape($this->node->label()));
     $this->drupalLogout();
     $node_access_user = $this->drupalCreateUser([
       'administer comments',

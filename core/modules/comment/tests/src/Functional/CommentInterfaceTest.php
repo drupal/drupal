@@ -198,7 +198,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'comment' => [['status' => CommentItemInterface::OPEN]]]);
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $this->assertNoText('This discussion is closed');
+    $this->assertSession()->pageTextNotContains('This discussion is closed');
     // Ensure that the comment body field exists.
     $this->assertSession()->fieldExists('edit-comment-body-0-value');
 

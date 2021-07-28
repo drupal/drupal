@@ -217,18 +217,18 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Ensure that the label is in French (and not in English).
     $this->drupalGet("fr/$translation_base_url/fr/edit");
     $this->assertSession()->pageTextContains($fr_site_name_label);
-    $this->assertNoText($site_name_label);
+    $this->assertSession()->pageTextNotContains($site_name_label);
 
     // Ensure that the label is also in French (and not in English)
     // when editing another language with the interface in French.
     $this->drupalGet("fr/$translation_base_url/ta/edit");
     $this->assertSession()->pageTextContains($fr_site_name_label);
-    $this->assertNoText($site_name_label);
+    $this->assertSession()->pageTextNotContains($site_name_label);
 
     // Ensure that the label is not translated when the interface is in English.
     $this->drupalGet("$translation_base_url/fr/edit");
     $this->assertSession()->pageTextContains($site_name_label);
-    $this->assertNoText($fr_site_name_label);
+    $this->assertSession()->pageTextNotContains($fr_site_name_label);
   }
 
   /**
@@ -267,8 +267,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet("$translation_base_url/fr/edit");
     // Assert that the language configuration does not leak outside of the
     // translation form into the actual site name and slogan.
-    $this->assertNoText('FR ' . $site_name);
-    $this->assertNoText('FR ' . $site_slogan);
+    $this->assertSession()->pageTextNotContains('FR ' . $site_name);
+    $this->assertSession()->pageTextNotContains('FR ' . $site_slogan);
     $edit = [
       'translation[config_names][system.site][name]' => $site_name,
       'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
@@ -283,7 +283,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Case 3: Keep default value for site name and slogan.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertNoText('FR ' . $site_slogan);
+    $this->assertSession()->pageTextNotContains('FR ' . $site_slogan);
     $edit = [
       'translation[config_names][system.site][name]' => $site_name,
       'translation[config_names][system.site][slogan]' => $site_slogan,
@@ -911,8 +911,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
     $this->assertSession()->pageTextContains('Name');
-    $this->assertNoText('Account cancellation confirmation');
-    $this->assertNoText('Password recovery');
+    $this->assertSession()->pageTextNotContains('Account cancellation confirmation');
+    $this->assertSession()->pageTextNotContains('Password recovery');
   }
 
   /**
