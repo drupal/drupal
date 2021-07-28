@@ -107,8 +107,8 @@ interface EntityDefinitionUpdateManagerInterface {
    * @param string $entity_type_id
    *   The entity type identifier.
    *
-   * @return \Drupal\Core\Entity\EntityTypeInterface
-   *   The entity type definition.
+   * @return \Drupal\Core\Entity\EntityTypeInterface|null
+   *   The entity type definition. Or NULL if not found.
    */
   public function getEntityType($entity_type_id);
 
