@@ -129,7 +129,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // go through the update process uninterrupted.
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('No pending updates.');
     // Confirm that all caches were cleared.
     $this->assertSession()->pageTextContains('hook_cache_flush() invoked for update_script_test.module.');
@@ -149,8 +149,8 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('This is a requirements warning provided by the update_script_test module.');
     $this->clickLink('try again');
     $this->assertNoText('This is a requirements warning provided by the update_script_test module.');
-    $this->clickLink(t('Continue'));
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Continue');
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
     $this->assertSession()->pageTextContains('The update_script_test_update_8001() update was executed successfully.');
     // Confirm that all caches were cleared.
@@ -161,7 +161,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('This is a requirements warning provided by the update_script_test module.');
     $this->clickLink('try again');
     $this->assertNoText('This is a requirements warning provided by the update_script_test module.');
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('No pending updates.');
     // Confirm that all caches were cleared.
     $this->assertSession()->pageTextContains('hook_cache_flush() invoked for update_script_test.module.');
@@ -418,7 +418,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // updates' page without errors.
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     // Make sure there are no pending updates (or uncaught exceptions).
     $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Status message"]', 'No pending updates.');
     // Verify that we warn the admin about this situation.
@@ -430,7 +430,7 @@ class UpdateScriptTest extends BrowserTestBase {
     \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_0', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     // There should not be any pending updates.
     $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Status message"]', 'No pending updates.');
     // But verify that we warn the admin about this situation.
@@ -440,7 +440,7 @@ class UpdateScriptTest extends BrowserTestBase {
     \Drupal::service('update.update_hook_registry')->setInstalledVersion('my_already_removed_module', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     // There still should not be any pending updates.
     $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Status message"]', 'No pending updates.');
     // Verify that we warn the admin about both orphaned entries.
@@ -506,7 +506,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('No pending updates.');
     $this->assertSession()->linkNotExists('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
@@ -521,7 +521,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('No pending updates.');
     $this->assertSession()->linkExists('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
@@ -562,8 +562,8 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Continue');
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
     $this->assertSession()->pageTextContains('Updates were attempted.');
     $this->assertSession()->linkExists('logged');
@@ -638,8 +638,8 @@ class UpdateScriptTest extends BrowserTestBase {
     // 'access site reports' permissions.
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Continue');
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
     $this->assertSession()->pageTextContains('Updates were attempted.');
     $this->assertSession()->linkExists('logged');
@@ -699,8 +699,8 @@ class UpdateScriptTest extends BrowserTestBase {
     }
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Continue');
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
 
     // Verify that updates were completed successfully.
@@ -828,7 +828,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->pageTextNotContains($unexpected_error_text);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     $assert_session->pageTextContains('No pending updates.');
     $this->assertInstalledExtensionConfig($extension_type, $extension_machine_name);
   }

@@ -53,7 +53,7 @@ class ForumIndexTest extends BrowserTestBase {
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
     $this->drupalGet("forum/$tid");
-    $this->clickLink(t('Add new @node_type', ['@node_type' => 'Forum topic']));
+    $this->clickLink('Add new Forum topic');
     $this->assertSession()->addressEquals("node/add/forum?forum_id=$tid");
     $this->submitForm($edit, 'Save');
 

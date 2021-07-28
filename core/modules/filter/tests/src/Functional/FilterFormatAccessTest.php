@@ -226,7 +226,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // Try to edit with a less privileged user.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $node->id());
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
 
     // Verify that body field is read-only and contains replacement value.
     $this->assertSession()->fieldDisabled($body_value_key);

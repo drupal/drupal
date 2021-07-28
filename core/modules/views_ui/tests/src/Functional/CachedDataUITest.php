@@ -62,7 +62,7 @@ class CachedDataUITest extends UITestBase {
     // Test we have the break lock link.
     $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_view/break-lock');
     // Break the lock.
-    $this->clickLink(t('break this lock'));
+    $this->clickLink('break this lock');
     $this->submitForm([], 'Break lock');
     // Test that save and cancel buttons are shown.
     $this->assertSession()->buttonExists('Save');

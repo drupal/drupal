@@ -80,7 +80,7 @@ class PreviewTest extends UITestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
-    $this->clickLink(t('Feed'));
+    $this->clickLink('Feed');
     $this->submitForm([], 'Update preview');
     $this->assertSession()->elementTextContains('xpath', '//div[@id="views-live-preview"]/pre', '<title>' . $view['page[title]'] . '</title>');
 

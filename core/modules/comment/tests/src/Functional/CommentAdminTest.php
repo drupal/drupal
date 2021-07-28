@@ -167,7 +167,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalGet('comment/1/edit');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->drupalGet('node/' . $this->node->id());
-    $this->clickLink(t('Approve'));
+    $this->clickLink('Approve');
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->id());

@@ -266,7 +266,7 @@ class ConfigEntityTest extends BrowserTestBase {
 
     // Delete the configuration entity.
     $this->drupalGet("admin/structure/config_test/manage/$id");
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->addressEquals("admin/structure/config_test/manage/$id/delete");
     $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals('admin/structure/config_test');

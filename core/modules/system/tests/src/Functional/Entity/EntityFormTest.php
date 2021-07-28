@@ -136,7 +136,7 @@ class EntityFormTest extends BrowserTestBase {
     $this->assertNotEquals($name1, $entity->name->value, new FormattableMarkup('%entity_type: The entity name has been modified.', ['%entity_type' => $entity_type]));
 
     $this->drupalGet($entity_type . '/manage/' . $entity->id() . '/edit');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->submitForm([], 'Delete');
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertNull($entity, new FormattableMarkup('%entity_type: Entity not found in the database.', ['%entity_type' => $entity_type]));
@@ -177,7 +177,7 @@ class EntityFormTest extends BrowserTestBase {
     $this->assertEquals($name2_ro, $translated_entity->name->value, new FormattableMarkup('%entity_type: The name of the translation has been modified.', ['%entity_type' => $entity_type_id]));
 
     $this->drupalGet('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->submitForm([], 'Delete Romanian translation');
     $entity = $this->loadEntityByName($entity_type_id, $name1);
     $this->assertNotNull($entity, new FormattableMarkup('%entity_type: The original entity still exists.', ['%entity_type' => $entity_type_id]));

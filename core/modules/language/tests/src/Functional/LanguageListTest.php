@@ -97,7 +97,7 @@ class LanguageListTest extends BrowserTestBase {
 
     // Ensure 'Edit' link works.
     $this->drupalGet('admin/config/regional/language');
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertSession()->titleEquals('Edit language | Drupal');
     // Edit a language.
     $name = $this->randomMachineName(16);
@@ -118,12 +118,12 @@ class LanguageListTest extends BrowserTestBase {
     $this->rebuildContainer();
     // Ensure 'delete' link works.
     $this->drupalGet('admin/config/regional/language');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete the language');
     // Delete a language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     // First test the 'cancel' link.
-    $this->clickLink(t('Cancel'));
+    $this->clickLink('Cancel');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $english]));
     $this->assertRaw($name);
     // Delete the language for real. This a confirm form, we do not need any

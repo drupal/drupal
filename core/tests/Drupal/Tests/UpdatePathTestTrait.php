@@ -44,11 +44,11 @@ trait UpdatePathTestTrait {
 
     $this->drupalGet($update_url);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
 
     $this->doSelectionTest();
     // Run the update hooks.
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
 
     // Ensure there are no failed updates.

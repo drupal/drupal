@@ -277,7 +277,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertNoRaw('Test config entity 51');
 
     // Browse to the next page, test config entity 51 is on page 2.
-    $this->clickLink(t('Page 2'));
+    $this->clickLink('Page 2');
     $this->assertNoRaw('Test config entity 50');
     $this->assertRaw('dotted.default');
     $this->assertRaw('Test config entity 51');

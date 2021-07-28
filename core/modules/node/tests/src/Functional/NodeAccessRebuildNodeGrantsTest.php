@@ -79,7 +79,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
 
     // Rebuild permissions.
     $this->drupalGet('admin/reports/status');
-    $this->clickLink(t('Rebuild permissions'));
+    $this->clickLink('Rebuild permissions');
     $this->submitForm([], 'Rebuild permissions');
     $this->assertSession()->pageTextContains('The content access permissions have been rebuilt.');
 
@@ -115,7 +115,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
 
     // Rebuild permissions.
     $this->drupalGet('admin/reports/status');
-    $this->clickLink(t('Rebuild permissions'));
+    $this->clickLink('Rebuild permissions');
     $this->submitForm([], 'Rebuild permissions');
     $this->assertSession()->pageTextContains('Content permissions have been rebuilt.');
     $this->assertNull(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions have been rebuilt');

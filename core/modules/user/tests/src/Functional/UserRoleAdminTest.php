@@ -89,7 +89,7 @@ class UserRoleAdminTest extends BrowserTestBase {
 
     // Test deleting a role.
     $this->drupalGet("admin/people/roles/manage/{$role->id()}");
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->submitForm([], 'Delete');
     $this->assertRaw(t('The role %label has been deleted.', ['%label' => $role_name]));
     $this->assertSession()->linkByHrefNotExists("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');

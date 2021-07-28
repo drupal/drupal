@@ -151,14 +151,14 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check that the 'Edit' link in the source language links back to the
     // original form.
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     // Also check that saving the form leads back to the translation overview.
     $this->submitForm([], 'Save configuration');
     $this->assertSession()->addressEquals($translation_base_url);
 
     // Check 'Add' link of French to visit add page.
     $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
-    $this->clickLink(t('Add'));
+    $this->clickLink('Add');
 
     // Make sure original text is present on this page.
     $this->assertRaw($site_name);
@@ -613,7 +613,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check 'Add' link of French to visit add page.
     $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
-    $this->clickLink(t('Add'));
+    $this->clickLink('Add');
 
     // Make sure original text is present on this page.
     $this->assertRaw($description);

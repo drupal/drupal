@@ -34,7 +34,7 @@ class ConfirmFormTest extends BrowserTestBase {
     $this->assertSession()->buttonExists('ConfirmFormTestForm::getConfirmText().');
 
     // Test cancelling the form.
-    $this->clickLink(t('ConfirmFormTestForm::getCancelText().'));
+    $this->clickLink('ConfirmFormTestForm::getCancelText().');
     $this->assertSession()->addressEquals('form-test/autocomplete');
 
     // Test submitting the form.
@@ -50,7 +50,7 @@ class ConfirmFormTest extends BrowserTestBase {
 
     // Test cancelling the form with a complex destination.
     $this->drupalGet('form-test/confirm-form-array-path');
-    $this->clickLink(t('ConfirmFormArrayPathTestForm::getCancelText().'));
+    $this->clickLink('ConfirmFormArrayPathTestForm::getCancelText().');
     // Verify that the form's complex cancel link was followed.
     $this->assertSession()->addressEquals('form-test/confirm-form?destination=admin/config');
   }

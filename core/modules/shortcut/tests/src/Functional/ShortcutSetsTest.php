@@ -37,7 +37,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    */
   public function testShortcutSetAdd() {
     $this->drupalGet('admin/config/user-interface/shortcut');
-    $this->clickLink(t('Add shortcut set'));
+    $this->clickLink('Add shortcut set');
     $edit = [
       'label' => $this->randomMachineName(),
       'id' => strtolower($this->randomMachineName()),
@@ -165,7 +165,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
 
     $new_label = $this->randomMachineName();
     $this->drupalGet('admin/config/user-interface/shortcut');
-    $this->clickLink(t('Edit shortcut set'));
+    $this->clickLink('Edit shortcut set');
     $this->submitForm(['label' => $new_label], 'Save');
     $set = ShortcutSet::load($set->id());
     $this->assertSame($new_label, $set->label(), 'Shortcut set has been successfully renamed.');

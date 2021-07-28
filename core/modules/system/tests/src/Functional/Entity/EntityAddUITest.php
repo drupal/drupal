@@ -96,7 +96,7 @@ class EntityAddUITest extends BrowserTestBase {
     $this->assertSession()->linkExists('Test label');
     $this->assertSession()->linkExists('Test2 label');
     $this->assertSession()->linkNotExists('Test3 label');
-    $this->clickLink(t('Test label'));
+    $this->clickLink('Test label');
     $this->assertSession()->statusCodeEquals(200);
 
     // Without any permissions, access must be denied.

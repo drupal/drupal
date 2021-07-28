@@ -258,7 +258,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Check that the field settings form can be submitted again, even when the
     // field is required.
     // The first 'Edit' link is for the Body field.
-    $this->clickLink(t('Edit'), 1);
+    $this->clickLink('Edit', 1);
     $this->submitForm([], 'Save settings');
 
     // Switch the target type to 'taxonomy_term' and check that the settings

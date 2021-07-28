@@ -229,7 +229,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Go to the second page and check that one of the initial three revisions
     // is displayed.
-    $this->clickLink(t('Page 2'));
+    $this->clickLink('Page 2');
     $this->assertSession()->pageTextContains($logs[2]);
   }
 

@@ -102,7 +102,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertSession()->linkExists('Administration pages');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.admin')->toString());
     // Ensure we can reach the "Add another module" link.
-    $this->clickLink(t('Add another module'));
+    $this->clickLink('Add another module');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/modules/install');
 

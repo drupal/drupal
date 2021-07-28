@@ -92,7 +92,7 @@ class BlockUiTest extends BrowserTestBase {
   public function testBlockDemoUiPage() {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
     $this->drupalGet('admin/structure/block');
-    $this->clickLink(t('Demonstrate block regions (@theme)', ['@theme' => 'Classy']));
+    $this->clickLink('Demonstrate block regions (Classy)');
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), "Highlighted")]');
 
     // Ensure that other themes can use the block demo page.

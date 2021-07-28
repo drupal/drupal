@@ -451,15 +451,15 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // Go to the homepage.
     $this->drupalGet('');
     // Click on the French link.
-    $this->clickLink(t('French'));
+    $this->clickLink('French');
     // There should be a query parameter to set the session language.
     $this->assertSession()->addressEquals('user/2?language=fr');
     // Click on the 'Home' Link.
-    $this->clickLink(t('Home'));
+    $this->clickLink('Home');
     // There should be no query parameter.
     $this->assertSession()->addressEquals('user/2');
     // Click on the French link.
-    $this->clickLink(t('French'));
+    $this->clickLink('French');
     // There should be no query parameter.
     $this->assertSession()->addressEquals('user/2');
   }

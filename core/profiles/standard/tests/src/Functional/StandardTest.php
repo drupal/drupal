@@ -39,7 +39,7 @@ class StandardTest extends BrowserTestBase {
   public function testStandard() {
     $this->drupalGet('');
     $this->assertSession()->linkExists('Contact');
-    $this->clickLink(t('Contact'));
+    $this->clickLink('Contact');
     $this->assertSession()->statusCodeEquals(200);
 
     // Test anonymous user can access 'Main navigation' block.

@@ -222,7 +222,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
         $this->drupalGet($path);
         $this->clickLink('Place block');
-        $this->clickLink(t('Add custom block'));
+        $this->clickLink('Add custom block');
         // The seven theme has markup inside the link, we cannot use clickLink().
         if ($default_theme == 'seven') {
           $options = $theme != $default_theme ? ['query' => ['theme' => $theme]] : [];
@@ -251,7 +251,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Test that adding a block from the 'custom blocks list' doesn't send you
     // to the block configure form.
     $this->drupalGet('admin/structure/block/block-content');
-    $this->clickLink(t('Add custom block'));
+    $this->clickLink('Add custom block');
     $this->clickLink('foo');
     $edit = ['info[0][value]' => $this->randomMachineName(8)];
     $this->submitForm($edit, 'Save');
