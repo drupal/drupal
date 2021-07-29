@@ -9,7 +9,6 @@
     "require": {
         "drupal/core": "9.3.x-dev",
         "behat/mink": "v1.8.1",
-        "behat/mink-goutte-driver": "v1.2.1",
         "behat/mink-selenium2-driver": "v1.4.0",
         "composer/ca-bundle": "1.2.10",
         "composer/composer": "2.1.5",
@@ -19,7 +18,6 @@
         "doctrine/instantiator": "1.4.0",
         "drupal/coder": "8.3.13",
         "easyrdf/easyrdf": "1.1.1",
-        "fabpot/goutte": "v3.3.1",
         "friends-of-behat/mink-browserkit-driver": "v1.5.0",
         "instaclick/php-webdriver": "1.4.9",
         "justinrainbow/json-schema": "5.2.11",

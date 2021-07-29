@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa10a6259c46de99ced09082eea4368a",
+    "content-hash": "8d45389b3d0ae61b9494521b92723562",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3639,16 +3639,16 @@
         },
         {
             "name": "symfony/psr-http-message-bridge",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/psr-http-message-bridge.git",
-                "reference": "81db2d4ae86e9f0049828d9343a72b9523884e5d"
+                "reference": "c9012994c4b4fb23e7c57dd86b763a417a04feba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/psr-http-message-bridge/zipball/81db2d4ae86e9f0049828d9343a72b9523884e5d",
-                "reference": "81db2d4ae86e9f0049828d9343a72b9523884e5d",
+                "url": "https://api.github.com/repos/symfony/psr-http-message-bridge/zipball/c9012994c4b4fb23e7c57dd86b763a417a04feba",
+                "reference": "c9012994c4b4fb23e7c57dd86b763a417a04feba",
                 "shasum": ""
             },
             "require": {
@@ -3658,7 +3658,7 @@
             },
             "require-dev": {
                 "nyholm/psr7": "^1.1",
-                "psr/log": "^1.1",
+                "psr/log": "^1.1 || ^2 || ^3",
                 "symfony/browser-kit": "^4.4 || ^5.0",
                 "symfony/config": "^4.4 || ^5.0",
                 "symfony/event-dispatcher": "^4.4 || ^5.0",
@@ -3707,7 +3707,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/psr-http-message-bridge/issues",
-                "source": "https://github.com/symfony/psr-http-message-bridge/tree/v2.1.0"
+                "source": "https://github.com/symfony/psr-http-message-bridge/tree/v2.1.1"
             },
             "funding": [
                 {
@@ -3723,7 +3723,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-17T10:35:25+00:00"
+            "time": "2021-07-27T17:25:39+00:00"
         },
         {
             "name": "symfony/routing",
@@ -4622,65 +4622,6 @@
             "time": "2020-03-11T15:45:53+00:00"
         },
         {
-            "name": "behat/mink-goutte-driver",
-            "version": "v1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/minkphp/MinkGoutteDriver.git",
-                "reference": "8b9ad6d2d95bc70b840d15323365f52fcdaea6ca"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkGoutteDriver/zipball/8b9ad6d2d95bc70b840d15323365f52fcdaea6ca",
-                "reference": "8b9ad6d2d95bc70b840d15323365f52fcdaea6ca",
-                "shasum": ""
-            },
-            "require": {
-                "behat/mink": "~1.6@dev",
-                "behat/mink-browserkit-driver": "~1.2@dev",
-                "fabpot/goutte": "~1.0.4|~2.0|~3.1",
-                "php": ">=5.3.1"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "~2.7|~3.0"
-            },
-            "type": "mink-driver",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Behat\\Mink\\Driver\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                }
-            ],
-            "description": "Goutte driver for Mink framework",
-            "homepage": "http://mink.behat.org/",
-            "keywords": [
-                "browser",
-                "goutte",
-                "headless",
-                "testing"
-            ],
-            "support": {
-                "issues": "https://github.com/minkphp/MinkGoutteDriver/issues",
-                "source": "https://github.com/minkphp/MinkGoutteDriver/tree/master"
-            },
-            "time": "2016-03-05T09:04:22+00:00"
-        },
-        {
             "name": "behat/mink-selenium2-driver",
             "version": "v1.4.0",
             "source": {
@@ -5317,65 +5258,6 @@
                 "source": "https://github.com/easyrdf/easyrdf/tree/1.1.1"
             },
             "time": "2020-12-02T08:47:31+00:00"
-        },
-        {
-            "name": "fabpot/goutte",
-            "version": "v3.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfPHP/Goutte.git",
-                "reference": "80a23b64f44d54dd571d114c473d9d7e9ed84ca5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/80a23b64f44d54dd571d114c473d9d7e9ed84ca5",
-                "reference": "80a23b64f44d54dd571d114c473d9d7e9ed84ca5",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.0",
-                "php": ">=7.1.3",
-                "symfony/browser-kit": "^4.4|^5.0",
-                "symfony/css-selector": "^4.4|^5.0",
-                "symfony/dom-crawler": "^4.4|^5.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^5.0"
-            },
-            "type": "application",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Goutte\\": "Goutte"
-                },
-                "exclude-from-classmap": [
-                    "Goutte/Tests"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "A simple PHP Web Scraper",
-            "homepage": "https://github.com/FriendsOfPHP/Goutte",
-            "keywords": [
-                "scraper"
-            ],
-            "support": {
-                "issues": "https://github.com/FriendsOfPHP/Goutte/issues",
-                "source": "https://github.com/FriendsOfPHP/Goutte/tree/v3.3.1"
-            },
-            "time": "2020-11-01T09:30:18+00:00"
         },
         {
             "name": "friends-of-behat/mink-browserkit-driver",
