@@ -1175,7 +1175,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       return TRUE;
     }
     catch (\Exception $e) {
-      throw new PluginException($e->getMessage(), NULL, $e);
+      throw new PluginException($e->getMessage(), 0, $e);
     }
     return FALSE;
   }

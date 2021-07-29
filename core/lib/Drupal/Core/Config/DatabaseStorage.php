@@ -173,7 +173,7 @@ class DatabaseStorage implements StorageInterface {
       return TRUE;
     }
     catch (\Exception $e) {
-      throw new StorageException($e->getMessage(), NULL, $e);
+      throw new StorageException($e->getMessage(), 0, $e);
     }
     return FALSE;
   }

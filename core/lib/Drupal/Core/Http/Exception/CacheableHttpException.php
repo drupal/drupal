@@ -18,7 +18,13 @@ class CacheableHttpException extends HttpException implements CacheableDependenc
    */
   public function __construct(CacheableDependencyInterface $cacheability, $statusCode = 0, $message = NULL, \Exception $previous = NULL, $code = 0) {
     $this->setCacheability($cacheability);
-    parent::__construct($statusCode, $message, $previous, $code);
+    // @todo Remove condition in https://www.drupal.org/node/3002352
+    if (is_array($code)) {
+      parent::__construct($statusCode, $message, $previous, $code);
+    }
+    else {
+      parent::__construct($statusCode, $message, $previous, [], $code);
+    }
   }
 
 }
