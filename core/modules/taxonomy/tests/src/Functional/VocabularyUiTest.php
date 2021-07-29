@@ -40,7 +40,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy');
 
     // Create a new vocabulary.
-    $this->clickLink(t('Add vocabulary'));
+    $this->clickLink('Add vocabulary');
     $edit = [];
     $vid = mb_strtolower($this->randomMachineName());
     $edit['name'] = $this->randomMachineName();
@@ -54,7 +54,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains($edit['name']);
     $this->assertSession()->pageTextContains($edit['description']);
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
-    $this->clickLink(t('Edit vocabulary'));
+    $this->clickLink('Edit vocabulary');
     $edit = [];
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
@@ -154,7 +154,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id());
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $vocabulary->label()]));
     $this->assertSession()->pageTextContains('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.');
 

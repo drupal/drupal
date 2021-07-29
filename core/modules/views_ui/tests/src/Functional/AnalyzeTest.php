@@ -38,7 +38,7 @@ class AnalyzeTest extends UITestBase {
     $this->assertSession()->linkExists('Analyze view');
 
     // This redirects the user to the analyze form.
-    $this->clickLink(t('Analyze view'));
+    $this->clickLink('Analyze view');
     $this->assertSession()->titleEquals('View analysis | Drupal');
 
     foreach (['ok', 'warning', 'error'] as $type) {

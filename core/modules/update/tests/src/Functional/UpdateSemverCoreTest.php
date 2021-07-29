@@ -332,7 +332,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Check manually'));
+    $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
     $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
@@ -354,7 +354,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Check manually'));
+    $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
     $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
@@ -376,7 +376,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Check manually'));
+    $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
     $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
@@ -465,15 +465,15 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/modules');
-    $this->clickLink(t('Add new module'));
+    $this->clickLink('Add new module');
     $this->assertSession()->addressEquals('admin/modules/install');
 
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Add new theme'));
+    $this->clickLink('Add new theme');
     $this->assertSession()->addressEquals('admin/theme/install');
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Add new module or theme'));
+    $this->clickLink('Add new module or theme');
     $this->assertSession()->addressEquals('admin/reports/updates/install');
   }
 

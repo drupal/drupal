@@ -289,7 +289,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $contact_form = mb_strtolower($this->randomMachineName(16));
     $this->addContactForm($contact_form, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldValueEquals('label', $label);
 
@@ -315,7 +315,7 @@ class ContactSitewideTest extends BrowserTestBase {
     }
 
     $this->assertSession()->statusCodeEquals(200);
-    $this->clickLink(t('Add field'));
+    $this->clickLink('Add field');
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a simple textfield.

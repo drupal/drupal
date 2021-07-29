@@ -84,7 +84,7 @@ class FieldWebTest extends ViewTestBase {
     $this->assertCacheContexts($expected_contexts);
 
     // Clicking a click sort should change the order.
-    $this->clickLink(t('ID'));
+    $this->clickLink('ID');
     $href = Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'desc']])->toString();
     $this->assertSession()->linkByHrefExists($href);
     // Check that the output has the expected order (asc).
@@ -94,7 +94,7 @@ class FieldWebTest extends ViewTestBase {
     $result = $this->xpath('//a[@href="' . $href . '"]');
     $this->assertEquals('nofollow', $result[0]->getAttribute('rel'));
 
-    $this->clickLink(t('ID Sort descending'));
+    $this->clickLink('ID Sort descending');
     // Check that the output has the expected order (desc).
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEquals(range(5, 1, -1), $ids);

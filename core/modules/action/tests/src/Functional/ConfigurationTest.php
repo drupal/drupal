@@ -59,7 +59,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($action_label);
 
     // Make another POST request to the action edit page.
-    $this->clickLink(t('Configure'));
+    $this->clickLink('Configure');
 
     $edit = [];
     $new_action_label = $this->randomMachineName();
@@ -77,12 +77,12 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($new_action_label);
 
     // Make sure the URL appears when re-editing the action.
-    $this->clickLink(t('Configure'));
+    $this->clickLink('Configure');
     $this->assertSession()->fieldValueEquals('url', 'admin');
 
     // Make sure that deletions work properly.
     $this->drupalGet('admin/config/system/actions');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $this->submitForm($edit, 'Delete');

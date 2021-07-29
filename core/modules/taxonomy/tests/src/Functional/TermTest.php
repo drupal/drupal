@@ -209,7 +209,7 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($term1->getName());
 
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertSession()->pageTextContains($term1->getName());
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains($term1->getName());
@@ -311,7 +311,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Delete term 1 from the term edit page.
     $this->drupalGet('taxonomy/term/' . $term_objects['term1']->id() . '/edit');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->submitForm([], 'Delete');
 
     // Delete term 2 from the term delete page.
@@ -353,7 +353,7 @@ class TermTest extends TaxonomyTestBase {
     // Submitting a term takes us to the add page; we need the List page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
 
     // Verify that the randomly generated term is present.
     $this->assertRaw($edit['name[0][value]']);
@@ -401,7 +401,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Delete the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->submitForm([], 'Delete');
 
     // Assert that the term no longer exists.
@@ -591,7 +591,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Check that the term is displayed when editing and saving the node with no
     // changes.
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertRaw($term->getName());
     $this->submitForm([], 'Save');
     $this->assertRaw($term->getName());

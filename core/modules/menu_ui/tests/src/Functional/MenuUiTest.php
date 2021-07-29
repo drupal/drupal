@@ -291,18 +291,18 @@ class MenuUiTest extends BrowserTestBase {
     // Test the 'Add link' local action.
     $this->drupalGet(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
-    $this->clickLink(t('Add link'));
+    $this->clickLink('Add link');
     $link_title = $this->randomString();
     $this->submitForm(['link[0][uri]' => '/', 'title[0][value]' => $link_title], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Edit' operation.
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertSession()->fieldValueEquals('title[0][value]', $link_title);
     $link_title = $this->randomString();
     $this->submitForm(['title[0][value]' => $link_title], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertRaw(t('Are you sure you want to delete the custom menu link %item?', ['%item' => $link_title]));
     $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));

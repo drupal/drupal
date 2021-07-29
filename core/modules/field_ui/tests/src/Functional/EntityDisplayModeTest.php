@@ -63,7 +63,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertSession()->linkNotExists('Test entity - revisions and data table', 'An entity type with no view builder cannot have view modes.');
 
     // Test adding a view mode including dots in machine_name.
-    $this->clickLink(t('Test entity'));
+    $this->clickLink('Test entity');
     $edit = [
       'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
@@ -91,7 +91,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertEquals(Url::fromRoute('entity.entity_view_mode.delete_form', ['entity_view_mode' => $view_mode->id()])->toString(), $view_mode->toUrl('delete-form')->toString());
 
     // Test deleting the view mode.
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertRaw(t('Are you sure you want to delete the view mode %label?', ['%label' => $edit['label']]));
     $this->submitForm([], 'Delete');
     $this->assertRaw(t('The view mode %label has been deleted.', ['%label' => $edit['label']]));
@@ -117,7 +117,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertSession()->linkNotExists('Entity Test without label', 'An entity type with no form cannot have form modes.');
 
     // Test adding a view mode including dots in machine_name.
-    $this->clickLink(t('Test entity'));
+    $this->clickLink('Test entity');
     $edit = [
       'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
@@ -145,7 +145,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertEquals(Url::fromRoute('entity.entity_form_mode.delete_form', ['entity_form_mode' => $form_mode->id()])->toString(), $form_mode->toUrl('delete-form')->toString());
 
     // Test deleting the form mode.
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertRaw(t('Are you sure you want to delete the form mode %label?', ['%label' => $edit['label']]));
     $this->submitForm([], 'Delete');
     $this->assertRaw(t('The form mode %label has been deleted.', ['%label' => $edit['label']]));

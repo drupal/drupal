@@ -412,7 +412,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Delete the field.
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -427,7 +427,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     foreach ($field_storage->getBundles() as $node_type) {
       // Delete all the body field instances.
       $this->drupalGet('admin/structure/types/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->fieldName);
-      $this->clickLink(t('Delete'));
+      $this->clickLink('Delete');
       $this->submitForm([], 'Delete');
     }
     // Check "Re-use existing field" appears.

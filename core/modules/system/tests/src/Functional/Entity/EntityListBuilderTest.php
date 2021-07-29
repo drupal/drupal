@@ -53,7 +53,7 @@ class EntityListBuilderTest extends BrowserTestBase {
     $this->assertNoRaw('Test entity 51');
 
     // Browse to the next page, test entity 51 is shown.
-    $this->clickLink(t('Page 2'));
+    $this->clickLink('Page 2');
     $this->assertNoRaw('Test entity 50');
     $this->assertRaw('Test entity 51');
   }

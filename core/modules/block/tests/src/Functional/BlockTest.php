@@ -243,7 +243,7 @@ class BlockTest extends BlockTestBase {
 
     // Test deleting the block from the edit form.
     $this->drupalGet('admin/structure/block/manage/' . $block['id']);
-    $this->clickLink(t('Remove block'));
+    $this->clickLink('Remove block');
     $this->assertRaw(t('Are you sure you want to remove the block @name?', ['@name' => $block['settings[label]']]));
     $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block['settings[label]']]));
@@ -251,7 +251,7 @@ class BlockTest extends BlockTestBase {
     // Test deleting a block via "Configure block" link.
     $block = $this->drupalPlaceBlock('system_powered_by_block');
     $this->drupalGet('admin/structure/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
-    $this->clickLink(t('Remove block'));
+    $this->clickLink('Remove block');
     $this->assertRaw(t('Are you sure you want to remove the block @name?', ['@name' => $block->label()]));
     $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block->label()]));

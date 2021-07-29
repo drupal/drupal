@@ -222,7 +222,7 @@ class NodeTypeTest extends NodeTestBase {
     unset($locked['default']);
     \Drupal::state()->set('node.type.locked', $locked);
     $this->drupalGet('admin/structure/types/manage/default');
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([], 'Delete');
     $this->assertFalse((bool) NodeType::load('default'), 'Node type with machine default deleted.');

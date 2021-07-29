@@ -53,7 +53,7 @@ class DisplayTest extends UITestBase {
     ];
     $view = $this->randomView($view);
 
-    $this->clickLink(t('Reorder displays'));
+    $this->clickLink('Reorder displays');
     $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
     $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
     $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
@@ -187,7 +187,7 @@ class DisplayTest extends UITestBase {
     // Test the default link_url value for new display
     $this->submitForm([], 'Add Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
-    $this->clickLink(t('Custom URL'));
+    $this->clickLink('Custom URL');
     $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
   }
 

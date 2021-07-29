@@ -146,7 +146,7 @@ class CronRunTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/reports/status');
-    $this->clickLink(t('Run cron'));
+    $this->clickLink('Run cron');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Cron ran successfully.');
   }

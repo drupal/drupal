@@ -103,7 +103,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
 
     // Translate the node into French.
     $this->drupalGet('node/' . $default_language_node->id() . '/translations');
-    $this->clickLink(t('Add'));
+    $this->clickLink('Add');
 
     // Remove the existing file.
     $this->submitForm([], 'Remove');

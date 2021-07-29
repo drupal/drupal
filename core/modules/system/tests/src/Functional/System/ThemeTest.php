@@ -365,7 +365,7 @@ class ThemeTest extends BrowserTestBase {
     // Install Bartik and set it as the default theme.
     $theme_installer->install(['bartik']);
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Set as default'));
+    $this->clickLink('Set as default');
     $this->assertEquals('bartik', $this->config('system.theme')->get('default'));
 
     // Test the default theme on the secondary links (blocks admin page).
@@ -374,7 +374,7 @@ class ThemeTest extends BrowserTestBase {
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
     // Stark is the first 'Set as default' link.
-    $this->clickLink(t('Set as default'));
+    $this->clickLink('Set as default');
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->pageTextContains('Stark(active tab)');
   }
@@ -417,7 +417,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Set as default'));
+    $this->clickLink('Set as default');
 
     // Check that seven cannot be uninstalled as it is the admin theme.
     $this->assertNoRaw('Uninstall Seven theme');
@@ -444,7 +444,7 @@ class ThemeTest extends BrowserTestBase {
     $this->assertNoRaw('Uninstall Classy theme');
 
     // Change the default theme to stark, stark is second in the list.
-    $this->clickLink(t('Set as default'), 1);
+    $this->clickLink('Set as default', 1);
 
     // Check that bartik can be uninstalled now.
     $this->assertRaw('Uninstall Bartik theme');
@@ -454,10 +454,10 @@ class ThemeTest extends BrowserTestBase {
     $this->assertNoRaw('Uninstall Classy theme');
 
     // Uninstall each of the three themes starting with Bartik.
-    $this->clickLink(t('Uninstall'));
+    $this->clickLink('Uninstall');
     $this->assertRaw('The <em class="placeholder">Bartik</em> theme has been uninstalled');
     // Seven is the second in the list.
-    $this->clickLink(t('Uninstall'));
+    $this->clickLink('Uninstall');
     $this->assertRaw('The <em class="placeholder">Seven</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.

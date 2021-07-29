@@ -113,7 +113,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $edit[$field_name . '[0][display]'] = FALSE;
     $edit[$field_name . '[1][display]'] = FALSE;
     $this->submitForm($edit, 'Preview');
-    $this->clickLink(t('Back to content editing'));
+    $this->clickLink('Back to content editing');
     // First file.
     $this->assertRaw($field_name . '[0][display]');
     // Second file.

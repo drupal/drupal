@@ -53,9 +53,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $label = 'Antelope';
     $new_label = 'Albatross';
     // Add a new entity using the operations link.
-    $link_text = t('Add custom block');
-    $this->assertSession()->linkExists($link_text);
-    $this->clickLink($link_text);
+    $this->clickLink('Add custom block');
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $edit['info[0][value]'] = $label;
@@ -81,7 +79,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $block = reset($blocks);
     if (!empty($block)) {
       $this->assertSession()->linkByHrefExists('block/' . $block->id());
-      $this->clickLink(t('Edit'));
+      $this->clickLink('Edit');
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->titleEquals("Edit custom block $label | Drupal");
       $edit = ['info[0][value]' => $new_label];

@@ -489,7 +489,7 @@ class ForumTest extends BrowserTestBase {
   public function deleteForum($tid) {
     // Delete the forum.
     $this->drupalGet('admin/structure/forum/edit/forum/' . $tid);
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete the forum');
     $this->assertNoText('Add forum');
     $this->assertNoText('Add forum container');

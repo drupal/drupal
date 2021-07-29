@@ -93,7 +93,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($edit, 'Save and edit');
     $this->submitForm([], 'Duplicate as Entity Reference');
-    $this->clickLink(t('Settings'));
+    $this->clickLink('Settings');
     $edit = [
       'style_options[search_fields][title]' => 'title',
     ];
@@ -109,7 +109,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     $this->drupalGet('admin/structure/views/view/node_test_view/edit/entity_reference_1');
     $this->submitForm([], 'Save');
-    $this->clickLink(t('Settings'));
+    $this->clickLink('Settings');
 
     // Create a test entity reference field.
     $field_name = 'test_entity_ref_field';
