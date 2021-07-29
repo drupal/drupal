@@ -17,7 +17,7 @@ class ResourceTypeBuildEvent extends Event {
   /**
    * The JSON:API resource type name of the instance to be built.
    *
-   * @var string
+   * @var null|string
    */
   protected $resourceTypeName;
 
@@ -67,7 +67,7 @@ class ResourceTypeBuildEvent extends Event {
    *   A new event.
    */
   public static function createFromEntityTypeAndBundle(EntityTypeInterface $entity_type, $bundle, array $fields) {
-    return new static(sprintf('%s--%s', $entity_type->id(), $bundle), $fields);
+    return new static($entity_type->id() . ResourceType::TYPE_NAME_URI_PATH_SEPARATOR . $bundle, $fields);
   }
 
   /**
@@ -78,6 +78,18 @@ class ResourceTypeBuildEvent extends Event {
    */
   public function getResourceTypeName() {
     return $this->resourceTypeName;
+  }
+
+  /**
+   * Sets the name of the resource type to be built.
+   *
+   * @param string $resource_type_name
+   *   The resource type name. Also used to build the resource path.
+   *
+   * @see \Drupal\jsonapi\ResourceType\ResourceType::getPath()
+   */
+  public function setResourceTypeName(string $resource_type_name): void {
+    $this->resourceTypeName = $resource_type_name;
   }
 
   /**

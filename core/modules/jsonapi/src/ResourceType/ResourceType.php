@@ -19,6 +19,13 @@ namespace Drupal\jsonapi\ResourceType;
 class ResourceType {
 
   /**
+   * A string which is used as path separator in resource type names.
+   *
+   * @see \Drupal\jsonapi\ResourceType\ResourceType::getPath()
+   */
+  const TYPE_NAME_URI_PATH_SEPARATOR = '--';
+
+  /**
    * The entity type ID.
    *
    * @var string
@@ -338,8 +345,10 @@ class ResourceType {
    *   (optional) Whether the resource type is versionable.
    * @param \Drupal\jsonapi\ResourceType\ResourceTypeField[] $fields
    *   (optional) The resource type fields, keyed by internal field name.
+   * @param null|string $type_name
+   *   The resource type name.
    */
-  public function __construct($entity_type_id, $bundle, $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, $is_versionable = FALSE, array $fields = []) {
+  public function __construct($entity_type_id, $bundle, $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, $is_versionable = FALSE, array $fields = [], $type_name = NULL) {
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $this->deserializationTargetClass = $deserialization_target_class;
@@ -349,9 +358,12 @@ class ResourceType {
     $this->isVersionable = $is_versionable;
     $this->fields = $fields;
 
-    $this->typeName = $this->bundle === '?'
-      ? 'unknown'
-      : sprintf('%s--%s', $this->entityTypeId, $this->bundle);
+    $this->typeName = $type_name;
+    if ($type_name === NULL) {
+      $this->typeName = $this->bundle === '?'
+        ? 'unknown'
+        : $this->entityTypeId . self::TYPE_NAME_URI_PATH_SEPARATOR . $this->bundle;
+    }
 
     $this->fieldMapping = array_flip(array_map(function (ResourceTypeField $field) {
       return $field->getPublicName();
@@ -420,12 +432,15 @@ class ResourceType {
    * Get the resource path.
    *
    * @return string
-   *   The path to access this resource type. Default: /entity_type_id/bundle.
+   *   The path to access this resource type. The function
+   *   replaces "--" with "/" in the URI path.
+   *   Example: "node--article" -> "node/article".
    *
+   * @see \Drupal\jsonapi\ResourceType\ResourceType::TYPE_NAME_URI_PATH_SEPARATOR
    * @see jsonapi.base_path
    */
   public function getPath() {
-    return sprintf('/%s/%s', $this->getEntityTypeId(), $this->getBundle());
+    return '/' . implode('/', explode(self::TYPE_NAME_URI_PATH_SEPARATOR, $this->typeName));
   }
 
 }

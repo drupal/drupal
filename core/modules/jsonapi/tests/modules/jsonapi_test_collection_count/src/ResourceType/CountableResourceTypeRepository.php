@@ -14,16 +14,17 @@ class CountableResourceTypeRepository extends ResourceTypeRepository {
    * {@inheritdoc}
    */
   protected function createResourceType(EntityTypeInterface $entity_type, $bundle) {
-    $raw_fields = $this->getAllFieldNames($entity_type, $bundle);
+    $resource_type = parent::createResourceType($entity_type, $bundle);
     return new CountableResourceType(
-      $entity_type->id(),
-      $bundle,
-      $entity_type->getClass(),
-      $entity_type->isInternal(),
-      static::isLocatableResourceType($entity_type, $bundle),
-      static::isMutableResourceType($entity_type, $bundle),
-      static::isVersionableResourceType($entity_type),
-      static::getFields($raw_fields, $entity_type, $bundle)
+      $resource_type->getEntityTypeId(),
+      $resource_type->getBundle(),
+      $resource_type->getDeserializationTargetClass(),
+      $resource_type->isInternal(),
+      $resource_type->isLocatable(),
+      $resource_type->isMutable(),
+      $resource_type->isVersionable(),
+      $resource_type->getFields(),
+      $resource_type->getTypeName()
     );
   }
 

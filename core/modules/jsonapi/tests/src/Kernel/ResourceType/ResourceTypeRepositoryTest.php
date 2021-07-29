@@ -188,16 +188,6 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * Tests that resource type fields can be aliased per resource type.
-   */
-  public function testResourceTypeNameAliasing() {
-    // When this test is implemented, ensure the the tested behaviors in
-    // ResourceTypeNameAliasTest have been covered and remove it. Then remove
-    // the jsonapi_test_resource_type_aliasing test module.
-    $this->markTestSkipped('Remove in https://www.drupal.org/project/drupal/issues/3105318');
-  }
-
-  /**
    * Tests that resource type fields can be disabled per resource type.
    */
   public function testResourceTypeFieldDisabling() {
@@ -215,6 +205,21 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     Cache::invalidateTags(['jsonapi_resource_types']);
     $this->assertFalse($this->resourceTypeRepository->getByTypeName('node--article')->isFieldEnabled('uid'));
     $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--page')->isFieldEnabled('uid'));
+  }
+
+  /**
+   * Tests that resource types can be renamed.
+   */
+  public function testResourceTypeRenaming() {
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.renamed_resource_types', [
+      'node--article' => 'articles',
+      'node--page' => 'pages',
+    ]);
+    Cache::invalidateTags(['jsonapi_resource_types']);
+    $this->assertNull($this->resourceTypeRepository->getByTypeName('node--article'));
+    $this->assertInstanceOf(ResourceType::class, $this->resourceTypeRepository->getByTypeName('articles'));
+    $this->assertNull($this->resourceTypeRepository->getByTypeName('node--page'));
+    $this->assertInstanceOf(ResourceType::class, $this->resourceTypeRepository->getByTypeName('pages'));
   }
 
 }
