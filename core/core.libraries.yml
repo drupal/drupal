@@ -857,7 +857,7 @@ drupal.dialog.off_canvas:
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
-  version: "v3.0.0-rc0"
+  version: "3.0.0-rc.0"
   license:
     name: MIT
     url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.0-rc.0/LICENSE

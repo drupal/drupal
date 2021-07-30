@@ -1,4 +1,3 @@
-
 .farbtastic {
   position: relative;
 }
@@ -6,13 +5,11 @@
   position: absolute;
   cursor: crosshair;
 }
-.farbtastic,
-.farbtastic .wheel {
+.farbtastic, .farbtastic .wheel {
   width: 195px;
   height: 195px;
 }
-.farbtastic .color,
-.farbtastic .overlay {
+.farbtastic .color, .farbtastic .overlay {
   top: 47px;
   left: 47px;
   width: 101px;
@@ -30,7 +27,7 @@
   width: 17px;
   height: 17px;
   margin: -8px 0 0 -8px;
-  overflow: hidden;
+  overflow: hidden; 
   background: url(marker.png) no-repeat;
 }
 
