@@ -710,6 +710,9 @@ INFO;
     if (!empty($lifecycle)) {
       $info .= "\nlifecycle: $lifecycle\n";
     }
+    if (in_array($lifecycle, [ExtensionLifecycle::DEPRECATED, ExtensionLifecycle::OBSOLETE], TRUE)) {
+      $info .= "\nlifecycle_link: http://example.com\n";
+    }
     vfsStream::setup('modules');
     $filename = "lifecycle-$lifecycle.info.yml";
     vfsStream::create([
@@ -794,6 +797,86 @@ INFO;
       'wrong case' => [
         'Experimental',
         "'lifecycle: Experimental' is not valid",
+      ],
+    ];
+  }
+
+  /**
+   * Tests an info file's lifecycle_link values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerLifecycleLink
+   */
+  public function testLifecycleLink($lifecycle, $lifecycle_link = NULL, $exception_message = NULL) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+lifecycle: $lifecycle
+INFO;
+    if (($lifecycle_link)) {
+      $info .= "\nlifecycle_link: $lifecycle_link\n";
+    }
+    vfsStream::setup('modules');
+    // Use a random file name to bypass the static caching in
+    // \Drupal\Core\Extension\InfoParser.
+    $random = mb_strtolower($this->randomMachineName());
+    $filename = "lifecycle-$random.info.yml";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $path = vfsStream::url("modules/fixtures/$filename");
+    if ($exception_message) {
+      $this->expectException(InfoParserException::class);
+      $this->expectExceptionMessage(sprintf($exception_message, $path));
+    }
+    $info_values = $this->infoParser->parse($path);
+    $this->assertSame($lifecycle, $info_values[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]);
+  }
+
+  /**
+   * Data provider for testLifecycleLink().
+   */
+  public function providerLifecycleLink() {
+    return [
+      'valid deprecated' => [
+        ExtensionLifecycle::DEPRECATED,
+        'http://example.com',
+      ],
+      'valid obsolete' => [
+        ExtensionLifecycle::OBSOLETE,
+        'http://example.com',
+      ],
+      'valid stable' => [
+        ExtensionLifecycle::STABLE,
+      ],
+      'valid experimental' => [
+        ExtensionLifecycle::EXPERIMENTAL,
+      ],
+      'missing deprecated' => [
+        ExtensionLifecycle::DEPRECATED,
+        NULL,
+        "Extension Module for That (%s) has 'lifecycle: deprecated' but is missing a 'lifecycle_link' entry.",
+      ],
+      'missing obsolete' => [
+        ExtensionLifecycle::OBSOLETE,
+        NULL,
+        "Extension Module for That (%s) has 'lifecycle: obsolete' but is missing a 'lifecycle_link' entry.",
+      ],
+      'invalid deprecated' => [
+        ExtensionLifecycle::DEPRECATED,
+        'look ma, not a url',
+        "Extension Module for That (%s) has a 'lifecycle_link' entry that is not a valid URL.",
+      ],
+      'invalid obsolete' => [
+        ExtensionLifecycle::OBSOLETE,
+        'I think you may find that this is also not a url',
+        "Extension Module for That (%s) has a 'lifecycle_link' entry that is not a valid URL.",
       ],
     ];
   }

@@ -20,6 +20,11 @@ final class ExtensionLifecycle {
   const LIFECYCLE_IDENTIFIER = 'lifecycle';
 
   /**
+   * The string used to identify the lifecycle link in an .info.yml file.
+   */
+  const LIFECYCLE_LINK_IDENTIFIER = 'lifecycle_link';
+
+  /**
    * Extension is experimental. Warnings will be shown if installed.
    */
   const EXPERIMENTAL = 'experimental';
