@@ -127,7 +127,6 @@ class DbDumpTest extends KernelTestBase {
       'config',
       'cache_bootstrap',
       'cache_config',
-      'cache_data',
       'cache_discovery',
       'cache_entity',
       'file_managed',
