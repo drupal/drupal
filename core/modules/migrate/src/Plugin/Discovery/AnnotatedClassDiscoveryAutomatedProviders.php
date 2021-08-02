@@ -3,8 +3,8 @@
 namespace Drupal\migrate\Plugin\Discovery;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Reflection\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\Doctrine\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\ClassFinder\ClassFinder;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
@@ -23,7 +23,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
   /**
    * A utility object that can use active autoloaders to find files for classes.
    *
-   * @var \Doctrine\Common\Reflection\ClassFinderInterface
+   * @var \Drupal\Component\ClassFinder\ClassFinderInterface
    */
   protected $finder;
 

@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Test;
 
-use Doctrine\Common\Reflection\StaticReflectionParser;
+use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
