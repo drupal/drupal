@@ -31,7 +31,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
   /**
    * Tests image widget element support multiple upload correctly.
    */
-  public function testWidgetElementMultipleUploads(): void {
+  public function testWidgetElementMultipleUploads() {
     $image_factory = \Drupal::service('image.factory');
     $file_system = \Drupal::service('file_system');
     $web_driver = $this->getSession()->getDriver();

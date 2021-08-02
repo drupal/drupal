@@ -28,7 +28,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');

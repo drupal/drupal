@@ -243,7 +243,7 @@ class ContentEntityTest extends KernelTestBase {
    */
   protected function assertIds(MigrateSourceInterface $source, array $configuration) {
     $ids = $source->getIds();
-    [, $entity_type_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $source->getPluginId());
+    list(, $entity_type_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $source->getPluginId());
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
 
     $this->assertArrayHasKey($entity_type->getKey('id'), $ids);
