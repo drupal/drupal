@@ -111,4 +111,28 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->assertSession()->linkExists($shortcut->label());
   }
 
+  /**
+   * Tests that the request bags have the correct classes.
+   *
+   * @todo Remove this when Symfony 4 is no longer supported.
+   *
+   * @see \Drupal\Core\Http\TrustedHostsRequestFactory
+   */
+  public function testRequestBags() {
+    $this->container->get('module_installer')->install(['trusted_hosts_test']);
+
+    $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
+    $settings['settings']['trusted_host_patterns'] = (object) [
+      'value' => ['^' . preg_quote($host) . '$'],
+      'required' => TRUE,
+    ];
+
+    $this->writeSettings($settings);
+
+    foreach (['request', 'query', 'cookies'] as $bag) {
+      $this->drupalGet('trusted-hosts-test/bag-type/' . $bag);
+      $this->assertSession()->pageTextContains('InputBag');
+    }
+  }
+
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Http;
 
+use Symfony\Component\HttpFoundation\InputBag as SymfonyInputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -61,7 +62,17 @@ class TrustedHostsRequestFactory {
     if (empty($server['HTTP_HOST']) || ($server['HTTP_HOST'] === 'localhost' && $this->host !== 'localhost')) {
       $server['HTTP_HOST'] = $this->host;
     }
-    return new Request($query, $request, $attributes, $cookies, $files, $server, $content);
+    $request = new Request($query, $request, $attributes, $cookies, $files, $server, $content);
+
+    // Replace ParameterBag with InputBag for compatibility with Symfony 5.
+    // @todo Remove this when Symfony 4 is no longer supported.
+    foreach (['request', 'query', 'cookies'] as $bag) {
+      if (!($bag instanceof SymfonyInputBag)) {
+        $request->$bag = new InputBag($request->$bag->all());
+      }
+    }
+
+    return $request;
   }
 
 }

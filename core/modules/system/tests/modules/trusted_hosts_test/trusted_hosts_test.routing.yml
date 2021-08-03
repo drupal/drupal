@@ -4,3 +4,10 @@ trusted_hosts_test.fake_request:
     _controller: '\Drupal\trusted_hosts_test\Controller\TrustedHostsTestController::fakeRequestHost'
   requirements:
     _access: 'TRUE'
+
+trusted_hosts_test.bag_type:
+  path: '/trusted-hosts-test/bag-type/{bag}'
+  defaults:
+    _controller: '\Drupal\trusted_hosts_test\Controller\TrustedHostsTestController::bagType'
+  requirements:
+    _access: 'TRUE'
