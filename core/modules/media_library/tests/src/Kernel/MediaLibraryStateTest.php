@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\media_library\Kernel;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -104,6 +106,11 @@ class MediaLibraryStateTest extends KernelTestBase {
     }
     $state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining_slots);
     $this->assertInstanceOf(MediaLibraryState::class, $state);
+
+    // Ensure that the state object carries cache metadata.
+    $this->assertInstanceOf(CacheableDependencyInterface::class, $state);
+    $this->assertSame(['url.query_args'], $state->getCacheContexts());
+    $this->assertSame(Cache::PERMANENT, $state->getCacheMaxAge());
   }
 
   /**
