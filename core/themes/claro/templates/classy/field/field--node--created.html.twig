@@ -15,10 +15,19 @@
  * - field_name: The name of the field.
  * - field_type: The type of the field.
  * - label_display: The display settings for the label.
+ * - is_inline: If false, display an ordinary field.
+ *   If true, display an inline format, suitable for inside elements such as
+ *   <span>, <h2> and so on.
  *
  * @see field.html.twig
+ * @see node_preprocess_field__node()
+ *
+ * @todo Delete as part of https://www.drupal.org/node/3015623
  */
 #}
+{% if not is_inline %}
+  {% include "field.html.twig" %}
+{% else %}
 {%
   set classes = [
     'field',
@@ -32,3 +41,4 @@
     {{ item.content }}
   {%- endfor -%}
 </span>
+{% endif %}
