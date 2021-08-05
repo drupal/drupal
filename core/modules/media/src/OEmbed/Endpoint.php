@@ -151,7 +151,7 @@ class Endpoint {
   public function matchUrl($url) {
     foreach ($this->getSchemes() as $scheme) {
       // Convert scheme into a valid regular expression.
-      $regexp = str_replace(['.', '*'], ['\.', '.*'], $scheme);
+      $regexp = str_replace(['.', '*', '?'], ['\.', '.*', '\?'], $scheme);
       if (preg_match("|^$regexp$|", $url)) {
         return TRUE;
       }
