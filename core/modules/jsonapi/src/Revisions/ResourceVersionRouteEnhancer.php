@@ -105,7 +105,7 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
         $message = 'JSON:API does not yet support resource versioning for this resource type.';
         $message .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
         $message .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
-        throw new CacheableHttpException($cacheability, 501, $message, NULL, 0);
+        throw new CacheableHttpException($cacheability, 501, $message);
       }
       return $defaults;
     }
@@ -151,7 +151,7 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
         ];
         $cacheability = (new CacheableMetadata())->addCacheContexts($cache_contexts);
         $message = 'JSON:API does not support filtering on revisions other than the latest version because a secure Drupal core API does not yet exist to do so.';
-        throw new CacheableHttpException($cacheability, 501, $message, NULL, 0);
+        throw new CacheableHttpException($cacheability, 501, $message);
       }
       // 'latest-version' and 'working-copy' are the only acceptable version
       // identifiers for a collection resource.
