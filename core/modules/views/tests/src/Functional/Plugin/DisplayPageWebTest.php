@@ -160,9 +160,6 @@ class DisplayPageWebTest extends ViewTestBase {
    *
    * @param string $path
    *   Path that will be set as the view page display path.
-   *
-   * @return bool
-   *   Assertion result.
    */
   public function assertPagePath($path) {
     $view = Views::getView('test_page_display_path');
@@ -172,10 +169,10 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->container->get('router.builder')->rebuild();
     // Check if we successfully changed the path.
     $this->drupalGet($path);
-    $success = $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check if we don't get any error on the view edit page.
     $this->drupalGet('admin/structure/views/view/test_page_display_path');
-    return $success && $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

@@ -72,8 +72,7 @@ class SessionTest extends BrowserTestBase {
     $this->drupalGet('user/login');
     $this->submitForm($edit, 'Log in');
     $this->drupalGet('user');
-    $pass = $this->assertSession()->pageTextContains($user->getAccountName());
-    $this->_logged_in = $pass;
+    $this->assertSession()->pageTextContains($user->getAccountName());
 
     $this->drupalGet('session-test/id');
     $matches = [];
