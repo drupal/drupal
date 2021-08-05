@@ -63,6 +63,14 @@ class SysLog implements LoggerInterface {
   public function log($level, $message, array $context = []) {
     global $base_url;
 
+    $format = $this->config->get('format');
+    // If no format is configured then a message will not be written to syslog
+    // so return early. This occurs during installation of the syslog module
+    // before configuration has been written.
+    if (empty($format)) {
+      return;
+    }
+
     // Ensure we have a connection available.
     $this->openConnection();
 
@@ -70,7 +78,7 @@ class SysLog implements LoggerInterface {
     $message_placeholders = $this->parser->parseMessagePlaceholders($message, $context);
     $message = empty($message_placeholders) ? $message : strtr($message, $message_placeholders);
 
-    $entry = strtr($this->config->get('format'), [
+    $entry = strtr($format, [
       '!base_url' => $base_url,
       '!timestamp' => $context['timestamp'],
       '!type' => $context['channel'],
