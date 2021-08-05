@@ -615,7 +615,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertNoText($item->getTitle());
+    $this->assertSession()->pageTextNotContains($item->getTitle());
     // The cache contexts associated with the (in)accessible menu links are
     // bubbled. See DefaultMenuLinkTreeManipulators::menuLinkCheckAccess().
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.permissions');
@@ -850,7 +850,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify deletion.
     $this->drupalGet('');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
   }
 
   /**
@@ -864,7 +864,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link is absent.
     $this->drupalGet('');
-    $this->assertNoText($item->getTitle());
+    $this->assertSession()->pageTextNotContains($item->getTitle());
     $this->enableMenuLink($item);
 
     // Verify menu link is displayed.

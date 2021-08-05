@@ -536,7 +536,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Ensure the error message is not present and the counts before and after
     // calling _file_save_upload_from_form() are correct.
-    $this->assertNoText($error);
+    $this->assertSession()->pageTextNotContains($error);
     $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 0');
     $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 0');
   }

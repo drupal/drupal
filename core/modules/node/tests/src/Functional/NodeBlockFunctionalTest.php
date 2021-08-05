@@ -110,11 +110,11 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // see the block.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($block->label());
+    $this->assertSession()->pageTextNotContains($block->label());
 
     // Test that only the 2 latest nodes are shown.
     $this->drupalLogin($this->webUser);
-    $this->assertNoText($node1->label());
+    $this->assertSession()->pageTextNotContains($node1->label());
     $this->assertSession()->pageTextContains($node2->label());
     $this->assertSession()->pageTextContains($node3->label());
 
@@ -164,7 +164,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('');
     $label = $block->label();
     // Check that block is not displayed on the front page.
-    $this->assertNoText($label);
+    $this->assertSession()->pageTextNotContains($label);
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route']);
 
     // Ensure that a page that does not have a node context can still be cached,
@@ -192,7 +192,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('node/' . $node5->id());
     // Check that block is not displayed on the node page when node is of type
     // 'page'.
-    $this->assertNoText($label);
+    $this->assertSession()->pageTextNotContains($label);
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route', 'timezone']);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
     $this->drupalGet('node/' . $node5->id());

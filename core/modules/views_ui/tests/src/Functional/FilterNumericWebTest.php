@@ -76,9 +76,9 @@ class FilterNumericWebTest extends UITestBase {
     $this->submitForm(['age' => '2'], 'Apply');
     $this->assertSession()->pageTextContains('John');
     $this->assertSession()->pageTextContains('Paul');
-    $this->assertNoText('Ringo');
+    $this->assertSession()->pageTextNotContains('Ringo');
     $this->assertSession()->pageTextContains('George');
-    $this->assertNoText('Meredith');
+    $this->assertSession()->pageTextNotContains('Meredith');
 
     // Change the filter to a single filter to test the schema when the operator
     // is not exposed.
@@ -94,16 +94,16 @@ class FilterNumericWebTest extends UITestBase {
     // Test that the filter works as expected.
     $this->drupalGet('test_view-path');
     $this->assertSession()->pageTextContains('John');
-    $this->assertNoText('Paul');
-    $this->assertNoText('Ringo');
-    $this->assertNoText('George');
-    $this->assertNoText('Meredith');
+    $this->assertSession()->pageTextNotContains('Paul');
+    $this->assertSession()->pageTextNotContains('Ringo');
+    $this->assertSession()->pageTextNotContains('George');
+    $this->assertSession()->pageTextNotContains('Meredith');
     $this->submitForm(['age' => '26'], 'Apply');
-    $this->assertNoText('John');
+    $this->assertSession()->pageTextNotContains('John');
     $this->assertSession()->pageTextContains('Paul');
-    $this->assertNoText('Ringo');
-    $this->assertNoText('George');
-    $this->assertNoText('Meredith');
+    $this->assertSession()->pageTextNotContains('Ringo');
+    $this->assertSession()->pageTextNotContains('George');
+    $this->assertSession()->pageTextNotContains('Meredith');
 
     // Change the filter to a 'between' filter to test if the label and
     // description are set for the 'minimum' filter element.

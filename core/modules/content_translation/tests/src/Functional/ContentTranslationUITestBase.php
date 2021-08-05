@@ -90,7 +90,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->assertCacheContexts($this->defaultCacheContexts);
 
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertNoText('Source language');
+    $this->assertSession()->pageTextNotContains('Source language');
 
     $translation = $this->getTranslation($entity, $default_langcode);
     foreach ($values[$default_langcode] as $property => $value) {
@@ -164,7 +164,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertNoText('Source language');
+    $this->assertSession()->pageTextNotContains('Source language');
 
     // Switch the source language.
     $langcode = 'fr';

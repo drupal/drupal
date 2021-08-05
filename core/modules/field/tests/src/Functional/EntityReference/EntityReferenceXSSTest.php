@@ -77,7 +77,7 @@ class EntityReferenceXSSTest extends BrowserTestBase {
     $this->drupalGet('node/add/article');
     $this->assertSession()->assertEscaped($referenced_node->getTitle());
     // options_buttons does not support optgroups.
-    $this->assertNoText('bundle with markup');
+    $this->assertSession()->pageTextNotContains('bundle with markup');
   }
 
 }

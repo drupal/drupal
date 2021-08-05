@@ -259,10 +259,10 @@ class BulkFormTest extends NodeTestBase {
     $this->assertSession()->pageTextContains("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(3)->getTranslation('en')->label();
     $this->assertSession()->pageTextContains($label);
-    $this->assertNoText("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertSession()->pageTextNotContains("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(4)->label();
     $this->assertSession()->pageTextContains($label);
-    $this->assertNoText("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertSession()->pageTextNotContains("$label (Original translation) - The following content item translations will be deleted:");
 
     $this->submitForm([], 'Delete');
 

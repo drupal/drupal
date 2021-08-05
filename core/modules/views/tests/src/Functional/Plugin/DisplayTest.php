@@ -445,17 +445,17 @@ class DisplayTest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/display/content/page_1/rendering_language');
     if ($expected_node_translatability) {
-      $this->assertNoText($not_supported_text);
+      $this->assertSession()->pageTextNotContains($not_supported_text);
       $this->assertSession()->pageTextContains($supported_text);
     }
     else {
       $this->assertSession()->pageTextContains($not_supported_text);
-      $this->assertNoText($supported_text);
+      $this->assertSession()->pageTextNotContains($supported_text);
     }
 
     $this->drupalGet('admin/structure/views/nojs/display/files/page_1/rendering_language');
     $this->assertSession()->pageTextContains($not_supported_text);
-    $this->assertNoText($supported_text);
+    $this->assertSession()->pageTextNotContains($supported_text);
   }
 
 }

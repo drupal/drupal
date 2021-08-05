@@ -332,7 +332,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');
-    $this->assertNoText($field->label());
+    $this->assertSession()->pageTextNotContains($field->label());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:core.entity_form_display.user.user.register');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 

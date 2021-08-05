@@ -88,8 +88,8 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->assertSession()->pageTextContains($node4->label());
     $this->assertSession()->pageTextContains($node3->label());
     $this->assertSession()->pageTextContains($node2->label());
-    $this->assertNoText($node1->label());
-    $this->assertNoText($page_node->label());
+    $this->assertSession()->pageTextNotContains($node1->label());
+    $this->assertSession()->pageTextNotContains($page_node->label());
     $pos5 = strpos($content, $node5->label());
     $pos4 = strpos($content, $node4->label());
     $pos3 = strpos($content, $node3->label());
@@ -112,9 +112,9 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->assertSession()->pageTextContains($node5->label());
     $this->assertSession()->pageTextContains($node4->label());
     $this->assertSession()->pageTextContains($node3->label());
-    $this->assertNoText($node2->label());
-    $this->assertNoText($node1->label());
-    $this->assertNoText($page_node->label());
+    $this->assertSession()->pageTextNotContains($node2->label());
+    $this->assertSession()->pageTextNotContains($node1->label());
+    $this->assertSession()->pageTextNotContains($page_node->label());
     $pos5 = strpos($content, $node5->label());
     $pos4 = strpos($content, $node4->label());
     $pos3 = strpos($content, $node3->label());

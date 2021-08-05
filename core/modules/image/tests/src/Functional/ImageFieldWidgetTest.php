@@ -35,7 +35,7 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--widget-image-image")]');
     // Verify that the image field widget limits accepted files.
     $this->assertSession()->elementExists('xpath', '//input[contains(@accept, "image/*")]');
-    $this->assertNoText('Image test on [site:name]');
+    $this->assertSession()->pageTextNotContains('Image test on [site:name]');
 
     // Check for allowed image file extensions - default.
     $this->assertSession()->pageTextContains('Allowed types: png gif jpg jpeg.');

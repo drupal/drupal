@@ -65,7 +65,7 @@ class ViewsBulkTest extends ViewTestBase {
     // on the confirm form.
     $this->submitForm(['node_bulk_form[0]' => TRUE], 'Apply to selected items');
     $this->assertSession()->pageTextContains($node_1->getTitle());
-    $this->assertNoText($node_2->getTitle());
+    $this->assertSession()->pageTextNotContains($node_2->getTitle());
 
     // Change the pager limit to 2.
     $this->config('views.view.content')->set('display.default.display_options.pager.options.items_per_page', 2)->save();
@@ -83,7 +83,7 @@ class ViewsBulkTest extends ViewTestBase {
     // selected on the confirm form.
     $this->submitForm(['node_bulk_form[1]' => TRUE], 'Apply to selected items');
     $this->assertSession()->pageTextContains($node_1->getTitle());
-    $this->assertNoText($node_3->getTitle());
+    $this->assertSession()->pageTextNotContains($node_3->getTitle());
   }
 
 }

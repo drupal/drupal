@@ -52,7 +52,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     // Check that teaser mode is viewed.
     $this->assertSession()->pageTextContains('Extra data that should appear only in the teaser for the node.');
     // Make sure body text is not present.
-    $this->assertNoText('Data that should appear only in the body for the node.');
+    $this->assertSession()->pageTextNotContains('Data that should appear only in the body for the node.');
 
     // Test that the correct build mode has been set.
     $build = $this->buildEntityView($node);

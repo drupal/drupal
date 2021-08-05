@@ -148,7 +148,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, $label);
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertSession()->pageTextNotContains(strip_tags(t('@type %title has been created.', $t_args)));
     $this->assertSession()->pageTextContains('Title field is required.');
 
     // Submit the form again but this time with the missing title field. This

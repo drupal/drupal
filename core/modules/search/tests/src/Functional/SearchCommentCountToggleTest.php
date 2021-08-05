@@ -106,7 +106,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->searchableNodes['1 comment']->save();
 
     $this->submitForm($edit, 'Search');
-    $this->assertNoText('0 comments');
+    $this->assertSession()->pageTextNotContains('0 comments');
     $this->assertSession()->pageTextContains('1 comment');
 
     // Test comment count display for nodes with comment status set to Hidden
@@ -116,8 +116,8 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->searchableNodes['1 comment']->save();
 
     $this->submitForm($edit, 'Search');
-    $this->assertNoText('0 comments');
-    $this->assertNoText('1 comment');
+    $this->assertSession()->pageTextNotContains('0 comments');
+    $this->assertSession()->pageTextNotContains('1 comment');
   }
 
 }

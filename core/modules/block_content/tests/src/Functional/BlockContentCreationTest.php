@@ -285,7 +285,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Show the delete confirm form.
     $this->drupalGet('block/3/delete');
-    $this->assertNoText('This will also remove');
+    $this->assertSession()->pageTextNotContains('This will also remove');
   }
 
   /**

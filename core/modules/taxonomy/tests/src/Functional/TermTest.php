@@ -177,9 +177,9 @@ class TermTest extends TaxonomyTestBase {
     // Get Page 3. No parent term and no terms <18 are displayed. Terms 18-25
     // are displayed.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', ['query' => ['page' => 2]]);
-    $this->assertNoText($term1->getName());
+    $this->assertSession()->pageTextNotContains($term1->getName());
     for ($x = 1; $x <= 17; $x++) {
-      $this->assertNoText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextNotContains($terms_array[$x]->getName());
     }
     for ($x = 18; $x <= 25; $x++) {
       $this->assertSession()->pageTextContains($terms_array[$x]->getName());
@@ -325,8 +325,8 @@ class TermTest extends TaxonomyTestBase {
     foreach ($term_names as $term_name) {
       $this->assertSession()->pageTextContains($term_name);
     }
-    $this->assertNoText($term_objects['term1']->getName());
-    $this->assertNoText($term_objects['term2']->getName());
+    $this->assertSession()->pageTextNotContains($term_objects['term1']->getName());
+    $this->assertSession()->pageTextNotContains($term_objects['term2']->getName());
   }
 
   /**

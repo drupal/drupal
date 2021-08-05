@@ -74,7 +74,7 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
     // Make sure will be able to translate the menu item.
-    $this->assertNoText('No strings available.');
+    $this->assertSession()->pageTextNotContains('No strings available.');
 
     // Check that the class is on the item before we translate it.
     $xpath = $this->xpath('//a[contains(@class, "icon-system-admin-structure")]');

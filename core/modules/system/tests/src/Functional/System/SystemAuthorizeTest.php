@@ -54,7 +54,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
     $page_title = $this->randomMachineName(16);
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertSession()->titleEquals("$page_title | Drupal");
-    $this->assertNoText('It appears you have reached this page in error.');
+    $this->assertSession()->pageTextNotContains('It appears you have reached this page in error.');
     $this->assertSession()->pageTextContains('To continue, provide your server connection details');
     // Make sure we see the new connection method added by system_test.
     $this->assertRaw('System Test FileTransfer');

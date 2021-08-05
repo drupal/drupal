@@ -90,7 +90,7 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet($revert_href);
     // $this->submitForm(array(), 'Revert');
     // $this->drupalGet('glossary');
-    // $this->assertNoText($new_title);
+    // $this->assertSession()->pageTextNotContains($new_title);
 
     // Duplicate the view and check that the normal schema of duplicated views is used.
     $this->drupalGet('admin/structure/views');

@@ -31,6 +31,19 @@ class UserAdminTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Gets the xpath selector for a user account.
+   *
+   * @param \Drupal\user\Entity\UserInterface $user
+   *   The user to get the link for.
+   *
+   * @return string
+   *   The xpath selector for the user link.
+   */
+  private static function getLinkSelectorForUser(UserInterface $user): string {
+    return '//td[contains(@class, "views-field-name")]/a[text()="' . $user->getAccountName() . '"]';
+  }
+
+  /**
    * Registers a user and deletes it.
    */
   public function testUserAdmin() {
@@ -88,9 +101,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['permission' => 'administer taxonomy']]);
 
     // Check if the correct users show up.
-    $this->assertNoText($user_a->getAccountName());
-    $this->assertSession()->pageTextContains($user_b->getAccountName());
-    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_b));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->getRoles();
@@ -98,9 +111,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['role' => reset($roles)]]);
 
     // Check if the correct users show up when filtered by role.
-    $this->assertNoText($user_a->getAccountName());
-    $this->assertNoText($user_b->getAccountName());
-    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_b));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Test blocking of a user.
     $account = $user_storage->load($user_c->id());
@@ -125,9 +138,9 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test filtering on admin page for blocked users
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
-    $this->assertNoText($user_a->getAccountName());
-    $this->assertNoText($user_b->getAccountName());
-    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
+    $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_b));
+    $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = [];

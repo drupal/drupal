@@ -428,7 +428,7 @@ class FormTest extends BrowserTestBase {
         'multiple_no_default',
     ];
     foreach ($no_errors as $key) {
-      $this->assertNoText($form[$key]['#title'] . ' field is required.');
+      $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
     }
 
     $expected_errors = [

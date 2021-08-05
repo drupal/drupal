@@ -174,7 +174,7 @@ class StatisticsAdminTest extends BrowserTestBase {
 
     // Verify that no hit URL is found.
     $this->drupalGet('admin/reports/pages');
-    $this->assertNoText('node/' . $this->testNode->id());
+    $this->assertSession()->pageTextNotContains('node/' . $this->testNode->id());
 
     $result = Database::getConnection()->select('node_counter', 'nc')
       ->fields('nc', ['daycount'])

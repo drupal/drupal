@@ -277,7 +277,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Test that the admin user can still access the contact form even though
     // the flood limit was reached.
     $this->drupalLogin($this->adminUser);
-    $this->assertNoText('Try again later.');
+    $this->assertSession()->pageTextNotContains('Try again later.');
   }
 
   /**

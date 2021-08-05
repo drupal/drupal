@@ -54,7 +54,7 @@ class InstallerExistingConfigSyncDriectoryProfileMismatchTest extends InstallerE
     $this->assertSession()->pageTextContains('The selected installation profile minimal does not match the profile stored in configuration testing_config_install_multilingual.');
 
     // Ensure there is no continuation button.
-    $this->assertNoText('Save and continue');
+    $this->assertSession()->pageTextNotContains('Save and continue');
     $this->assertSession()->buttonNotExists('edit-submit');
   }
 

@@ -29,7 +29,7 @@ class DateFormatsLockedTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists('admin/config/regional/date-time/formats/manage/short');
     $this->assertSession()->linkByHrefNotExists('admin/config/regional/date-time/formats/manage/html_date');
     $this->assertSession()->pageTextContains('Fallback date format');
-    $this->assertNoText('short (locked)');
+    $this->assertSession()->pageTextNotContains('short (locked)');
 
     // Locked date formats are not editable.
     $this->drupalGet('admin/config/regional/date-time/formats/manage/short');

@@ -343,7 +343,7 @@ class ThemeUiTest extends BrowserTestBase {
 
     file_put_contents($file_path, Yaml::encode($compatible_info));
     $this->drupalGet('admin/appearance');
-    $this->assertNoText($incompatible_themes_message);
+    $this->assertSession()->pageTextNotContains($incompatible_themes_message);
     $page->clickLink("Install $theme_name theme");
     $assert_session->addressEquals('admin/appearance');
     $assert_session->pageTextContains("The $theme_name theme has been installed");
@@ -364,7 +364,7 @@ class ThemeUiTest extends BrowserTestBase {
 
       file_put_contents($file_path, Yaml::encode($compatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertNoText($incompatible_themes_message);
+      $this->assertSession()->pageTextNotContains($incompatible_themes_message);
     }
     // Uninstall the theme and ensure that incompatible themes message is not
     // displayed for themes that are not installed.
@@ -373,7 +373,7 @@ class ThemeUiTest extends BrowserTestBase {
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertNoText($incompatible_themes_message);
+      $this->assertSession()->pageTextNotContains($incompatible_themes_message);
     }
   }
 

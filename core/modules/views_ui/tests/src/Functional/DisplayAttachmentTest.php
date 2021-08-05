@@ -98,7 +98,7 @@ class DisplayAttachmentTest extends UITestBase {
     $this->submitForm([], 'Save');
 
     // Check that there is no warning for the removed page display.
-    $this->assertNoText("Plugin ID &#039;page_1&#039; was not found.");
+    $this->assertSession()->pageTextNotContains("Plugin ID 'page_1' was not found.");
 
     // Check that the attachment is no longer linked to the removed display.
     $this->assertSession()->pageTextContains('Not defined');

@@ -197,8 +197,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
 
-    $this->assertNoText('Alternative text field is required.');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->pageTextNotContains('Alternative text field is required.');
+    $this->assertSession()->pageTextNotContains('Title field is required.');
 
     $instance->setSetting('required', 0);
     $instance->setSetting('alt_field_required', 1);
@@ -211,8 +211,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
 
-    $this->assertNoText('Alternative text field is required.');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->pageTextNotContains('Alternative text field is required.');
+    $this->assertSession()->pageTextNotContains('Title field is required.');
   }
 
   /**

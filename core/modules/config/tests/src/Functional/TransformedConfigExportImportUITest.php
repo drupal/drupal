@@ -48,8 +48,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
   public function testTransformedExportImport() {
     // After installation there is no snapshot but a new site name.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText('Warning message');
-    $this->assertNoText('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('Warning message');
+    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
 
     // Tests changes of system.site.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');

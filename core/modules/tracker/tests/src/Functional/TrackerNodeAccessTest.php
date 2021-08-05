@@ -104,10 +104,10 @@ class TrackerNodeAccessTest extends BrowserTestBase {
     // User without access should not see private node.
     $this->drupalLogin($no_access_user);
     $this->drupalGet('activity');
-    $this->assertNoText($private_node->getTitle());
+    $this->assertSession()->pageTextNotContains($private_node->getTitle());
     $this->assertSession()->pageTextContains($public_node->getTitle());
     $this->drupalGet('user/' . $access_user->id() . '/activity');
-    $this->assertNoText($private_node->getTitle());
+    $this->assertSession()->pageTextNotContains($private_node->getTitle());
     $this->assertSession()->pageTextContains($public_node->getTitle());
   }
 

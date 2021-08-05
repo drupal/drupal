@@ -394,7 +394,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->pageTextContains('Scale and crop 360×240');
 
     // Check that the previous effect is replaced.
-    $this->assertNoText('Scale and crop 300×200');
+    $this->assertSession()->pageTextNotContains('Scale and crop 300×200');
 
     // Add another scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
