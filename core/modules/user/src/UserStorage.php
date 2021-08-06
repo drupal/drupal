@@ -18,21 +18,24 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
    * {@inheritdoc}
    */
   protected function doSaveFieldItems(ContentEntityInterface $entity, array $names = []) {
-    // The anonymous user account is saved with the fixed user ID of 0.
-    // Therefore we need to check for NULL explicitly.
-    if ($entity->id() === NULL) {
-      $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX([uid]) FROM {' . $this->getBaseTable() . '}')->fetchField());
-      $entity->enforceIsNew();
+    // The anonymous user account is saved with the fixed user ID of 0. MySQL
+    // does not support inserting an ID of 0 into serial field unless the SQL
+    // mode is set to NO_AUTO_VALUE_ON_ZERO.
+    // @todo https://drupal.org/i/3222123 implement a generic fix for all entity
+    //   types.
+    if ($entity->id() === 0) {
+      $database = \Drupal::database();
+      if ($database->databaseType() === 'mysql') {
+        $sql_mode = $database->query("SELECT @@sql_mode;")->fetchField();
+        $database->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
+      }
     }
-    return parent::doSaveFieldItems($entity, $names);
-  }
+    parent::doSaveFieldItems($entity, $names);
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function isColumnSerial($table_name, $schema_name) {
-    // User storage does not use a serial column for the user id.
-    return $table_name == $this->revisionTable && $schema_name == $this->revisionKey;
+    // Reset the SQL mode if we've changed it.
+    if (isset($sql_mode, $database)) {
+      $database->query("SET sql_mode = '$sql_mode'");
+    }
   }
 
   /**

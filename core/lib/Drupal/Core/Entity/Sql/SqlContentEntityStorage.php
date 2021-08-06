@@ -1057,7 +1057,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // SQL database drivers.
         // @see https://www.drupal.org/node/2279395
         $value = SqlContentEntityStorageSchema::castValue($definition->getSchema()['columns'][$column_name], $value);
-        if (!(empty($value) && $this->isColumnSerial($table_name, $schema_name))) {
+        $empty_serial = empty($value) && $this->isColumnSerial($table_name, $schema_name);
+        // The user entity is a very special case where the ID field is a serial
+        // but we need to insert a row with an ID of 0 to represent the
+        // anonymous user.
+        // @todo https://drupal.org/i/3222123 implement a generic fix for all
+        //   entity types.
+        $user_zero = $this->entityTypeId === 'user' && $value === 0;
+        if (!$empty_serial || $user_zero) {
           $record->$schema_name = $value;
         }
       }

@@ -29,16 +29,6 @@ class UserStorageSchema extends SqlContentEntityStorageSchema {
   /**
    * {@inheritdoc}
    */
-  protected function processIdentifierSchema(&$schema, $key) {
-    // The "users" table does not use serial identifiers.
-    if ($key != $this->entityType->getKey('id')) {
-      parent::processIdentifierSchema($schema, $key);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
     $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
     $field_name = $storage_definition->getName();

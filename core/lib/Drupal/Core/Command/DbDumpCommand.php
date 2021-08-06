@@ -410,9 +410,15 @@ class DbDumpCommand extends DbCommandBase {
 use Drupal\Core\Database\Database;
 
 $connection = Database::getConnection();
+// Ensure any tables with a serial column with a value of 0 are created as
+// expected.
+$sql_mode = $connection->query("SELECT @@sql_mode;")->fetchField();
+$connection->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
 
 {{TABLES}}
 
+// Reset the SQL mode.
+$connection->query("SET sql_mode = '$sql_mode'");
 ENDOFSCRIPT;
     return $script;
   }

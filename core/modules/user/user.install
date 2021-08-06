@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the user module.
  */
 
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+
 /**
  * Implements hook_schema().
  */
@@ -96,4 +98,39 @@ function user_install() {
  */
 function user_update_last_removed() {
   return 8100;
+}
+
+/**
+ * Change the users table to use an serial uid field.
+ */
+function user_update_9301(&$sandbox) {
+  if (!\Drupal::entityTypeManager()->getStorage('user') instanceof SqlContentEntityStorage) {
+    return t('The user entity storage is not using an SQL storage, update skipped.');
+  }
+
+  $connection = \Drupal::database();
+  $connection->schema()->dropPrimaryKey('users');
+  if ($connection->databaseType() === 'mysql') {
+    $sql_mode = $connection->query("SELECT @@sql_mode;")->fetchField();
+    $connection->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
+  }
+  $connection->schema()->changeField('users', 'uid', 'uid', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['uid']]);
+  if (isset($sql_mode)) {
+    $connection->query("SET sql_mode = '$sql_mode'");
+  }
+
+  // Update the last installed schema to reflect the change of field type.
+  $installed_storage_schema = \Drupal::keyValue('entity.storage_schema.sql');
+  $field_schema_data = $installed_storage_schema->get('user.field_schema_data.uid');
+  $field_schema_data['users']['fields']['uid']['type'] = 'serial';
+  $installed_storage_schema->set('user.field_schema_data.uid', $field_schema_data);
+
+  // The new PostgreSQL sequence for the uid field needs to start with the last
+  // used user ID + 1 and the sequence must be owned by uid field.
+  // @todo https://drupal.org/i/3028706 implement a generic fix.
+  if ($connection->driver() == 'pgsql') {
+    $maximum_uid = $connection->query('SELECT MAX([uid]) FROM {users}')->fetchField();
+    $seq = $connection->makeSequenceName('users', 'uid');
+    $connection->query("ALTER SEQUENCE " . $seq . " RESTART WITH " . ($maximum_uid + 1) . " OWNED BY {users}.uid");
+  }
 }

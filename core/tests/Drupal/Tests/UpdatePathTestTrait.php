@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 
 /**
@@ -105,6 +106,15 @@ trait UpdatePathTestTrait {
         // Note that resetAll() does not reset the kernel module list so we
         // have to do that manually.
         $this->kernel->updateModules($module_handler_list, $module_handler_list);
+      }
+
+      // Close any open database connections. This allows DB drivers that store
+      // static information to refresh it in the update runner.
+      // @todo https://drupal.org/i/3222121 consider doing this in
+      //   \Drupal\Core\DrupalKernel::initializeContainer() for container
+      //   rebuilds.
+      foreach (Database::getAllConnectionInfo() as $key => $info) {
+        Database::closeConnection(NULL, $key);
       }
 
       // If we have successfully clicked 'Apply pending updates' then we need to
