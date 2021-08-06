@@ -35,7 +35,11 @@ class TimestampDatetimeWidget extends WidgetBase {
       '#default_value' => $default_value,
       '#date_year_range' => '1902:2037',
     ];
-    $element['value']['#description'] = $this->t('Format: %format. Leave blank to use the time of form submission.', ['%format' => Datetime::formatExample($date_format . ' ' . $time_format)]);
+
+    $element['value']['#description'] = $element['#description'] !== ''
+    ? $element['#description']
+    : $this->t('Format: %format. Leave blank to use the time of form submission.',
+    ['%format' => Datetime::formatExample($date_format . ' ' . $time_format)]);
 
     return $element;
   }

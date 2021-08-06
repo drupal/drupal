@@ -79,6 +79,7 @@ class TimestampTest extends BrowserTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'required' => TRUE,
+      'description' => 'Description for timestamp field.',
     ]);
     $this->field->save();
 
@@ -113,6 +114,9 @@ class TimestampTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
+
+    // Make sure the field description is properly displayed.
+    $this->assertSession()->pageTextContains('Description for timestamp field.');
 
     // Make sure the "datetime_timestamp" widget is on the page.
     $this->assertSession()->elementsCount('xpath', '//div[contains(@class, "field--widget-datetime-timestamp") and @id="edit-field-timestamp-wrapper"]', 1);
