@@ -81,9 +81,6 @@ class DisplayBlockTest extends ViewTestBase {
     $this->submitForm($edit, 'Save and edit');
 
     $pattern = '//tr[.//td[text()=:category] and .//td//a[contains(@href, :href)]]';
-
-    // Test that the block was given a default category corresponding to its
-    // base table.
     $arguments = [
       ':href' => Url::fromRoute('block.admin_add', [
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_1',
@@ -91,10 +88,12 @@ class DisplayBlockTest extends ViewTestBase {
       ])->toString(),
       ':category' => 'Lists (Views)',
     ];
+
+    // Test that the block was given a default category corresponding to its
+    // base table.
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
-    $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The test block appears in the category for its base table.');
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($pattern, $arguments));
 
     // Duplicate the block before changing the category.
     $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
@@ -103,8 +102,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Change the block category to a random string.
     $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
-    $link = $this->xpath('//a[@id="views-block-1-block-category" and normalize-space(text())=:category]', $arguments);
-    $this->assertTrue(!empty($link));
+    $this->assertSession()->elementTextEquals('named', ['id', 'views-block-1-block-category'], 'Lists (Views)');
     $this->clickLink('Lists (Views)');
     $category = $this->randomString();
     $this->submitForm(['block_category' => $category], 'Apply');
@@ -119,9 +117,10 @@ class DisplayBlockTest extends ViewTestBase {
     $arguments[':category'] = $category;
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
-    $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The test block appears in the custom category.');
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($pattern, $arguments));
 
+    // Test that the first duplicated test block remains in the original
+    // category.
     $arguments = [
       ':href' => Url::fromRoute('block.admin_add', [
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_2',
@@ -129,9 +128,10 @@ class DisplayBlockTest extends ViewTestBase {
       ])->toString(),
       ':category' => 'Lists (Views)',
     ];
-    $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The first duplicated test block remains in the original category.');
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($pattern, $arguments));
 
+    // Test that the second duplicated test block appears in the custom
+    // category.
     $arguments = [
       ':href' => Url::fromRoute('block.admin_add', [
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_3',
@@ -139,8 +139,7 @@ class DisplayBlockTest extends ViewTestBase {
       ])->toString(),
       ':category' => $category,
     ];
-    $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The second duplicated test block appears in the custom category.');
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($pattern, $arguments));
   }
 
   /**

@@ -157,8 +157,8 @@ class StyleTableTest extends ViewTestBase {
     $this->drupalGet('test-table');
 
     // Test that only one of the job columns still shows.
-    $result = $this->xpath('//thead/tr/th/a[text()="Job"]');
-    $this->assertCount(1, $result, 'Ensure that empty column header is hidden.');
+    // Ensure that empty column header is hidden.
+    $this->assertSession()->elementsCount('xpath', '//thead/tr/th/a[text()="Job"]', 1);
 
     $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job-1 ")]');
     $this->assertCount(0, $result, 'Ensure the empty table cells are hidden.');

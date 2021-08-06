@@ -46,31 +46,15 @@ class UserAccountLinksTest extends BrowserTestBase {
 
     // For a logged-in user, expect the secondary menu to have links for "My
     // account" and "Log out".
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
-      ':menu_class' => 'menu',
-      ':href' => 'user',
-      ':text' => 'My account',
-    ]);
-    $this->assertCount(1, $link, 'My account link is in secondary menu.');
-
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
-      ':menu_class' => 'menu',
-      ':href' => 'user/logout',
-      ':text' => 'Log out',
-    ]);
-    $this->assertCount(1, $link, 'Log out link is in secondary menu.');
+    $this->assertSession()->elementsCount('xpath', '//ul[@class="menu"]/li/a[contains(@href, "user") and text()="My account"]', 1);
+    $this->assertSession()->elementsCount('xpath', '//ul[@class="menu"]/li/a[contains(@href, "user/logout") and text()="Log out"]', 1);
 
     // Log out and get the homepage.
     $this->drupalLogout();
     $this->drupalGet('<front>');
 
     // For a logged-out user, expect the secondary menu to have a "Log in" link.
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
-      ':menu_class' => 'menu',
-      ':href' => 'user/login',
-      ':text' => 'Log in',
-    ]);
-    $this->assertCount(1, $link, 'Log in link is in secondary menu.');
+    $this->assertSession()->elementsCount('xpath', '//ul[@class="menu"]/li/a[contains(@href, "user/login") and text()="Log in"]', 1);
   }
 
   /**
@@ -85,12 +69,7 @@ class UserAccountLinksTest extends BrowserTestBase {
 
     // Verify that the 'My account' link exists before we check for its
     // disappearance.
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
-      ':menu_class' => 'menu',
-      ':href' => 'user',
-      ':text' => 'My account',
-    ]);
-    $this->assertCount(1, $link, 'My account link is in the secondary menu.');
+    $this->assertSession()->elementsCount('xpath', '//ul[@class="menu"]/li/a[contains(@href, "user") and text()="My account"]', 1);
 
     // Verify that the 'My account' link is enabled. Do not assume the value of
     // auto-increment is 1. Use XPath to obtain input element id and name using
@@ -108,12 +87,7 @@ class UserAccountLinksTest extends BrowserTestBase {
     $this->drupalGet('<front>');
 
     // Verify that the 'My account' link does not appear when disabled.
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
-      ':menu_class' => 'menu',
-      ':href' => 'user',
-      ':text' => 'My account',
-    ]);
-    $this->assertCount(0, $link, 'My account link is not in the secondary menu.');
+    $this->assertSession()->elementNotExists('xpath', '//ul[@class="menu"]/li/a[contains(@href, "user") and text()="My account"]');
   }
 
   /**

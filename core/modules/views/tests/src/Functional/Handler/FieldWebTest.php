@@ -91,8 +91,7 @@ class FieldWebTest extends ViewTestBase {
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEquals(range(1, 5), $ids);
     // Check that the rel attribute has the correct value.
-    $result = $this->xpath('//a[@href="' . $href . '"]');
-    $this->assertEquals('nofollow', $result[0]->getAttribute('rel'));
+    $this->assertSession()->elementAttributeContains('xpath', "//a[@href='$href']", 'rel', 'nofollow');
 
     $this->clickLink('ID Sort descending');
     // Check that the output has the expected order (desc).

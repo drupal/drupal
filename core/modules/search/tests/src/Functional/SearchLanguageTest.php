@@ -163,8 +163,7 @@ class SearchLanguageTest extends BrowserTestBase {
 
     $node = $this->searchableNodes[1]->getTranslation('es');
     $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/h3[contains(@lang, "es")]');
-    $result = $this->xpath('//div[@class="layout-content"]//ol/li/h3[contains(@lang, "es")]/a');
-    $this->assertEquals($node->getTitle(), $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//ol/li/h3[contains(@lang, "es")]/a', $node->getTitle());
     $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/p[contains(@lang, "es")]');
 
     // Visit the search form in Spanish language.
@@ -172,8 +171,7 @@ class SearchLanguageTest extends BrowserTestBase {
     $this->submitForm(['keys' => 'First node'], 'Search');
     $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/h3[contains(@lang, "en")]');
     $node = $this->searchableNodes[0]->getTranslation('en');
-    $result = $this->xpath('//div[@class="layout-content"]//ol/li/h3[contains(@lang, "en")]/a');
-    $this->assertEquals($node->getTitle(), $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//ol/li/h3[contains(@lang, "en")]/a', $node->getTitle());
     $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/p[contains(@lang, "en")]');
   }
 

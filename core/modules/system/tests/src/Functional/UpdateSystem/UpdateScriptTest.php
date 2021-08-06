@@ -509,7 +509,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('No pending updates.');
     $this->assertSession()->linkNotExists('Administration pages');
-    $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
+    $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
     $this->clickLink('Front page');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -524,7 +524,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('No pending updates.');
     $this->assertSession()->linkExists('Administration pages');
-    $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
+    $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
     $this->clickLink('Administration pages');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -568,7 +568,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Updates were attempted.');
     $this->assertSession()->linkExists('logged');
     $this->assertSession()->linkExists('Administration pages');
-    $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
+    $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
     $this->clickLink('Administration pages');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -644,7 +644,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Updates were attempted.');
     $this->assertSession()->linkExists('logged');
     $this->assertSession()->linkExists('Administration pages');
-    $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
+    $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
     $this->clickLink('Administration pages');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -714,7 +714,7 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Verify that there are no links to different parts of the workflow.
     $this->assertSession()->linkNotExists('Administration pages');
-    $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
+    $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
     $this->assertSession()->linkNotExists('logged');
 
     // Verify the front page can be visited following the upgrade.
