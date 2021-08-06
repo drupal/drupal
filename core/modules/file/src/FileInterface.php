@@ -14,6 +14,15 @@ use Drupal\Core\Entity\EntityChangedInterface;
 interface FileInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
+   * Indicates that the file is permanent and should not be deleted.
+   *
+   * Temporary files older than the system.file.temporary_maximum_age will be
+   * removed during cron runs if cleanup is not disabled. (Permanent files will
+   * not be removed during the file garbage collection process.)
+   */
+  const STATUS_PERMANENT = 1;
+
+  /**
    * Returns the name of the file.
    *
    * This may differ from the basename of the URI if the file is renamed to

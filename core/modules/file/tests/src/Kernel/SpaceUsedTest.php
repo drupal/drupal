@@ -3,6 +3,7 @@
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 /**
  * Tests the spaceUsed() function.
@@ -40,7 +41,7 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The file entity.
    */
-  protected function createFileWithSize($uri, $size, $uid, $status = FILE_STATUS_PERMANENT) {
+  protected function createFileWithSize($uri, $size, $uid, $status = FileInterface::STATUS_PERMANENT) {
     file_put_contents($uri, $this->randomMachineName($size));
     $file = File::create([
       'uri' => $uri,
@@ -63,15 +64,15 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
 
     // Test the status fields
     $this->assertEquals(4, $file->spaceUsed(NULL, 0));
-    $this->assertEquals(370, $file->spaceUsed(NULL, FILE_STATUS_PERMANENT));
+    $this->assertEquals(370, $file->spaceUsed());
 
     // Test both the user and status.
     $this->assertEquals(0, $file->spaceUsed(1, 0));
-    $this->assertEquals(0, $file->spaceUsed(1, FILE_STATUS_PERMANENT));
+    $this->assertEquals(0, $file->spaceUsed(1));
     $this->assertEquals(1, $file->spaceUsed(2, 0));
-    $this->assertEquals(70, $file->spaceUsed(2, FILE_STATUS_PERMANENT));
+    $this->assertEquals(70, $file->spaceUsed(2));
     $this->assertEquals(3, $file->spaceUsed(3, 0));
-    $this->assertEquals(300, $file->spaceUsed(3, FILE_STATUS_PERMANENT));
+    $this->assertEquals(300, $file->spaceUsed(3));
   }
 
 }

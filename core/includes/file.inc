@@ -21,6 +21,12 @@ use Drupal\Core\File\FileSystemInterface;
  * configuration value will be, if clean-up not disabled, removed during cron
  * runs, but permanent files will not be removed during the file garbage
  * collection process.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\file\FileInterface::STATUS_PERMANENT or
+ *   \Drupal\file\FileInterface::setPermanent() instead.
+ *
+ * @see https://www.drupal.org/node/3022147
  */
 const FILE_STATUS_PERMANENT = 1;
 

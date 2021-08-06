@@ -17,11 +17,11 @@ interface FileStorageInterface extends ContentEntityStorageInterface {
    *   non-temporary files.
    * @param int $status
    *   (Optional) The file status to consider. The default is to only
-   *   consider files in status FILE_STATUS_PERMANENT.
+   *   consider files in status FileInterface::STATUS_PERMANENT.
    *
    * @return int
    *   An integer containing the number of bytes used.
    */
-  public function spaceUsed($uid = NULL, $status = FILE_STATUS_PERMANENT);
+  public function spaceUsed($uid = NULL, $status = FileInterface::STATUS_PERMANENT);
 
 }

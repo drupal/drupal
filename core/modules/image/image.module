@@ -389,7 +389,7 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
 
     // Is there a new file?
     if ($file_new) {
-      $file_new->status = FILE_STATUS_PERMANENT;
+      $file_new->setPermanent();
       $file_new->save();
       \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field_storage->uuid());
     }
@@ -428,7 +428,7 @@ function image_field_config_update(FieldConfigInterface $field) {
   if ($uuid_new != $uuid_old) {
     // Save the new file, if present.
     if ($file_new) {
-      $file_new->status = FILE_STATUS_PERMANENT;
+      $file_new->setPermanent();
       $file_new->save();
       \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field->uuid());
     }

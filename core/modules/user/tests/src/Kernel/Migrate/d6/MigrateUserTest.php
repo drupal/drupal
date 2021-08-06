@@ -45,8 +45,8 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
       'filemime' => 'image/jpeg',
       'created' => 1,
       'changed' => 1,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     $file->enforceIsNew();
     file_put_contents($file->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
     $file->save();
@@ -59,8 +59,8 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
       'filemime' => 'image/png',
       'created' => 1,
       'changed' => 1,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     $file->enforceIsNew();
     file_put_contents($file->getFileUri(), file_get_contents('core/tests/fixtures/files/image-2.jpg'));
     $file->save();

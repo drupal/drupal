@@ -152,9 +152,9 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       $field_values = [
         'uri' => $this->files[$index]->uri,
         'uid' => \Drupal::currentUser()->id(),
-        'status' => FILE_STATUS_PERMANENT,
       ];
       $file = File::create($field_values);
+      $file->setPermanent();
       $file->save();
       $fid = $file->id();
       $this->files[$index]->fid = $fid;

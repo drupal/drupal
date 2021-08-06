@@ -34,10 +34,10 @@ class FileNormalizeTest extends NormalizerTestBase {
       'filename' => 'test_1.txt',
       'uri' => 'public://test_1.txt',
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ];
     // Create a new file entity.
     $file = File::create($file_params);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), 'hello world');
     $file->save();
 

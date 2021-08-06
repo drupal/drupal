@@ -560,8 +560,8 @@ function file_save_data($data, $destination = NULL, $replace = FileSystemInterfa
     $file = File::create([
       'uri' => $uri,
       'uid' => $user->id(),
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     // If we are replacing an existing file re-use its database record.
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
@@ -709,7 +709,7 @@ function file_cron() {
   if ($age) {
     $fids = Drupal::entityQuery('file')
       ->accessCheck(FALSE)
-      ->condition('status', FILE_STATUS_PERMANENT, '<>')
+      ->condition('status', FileInterface::STATUS_PERMANENT, '<>')
       ->condition('changed', REQUEST_TIME - $age, '<')
       ->range(0, 100)
       ->execute();
@@ -1782,7 +1782,7 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
 function _views_file_status($choice = NULL) {
   $status = [
     0 => t('Temporary'),
-    FILE_STATUS_PERMANENT => t('Permanent'),
+    FileInterface::STATUS_PERMANENT => t('Permanent'),
   ];
 
   if (isset($choice)) {

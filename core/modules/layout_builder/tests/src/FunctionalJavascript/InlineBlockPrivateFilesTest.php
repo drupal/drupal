@@ -228,8 +228,8 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
       'filename' => $file_name,
       'uri' => "private://$file_name",
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), $this->getFileSecret($file));
     $file->save();
     return $file;

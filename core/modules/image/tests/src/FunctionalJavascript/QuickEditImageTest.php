@@ -91,8 +91,8 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     $file = File::create([
       'uri' => $valid_images[0]->uri,
       'uid' => $this->contentAuthorUser->id(),
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     $file->save();
 
     // Use the first valid image to create a new Node.

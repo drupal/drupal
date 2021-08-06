@@ -139,8 +139,8 @@ EOF;
       'uri' => $path . '/' . $filename,
       'filemime' => 'text/x-gettext-translation',
       'timestamp' => $timestamp,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), $po_header . $text);
     touch(\Drupal::service('file_system')->realpath($file->getFileUri()), $timestamp);
     $file->save();

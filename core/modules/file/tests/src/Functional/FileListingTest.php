@@ -227,8 +227,8 @@ class FileListingTest extends FileFieldTestBase {
       'filemime' => 'text/plain',
       'created' => 1,
       'changed' => 1,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), 'hello world');
 
     // Save it, inserting a new record.

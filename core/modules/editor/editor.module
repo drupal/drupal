@@ -444,8 +444,7 @@ function editor_entity_revision_delete(EntityInterface $entity) {
 /**
  * Records file usage of files referenced by formatted text fields.
  *
- * Every referenced file that does not yet have the FILE_STATUS_PERMANENT state,
- * will be given that state.
+ * Every referenced file that is temporally saved will be resaved as permanent.
  *
  * @param array $uuids
  *   An array of file entity UUIDs.

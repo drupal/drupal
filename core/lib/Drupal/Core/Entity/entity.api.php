@@ -567,7 +567,7 @@ use Drupal\node\Entity\NodeType;
  * Here is an example, using the core File entity:
  * @code
  * $fids = Drupal::entityQuery('file')
- *   ->condition('status', FILE_STATUS_PERMANENT, '<>')
+ *   ->condition('status', \Drupal\file\FileInterface::STATUS_PERMANENT, '<>')
  *   ->condition('changed', REQUEST_TIME - $age, '<')
  *   ->range(0, 100)
  *   ->execute();

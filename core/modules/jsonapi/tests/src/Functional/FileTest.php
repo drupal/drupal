@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
@@ -105,7 +106,7 @@ class FileTest extends ResourceTestBase {
     $file->setFilename('drupal.txt');
     $file->setMimeType('text/plain');
     $file->setFileUri('public://drupal.txt');
-    $file->set('status', FILE_STATUS_PERMANENT);
+    $file->set('status', FileInterface::STATUS_PERMANENT);
     $file->save();
 
     file_put_contents($file->getFileUri(), 'Drupal');

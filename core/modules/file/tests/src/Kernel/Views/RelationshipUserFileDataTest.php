@@ -82,9 +82,8 @@ class RelationshipUserFileDataTest extends KernelTestBase {
       'filemime' => 'image/jpeg',
       'created' => 1,
       'changed' => 1,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
-    $file->enforceIsNew();
+    $file->enforceIsNew()->setPermanent();
     file_put_contents($file->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
     $file->save();
 

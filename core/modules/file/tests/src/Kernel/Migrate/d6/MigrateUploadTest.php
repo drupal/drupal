@@ -44,8 +44,8 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
         'filemime' => 'text/plain',
         'created' => 1,
         'changed' => 1,
-        'status' => FILE_STATUS_PERMANENT,
       ]);
+      $file->setPermanent();
       $file->enforceIsNew();
       file_put_contents($file->getFileUri(), 'hello world');
 

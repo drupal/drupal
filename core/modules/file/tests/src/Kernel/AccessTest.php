@@ -131,8 +131,8 @@ class AccessTest extends KernelTestBase {
       'filename' => 'green-scarf',
       'uri' => 'private://green-scarf',
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     $file->save();
     \Drupal::service('session')->set('anonymous_allowed_file_ids', [$file->id() => $file->id()]);
 

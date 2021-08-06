@@ -124,7 +124,7 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public function isPermanent() {
-    return $this->get('status')->value == FILE_STATUS_PERMANENT;
+    return $this->get('status')->value == static::STATUS_PERMANENT;
   }
 
   /**
@@ -138,7 +138,7 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public function setPermanent() {
-    $this->get('status')->value = FILE_STATUS_PERMANENT;
+    $this->get('status')->value = static::STATUS_PERMANENT;
   }
 
   /**
