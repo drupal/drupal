@@ -144,7 +144,7 @@ class ModulesUninstallForm extends FormBase {
     }
 
     // Sort all modules by their name.
-    uasort($uninstallable, 'system_sort_by_info_name');
+    uasort($uninstallable, [ModuleExtensionList::class, 'sortByName']);
     $validation_reasons = $this->moduleInstaller->validateUninstall(array_keys($uninstallable));
 
     $form['uninstall'] = ['#tree' => TRUE];

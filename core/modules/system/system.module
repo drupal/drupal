@@ -891,16 +891,14 @@ function system_region_list($theme, $show = REGIONS_ALL) {
 
 /**
  * Array sorting callback; sorts modules by their name.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Extension\ExtensionList::sortByName() instead.
+ *
+ * @see https://www.drupal.org/node/3225999
  */
 function system_sort_modules_by_info_name($a, $b) {
-  @trigger_error('system_sort_modules_by_info_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Implement system_sort_by_info_name() instead. See https://www.drupal.org/node/3225624', E_USER_DEPRECATED);
-  return system_sort_by_info_name($a, $b);
-}
-
-/**
- * Array sorting callback; sorts modules by their name.
- */
-function system_sort_by_info_name($a, $b) {
+  @trigger_error('system_sort_modules_by_info_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionList::sortByName() instead. See https://www.drupal.org/node/3225999', E_USER_DEPRECATED);
   return strcasecmp($a->info['name'], $b->info['name']);
 }
 
@@ -910,7 +908,7 @@ function system_sort_by_info_name($a, $b) {
  * Callback for uasort() within
  * \Drupal\system\Controller\SystemController::themesPage().
  *
- * @see system_sort_by_info_name()
+ * @see \Drupal\Core\Extension\Extension::sortByName()
  */
 function system_sort_themes($a, $b) {
   if ($a->is_default) {

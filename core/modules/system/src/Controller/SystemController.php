@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleDependencyMessageTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
@@ -203,7 +204,7 @@ class SystemController extends ControllerBase {
     $config = $this->config('system.theme');
     // Get all available themes.
     $themes = $this->themeHandler->rebuildThemeData();
-    uasort($themes, 'system_sort_by_info_name');
+    uasort($themes, [ThemeExtensionList::class, 'sortByName']);
 
     $theme_default = $config->get('default');
     $theme_groups = ['installed' => [], 'uninstalled' => []];
