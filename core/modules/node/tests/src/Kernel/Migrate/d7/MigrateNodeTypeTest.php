@@ -33,8 +33,6 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
   /**
    * Tests a single node type.
    *
-   * @dataProvider testNodeTypeDataProvider
-   *
    * @param string $id
    *   The node type ID.
    * @param string $label
