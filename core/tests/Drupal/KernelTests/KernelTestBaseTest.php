@@ -175,10 +175,13 @@ class KernelTestBaseTest extends KernelTestBase {
     // which checks the DRUPAL_TEST_IN_CHILD_SITE constant, that is not defined
     // in Kernel tests.
     try {
-      $this->container->get('http_client')->get('http://example.com');
+      /** @var \GuzzleHttp\Psr7\Response $response */
+      $response = $this->container->get('http_client')->head('http://example.com');
+      self::assertEquals(200, $response->getStatusCode());
     }
-    catch (GuzzleException $e) {
-      // Ignore any HTTP errors.
+    catch (\Throwable $e) {
+      // Ignore any HTTP errors, any other exception is considered an error.
+      self::assertInstanceOf(GuzzleException::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
     }
   }
 
