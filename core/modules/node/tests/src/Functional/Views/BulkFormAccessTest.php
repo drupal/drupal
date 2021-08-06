@@ -124,9 +124,7 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->drupalGet('test-node-bulk-form');
     $this->submitForm($edit, 'Apply to selected items');
     // Test that the action message isn't shown.
-    $this->assertNoRaw(new FormattableMarkup('%action was applied to 1 item.', [
-      '%action' => 'Unpublish content',
-    ]));
+    $this->assertSession()->pageTextNotContains("Unpublish content was applied to 1 item.");
     // Re-load the node and check the status.
     $node = Node::load($node->id());
     $this->assertTrue($node->isPublished(), 'The node is still published.');

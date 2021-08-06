@@ -217,7 +217,7 @@ class BlockUiTest extends BrowserTestBase {
     $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getAccountName() . '</div>';
     $this->drupalGet('');
     $this->assertSession()->pageTextNotContains('Test context-aware block');
-    $this->assertNoRaw($expected_text);
+    $this->assertSession()->responseNotContains($expected_text);
 
     $block_url = 'admin/structure/block/add/test_context_aware/classy';
     $arguments = [
@@ -264,7 +264,7 @@ class BlockUiTest extends BrowserTestBase {
 
     // Tests that conditions with missing context are not displayed.
     $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
-    $this->assertNoRaw('No existing type');
+    $this->assertSession()->responseNotContains('No existing type');
     $this->assertSession()->elementNotExists('xpath', '//*[@name="visibility[condition_test_no_existing_type][negate]"]');
   }
 

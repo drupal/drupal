@@ -75,7 +75,7 @@ class DisplayFeedTest extends UITestBase {
     $this->submitForm(['displays[page]' => 'page'], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
-    $this->assertNoRaw('<em>Page</em>');
+    $this->assertSession()->responseNotContains('<em>Page</em>');
 
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');
     $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Page');

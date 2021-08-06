@@ -429,7 +429,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     // Default image should not be displayed.
-    $this->assertNoRaw($default_output);
+    $this->assertSession()->responseNotContains($default_output);
     // User supplied image should be displayed.
     $this->assertRaw($image_output);
 

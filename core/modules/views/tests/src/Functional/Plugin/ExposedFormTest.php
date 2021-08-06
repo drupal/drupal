@@ -243,7 +243,7 @@ class ExposedFormTest extends ViewTestBase {
     // Assert that the only occurrence of `$view->getTitle()` is the title tag
     // now that label has been removed.
     $this->drupalGet('test_exposed_block');
-    $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertSession()->responseNotContains('<strong>Custom</strong> titlealert("hacked!");');
     $this->assertSession()->elementContains('css', 'title', $view->getTitle());
     $this->assertSession()->pageTextMatchesCount(1, '/' . $view->getTitle() . '/');
 
@@ -397,9 +397,9 @@ class ExposedFormTest extends ViewTestBase {
     // Make sure we see the single-escaped string in the raw output.
     $this->assertRaw($escape_1);
     // But no double-escaped string.
-    $this->assertNoRaw($escape_2);
+    $this->assertSession()->responseNotContains($escape_2);
     // And not the raw label, either.
-    $this->assertNoRaw($expected_label);
+    $this->assertSession()->responseNotContains($expected_label);
 
     // Check that the custom field identifier is used in the URL query string.
     $this->submitForm(['sort_order' => 'DESC'], 'Apply');

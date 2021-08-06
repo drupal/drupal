@@ -351,7 +351,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // mode this time.
     $comment_element = $this->cssSelect('.comment-wrapper');
     $this->assertTrue(!empty($comment_element));
-    $this->assertNoRaw('<p>' . $comment_text . '</p>');
+    $this->assertSession()->responseNotContains('<p>' . $comment_text . '</p>');
   }
 
 }

@@ -116,7 +116,7 @@ class ContactPersonalTest extends BrowserTestBase {
     ];
     $this->assertRaw(new FormattableMarkup('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
     // Ensure an unescaped version of the email does not exist anywhere.
-    $this->assertNoRaw($this->webUser->getEmail());
+    $this->assertSession()->responseNotContains($this->webUser->getEmail());
 
     // Test HTML mails.
     $mail_config = $this->config('system.mail');

@@ -99,7 +99,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
       $this->assertRaw('core/themes/' . $this->adminTheme);
     }
     else {
-      $this->assertNoRaw('core/themes/' . $this->adminTheme);
+      $this->assertSession()->responseNotContains('core/themes/' . $this->adminTheme);
     }
   }
 

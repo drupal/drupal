@@ -300,7 +300,7 @@ class LinkFieldTest extends BrowserTestBase {
 
       if ($title_setting === DRUPAL_DISABLED) {
         $this->assertSession()->fieldNotExists("{$field_name}[0][title]");
-        $this->assertNoRaw('placeholder="Enter the text for this link"');
+        $this->assertSession()->responseNotContains('placeholder="Enter the text for this link"');
       }
       else {
         $this->assertRaw('placeholder="Enter the text for this link"');

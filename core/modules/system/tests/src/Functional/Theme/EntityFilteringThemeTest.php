@@ -147,7 +147,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
       foreach ($paths as $path) {
         $this->drupalGet($path);
         $this->assertSession()->statusCodeEquals(200);
-        $this->assertNoRaw($this->xssLabel);
+        $this->assertSession()->responseNotContains($this->xssLabel);
       }
     }
   }

@@ -78,7 +78,7 @@ class CommentRssTest extends CommentTestBase {
     $this->node->set('comment', CommentItemInterface::HIDDEN);
     $this->node->save();
     $this->drupalGet('rss.xml');
-    $this->assertNoRaw($raw);
+    $this->assertSession()->responseNotContains($raw);
   }
 
 }

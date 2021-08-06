@@ -92,7 +92,7 @@ class SearchNodeDiacriticsTest extends BrowserTestBase {
     $edit = ['keys' => 'Enritchment'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertNoRaw('<strong>Enricþment</strong>');
+    $this->assertSession()->responseNotContains('<strong>Enricþment</strong>');
 
     $edit = ['keys' => 'æll'];
     $this->drupalGet('search/node');
@@ -102,7 +102,7 @@ class SearchNodeDiacriticsTest extends BrowserTestBase {
     $edit = ['keys' => 'all'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertNoRaw('<strong>æll</strong>');
+    $this->assertSession()->responseNotContains('<strong>æll</strong>');
     // cSpell:enable
   }
 

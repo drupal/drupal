@@ -333,7 +333,7 @@ class FormTest extends BrowserTestBase {
     $this->drupalLogin($account);
 
     $this->drupalGet(Url::fromRoute('form_test.get_form'));
-    $this->assertNoRaw('form_token');
+    $this->assertSession()->responseNotContains('form_token');
   }
 
   /**
@@ -351,7 +351,7 @@ class FormTest extends BrowserTestBase {
     $edit = [];
     $this->drupalGet('form-test/validate-required-no-title');
     $this->submitForm($edit, 'Submit');
-    $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
+    $this->assertSession()->pageTextNotContains("The form_test_validate_required_form_no_title form was submitted successfully.");
 
     // Check the page for the error class on the textfield.
     $this->assertSession()->elementExists('xpath', '//input[contains(@class, "error")]');
@@ -411,7 +411,7 @@ class FormTest extends BrowserTestBase {
 
     // Verify that the options are escaped as expected.
     $this->assertSession()->assertEscaped('<strong>four</strong>');
-    $this->assertNoRaw('<strong>four</strong>');
+    $this->assertSession()->responseNotContains('<strong>four</strong>');
 
     // Posting without any values should throw validation errors.
     $this->submitForm([], 'Submit');
@@ -662,7 +662,7 @@ class FormTest extends BrowserTestBase {
             $this->assertRaw(new FormattableMarkup($message, $placeholders));
           }
           else {
-            $this->assertNoRaw(new FormattableMarkup($message, $placeholders));
+            $this->assertSession()->responseNotContains(new FormattableMarkup($message, $placeholders));
           }
         }
       }

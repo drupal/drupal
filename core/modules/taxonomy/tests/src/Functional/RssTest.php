@@ -143,7 +143,7 @@ class RssTest extends TaxonomyTestBase {
     // Unpublish the article and check that it is not shown in the feed.
     $node->setUnpublished()->save();
     $this->drupalGet('taxonomy/term/all/feed');
-    $this->assertNoRaw($raw_xml);
+    $this->assertSession()->responseNotContains($raw_xml);
   }
 
 }

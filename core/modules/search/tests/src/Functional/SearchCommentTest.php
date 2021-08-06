@@ -190,7 +190,7 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Verify the evil comment subject is escaped in search results.
     $this->assertRaw('&lt;script&gt;alert(&#039;<strong>subjectkeyword</strong>&#039;);');
-    $this->assertNoRaw('<script>');
+    $this->assertSession()->responseNotContains('<script>');
 
     // Search for the keyword near the evil script tag in the comment body.
     $edit = [
@@ -202,7 +202,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Verify that nearby script tag in the evil comment body is stripped from
     // search results.
     $this->assertRaw('<strong>nearbykeyword</strong>');
-    $this->assertNoRaw('<script>');
+    $this->assertSession()->responseNotContains('<script>');
 
     // Search for contents inside the evil script tag in the comment body.
     $edit = [
@@ -215,7 +215,7 @@ class SearchCommentTest extends BrowserTestBase {
     //   https://www.drupal.org/node/2551135
 
     // Verify there is no script tag in search results.
-    $this->assertNoRaw('<script>');
+    $this->assertSession()->responseNotContains('<script>');
 
     // Hide comments.
     $this->drupalLogin($this->adminUser);

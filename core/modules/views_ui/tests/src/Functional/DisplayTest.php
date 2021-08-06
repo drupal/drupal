@@ -228,15 +228,15 @@ class DisplayTest extends UITestBase {
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
       $escaped = views_ui_truncate($input, 25);
       $this->assertSession()->assertEscaped($escaped);
-      $this->assertNoRaw($xss_markup);
+      $this->assertSession()->responseNotContains($xss_markup);
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
       $this->assertSession()->assertEscaped("View $escaped");
-      $this->assertNoRaw("View $xss_markup");
+      $this->assertSession()->responseNotContains("View $xss_markup");
       $this->assertSession()->assertEscaped("Duplicate $escaped");
-      $this->assertNoRaw("Duplicate $xss_markup");
+      $this->assertSession()->responseNotContains("Duplicate $xss_markup");
       $this->assertSession()->assertEscaped("Delete $escaped");
-      $this->assertNoRaw("Delete $xss_markup");
+      $this->assertSession()->responseNotContains("Delete $xss_markup");
     }
   }
 
@@ -254,7 +254,7 @@ class DisplayTest extends UITestBase {
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);
-    $this->assertNoRaw($display_title);
+    $this->assertSession()->responseNotContains($display_title);
 
     // Ensure that the dropdown buttons are displayed correctly.
     $this->assertSession()->buttonExists('Duplicate ' . $display_title);
@@ -269,7 +269,7 @@ class DisplayTest extends UITestBase {
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);
-    $this->assertNoRaw($display_title);
+    $this->assertSession()->responseNotContains($display_title);
   }
 
   /**

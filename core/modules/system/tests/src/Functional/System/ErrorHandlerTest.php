@@ -58,7 +58,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertRaw('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
     $this->assertRaw('&amp;');
-    $this->assertNoRaw('&amp;amp;');
+    $this->assertSession()->responseNotContains('&amp;amp;');
 
     // Set error reporting to display verbose notices.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
@@ -70,7 +70,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
-    $this->assertNoRaw('<pre class="backtrace">');
+    $this->assertSession()->responseNotContains('<pre class="backtrace">');
 
     // Set error reporting to not collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_SOME)->save();
@@ -79,7 +79,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertNoErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
-    $this->assertNoRaw('<pre class="backtrace">');
+    $this->assertSession()->responseNotContains('<pre class="backtrace">');
 
     // Set error reporting to not show any errors.
     $config->set('error_level', ERROR_REPORTING_HIDE)->save();
@@ -89,7 +89,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertNoErrorMessage($error_warning);
     $this->assertNoErrorMessage($error_user_notice);
     $this->assertNoMessages();
-    $this->assertNoRaw('<pre class="backtrace">');
+    $this->assertSession()->responseNotContains('<pre class="backtrace">');
   }
 
   /**
@@ -161,7 +161,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    */
   public function assertNoErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertNoRaw($message);
+    $this->assertSession()->responseNotContains($message);
   }
 
   /**

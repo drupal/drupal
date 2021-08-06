@@ -80,7 +80,7 @@ class FilterUITest extends UITestBase {
 
     // Tests that we can create a new filter group from UI.
     $this->drupalGet('admin/structure/views/nojs/rearrange-filter/test_filter_groups/page');
-    $this->assertNoRaw('<span>Group 3</span>');
+    $this->assertSession()->elementNotExists('xpath', '//span[text()="Group 3"]');
 
     // Create 2 new groups.
     $this->submitForm([], 'Create new filter group');
@@ -96,7 +96,7 @@ class FilterUITest extends UITestBase {
     $this->submitForm([], 'Remove group 3');
 
     // Group 3 now does not exist.
-    $this->assertNoRaw('<span>Group 3</span>');
+    $this->assertSession()->elementNotExists('xpath', '//span[text()="Group 3"]');
   }
 
   /**

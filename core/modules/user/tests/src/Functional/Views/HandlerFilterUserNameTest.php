@@ -172,7 +172,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $options['query']['uid'] = implode(', ', $users);
 
     $this->drupalGet($path, $options);
-    $this->assertNoRaw('Unable to find user');
+    $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
     foreach ($this->accounts as $account) {
       $this->assertRaw($account->id());
@@ -184,7 +184,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     }, $this->accounts);
 
     $this->drupalGet($path, $options);
-    $this->assertNoRaw('Unable to find user');
+    $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
     foreach ($this->accounts as $account) {
       $this->assertRaw($account->id());

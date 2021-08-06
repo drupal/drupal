@@ -98,14 +98,14 @@ class PageTitleTest extends BrowserTestBase {
 
     // Test the title, checking for the lack of the unfiltered version of the
     // title.
-    $this->assertNoRaw($title);
+    $this->assertSession()->responseNotContains($title);
     // Add </title> to make sure we're checking the title tag, rather than the
     // first 'heading' on the page.
     $this->assertRaw($title_filtered . '</title>');
 
     // Test the slogan.
     // Check the unfiltered version of the slogan is missing.
-    $this->assertNoRaw($slogan);
+    $this->assertSession()->responseNotContains($slogan);
     // Check for the filtered version of the slogan.
     $this->assertRaw($slogan_filtered);
   }

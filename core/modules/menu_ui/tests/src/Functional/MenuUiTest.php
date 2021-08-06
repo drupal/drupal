@@ -268,7 +268,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Make sure there's no delete button on system menus.
     $this->drupalGet('admin/structure/menu/manage/main');
-    $this->assertNoRaw('edit-delete');
+    $this->assertSession()->responseNotContains('edit-delete');
 
     // Try to delete the main menu.
     $this->drupalGet('admin/structure/menu/manage/main/delete');

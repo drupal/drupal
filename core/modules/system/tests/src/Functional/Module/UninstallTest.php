@@ -126,7 +126,7 @@ class UninstallTest extends BrowserTestBase {
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     // Check that the page does not have double escaped HTML tags.
-    $this->assertNoRaw('&lt;label');
+    $this->assertSession()->responseNotContains('&lt;label');
 
     // Make sure our unique cache entry is gone.
     $cached = \Drupal::cache()->get('uninstall_test');

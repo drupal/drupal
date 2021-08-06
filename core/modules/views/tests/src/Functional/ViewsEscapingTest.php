@@ -83,7 +83,7 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->drupalGet('test_field_header_xss');
 
     // Assert that harmful tags are escaped in header label.
-    $this->assertNoRaw('<script>alert("XSS")</script>');
+    $this->assertSession()->responseNotContains('<script>alert("XSS")</script>');
   }
 
 }

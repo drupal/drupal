@@ -71,7 +71,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($node->label());
     $this->assertSession()->pageTextContains('Comments');
     $this->assertRaw('page=1');
-    $this->assertNoRaw('page=2');
+    $this->assertSession()->responseNotContains('page=2');
   }
 
   /**
@@ -103,7 +103,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
     $this->drupalGet('forum/' . $tid);
     $this->assertRaw('page=1');
-    $this->assertNoRaw('page=2');
+    $this->assertSession()->responseNotContains('page=2');
   }
 
 }

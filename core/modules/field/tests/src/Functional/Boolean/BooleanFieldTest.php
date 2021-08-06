@@ -108,7 +108,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[value]", '');
     $this->assertSession()->pageTextContains($this->field->label());
-    $this->assertNoRaw($on);
+    $this->assertSession()->responseNotContains($on);
 
     // Submit and ensure it is accepted.
     $edit = [

@@ -93,7 +93,7 @@ class BulkFormTest extends UserTestBase {
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
-    $this->assertNoRaw($account->label());
+    $this->assertSession()->pageTextNotContains($account->label());
 
     // Remove the user status filter from the view.
     $view = Views::getView('test_user_bulk_form');
