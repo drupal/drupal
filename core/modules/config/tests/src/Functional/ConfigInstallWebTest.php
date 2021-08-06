@@ -234,7 +234,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
       // Ignore failed deletes.
     }
     $this->drupalGet('/admin/reports/status');
-    $this->assertRaw(t('The directory %directory does not exist.', ['%directory' => $directory]));
+    $this->assertSession()->pageTextContains("The directory $directory does not exist.");
   }
 
 }

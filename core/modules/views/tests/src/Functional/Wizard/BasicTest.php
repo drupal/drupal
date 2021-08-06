@@ -170,7 +170,7 @@ class BasicTest extends WizardTestBase {
     $view4['rest_export[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view4, 'Save and edit');
-    $this->assertRaw(t('The view %view has been saved.', ['%view' => $view4['label']]));
+    $this->assertSession()->pageTextContains("The view {$view4['label']} has been saved.");
 
     // Check that the REST export path works. JSON will work, as all core
     // formats will be allowed. JSON and XML by default.

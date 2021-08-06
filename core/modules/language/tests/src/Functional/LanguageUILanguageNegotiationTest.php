@@ -529,7 +529,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/url');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(t('The domain for %language may only contain the domain name, not a trailing slash, protocol and/or port.', ['%language' => 'Italian']));
+    $this->assertSession()->pageTextContains("The domain for Italian may only contain the domain name, not a trailing slash, protocol and/or port.");
 
     // Build the link we're going to test.
     $link = 'it.example.com' . rtrim(base_path(), '/') . '/admin';

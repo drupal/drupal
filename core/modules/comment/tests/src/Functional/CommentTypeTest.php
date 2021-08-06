@@ -161,15 +161,8 @@ class CommentTypeTest extends CommentTestBase {
 
     // Attempt to delete the comment type, which should not be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
-    $this->assertRaw(
-      t('%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', ['%label' => $type->label()])
-    );
-    $this->assertRaw(
-      t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', [
-        '%label' => 'foo',
-        '%field' => 'node.foo',
-      ])
-    );
+    $this->assertSession()->pageTextContains($type->label() . ' is used by 1 comment on your site. You can not remove this comment type until you have removed all of the ' . $type->label() . ' comments.');
+    $this->assertSession()->pageTextContains('foo is used by the node.foo field on your site. You can not remove this comment type until you have removed the field.');
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the comment and the field.
@@ -177,9 +170,7 @@ class CommentTypeTest extends CommentTestBase {
     $field_storage->delete();
     // Attempt to delete the comment type, which should now be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
-    $this->assertRaw(
-      t('Are you sure you want to delete the comment type %type?', ['%type' => $type->id()])
-    );
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the comment type ' . $type->id() . '?');
     $this->assertSession()->pageTextContains('This action cannot be undone.');
 
     // Test exception thrown when re-using an existing comment type.
@@ -195,7 +186,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->submitForm([], 'Delete');
     $this->assertNull(CommentType::load($type->id()), 'Comment type deleted.');
-    $this->assertRaw(t('The comment type %label has been deleted.', ['%label' => $type->label()]));
+    $this->assertSession()->pageTextContains('The comment type ' . $type->label() . ' has been deleted.');
   }
 
 }

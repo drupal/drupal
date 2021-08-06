@@ -190,18 +190,14 @@ class NodeTypeTest extends NodeTestBase {
     $node = $this->drupalCreateNode(['type' => $type->id()]);
     // Attempt to delete the content type, which should not be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
-    $this->assertRaw(
-     t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', ['%type' => $type->label()])
-    );
+    $this->assertSession()->pageTextContains("{$type->label()} is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the {$type->label()} content.");
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the node.
     $node->delete();
     // Attempt to delete the content type, which should now be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
-    $this->assertRaw(
-      t('Are you sure you want to delete the content type %type?', ['%type' => $type->label()])
-    );
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the content type {$type->label()}?");
     $this->assertSession()->pageTextContains('This action cannot be undone.');
 
     // Test that a locked node type could not be deleted.
@@ -276,9 +272,9 @@ class NodeTypeTest extends NodeTestBase {
 
     // Navigate to content type administration screen
     $this->drupalGet('admin/structure/types');
-    $this->assertRaw(t('No content types available. <a href=":link">Add content type</a>.', [
-        ':link' => Url::fromRoute('node.type_add')->toString(),
-      ]));
+    $this->assertSession()->pageTextContains("No content types available. Add content type.");
+    $this->assertSession()->linkExists("Add content type");
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('node.type_add')->toString());
 
     $bundle_info->clearCachedBundles();
     $this->assertCount(0, $bundle_info->getBundleInfo('node'), 'The bundle information service has 0 bundles for the Node entity type.');

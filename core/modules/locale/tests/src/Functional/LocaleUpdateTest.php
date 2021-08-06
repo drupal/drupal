@@ -332,8 +332,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Install');
 
     // Check if translations have been imported.
-    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
-      ['%number' => 7, '%update' => 0, '%delete' => 0]));
+    $this->assertSession()->pageTextContains("One translation file imported. 7 translations were added, 0 translations were updated and 0 translations were removed.");
     // cSpell:disable-next-line
     $this->assertTranslation('Tuesday', 'Dienstag', 'de');
 
@@ -382,8 +381,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Add language');
 
     // Check if the right number of translations are added.
-    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
-      ['%number' => 8, '%update' => 0, '%delete' => 0]));
+    $this->assertSession()->pageTextContains("One translation file imported. 8 translations were added, 0 translations were updated and 0 translations were removed.");
     // cSpell:disable-next-line
     $this->assertTranslation('Extraday', 'extra dag', 'nl');
 

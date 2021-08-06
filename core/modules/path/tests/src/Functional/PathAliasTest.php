@@ -148,21 +148,18 @@ class PathAliasTest extends PathTestBase {
     $this->submitForm($edit, 'Save');
 
     // Confirm no duplicate was created.
-    $this->assertRaw(t('The alias %alias is already in use in this language.', ['%alias' => $edit['alias[0][value]']]));
+    $this->assertSession()->pageTextContains("The alias {$edit['alias[0][value]']} is already in use in this language.");
 
     $edit_upper = $edit;
     $edit_upper['alias[0][value]'] = mb_strtoupper($edit['alias[0][value]']);
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit_upper, 'Save');
-    $this->assertRaw(t('The alias %alias could not be added because it is already in use in this language with different capitalization: %stored_alias.', [
-      '%alias' => $edit_upper['alias[0][value]'],
-      '%stored_alias' => $edit['alias[0][value]'],
-    ]));
+    $this->assertSession()->pageTextContains("The alias {$edit_upper['alias[0][value]']} could not be added because it is already in use in this language with different capitalization: {$edit['alias[0][value]']}.");
 
     // Delete alias.
     $this->drupalGet('admin/config/search/path/edit/' . $pid);
     $this->clickLink('Delete');
-    $this->assertRaw(t('Are you sure you want to delete the URL alias %name?', ['%name' => $edit['alias[0][value]']]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the URL alias {$edit['alias[0][value]']}?");
     $this->submitForm([], 'Delete');
 
     // Confirm that the alias no longer works.
@@ -233,7 +230,7 @@ class PathAliasTest extends PathTestBase {
     $edit['path[0][value]'] = '/node/' . $node3->id();
     $this->drupalGet('admin/config/search/path/edit/' . $pid);
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('The alias %alias is already in use in this language.', ['%alias' => $edit['alias[0][value]']]));
+    $this->assertSession()->pageTextContains("The alias {$edit['alias[0][value]']} is already in use in this language.");
 
     // Create an alias without a starting slash.
     $node5 = $this->drupalCreateNode();

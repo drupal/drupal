@@ -38,8 +38,8 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertRaw(t('Trusted Host Settings'));
-    $this->assertRaw(t('The trusted_host_patterns setting is not configured in settings.php.'));
+    $this->assertSession()->pageTextContains("Trusted Host Settings");
+    $this->assertSession()->pageTextContains("The trusted_host_patterns setting is not configured in settings.php.");
   }
 
   /**
@@ -56,8 +56,8 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertRaw(t('Trusted Host Settings'));
-    $this->assertRaw(t('The trusted_host_patterns setting is set to allow'));
+    $this->assertSession()->pageTextContains("Trusted Host Settings");
+    $this->assertSession()->pageTextContains("The trusted_host_patterns setting is set to allow");
   }
 
   /**

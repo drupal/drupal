@@ -188,9 +188,7 @@ class FilterAdminTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/content/formats/add');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(t('Text format names must be unique. A format named %name already exists.', [
-      '%name' => $name,
-    ]));
+    $this->assertSession()->pageTextContains("Text format names must be unique. A format named $name already exists.");
   }
 
   /**
@@ -268,7 +266,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/add');
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->addressEquals('admin/config/content/formats');
-    $this->assertRaw(t('Added text format %format.', ['%format' => $edit['name']]));
+    $this->assertSession()->pageTextContains("Added text format {$edit['name']}.");
 
     filter_formats_reset();
     $format = FilterFormat::load($edit['format']);
@@ -286,7 +284,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $format->id() . '/disable');
     $this->submitForm([], 'Disable');
     $this->assertSession()->addressEquals('admin/config/content/formats');
-    $this->assertRaw(t('Disabled text format %format.', ['%format' => $edit['name']]));
+    $this->assertSession()->pageTextContains("Disabled text format {$edit['name']}.");
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([RoleInterface::AUTHENTICATED_ID]);
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
     $this->assertFalse($role->hasPermission($format->getPermissionName()), 'The filter permission has been removed from the authenticated role');
@@ -299,7 +297,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $full);
-    $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]));
+    $this->assertSession()->pageTextContains("The text format {$format->label()} has been updated.");
 
     // Switch user.
     $this->drupalLogin($this->webUser);
@@ -365,7 +363,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $full);
-    $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]));
+    $this->assertSession()->pageTextContains("The text format {$format->label()} has been updated.");
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->assertSession()->fieldValueEquals('roles[' . RoleInterface::AUTHENTICATED_ID . ']', $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']']);
 
@@ -391,7 +389,7 @@ class FilterAdminTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/content/formats/manage/basic_html');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertNoRaw(t('The text format %format has been updated.', ['%format' => 'Basic HTML']));
+    $this->assertSession()->pageTextNotContains("The text format Basic HTML has been updated.");
   }
 
   /**

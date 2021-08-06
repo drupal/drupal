@@ -378,8 +378,9 @@ class UserPasswordResetTest extends BrowserTestBase {
     ];
     $this->drupalGet('user/login');
     $this->submitForm($edit, 'Log in');
-    $this->assertRaw(t('Unrecognized username or password. <a href=":password">Forgot your password?</a>',
-      [':password' => Url::fromRoute('user.pass', [], ['query' => ['name' => $edit['name']]])->toString()]));
+    $this->assertSession()->pageTextContains("Unrecognized username or password. Forgot your password?");
+    $this->assertSession()->linkExists("Forgot your password?");
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass', [], ['query' => ['name' => $edit['name']]])->toString());
     unset($edit['pass']);
     $this->drupalGet('user/password', ['query' => ['name' => $edit['name']]]);
     $this->assertSession()->fieldValueEquals('name', $edit['name']);

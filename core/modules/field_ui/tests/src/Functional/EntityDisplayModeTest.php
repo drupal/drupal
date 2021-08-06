@@ -77,7 +77,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("Saved the {$edit['label']} view mode.");
 
     // Test editing the view mode.
     $this->drupalGet('admin/structure/display-modes/view/manage/entity_test.' . $edit['id']);
@@ -92,9 +92,9 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test deleting the view mode.
     $this->clickLink('Delete');
-    $this->assertRaw(t('Are you sure you want to delete the view mode %label?', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the view mode {$edit['label']}?");
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The view mode %label has been deleted.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("The view mode {$edit['label']} has been deleted.");
   }
 
   /**
@@ -131,7 +131,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('Saved the %label form mode.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("Saved the {$edit['label']} form mode.");
 
     // Test editing the form mode.
     $this->drupalGet('admin/structure/display-modes/form/manage/entity_test.' . $edit['id']);
@@ -146,9 +146,9 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test deleting the form mode.
     $this->clickLink('Delete');
-    $this->assertRaw(t('Are you sure you want to delete the form mode %label?', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the form mode {$edit['label']}?");
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The form mode %label has been deleted.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("The form mode {$edit['label']} has been deleted.");
   }
 
   /**

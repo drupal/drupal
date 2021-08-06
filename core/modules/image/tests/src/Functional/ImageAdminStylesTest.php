@@ -68,7 +68,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('admin/config/media/image-styles/add');
     $this->submitForm($edit, 'Create new style');
-    $this->assertRaw(t('Style %name was created.', ['%name' => $style_label]));
+    $this->assertSession()->pageTextContains("Style {$style_label} was created.");
     $options = image_style_options();
     $this->assertArrayHasKey($style_name, $options);
   }
@@ -120,7 +120,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     ];
     $this->drupalGet($admin_path . '/add');
     $this->submitForm($edit, 'Create new style');
-    $this->assertRaw(t('Style %name was created.', ['%name' => $style_label]));
+    $this->assertSession()->pageTextContains("Style {$style_label} was created.");
 
     // Ensure that the expected entity operations are there.
     $this->drupalGet($admin_path);
@@ -257,7 +257,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Confirm that the form submission was successful.
     $this->assertSession()->statusCodeEquals(200);
     $image_crop_effect = $style->getEffect($uuids['image_crop']);
-    $this->assertRaw(t('The image effect %name has been deleted.', ['%name' => $image_crop_effect->label()]));
+    $this->assertSession()->pageTextContains("The image effect {$image_crop_effect->label()} has been deleted.");
     // Confirm that there is no longer a link to the effect.
     $this->assertSession()->linkByHrefNotExists($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
     // Refresh the image style information and verify that the effect was
@@ -305,9 +305,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Confirm that the empty text is correct on the image styles page.
     $this->drupalGet($admin_path);
-    $this->assertRaw(t('There are currently no styles. <a href=":url">Add a new one</a>.', [
-      ':url' => Url::fromRoute('image.style_add')->toString(),
-    ]));
+    $this->assertSession()->pageTextContains("There are currently no styles. Add a new one.");
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('image.style_add')->toString());
 
   }
 
@@ -371,8 +370,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     ];
     $this->drupalGet($style_path . $new_style_name . '/delete');
     $this->submitForm($edit, 'Delete');
-    $message = t('The image style %name has been deleted.', ['%name' => $new_style_label]);
-    $this->assertRaw($message);
+    $this->assertSession()->pageTextContains("The image style {$new_style_label} has been deleted.");
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
@@ -523,7 +521,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $this->drupalGet('admin/config/media/image-styles');
     $this->clickLink('Edit');
-    $this->assertRaw(t('Select a new effect'));
+    $this->assertSession()->pageTextContains("Select a new effect");
   }
 
 }

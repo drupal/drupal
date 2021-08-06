@@ -77,7 +77,7 @@ class CKEditorAdminTest extends BrowserTestBase {
       'editor[editor]' => 'ckeditor',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(t('You must configure the selected text editor.'));
+    $this->assertSession()->pageTextContains('You must configure the selected text editor.');
 
     // Ensure the CKEditor editor returns the expected default settings.
     $expected_default_settings = [

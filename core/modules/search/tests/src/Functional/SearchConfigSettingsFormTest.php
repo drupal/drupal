@@ -149,7 +149,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save search page');
 
     // Ensure that the modifications took effect.
-    $this->assertRaw(t('The %label search page has been updated.', ['%label' => 'Dummy search type']));
+    $this->assertSession()->pageTextContains("The Dummy search type search page has been updated.");
     $this->drupalGet('admin/config/search/pages/manage/dummy_search_type');
     $this->assertTrue($this->assertSession()->optionExists('edit-extra-type-settings-boost', 'ii')->isSelected());
   }
@@ -280,7 +280,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $first['path'] = strtolower($this->randomMachineName(8));
     $this->submitForm($first, 'Save');
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
-    $this->assertRaw(t('The %label search page has been added.', ['%label' => $first['label']]));
+    $this->assertSession()->pageTextContains("The {$first['label']} search page has been added.");
 
     // Attempt to add a search page with an existing path.
     $edit = [];
@@ -326,7 +326,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Change the default search page.
     $this->clickLink('Set as default');
-    $this->assertRaw(t('The default search page is now %label. Be sure to check the ordering of your search pages.', ['%label' => $second['label']]));
+    $this->assertSession()->pageTextContains("The default search page is now {$second['label']}. Be sure to check the ordering of your search pages.");
     $this->verifySearchPageOperations($first_id, TRUE, TRUE, TRUE, FALSE);
     $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
 
@@ -345,9 +345,9 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Test deleting.
     $this->clickLink('Delete');
-    $this->assertRaw(t('Are you sure you want to delete the search page %label?', ['%label' => $first['label']]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the search page {$first['label']}?");
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The search page %label has been deleted.', ['%label' => $first['label']]));
+    $this->assertSession()->pageTextContains("The search page {$first['label']} has been deleted.");
     $this->verifySearchPageOperations($first_id, FALSE, FALSE, FALSE, FALSE);
   }
 

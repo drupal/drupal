@@ -36,7 +36,7 @@ class ViewEditTest extends UITestBase {
     $this->clickLink('Delete view');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_view/delete');
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The view %name has been deleted.', ['%name' => $view->label()]));
+    $this->assertSession()->pageTextContains("The view {$view->label()} has been deleted.");
 
     $this->assertSession()->addressEquals('admin/structure/views');
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');

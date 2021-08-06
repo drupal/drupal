@@ -37,7 +37,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalGet('node/add/' . $type_name);
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]));
+    $this->assertSession()->pageTextContains("{$field->getLabel()} field is required.");
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -59,7 +59,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalGet('node/add/' . $type_name);
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]));
+    $this->assertSession()->pageTextContains("{$field->getLabel()} field is required.");
 
     // Create a new node with the uploaded file into the multivalue field.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -105,8 +105,9 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
       // Check that uploading the large file fails (1M limit).
       $this->uploadNodeFile($large_file, $field_name, $type_name);
-      $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', ['%filesize' => format_size($large_file->getSize()), '%maxsize' => format_size($file_limit)]);
-      $this->assertRaw($error_message);
+      $filesize = format_size($large_file->getSize());
+      $maxsize = format_size($file_limit);
+      $this->assertSession()->pageTextContains("The file is {$filesize} exceeding the maximum file size of {$maxsize}.");
     }
 
     // Turn off the max filesize.
@@ -149,8 +150,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Check that the file with the wrong extension cannot be uploaded.
     $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $error_message = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => 'txt']);
-    $this->assertRaw($error_message);
+    $this->assertSession()->pageTextContains("Only files with the following extensions are allowed: txt.");
 
     // Enable extension checking for text and image files.
     $this->updateFileField($field_name, $type_name, ['file_extensions' => "txt $test_file_extension"]);

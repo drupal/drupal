@@ -63,7 +63,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Out of date');
 
     // The setting config_sync_directory is not properly formed.
-    $this->assertRaw(t("Your %file file must define the %setting setting", ['%file' => $this->siteDirectory . '/settings.php', '%setting' => "\$settings['config_sync_directory']"]));
+    $this->assertSession()->pageTextContains("Your {$this->siteDirectory}/settings.php file must define the \$settings['config_sync_directory'] setting");
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');

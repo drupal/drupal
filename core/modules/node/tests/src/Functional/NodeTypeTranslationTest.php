@@ -121,7 +121,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertRaw(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
 
     // Check the name is translated with admin theme for editing.
     $this->drupalGet('admin/appearance');
@@ -129,7 +129,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertRaw(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
   }
 
   /**

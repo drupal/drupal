@@ -66,7 +66,8 @@ class DependencyTest extends ModuleTestBase {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
     $this->drupalGet('admin/modules');
-    $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst('_missing_dependency')]));
+    $this->assertSession()->pageTextContains(Unicode::ucfirst('_missing_dependency') . ' (missing)');
+    $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-dependencies-test"]//span[@class="admin-missing"]', 'missing');
     $this->assertSession()->checkboxNotChecked('modules[system_dependencies_test][enable]');
   }
 
@@ -78,10 +79,8 @@ class DependencyTest extends ModuleTestBase {
     // Test that the system_incompatible_module_version_dependencies_test is
     // marked as having an incompatible dependency.
     $this->drupalGet('admin/modules');
-    $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> version @version)', [
-      '@module' => 'System incompatible module version test (>2.0)',
-      '@version' => '1.0',
-    ]));
+    $this->assertSession()->pageTextContains('System incompatible module version test (>2.0) (incompatible with version 1.0)');
+    $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-incompatible-module-version-dependencies-test"]//span[@class="admin-missing"]', 'incompatible with');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_module_version_dependencies_test][enable]');
   }
 
@@ -92,9 +91,8 @@ class DependencyTest extends ModuleTestBase {
     // Test that the system_incompatible_core_version_dependencies_test is
     // marked as having an incompatible dependency.
     $this->drupalGet('admin/modules');
-    $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', [
-      '@module' => 'System core incompatible semver test',
-    ]));
+    $this->assertSession()->pageTextContains('System core incompatible semver test (incompatible with this version of Drupal core)');
+    $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-incompatible-core-version-dependencies-test"]//span[@class="admin-missing"]', 'incompatible with');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_core_version_dependencies_test][enable]');
   }
 

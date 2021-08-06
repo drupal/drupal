@@ -33,8 +33,8 @@ class EmailTest extends BrowserTestBase {
     $edit['email_required'] = ' ';
     $this->drupalGet('form-test/email');
     $this->submitForm($edit, 'Submit');
-    $this->assertRaw(t('The email address %mail is not valid.', ['%mail' => 'invalid']));
-    $this->assertRaw(t('@name field is required.', ['@name' => 'Address']));
+    $this->assertSession()->pageTextContains("The email address invalid is not valid.");
+    $this->assertSession()->pageTextContains("Address field is required.");
 
     $edit = [];
     $edit['email_required'] = '  foo.bar@example.com ';

@@ -107,7 +107,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     ];
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
-    $this->assertRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
+    $this->assertSession()->pageTextContains('There are no users matching "' . implode(', ', $users) . '".');
 
     // Pass in an invalid username and a valid username.
     $random_name = $this->randomMachineName();
@@ -119,7 +119,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $users = [$users[0]];
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
-    $this->assertRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
+    $this->assertSession()->pageTextContains('There are no users matching "' . implode(', ', $users) . '".');
 
     // Pass in just valid usernames.
     $users = $this->names;
@@ -129,7 +129,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     ];
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
-    $this->assertNoRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
+    $this->assertSession()->pageTextNotContains('There are no users matching "' . implode(', ', $users) . '".');
   }
 
   /**
@@ -145,7 +145,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $users = array_map('strtolower', $users);
     $options['query']['uid'] = implode(', ', $users);
     $this->drupalGet($path, $options);
-    $this->assertRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
+    $this->assertSession()->pageTextContains('There are no users matching "' . implode(', ', $users) . '".');
 
     // Pass in an invalid target_id in for the entity_autocomplete value format.
     // There should be no errors, but all results should be returned as the
@@ -165,7 +165,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $users = [$users[0]];
 
     $this->drupalGet($path, $options);
-    $this->assertRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
+    $this->assertSession()->pageTextContains('There are no users matching "' . implode(', ', $users) . '".');
 
     // Pass in just valid usernames.
     $users = $this->names;

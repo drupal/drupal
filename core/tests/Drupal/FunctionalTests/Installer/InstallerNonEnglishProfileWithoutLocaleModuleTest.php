@@ -67,9 +67,7 @@ class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBas
 
     // Verify that the confirmation message appears.
     require_once $this->root . '/core/includes/install.inc';
-    $this->assertRaw(t('Congratulations, you installed @drupal!', [
-      '@drupal' => drupal_install_profile_distribution_name(),
-    ]));
+    $this->assertSession()->pageTextContains('Congratulations, you installed Drupal!');
 
     $this->assertFalse(\Drupal::service('module_handler')->moduleExists('locale'), 'The Locale module is not installed.');
     $this->assertTrue(\Drupal::service('module_handler')->moduleExists('language'), 'The Language module is installed.');

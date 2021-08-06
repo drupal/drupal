@@ -43,21 +43,14 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     // Delete zh-cn language code.
     $browser_langcode = 'zh-cn';
     $this->drupalGet('admin/config/regional/language/detection/browser/delete/' . $browser_langcode);
-    $message = t('Are you sure you want to delete @browser_langcode?', [
-      '@browser_langcode' => $browser_langcode,
-    ]);
-    $this->assertRaw($message);
+    $this->assertSession()->pageTextContains("Are you sure you want to delete {$browser_langcode}?");
 
     // Confirm the delete.
     $edit = [];
     $this->drupalGet('admin/config/regional/language/detection/browser/delete/' . $browser_langcode);
     $this->submitForm($edit, 'Confirm');
 
-    // We need raw here because %browser will add HTML.
-    $t_args = [
-      '%browser' => $browser_langcode,
-    ];
-    $this->assertRaw(t('The mapping for the %browser browser language code has been deleted.', $t_args));
+    $this->assertSession()->pageTextContains("The mapping for the {$browser_langcode} browser language code has been deleted.");
 
     // Check we went back to the browser negotiation mapping overview.
     $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
