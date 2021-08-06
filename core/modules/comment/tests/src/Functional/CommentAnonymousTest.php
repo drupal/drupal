@@ -162,7 +162,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->performCommentOperation($anonymous_comment3, 'delete');
 
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $anonymous_comment3->id() . ']');
+    $this->assertSession()->responseNotContains('comments[' . $anonymous_comment3->id() . ']');
     $this->drupalLogout();
 
     // Comment 3 was deleted.

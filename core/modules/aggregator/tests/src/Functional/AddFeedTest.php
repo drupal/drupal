@@ -66,7 +66,7 @@ class AddFeedTest extends AggregatorTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $this->assertSession()->assertEscaped('Test feed title <script>alert(123);</script>');
-    $this->assertNoRaw('Test feed title <script>alert(123);</script>');
+    $this->assertSession()->responseNotContains('Test feed title <script>alert(123);</script>');
 
     // Ensure the feed icon title is escaped.
     $this->assertStringContainsString('class="feed-icon">  Subscribe to Test feed title &lt;script&gt;alert(123);&lt;/script&gt; feed</a>', str_replace(["\n", "\r"], '', $this->getSession()->getPage()->getContent()));

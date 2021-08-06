@@ -65,7 +65,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that an empty block is not displayed.
     $this->assertSession()->pageTextNotContains('Powered by Drupal');
-    $this->assertNoRaw('sidebar-first');
+    $this->assertSession()->responseNotContains('sidebar-first');
   }
 
   /**
@@ -256,7 +256,7 @@ class BlockTest extends BlockTestBase {
     $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block->label()]));
     $this->assertSession()->addressEquals('admin');
-    $this->assertNoRaw($block->id());
+    $this->assertSession()->responseNotContains($block->id());
   }
 
   /**

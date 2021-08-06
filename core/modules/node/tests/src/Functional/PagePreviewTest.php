@@ -326,7 +326,7 @@ class PagePreviewTest extends NodeTestBase {
     $node_type->setPreviewMode(DRUPAL_REQUIRED);
     $node_type->save();
     $this->drupalGet('node/add/page');
-    $this->assertNoRaw('edit-submit');
+    $this->assertSession()->responseNotContains('edit-submit');
     $this->drupalGet('node/add/page');
     $this->submitForm([$title_key => 'Preview'], 'Preview');
     $this->clickLink('Back to content editing');

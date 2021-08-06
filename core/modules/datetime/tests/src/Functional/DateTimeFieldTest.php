@@ -79,7 +79,7 @@ class DateTimeFieldTest extends DateTestBase {
       $id = $match[1];
       $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
       $this->assertRaw($date->format($date_format));
-      $this->assertNoRaw($date->format($time_format));
+      $this->assertSession()->responseNotContains($date->format($time_format));
 
       // Verify the date doesn't change if using a timezone that is UTC+12 when
       // the entity is edited through the form.

@@ -272,7 +272,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit2, 'Save');
 
-    $this->assertNoRaw('Error message');
+    $this->assertSession()->responseNotContains('Error message');
 
     // Create another block with no instances, and test we don't get a
     // confirmation message about deleting instances.

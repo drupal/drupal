@@ -80,8 +80,8 @@ class BlockAdminThemeTest extends BrowserTestBase {
     $this->drupalGet('admin');
 
     // Check if contextual link classes are unavailable.
-    $this->assertNoRaw('<div data-contextual-id="block:block=' . $block->id() . ':langcode=en"></div>');
-    $this->assertNoRaw('contextual-region');
+    $this->assertSession()->responseNotContains('<div data-contextual-id="block:block=' . $block->id() . ':langcode=en"></div>');
+    $this->assertSession()->responseNotContains('contextual-region');
   }
 
 }

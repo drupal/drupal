@@ -420,12 +420,12 @@ class ThemeTest extends BrowserTestBase {
     $this->clickLink('Set as default');
 
     // Check that seven cannot be uninstalled as it is the admin theme.
-    $this->assertNoRaw('Uninstall Seven theme');
+    $this->assertSession()->responseNotContains('Uninstall Seven theme');
     // Check that bartik cannot be uninstalled as it is the default theme.
-    $this->assertNoRaw('Uninstall Bartik theme');
+    $this->assertSession()->responseNotContains('Uninstall Bartik theme');
     // Check that the classy theme cannot be uninstalled as it is a base theme
     // of seven and bartik.
-    $this->assertNoRaw('Uninstall Classy theme');
+    $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Install Stark and set it as the default theme.
     \Drupal::service('theme_installer')->install(['stark']);
@@ -441,7 +441,7 @@ class ThemeTest extends BrowserTestBase {
     $this->assertRaw('Uninstall Seven theme');
     // Check that the classy theme still cannot be uninstalled as it is a
     // base theme of bartik.
-    $this->assertNoRaw('Uninstall Classy theme');
+    $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Change the default theme to stark, stark is second in the list.
     $this->clickLink('Set as default', 1);
@@ -451,7 +451,7 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the classy theme still can't be uninstalled as neither of its
     // base themes have been.
-    $this->assertNoRaw('Uninstall Classy theme');
+    $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Uninstall each of the three themes starting with Bartik.
     $this->clickLink('Uninstall');
@@ -461,7 +461,7 @@ class ThemeTest extends BrowserTestBase {
     $this->assertRaw('The <em class="placeholder">Seven</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.
-    $this->assertNoRaw('Uninstall Classy theme');
+    $this->assertSession()->responseNotContains('Uninstall Classy theme');
   }
 
   /**

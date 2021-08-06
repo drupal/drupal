@@ -207,7 +207,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Check that the fallback format exists and cannot be disabled.
     $this->assertSame($plain, filter_fallback_format(), 'The fallback format is set to plain text.');
     $this->drupalGet('admin/config/content/formats');
-    $this->assertNoRaw('admin/config/content/formats/manage/' . $plain . '/disable');
+    $this->assertSession()->responseNotContains('admin/config/content/formats/manage/' . $plain . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $plain . '/disable');
     $this->assertSession()->statusCodeEquals(403);
 
@@ -451,7 +451,7 @@ class FilterAdminTest extends BrowserTestBase {
     // The format is not used anymore.
     $this->assertSession()->pageTextNotContains('filtered text');
     // The text is not displayed unfiltered or escaped.
-    $this->assertNoRaw($body_value);
+    $this->assertSession()->responseNotContains($body_value);
     $this->assertSession()->assertNoEscaped($body_value);
 
     // Visit the dblog report page.
@@ -467,7 +467,7 @@ class FilterAdminTest extends BrowserTestBase {
     $node->save();
     $this->drupalGet($node->toUrl());
     // The text is not displayed unfiltered or escaped.
-    $this->assertNoRaw($body_value);
+    $this->assertSession()->responseNotContains($body_value);
     $this->assertSession()->assertNoEscaped($body_value);
 
     // Visit the dblog report page.

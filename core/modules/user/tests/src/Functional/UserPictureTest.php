@@ -145,7 +145,7 @@ class UserPictureTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoRaw(StreamWrapperManager::getTarget($file->getFileUri()));
+    $this->assertSession()->responseNotContains(StreamWrapperManager::getTarget($file->getFileUri()));
   }
 
   /**

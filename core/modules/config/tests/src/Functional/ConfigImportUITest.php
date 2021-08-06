@@ -128,11 +128,11 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Import and verify that both do not appear anymore.
     $this->submitForm([], 'Import all');
-    $this->assertNoRaw('<td>' . $name);
-    $this->assertNoRaw('<td>' . $dynamic_name);
-    $this->assertNoRaw('<td>core.extension');
-    $this->assertNoRaw('<td>system.theme');
-    $this->assertNoRaw('<td>automated_cron.settings');
+    $this->assertSession()->responseNotContains('<td>' . $name);
+    $this->assertSession()->responseNotContains('<td>' . $dynamic_name);
+    $this->assertSession()->responseNotContains('<td>core.extension');
+    $this->assertSession()->responseNotContains('<td>system.theme');
+    $this->assertSession()->responseNotContains('<td>automated_cron.settings');
 
     $this->assertSession()->buttonNotExists('Import all');
 
@@ -199,9 +199,9 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Import and verify that both do not appear anymore.
     $this->submitForm([], 'Import all');
-    $this->assertNoRaw('<td>core.extension');
-    $this->assertNoRaw('<td>system.theme');
-    $this->assertNoRaw('<td>automated_cron.settings');
+    $this->assertSession()->responseNotContains('<td>core.extension');
+    $this->assertSession()->responseNotContains('<td>system.theme');
+    $this->assertSession()->responseNotContains('<td>automated_cron.settings');
 
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module uninstalled during import.');
@@ -298,7 +298,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
-    $this->assertNoRaw('&amp;nbsp;');
+    $this->assertSession()->responseNotContains('&amp;nbsp;');
     $this->assertSession()->titleEquals("View changes of $config_name | Drupal");
 
     // The following assertions do not use

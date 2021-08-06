@@ -95,7 +95,7 @@ trait FieldUiTestTrait {
     // contain HTML which will be auto-escaped by Twig.
     $this->assertRaw('field-config-edit-form');
     // Check that the page does not have double escaped HTML tags.
-    $this->assertNoRaw('&amp;lt;');
+    $this->assertSession()->responseNotContains('&amp;lt;');
 
     // Second step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');

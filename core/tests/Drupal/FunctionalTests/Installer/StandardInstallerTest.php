@@ -32,7 +32,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    */
   protected function setUpSite() {
     // Test that the correct theme is being used.
-    $this->assertNoRaw('bartik');
+    $this->assertSession()->responseNotContains('bartik');
     $this->assertRaw('themes/seven/css/theme/install-page.css');
     parent::setUpSite();
   }

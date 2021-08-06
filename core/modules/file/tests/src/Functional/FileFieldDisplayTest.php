@@ -87,7 +87,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->drupalGet('node/' . $nid . '/edit');
     $this->submitForm($edit, 'Save');
 
-    $this->assertNoRaw($default_output);
+    $this->assertSession()->responseNotContains($default_output);
 
     // Add a description and make sure that it is displayed.
     $description = $this->randomMachineName();

@@ -100,7 +100,7 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
         // The XML test fixtures for this method all contain the '8.2.0' release
         // but because '8.2.0' is not in a supported branch it will not be in
         // the available updates.
-        $this->assertNoRaw('8.2.0');
+        $this->assertSession()->responseNotContains('8.2.0');
         switch ($minor_version) {
           case 0:
             // Both stable and unstable releases are available.

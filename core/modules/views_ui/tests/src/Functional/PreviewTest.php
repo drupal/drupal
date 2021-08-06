@@ -93,7 +93,7 @@ class PreviewTest extends UITestBase {
     $this->assertSession()->pageTextContains('Query build time');
     $this->assertSession()->pageTextContains('Query execute time');
     $this->assertSession()->pageTextContains('View render time');
-    $this->assertNoRaw('<strong>Query</strong>');
+    $this->assertSession()->responseNotContains('<strong>Query</strong>');
 
     // Statistics and query.
     $settings->set('ui.show.sql_query.enabled', TRUE)->save();

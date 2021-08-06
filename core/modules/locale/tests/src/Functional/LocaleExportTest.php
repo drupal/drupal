@@ -104,7 +104,7 @@ class LocaleExportTest extends BrowserTestBase {
     // Ensure the customized translations exist in the file.
     $this->assertRaw('msgstr "janvier"');
     // Ensure no untranslated strings exist in the file.
-    $this->assertNoRaw('msgid "February"');
+    $this->assertSession()->responseNotContains('msgid "February"');
 
     // Export only untranslated French translations.
     $this->drupalGet('admin/config/regional/translate/export');
@@ -118,7 +118,7 @@ class LocaleExportTest extends BrowserTestBase {
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');
     // Ensure no customized translations exist in the file.
-    $this->assertNoRaw('msgstr "janvier"');
+    $this->assertSession()->responseNotContains('msgstr "janvier"');
     // Ensure the untranslated strings exist in the file, and with right quotes.
     $this->assertRaw($this->getUntranslatedString());
   }

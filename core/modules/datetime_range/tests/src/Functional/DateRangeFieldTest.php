@@ -94,9 +94,9 @@ class DateRangeFieldTest extends DateTestBase {
       $id = $match[1];
       $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
       $this->assertRaw($start_date->format($date_format));
-      $this->assertNoRaw($start_date->format($time_format));
+      $this->assertSession()->responseNotContains($start_date->format($time_format));
       $this->assertRaw($end_date->format($date_format));
-      $this->assertNoRaw($end_date->format($time_format));
+      $this->assertSession()->responseNotContains($end_date->format($time_format));
 
       // Verify the date doesn't change when entity is edited through the form.
       $entity = EntityTest::load($id);
@@ -500,9 +500,9 @@ class DateRangeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $this->assertRaw($start_date->format($date_format));
-    $this->assertNoRaw($start_date->format($time_format));
+    $this->assertSession()->responseNotContains($start_date->format($time_format));
     $this->assertRaw($end_date->format($date_format));
-    $this->assertNoRaw($end_date->format($time_format));
+    $this->assertSession()->responseNotContains($end_date->format($time_format));
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');

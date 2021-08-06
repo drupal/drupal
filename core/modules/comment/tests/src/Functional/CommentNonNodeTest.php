@@ -324,7 +324,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Delete the comment.
     $this->performCommentOperation($comment1, 'delete');
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $comment1->id() . ']');
+    $this->assertSession()->responseNotContains('comments[' . $comment1->id() . ']');
 
     // Post another comment.
     $comment1 = $this->postComment($this->entity, $this->randomMachineName(), $this->randomMachineName());

@@ -320,7 +320,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalGet($this->adminPath);
     $this->submitForm($edit, 'Save field settings');
     // Verify that the page does not have double escaped HTML tags.
-    $this->assertNoRaw('&amp;lt;');
+    $this->assertSession()->responseNotContains('&amp;lt;');
 
     if (is_string($result)) {
       $this->assertSession()->pageTextContains($result);

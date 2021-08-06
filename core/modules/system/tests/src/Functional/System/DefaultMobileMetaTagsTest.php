@@ -47,7 +47,7 @@ class DefaultMobileMetaTagsTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['system_module_test']);
     $this->drupalGet('');
     foreach ($this->defaultMetaTags as $name => $metatag) {
-      $this->assertNoRaw($metatag);
+      $this->assertSession()->responseNotContains($metatag);
     }
   }
 

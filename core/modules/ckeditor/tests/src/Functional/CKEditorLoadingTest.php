@@ -101,11 +101,11 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // Verify that a single text format hidden input does not exist on the page.
     $this->assertSession()->elementNotExists('xpath', '//input[@type="hidden" and contains(@class, "editor")]');
     // Verify that CKEditor glue JS is absent.
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
+    $this->assertSession()->responseNotContains(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
 
     // On pages where there would never be a text editor, CKEditor JS is absent.
     $this->drupalGet('user');
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
+    $this->assertSession()->responseNotContains(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
 
     // The normal user:
     // - has access to 2 text formats;

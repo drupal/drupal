@@ -90,7 +90,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEquals($image_file_width, $uploaded_image_file_width);
     $this->assertEquals($image_file_height, $uploaded_image_file_height);
-    $this->assertNoRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
+    $this->assertSession()->pageTextNotContains("The image was resized to fit within the maximum allowed dimensions of {$max_width}x{$max_height} pixels.");
 
     // Case 2: max width smaller than uploaded image: image scaled down.
     $test_image = $testing_image_list[1];
@@ -126,7 +126,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
     list($uploaded_image_file_width, $uploaded_image_file_height) = $this->uploadImage($test_image->uri);
     $this->assertEquals($image_file_width, $uploaded_image_file_width);
     $this->assertEquals($image_file_height, $uploaded_image_file_height);
-    $this->assertNoRaw((string) new FormattableMarkup('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', ['%dimensions' => $max_width . 'x' . $max_height]));
+    $this->assertSession()->pageTextNotContains("The image was resized to fit within the maximum allowed dimensions of {$max_width}x{$max_height} pixels.");
 
     // Case 5: only max width dimension was provided and it was smaller than
     // uploaded image: image scaled down.

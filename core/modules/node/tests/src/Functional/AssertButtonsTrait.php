@@ -33,7 +33,7 @@ trait AssertButtonsTrait {
     else {
       // Assert there is a save button.
       $this->assertSession()->buttonExists('Save');
-      $this->assertNoRaw('dropbutton-wrapper');
+      $this->assertSession()->responseNotContains('dropbutton-wrapper');
     }
   }
 

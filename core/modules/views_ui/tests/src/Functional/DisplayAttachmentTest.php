@@ -45,7 +45,7 @@ class DisplayAttachmentTest extends UITestBase {
     $this->submitForm(['displays[page_1]' => 1], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
-    $this->assertNoRaw('<em>Page</em>');
+    $this->assertSession()->responseNotContains('<em>Page</em>');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEquals(t('Page'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');

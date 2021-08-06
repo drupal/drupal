@@ -682,7 +682,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
           $this->assertRaw('edit-source-config-names-viewsviewfiles-display-default-display-options-fields-count-format-plural-string-' . $index);
         }
         else {
-          $this->assertNoRaw('edit-source-config-names-viewsviewfiles-display-default-display-options-fields-count-format-plural-string-' . $index);
+          $this->assertSession()->responseNotContains('edit-source-config-names-viewsviewfiles-display-default-display-options-fields-count-format-plural-string-' . $index);
         }
       }
     }

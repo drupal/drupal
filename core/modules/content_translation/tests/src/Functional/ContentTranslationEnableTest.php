@@ -46,7 +46,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/regional/content-language');
     // The node entity type should not be an option because it has no bundles.
-    $this->assertNoRaw('entity_types[node]');
+    $this->assertSession()->responseNotContains('entity_types[node]');
     // Enable content translation on entity types that have will have a
     // content_translation_uid.
     $edit = [

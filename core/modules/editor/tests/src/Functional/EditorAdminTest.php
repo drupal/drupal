@@ -216,7 +216,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->assertSame('Unicorn Editor', $options[1]->getText(), 'Option 2 in the Text Editor select is "Unicorn Editor".');
     $this->assertTrue($options[0]->hasAttribute('selected'), 'Option 1 ("None") is selected.');
     // Ensure the none option is selected.
-    $this->assertNoRaw('This option is disabled because no modules that provide a text editor are currently enabled.');
+    $this->assertSession()->pageTextNotContains('This option is disabled because no modules that provide a text editor are currently enabled.');
 
     // Select the "Unicorn Editor" editor and click the "Configure" button.
     $edit = [

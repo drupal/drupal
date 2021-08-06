@@ -36,8 +36,8 @@ class MenuLinkSecurityTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_menu_block:tools');
 
     $this->drupalGet('<front>');
-    $this->assertNoRaw('<script>alert("Wild animals")</script>');
-    $this->assertNoRaw('<script>alert("Even more wild animals")</script>');
+    $this->assertSession()->responseNotContains('<script>alert("Wild animals")</script>');
+    $this->assertSession()->responseNotContains('<script>alert("Even more wild animals")</script>');
     $this->assertSession()->assertEscaped('<script>alert("Wild animals")</script>');
     $this->assertSession()->assertEscaped('<script>alert("Even more wild animals")</script>');
   }
