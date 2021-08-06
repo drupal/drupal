@@ -55,7 +55,6 @@ use Drupal\migrate\MigrateException;
  *      source: some_text_field
  *    -
  *      plugin: substr
- *      source: some_text_field
  *      start: 6
  *      length: 10
  * @endcode
