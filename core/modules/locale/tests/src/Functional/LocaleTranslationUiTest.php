@@ -208,9 +208,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // This a confirm form, we do not need any fields changed.
     $this->drupalGet($path);
     $this->submitForm([], 'Delete');
-    // We need raw here because %language and %langcode will add HTML.
-    $t_args = ['%language' => $name, '%langcode' => $langcode];
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args));
+    $this->assertSession()->pageTextContains("The {$name} ({$langcode}) language has been removed.");
     // Reload to remove $name.
     $this->drupalGet($path);
     // Verify that language is no longer found.

@@ -211,7 +211,8 @@ class ManageDisplayTest extends BrowserTestBase {
     ])->save();
 
     $this->drupalGet('admin/structure/types/manage/no_fields/display');
-    $this->assertRaw(t('There are no fields yet added. You can add new fields on the <a href=":link">Manage fields</a> page.', [':link' => Url::fromRoute('entity.node.field_ui_fields', ['node_type' => 'no_fields'])->toString()]));
+    $this->assertSession()->pageTextContains("There are no fields yet added. You can add new fields on the Manage fields page.");
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.node.field_ui_fields', ['node_type' => 'no_fields'])->toString());
   }
 
   /**

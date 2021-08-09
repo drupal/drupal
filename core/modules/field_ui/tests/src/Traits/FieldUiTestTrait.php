@@ -48,17 +48,17 @@ trait FieldUiTestTrait {
       $this->drupalGet($bundle_path);
     }
     $this->submitForm($initial_edit, 'Save and continue');
-    $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', ['%label' => $label]));
+    $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
     // Test Breadcrumbs.
     $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
 
     // Second step: 'Storage settings' form.
     $this->submitForm($storage_edit, 'Save field settings');
-    $this->assertRaw(t('Updated field %label field settings.', ['%label' => $label]));
+    $this->assertSession()->pageTextContains("Updated field $label field settings.");
 
     // Third step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');
-    $this->assertRaw(t('Saved %label configuration.', ['%label' => $label]));
+    $this->assertSession()->pageTextContains("Saved $label configuration.");
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
@@ -99,7 +99,7 @@ trait FieldUiTestTrait {
 
     // Second step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');
-    $this->assertRaw(t('Saved %label configuration.', ['%label' => $label]));
+    $this->assertSession()->pageTextContains("Saved $label configuration.");
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
@@ -123,14 +123,14 @@ trait FieldUiTestTrait {
   public function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
-    $this->assertRaw(t('Are you sure you want to delete the field %label', ['%label' => $label]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the field $label");
 
     // Test Breadcrumbs.
     $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
 
     // Submit confirmation form.
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The field %label has been deleted from the %type content type.', ['%label' => $label, '%type' => $bundle_label]));
+    $this->assertSession()->pageTextContains("The field $label has been deleted from the $bundle_label content type.");
 
     // Check that the field does not appear in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery('//table[@id="field-overview"]//span[@class="label-field" and text()= :label]', [

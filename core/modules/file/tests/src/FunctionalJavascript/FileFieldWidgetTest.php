@@ -210,13 +210,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
     $multiple_field = $this->getSession()->getPage()->findField('files[test_file_field_1_0][]');
     $multiple_field->setValue(implode("\n", $remote_paths));
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $args = [
-      '%field' => $field_name,
-      '@max' => $cardinality,
-      '@count' => 3,
-      '%list' => 'text-2.txt',
-    ];
-    $this->assertRaw(t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args));
+    $this->assertSession()->pageTextContains("Field {$field_name} can only hold {$cardinality} values but there were 3 uploaded. The following files have been omitted as a result: text-2.txt.");
   }
 
   /**

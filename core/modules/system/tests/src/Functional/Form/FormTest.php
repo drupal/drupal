@@ -380,7 +380,7 @@ class FormTest extends BrowserTestBase {
     $edit = [];
     $this->drupalGet('form-test/checkbox');
     $this->submitForm($edit, 'Submit');
-    $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']));
+    $this->assertSession()->pageTextContains("required_checkbox field is required.");
 
     // Now try to submit the form correctly.
     $this->submitForm(['required_checkbox' => 1], 'Submit');
@@ -721,7 +721,7 @@ class FormTest extends BrowserTestBase {
       ];
       $this->drupalGet('form-test/color');
       $this->submitForm($edit, 'Submit');
-      $this->assertRaw(t('%name must be a valid color.', ['%name' => 'Color']));
+      $this->assertSession()->pageTextContains("Color must be a valid color.");
     }
   }
 

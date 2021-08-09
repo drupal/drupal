@@ -154,7 +154,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $invalid_recipients = ['invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com'];
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addContactForm($this->randomMachineName(16), $this->randomMachineName(16), $invalid_recipient, '', FALSE);
-      $this->assertRaw(t('%recipient is an invalid email address.', ['%recipient' => $invalid_recipient]));
+      $this->assertSession()->pageTextContains($invalid_recipient . ' is an invalid email address.');
     }
 
     // Test validation of empty form and recipients fields.
@@ -227,7 +227,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Try adding a form that already exists.
     $this->addContactForm($name, $label, '', '', FALSE);
     $this->assertSession()->pageTextNotContains("Contact form $label has been added.");
-    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     $this->drupalLogout();
 
@@ -249,7 +249,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Your email address field is required.');
 
     $this->submitContact($this->randomMachineName(16), $invalid_recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
-    $this->assertRaw(t('The email address %mail is not valid.', ['%mail' => 'invalid']));
+    $this->assertSession()->pageTextContains('The email address invalid is not valid.');
 
     $this->submitContact($this->randomMachineName(16), $recipients[0], '', $id, $this->randomMachineName(64));
     $this->assertSession()->pageTextContains('Subject field is required.');
@@ -277,7 +277,7 @@ class ContactSitewideTest extends BrowserTestBase {
     }
     // Submit contact form one over limit.
     $this->submitContact($this->randomMachineName(16), $recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
-    $this->assertRaw(t('You cannot send more than %number messages in 10 min. Try again later.', ['%number' => $this->config('contact.settings')->get('flood.limit')]));
+    $this->assertSession()->pageTextContains('You cannot send more than ' . $this->config('contact.settings')->get('flood.limit') . ' messages in 10 min. Try again later.');
 
     // Test listing controller.
     $this->drupalLogin($admin_user);
@@ -606,7 +606,7 @@ class ContactSitewideTest extends BrowserTestBase {
       else {
         $this->drupalGet("admin/structure/contact/manage/{$id}/delete");
         $this->submitForm([], 'Delete');
-        $this->assertRaw(t('The contact form %label has been deleted.', ['%label' => $contact_form->label()]));
+        $this->assertSession()->pageTextContains("The contact form {$contact_form->label()} has been deleted.");
         $this->assertNull(ContactForm::load($id), new FormattableMarkup('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
       }
     }

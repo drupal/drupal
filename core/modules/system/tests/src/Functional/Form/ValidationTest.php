@@ -152,9 +152,9 @@ class ValidationTest extends BrowserTestBase {
    * Tests #pattern validation.
    */
   public function testPatternValidation() {
-    $textfield_error = t('%name field is not in the right format.', ['%name' => 'One digit followed by lowercase letters']);
-    $tel_error = t('%name field is not in the right format.', ['%name' => 'Everything except numbers']);
-    $password_error = t('%name field is not in the right format.', ['%name' => 'Password']);
+    $textfield_error = 'One digit followed by lowercase letters field is not in the right format.';
+    $tel_error = 'Everything except numbers field is not in the right format.';
+    $password_error = 'Password field is not in the right format.';
 
     // Invalid textfield, valid tel.
     $edit = [
@@ -163,9 +163,9 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertRaw($textfield_error);
-    $this->assertNoRaw($tel_error);
-    $this->assertNoRaw($password_error);
+    $this->assertSession()->pageTextContains($textfield_error);
+    $this->assertSession()->pageTextNotContains($tel_error);
+    $this->assertSession()->pageTextNotContains($password_error);
 
     // Valid textfield, invalid tel, valid password.
     $edit = [
@@ -175,9 +175,9 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertNoRaw($textfield_error);
-    $this->assertRaw($tel_error);
-    $this->assertNoRaw($password_error);
+    $this->assertSession()->pageTextNotContains($textfield_error);
+    $this->assertSession()->pageTextContains($tel_error);
+    $this->assertSession()->pageTextNotContains($password_error);
 
     // Non required fields are not validated if empty.
     $edit = [
@@ -186,9 +186,9 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertNoRaw($textfield_error);
-    $this->assertNoRaw($tel_error);
-    $this->assertNoRaw($password_error);
+    $this->assertSession()->pageTextNotContains($textfield_error);
+    $this->assertSession()->pageTextNotContains($tel_error);
+    $this->assertSession()->pageTextNotContains($password_error);
 
     // Invalid password.
     $edit = [
@@ -196,9 +196,9 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertNoRaw($textfield_error);
-    $this->assertNoRaw($tel_error);
-    $this->assertRaw($password_error);
+    $this->assertSession()->pageTextNotContains($textfield_error);
+    $this->assertSession()->pageTextNotContains($tel_error);
+    $this->assertSession()->pageTextContains($password_error);
 
     // The pattern attribute overrides #pattern and is not validated on the
     // server side.
@@ -209,7 +209,7 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertNoRaw(t('%name field is not in the right format.', ['%name' => 'Client side validation']));
+    $this->assertSession()->pageTextNotContains('Client side validation field is not in the right format.');
   }
 
   /**

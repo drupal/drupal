@@ -308,7 +308,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select invalid 'none' option.
     $edit = ['card_1' => '_none'];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('@title field is required.', ['@title' => $field->getName()]));
+    $this->assertSession()->pageTextContains("{$field->getName()} field is required.");
 
     // Submit form: select first option.
     $edit = ['card_1' => 0];

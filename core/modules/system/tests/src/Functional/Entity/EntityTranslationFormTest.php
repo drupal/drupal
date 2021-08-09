@@ -88,7 +88,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $edit = ['language_configuration[language_alterable]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save content type');
-    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
+    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Create a node with language.
     $edit = [];

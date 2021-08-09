@@ -130,9 +130,7 @@ class LanguageListTest extends BrowserTestBase {
     // fields changed.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     $this->submitForm([], 'Delete');
-    // We need raw here because %language and %langcode will add HTML.
-    $t_args = ['%language' => $name, '%langcode' => $langcode];
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args));
+    $this->assertSession()->pageTextContains("The {$name} ({$langcode}) language has been removed.");
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $english]));
     // Verify that language is no longer found.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
@@ -143,9 +141,7 @@ class LanguageListTest extends BrowserTestBase {
     $this->submitForm([], 'Delete');
     // Make sure the "language_count" state has been updated correctly.
     $this->rebuildContainer();
-    // We need raw here because %language and %langcode will add HTML.
-    $t_args = ['%language' => 'French', '%langcode' => 'fr'];
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args));
+    $this->assertSession()->pageTextContains("The French (fr) language has been removed.");
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     // Verify that language is no longer found.
     $this->drupalGet('admin/config/regional/language/delete/fr');
@@ -183,9 +179,7 @@ class LanguageListTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
-    // We need raw here because %language and %langcode will add HTML.
-    $t_args = ['%language' => 'English', '%langcode' => 'en'];
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args));
+    $this->assertSession()->pageTextContains("The English (en) language has been removed.");
     $this->rebuildContainer();
 
     // Ensure we can't delete a locked language.

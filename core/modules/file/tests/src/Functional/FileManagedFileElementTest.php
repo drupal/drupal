@@ -40,7 +40,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           // Submit without a file.
           $this->drupalGet($path);
           $this->submitForm([], 'Save');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [])]));
+          $this->assertSession()->pageTextContains("The file ids are .");
 
           // Submit with a file, but with an invalid form token. Ensure the file
           // was not saved.
@@ -63,12 +63,12 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->submitForm($edit, 'Save');
           $last_fid = $this->getLastFileId();
           $this->assertGreaterThan($last_fid_prior, $last_fid, 'New file got saved.');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
+          $this->assertSession()->pageTextContains("The file ids are $last_fid.");
 
           // Submit no new input, but with a default file.
           $this->drupalGet($path . '/' . $last_fid);
           $this->submitForm([], 'Save');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
+          $this->assertSession()->pageTextContains("The file ids are $last_fid.");
 
           // Upload, then Submit.
           $last_fid_prior = $this->getLastFileId();
@@ -78,7 +78,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $last_fid = $this->getLastFileId();
           $this->assertGreaterThan($last_fid_prior, $last_fid, 'New file got uploaded.');
           $this->submitForm([], 'Save');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
+          $this->assertSession()->pageTextContains("The file ids are $last_fid.");
 
           // Remove, then Submit.
           $remove_button_title = $multiple ? 'Remove selected' : 'Remove';
@@ -90,7 +90,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->drupalGet($path . '/' . $last_fid);
           $this->submitForm($remove_edit, $remove_button_title);
           $this->submitForm([], 'Save');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']));
+          $this->assertSession()->pageTextContains("The file ids are .");
 
           // Upload, then Remove, then Submit.
           $this->drupalGet($path);
@@ -104,7 +104,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->submitForm($remove_edit, $remove_button_title);
 
           $this->submitForm([], 'Save');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']));
+          $this->assertSession()->pageTextContains("The file ids are .");
         }
       }
     }
@@ -129,7 +129,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     // Save the entire form.
     $this->submitForm([], 'Save');
     // Check that two files are saved into a single multiple file element.
-    $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', $fid_list)]));
+    $this->assertSession()->pageTextContains("The file ids are " . implode(',', $fid_list) . ".");
 
     // Delete only the first file.
     $edit = [

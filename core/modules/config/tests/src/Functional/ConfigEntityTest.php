@@ -234,9 +234,9 @@ class ConfigEntityTest extends BrowserTestBase {
     $label1 = $this->randomMachineName();
     $label2 = $this->randomMachineName();
     $label3 = $this->randomMachineName();
-    $message_insert = new FormattableMarkup('%label configuration has been created.', ['%label' => $label1]);
-    $message_update = new FormattableMarkup('%label configuration has been updated.', ['%label' => $label2]);
-    $message_delete = new FormattableMarkup('The test configuration %label has been deleted.', ['%label' => $label2]);
+    $message_insert = "$label1 configuration has been created.";
+    $message_update = "$label2 configuration has been updated.";
+    $message_delete = "The test configuration $label2 has been deleted.";
 
     // Create a configuration entity.
     $edit = [
@@ -247,8 +247,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw($message_insert);
-    $this->assertNoRaw($message_update);
+    $this->assertSession()->pageTextContains($message_insert);
+    $this->assertSession()->pageTextNotContains($message_update);
     $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
 
     // Update the configuration entity.
@@ -259,8 +259,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoRaw($message_insert);
-    $this->assertRaw($message_update);
+    $this->assertSession()->pageTextNotContains($message_insert);
+    $this->assertSession()->pageTextContains($message_update);
     $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
     $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id/delete");
 
@@ -271,8 +271,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoRaw($message_update);
-    $this->assertRaw($message_delete);
+    $this->assertSession()->pageTextNotContains($message_update);
+    $this->assertSession()->pageTextContains($message_delete);
     $this->assertSession()->pageTextNotContains($label1);
     $this->assertSession()->linkByHrefNotExists("admin/structure/config_test/manage/$id");
 
@@ -312,8 +312,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/config_test/add');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $message_insert = new FormattableMarkup('%label configuration has been created.', ['%label' => $edit['label']]);
-    $this->assertRaw($message_insert);
+    $this->assertSession()->pageTextContains('0 configuration has been created.');
     $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/0');
     $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/0/delete');
     $this->drupalGet('admin/structure/config_test/manage/0/delete');

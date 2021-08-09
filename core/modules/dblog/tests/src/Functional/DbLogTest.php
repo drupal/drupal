@@ -474,7 +474,7 @@ class DbLogTest extends BrowserTestBase {
       $link = mb_substr($value, strpos($value, 'admin/reports/dblog/event/'));
       $this->drupalGet($link);
       // Check for full message text on the details page.
-      $this->assertRaw($message);
+      $this->assertSession()->responseContains($message);
     }
     $this->assertNotEmpty($link, 'DBLog event was recorded: [delete user]');
     // Visit random URL (to generate page not found event).

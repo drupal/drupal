@@ -346,7 +346,7 @@ class ForumTest extends BrowserTestBase {
     // Save forum overview.
     $this->drupalGet('admin/structure/forum/');
     $this->submitForm([], 'Save');
-    $this->assertRaw(t('The configuration options have been saved.'));
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     // Delete this second forum.
     $this->deleteForum($delete_forum['tid']);
     // Create forum at the top (root) level.
@@ -403,7 +403,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $original_vocabulary->id());
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('Updated vocabulary %name.', ['%name' => $edit['name']]));
+    $this->assertSession()->pageTextContains("Updated vocabulary {$edit['name']}.");
 
     // Grab the newly edited vocabulary.
     $current_vocabulary = Vocabulary::load($vid);
@@ -586,12 +586,12 @@ class ForumTest extends BrowserTestBase {
     $type = t('Forum topic');
     if ($container) {
       $this->assertSession()->pageTextNotContains("$type $title has been created.");
-      $this->assertRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
+      $this->assertSession()->pageTextContains("The item {$forum['name']} is a forum container, not a forum.");
       return;
     }
     else {
       $this->assertSession()->pageTextContains($type . ' ' . $title . ' has been created.');
-      $this->assertNoRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
+      $this->assertSession()->pageTextNotContains("The item {$forum['name']} is a forum container, not a forum.");
 
       // Verify that the creation message contains a link to a node.
       $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -688,7 +688,7 @@ class ForumTest extends BrowserTestBase {
       $this->drupalGet('node/' . $node->id() . '/delete');
       $this->submitForm([], 'Delete');
       $this->assertSession()->statusCodeEquals($response);
-      $this->assertRaw(t('Forum topic %title has been deleted.', ['%title' => $edit['title[0][value]']]));
+      $this->assertSession()->pageTextContains("Forum topic {$edit['title[0][value]']} has been deleted.");
     }
   }
 

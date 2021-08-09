@@ -61,12 +61,10 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
 
-    $this->assertRaw(t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', [
-      '%field' => t('Language code'),
-      ':url' => 'http://www.w3.org/International/articles/language-tags/',
-    ]));
-
-    $this->assertRaw(t('%field cannot contain any markup.', ['%field' => t('Language name')]));
+    $this->assertSession()->pageTextContains("Language code must be a valid language tag as defined by the W3C.");
+    $this->assertSession()->linkExists("defined by the W3C");
+    $this->assertSession()->linkByHrefExists("http://www.w3.org/International/articles/language-tags/");
+    $this->assertSession()->pageTextContains("Language name cannot contain any markup.");
     $this->assertSession()->addressEquals(Url::fromRoute('language.add'));
 
     // Test adding a custom language with a numeric region code.
@@ -79,10 +77,7 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
-    $this->assertRaw(t(
-      'The language %language has been created and can now be used.',
-      ['%language' => $edit['label']]
-    ));
+    $this->assertSession()->pageTextContains("The language {$edit['label']} has been created and can now be used.");
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
 
     // Test validation of existing language values.
@@ -96,19 +91,13 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
     // Add the language the first time.
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
-    $this->assertRaw(t(
-      'The language %language has been created and can now be used.',
-      ['%language' => $edit['label']]
-    ));
+    $this->assertSession()->pageTextContains("The language {$edit['label']} has been created and can now be used.");
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
 
     // Add the language a second time and confirm that this is not allowed.
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
-    $this->assertRaw(t(
-      'The language %language (%langcode) already exists.',
-      ['%language' => $edit['label'], '%langcode' => $edit['langcode']]
-    ));
+    $this->assertSession()->pageTextContains("The language {$edit['label']} ({$edit['langcode']}) already exists.");
     $this->assertSession()->addressEquals(Url::fromRoute('language.add'));
   }
 

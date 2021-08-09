@@ -57,7 +57,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save content type');
-    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
+    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Make node body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');

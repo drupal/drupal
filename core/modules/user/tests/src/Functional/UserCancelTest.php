@@ -57,7 +57,7 @@ class UserCancelTest extends BrowserTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->assertNoRaw(t('Cancel account'));
+    $this->assertSession()->pageTextNotContains("Cancel account");
 
     // Attempt bogus account cancellation request confirmation.
     $timestamp = $account->getLastLoginTime();
@@ -92,7 +92,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->submitForm([], 'Cancel account');
 
     // Confirm deletion.
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
     $this->assertNull(User::load($account->id()), 'User is not found in the database.');
   }
 
@@ -208,7 +208,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertTrue($account->isBlocked(), 'User has been blocked.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been disabled.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been disabled.");
   }
 
   /**
@@ -265,7 +265,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been disabled.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been disabled.");
 
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -374,7 +374,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
     $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
-    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $this->config('user.settings')->get('anonymous')]));
+    $this->assertSession()->pageTextContains("Your account will be removed and all account information deleted. All of your content will be assigned to the {$this->config('user.settings')->get('anonymous')} user.");
 
     // Confirm account cancellation.
     $timestamp = time();
@@ -408,7 +408,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertEquals($anonymous_user->getDisplayName(), $test_comment->getAuthorName(), 'Comment of the user has been attributed to anonymous user name.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
   }
 
   /**
@@ -438,7 +438,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
     $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
-    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $this->config('user.settings')->get('anonymous')]));
+    $this->assertSession()->pageTextContains("Your account will be removed and all account information deleted. All of your content will be assigned to the {$this->config('user.settings')->get('anonymous')} user.");
 
     // Confirm account cancellation.
     $timestamp = time();
@@ -538,7 +538,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertNull(Comment::load($comment->id()), 'Comment of the user has been deleted.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
   }
 
   /**
@@ -557,12 +557,12 @@ class UserCancelTest extends BrowserTestBase {
     // Delete regular user.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("Are you sure you want to cancel the account {$account->getAccountName()}?");
     $this->assertSession()->pageTextContains('Select the method to cancel the account above.');
 
     // Confirm deletion.
     $this->submitForm([], 'Cancel account');
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
     $this->assertNull(User::load($account->id()), 'User is not found in the database.');
   }
 
@@ -585,12 +585,12 @@ class UserCancelTest extends BrowserTestBase {
     // Delete regular user without email address.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("Are you sure you want to cancel the account {$account->getAccountName()}?");
     $this->assertSession()->pageTextContains('Select the method to cancel the account above.');
 
     // Confirm deletion.
     $this->submitForm([], 'Cancel account');
-    $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
+    $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
     $this->assertNull(User::load($account->id()), 'User is not found in the database.');
   }
 

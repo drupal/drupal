@@ -172,7 +172,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     $this->drupalGet("{$translation_base_url}/fr/add");
     $this->submitForm($edit, 'Save translation');
-    $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
+    $this->assertSession()->pageTextContains('Successfully saved French translation.');
 
     // Check for edit, delete links (and no 'add' link) for French language.
     $this->assertSession()->linkByHrefNotExists("$translation_base_url/fr/add");
@@ -274,7 +274,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
     ];
     $this->submitForm($edit, 'Save translation');
-    $this->assertRaw(t('Successfully updated @language translation.', ['@language' => 'French']));
+    $this->assertSession()->pageTextContains('Successfully updated French translation.');
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
 
     // Expect only slogan in language specific file.
@@ -417,12 +417,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $replacements = ['%label' => t('@label @entity_type', ['@label' => $label, '@entity_type' => mb_strtolower(t('Contact form'))]), '@language' => \Drupal::languageManager()->getLanguage($langcode)->getName()];
 
       $this->drupalGet("$translation_base_url/$langcode/delete");
-      $this->assertRaw(t('Are you sure you want to delete the @language translation of %label?', $replacements));
+      $this->assertSession()->responseContains(t('Are you sure you want to delete the @language translation of %label?', $replacements));
       // Assert link back to list page to cancel delete is present.
       $this->assertSession()->linkByHrefExists($translation_base_url);
 
       $this->submitForm([], 'Delete');
-      $this->assertRaw(t('@language translation of %label was deleted', $replacements));
+      $this->assertSession()->responseContains(t('@language translation of %label was deleted', $replacements));
       $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/add");
       $this->assertSession()->linkByHrefNotExists("translation_base_url/$langcode/edit");
       $this->assertSession()->linkByHrefNotExists("$translation_base_url/$langcode/delete");
@@ -628,7 +628,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet("{$translation_base_url}/fr/add");
     $this->submitForm($edit, 'Save translation');
-    $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
+    $this->assertSession()->pageTextContains('Successfully saved French translation.');
 
     // Check for edit, delete links (and no 'add' link) for French language.
     $this->assertSession()->linkByHrefNotExists("$translation_base_url/fr/add");
@@ -878,7 +878,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Delete French language
     $this->drupalGet('admin/config/regional/language/delete/fr');
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'French', '%langcode' => 'fr']));
+    $this->assertSession()->pageTextContains('The French (fr) language has been removed.');
 
     // Change default language to Tamil.
     $edit = [
@@ -886,12 +886,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(t('Configuration saved.'));
+    $this->assertSession()->pageTextContains('Configuration saved.');
 
     // Delete English language
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'English', '%langcode' => 'en']));
+    $this->assertSession()->pageTextContains('The English (en) language has been removed.');
 
     // Visit account setting translation page, this should not
     // throw any notices.
@@ -1156,7 +1156,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(t('The configuration options have been saved.'));
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 
   /**

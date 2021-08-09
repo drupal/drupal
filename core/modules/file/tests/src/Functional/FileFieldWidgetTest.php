@@ -377,13 +377,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit[$name] = \Drupal::service('file_system')->realpath($test_file_image->getFileUri());
     $this->submitForm($edit, 'Upload');
 
-    $error_message = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => 'txt']);
-    $this->assertRaw($error_message);
+    $this->assertSession()->pageTextContains("Only files with the following extensions are allowed: txt.");
 
     // Upload file with correct extension, check that error message is removed.
     $edit[$name] = \Drupal::service('file_system')->realpath($test_file_text->getFileUri());
     $this->submitForm($edit, 'Upload');
-    $this->assertNoRaw($error_message);
+    $this->assertSession()->pageTextNotContains("Only files with the following extensions are allowed: txt.");
   }
 
   /**

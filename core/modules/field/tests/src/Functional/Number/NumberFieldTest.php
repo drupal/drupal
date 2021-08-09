@@ -104,7 +104,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -122,7 +122,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
   }
 
@@ -209,7 +209,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => $minimum - 1,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name must be higher than or equal to %minimum.', ['%name' => $field_name, '%minimum' => $minimum]));
+    $this->assertSession()->pageTextContains("{$field_name} must be higher than or equal to {$minimum}.");
 
     // Try to set a decimal value
     $this->drupalGet('entity_test/add');
@@ -217,7 +217,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => 1.5,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name is not a valid number.', ['%name' => $field_name]));
+    $this->assertSession()->pageTextContains("{$field_name} is not a valid number.");
 
     // Try to set a value above the maximum value
     $this->drupalGet('entity_test/add');
@@ -225,7 +225,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => $maximum + 1,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name must be lower than or equal to %maximum.', ['%name' => $field_name, '%maximum' => $maximum]));
+    $this->assertSession()->pageTextContains("{$field_name} must be lower than or equal to {$maximum}.");
 
     // Try to set a wrong integer value.
     $this->drupalGet('entity_test/add');
@@ -233,7 +233,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => '20-40',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+    $this->assertSession()->pageTextContains("{$field_name} must be a number.");
 
     // Test with valid entries.
     $valid_entries = [
@@ -352,7 +352,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -370,7 +370,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
   }
 
@@ -437,9 +437,9 @@ class NumberFieldTest extends BrowserTestBase {
     $this->drupalGet($field_configuration_url);
     $this->submitForm($edit, 'Save settings');
     // Check if an error message is shown.
-    $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]));
+    $this->assertSession()->pageTextNotContains("Minimum is not a valid number.");
     // Check if a success message is shown.
-    $this->assertRaw(t('Saved %label configuration.', ['%label' => $field->getLabel()]));
+    $this->assertSession()->pageTextContains("Saved {$field->getLabel()} configuration.");
     // Check if the minimum value was actually set.
     $this->drupalGet($field_configuration_url);
     $this->assertSession()->fieldValueEquals('edit-settings-min', $minimum_value);

@@ -29,9 +29,7 @@ class InstallerTest extends InstallerTestBase {
 
     // Verify that the confirmation message appears.
     require_once $this->root . '/core/includes/install.inc';
-    $this->assertRaw(t('Congratulations, you installed @drupal!', [
-      '@drupal' => drupal_install_profile_distribution_name(),
-    ]));
+    $this->assertSession()->pageTextContains('Congratulations, you installed Drupal!');
 
     // Ensure that the timezone is correct for sites under test after installing
     // interactively.

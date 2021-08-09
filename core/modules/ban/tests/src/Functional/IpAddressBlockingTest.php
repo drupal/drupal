@@ -42,7 +42,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add');
     $ip = $connection->select('ban_ip', 'bi')->fields('bi', ['iid'])->condition('ip', $edit['ip'])->execute()->fetchField();
     $this->assertNotEmpty($ip, 'IP address found in database.');
-    $this->assertRaw(t('The IP address %ip has been banned.', ['%ip' => $edit['ip']]));
+    $this->assertSession()->pageTextContains('The IP address 1.2.3.3 has been banned.');
 
     // Try to block an IP address that's already blocked.
     $edit = [];
@@ -78,7 +78,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $this->submitForm([], 'Add');
     $ip = $connection->select('ban_ip', 'bi')->fields('bi', ['iid'])->condition('ip', $submit_ip)->execute()->fetchField();
     $this->assertNotEmpty($ip, 'IP address found in database');
-    $this->assertRaw(t('The IP address %ip has been banned.', ['%ip' => $submit_ip]));
+    $this->assertSession()->pageTextContains("The IP address $submit_ip has been banned.");
 
     // Submit your own IP address. This fails, although it works when testing
     // manually.

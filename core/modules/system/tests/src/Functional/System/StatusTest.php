@@ -63,7 +63,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Out of date');
 
     // The setting config_sync_directory is not properly formed.
-    $this->assertRaw(t("Your %file file must define the %setting setting", ['%file' => $this->siteDirectory . '/settings.php', '%setting' => "\$settings['config_sync_directory']"]));
+    $this->assertSession()->pageTextContains("Your {$this->siteDirectory}/settings.php file must define the \$settings['config_sync_directory'] setting");
 
     // Set the schema version of update_test_postupdate to a lower version, so
     // update_test_postupdate_update_8001() needs to be executed.

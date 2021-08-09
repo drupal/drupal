@@ -367,7 +367,7 @@ abstract class CommentTestBase extends BrowserTestBase {
 
     if ($operation == 'delete') {
       $this->submitForm([], 'Delete');
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
+      $this->assertSession()->pageTextContains('Deleted 1 comment.');
     }
     else {
       $this->assertSession()->pageTextContains('The update has been performed.');

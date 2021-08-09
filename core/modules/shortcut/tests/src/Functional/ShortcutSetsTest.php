@@ -93,7 +93,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     }
 
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('The shortcut set has been updated.'));
+    $this->assertSession()->pageTextContains("The shortcut set has been updated.");
 
     \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
     // Check to ensure that the shortcut weights have changed and that

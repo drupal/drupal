@@ -88,11 +88,11 @@ class UserCreateTest extends BrowserTestBase {
 
     $config->set('password_strength', TRUE)->save();
     $this->drupalGet('admin/people/create');
-    $this->assertRaw(t('Password strength:'));
+    $this->assertSession()->responseContains("Password strength:");
 
     $config->set('password_strength', FALSE)->save();
     $this->drupalGet('admin/people/create');
-    $this->assertNoRaw(t('Password strength:'));
+    $this->assertSession()->responseNotContains("Password strength:");
 
     // We create two users, notifying one and not notifying the other, to
     // ensure that the tests work in both cases.

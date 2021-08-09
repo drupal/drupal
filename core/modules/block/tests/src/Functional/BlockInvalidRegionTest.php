@@ -45,17 +45,17 @@ class BlockInvalidRegionTest extends BrowserTestBase {
     \Drupal::configFactory()->getEditable('block.block.' . $block->id())->set('region', 'invalid_region')->save();
     $block = Block::load($block->id());
 
-    $warning_message = t('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block->id(), '%region' => 'invalid_region']);
+    $warning_message = 'The block ' . $block->id() . ' was assigned to the invalid region invalid_region and has been disabled.';
 
     // Clearing the cache should disable the test block placed in the invalid region.
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm([], 'Clear all caches');
-    $this->assertRaw($warning_message);
+    $this->assertSession()->pageTextContains($warning_message);
 
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm([], 'Clear all caches');
-    $this->assertNoRaw($warning_message);
+    $this->assertSession()->pageTextNotContains($warning_message);
 
     // Place disabled test block in the invalid region of the default theme.
     \Drupal::configFactory()->getEditable('block.block.' . $block->id())->set('region', 'invalid_region')->save();
@@ -64,7 +64,7 @@ class BlockInvalidRegionTest extends BrowserTestBase {
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm([], 'Clear all caches');
-    $this->assertNoRaw($warning_message);
+    $this->assertSession()->pageTextNotContains($warning_message);
   }
 
 }

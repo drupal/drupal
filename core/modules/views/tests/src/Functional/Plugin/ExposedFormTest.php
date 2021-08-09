@@ -401,7 +401,7 @@ class ExposedFormTest extends ViewTestBase {
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered before submitting the normal form.
-    $this->assertRaw(t('Apply'));
+    $this->assertSession()->responseContains("Apply");
     $this->assertRaw('<div class="views-row">');
 
     $this->submitForm([], 'Submit');
@@ -409,7 +409,7 @@ class ExposedFormTest extends ViewTestBase {
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered after submitting the normal form.
-    $this->assertRaw(t('Apply'));
+    $this->assertSession()->responseContains("Apply");
     $this->assertRaw('<div class="views-row">');
   }
 

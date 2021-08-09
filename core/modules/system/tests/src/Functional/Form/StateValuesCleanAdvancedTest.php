@@ -58,7 +58,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
 
     // Expecting a 200 HTTP code.
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('You WIN!'));
+    $this->assertSession()->pageTextContains("You WIN!");
   }
 
 }

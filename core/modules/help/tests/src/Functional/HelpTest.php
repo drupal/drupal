@@ -73,7 +73,7 @@ class HelpTest extends BrowserTestBase {
     // Verify that introductory help text exists, goes for 100% module coverage.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
-    $this->assertRaw(t('For more information, refer to the help listed on this page or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', [':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org']));
+    $this->assertSession()->responseContains('For more information, refer to the help listed on this page or to the <a href="https://www.drupal.org/documentation">online documentation</a> and <a href="https://www.drupal.org/support">support</a> pages at <a href="https://www.drupal.org">drupal.org</a>.');
 
     // Verify that hook_help() section title and description appear.
     $this->assertSession()->responseContains('<h2>Module overviews</h2>');
@@ -92,7 +92,7 @@ class HelpTest extends BrowserTestBase {
     // Ensure a module which does not provide a module overview page is handled
     // correctly.
     $this->clickLink(\Drupal::moduleHandler()->getName('help_test'));
-    $this->assertRaw(t('No help is available for module %module.', ['%module' => \Drupal::moduleHandler()->getName('help_test')]));
+    $this->assertSession()->pageTextContains('No help is available for module ' . \Drupal::moduleHandler()->getName('help_test'));
 
     // Verify that the order of topics is alphabetical by displayed module
     // name, by checking the order of some modules, including some that would

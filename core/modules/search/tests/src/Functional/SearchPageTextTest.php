@@ -138,7 +138,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = implode(' ', $keys);
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertRaw(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', ['@count' => $limit]));
+    $this->assertSession()->pageTextContains("Your search used too many AND/OR expressions. Only the first {$limit} terms were included in this search.");
 
     // Test that a search on Node or User with no keywords entered generates
     // the "Please enter some keywords" message.

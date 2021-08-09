@@ -123,7 +123,7 @@ class DisplayPathTest extends UITestBase {
     $this->submitForm([], 'Add Page');
     $this->submitForm([], 'Delete Page');
     $this->submitForm([], 'Save');
-    $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));
+    $this->assertSession()->pageTextContains("The view Test view has been saved.");
   }
 
   /**

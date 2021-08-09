@@ -105,13 +105,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->submitForm($edit, 'Apply');
 
     // Note, the undefined index error has two spaces after it.
-    $error = [
-      '%type' => 'Notice',
-      '@message' => 'Undefined index:  ' . $argument_type,
-      '%function' => 'views_handler_argument->validateOptionsForm()',
-    ];
-    $message = t('%type: @message in %function', $error);
-    $this->assertNoRaw($message);
+    $this->assertSession()->pageTextNotContains("Notice: Undefined index:  {$argument_type} in views_handler_argument->validateOptionsForm()");
   }
 
   /**
