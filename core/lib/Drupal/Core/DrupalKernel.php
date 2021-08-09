@@ -15,6 +15,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
@@ -769,7 +770,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $all_profiles = $listing->scan('profile');
       $profiles = array_intersect_key($all_profiles, $this->moduleList);
 
-      $profile_directories = array_map(function ($profile) {
+      $profile_directories = array_map(function (Extension $profile) {
         return $profile->getPath();
       }, $profiles);
       $listing->setProfileDirectories($profile_directories);
