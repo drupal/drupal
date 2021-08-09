@@ -88,9 +88,9 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
     $this->assertEquals('ltr', $direction);
 
     // Verify that the distribution name appears.
-    $this->assertSession()->pageTextContains($this->info['distribution']['name']);
+    $this->assertRaw($this->info['distribution']['name']);
     // Verify that the requested theme is used.
-    $this->assertSession()->responseContains($this->info['distribution']['install']['theme']);
+    $this->assertRaw($this->info['distribution']['install']['theme']);
     // Verify that the "Choose profile" step does not appear.
     $this->assertSession()->pageTextNotContains('profile');
 

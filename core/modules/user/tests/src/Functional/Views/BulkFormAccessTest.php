@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Functional\Views;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\user\Entity\User;
 
 /**
@@ -59,7 +60,11 @@ class BulkFormAccessTest extends UserTestBase {
     $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertSession()->pageTextContains("No access to execute Block the selected user(s) on the User {$no_edit_user->label()}.");
+    $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
+      '%action' => 'Block the selected user(s)',
+      '@entity_type_label' => 'User',
+      '%entity_label' => $no_edit_user->label(),
+    ]));
 
     // Re-load the account "no_edit" and ensure it is not blocked.
     $no_edit_user = User::load($no_edit_user->id());

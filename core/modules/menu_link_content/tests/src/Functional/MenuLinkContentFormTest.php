@@ -86,7 +86,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     $option = $this->assertSession()->optionExists('edit-menu-parent', 'admin:');
     $this->assertTrue($option->isSelected());
     // Test that the field description is present.
-    $this->assertSession()->pageTextContains('The location this menu link points to.');
+    $this->assertRaw('The location this menu link points to.');
 
     $this->submitForm([
       'title[0][value]' => t('Front page'),

@@ -253,17 +253,17 @@ class BasicAuthTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(401);
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('nope');
+    $this->assertRaw('nope');
 
     $account = $this->drupalCreateUser();
     $this->basicAuthGet('/basic_auth_test/state/modify', $account->getAccountName(), $account->pass_raw);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Done');
+    $this->assertRaw('Done');
 
     $this->mink->resetSessions();
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('yep');
+    $this->assertRaw('yep');
   }
 
 }

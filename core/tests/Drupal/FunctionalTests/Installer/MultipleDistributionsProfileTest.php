@@ -55,9 +55,9 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
    */
   protected function setUpLanguage() {
     // Verify that the distribution name appears.
-    $this->assertSession()->pageTextContains('distribution_one');
+    $this->assertRaw('distribution_one');
     // Verify that the requested theme is used.
-    $this->assertSession()->responseContains('bartik');
+    $this->assertRaw('bartik');
     // Verify that the "Choose profile" step does not appear.
     $this->assertSession()->pageTextNotContains('profile');
 

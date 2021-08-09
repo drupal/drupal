@@ -70,7 +70,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Test the add shortcut form UI. Test that the base field description is
     // there.
     $this->drupalGet('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link');
-    $this->assertSession()->pageTextContains('The location this shortcut points to.');
+    $this->assertRaw('The location this shortcut points to.');
 
     // Check that each new shortcut links where it should.
     foreach ($test_cases as $test_path) {
@@ -219,11 +219,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
     ])->save();
     // Test page with HTML tags in title.
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
-    $page_title = "Edit Basic block custom block type";
-    $this->assertSession()->pageTextContains($page_title);
+    $page_title = new FormattableMarkup('Edit %label custom block type', ['%label' => 'Basic block']);
+    $this->assertRaw($page_title);
     // Add shortcut to this page.
     $this->clickLink('Add to Default shortcuts');
-    $this->assertSession()->pageTextContains("Added a shortcut for {$page_title}.");
+    $this->assertRaw(new FormattableMarkup('Added a shortcut for %title.', [
+      '%title' => trim(strip_tags($page_title)),
+    ]));
+
   }
 
   /**

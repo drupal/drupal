@@ -56,7 +56,7 @@ class ColorSafePreviewTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('TEST COLOR PREVIEW');
 
     $this->assertSession()->responseNotContains('<script>alert("security filter test");</script>');
-    $this->assertSession()->responseContains('<h2>TEST COLOR PREVIEW</h2>');
+    $this->assertRaw('<h2>TEST COLOR PREVIEW</h2>');
   }
 
 }

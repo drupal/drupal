@@ -122,7 +122,7 @@ class BooleanFieldTest extends BrowserTestBase {
     // Verify that boolean value is displayed.
     $entity = EntityTest::load($id);
     $this->drupalGet($entity->toUrl());
-    $this->assertSession()->responseContains('<div class="field__item">' . $on . '</div>');
+    $this->assertRaw('<div class="field__item">' . $on . '</div>');
 
     // Test with "On" label option.
     $display_repository->getFormDisplay('entity_test', 'entity_test')
@@ -136,7 +136,7 @@ class BooleanFieldTest extends BrowserTestBase {
 
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[value]", '');
-    $this->assertSession()->pageTextContains($on);
+    $this->assertRaw($on);
     $this->assertSession()->pageTextNotContains($this->field->label());
 
     // Test if we can change the on label.
@@ -148,7 +148,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
     // Check if we see the updated labels in the creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertSession()->pageTextContains($on);
+    $this->assertRaw($on);
 
     // Go to the form display page and check if the default settings works as
     // expected.

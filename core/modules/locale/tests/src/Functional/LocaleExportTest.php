@@ -68,9 +68,9 @@ class LocaleExportTest extends BrowserTestBase {
     $this->submitForm(['langcode' => 'fr'], 'Export');
 
     // Ensure we have a translation file.
-    $this->assertSession()->pageTextContains('# French translation of Drupal');
+    $this->assertRaw('# French translation of Drupal');
     // Ensure our imported translations exist in the file.
-    $this->assertSession()->pageTextContains('msgstr "lundi"');
+    $this->assertRaw('msgstr "lundi"');
 
     // Import some more French translations which will be marked as customized.
     $name = $file_system->tempnam('temporary://', "po2_") . '.po';
@@ -100,9 +100,9 @@ class LocaleExportTest extends BrowserTestBase {
     ], 'Export');
 
     // Ensure we have a translation file.
-    $this->assertSession()->pageTextContains('# French translation of Drupal');
+    $this->assertRaw('# French translation of Drupal');
     // Ensure the customized translations exist in the file.
-    $this->assertSession()->pageTextContains('msgstr "janvier"');
+    $this->assertRaw('msgstr "janvier"');
     // Ensure no untranslated strings exist in the file.
     $this->assertSession()->responseNotContains('msgid "February"');
 
@@ -116,11 +116,11 @@ class LocaleExportTest extends BrowserTestBase {
     ], 'Export');
 
     // Ensure we have a translation file.
-    $this->assertSession()->pageTextContains('# French translation of Drupal');
+    $this->assertRaw('# French translation of Drupal');
     // Ensure no customized translations exist in the file.
     $this->assertSession()->responseNotContains('msgstr "janvier"');
     // Ensure the untranslated strings exist in the file, and with right quotes.
-    $this->assertSession()->responseContains($this->getUntranslatedString());
+    $this->assertRaw($this->getUntranslatedString());
   }
 
   /**
@@ -135,7 +135,7 @@ class LocaleExportTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/translate/export');
     $this->submitForm([], 'Export');
     // Ensure we have a translation file.
-    $this->assertSession()->pageTextContains('# LANGUAGE translation of PROJECT');
+    $this->assertRaw('# LANGUAGE translation of PROJECT');
   }
 
   /**

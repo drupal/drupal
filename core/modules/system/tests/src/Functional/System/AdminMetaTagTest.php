@@ -23,7 +23,7 @@ class AdminMetaTagTest extends BrowserTestBase {
     list($version,) = explode('.', \Drupal::VERSION);
     $string = '<meta name="Generator" content="Drupal ' . $version . ' (https://www.drupal.org)" />';
     $this->drupalGet('node');
-    $this->assertSession()->responseContains($string);
+    $this->assertRaw($string);
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -292,12 +293,12 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit = ['mail' => 'test@example.com', 'name' => $account->getAccountName()];
     $this->drupalGet('user/register');
     $this->submitForm($edit, 'Create new account');
-    $this->assertSession()->pageTextContains("The username {$account->getAccountName()} is already taken.");
+    $this->assertRaw(new FormattableMarkup('The username %value is already taken.', ['%value' => $account->getAccountName()]));
 
     $edit = ['mail' => $account->getEmail(), 'name' => $this->randomString()];
     $this->drupalGet('user/register');
     $this->submitForm($edit, 'Create new account');
-    $this->assertSession()->pageTextContains("The email address {$account->getEmail()} is already taken.");
+    $this->assertRaw(new FormattableMarkup('The email address %value is already taken.', ['%value' => $account->getEmail()]));
   }
 
   /**

@@ -40,7 +40,7 @@ class RouterPermissionTest extends BrowserTestBase {
     $this->drupalGet('router_test/test7');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseNotContains('Access denied');
-    $this->assertSession()->pageTextContains('test7text');
+    $this->assertRaw('test7text');
   }
 
 }

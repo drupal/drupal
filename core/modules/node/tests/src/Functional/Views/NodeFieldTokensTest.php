@@ -53,16 +53,16 @@ class NodeFieldTokensTest extends NodeTestBase {
     $this->drupalGet('test_node_tokens');
 
     // Body: {{ body }}<br />
-    $this->assertSession()->responseContains("Body: <p>$body</p>");
+    $this->assertRaw("Body: <p>$body</p>");
 
     // Raw value: {{ body__value }}<br />
-    $this->assertSession()->responseContains("Raw value: $body");
+    $this->assertRaw("Raw value: $body");
 
     // Raw summary: {{ body__summary }}<br />
-    $this->assertSession()->responseContains("Raw summary: $summary");
+    $this->assertRaw("Raw summary: $summary");
 
     // Raw format: {{ body__format }}<br />
-    $this->assertSession()->responseContains("Raw format: plain_text");
+    $this->assertRaw("Raw format: plain_text");
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -93,7 +94,11 @@ class BulkFormAccessTest extends NodeTestBase {
     ];
     $this->drupalGet('test-node-bulk-form');
     $this->submitForm($edit, 'Apply to selected items');
-    $this->assertSession()->pageTextContains("No access to execute Unpublish content on the Content {$node->label()}.");
+    $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
+      '%action' => 'Unpublish content',
+      '@entity_type_label' => 'Content',
+      '%entity_label' => $node->label(),
+    ]));
 
     // Re-load the node and check the status.
     $node = Node::load($node->id());
@@ -134,7 +139,11 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->drupalGet('test-node-bulk-form');
     $this->submitForm($edit, 'Apply to selected items');
     // Test that the action message isn't shown.
-    $this->assertSession()->pageTextContains("No access to execute Delete content on the Content {$node->label()}.");
+    $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
+      '%action' => 'Delete content',
+      '@entity_type_label' => 'Content',
+      '%entity_label' => $node->label(),
+    ]));
     $this->assertNotEmpty($this->cssSelect('#views-form-test-node-bulk-form-page-1'));
   }
 

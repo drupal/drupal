@@ -233,7 +233,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the custom block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->responseContains('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertRaw('<strong>Custom</strong> titlealert("hacked!");');
 
     // Set label to hidden on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -395,7 +395,7 @@ class ExposedFormTest extends ViewTestBase {
     $escape_1 = Html::escape($expected_label);
     $escape_2 = Html::escape($escape_1);
     // Make sure we see the single-escaped string in the raw output.
-    $this->assertSession()->responseContains($escape_1);
+    $this->assertRaw($escape_1);
     // But no double-escaped string.
     $this->assertSession()->responseNotContains($escape_2);
     // And not the raw label, either.
@@ -448,7 +448,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered before submitting the normal form.
     $this->assertSession()->responseContains("Apply");
-    $this->assertSession()->responseContains('<div class="views-row">');
+    $this->assertRaw('<div class="views-row">');
 
     $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);
@@ -456,7 +456,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered after submitting the normal form.
     $this->assertSession()->responseContains("Apply");
-    $this->assertSession()->responseContains('<div class="views-row">');
+    $this->assertRaw('<div class="views-row">');
   }
 
   /**

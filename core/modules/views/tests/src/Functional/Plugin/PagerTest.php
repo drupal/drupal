@@ -484,7 +484,7 @@ class PagerTest extends ViewTestBase {
     ];
     foreach ($labels as $label => $translation) {
       // Check if we can find the translation.
-      $this->assertSession()->pageTextContains($translation);
+      $this->assertRaw($translation);
     }
   }
 
@@ -531,7 +531,7 @@ class PagerTest extends ViewTestBase {
     $this->drupalGet('nl/test_pager_full', ['query' => ['page' => 1]]);
     foreach ($labels as $label => $translation) {
       // Check if we can find the translation.
-      $this->assertSession()->pageTextContains($translation);
+      $this->assertRaw($translation);
     }
   }
 

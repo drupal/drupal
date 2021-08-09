@@ -65,11 +65,11 @@ class FieldDropButtonTest extends ViewTestBase {
 
     // Check if the dropbutton.js library is available.
     $this->drupalGet('admin/content');
-    $this->assertSession()->responseContains('dropbutton.js');
+    $this->assertRaw('dropbutton.js');
     // Check if the dropbutton.js library is available on a cached page to
     // ensure that bubbleable metadata is not lost in the views render workflow.
     $this->drupalGet('admin/content');
-    $this->assertSession()->responseContains('dropbutton.js');
+    $this->assertRaw('dropbutton.js');
   }
 
 }

@@ -83,7 +83,7 @@ class BulkFormTest extends UserTestBase {
 
     // Block a user using the bulk form.
     $this->assertTrue($account->isActive(), 'The user is not blocked.');
-    $this->assertSession()->pageTextContains($account->label());
+    $this->assertRaw($account->label());
     $edit = [
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_block_user_action',

@@ -86,17 +86,17 @@ class LinkViewsTokensTest extends ViewTestBase {
 
     foreach ($uris as $uri => $title) {
       // Formatted link: {{ field_link }}<br />
-      $this->assertSession()->responseContains("Formatted: <a href=\"$uri\" class=\"test-link-class\">$title</a>");
+      $this->assertRaw("Formatted: <a href=\"$uri\" class=\"test-link-class\">$title</a>");
 
       // Raw uri: {{ field_link__uri }}<br />
-      $this->assertSession()->responseContains("Raw uri: $uri");
+      $this->assertRaw("Raw uri: $uri");
 
       // Raw title: {{ field_link__title }}<br />
-      $this->assertSession()->responseContains("Raw title: $title");
+      $this->assertRaw("Raw title: $title");
 
       // Raw options: {{ field_link__options }}<br />
       // Options is an array and should return empty after token replace.
-      $this->assertSession()->responseContains("Raw options: .");
+      $this->assertRaw("Raw options: .");
     }
   }
 

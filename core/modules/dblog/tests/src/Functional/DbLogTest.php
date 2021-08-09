@@ -133,10 +133,10 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists($context['referer']);
 
     // Verify hostname.
-    $this->assertSession()->pageTextContains($context['ip']);
+    $this->assertRaw($context['ip']);
 
     // Verify location.
-    $this->assertSession()->pageTextContains($context['request_uri']);
+    $this->assertRaw($context['request_uri']);
 
     // Verify severity.
     $this->assertSession()->pageTextContains('Notice');
@@ -402,7 +402,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $result->fetchField());
 
     // Check if the link exists (unescaped).
-    $this->assertSession()->responseContains($link);
+    $this->assertRaw($link);
   }
 
   /**
@@ -850,7 +850,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->statusCodeEquals(200);
     // Make sure HTML tags are filtered out.
-    $this->assertSession()->responseContains('title="alert(&#039;foo&#039;);Lorem');
+    $this->assertRaw('title="alert(&#039;foo&#039;);Lorem');
     $this->assertSession()->responseNotContains("<script>alert('foo');</script>");
 
     // Make sure HTML tags are filtered out in admin/reports/dblog/event/ too.
@@ -860,7 +860,7 @@ class DbLogTest extends BrowserTestBase {
     $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()->responseNotContains("<script>alert('foo');</script>");
-    $this->assertSession()->responseContains("alert('foo'); <strong>Lorem ipsum</strong>");
+    $this->assertRaw("alert('foo'); <strong>Lorem ipsum</strong>");
   }
 
   /**
@@ -903,8 +903,8 @@ class DbLogTest extends BrowserTestBase {
     // Check if the full message displays on the details page and backtrace is a
     // pre-formatted text.
     $message = new FormattableMarkup('%type: @message in %function (line', $error_user_notice);
-    $this->assertSession()->responseContains($message);
-    $this->assertSession()->responseContains('<pre class="backtrace">');
+    $this->assertRaw($message);
+    $this->assertRaw('<pre class="backtrace">');
   }
 
 }
