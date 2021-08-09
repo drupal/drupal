@@ -125,8 +125,7 @@ class CommentPreviewTest extends CommentTestBase {
     $submit_button = $this->assertSession()->buttonExists('Save');
     $submit_button->click();
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertCount(2, $elements);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comment-wrapper")]/article', 2);
   }
 
   /**

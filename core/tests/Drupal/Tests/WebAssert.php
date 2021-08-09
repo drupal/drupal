@@ -978,7 +978,8 @@ class WebAssert extends MinkWebAssert {
    *   Expected text.
    */
   public function elementTextEquals(string $selectorType, $selector, string $text): void {
-    $message = "Failed asserting that the text of the element identified by '$selector' equals '$text'.";
+    $selector_string = is_array($selector) ? '[' . implode(', ', $selector) . ']' : $selector;
+    $message = "Failed asserting that the text of the element identified by '$selector_string' equals '$text'.";
     $constraint = new IsEqual($text);
     Assert::assertThat($this->elementExists($selectorType, $selector)->getText(), $constraint, $message);
   }

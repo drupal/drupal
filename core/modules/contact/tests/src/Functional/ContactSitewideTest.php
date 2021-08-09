@@ -118,12 +118,8 @@ class ContactSitewideTest extends BrowserTestBase {
     // Cannot use ::assertNoLinkByHref as it does partial url matching and with
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://www.drupal.org/node/2031223 for the above.
-    $edit_link = $this->xpath('//a[@href=:href]', [
-      ':href' => Url::fromRoute('entity.contact_form.edit_form', ['contact_form' => 'personal'])->toString(),
-    ]);
-    $this->assertTrue(empty($edit_link), new FormattableMarkup('No link containing href %href found.',
-      ['%href' => 'admin/structure/contact/manage/personal']
-    ));
+    $url = Url::fromRoute('entity.contact_form.edit_form', ['contact_form' => 'personal'])->toString();
+    $this->assertSession()->elementNotExists('xpath', "//a[@href='{$url}']");
     $this->assertSession()->linkByHrefNotExists('admin/structure/contact/manage/personal/delete');
 
     $this->drupalGet('admin/structure/contact/manage/personal');
@@ -299,12 +295,11 @@ class ContactSitewideTest extends BrowserTestBase {
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');
 
-    $view_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and text()=:text]', [
+    // Test contact listing links to contact form.
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery('//table/tbody/tr/td/a[contains(@href, :href) and text()=:text]', [
       ':href' => Url::fromRoute('entity.contact_form.canonical', ['contact_form' => $contact_form])->toString(),
       ':text' => $label,
-      ]
-    );
-    $this->assertTrue(!empty($view_link), 'Contact listing links to contact form.');
+    ]));
 
     // Find out in which row the form we want to add a field to is.
     foreach ($this->xpath('//table/tbody/tr') as $row) {
