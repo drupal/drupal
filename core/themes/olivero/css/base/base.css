@@ -55,6 +55,10 @@ a:focus {
     outline-offset: 2px;
   }
 
+button {
+  font-family: inherit;
+}
+
 img,
 video {
   display: block;
