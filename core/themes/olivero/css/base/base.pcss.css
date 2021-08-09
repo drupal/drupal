@@ -50,6 +50,10 @@ a {
   }
 }
 
+button {
+  font-family: inherit;
+}
+
 img,
 video {
   display: block;
