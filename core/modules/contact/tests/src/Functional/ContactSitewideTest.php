@@ -393,7 +393,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Message is now by default displayed twice, once for the form element and
     // once for the viewed message.
     $page_text = $this->getSession()->getPage()->getText();
-    $this->assertGreaterThan(1, substr_count($page_text, t('Message')));
+    $this->assertGreaterThan(1, substr_count($page_text, 'Message'));
     $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-above');
     $this->assertSession()->pageTextContains($edit['message[0][value]']);
 
@@ -408,7 +408,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->submitForm($edit, 'Preview');
     // Message should only be displayed once now.
     $page_text = $this->getSession()->getPage()->getText();
-    $this->assertEquals(1, substr_count($page_text, t('Message')));
+    $this->assertEquals(1, substr_count($page_text, 'Message'));
     $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-hidden field__item">');
     $this->assertSession()->pageTextContains($edit['message[0][value]']);
 

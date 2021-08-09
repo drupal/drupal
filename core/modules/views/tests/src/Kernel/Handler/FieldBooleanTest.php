@@ -49,20 +49,20 @@ class FieldBooleanTest extends ViewsKernelTestBase {
     $this->executeView($view);
 
     // This is john, which has no age, there are no custom formats defined, yet.
-    $this->assertEquals(t('No'), $view->field['age']->advancedRender($view->result[0]));
-    $this->assertEquals(t('Yes'), $view->field['age']->advancedRender($view->result[1]));
+    $this->assertEquals('No', $view->field['age']->advancedRender($view->result[0]));
+    $this->assertEquals('Yes', $view->field['age']->advancedRender($view->result[1]));
 
     // Reverse the output.
     $view->field['age']->options['not'] = TRUE;
-    $this->assertEquals(t('Yes'), $view->field['age']->advancedRender($view->result[0]));
-    $this->assertEquals(t('No'), $view->field['age']->advancedRender($view->result[1]));
+    $this->assertEquals('Yes', $view->field['age']->advancedRender($view->result[0]));
+    $this->assertEquals('No', $view->field['age']->advancedRender($view->result[1]));
 
     unset($view->field['age']->options['not']);
 
     // Use another output format.
     $view->field['age']->options['type'] = 'true-false';
-    $this->assertEquals(t('False'), $view->field['age']->advancedRender($view->result[0]));
-    $this->assertEquals(t('True'), $view->field['age']->advancedRender($view->result[1]));
+    $this->assertEquals('False', $view->field['age']->advancedRender($view->result[0]));
+    $this->assertEquals('True', $view->field['age']->advancedRender($view->result[1]));
 
     // test awesome unicode.
     $view->field['age']->options['type'] = 'unicode-yes-no';
@@ -72,8 +72,8 @@ class FieldBooleanTest extends ViewsKernelTestBase {
     // Set a custom output format.
     $view->field['age']->formats['test'] = [t('Test-True'), t('Test-False')];
     $view->field['age']->options['type'] = 'test';
-    $this->assertEquals(t('Test-False'), $view->field['age']->advancedRender($view->result[0]));
-    $this->assertEquals(t('Test-True'), $view->field['age']->advancedRender($view->result[1]));
+    $this->assertEquals('Test-False', $view->field['age']->advancedRender($view->result[0]));
+    $this->assertEquals('Test-True', $view->field['age']->advancedRender($view->result[1]));
   }
 
 }

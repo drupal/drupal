@@ -150,13 +150,13 @@ class EntityValidationTest extends EntityKernelTestBase {
     // This should fail on AllowedValues and Length constraints.
     $this->assertEquals(2, $violations->count(), 'Validation failed.');
     $this->assertEquals(t('This value is too long. It should have %limit characters or less.', ['%limit' => '12']), $violations[0]->getMessage());
-    $this->assertEquals(t('The value you selected is not a valid choice.'), $violations[1]->getMessage());
+    $this->assertEquals('The value you selected is not a valid choice.', $violations[1]->getMessage());
 
     $test_entity = clone $entity;
     $test_entity->type->value = NULL;
     $violations = $test_entity->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed.');
-    $this->assertEquals(t('This value should not be null.'), $violations[0]->getMessage());
+    $this->assertEquals('This value should not be null.', $violations[0]->getMessage());
 
     $test_entity = clone $entity;
     $test_entity->name->value = $this->randomString(33);
@@ -180,7 +180,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $test_entity->field_test_text->format = $this->randomString(33);
     $violations = $test_entity->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed.');
-    $this->assertEquals(t('The value you selected is not a valid choice.'), $violations[0]->getMessage());
+    $this->assertEquals('The value you selected is not a valid choice.', $violations[0]->getMessage());
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
