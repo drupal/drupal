@@ -58,7 +58,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->submitForm($edit, 'Preview');
     $this->assertInstanceOf(MarkupInterface::class, $this->webUser->getDisplayName());
     $this->assertSession()->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
-    $this->assertRaw('<em>' . $this->webUser->id() . '</em>');
+    $this->assertSession()->responseContains('<em>' . $this->webUser->id() . '</em>');
 
     // Add a user picture.
     $image = current($this->drupalGetTestFiles('image'));

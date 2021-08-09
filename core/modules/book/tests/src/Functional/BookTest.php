@@ -130,23 +130,23 @@ class BookTest extends BrowserTestBase {
 
     // On non-node route.
     $this->drupalGet($this->adminUser->toUrl());
-    $this->assertRaw('[route.book_navigation]=book.none');
+    $this->assertSession()->responseContains('[route.book_navigation]=book.none');
 
     // On non-book node route.
     $this->drupalGet($page->toUrl());
-    $this->assertRaw('[route.book_navigation]=book.none');
+    $this->assertSession()->responseContains('[route.book_navigation]=book.none');
 
     // On book node route.
     $this->drupalGet($book_nodes[0]->toUrl());
-    $this->assertRaw('[route.book_navigation]=0|2|3');
+    $this->assertSession()->responseContains('[route.book_navigation]=0|2|3');
     $this->drupalGet($book_nodes[1]->toUrl());
-    $this->assertRaw('[route.book_navigation]=0|2|3|4');
+    $this->assertSession()->responseContains('[route.book_navigation]=0|2|3|4');
     $this->drupalGet($book_nodes[2]->toUrl());
-    $this->assertRaw('[route.book_navigation]=0|2|3|5');
+    $this->assertSession()->responseContains('[route.book_navigation]=0|2|3|5');
     $this->drupalGet($book_nodes[3]->toUrl());
-    $this->assertRaw('[route.book_navigation]=0|2|6');
+    $this->assertSession()->responseContains('[route.book_navigation]=0|2|6');
     $this->drupalGet($book_nodes[4]->toUrl());
-    $this->assertRaw('[route.book_navigation]=0|2|7');
+    $this->assertSession()->responseContains('[route.book_navigation]=0|2|7');
   }
 
   /**
@@ -256,7 +256,7 @@ class BookTest extends BrowserTestBase {
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
       $this->assertSession()->pageTextContains($node->label());
-      $this->assertRaw($node->body->processed);
+      $this->assertSession()->responseContains($node->body->processed);
     }
 
     // Make sure we can't export an unsupported format.

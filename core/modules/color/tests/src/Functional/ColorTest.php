@@ -217,7 +217,7 @@ class ColorTest extends BrowserTestBase {
     // Make sure the color logo is not being used.
     $this->assertSession()->responseNotContains('files/color/bartik-');
     // Make sure the original bartik logo exists.
-    $this->assertRaw('bartik/logo.svg');
+    $this->assertSession()->responseContains('bartik/logo.svg');
 
     // Log in and set the color scheme to 'slate'.
     $this->drupalLogin($this->bigUser);
@@ -229,7 +229,7 @@ class ColorTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('');
     // Make sure the color logo is being used.
-    $this->assertRaw('files/color/bartik-');
+    $this->assertSession()->responseContains('files/color/bartik-');
     // Make sure the original bartik logo does not exist.
     $this->assertSession()->responseNotContains('bartik/logo.svg');
 
@@ -245,7 +245,7 @@ class ColorTest extends BrowserTestBase {
     // Make sure the color logo is not being used.
     $this->assertSession()->responseNotContains('files/color/bartik-');
     // Make sure the original bartik logo exists.
-    $this->assertRaw('bartik/logo.svg');
+    $this->assertSession()->responseContains('bartik/logo.svg');
   }
 
 }

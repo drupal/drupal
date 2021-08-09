@@ -189,7 +189,7 @@ class SearchCommentTest extends BrowserTestBase {
     $this->submitForm($edit, 'Search');
 
     // Verify the evil comment subject is escaped in search results.
-    $this->assertRaw('&lt;script&gt;alert(&#039;<strong>subjectkeyword</strong>&#039;);');
+    $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;<strong>subjectkeyword</strong>&#039;);');
     $this->assertSession()->responseNotContains('<script>');
 
     // Search for the keyword near the evil script tag in the comment body.
@@ -201,7 +201,7 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Verify that nearby script tag in the evil comment body is stripped from
     // search results.
-    $this->assertRaw('<strong>nearbykeyword</strong>');
+    $this->assertSession()->responseContains('<strong>nearbykeyword</strong>');
     $this->assertSession()->responseNotContains('<script>');
 
     // Search for contents inside the evil script tag in the comment body.

@@ -90,7 +90,7 @@ class EmailFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
-    $this->assertRaw('placeholder="example@example.com"');
+    $this->assertSession()->responseContains('placeholder="example@example.com"');
 
     // Submit a valid email address and ensure it is accepted.
     $value = 'test@example.com';
@@ -101,7 +101,7 @@ class EmailFieldTest extends BrowserTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-    $this->assertRaw($value);
+    $this->assertSession()->responseContains($value);
 
     // Verify that a mailto link is displayed.
     $entity = EntityTest::load($id);

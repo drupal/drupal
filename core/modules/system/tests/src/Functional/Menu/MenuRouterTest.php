@@ -199,7 +199,7 @@ class MenuRouterTest extends BrowserTestBase {
       // cSpell:disable-next-line
       "éøïвβ中國書۞";
     $this->drupalGet($path);
-    $this->assertRaw('This is the menuTestCallback content.');
+    $this->assertSession()->pageTextContains('This is the menuTestCallback content.');
     $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
   }
 
@@ -270,7 +270,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertSession()->pageTextContains('Active theme: seven. Actual theme: seven.');
-    $this->assertRaw('seven/css/base/elements.css');
+    $this->assertSession()->responseContains('seven/css/base/elements.css');
   }
 
   /**
@@ -283,7 +283,7 @@ class MenuRouterTest extends BrowserTestBase {
     // we expect the theme callback system to be bypassed entirely.
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     // Check that the maintenance theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('bartik/css/base/elements.css');
 
     // An administrator, however, should continue to see the requested theme.
     $admin_user = $this->drupalCreateUser(['access site in maintenance mode']);
@@ -291,7 +291,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertSession()->pageTextContains('Active theme: seven. Actual theme: seven.');
     // Check that the administrative theme's CSS appears on the page.
-    $this->assertRaw('seven/css/base/elements.css');
+    $this->assertSession()->responseContains('seven/css/base/elements.css');
 
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
@@ -304,7 +304,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertSession()->pageTextContains('Active theme: bartik. Actual theme: bartik.');
     // Check that the default theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('bartik/css/base/elements.css');
 
     // Now install the theme and request it again.
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
@@ -314,7 +314,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertSession()->pageTextContains('Active theme: test_theme. Actual theme: test_theme.');
     // Check that the optional theme's CSS appears on the page.
-    $this->assertRaw('test_theme/kitten.css');
+    $this->assertSession()->responseContains('test_theme/kitten.css');
 
     $theme_installer->uninstall(['test_theme']);
   }
@@ -326,7 +326,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
     $this->assertSession()->pageTextContains('Active theme: bartik. Actual theme: bartik.');
     // Check that the default theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('bartik/css/base/elements.css');
   }
 
   /**
@@ -336,7 +336,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
     $this->assertSession()->pageTextContains('Active theme: bartik. Actual theme: bartik.');
     // Check that the default theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('bartik/css/base/elements.css');
   }
 
 }

@@ -195,8 +195,8 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $this->assertSession()->responseNotContains('data-quickedit-field-id="node/' . $this->testNode->id() . '/title/' . $this->testNode->language()->getId() . '/full"');
 
     $this->drupalGet('node/' . $this->testNode->id());
-    $this->assertRaw('data-quickedit-entity-id="node/' . $this->testNode->id() . '"');
-    $this->assertRaw('data-quickedit-field-id="node/' . $this->testNode->id() . '/title/' . $this->testNode->language()->getId() . '/full"');
+    $this->assertSession()->responseContains('data-quickedit-entity-id="node/' . $this->testNode->id() . '"');
+    $this->assertSession()->responseContains('data-quickedit-field-id="node/' . $this->testNode->id() . '/title/' . $this->testNode->language()->getId() . '/full"');
 
     // Wait for the page to completely load before making any changes to the
     // node. This allows Quick Edit to fetch the metadata without causing
@@ -335,7 +335,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     // Check that the data- attribute is present.
     $this->drupalLogin($this->editorUser);
     $this->drupalGet('');
-    $this->assertRaw('data-quickedit-entity-id="block_content/1"');
+    $this->assertSession()->responseContains('data-quickedit-entity-id="block_content/1"');
   }
 
   /**

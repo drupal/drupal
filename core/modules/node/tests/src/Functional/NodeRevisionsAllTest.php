@@ -208,7 +208,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id() . '/revisions');
 
     // Check that the pager exists.
-    $this->assertRaw('page=1');
+    $this->assertSession()->responseContains('page=1');
 
     // Check that the last revision is displayed on the first page.
     $this->assertSession()->pageTextContains(end($logs));

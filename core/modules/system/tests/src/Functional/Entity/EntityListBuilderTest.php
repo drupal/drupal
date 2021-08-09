@@ -49,13 +49,13 @@ class EntityListBuilderTest extends BrowserTestBase {
     $this->drupalGet('entity_test/list');
 
     // Item 51 should not be present.
-    $this->assertRaw('Test entity 50');
+    $this->assertSession()->pageTextContains('Test entity 50');
     $this->assertSession()->responseNotContains('Test entity 51');
 
     // Browse to the next page, test entity 51 is shown.
     $this->clickLink('Page 2');
     $this->assertSession()->responseNotContains('Test entity 50');
-    $this->assertRaw('Test entity 51');
+    $this->assertSession()->pageTextContains('Test entity 51');
   }
 
   /**

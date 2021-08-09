@@ -505,8 +505,8 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Ensure the expected error message is present and the counts before and
     // after calling _file_save_upload_from_form() are correct.
     $this->assertSession()->pageTextContains($error);
-    $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
-    $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
+    $this->assertSession()->pageTextContains('Number of error messages before _file_save_upload_from_form(): 1');
+    $this->assertSession()->pageTextContains('Number of error messages after _file_save_upload_from_form(): 1');
 
     // Test that error messages are preserved when an error occurs.
     $edit = [
@@ -522,8 +522,8 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Ensure the expected error message is present and the counts before and
     // after calling _file_save_upload_from_form() are correct.
     $this->assertSession()->pageTextContains($error);
-    $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
-    $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
+    $this->assertSession()->pageTextContains('Number of error messages before _file_save_upload_from_form(): 1');
+    $this->assertSession()->pageTextContains('Number of error messages after _file_save_upload_from_form(): 1');
 
     // Test a successful upload with no messages.
     $edit = [
@@ -537,8 +537,8 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Ensure the error message is not present and the counts before and after
     // calling _file_save_upload_from_form() are correct.
     $this->assertSession()->pageTextNotContains($error);
-    $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 0');
-    $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 0');
+    $this->assertSession()->pageTextContains('Number of error messages before _file_save_upload_from_form(): 0');
+    $this->assertSession()->pageTextContains('Number of error messages after _file_save_upload_from_form(): 0');
   }
 
   /**

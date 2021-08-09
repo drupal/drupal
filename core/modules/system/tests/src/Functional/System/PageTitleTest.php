@@ -101,13 +101,13 @@ class PageTitleTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains($title);
     // Add </title> to make sure we're checking the title tag, rather than the
     // first 'heading' on the page.
-    $this->assertRaw($title_filtered . '</title>');
+    $this->assertSession()->responseContains($title_filtered . '</title>');
 
     // Test the slogan.
     // Check the unfiltered version of the slogan is missing.
     $this->assertSession()->responseNotContains($slogan);
     // Check for the filtered version of the slogan.
-    $this->assertRaw($slogan_filtered);
+    $this->assertSession()->responseContains($slogan_filtered);
   }
 
   /**
@@ -166,10 +166,10 @@ class PageTitleTest extends BrowserTestBase {
     // controller does not escape them.
     $this->drupalGet('test-page-cached-controller');
     $this->assertSession()->titleEquals('Cached title | Drupal');
-    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
+    $this->assertSession()->responseContains(Html::escape('<span>Cached title</span>') . '</h1>');
     $this->drupalGet('test-page-cached-controller');
     $this->assertSession()->titleEquals('Cached title | Drupal');
-    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
+    $this->assertSession()->responseContains(Html::escape('<span>Cached title</span>') . '</h1>');
   }
 
 }

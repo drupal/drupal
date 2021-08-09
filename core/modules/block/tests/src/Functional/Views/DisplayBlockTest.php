@@ -386,8 +386,8 @@ class DisplayBlockTest extends ViewTestBase {
     $cached_id_token = Crypt::hmacBase64($cached_id, Settings::getHashSalt() . $this->container->get('private_key')->get());
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     // Check existence of the contextual link placeholders.
-    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token]) . '></div>');
-    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $cached_id, 'data-contextual-token' => $cached_id_token]) . '></div>');
+    $this->assertSession()->responseContains('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token]) . '></div>');
+    $this->assertSession()->responseContains('<div' . new Attribute(['data-contextual-id' => $cached_id, 'data-contextual-token' => $cached_id_token]) . '></div>');
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()

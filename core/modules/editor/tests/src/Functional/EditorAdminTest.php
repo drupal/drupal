@@ -71,7 +71,7 @@ class EditorAdminTest extends BrowserTestBase {
     $options = $select->findAll('css', 'option');
     $this->assertCount(1, $options);
     $this->assertSame('None', $options[0]->getText(), 'Option 1 in the Text Editor select is "None".');
-    $this->assertRaw('This option is disabled because no modules that provide a text editor are currently enabled.');
+    $this->assertSession()->pageTextContains('This option is disabled because no modules that provide a text editor are currently enabled.');
   }
 
   /**
@@ -143,14 +143,14 @@ class EditorAdminTest extends BrowserTestBase {
 
     // Go to node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertRaw($text);
+    $this->assertSession()->responseContains($text);
 
     // Disable the format assigned to the 'body' field of the node.
     FilterFormat::load('monoceros')->disable()->save();
 
     // Edit again the node.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertRaw($text);
+    $this->assertSession()->responseContains($text);
   }
 
   /**

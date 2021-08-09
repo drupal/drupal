@@ -87,7 +87,7 @@ class CommentBlockTest extends CommentTestBase {
     for ($i = 0; $i < 10; $i++) {
       $this->clickLink($comments[$i]->getSubject());
       $this->assertSession()->pageTextContains($comments[$i]->getSubject());
-      $this->assertRaw('<link rel="canonical"');
+      $this->assertSession()->responseContains('<link rel="canonical"');
     }
   }
 

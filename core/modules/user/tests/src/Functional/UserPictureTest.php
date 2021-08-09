@@ -72,7 +72,7 @@ class UserPictureTest extends BrowserTestBase {
 
     // Verify that the image is displayed on the user account page.
     $this->drupalGet('user');
-    $this->assertRaw(StreamWrapperManager::getTarget($file->getFileUri()));
+    $this->assertSession()->responseContains(StreamWrapperManager::getTarget($file->getFileUri()));
 
     // Delete the picture.
     $edit = [];

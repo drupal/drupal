@@ -161,8 +161,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->clickLink('Add');
 
     // Make sure original text is present on this page.
-    $this->assertRaw($site_name);
-    $this->assertRaw($site_slogan);
+    $this->assertSession()->pageTextContains($site_name);
+    $this->assertSession()->pageTextContains($site_slogan);
 
     // Update site name and slogan for French.
     $edit = [
@@ -189,8 +189,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check French translation of site name and slogan are in place.
     $this->drupalGet('fr');
-    $this->assertRaw($fr_site_name);
-    $this->assertRaw($fr_site_slogan);
+    $this->assertSession()->pageTextContains($fr_site_name);
+    $this->assertSession()->pageTextContains($fr_site_slogan);
 
     // Visit French site to ensure base language string present as source.
     $this->drupalGet("fr/$translation_base_url/fr/edit");
@@ -486,7 +486,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains($label);
 
       // Make sure that the date library is added.
-      $this->assertRaw('core/modules/system/js/system.date.js');
+      $this->assertSession()->responseContains('core/modules/system/js/system.date.js');
 
       // Update translatable fields.
       $edit = [
@@ -616,8 +616,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->clickLink('Add');
 
     // Make sure original text is present on this page.
-    $this->assertRaw($description);
-    $this->assertRaw($human_readable_name);
+    $this->assertSession()->pageTextContains($description);
+    $this->assertSession()->pageTextContains($human_readable_name);
 
     // Update Views Fields for French.
     $edit = [
@@ -679,7 +679,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       // Check if the expected number of source elements are present.
       foreach ($data['expected'] as $index => $expected) {
         if ($expected) {
-          $this->assertRaw('edit-source-config-names-viewsviewfiles-display-default-display-options-fields-count-format-plural-string-' . $index);
+          $this->assertSession()->responseContains('edit-source-config-names-viewsviewfiles-display-default-display-options-fields-count-format-plural-string-' . $index);
         }
         else {
           $this->assertSession()->responseNotContains('edit-source-config-names-viewsviewfiles-display-default-display-options-fields-count-format-plural-string-' . $index);
@@ -713,7 +713,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Make sure original text is present on this page, in addition to 2 new
     // empty fields.
-    $this->assertRaw($description);
+    $this->assertSession()->pageTextContains($description);
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][0]', $field_value);
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][1]', $field_value_plural);
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]', '');
@@ -1088,7 +1088,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check that the translations are saved.
     $this->clickLink('Add');
-    $this->assertRaw('FR label');
+    $this->assertSession()->responseContains('FR label');
   }
 
   /**

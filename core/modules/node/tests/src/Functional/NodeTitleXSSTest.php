@@ -43,7 +43,7 @@ class NodeTitleXSSTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node->id());
     // Titles should be escaped.
-    $this->assertRaw('<title>' . Html::escape($title) . ' | Drupal</title>');
+    $this->assertSession()->responseContains('<title>' . Html::escape($title) . ' | Drupal</title>');
     $this->assertSession()->responseNotContains($xss);
 
     $this->drupalGet('node/' . $node->id() . '/edit');

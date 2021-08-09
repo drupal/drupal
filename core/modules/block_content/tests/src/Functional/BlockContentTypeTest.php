@@ -123,7 +123,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');
-    $this->assertRaw('Block description');
+    $this->assertSession()->pageTextContains('Block description');
     $this->assertNotEmpty($this->cssSelect('#edit-body-0-value'), 'Body field was found.');
 
     // Change the block type name.
@@ -143,7 +143,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     $this->drupalGet('block/add');
-    $this->assertRaw('Bar');
+    $this->assertSession()->pageTextContains('Bar');
     $this->clickLink('Bar');
     // Verify that the original machine name was used in the URL.
     $this->assertSession()->addressEquals(Url::fromRoute('block_content.add_form', ['block_content_type' => 'basic']));

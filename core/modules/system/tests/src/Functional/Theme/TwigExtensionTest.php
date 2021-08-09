@@ -49,7 +49,7 @@ class TwigExtensionTest extends BrowserTestBase {
     $this->drupalGet('twig-extension-test/filter');
     $this->assertSession()->pageTextContains('Every plant is not a mineral.');
     // Test safe_join filter.
-    $this->assertRaw('&lt;em&gt;will be escaped&lt;/em&gt;<br/><em>will be markup</em><br/><strong>will be rendered</strong>');
+    $this->assertSession()->responseContains('&lt;em&gt;will be escaped&lt;/em&gt;<br/><em>will be markup</em><br/><strong>will be rendered</strong>');
   }
 
   /**

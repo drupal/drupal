@@ -75,7 +75,7 @@ class UninstallTest extends BrowserTestBase {
 
     // Be sure labels are rendered properly.
     // @see regression https://www.drupal.org/node/2512106
-    $this->assertRaw('<label for="edit-uninstall-node" class="module-name table-filter-text-source">Node</label>');
+    $this->assertSession()->responseContains('<label for="edit-uninstall-node" class="module-name table-filter-text-source">Node</label>');
 
     $this->assertSession()->pageTextContains('The following reason prevents Node from being uninstalled:');
     $this->assertSession()->pageTextContains('There is content for the entity type: Content');
@@ -114,7 +114,7 @@ class UninstallTest extends BrowserTestBase {
       $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
       // Add h3's since the entity type label is often repeated in the entity
       // labels.
-      $this->assertRaw('<h3>' . $entity_type->getLabel() . '</h3>');
+      $this->assertSession()->responseContains('<h3>' . $entity_type->getLabel() . '</h3>');
     }
 
     // Set a unique cache entry to be able to test whether all caches are

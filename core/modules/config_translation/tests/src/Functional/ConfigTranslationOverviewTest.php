@@ -122,7 +122,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
 
       $title = $test_entity->label() . ' ' . $entity_type->getSingularLabel();
       $title = 'Translations for <em class="placeholder">' . Html::escape($title) . '</em>';
-      $this->assertRaw($title);
+      $this->assertSession()->responseContains($title);
       $this->assertSession()->responseContains('<th>Language</th>');
 
       $this->drupalGet($base_url);

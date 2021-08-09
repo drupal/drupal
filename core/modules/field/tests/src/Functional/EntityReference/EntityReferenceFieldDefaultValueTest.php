@@ -91,7 +91,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $field_name);
-    $this->assertRaw('name="default_value_input[' . $field_name . '][0][target_id]" value="' . $referenced_node->getTitle() . ' (' . $referenced_node->id() . ')');
+    $this->assertSession()->responseContains('name="default_value_input[' . $field_name . '][0][target_id]" value="' . $referenced_node->getTitle() . ' (' . $referenced_node->id() . ')');
 
     // Check if the ID has been converted to UUID in config entity.
     $config_entity = $this->config('field.field.node.reference_content.' . $field_name)->get();

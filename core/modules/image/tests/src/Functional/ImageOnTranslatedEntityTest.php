@@ -130,12 +130,12 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->submitForm($edit, 'Save (this translation)');
     // This inspects the HTML after the post of the translation, the image
     // should be displayed on the original node.
-    $this->assertRaw('alt="Lost in translation image"');
-    $this->assertRaw('title="Lost in translation image title"');
+    $this->assertSession()->responseContains('alt="Lost in translation image"');
+    $this->assertSession()->responseContains('title="Lost in translation image title"');
     $second_fid = $this->getLastFileId();
     // View the translated node.
     $this->drupalGet('fr/node/' . $default_language_node->id());
-    $this->assertRaw('alt="Scarlett Johansson image"');
+    $this->assertSession()->responseContains('alt="Scarlett Johansson image"');
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
 
@@ -170,12 +170,12 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->assertTrue($file->isPermanent(), 'First file still exists and is permanent.');
     // This inspects the HTML after the post of the translation, the image
     // should be displayed on the original node.
-    $this->assertRaw('alt="Lost in translation image"');
-    $this->assertRaw('title="Lost in translation image title"');
+    $this->assertSession()->responseContains('alt="Lost in translation image"');
+    $this->assertSession()->responseContains('title="Lost in translation image title"');
     // View the translated node.
     $this->drupalGet('nl/node/' . $default_language_node->id());
-    $this->assertRaw('alt="Akiko Takeshita image"');
-    $this->assertRaw('title="Akiko Takeshita image title"');
+    $this->assertSession()->responseContains('alt="Akiko Takeshita image"');
+    $this->assertSession()->responseContains('title="Akiko Takeshita image title"');
 
     // Ensure the file status of the second file is permanent.
     $file = File::load($second_fid);

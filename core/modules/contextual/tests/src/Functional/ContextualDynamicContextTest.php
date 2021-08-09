@@ -157,7 +157,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     // Get a page where contextual links are directly rendered.
     $this->drupalGet(Url::fromRoute('menu_test.contextual_test'));
     $this->assertSession()->assertEscaped("<script>alert('Welcome to the jungle!')</script>");
-    $this->assertRaw('<li class="menu-testcontextual-hidden-manage-edit"><a href="' . base_path() . 'menu-test-contextual/1/edit" class="use-ajax" data-dialog-type="modal" data-is-something>Edit menu - contextual</a></li>');
+    $this->assertSession()->responseContains('<li class="menu-testcontextual-hidden-manage-edit"><a href="' . base_path() . 'menu-test-contextual/1/edit" class="use-ajax" data-dialog-type="modal" data-is-something>Edit menu - contextual</a></li>');
   }
 
   /**

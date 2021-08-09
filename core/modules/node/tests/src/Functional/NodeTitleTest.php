@@ -103,11 +103,11 @@ class NodeTitleTest extends NodeTestBase {
     // the page.
     $edge_case_title_escaped = Html::escape($edge_case_title);
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw('<title>' . $edge_case_title_escaped . ' | Drupal</title>');
+    $this->assertSession()->responseContains('<title>' . $edge_case_title_escaped . ' | Drupal</title>');
 
     // Test that the title appears as <title> when reloading the node page.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw('<title>' . $edge_case_title_escaped . ' | Drupal</title>');
+    $this->assertSession()->responseContains('<title>' . $edge_case_title_escaped . ' | Drupal</title>');
 
   }
 

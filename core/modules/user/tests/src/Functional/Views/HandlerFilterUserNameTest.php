@@ -155,7 +155,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path, $options);
     // The actual result should contain all of the user ids.
     foreach ($this->accounts as $account) {
-      $this->assertRaw($account->id());
+      $this->assertSession()->pageTextContains($account->id());
     }
 
     // Pass in an invalid username and a valid username.
@@ -175,7 +175,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
     foreach ($this->accounts as $account) {
-      $this->assertRaw($account->id());
+      $this->assertSession()->pageTextContains($account->id());
     }
 
     // Pass in just valid user IDs in the entity_autocomplete target_id format.
@@ -187,7 +187,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
     foreach ($this->accounts as $account) {
-      $this->assertRaw($account->id());
+      $this->assertSession()->pageTextContains($account->id());
     }
   }
 
