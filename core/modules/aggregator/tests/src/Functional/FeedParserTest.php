@@ -41,10 +41,10 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertSession()->pageTextContains('First example feed item title');
     $this->assertSession()->linkByHrefExists('http://example.com/example-turns-one');
     $this->assertSession()->pageTextContains('First example feed item description.');
-    $this->assertRaw('<img src="http://example.com/images/druplicon.png"');
+    $this->assertSession()->responseContains('<img src="http://example.com/images/druplicon.png"');
 
     // Several additional items that include elements over 255 characters.
-    $this->assertRaw("Second example feed item title.");
+    $this->assertSession()->pageTextContains("Second example feed item title.");
     $this->assertSession()->pageTextContains('Long link feed item title');
     $this->assertSession()->pageTextContains('Long link feed item description');
     $this->assertSession()->linkByHrefExists('http://example.com/tomorrow/and/tomorrow/and/tomorrow/creeps/in/this/petty/pace/from/day/to/day/to/the/last/syllable/of/recorded/time/and/all/our/yesterdays/have/lighted/fools/the/way/to/dusty/death/out/out/brief/candle/life/is/but/a/walking/shadow/a/poor/player/that/struts/and/frets/his/hour/upon/the/stage/and/is/heard/no/more/it/is/a/tale/told/by/an/idiot/full/of/sound/and/fury/signifying/nothing');
@@ -91,7 +91,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw("Quote&quot; Amp&amp;");
+    $this->assertSession()->responseContains("Quote&quot; Amp&amp;");
   }
 
   /**

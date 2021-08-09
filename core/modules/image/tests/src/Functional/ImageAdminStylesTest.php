@@ -494,7 +494,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
+    $this->assertSession()->responseContains(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');

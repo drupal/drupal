@@ -92,7 +92,7 @@ class StringFieldTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertSession()->fieldNotExists("{$field_name}[0][format]");
-    $this->assertRaw(new FormattableMarkup('placeholder="A placeholder on @widget_type"', ['@widget_type' => $widget_type]));
+    $this->assertSession()->responseContains(new FormattableMarkup('placeholder="A placeholder on @widget_type"', ['@widget_type' => $widget_type]));
 
     // Submit with some value.
     $value = $this->randomMachineName();

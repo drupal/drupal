@@ -101,7 +101,7 @@ class DependencyTest extends ModuleTestBase {
    */
   public function testIncompatiblePhpVersionDependency() {
     $this->drupalGet('admin/modules');
-    $this->assertRaw('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.');
+    $this->assertSession()->pageTextContains('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_php_version_test][enable]');
   }
 

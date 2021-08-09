@@ -58,7 +58,7 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Assert that the value is displayed.
     $this->drupalGet('numeric-test');
-    $this->assertRaw('<span class="field-content">0</span>');
+    $this->assertSession()->responseContains('<span class="field-content">0</span>');
 
     // Assert that the user interface has controls to change it.
     $this->drupalGet('admin/structure/views/nojs/handler/numeric_test/page_1/field/count');
@@ -82,7 +82,7 @@ class NumericFormatPluralTest extends ViewTestBase {
     }
     $this->drupalGet('numeric-test');
     foreach ($numbers as $i => $number) {
-      $this->assertRaw('<span class="field-content">' . $number . ($number == 1 ? ' time' : ' times') . '</span>');
+      $this->assertSession()->responseContains('<span class="field-content">' . $number . ($number == 1 ? ' time' : ' times') . '</span>');
     }
 
     // Add Slovenian and set its plural formula to test multiple plural forms.
@@ -121,12 +121,12 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // The view should now use the new plural configuration.
     $this->drupalGet('sl/numeric-test');
-    $this->assertRaw('<span class="field-content">0 time3</span>');
-    $this->assertRaw('<span class="field-content">1 time0</span>');
-    $this->assertRaw('<span class="field-content">2 time1</span>');
-    $this->assertRaw('<span class="field-content">3 time2</span>');
-    $this->assertRaw('<span class="field-content">4 time2</span>');
-    $this->assertRaw('<span class="field-content">42 time3</span>');
+    $this->assertSession()->responseContains('<span class="field-content">0 time3</span>');
+    $this->assertSession()->responseContains('<span class="field-content">1 time0</span>');
+    $this->assertSession()->responseContains('<span class="field-content">2 time1</span>');
+    $this->assertSession()->responseContains('<span class="field-content">3 time2</span>');
+    $this->assertSession()->responseContains('<span class="field-content">4 time2</span>');
+    $this->assertSession()->responseContains('<span class="field-content">42 time3</span>');
 
     // Add an English configuration translation with English plurals.
     $english = \Drupal::languageManager()->getLanguageConfigOverride('en', 'views.view.numeric_test');
@@ -134,12 +134,12 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // The view displayed in English should use the English translation.
     $this->drupalGet('numeric-test');
-    $this->assertRaw('<span class="field-content">0 times</span>');
-    $this->assertRaw('<span class="field-content">1 time</span>');
-    $this->assertRaw('<span class="field-content">2 times</span>');
-    $this->assertRaw('<span class="field-content">3 times</span>');
-    $this->assertRaw('<span class="field-content">4 times</span>');
-    $this->assertRaw('<span class="field-content">42 times</span>');
+    $this->assertSession()->responseContains('<span class="field-content">0 times</span>');
+    $this->assertSession()->responseContains('<span class="field-content">1 time</span>');
+    $this->assertSession()->responseContains('<span class="field-content">2 times</span>');
+    $this->assertSession()->responseContains('<span class="field-content">3 times</span>');
+    $this->assertSession()->responseContains('<span class="field-content">4 times</span>');
+    $this->assertSession()->responseContains('<span class="field-content">42 times</span>');
   }
 
   /**

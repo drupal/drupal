@@ -81,10 +81,10 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     foreach (['llama', 'piggy', 'unicorn', 'kitten'] as $animal) {
       $url = Url::fromUri('route:dynamic_page_cache_test.html.with_cache_contexts', ['query' => ['animal' => $animal]]);
       $this->drupalGet($url);
-      $this->assertRaw($animal);
+      $this->assertSession()->pageTextContains($animal);
       $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
       $this->drupalGet($url);
-      $this->assertRaw($animal);
+      $this->assertSession()->pageTextContains($animal);
       $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
       // Finally, let's also verify that the 'dynamic_page_cache_test.html'

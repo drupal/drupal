@@ -383,25 +383,25 @@ class CommentPagerTest extends CommentTestBase {
     // shown.
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains('next');
-    $this->assertRaw('Comment 1 on field comment');
-    $this->assertRaw('Comment 1 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment_2');
     // Navigate to next page of field 1.
     $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', [':label' => 'Comment 1 on field comment']);
     // Check only one pager updated.
-    $this->assertRaw('Comment 2 on field comment');
-    $this->assertRaw('Comment 1 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment_2');
     // Return to page 1.
     $this->drupalGet('node/' . $node->id());
     // Navigate to next page of field 2.
     $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', [':label' => 'Comment 1 on field comment_2']);
     // Check only one pager updated.
-    $this->assertRaw('Comment 1 on field comment');
-    $this->assertRaw('Comment 2 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment_2');
     // Navigate to next page of field 1.
     $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', [':label' => 'Comment 1 on field comment']);
     // Check only one pager updated.
-    $this->assertRaw('Comment 2 on field comment');
-    $this->assertRaw('Comment 2 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment_2');
   }
 
   /**

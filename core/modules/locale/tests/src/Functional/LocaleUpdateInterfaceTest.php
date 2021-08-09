@@ -102,7 +102,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
       '@version' => '1.3-dev',
       '@info' => t('File not found at %local_path', ['%local_path' => 'core/modules/locale/tests/test.de.po']),
     ]);
-    $this->assertRaw($release_details->__toString());
+    $this->assertSession()->responseContains($release_details->__toString());
 
     // Override Drupal core translation status as 'no translations found'.
     $status = locale_translation_get_status();

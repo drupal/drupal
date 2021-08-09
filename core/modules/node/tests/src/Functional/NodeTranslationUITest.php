@@ -261,7 +261,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('node/' . $article->id() . '/translations');
     // Verify that translation uses the admin theme if edit is admin.
-    $this->assertRaw('core/themes/seven/css/base/elements.css');
+    $this->assertSession()->responseContains('core/themes/seven/css/base/elements.css');
 
     // Turn off admin theme for editing, assert inheritance to translations.
     $edit['use_admin_theme'] = FALSE;

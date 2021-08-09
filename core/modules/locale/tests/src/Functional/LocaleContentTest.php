@@ -137,7 +137,7 @@ class LocaleContentTest extends BrowserTestBase {
     // Edit the content and ensure correct language is selected.
     $path = 'node/' . $node->id() . '/edit';
     $this->drupalGet($path);
-    $this->assertRaw('<option value="' . $langcode . '" selected="selected">' . $name . '</option>');
+    $this->assertSession()->responseContains('<option value="' . $langcode . '" selected="selected">' . $name . '</option>');
     // Ensure we can change the node language.
     $edit = [
       'langcode[0][value]' => 'en',

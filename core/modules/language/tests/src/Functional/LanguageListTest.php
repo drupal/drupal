@@ -72,7 +72,7 @@ class LanguageListTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
-    $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
+    $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
     $this->assertSession()->pageTextContains($name);
 
     $language = \Drupal::service('language_manager')->getLanguage($langcode);
@@ -106,7 +106,7 @@ class LanguageListTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/edit/' . $langcode);
     $this->submitForm($edit, 'Save language');
-    $this->assertRaw($name);
+    $this->assertSession()->pageTextContains($name);
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $language]));
 
     // Change back the default language.
@@ -125,7 +125,7 @@ class LanguageListTest extends BrowserTestBase {
     // First test the 'cancel' link.
     $this->clickLink('Cancel');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $english]));
-    $this->assertRaw($name);
+    $this->assertSession()->pageTextContains($name);
     // Delete the language for real. This a confirm form, we do not need any
     // fields changed.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);

@@ -173,7 +173,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     foreach ($table_headers as $table_header) {
       // We check that the label appear in the table headings.
-      $this->assertRaw($table_header . '</th>');
+      $this->assertSession()->responseContains($table_header . '</th>');
     }
 
     // Test the "Add field" action link.
@@ -750,7 +750,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // The external redirect should not fire.
     $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
+    $this->assertSession()->responseContains('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }
 
   /**
@@ -812,8 +812,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
 
     $this->drupalGet('node/add/article');
-    $this->assertRaw('<strong>Test with an upload field.</strong>');
-    $this->assertRaw('<em>Test with a non upload field.</em>');
+    $this->assertSession()->responseContains('<strong>Test with an upload field.</strong>');
+    $this->assertSession()->responseContains('<em>Test with a non upload field.</em>');
   }
 
   /**

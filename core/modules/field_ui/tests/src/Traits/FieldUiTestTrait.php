@@ -93,7 +93,7 @@ trait FieldUiTestTrait {
     $this->submitForm($initial_edit, 'Save and continue');
     // Set the main content to only the content region because the label can
     // contain HTML which will be auto-escaped by Twig.
-    $this->assertRaw('field-config-edit-form');
+    $this->assertSession()->responseContains('field-config-edit-form');
     // Check that the page does not have double escaped HTML tags.
     $this->assertSession()->responseNotContains('&amp;lt;');
 

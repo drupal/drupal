@@ -69,7 +69,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Test adding a view mode.
     $edit = [
@@ -123,7 +123,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Test adding a form mode.
     $edit = [

@@ -39,9 +39,9 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
     $this->assertSession()->pageTextMatchesCount(3, '/Duplicated message/');
 
     // Ensure Markup objects are rendered as expected.
-    $this->assertRaw('Markup with <em>markup!</em>');
+    $this->assertSession()->responseContains('Markup with <em>markup!</em>');
     $this->assertSession()->pageTextMatchesCount(1, '/Markup with markup!/');
-    $this->assertRaw('Markup2 with <em>markup!</em>');
+    $this->assertSession()->responseContains('Markup2 with <em>markup!</em>');
 
     // Ensure when the same message is of different types it is not duplicated.
     $this->assertSession()->pageTextMatchesCount(1, '$Non duplicate Markup / string.$');

@@ -55,9 +55,9 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
-    $this->assertRaw('<pre class="backtrace">');
+    $this->assertSession()->responseContains('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
-    $this->assertRaw('&amp;');
+    $this->assertSession()->responseContains('&amp;');
     $this->assertSession()->responseNotContains('&amp;amp;');
 
     // Set error reporting to display verbose notices.
@@ -131,7 +131,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     // error message.
     $this->assertSession()->pageTextContains($error_pdo_exception['@message']);
     $error_details = new FormattableMarkup('in %function (line ', $error_pdo_exception);
-    $this->assertRaw($error_details);
+    $this->assertSession()->responseContains($error_details);
     $this->drupalGet('error-test/trigger-renderer-exception');
     $this->assertSession()->statusCodeEquals(500);
     $this->assertErrorMessage($error_renderer_exception);
@@ -153,7 +153,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    */
   public function assertErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains($message);
   }
 
   /**

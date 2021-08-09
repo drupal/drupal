@@ -131,11 +131,11 @@ class FileListingTest extends FileFieldTestBase {
     $this->drupalGet('admin/content/files');
     $file = File::load($orphaned_file);
     $usage = $this->sumUsages($file_usage->listUsage($file));
-    $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
+    $this->assertSession()->responseContains('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
     $file = File::load($used_file);
     $usage = $this->sumUsages($file_usage->listUsage($file));
-    $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
+    $this->assertSession()->responseContains('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
     $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", [':value' => 'Temporary']);
     $this->assertCount(1, $result, 'Unused file marked as temporary.');

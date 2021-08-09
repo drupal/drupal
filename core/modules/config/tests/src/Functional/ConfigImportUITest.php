@@ -119,11 +119,11 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify that both appear as ready to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertRaw('<td>' . $name);
-    $this->assertRaw('<td>' . $dynamic_name);
-    $this->assertRaw('<td>core.extension');
-    $this->assertRaw('<td>system.theme');
-    $this->assertRaw('<td>automated_cron.settings');
+    $this->assertSession()->responseContains('<td>' . $name);
+    $this->assertSession()->responseContains('<td>' . $dynamic_name);
+    $this->assertSession()->responseContains('<td>core.extension');
+    $this->assertSession()->responseContains('<td>system.theme');
+    $this->assertSession()->responseContains('<td>automated_cron.settings');
     $this->assertSession()->buttonExists('Import all');
 
     // Import and verify that both do not appear anymore.
@@ -193,9 +193,9 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify that both appear as ready to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertRaw('<td>core.extension');
-    $this->assertRaw('<td>system.theme');
-    $this->assertRaw('<td>automated_cron.settings');
+    $this->assertSession()->responseContains('<td>core.extension');
+    $this->assertSession()->responseContains('<td>system.theme');
+    $this->assertSession()->responseContains('<td>automated_cron.settings');
 
     // Import and verify that both do not appear anymore.
     $this->submitForm([], 'Import all');

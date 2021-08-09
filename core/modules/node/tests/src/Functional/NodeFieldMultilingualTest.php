@@ -109,12 +109,12 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $this->drupalGet("it/node/{$node->id()}");
     // Verify that body is correctly displayed using Italian as requested
     // language.
-    $this->assertRaw($body_value);
+    $this->assertSession()->pageTextContains($body_value);
 
     $this->drupalGet("node/{$node->id()}");
     // Verify that body is correctly displayed using English as requested
     // language.
-    $this->assertRaw($body_value);
+    $this->assertSession()->pageTextContains($body_value);
   }
 
   /**

@@ -243,7 +243,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('Test context-aware block');
     $this->assertSession()->pageTextContains('User context found.');
-    $this->assertRaw($expected_text);
+    $this->assertSession()->responseContains($expected_text);
 
     // Test context mapping form element is not visible if there are no valid
     // context options for the block (the test_context_aware_no_valid_context_options

@@ -122,11 +122,11 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Assert the old revision message.
     $date = $this->container->get('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
     $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId()]);
-    $this->assertRaw(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
+    $this->assertSession()->responseContains(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
 
     // Assert the current revision message.
     $date = $this->container->get('date.formatter')->format($nodes[1]->revision_timestamp->value, 'short');
-    $this->assertRaw($nodes[1]->toLink($date)->toString() . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
+    $this->assertSession()->responseContains($nodes[1]->toLink($date)->toString() . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
   }
 
   /**

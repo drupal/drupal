@@ -214,7 +214,7 @@ class DefaultViewsTest extends UITestBase {
     $this->assertSession()->linkByHrefExists('test_page_display_menu/local');
 
     // Check that a dynamic path is shown as text.
-    $this->assertRaw('test_route_with_suffix/%/suffix');
+    $this->assertSession()->responseContains('test_route_with_suffix/%/suffix');
     $this->assertSession()->linkByHrefNotExists(Url::fromUri('base:test_route_with_suffix/%/suffix')->toString());
   }
 

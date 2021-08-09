@@ -187,14 +187,14 @@ class MenuUiTest extends BrowserTestBase {
 
     // Assert the new menu.
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
-    $this->assertRaw($label);
+    $this->assertSession()->pageTextContains($label);
 
     // Edit the menu.
     $new_label = $this->randomMachineName(16);
     $menu->set('label', $new_label);
     $menu->save();
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
-    $this->assertRaw($new_label);
+    $this->assertSession()->pageTextContains($new_label);
   }
 
   /**

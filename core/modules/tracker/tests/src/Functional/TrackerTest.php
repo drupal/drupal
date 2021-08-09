@@ -237,7 +237,7 @@ class TrackerTest extends BrowserTestBase {
     Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertSession()->assertNoEscaped('<em>' . $this->user->id() . '</em>');
-    $this->assertRaw('<em>' . $this->user->id() . '</em>');
+    $this->assertSession()->responseContains('<em>' . $this->user->id() . '</em>');
   }
 
   /**

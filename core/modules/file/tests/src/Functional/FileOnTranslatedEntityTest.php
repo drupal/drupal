@@ -115,7 +115,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save (this translation)');
     // This inspects the HTML after the post of the translation, the file
     // should be displayed on the original node.
-    $this->assertRaw('file--mime-text-plain');
+    $this->assertSession()->responseContains('file--mime-text-plain');
     $second_fid = $this->getLastFileId();
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
@@ -149,7 +149,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertTrue($file->isPermanent(), 'First file still exists and is permanent.');
     // This inspects the HTML after the post of the translation, the file
     // should be displayed on the original node.
-    $this->assertRaw('file--mime-text-plain');
+    $this->assertSession()->responseContains('file--mime-text-plain');
 
     // Ensure the file status of the second file is permanent.
     $file = File::load($second_fid);

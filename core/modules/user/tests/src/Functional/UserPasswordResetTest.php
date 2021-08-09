@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\user\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
@@ -331,10 +330,9 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Log in as a different user.
     $this->drupalLogin($this->account);
     $this->drupalGet($resetURL);
-    $this->assertRaw(new FormattableMarkup(
-      'Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
-      ['%other_user' => $this->account->getAccountName(), '%resetting_user' => $another_account->getAccountName(), ':logout' => Url::fromRoute('user.logout')->toString()]
-    ));
+    $this->assertSession()->pageTextContains("Another user ({$this->account->getAccountName()}) is already logged into the site on this computer, but you tried to use a one-time link for user {$another_account->getAccountName()}. Please log out and try using the link again.");
+    $this->assertSession()->linkExists('log out');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('user.logout')->toString());
 
     $another_account->delete();
     $this->drupalGet($resetURL);

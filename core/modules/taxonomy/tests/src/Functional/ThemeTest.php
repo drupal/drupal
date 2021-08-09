@@ -44,20 +44,20 @@ class ThemeTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     // Check that the administrative theme's CSS appears on the page for adding
     // a taxonomy term.
-    $this->assertRaw('seven/css/base/elements.css');
+    $this->assertSession()->responseContains('seven/css/base/elements.css');
 
     // Viewing a taxonomy term should use the default theme.
     $term = $this->createTerm($vocabulary);
     $this->drupalGet('taxonomy/term/' . $term->id());
     // Check that the default theme's CSS appears on the page for viewing
     // a taxonomy term.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('bartik/css/base/elements.css');
 
     // Editing a taxonomy term should use the same theme as adding one.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     // Check that the administrative theme's CSS appears on the page for editing
     // a taxonomy term.
-    $this->assertRaw('seven/css/base/elements.css');
+    $this->assertSession()->responseContains('seven/css/base/elements.css');
   }
 
 }

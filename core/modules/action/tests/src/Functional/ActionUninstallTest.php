@@ -40,7 +40,7 @@ class ActionUninstallTest extends BrowserTestBase {
 
     $this->drupalGet('admin/people');
     // Ensure we have the user_block_user_action listed.
-    $this->assertRaw('<option value="user_block_user_action">Block the selected user(s)</option>');
+    $this->assertSession()->responseContains('<option value="user_block_user_action">Block the selected user(s)</option>');
 
   }
 

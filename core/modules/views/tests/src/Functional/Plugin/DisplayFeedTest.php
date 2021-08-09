@@ -76,7 +76,7 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
     // Verify HTML is properly escaped in the description field.
-    $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
+    $this->assertSession()->responseContains('&lt;p&gt;A paragraph&lt;/p&gt;');
 
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_display_feed');
     $display = &$view->getDisplay('feed_1');
@@ -137,7 +137,7 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
     // Verify HTML is properly escaped in the description field.
-    $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
+    $this->assertSession()->responseContains('&lt;p&gt;A paragraph&lt;/p&gt;');
 
     // Change the display to use the nid field, which is rewriting output as
     // 'node/{{ nid }}' and make sure things are still working.

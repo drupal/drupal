@@ -105,7 +105,7 @@ class LinkFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
-    $this->assertRaw('placeholder="http://example.com"');
+    $this->assertSession()->responseContains('placeholder="http://example.com"');
 
     // Create a path alias.
     $this->createPathAlias('/admin', '/a/path/alias');
@@ -222,7 +222,7 @@ class LinkFieldTest extends BrowserTestBase {
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
-      $this->assertRaw('"' . $string . '"');
+      $this->assertSession()->responseContains('"' . $string . '"');
     }
   }
 
@@ -296,14 +296,14 @@ class LinkFieldTest extends BrowserTestBase {
       // Assert label is shown.
       $this->assertSession()->pageTextContains('Read more about this entity');
       $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
-      $this->assertRaw('placeholder="http://example.com"');
+      $this->assertSession()->responseContains('placeholder="http://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
         $this->assertSession()->fieldNotExists("{$field_name}[0][title]");
         $this->assertSession()->responseNotContains('placeholder="Enter the text for this link"');
       }
       else {
-        $this->assertRaw('placeholder="Enter the text for this link"');
+        $this->assertSession()->responseContains('placeholder="Enter the text for this link"');
 
         $this->assertSession()->fieldValueEquals("{$field_name}[0][title]", '');
         if ($title_setting === DRUPAL_OPTIONAL) {
