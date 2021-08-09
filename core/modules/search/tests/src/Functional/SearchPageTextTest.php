@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\search\Functional;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\BrowserTestBase;
 
@@ -82,7 +81,6 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains('search yielded no results');
     $this->assertSession()->pageTextContains('Search');
-    $title_source = 'Search for @keywords | Drupal';
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
     $this->assertSession()->pageTextNotContains('Node');
     $this->assertSession()->pageTextNotContains('Node');
@@ -105,8 +103,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $actual_title = $this->xpath('//title')[0]->getText();
-    $this->assertEquals(Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), $actual_title, 'Search page title is correct');
+    $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
 
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalGet('search/user');

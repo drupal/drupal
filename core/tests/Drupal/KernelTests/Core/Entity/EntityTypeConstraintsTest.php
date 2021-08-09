@@ -67,7 +67,7 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
     $entity->changed->value = REQUEST_TIME - 86400;
     $violations = $entity->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed.');
-    $this->assertEquals(t('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.'), $violations[0]->getMessage());
+    $this->assertEquals('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.', $violations[0]->getMessage());
   }
 
 }

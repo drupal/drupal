@@ -135,9 +135,9 @@ class RegistrationWithUserFieldsTest extends WebDriverTestBase {
       ->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $name . '@example.com']);
     $new_user = reset($accounts);
-    $this->assertEquals($value, $new_user->test_user_field[0]->value, t('The field value was correctly saved.'));
-    $this->assertEquals($value . '1', $new_user->test_user_field[1]->value, t('The field value was correctly saved.'));
-    $this->assertEquals($value . '2', $new_user->test_user_field[2]->value, t('The field value was correctly saved.'));
+    $this->assertEquals($value, $new_user->test_user_field[0]->value);
+    $this->assertEquals($value . '1', $new_user->test_user_field[1]->value);
+    $this->assertEquals($value . '2', $new_user->test_user_field[2]->value);
   }
 
 }
