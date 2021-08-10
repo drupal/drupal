@@ -9,9 +9,10 @@
   Drupal.ckeditor = Drupal.ckeditor || {};
   Drupal.behaviors.ckeditorAdmin = {
     attach: function attach(context) {
-      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').once('ckeditor-configuration');
+      var configurationForm = once('ckeditor-configuration', '.ckeditor-toolbar-configuration', context);
 
-      if ($configurationForm.length) {
+      if (configurationForm.length) {
+        var $configurationForm = $(configurationForm);
         var $textarea = $configurationForm.find('.js-form-item-editor-settings-toolbar-button-groups').hide().find('textarea');
         $configurationForm.append(drupalSettings.ckeditor.toolbarAdmin);
         Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
@@ -36,9 +37,9 @@
         return;
       }
 
-      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').findOnce('ckeditor-configuration');
+      var configurationForm = once.filter('ckeditor-configuration', '.ckeditor-toolbar-configuration', context);
 
-      if ($configurationForm.length && Drupal.ckeditor.models && Drupal.ckeditor.models.Model) {
+      if (configurationForm.length && Drupal.ckeditor.models && Drupal.ckeditor.models.Model) {
         var config = Drupal.ckeditor.models.Model.toJSON().activeEditorConfig;
         var buttons = Drupal.ckeditor.views.controller.getButtonList(config);
         var $activeToolbar = $('.ckeditor-toolbar-configuration').find('.ckeditor-toolbar-active');
@@ -194,9 +195,10 @@
   Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
     attach: function attach(context) {
       var $context = $(context);
-      var $ckeditorPluginSettings = $context.find('#ckeditor-plugin-settings').once('ckeditor-plugin-settings');
+      var ckeditorPluginSettings = once('ckeditor-plugin-settings', '#ckeditor-plugin-settings', context);
 
-      if ($ckeditorPluginSettings.length) {
+      if (ckeditorPluginSettings.length) {
+        var $ckeditorPluginSettings = $(ckeditorPluginSettings);
         $ckeditorPluginSettings.find('[data-ckeditor-buttons]').each(function () {
           var $this = $(this);
 

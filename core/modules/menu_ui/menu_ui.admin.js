@@ -8,9 +8,10 @@
 (function ($, Drupal) {
   Drupal.behaviors.menuUiChangeParentItems = {
     attach: function attach(context, settings) {
-      var $menu = $('#edit-menu').once('menu-parent');
+      var menu = once('menu-parent', '#edit-menu');
 
-      if ($menu.length) {
+      if (menu.length) {
+        var $menu = $(menu);
         Drupal.menuUiUpdateParentList();
         $menu.on('change', 'input', Drupal.menuUiUpdateParentList);
       }

@@ -18,7 +18,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
       Object.keys(settings.tableDrag || {}).forEach(function (base) {
-        initTableDrag($(context).find("#".concat(base)).once('tabledrag'), base);
+        initTableDrag($(once('tabledrag', "#".concat(base), context)), base);
       });
     }
   };
@@ -162,7 +162,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
     this.$toggleWeightButton.html(Drupal.theme('toggleButtonContent', displayWeight));
-    $('table').findOnce('tabledrag').trigger('columnschange', !!displayWeight);
+    $(once.filter('tabledrag', 'table')).trigger('columnschange', !!displayWeight);
   };
 
   Drupal.tableDrag.prototype.toggleColumns = function () {
@@ -177,7 +177,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.hideColumns = function () {
-    var $tables = $('table').findOnce('tabledrag');
+    var $tables = $(once.filter('tabledrag', 'table'));
     $tables.find('.tabledrag-hide').css('display', 'none');
     $tables.find('.tabledrag-handle').css('display', '');
     $tables.find('.tabledrag-has-colspan').each(function () {
@@ -186,7 +186,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.showColumns = function () {
-    var $tables = $('table').findOnce('tabledrag');
+    var $tables = $(once.filter('tabledrag', 'table'));
     $tables.find('.tabledrag-hide').css('display', '');
     $tables.find('.tabledrag-handle').css('display', 'none');
     $tables.find('.tabledrag-has-colspan').each(function () {

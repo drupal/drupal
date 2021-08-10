@@ -67,8 +67,8 @@
     };
     this.settings = settings;
     this.$exposed_form = $("form#views-exposed-form-".concat(settings.view_name.replace(/_/g, '-'), "-").concat(settings.view_display_id.replace(/_/g, '-')));
-    this.$exposed_form.once('exposed-form').each($.proxy(this.attachExposedFormAjax, this));
-    this.$view.filter($.proxy(this.filterNestedViews, this)).once('ajax-pager').each($.proxy(this.attachPagerAjax, this));
+    once('exposed-form', this.$exposed_form).forEach($.proxy(this.attachExposedFormAjax, this));
+    once('ajax-pager', this.$view.filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));
     var selfSettings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,

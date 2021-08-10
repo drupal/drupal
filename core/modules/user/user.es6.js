@@ -63,224 +63,219 @@
   Drupal.behaviors.password = {
     attach(context, settings) {
       const cssClasses = Drupal.user.password.css;
-      $(context)
-        .find('input.js-password-field')
-        .once('password')
-        .each((index, value) => {
-          const $mainInput = $(value);
-          const $mainInputParent = $mainInput
-            .parent()
-            .addClass(cssClasses.passwordParent);
-          const $passwordWidget = $mainInput.closest(
-            '.js-form-type-password-confirm',
-          );
-          const $confirmInput = $passwordWidget.find(
-            'input.js-password-confirm',
-          );
-          const $passwordConfirmMessage = $(
-            Drupal.theme('passwordConfirmMessage', settings.password),
-          );
+      once('password', 'input.js-password-field', context).forEach((value) => {
+        const $mainInput = $(value);
+        const $mainInputParent = $mainInput
+          .parent()
+          .addClass(cssClasses.passwordParent);
+        const $passwordWidget = $mainInput.closest(
+          '.js-form-type-password-confirm',
+        );
+        const $confirmInput = $passwordWidget.find('input.js-password-confirm');
+        const $passwordConfirmMessage = $(
+          Drupal.theme('passwordConfirmMessage', settings.password),
+        );
 
-          let $passwordMatchStatus = $passwordConfirmMessage
-            .find('[data-drupal-selector="password-match-status-text"]')
+        let $passwordMatchStatus = $passwordConfirmMessage
+          .find('[data-drupal-selector="password-match-status-text"]')
+          .first();
+        if ($passwordMatchStatus.length === 0) {
+          $passwordMatchStatus = $passwordConfirmMessage.find('span').first();
+          Drupal.deprecationError({
+            message:
+              'Returning <span> without data-drupal-selector="password-match-status-text" attribute is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3152101',
+          });
+        }
+
+        const $confirmInputParent = $confirmInput
+          .parent()
+          .addClass('confirm-parent')
+          .append($passwordConfirmMessage);
+
+        // List of classes to be removed from the strength bar on a state
+        // change.
+        const passwordStrengthBarClassesToRemove = [
+          cssClasses.passwordWeak || '',
+          cssClasses.passwordFair || '',
+          cssClasses.passwordGood || '',
+          cssClasses.passwordStrong || '',
+        ]
+          .join(' ')
+          .trim();
+
+        // List of classes to be removed from the text wrapper on a state
+        // change.
+        const confirmTextWrapperClassesToRemove = [
+          cssClasses.passwordsMatch || '',
+          cssClasses.passwordsNotMatch || '',
+        ]
+          .join(' ')
+          .trim();
+
+        // List of classes to be removed from the widget on a state change.
+        const widgetClassesToRemove = [
+          cssClasses.widgetInitial || '',
+          cssClasses.passwordEmpty || '',
+          cssClasses.passwordFilled || '',
+          cssClasses.confirmEmpty || '',
+          cssClasses.confirmFilled || '',
+        ]
+          .join(' ')
+          .trim();
+
+        const password = {};
+
+        // If the password strength indicator is enabled, add its markup.
+        if (settings.password.showStrengthIndicator) {
+          const $passwordStrength = $(
+            Drupal.theme('passwordStrength', settings.password),
+          );
+          password.$strengthBar = $passwordStrength
+            .find('[data-drupal-selector="password-strength-indicator"]')
             .first();
-          if ($passwordMatchStatus.length === 0) {
-            $passwordMatchStatus = $passwordConfirmMessage.find('span').first();
+          if (password.$strengthBar.length === 0) {
+            password.$strengthBar = $passwordStrength
+              .find('.js-password-strength__indicator')
+              .first();
             Drupal.deprecationError({
               message:
-                'Returning <span> without data-drupal-selector="password-match-status-text" attribute is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3152101',
+                'The js-password-strength__indicator class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__indicator with a data-drupal-selector="password-strength-indicator" attribute. See https://www.drupal.org/node/3152101',
             });
           }
-
-          const $confirmInputParent = $confirmInput
-            .parent()
-            .addClass('confirm-parent')
-            .append($passwordConfirmMessage);
-
-          // List of classes to be removed from the strength bar on a state
-          // change.
-          const passwordStrengthBarClassesToRemove = [
-            cssClasses.passwordWeak || '',
-            cssClasses.passwordFair || '',
-            cssClasses.passwordGood || '',
-            cssClasses.passwordStrong || '',
-          ]
-            .join(' ')
-            .trim();
-
-          // List of classes to be removed from the text wrapper on a state
-          // change.
-          const confirmTextWrapperClassesToRemove = [
-            cssClasses.passwordsMatch || '',
-            cssClasses.passwordsNotMatch || '',
-          ]
-            .join(' ')
-            .trim();
-
-          // List of classes to be removed from the widget on a state change.
-          const widgetClassesToRemove = [
-            cssClasses.widgetInitial || '',
-            cssClasses.passwordEmpty || '',
-            cssClasses.passwordFilled || '',
-            cssClasses.confirmEmpty || '',
-            cssClasses.confirmFilled || '',
-          ]
-            .join(' ')
-            .trim();
-
-          const password = {};
-
-          // If the password strength indicator is enabled, add its markup.
-          if (settings.password.showStrengthIndicator) {
-            const $passwordStrength = $(
-              Drupal.theme('passwordStrength', settings.password),
-            );
-            password.$strengthBar = $passwordStrength
-              .find('[data-drupal-selector="password-strength-indicator"]')
-              .first();
-            if (password.$strengthBar.length === 0) {
-              password.$strengthBar = $passwordStrength
-                .find('.js-password-strength__indicator')
-                .first();
-              Drupal.deprecationError({
-                message:
-                  'The js-password-strength__indicator class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__indicator with a data-drupal-selector="password-strength-indicator" attribute. See https://www.drupal.org/node/3152101',
-              });
-            }
+          password.$strengthTextWrapper = $passwordStrength
+            .find('[data-drupal-selector="password-strength-text"]')
+            .first();
+          if (password.$strengthTextWrapper.length === 0) {
             password.$strengthTextWrapper = $passwordStrength
-              .find('[data-drupal-selector="password-strength-text"]')
+              .find('.js-password-strength__text')
               .first();
-            if (password.$strengthTextWrapper.length === 0) {
-              password.$strengthTextWrapper = $passwordStrength
-                .find('.js-password-strength__text')
-                .first();
-              Drupal.deprecationError({
-                message:
-                  'The js-password-strength__text class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__text with a data-drupal-selector="password-strength-text" attribute. See https://www.drupal.org/node/3152101',
-              });
+            Drupal.deprecationError({
+              message:
+                'The js-password-strength__text class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__text with a data-drupal-selector="password-strength-text" attribute. See https://www.drupal.org/node/3152101',
+            });
+          }
+          password.$suggestions = $(
+            Drupal.theme('passwordSuggestions', settings.password, []),
+          );
+
+          password.$suggestions.hide();
+          $mainInputParent.append($passwordStrength);
+          $confirmInputParent.after(password.$suggestions);
+        }
+
+        /**
+         * Adds classes to the widget indicating if the elements are filled.
+         */
+        const addWidgetClasses = () => {
+          $passwordWidget
+            .addClass(
+              $mainInput.val()
+                ? cssClasses.passwordFilled
+                : cssClasses.passwordEmpty,
+            )
+            .addClass(
+              $confirmInput.val()
+                ? cssClasses.confirmFilled
+                : cssClasses.confirmEmpty,
+            );
+        };
+
+        /**
+         * Check that password and confirmation inputs match.
+         *
+         * @param {string} confirmInputVal
+         *   The value of the confirm input.
+         */
+        const passwordCheckMatch = (confirmInputVal) => {
+          const passwordsAreMatching = $mainInput.val() === confirmInputVal;
+          const confirmClass = passwordsAreMatching
+            ? cssClasses.passwordsMatch
+            : cssClasses.passwordsNotMatch;
+          const confirmMessage = passwordsAreMatching
+            ? settings.password.confirmSuccess
+            : settings.password.confirmFailure;
+
+          // Update the success message and set the class if needed.
+          if (
+            !$passwordMatchStatus.hasClass(confirmClass) ||
+            !$passwordMatchStatus.html() === confirmMessage
+          ) {
+            if (confirmTextWrapperClassesToRemove) {
+              $passwordMatchStatus.removeClass(
+                confirmTextWrapperClassesToRemove,
+              );
             }
-            password.$suggestions = $(
-              Drupal.theme('passwordSuggestions', settings.password, []),
+            $passwordMatchStatus.html(confirmMessage).addClass(confirmClass);
+          }
+        };
+
+        /**
+         * Checks the password strength.
+         */
+        const passwordCheck = () => {
+          if (settings.password.showStrengthIndicator) {
+            // Evaluate the password strength.
+            const result = Drupal.evaluatePasswordStrength(
+              $mainInput.val(),
+              settings.password,
+            );
+            const $currentPasswordSuggestions = $(
+              Drupal.theme(
+                'passwordSuggestions',
+                settings.password,
+                result.messageTips,
+              ),
             );
 
-            password.$suggestions.hide();
-            $mainInputParent.append($passwordStrength);
-            $confirmInputParent.after(password.$suggestions);
+            // Update the suggestions for how to improve the password if needed.
+            if (
+              password.$suggestions.html() !==
+              $currentPasswordSuggestions.html()
+            ) {
+              password.$suggestions.replaceWith($currentPasswordSuggestions);
+              password.$suggestions = $currentPasswordSuggestions.toggle(
+                // Only show the description box if a weakness exists in the
+                // password.
+                result.strength !== 100,
+              );
+            }
+
+            if (passwordStrengthBarClassesToRemove) {
+              password.$strengthBar.removeClass(
+                passwordStrengthBarClassesToRemove,
+              );
+            }
+            // Adjust the length of the strength indicator.
+            password.$strengthBar
+              .css('width', `${result.strength}%`)
+              .addClass(result.indicatorClass);
+
+            // Update the strength indication text.
+            password.$strengthTextWrapper.html(result.indicatorText);
           }
 
-          /**
-           * Adds classes to the widget indicating if the elements are filled.
-           */
-          const addWidgetClasses = () => {
-            $passwordWidget
-              .addClass(
-                $mainInput.val()
-                  ? cssClasses.passwordFilled
-                  : cssClasses.passwordEmpty,
-              )
-              .addClass(
-                $confirmInput.val()
-                  ? cssClasses.confirmFilled
-                  : cssClasses.confirmEmpty,
-              );
-          };
-
-          /**
-           * Check that password and confirmation inputs match.
-           *
-           * @param {string} confirmInputVal
-           *   The value of the confirm input.
-           */
-          const passwordCheckMatch = (confirmInputVal) => {
-            const passwordsAreMatching = $mainInput.val() === confirmInputVal;
-            const confirmClass = passwordsAreMatching
-              ? cssClasses.passwordsMatch
-              : cssClasses.passwordsNotMatch;
-            const confirmMessage = passwordsAreMatching
-              ? settings.password.confirmSuccess
-              : settings.password.confirmFailure;
-
-            // Update the success message and set the class if needed.
-            if (
-              !$passwordMatchStatus.hasClass(confirmClass) ||
-              !$passwordMatchStatus.html() === confirmMessage
-            ) {
-              if (confirmTextWrapperClassesToRemove) {
-                $passwordMatchStatus.removeClass(
-                  confirmTextWrapperClassesToRemove,
-                );
-              }
-              $passwordMatchStatus.html(confirmMessage).addClass(confirmClass);
-            }
-          };
-
-          /**
-           * Checks the password strength.
-           */
-          const passwordCheck = () => {
-            if (settings.password.showStrengthIndicator) {
-              // Evaluate the password strength.
-              const result = Drupal.evaluatePasswordStrength(
-                $mainInput.val(),
-                settings.password,
-              );
-              const $currentPasswordSuggestions = $(
-                Drupal.theme(
-                  'passwordSuggestions',
-                  settings.password,
-                  result.messageTips,
-                ),
-              );
-
-              // Update the suggestions for how to improve the password if needed.
-              if (
-                password.$suggestions.html() !==
-                $currentPasswordSuggestions.html()
-              ) {
-                password.$suggestions.replaceWith($currentPasswordSuggestions);
-                password.$suggestions = $currentPasswordSuggestions.toggle(
-                  // Only show the description box if a weakness exists in the
-                  // password.
-                  result.strength !== 100,
-                );
-              }
-
-              if (passwordStrengthBarClassesToRemove) {
-                password.$strengthBar.removeClass(
-                  passwordStrengthBarClassesToRemove,
-                );
-              }
-              // Adjust the length of the strength indicator.
-              password.$strengthBar
-                .css('width', `${result.strength}%`)
-                .addClass(result.indicatorClass);
-
-              // Update the strength indication text.
-              password.$strengthTextWrapper.html(result.indicatorText);
-            }
-
-            // Check the value in the confirm input and show results.
-            if ($confirmInput.val()) {
-              passwordCheckMatch($confirmInput.val());
-              $passwordConfirmMessage.css({ visibility: 'visible' });
-            } else {
-              $passwordConfirmMessage.css({ visibility: 'hidden' });
-            }
-
-            if (widgetClassesToRemove) {
-              $passwordWidget.removeClass(widgetClassesToRemove);
-              addWidgetClasses();
-            }
-          };
+          // Check the value in the confirm input and show results.
+          if ($confirmInput.val()) {
+            passwordCheckMatch($confirmInput.val());
+            $passwordConfirmMessage.css({ visibility: 'visible' });
+          } else {
+            $passwordConfirmMessage.css({ visibility: 'hidden' });
+          }
 
           if (widgetClassesToRemove) {
+            $passwordWidget.removeClass(widgetClassesToRemove);
             addWidgetClasses();
           }
+        };
 
-          // Monitor input events.
-          $mainInput.on('input', passwordCheck);
-          $confirmInput.on('input', passwordCheck);
-        });
+        if (widgetClassesToRemove) {
+          addWidgetClasses();
+        }
+
+        // Monitor input events.
+        $mainInput.on('input', passwordCheck);
+        $confirmInput.on('input', passwordCheck);
+      });
     },
   };
 

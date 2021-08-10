@@ -28,11 +28,13 @@
       }
 
       // Bind hide/show and rearrange customization checkboxes.
-      $configForm
-        .once('negotiation-language-admin-bind')
-        .on('change', inputSelector, (event) => {
+      $(once('negotiation-language-admin-bind', $configForm)).on(
+        'change',
+        inputSelector,
+        (event) => {
           toggleTable(event.target);
-        });
+        },
+      );
       // Initially, hide language detection types that are not customized.
       $configForm
         .find(`${inputSelector}:not(:checked)`)

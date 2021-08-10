@@ -44,19 +44,22 @@
     // Identify the button that was clicked so that .ajaxSubmit() can use it.
     // We need to do this for both .click() and .mousedown() since JavaScript
     // code might trigger either behavior.
-    const $submitButtons = $form
-      .find('input[type=submit].js-form-submit, button.js-form-submit')
-      .once('views-ajax-submit');
+    const $submitButtons = $(
+      once(
+        'views-ajax-submit',
+        $form.find('input[type=submit].js-form-submit, button.js-form-submit'),
+      ),
+    );
     $submitButtons.on('click mousedown', function () {
       this.form.clk = this;
     });
-    $form.once('views-ajax-submit').each(function () {
-      const $form = $(this);
+    once('views-ajax-submit', $form).forEach((form) => {
+      const $form = $(form);
       const elementSettings = {
         url: response.url,
         event: 'submit',
         base: $form.attr('id'),
-        element: this,
+        element: form,
       };
       const ajaxForm = Drupal.ajax(elementSettings);
       ajaxForm.$form = $form;
@@ -166,13 +169,14 @@
    */
   Drupal.behaviors.livePreview = {
     attach(context) {
-      $('input#edit-displays-live-preview', context)
-        .once('views-ajax')
-        .on('click', function () {
+      $(once('views-ajax', 'input#edit-displays-live-preview', context)).on(
+        'click',
+        function () {
           if ($(this).is(':checked')) {
             $('#preview-submit').trigger('click');
           }
-        });
+        },
+      );
     },
   };
 
@@ -186,15 +190,13 @@
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach(context) {
-      $('#views-tabset a')
-        .once('views-ajax')
-        .on('click', function () {
-          const href = $(this).attr('href');
-          // Cut of #views-tabset.
-          const displayId = href.substr(11);
-          // Set the form element.
-          $('#views-live-preview #preview-display-id').val(displayId);
-        });
+      $(once('views-ajax', '#views-tabset a')).on('click', function () {
+        const href = $(this).attr('href');
+        // Cut of #views-tabset.
+        const displayId = href.substr(11);
+        // Set the form element.
+        $('#views-live-preview #preview-display-id').val(displayId);
+      });
     },
   };
 
@@ -214,58 +216,56 @@
         progress: { type: 'fullscreen' },
       };
       // Bind AJAX behaviors to all items showing the class.
-      $('a.views-ajax-link', context)
-        .once('views-ajax')
-        .each(function () {
-          const elementSettings = baseElementSettings;
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
-          // Set the URL to go to the anchor.
-          if ($(this).attr('href')) {
-            elementSettings.url = $(this).attr('href');
-          }
-          Drupal.ajax(elementSettings);
-        });
+      once('views-ajax', 'a.views-ajax-link', context).forEach((link) => {
+        const $link = $(link);
+        const elementSettings = baseElementSettings;
+        elementSettings.base = $link.attr('id');
+        elementSettings.element = link;
+        // Set the URL to go to the anchor.
+        if ($link.attr('href')) {
+          elementSettings.url = $link.attr('href');
+        }
+        Drupal.ajax(elementSettings);
+      });
 
-      $('div#views-live-preview a')
-        .once('views-ajax')
-        .each(function () {
-          // We don't bind to links without a URL.
-          if (!$(this).attr('href')) {
-            return true;
-          }
+      once('views-ajax', 'div#views-live-preview a').forEach((link) => {
+        const $link = $(link);
+        // We don't bind to links without a URL.
+        if (!$link.attr('href')) {
+          return true;
+        }
 
-          const elementSettings = baseElementSettings;
-          // Set the URL to go to the anchor.
-          elementSettings.url = $(this).attr('href');
-          if (
-            Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
-            'admin/structure/views'
-          ) {
-            return true;
-          }
+        const elementSettings = baseElementSettings;
+        // Set the URL to go to the anchor.
+        elementSettings.url = $link.attr('href');
+        if (
+          Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
+          'admin/structure/views'
+        ) {
+          return true;
+        }
 
-          elementSettings.wrapper = 'views-preview-wrapper';
-          elementSettings.method = 'replaceWith';
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
-          Drupal.ajax(elementSettings);
-        });
+        elementSettings.wrapper = 'views-preview-wrapper';
+        elementSettings.method = 'replaceWith';
+        elementSettings.base = link.id;
+        elementSettings.element = link;
+        Drupal.ajax(elementSettings);
+      });
 
       // Within a live preview, make exposed widget form buttons re-trigger the
       // Preview button.
       // @todo Revisit this after fixing Views UI to display a Preview outside
       //   of the main Edit form.
-      $('div#views-live-preview input[type=submit]')
-        .once('views-ajax')
-        .each(function (event) {
-          $(this).on('click', function () {
+      once('views-ajax', 'div#views-live-preview input[type=submit]').forEach(
+        (submit) => {
+          const $submit = $(submit);
+          $submit.on('click', function () {
             this.form.clk = this;
             return true;
           });
           const elementSettings = baseElementSettings;
           // Set the URL to go to the anchor.
-          elementSettings.url = $(this.form).attr('action');
+          elementSettings.url = $(submit.form).attr('action');
           if (
             Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
             'admin/structure/views'
@@ -276,11 +276,12 @@
           elementSettings.wrapper = 'views-preview-wrapper';
           elementSettings.method = 'replaceWith';
           elementSettings.event = 'click';
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
+          elementSettings.base = submit.id;
+          elementSettings.element = submit;
 
           Drupal.ajax(elementSettings);
-        });
+        },
+      );
     },
   };
 })(jQuery, Drupal, drupalSettings);

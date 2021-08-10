@@ -4,11 +4,11 @@
  * May only be loaded for authenticated users, with the History module enabled.
  */
 (function ($, Drupal, window) {
-  function processNodeNewIndicators($placeholders) {
+  function processNodeNewIndicators(placeholders) {
     const newNodeString = Drupal.t('new');
     const updatedNodeString = Drupal.t('updated');
 
-    $placeholders.each((index, placeholder) => {
+    placeholders.forEach((placeholder) => {
       const timestamp = parseInt(
         placeholder.getAttribute('data-history-node-timestamp'),
         10,
@@ -24,10 +24,10 @@
     });
   }
 
-  function processNewRepliesIndicators($placeholders) {
+  function processNewRepliesIndicators(placeholders) {
     // Figure out which placeholders need the "x new" replies links.
     const placeholdersToUpdate = {};
-    $placeholders.each((index, placeholder) => {
+    placeholders.forEach((placeholder) => {
       const timestamp = parseInt(
         placeholder.getAttribute('data-history-node-last-comment-timestamp'),
         10,
@@ -80,67 +80,69 @@
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
       const nodeIDs = [];
-      const $nodeNewPlaceholders = $(context)
-        .find('[data-history-node-timestamp]')
-        .once('history')
-        .filter(function () {
-          const nodeTimestamp = parseInt(
-            this.getAttribute('data-history-node-timestamp'),
-            10,
-          );
-          const nodeID = this.getAttribute('data-history-node-id');
-          if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
-            nodeIDs.push(nodeID);
-            return true;
-          }
+      const nodeNewPlaceholders = once(
+        'history',
+        '[data-history-node-timestamp]',
+        context,
+      ).filter((placeholder) => {
+        const nodeTimestamp = parseInt(
+          placeholder.getAttribute('data-history-node-timestamp'),
+          10,
+        );
+        const nodeID = placeholder.getAttribute('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
+          nodeIDs.push(nodeID);
+          return true;
+        }
 
-          return false;
-        });
+        return false;
+      });
 
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
-      const $newRepliesPlaceholders = $(context)
-        .find('[data-history-node-last-comment-timestamp]')
-        .once('history')
-        .filter(function () {
-          const lastCommentTimestamp = parseInt(
-            this.getAttribute('data-history-node-last-comment-timestamp'),
-            10,
-          );
-          const nodeTimestamp = parseInt(
-            this.previousSibling.previousSibling.getAttribute(
-              'data-history-node-timestamp',
-            ),
-            10,
-          );
-          // Discard placeholders that have zero comments.
-          if (lastCommentTimestamp === nodeTimestamp) {
-            return false;
-          }
-          const nodeID = this.previousSibling.previousSibling.getAttribute(
-            'data-history-node-id',
-          );
-          if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
-            if (nodeIDs.indexOf(nodeID) === -1) {
-              nodeIDs.push(nodeID);
-            }
-            return true;
-          }
-
+      const newRepliesPlaceholders = once(
+        'history',
+        '[data-history-node-last-comment-timestamp]',
+        context,
+      ).filter((placeholder) => {
+        const lastCommentTimestamp = parseInt(
+          placeholder.getAttribute('data-history-node-last-comment-timestamp'),
+          10,
+        );
+        const nodeTimestamp = parseInt(
+          placeholder.previousSibling.previousSibling.getAttribute(
+            'data-history-node-timestamp',
+          ),
+          10,
+        );
+        // Discard placeholders that have zero comments.
+        if (lastCommentTimestamp === nodeTimestamp) {
           return false;
-        });
+        }
+        const nodeID = placeholder.previousSibling.previousSibling.getAttribute(
+          'data-history-node-id',
+        );
+        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+          if (nodeIDs.indexOf(nodeID) === -1) {
+            nodeIDs.push(nodeID);
+          }
+          return true;
+        }
+
+        return false;
+      });
 
       if (
-        $nodeNewPlaceholders.length === 0 &&
-        $newRepliesPlaceholders.length === 0
+        nodeNewPlaceholders.length === 0 &&
+        newRepliesPlaceholders.length === 0
       ) {
         return;
       }
 
       // Fetch the node read timestamps from the server.
       Drupal.history.fetchTimestamps(nodeIDs, () => {
-        processNodeNewIndicators($nodeNewPlaceholders);
-        processNewRepliesIndicators($newRepliesPlaceholders);
+        processNodeNewIndicators(nodeNewPlaceholders);
+        processNewRepliesIndicators(newRepliesPlaceholders);
       });
     },
   };

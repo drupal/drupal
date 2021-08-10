@@ -52,8 +52,8 @@
   };
   Drupal.behaviors.contentTranslation = {
     attach: function attach(context) {
-      $(context).find('table .bundle-settings .translatable :input').once('translation-entity-admin-hide').each(function () {
-        var $input = $(this);
+      once('translation-entity-admin-hide', $(context).find('table .bundle-settings .translatable :input')).forEach(function (input) {
+        var $input = $(input);
         var $bundleSettings = $input.closest('.bundle-settings');
 
         if (!$input.is(':checked')) {
@@ -62,7 +62,7 @@
           $bundleSettings.nextUntil('.bundle-settings', '.field-settings').find('.translatable :input:not(:checked)').closest('.field-settings').nextUntil(':not(.column-settings)').hide();
         }
       });
-      $('body').once('translation-entity-admin-bind').on('click', 'table .bundle-settings .translatable :input', function (e) {
+      $(once('translation-entity-admin-bind', 'body')).on('click', 'table .bundle-settings .translatable :input', function (e) {
         var $target = $(e.target);
         var $bundleSettings = $target.closest('.bundle-settings');
         var $settings = $bundleSettings.nextUntil('.bundle-settings');

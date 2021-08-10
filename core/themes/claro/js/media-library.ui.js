@@ -8,7 +8,11 @@
 (function ($, Drupal, window) {
   Drupal.behaviors.MediaLibraryItemSelectionClaro = {
     attach: function attach() {
-      $(window).once('media-library-selection-info-claro-event').on('dialog:aftercreate', function (event, dialog, $element, settings) {
+      if (!once('media-library-selection-info-claro-event', 'html').length) {
+        return;
+      }
+
+      $(window).on('dialog:aftercreate', function (event, dialog, $element, settings) {
         var moveCounter = function moveCounter($selectedCount, $buttonPane) {
           var $moveSelectedCount = $selectedCount.detach();
           $buttonPane.prepend($moveSelectedCount);

@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.behaviors.MediaLibrarySelectAll = {
     attach: function attach(context) {
-      var $view = $('.js-media-library-view[data-view-display-id="page"]', context).once('media-library-select-all');
+      var $view = $(once('media-library-select-all', '.js-media-library-view[data-view-display-id="page"]', context));
 
       if ($view.length && $view.find('.js-media-library-item').length) {
         var $checkbox = $(Drupal.theme('checkbox')).on('click', function (_ref) {

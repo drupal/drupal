@@ -88,7 +88,7 @@
   Drupal.behaviors.contextual = {
     attach: function attach(context) {
       var $context = $(context);
-      var $placeholders = $context.find('[data-contextual-id]').once('contextual-render');
+      var $placeholders = $(once('contextual-render', '[data-contextual-id]', context));
 
       if ($placeholders.length === 0) {
         return;

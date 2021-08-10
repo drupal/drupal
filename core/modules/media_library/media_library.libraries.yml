@@ -4,7 +4,7 @@ click_to_select:
     js/media_library.click_to_select.js: {}
   dependencies:
     - core/drupal
-    - core/jquery.once
+    - core/once
 
 view:
   version: VERSION
@@ -21,7 +21,7 @@ widget:
     js/media_library.widget.js: {}
   dependencies:
     - core/drupal.dialog.ajax
-    - core/jquery.once
+    - core/once
     - core/sortable
     - core/drupal.nodelist.foreach
 
@@ -32,6 +32,7 @@ ui:
   dependencies:
     - core/drupal.ajax
     - core/drupal.announce
-    - core/jquery.once
+    - core/once
+    - core/jquery
     - media_library/view
     - core/tabbable

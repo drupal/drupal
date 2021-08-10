@@ -10,15 +10,15 @@
   /**
    * Processes the markup for "new comment" indicators.
    *
-   * @param {jQuery} $placeholders
+   * @param {Array.<Element>} placeholders
    *   The elements that should be processed.
    */
-  function processCommentNewIndicators($placeholders) {
+  function processCommentNewIndicators(placeholders) {
     let isFirstNewComment = true;
     const newCommentString = Drupal.t('new');
     let $placeholder;
 
-    $placeholders.each((index, placeholder) => {
+    placeholders.forEach((placeholder) => {
       $placeholder = $(placeholder);
       const timestamp = parseInt(
         $placeholder.attr('data-comment-timestamp'),
@@ -69,33 +69,34 @@
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
       const nodeIDs = [];
-      const $placeholders = $(context)
-        .find('[data-comment-timestamp]')
-        .once('history')
-        .filter(function () {
-          const $placeholder = $(this);
-          const commentTimestamp = parseInt(
-            $placeholder.attr('data-comment-timestamp'),
-            10,
-          );
-          const nodeID = $placeholder
-            .closest('[data-history-node-id]')
-            .attr('data-history-node-id');
-          if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
-            nodeIDs.push(nodeID);
-            return true;
-          }
+      const placeholders = once(
+        'history',
+        '[data-comment-timestamp]',
+        context,
+      ).filter((placeholder) => {
+        const $placeholder = $(placeholder);
+        const commentTimestamp = parseInt(
+          $placeholder.attr('data-comment-timestamp'),
+          10,
+        );
+        const nodeID = $placeholder
+          .closest('[data-history-node-id]')
+          .attr('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
+          nodeIDs.push(nodeID);
+          return true;
+        }
 
-          return false;
-        });
+        return false;
+      });
 
-      if ($placeholders.length === 0) {
+      if (placeholders.length === 0) {
         return;
       }
 
       // Fetch the node read timestamps from the server.
       Drupal.history.fetchTimestamps(nodeIDs, () => {
-        processCommentNewIndicators($placeholders);
+        processCommentNewIndicators(placeholders);
       });
     },
   };

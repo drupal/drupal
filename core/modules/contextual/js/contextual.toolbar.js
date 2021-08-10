@@ -34,7 +34,7 @@
 
   Drupal.behaviors.contextualToolbar = {
     attach: function attach(context) {
-      if ($('body').once('contextualToolbar-init').length) {
+      if (once('contextualToolbar-init', 'body').length) {
         initContextualToolbar(context);
       }
     }

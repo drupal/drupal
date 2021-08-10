@@ -27,7 +27,7 @@
   Drupal.behaviors.password = {
     attach: function attach(context, settings) {
       var cssClasses = Drupal.user.password.css;
-      $(context).find('input.js-password-field').once('password').each(function (index, value) {
+      once('password', 'input.js-password-field', context).forEach(function (value) {
         var $mainInput = $(value);
         var $mainInputParent = $mainInput.parent().addClass(cssClasses.passwordParent);
         var $passwordWidget = $mainInput.closest('.js-form-type-password-confirm');

@@ -29,8 +29,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           elementSettings.selector = "#".concat(base);
         }
 
-        $(elementSettings.selector).once('drupal-ajax').each(function () {
-          elementSettings.element = this;
+        once('drupal-ajax', $(elementSettings.selector)).forEach(function (el) {
+          elementSettings.element = el;
           elementSettings.base = base;
           Drupal.ajax(elementSettings);
         });
@@ -40,16 +40,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         return loadAjaxBehavior(base);
       });
       Drupal.ajax.bindAjaxLinks(document.body);
-      $('.use-ajax-submit').once('ajax').each(function () {
+      once('ajax', '.use-ajax-submit').forEach(function (el) {
         var elementSettings = {};
-        elementSettings.url = $(this.form).attr('action');
+        elementSettings.url = $(el.form).attr('action');
         elementSettings.setClick = true;
         elementSettings.event = 'click';
         elementSettings.progress = {
           type: 'throbber'
         };
-        elementSettings.base = $(this).attr('id');
-        elementSettings.element = this;
+        elementSettings.base = el.id;
+        elementSettings.element = el;
         Drupal.ajax(elementSettings);
       });
     },
@@ -139,7 +139,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   };
 
   Drupal.ajax.bindAjaxLinks = function (element) {
-    $(element).find('.use-ajax').once('ajax').each(function (i, ajaxLink) {
+    once('ajax', '.use-ajax', element).forEach(function (ajaxLink) {
       var $linkElement = $(ajaxLink);
       var elementSettings = {
         progress: {

@@ -47,7 +47,7 @@
       }
 
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        initTableDrag($(context).find(`#${base}`).once('tabledrag'), base);
+        initTableDrag($(once('tabledrag', `#${base}`, context)), base);
       });
     },
   };
@@ -370,7 +370,10 @@
 
     // Trigger an event to allow other scripts to react to this display change.
     // Force the extra parameter as a bool.
-    $('table').findOnce('tabledrag').trigger('columnschange', !!displayWeight);
+    $(once.filter('tabledrag', 'table')).trigger(
+      'columnschange',
+      !!displayWeight,
+    );
   };
 
   /**
@@ -396,7 +399,7 @@
    * Undo showColumns().
    */
   Drupal.tableDrag.prototype.hideColumns = function () {
-    const $tables = $('table').findOnce('tabledrag');
+    const $tables = $(once.filter('tabledrag', 'table'));
     // Hide weight/parent cells and headers.
     $tables.find('.tabledrag-hide').css('display', 'none');
     // Show TableDrag handles.
@@ -413,7 +416,7 @@
    * Undo hideColumns().
    */
   Drupal.tableDrag.prototype.showColumns = function () {
-    const $tables = $('table').findOnce('tabledrag');
+    const $tables = $(once.filter('tabledrag', 'table'));
     // Show weight/parent cells and headers.
     $tables.find('.tabledrag-hide').css('display', '');
     // Hide TableDrag handles.

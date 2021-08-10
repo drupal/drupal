@@ -5,6 +5,7 @@ drupal.block:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/once
 
 drupal.block.admin:
   version: VERSION
@@ -19,3 +20,4 @@ drupal.block.admin:
     - core/drupal.announce
     - core/drupal.debounce
     - core/drupal.dialog.ajax
+    - core/once

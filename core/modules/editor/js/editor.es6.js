@@ -204,57 +204,54 @@
         return;
       }
 
-      $(context)
-        .find('[data-editor-for]')
-        .once('editor')
-        .each(function () {
-          const $this = $(this);
-          const field = findFieldForFormatSelector($this);
+      once('editor', '[data-editor-for]', context).forEach((editor) => {
+        const $this = $(editor);
+        const field = findFieldForFormatSelector($this);
 
-          // Opt-out if no supported text area was found.
-          if (!field) {
+        // Opt-out if no supported text area was found.
+        if (!field) {
+          return;
+        }
+
+        // Store the current active format.
+        const activeFormatID = $this.val();
+        field.setAttribute('data-editor-active-text-format', activeFormatID);
+
+        // Directly attach this text editor, if the text format is enabled.
+        if (settings.editor.formats[activeFormatID]) {
+          // XSS protection for the current text format/editor is performed on
+          // the server side, so we don't need to do anything special here.
+          Drupal.editorAttach(field, settings.editor.formats[activeFormatID]);
+        }
+        // When there is no text editor for this text format, still track
+        // changes, because the user has the ability to switch to some text
+        // editor, otherwise this code would not be executed.
+        $(field).on('change.editor keypress.editor', () => {
+          field.setAttribute('data-editor-value-is-changed', 'true');
+          // Just knowing that the value was changed is enough, stop tracking.
+          $(field).off('.editor');
+        });
+
+        // Attach onChange handler to text format selector element.
+        if ($this.is('select')) {
+          $this.on('change.editorAttach', { field }, onTextFormatChange);
+        }
+        // Detach any editor when the containing form is submitted.
+        $this.parents('form').on('submit', (event) => {
+          // Do not detach if the event was canceled.
+          if (event.isDefaultPrevented()) {
             return;
           }
-
-          // Store the current active format.
-          const activeFormatID = $this.val();
-          field.setAttribute('data-editor-active-text-format', activeFormatID);
-
-          // Directly attach this text editor, if the text format is enabled.
+          // Detach the current editor (if any).
           if (settings.editor.formats[activeFormatID]) {
-            // XSS protection for the current text format/editor is performed on
-            // the server side, so we don't need to do anything special here.
-            Drupal.editorAttach(field, settings.editor.formats[activeFormatID]);
+            Drupal.editorDetach(
+              field,
+              settings.editor.formats[activeFormatID],
+              'serialize',
+            );
           }
-          // When there is no text editor for this text format, still track
-          // changes, because the user has the ability to switch to some text
-          // editor, otherwise this code would not be executed.
-          $(field).on('change.editor keypress.editor', () => {
-            field.setAttribute('data-editor-value-is-changed', 'true');
-            // Just knowing that the value was changed is enough, stop tracking.
-            $(field).off('.editor');
-          });
-
-          // Attach onChange handler to text format selector element.
-          if ($this.is('select')) {
-            $this.on('change.editorAttach', { field }, onTextFormatChange);
-          }
-          // Detach any editor when the containing form is submitted.
-          $this.parents('form').on('submit', (event) => {
-            // Do not detach if the event was canceled.
-            if (event.isDefaultPrevented()) {
-              return;
-            }
-            // Detach the current editor (if any).
-            if (settings.editor.formats[activeFormatID]) {
-              Drupal.editorDetach(
-                field,
-                settings.editor.formats[activeFormatID],
-                'serialize',
-              );
-            }
-          });
         });
+      });
     },
 
     detach(context, settings, trigger) {
@@ -264,13 +261,13 @@
       if (trigger === 'serialize') {
         // Removing the editor-processed class guarantees that the editor will
         // be reattached. Only do this if we're planning to destroy the editor.
-        editors = $(context).find('[data-editor-for]').findOnce('editor');
+        editors = once.filter('editor', '[data-editor-for]', context);
       } else {
-        editors = $(context).find('[data-editor-for]').removeOnce('editor');
+        editors = once.remove('editor', '[data-editor-for]', context);
       }
 
-      editors.each(function () {
-        const $this = $(this);
+      editors.forEach((editor) => {
+        const $this = $(editor);
         const activeFormatID = $this.val();
         const field = findFieldForFormatSelector($this);
         if (field && activeFormatID in settings.editor.formats) {

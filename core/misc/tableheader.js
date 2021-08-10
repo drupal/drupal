@@ -39,13 +39,9 @@
   }
 
   function tableHeaderInitHandler(e) {
-    var $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
-    var il = $tables.length;
-
-    for (var i = 0; i < il; i++) {
-      TableHeader.tables.push(new TableHeader($tables[i]));
-    }
-
+    once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(function (table) {
+      TableHeader.tables.push(new TableHeader(table));
+    });
     forTables('onScroll');
   }
 

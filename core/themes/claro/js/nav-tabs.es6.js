@@ -6,7 +6,7 @@
  * added to the main element, and a target element is included.
  */
 (($, Drupal) => {
-  function init(i, tab) {
+  function init(tab) {
     const $tab = $(tab);
     const $target = $tab.find('[data-drupal-nav-tabs-target]');
     const $active = $target.find('.js-active-tab');
@@ -69,6 +69,7 @@
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
     $(window)
+      // @todo use a media query event listener https://www.drupal.org/project/drupal/issues/3225621
       .on('resize.tabs', Drupal.debounce(toggleCollapsed, 150))
       .trigger('resize.tabs');
   }
@@ -77,12 +78,11 @@
    */
   Drupal.behaviors.navTabs = {
     attach(context) {
-      $(context)
-        .find('[data-drupal-nav-tabs].is-collapsible')
-        .once('nav-tabs')
-        .each((i, value) => {
-          $(value).each(init);
-        });
+      once(
+        'nav-tabs',
+        '[data-drupal-nav-tabs].is-collapsible',
+        context,
+      ).forEach(init);
     },
   };
 })(jQuery, Drupal);

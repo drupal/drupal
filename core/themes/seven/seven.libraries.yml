@@ -106,7 +106,7 @@ drupal.nav-tabs:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
     - core/drupal.debounce
     - core/collapse
 
@@ -116,7 +116,7 @@ drupal.responsive-detail:
     js/responsive-details.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/collapse
 
 vertical-tabs:

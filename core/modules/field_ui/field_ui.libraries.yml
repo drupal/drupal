@@ -9,4 +9,4 @@ drupal.field_ui:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once

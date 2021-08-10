@@ -32,13 +32,13 @@
         if (typeof elementSettings.selector === 'undefined') {
           elementSettings.selector = `#${base}`;
         }
-        $(elementSettings.selector)
-          .once('drupal-ajax')
-          .each(function () {
-            elementSettings.element = this;
-            elementSettings.base = base;
-            Drupal.ajax(elementSettings);
-          });
+        // Use jQuery selector instead of a native selector for
+        // backwards compatibility.
+        once('drupal-ajax', $(elementSettings.selector)).forEach((el) => {
+          elementSettings.element = el;
+          elementSettings.base = base;
+          Drupal.ajax(elementSettings);
+        });
       }
 
       // Load all Ajax behaviors specified in the settings.
@@ -49,27 +49,25 @@
       Drupal.ajax.bindAjaxLinks(document.body);
 
       // This class means to submit the form to the action using Ajax.
-      $('.use-ajax-submit')
-        .once('ajax')
-        .each(function () {
-          const elementSettings = {};
+      once('ajax', '.use-ajax-submit').forEach((el) => {
+        const elementSettings = {};
 
-          // Ajax submits specified in this manner automatically submit to the
-          // normal form action.
-          elementSettings.url = $(this.form).attr('action');
-          // Form submit button clicks need to tell the form what was clicked so
-          // it gets passed in the POST request.
-          elementSettings.setClick = true;
-          // Form buttons use the 'click' event rather than mousedown.
-          elementSettings.event = 'click';
-          // Clicked form buttons look better with the throbber than the progress
-          // bar.
-          elementSettings.progress = { type: 'throbber' };
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
+        // Ajax submits specified in this manner automatically submit to the
+        // normal form action.
+        elementSettings.url = $(el.form).attr('action');
+        // Form submit button clicks need to tell the form what was clicked so
+        // it gets passed in the POST request.
+        elementSettings.setClick = true;
+        // Form buttons use the 'click' event rather than mousedown.
+        elementSettings.event = 'click';
+        // Clicked form buttons look better with the throbber than the progress
+        // bar.
+        elementSettings.progress = { type: 'throbber' };
+        elementSettings.base = el.id;
+        elementSettings.element = el;
 
-          Drupal.ajax(elementSettings);
-        });
+        Drupal.ajax(elementSettings);
+      });
     },
 
     detach(context, settings, trigger) {
@@ -289,32 +287,29 @@
    */
   Drupal.ajax.bindAjaxLinks = (element) => {
     // Bind Ajax behaviors to all items showing the class.
-    $(element)
-      .find('.use-ajax')
-      .once('ajax')
-      .each((i, ajaxLink) => {
-        const $linkElement = $(ajaxLink);
+    once('ajax', '.use-ajax', element).forEach((ajaxLink) => {
+      const $linkElement = $(ajaxLink);
 
-        const elementSettings = {
-          // Clicked links look better with the throbber than the progress bar.
-          progress: { type: 'throbber' },
-          dialogType: $linkElement.data('dialog-type'),
-          dialog: $linkElement.data('dialog-options'),
-          dialogRenderer: $linkElement.data('dialog-renderer'),
-          base: $linkElement.attr('id'),
-          element: ajaxLink,
-        };
-        const href = $linkElement.attr('href');
-        /**
-         * For anchor tags, these will go to the target of the anchor rather
-         * than the usual location.
-         */
-        if (href) {
-          elementSettings.url = href;
-          elementSettings.event = 'click';
-        }
-        Drupal.ajax(elementSettings);
-      });
+      const elementSettings = {
+        // Clicked links look better with the throbber than the progress bar.
+        progress: { type: 'throbber' },
+        dialogType: $linkElement.data('dialog-type'),
+        dialog: $linkElement.data('dialog-options'),
+        dialogRenderer: $linkElement.data('dialog-renderer'),
+        base: $linkElement.attr('id'),
+        element: ajaxLink,
+      };
+      const href = $linkElement.attr('href');
+      /**
+       * For anchor tags, these will go to the target of the anchor rather than
+       * the usual location.
+       */
+      if (href) {
+        elementSettings.url = href;
+        elementSettings.event = 'click';
+      }
+      Drupal.ajax(elementSettings);
+    });
   };
 
   /**

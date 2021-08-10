@@ -165,8 +165,9 @@
 
     // Return the jQuery object.
     return this.each(function (selector) {
-      const $menu = $(this).once('toolbar-menu');
-      if ($menu.length) {
+      const menu = once('toolbar-menu', this);
+      if (menu.length) {
+        const $menu = $(menu);
         // Bind event handlers.
         $menu
           .on('click.toolbar', '.toolbar-box', toggleClickHandler)

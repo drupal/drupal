@@ -116,7 +116,7 @@
 
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
-      var $autocomplete = $(context).find('input.form-autocomplete').once('autocomplete');
+      var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
 
       if ($autocomplete.length) {
         var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
@@ -136,7 +136,7 @@
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context).find('input.form-autocomplete').removeOnce('autocomplete').autocomplete('destroy');
+        $(once.remove('autocomplete', 'input.form-autocomplete', context)).autocomplete('destroy');
       }
     }
   };
