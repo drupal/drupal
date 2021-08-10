@@ -24,6 +24,10 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->sourceDatabase->update('file_managed')
+      ->fields(['filename' => 'this can have spaces in it'])
+      ->condition('fid', 3)
+      ->execute();
     $this->setSetting('file_private_path', $this->container->getParameter('site.path') . '/private');
     $this->fileMigrationSetup();
   }

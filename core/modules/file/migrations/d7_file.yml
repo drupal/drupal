@@ -19,7 +19,14 @@ process:
   # If you are using this file to build a custom migration consider removing
   # the fid field to allow incremental migrations.
   fid: fid
-  filename: filename
+  # File entity module uses file_managed.filename as the entity title, while
+  # Drupal 8 expects this to be an actual file name. Therefore, extract the
+  # filename from the uri field. Otherwise, the file will migrate but form
+  # validation won't pass when editing it.
+  filename:
+    plugin: callback
+    callable: basename
+    source: uri
   source_full_path:
     -
       plugin: concat
