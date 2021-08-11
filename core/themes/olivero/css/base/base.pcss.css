@@ -67,33 +67,50 @@ audio {
 }
 
 h1 {
-  margin-block: var(--sp);
   letter-spacing: -0.01em;
-  color: var(--color--gray-0);
-  font-size: 24px;
-  font-weight: bold;
-  line-height: var(--sp1-5);
+  font-size: 28px;
+  line-height: var(--sp2);
 
   @media (--md) {
-    margin-block: var(--sp2);
     font-size: 60px;
     line-height: var(--sp4);
   }
 }
 
 h2 {
-  margin-block: var(--sp);
   letter-spacing: -0.01em;
-  color: var(--color--gray-0);
   font-size: 24px;
-  font-weight: bold;
-  line-height: var(--sp1-5);
+  line-height: var(--sp2);
 
   @media (--md) {
-    margin-block: var(--sp2);
     font-size: 36px;
     line-height: var(--sp3);
   }
+}
+
+h3 {
+  font-size: 20px;
+  line-height: var(--sp1-5);
+
+  @media (--md) {
+    font-size: 24px;
+    line-height: var(--sp2);
+  }
+}
+
+h4 {
+  font-size: 18px;
+  line-height: var(--sp1-5);
+}
+
+h5 {
+  font-size: 16px;
+  line-height: var(--sp1-5);
+}
+
+h6 {
+  font-size: 14px;
+  line-height: var(--sp);
 }
 
 h1,
@@ -102,7 +119,14 @@ h3,
 h4,
 h5,
 h6 {
+  margin-block: var(--sp);
+  color: var(--color--gray-0);
   font-family: var(--font-sans);
+  font-weight: bold;
+
+  @media (--md) {
+    margin-block: var(--sp2);
+  }
 }
 
 ul {

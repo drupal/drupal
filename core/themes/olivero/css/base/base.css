@@ -72,44 +72,60 @@ audio {
 }
 
 h1 {
-  margin-top: 1.125rem;
-  margin-bottom: 1.125rem;
   letter-spacing: -0.01em;
-  color: #0d1214;
-  font-size: 1.5rem;
-  font-weight: bold;
-  line-height: 1.6875rem
+  font-size: 1.75rem;
+  line-height: 2.25rem
 }
 
 @media (min-width: 43.75rem) {
 
 h1 {
-    margin-top: 2.25rem;
-    margin-bottom: 2.25rem;
     font-size: 3.75rem;
     line-height: 4.5rem
 }
   }
 
 h2 {
-  margin-top: 1.125rem;
-  margin-bottom: 1.125rem;
   letter-spacing: -0.01em;
-  color: #0d1214;
   font-size: 1.5rem;
-  font-weight: bold;
-  line-height: 1.6875rem
+  line-height: 2.25rem
 }
 
 @media (min-width: 43.75rem) {
 
 h2 {
-    margin-top: 2.25rem;
-    margin-bottom: 2.25rem;
     font-size: 2.25rem;
     line-height: 3.375rem
 }
   }
+
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.6875rem
+}
+
+@media (min-width: 43.75rem) {
+
+h3 {
+    font-size: 1.5rem;
+    line-height: 2.25rem
+}
+  }
+
+h4 {
+  font-size: 1.125rem;
+  line-height: 1.6875rem;
+}
+
+h5 {
+  font-size: 1rem;
+  line-height: 1.6875rem;
+}
+
+h6 {
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+}
 
 h1,
 h2,
@@ -117,8 +133,25 @@ h3,
 h4,
 h5,
 h6 {
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
+  color: #0d1214;
   font-family: "metropolis", sans-serif;
+  font-weight: bold
 }
+
+@media (min-width: 43.75rem) {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem
+}
+  }
 
 [dir="ltr"] ul {
   margin-left: 1.5em;
