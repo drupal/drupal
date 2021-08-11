@@ -11,22 +11,6 @@
   font-family: var(--font-serif);
   line-height: var(--sp1-5);
 
-  & h2 {
-    margin-block-start: var(--sp2);
-    margin-block-end: var(--sp1-5);
-    letter-spacing: 0.12em;
-    color: var(--color--black);
-    font-size: 16px;
-    line-height: var(--sp1-5);
-
-    @media (--md) {
-      margin-block-start: var(--sp3);
-      margin-block-end: var(--sp2);
-      letter-spacing: 0.09em;
-      font-size: 21px;
-    }
-  }
-
   /*
     @todo
 

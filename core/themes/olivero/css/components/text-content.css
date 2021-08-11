@@ -15,29 +15,6 @@
   color: #313637;
   font-family: "Lora", "georgia", serif;
   line-height: 1.6875rem
-}
-
-.text-content h2, .cke_editable h2 {
-    margin-top: 2.25rem;
-    margin-bottom: 1.6875rem;
-    letter-spacing: 0.12em;
-    color: #000;
-    font-size: 1rem;
-    line-height: 1.6875rem
-  }
-
-@media (min-width: 43.75rem) {
-
-.text-content h2, .cke_editable h2 {
-      margin-top: 3.375rem;
-      margin-bottom: 2.25rem;
-      letter-spacing: 0.09em;
-      font-size: 1.3125rem
-  }
-    }
-
-.text-content,
-.cke_editable {
 
   /*
     @todo
