@@ -12,7 +12,7 @@ services:
     arguments: ['@media.oembed.provider_repository', '@media.oembed.resource_fetcher', '@http_client', '@module_handler', '@cache.default']
   media.oembed.provider_repository:
     class: Drupal\media\OEmbed\ProviderRepository
-    arguments: ['@http_client', '@config.factory', '@datetime.time', '@cache.default']
+    arguments: ['@http_client', '@config.factory', '@datetime.time', '@keyvalue', '@logger.factory']
   media.oembed.resource_fetcher:
     class: Drupal\media\OEmbed\ResourceFetcher
     arguments: ['@http_client', '@media.oembed.provider_repository', '@cache.default']

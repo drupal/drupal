@@ -2,7 +2,6 @@
 
 namespace Drupal\media_test_oembed;
 
-use Drupal\Core\Cache\NullBackend;
 use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\ProviderRepository as BaseProviderRepository;
 
@@ -13,14 +12,6 @@ use Drupal\media\OEmbed\ProviderRepository as BaseProviderRepository;
  * provider data from state before calling the parent methods.
  */
 class ProviderRepository extends BaseProviderRepository {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(...$arguments) {
-    parent::__construct(...$arguments);
-    $this->cacheBackend = new NullBackend('default');
-  }
 
   /**
    * {@inheritdoc}
