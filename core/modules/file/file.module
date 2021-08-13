@@ -1778,8 +1778,14 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
  *
  * @return \Drupal\Core\StringTranslation\TranslatableMarkup|\Drupal\Core\StringTranslation\TranslatableMarkup[]
  *   An array of file statuses or a specified status if $choice is set.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3227228
  */
 function _views_file_status($choice = NULL) {
+  @trigger_error('_views_file_status() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3227228', E_USER_DEPRECATED);
   $status = [
     0 => t('Temporary'),
     FileInterface::STATUS_PERMANENT => t('Permanent'),

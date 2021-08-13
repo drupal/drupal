@@ -34,4 +34,14 @@ class FileModuleTest extends KernelTestBase {
     $this->assertEquals($expected_message, \Drupal::messenger()->all()['error'][0]);
   }
 
+  /**
+   * Tests the deprecation of _views_file_status().
+   *
+   * @group legacy
+   */
+  public function testViewsFileStatus() {
+    $this->expectDeprecation('_views_file_status() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3227228');
+    $this->assertIsArray(_views_file_status());
+  }
+
 }
