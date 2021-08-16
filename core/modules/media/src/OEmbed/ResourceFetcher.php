@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\RequestOptions;
 
 /**
  * Fetches and caches oEmbed resources.
@@ -59,9 +58,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
 
     try {
-      $response = $this->httpClient->request('GET', $url, [
-        RequestOptions::TIMEOUT => 5,
-      ]);
+      $response = $this->httpClient->get($url);
     }
     catch (TransferException $e) {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
