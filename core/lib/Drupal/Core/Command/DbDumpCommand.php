@@ -122,6 +122,9 @@ class DbDumpCommand extends DbCommandBase {
       }
     }
 
+    // Keep the table names sorted alphabetically.
+    asort($tables);
+
     return $tables;
   }
 
