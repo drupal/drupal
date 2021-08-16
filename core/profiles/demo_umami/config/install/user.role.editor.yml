@@ -15,7 +15,6 @@ dependencies:
     - file
     - node
     - path
-    - quickedit
     - shortcut
     - system
     - taxonomy
@@ -29,7 +28,6 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
-  - 'access in-place editing'
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'administer shortcuts'

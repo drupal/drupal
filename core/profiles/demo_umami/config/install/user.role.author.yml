@@ -14,7 +14,6 @@ dependencies:
     - file
     - node
     - path
-    - quickedit
     - system
     - taxonomy
     - toolbar
@@ -26,7 +25,6 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
-  - 'access in-place editing'
   - 'access toolbar'
   - 'cancel account'
   - 'change own username'
