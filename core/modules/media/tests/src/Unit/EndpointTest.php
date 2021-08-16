@@ -24,4 +24,16 @@ class EndpointTest extends UnitTestCase {
     $this->assertTrue($endpoint->matchUrl('https://www.youtube.com/playlist?list=aBc-EzAs123'));
   }
 
+  /**
+   * @covers ::matchUrl
+   */
+  public function testCaseSensitiveMatch(): void {
+    $endpoint = new Endpoint(
+      'https://www.example.com/oembed',
+      $this->createMock('\Drupal\media\OEmbed\Provider'),
+      ['https://*.example.com/Video/*'],
+    );
+    $this->assertTrue($endpoint->matchUrl('https://foo.example.com/Video/bar'));
+  }
+
 }
