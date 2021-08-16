@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Fetches and caches oEmbed resources.
@@ -65,7 +66,9 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
 
     try {
-      $response = $this->httpClient->get($url);
+      $response = $this->httpClient->request('GET', $url, [
+        RequestOptions::TIMEOUT => 5,
+      ]);
     }
     catch (TransferException $e) {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
