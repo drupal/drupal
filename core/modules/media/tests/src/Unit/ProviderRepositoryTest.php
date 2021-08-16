@@ -4,6 +4,7 @@ namespace Drupal\Tests\media\Unit;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\media\OEmbed\ProviderException;
 use Drupal\media\OEmbed\ProviderRepository;
 use Drupal\Tests\UnitTestCase;
@@ -11,6 +12,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\media\OEmbed\ProviderRepository
@@ -48,6 +50,13 @@ class ProviderRepositoryTest extends UnitTestCase {
   private $currentTime;
 
   /**
+   * The mocked logger channel.
+   *
+   * @var \Psr\Log\LoggerInterface|\Prophecy\Prophecy\ObjectProphecy
+   */
+  private $logger;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -66,6 +75,10 @@ class ProviderRepositoryTest extends UnitTestCase {
     $time = $this->prophesize('\Drupal\Component\Datetime\TimeInterface');
     $time->getCurrentTime()->willReturn($this->currentTime);
 
+    $this->logger = $this->prophesize('\Psr\Log\LoggerInterface');
+    $logger_factory = new LoggerChannelFactory();
+    $logger_factory->addLogger($this->logger->reveal());
+
     $this->responses = new MockHandler();
     $client = new Client([
       'handler' => HandlerStack::create($this->responses),
@@ -75,7 +88,7 @@ class ProviderRepositoryTest extends UnitTestCase {
       $config_factory,
       $time->reveal(),
       $key_value_factory,
-      new LoggerChannelFactory()
+      $logger_factory
     );
   }
 
@@ -216,6 +229,13 @@ END;
 END;
     $response = new Response(200, [], $body);
     $this->responses->append($response);
+
+    // The corrupt provider should cause a warning to be logged.
+    $this->logger->log(
+      RfcLogLevel::WARNING,
+      "Provider Uncle Rico's football videos does not define a valid external URL.",
+      Argument::type('array')
+    )->shouldBeCalled();
 
     $youtube = $this->repository->get('YouTube');
     // The corrupt provider should not be stored.
