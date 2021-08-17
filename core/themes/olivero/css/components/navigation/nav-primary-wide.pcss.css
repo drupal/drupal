@@ -15,6 +15,11 @@ body:not(.is-always-mobile-nav) {
         & .primary-nav__menu-link--nolink {
           flex-basis: auto;
         }
+
+        /* Remove hover state if submenu exists. */
+        & .primary-nav__menu-link-inner:after {
+          content: none;
+        }
       }
     }
 
@@ -80,8 +85,11 @@ body:not(.is-always-mobile-nav) {
       padding-block: var(--sp2);
       padding-inline-start: 0;
       padding-inline-end: 0;
-      transform-origin: center;
-      border-top-width: var(--sp0-5);
+
+      &:after {
+        transform-origin: center;
+        border-top-width: var(--sp0-5);
+      }
     }
 
     & .primary-nav__menu--level-1 {
