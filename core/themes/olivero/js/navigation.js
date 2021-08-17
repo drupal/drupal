@@ -73,6 +73,11 @@
 
       Drupal.olivero.closeAllSubNav();
     });
+    props.navWrapper.addEventListener('click', function (e) {
+      if (e.target.matches("[href*=\"".concat(window.location.pathname, "#\"], [href*=\"").concat(window.location.pathname, "#\"] *, [href^=\"#\"], [href^=\"#\"] *"))) {
+        toggleNav(props, false);
+      }
+    });
   }
 
   Drupal.behaviors.oliveroNavigation = {

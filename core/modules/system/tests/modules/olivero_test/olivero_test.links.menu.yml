@@ -21,3 +21,8 @@ olivero_test.child_button:
   parent: olivero_test.button
   menu_name: main
   weight: 100
+olivero_test.anchor_link:
+  title: "⚓️ Anchor link"
+  url: "internal:#footer"
+  menu_name: main
+  weight: 200
