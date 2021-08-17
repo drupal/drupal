@@ -143,3 +143,13 @@
     }
   }
 }
+
+/**
+ * Decrease font-size for blockquote placed in sidebar region.
+ */
+.region--sidebar .text-content blockquote {
+  @media (--lg) {
+    font-size: 24px;
+    line-height: var(--sp2);
+  }
+}
