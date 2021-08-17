@@ -4,9 +4,7 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
-use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
@@ -71,8 +69,7 @@ class BaseThemeMissingTest extends KernelTestBase {
    */
   public function testMissingBaseThemeException() {
     $this->container->get('extension.list.theme')
-      ->setExtensionDiscovery(new ExtensionDiscovery('vfs://core'))
-      ->setInfoParser(new VfsInfoParser('vfs:/'));
+      ->setExtensionDiscovery(new ExtensionDiscovery('vfs://core'));
 
     $this->expectException(InfoParserException::class);
     $this->expectExceptionMessage('Missing required key ("base theme") in themes/test_missing_base_theme/test_missing_base_theme.theme/test_missing_base_theme.theme, see https://www.drupal.org/node/3066038');
@@ -107,34 +104,10 @@ class VfsThemeExtensionList extends ThemeExtensionList {
   }
 
   /**
-   * Sets the info parser.
-   *
-   * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
-   *   The info parser.
-   *
-   * @return self
-   */
-  public function setInfoParser(InfoParserInterface $info_parser) {
-    $this->infoParser = $info_parser;
-    return $this;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getExtensionDiscovery() {
     return $this->extensionDiscovery;
-  }
-
-}
-
-class VfsInfoParser extends InfoParser {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function parse($filename) {
-    return parent::parse("vfs://core/$filename");
   }
 
 }
