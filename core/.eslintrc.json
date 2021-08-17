@@ -1,7 +1,8 @@
 {
   "extends": [
     "airbnb",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:yml/recommended"
   ],
   "root": true,
   "env": {

@@ -8,3 +8,9 @@ modules/locale/tests/locale_test.es6.js
 misc/polyfills/array.find.es6.js
 misc/polyfills/element.closest.es6.js
 misc/polyfills/object.assign.es6.js
+
+# Ignore deliberately malformed YAML files.
+modules/system/tests/fixtures/HtaccessTest/access_test.yml
+modules/system/tests/themes/test_theme_libraries_empty/test_theme_libraries_empty.info.yml
+tests/Drupal/Tests/Core/Asset/library_test_files/empty.libraries.yml
+tests/Drupal/Tests/Core/Asset/library_test_files/invalid_file.libraries.yml

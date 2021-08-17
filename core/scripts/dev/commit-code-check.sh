@@ -11,7 +11,7 @@
 # - File modes.
 # - No changes to core/node_modules directory.
 # - PHPCS checks PHP and YAML files.
-# - Eslint checks JavaScript files.
+# - ESLint checks JavaScript and YAML files.
 # - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
 # - Checks .pcss.css and .css files are equivalent.
@@ -230,6 +230,23 @@ for FILE in $FILES; do
     else
       printf "PHPCS: $FILE ${green}passed${reset}\n"
     fi
+  fi
+
+  ############################################################################
+  ### YAML FILES
+  ############################################################################
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.yml$ ]]; then
+    # Test files with ESLint.
+    cd "$TOP_LEVEL/core"
+    node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . "$TOP_LEVEL/$FILE"
+    YAMLLINT=$?
+    if [ "$YAMLLINT" -ne "0" ]; then
+      # If there are failures set the status to a number other than 0.
+      STATUS=1
+    else
+      printf "ESLint: $FILE ${green}passed${reset}\n"
+    fi
+    cd $TOP_LEVEL
   fi
 
   ############################################################################

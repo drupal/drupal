@@ -3,8 +3,6 @@
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
 build:
   assessment:
-    validate_codebase:
-      # Core's code quality is checked by container_command.commit_checks.
     testing:
       # Run code quality checks.
       container_command.commit-checks:
@@ -45,4 +43,4 @@ build:
         halt-on-fail: false
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
-      nightwatchjs:
+      nightwatchjs: {}
