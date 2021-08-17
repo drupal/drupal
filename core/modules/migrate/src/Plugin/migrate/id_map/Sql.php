@@ -539,10 +539,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
       ->fields('map');
     foreach ($this->destinationIdFields() as $field_name => $destination_id) {
+      if (!isset($destination_id_values[$field_name])) {
+        return [];
+      }
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
-    $result = $query->execute();
-    return $result->fetchAssoc();
+    $result = $query->execute()->fetchAssoc();
+    return $result ? $result : [];
   }
 
   /**

@@ -571,11 +571,19 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $id_map = $this->getIdMap();
     $result_row = $id_map->getRowByDestination($dest_id_values);
     $this->assertSame($row, $result_row);
-    // This value does not exist.
-    $dest_id_values = ['destination_id_property' => 'invalid_destination_id_property'];
-    $id_map = $this->getIdMap();
-    $result_row = $id_map->getRowByDestination($dest_id_values);
-    $this->assertFalse($result_row);
+    // This value does not exist, getRowByDestination should return an (empty)
+    // array.
+    // @see \Drupal\migrate\Plugin\MigrateIdMapInterface::getRowByDestination()
+    $missing_result_row = $id_map->getRowByDestination([
+      'destination_id_property' => 'invalid_destination_id_property',
+    ]);
+    $this->assertEquals([], $missing_result_row);
+    // The destination ID values array does not contain all the destination ID
+    // keys, we expect an empty array.
+    $invalid_result_row = $id_map->getRowByDestination([
+      'invalid_destination_key' => 'invalid_destination_id_property',
+    ]);
+    $this->assertEquals([], $invalid_result_row);
   }
 
   /**
