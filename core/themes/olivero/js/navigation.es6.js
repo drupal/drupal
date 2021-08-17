@@ -113,6 +113,18 @@
       // Ensure that all sub-navigation menus close when the browser is resized.
       Drupal.olivero.closeAllSubNav();
     });
+
+    // If hyperlink links to an anchor in the current page, close the
+    // mobile menu after the click.
+    props.navWrapper.addEventListener('click', (e) => {
+      if (
+        e.target.matches(
+          `[href*="${window.location.pathname}#"], [href*="${window.location.pathname}#"] *, [href^="#"], [href^="#"] *`,
+        )
+      ) {
+        toggleNav(props, false);
+      }
+    });
   }
 
   /**

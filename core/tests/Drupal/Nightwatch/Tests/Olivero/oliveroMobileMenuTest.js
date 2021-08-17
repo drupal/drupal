@@ -163,4 +163,13 @@ module.exports = {
         },
       );
   },
+  'Verify clicks on hashes close mobile menu': (browser) => {
+    browser
+      .drupalRelativeURL('/node')
+      .waitForElementVisible('body')
+      .click(mobileNavButtonSelector)
+      .waitForElementVisible(headerNavSelector)
+      .click('[href="#footer"]')
+      .waitForElementNotVisible(headerNavSelector);
+  },
 };
