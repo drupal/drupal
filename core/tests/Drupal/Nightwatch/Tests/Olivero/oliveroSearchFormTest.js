@@ -29,9 +29,12 @@ module.exports = {
     browser
       .resizeWindow(1400, 800)
       .drupalRelativeURL('/')
+      .waitForElementVisible(searchButtonSelector)
+      .assert.attributeEquals(searchButtonSelector, 'aria-expanded', 'false')
       .click(searchButtonSelector)
       .waitForElementVisible(`${searchWideSelector}`)
       .waitForElementVisible(`${searchWideSelector} ${searchFormSelector}`)
+      .assert.attributeEquals(searchButtonSelector, 'aria-expanded', 'true')
       .assert.attributeContains(
         `${searchWideSelector} ${searchFormSelector} input[name=keys]`,
         'placeholder',
@@ -42,7 +45,10 @@ module.exports = {
         'title',
         'Enter the terms you wish to search for.',
       )
-      .assert.elementPresent('button.search-form__submit');
+      .assert.elementPresent('button.search-form__submit')
+      .click('body')
+      .waitForElementNotVisible(`${searchWideSelector}`)
+      .assert.attributeEquals(searchButtonSelector, 'aria-expanded', 'false');
   },
   'search narrow form is accessible': (browser) => {
     browser

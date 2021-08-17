@@ -50,4 +50,13 @@
       toggleSearchVisibility(false);
     }
   });
+  Drupal.behaviors.searchWide = {
+    attach: function attach(context) {
+      var searchWideButton = once('search-wide', '[data-drupal-selector="block-search-wide-button"]', context).shift();
+
+      if (searchWideButton) {
+        searchWideButton.setAttribute('aria-expanded', 'false');
+      }
+    }
+  };
 })(Drupal);

@@ -77,4 +77,25 @@
       toggleSearchVisibility(false);
     }
   });
+
+  /**
+   * Initializes the search wide button.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *  Adds aria-expanded attribute to the search wide button.
+   */
+  Drupal.behaviors.searchWide = {
+    attach(context) {
+      const searchWideButton = once(
+        'search-wide',
+        '[data-drupal-selector="block-search-wide-button"]',
+        context,
+      ).shift();
+      if (searchWideButton) {
+        searchWideButton.setAttribute('aria-expanded', 'false');
+      }
+    },
+  };
 })(Drupal);
