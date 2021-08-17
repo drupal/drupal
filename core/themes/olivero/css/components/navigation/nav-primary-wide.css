@@ -222,7 +222,10 @@
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2:focus:before {
+        top: 0;
+        left: -0.5625rem;
         height: 100%;
+        transform: none;
       }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
