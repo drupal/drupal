@@ -118,7 +118,13 @@ class JsMessageTest extends WebDriverTestBase {
         $current_messages[] = $message_div->getText();
       }
     }
-    $this->assertEquals($expected_messages, $current_messages);
+    // Check that each message text contains the expected text.
+    if (count($expected_messages) !== count($current_messages)) {
+      $this->fail('The expected messages array contains a different number of values than the current messages array.');
+    }
+    for ($i = 0; $i < count($expected_messages); $i++) {
+      $this->assertStringContainsString($expected_messages[$i], $current_messages[$i]);
+    }
   }
 
 }
