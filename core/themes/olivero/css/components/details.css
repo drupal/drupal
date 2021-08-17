@@ -111,7 +111,8 @@
 /* Disable default outline for summary, since we have own implementation */
 
 .olivero-details__summary:focus {
-  outline: none;
+  outline: solid 2px transparent;
+  outline-offset: -4px;
 }
 
 /* Details summary, hover state */
@@ -196,7 +197,7 @@
 }
 
 .collapse-processed > .olivero-details__summary .details-title:focus {
-  outline: none;
+  outline: solid 2px transparent;
 }
 
 .collapse-processed > .olivero-details__summary .details-title:hover {
