@@ -6,5 +6,6 @@ services:
 
   access_check.menu_test_session:
     class: Drupal\menu_test\Access\AccessCheck
+    arguments: ['@request_stack']
     tags:
       - { name: access_check, applies_to: _menu_test_session_access }

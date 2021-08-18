@@ -4,6 +4,7 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Verifies that the password reset behaves as expected with form elements.
@@ -50,10 +51,17 @@ class UserAccountFormPasswordResetTest extends KernelTestBase {
    * Tests the reset token used only from query string.
    */
   public function testPasswordResetToken() {
-    $token = 'VALID_TOKEN';
-    $_SESSION['pass_reset_1'] = $token;
     /** @var \Symfony\Component\HttpFoundation\Request $request */
     $request = $this->container->get('request_stack')->getCurrentRequest();
+
+    // @todo: Replace with $request->getSession() as soon as the session is
+    // present in KernelTestBase.
+    // see: https://www.drupal.org/node/2484991
+    $session = new Session();
+    $request->setSession($session);
+
+    $token = 'VALID_TOKEN';
+    $session->set('pass_reset_1', $token);
 
     // Set token in query string.
     $request->query->set('pass-reset-token', $token);

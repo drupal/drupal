@@ -317,9 +317,12 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     // remember settings.
     $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
-    if (isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
-      unset($_SESSION['views'][$this->view->storage->id()][$display_id]);
+    $session = $this->view->getRequest()->getSession();
+    $views_session = $session->get('views', []);
+    if (isset($views_session[$this->view->storage->id()][$display_id])) {
+      unset($views_session[$this->view->storage->id()][$display_id]);
     }
+    $session->set('views', $views_session);
 
     // Set the form to allow redirect.
     if (empty($this->view->live_preview) && !\Drupal::request()->isXmlHttpRequest()) {

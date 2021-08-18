@@ -774,7 +774,7 @@ function file_cron() {
  */
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
   // Get all errors set before calling this method. This will also clear them
-  // from $_SESSION.
+  // from the messenger service.
   $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
 
   $upload_location = isset($element['#upload_location']) ? $element['#upload_location'] : FALSE;
@@ -784,7 +784,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
 
   // Get new errors that are generated while trying to save the upload. This
-  // will also clear them from $_SESSION.
+  // will also clear them from the messenger service.
   $errors_new = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
   if (!empty($errors_new)) {
 

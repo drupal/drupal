@@ -11,10 +11,11 @@ parameters:
     # @default 100
     gc_divisor: 100
     #
-    # Set session lifetime (in seconds), i.e. the time from the user's last
-    # visit to the active session may be deleted by the session garbage
-    # collector. When a session is deleted, authenticated users are logged out,
-    # and the contents of the user's $_SESSION variable is discarded.
+    # Set session lifetime (in seconds), i.e. the grace period for session
+    # data. Sessions are deleted by the session garbage collector after one
+    # session lifetime has elapsed since the user's last visit. When a session
+    # is deleted, authenticated users are logged out, and the contents of the
+    # user's session is discarded.
     # @default 200000
     gc_maxlifetime: 200000
     #

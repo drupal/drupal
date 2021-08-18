@@ -12,7 +12,8 @@ function big_pipe_test_page_top(array &$page_top) {
   // Ensure this hook is invoked on every page load.
   $page_top['#cache']['max-age'] = 0;
 
-  if (\Drupal::request()->query->get('trigger_session')) {
-    $_SESSION['big_pipe_test'] = TRUE;
+  $request = \Drupal::request();
+  if ($request->query->get('trigger_session')) {
+    $request->getSession()->set('big_pipe_test', TRUE);
   }
 }

@@ -34,10 +34,11 @@ class FormTestStorageForm extends FormBase {
     }
     // Initialize
     $storage = $form_state->getStorage();
+    $session = $this->getRequest()->getSession();
     if (empty($storage)) {
       $user_input = $form_state->getUserInput();
       if (empty($user_input)) {
-        $_SESSION['constructions'] = 0;
+        $session->set('constructions', 0);
       }
       // Put the initial thing into the storage
       $storage = [
@@ -49,8 +50,9 @@ class FormTestStorageForm extends FormBase {
       $form_state->setStorage($storage);
     }
     // Count how often the form is constructed.
-    $_SESSION['constructions']++;
-    $this->messenger()->addStatus("Form constructions: " . $_SESSION['constructions']);
+    $counter = $session->get('constructions');
+    $session->set('constructions', ++$counter);
+    $this->messenger()->addStatus("Form constructions: " . $counter);
 
     $form['title'] = [
       '#type' => 'textfield',
@@ -137,7 +139,7 @@ class FormTestStorageForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus("Title: " . Html::escape($form_state->getValue('title')));
-    $this->messenger()->addStatus("Form constructions: " . $_SESSION['constructions']);
+    $this->messenger()->addStatus("Form constructions: " . $this->getRequest()->getSession()->get('constructions'));
     if ($form_state->has(['thing', 'changed'])) {
       $this->messenger()->addStatus("The thing has been changed.");
     }

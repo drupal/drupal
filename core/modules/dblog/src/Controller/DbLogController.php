@@ -18,6 +18,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Link;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -118,6 +119,9 @@ class DbLogController extends ControllerBase {
    * Messages are truncated at 56 chars.
    * Full-length messages can be viewed on the message details page.
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
    * @return array
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
@@ -125,9 +129,9 @@ class DbLogController extends ControllerBase {
    * @see Drupal\dblog\Form\DblogClearLogConfirmForm
    * @see Drupal\dblog\Controller\DbLogController::eventDetails()
    */
-  public function overview() {
+  public function overview(Request $request) {
 
-    $filter = $this->buildFilterQuery();
+    $filter = $this->buildFilterQuery($request);
     $rows = [];
 
     $classes = static::getLogLevelClassMap();
@@ -316,12 +320,16 @@ class DbLogController extends ControllerBase {
   /**
    * Builds a query for database log administration filters based on session.
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
    * @return array|null
    *   An associative array with keys 'where' and 'args' or NULL if there were
    *   no filters set.
    */
-  protected function buildFilterQuery() {
-    if (empty($_SESSION['dblog_overview_filter'])) {
+  protected function buildFilterQuery(Request $request) {
+    $session_filters = $request->getSession()->get('dblog_overview_filter', []);
+    if (empty($session_filters)) {
       return;
     }
 
@@ -331,7 +339,7 @@ class DbLogController extends ControllerBase {
 
     // Build query.
     $where = $args = [];
-    foreach ($_SESSION['dblog_overview_filter'] as $key => $filter) {
+    foreach ($session_filters as $key => $filter) {
       $filter_where = [];
       foreach ($filter as $value) {
         $filter_where[] = $filters[$key]['where'];

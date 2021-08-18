@@ -3,6 +3,7 @@
 namespace Drupal\menu_test;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controllers for testing the menu integration routing system.
@@ -32,13 +33,17 @@ class TestControllers {
 
   /**
    * Prints out test data.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return array
+   *   Render array.
    */
-  public function testSession() {
-    if (!isset($_SESSION['menu_test'])) {
-      $_SESSION['menu_test'] = 0;
-    }
-    $_SESSION['menu_test']++;
-    return ['#markup' => new FormattableMarkup('Session menu_test is @count', ['@count' => $_SESSION['menu_test']])];
+  public function testSession(Request $request) {
+    $counter = $request->getSession()->get('menu_test', 0);
+    $request->getSession()->set('menu_test', ++$counter);
+    return ['#markup' => new FormattableMarkup('Session menu_test is @count', ['@count' => $counter])];
   }
 
   /**

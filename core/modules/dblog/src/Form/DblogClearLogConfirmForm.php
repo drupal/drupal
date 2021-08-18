@@ -66,7 +66,7 @@ class DblogClearLogConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $_SESSION['dblog_overview_filter'] = [];
+    $this->getRequest()->getSession()->remove('dblog_overview_filter');
     $this->connection->truncate('watchdog')->execute();
     $this->messenger()->addStatus($this->t('Database log cleared.'));
     $form_state->setRedirectUrl($this->getCancelUrl());

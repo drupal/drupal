@@ -125,22 +125,24 @@ abstract class TranslateFormBase extends FormBase {
 
     $filter_values = [];
     $filters = $this->translateFilters();
+    $request = $this->getRequest();
+    $session_filters = $request->getSession()->get('locale_translate_filter', []);
     foreach ($filters as $key => $filter) {
       $filter_values[$key] = $filter['default'];
       // Let the filter defaults be overwritten by parameters in the URL.
-      if ($this->getRequest()->query->has($key)) {
+      if ($request->query->has($key)) {
         // Only allow this value if it was among the options, or
         // if there were no fixed options to filter for.
-        $value = $this->getRequest()->query->get($key);
+        $value = $request->query->get($key);
         if (!isset($filter['options']) || isset($filter['options'][$value])) {
           $filter_values[$key] = $value;
         }
       }
-      elseif (isset($_SESSION['locale_translate_filter'][$key])) {
+      elseif (isset($session_filters[$key])) {
         // Only allow this value if it was among the options, or
         // if there were no fixed options to filter for.
-        if (!isset($filter['options']) || isset($filter['options'][$_SESSION['locale_translate_filter'][$key]])) {
-          $filter_values[$key] = $_SESSION['locale_translate_filter'][$key];
+        if (!isset($filter['options']) || isset($filter['options'][$session_filters[$key]])) {
+          $filter_values[$key] = $session_filters[$key];
         }
       }
     }
