@@ -169,7 +169,22 @@ display:
           depth: -2
           error_message: true
           plugin_id: taxonomy_index_tid_depth
-      sorts: {  }
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          order: DESC
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
       header: {  }
       footer: {  }
       empty: {  }

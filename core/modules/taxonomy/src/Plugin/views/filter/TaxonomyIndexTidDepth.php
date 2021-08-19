@@ -2,8 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\views\filter;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
 
 /**
  * Filter handler for taxonomy terms with depth.
@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @ViewsFilter("taxonomy_index_tid_depth")
  */
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
+  use TaxonomyIndexDepthQueryTrait;
 
   public function operatorOptions($which = 'title') {
     return [
@@ -52,10 +53,6 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
       if (is_array($this->value)) {
         $this->value = current($this->value);
       }
-      $operator = '=';
-    }
-    else {
-      $operator = 'IN';
     }
 
     // The normal use of ensureMyTable() here breaks Views.
@@ -70,32 +67,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
       $this->tableAlias = $this->query->ensureTable($this->view->storage->get('base_table'));
     }
 
-    // Now build the subqueries.
-    $subquery = Database::getConnection()->select('taxonomy_index', 'tn');
-    $subquery->addField('tn', 'nid');
-    $where = ($this->view->query->getConnection()->condition('OR'))->condition('tn.tid', $this->value, $operator);
-    $last = "tn";
-
-    if ($this->options['depth'] > 0) {
-      $subquery->leftJoin('taxonomy_term__parent', 'th', "[th].[entity_id] = [tn].[tid]");
-      $last = "th";
-      foreach (range(1, abs($this->options['depth'])) as $count) {
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[parent_target_id] = [th$count].[entity_id]");
-        $where->condition("th$count.entity_id", $this->value, $operator);
-        $last = "th$count";
-      }
-    }
-    elseif ($this->options['depth'] < 0) {
-      foreach (range(1, abs($this->options['depth'])) as $count) {
-        $field = $count == 1 ? 'tid' : 'entity_id';
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[$field] = [th$count].[parent_target_id]");
-        $where->condition("th$count.entity_id", $this->value, $operator);
-        $last = "th$count";
-      }
-    }
-
-    $subquery->condition($where);
-    $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", $subquery, 'IN');
+    $this->addSubQueryJoin($this->value);
   }
 
 }

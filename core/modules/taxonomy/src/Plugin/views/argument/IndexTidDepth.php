@@ -2,10 +2,10 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsArgument("taxonomy_index_tid_depth")
  */
 class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPluginInterface {
+  use TaxonomyIndexDepthQueryTrait;
 
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -101,40 +102,13 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
       if ($break->value === [-1]) {
         return FALSE;
       }
-
-      $operator = (count($break->value) > 1) ? 'IN' : '=';
       $tids = $break->value;
     }
     else {
-      $operator = "=";
       $tids = $this->argument;
     }
-    // Now build the subqueries.
-    $subquery = Database::getConnection()->select('taxonomy_index', 'tn');
-    $subquery->addField('tn', 'nid');
-    $where = ($this->view->query->getConnection()->condition('OR'))->condition('tn.tid', $tids, $operator);
-    $last = "tn";
 
-    if ($this->options['depth'] > 0) {
-      $subquery->leftJoin('taxonomy_term__parent', 'th', "[th].[entity_id] = [tn].[tid]");
-      $last = "th";
-      foreach (range(1, abs($this->options['depth'])) as $count) {
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[parent_target_id] = [th$count].[entity_id]");
-        $where->condition("th$count.entity_id", $tids, $operator);
-        $last = "th$count";
-      }
-    }
-    elseif ($this->options['depth'] < 0) {
-      foreach (range(1, abs($this->options['depth'])) as $count) {
-        $field = $count == 1 ? 'tid' : 'entity_id';
-        $subquery->leftJoin('taxonomy_term__parent', "th$count", "[$last].[$field] = [th$count].[parent_target_id]");
-        $where->condition("th$count.entity_id", $tids, $operator);
-        $last = "th$count";
-      }
-    }
-
-    $subquery->condition($where);
-    $this->query->addWhere(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
+    $this->addSubQueryJoin($tids);
   }
 
   public function title() {
