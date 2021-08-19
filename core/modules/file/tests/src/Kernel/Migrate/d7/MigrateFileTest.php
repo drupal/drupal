@@ -24,10 +24,6 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->sourceDatabase->update('file_managed')
-      ->fields(['filename' => 'this can have spaces in it'])
-      ->condition('fid', 1)
-      ->execute();
     $this->fileMigrationSetup();
   }
 
