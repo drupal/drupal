@@ -28,7 +28,7 @@ class FormSubmitter implements FormSubmitterInterface {
   protected $requestStack;
 
   /**
-   * Constructs a new FormValidator.
+   * Constructs a new FormSubmitter.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
