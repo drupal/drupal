@@ -72,7 +72,7 @@ class BaseThemeMissingTest extends KernelTestBase {
       ->setExtensionDiscovery(new ExtensionDiscovery('vfs://core'));
 
     $this->expectException(InfoParserException::class);
-    $this->expectExceptionMessage('Missing required key ("base theme") in themes/test_missing_base_theme/test_missing_base_theme.theme/test_missing_base_theme.theme, see https://www.drupal.org/node/3066038');
+    $this->expectExceptionMessage('Missing required key ("base theme") in themes/test_missing_base_theme/test_missing_base_theme.info.yml, see https://www.drupal.org/node/3066038');
     $this->themeInstaller->install(['test_missing_base_theme']);
   }
 
