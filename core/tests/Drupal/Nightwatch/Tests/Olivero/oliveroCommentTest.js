@@ -28,7 +28,7 @@ module.exports = {
     browser
       .drupalRelativeURL('/node/1')
       .assert.containsText('body', 'Article without comments')
-      .assert.not.elementPresent(commentTitleSelector);
+      .assert.not.elementPresent(commentCountSelector);
   },
   'Article with comments should display count': (browser) => {
     browser
