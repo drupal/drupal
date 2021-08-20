@@ -29,6 +29,14 @@ entity.user.admin_form:
   requirements:
     _permission: 'administer account settings'
 
+user.role.settings:
+  path: '/admin/people/role-settings'
+  defaults:
+    _form: '\Drupal\user\Form\RoleSettingsForm'
+    _title: 'Role settings'
+  requirements:
+    _permission: 'administer permissions'
+
 entity.user.collection:
   path: '/admin/people'
   defaults:

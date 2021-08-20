@@ -49,3 +49,9 @@ entity.user_role.collection:
   route_name: entity.user_role.collection
   base_route: entity.user.collection
   weight: 10
+
+user.role.settings:
+  title: 'Role settings'
+  route_name: user.role.settings
+  base_route: entity.user.collection
+  weight: 11

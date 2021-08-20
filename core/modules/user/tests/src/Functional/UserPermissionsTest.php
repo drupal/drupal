@@ -108,7 +108,7 @@ class UserPermissionsTest extends BrowserTestBase {
    */
   public function testAdministratorRole() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/config/people/accounts');
+    $this->drupalGet('admin/people/role-settings');
 
     // Verify that the administration role is none by default.
     $this->assertTrue($this->assertSession()->optionExists('edit-user-admin-role', '')->isSelected());
@@ -118,7 +118,7 @@ class UserPermissionsTest extends BrowserTestBase {
     // Set the user's role to be the administrator role.
     $edit = [];
     $edit['user_admin_role'] = $this->rid;
-    $this->drupalGet('admin/config/people/accounts');
+    $this->drupalGet('admin/people/role-settings');
     $this->submitForm($edit, 'Save configuration');
 
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
@@ -133,7 +133,7 @@ class UserPermissionsTest extends BrowserTestBase {
     // Ensure that selecting '- None -' removes the admin role.
     $edit = [];
     $edit['user_admin_role'] = '';
-    $this->drupalGet('admin/config/people/accounts');
+    $this->drupalGet('admin/people/role-settings');
     $this->submitForm($edit, 'Save configuration');
 
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
@@ -144,7 +144,7 @@ class UserPermissionsTest extends BrowserTestBase {
     // hidden.
     Role::create(['id' => 'admin_role_0', 'is_admin' => TRUE, 'label' => 'Admin role 0'])->save();
     Role::create(['id' => 'admin_role_1', 'is_admin' => TRUE, 'label' => 'Admin role 1'])->save();
-    $this->drupalGet('admin/config/people/accounts');
+    $this->drupalGet('admin/people/role-settings');
     $this->assertSession()->fieldNotExists('user_admin_role');
   }
 
