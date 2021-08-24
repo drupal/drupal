@@ -48,14 +48,14 @@ their destination location. In order to prevent arbitrary dependencies from
 copying files via the scaffold mechanism, only those projects that are
 specifically permitted by the top-level project will be used to scaffold files.
 
-Example: Permit scaffolding from the project `drupal/core`
+Example: Permit scaffolding from the project `upstream/project`
 ```
   "name": "my/project",
   ...
   "extra": {
     "drupal-scaffold": {
       "allowed-packages": [
-        "drupal/core"
+        "upstream/project"
       ],
       ...
     }
@@ -63,8 +63,9 @@ Example: Permit scaffolding from the project `drupal/core`
 ```
 Allowing a package to scaffold files also permits it to delegate permission to
 scaffold to any project that it requires itself. This allows a package to
-organize its scaffold assets as it sees fit. For example, the project
-`drupal/core` may choose to store its assets in a subproject `drupal/assets`.
+organize its scaffold assets as it sees fit. For example, if `upstream/project`
+stores its assets in a subproject `upstream/assets`, `upstream/assets` would
+implicitly be allowed to scaffold files.
 
 It is possible for a project to obtain scaffold files from multiple projects.
 For example, a Drupal project using a distribution, and installing on a specific
@@ -393,9 +394,6 @@ Sample composer.json for a project that relies on packages that use composer-sca
   },
   "extra": {
     "drupal-scaffold": {
-      "allowed-packages": [
-        "drupal/core"
-      ],
       "locations": {
         "web-root": "./docroot"
       },
