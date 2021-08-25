@@ -70,6 +70,14 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
     $this->terms[2] = $third;
 
     $this->view = Views::getView('test_filter_taxonomy_index_tid_depth');
+
+    // Fix the created date to match the expectations of the order by in the
+    // view. Node 1 should be the most recent node and node 6 should be the
+    // oldest.
+    $time = \Drupal::time();
+    foreach ($this->nodes as $i => $node) {
+      $node->setCreatedTime($time->getRequestTime() - $i)->save();
+    }
   }
 
   /**
