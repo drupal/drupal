@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\layout_builder\Functional;
+namespace Drupal\Tests\quickedit\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests Layout Builder integration with Quick Edit.
  *
- * @group layout_builder
+ * @group quickedit
  */
 class LayoutBuilderQuickEditTest extends BrowserTestBase {
 

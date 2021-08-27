@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\editor\Functional;
+namespace Drupal\Tests\quickedit\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -10,9 +10,9 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests Quick Edit module integration endpoints.
  *
- * @group editor
+ * @group quickedit
  */
-class QuickEditIntegrationLoadingTest extends BrowserTestBase {
+class EditorIntegrationLoadingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

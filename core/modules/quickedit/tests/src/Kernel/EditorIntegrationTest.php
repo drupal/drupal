@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\editor\Kernel;
+namespace Drupal\Tests\quickedit\Kernel;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
@@ -8,7 +8,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\MetadataGenerator;
-use Drupal\Tests\quickedit\Kernel\QuickEditTestBase;
 use Drupal\quickedit_test\MockQuickEditEntityFieldAccessCheck;
 use Drupal\editor\EditorController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +18,9 @@ use Drupal\filter\Entity\FilterFormat;
 /**
  * Tests Edit module integration (Editor module's inline editing support).
  *
- * @group editor
+ * @group quickedit
  */
-class QuickEditIntegrationTest extends QuickEditTestBase {
+class EditorIntegrationTest extends QuickEditTestBase {
 
   /**
    * {@inheritdoc}
