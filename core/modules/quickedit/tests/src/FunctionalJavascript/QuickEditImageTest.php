@@ -1,15 +1,14 @@
 <?php
 
-namespace Drupal\Tests\image\FunctionalJavascript;
+namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
 use Drupal\file\Entity\File;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
-use Drupal\Tests\quickedit\FunctionalJavascript\QuickEditJavascriptTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\image\Plugin\InPlaceEditor\Image
- * @group image
+ * @group quickedit
  */
 class QuickEditImageTest extends QuickEditJavascriptTestBase {
 

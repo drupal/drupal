@@ -1,17 +1,18 @@
 <?php
 
-namespace Drupal\Tests\settings_tray\FunctionalJavascript;
+namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayTestBase;
 use Drupal\user\Entity\Role;
 
 /**
  * Test Settings Tray and Quick Edit modules integration.
  *
- * @group settings_tray
+ * @group quickedit
  */
-class QuickEditIntegrationTest extends SettingsTrayTestBase {
+class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
 
   /**
    * {@inheritdoc}

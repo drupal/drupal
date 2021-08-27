@@ -1,11 +1,10 @@
 <?php
 
-namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
-use Drupal\Tests\quickedit\FunctionalJavascript\QuickEditJavascriptTestBase;
 
 /**
  * Tests that Layout Builder functions with Quick Edit.
@@ -13,7 +12,7 @@ use Drupal\Tests\quickedit\FunctionalJavascript\QuickEditJavascriptTestBase;
  * @covers layout_builder_entity_view_alter()
  * @covers layout_builder_quickedit_render_field()
  *
- * @group layout_builder
+ * @group quickedit
  */
 class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
 
