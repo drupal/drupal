@@ -15,6 +15,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
    */
   protected static $modules = [
     'contextual',
+    'quickedit',
     // @see media_test_embed_entity_view_alter()
     'media_test_embed',
   ];
@@ -28,14 +29,16 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
     $this->container->get('current_user')
       ->addRole($this->drupalCreateRole([
         'access contextual links',
+        'access in-place editing',
       ]));
   }
 
   /**
    * @covers ::renderMedia
    * @covers ::disableContextualLinks
+   * @dataProvider providerDisabledIntegrations
    */
-  public function testDisabledIntegrations() {
+  public function testDisabledIntegrations($integration_detection_selector) {
     $text = $this->createEmbedCode([
       'data-entity-type' => 'media',
       'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
@@ -43,7 +46,21 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
 
     $this->applyFilter($text);
     $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode]'));
-    $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode].contextual-region'));
+    $this->assertCount(0, $this->cssSelect($integration_detection_selector));
+  }
+
+  /**
+   * Data provider for testDisabledIntegrations().
+   */
+  public function providerDisabledIntegrations() {
+    return [
+      'contextual' => [
+        'div[data-media-embed-test-view-mode].contextual-region',
+      ],
+      'quickedit' => [
+        'div[data-media-embed-test-view-mode][data-quickedit-entity-id]',
+      ],
+    ];
   }
 
 }

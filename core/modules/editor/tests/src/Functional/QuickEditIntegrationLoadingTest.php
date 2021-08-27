@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\quickedit\Functional;
+namespace Drupal\Tests\editor\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -10,9 +10,9 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests Quick Edit module integration endpoints.
  *
- * @group quickedit
+ * @group editor
  */
-class EditorIntegrationLoadingTest extends BrowserTestBase {
+class QuickEditIntegrationLoadingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -71,7 +71,6 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
    * Tests loading of untransformed text when a user doesn't have access to it.
    */
   public function testUsersWithoutPermission() {
-    $this->fail();
     // Create 3 users, each with insufficient permissions, i.e. without either
     // or both of the following permissions:
     // - the 'access in-place editing' permission

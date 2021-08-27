@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\quickedit\Functional;
+namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests Layout Builder integration with Quick Edit.
  *
- * @group quickedit
+ * @group layout_builder
  */
 class LayoutBuilderQuickEditTest extends BrowserTestBase {
 
@@ -45,7 +45,6 @@ class LayoutBuilderQuickEditTest extends BrowserTestBase {
    * Tests Quick Edit integration with a block from a different entity type.
    */
   public function testPlaceFieldBlockFromDifferentEntityType() {
-    $this->fail();
     $page = $this->getSession()->getPage();
 
     $this->drupalLogin($this->drupalCreateUser([
