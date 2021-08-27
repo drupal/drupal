@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\quickedit\FunctionalJavascript;
+namespace Drupal\Tests\inline_form_errors\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
@@ -8,9 +8,9 @@ use Drupal\node\Entity\NodeType;
 /**
  * Tests Inline Form Errors compatibility with Quick Edit.
  *
- * @group quickedit
+ * @group inline_form_errors
  */
-class InlineFormErrorsIntegrationTest extends WebDriverTestBase {
+class FormErrorHandlerQuickEditTest extends WebDriverTestBase {
 
   /**
    * Modules to enable.
@@ -60,7 +60,6 @@ class InlineFormErrorsIntegrationTest extends WebDriverTestBase {
    * Tests that the inline form errors are not visible for Quick Edit forms.
    */
   public function testDisabledInlineFormErrors() {
-    $this->fail();
     $session = $this->getSession();
     $web_assert = $this->assertSession();
 

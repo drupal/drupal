@@ -1,18 +1,17 @@
 <?php
 
-namespace Drupal\Tests\quickedit\FunctionalJavascript;
+namespace Drupal\Tests\settings_tray\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayTestBase;
 use Drupal\user\Entity\Role;
 
 /**
  * Test Settings Tray and Quick Edit modules integration.
  *
- * @group quickedit
+ * @group settings_tray
  */
-class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
+class QuickEditIntegrationTest extends SettingsTrayTestBase {
 
   /**
    * {@inheritdoc}
@@ -48,7 +47,6 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
    * Tests QuickEdit links behavior.
    */
   public function testQuickEditLinks() {
-    $this->fail();
     $quick_edit_selector = '#quickedit-entity-toolbar';
     $node_selector = '[data-quickedit-entity-id="node/1"]';
     $body_selector = '[data-quickedit-field-id="node/1/body/en/full"]';

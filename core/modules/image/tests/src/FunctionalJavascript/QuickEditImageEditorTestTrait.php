@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\quickedit\FunctionalJavascript;
+namespace Drupal\Tests\image\FunctionalJavascript;
 
 /**
  * @see \Drupal\image\Plugin\InPlaceEditor\Image
