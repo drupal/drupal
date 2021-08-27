@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\image\Functional;
+namespace Drupal\Tests\quickedit\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
@@ -10,7 +10,7 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests the endpoints used by the "image" in-place editor.
  *
- * @group image
+ * @group quickedit
  */
 class QuickEditImageControllerTest extends BrowserTestBase {
 
@@ -76,6 +76,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
    * Tests that routes restrict access for un-privileged users.
    */
   public function testAccess() {
+    $this->fail();
     // Create an anonymous user.
     $user = $this->createUser();
     $this->drupalLogin($user);
