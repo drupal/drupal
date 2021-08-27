@@ -1,12 +1,14 @@
 <?php
 
-namespace Drupal\Tests\media\Kernel;
+namespace Drupal\Tests\quickedit\Kernel;
+
+use Drupal\Tests\media\Kernel\MediaEmbedFilterTestBase;
 
 /**
  * Tests that media embed disables certain integrations.
  *
  * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
- * @group media
+ * @group quickedit
  */
 class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase {
 
@@ -15,6 +17,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
    */
   protected static $modules = [
     'contextual',
+    'quickedit',
     // @see media_test_embed_entity_view_alter()
     'media_test_embed',
   ];
@@ -28,6 +31,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
     $this->container->get('current_user')
       ->addRole($this->drupalCreateRole([
         'access contextual links',
+        'access in-place editing',
       ]));
   }
 
@@ -36,6 +40,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
    * @covers ::disableContextualLinks
    */
   public function testDisabledIntegrations() {
+    $this->fail();
     $text = $this->createEmbedCode([
       'data-entity-type' => 'media',
       'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
@@ -43,7 +48,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
 
     $this->applyFilter($text);
     $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode]'));
-    $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode].contextual-region'));
+    $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode][data-quickedit-entity-id]'));
   }
 
 }
