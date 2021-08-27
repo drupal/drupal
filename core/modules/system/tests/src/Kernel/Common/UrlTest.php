@@ -68,7 +68,7 @@ class UrlTest extends KernelTestBase {
         '#url' => Url::fromUri($uri),
       ];
       \Drupal::service('renderer')->renderRoot($link);
-      $this->assertEquals($expected_cacheability, $link['#cache']);
+      $this->assertEqualsCanonicalizing($expected_cacheability, $link['#cache']);
       $this->assertEquals($expected_attachments, $link['#attached']);
     }
   }

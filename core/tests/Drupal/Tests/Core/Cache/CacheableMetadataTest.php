@@ -35,7 +35,7 @@ class CacheableMetadataTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->assertEquals($expected, $a->merge($b));
+    $this->assertEqualsCanonicalizing($expected, $a->merge($b));
   }
 
   /**
@@ -58,7 +58,7 @@ class CacheableMetadataTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->assertEquals($expected, $a->addCacheableDependency($b));
+    $this->assertEqualsCanonicalizing($expected, $a->addCacheableDependency($b));
   }
 
   /**
@@ -73,7 +73,7 @@ class CacheableMetadataTest extends UnitTestCase {
       // Cache contexts.
       [(new CacheableMetadata())->setCacheContexts(['foo']), (new CacheableMetadata())->setCacheContexts(['bar']), (new CacheableMetadata())->setCacheContexts(['bar', 'foo'])],
       // Cache tags.
-      [(new CacheableMetadata())->setCacheTags(['foo']), (new CacheableMetadata())->setCacheTags(['bar']), (new CacheableMetadata())->setCacheTags(['bar', 'foo'])],
+      [(new CacheableMetadata())->setCacheTags(['foo']), (new CacheableMetadata())->setCacheTags(['bar']), (new CacheableMetadata())->setCacheTags(['foo', 'bar'])],
       // Cache max-ages.
       [(new CacheableMetadata())->setCacheMaxAge(60), (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), (new CacheableMetadata())->setCacheMaxAge(60)],
     ];
@@ -90,15 +90,15 @@ class CacheableMetadataTest extends UnitTestCase {
       [[], []],
       [['foo:bar'], ['foo:bar']],
       [['foo:baz'], ['foo:bar', 'foo:baz']],
-      [['axx:first', 'foo:baz'], ['axx:first', 'foo:bar', 'foo:baz']],
-      [[], ['axx:first', 'foo:bar', 'foo:baz']],
-      [['axx:first'], ['axx:first', 'foo:bar', 'foo:baz']],
+      [['axx:first', 'foo:baz'], ['foo:bar', 'foo:baz', 'axx:first']],
+      [[], ['foo:bar', 'foo:baz', 'axx:first']],
+      [['axx:first'], ['foo:bar', 'foo:baz', 'axx:first']],
     ];
 
-    foreach ($add_expected as $data) {
+    foreach ($add_expected as $row => $data) {
       list($add, $expected) = $data;
       $metadata->addCacheTags($add);
-      $this->assertEquals($expected, $metadata->getCacheTags());
+      $this->assertEquals($expected, $metadata->getCacheTags(), sprintf("Dataset in %d row failed on validation.", $row + 1));
     }
   }
 

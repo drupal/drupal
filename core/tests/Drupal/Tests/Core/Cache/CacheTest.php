@@ -52,11 +52,11 @@ class CacheTest extends UnitTestCase {
     return [
       [[], [], []],
       [['bar', 'foo'], ['bar'], ['foo']],
-      [['bar', 'foo'], ['foo'], ['bar']],
-      [['bar', 'foo'], ['foo'], ['bar', 'foo']],
-      [['bar', 'foo'], ['foo'], ['foo', 'bar']],
+      [['foo', 'bar'], ['foo'], ['bar']],
+      [['foo', 'bar'], ['foo'], ['bar', 'foo']],
+      [['foo', 'bar'], ['foo'], ['foo', 'bar']],
       [['bar', 'foo'], ['bar', 'foo'], ['foo', 'bar']],
-      [['bar', 'foo'], ['foo', 'bar'], ['foo', 'bar']],
+      [['foo', 'bar'], ['foo', 'bar'], ['foo', 'bar']],
       [['bar', 'foo', 'llama'], ['bar', 'foo'], ['foo', 'bar'], ['llama', 'foo']],
     ];
   }
@@ -67,7 +67,7 @@ class CacheTest extends UnitTestCase {
    * @dataProvider mergeTagsProvider
    */
   public function testMergeTags(array $expected, ...$cache_tags) {
-    $this->assertEquals($expected, Cache::mergeTags(...$cache_tags));
+    $this->assertEqualsCanonicalizing($expected, Cache::mergeTags(...$cache_tags));
   }
 
   /**
@@ -145,7 +145,7 @@ class CacheTest extends UnitTestCase {
     $container = $this->prophesize(Container::class);
     $container->get('cache_contexts_manager')->willReturn($cache_contexts_manager->reveal());
     \Drupal::setContainer($container->reveal());
-    $this->assertSame($expected, Cache::mergeContexts(...$contexts));
+    $this->assertEqualsCanonicalizing($expected, Cache::mergeContexts(...$contexts));
   }
 
   /**

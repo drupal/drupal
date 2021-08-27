@@ -565,7 +565,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
     static::recursiveKSort($actual);
-    $this->assertSame($expected, $actual);
+    $this->assertEqualsCanonicalizing($expected, $actual);
 
     // Not only assert the normalization, also assert deserialization of the
     // response results in the expected object.

@@ -62,7 +62,7 @@ class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
     // based on the host entity's language, which should require a cache context
     // to be associated. (The host entity's language may itself be selected
     // based on the request context, but that is of no concern to this filter.)
-    $this->assertSame($result->getCacheContexts(), ['timezone', 'user.permissions']);
+    $this->assertEqualsCanonicalizing($result->getCacheContexts(), ['timezone', 'user.permissions']);
   }
 
   /**

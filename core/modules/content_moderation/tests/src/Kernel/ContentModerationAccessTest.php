@@ -79,8 +79,8 @@ class ContentModerationAccessTest extends KernelTestBase {
 
     $result = $node->access('update', $account, TRUE);
     $this->assertFalse($result->isAllowed());
-    $this->assertEquals(['user.permissions'], $result->getCacheContexts());
-    $this->assertEquals(['config:workflows.workflow.editorial', 'node:' . $node->id()], $result->getCacheTags());
+    $this->assertEqualsCanonicalizing(['user.permissions'], $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['config:workflows.workflow.editorial', 'node:' . $node->id()], $result->getCacheTags());
     $this->assertEquals(CacheBackendInterface::CACHE_PERMANENT, $result->getCacheMaxAge());
 
     $authenticated->grantPermission('use editorial transition create_new_draft');
@@ -89,8 +89,8 @@ class ContentModerationAccessTest extends KernelTestBase {
     \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
     $result = $node->access('update', $account, TRUE);
     $this->assertTrue($result->isAllowed());
-    $this->assertEquals(['user.permissions'], $result->getCacheContexts());
-    $this->assertEquals(['config:workflows.workflow.editorial', 'node:' . $node->id()], $result->getCacheTags());
+    $this->assertEqualsCanonicalizing(['user.permissions'], $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['config:workflows.workflow.editorial', 'node:' . $node->id()], $result->getCacheTags());
     $this->assertEquals(CacheBackendInterface::CACHE_PERMANENT, $result->getCacheMaxAge());
   }
 

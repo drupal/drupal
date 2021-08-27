@@ -23,6 +23,11 @@ class ContextCacheKeys extends CacheableMetadata {
    *   The cache context keys.
    */
   public function __construct(array $keys) {
+    // Domain invariant: cache keys must be always sorted.
+    // Sorting keys warrants that different combination of the same keys
+    // generates the same cache cid.
+    // @see \Drupal\Core\Render\RenderCache::createCacheID()
+    sort($keys);
     $this->keys = $keys;
   }
 

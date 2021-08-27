@@ -122,7 +122,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       'content' => $block_content,
     ];
 
-    $expected_cache = $expected_build + [
+    $expected_build_with_expected_cache = $expected_build + [
       '#cache' => [
         'contexts' => [],
         'tags' => [
@@ -137,7 +137,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $result = $event->getBuild();
     $this->assertEquals($expected_build, $result);
     $event->getCacheableMetadata()->applyTo($result);
-    $this->assertEquals($expected_cache, $result);
+    $this->assertEqualsCanonicalizing($expected_build_with_expected_cache['#cache'], $result['#cache']);
   }
 
   /**
@@ -443,7 +443,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $result = $event->getBuild();
     $this->assertEquals($expected_build, $result);
     $event->getCacheableMetadata()->applyTo($result);
-    $this->assertEquals($expected_cache, $result);
+    $this->assertEqualsCanonicalizing($expected_cache, $result);
   }
 
   /**
@@ -488,7 +488,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $result = $event->getBuild();
     $this->assertEquals($expected_build, $result);
     $event->getCacheableMetadata()->applyTo($result);
-    $this->assertEquals($expected_cache, $result);
+    $this->assertEqualsCanonicalizing($expected_cache, $result);
   }
 
   /**

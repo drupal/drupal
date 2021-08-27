@@ -101,7 +101,6 @@ class MenuLinkTreeTest extends UnitTestCase {
       $access->addCacheContexts($access_cache_contexts);
     }
     $build = $this->menuLinkTree->build($tree);
-    sort($expected_build['#cache']['contexts']);
     $this->assertEquals($expected_build, $build, $description);
   }
 

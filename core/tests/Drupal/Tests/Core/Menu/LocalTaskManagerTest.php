@@ -434,8 +434,8 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->manager->getTasksBuild('menu_local_task_test_tasks_view', $cacheability);
 
     // Ensure that all cacheability metadata is merged together.
-    $this->assertEquals(['tag.example1', 'tag.example2'], $cacheability->getCacheTags());
-    $this->assertEquals(['context.example1', 'context.example2', 'route', 'user.permissions'], $cacheability->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['tag.example1', 'tag.example2'], $cacheability->getCacheTags());
+    $this->assertEqualsCanonicalizing(['context.example1', 'context.example2', 'route', 'user.permissions'], $cacheability->getCacheContexts());
   }
 
   protected function setupFactoryAndLocalTaskPlugins(array $definitions, $active_plugin_id) {
@@ -476,7 +476,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $cache_context_manager = $this->prophesize(CacheContextsManager::class);
 
-    foreach ([NULL, ['user.permissions'], ['route'], ['route', 'context.example1'], ['context.example1', 'route'], ['context.example1', 'route', 'context.example2'], ['context.example1', 'context.example2', 'route'], ['context.example1', 'context.example2', 'route', 'user.permissions']] as $argument) {
+    foreach ([NULL, ['user.permissions'], ['route'], ['route', 'context.example1'], ['context.example1', 'route'], ['route', 'context.example1', 'context.example2'], ['context.example1', 'context.example2', 'route'], ['route', 'context.example1', 'context.example2', 'user.permissions']] as $argument) {
       $cache_context_manager->assertValidTokens($argument)->willReturn(TRUE);
     }
 

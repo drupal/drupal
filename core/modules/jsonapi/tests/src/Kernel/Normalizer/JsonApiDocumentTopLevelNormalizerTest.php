@@ -310,7 +310,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertTrue(!isset($normalized['included'][1]['attributes']['created']));
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
-    $this->assertSame(
+    $this->assertEqualsCanonicalizing(
       ['file:1', 'node:1', 'taxonomy_term:1', 'taxonomy_term:2', 'user:1'],
       $jsonapi_doc_object->getCacheTags()
     );
@@ -400,7 +400,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertCount(12, $normalized['included'][1]['attributes']);
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
-    $this->assertSame(
+    $this->assertEqualsCanonicalizing(
       ['node:1', 'taxonomy_term:1', 'taxonomy_term:2', 'user:1'],
       $jsonapi_doc_object->getCacheTags()
     );

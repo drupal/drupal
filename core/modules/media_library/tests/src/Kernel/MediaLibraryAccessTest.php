@@ -417,8 +417,8 @@ class MediaLibraryAccessTest extends KernelTestBase {
     if ($access_result instanceof AccessResultReasonInterface && isset($expected_reason)) {
       $this->assertSame($expected_reason, $access_result->getReason());
     }
-    $this->assertSame($expected_cache_tags, $access_result->getCacheTags());
-    $this->assertSame($expected_cache_contexts, $access_result->getCacheContexts());
+    $this->assertEqualsCanonicalizing($expected_cache_tags, $access_result->getCacheTags());
+    $this->assertEqualsCanonicalizing($expected_cache_contexts, $access_result->getCacheContexts());
   }
 
 }

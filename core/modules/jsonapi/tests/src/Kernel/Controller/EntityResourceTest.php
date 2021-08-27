@@ -207,7 +207,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $data = $response->getResponseData()->getData();
     $this->assertCount(1, $data);
     $this->assertEquals($this->node2->uuid(), $data->toArray()[0]->getId());
-    $this->assertEquals(['node:2', 'node_list'], $response->getCacheableMetadata()->getCacheTags());
+    $this->assertEqualsCanonicalizing(['node:2', 'node_list'], $response->getCacheableMetadata()->getCacheTags());
   }
 
   /**

@@ -250,8 +250,18 @@ abstract class RendererTestBase extends UnitTestCase {
     $cached = $cache_backend->get($cid);
     $this->assertNotFalse($cached, sprintf('Expected cache item "%s" exists.', $cid));
     if ($cached !== FALSE) {
-      $this->assertEquals($data, $cached->data, sprintf('Cache item "%s" has the expected data.', $cid));
-      $this->assertSame(Cache::mergeTags($data['#cache']['tags'], ['rendered']), $cached->tags, "The cache item's cache tags also has the 'rendered' cache tag.");
+      $this->assertEqualsCanonicalizing(array_keys($data), array_keys($cached->data), 'The cache item contains the same parent array keys.');
+      foreach ($data as $key => $value) {
+        // We do not want to assert on the order of cacheability information.
+        // @see https://www.drupal.org/project/drupal/issues/3225328
+        if ($key === '#cache') {
+          $this->assertEqualsCanonicalizing($value, $cached->data[$key], sprintf('Cache item "%s" has the expected data.', $cid));
+        }
+        else {
+          $this->assertEquals($value, $cached->data[$key], sprintf('Cache item "%s" has the expected data.', $cid));
+        }
+      }
+      $this->assertEqualsCanonicalizing(Cache::mergeTags($data['#cache']['tags'], ['rendered']), $cached->tags, "The cache item's cache tags also has the 'rendered' cache tag.");
     }
   }
 

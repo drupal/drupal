@@ -28,8 +28,7 @@ class Cache {
    */
   public static function mergeContexts(array ...$cache_contexts) {
     $cache_contexts = array_unique(array_merge(...$cache_contexts));
-    assert(\Drupal::service('cache_contexts_manager')->assertValidTokens($cache_contexts));
-    sort($cache_contexts);
+    assert(\Drupal::service('cache_contexts_manager')->assertValidTokens($cache_contexts), sprintf('Failed to assert that "%s" are valid cache contexts.', implode(', ', $cache_contexts)));
     return $cache_contexts;
   }
 
@@ -53,7 +52,6 @@ class Cache {
   public static function mergeTags(array ...$cache_tags) {
     $cache_tags = array_unique(array_merge(...$cache_tags));
     assert(Inspector::assertAllStrings($cache_tags), 'Cache tags must be valid strings');
-    sort($cache_tags);
     return $cache_tags;
   }
 

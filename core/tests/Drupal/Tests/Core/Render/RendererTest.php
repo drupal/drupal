@@ -632,7 +632,7 @@ class RendererTest extends RendererTestBase {
 
     $this->renderer->renderPlain($build);
 
-    $this->assertEquals(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
   }
 
   /**

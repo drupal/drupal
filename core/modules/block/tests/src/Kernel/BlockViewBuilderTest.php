@@ -296,8 +296,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     // - the built render array;
     $build = $this->getBlockRenderArray();
     $this->assertSame($expected_keys, $build['#cache']['keys']);
-    $this->assertSame($expected_contexts, $build['#cache']['contexts']);
-    $this->assertSame($expected_tags, $build['#cache']['tags']);
+    $this->assertEqualsCanonicalizing($expected_contexts, $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing($expected_tags, $build['#cache']['tags']);
     $this->assertSame($expected_max_age, $build['#cache']['max-age']);
     $this->assertFalse(isset($build['#create_placeholder']));
     // - the rendered render array;
@@ -307,9 +307,9 @@ class BlockViewBuilderTest extends KernelTestBase {
     $cid = implode(':', $expected_keys) . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys($final_cache_contexts)->getKeys());
     $cache_item = $this->container->get('cache.render')->get($cid);
     $this->assertNotEmpty($cache_item, 'The block render element has been cached with the expected cache ID.');
-    $this->assertSame(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
-    $this->assertSame($final_cache_contexts, $cache_item->data['#cache']['contexts']);
-    $this->assertSame($expected_tags, $cache_item->data['#cache']['tags']);
+    $this->assertEqualsCanonicalizing(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
+    $this->assertEqualsCanonicalizing($final_cache_contexts, $cache_item->data['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing($expected_tags, $cache_item->data['#cache']['tags']);
     $this->assertSame($expected_max_age, $cache_item->data['#cache']['max-age']);
 
     $this->container->get('cache.render')->delete($cid);

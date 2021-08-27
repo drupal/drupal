@@ -34,8 +34,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
     $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="' . $expected_view_mode . '"]'));
     $this->assertHasAttributes($this->cssSelect('div[data-media-embed-test-view-mode="' . $expected_view_mode . '"]')[0], $expected_attributes);
-    $this->assertSame($expected_cacheability->getCacheTags(), $result->getCacheTags());
-    $this->assertSame($expected_cacheability->getCacheContexts(), $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing($expected_cacheability->getCacheTags(), $result->getCacheTags());
+    $this->assertEqualsCanonicalizing($expected_cacheability->getCacheContexts(), $result->getCacheContexts());
     $this->assertSame($expected_cacheability->getCacheMaxAge(), $result->getCacheMaxAge());
     $this->assertSame(['library'], array_keys($result->getAttachments()));
     $this->assertSame(['media/filter.caption'], $result->getAttachments()['library']);
@@ -152,8 +152,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
 
-    $this->assertSame($expected_cacheability->getCacheTags(), $result->getCacheTags());
-    $this->assertSame($expected_cacheability->getCacheContexts(), $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing($expected_cacheability->getCacheTags(), $result->getCacheTags());
+    $this->assertEqualsCanonicalizing($expected_cacheability->getCacheContexts(), $result->getCacheContexts());
     $this->assertSame($expected_cacheability->getCacheMaxAge(), $result->getCacheMaxAge());
     $this->assertSame($expected_attachments, $result->getAttachments());
   }
@@ -408,7 +408,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     $this->setRawContent($result->getProcessedText());
     $this->assertCount($expected_verification_success ? 1 : 0, $this->cssSelect($verification_selector));
     $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
-    $this->assertSame([
+    $this->assertEqualsCanonicalizing([
       '_media_test_embed_filter_access:media:1',
       '_media_test_embed_filter_access:user:2',
       'config:image.style.thumbnail',
@@ -417,7 +417,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'media_view',
       'user:2',
     ], $result->getCacheTags());
-    $this->assertSame(['timezone', 'user.permissions'], $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['timezone', 'user.permissions'], $result->getCacheContexts());
     $this->assertSame(Cache::PERMANENT, $result->getCacheMaxAge());
     $this->assertSame(['library'], array_keys($result->getAttachments()));
     $this->assertSame($expected_asset_libraries, $result->getAttachments()['library']);
