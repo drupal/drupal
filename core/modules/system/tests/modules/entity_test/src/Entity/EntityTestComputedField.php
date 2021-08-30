@@ -4,7 +4,9 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
+use Drupal\entity_test\Plugin\Field\ComputedTestCacheableStringItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
@@ -19,11 +21,12 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *   },
  *   entity_keys = {
  *     "id" = "id",
+ *     "uuid" = "uuid",
  *     "label" = "name",
  *   },
  *   admin_permission = "administer entity_test content",
  *   links = {
- *     "add-form" = "/entity_test_computed_field/add",
+ *     "canonical" = "/entity_test_computed_field/{entity_test_computed_field}",
  *   },
  * )
  */
@@ -45,6 +48,13 @@ class EntityTestComputedField extends EntityTest {
       ->setComputed(TRUE)
       ->setSetting('target_type', 'entity_test')
       ->setClass(ComputedReferenceTestFieldItemList::class);
+
+    $fields['computed_test_cacheable_string_field'] = BaseFieldDefinition::create('computed_test_cacheable_string_item')
+      ->setLabel(new TranslatableMarkup('Computed Cacheable String Field Test'))
+      ->setComputed(TRUE)
+      ->setClass(ComputedTestCacheableStringItemList::class)
+      ->setReadOnly(FALSE)
+      ->setInternal(FALSE);
 
     return $fields;
   }

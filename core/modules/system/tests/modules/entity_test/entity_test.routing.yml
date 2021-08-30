@@ -102,5 +102,13 @@ entity.entity_test_view_builder.canonical:
   requirements:
     _access: 'TRUE'
 
+entity.entity_test_computed_field.canonical:
+  path: '/entity_test_computed_field/{entity_test_computed_field}'
+  defaults:
+    _entity_view: 'entity_test_computed_field.full'
+    _title: 'Test full view mode'
+  requirements:
+    _entity_access: 'entity_test_computed_field.view'
+
 route_callbacks:
   - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'
