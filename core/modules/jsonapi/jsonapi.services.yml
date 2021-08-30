@@ -90,7 +90,7 @@ services:
       - { name: route_enhancer }
   jsonapi.field_resolver:
     class: Drupal\jsonapi\Context\FieldResolver
-    arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@jsonapi.resource_type.repository', '@module_handler']
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@jsonapi.resource_type.repository', '@module_handler', '@current_user']
   jsonapi.include_resolver:
     class: Drupal\jsonapi\IncludeResolver
     arguments:
