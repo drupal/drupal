@@ -55,10 +55,10 @@ field.formatter.settings.datetime_time_ago:
   label: 'Datetime time ago display format settings'
   mapping:
     future_format:
-      type: string
+      type: label
       label: 'Future format'
     past_format:
-      type: string
+      type: label
       label: 'Past format'
     granularity:
       type: integer
