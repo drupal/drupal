@@ -139,7 +139,8 @@
 .button--primary:hover,
   .button--primary:focus {
     color: #fff;
-    background-color: #2494db;
+    border-color: #0f6292;
+    background-color: #0f6292;
   }
 
 .button--primary:active {
