@@ -36,16 +36,15 @@
 
 .node--view-mode-teaser .node__top-wrapper {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    margin: 0;
-    margin-bottom: 1.125rem
+    margin: 0
   }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__top-wrapper {
-      position: relative; /* Anchor the image */
-      margin: 0
+      position: relative /* Anchor the image */
   }
     }
 
@@ -59,8 +58,22 @@
 
 .node--view-mode-teaser .primary-image {
     flex-shrink: 0;
-    margin: 0
+    margin: 0;
+    margin-bottom: 1.125rem
+
+    /* Ensure title does not wrap under image until necessary. */
   }
+
+.node--view-mode-teaser .primary-image + .node__title {
+      flex-basis: calc(100% - 5.0625rem)
+    }
+
+@media (min-width: 62.5rem) {
+
+.node--view-mode-teaser .primary-image + .node__title {
+        flex-basis: auto
+    }
+      }
 
 .node--view-mode-teaser .primary-image a {
       display: block;
@@ -139,6 +152,7 @@
 
 .node--view-mode-teaser .node__title {
     margin: 0;
+    margin-bottom: 1.125rem;
     color: #0d1214;
     font-size: 1.5rem;
     line-height: 1.6875rem
@@ -147,7 +161,6 @@
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__title {
-      margin-bottom: 1.125rem;
       font-size: 2.25rem;
       line-height: 3.375rem
   }

@@ -30,20 +30,29 @@
 
   & .node__top-wrapper {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     margin: 0;
-    margin-block-end: var(--sp1);
 
     @media (--lg) {
       position: relative; /* Anchor the image */
-      margin: 0;
     }
   }
 
   & .primary-image {
     flex-shrink: 0;
     margin: 0;
+    margin-block-end: var(--sp1);
     margin-inline-end: var(--sp1);
+
+    /* Ensure title does not wrap under image until necessary. */
+    & + .node__title {
+      flex-basis: calc(100% - calc(4.5 * var(--sp)));
+
+      @media (--lg) {
+        flex-basis: auto;
+      }
+    }
 
     & a {
       display: block;
@@ -89,12 +98,12 @@
 
   & .node__title {
     margin: 0;
+    margin-block-end: var(--sp1);
     color: var(--color--gray-0);
     font-size: 24px;
     line-height: var(--line-height-base);
 
     @media (--lg) {
-      margin-block-end: var(--sp1);
       font-size: var(--sp2);
       line-height: var(--sp3);
     }
