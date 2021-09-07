@@ -32,10 +32,13 @@ Framework managers
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+  - (provisional) Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+  - (provisional) Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
+- (provisional) Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Core JavaScript packages
  - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
@@ -311,7 +314,7 @@ Migrate
 - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
 - Michael Lutz 'mikelutz' https://www.drupal.org/u/mikelutz
-- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
+- Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Node
 - ?
