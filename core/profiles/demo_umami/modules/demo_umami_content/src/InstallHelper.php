@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This code is only for use by the Umami demo: Content module.
  */
 class InstallHelper implements ContainerInjectionInterface {
-
-  /**
-   * The path alias manager.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
 
   /**
    * Entity type manager.
@@ -99,8 +91,6 @@ class InstallHelper implements ContainerInjectionInterface {
   /**
    * Constructs a new InstallHelper object.
    *
-   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
-   *   The path alias manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity type manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
@@ -110,8 +100,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system.
    */
-  public function __construct(AliasManagerInterface $aliasManager, EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $moduleHandler, StateInterface $state, FileSystemInterface $fileSystem) {
-    $this->aliasManager = $aliasManager;
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, ModuleHandlerInterface $moduleHandler, StateInterface $state, FileSystemInterface $fileSystem) {
     $this->entityTypeManager = $entityTypeManager;
     $this->moduleHandler = $moduleHandler;
     $this->state = $state;
@@ -127,7 +116,6 @@ class InstallHelper implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('path_alias.manager'),
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('state'),
