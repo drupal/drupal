@@ -166,6 +166,43 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests per-table prefix connection option.
+   */
+  public function testPerTablePrefixOption() {
+    $connection_info = Database::getConnectionInfo('default');
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+      'test_table' => $connection_info['default']['prefix'] . '_bar',
+    ];
+    Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->assertInstanceOf(Connection::class, $foo_connection);
+    $this->assertIsString($foo_connection->getConnectionOptions()['prefix']);
+    $this->assertSame($connection_info['default']['prefix'], $foo_connection->getConnectionOptions()['prefix']);
+    $this->assertSame([
+      'test_table' => $connection_info['default']['prefix'] . '_bar',
+    ], $foo_connection->getConnectionOptions()['extra_prefix']);
+  }
+
+  /**
+   * Tests the prefix connection option in array form.
+   */
+  public function testPrefixArrayOption() {
+    $connection_info = Database::getConnectionInfo('default');
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+    ];
+    Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->assertInstanceOf(Connection::class, $foo_connection);
+    $this->assertIsString($foo_connection->getConnectionOptions()['prefix']);
+    $this->assertSame($connection_info['default']['prefix'], $foo_connection->getConnectionOptions()['prefix']);
+    $this->assertArrayNotHasKey('extra_prefix', $foo_connection->getConnectionOptions());
+  }
+
+  /**
    * Ensure that you cannot execute multiple statements on MySQL.
    */
   public function testMultipleStatementsForNewPhp() {

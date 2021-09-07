@@ -227,6 +227,8 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
+   *   An 'extra_prefix' option may be present to allow BC for attaching
+   *   per-table prefixes, but it is meant for internal use only.
    */
   public function __construct(\PDO $connection, array $connection_options) {
     if ($this->identifierQuotes === NULL) {
@@ -235,11 +237,46 @@ abstract class Connection {
     }
 
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+
     // The 'transactions' option is deprecated.
     if (isset($connection_options['transactions'])) {
       @trigger_error('Passing a \'transactions\' connection option to ' . __METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
       unset($connection_options['transactions']);
     }
+
+    // Manage the table prefix.
+    if (isset($connection_options['prefix']) && is_array($connection_options['prefix'])) {
+      if (count($connection_options['prefix']) > 1) {
+        // If there are keys left besides the 'default' one, we are in a
+        // multi-prefix scenario (for per-table prefixing, or migrations).
+        // In that case, we put the non-default keys in a 'extra_prefix' key
+        // to avoid mixing up with the normal 'prefix', which is a string since
+        // Drupal 9.1.0.
+        $prefix = $connection_options['prefix']['default'] ?? '';
+        unset($connection_options['prefix']['default']);
+        if (isset($connection_options['extra_prefix'])) {
+          $connection_options['extra_prefix'] = array_merge($connection_options['extra_prefix'], $connection_options['prefix']);
+        }
+        else {
+          $connection_options['extra_prefix'] = $connection_options['prefix'];
+        }
+      }
+      else {
+        $prefix = $connection_options['prefix']['default'] ?? '';
+      }
+      $connection_options['prefix'] = $prefix;
+    }
+
+    // Initialize and prepare the connection prefix.
+    if (!isset($connection_options['extra_prefix'])) {
+      $prefix = $connection_options['prefix'] ?? '';
+    }
+    else {
+      $default_prefix = $connection_options['prefix'] ?? '';
+      $prefix = $connection_options['extra_prefix'];
+      $prefix['default'] = $default_prefix;
+    }
+    $this->setPrefix($prefix);
 
     // Work out the database driver namespace if none is provided. This normally
     // written to setting.php by installer or set by
@@ -253,9 +290,6 @@ abstract class Connection {
     if (strpos($connection_options['namespace'], 'Drupal\Driver\Database') === 0) {
       @trigger_error('Support for database drivers located in the "drivers/lib/Drupal/Driver/Database" directory is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Contributed and custom database drivers should be provided by modules and use the namespace "Drupal\MODULE_NAME\Driver\Database\DRIVER_NAME". See https://www.drupal.org/node/3123251', E_USER_DEPRECATED);
     }
-
-    // Initialize and prepare the connection prefix.
-    $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
 
     // Set a Statement class, unless the driver opted out.
     // @todo remove this in Drupal 10 https://www.drupal.org/node/3177490
@@ -407,8 +441,7 @@ abstract class Connection {
    * Set the list of prefixes used by this database connection.
    *
    * @param array|string $prefix
-   *   Either a single prefix, or an array of prefixes, in any of the multiple
-   *   forms documented in default.settings.php.
+   *   Either a single prefix, or an array of prefixes.
    */
   protected function setPrefix($prefix) {
     if (is_array($prefix)) {
@@ -1994,7 +2027,7 @@ abstract class Connection {
     }
 
     if (!empty($url_components['fragment'])) {
-      $database['prefix']['default'] = $url_components['fragment'];
+      $database['prefix'] = $url_components['fragment'];
     }
 
     return $database;
@@ -2050,8 +2083,8 @@ abstract class Connection {
       $db_url .= '?module=' . $connection_options['module'];
     }
 
-    if (isset($connection_options['prefix']['default']) && $connection_options['prefix']['default'] !== '') {
-      $db_url .= '#' . $connection_options['prefix']['default'];
+    if (isset($connection_options['prefix']) && $connection_options['prefix'] !== '') {
+      $db_url .= '#' . $connection_options['prefix'];
     }
 
     return $db_url;

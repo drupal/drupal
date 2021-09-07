@@ -318,7 +318,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    */
   protected function addTestDatabase($db_prefix) {
     $database = Database::convertDbUrlToConnectionInfo(getenv('SIMPLETEST_DB'), $this->root);
-    $database['prefix'] = ['default' => $db_prefix];
+    $database['prefix'] = $db_prefix;
     $target = __CLASS__ . $db_prefix;
     Database::addConnectionInfo($target, 'default', $database);
     return $target;

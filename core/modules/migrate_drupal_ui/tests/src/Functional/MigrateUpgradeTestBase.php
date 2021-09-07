@@ -107,7 +107,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $connection_info['prefix'] = '';
     }
     else {
-      $prefix = is_array($connection_info['prefix']) ? $connection_info['prefix']['default'] : $connection_info['prefix'];
+      $prefix = $connection_info['prefix'];
       // Simpletest uses fixed length prefixes. Create a new prefix for the
       // source database. Adding to the end of the prefix ensures that
       // \Drupal\simpletest\TestBase::restoreEnvironment() will remove the
@@ -295,7 +295,6 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     $driver = $connection_options['driver'];
-    $connection_options['prefix'] = $connection_options['prefix']['default'];
 
     // Use the driver connection form to get the correct options out of the
     // database settings. This supports all of the databases we test against.

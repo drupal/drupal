@@ -167,9 +167,7 @@ trait TestSetupTrait {
       foreach ($connection_info as $target => $value) {
         // Replace the full table prefix definition to ensure that no table
         // prefixes of the test runner leak into the test.
-        $connection_info[$target]['prefix'] = [
-          'default' => $value['prefix']['default'] . $this->databasePrefix,
-        ];
+        $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }

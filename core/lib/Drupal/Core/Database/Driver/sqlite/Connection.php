@@ -514,8 +514,8 @@ class Connection extends DatabaseConnection {
 
     $db_url = 'sqlite://localhost/' . $connection_options['database'];
 
-    if (isset($connection_options['prefix']['default']) && $connection_options['prefix']['default'] !== NULL && $connection_options['prefix']['default'] !== '') {
-      $db_url .= '#' . $connection_options['prefix']['default'];
+    if (isset($connection_options['prefix']) && $connection_options['prefix'] !== '') {
+      $db_url .= '#' . $connection_options['prefix'];
     }
 
     return $db_url;

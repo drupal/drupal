@@ -1204,7 +1204,10 @@ class SchemaTest extends KernelTestBase {
 
     // Add per-table prefix to the second table.
     $new_connection_info = $connection_info['default'];
-    $new_connection_info['prefix']['test_2_table'] = $new_connection_info['prefix']['default'] . '_shared_';
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+      'test_2_table' => $connection_info['default']['prefix'] . '_shared_',
+    ];
     Database::addConnectionInfo('test', 'default', $new_connection_info);
     Database::setActiveConnection('test');
     $test_schema = Database::getConnection()->schema();
