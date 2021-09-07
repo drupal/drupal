@@ -122,4 +122,26 @@ class UpsertTest extends DatabaseTestBase {
     $upsert->execute();
   }
 
+  /**
+   * Tests that we can upsert a null into blob field.
+   */
+  public function testUpsertNullBlob() {
+    $id = $this->connection->insert('test_one_blob')
+      ->fields(['blob1' => 'test'])
+      ->execute();
+    $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
+    $this->assertSame('test', $r['blob1']);
+
+    $this->connection->upsert('test_one_blob')
+      ->key('id')
+      ->fields(['id', 'blob1'])
+      ->values(['id' => $id, 'blob1' => NULL])
+      ->values(['id' => $id + 1, 'blob1' => NULL])
+      ->execute();
+    $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
+    $this->assertNull($r['blob1']);
+    $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE [id] = :id', [':id' => $id + 1])->fetchAssoc();
+    $this->assertNull($r['blob1']);
+  }
+
 }

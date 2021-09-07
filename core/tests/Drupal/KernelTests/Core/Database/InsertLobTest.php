@@ -25,6 +25,17 @@ class InsertLobTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests that we can insert a null into blob field.
+   */
+  public function testInsertNullBlob() {
+    $id = $this->connection->insert('test_one_blob')
+      ->fields(['blob1' => NULL])
+      ->execute();
+    $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
+    $this->assertNull($r['blob1']);
+  }
+
+  /**
    * Tests that we can insert multiple blob fields in the same query.
    */
   public function testInsertMultipleBlob() {

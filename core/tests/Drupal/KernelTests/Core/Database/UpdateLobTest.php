@@ -32,6 +32,24 @@ class UpdateLobTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests that we can update a blob column to null.
+   */
+  public function testUpdateNullBlob() {
+    $id = $this->connection->insert('test_one_blob')
+      ->fields(['blob1' => 'test'])
+      ->execute();
+    $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
+    $this->assertSame('test', $r['blob1']);
+
+    $this->connection->update('test_one_blob')
+      ->fields(['blob1' => NULL])
+      ->condition('id', $id)
+      ->execute();
+    $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
+    $this->assertNull($r['blob1']);
+  }
+
+  /**
    * Confirms that we can update two blob columns in the same table.
    */
   public function testUpdateMultipleBlob() {

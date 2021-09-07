@@ -29,7 +29,7 @@ class Upsert extends QueryUpsert {
     $blob_count = 0;
     foreach ($this->insertValues as $insert_values) {
       foreach ($this->insertFields as $idx => $field) {
-        if (isset($table_information->blob_fields[$field])) {
+        if (isset($table_information->blob_fields[$field]) && $insert_values[$idx] !== NULL) {
           $blobs[$blob_count] = fopen('php://memory', 'a');
           fwrite($blobs[$blob_count], $insert_values[$idx]);
           rewind($blobs[$blob_count]);
