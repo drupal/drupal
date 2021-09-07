@@ -108,14 +108,7 @@ class MediaRevisionAccessCheck implements AccessInterface {
         return FALSE;
       }
 
-      // There should be at least two revisions. If the revision ID of the
-      // given media item and the revision ID of the default revision differ,
-      // then we already have two different revisions so there is no need for a
-      // separate database check.
-      if ($media->isDefaultRevision() && ($this->countDefaultLanguageRevisions($media) == 1)) {
-        $this->access[$cid] = FALSE;
-      }
-      elseif ($account->hasPermission('administer media')) {
+      if ($account->hasPermission('administer media')) {
         $this->access[$cid] = TRUE;
       }
       else {

@@ -37,9 +37,9 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     ]);
     $media->save();
 
-    // You can't access the revision page when there is only 1 revision.
+    // You can access the revision page when there is only 1 revision.
     $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
-    $assert->statusCodeEquals(403);
+    $assert->statusCodeEquals(200);
 
     // Create some revisions.
     $media_revisions = [];
