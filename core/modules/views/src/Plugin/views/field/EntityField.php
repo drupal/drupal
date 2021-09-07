@@ -931,7 +931,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   }
 
   public function render_item($count, $item) {
-    return render($item['rendered']);
+    return $this->renderer->render($item['rendered']);
   }
 
   protected function documentSelfTokens(&$tokens) {

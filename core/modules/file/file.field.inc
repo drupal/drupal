@@ -70,28 +70,24 @@ function template_preprocess_file_widget_multiple(&$variables) {
       hide($widget['display']);
     }
     hide($widget['_weight']);
+    $widget['_weight']['#attributes']['class'] = [$weight_class];
 
     // Render everything else together in a column, without the normal wrappers.
+    $row = [];
     $widget['#theme_wrappers'] = [];
-    $information = \Drupal::service('renderer')->render($widget);
-    $display = '';
+    $row[] = \Drupal::service('renderer')->render($widget);
+
+    // Arrange the row with the rest of the rendered columns.
     if ($element['#display_field']) {
       unset($widget['display']['#title']);
-      $display = [
-        'data' => render($widget['display']),
+      $row[] = [
+        'data' => $widget['display'],
         'class' => ['checkbox'],
       ];
     }
-    $widget['_weight']['#attributes']['class'] = [$weight_class];
-    $weight = render($widget['_weight']);
-
-    // Arrange the row with all of the rendered columns.
-    $row = [];
-    $row[] = $information;
-    if ($element['#display_field']) {
-      $row[] = $display;
-    }
-    $row[] = $weight;
+    $row[] = [
+      'data' => $widget['_weight'],
+    ];
 
     // Show the buttons that had previously been marked as hidden in this
     // preprocess function. We use show() to undo the earlier hide().
