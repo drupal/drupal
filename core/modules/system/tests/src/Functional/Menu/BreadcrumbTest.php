@@ -323,7 +323,7 @@ class BreadcrumbTest extends BrowserTestBase {
 
     // Verify breadcrumb on user pages (without menu link) for anonymous user.
     $trail = $home;
-    $this->assertBreadcrumb('user', $trail, t('Log in'));
+    $this->assertBreadcrumb('user', $trail, 'Log in');
     $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getAccountName());
 
     // Verify breadcrumb on user pages (without menu link) for registered users.
@@ -370,17 +370,17 @@ class BreadcrumbTest extends BrowserTestBase {
     // page title, and that the breadcrumb is just the Home link (because the
     // user is not able to access "Administer".
     $trail = $home;
-    $this->assertBreadcrumb('admin', $trail, t('Access denied'));
+    $this->assertBreadcrumb('admin', $trail, 'Access denied');
     $this->assertSession()->statusCodeEquals(403);
 
     // Since the 'admin' path is not accessible, we still expect only the Home
     // link.
-    $this->assertBreadcrumb('admin/reports', $trail, t('Reports'));
+    $this->assertBreadcrumb('admin/reports', $trail, 'Reports');
     $this->assertSession()->statusCodeNotEquals(403);
 
     // Since the Reports page is accessible, that will show.
     $trail += ['admin/reports' => t('Reports')];
-    $this->assertBreadcrumb('admin/reports/dblog', $trail, t('Recent log messages'));
+    $this->assertBreadcrumb('admin/reports/dblog', $trail, 'Recent log messages');
     $this->assertSession()->statusCodeNotEquals(403);
 
     // Ensure that the breadcrumb is safe against XSS.

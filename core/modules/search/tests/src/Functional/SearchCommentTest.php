@@ -326,7 +326,7 @@ class SearchCommentTest extends BrowserTestBase {
         $this->assertSession()->pageTextContains($this->commentSubject);
       }
       else {
-        $this->assertSession()->pageTextContains(t('Your search yielded no results.'));
+        $this->assertSession()->pageTextContains('Your search yielded no results.');
       }
     }
     catch (ResponseTextException $exception) {

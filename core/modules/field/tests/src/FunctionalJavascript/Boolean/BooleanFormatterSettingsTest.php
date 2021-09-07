@@ -126,7 +126,7 @@ class BooleanFormatterSettingsTest extends WebDriverTestBase {
       foreach ($options as $string) {
         $assert_session->pageTextContains($string);
       }
-      $assert_session->pageTextContains(t('Field settings (@on_label / @off_label)', ['@on_label' => $values[0], '@off_label' => $values[1]]));
+      $assert_session->pageTextContains("Field settings ({$values[0]} / {$values[1]})");
     }
   }
 

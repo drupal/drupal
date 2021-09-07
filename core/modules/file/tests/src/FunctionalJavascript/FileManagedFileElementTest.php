@@ -85,7 +85,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->getSession()->getPage()->pressButton($remove_button_title);
           $this->assertSession()->assertWaitOnAjaxRequest();
           $this->submitForm([], 'Save');
-          $this->assertSession()->responseContains(t('The file ids are %fids.', ['%fids' => '']));
+          $this->assertSession()->pageTextContains('The file ids are .');
 
           // Upload, then Remove, then Submit.
           $this->drupalGet($path);
@@ -100,7 +100,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->assertSession()->assertWaitOnAjaxRequest();
 
           $this->submitForm([], 'Save');
-          $this->assertSession()->responseContains(t('The file ids are %fids.', ['%fids' => '']));
+          $this->assertSession()->pageTextContains('The file ids are .');
         }
       }
     }

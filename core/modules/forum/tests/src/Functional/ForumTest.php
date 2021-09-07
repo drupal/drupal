@@ -135,7 +135,8 @@ class ForumTest extends BrowserTestBase {
     // Check that the basic forum install creates a default forum topic
     $this->drupalGet('/forum');
     // Look for the "General discussion" default forum
-    $this->assertSession()->responseContains(Link::createFromRoute(t('General discussion'), 'forum.page', ['taxonomy_term' => 1])->toString());
+    $this->assertSession()->linkExists('General discussion');
+    $this->assertSession()->linkByHrefExists('/forum/1');
     // Check the presence of expected cache tags.
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:forum.settings');
 

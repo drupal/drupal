@@ -414,15 +414,15 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Test that delete links work and operations perform properly.
     foreach ($this->langcodes as $langcode) {
-      $replacements = ['%label' => t('@label @entity_type', ['@label' => $label, '@entity_type' => mb_strtolower(t('Contact form'))]), '@language' => \Drupal::languageManager()->getLanguage($langcode)->getName()];
+      $language = \Drupal::languageManager()->getLanguage($langcode)->getName();
 
       $this->drupalGet("$translation_base_url/$langcode/delete");
-      $this->assertSession()->responseContains(t('Are you sure you want to delete the @language translation of %label?', $replacements));
+      $this->assertSession()->pageTextContains("Are you sure you want to delete the $language translation of $label contact form?");
       // Assert link back to list page to cancel delete is present.
       $this->assertSession()->linkByHrefExists($translation_base_url);
 
       $this->submitForm([], 'Delete');
-      $this->assertSession()->responseContains(t('@language translation of %label was deleted', $replacements));
+      $this->assertSession()->pageTextContains("$language translation of $label contact form was deleted");
       $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/add");
       $this->assertSession()->linkByHrefNotExists("translation_base_url/$langcode/edit");
       $this->assertSession()->linkByHrefNotExists("$translation_base_url/$langcode/delete");

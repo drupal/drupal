@@ -127,7 +127,7 @@ class PathLanguageUiTest extends PathTestBase {
     $node = $this->drupalCreateNode();
     $this->drupalget($node->toUrl('edit-form'));
     $this->submitForm([], 'Save');
-    $this->assertSession()->pageTextNotContains(t('The alias is already in use.'));
+    $this->assertSession()->pageTextNotContains('The alias is already in use.');
   }
 
 }

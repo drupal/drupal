@@ -83,12 +83,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
    */
   public function testDefaultTab() {
     $this->drupalGet('form_test/vertical-tabs');
-
-    $value = $this->assertSession()
-      ->elementExists('css', 'input[name="vertical_tabs__active_tab"]')
-      ->getValue();
-
-    $this->assertSame('edit-tab3', $value, t('The default vertical tab is correctly selected.'));
+    $this->assertSession()->elementAttributeContains('css', 'input[name="vertical_tabs__active_tab"]', 'value', 'edit-tab3');
   }
 
   /**

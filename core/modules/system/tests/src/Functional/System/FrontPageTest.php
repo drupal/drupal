@@ -84,7 +84,7 @@ class FrontPageTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm($edit, 'Save configuration');
     // Check that the front page path has been saved.
-    $this->assertSession()->pageTextContains(t('The configuration options have been saved.'));
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     // Check that path is the front page.
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('On front page.');

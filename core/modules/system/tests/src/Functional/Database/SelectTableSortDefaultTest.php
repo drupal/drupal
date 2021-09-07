@@ -86,7 +86,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
     // Verify that the table was displayed. Just the header is checked for
     // because if there were any fatal errors or exceptions in displaying the
     // sorted table, it would not print the table.
-    $assert->pageTextContains(t('Username'));
+    $assert->pageTextContains('Username');
 
     // Verify that the header links are built properly.
     $assert->linkByHrefExists('database_test/tablesort_default_sort');

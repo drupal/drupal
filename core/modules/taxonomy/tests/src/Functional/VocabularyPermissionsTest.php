@@ -291,7 +291,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $edit['name[0][value]'] = $this->randomMachineName();
 
     $this->submitForm($edit, 'Save');
-    $assert_session->pageTextContains(t('Created new term @name.', ['@name' => $edit['name[0][value]']]));
+    $assert_session->pageTextContains("Created new term {$edit['name[0][value]']}.");
 
     $terms = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')

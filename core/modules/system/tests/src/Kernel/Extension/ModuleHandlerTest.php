@@ -50,7 +50,7 @@ class ModuleHandlerTest extends KernelTestBase {
     ];
     $this->moduleHandler()->setModuleList($fixed_list);
     $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
-    $this->assertModuleList($new_module_list, t('When using a fixed list'));
+    $this->assertModuleList($new_module_list, 'When using a fixed list');
   }
 
   /**

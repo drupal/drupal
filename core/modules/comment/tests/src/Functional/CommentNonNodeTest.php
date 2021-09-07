@@ -148,19 +148,19 @@ class CommentNonNodeTest extends BrowserTestBase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertSession()->buttonNotExists(t('Save'));
+        $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertSession()->buttonExists(t('Preview'));
-        $this->assertSession()->buttonExists(t('Save'));
+        $this->assertSession()->buttonExists('Preview');
+        $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertSession()->buttonNotExists(t('Preview'));
-        $this->assertSession()->buttonExists(t('Save'));
+        $this->assertSession()->buttonNotExists('Preview');
+        $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
     }
@@ -502,7 +502,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Attempt to add a comment-type referencing this entity-type.
     $this->drupalGet('admin/structure/comment/types/add');
     $this->assertSession()->optionNotExists('edit-target-entity-type-id', 'entity_test_string_id');
-    $this->assertSession()->responseNotContains(t('Test entity with string_id'));
+    $this->assertSession()->responseNotContains('Test entity with string_id');
 
     // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');

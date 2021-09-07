@@ -103,18 +103,13 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
     $this->submitForm(["translation[config_names][taxonomy.vocabulary.$vid][name]" => $translated_vid_name], t('Save translation'));
 
     // Assert that the right name label is displayed on the taxonomy term
-    // overview page. The translations are created in this test; therefore, the
-    // assertions do not use t(). If t() were used then the correct langcodes
-    // would need to be provided.
+    // overview page.
     $this->drupalGet("admin/structure/taxonomy/manage/$vid/overview");
     $this->assertSession()->pageTextContains($vid_name);
     $this->drupalGet("$langcode/admin/structure/taxonomy/manage/$vid/overview");
     $this->assertSession()->pageTextContains($translated_vid_name);
 
     // Assert that the right name label is displayed on the taxonomy reset page.
-    // The translations are created in this test; therefore, the assertions do
-    // not use t(). If t() were used then the correct langcodes would need to be
-    // provided.
     $this->drupalGet("admin/structure/taxonomy/manage/$vid/reset");
     $this->assertSession()->pageTextContains($vid_name);
     $this->drupalGet("$langcode/admin/structure/taxonomy/manage/$vid/reset");
