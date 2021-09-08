@@ -111,7 +111,7 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   /**
    * {@inheritdoc}
    */
-  public function setDefinition($id, Definition $definition) {
+  public function setDefinition($id, Definition $definition): Definition {
     $definition = parent::setDefinition($id, $definition);
     // As of Symfony 3.4 all definitions are private by default.
     // \Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPassOnly
