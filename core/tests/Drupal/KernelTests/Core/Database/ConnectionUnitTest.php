@@ -119,8 +119,9 @@ class ConnectionUnitTest extends KernelTestBase {
    */
   public function testOpenClose() {
     // Do not run this test for an SQLite database.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped("This tests can not run with an SQLite database.");
+    $database_type = $this->connection->databaseType();
+    if ($database_type != 'mysql' && $database_type != 'pgsql') {
+      $this->markTestSkipped("This tests only runs on MySQL and PostgreSQL");
     }
 
     // Add and open a new connection.
@@ -145,8 +146,9 @@ class ConnectionUnitTest extends KernelTestBase {
    */
   public function testOpenQueryClose() {
     // Do not run this test for an SQLite database.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped("This tests can not run with an SQLite database.");
+    $database_type = $this->connection->databaseType();
+    if ($database_type != 'mysql' && $database_type != 'pgsql') {
+      $this->markTestSkipped("This tests only runs on MySQL and PostgreSQL");
     }
 
     // Add and open a new connection.
@@ -174,8 +176,9 @@ class ConnectionUnitTest extends KernelTestBase {
    */
   public function testOpenQueryPrefetchClose() {
     // Do not run this test for an SQLite database.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped("This tests can not run with an SQLite database.");
+    $database_type = $this->connection->databaseType();
+    if ($database_type != 'mysql' && $database_type != 'pgsql') {
+      $this->markTestSkipped("This tests only runs on MySQL and PostgreSQL");
     }
 
     // Add and open a new connection.
@@ -203,8 +206,9 @@ class ConnectionUnitTest extends KernelTestBase {
    */
   public function testOpenSelectQueryClose() {
     // Do not run this test for an SQLite database.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped("This tests can not run with an SQLite database.");
+    $database_type = $this->connection->databaseType();
+    if ($database_type != 'mysql' && $database_type != 'pgsql') {
+      $this->markTestSkipped("This tests only runs on MySQL and PostgreSQL");
     }
 
     // Add and open a new connection.
