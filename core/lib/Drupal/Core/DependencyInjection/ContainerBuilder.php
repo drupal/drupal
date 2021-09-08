@@ -5,6 +5,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 use Symfony\Component\DependencyInjection\Definition;
@@ -100,7 +101,7 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   /**
    * {@inheritdoc}
    */
-  public function setAlias($alias, $id) {
+  public function setAlias($alias, $id): Alias {
     $alias = parent::setAlias($alias, $id);
     // As of Symfony 3.4 all aliases are private by default.
     $alias->setPublic(TRUE);
