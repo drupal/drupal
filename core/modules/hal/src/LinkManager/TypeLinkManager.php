@@ -108,7 +108,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *   corresponding type URI.
    */
   protected function getTypes($context = []) {
-    $cid = 'hal:links:types';
+    $cid = 'hal:links:types:' . $this->getLinkDomain($context);
     $cache = $this->cache->get($cid);
     if (!$cache) {
       $data = $this->writeCache($context);
@@ -152,7 +152,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
     }
     // These URIs only change when entity info changes, so cache it permanently
     // and only clear it when entity_info is cleared.
-    $this->cache->set('hal:links:types', $data, Cache::PERMANENT, ['entity_types']);
+    $this->cache->set('hal:links:types:' . $this->getLinkDomain($context), $data, Cache::PERMANENT, ['entity_types']);
     return $data;
   }
 

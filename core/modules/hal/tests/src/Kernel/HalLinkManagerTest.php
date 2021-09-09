@@ -244,13 +244,27 @@ class HalLinkManagerTest extends KernelTestBase {
 
     /** @var \Drupal\hal\LinkManager\LinkManager $link_manager */
     $link_manager = \Drupal::service('hal.link_manager');
-    $link_manager->setLinkDomain('http://example.com/');
-    $link = $link_manager->getTypeUri('node', 'page', $serialization_context);
-    $this->assertEquals('http://example.com/rest/type/node/page', $link);
-    $this->assertEquals($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
-    $link = $link_manager->getRelationUri('node', 'page', 'field_ref', $serialization_context);
-    $this->assertEquals('http://example.com/rest/relation/node/page/field_ref', $link);
-    $this->assertEquals($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
+    /** @var \Drupal\hal\LinkManager\TypeLinkManager $type_link_manager */
+    $type_link_manager = \Drupal::service('hal.link_manager.type');
+    /** @var \Drupal\hal\LinkManager\RelationLinkManager $relation_link_manager */
+    $relation_link_manager = \Drupal::service('hal.link_manager.relation');
+
+    // One Drupal installation can serve multiple domains, protocols or ports.
+    foreach (['http://example.com/', 'https://example.com/', 'https://example.com:443/', 'http://drupal.org/'] as $domain) {
+      $link_manager->setLinkDomain($domain);
+
+      $link = $link_manager->getTypeUri('node', 'page', $serialization_context);
+      $this->assertEquals($domain . 'rest/type/node/page', $link);
+      $this->assertEquals($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
+      $type_ids = $type_link_manager->getTypeInternalIds($link, $serialization_context);
+      $this->assertEquals(['entity_type' => 'node', 'bundle' => 'page'], $type_ids);
+
+      $link = $link_manager->getRelationUri('node', 'page', 'field_ref', $serialization_context);
+      $this->assertEquals($domain . 'rest/relation/node/page/field_ref', $link);
+      $this->assertEquals($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
+      $relation_ids = $relation_link_manager->getRelationInternalIds($link, $serialization_context);
+      $this->assertEquals(['entity_type_id' => 'node', 'bundle' => 'page', 'field_name' => 'field_ref'], $relation_ids);
+    }
   }
 
 }
