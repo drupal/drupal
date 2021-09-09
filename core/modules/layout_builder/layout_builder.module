@@ -334,7 +334,7 @@ function layout_builder_plugin_filter_layout_alter(array &$definitions, array $e
  */
 function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
   // Remove the extra 'Manage display' breadcrumb for Layout Builder defaults.
-  if ($route_match->getRouteObject()->hasOption('_layout_builder') && $route_match->getParameter('section_storage_type') === 'defaults') {
+  if ($route_match->getRouteObject() && $route_match->getRouteObject()->hasOption('_layout_builder') && $route_match->getParameter('section_storage_type') === 'defaults') {
     $links = array_filter($breadcrumb->getLinks(), function (Link $link) use ($route_match) {
       $entity_type_id = $route_match->getParameter('entity_type_id');
       if (!$link->getUrl()->isRouted()) {
