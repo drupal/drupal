@@ -587,10 +587,36 @@ abstract class EntityBase implements EntityInterface {
    */
   public function getTypedData() {
     if (!isset($this->typedData)) {
-      $class = \Drupal::typedDataManager()->getDefinition('entity')['class'];
+      $class = $this->getTypedDataClass();
       $this->typedData = $class::createFromEntity($this);
     }
     return $this->typedData;
+  }
+
+  /**
+   * Returns the typed data class name for this entity.
+   *
+   * @return string
+   *   The string representing the typed data class name.
+   *
+   * @see \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
+   */
+  private function getTypedDataClass(): string {
+    $typed_data_manager = \Drupal::typedDataManager();
+
+    // Check more specific data types that could apply to this entity.
+    $candidate_data_types = [
+      "entity:{$this->getEntityTypeId()}:{$this->bundle()}",
+      "entity:{$this->getEntityTypeId()}",
+    ];
+    foreach ($candidate_data_types as $candidate_data_type) {
+      if ($typed_data_manager->hasDefinition($candidate_data_type)) {
+        return $typed_data_manager->getDefinition($candidate_data_type)['class'];
+      }
+    }
+
+    // Fall back to the generic entity definition.
+    return $typed_data_manager->getDefinition('entity')['class'];
   }
 
   /**
