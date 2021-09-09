@@ -1298,12 +1298,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Install Quick Edit as well.
-    $this->container->get('module_installer')->install(['quickedit']);
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
-      'access in-place editing',
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
