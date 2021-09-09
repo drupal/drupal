@@ -7,6 +7,7 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Validator\ContextualValidatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -51,14 +52,14 @@ class RecursiveValidator implements ValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function startContext($root = NULL) {
+  public function startContext($root = NULL): ContextualValidatorInterface {
     return new RecursiveContextualValidator($this->contextFactory->createContext($this, $root), $this, $this->constraintValidatorFactory, $this->typedDataManager);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function inContext(ExecutionContextInterface $context) {
+  public function inContext(ExecutionContextInterface $context): ContextualValidatorInterface {
     return new RecursiveContextualValidator($context, $this, $this->constraintValidatorFactory, $this->typedDataManager);
   }
 
