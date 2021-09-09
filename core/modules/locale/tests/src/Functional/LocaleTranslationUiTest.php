@@ -79,7 +79,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
-    $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
+    $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
     // Ensure that test language was added.
     $this->assertSession()->pageTextContains($name);
     $this->drupalLogout();
@@ -132,7 +132,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertRaw($translation);
+    $this->assertSession()->pageTextContains($translation);
 
     $search = [
       'string' => $name,
@@ -155,7 +155,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertRaw($translation_to_en);
+    $this->assertSession()->pageTextContains($translation_to_en);
 
     $this->assertNotEquals($translation, $name);
     $this->assertEquals($translation, t($name, [], ['langcode' => $langcode]), 't() works for non-English.');
@@ -232,7 +232,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($edit, 'Save translations');
-    $this->assertRaw($name);
+    $this->assertSession()->responseContains($name);
     $this->drupalLogin($translate_user);
     $search = [
       'string' => $name,

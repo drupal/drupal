@@ -19,7 +19,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    */
   public function testInstaller() {
     // Verify that the Standard install profile's default frontpage appears.
-    $this->assertRaw('No front page content has been created yet.');
+    $this->assertSession()->pageTextContains('No front page content has been created yet.');
     // Ensure that the contact link enabled in standard_install() works as
     // expected.
     $this->clickLink('Contact');
@@ -33,7 +33,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
   protected function setUpSite() {
     // Test that the correct theme is being used.
     $this->assertSession()->responseNotContains('bartik');
-    $this->assertRaw('themes/seven/css/theme/install-page.css');
+    $this->assertSession()->responseContains('themes/seven/css/theme/install-page.css');
     parent::setUpSite();
   }
 

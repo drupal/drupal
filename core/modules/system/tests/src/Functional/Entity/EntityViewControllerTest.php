@@ -55,17 +55,17 @@ class EntityViewControllerTest extends BrowserTestBase {
 
     foreach ($this->entities as $entity) {
       $this->drupalGet('entity_test/' . $entity->id());
-      $this->assertRaw($entity->label());
-      $this->assertRaw($get_label_markup($entity->label()));
-      $this->assertRaw('full');
+      $this->assertSession()->pageTextContains($entity->label());
+      $this->assertSession()->responseContains($get_label_markup($entity->label()));
+      $this->assertSession()->pageTextContains('full');
 
       $this->drupalGet('entity_test_converter/' . $entity->id());
-      $this->assertRaw($entity->label());
-      $this->assertRaw('full');
+      $this->assertSession()->pageTextContains($entity->label());
+      $this->assertSession()->pageTextContains('full');
 
       $this->drupalGet('entity_test_no_view_mode/' . $entity->id());
-      $this->assertRaw($entity->label());
-      $this->assertRaw('full');
+      $this->assertSession()->pageTextContains($entity->label());
+      $this->assertSession()->pageTextContains('full');
     }
 
     // Test viewing a revisionable entity.
@@ -76,8 +76,8 @@ class EntityViewControllerTest extends BrowserTestBase {
     $entity_test_rev->isDefaultRevision(TRUE);
     $entity_test_rev->save();
     $this->drupalGet('entity_test_rev/' . $entity_test_rev->id() . '/revision/' . $entity_test_rev->revision_id->value . '/view');
-    $this->assertRaw($entity_test_rev->label());
-    $this->assertRaw($get_label_markup($entity_test_rev->label()));
+    $this->assertSession()->pageTextContains($entity_test_rev->label());
+    $this->assertSession()->responseContains($get_label_markup($entity_test_rev->label()));
 
     // As entity_test IDs must be integers, make sure requests for non-integer
     // IDs return a page not found error.

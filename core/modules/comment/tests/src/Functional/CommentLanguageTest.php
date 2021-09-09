@@ -156,7 +156,7 @@ class CommentLanguageTest extends BrowserTestBase {
     $this->drupalGet('admin/content/comment');
     foreach ($comment_values as $node_values) {
       foreach ($node_values as $value) {
-        $this->assertRaw($value);
+        $this->assertSession()->responseContains($value);
       }
     }
   }

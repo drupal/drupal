@@ -101,7 +101,7 @@ class PreviewTest extends UITestBase {
     $this->assertSession()->pageTextContains('Query build time');
     $this->assertSession()->pageTextContains('Query execute time');
     $this->assertSession()->pageTextContains('View render time');
-    $this->assertRaw('<strong>Query</strong>');
+    $this->assertSession()->responseContains('<strong>Query</strong>');
     $query_string = <<<SQL
 SELECT "views_test_data"."name" AS "views_test_data_name"
 FROM
@@ -143,7 +143,7 @@ SQL;
     $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()="Test row count"]', 1);
     // Check that additional assets are attached.
     $this->assertStringContainsString('views_ui_test/views_ui_test.test', $this->getDrupalSettings()['ajaxPageState']['libraries'], 'Attached library found.');
-    $this->assertRaw('css/views_ui_test.test.css');
+    $this->assertSession()->responseContains('css/views_ui_test.test.css');
   }
 
   /**

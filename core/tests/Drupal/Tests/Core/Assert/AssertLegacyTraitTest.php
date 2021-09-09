@@ -67,6 +67,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
    * @covers ::assertRaw
    */
   public function testAssertRaw() {
+    $this->expectDeprecation('AssertLegacyTrait::assertRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738');
     $this->expectDeprecation('Calling AssertLegacyTrait::assertRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738');
     $this->page->getText()->willReturn('foo bar bar');
     $this->assertRaw('foo', '\'foo\' should be present.');

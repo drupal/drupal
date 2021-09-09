@@ -21,7 +21,7 @@ class InstallerExistingInstallationTest extends InstallerTestBase {
   public function testInstaller() {
     // Verify that Drupal can't be immediately reinstalled.
     $this->visitInstaller();
-    $this->assertRaw('Drupal already installed');
+    $this->assertSession()->pageTextContains('Drupal already installed');
 
     // Delete settings.php and attempt to reinstall again.
     unlink($this->siteDirectory . '/settings.php');
@@ -30,7 +30,7 @@ class InstallerExistingInstallationTest extends InstallerTestBase {
     $this->setUpProfile();
     $this->setUpRequirementsProblem();
     $this->setUpSettings();
-    $this->assertRaw('Drupal already installed');
+    $this->assertSession()->pageTextContains('Drupal already installed');
   }
 
 }

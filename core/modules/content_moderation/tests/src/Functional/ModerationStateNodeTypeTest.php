@@ -26,7 +26,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->assertSession()->pageTextContains('The content type Not moderated has been added.');
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'not_moderated');
     $this->drupalGet('node/add/not_moderated');
-    $this->assertRaw('Save');
+    $this->assertSession()->pageTextContains('Save');
     $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');

@@ -69,7 +69,7 @@ class UpdateSchemaTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink('Continue');
-    $this->assertRaw('Schema version 8001.');
+    $this->assertSession()->pageTextContains('Schema version 8001.');
     // Run the update hooks.
     $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();

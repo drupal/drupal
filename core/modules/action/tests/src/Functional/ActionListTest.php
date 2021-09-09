@@ -36,7 +36,7 @@ class ActionListTest extends BrowserTestBase {
     $actions = $storage->loadMultiple();
     $storage->delete($actions);
     $this->drupalGet('/admin/config/system/actions');
-    $this->assertRaw('There are no actions yet.');
+    $this->assertSession()->pageTextContains('There are no actions yet.');
   }
 
 }

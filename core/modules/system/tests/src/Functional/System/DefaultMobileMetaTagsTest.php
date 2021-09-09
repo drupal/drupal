@@ -36,7 +36,7 @@ class DefaultMobileMetaTagsTest extends BrowserTestBase {
   public function testDefaultMetaTagsExist() {
     $this->drupalGet('');
     foreach ($this->defaultMetaTags as $name => $metatag) {
-      $this->assertRaw($metatag);
+      $this->assertSession()->responseContains($metatag);
     }
   }
 

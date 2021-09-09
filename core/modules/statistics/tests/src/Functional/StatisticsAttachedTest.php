@@ -56,7 +56,7 @@ class StatisticsAttachedTest extends BrowserTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
 
-    $this->assertRaw('core/modules/statistics/statistics.js');
+    $this->assertSession()->responseContains('core/modules/statistics/statistics.js');
   }
 
 }

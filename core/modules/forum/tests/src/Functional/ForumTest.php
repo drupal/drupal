@@ -135,7 +135,7 @@ class ForumTest extends BrowserTestBase {
     // Check that the basic forum install creates a default forum topic
     $this->drupalGet('/forum');
     // Look for the "General discussion" default forum
-    $this->assertRaw(Link::createFromRoute(t('General discussion'), 'forum.page', ['taxonomy_term' => 1])->toString());
+    $this->assertSession()->responseContains(Link::createFromRoute(t('General discussion'), 'forum.page', ['taxonomy_term' => 1])->toString());
     // Check the presence of expected cache tags.
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:forum.settings');
 
@@ -332,13 +332,13 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Add forum');
     $this->assertSession()->linkExists('Add container');
     $this->clickLink('edit container');
-    $this->assertRaw('Edit container');
+    $this->assertSession()->pageTextContains('Edit container');
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Verify the "edit forum" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
     $this->clickLink('edit forum');
-    $this->assertRaw('Edit forum');
+    $this->assertSession()->pageTextContains('Edit forum');
     // Navigate back to forum structure page.
     $this->drupalGet('admin/structure/forum');
     // Create second forum in container, destined to be deleted below.
@@ -604,8 +604,8 @@ class ForumTest extends BrowserTestBase {
 
     // View forum topic.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw($title);
-    $this->assertRaw($body);
+    $this->assertSession()->pageTextContains($title);
+    $this->assertSession()->pageTextContains($body);
 
     return $node;
   }
@@ -652,7 +652,7 @@ class ForumTest extends BrowserTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     ];
-    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb));
+    $this->assertSession()->responseContains(\Drupal::service('renderer')->renderRoot($breadcrumb));
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -718,7 +718,7 @@ class ForumTest extends BrowserTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     ];
-    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb));
+    $this->assertSession()->responseContains(\Drupal::service('renderer')->renderRoot($breadcrumb));
   }
 
   /**

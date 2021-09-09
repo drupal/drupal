@@ -55,7 +55,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $node_file = File::load($node->{$field_name}->target_id);
     // Ensure the file can be viewed.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw($node_file->getFilename());
+    $this->assertSession()->responseContains($node_file->getFilename());
     // Ensure the file can be downloaded.
     $this->drupalGet(file_create_url($node_file->getFileUri()));
     $this->assertSession()->statusCodeEquals(200);

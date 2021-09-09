@@ -232,7 +232,7 @@ class FormTest extends BrowserTestBase {
     // Verify that no error message is displayed when all required fields are
     // filled.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertRaw("The form_test_validate_required_form form was submitted successfully.");
+    $this->assertSession()->pageTextContains("The form_test_validate_required_form form was submitted successfully.");
   }
 
   /**
@@ -367,7 +367,7 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Verify that no error input form element class is present.
     $this->assertSession()->elementNotExists('xpath', '//input[contains(@class, "error")]');
-    $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
+    $this->assertSession()->pageTextContains("The form_test_validate_required_form_no_title form was submitted successfully.");
   }
 
   /**
@@ -659,7 +659,7 @@ class FormTest extends BrowserTestBase {
           // Check if the error exists on the page, if the current message ID is
           // expected. Otherwise ensure that the error message is not present.
           if ($id === $error) {
-            $this->assertRaw(new FormattableMarkup($message, $placeholders));
+            $this->assertSession()->responseContains(new FormattableMarkup($message, $placeholders));
           }
           else {
             $this->assertSession()->responseNotContains(new FormattableMarkup($message, $placeholders));

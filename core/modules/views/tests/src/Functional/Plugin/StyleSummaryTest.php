@@ -60,7 +60,7 @@ class StyleSummaryTest extends ViewTestBase {
     $this->drupalGet('test-summary');
 
     // Ensure styles are properly added for summary views.
-    $this->assertRaw('stable/css/views/views.module.css');
+    $this->assertSession()->responseContains('stable/css/views/views.module.css');
 
     $summary_list = $this->cssSelect('ul.views-summary li');
     $this->assertCount(4, $summary_list);

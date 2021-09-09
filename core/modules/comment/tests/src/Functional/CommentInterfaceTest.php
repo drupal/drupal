@@ -318,7 +318,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Comment displayed in 'default' display mode found and has body text.
     $comment_element = $this->cssSelect('.comment-wrapper');
     $this->assertTrue(!empty($comment_element));
-    $this->assertRaw('<p>' . $comment_text . '</p>');
+    $this->assertSession()->responseContains('<p>' . $comment_text . '</p>');
 
     // Create a new comment entity view mode.
     $mode = mb_strtolower($this->randomMachineName());

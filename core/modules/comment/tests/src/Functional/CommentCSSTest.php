@@ -115,7 +115,7 @@ class CommentCSSTest extends CommentTestBase {
         // user (the viewer) was the author of the comment. We do this in Java-
         // Script to prevent breaking the render cache.
         $this->assertCount(1, $this->xpath('//*[contains(@class, "comment") and @data-comment-user-id="' . $case['comment_uid'] . '"]'), 'data-comment-user-id attribute is set on comment.');
-        $this->assertRaw(drupal_get_path('module', 'comment') . '/js/comment-by-viewer.js');
+        $this->assertSession()->responseContains(drupal_get_path('module', 'comment') . '/js/comment-by-viewer.js');
       }
 
       // Verify the unpublished class.

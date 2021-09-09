@@ -280,7 +280,7 @@ class HandlerTest extends UITestBase {
     // description field is shown instead.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_node_view/default/field');
     $this->assertSession()->pageTextNotContains('Error: missing help');
-    $this->assertRaw('<td class="description"></td>');
+    $this->assertSession()->responseContains('<td class="description"></td>');
 
     // Test that no error message is shown for other fields.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_view_empty/default/field');

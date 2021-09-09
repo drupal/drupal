@@ -267,7 +267,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Verify the placeholder is there.
     $this->drupalGet('node/add/article');
-    $this->assertRaw('placeholder="Start typing here."');
+    $this->assertSession()->responseContains('placeholder="Start typing here."');
 
     // Preview and verify the terms appear but are not created.
     $this->submitForm($edit, 'Preview');
@@ -356,7 +356,7 @@ class TermTest extends TaxonomyTestBase {
     $this->clickLink('Edit');
 
     // Verify that the randomly generated term is present.
-    $this->assertRaw($edit['name[0][value]']);
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
     $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     $edit = [
@@ -592,9 +592,9 @@ class TermTest extends TaxonomyTestBase {
     // Check that the term is displayed when editing and saving the node with no
     // changes.
     $this->clickLink('Edit');
-    $this->assertRaw($term->getName());
+    $this->assertSession()->responseContains($term->getName());
     $this->submitForm([], 'Save');
-    $this->assertRaw($term->getName());
+    $this->assertSession()->responseContains($term->getName());
   }
 
   /**

@@ -87,7 +87,7 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
       $this->drupalGet('node/1');
 
       // Ensure the text is transformed.
-      $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+      $this->assertSession()->responseContains('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
       $client = $this->getHttpClient();
 
@@ -125,7 +125,7 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
     $this->drupalGet('node/1');
 
     // Ensure the text is transformed.
-    $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+    $this->assertSession()->responseContains('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
     $client = $this->getHttpClient();
     $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
       'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),

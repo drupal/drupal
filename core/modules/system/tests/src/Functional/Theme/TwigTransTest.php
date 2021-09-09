@@ -148,15 +148,15 @@ class TwigTransTest extends BrowserTestBase {
 
     // Assert that {{ token }} was successfully translated and prefixed
     // with "@".
-    $this->assertRaw('ESCAPEE: &amp;&quot;&lt;&gt;');
+    $this->assertSession()->responseContains('ESCAPEE: &amp;&quot;&lt;&gt;');
 
     // Assert that {{ token|placeholder }} was successfully translated and
     // prefixed with "%".
-    $this->assertRaw('PLAYSHOLDR: <em class="placeholder">&amp;&quot;&lt;&gt;</em>');
+    $this->assertSession()->responseContains('PLAYSHOLDR: <em class="placeholder">&amp;&quot;&lt;&gt;</em>');
 
     // Assert that {{ complex.tokens }} were successfully translated with
     // appropriate prefixes.
-    $this->assertRaw('DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;.');
+    $this->assertSession()->responseContains('DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;.');
 
     // Assert that {% trans %} with a context only msgid is excluded from
     // translation.
@@ -200,7 +200,7 @@ class TwigTransTest extends BrowserTestBase {
         // Install the language in Drupal.
         $this->drupalGet('admin/config/regional/language/add');
         $this->submitForm($edit, 'Add custom language');
-        $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
+        $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
 
         // Import the custom .po contents for the language.
         $filename = $file_system->tempnam('temporary://', "po_") . '.po';

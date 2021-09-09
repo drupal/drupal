@@ -314,12 +314,12 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Unpublish the comment.
     $this->performCommentOperation($comment1, 'unpublish');
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments[' . $comment1->id() . ']');
+    $this->assertSession()->responseContains('comments[' . $comment1->id() . ']');
 
     // Publish the comment.
     $this->performCommentOperation($comment1, 'publish', TRUE);
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $comment1->id() . ']');
+    $this->assertSession()->responseContains('comments[' . $comment1->id() . ']');
 
     // Delete the comment.
     $this->performCommentOperation($comment1, 'delete');
@@ -332,7 +332,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Check that the comment was found.
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $comment1->id() . ']');
+    $this->assertSession()->responseContains('comments[' . $comment1->id() . ']');
 
     // Check that entity access applies to administrative page.
     $this->assertSession()->pageTextContains($this->entity->label());

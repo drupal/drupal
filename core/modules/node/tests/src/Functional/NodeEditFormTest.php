@@ -86,7 +86,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that the title and body fields are displayed with the correct values.
     // @todo Ideally assertLink would support HTML, but it doesn't.
-    $this->assertRaw('Edit<span class="visually-hidden">(active tab)</span>');
+    $this->assertSession()->responseContains('Edit<span class="visually-hidden">(active tab)</span>');
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
     $this->assertSession()->fieldValueEquals($body_key, $edit[$body_key]);
 
@@ -141,7 +141,7 @@ class NodeEditFormTest extends NodeTestBase {
     $open_details_elements = count($this->cssSelect('details[open="open"]'));
     $this->submitForm($edit, 'Save');
     // The node author details must be open.
-    $this->assertRaw('<details class="node-form-author js-form-wrapper form-wrapper" data-drupal-selector="edit-author" id="edit-author" open="open">');
+    $this->assertSession()->responseContains('<details class="node-form-author js-form-wrapper form-wrapper" data-drupal-selector="edit-author" id="edit-author" open="open">');
     // Only one extra details element should now be open.
     $open_details_elements++;
     $this->assertCount($open_details_elements, $this->cssSelect('details[open="open"]'), 'Exactly one extra open &lt;details&gt; element found.');

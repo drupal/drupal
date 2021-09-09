@@ -117,7 +117,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     // Assert that HTML is not escaped unexpectedly.
     if ($this->testHTMLEscapeForAllLanguages) {
       $this->assertSession()->responseNotContains('&lt;span class=&quot;translation-entity-all-languages&quot;&gt;(all languages)&lt;/span&gt;');
-      $this->assertRaw('<span class="translation-entity-all-languages">(all languages)</span>');
+      $this->assertSession()->responseContains('<span class="translation-entity-all-languages">(all languages)</span>');
     }
 
     // Ensure that the content language cache context is not yet added to the
@@ -525,7 +525,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url);
 
-        $this->assertRaw($entity->getTranslation($langcode)->label());
+        $this->assertSession()->responseContains($entity->getTranslation($langcode)->label());
       }
     }
   }

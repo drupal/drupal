@@ -204,7 +204,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
     ];
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
-    $this->assertRaw($default_output);
+    $this->assertSession()->responseContains($default_output);
 
     // Test field not being configured. This should not cause a fatal error.
     $display_options = [
@@ -290,32 +290,32 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);
     if (!$empty_styles) {
-      $this->assertRaw('/styles/medium/');
+      $this->assertSession()->responseContains('/styles/medium/');
       // Assert the empty image is present.
-      $this->assertRaw('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+      $this->assertSession()->responseContains('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
       $thumbnail_style = ImageStyle::load('thumbnail');
       // Assert the output of the 'srcset' attribute (small multipliers first).
-      $this->assertRaw('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . file_url_transform_relative($thumbnail_style->buildUrl($image_uri)) . ' 1.5x');
-      $this->assertRaw('/styles/medium/');
+      $this->assertSession()->responseContains('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x, ' . file_url_transform_relative($thumbnail_style->buildUrl($image_uri)) . ' 1.5x');
+      $this->assertSession()->responseContains('/styles/medium/');
       // Assert the output of the original image.
       $this->assertRaw(file_url_transform_relative(file_create_url($image_uri)) . ' 3x');
       // Assert the output of the breakpoints.
-      $this->assertRaw('media="(min-width: 0px)"');
-      $this->assertRaw('media="(min-width: 560px)"');
+      $this->assertSession()->responseContains('media="(min-width: 0px)"');
+      $this->assertSession()->responseContains('media="(min-width: 560px)"');
       // Assert the output of the 'sizes' attribute.
-      $this->assertRaw('sizes="(min-width: 700px) 700px, 100vw"');
+      $this->assertSession()->responseContains('sizes="(min-width: 700px) 700px, 100vw"');
       $this->assertSession()->responseMatches('/media="\(min-width: 560px\)".+?sizes="\(min-width: 700px\) 700px, 100vw"/');
       // Assert the output of the 'srcset' attribute (small images first).
       $medium_style = ImageStyle::load('medium');
-      $this->assertRaw(file_url_transform_relative($medium_style->buildUrl($image_uri)) . ' 220w, ' . file_url_transform_relative($large_style->buildUrl($image_uri)) . ' 360w');
-      $this->assertRaw('media="(min-width: 851px)"');
+      $this->assertSession()->responseContains(file_url_transform_relative($medium_style->buildUrl($image_uri)) . ' 220w, ' . file_url_transform_relative($large_style->buildUrl($image_uri)) . ' 360w');
+      $this->assertSession()->responseContains('media="(min-width: 851px)"');
     }
-    $this->assertRaw('/styles/large/');
+    $this->assertSession()->responseContains('/styles/large/');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:responsive_image.styles.style_one');
     if (!$empty_styles) {
       $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.medium');
       $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.thumbnail');
-      $this->assertRaw('type="image/png"');
+      $this->assertSession()->responseContains('type="image/png"');
     }
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.large');
 
@@ -330,7 +330,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
     $default_output = trim($renderer->renderRoot($fallback_image));
-    $this->assertRaw($default_output);
+    $this->assertSession()->responseContains($default_output);
 
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.

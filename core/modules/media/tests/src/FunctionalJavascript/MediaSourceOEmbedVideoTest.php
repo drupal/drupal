@@ -201,7 +201,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // 'view media' permission.
     $this->drupalGet('media/oembed', ['query' => $query]);
     $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
-    $this->assertRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
+    $this->assertSession()->responseContains('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
     $this->assertSession()->responseNotContains('core/modules/media/templates/media-oembed-iframe.html.twig');
 
     // Test themes not inheriting from stable.
@@ -210,7 +210,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $this->drupalGet('media/oembed', ['query' => $query]);
     $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
     $this->assertSession()->responseNotContains('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
-    $this->assertRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
+    $this->assertSession()->responseContains('core/modules/media/templates/media-oembed-iframe.html.twig');
 
     // Remove the 'view media' permission to test that this restricts access.
     $role = Role::load(AccountInterface::ANONYMOUS_ROLE);

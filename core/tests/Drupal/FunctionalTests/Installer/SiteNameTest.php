@@ -38,7 +38,7 @@ class SiteNameTest extends BrowserTestBase {
    */
   public function testSiteName() {
     $this->drupalGet('');
-    $this->assertRaw($this->siteName);
+    $this->assertSession()->pageTextContains($this->siteName);
   }
 
 }

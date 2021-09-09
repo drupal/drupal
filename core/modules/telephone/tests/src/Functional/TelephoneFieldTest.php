@@ -89,7 +89,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   public function testTelephoneWidget() {
     $this->drupalGet('node/add/article');
     $this->assertSession()->fieldValueEquals("field_telephone[0][value]", '');
-    $this->assertRaw('placeholder="123-456-7890"');
+    $this->assertSession()->responseContains('placeholder="123-456-7890"');
   }
 
   /**
@@ -108,7 +108,7 @@ class TelephoneFieldTest extends BrowserTestBase {
 
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
-    $this->assertRaw('<a href="tel:' . $expected . '">');
+    $this->assertSession()->responseContains('<a href="tel:' . $expected . '">');
   }
 
   /**

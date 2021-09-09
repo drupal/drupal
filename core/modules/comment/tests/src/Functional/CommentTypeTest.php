@@ -114,7 +114,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->submitForm($edit, 'Save');
 
     $this->drupalGet('admin/structure/comment');
-    $this->assertRaw('Bar');
+    $this->assertSession()->pageTextContains('Bar');
     $this->clickLink('Manage fields');
     // Verify that the original machine name was used in the URL.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment']));

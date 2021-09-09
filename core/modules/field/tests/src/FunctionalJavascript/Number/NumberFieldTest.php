@@ -151,8 +151,8 @@ class NumberFieldTest extends WebDriverTestBase {
     // Check number_decimal and number_unformatted formatters behavior.
     $this->drupalGet('node/' . $node->id());
     $float_formatted = number_format($random_float, $scale, $decimal_separator, $thousand_separator);
-    $this->assertRaw("$prefix$float_formatted$suffix");
-    $this->assertRaw((string) $random_integer);
+    $this->assertSession()->responseContains("$prefix$float_formatted$suffix");
+    $this->assertSession()->responseContains((string) $random_integer);
 
     // Configure the number_decimal formatter.
     \Drupal::service('entity_display.repository')->getViewDisplay('node', $type)
@@ -182,7 +182,7 @@ class NumberFieldTest extends WebDriverTestBase {
     $this->drupalGet('node/' . $node->id());
 
     $integer_formatted = number_format($random_integer, 0, '', $thousand_separator);
-    $this->assertRaw($integer_formatted);
+    $this->assertSession()->responseContains($integer_formatted);
   }
 
 }

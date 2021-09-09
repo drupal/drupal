@@ -192,7 +192,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The following items in your active configuration have changes since the last import that may be lost on the next import.');
     // Ensure the item is displayed as part of a list (to avoid false matches
     // on the rest of the page) and that the list markup is not escaped.
-    $this->assertRaw('<li>system.site</li>');
+    $this->assertSession()->responseContains('<li>system.site</li>');
     // Remove everything from sync. The warning about differences between the
     // active and snapshot should no longer exist.
     \Drupal::service('config.storage.sync')->deleteAll();
@@ -213,7 +213,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The following items in your active configuration have changes since the last import that may be lost on the next import.');
     // Ensure the item is displayed as part of a list (to avoid false matches
     // on the rest of the page) and that the list markup is not escaped.
-    $this->assertRaw('<li>system.site</li>');
+    $this->assertSession()->responseContains('<li>system.site</li>');
   }
 
   /**

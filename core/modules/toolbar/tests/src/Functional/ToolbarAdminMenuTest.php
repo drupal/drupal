@@ -103,7 +103,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the toolbar is present in the HTML.
-    $this->assertRaw('id="toolbar-administration"');
+    $this->assertSession()->responseContains('id="toolbar-administration"');
 
     // Store the adminUser admin menu subtrees hash for comparison later.
     $this->hash = $this->getSubtreesHash();
@@ -185,7 +185,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the toolbar is present in the HTML.
-    $this->assertRaw('id="toolbar-administration"');
+    $this->assertSession()->responseContains('id="toolbar-administration"');
 
     $admin_user_2_hash = $this->getSubtreesHash();
 
@@ -195,7 +195,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the toolbar is present in the HTML.
-    $this->assertRaw('id="toolbar-administration"');
+    $this->assertSession()->responseContains('id="toolbar-administration"');
 
     $this->hash = $this->getSubtreesHash();
 
@@ -293,7 +293,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     t($name, [], ['langcode' => $langcode]);
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
-    $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
+    $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
     // Verify that the test language was added.
     $this->assertSession()->pageTextContains($name);
 
@@ -422,7 +422,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('<front>'));
     $this->assertSession()->pageTextContains('External URL');
     // Ensure the description is escaped as expected.
-    $this->assertRaw('title="External URL &amp; escaped"');
+    $this->assertSession()->responseContains('title="External URL &amp; escaped"');
   }
 
   /**

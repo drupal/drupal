@@ -141,7 +141,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     $node = $this->getNodeByTitle('english_title');
     $this->drupalGet('node/' . $node->id() . '/edit');
     // Test the expected title when loading the form.
-    $this->assertRaw('<title>Edit Article english_title | Drupal</title>');
+    $this->assertSession()->titleEquals('Edit Article english_title | Drupal');
     // Upload and image after changing the node language.
     $images = $this->drupalGetTestFiles('image')[1];
     $edit = [
@@ -151,7 +151,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     $this->submitForm($edit, 'Upload');
     // Test the expected title after triggering an ajax call with a new
     // language selected.
-    $this->assertRaw('<title>Edit Article english_title | Drupal</title>');
+    $this->assertSession()->titleEquals('Edit Article english_title | Drupal');
     $edit = [
       'langcode[0][value]' => 'en',
       'field_image_field[0][alt]' => 'alternative_text',

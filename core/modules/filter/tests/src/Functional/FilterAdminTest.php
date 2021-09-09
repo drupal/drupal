@@ -295,7 +295,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('<option value="' . $full . '">Full HTML</option>');
+    $this->assertSession()->responseContains('<option value="' . $full . '">Full HTML</option>');
 
     // Use basic HTML and see if it removes tags that are not allowed.
     $body = '<em>' . $this->randomMachineName() . '</em>';
@@ -318,7 +318,7 @@ class FilterAdminTest extends BrowserTestBase {
 
     $this->drupalGet('node/' . $node->id());
     // Check that filter removed invalid tag.
-    $this->assertRaw($body . $extra_text);
+    $this->assertSession()->responseContains($body . $extra_text);
 
     // Use plain text and see if it escapes all tags, whether allowed or not.
     // In order to test plain text, we have to enable the hidden variable for
@@ -403,10 +403,10 @@ class FilterAdminTest extends BrowserTestBase {
 
     $this->drupalGet('filter/tips');
 
-    $this->assertRaw('<td class="type">' . $link_as_code . '</td>');
-    $this->assertRaw('<td class="get">' . $link . '</td>');
-    $this->assertRaw('<td class="type">' . $ampersand_as_code . '</td>');
-    $this->assertRaw('<td class="get">' . $ampersand . '</td>');
+    $this->assertSession()->responseContains('<td class="type">' . $link_as_code . '</td>');
+    $this->assertSession()->responseContains('<td class="get">' . $link . '</td>');
+    $this->assertSession()->responseContains('<td class="type">' . $ampersand_as_code . '</td>');
+    $this->assertSession()->responseContains('<td class="get">' . $ampersand . '</td>');
   }
 
   /**
@@ -456,7 +456,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/reports/dblog');
     // The correct message has been logged.
-    $this->assertRaw(sprintf('Disabled text format: %s.', $format_id));
+    $this->assertSession()->pageTextContains(sprintf('Disabled text format: %s.', $format_id));
 
     // Programmatically change the text format to something random so we trigger
     // the missing text format message.
@@ -471,7 +471,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Visit the dblog report page.
     $this->drupalGet('admin/reports/dblog');
     // The missing text format message has been logged.
-    $this->assertRaw(sprintf('Missing text format: %s.', $format_id));
+    $this->assertSession()->pageTextContains(sprintf('Missing text format: %s.', $format_id));
   }
 
 }

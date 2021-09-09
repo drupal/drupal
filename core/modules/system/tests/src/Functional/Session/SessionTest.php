@@ -317,7 +317,7 @@ class SessionTest extends BrowserTestBase {
     $this->mink->resetSessions();
     $this->drupalGet('session-test/id-from-cookie');
     // Verify that session ID is blank as sent from cookie header.
-    $this->assertRaw("session_id:\n");
+    $this->assertSession()->responseContains("session_id:\n");
     // Assert that we have an anonymous session now.
     $this->drupalGet('session-test/is-logged-in');
     $this->assertSession()->statusCodeEquals(403);

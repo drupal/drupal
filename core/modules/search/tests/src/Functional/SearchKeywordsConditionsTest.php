@@ -70,7 +70,7 @@ class SearchKeywordsConditionsTest extends BrowserTestBase {
     $keys = 'moving drop ' . $this->randomMachineName();
     $this->drupalGet("search/dummy_path", ['query' => ['keys' => 'bike', 'search_conditions' => $keys]]);
     $this->assertSession()->pageTextContains("Dummy search snippet to display.");
-    $this->assertRaw(Html::escape(print_r(['keys' => 'bike', 'search_conditions' => $keys], TRUE)));
+    $this->assertSession()->responseContains(Html::escape(print_r(['keys' => 'bike', 'search_conditions' => $keys], TRUE)));
   }
 
 }
