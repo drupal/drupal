@@ -129,7 +129,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    * @see https://www.drupal.org/node/2877608
    */
   protected function getRelations($context = []) {
-    $cid = 'hal:links:relations';
+    $cid = 'hal:links:relations:' . $this->getLinkDomain($context);
     $cache = $this->cache->get($cid);
     if (!$cache) {
       $data = $this->writeCache($context);
@@ -174,7 +174,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     }
     // These URIs only change when field info changes, so cache it permanently
     // and only clear it when the fields cache is cleared.
-    $this->cache->set('hal:links:relations', $data, Cache::PERMANENT, ['entity_field_info']);
+    $this->cache->set('hal:links:relations:' . $this->getLinkDomain($context), $data, Cache::PERMANENT, ['entity_field_info']);
     return $data;
   }
 
