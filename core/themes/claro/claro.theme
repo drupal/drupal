@@ -42,9 +42,8 @@ function claro_theme_suggestions_details_alter(&$suggestions, $variables) {
 /**
  * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
  *
- * Use preprocess hook to set #attached to child elements
- * because they will be processed by Twig and drupal_render will
- * be invoked.
+ * Use preprocess hook to set #attached to child elements because they will be
+ * processed by Twig and \Drupal::service('renderer')->render() will be invoked.
  */
 function claro_preprocess_menu_local_tasks(&$variables) {
   if (!empty($variables['primary'])) {

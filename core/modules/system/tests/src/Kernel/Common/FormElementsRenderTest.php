@@ -7,7 +7,7 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Performs integration tests on drupal_render().
+ * Performs integration tests on \Drupal::service('renderer')->render().
  *
  * @group system
  */

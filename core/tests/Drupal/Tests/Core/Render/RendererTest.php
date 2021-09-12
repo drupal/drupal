@@ -507,8 +507,9 @@ class RendererTest extends RendererTestBase {
     $this->assertTrue($elements['#sorted'], "'#sorted' => TRUE was added to the array");
 
     // Pass $elements through \Drupal\Core\Render\Element::children() and
-    // ensure it remains sorted in the correct order. drupal_render() will
-    // return an empty string if used on the same array in the same request.
+    // ensure it remains sorted in the correct order.
+    // \Drupal::service('renderer')->render() will return an empty string if
+    // used on the same array in the same request.
     $children = Element::children($elements);
     $this->assertSame('first', array_shift($children), 'Child found in the correct order.');
     $this->assertSame('second', array_shift($children), 'Child found in the correct order.');

@@ -30,9 +30,8 @@ function seven_preprocess_html(&$variables) {
 /**
  * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
  *
- * Use preprocess hook to set #attached to child elements
- * because they will be processed by Twig and drupal_render will
- * be invoked.
+ * Use preprocess hook to set #attached to child elements because they will be
+ * processed by Twig and \Drupal::service('renderer')->render() will be invoked.
  */
 function seven_preprocess_menu_local_tasks(&$variables) {
   if (!empty($variables['primary'])) {

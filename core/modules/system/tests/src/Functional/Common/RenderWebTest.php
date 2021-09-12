@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
- * Performs integration tests on drupal_render().
+ * Performs integration tests on \Drupal::service('renderer')->render().
  *
  * @group Common
  */

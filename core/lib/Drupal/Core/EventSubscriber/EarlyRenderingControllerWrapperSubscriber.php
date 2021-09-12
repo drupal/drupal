@@ -17,11 +17,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Subscriber that wraps controllers, to handle early rendering.
  *
- * When controllers call drupal_render() (RendererInterface::render()) outside
- * of a render context, we call that "early rendering". Controllers should
- * return only render arrays, but we cannot prevent controllers from doing early
- * rendering. The problem with early rendering is that the bubbleable metadata
- * (cacheability & attachments) are lost.
+ * When controllers call RendererInterface::render() outside of a render
+ * context, we call that "early rendering". Controllers should return
+ * only render arrays, but we cannot prevent controllers from doing
+ * early rendering. The problem with early rendering is that the
+ * bubbleable metadata (cacheability & attachments) are lost.
  *
  * This can lead to broken pages (missing assets), stale pages (missing cache
  * tags causing a page not to be invalidated) or even security problems (missing
@@ -36,8 +36,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * ::renderPlain() methods. In that case, no bubbleable metadata is lost.
  *
  * If the render context is not empty, then the controller did use
- * drupal_render(), and bubbleable metadata was collected. This bubbleable
- * metadata is then merged onto the render array.
+ * RendererInterface::render(), and bubbleable metadata was collected.
+ * This bubbleable metadata is then merged onto the render array.
  *
  * In other words: this just exists to ease the transition to Drupal 8: it
  * allows controllers that return render arrays (the majority) and
@@ -124,8 +124,8 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
     });
 
     // If early rendering happened, i.e. if code in the controller called
-    // drupal_render() outside of a render context, then the bubbleable metadata
-    // for that is stored in the current render context.
+    // RendererInterface::render() outside of a render context, then the
+    // bubbleable metadata for that is stored in the current render context.
     if (!$context->isEmpty()) {
       /** @var \Drupal\Core\Render\BubbleableMetadata $early_rendering_bubbleable_metadata */
       $early_rendering_bubbleable_metadata = $context->pop();

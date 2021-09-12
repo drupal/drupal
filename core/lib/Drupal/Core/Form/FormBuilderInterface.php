@@ -245,10 +245,11 @@ interface FormBuilderInterface {
    * This is one of the three primary functions that recursively iterates a form
    * array. This one does it for completing the form building process. The other
    * two are self::doValidateForm() (invoked via self::validateForm() and used
-   * to invoke validation logic for each element) and drupal_render() (for
-   * rendering each element). Each of these three pipelines provides ample
-   * opportunity for modules to customize what happens. For example, during this
-   * function's life cycle, the following functions get called for each element:
+   * to invoke validation logic for each element) and
+   * RendererInterface::render() (for rendering each element).
+   * Each of these three pipelines provides ample opportunity for modules to
+   * customize what happens. For example, during this function's life cycle,
+   * the following functions get called for each element:
    * - $element['#value_callback']: A callable that implements how user input is
    *   mapped to an element's #value property. This defaults to a function named
    *   'form_type_TYPE_value' where TYPE is $element['#type'].
@@ -269,8 +270,8 @@ interface FormBuilderInterface {
    *   called in postorder traversal, meaning they are called for the child
    *   elements first, then for the parent element.
    * There are similar properties containing callback functions invoked by
-   * self::doValidateForm() and drupal_render(), appropriate for those
-   * operations.
+   * self::doValidateForm() and RendererInterface::render(),
+   * appropriate for those operations.
    *
    * Developers are strongly encouraged to integrate the functionality needed by
    * their form or module within one of these three pipelines, using the

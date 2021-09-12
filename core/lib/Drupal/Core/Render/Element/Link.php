@@ -111,9 +111,10 @@ class Link extends RenderElement {
    *
    * The purpose of this is to allow links to be logically grouped into related
    * categories, so that each child group can be rendered as its own list of
-   * links if drupal_render() is called on it, but calling drupal_render() on
-   * the parent element will still produce a single list containing all the
-   * remaining links, regardless of what group they were in.
+   * links if RendererInterface::render() is called on it, but
+   * calling RendererInterface::render() on the parent element will
+   * still produce a single list containing all the remaining links, regardless
+   * of what group they were in.
    *
    * A typical example comes from node links, which are stored in a renderable
    * array similar to this:
