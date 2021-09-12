@@ -490,9 +490,12 @@ function _filter_url($text, $filter) {
 
   // Prepare domain name pattern.
   // The ICANN seems to be on track towards accepting more diverse top level
-  // domains, so this pattern has been "future-proofed" to allow for TLDs
-  // of length 2-64.
+  // domains (TLDs), so this pattern has been "future-proofed" to allow for
+  // TLDs of length 2-64.
   $domain = '(?:[\p{L}\p{M}\p{N}._+-]+\.)?[\p{L}\p{M}]{2,64}\b';
+  // Mail domains differ from the generic domain pattern, specifically:
+  // A . character must be present in the string that follows the @ character.
+  $email_domain = '(?:[\p{L}\p{M}\p{N}._+-]+\.)+[\p{L}\p{M}]{2,64}\b';
   $ip = '(?:[0-9]{1,3}\.){3}[0-9]{1,3}';
   $auth = '[\p{L}\p{M}\p{N}:%_+*~#?&=.,/;-]+@';
   $trail = '(' . $valid_url_path . '*)?(\\?' . $valid_url_query_chars . '*' . $valid_url_query_ending_chars . ')?';
@@ -503,7 +506,7 @@ function _filter_url($text, $filter) {
   $tasks['_filter_url_parse_full_links'] = $pattern;
 
   // Match email addresses.
-  $url_pattern = "[\p{L}\p{M}\p{N}._+-]{1,254}@(?:$domain)";
+  $url_pattern = "[\p{L}\p{M}\p{N}._+-]{1,254}@(?:$email_domain)";
   $pattern = "`($url_pattern)`u";
   $tasks['_filter_url_parse_email_links'] = $pattern;
 
