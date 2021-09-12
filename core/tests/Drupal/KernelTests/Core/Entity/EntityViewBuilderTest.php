@@ -45,7 +45,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
     $cache = \Drupal::cache();
 
-    // Force a request via GET so we can get drupal_render() cache working.
+    // Force a request via GET so cache is rendered.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
     $request->setMethod('GET');
@@ -99,7 +99,8 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $renderer = $this->container->get('renderer');
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
 
-    // Force a request via GET so we can get drupal_render() cache working.
+    // Force a request via GET so we can get
+    // \Drupal::service('renderer')->render() cache working.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
     $request->setMethod('GET');

@@ -548,7 +548,7 @@ class Renderer implements RendererInterface {
       $this->replacePlaceholders($elements);
       // @todo remove as part of https://www.drupal.org/node/2511330.
       if ($context->count() !== 1) {
-        throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
+        throw new \LogicException('A stray RendererInterface::render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
       }
     }
 

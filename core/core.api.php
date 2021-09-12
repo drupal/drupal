@@ -2413,8 +2413,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  * @code
  * array('#type' => 'status_messages')
  * @endcode
- * to a render array, use drupal_render() to render it, and add a command to
- * place the messages in an appropriate location.
+ * to a render array, use \Drupal::service('renderer')->render() to render it,
+ * and add a command to place the messages in an appropriate location.
  *
  * @section sec_other Other methods for triggering Ajax
  * Here are some additional methods you can use to trigger Ajax responses in

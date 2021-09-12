@@ -294,11 +294,12 @@ class ImageDimensionsTest extends BrowserTestBase {
   /**
    * Render an image style element.
    *
-   * Function drupal_render() alters the passed $variables array by adding a new
-   * key '#printed' => TRUE. This prevents next call to re-render the element.
-   * We wrap drupal_render() in a helper protected method and pass each time a
-   * fresh array so that $variables won't get altered and the element is
-   * re-rendered each time.
+   * Function \Drupal\Core\Render\RendererInterface::render() alters the passed
+   * $variables array by adding a new key '#printed' => TRUE. This prevents next
+   * call to re-render the element. We wrap
+   * \Drupal\Core\Render\RendererInterface::render() in a helper protected
+   * method and pass each time a fresh array so that $variables won't get
+   * altered and the element is re-rendered each time.
    */
   protected function getImageTag($variables) {
     return str_replace("\n", NULL, \Drupal::service('renderer')->renderRoot($variables));

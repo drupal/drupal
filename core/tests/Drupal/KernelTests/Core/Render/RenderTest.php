@@ -5,7 +5,7 @@ namespace Drupal\KernelTests\Core\Render;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Performs functional tests on drupal_render().
+ * Performs functional tests on \Drupal::service('renderer')->render().
  *
  * @group Common
  */

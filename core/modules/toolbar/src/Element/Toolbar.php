@@ -50,7 +50,7 @@ class Toolbar extends RenderElement {
   }
 
   /**
-   * Builds the Toolbar as a structured array ready for drupal_render().
+   * Builds the Toolbar as a structured array ready for rendering.
    *
    * Since building the toolbar takes some time, it is done just prior to
    * rendering to ensure that it is built only if it will be displayed.

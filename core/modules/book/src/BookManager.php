@@ -564,7 +564,8 @@ class BookManager implements BookManagerInterface {
     $build = [];
 
     if ($items) {
-      // Make sure drupal_render() does not re-order the links.
+      // Make sure Drupal\Core\Render\Element::children() does not re-order the
+      // links.
       $build['#sorted'] = TRUE;
       // Get the book id from the last link.
       $item = end($items);

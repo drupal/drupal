@@ -171,7 +171,8 @@ class MenuLinkTree implements MenuLinkTreeInterface {
     $tree_cacheability->applyTo($build);
 
     if ($items) {
-      // Make sure drupal_render() does not re-order the links.
+      // Make sure Drupal\Core\Render\Element::children() does not re-order the
+      // links.
       $build['#sorted'] = TRUE;
       // Get the menu name from the last link.
       $item = end($items);

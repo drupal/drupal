@@ -255,7 +255,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
   public function getRenderTokens($item);
 
   /**
-   * Passes values to drupal_render() using $this->themeFunctions() as #theme.
+   * Renders row values using $this->themeFunctions() as #theme.
    *
    * @param \Drupal\views\ResultRow $values
    *   Holds single row of a view's result set.

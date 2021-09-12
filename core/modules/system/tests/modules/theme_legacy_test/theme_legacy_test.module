@@ -63,12 +63,12 @@ function theme_theme_test_function_template_override($variables) {
 }
 
 /**
- * Theme function for testing rendering of child elements via drupal_render().
+ * Theme function for testing rendering of child elements.
  *
  * Theme hooks defining a 'render element' add an internal '#render_children'
- * property. When this property is found, drupal_render() avoids calling
- * the 'theme.manager' service 'render' method on the top-level element to
- * prevent infinite recursion.
+ * property. When this property is found, \Drupal::service('renderer')->render()
+ * avoids calling the 'theme.manager' service's ThemeManagerInterface::render()
+ * method on the top-level element to prevent infinite recursion.
  *
  * @param array $variables
  *   An associative array containing:

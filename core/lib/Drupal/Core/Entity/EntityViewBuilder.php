@@ -246,8 +246,8 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * This function is assigned as a #pre_render callback in ::viewMultiple().
    *
    * By delaying the building of an entity until the #pre_render processing in
-   * drupal_render(), the processing cost of assembling an entity's renderable
-   * array is saved on cache-hit requests.
+   * \Drupal::service('renderer')->render(), the processing cost of assembling
+   * an entity's renderable array is saved on cache-hit requests.
    *
    * @param array $build_list
    *   A renderable  array containing build information and context for an

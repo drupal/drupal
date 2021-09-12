@@ -408,13 +408,13 @@ function render(&$element) {
 /**
  * Hides an element from later rendering.
  *
- * The first time render() or drupal_render() is called on an element tree,
- * as each element in the tree is rendered, it is marked with a #printed flag
- * and the rendered children of the element are cached. Subsequent calls to
- * render() or drupal_render() will not traverse the child tree of this element
- * again: they will just use the cached children. So if you want to hide an
- * element, be sure to call hide() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
+ * The first time render() or RenderInterface::render() is called on an element
+ * tree, as each element in the tree is rendered, it is marked with a #printed
+ * flag and the rendered children of the element are cached. Subsequent calls to
+ * render() or RenderInterface::render() will not traverse the child tree of
+ * this element again: they will just use the cached children. So if you want to
+ * hide an element, be sure to call hide() on the element before its parent tree
+ * is rendered for the first time, as it will have no effect on subsequent
  * renderings of the parent tree.
  *
  * @param $element
@@ -423,6 +423,7 @@ function render(&$element) {
  * @return
  *   The element.
  *
+ * @see \Drupal\Core\Render\RendererInterface
  * @see render()
  * @see show()
  */
@@ -437,13 +438,13 @@ function hide(&$element) {
  * You can also use render($element), which shows the element while rendering
  * it.
  *
- * The first time render() or drupal_render() is called on an element tree,
- * as each element in the tree is rendered, it is marked with a #printed flag
- * and the rendered children of the element are cached. Subsequent calls to
- * render() or drupal_render() will not traverse the child tree of this element
- * again: they will just use the cached children. So if you want to show an
- * element, be sure to call show() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
+ * The first time render() or RenderInterface::render() is called on an element
+ * tree, as each element in the tree is rendered, it is marked with a #printed
+ * flag and the rendered children of the element are cached. Subsequent calls to
+ * render() or RenderInterface::render() will not traverse the child tree of
+ * this element again: they will just use the cached children. So if you want to
+ * show an element, be sure to call show() on the element before its parent tree
+ * is rendered for the first time, as it will have no effect on subsequent
  * renderings of the parent tree.
  *
  * @param $element
@@ -452,6 +453,7 @@ function hide(&$element) {
  * @return
  *   The element.
  *
+ * @see \Drupal\Core\Render\RendererInterface
  * @see render()
  * @see hide()
  */

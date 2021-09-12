@@ -172,8 +172,8 @@ class HtmlTag extends RenderElement {
     // technique. See http://wikipedia.org/wiki/Conditional_comment
     // for details.
 
-    // Ensure what we are dealing with is safe.
-    // This would be done later anyway in drupal_render().
+    // Ensure what we are dealing with is safe. This would be done later anyway
+    // in \Drupal::service('renderer')->render().
     $prefix = isset($element['#prefix']) ? $element['#prefix'] : '';
     if ($prefix && !($prefix instanceof MarkupInterface)) {
       $prefix = Xss::filterAdmin($prefix);

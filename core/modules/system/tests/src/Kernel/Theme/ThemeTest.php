@@ -135,7 +135,7 @@ class ThemeTest extends KernelTestBase {
         '#markup' => 'Foo',
       ],
     ];
-    $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', 'drupal_render() avoids #theme recursion loop when rendering a render element.');
+    $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', "\Drupal::service('renderer')->render() avoids #theme recursion loop when rendering a render element.");
 
     $element = [
       '#theme_wrappers' => ['theme_test_render_element_children'],
@@ -143,7 +143,7 @@ class ThemeTest extends KernelTestBase {
         '#markup' => 'Foo',
       ],
     ];
-    $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', 'drupal_render() avoids #theme_wrappers recursion loop when rendering a render element.');
+    $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', "\Drupal::service('renderer')->render() avoids #theme_wrappers recursion loop when rendering a render element.");
   }
 
   /**
