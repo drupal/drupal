@@ -19,6 +19,7 @@
     "Cookies": true,
     "Backbone": true,
     "Modernizr": true,
+    "loadjs": true,
     "Popper": true,
     "Shepherd": true,
     "Sortable": true,

@@ -95,6 +95,16 @@ drupal.announce:
     - core/drupal
     - core/drupal.debounce
 
+loadjs:
+  remote: https://github.com/muicss/loadjs
+  version: "4.2.0"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/muicss/loadjs/4.2.0/LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/loadjs/loadjs.min.js: { minified: true }
+
 drupal.autocomplete:
   version: VERSION
   js:

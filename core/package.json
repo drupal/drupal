@@ -63,6 +63,7 @@
     "jquery-form": "^4.3.0",
     "jquery-once": "^2.2.3",
     "js-cookie": "3.0.0-rc.0",
+    "loadjs": "^4.2.0",
     "minimist": "^1.2.2",
     "mkdirp": "^1.0.4",
     "nightwatch": "^1.6.3",

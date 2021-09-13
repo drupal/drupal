@@ -167,6 +167,10 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       pack: 'underscore',
       files: ['underscore-min.js', 'underscore-min.js.map'],
     },
+    {
+      pack: 'loadjs',
+      files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
+    },
   ].map(async ({ pack, files = [], folder = false, library = false }) => {
     const sourceFolder = pack;
     const libraryName = library || folder || pack;
