@@ -62,7 +62,7 @@
     }
 
     @media (--md) {
-      padding-block: var(--sp2);
+      height: calc(4 * var(--sp));
       padding-inline-start: var(--sp2);
       padding-inline-end: var(--sp2);
     }
