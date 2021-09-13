@@ -79,7 +79,7 @@ class CounterTest extends UnitTestCase {
 
     $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\Full')
       ->disableOriginalConstructor()
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $this->view->display_handler = $this->display;

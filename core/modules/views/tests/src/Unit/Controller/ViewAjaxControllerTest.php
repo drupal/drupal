@@ -110,7 +110,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     ];
     $this->renderer = $this->getMockBuilder('Drupal\Core\Render\Renderer')
       ->setConstructorArgs($args)
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
     $container = new ContainerBuilder();
     $container->set('renderer', $this->renderer);

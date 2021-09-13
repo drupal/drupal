@@ -91,7 +91,7 @@ class ElementInfoManagerTest extends UnitTestCase {
 
     $element_info = $this->getMockBuilder('Drupal\Core\Render\ElementInfoManager')
       ->setConstructorArgs([new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager])
-      ->setMethods(['getDefinitions', 'createInstance'])
+      ->onlyMethods(['getDefinitions', 'createInstance'])
       ->getMock();
 
     $this->themeManager->expects($this->any())

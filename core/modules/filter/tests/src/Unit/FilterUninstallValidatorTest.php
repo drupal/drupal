@@ -22,7 +22,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
     parent::setUp();
     $this->filterUninstallValidator = $this->getMockBuilder('Drupal\filter\FilterUninstallValidator')
       ->disableOriginalConstructor()
-      ->setMethods(['getFilterDefinitionsByProvider', 'getEnabledFilterFormats'])
+      ->onlyMethods(['getFilterDefinitionsByProvider', 'getEnabledFilterFormats'])
       ->getMock();
     $this->filterUninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }

@@ -23,7 +23,7 @@ class YamlTest extends TestCase {
   public function setUp(): void {
     parent::setUp();
     $this->mockParser = $this->getMockBuilder('\stdClass')
-      ->setMethods(['encode', 'decode', 'getFileExtension'])
+      ->addMethods(['encode', 'decode', 'getFileExtension'])
       ->getMock();
     YamlParserProxy::setMock($this->mockParser);
   }

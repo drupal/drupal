@@ -77,7 +77,7 @@ class ViewListBuilderTest extends UnitTestCase {
       ]);
 
     $default_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DefaultDisplay')
-      ->setMethods(['initDisplay'])
+      ->onlyMethods(['initDisplay'])
       ->setConstructorArgs([[], 'default', $display_manager->getDefinition('default')])
       ->getMock();
     $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
@@ -85,7 +85,7 @@ class ViewListBuilderTest extends UnitTestCase {
     $menu_storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $parent_form_selector = $this->createMock(MenuParentFormSelector::class);
     $page_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\Page')
-      ->setMethods(['initDisplay', 'getPath'])
+      ->onlyMethods(['initDisplay', 'getPath'])
       ->setConstructorArgs([[], 'default', $display_manager->getDefinition('page'), $route_provider, $state, $menu_storage, $parent_form_selector])
       ->getMock();
     $page_display->expects($this->any())
@@ -96,7 +96,7 @@ class ViewListBuilderTest extends UnitTestCase {
         $this->returnValue('<script>alert("placeholder_page/%")</script>')));
 
     $embed_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\Embed')
-      ->setMethods(['initDisplay'])
+      ->onlyMethods(['initDisplay'])
       ->setConstructorArgs([[], 'default', $display_manager->getDefinition('embed')])
       ->getMock();
 

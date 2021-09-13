@@ -128,7 +128,7 @@ class QueryFactoryTest extends UnitTestCase {
   protected function getConfigObject($name) {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
-      ->setMethods(['save', 'delete'])
+      ->onlyMethods(['save', 'delete'])
       ->getMock();
     return $config->setName($name);
   }

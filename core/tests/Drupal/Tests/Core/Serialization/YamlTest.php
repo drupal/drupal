@@ -25,7 +25,7 @@ class YamlTest extends UnitTestCase {
     $this->assertEquals(YamlParserProxy::class, Settings::get('yaml_parser_class'));
 
     $mock = $this->getMockBuilder('\stdClass')
-      ->setMethods(['encode', 'decode', 'getFileExtension'])
+      ->addMethods(['encode', 'decode', 'getFileExtension'])
       ->getMock();
     $mock
       ->expects($this->once())

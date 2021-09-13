@@ -386,7 +386,7 @@ class AjaxCommandsTest extends UnitTestCase {
           'width' => 500,
         ],
       ])
-      ->setMethods(['getRenderedContent'])
+      ->onlyMethods(['getRenderedContent'])
       ->getMock();
 
     // This method calls the render service, which isn't available. We want it

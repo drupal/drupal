@@ -256,7 +256,7 @@ class FormSubmitterTest extends UnitTestCase {
     $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
       ->setConstructorArgs([$request_stack, $this->urlGenerator])
-      ->setMethods(['batchGet', 'drupalInstallationAttempted'])
+      ->onlyMethods(['batchGet'])
       ->getMock();
   }
 

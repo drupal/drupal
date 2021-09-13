@@ -176,14 +176,14 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   public function testFieldProviderMissingRequiredProperty(array $definitions, $missing_property) {
     $discovery = $this->getMockBuilder(MigrateFieldPluginManager::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getDefinitions'])
+      ->onlyMethods(['getDefinitions'])
       ->getMock();
     $discovery->method('getDefinitions')
       ->willReturn($definitions);
 
     $plugin_manager = $this->getMockBuilder(MigrateFieldPluginManager::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getDiscovery'])
+      ->onlyMethods(['getDiscovery'])
       ->getMock();
     $plugin_manager->method('getDiscovery')
       ->willReturn($discovery);

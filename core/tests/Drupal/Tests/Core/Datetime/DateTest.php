@@ -80,7 +80,7 @@ class DateTest extends UnitTestCase {
 
     $this->dateFormatterStub = $this->getMockBuilder('\Drupal\Core\Datetime\DateFormatter')
       ->setConstructorArgs([$this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack])
-      ->setMethods(['formatDiff'])
+      ->onlyMethods(['formatDiff'])
       ->getMock();
   }
 

@@ -95,7 +95,7 @@ class BuildTestTest extends BuildTestBase {
     // Mock BuildTestBase so that it thinks our VFS is the Drupal root.
     /** @var \PHPUnit\Framework\MockObject\MockBuilder|\Drupal\BuildTests\Framework\BuildTestBase $base */
     $base = $this->getMockBuilder(BuildTestBase::class)
-      ->setMethods(['getDrupalRoot'])
+      ->onlyMethods(['getDrupalRoot'])
       ->getMockForAbstractClass();
     $base->expects($this->exactly(2))
       ->method('getDrupalRoot')

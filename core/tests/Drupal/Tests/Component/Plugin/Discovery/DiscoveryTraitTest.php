@@ -130,7 +130,7 @@ class DiscoveryTraitTest extends TestCase {
    */
   public function testHasDefinition($expected, $plugin_id) {
     $trait = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryTrait')
-      ->setMethods(['getDefinition'])
+      ->onlyMethods(['getDefinition'])
       ->getMockForTrait();
     // Set up our mocked getDefinition() to return TRUE for 'valid' and FALSE
     // for 'not_valid'.

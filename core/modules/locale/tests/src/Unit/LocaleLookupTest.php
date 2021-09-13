@@ -116,7 +116,7 @@ class LocaleLookupTest extends UnitTestCase {
 
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
       ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
-      ->setMethods(['persist'])
+      ->onlyMethods(['persist'])
       ->getMock();
     $locale_lookup->expects($this->never())
       ->method('persist');
@@ -234,7 +234,7 @@ class LocaleLookupTest extends UnitTestCase {
     $this->configFactory = $this->getConfigFactoryStub(['locale.settings' => ['cache_strings' => TRUE]]);
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
       ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
-      ->setMethods(['persist'])
+      ->onlyMethods(['persist'])
       ->getMock();
     $locale_lookup->expects($this->once())
       ->method('persist');
@@ -264,7 +264,7 @@ class LocaleLookupTest extends UnitTestCase {
 
     $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
       ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
-      ->setMethods(['persist'])
+      ->onlyMethods(['persist'])
       ->getMock();
     $locale_lookup->expects($this->never())
       ->method('persist');

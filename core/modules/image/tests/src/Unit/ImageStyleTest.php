@@ -54,18 +54,13 @@ class ImageStyleTest extends UnitTestCase {
       ->method('createInstance')
       ->with($image_effect_id)
       ->will($this->returnValue($image_effect));
-    $default_stubs = [
-      'getImageEffectPluginManager',
-      'fileUriScheme',
-      'fileUriTarget',
-      'fileDefaultScheme',
-    ];
+    $default_stubs = ['getImageEffectPluginManager', 'fileDefaultScheme'];
     $image_style = $this->getMockBuilder('\Drupal\image\Entity\ImageStyle')
       ->setConstructorArgs([
         ['effects' => [$image_effect_id => ['id' => $image_effect_id]]],
         $this->entityTypeId,
       ])
-      ->setMethods(array_merge($default_stubs, $stubs))
+      ->onlyMethods(array_merge($default_stubs, $stubs))
       ->getMock();
 
     $image_style->expects($this->any())

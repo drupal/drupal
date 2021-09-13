@@ -25,7 +25,7 @@ class DisplayVariantTest extends UnitTestCase {
   public function setUpDisplayVariant($configuration = [], $definition = []) {
     return $this->getMockBuilder('Drupal\Core\Display\VariantBase')
       ->setConstructorArgs([$configuration, 'test', $definition])
-      ->setMethods(['build'])
+      ->onlyMethods(['build'])
       ->getMock();
   }
 

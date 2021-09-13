@@ -22,7 +22,7 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
     parent::setUp();
     $this->uninstallValidator = $this->getMockBuilder('Drupal\Core\Extension\RequiredModuleUninstallValidator')
       ->disableOriginalConstructor()
-      ->setMethods(['getModuleInfoByModule'])
+      ->onlyMethods(['getModuleInfoByModule'])
       ->getMock();
     $this->uninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }

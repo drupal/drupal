@@ -107,7 +107,7 @@ class LoggerChannelTest extends UnitTestCase {
       ->will($this->returnValue(1));
 
     $request_mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-      ->setMethods(['getClientIp'])
+      ->onlyMethods(['getClientIp'])
       ->getMock();
     $request_mock->expects($this->any())
       ->method('getClientIp')

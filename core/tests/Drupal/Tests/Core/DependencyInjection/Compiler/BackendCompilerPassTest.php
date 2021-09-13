@@ -123,7 +123,7 @@ class BackendCompilerPassTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->setDefinition('service', $service);
     $container->setDefinition('sqlite.service', new Definition(__NAMESPACE__ . '\\ServiceClassSqlite'));
-    $mock = $this->getMockBuilder('Drupal\Core\Database\Driver\sqlite\Connection')->setMethods(NULL)->disableOriginalConstructor()->getMock();
+    $mock = $this->getMockBuilder('Drupal\Core\Database\Driver\sqlite\Connection')->onlyMethods([])->disableOriginalConstructor()->getMock();
     $container->set('database', $mock);
     return $container;
   }
@@ -158,7 +158,7 @@ class BackendCompilerPassTest extends UnitTestCase {
   protected function getDrivertestMysqlContainer($service) {
     $container = new ContainerBuilder();
     $container->setDefinition('service', $service);
-    $mock = $this->getMockBuilder('Drupal\driver_test\Driver\Database\DrivertestMysql\Connection')->setMethods(NULL)->disableOriginalConstructor()->getMock();
+    $mock = $this->getMockBuilder('Drupal\driver_test\Driver\Database\DrivertestMysql\Connection')->onlyMethods([])->disableOriginalConstructor()->getMock();
     $container->set('database', $mock);
     return $container;
   }

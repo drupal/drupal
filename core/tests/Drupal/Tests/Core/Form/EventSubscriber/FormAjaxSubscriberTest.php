@@ -166,7 +166,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
         $this->getStringTranslationStub(),
         $this->messenger,
       ])
-      ->setMethods(['formatSize'])
+      ->onlyMethods(['formatSize'])
       ->getMock();
 
     $this->subscriber->expects($this->once())

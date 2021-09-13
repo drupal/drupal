@@ -60,7 +60,7 @@ class ConfigTest extends TestCase {
   public function testGetMessageText($expected, $config) {
     // Root package has our config.
     $root = $this->getMockBuilder(RootPackageInterface::class)
-      ->setMethods(['getExtra'])
+      ->onlyMethods(['getExtra'])
       ->getMockForAbstractClass();
     $root->expects($this->once())
       ->method('getExtra')
@@ -77,7 +77,7 @@ class ConfigTest extends TestCase {
   public function testDefaultFile() {
     // Root package has no extra field.
     $root = $this->getMockBuilder(RootPackageInterface::class)
-      ->setMethods(['getExtra'])
+      ->onlyMethods(['getExtra'])
       ->getMockForAbstractClass();
     $root->expects($this->once())
       ->method('getExtra')
@@ -87,7 +87,7 @@ class ConfigTest extends TestCase {
     // config to try that.
     $message = $this->getMockBuilder(Message::class)
       ->setConstructorArgs([$root, 'event-name'])
-      ->setMethods(['getMessageFromFile'])
+      ->onlyMethods(['getMessageFromFile'])
       ->getMock();
     $message->expects($this->once())
       ->method('getMessageFromFile')

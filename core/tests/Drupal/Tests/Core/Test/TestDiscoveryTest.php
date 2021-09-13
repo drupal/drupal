@@ -422,7 +422,7 @@ EOF;
 
     $test_discovery = $this->getMockBuilder(TestDiscovery::class)
       ->setConstructorArgs([$app_root, $class_loader->reveal(), $module_handler->reveal()])
-      ->setMethods(['getExtensions'])
+      ->onlyMethods(['getExtensions'])
       ->getMock();
 
     $test_discovery->expects($this->any())

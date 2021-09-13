@@ -66,7 +66,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
           $translation_manager,
         ]
       )
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');

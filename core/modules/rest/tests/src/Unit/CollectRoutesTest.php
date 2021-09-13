@@ -40,12 +40,12 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
 
     $this->view = $this->getMockBuilder('\Drupal\views\Entity\View')
-      ->setMethods(['initHandlers'])
+      ->addMethods(['initHandlers'])
       ->setConstructorArgs([['id' => 'test_view'], 'view'])
       ->getMock();
 
     $view_executable = $this->getMockBuilder('\Drupal\views\ViewExecutable')
-      ->setMethods(['initHandlers', 'getTitle'])
+      ->onlyMethods(['initHandlers', 'getTitle'])
       ->disableOriginalConstructor()
       ->getMock();
     $view_executable->expects($this->any())
@@ -116,7 +116,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->will($this->returnValue($none));
 
     $style_plugin = $this->getMockBuilder('\Drupal\rest\Plugin\views\style\Serializer')
-      ->setMethods(['getFormats', 'init'])
+      ->onlyMethods(['getFormats', 'init'])
       ->disableOriginalConstructor()
       ->getMock();
 

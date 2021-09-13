@@ -17,7 +17,7 @@ class UserTest extends UserSessionTest {
   protected function createUserSession(array $rids = [], $authenticated = FALSE) {
     $user = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(['get', 'id'])
+      ->onlyMethods(['get', 'id'])
       ->getMock();
     $user->expects($this->any())
       ->method('id')

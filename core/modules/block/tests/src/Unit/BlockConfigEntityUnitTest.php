@@ -96,7 +96,7 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
     // Mock the entity under test so that we can mock getPluginCollections().
     $entity = $this->getMockBuilder('\Drupal\block\Entity\Block')
       ->setConstructorArgs([$values, $this->entityTypeId])
-      ->setMethods(['getPluginCollections'])
+      ->onlyMethods(['getPluginCollections'])
       ->getMock();
     // Create a configurable plugin that would add a dependency.
     $instance_id = $this->randomMachineName();
@@ -106,7 +106,7 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
     // Create a plugin collection to contain the instance.
     $plugin_collection = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultLazyPluginCollection')
       ->disableOriginalConstructor()
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $plugin_collection->expects($this->atLeastOnce())
       ->method('get')

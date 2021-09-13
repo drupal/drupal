@@ -145,7 +145,7 @@ class RegistryLegacyTest extends UnitTestCase {
 
   protected function setupTheme() {
     $this->registry = $this->getMockBuilder(Registry::class)
-      ->setMethods(['getPath'])
+      ->onlyMethods(['getPath'])
       ->setConstructorArgs([
         $this->root,
         $this->cache,

@@ -45,7 +45,7 @@ class ViewUIObjectTest extends UnitTestCase {
     }
 
     $storage = $this->getMockBuilder('Drupal\views\Entity\View')
-      ->setMethods($interface_methods)
+      ->onlyMethods($interface_methods)
       ->setConstructorArgs([[], 'view'])
       ->getMock();
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')

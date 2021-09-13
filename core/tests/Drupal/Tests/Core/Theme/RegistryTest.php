@@ -484,7 +484,7 @@ class RegistryTest extends UnitTestCase {
 
   protected function setupTheme() {
     $this->registry = $this->getMockBuilder(Registry::class)
-      ->setMethods(['getPath'])
+      ->onlyMethods(['getPath'])
       ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList])
       ->getMock();
     $this->registry->expects($this->any())

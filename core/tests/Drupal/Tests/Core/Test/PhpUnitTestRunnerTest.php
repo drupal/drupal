@@ -26,7 +26,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     // Create a mock runner.
     $runner = $this->getMockBuilder(PhpUnitTestRunner::class)
       ->disableOriginalConstructor()
-      ->setMethods(['xmlLogFilepath', 'runCommand'])
+      ->onlyMethods(['xmlLogFilepath', 'runCommand'])
       ->getMock();
 
     // Set some expectations for xmlLogFilepath().

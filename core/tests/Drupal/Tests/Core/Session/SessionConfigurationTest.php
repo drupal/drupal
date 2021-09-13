@@ -18,7 +18,7 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   protected function createSessionConfiguration($options = []) {
     return $this->getMockBuilder('Drupal\Core\Session\SessionConfiguration')
-      ->setMethods(['drupalValidTestUa'])
+      ->onlyMethods(['drupalValidTestUa'])
       ->setConstructorArgs([$options])
       ->getMock();
   }

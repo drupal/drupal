@@ -235,7 +235,7 @@ class EntityUnitTest extends UnitTestCase {
     unset($methods[array_search('create', $methods)]);
     $this->entity = $this->getMockBuilder(EntityTestMul::class)
       ->disableOriginalConstructor()
-      ->setMethods($methods)
+      ->onlyMethods($methods)
       ->getMock();
 
   }

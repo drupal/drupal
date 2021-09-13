@@ -88,7 +88,7 @@ class ReflectionFactoryTest extends TestCase {
   public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration) {
     // Create a mock DiscoveryInterface which can return our plugin definition.
     $mock_discovery = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
-      ->setMethods(['getDefinition', 'getDefinitions', 'hasDefinition'])
+      ->onlyMethods(['getDefinition', 'getDefinitions', 'hasDefinition'])
       ->getMock();
     $mock_discovery->expects($this->never())->method('getDefinitions');
     $mock_discovery->expects($this->never())->method('hasDefinition');

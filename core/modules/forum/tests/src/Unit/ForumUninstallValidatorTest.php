@@ -23,7 +23,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
     parent::setUp();
     $this->forumUninstallValidator = $this->getMockBuilder('Drupal\forum\ForumUninstallValidator')
       ->disableOriginalConstructor()
-      ->setMethods(['hasForumNodes', 'hasTermsForVocabulary', 'getForumVocabulary'])
+      ->onlyMethods(['hasForumNodes', 'hasTermsForVocabulary', 'getForumVocabulary'])
       ->getMock();
     $this->forumUninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }
