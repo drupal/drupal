@@ -10,7 +10,7 @@ class AccessResultForbidden extends AccessResult implements AccessResultReasonIn
   /**
    * The reason why access is forbidden. For use in error messages.
    *
-   * @var string|null
+   * @var string
    */
   protected $reason;
 
@@ -35,7 +35,7 @@ class AccessResultForbidden extends AccessResult implements AccessResultReasonIn
    * {@inheritdoc}
    */
   public function getReason() {
-    return $this->reason;
+    return (string) $this->reason;
   }
 
   /**

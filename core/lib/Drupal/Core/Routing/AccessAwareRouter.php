@@ -114,10 +114,10 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
     }
     if (!$access_result->isAllowed()) {
       if ($access_result instanceof CacheableDependencyInterface && $request->isMethodCacheable()) {
-        throw new CacheableAccessDeniedHttpException($access_result, $access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : NULL);
+        throw new CacheableAccessDeniedHttpException($access_result, $access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : '');
       }
       else {
-        throw new AccessDeniedHttpException($access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : NULL);
+        throw new AccessDeniedHttpException($access_result instanceof AccessResultReasonInterface ? $access_result->getReason() : '');
       }
     }
   }
