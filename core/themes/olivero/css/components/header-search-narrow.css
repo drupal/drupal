@@ -107,8 +107,7 @@
   }
 
 .block-search-narrow input[type="search"] {
-      padding-top: 2.25rem;
-      padding-bottom: 2.25rem
+      height: 4.5rem
   }
     }
 
