@@ -231,3 +231,22 @@ tr .form-item,
   flex: 0 1 100%;
   min-width: 1px;
 }
+
+/**
+ * Inline forms.
+ */
+
+.form--inline > * {
+    display: inline-block;
+    margin-top: 0.5625rem;
+    margin-bottom: 0;
+    vertical-align: top; /* Ensure proper alignment if description is present. */
+  }
+
+.form--inline .form-item__label {
+    margin: 0;
+  }
+
+.form--inline .form-actions {
+    margin-top: 1.6875rem;
+  }
