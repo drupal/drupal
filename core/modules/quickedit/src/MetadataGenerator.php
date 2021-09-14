@@ -68,7 +68,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
 
     // Early-return if user does not have access.
     $access = $this->accessChecker->accessEditEntityField($entity, $field_name);
-    if (!$access) {
+    if (!$access->isAllowed()) {
       return ['access' => FALSE];
     }
 
