@@ -53,6 +53,7 @@ function quickedit_page_attachments(array &$page) {
     return;
   }
 
+  $page['#attached']['drupalSettings']['quickedit']['csrf_token'] = \Drupal::csrfToken()->get('X-Drupal-Quickedit-CSRF-Token');
   $page['#attached']['library'][] = 'quickedit/quickedit';
 }
 
