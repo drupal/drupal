@@ -472,6 +472,9 @@
               uuid: this.data.attributes['data-entity-uuid'],
             },
             dataType: 'html',
+            headers: {
+              'X-Drupal-MediaPreview-CSRF-Token': editor.config.drupalMedia_previewCsrfToken,
+            },
             success: (previewHtml, textStatus, jqXhr) => {
               this.element.setHtml(previewHtml);
               this.setData(

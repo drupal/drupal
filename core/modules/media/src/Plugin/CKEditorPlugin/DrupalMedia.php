@@ -98,7 +98,9 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
-    return [];
+    return [
+      'drupalMedia_previewCsrfToken' => \Drupal::csrfToken()->get('X-Drupal-MediaPreview-CSRF-Token'),
+    ];
   }
 
   /**
