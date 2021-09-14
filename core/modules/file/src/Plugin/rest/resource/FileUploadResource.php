@@ -255,15 +255,27 @@ class FileUploadResource extends ResourceBase {
     $file->setOwnerId($this->currentUser->id());
     $file->setFilename($prepared_filename);
     $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
-    $file->setFileUri($file_uri);
+    $file->setFileUri($temp_file_path);
     // Set the size. This is done in File::preSave() but we validate the file
     // before it is saved.
     $file->setSize(@filesize($temp_file_path));
 
-    // Validate the file entity against entity-level validation and field-level
-    // validators.
-    $this->validate($file, $validators);
+    // Validate the file against field-level validators first while the file is
+    // still a temporary file. Validation is split up in 2 steps to be the same
+    // as in _file_save_upload_single().
+    // For backwards compatibility this part is copied from ::validate() to
+    // leave that method behavior unchanged.
+    // @todo Improve this with a file uploader service in
+    //   https://www.drupal.org/project/drupal/issues/2940383
+    $errors = file_validate($file, $validators);
 
+    if (!empty($errors)) {
+      $message = "Unprocessable Entity: file validation failed.\n";
+      $message .= implode("\n", array_map([PlainTextOutput::class, 'renderFromHtml'], $errors));
+      throw new UnprocessableEntityHttpException($message);
+    }
+
+    $file->setFileUri($file_uri);
     // Move the file to the correct location after validation. Use
     // FileSystemInterface::EXISTS_ERROR as the file location has already been
     // determined above in FileSystem::getDestinationFilename().
@@ -273,6 +285,9 @@ class FileUploadResource extends ResourceBase {
     catch (FileException $e) {
       throw new HttpException(500, 'Temporary file could not be moved to file location');
     }
+
+    // Second step of the validation on the file object itself now.
+    $this->resourceValidate($file);
 
     $file->save();
 
@@ -425,6 +440,11 @@ class FileUploadResource extends ResourceBase {
 
   /**
    * Validates the file.
+   *
+   * @todo this method is unused in this class because file validation needs to
+   *   be split up in 2 steps in ::post(). Add a deprecation notice as soon as a
+   *   central core file upload service can be used in this class.
+   *   See https://www.drupal.org/project/drupal/issues/2940383
    *
    * @param \Drupal\file\FileInterface $file
    *   The file entity to validate.
