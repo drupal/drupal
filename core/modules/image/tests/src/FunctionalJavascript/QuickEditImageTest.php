@@ -42,9 +42,19 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
 
     // Create the Article node type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+  }
 
+  /**
+   * Tests that quick editor works correctly with images.
+   *
+   * @covers ::isCompatible
+   * @covers ::getAttachments
+   *
+   * @dataProvider providerTestImageInPlaceEditor
+   */
+  public function testImageInPlaceEditor($admin_permission = FALSE) {
     // Log in as a content author who can use Quick Edit and edit Articles.
-    $this->contentAuthorUser = $this->drupalCreateUser([
+    $permissions = [
       'access contextual links',
       'access toolbar',
       'access in-place editing',
@@ -52,17 +62,13 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
       'create article content',
       'edit any article content',
       'delete any article content',
-    ]);
+    ];
+    if ($admin_permission) {
+      $permissions[] = 'administer nodes';
+    }
+    $this->contentAuthorUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->contentAuthorUser);
-  }
 
-  /**
-   * Test that quick editor works correctly with images.
-   *
-   * @covers ::isCompatible
-   * @covers ::getAttachments
-   */
-  public function testImageInPlaceEditor() {
     // Create a field with a basic filetype restriction.
     $field_name = strtolower($this->randomMachineName());
     $field_settings = [
@@ -127,13 +133,25 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     $this->assertEntityInstanceStates([
       'node/1[0]' => 'closed',
     ]);
+
+    $admin_inactive = [];
+    $admin_candidate = [];
+    if ($admin_permission) {
+      $admin_inactive = [
+        'node/1/uid/en/full' => 'inactive',
+        'node/1/created/en/full' => 'inactive',
+      ];
+      $admin_candidate = [
+        'node/1/uid/en/full' => 'candidate',
+        'node/1/created/en/full' => 'candidate',
+      ];
+    }
+
     $this->assertEntityInstanceFieldStates('node', 1, 0, [
       'node/1/title/en/full'               => 'inactive',
-      'node/1/uid/en/full'                 => 'inactive',
-      'node/1/created/en/full'             => 'inactive',
       'node/1/body/en/full'                => 'inactive',
       'node/1/' . $field_name . '/en/full' => 'inactive',
-    ]);
+    ] + $admin_inactive);
 
     // Start in-place editing of the article node.
     $this->startQuickEditViaToolbar('node', 1, 0);
@@ -143,11 +161,9 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     $this->assertQuickEditEntityToolbar((string) $node->label(), NULL);
     $this->assertEntityInstanceFieldStates('node', 1, 0, [
       'node/1/title/en/full'               => 'candidate',
-      'node/1/uid/en/full'                 => 'candidate',
-      'node/1/created/en/full'             => 'candidate',
       'node/1/body/en/full'                => 'candidate',
       'node/1/' . $field_name . '/en/full' => 'candidate',
-    ]);
+    ] + $admin_candidate);
 
     // Click the image field.
     $this->click($field_selector);
@@ -155,21 +171,17 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     $this->assertSession()->elementExists('css', $field_selector . ' .quickedit-image-dropzone');
     $this->assertEntityInstanceFieldStates('node', 1, 0, [
       'node/1/title/en/full'               => 'candidate',
-      'node/1/uid/en/full'                 => 'candidate',
-      'node/1/created/en/full'             => 'candidate',
       'node/1/body/en/full'                => 'candidate',
       'node/1/' . $field_name . '/en/full' => 'active',
-    ]);
+    ] + $admin_candidate);
 
     // Type new 'alt' text.
     $this->typeInImageEditorAltTextInput('New text');
     $this->assertEntityInstanceFieldStates('node', 1, 0, [
       'node/1/title/en/full'               => 'candidate',
-      'node/1/uid/en/full'                 => 'candidate',
-      'node/1/created/en/full'             => 'candidate',
       'node/1/body/en/full'                => 'candidate',
       'node/1/' . $field_name . '/en/full' => 'changed',
-    ]);
+    ] + $admin_candidate);
 
     // Drag and drop an image.
     $this->dropImageOnImageEditor($valid_images[1]->uri);
@@ -184,11 +196,9 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     ]);
     $this->assertEntityInstanceFieldStates('node', 1, 0, [
       'node/1/title/en/full'               => 'candidate',
-      'node/1/uid/en/full'                 => 'candidate',
-      'node/1/created/en/full'             => 'candidate',
       'node/1/body/en/full'                => 'candidate',
       'node/1/' . $field_name . '/en/full' => 'saving',
-    ]);
+    ] + $admin_candidate);
     $this->assertEntityInstanceFieldMarkup('node', 1, 0, [
       'node/1/' . $field_name . '/en/full' => '.quickedit-changed',
     ]);
@@ -205,6 +215,19 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     // Check that the new image appears as expected.
     $this->assertSession()->elementNotExists('css', $entity_selector . ' ' . $field_selector . ' ' . $original_image_selector);
     $this->assertSession()->elementExists('css', $entity_selector . ' ' . $field_selector . ' ' . $new_image_selector);
+  }
+
+  /**
+   * Data provider for ::testImageInPlaceEditor().
+   *
+   * @return array
+   *   Test cases.
+   */
+  public function providerTestImageInPlaceEditor(): array {
+    return [
+      'with permission' => [TRUE],
+      'without permission' => [FALSE],
+    ];
   }
 
 }
