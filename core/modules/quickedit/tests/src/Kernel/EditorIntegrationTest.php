@@ -179,6 +179,11 @@ class EditorIntegrationTest extends QuickEditTestBase {
 
     // Verify metadata.
     $items = $entity->get($this->fieldName);
+    \Drupal::state()->set('quickedit_test_field_access', 'forbidden');
+    $this->assertSame(['access' => FALSE], $this->metadataGenerator->generateFieldMetadata($items, 'default'));
+    \Drupal::state()->set('quickedit_test_field_access', 'neutral');
+    $this->assertSame(['access' => FALSE], $this->metadataGenerator->generateFieldMetadata($items, 'default'));
+    \Drupal::state()->set('quickedit_test_field_access', 'allowed');
     $metadata = $this->metadataGenerator->generateFieldMetadata($items, 'default');
     $expected = [
       'access' => TRUE,
