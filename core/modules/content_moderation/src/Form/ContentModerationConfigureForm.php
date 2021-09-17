@@ -104,7 +104,7 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
       $form['entity_types_container']['entity_types'][$entity_type->id()] = [
         'type' => [
           '#type' => 'inline_template',
-          '#template' => '<strong>{{ label }}</strong></br><span id="selected-{{ entity_type_id }}">{{ selected_bundles }}</span>',
+          '#template' => '<strong>{{ label }}</strong><br><span id="selected-{{ entity_type_id }}">{{ selected_bundles }}</span>',
           '#context' => [
             'label' => $this->t('@bundle types', ['@bundle' => $entity_type->getLabel()]),
             'entity_type_id' => $entity_type->id(),

@@ -35,7 +35,7 @@ class FinalExceptionSubscriberTest extends UnitTestCase {
     $response = $event->getResponse();
 
     $this->assertInstanceOf(Response::class, $response);
-    $this->stringStartsWith('The website encountered an unexpected error. Please try again later.</br></br><em class="placeholder">Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException</em>: test message in ', $response->getContent());
+    $this->stringStartsWith('The website encountered an unexpected error. Please try again later.<br><br><em class="placeholder">Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException</em>: test message in ', $response->getContent());
     $this->assertEquals(405, $response->getStatusCode());
     $this->assertEquals('POST, PUT', $response->headers->get('Allow'));
     // Also check that the text/plain content type was added.
