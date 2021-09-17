@@ -29,8 +29,10 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: var(--color--blue-50);
-    border-color: var(--color--blue-50);
+    color: var(--color--blue-10);
+    border: solid 2px var(--color--blue-10);
+    background: none;
+    font-weight: 700;
   }
 
   &:focus {
