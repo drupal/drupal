@@ -28,7 +28,8 @@
   function handleFocus() {
     if (searchIsVisible()) {
       searchWideWrapper.querySelector('input[type="search"]').focus();
-    } else {
+    } else if (searchWideWrapper.contains(document.activeElement)) {
+      // Return focus to button only if focus was inside of the search wrapper.
       searchWideButton.focus();
     }
   }
@@ -61,21 +62,8 @@
     }
   });
 
-  document.addEventListener('click', (e) => {
-    if (
-      e.target.matches(
-        '[data-drupal-selector="block-search-wide-button"], [data-drupal-selector="block-search-wide-button"] *',
-      )
-    ) {
-      toggleSearchVisibility(!searchIsVisible());
-    } else if (
-      searchIsVisible() &&
-      !e.target.matches(
-        '[data-drupal-selector="block-search-wide-wrapper"], [data-drupal-selector="block-search-wide-wrapper"] *',
-      )
-    ) {
-      toggleSearchVisibility(false);
-    }
+  searchWideButton.addEventListener('click', () => {
+    toggleSearchVisibility(!searchIsVisible());
   });
 
   /**
@@ -98,4 +86,16 @@
       }
     },
   };
+
+  /**
+   * Close the wide search container if focus moves from either the container
+   * or its toggle button.
+   */
+  document
+    .querySelector('[data-drupal-selector="search-block-form-2"]')
+    .addEventListener('focusout', (e) => {
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        toggleSearchVisibility(false);
+      }
+    });
 })(Drupal);
