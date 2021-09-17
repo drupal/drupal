@@ -42,10 +42,10 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent !important;  /* 2 */
   border-radius: 2px;
-  background-color: #d4d4d8;
+  background-color: #d3d4d9;
   font-size: 1rem;
   font-weight: 700;
   line-height: 1rem;
@@ -65,7 +65,7 @@
 
 .button:hover {
   text-decoration: none;
-  background-color: #c2c3ca;
+  background-color: #c1c2c7;
 }
 
 .button:focus {
@@ -120,7 +120,7 @@
 
 a.button:hover,
 a.button:active {
-  color: #222330;
+  color: #232429;
 }
 
 /* Primary button styles */
@@ -173,14 +173,14 @@ a.button--danger:active {
 
 .button:disabled,
 .button.is-disabled {
-  color: #8e929c;
+  color: #919297;
   background-color: #ebebed;
 }
 
 .button--primary:disabled,
 .button--primary.is-disabled {
-  color: #82828c;
-  background-color: #d4d4d8;
+  color: #828388;
+  background-color: #d3d4d9;
 }
 
 /* Make disabled <link> behave like a [disabled] <input> or <button> */

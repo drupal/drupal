@@ -15,7 +15,7 @@
   border: 0;
   border-radius: 0.25rem;
   background: transparent;
-  box-shadow: 0 0 1rem -0.25rem #222330;
+  box-shadow: 0 0 1rem -0.25rem #232429;
 }
 
 .ui-dialog:focus {
@@ -37,7 +37,7 @@
   color: #fff;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background: #222330;
+  background: #232429;
   line-height: 2rem;
 }
 
@@ -94,12 +94,12 @@
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
   padding: 1rem 1.5rem;
-  color: #222330;
+  color: #232429;
   background: #fff;
 }
 
 .ui-dialog > .ui-dialog-buttonpane {
-  color: #222330;
+  color: #232429;
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
   background: #f3f4f9;

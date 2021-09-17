@@ -41,7 +41,7 @@
   margin: 0;
   padding-top: 0.5rem;
   list-style: none;
-  color: #222330;
+  color: #232429;
 }
 
 [dir="rtl"] .vertical-tabs__menu {
@@ -85,7 +85,7 @@
   display: block;
   width: 100%;
   margin-top: -1px;
-  border-top: 1px solid #d4d4d8;
+  border-top: 1px solid #d3d4d9;
 }
 
 /**
@@ -143,7 +143,7 @@
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent;
   border-width: 1px 0 1px 4px; /* LTR */
   border-radius: 2px 0 0 2px; /* LTR */
@@ -265,7 +265,7 @@
 
 .vertical-tabs__menu-link-summary {
   display: block;
-  color: #545560;
+  color: #55565b;
   font-size: 0.889rem;
   font-weight: normal;
 }
@@ -278,7 +278,7 @@
   box-sizing: border-box;
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
-  color: #222330;
+  color: #232429;
   border: 1px solid #dedfe4;
   border-radius: 2px;
   background-color: #fff;

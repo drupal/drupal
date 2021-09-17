@@ -8,13 +8,13 @@
 :root {
   /* default */
   --icon-link-bg-color: var(--color-white);
-  --icon-link-border-color: var(--color-lightgray);
+  --icon-link-border-color: var(--color-gray-200);
   /* active */
   --icon-link--active-bg-color: var(--color-absolutezero);
   --icon-link--active-border-color: var(--color-absolutezero);
   /* hover */
   --icon-link--hover-bg-color: var(--color-bgblue-hover);
-  --icon-link--hover-border-color: var(--color-lightgray-o-80);
+  --icon-link--hover-border-color: var(--color-gray-200-o-80);
 }
 
 .icon-link {

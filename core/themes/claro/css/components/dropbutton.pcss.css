@@ -319,7 +319,7 @@
  * Non-first dropbutton list elements.
  */
 .dropbutton__item:first-of-type ~ .dropbutton__item {
-  border: var(--dropbutton-border-size) solid var(--color-lightgray);
+  border: var(--dropbutton-border-size) solid var(--color-gray-200);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
@@ -329,7 +329,7 @@
 }
 
 .dropbutton__item ~ .dropbutton__item:last-child {
-  border-bottom: var(--dropbutton-border-size) solid var(--color-lightgray);
+  border-bottom: var(--dropbutton-border-size) solid var(--color-gray-200);
   border-radius: 0 0 var(--dropbutton-border-radius-size) var(--dropbutton-border-radius-size);
 }
 
@@ -341,7 +341,7 @@
   position: relative;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   text-decoration: none;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
@@ -393,7 +393,7 @@
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > *:hover {
   color: var(--color-text);
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
 }
 
 .dropbutton__item > .button:not(:focus) {

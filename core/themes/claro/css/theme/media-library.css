@@ -39,7 +39,7 @@
   margin: 0;
   padding-top: 0.5rem;
   list-style: none;
-  color: #222330;
+  color: #232429;
 }
 
 [dir="rtl"] .media-library-menu {
@@ -63,7 +63,7 @@
   width: 100%;
   margin-top: -1px;
   content: "";
-  border-top: 1px solid #d4d4d8;
+  border-top: 1px solid #d3d4d9;
 }
 
 .media-library-menu__link {
@@ -76,7 +76,7 @@
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent;
   border-width: 1px 0 1px 4px; /* LTR */
   border-radius: 2px 0 0 2px; /* LTR */
@@ -107,8 +107,8 @@
   text-decoration: none;
   color: #003cc5;
   /* These borders are necessary to replace the dividing lines while in the hover state. */
-  border-top: 1px solid #d4d4d8;
-  border-bottom: 1px solid #d4d4d8;
+  border-top: 1px solid #d3d4d9;
+  border-bottom: 1px solid #d3d4d9;
   background: #f0f5fd;
 }
 
@@ -803,7 +803,7 @@
 
 .media-library-item__edit {
   /* !important to override button class border. */
-  border: 1px solid #d4d4d8 !important;
+  border: 1px solid #d3d4d9 !important;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg fill='%23545560'%3e%3cpath d='M14.545 3.042l-1.586-1.585a1.003 1.003 0 00-1.414 0L10.252 2.75l3 3 1.293-1.293a1.004 1.004 0 000-1.415zM5.25 13.751l-3-3 6.998-6.998 3 3zM.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center;
@@ -822,7 +822,7 @@
 .media-library-item__remove.button:hover,
 .media-library-item__remove.button:focus {
   /* !important to override button class border. */
-  border: 1px solid #d4d4d8 !important;
+  border: 1px solid #d3d4d9 !important;
   background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M2.344 2.343l11.313 11.313M2.344 13.657L13.657 2.343' stroke='%2355565B' stroke-width='3'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center;

@@ -28,7 +28,7 @@
   padding-left: 1.5em;
 }
 .admin-item:not(:last-child) {
-  border-bottom: calc(1em / 16) solid var(--color-lightgray);
+  border-bottom: calc(1em / 16) solid var(--color-gray-200);
 }
 .admin-item__title {
   font-weight: bold;
@@ -64,7 +64,7 @@
 }
 .admin-item__description {
   margin: 0.5em 0 0.25em;
-  color: var(--color-oldsilver);
+  color: var(--color-gray-600);
 }
 [dir="rtl"] .admin-item__description {
   margin-right: 0;

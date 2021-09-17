@@ -35,9 +35,9 @@
 .progress__track {
   height: calc(1rem - 2px);
   margin-top: 0;
-  border: 1px #8e929c solid;
+  border: 1px #919297 solid;
   border-radius: 1rem;
-  background-color: #d4d4d8;
+  background-color: #d3d4d9;
 }
 
 .progress__bar {
@@ -73,7 +73,7 @@
 .progress__percentage {
   overflow: hidden;
   margin-top: 0.5rem;
-  color: #545560;
+  color: #55565b;
   font-size: 0.79rem;
 }
 

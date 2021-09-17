@@ -233,7 +233,7 @@ td.group-title {
   bottom: -13px;
   padding: 0.5px 6px;
   text-transform: uppercase;
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid var(--color-gray-200);
   background: #fff;
   font-weight: bold;
   font-style: italic;
@@ -252,9 +252,9 @@ td.group-title {
 }
 .views-displays {
   padding-bottom: 36px;
-  border-top: 1px solid var(--color-lightgray-o-80);
-  border-right: 1px solid var(--color-lightgray-o-80);
-  border-left: 1px solid var(--color-lightgray-o-80);
+  border-top: 1px solid var(--color-gray-200-o-80);
+  border-right: 1px solid var(--color-gray-200-o-80);
+  border-left: 1px solid var(--color-gray-200-o-80);
 }
 .views-display-top {
   position: relative;
@@ -262,16 +262,16 @@ td.group-title {
   flex-wrap: wrap;
   justify-content: space-between;
   padding: var(--space-s) var(--space-s) calc(var(--space-s) - 5px);
-  border-bottom: 1px solid var(--color-lightgray-o-80);
-  background-color: var(--color-whitesmoke);
+  border-bottom: 1px solid var(--color-gray-200-o-80);
+  background-color: var(--color-gray-050);
 }
 .form-edit .form-actions {
   margin-top: 0;
   padding: var(--space-s) var(--space-m);
-  border-right: 1px solid var(--color-lightgray-o-80);
-  border-bottom: 1px solid var(--color-lightgray-o-80);
-  border-left: 1px solid var(--color-lightgray-o-80);
-  background-color: var(--color-whitesmoke);
+  border-right: 1px solid var(--color-gray-200-o-80);
+  border-bottom: 1px solid var(--color-gray-200-o-80);
+  border-left: 1px solid var(--color-gray-200-o-80);
+  background-color: var(--color-gray-050);
 }
 .edit-display-settings {
   margin: var(--space-l) var(--space-l) 0 var(--space-l);
@@ -290,7 +290,7 @@ td.group-title {
   padding: 0.125rem 0 0;
 }
 .views-display-column {
-  border: 1px solid var(--color-lightgray-o-80);
+  border: 1px solid var(--color-gray-200-o-80);
   border-radius: var(--base-border-radius);
   box-shadow: var(--details-box-shadow);
 }
@@ -332,7 +332,7 @@ td.group-title {
   margin: 0 0 var(--space-xs);
   padding-top: var(--space-xs);
   padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--color-lightgray-o-80);
+  border-bottom: 1px solid var(--color-gray-200-o-80);
   line-height: 20px;
 }
 .views-ui-display-tab-bucket:last-of-type {
@@ -469,7 +469,7 @@ td.group-title {
 .views-ui-dialog .views-offset-top:not(:empty) {
   position: relative;
   padding: var(--space-s) var(--space-m) var(--space-xs);
-  background-color: var(--color-whitesmoke);
+  background-color: var(--color-gray-050);
 }
 .views-ui-dialog .views-offset-top:not(:empty):after {
   position: absolute;
@@ -529,7 +529,7 @@ td.group-title {
   border-collapse: collapse;
 }
 .views-ui-rearrange-filter-form tr td[rowspan] {
-  border: 1px solid var(--color-lightgray);
+  border: 1px solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
   border-right: 1px solid #cdcdcd; /* LTR */
@@ -539,7 +539,7 @@ td.group-title {
   border-left: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .draggable td {
-  border-bottom: 0.0625rem solid var(--color-lightgray);
+  border-bottom: 0.0625rem solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form .group-empty {
   border-bottom: 1px solid #cdcdcd;
@@ -569,7 +569,7 @@ td.group-title {
   margin-top: 0;
   padding: 8px 12px;
   border-bottom: 1px solid #ccc;
-  background-color: var(--color-whitesmoke);
+  background-color: var(--color-gray-050);
 }
 .view-preview-form .form-item--live-preview {
   position: absolute;
@@ -622,7 +622,7 @@ td.group-title {
   border-color: var(--color-bg);
 }
 .views-query-info table tr {
-  background-color: var(--color-whitesmoke);
+  background-color: var(--color-gray-050);
 }
 .views-query-info table th,
 .views-query-info table td {

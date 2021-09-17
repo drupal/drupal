@@ -750,7 +750,7 @@
 
 .media-library-item__edit {
   /* !important to override button class border. */
-  border: 1px solid var(--color-lightgray) !important;
+  border: 1px solid var(--color-gray-200) !important;
   background-image: url("../../images/icons/545560/pencil.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -767,7 +767,7 @@
 .media-library-item__remove.button:hover,
 .media-library-item__remove.button:focus {
   /* !important to override button class border. */
-  border: 1px solid var(--color-lightgray) !important;
+  border: 1px solid var(--color-gray-200) !important;
   background-image: url("../../../../misc/icons/545560/ex.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -801,7 +801,7 @@
   justify-content: center;
   width: 220px;
   margin-right: 20px; /* LTR */
-  background: var(--color-whitesmoke-o-40);
+  background: var(--color-gray-050-o-40);
 }
 [dir="rtl"] .media-library-add-form__preview {
   margin-right: 0;

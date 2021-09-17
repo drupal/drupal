@@ -35,7 +35,7 @@ th {
   height: 3rem;
   padding: 0.5rem 1rem;
   text-align: left; /* LTR */
-  color: #222330;
+  color: #232429;
   background: #f3f4f9;
   line-height: 1.25rem; /* 20px */
 }
@@ -158,12 +158,12 @@ _:-ms-fullscreen, /* Only IE 11 */
 }
 
 tr {
-  border-bottom: 0.0625rem solid #d4d4d8;
+  border-bottom: 0.0625rem solid #d3d4d9;
 }
 
 tr,
 .draggable-table.tabledrag-disabled tr {
-  color: #222330;
+  color: #232429;
   background: #fff;
 }
 
@@ -173,19 +173,19 @@ thead tr {
 
 tr:hover,
 tr:focus {
-  color: #222330;
+  color: #232429;
   background: #f0f5fd;
 }
 
 tr.color-warning:hover,
 tr.color-warning:focus {
-  color: #222330;
+  color: #232429;
   background: #fdf8ed;
 }
 
 tr.color-error:hover,
 tr.color-error:focus {
-  color: #222330;
+  color: #232429;
   background: #fcf4f2;
 }
 
@@ -227,7 +227,7 @@ td > .ajax-new-content > .form-item > .form-element {
 /* Win over table-file-multiple-widget. */
 
 th.is-disabled.is-disabled {
-  color: #82828c;
+  color: #828388;
 }
 
 /* Force browsers to calculate the width of a 'select all' <th> element. */
@@ -253,7 +253,7 @@ tfoot tr:last-child {
 }
 
 tfoot tr:first-child td {
-  border-top: 0.0625rem solid #8e929c;
+  border-top: 0.0625rem solid #919297;
 }
 
 /**

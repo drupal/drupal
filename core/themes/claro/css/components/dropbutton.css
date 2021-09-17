@@ -122,7 +122,7 @@
   height: 3rem;
   border: 1px solid transparent !important; /* 1 */
   border-radius: 0 2px 2px 0; /* LTR */
-  background: #d4d4d8;
+  background: #d3d4d9;
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -150,8 +150,8 @@
 /* Toggler states. */
 
 .dropbutton__toggle:hover {
-  color: #222330;
-  background-color: #c2c3ca;
+  color: #232429;
+  background-color: #c1c2c7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -160,7 +160,7 @@
 }
 
 .dropbutton__toggle:active {
-  color: #222330;
+  color: #232429;
   background-color: #adaeb3;
 }
 
@@ -238,10 +238,10 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #222330;
+  color: #232429;
   border: 1px solid transparent !important; /* 1 */
   border-radius: 2px;
-  background-color: #d4d4d8;
+  background-color: #d3d4d9;
   font-size: 1rem;
   font-weight: 700;
   line-height: 1rem;
@@ -275,8 +275,8 @@
 .dropbutton__item:first-of-type > *:hover,
 .dropbutton__item:first-of-type > .button:hover {
   text-decoration: none;
-  color: #222330;
-  background-color: #c2c3ca;
+  color: #232429;
+  background-color: #c1c2c7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -290,7 +290,7 @@
 }
 
 .dropbutton__item:first-of-type > *:active {
-  color: #222330;
+  color: #232429;
   background-color: #adaeb3;
 }
 
@@ -334,7 +334,7 @@
  */
 
 .dropbutton__item:first-of-type ~ .dropbutton__item {
-  border: 1px solid #d4d4d8;
+  border: 1px solid #d3d4d9;
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
@@ -344,7 +344,7 @@
 }
 
 .dropbutton__item ~ .dropbutton__item:last-child {
-  border-bottom: 1px solid #d4d4d8;
+  border-bottom: 1px solid #d3d4d9;
   border-radius: 0 0 2px 2px;
 }
 
@@ -357,7 +357,7 @@
   position: relative;
   padding: calc(1rem - 1px);
   text-decoration: none;
-  color: #545560;
+  color: #55565b;
   border: 1px solid transparent !important; /* 1 */
   border-radius: 2px;
   background: #fff;
@@ -411,7 +411,7 @@
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > *:hover {
-  color: #222330;
+  color: #232429;
   background: #f3f4f9;
 }
 

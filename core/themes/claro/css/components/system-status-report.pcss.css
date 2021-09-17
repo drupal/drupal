@@ -98,7 +98,7 @@
 }
 
 .claro-details__summary--system-status-report {
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
 }
 
 @media screen and (max-width: 48em) {

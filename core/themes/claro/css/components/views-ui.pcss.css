@@ -75,7 +75,7 @@ details.fieldset-no-legend {
 .views-ui-dialog .form-item:first-of-type.description {
   margin: 0 0 var(--space-l) 0;
   padding-bottom: var(--space-s);
-  border-bottom: 0.0625rem solid var(--color-lightgray);
+  border-bottom: 0.0625rem solid var(--color-gray-200);
   font-weight: bold;
 }
 
@@ -273,7 +273,7 @@ details.fieldset-no-legend {
 }
 .views-tabs .add a {
   padding: 9px 13px 9px 9px;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   border: none;
   border-radius: var(--base-border-radius);
   background-color: transparent;
@@ -397,7 +397,7 @@ details.fieldset-no-legend {
   border-bottom: 0;
 }
 .views-ui-rearrange-filter-form tr:first-of-type {
-  border-top: 0.0625rem solid var(--color-lightgray);
+  border-top: 0.0625rem solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form tr:not(.draggable):hover {
   background: inherit;
@@ -509,14 +509,14 @@ details.fieldset-no-legend {
 .views-config-group-region {
   display: table;
   margin: var(--space-l) 0;
-  border: 0.0625rem solid var(--color-lightgray);
+  border: 0.0625rem solid var(--color-gray-200);
   border-collapse: collapse;
 }
 .views-config-group-region .views-group-box {
   position: relative;
   display: table-cell;
   padding: var(--space-l);
-  border: 0.0625rem solid var(--color-lightgray);
+  border: 0.0625rem solid var(--color-gray-200);
 }
 .views-config-group-region .views-group-box--operator {
   padding-right: var(--space-xl);
@@ -551,7 +551,7 @@ details.fieldset-no-legend {
   width: 0.0625rem;
   height: 100%;
   content: "";
-  border-left: 0.0625rem solid var(--color-lightgray);
+  border-left: 0.0625rem solid var(--color-gray-200);
 }
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::before {
   right: 0;
@@ -563,8 +563,8 @@ details.fieldset-no-legend {
   left: calc(0 - var(--space-m)); /* LTR */
   padding: 0 0.3rem 0.3rem 0.4rem; /* LTR */
   content: ">";
-  color: var(--color-oldsilver);
-  border: 0.0625rem solid var(--color-lightgray);
+  color: var(--color-gray-600);
+  border: 0.0625rem solid var(--color-gray-200);
   background: #fff;
   font-size: var(--font-size-h1);
   font-weight: bold;

@@ -22,15 +22,15 @@
   display: inline-block;
   max-width: 100%;
   background-color: #fff;
-  box-shadow: inset 0 0 0.4375rem #d4d4d8;
+  box-shadow: inset 0 0 0.4375rem #d3d4d9;
 }
 
 .image-preview img {
   background-image:
-    linear-gradient(-45deg, #d4d4d8 25%, transparent 26%),
-    linear-gradient(-45deg, #d4d4d8 25%, transparent 26%),
-    linear-gradient(135deg, #d4d4d8 25%, transparent 26%),
-    linear-gradient(135deg, #d4d4d8 25%, transparent 26%);
+    linear-gradient(-45deg, #d3d4d9 25%, transparent 26%),
+    linear-gradient(-45deg, #d3d4d9 25%, transparent 26%),
+    linear-gradient(135deg, #d3d4d9 25%, transparent 26%),
+    linear-gradient(135deg, #d3d4d9 25%, transparent 26%);
   background-position:
     0 0,
     0.4375rem 0.4375rem,

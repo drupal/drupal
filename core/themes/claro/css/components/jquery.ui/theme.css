@@ -546,7 +546,7 @@
 .ui-widget-overlay {
   z-index: 1259;
   opacity: 0.7;
-  background: #222330;
+  background: #232429;
 }
 
 /**
@@ -597,7 +597,7 @@
 
 .ui-autocomplete {
   overflow: hidden;
-  color: #545560;
+  color: #55565b;
   border: 1px solid rgba(216, 217, 224, 0.8);
   border-top: 0;
   border-radius: 0 0 0.125rem 0.125rem;

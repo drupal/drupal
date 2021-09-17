@@ -241,7 +241,7 @@
  */
 .vertical-tabs__menu-link-summary {
   display: block;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   font-size: var(--font-size-s);
   font-weight: normal;
 }
