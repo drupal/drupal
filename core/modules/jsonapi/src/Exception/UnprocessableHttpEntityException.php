@@ -3,7 +3,6 @@
 namespace Drupal\jsonapi\Exception;
 
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -22,8 +21,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * @see jsonapi.api.php
  */
 class UnprocessableHttpEntityException extends HttpException {
-
-  use DependencySerializationTrait;
 
   /**
    * The constraint violations associated with this exception.
