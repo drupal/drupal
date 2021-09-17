@@ -95,8 +95,15 @@ class HtmlTag extends RenderElement {
     // Construct all other elements.
     else {
       $open_tag .= '>';
-      $markup = $element['#value'] instanceof MarkupInterface ? $element['#value'] : Xss::filterAdmin($element['#value']);
-      $element['#markup'] = Markup::create($markup);
+      if ($element['#value'] === NULL) {
+        $element['#markup'] = '';
+      }
+      elseif ($element['#value'] instanceof MarkupInterface) {
+        $element['#markup'] = $element['#value'];
+      }
+      else {
+        $element['#markup'] = Markup::create(Xss::filterAdmin($element['#value']));
+      }
     }
     $prefix = isset($element['#prefix']) ? $element['#prefix'] . $open_tag : $open_tag;
     $suffix = isset($element['#suffix']) ? $close_tag . $element['#suffix'] : $close_tag;
