@@ -7,7 +7,7 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class InstallerExistingConfigSyncDriectoryProfileMismatchTest extends InstallerExistingConfigTestBase {
+class InstallerExistingConfigSyncDirectoryProfileMismatchTest extends InstallerExistingConfigTestBase {
 
   /**
    * {@inheritdoc}
