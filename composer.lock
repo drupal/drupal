@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "107b1d4f65408eb2844facd227005517de15343b"
+                "reference": "833c40df380059ecff9e327223e066ac3a41c328"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -572,6 +572,7 @@
                 "symfony/http-kernel": "^4.4",
                 "symfony/mime": "^5.3.0",
                 "symfony/polyfill-iconv": "^1.0",
+                "symfony/polyfill-php80": "^1.16",
                 "symfony/process": "^4.4",
                 "symfony/psr-http-message-bridge": "^2.0",
                 "symfony/routing": "^4.4",
@@ -6962,6 +6963,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
