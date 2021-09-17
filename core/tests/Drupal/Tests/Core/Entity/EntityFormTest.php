@@ -113,7 +113,7 @@ class EntityFormTest extends UnitTestCase {
     $values = ['id' => $entity_id];
     $entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections')
       ->setConstructorArgs([$values, 'test_config_entity'])
-      ->setMethods(['getPluginCollections'])
+      ->onlyMethods(['getPluginCollections'])
       ->getMock();
     $entity->expects($this->atLeastOnce())
       ->method('getPluginCollections')

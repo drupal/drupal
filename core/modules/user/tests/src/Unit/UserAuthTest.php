@@ -71,7 +71,7 @@ class UserAuthTest extends UnitTestCase {
 
     $this->testUser = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(['id', 'setPassword', 'save', 'getPassword'])
+      ->onlyMethods(['id', 'setPassword', 'save', 'getPassword'])
       ->getMock();
 
     $this->userAuth = new UserAuth($entity_type_manager, $this->passwordService);

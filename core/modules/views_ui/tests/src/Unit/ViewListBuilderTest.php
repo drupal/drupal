@@ -76,14 +76,14 @@ class ViewListBuilderTest extends UnitTestCase {
       ]);
 
     $default_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DefaultDisplay')
-      ->setMethods(['initDisplay'])
+      ->onlyMethods(['initDisplay'])
       ->setConstructorArgs([[], 'default', $display_manager->getDefinition('default')])
       ->getMock();
     $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $state = $this->createMock('\Drupal\Core\State\StateInterface');
     $menu_storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $page_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\Page')
-      ->setMethods(['initDisplay', 'getPath'])
+      ->onlyMethods(['initDisplay', 'getPath'])
       ->setConstructorArgs([[], 'default', $display_manager->getDefinition('page'), $route_provider, $state, $menu_storage])
       ->getMock();
     $page_display->expects($this->any())
@@ -94,7 +94,7 @@ class ViewListBuilderTest extends UnitTestCase {
         $this->returnValue('<script>alert("placeholder_page/%")</script>')));
 
     $embed_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\Embed')
-      ->setMethods(['initDisplay'])
+      ->onlyMethods(['initDisplay'])
       ->setConstructorArgs([[], 'default', $display_manager->getDefinition('embed')])
       ->getMock();
 

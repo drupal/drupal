@@ -35,7 +35,7 @@ class FormErrorHandlerTest extends UnitTestCase {
     $this->messenger = $this->createMock(MessengerInterface::class);
 
     $this->formErrorHandler = $this->getMockBuilder('Drupal\Core\Form\FormErrorHandler')
-      ->setMethods(['messenger'])
+      ->onlyMethods(['messenger'])
       ->getMock();
 
     $this->formErrorHandler->expects($this->atLeastOnce())

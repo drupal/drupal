@@ -84,7 +84,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
     ]);
 
     $test_processor = $this->getMockBuilder('Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor')
-      ->setMethods(['buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'])
+      ->onlyMethods(['buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'])
       ->setConstructorArgs([[], 'aggregator_test', ['description' => ''], $this->configFactory])
       ->getMock();
     $test_processor->expects($this->once())

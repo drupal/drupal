@@ -51,7 +51,7 @@ class CommentLockTest extends UnitTestCase {
     $methods[] = 'invalidateTagsOnSave';
     $comment = $this->getMockBuilder('Drupal\comment\Entity\Comment')
       ->disableOriginalConstructor()
-      ->setMethods($methods)
+      ->onlyMethods($methods)
       ->getMock();
     $comment->expects($this->once())
       ->method('isNew')

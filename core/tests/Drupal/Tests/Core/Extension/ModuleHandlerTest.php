@@ -111,7 +111,7 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['load'])
+      ->onlyMethods(['load'])
       ->getMock();
     $module_handler->expects($this->exactly(3))
       ->method('load')
@@ -178,7 +178,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->setConstructorArgs([
         $this->root, [], $this->cacheBackend,
       ])
-      ->setMethods(['resetImplementations'])
+      ->onlyMethods(['resetImplementations'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -206,7 +206,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->setConstructorArgs([
         $this->root, [], $this->cacheBackend,
       ])
-      ->setMethods(['resetImplementations'])
+      ->onlyMethods(['resetImplementations'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -228,7 +228,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->setConstructorArgs([
         $this->root, [], $this->cacheBackend,
       ])
-      ->setMethods(['resetImplementations'])
+      ->onlyMethods(['resetImplementations'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -266,7 +266,7 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['loadInclude'])
+      ->onlyMethods(['loadInclude'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -355,7 +355,7 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['buildImplementationInfo', 'loadInclude'])
+      ->onlyMethods(['buildImplementationInfo', 'loadInclude'])
       ->getMock();
     $module_handler->load('module_handler_test');
 
@@ -393,7 +393,7 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['buildImplementationInfo'])
+      ->onlyMethods(['buildImplementationInfo'])
       ->getMock();
     $module_handler->load('module_handler_test');
 

@@ -89,7 +89,7 @@ class ContextTest extends UnitTestCase {
   public function testSetContextValueTypedData() {
 
     $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
-      ->setMethods(['getDefaultValue', 'getDataDefinition'])
+      ->onlyMethods(['getDefaultValue', 'getDataDefinition'])
       ->getMockForAbstractClass();
 
     $typed_data = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
@@ -102,9 +102,9 @@ class ContextTest extends UnitTestCase {
    */
   public function testSetContextValueCacheableDependency() {
     $container = new Container();
-    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
-      ->setMethods(['validateTokens'])
+      ->onlyMethods(['validateTokens'])
       ->getMock();
     $container->set('cache_contexts_manager', $cache_context_manager);
     $cache_context_manager->expects($this->any())
@@ -145,7 +145,7 @@ class ContextTest extends UnitTestCase {
     $mock_data_definition = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
 
     $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
-      ->setMethods(['getDefaultValue', 'getDataDefinition'])
+      ->onlyMethods(['getDefaultValue', 'getDataDefinition'])
       ->getMockForAbstractClass();
 
     $this->contextDefinition->expects($this->once())

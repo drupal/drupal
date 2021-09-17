@@ -32,7 +32,7 @@ class DrupalTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
   }
 

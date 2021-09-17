@@ -36,7 +36,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
     $middleware = new ReverseProxyMiddleware($this->mockHttpKernel, $settings);
     // Mock a request object.
     $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-      ->setMethods(['setTrustedProxies'])
+      ->onlyMethods(['setTrustedProxies'])
       ->getMock();
     // setTrustedProxies() should never fire.
     $request->expects($this->never())

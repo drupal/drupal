@@ -47,9 +47,9 @@ class BlockPageVariantTest extends UnitTestCase {
   public function setUpDisplayVariant($configuration = [], $definition = []) {
 
     $container = new Container();
-    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
-      ->setMethods(['assertValidTokens'])
+      ->onlyMethods(['assertValidTokens'])
       ->getMock();
     $container->set('cache_contexts_manager', $cache_context_manager);
     $cache_context_manager->expects($this->any())
@@ -62,7 +62,7 @@ class BlockPageVariantTest extends UnitTestCase {
 
     return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
       ->setConstructorArgs([$configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, ['config:block_list']])
-      ->setMethods(['getRegionNames'])
+      ->addMethods(['getRegionNames'])
       ->getMock();
   }
 

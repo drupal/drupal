@@ -48,7 +48,7 @@ class VendorHardeningPluginTest extends TestCase {
       ->willReturn(['tests']);
 
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
-      ->setMethods(['getInstallPathForPackage'])
+      ->onlyMethods(['getInstallPathForPackage'])
       ->getMock();
     $plugin->expects($this->once())
       ->method('getInstallPathForPackage')
@@ -78,7 +78,7 @@ class VendorHardeningPluginTest extends TestCase {
    */
   public function testCleanPathsForPackage() {
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
-      ->setMethods(['getInstallPathForPackage'])
+      ->onlyMethods(['getInstallPathForPackage'])
       ->getMock();
     $plugin->expects($this->once())
       ->method('getInstallPathForPackage')
@@ -119,7 +119,7 @@ class VendorHardeningPluginTest extends TestCase {
       ->willReturn('drupal/package');
 
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
-      ->setMethods(['getInstalledPackages', 'getInstallPathForPackage'])
+      ->onlyMethods(['getInstalledPackages', 'getInstallPathForPackage'])
       ->getMock();
     $plugin->expects($this->once())
       ->method('getInstalledPackages')
@@ -153,7 +153,7 @@ class VendorHardeningPluginTest extends TestCase {
     // Set up mocks so that writeAccessRestrictionFiles() can eventually use
     // the IOInterface object.
     $composer = $this->getMockBuilder(Composer::class)
-      ->setMethods(['getPackage'])
+      ->onlyMethods(['getPackage'])
       ->getMock();
     $composer->expects($this->once())
       ->method('getPackage')

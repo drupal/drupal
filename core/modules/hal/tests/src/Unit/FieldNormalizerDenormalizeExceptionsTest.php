@@ -52,7 +52,7 @@ class FieldNormalizerDenormalizeExceptionsTest extends UnitTestCase {
    */
   public function providerNormalizerDenormalizeExceptions() {
     $mock = $this->getMockBuilder('\Drupal\Core\Field\Plugin\DataType\FieldItem')
-      ->setMethods(['getParent'])
+      ->addMethods(['getParent'])
       ->getMock();
     $mock->expects($this->any())
       ->method('getParent')

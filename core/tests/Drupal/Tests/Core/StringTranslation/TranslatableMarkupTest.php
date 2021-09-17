@@ -57,7 +57,7 @@ class TranslatableMarkupTest extends UnitTestCase {
     $string = 'May I have an exception please?';
     $text = $this->getMockBuilder(TranslatableMarkup::class)
       ->setConstructorArgs([$string, [], [], $translation])
-      ->setMethods(['_die'])
+      ->onlyMethods(['_die'])
       ->getMock();
     $text
       ->expects($this->once())

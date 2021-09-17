@@ -19,7 +19,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   protected function mockBrowserTestBaseWithDriver($driver) {
     $session = $this->getMockBuilder(Session::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getDriver'])
+      ->onlyMethods(['getDriver'])
       ->getMock();
     $session->expects($this->any())
       ->method('getDriver')
@@ -27,7 +27,7 @@ class BrowserTestBaseTest extends UnitTestCase {
 
     $btb = $this->getMockBuilder(BrowserTestBase::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getSession'])
+      ->onlyMethods(['getSession'])
       ->getMockForAbstractClass();
     $btb->expects($this->any())
       ->method('getSession')
@@ -44,7 +44,7 @@ class BrowserTestBaseTest extends UnitTestCase {
     $expected = new \stdClass();
 
     $browserkit_client = $this->getMockBuilder(DrupalTestBrowser::class)
-      ->setMethods(['getClient'])
+      ->onlyMethods(['getClient'])
       ->getMockForAbstractClass();
     $browserkit_client->expects($this->once())
       ->method('getClient')
@@ -112,7 +112,7 @@ class BrowserTestBaseTest extends UnitTestCase {
     $this->assertTrue(method_exists(BrowserTestBase::class, $method));
     $btb = $this->getMockBuilder(BrowserTestBase::class)
       ->disableOriginalConstructor()
-      ->setMethods([$method])
+      ->onlyMethods([$method])
       ->getMockForAbstractClass();
     $btb->expects($this->never())->method($method);
     $ref_tearDown = new \ReflectionMethod($btb, 'tearDown');

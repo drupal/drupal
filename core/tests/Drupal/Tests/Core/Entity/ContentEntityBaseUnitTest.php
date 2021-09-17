@@ -340,7 +340,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $validator = $this->createMock(ValidatorInterface::class);
     /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit\Framework\MockObject\MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
     $non_empty_violation_list = clone $empty_violation_list;
     $violation = $this->createMock('\Symfony\Component\Validator\ConstraintViolationInterface');
@@ -369,7 +369,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $validator = $this->createMock(ValidatorInterface::class);
     /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit\Framework\MockObject\MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
     $validator->expects($this->once())
       ->method('validate')
@@ -470,7 +470,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(['getTranslatedField'])
+      ->onlyMethods(['getTranslatedField'])
       ->getMockForAbstractClass();
 
     // Set up expectations for getTranslatedField() method. In get(),
@@ -532,14 +532,14 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(['getFieldDefinitions', 'get'])
+      ->onlyMethods(['getFieldDefinitions', 'get'])
       ->getMockForAbstractClass();
 
     // Mock field definition objects for each element of $field_definitions.
     $mocked_field_definitions = [];
     foreach ($field_definitions as $name) {
       $mock_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinitionInterface')
-        ->setMethods(['isComputed'])
+        ->onlyMethods(['isComputed'])
         ->getMockForAbstractClass();
       // Set expectations for isComputed(). isComputed() gets called whenever
       // $include_computed is FALSE, but not otherwise. It returns the value of

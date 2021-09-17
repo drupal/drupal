@@ -64,7 +64,7 @@ class ImageTest extends UnitTestCase {
     $stubs = array_merge(['getPluginId', 'save'], $stubs);
     return $mock_builder
       ->disableOriginalConstructor()
-      ->setMethods($stubs)
+      ->onlyMethods($stubs)
       ->getMock();
   }
 
@@ -82,7 +82,7 @@ class ImageTest extends UnitTestCase {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
     $logger = $this->createMock('Psr\Log\LoggerInterface');
     return $mock_builder
-      ->setMethods(['execute'])
+      ->onlyMethods(['execute'])
       ->setConstructorArgs([[], '', [], $toolkit, $logger])
       ->getMock();
   }
@@ -211,7 +211,7 @@ class ImageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $image = $this->getMockBuilder('Drupal\Core\Image\Image')
-      ->setMethods(['chmod'])
+      ->onlyMethods([])
       ->setConstructorArgs([$toolkit, $this->image->getSource()])
       ->getMock();
 
@@ -220,7 +220,7 @@ class ImageTest extends UnitTestCase {
       ->willReturn(TRUE);
 
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $container->expects($this->once())
       ->method('get')
@@ -256,7 +256,7 @@ class ImageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $image = $this->getMockBuilder('Drupal\Core\Image\Image')
-      ->setMethods(['chmod'])
+      ->onlyMethods([])
       ->setConstructorArgs([$toolkit, $this->image->getSource()])
       ->getMock();
 
@@ -265,7 +265,7 @@ class ImageTest extends UnitTestCase {
       ->willReturn(FALSE);
 
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $container->expects($this->once())
       ->method('get')

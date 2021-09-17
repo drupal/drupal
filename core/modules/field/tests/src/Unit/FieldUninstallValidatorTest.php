@@ -29,7 +29,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
     parent::setUp();
     $this->fieldUninstallValidator = $this->getMockBuilder('Drupal\field\FieldUninstallValidator')
       ->disableOriginalConstructor()
-      ->setMethods(['getFieldStoragesByModule', 'getFieldTypeLabel'])
+      ->onlyMethods(['getFieldStoragesByModule', 'getFieldTypeLabel'])
       ->getMock();
     $this->fieldUninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }

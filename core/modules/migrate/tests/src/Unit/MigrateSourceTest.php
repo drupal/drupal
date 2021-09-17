@@ -111,7 +111,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $constructor_args = [$configuration, 'd6_action', [], $this->migration];
     $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'prepareRow', 'initializeIterator'];
     $source_plugin = $this->getMockBuilder(SourcePluginBase::class)
-      ->setMethods($methods)
+      ->onlyMethods($methods)
       ->setConstructorArgs($constructor_args)
       ->getMock();
 

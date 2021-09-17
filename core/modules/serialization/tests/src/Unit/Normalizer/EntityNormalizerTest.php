@@ -83,7 +83,7 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $content_entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(['getFields'])
+      ->onlyMethods(['getFields'])
       ->getMockForAbstractClass();
     $content_entity->expects($this->once())
       ->method('getFields')
@@ -91,7 +91,7 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
       ->disableOriginalConstructor()
-      ->setMethods(['normalize'])
+      ->onlyMethods(['normalize'])
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('normalize')
@@ -217,7 +217,7 @@ class EntityNormalizerTest extends UnitTestCase {
     // item.
     $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
       ->disableOriginalConstructor()
-      ->setMethods(['denormalize'])
+      ->onlyMethods(['denormalize'])
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
@@ -366,7 +366,7 @@ class EntityNormalizerTest extends UnitTestCase {
     // item.
     $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
       ->disableOriginalConstructor()
-      ->setMethods(['denormalize'])
+      ->onlyMethods(['denormalize'])
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('denormalize')

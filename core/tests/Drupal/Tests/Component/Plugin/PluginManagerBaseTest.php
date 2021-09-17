@@ -37,7 +37,7 @@ class PluginManagerBaseTest extends TestCase {
    */
   public function getMockFactoryInterface($expects_count) {
     $mock_factory = $this->getMockBuilder('Drupal\Component\Plugin\Factory\FactoryInterface')
-      ->setMethods(['createInstance'])
+      ->onlyMethods(['createInstance'])
       ->getMockForAbstractClass();
     $mock_factory->expects($this->exactly($expects_count))
       ->method('createInstance')

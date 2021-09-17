@@ -27,7 +27,7 @@ class BlockBaseTest extends UnitTestCase {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PhpTransliteration')
       ->setConstructorArgs([NULL, $module_handler])
-      ->setMethods(['readLanguageOverrides'])
+      ->onlyMethods(['readLanguageOverrides'])
       ->getMock();
 
     $config = [];

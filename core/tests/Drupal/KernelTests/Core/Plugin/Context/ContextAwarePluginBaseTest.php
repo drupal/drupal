@@ -43,7 +43,7 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
     $plugin_definition->addContextDefinition('nato_letter', ContextDefinition::create('string'));
     $this->plugin = $this->getMockBuilder(ContextAwarePluginBase::class)
       ->setConstructorArgs([$configuration, 'the_sisko', $plugin_definition])
-      ->setMethods(['setContext'])
+      ->onlyMethods(['setContext'])
       ->getMockForAbstractClass();
   }
 

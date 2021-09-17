@@ -22,7 +22,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
     parent::setUp();
     $this->bookUninstallValidator = $this->getMockBuilder('Drupal\book\BookUninstallValidator')
       ->disableOriginalConstructor()
-      ->setMethods(['hasBookOutlines', 'hasBookNodes'])
+      ->onlyMethods(['hasBookOutlines', 'hasBookNodes'])
       ->getMock();
     $this->bookUninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }

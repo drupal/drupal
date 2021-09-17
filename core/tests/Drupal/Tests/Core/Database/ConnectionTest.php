@@ -667,7 +667,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testQueryTrim($expected, $query, $options) {
     $mock_pdo = $this->getMockBuilder(StubPdo::class)
-      ->setMethods(['execute', 'prepare', 'setAttribute'])
+      ->onlyMethods(['prepare'])
       ->getMock();
     $mock_statement = $this->getMockBuilder(StatementWrapper::class)
       ->disableOriginalConstructor()

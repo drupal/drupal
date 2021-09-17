@@ -433,7 +433,7 @@ class EntityUrlTest extends UnitTestCase {
     // add method prophecies later while still revealing the prophecy now.
     $entity = $this->getMockBuilder($class)
       ->setConstructorArgs([$values, $this->entityTypeId])
-      ->setMethods($methods)
+      ->onlyMethods($methods)
       ->getMockForAbstractClass();
 
     $this->entityType = $this->prophesize(EntityTypeInterface::class);

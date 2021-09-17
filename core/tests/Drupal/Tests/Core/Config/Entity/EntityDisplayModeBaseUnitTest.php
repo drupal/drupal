@@ -90,7 +90,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     $this->entity = $this->getMockBuilder('\Drupal\Core\Entity\EntityDisplayModeBase')
       ->setConstructorArgs([$values, $this->entityType])
-      ->setMethods(['getFilterFormat'])
+      ->addMethods(['getFilterFormat'])
       ->getMock();
 
     $dependencies = $this->entity->calculateDependencies()->getDependencies();
@@ -103,7 +103,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   public function testSetTargetType() {
     // Generate mock.
     $mock = $this->getMockBuilder('Drupal\Core\Entity\EntityDisplayModeBase')
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->setConstructorArgs([['something' => 'nothing'], 'test_type'])
       ->getMock();
 
@@ -131,7 +131,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   public function testGetTargetType() {
     // Generate mock.
     $mock = $this->getMockBuilder('Drupal\Core\Entity\EntityDisplayModeBase')
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->setConstructorArgs([['something' => 'nothing'], 'test_type'])
       ->getMock();
 

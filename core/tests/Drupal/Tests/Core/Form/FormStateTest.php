@@ -181,7 +181,7 @@ class FormStateTest extends UnitTestCase {
     $module = 'some_module';
     $name = 'some_name';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['moduleLoadInclude'])
+      ->onlyMethods(['moduleLoadInclude'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('moduleLoadInclude')
@@ -197,7 +197,7 @@ class FormStateTest extends UnitTestCase {
     $type = 'some_type';
     $module = 'some_module';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['moduleLoadInclude'])
+      ->onlyMethods(['moduleLoadInclude'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('moduleLoadInclude')
@@ -213,7 +213,7 @@ class FormStateTest extends UnitTestCase {
     $type = 'some_type';
     $module = 'some_module';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['moduleLoadInclude'])
+      ->onlyMethods(['moduleLoadInclude'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('moduleLoadInclude')
@@ -230,7 +230,7 @@ class FormStateTest extends UnitTestCase {
     $module = 'some_module';
     $name = 'some_name';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['moduleLoadInclude'])
+      ->onlyMethods(['moduleLoadInclude'])
       ->getMock();
 
     $form_state->addBuildInfo('files', [

@@ -417,7 +417,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           ],
         ],
       ])
-      ->setMethods(['getRevisionMetadataKeys'])
+      ->onlyMethods(['getRevisionMetadataKeys'])
       ->getMock();
 
     $this->entityType->expects($this->any())
@@ -635,7 +635,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'revision_data_table' => 'entity_test_revision_field_data',
         ],
       ])
-      ->setMethods(['isRevisionable', 'isTranslatable', 'getRevisionMetadataKeys'])
+      ->onlyMethods(['isRevisionable', 'isTranslatable', 'getRevisionMetadataKeys'])
       ->getMock();
 
     $this->entityType->expects($this->any())
@@ -1221,7 +1221,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
       ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
-      ->setMethods(['installedStorageSchema', 'hasSharedTableStructureChange'])
+      ->onlyMethods(['installedStorageSchema', 'hasSharedTableStructureChange'])
       ->getMock();
 
     $this->storageSchema->expects($this->any())
@@ -1418,7 +1418,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
       ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
-      ->setMethods(['installedStorageSchema', 'loadEntitySchemaData', 'hasSharedTableNameChanges', 'isTableEmpty', 'getTableMapping'])
+      ->onlyMethods(['installedStorageSchema', 'loadEntitySchemaData', 'hasSharedTableNameChanges', 'isTableEmpty', 'getTableMapping'])
       ->getMock();
     $this->storageSchema
       ->expects($this->any())

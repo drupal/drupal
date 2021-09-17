@@ -483,7 +483,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $class = 'Drupal\migrate\Plugin\migrate\source\SourcePluginBase';
     $source = $this->getMockBuilder($class)
       ->disableOriginalConstructor()
-      ->setMethods(get_class_methods($class))
+      ->onlyMethods(get_class_methods($class))
       ->getMockForAbstractClass();
     $source->expects($this->once())
       ->method('rewind')

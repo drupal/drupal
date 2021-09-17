@@ -80,7 +80,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
     // The mocked super user account, with the same roles as Account 2.
     $this->account1 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(['getRoles', 'id'])
+      ->onlyMethods(['getRoles', 'id'])
       ->getMock();
     $this->account1->expects($this->any())
       ->method('id')
@@ -92,7 +92,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
     $roles_1 = ['administrator', 'authenticated'];
     $this->account2 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(['getRoles', 'id'])
+      ->onlyMethods(['getRoles', 'id'])
       ->getMock();
     $this->account2->expects($this->any())
       ->method('getRoles')
@@ -105,7 +105,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
     $roles_3 = ['authenticated', 'administrator'];
     $this->account3 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(['getRoles', 'id'])
+      ->onlyMethods(['getRoles', 'id'])
       ->getMock();
     $this->account3->expects($this->any())
       ->method('getRoles')
@@ -118,7 +118,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
     $roles_2_updated = ['editor', 'administrator', 'authenticated'];
     $this->account2Updated = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(['getRoles', 'id'])
+      ->onlyMethods(['getRoles', 'id'])
       ->getMock();
     $this->account2Updated->expects($this->any())
       ->method('getRoles')
@@ -131,7 +131,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
     $random = Crypt::randomBytesBase64(55);
     $this->privateKey = $this->getMockBuilder('Drupal\Core\PrivateKey')
       ->disableOriginalConstructor()
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $this->privateKey->expects($this->any())
       ->method('get')

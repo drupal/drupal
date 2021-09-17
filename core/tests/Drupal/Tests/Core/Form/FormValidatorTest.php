@@ -55,7 +55,7 @@ class FormValidatorTest extends UnitTestCase {
   public function testValidationComplete() {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $form = [];
@@ -73,7 +73,7 @@ class FormValidatorTest extends UnitTestCase {
   public function testPreventDuplicateValidation() {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['doValidateForm'])
+      ->onlyMethods(['doValidateForm'])
       ->getMock();
     $form_validator->expects($this->never())
       ->method('doValidateForm');
@@ -93,7 +93,7 @@ class FormValidatorTest extends UnitTestCase {
   public function testMustValidate() {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['doValidateForm'])
+      ->onlyMethods(['doValidateForm'])
       ->getMock();
     $form_validator->expects($this->once())
       ->method('doValidateForm');
@@ -120,14 +120,14 @@ class FormValidatorTest extends UnitTestCase {
 
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([$request_stack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['doValidateForm'])
+      ->onlyMethods(['doValidateForm'])
       ->getMock();
     $form_validator->expects($this->never())
       ->method('doValidateForm');
 
     $form['#token'] = 'test_form_id';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['setErrorByName'])
+      ->onlyMethods(['setErrorByName'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('setErrorByName')
@@ -148,14 +148,14 @@ class FormValidatorTest extends UnitTestCase {
 
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([$request_stack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['doValidateForm'])
+      ->onlyMethods(['doValidateForm'])
       ->getMock();
     $form_validator->expects($this->once())
       ->method('doValidateForm');
 
     $form['#token'] = 'test_form_id';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['setErrorByName'])
+      ->onlyMethods(['setErrorByName'])
       ->getMock();
     $form_state->expects($this->never())
       ->method('setErrorByName');
@@ -172,7 +172,7 @@ class FormValidatorTest extends UnitTestCase {
   public function testHandleErrorsWithLimitedValidation($sections, $triggering_element, $values, $expected) {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $triggering_element['#limit_validation_errors'] = $sections;
@@ -268,10 +268,10 @@ class FormValidatorTest extends UnitTestCase {
   public function testExecuteValidateHandlers() {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
     $mock = $this->getMockBuilder('stdClass')
-      ->setMethods(['validate_handler', 'hash_validate'])
+      ->addMethods(['validate_handler', 'hash_validate'])
       ->getMock();
     $mock->expects($this->once())
       ->method('validate_handler')
@@ -301,7 +301,7 @@ class FormValidatorTest extends UnitTestCase {
   public function testRequiredErrorMessage($element, $expected_message) {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['executeValidateHandlers'])
+      ->onlyMethods(['executeValidateHandlers'])
       ->getMock();
     $form_validator->expects($this->once())
       ->method('executeValidateHandlers');
@@ -315,7 +315,7 @@ class FormValidatorTest extends UnitTestCase {
       '#parents' => ['test'],
     ];
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['setError'])
+      ->onlyMethods(['setError'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('setError')
@@ -349,12 +349,12 @@ class FormValidatorTest extends UnitTestCase {
   public function testElementValidate() {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['executeValidateHandlers'])
+      ->onlyMethods(['executeValidateHandlers'])
       ->getMock();
     $form_validator->expects($this->once())
       ->method('executeValidateHandlers');
     $mock = $this->getMockBuilder('stdClass')
-      ->setMethods(['element_validate'])
+      ->addMethods(['element_validate'])
       ->getMock();
     $mock->expects($this->once())
       ->method('element_validate')
@@ -379,7 +379,7 @@ class FormValidatorTest extends UnitTestCase {
   public function testPerformRequiredValidation($element, $expected_message, $call_watchdog) {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->setMethods(['setError'])
+      ->addMethods(['setError'])
       ->getMock();
 
     if ($call_watchdog) {
@@ -396,7 +396,7 @@ class FormValidatorTest extends UnitTestCase {
       '#parents' => ['test'],
     ];
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(['setError'])
+      ->onlyMethods(['setError'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('setError')

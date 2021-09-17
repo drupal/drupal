@@ -76,7 +76,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $this->contextualLinkManager = $this
       ->getMockBuilder('Drupal\Core\Menu\ContextualLinkManager')
       ->disableOriginalConstructor()
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $this->controllerResolver = $this->createMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
