@@ -64,6 +64,7 @@ trait DependencySerializationTrait {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function __wakeup() {
     // Tests in isolation potentially unserialize in the parent process.
     $phpunit_bootstrap = isset($GLOBALS['__PHPUNIT_BOOTSTRAP']);

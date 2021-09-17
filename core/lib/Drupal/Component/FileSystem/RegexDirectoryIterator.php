@@ -33,6 +33,7 @@ class RegexDirectoryIterator extends \FilterIterator {
   /**
    * Implements \FilterIterator::accept().
    */
+  #[\ReturnTypeWillChange]
   public function accept() {
     /** @var \SplFileInfo $file_info */
     $file_info = $this->getInnerIterator()->current();

@@ -30,6 +30,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function offsetExists($offset) {
     @trigger_error($this->message, E_USER_DEPRECATED);
     return parent::offsetExists($offset);
@@ -38,6 +39,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function offsetGet($offset) {
     @trigger_error($this->message, E_USER_DEPRECATED);
     return parent::offsetGet($offset);
@@ -46,6 +48,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
     @trigger_error($this->message, E_USER_DEPRECATED);
     parent::offsetSet($offset, $value);
@@ -54,6 +57,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function offsetUnset($offset) {
     @trigger_error($this->message, E_USER_DEPRECATED);
     parent::offsetUnset($offset);
@@ -62,6 +66,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function getIterator() {
     @trigger_error($this->message, E_USER_DEPRECATED);
     return parent::getIterator();
@@ -86,6 +91,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function count() {
     @trigger_error($this->message, E_USER_DEPRECATED);
     return parent::count();

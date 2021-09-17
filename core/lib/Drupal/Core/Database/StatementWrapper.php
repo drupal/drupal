@@ -308,6 +308,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function getIterator() {
     return new \ArrayIterator($this->fetchAll());
   }

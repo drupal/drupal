@@ -126,6 +126,7 @@ trait ComputedItemListTrait {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function getIterator() {
     $this->ensureComputedValue();
     return parent::getIterator();
@@ -134,6 +135,7 @@ trait ComputedItemListTrait {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function count() {
     $this->ensureComputedValue();
     return parent::count();

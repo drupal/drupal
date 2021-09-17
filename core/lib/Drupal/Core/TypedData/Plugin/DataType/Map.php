@@ -181,6 +181,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function getIterator() {
     return new \ArrayIterator($this->getProperties());
   }

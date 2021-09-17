@@ -46,6 +46,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function open($save_path, $name) {
     return TRUE;
   }
@@ -53,6 +54,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function read($sid) {
     $data = '';
     if (!empty($sid)) {
@@ -67,6 +69,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function write($sid, $value) {
     // The exception handler is not active at this point, so we need to do it
     // manually.
@@ -99,6 +102,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function close() {
     return TRUE;
   }
@@ -106,6 +110,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function destroy($sid) {
     // Delete session data.
     $this->connection->delete('sessions')
@@ -118,6 +123,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function gc($lifetime) {
     // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
     // value. For example, if you want user sessions to stay in your database

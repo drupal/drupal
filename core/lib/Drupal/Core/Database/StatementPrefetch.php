@@ -320,6 +320,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * @return mixed
    *   The current row formatted as requested.
    */
+  #[\ReturnTypeWillChange]
   public function current() {
     if (isset($this->currentRow)) {
       switch ($this->fetchStyle) {
@@ -379,6 +380,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function key() {
     return $this->currentKey;
   }
@@ -386,6 +388,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function rewind() {
     // Nothing to do: our DatabaseStatement can't be rewound.
   }
@@ -393,6 +396,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function next() {
     if (!empty($this->data)) {
       $this->currentRow = reset($this->data);
@@ -407,6 +411,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function valid() {
     return isset($this->currentRow);
   }
