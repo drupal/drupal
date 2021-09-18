@@ -14,9 +14,6 @@ use Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter;
  *     "text",
  *     "text_long",
  *     "text_with_summary"
- *   },
- *   quickedit = {
- *     "editor" = "form"
  *   }
  * )
  */

@@ -13,9 +13,6 @@ use Drupal\Core\Field\FormatterBase;
  *   label = @Translation("Dummy image"),
  *   field_types = {
  *     "image"
- *   },
- *   quickedit = {
- *     "editor" = "image"
  *   }
  * )
  */
