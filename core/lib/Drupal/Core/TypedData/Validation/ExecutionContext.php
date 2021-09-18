@@ -6,7 +6,6 @@ use Drupal\Core\Validation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\MetadataInterface;
 use Symfony\Component\Validator\Util\PropertyPath;
@@ -178,28 +177,28 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function getViolations(): ConstraintViolationListInterface {
+  public function getViolations() {
     return $this->violations;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getValidator(): ValidatorInterface {
+  public function getValidator() {
     return $this->validator;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getRoot(): mixed {
+  public function getRoot() {
     return $this->root;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getValue(): mixed {
+  public function getValue() {
     return $this->value;
   }
 
