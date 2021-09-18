@@ -106,7 +106,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   /**
    * {@inheritdoc}
    */
-  public function matchRequest(Request $request) {
+  public function matchRequest(Request $request): array {
     try {
       $collection = $this->getInitialRouteCollection($request);
     }

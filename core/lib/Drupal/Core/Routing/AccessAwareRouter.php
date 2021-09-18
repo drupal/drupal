@@ -89,7 +89,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when access checking failed.
    */
-  public function matchRequest(Request $request) {
+  public function matchRequest(Request $request): array {
     $parameters = $this->router->matchRequest($request);
     $request->attributes->add($parameters);
     $this->checkAccess($request);
