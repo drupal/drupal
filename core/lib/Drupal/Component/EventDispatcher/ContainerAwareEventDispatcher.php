@@ -153,7 +153,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function getListeners($event_name = NULL) {
+  public function getListeners($event_name = NULL): array {
     $result = [];
 
     if ($event_name === NULL) {
@@ -193,9 +193,9 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function getListenerPriority($event_name, $listener) {
+  public function getListenerPriority($event_name, $listener): ?int {
     if (!isset($this->listeners[$event_name])) {
-      return;
+      return NULL;
     }
     if (is_array($listener) && isset($listener[0]) && $listener[0] instanceof \Closure) {
       $listener[0] = $listener[0]();
@@ -219,12 +219,13 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
         }
       }
     }
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasListeners($event_name = NULL) {
+  public function hasListeners($event_name = NULL): bool {
     if ($event_name !== NULL) {
       return !empty($this->listeners[$event_name]);
     }
