@@ -7,6 +7,7 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Mapping\MetadataInterface;
 use Symfony\Component\Validator\Validator\ContextualValidatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -69,7 +70,7 @@ class RecursiveValidator implements ValidatorInterface {
    * @param \Drupal\Core\TypedData\TypedDataInterface $typed_data
    *   A typed data object containing the value to validate.
    */
-  public function getMetadataFor($typed_data) {
+  public function getMetadataFor($typed_data): MetadataInterface {
     if (!$typed_data instanceof TypedDataInterface) {
       throw new \InvalidArgumentException('The passed value must be a typed data object.');
     }
@@ -79,7 +80,7 @@ class RecursiveValidator implements ValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasMetadataFor($value) {
+  public function hasMetadataFor($value): bool {
     return $value instanceof TypedDataInterface;
   }
 
