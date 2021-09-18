@@ -4,6 +4,7 @@ namespace Drupal\Core\TypedData\Validation;
 
 use Drupal\Core\Validation\TranslatorInterface;
 use Symfony\Component\Validator\Context\ExecutionContextFactoryInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -39,7 +40,7 @@ class ExecutionContextFactory implements ExecutionContextFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function createContext(ValidatorInterface $validator, $root) {
+  public function createContext(ValidatorInterface $validator, $root): ExecutionContextInterface {
     return new ExecutionContext(
       $validator,
       $root,
