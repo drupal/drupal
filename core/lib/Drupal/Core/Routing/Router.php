@@ -324,7 +324,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   /**
    * {@inheritdoc}
    */
-  public function getRouteCollection() {
+  public function getRouteCollection(): RouteCollection {
     return new LazyRouteCollection($this->routeProvider);
   }
 
