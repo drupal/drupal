@@ -4,6 +4,7 @@ namespace Drupal\Core\StackMiddleware;
 
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -41,7 +42,7 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     // Initialize proxy settings.
     static::setSettingsOnRequest($request, $this->settings);
     return $this->httpKernel->handle($request, $type, $catch);

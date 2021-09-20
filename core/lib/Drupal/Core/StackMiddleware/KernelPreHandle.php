@@ -4,6 +4,7 @@ namespace Drupal\Core\StackMiddleware;
 
 use Drupal\Core\DrupalKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -41,7 +42,7 @@ class KernelPreHandle implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     $this->drupalKernel->preHandle($request);
 
     return $this->httpKernel->handle($request, $type, $catch);

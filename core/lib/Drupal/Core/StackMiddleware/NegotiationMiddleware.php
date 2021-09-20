@@ -3,6 +3,7 @@
 namespace Drupal\Core\StackMiddleware;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -37,7 +38,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     // Register available mime types.
     foreach ($this->formats as $format => $mime_type) {
       $request->setFormat($format, $mime_type);

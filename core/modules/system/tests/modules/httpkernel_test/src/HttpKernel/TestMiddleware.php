@@ -3,6 +3,7 @@
 namespace Drupal\httpkernel_test\HttpKernel;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -40,7 +41,7 @@ class TestMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     $request->attributes->set('_hello', 'world');
     if ($request->attributes->has('_optional_argument')) {
       $request->attributes->set('_previous_optional_argument', $request->attributes->get('_optional_argument'));
