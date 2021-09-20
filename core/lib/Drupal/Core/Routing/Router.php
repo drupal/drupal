@@ -97,7 +97,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   /**
    * {@inheritdoc}
    */
-  public function match($pathinfo) {
+  public function match($pathinfo): array {
     $request = Request::create($pathinfo);
 
     return $this->matchRequest($request);

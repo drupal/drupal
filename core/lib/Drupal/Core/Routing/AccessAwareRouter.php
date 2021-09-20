@@ -147,7 +147,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when access checking failed.
    */
-  public function match($pathinfo) {
+  public function match($pathinfo): array {
     return $this->matchRequest(Request::create($pathinfo));
   }
 
