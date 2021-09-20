@@ -748,6 +748,27 @@ class FileUploadTest extends ResourceTestBase {
   }
 
   /**
+   * Tests using the file upload POST route no directory configured.
+   */
+  public function testFileUploadNoDirectorySetting() {
+    $this->setUpAuthorization('POST');
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    $uri = Url::fromUri('base:' . static::$postUri);
+
+    $this->field->setSetting('file_directory', '')
+      ->save();
+
+    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
+    $expected = $this->getExpectedDocument(1, 'example.txt', TRUE);
+    $expected['data']['attributes']['uri']['value'] = 'public://example.txt';
+    $expected['data']['attributes']['uri']['url'] = base_path() . $this->siteDirectory . '/files/example.txt';
+
+    $this->assertResponseData($expected, $response);
+    $this->assertFileExists('public://example.txt');
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
