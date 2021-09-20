@@ -5,6 +5,7 @@ namespace Drupal\Core\TypedData\Validation;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Context\ExecutionContextFactoryInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\MetadataInterface;
@@ -87,7 +88,7 @@ class RecursiveValidator implements ValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function validate($value, $constraints = NULL, $groups = NULL) {
+  public function validate($value, $constraints = NULL, $groups = NULL): ConstraintViolationListInterface {
     return $this->startContext($value)
       ->validate($value, $constraints, $groups)
       ->getViolations();
@@ -96,7 +97,7 @@ class RecursiveValidator implements ValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateProperty($object, $propertyName, $groups = NULL) {
+  public function validateProperty($object, $propertyName, $groups = NULL): ConstraintViolationListInterface {
     return $this->startContext($object)
       ->validateProperty($object, $propertyName, $groups)
       ->getViolations();
@@ -105,7 +106,7 @@ class RecursiveValidator implements ValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function validatePropertyValue($objectOrClass, $propertyName, $value, $groups = NULL) {
+  public function validatePropertyValue($objectOrClass, $propertyName, $value, $groups = NULL): ConstraintViolationListInterface {
     // Just passing a class name is not supported.
     if (!is_object($objectOrClass)) {
       throw new \LogicException('Typed data validation does not support passing the class name only.');
