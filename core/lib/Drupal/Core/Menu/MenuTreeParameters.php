@@ -212,6 +212,21 @@ class MenuTreeParameters implements \Serializable {
    * {@inheritdoc}
    */
   public function serialize() {
+    return serialize($this->__serialize());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    $this->__unserialize(unserialize($serialized));
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __serialize(): array {
     // Enforce type consistency for all the internal properties of this object.
     $this->root = (string) $this->root;
     $this->minDepth = $this->minDepth !== NULL ? (int) $this->minDepth : NULL;
@@ -222,25 +237,23 @@ class MenuTreeParameters implements \Serializable {
     sort($this->expandedParents);
     asort($this->conditions);
 
-    return serialize([
+    return [
       'root' => $this->root,
       'minDepth' => $this->minDepth,
       'maxDepth' => $this->maxDepth,
       'expandedParents' => $this->expandedParents,
       'activeTrail' => $this->activeTrail,
       'conditions' => $this->conditions,
-    ]);
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function unserialize($serialized) {
-    foreach (unserialize($serialized) as $key => $value) {
+  public function __unserialize(array $data): void {
+    foreach ($data as $key => $value) {
       $this->{$key} = $value;
     }
-
-    return $this;
   }
 
 }
