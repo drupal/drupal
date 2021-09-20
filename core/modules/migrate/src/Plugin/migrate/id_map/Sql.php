@@ -441,6 +441,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
           'description' => 'Messages generated during a migration process',
           'fields' => $fields,
           'primary key' => ['msgid'],
+          'indexes' => [$this::SOURCE_IDS_HASH => [$this::SOURCE_IDS_HASH]],
         ];
         $this->getDatabase()->schema()->createTable($this->messageTableName(), $schema);
       }
