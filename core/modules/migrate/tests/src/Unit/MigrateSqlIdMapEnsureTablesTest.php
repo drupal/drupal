@@ -109,6 +109,9 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'description' => 'Messages generated during a migration process',
       'fields' => $fields,
       'primary key' => ['msgid'],
+      'indexes' => [
+        'source_ids_hash' => ['source_ids_hash'],
+      ],
     ];
 
     $schema = $this->getMockBuilder('Drupal\Core\Database\Schema')
