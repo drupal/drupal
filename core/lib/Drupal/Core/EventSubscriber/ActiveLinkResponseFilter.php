@@ -79,7 +79,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
     $response = $event->getResponse();
 
     // Only care about HTML responses.
-    if (stripos($response->headers->get('Content-Type'), 'text/html') === FALSE) {
+    if (stripos($response->headers->get('Content-Type', ''), 'text/html') === FALSE) {
       return;
     }
 
