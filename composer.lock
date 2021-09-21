@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "833c40df380059ecff9e327223e066ac3a41c328"
+                "reference": "f3d27c6d13a1d3b6b5e3f2bf2074f63d24c17603"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -765,7 +765,8 @@
                     "lib/Drupal/Core/Site/Settings.php"
                 ],
                 "files": [
-                    "includes/bootstrap.inc"
+                    "includes/bootstrap.inc",
+                    "includes/guzzle_php81_shim.php"
                 ]
             },
             "scripts": {
