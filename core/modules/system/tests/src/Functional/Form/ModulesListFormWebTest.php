@@ -44,7 +44,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/system-test/configure/bar') and text()='Configure ']/span[contains(@class, 'visually-hidden') and text()='the System test module']");
 
     // Check that system_test's permissions link was rendered correctly.
-    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/people/permissions#module-system_test') and @title='Configure permissions']");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/people/permissions/module/system_test') and @title='Configure permissions']");
 
     // Check that system_test's help link was rendered correctly.
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/help/system_test') and @title='Help']");
@@ -53,6 +53,32 @@ class ModulesListFormWebTest extends BrowserTestBase {
     // module is used because its machine name is different than its human
     // readable name.
     $this->assertSession()->pageTextContains('dblog');
+  }
+
+  /**
+   * Tests the status message when enabling one or more modules.
+   */
+  public function testModulesListFormStatusMessage() {
+    $this->drupalGet('admin/modules');
+
+    // Enable a module that does not define permissions.
+    $edit = ['modules[layout_discovery][enable]' => 'layout_discovery'];
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Layout Discovery has been enabled.');
+    $this->assertSession()->elementNotExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a");
+
+    // Enable a module that defines permissions.
+    $edit = ['modules[action][enable]' => 'action'];
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Actions has been enabled.');
+    $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/action')]");
+
+    // Enable a module that has dependencies and both define permissions.
+    $edit = ['modules[content_moderation][enable]' => 'content_moderation'];
+    $this->submitForm($edit, 'Install');
+    $this->submitForm([], 'Continue');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", '2 modules have been enabled: Content Moderation, Workflows.');
+    $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/content_moderation%2Cworkflows')]");
   }
 
   /**

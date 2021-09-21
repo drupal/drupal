@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ModulesListConfirmForm extends ConfirmFormBase {
 
+  use ModulesEnabledTrait;
+
   /**
    * The module handler service.
    *
@@ -196,11 +198,8 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // Unset the messenger to make sure that we'll get the service from the
       // new container.
       $this->messenger = NULL;
-      $module_names = array_values($this->modules['install']);
-      $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
-        '%name' => $module_names[0],
-        '%names' => implode(', ', $module_names),
-      ]));
+      $this->messenger()
+        ->addStatus($this->modulesEnabledConfirmationMessage($this->modules['install']));
     }
 
     $form_state->setRedirectUrl($this->getCancelUrl());
