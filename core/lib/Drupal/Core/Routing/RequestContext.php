@@ -39,6 +39,8 @@ class RequestContext extends SymfonyRequestContext {
     if (isset($GLOBALS['base_url'])) {
       $this->setCompleteBaseUrl($GLOBALS['base_url']);
     }
+
+    return $this;
   }
 
   /**

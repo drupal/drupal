@@ -35,9 +35,7 @@ class UrlMatcher extends BaseUrlMatcher {
 
   public function finalMatch(RouteCollection $collection, Request $request) {
     $this->routes = $collection;
-    $context = new RequestContext();
-    $context->fromRequest($request);
-    $this->setContext($context);
+    $context = (new RequestContext())->fromRequest($request)->setContext($context);
 
     return $this->match($this->currentPath->getPath($request));
   }
