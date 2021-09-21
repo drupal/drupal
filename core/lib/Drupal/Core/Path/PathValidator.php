@@ -157,9 +157,7 @@ class PathValidator implements PathValidatorInterface {
     $path = $this->pathProcessor->processInbound('/' . $path, $request);
 
     try {
-      $request_context = new RequestContext();
-      $request_context->fromRequest($request);
-      $router->setContext($request_context);
+      $router->setContext((new RequestContext())->fromRequest($request));
       $result = $router->match($path);
     }
     catch (ResourceNotFoundException $e) {
