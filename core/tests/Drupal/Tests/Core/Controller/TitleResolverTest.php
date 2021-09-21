@@ -103,6 +103,24 @@ class TitleResolverTest extends UnitTestCase {
   }
 
   /**
+   * Tests a static title with a NULL value parameter.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testStaticTitleWithNullValueParameter() {
+    $raw_variables = new ParameterBag(['test' => NULL, 'test2' => 'value']);
+    $request = new Request();
+    $request->attributes->set('_raw_variables', $raw_variables);
+
+    $route = new Route('/test-route', ['_title' => 'static title %test @test']);
+    $translatable_markup = $this->titleResolver->getTitle($request, $route);
+    $this->assertSame('', $translatable_markup->getArguments()['@test']);
+    $this->assertSame('', $translatable_markup->getArguments()['%test']);
+    $this->assertSame('value', $translatable_markup->getArguments()['@test2']);
+    $this->assertSame('value', $translatable_markup->getArguments()['%test2']);
+  }
+
+  /**
    * Tests a dynamic title.
    *
    * @see \Drupal\Core\Controller\TitleResolver::getTitle()
