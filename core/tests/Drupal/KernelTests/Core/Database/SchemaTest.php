@@ -1276,4 +1276,75 @@ class SchemaTest extends KernelTestBase {
     $this->assertTrue($this->schema->dropTable($table_name), 'Table with uppercase table name dropped');
   }
 
+  /**
+   * Tests default values after altering table.
+   */
+  public function testDefaultAfterAlter() {
+    $table_name = 'test_table';
+
+    // Create the table.
+    $table_specification = [
+      'description' => 'Test table.',
+      'fields' => [
+        'column1'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+        'column2'  => [
+          'type' => 'varchar',
+          'length' => 20,
+          'default' => NULL,
+        ],
+        'column3'  => [
+          'type' => 'int',
+          'default' => 200,
+        ],
+        'column4'  => [
+          'type' => 'float',
+          'default' => 1.23,
+        ],
+        'column5'  => [
+          'type' => 'varchar',
+          'length' => 20,
+          'default' => "'s o'clock'",
+        ],
+        'column6'  => [
+          'type' => 'varchar',
+          'length' => 20,
+          'default' => "o'clock",
+        ],
+        'column7'  => [
+          'type' => 'varchar',
+          'length' => 20,
+          'default' => 'default value',
+        ],
+      ],
+    ];
+    $this->schema->createTable($table_name, $table_specification);
+
+    // Insert a row and check that columns have the expected default values.
+    $this->connection->insert($table_name)->fields(['column1' => 1])->execute();
+    $result = $this->connection->select($table_name, 't')->fields('t', ['column2', 'column3', 'column4', 'column5', 'column6', 'column7'])->condition('column1', 1)->execute()->fetchObject();
+    $this->assertNull($result->column2);
+    $this->assertSame('200', $result->column3);
+    $this->assertSame('1.23', $result->column4);
+    $this->assertSame("'s o'clock'", $result->column5);
+    $this->assertSame("o'clock", $result->column6);
+    $this->assertSame('default value', $result->column7);
+
+    // Force SQLite schema to create a new table and copy data by adding a not
+    // field with an initial value.
+    $this->schema->addField('test_table', 'new_column', ['type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'description' => 'Added new column', 'initial' => 'test']);
+
+    // Test that the columns default values are still correct.
+    $this->connection->insert($table_name)->fields(['column1' => 2, 'new_column' => 'value'])->execute();
+    $result = $this->connection->select($table_name, 't')->fields('t', ['column2', 'column3', 'column4', 'column5', 'column6', 'column7'])->condition('column1', 2)->execute()->fetchObject();
+    $this->assertNull($result->column2);
+    $this->assertSame('200', $result->column3);
+    $this->assertSame('1.23', $result->column4);
+    $this->assertSame("'s o'clock'", $result->column5);
+    $this->assertSame("o'clock", $result->column6);
+    $this->assertSame('default value', $result->column7);
+  }
+
 }
