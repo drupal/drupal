@@ -16,7 +16,7 @@ class CacheableMethodNotAllowedHttpException extends MethodNotAllowedHttpExcepti
   /**
    * {@inheritdoc}
    */
-  public function __construct(CacheableDependencyInterface $cacheability, array $allow, $message = NULL, \Exception $previous = NULL, $code = 0) {
+  public function __construct(CacheableDependencyInterface $cacheability, array $allow, $message = '', \Exception $previous = NULL, $code = 0) {
     $this->setCacheability($cacheability);
     parent::__construct($allow, $message, $previous, $code);
   }
