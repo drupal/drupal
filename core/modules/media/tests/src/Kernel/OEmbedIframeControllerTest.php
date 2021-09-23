@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media\Kernel;
 
+use Drupal\Core\Render\HtmlResponse;
 use Drupal\media\Controller\OEmbedIframeController;
 use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\Resource;
@@ -93,13 +94,17 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
       'url' => '',
       'hash' => $hash,
     ]);
-    $content = OEmbedIframeController::create($this->container)
-      ->render($request)
-      ->getContent();
+    $response = $this->container->get('html_response.attachments_processor')
+      ->processAttachments(OEmbedIframeController::create($this->container)
+        ->render($request));
+    assert($response instanceof HtmlResponse);
+    $content = $response->getContent();
 
     // This query parameter is added by
     // media_test_oembed_preprocess_media_oembed_iframe() for YouTube videos.
     $this->assertStringContainsString('&pasta=rigatoni', $content);
+    $this->assertStringContainsString('test.css', $content);
+    $this->assertContains('yo_there', $response->getCacheableMetadata()->getCacheTags());
   }
 
 }

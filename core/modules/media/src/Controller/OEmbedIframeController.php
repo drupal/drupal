@@ -5,6 +5,7 @@ namespace Drupal\media\Controller;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
@@ -167,7 +168,8 @@ class OEmbedIframeController implements ContainerInjectionInterface {
         ],
         '#placeholder_token' => $placeholder_token,
       ];
-      $content = $this->renderer->executeInRenderContext(new RenderContext(), function () use ($resource, $element) {
+      $context = new RenderContext();
+      $content = $this->renderer->executeInRenderContext($context, function () use ($resource, $element) {
         return $this->renderer->render($element);
       });
       $response
@@ -175,6 +177,18 @@ class OEmbedIframeController implements ContainerInjectionInterface {
         ->setAttachments($element['#attached'])
         ->addCacheableDependency($resource)
         ->addCacheableDependency(CacheableMetadata::createFromRenderArray($element));
+
+      // Modules and themes implementing hook_media_oembed_iframe_preprocess()
+      // can add additional #cache and #attachments to a render array. If this
+      // occurs, the render context won't be empty, and we need to ensure the
+      // added metadata is bubbled up to the response.
+      // @see \Drupal\Core\Theme\ThemeManager::render()
+      if (!$context->isEmpty()) {
+        $bubbleable_metadata = $context->pop();
+        assert($bubbleable_metadata instanceof BubbleableMetadata);
+        $response->addCacheableDependency($bubbleable_metadata);
+        $response->addAttachments($bubbleable_metadata->getAttachments());
+      }
     }
     catch (ResourceException $e) {
       // Prevent the response from being cached.
