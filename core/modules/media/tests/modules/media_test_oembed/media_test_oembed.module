@@ -14,6 +14,9 @@ function media_test_oembed_preprocess_media_oembed_iframe(array &$variables) {
   if ($variables['resource']->getProvider()->getName() === 'YouTube') {
     $variables['media'] = str_replace('?feature=oembed', '?feature=oembed&pasta=rigatoni', (string) $variables['media']);
   }
+  // @see \Drupal\Tests\media\Kernel\OEmbedIframeControllerTest
+  $variables['#attached']['library'][] = 'media_test_oembed/frame';
+  $variables['#cache']['tags'][] = 'yo_there';
 }
 
 /**

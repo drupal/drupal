@@ -1,0 +1,5 @@
+frame:
+  version: VERSION
+  css:
+    component:
+      css/test.css: { preprocess: false, minified: true }
