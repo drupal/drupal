@@ -4,7 +4,6 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
@@ -1035,14 +1034,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    * @dataProvider previewAccessProvider
    */
   public function testEmbedPreviewAccess($media_embed_enabled, $can_use_format) {
-    $format = FilterFormat::create([
-      'format' => $this->randomMachineName(),
-      'name' => $this->randomString(),
-      'filters' => [
-        'filter_align' => ['status' => TRUE],
-        'filter_caption' => ['status' => TRUE],
-        'media_embed' => ['status' => $media_embed_enabled],
-      ],
+    // Reconfigure the host entity's text format to suit our needs.
+    /** @var \Drupal\filter\FilterFormatInterface $format */
+    $format = FilterFormat::load($this->host->body->format);
+    $format->set('filters', [
+      'filter_align' => ['status' => TRUE],
+      'filter_caption' => ['status' => TRUE],
+      'media_embed' => ['status' => $media_embed_enabled],
     ]);
     $format->save();
 
@@ -1053,24 +1051,28 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       $permissions[] = $format->getPermissionName();
     }
     $this->drupalLogin($this->drupalCreateUser($permissions));
-
-    $text = '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>';
-    $route_parameters = ['filter_format' => $format->id()];
-    $options = [
-      'query' => [
-        'text' => $text,
-        'uuid' => $this->media->uuid(),
-      ],
-    ];
-    $this->drupalGet(Url::fromRoute('media.filter.preview', $route_parameters, $options));
+    $this->drupalGet($this->host->toUrl('edit-form'));
 
     $assert_session = $this->assertSession();
-    if ($media_embed_enabled && $can_use_format) {
-      $assert_session->elementExists('css', 'img');
-      $assert_session->responseContains('baz');
+    if ($can_use_format) {
+      $this->waitForEditor();
+      $this->assignNameToCkeditorIframe();
+      $this->getSession()->switchToIFrame('ckeditor');
+      if ($media_embed_enabled) {
+        // The preview rendering, which in this test will use Classy's
+        // media.html.twig template, will fail without the CSRF token/header.
+        // @see ::testEmbeddedMediaPreviewWithCsrfToken()
+        $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media'));
+      }
+      else {
+        // If the filter isn't enabled, there won't be an error, but the
+        // preview shouldn't be rendered.
+        $assert_session->assertWaitOnAjaxRequest();
+        $assert_session->elementNotExists('css', 'article.media');
+      }
     }
     else {
-      $assert_session->responseContains('You are not authorized to access this page.');
+      $assert_session->pageTextContains('This field has been disabled because you do not have sufficient permissions to edit it.');
     }
   }
 

@@ -112,6 +112,14 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->usingLayoutBuilder = TRUE;
+    $this->assertQuickEditInit(['title']);
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'access in-place editing',
+      'access content',
+      'edit any article content',
+      'administer nodes',
+    ]));
     $this->assertQuickEditInit(['title', 'uid', 'created']);
   }
 
@@ -120,10 +128,12 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
    *
    * @param bool $use_revisions
    *   If revisions are used.
+   * @param bool $admin_permission
+   *   Whether to assign admin permissions to the user created for testing.
    *
    * @dataProvider providerEnableDisableLayoutBuilder
    */
-  public function testEnableDisableLayoutBuilder($use_revisions) {
+  public function testEnableDisableLayoutBuilder($use_revisions, $admin_permission = FALSE) {
     if (!$use_revisions) {
       $content_type = NodeType::load('article');
       $content_type->setNewRevision(FALSE);
@@ -131,10 +141,18 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
     }
     $fields = [
       'title',
-      'uid',
-      'created',
       'body',
     ];
+    if ($admin_permission) {
+      $fields = array_merge($fields, ['uid', 'created']);
+      $this->drupalLogin($this->drupalCreateUser([
+        'access contextual links',
+        'access in-place editing',
+        'access content',
+        'edit any article content',
+        'administer nodes',
+      ]));
+    }
 
     // Test article with Layout Builder disabled.
     $this->assertQuickEditInit($fields);
@@ -168,8 +186,10 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
    */
   public function providerEnableDisableLayoutBuilder() {
     return [
-      'use revisions' => [TRUE],
-      'do not use revisions' => [FALSE],
+      'use revisions, not admin' => [TRUE],
+      'do not use revisions, not admin' => [FALSE],
+      'use revisions, admin' => [TRUE, TRUE],
+      'do not use revisions, admin' => [FALSE, TRUE],
     ];
   }
 
