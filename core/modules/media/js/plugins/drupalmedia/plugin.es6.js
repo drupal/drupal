@@ -473,7 +473,8 @@
             },
             dataType: 'html',
             headers: {
-              'X-Drupal-MediaPreview-CSRF-Token': editor.config.drupalMedia_previewCsrfToken,
+              'X-Drupal-MediaPreview-CSRF-Token':
+                editor.config.drupalMedia_previewCsrfToken,
             },
             success: (previewHtml, textStatus, jqXhr) => {
               this.element.setHtml(previewHtml);
