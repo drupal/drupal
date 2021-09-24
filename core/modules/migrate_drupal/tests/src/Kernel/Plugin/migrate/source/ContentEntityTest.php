@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -11,8 +10,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\source\ContentEntity;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
@@ -177,66 +174,6 @@ class ContentEntityTest extends KernelTestBase {
     ])->save();
 
     $this->migrationPluginManager = $this->container->get('plugin.manager.migration');
-  }
-
-  /**
-   * Tests the constructor for missing entity_type.
-   */
-  public function testConstructorEntityTypeMissing() {
-    $migration = $this->prophesize(MigrationInterface::class)->reveal();
-    $configuration = [];
-    $plugin_definition = [
-      'entity_type' => '',
-    ];
-    $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage('Missing required "entity_type" definition.');
-    ContentEntity::create($this->container, $configuration, 'content_entity', $plugin_definition, $migration);
-  }
-
-  /**
-   * Tests the constructor for non content entity.
-   */
-  public function testConstructorNonContentEntity() {
-    $migration = $this->prophesize(MigrationInterface::class)->reveal();
-    $configuration = [];
-    $plugin_definition = [
-      'entity_type' => 'node_type',
-    ];
-    $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage('The entity type (node_type) is not supported. The "content_entity" source plugin only supports content entities.');
-    ContentEntity::create($this->container, $configuration, 'content_entity:node_type', $plugin_definition, $migration);
-  }
-
-  /**
-   * Tests the constructor for not bundleable entity.
-   */
-  public function testConstructorNotBundable() {
-    $migration = $this->prophesize(MigrationInterface::class)->reveal();
-    $configuration = [
-      'bundle' => 'foo',
-    ];
-    $plugin_definition = [
-      'entity_type' => 'user',
-    ];
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('A bundle was provided but the entity type (user) is not bundleable');
-    ContentEntity::create($this->container, $configuration, 'content_entity:user', $plugin_definition, $migration);
-  }
-
-  /**
-   * Tests the constructor for invalid entity bundle.
-   */
-  public function testConstructorInvalidBundle() {
-    $migration = $this->prophesize(MigrationInterface::class)->reveal();
-    $configuration = [
-      'bundle' => 'foo',
-    ];
-    $plugin_definition = [
-      'entity_type' => 'node',
-    ];
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The provided bundle (foo) is not valid for the (node) entity type.');
-    ContentEntity::create($this->container, $configuration, 'content_entity:node', $plugin_definition, $migration);
   }
 
   /**
