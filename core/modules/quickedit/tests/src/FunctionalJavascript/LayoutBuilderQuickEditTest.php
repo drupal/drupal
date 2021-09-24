@@ -128,6 +128,8 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
    *
    * @param bool $use_revisions
    *   If revisions are used.
+   * @param bool $admin_permission
+   *   Whether to grant admin permissions to the user created for the test.
    *
    * @dataProvider providerEnableDisableLayoutBuilder
    */
