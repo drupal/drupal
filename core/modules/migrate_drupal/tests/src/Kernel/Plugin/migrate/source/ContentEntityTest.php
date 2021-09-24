@@ -127,6 +127,7 @@ class ContentEntityTest extends KernelTestBase {
       ['target_bundles' => [$this->vocabulary]],
       FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
     );
+
     // Create a term reference field on user.
     $this->createEntityReferenceField(
       'user',
@@ -139,7 +140,8 @@ class ContentEntityTest extends KernelTestBase {
       FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
     );
 
-    // Create some data.
+    // Create a node, with data in a term reference field, and then add a French
+    // translation of the node.
     $this->user = User::create([
       'name' => 'user123',
       'uid' => 1,
@@ -147,11 +149,12 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $this->user->save();
 
-    $this->anon = User::create([
+    // Add the anonymous user so we can test later that it is not provided in a
+    // source row.
+    User::create([
       'name' => 'anon',
       'uid' => 0,
-    ]);
-    $this->anon->save();
+    ])->save();
 
     $term = Term::create([
       'vid' => $this->vocabulary,
@@ -216,7 +219,9 @@ class ContentEntityTest extends KernelTestBase {
     $user_source = $migration->getSourcePlugin();
     $this->assertSame('users', $user_source->__toString());
     if (!$configuration['include_translations']) {
-      // Confirm that the query does not return a row for the anonymous user.
+      // Confirm that the anonymous user is in the source database but not
+      // included in the rows returned by the content_entity.
+      $this->assertNotNull(User::load(0));
       $this->assertEquals(1, $user_source->count());
     }
     $this->assertIds($user_source, $configuration);
