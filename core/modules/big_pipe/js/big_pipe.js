@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, drupalSettings) {
   function mapTextContentToAjaxResponse(content) {
     if (content === '') {
       return false;
@@ -69,11 +69,11 @@
   }
 
   bigPipeProcess();
-  $(window).on('load', function () {
+  window.addEventListener('load', function () {
     if (timeoutID) {
       clearTimeout(timeoutID);
     }
 
     bigPipeProcessDocument(document);
   });
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);

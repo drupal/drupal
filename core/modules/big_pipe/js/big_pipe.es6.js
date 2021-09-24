@@ -3,7 +3,7 @@
  * Renders BigPipe placeholders using Drupal's Ajax system.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, drupalSettings) {
   /**
    * Maps textContent of <script type="application/vnd.drupal-ajax"> to an AJAX response.
    *
@@ -123,10 +123,10 @@
 
   // If something goes wrong, make sure everything is cleaned up and has had a
   // chance to be processed with everything loaded.
-  $(window).on('load', () => {
+  window.addEventListener('load', () => {
     if (timeoutID) {
       clearTimeout(timeoutID);
     }
     bigPipeProcessDocument(document);
   });
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);

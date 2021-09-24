@@ -5,7 +5,6 @@ big_pipe:
   drupalSettings:
     bigPipePlaceholderIds: []
   dependencies:
-    - core/jquery
     - core/once
     - core/drupal.ajax
     - core/drupalSettings
