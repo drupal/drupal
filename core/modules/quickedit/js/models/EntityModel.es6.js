@@ -526,6 +526,9 @@
             options.success.call(entityModel);
           }
         };
+        entitySaverAjax.options.headers = entitySaverAjax.options.headers || {};
+        entitySaverAjax.options.headers['X-Drupal-Quickedit-CSRF-Token'] =
+          drupalSettings.quickedit.csrf_token;
         // Trigger the AJAX request, which will return the quickeditEntitySaved
         // AJAX command to which we then react.
         entitySaverAjax.execute();

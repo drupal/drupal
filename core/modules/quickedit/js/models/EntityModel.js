@@ -235,6 +235,8 @@
         }
       };
 
+      entitySaverAjax.options.headers = entitySaverAjax.options.headers || {};
+      entitySaverAjax.options.headers['X-Drupal-Quickedit-CSRF-Token'] = drupalSettings.quickedit.csrf_token;
       entitySaverAjax.execute();
     },
     validate: function validate(attrs, options) {
