@@ -18,6 +18,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Psr\Log\LoggerInterface;
@@ -174,18 +175,37 @@ class TemporaryJsonapiFileFieldUploader {
     $file->setOwnerId($owner->id());
     $file->setFilename($prepared_filename);
     $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
-    $file->setFileUri($file_uri);
+    $file->setFileUri($temp_file_path);
     // Set the size. This is done in File::preSave() but we validate the file
     // before it is saved.
     $file->setSize(@filesize($temp_file_path));
 
-    // Validate the file entity against entity-level validation and field-level
-    // validators.
-    $violations = $this->validate($file, $validators);
-    if ($violations->count() > 0) {
+    // Validate the file against field-level validators first while the file is
+    // still a temporary file. Validation is split up in 2 steps to be the same
+    // as in _file_save_upload_single().
+    // For backwards compatibility this part is copied from ::validate() to
+    // leave that method behavior unchanged.
+    // @todo Improve this with a file uploader service in
+    //   https://www.drupal.org/project/drupal/issues/2940383
+    $errors = file_validate($file, $validators);
+    if (!empty($errors)) {
+      $violations = new EntityConstraintViolationList($file);
+      $translator = new DrupalTranslator();
+      $entity = EntityAdapter::createFromEntity($file);
+      foreach ($errors as $error) {
+        $violation = new ConstraintViolation($translator->trans($error),
+          $error,
+          [],
+          $entity,
+          '',
+          NULL
+        );
+        $violations->add($violation);
+      }
       return $violations;
     }
 
+    $file->setFileUri($file_uri);
     // Move the file to the correct location after validation. Use
     // FileSystemInterface::EXISTS_ERROR as the file location has already been
     // determined above in FileSystem::getDestinationFilename().
@@ -194,6 +214,16 @@ class TemporaryJsonapiFileFieldUploader {
     }
     catch (FileException $e) {
       throw new HttpException(500, 'Temporary file could not be moved to file location');
+    }
+
+    // Second step of the validation on the file object itself now.
+    $violations = $file->validate();
+
+    // Remove violations of inaccessible fields as they cannot stem from our
+    // changes.
+    $violations->filterByFieldAccess();
+    if ($violations->count() > 0) {
+      return $violations;
     }
 
     $file->save();
@@ -333,6 +363,11 @@ class TemporaryJsonapiFileFieldUploader {
 
   /**
    * Validates the file.
+   *
+   * @todo this method is unused in this class because file validation needs to
+   *   be split up in 2 steps in ::handleFileUploadForField(). Add a deprecation
+   *   notice as soon as a central core file upload service can be used in this
+   *   class. See https://www.drupal.org/project/drupal/issues/2940383
    *
    * @param \Drupal\file\FileInterface $file
    *   The file entity to validate.
