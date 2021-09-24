@@ -774,7 +774,7 @@ EOF;
     if (strlen($pattern) < 31000) {
       // Only small (<31K characters) patterns can be handled by preg_split().
       $flags = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE;
-      $result = preg_split($pattern, $html_string, NULL, $flags);
+      $result = preg_split($pattern, $html_string, 0, $flags);
     }
     else {
       // For large amounts of placeholders we use a simpler but slower approach.
