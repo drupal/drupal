@@ -897,11 +897,7 @@
         },
         {
             "name": "drupal/core-project-message",
-<<<<<<< HEAD
             "version": "8.9.x-dev",
-=======
-            "version": "8.9.19",
->>>>>>> 8.9.19
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -934,11 +930,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-<<<<<<< HEAD
             "version": "8.9.x-dev",
-=======
-            "version": "8.9.19",
->>>>>>> 8.9.19
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
