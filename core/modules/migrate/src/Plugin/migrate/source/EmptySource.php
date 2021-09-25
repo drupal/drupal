@@ -63,7 +63,7 @@ class EmptySource extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     return 1;
   }
 
