@@ -233,7 +233,7 @@ class UserViewsData extends EntityViewsData {
       'name field' => 'name',
       'empty field name' => $this->t('No role'),
       'zero is null' => TRUE,
-      'numeric' => TRUE,
+      'numeric' => FALSE,
     ];
 
     $data['user__roles']['permission'] = [
