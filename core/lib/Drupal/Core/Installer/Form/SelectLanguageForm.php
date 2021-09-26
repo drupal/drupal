@@ -58,7 +58,7 @@ class SelectLanguageForm extends FormBase {
     }
     asort($select_options);
     $request = Request::createFromGlobals();
-    $browser_langcode = UserAgent::getBestMatchingLangcode($request->server->get('HTTP_ACCEPT_LANGUAGE'), $browser_options);
+    $browser_langcode = UserAgent::getBestMatchingLangcode($request->server->get('HTTP_ACCEPT_LANGUAGE', ''), $browser_options);
     $form['langcode'] = [
       '#type' => 'select',
       '#title' => 'Choose language',
