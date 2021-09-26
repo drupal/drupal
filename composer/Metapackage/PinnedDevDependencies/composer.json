@@ -21,7 +21,7 @@
         "friends-of-behat/mink-browserkit-driver": "v1.5.0",
         "instaclick/php-webdriver": "1.4.9",
         "justinrainbow/json-schema": "5.2.11",
-        "mikey179/vfsstream": "v1.6.9",
+        "mikey179/vfsstream": "v1.6.10",
         "myclabs/deep-copy": "1.10.2",
         "phar-io/manifest": "2.0.3",
         "phar-io/version": "3.1.0",
