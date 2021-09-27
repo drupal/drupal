@@ -523,6 +523,16 @@ field.value.string_long:
       type: text
       label: 'Value'
 
+# Schema for the configuration of the Password field type.
+
+field.storage_settings.password:
+  type: field.storage_settings.string
+  label: 'Password settings'
+
+field.field_settings.password:
+  type: mapping
+  label: 'Password settings'
+
 # Schema for the configuration of the URI field type.
 
 field.storage_settings.uri:
