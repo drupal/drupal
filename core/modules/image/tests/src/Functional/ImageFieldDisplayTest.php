@@ -116,7 +116,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     ];
-    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test the image linked to file formatter.
@@ -305,7 +305,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $nid . '/edit');
     $this->submitForm($edit, 'Save');
-    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Verify that alt/title longer than allowed results in a validation error.
@@ -398,7 +398,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     ];
-    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
@@ -423,7 +423,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     ];
-    $image_output = str_replace("\n", NULL, $renderer->renderRoot($image));
+    $image_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
@@ -477,7 +477,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     ];
-    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.

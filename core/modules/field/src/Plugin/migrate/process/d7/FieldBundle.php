@@ -102,7 +102,7 @@ class FieldBundle extends ProcessPluginBase implements ContainerFactoryPluginInt
     // For comment entity types get the destination bundle from the
     // d7_comment_type migration, if it exists.
     if ($entity_type === 'comment' && $bundle != 'comment_forum') {
-      $value = preg_replace('/comment_node_/', NULL, $bundle);
+      $value = str_replace('comment_node_', '', $bundle);
       $migration = 'd7_comment_type';
       $lookup_result = $this->migrateLookup->lookup($migration, [$value]);
       $lookup_result = empty($lookup_result) ? NULL : reset($lookup_result[0]);

@@ -212,7 +212,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 240,
       '#alt' => $alt,
     ];
-    $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test field not being configured. This should not cause a fatal error.
