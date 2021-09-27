@@ -70,6 +70,9 @@
    *   When true, the tabbable elements of this tabbingContext will be reachable
    *   via the tab key and the disabled elements will not. Only one
    *   tabbingContext can be active at a time.
+   *  @param {bool} options.trapFocus
+   *   When true, focus is trapped within the tabbable elements, i.e. focus will
+   *   remain within the browser.
    */
   function TabbingContext(options) {
     $.extend(
@@ -99,6 +102,11 @@
          * @type {bool}
          */
         active: false,
+
+        /**
+         * @type {bool}
+         */
+        trapFocus: false,
       },
       options,
     );
@@ -119,13 +127,24 @@
        * @param {jQuery|Selector|Element|ElementArray|object|selection} elements
        *   The set of elements to which tabbing should be constrained. Can also
        *   be any jQuery-compatible argument.
+       * @param {object} [options={}]
+       *   Constrain options.
+       * @param {boolean} [options.trapFocus=false]
+       *   When true, tabbing is trapped within the set of elements and can't
+       *   leave the browser. If the final element in the set is tabbed, the
+       *   first element in the set will receive focus. If the first element in
+       *   the set is shift-tabbed, the last element in the set will receive
+       *   focus.
+       *   When false, it is possible to tab out of the browser window by
+       *   tabbing the final element in the set or shift-tabbing the first
+       *   element in the set.
        *
        * @return {Drupal~TabbingContext}
        *   The TabbingContext instance.
        *
        * @fires event:drupalTabbingConstrained
        */
-      constrain(elements) {
+      constrain(elements, { trapFocus = false } = {}) {
         // Deactivate all tabbingContexts to prepare for the new constraint. A
         // tabbingContext instance will only be reactivated if the stack is
         // unwound to it in the _unwindStack() method.
@@ -149,6 +168,7 @@
           // tabbingContext is pushed on top of the stack.
           level: this.stack.length,
           $tabbableElements: $(tabbableElements),
+          trapFocus,
         });
 
         this.stack.push(tabbingContext);
@@ -226,6 +246,22 @@
           $hasFocus = $set.eq(0);
         }
         $hasFocus.trigger('focus');
+
+        // Trap focus within the set.
+        if ($set.length && tabbingContext.trapFocus) {
+          $set.last().on('keydown.focus-trap', (event) => {
+            if (event.key === 'Tab' && !event.shiftKey) {
+              event.preventDefault();
+              $set.first().focus();
+            }
+          });
+          $set.first().on('keydown.focus-trap', (event) => {
+            if (event.key === 'Tab' && event.shiftKey) {
+              event.preventDefault();
+              $set.last().focus();
+            }
+          });
+        }
       },
 
       /**
@@ -241,6 +277,9 @@
         const $set = tabbingContext.$disabledElements;
         const level = tabbingContext.level;
         const il = $set.length;
+
+        tabbingContext.$tabbableElements.first().off('keydown.focus-trap');
+        tabbingContext.$tabbableElements.last().off('keydown.focus-trap');
         for (let i = 0; i < il; i++) {
           this.restoreTabindex($set.eq(i), level);
         }

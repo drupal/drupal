@@ -1,0 +1,5 @@
+name: 'Tabbing Manager Test'
+type: module
+description: 'Module for the testing tabbing manager'
+package: Testing
+version: VERSION

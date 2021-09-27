@@ -1,0 +1,7 @@
+tabbingmanager_test_page:
+  path: '/tabbingmanager-test'
+  defaults:
+    _controller: '\Drupal\tabbingmanager_test\Controller\TabbingManagerTestController::build'
+    _title: 'Tabbing Manager testing'
+  requirements:
+    _access: 'TRUE'
