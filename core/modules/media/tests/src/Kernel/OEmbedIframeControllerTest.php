@@ -105,6 +105,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
     $this->assertStringContainsString('&pasta=rigatoni', $content);
     $this->assertStringContainsString('test.css', $content);
     $this->assertContains('yo_there', $response->getCacheableMetadata()->getCacheTags());
+    $this->assertStringContainsString('text/html', $response->headers->get('Content-Type'));
   }
 
 }
