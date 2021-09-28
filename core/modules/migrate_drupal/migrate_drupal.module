@@ -11,7 +11,6 @@ use Drupal\Core\Url;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\RequirementsInterface;
-use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\migrate_drupal\NodeMigrateType;
 
 /**
@@ -113,7 +112,7 @@ function migrate_drupal_migration_plugins_alter(array &$definitions) {
 
     try {
       $source_connection = $source_plugin->getDatabase();
-      $version = MigrationConfigurationTrait::getLegacyDrupalVersion($source_connection);
+      $version = NodeMigrateType::getLegacyDrupalVersion($source_connection);
     }
     catch (\Exception $e) {
       \Drupal::messenger()
