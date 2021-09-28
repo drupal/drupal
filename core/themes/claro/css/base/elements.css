@@ -139,7 +139,7 @@ address {
 
 u,
 ins {
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 s,
