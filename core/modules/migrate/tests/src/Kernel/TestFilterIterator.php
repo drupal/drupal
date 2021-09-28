@@ -10,7 +10,7 @@ class TestFilterIterator extends \FilterIterator {
   /**
    * {@inheritdoc}
    */
-  public function accept() {
+  public function accept(): bool {
     return TRUE;
   }
 
