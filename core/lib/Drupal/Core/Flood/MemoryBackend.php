@@ -41,7 +41,7 @@ class MemoryBackend implements FloodInterface {
     // We can't use REQUEST_TIME here, because that would not guarantee
     // uniqueness.
     $time = microtime(TRUE);
-    $this->events[$name][$identifier][$time + $window] = $time;
+    $this->events[$name][$identifier][] = ['expire' => $time + $window, 'time' => $time];
   }
 
   /**
@@ -65,8 +65,8 @@ class MemoryBackend implements FloodInterface {
       return $threshold > 0;
     }
     $limit = microtime(TRUE) - $window;
-    $number = count(array_filter($this->events[$name][$identifier], function ($timestamp) use ($limit) {
-      return $timestamp > $limit;
+    $number = count(array_filter($this->events[$name][$identifier], function ($entry) use ($limit) {
+      return $entry['time'] > $limit;
     }));
     return ($number < $threshold);
   }
@@ -76,12 +76,10 @@ class MemoryBackend implements FloodInterface {
    */
   public function garbageCollection() {
     foreach ($this->events as $name => $identifiers) {
-      foreach ($this->events[$name] as $identifier => $timestamps) {
-        // Filter by key (expiration) but preserve key => value  associations.
-        $this->events[$name][$identifier] = array_filter($timestamps, function () use (&$timestamps) {
-          $expiration = key($timestamps);
-          next($timestamps);
-          return $expiration > microtime(TRUE);
+      foreach ($this->events[$name] as $identifier => $entries) {
+        // Remove expired entries.
+        $this->events[$name][$identifier] = array_filter($entries, function ($entry) {
+          return $entry['expire'] > microtime(TRUE);
         });
       }
     }

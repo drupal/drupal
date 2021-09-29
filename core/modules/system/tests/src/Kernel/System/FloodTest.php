@@ -75,6 +75,18 @@ class FloodTest extends KernelTestBase {
   }
 
   /**
+   * Tests memory backend records events to the nearest microsecond.
+   */
+  public function testMemoryBackendThreshold() {
+    $request_stack = \Drupal::service('request_stack');
+    $flood = new MemoryBackend($request_stack);
+    $flood->register('new event');
+    $this->assertTrue($flood->isAllowed('new event', '2'));
+    $flood->register('new event');
+    $this->assertFalse($flood->isAllowed('new event', '2'));
+  }
+
+  /**
    * Tests flood control database backend.
    */
   public function testDatabaseBackend() {
