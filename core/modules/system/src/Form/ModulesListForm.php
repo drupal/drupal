@@ -477,17 +477,7 @@ class ModulesListForm extends FormBase {
           ->addStatus($this->modulesEnabledConfirmationMessage($modules['install']));
       }
       catch (PreExistingConfigException $e) {
-        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        $this->messenger()->addError(
-          $this->formatPlural(
-            count($config_objects),
-            'Unable to install @extension, %config_names already exists in active configuration.',
-            'Unable to install @extension, %config_names already exist in active configuration.',
-            [
-              '%config_names' => implode(', ', $config_objects),
-              '@extension' => $modules['install'][$e->getExtension()],
-            ])
-        );
+        $this->messenger()->addError($this->modulesFailToEnableMessage($modules, $e));
         return;
       }
       catch (UnmetDependenciesException $e) {

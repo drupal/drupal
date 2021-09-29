@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -55,6 +56,31 @@ trait ModulesEnabledTrait {
       '@count modules have been enabled: %names.',
       $t_args
     );
+  }
+
+  /**
+   * Provides a fail message after attempt to install a module.
+   *
+   * @param string[] $modules
+   *   Enabled module names, keyed by machine names.
+   * @param Drupal\Core\Config\PreExistingConfigException $exception
+   *   Exception thrown if configuration with the same name already exists.
+   *
+   * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup
+   *   A confirmation message. If any of the enabled modules have permissions
+   *   that the current user can manage, then include a link to the permissions
+   *   page for those modules.
+   */
+  protected function modulesFailToEnableMessage(array $modules, PreExistingConfigException $exception): PluralTranslatableMarkup {
+    $config_objects = $exception->flattenConfigObjects($exception->getConfigObjects());
+    return $this->formatPlural(
+      count($config_objects),
+      'Unable to install @extension, %config_names already exists in active configuration.',
+      'Unable to install @extension, %config_names already exist in active configuration.',
+      [
+        '%config_names' => implode(', ', $config_objects),
+        '@extension' => $modules['install'][$exception->getExtension()],
+      ]);
   }
 
 }

@@ -175,17 +175,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
         $this->moduleInstaller->install(array_keys($this->modules['install']));
       }
       catch (PreExistingConfigException $e) {
-        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        $this->messenger()->addError(
-          $this->formatPlural(
-            count($config_objects),
-            'Unable to install @extension, %config_names already exists in active configuration.',
-            'Unable to install @extension, %config_names already exist in active configuration.',
-            [
-              '%config_names' => implode(', ', $config_objects),
-              '@extension' => $this->modules['install'][$e->getExtension()],
-            ])
-        );
+        $this->messenger()->addError($this->modulesFailToEnableMessage($this->modules, $e));
         return;
       }
       catch (UnmetDependenciesException $e) {
