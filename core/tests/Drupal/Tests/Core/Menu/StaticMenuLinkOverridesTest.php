@@ -47,8 +47,6 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    */
   public function providerTestLoadOverride() {
     $data = [];
-    // No specified ID.
-    $data[] = [['test1' => ['parent' => 'test0']], NULL, []];
     // Valid ID.
     $data[] = [['test1' => ['parent' => 'test0']], 'test1', ['parent' => 'test0']];
     // Non existing ID.

@@ -71,9 +71,10 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    * {@inheritdoc}
    */
   public function loadOverride($id) {
+    assert(is_string($id), 'Menu link plugin ID should be a string.');
     $all_overrides = $this->getConfig()->get('definitions');
     $id = static::encodeId($id);
-    return $id && isset($all_overrides[$id]) ? $all_overrides[$id] : [];
+    return $all_overrides[$id] ?? [];
   }
 
   /**
