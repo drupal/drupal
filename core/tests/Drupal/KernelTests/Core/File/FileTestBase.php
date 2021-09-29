@@ -65,14 +65,17 @@ abstract class FileTestBase extends KernelTestBase {
    */
   protected function setUpFilesystem() {
     $public_file_directory = $this->siteDirectory . '/files';
+    $private_file_directory = $this->siteDirectory . '/private';
 
     require_once 'core/includes/file.inc';
 
     mkdir($this->siteDirectory, 0775);
     mkdir($this->siteDirectory . '/files', 0775);
+    mkdir($this->siteDirectory . '/private', 0775);
     mkdir($this->siteDirectory . '/files/config/sync', 0775, TRUE);
 
     $this->setSetting('file_public_path', $public_file_directory);
+    $this->setSetting('file_private_path', $private_file_directory);
     $this->setSetting('config_sync_directory', $this->siteDirectory . '/files/config/sync');
   }
 
