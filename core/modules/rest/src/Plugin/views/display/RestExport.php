@@ -383,10 +383,11 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    *   TRUE, when the view should override the given route.
    */
   protected function overrideApplies($view_path, Route $view_route, Route $route) {
-    $route_formats = explode('|', $route->getRequirement('_format'));
-    $view_route_formats = explode('|', $view_route->getRequirement('_format'));
+    $route_has_format = $route->hasRequirement('_format');
+    $route_formats = $route_has_format ? explode('|', $route->getRequirement('_format')) : [];
+    $view_route_formats = $view_route->hasRequirement('_format') ? explode('|', $view_route->getRequirement('_format')) : [];
     return $this->overrideAppliesPathAndMethod($view_path, $view_route, $route)
-      && (!$route->hasRequirement('_format') || array_intersect($route_formats, $view_route_formats) != []);
+      && (!$route_has_format || array_intersect($route_formats, $view_route_formats) != []);
   }
 
   /**
