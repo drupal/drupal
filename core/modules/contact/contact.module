@@ -123,7 +123,7 @@ function contact_mail($key, &$message, $params) {
   $variables = [
     '@site-name' => \Drupal::config('system.site')->get('name'),
     '@subject' => $contact_message->getSubject(),
-    '@form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
+    '@form' => !empty($params['contact_form']) ? $params['contact_form']->label() : '',
     '@form-url' => Url::fromRoute('<current>', [], ['absolute' => TRUE, 'language' => $language])->toString(),
     '@sender-name' => $sender->getDisplayName(),
   ];

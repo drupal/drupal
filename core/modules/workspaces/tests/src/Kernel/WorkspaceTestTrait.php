@@ -77,13 +77,13 @@ trait WorkspaceTestTrait {
    * - qa
    */
   protected function createWorkspaceHierarchy() {
-    $this->workspaces['dev'] = Workspace::create(['id' => 'dev', 'parent' => 'stage']);
+    $this->workspaces['dev'] = Workspace::create(['id' => 'dev', 'parent' => 'stage', 'label' => 'dev']);
     $this->workspaces['dev']->save();
-    $this->workspaces['local_1'] = Workspace::create(['id' => 'local_1', 'parent' => 'dev']);
+    $this->workspaces['local_1'] = Workspace::create(['id' => 'local_1', 'parent' => 'dev', 'label' => 'local_1']);
     $this->workspaces['local_1']->save();
-    $this->workspaces['local_2'] = Workspace::create(['id' => 'local_2', 'parent' => 'dev']);
+    $this->workspaces['local_2'] = Workspace::create(['id' => 'local_2', 'parent' => 'dev', 'label' => 'local_2']);
     $this->workspaces['local_2']->save();
-    $this->workspaces['qa'] = Workspace::create(['id' => 'qa', 'parent' => 'live']);
+    $this->workspaces['qa'] = Workspace::create(['id' => 'qa', 'parent' => 'live', 'label' => 'qa']);
     $this->workspaces['qa']->save();
   }
 

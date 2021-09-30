@@ -44,7 +44,7 @@ class ContentEntityNullStorageTest extends KernelTestBase {
    */
   public function testDeleteThroughImport() {
     $this->installConfig(['system']);
-    $contact_form = ContactForm::create(['id' => 'test']);
+    $contact_form = ContactForm::create(['id' => 'test', 'label' => 'Test contact form']);
     $contact_form->save();
 
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));

@@ -78,6 +78,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $admin_role = Role::create([
       'id' => 'admin',
       'permissions' => ['administer comments', 'skip comment approval'],
+      'label' => 'Admin',
     ]);
     $admin_role->save();
     // Create the admin user.

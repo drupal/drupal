@@ -90,7 +90,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   /**
    * Gets the label of the entity.
    *
-   * @return string|null
+   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   The label of the entity, or NULL if there is no label defined.
    */
   public function label();

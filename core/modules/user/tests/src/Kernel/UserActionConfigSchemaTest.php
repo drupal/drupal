@@ -28,7 +28,7 @@ class UserActionConfigSchemaTest extends KernelTestBase {
    */
   public function testValidUserActionConfigSchema() {
     $rid = strtolower($this->randomMachineName(8));
-    Role::create(['id' => $rid])->save();
+    Role::create(['id' => $rid, 'label' => $rid])->save();
 
     // Test user_add_role_action configuration.
     $config = $this->config('system.action.user_add_role_action.' . $rid);

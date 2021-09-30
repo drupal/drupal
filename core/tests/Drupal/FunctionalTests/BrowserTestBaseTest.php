@@ -997,7 +997,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // value. It should be sufficient to test just a couple of properties.
     $this->assertStringContainsString('<span class=sf-dump-note>', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">id</span>: "<span class=sf-dump-str title="9 characters">test_role</span>"', $body);
-    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">label</span>: <span class=sf-dump-const>null</span>', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">label</span>: "<span class=sf-dump-str title="9 characters">Test role</span>"', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">permissions</span>: []', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">uuid</span>: "', $body);
     $this->assertStringContainsString('</samp>}', $body);

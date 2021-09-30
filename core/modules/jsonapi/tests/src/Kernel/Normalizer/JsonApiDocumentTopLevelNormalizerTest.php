@@ -189,6 +189,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       'permissions' => [
         'access content',
       ],
+      'label' => 'Anonymous',
     ])->save();
 
     $this->includeResolver = $this->container->get('jsonapi.include_resolver');

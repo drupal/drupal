@@ -546,10 +546,10 @@ class BlockTest extends BlockTestBase {
    * Tests block_user_role_delete.
    */
   public function testBlockUserRoleDelete() {
-    $role1 = Role::create(['id' => 'test_role1', 'name' => $this->randomString()]);
+    $role1 = Role::create(['id' => 'test_role1', 'label' => 'Test role 1']);
     $role1->save();
 
-    $role2 = Role::create(['id' => 'test_role2', 'name' => $this->randomString()]);
+    $role2 = Role::create(['id' => 'test_role2', 'label' => 'Test role 2']);
     $role2->save();
 
     $block = Block::create([

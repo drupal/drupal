@@ -166,8 +166,8 @@ class UserValidationTest extends KernelTestBase {
     $this->assertAllowedValuesViolation($user, 'preferred_admin_langcode');
     $user->set('preferred_admin_langcode', NULL);
 
-    Role::create(['id' => 'role1'])->save();
-    Role::create(['id' => 'role2'])->save();
+    Role::create(['id' => 'role1', 'label' => 'Role 1'])->save();
+    Role::create(['id' => 'role2', 'label' => 'Role 2'])->save();
 
     // Test cardinality of user roles.
     $user = User::create([

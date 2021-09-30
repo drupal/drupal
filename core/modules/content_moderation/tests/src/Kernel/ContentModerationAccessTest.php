@@ -67,6 +67,7 @@ class ContentModerationAccessTest extends KernelTestBase {
     /** @var \Drupal\user\RoleInterface $authenticated */
     $authenticated = Role::create([
       'id' => 'authenticated',
+      'label' => 'Authenticated',
     ]);
     $authenticated->grantPermission('access content');
     $authenticated->grantPermission('edit any page content');

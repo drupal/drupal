@@ -46,7 +46,7 @@ class StatisticsLoggingTest extends WebDriverTestBase {
       ->save();
 
     // Add another language to enable multilingual path processor.
-    ConfigurableLanguage::create(['id' => 'xx'])->save();
+    ConfigurableLanguage::create(['id' => 'xx', 'label' => 'Test language'])->save();
     $this->config('language.negotiation')->set('url.prefixes.en', 'en')->save();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);

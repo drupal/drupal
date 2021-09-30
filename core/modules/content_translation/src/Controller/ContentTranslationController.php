@@ -185,7 +185,7 @@ class ContentTranslationController extends ControllerBase {
           $metadata = $manager->getTranslationMetadata($translation);
           $source = $metadata->getSource() ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
           $is_original = $langcode == $original;
-          $label = $entity->getTranslation($langcode)->label();
+          $label = $entity->getTranslation($langcode)->label() ?? $entity->id();
           $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : ['url' => $entity->toUrl()];
           if (!empty($link['url'])) {
             $link['url']->setOption('language', $language);
@@ -323,7 +323,7 @@ class ContentTranslationController extends ControllerBase {
       ];
     }
 
-    $build['#title'] = $this->t('Translations of %label', ['%label' => $entity->label()]);
+    $build['#title'] = $this->t('Translations of %label', ['%label' => $entity->label() ?? $entity->id()]);
 
     // Add metadata to the build render array to let other modules know about
     // which entity this is.

@@ -162,6 +162,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
     // Create a test entity.
     $id = $this->createEntity([
       $this->fieldName => [['value' => 'The untranslated field value']],
+      'name' => 'Test entity',
     ], $this->langcodes[0]);
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);

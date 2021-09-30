@@ -39,6 +39,7 @@ class RouteProviderTest extends KernelTestBase {
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::create([
       'id' => RoleInterface::ANONYMOUS_ID,
+      'label' => 'Anonymous',
     ]);
     $role
       ->grantPermission('administer entity_test content')

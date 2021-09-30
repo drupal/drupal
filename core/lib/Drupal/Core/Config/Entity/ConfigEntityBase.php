@@ -231,8 +231,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     $a_weight = isset($a->weight) ? $a->weight : 0;
     $b_weight = isset($b->weight) ? $b->weight : 0;
     if ($a_weight == $b_weight) {
-      $a_label = $a->label();
-      $b_label = $b->label();
+      $a_label = $a->label() ?? '';
+      $b_label = $b->label() ?? '';
       return strnatcasecmp($a_label, $b_label);
     }
     return ($a_weight < $b_weight) ? -1 : 1;

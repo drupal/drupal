@@ -66,7 +66,7 @@ abstract class CommentViewsKernelTestBase extends ViewsKernelTestBase {
     // @todo Remove in https://www.drupal.org/node/540008.
     $this->userStorage->create(['uid' => 1, 'name' => 'user1'])->save();
 
-    $admin_role = Role::create(['id' => 'admin']);
+    $admin_role = Role::create(['id' => 'admin', 'label' => 'Admin']);
     $admin_role->grantPermission('administer comments');
     $admin_role->grantPermission('access comments');
     $admin_role->grantPermission('post comments');

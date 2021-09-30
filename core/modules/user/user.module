@@ -5,6 +5,7 @@
  * Enables the user registration and login system.
  */
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
@@ -846,6 +847,8 @@ function user_user_role_insert(RoleInterface $role) {
   if (in_array($role->id(), [RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID]) || $role->isSyncing()) {
     return;
   }
+
+  assert(Inspector::assertStringable($role->label()), 'Role label is expected to be a string.');
 
   $add_id = 'user_add_role_action.' . $role->id();
   if (!Action::load($add_id)) {

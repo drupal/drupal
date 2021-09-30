@@ -53,7 +53,7 @@ class RoleTest extends ResourceTestBase {
   protected function createEntity() {
     $role = Role::create([
       'id' => 'llama',
-      'name' => $this->randomString(),
+      'label' => 'Llama',
     ]);
     $role->save();
 
@@ -88,7 +88,7 @@ class RoleTest extends ResourceTestBase {
           'langcode' => 'en',
           'status' => TRUE,
           'dependencies' => [],
-          'label' => NULL,
+          'label' => 'Llama',
           'is_admin' => NULL,
           'permissions' => [],
           'drupal_internal__id' => 'llama',

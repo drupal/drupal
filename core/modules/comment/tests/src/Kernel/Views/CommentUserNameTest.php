@@ -55,6 +55,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     $admin_role = Role::create([
       'id' => 'admin',
       'permissions' => ['administer comments', 'access user profiles'],
+      'label' => 'Admin',
     ]);
     $admin_role->save();
 

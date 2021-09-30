@@ -228,7 +228,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $language = new Language(['id' => $langcode]);
         // Test that label is correctly shown for translation.
         $view_url = $entity->toUrl('canonical', ['language' => $language])->toString();
-        $this->assertSession()->elementTextEquals('xpath', "//table//a[@href='{$view_url}']", $entity->getTranslation($langcode)->label() ?? '');
+        $this->assertSession()->elementTextEquals('xpath', "//table//a[@href='{$view_url}']", $entity->getTranslation($langcode)->label() ?? $entity->getTranslation($langcode)->id());
         // Test that edit link is correct for translation.
         $edit_path = $entity->toUrl('edit-form', ['language' => $language])->toString();
         $this->assertSession()->elementTextEquals('xpath', "//table//ul[@class='dropbutton']/li/a[@href='{$edit_path}']", 'Edit');

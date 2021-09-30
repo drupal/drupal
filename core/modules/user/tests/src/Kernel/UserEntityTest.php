@@ -38,9 +38,9 @@ class UserEntityTest extends KernelTestBase {
    */
   public function testUserMethods() {
     $role_storage = $this->container->get('entity_type.manager')->getStorage('user_role');
-    $role_storage->create(['id' => 'test_role_one'])->save();
-    $role_storage->create(['id' => 'test_role_two'])->save();
-    $role_storage->create(['id' => 'test_role_three'])->save();
+    $role_storage->create(['id' => 'test_role_one', 'label' => 'Test role 1'])->save();
+    $role_storage->create(['id' => 'test_role_two', 'label' => 'Test role 2'])->save();
+    $role_storage->create(['id' => 'test_role_three', 'label' => 'Test role 3'])->save();
 
     $values = [
       'uid' => 1,

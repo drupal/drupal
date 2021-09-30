@@ -35,7 +35,7 @@ abstract class RoleResourceTestBase extends EntityResourceTestBase {
   protected function createEntity() {
     $role = Role::create([
       'id' => 'llama',
-      'name' => $this->randomString(),
+      'label' => 'Llama',
     ]);
     $role->save();
 
@@ -53,7 +53,7 @@ abstract class RoleResourceTestBase extends EntityResourceTestBase {
       'status' => TRUE,
       'dependencies' => [],
       'id' => 'llama',
-      'label' => NULL,
+      'label' => 'Llama',
       'is_admin' => NULL,
       'permissions' => [],
     ];

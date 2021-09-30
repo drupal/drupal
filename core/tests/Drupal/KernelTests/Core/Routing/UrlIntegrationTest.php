@@ -26,12 +26,12 @@ class UrlIntegrationTest extends KernelTestBase {
    */
   public function testAccess() {
     /** @var \Drupal\user\RoleInterface $role_with_access */
-    $role_with_access = Role::create(['id' => 'role_with_access']);
+    $role_with_access = Role::create(['id' => 'role_with_access', 'label' => 'With access']);
     $role_with_access->grantPermission('administer users');
     $role_with_access->save();
 
     /** @var \Drupal\user\RoleInterface $role_without_access */
-    $role_without_access = Role::create(['id' => 'role_without_access']);
+    $role_without_access = Role::create(['id' => 'role_without_access', 'label' => 'Without access']);
     $role_without_access->save();
 
     $user_with_access = User::create(['roles' => ['role_with_access']]);
