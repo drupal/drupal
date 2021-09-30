@@ -8,40 +8,54 @@
  * @see template_preprocess_maintenance_page()
  */
  #}
-<div id="page-wrapper">
+
+<div id="page-wrapper" class="page-wrapper">
   <div id="page">
-    <header id="header" role="banner">
-      <div class="section">
-        {% if site_name or site_slogan %}
-          <div id="name-and-slogan"{{ hide_site_name and hide_site_slogan ? ' class="visually-hidden"' }}>
-            {% if site_name %}
-              <div id="site-name"{{ hide_site_name ? ' class="visually-hidden"' }}>
-                <strong>
-                  <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
-                </strong>
+
+    <header id="header" class="site-header" role="banner" data-once="navigation">
+      <div class="site-header__fixable">
+        <div class="site-header__initial">
+        </div>
+        <div id="site-header__inner" class="site-header__inner">
+          <div class="container site-header__inner__container">
+            <div class="site-branding block block-system block-system-branding-block">
+              <div class="site-branding__inner">
+                <div class="site-branding__text">
+                  <div class="site-branding__name">
+                    {{ site_name }}
+                  </div>
+                </div>
               </div>
-            {% endif %}
-            {% if site_slogan %}
-              <div id="site-slogan"{{ hide_site_slogan ? ' class="visually-hidden"' }}>
-                {{ site_slogan }}
-              </div>
-            {% endif %}
+            </div>
           </div>
-        {% endif %}
+        </div>
       </div>
     </header>
-    <div id="main-wrapper">
-      <div id="main">
-        <main id="content" class="column" role="main">
-          <section class="section">
-            <a id="main-content"></a>
-            {% if title %}
-              <h1 class="title" id="page-title">{{ title }}</h1>
-            {% endif %}
-            {{ page.content }}
+
+    <div id="main-wrapper" class="layout-main-wrapper layout-container">
+      <div id="main" class="layout-main">
+        <div class="main-content">
+          <a id="main-content" tabindex="-1"></a>
+          <div class="main-content__container container">
             {{ page.highlighted }}
-          </section>
-        </main>
+            <main role="main">
+              <div class="region region--content-above grid-full layout--pass--content-medium ie11-autorow">
+                {% if title %}
+                  <h1 class="title" id="page-title">{{ title }}</h1>
+                {% endif %}
+              </div>
+              <div class="region region--content grid-full layout--pass--content-medium ie11-autorow" id="content">
+                <div id="block-olivero-content" class="block block-system block-system-main-block text-content">
+                  {{ page.content }}
+
+                  {% include "@olivero/../images/site-under-maintenance-icon.svg" %}
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+        <div class="social-bar">
+        </div>
       </div>
     </div>
   </div>

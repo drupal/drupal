@@ -10,7 +10,7 @@
 
   function isDesktopNav() {
     var navButtons = document.querySelector('[data-drupal-selector="mobile-buttons"]');
-    return window.getComputedStyle(navButtons).getPropertyValue('display') === 'none';
+    return navButtons ? window.getComputedStyle(navButtons).getPropertyValue('display') === 'none' : false;
   }
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
@@ -98,23 +98,34 @@
         threshold: [0.999, 1]
       };
       var observer = new IntersectionObserver(toggleDesktopNavVisibility, options);
-      observer.observe(primaryNav);
+
+      if (primaryNav) {
+        observer.observe(primaryNav);
+      }
     }
 
-    stickyHeaderToggleButton.addEventListener('click', function () {
-      toggleStickyHeaderState(!stickyHeaderIsEnabled());
-    });
-    document.querySelector('[data-drupal-selector="site-header-inner"]').addEventListener('focusin', function () {
-      if (isDesktopNav() && !stickyHeaderIsEnabled()) {
-        var header = document.querySelector('[data-drupal-selector="site-header"]');
-        var headerNav = header.querySelector('[data-drupal-selector="header-nav"]');
-        var headerMargin = header.clientHeight - headerNav.clientHeight;
+    if (stickyHeaderToggleButton) {
+      stickyHeaderToggleButton.addEventListener('click', function () {
+        toggleStickyHeaderState(!stickyHeaderIsEnabled());
+      });
+    }
 
-        if (window.scrollY > headerMargin) {
-          window.scrollTo(0, headerMargin);
+    var siteHeaderInner = document.querySelector('[data-drupal-selector="site-header-inner"]');
+
+    if (siteHeaderInner) {
+      siteHeaderInner.addEventListener('focusin', function () {
+        if (isDesktopNav() && !stickyHeaderIsEnabled()) {
+          var header = document.querySelector('[data-drupal-selector="site-header"]');
+          var headerNav = header.querySelector('[data-drupal-selector="header-nav"]');
+          var headerMargin = header.clientHeight - headerNav.clientHeight;
+
+          if (window.scrollY > headerMargin) {
+            window.scrollTo(0, headerMargin);
+          }
         }
-      }
-    });
+      });
+    }
+
     monitorNavPosition();
     setStickyHeaderStorage(getStickyHeaderStorage());
     toggleStickyHeaderState(getStickyHeaderStorage());

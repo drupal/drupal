@@ -190,6 +190,12 @@ local-actions:
     component:
       css/components/action-links.css: {}
 
+maintenance-page:
+  version: VERSION
+  css:
+    component:
+      css/components/maintenance-page.css: {}
+
 menu-sidebar:
   version: VERSION
   css:

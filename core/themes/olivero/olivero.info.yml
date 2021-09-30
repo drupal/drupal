@@ -35,6 +35,10 @@ regions:
   footer_top: 'Footer Top'
   footer_bottom: 'Footer Bottom'
 libraries-override:
+  system/admin:
+    css:
+      theme:
+        css/system.admin.css: false
   system/base:
     css:
       component:
