@@ -113,7 +113,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['node']);
     $this->resetAll();
     // Create a new node type and attach the 'body' field to it.
-    $node_type = NodeType::create(['type' => mb_strtolower($this->randomMachineName())]);
+    $node_type = NodeType::create(['type' => mb_strtolower($this->randomMachineName()), 'name' => $this->randomString()]);
     $node_type->save();
     node_add_body_field($node_type, $this->randomString());
 
