@@ -669,7 +669,7 @@ function _filter_url_trim($text, $length = NULL) {
     $_length = $length;
   }
 
-  if (isset($_length)) {
+  if (isset($text) && isset($_length)) {
     $text = Unicode::truncate($text, $_length, FALSE, TRUE);
   }
 
