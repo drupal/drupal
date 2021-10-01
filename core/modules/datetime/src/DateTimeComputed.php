@@ -46,6 +46,11 @@ class DateTimeComputed extends TypedData {
     $item = $this->getParent();
     $value = $item->{($this->definition->getSetting('date source'))};
 
+    // A date cannot be created from a NULL value.
+    if ($value === NULL) {
+      return NULL;
+    }
+
     $datetime_type = $item->getFieldDefinition()->getSetting('datetime_type');
     $storage_format = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
     try {
