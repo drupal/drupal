@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Component\Gettext;
 
+use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
@@ -37,7 +38,10 @@ class PoStreamWriterTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
 
+    $poHeader = $this->prophesize(PoHeader::class);
+    $poHeader->__toString()->willReturn('');
     $this->poWriter = new PoStreamWriter();
+    $this->poWriter->setHeader($poHeader->reveal());
 
     $root = vfsStream::setup();
     $this->poFile = new vfsStreamFile('powriter.po');
