@@ -374,7 +374,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
 
     // Set existing password if set in the form state.
-    $current_pass = trim($form_state->getValue('current_pass'));
+    $current_pass = trim($form_state->getValue('current_pass', ''));
     if (strlen($current_pass) > 0) {
       $account->setExistingPassword($current_pass);
     }
