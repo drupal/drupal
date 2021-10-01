@@ -31,7 +31,7 @@
     "jquery/no-is": 0,
     "jquery/no-load": 2,
     "jquery/no-map": 0,
-    "jquery/no-merge": 0,
+    "jquery/no-merge": 2,
     "jquery/no-param": 2,
     "jquery/no-parent": 0,
     "jquery/no-parents": 0,

@@ -1320,7 +1320,7 @@
     if (this.indentEnabled) {
       this.indents = $tableRow.find('.js-indentation').length;
       this.children = this.findChildren(addClasses);
-      this.group = $.merge(this.group, this.children);
+      this.group = this.group.concat(this.children);
       // Find the depth of this entire group.
       for (let n = 0; n < this.group.length; n++) {
         this.groupDepth = Math.max(

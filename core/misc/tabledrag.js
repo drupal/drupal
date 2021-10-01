@@ -780,7 +780,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     if (this.indentEnabled) {
       this.indents = $tableRow.find('.js-indentation').length;
       this.children = this.findChildren(addClasses);
-      this.group = $.merge(this.group, this.children);
+      this.group = this.group.concat(this.children);
 
       for (var n = 0; n < this.group.length; n++) {
         this.groupDepth = Math.max($(this.group[n]).find('.js-indentation').length, this.groupDepth);
