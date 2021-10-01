@@ -389,7 +389,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function getSubject() {
-    return $this->get('subject')->value;
+    return $this->get('subject')->value ?? '';
   }
 
   /**
