@@ -525,9 +525,11 @@ class TwigExtension extends AbstractExtension {
       return 0;
     }
 
-    // Return early for NULL and empty arrays.
+    // Return early for NULL, empty arrays, empty strings and FALSE booleans.
+    // @todo https://www.drupal.org/project/drupal/issues/3240093 Determine if
+    //   this behavior is correct or should be deprecated.
     if ($arg == NULL) {
-      return NULL;
+      return '';
     }
 
     // Optimize for scalars as it is likely they come from the escape filter.
