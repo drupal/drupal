@@ -348,8 +348,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // When a module is providing the database driver, then enable that module.
     $connection_info = Database::getConnectionInfo();
     $driver = $connection_info['default']['driver'];
-    $namespace = $connection_info['default']['namespace'] ?? NULL;
-    $autoload = $connection_info['default']['autoload'] ?? NULL;
+    $namespace = $connection_info['default']['namespace'] ?? '';
+    $autoload = $connection_info['default']['autoload'] ?? '';
     if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
       [$first, $second] = explode('\\', $namespace, 3);
       if ($first === 'Drupal' && strtolower($second) === $second) {
