@@ -79,6 +79,7 @@
 .pager__link.is-active,
 .pager__item--current {
   color: var(--pager--active-fg-color);
+  border: var(--pager-border-width) solid transparent;
   background: var(--pager--active-bg-color);
 }
 .pager__item--first .pager__link::before {
@@ -148,8 +149,5 @@
 @media (-ms-high-contrast: active) {
   .pager__item a:hover {
     text-decoration: underline;
-  }
-  .pager__link.is-active {
-    border: var(--pager-border-width) solid var(--color-white);
   }
 }
