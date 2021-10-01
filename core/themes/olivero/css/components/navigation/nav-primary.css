@@ -196,14 +196,9 @@
     border-top: solid 5px #2494db;
   }
 
-.primary-nav__menu-link-inner:hover,
-  .primary-nav__menu-link-inner:focus {
-    outline: 0
+.primary-nav__menu-link:hover .primary-nav__menu-link-inner:after {
+      transform: scaleX(1)
   }
-
-.primary-nav__menu-link-inner:hover:after, .primary-nav__menu-link-inner:focus:after {
-      transform: scaleX(1);
-    }
 
 /*
   Top level specific styles.
