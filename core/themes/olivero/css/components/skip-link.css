@@ -40,6 +40,11 @@
   background-color: #0d1214
 }
 
+.skip-link:hover {
+    text-decoration: underline;
+    color: #fff;
+  }
+
 .skip-link:after {
     content: "\0020	➔";
   }
