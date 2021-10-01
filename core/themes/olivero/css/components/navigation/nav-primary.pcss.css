@@ -114,11 +114,8 @@
     border-top: solid 5px var(--color--blue-50);
   }
 
-  &:hover,
-  &:focus {
-    outline: 0;
-
-    &:after {
+  &:after {
+    @nest .primary-nav__menu-link:hover & {
       transform: scaleX(1);
     }
   }

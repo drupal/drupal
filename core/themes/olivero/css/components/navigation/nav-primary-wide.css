@@ -23,7 +23,7 @@
 
         /* Remove hover state if submenu exists. */
       }
-        body:not(.is-always-mobile-nav) .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link-inner:after {
+        body:not(.is-always-mobile-nav) .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--level-1 .primary-nav__menu-link-inner:after {
           content: none;
         }
 

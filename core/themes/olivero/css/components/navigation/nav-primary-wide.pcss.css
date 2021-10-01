@@ -17,7 +17,7 @@ body:not(.is-always-mobile-nav) {
         }
 
         /* Remove hover state if submenu exists. */
-        & .primary-nav__menu-link-inner:after {
+        & .primary-nav__menu-link--level-1 .primary-nav__menu-link-inner:after {
           content: none;
         }
       }
