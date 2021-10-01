@@ -3,6 +3,7 @@
 namespace Drupal\Tests\text\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -69,6 +70,13 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
     $body_field = FieldConfig::loadByName('node', 'page', 'body');
     $body_field->set('description', 'Text with Summary field description.');
     $body_field->save();
+
+    $this->assertSummaryToggle();
+
+    // Repeat test with unlimited cardinality field.
+    $body_field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $body_field_storage->setCardinality(-1);
+    $body_field_storage->save();
 
     $this->assertSummaryToggle();
 
