@@ -27,4 +27,14 @@ class SkippedDeprecationTest extends UnitTestCase {
     $this->addToAssertionCount(1);
   }
 
+  /**
+   * Tests skipping E_DEPRECATED deprecations in unit tests.
+   *
+   * @see \Drupal\Tests\Listeners\DeprecationListenerTrait::getSkippedDeprecations()
+   */
+  public function testSkippingPhpDeprecations() {
+    include_once __DIR__ . '/../../fixtures/deprecated_code.php';
+    $this->addToAssertionCount(1);
+  }
+
 }

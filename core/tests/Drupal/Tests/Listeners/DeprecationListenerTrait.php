@@ -76,6 +76,12 @@ trait DeprecationListenerTrait {
       // issues and thus were not addressed in time for the 9.0.0 release.
       '%The entity link url update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2857891.%',
       '%The operator defaults update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2869168.%',
+      // Guzzle 6 will not be updated for full PHP 8.1 compatibility, see
+      // https://github.com/guzzle/guzzle/pull/2918.
+      '%Return type of GuzzleHttp\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
+      // Skip EasyRdf deprecations for PHP 8.1 - fixed by
+      // https://github.com/easyrdf/easyrdf/pull/384.
+      '%Return type of EasyRdf\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
@@ -98,8 +104,9 @@ trait DeprecationListenerTrait {
    */
   public static function getSkippedDeprecations() {
     return [
-      // The following deprecation message is skipped for testing purposes.
+      // The following deprecation messages are skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
+      'Return type of PhpDeprecation::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice',
       // The following Symfony deprecations are introduced in the Symfony 4
       // development cycle. They will need to be resolved prior to Symfony 5
       // compatibility.
@@ -136,7 +143,7 @@ trait DeprecationListenerTrait {
     }
     $deprecation_handler = function ($type, $msg, $file, $line, $context = []) {
       // Skip listed deprecations.
-      if ($type === E_USER_DEPRECATED && static::isDeprecationSkipped($msg)) {
+      if (($type === E_USER_DEPRECATED || $type === E_DEPRECATED) && static::isDeprecationSkipped($msg)) {
         return;
       }
       return call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
