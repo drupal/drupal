@@ -124,7 +124,7 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     foreach ($entities as $id => $entity) {
       if ($build[$id]['#comment_threaded']) {
-        $comment_indent = count(explode('.', $entity->getThread())) - 1;
+        $comment_indent = count(explode('.', (string) $entity->getThread())) - 1;
         if ($comment_indent > $current_indent) {
           // Set 1 to indent this comment from the previous one (its parent).
           // Set only one extra level of indenting even if the difference in

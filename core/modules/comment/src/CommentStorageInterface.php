@@ -17,9 +17,10 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    * @param \Drupal\comment\CommentInterface $comment
    *   A comment entity.
    *
-   * @return string
+   * @return string|null
    *   The maximum encoded thread value among the top level comments of the
-   *   node $comment belongs to.
+   *   node $comment belongs to. NULL is returned when the commented entity has
+   *   no comments.
    */
   public function getMaxThread(CommentInterface $comment);
 
@@ -29,8 +30,9 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    * @param \Drupal\comment\CommentInterface $comment
    *   A comment entity.
    *
-   * @return string
-   *   The maximum encoded thread value among all replies of $comment.
+   * @return string|null
+   *   The maximum encoded thread value among all replies of $comment. NULL is
+   *   returned when the commented entity has no comments.
    */
   public function getMaxThreadPerThread(CommentInterface $comment);
 
