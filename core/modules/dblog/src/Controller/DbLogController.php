@@ -407,7 +407,7 @@ class DbLogController extends ControllerBase {
    *   empty uri or invalid, fallback to the provided $uri.
    */
   protected function createLink($uri) {
-    if (UrlHelper::isValid($uri, TRUE)) {
+    if ($uri !== NULL && UrlHelper::isValid($uri, TRUE)) {
       return new Link($uri, Url::fromUri($uri));
     }
     return $uri;
