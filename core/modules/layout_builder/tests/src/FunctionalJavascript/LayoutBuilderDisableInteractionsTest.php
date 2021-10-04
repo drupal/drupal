@@ -181,7 +181,8 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       $this->fail(new FormattableMarkup("@tag_name was clickable when it shouldn't have been", ['@tag_name' => $tag_name]));
     }
     catch (\Exception $e) {
-      $this->assertStringContainsString('is not clickable at point', $e->getMessage());
+      // cspell:ignore interactable
+      $this->assertMatchesRegularExpression('/(is not clickable at point|element not interactable)/', $e->getMessage());
     }
   }
 
