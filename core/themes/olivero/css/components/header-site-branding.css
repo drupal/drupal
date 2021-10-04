@@ -41,7 +41,7 @@
   flex-shrink: 1;
   align-items: flex-end;
   min-width: calc(33.33333vw + 0.75rem);
-  height: 3.375rem;
+  min-height: 3.375rem;
   padding-top: 0;
   padding-bottom: 0.5625rem;
 
@@ -52,14 +52,14 @@
 @media (min-width: 31.25rem) {
 
 .site-branding {
-    height: 4.5rem
+    min-height: 4.5rem
 }
   }
 
 @media (min-width: 43.75rem) {
 
 .site-branding {
-    height: 6.75rem;
+    min-height: 6.75rem;
     padding-bottom: 1.125rem
 }
   }
@@ -99,7 +99,7 @@
 
 .site-branding {
     min-width: calc(14.28571vw + 0.99107rem);
-    height: 11.25rem;
+    min-height: 11.25rem;
     padding-top: 0;
     padding-bottom: 0
 }
