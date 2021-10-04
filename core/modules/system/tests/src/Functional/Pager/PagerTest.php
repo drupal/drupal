@@ -118,7 +118,7 @@ class PagerTest extends BrowserTestBase {
     $test_data = [
       // With no query, all pagers set to first page.
       [
-        'input_query' => NULL,
+        'input_query' => '',
         'expected_page' => [0 => '1', 1 => '1', 4 => '1'],
         'expected_query' => '?page=0,0,,,0',
       ],
