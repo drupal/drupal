@@ -75,6 +75,7 @@ class TextSummaryTest extends KernelTestBase {
   public function testLength() {
     FilterFormat::create([
       'format' => 'autop',
+      'name' => 'Autop',
       'filters' => [
         'filter_autop' => [
           'status' => 1,
@@ -83,6 +84,7 @@ class TextSummaryTest extends KernelTestBase {
     ])->save();
     FilterFormat::create([
       'format' => 'autop_correct',
+      'name' => 'Autop correct',
       'filters' => [
         'filter_autop' => [
           'status' => 1,
@@ -310,6 +312,7 @@ class TextSummaryTest extends KernelTestBase {
   public function testNormalization() {
     FilterFormat::create([
       'format' => 'filter_html_enabled',
+      'name' => 'Filter HTML enabled',
       'filters' => [
         'filter_html' => [
           'status' => 1,
@@ -321,6 +324,7 @@ class TextSummaryTest extends KernelTestBase {
     ])->save();
     FilterFormat::create([
       'format' => 'filter_htmlcorrector_enabled',
+      'name' => 'Filter HTML corrector enabled',
       'filters' => [
         'filter_htmlcorrector' => [
           'status' => 1,
@@ -329,6 +333,7 @@ class TextSummaryTest extends KernelTestBase {
     ])->save();
     FilterFormat::create([
       'format' => 'neither_filter_enabled',
+      'name' => 'Neither filter enabled',
       'filters' => [],
     ])->save();
 

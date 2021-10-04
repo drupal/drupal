@@ -54,6 +54,7 @@ class EditorMediaDialogTest extends KernelTestBase {
       'filters' => [
         'media_embed' => ['status' => TRUE],
       ],
+      'name' => 'Media embed on',
     ]);
 
     $editor = $this->prophesize(EditorInterface::class);
