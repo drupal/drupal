@@ -131,7 +131,7 @@ function contact_mail($key, &$message, $params) {
     $variables['@sender-url'] = $sender->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString();
   }
   else {
-    $variables['@sender-url'] = $params['sender']->getEmail();
+    $variables['@sender-url'] = $params['sender']->getEmail() ?? '';
   }
 
   $options = ['langcode' => $language->getId()];
