@@ -23,11 +23,11 @@ class ComplexWorkflowTypeTest extends KernelTestBase {
    * @covers \Drupal\workflows\Entity\Workflow::loadMultipleByType
    */
   public function testLoadMultipleByType() {
-    $workflow1 = new Workflow(['id' => 'test1', 'type' => 'workflow_type_complex_test'], 'workflow');
+    $workflow1 = Workflow::create(['id' => 'test1', 'type' => 'workflow_type_complex_test']);
     $workflow1->save();
-    $workflow2 = new Workflow(['id' => 'test2', 'type' => 'workflow_type_complex_test'], 'workflow');
+    $workflow2 = Workflow::create(['id' => 'test2', 'type' => 'workflow_type_complex_test']);
     $workflow2->save();
-    $workflow3 = new Workflow(['id' => 'test3', 'type' => 'workflow_type_test'], 'workflow');
+    $workflow3 = Workflow::create(['id' => 'test3', 'type' => 'workflow_type_test']);
     $workflow3->save();
 
     $this->assertEquals(['test1', 'test2'], array_keys(Workflow::loadMultipleByType('workflow_type_complex_test')));
