@@ -355,12 +355,9 @@ class SharedTempStoreTest extends UnitTestCase {
    */
   public function testSerialization() {
     // Add an unserializable request to the request stack. If the tempstore
-    // didn't use DependencySerializationTrait, the exception would be thrown
+    // didn't use DependencySerializationTrait, an exception would be thrown
     // when we try to serialize the tempstore.
-    $request = $this->prophesize(Request::class);
-    $request->willImplement('\Serializable');
-    $request->serialize()->willThrow(new \LogicException('Oops!'));
-    $unserializable_request = $request->reveal();
+    $unserializable_request = new UnserializableRequest();
 
     $this->requestStack->push($unserializable_request);
     $this->requestStack->_serviceId = 'request_stack';
@@ -424,6 +421,20 @@ class SharedTempStoreTest extends UnitTestCase {
     $expire_property = $reflection_class->getProperty('expire');
     $expire_property->setAccessible(TRUE);
     $this->assertSame(1000, $expire_property->getValue($store));
+  }
+
+}
+
+/**
+ * A class for testing.
+ */
+class UnserializableRequest extends Request {
+
+  /**
+   * @return array
+   */
+  public function __serialize(): array {
+    throw new \LogicException('Oops!');
   }
 
 }
