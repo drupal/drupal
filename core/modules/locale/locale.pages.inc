@@ -47,6 +47,6 @@ function template_preprocess_locale_translation_update_info(array &$variables) {
 function template_preprocess_locale_translation_last_check(array &$variables) {
   $last = $variables['last'];
   $variables['last_checked'] = ($last != NULL);
-  $variables['time'] = \Drupal::service('date.formatter')->formatTimeDiffSince($last);
+  $variables['time'] = $variables['last_checked'] ? \Drupal::service('date.formatter')->formatTimeDiffSince($last) : NULL;
   $variables['link'] = Link::fromTextAndUrl(t('Check manually'), Url::fromRoute('locale.check_translation', [], ['query' => \Drupal::destination()->getAsArray()]))->toString();
 }
