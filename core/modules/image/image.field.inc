@@ -58,7 +58,7 @@ function template_preprocess_image_formatter(&$variables) {
   $item = $variables['item'];
 
   // Do not output an empty 'title' attribute.
-  if (mb_strlen($item->title) != 0) {
+  if (!is_null($item->title) && mb_strlen($item->title) != 0) {
     $variables['image']['#title'] = $item->title;
   }
 
