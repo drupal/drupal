@@ -98,7 +98,7 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    *   (optional) The language type; e.g., the interface or the content
    *   language.
    *
-   * @return string
+   * @return string|null
    *   The negotiated language method ID.
    */
   public function getNegotiatedLanguageMethod($type = LanguageInterface::TYPE_INTERFACE);
