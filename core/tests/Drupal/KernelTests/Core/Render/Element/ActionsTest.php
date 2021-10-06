@@ -21,6 +21,7 @@ class ActionsTest extends KernelTestBase implements FormInterface {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return __CLASS__;
   }
 
   /**
