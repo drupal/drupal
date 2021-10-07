@@ -72,13 +72,13 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     if ($postfix) {
       $configuration['postfix'] = $postfix;
     }
-    $configuration['start'] = isset($start) ? $start : NULL;
-    $configuration['length'] = isset($length) ? $length : NULL;
+    $configuration['start'] = $start;
+    $configuration['length'] = $length;
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->entityQueryExpects($count);
     $value = $this->randomMachineName(32);
     $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
-    $expected = mb_substr($value, $start, $length);
+    $expected = mb_substr($value, $start ?? 0, $length);
     $expected .= $count ? $postfix . $count : '';
     $this->assertSame($expected, $actual);
   }
