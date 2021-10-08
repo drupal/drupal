@@ -48,8 +48,9 @@ class PathValidatorTest extends KernelTestBase {
       'PUT',
       'PATCH',
       'DELETE',
-      // Used in CLI context.
-      NULL,
+      // NULL is used in CLI context which results in a request method of an
+      // empty string.
+      '',
       // If no request was even pushed onto the request stack, and hence.
       FALSE,
     ];
