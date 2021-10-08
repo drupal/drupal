@@ -299,7 +299,7 @@ function user_is_blocked($name) {
  * Implements hook_ENTITY_TYPE_view() for user entities.
  */
 function user_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
-  if ($display->getComponent('member_for')) {
+  if ($account->isAuthenticated() && $display->getComponent('member_for')) {
     $build['member_for'] = [
       '#type' => 'item',
       '#markup' => '<h4 class="label">' . t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime()),
