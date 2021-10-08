@@ -4,10 +4,8 @@ namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Statement;
-use Drupal\Core\Database\StatementWrapper;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
-use Drupal\Tests\Core\Database\Stub\Driver;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -667,21 +665,12 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider provideQueriesToTrim
    */
   public function testQueryTrim($expected, $query, $options) {
-    $mock_pdo = $this->getMockBuilder(StubPdo::class)
-      ->onlyMethods(['prepare'])
-      ->getMock();
-    $mock_statement = $this->getMockBuilder(StatementWrapper::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    // Ensure that PDO::prepare() is called only once, and with the
-    // correctly trimmed query string.
-    $mock_pdo->expects($this->once())
-      ->method('prepare')
-      ->with($expected)
-      ->willReturn($mock_statement);
+    $mock_pdo = $this->getMockBuilder(StubPdo::class)->getMock();
     $connection = new StubConnection($mock_pdo, []);
-    $connection->query($query, [], $options);
+
+    $preprocess_method = new \ReflectionMethod($connection, 'preprocessStatement');
+    $preprocess_method->setAccessible(TRUE);
+    $this->assertSame($expected, $preprocess_method->invoke($connection, $query, $options));
   }
 
   /**
