@@ -133,7 +133,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     ];
 
     // @todo How do we apply argument validation?
-    $bits = explode('/', $this->getOption('path'));
+    $path = $this->getOption('path');
+
     // @todo Figure out validation/argument loading.
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
@@ -144,23 +145,27 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     $argument_map = [];
 
-    // Replace arguments in the views UI (defined via %) with parameters in
-    // routes (defined via {}). As a name for the parameter use arg_$key, so
-    // it can be pulled in the views controller from the request.
-    foreach ($bits as $pos => $bit) {
-      if ($bit == '%') {
-        // Generate the name of the parameter using the key of the argument
-        // handler.
-        $arg_id = 'arg_' . $arg_counter++;
-        $bits[$pos] = '{' . $arg_id . '}';
-        $argument_map[$arg_id] = $arg_id;
-      }
-      elseif (strpos($bit, '%') === 0) {
-        // Use the name defined in the path.
-        $parameter_name = substr($bit, 1);
-        $arg_id = 'arg_' . $arg_counter++;
-        $argument_map[$arg_id] = $parameter_name;
-        $bits[$pos] = '{' . $parameter_name . '}';
+    $bits = [];
+    if (is_string($path)) {
+      $bits = explode('/', $path);
+      // Replace arguments in the views UI (defined via %) with parameters in
+      // routes (defined via {}). As a name for the parameter use arg_$key, so
+      // it can be pulled in the views controller from the request.
+      foreach ($bits as $pos => $bit) {
+        if ($bit == '%') {
+          // Generate the name of the parameter using the key of the argument
+          // handler.
+          $arg_id = 'arg_' . $arg_counter++;
+          $bits[$pos] = '{' . $arg_id . '}';
+          $argument_map[$arg_id] = $arg_id;
+        }
+        elseif (strpos($bit, '%') === 0) {
+          // Use the name defined in the path.
+          $parameter_name = substr($bit, 1);
+          $arg_id = 'arg_' . $arg_counter++;
+          $argument_map[$arg_id] = $parameter_name;
+          $bits[$pos] = '{' . $parameter_name . '}';
+        }
       }
     }
 
