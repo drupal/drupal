@@ -135,19 +135,36 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     $media_type = $this->createMediaType('oembed:video');
     $source = $media_type->getSource();
 
+    // Add some HTML to the global site slogan, and use the site:slogan token in
+    // the thumbnail path, in order to prove that the final thumbnail path is
+    // stripped of HTML tags, and XML entities are decoded.
+    $this->config('system.site')
+      ->set('slogan', '<h1>this&amp;that</h1>')
+      ->save();
+    $configuration = $source->getConfiguration();
+    $configuration['thumbnails_directory'] .= '/[site:slogan]';
+    $source->setConfiguration($configuration);
+    $media_type->save();
+
     $media = Media::create([
       'bundle' => $media_type->id(),
       $source->getSourceFieldDefinition($media_type)->getName() => $this->randomString(),
     ]);
     $media->save();
 
+    // The thumbnail directory should include the current date, as per the
+    // default configuration of the oEmbed source plugin.
+    $date = date('Y-m', $this->container->get('datetime.time')->getRequestTime());
+
     // The thumbnail should have a file extension, even if it wasn't in the URL.
-    $expected_uri = 'public://oembed_thumbnails/' . Crypt::hashBase64($thumbnail_url) . ".$expected_extension";
+    $expected_uri = "public://oembed_thumbnails/$date/this&that/" . Crypt::hashBase64($thumbnail_url) . ".$expected_extension";
     $this->assertSame($expected_uri, $source->getMetadata($media, 'thumbnail_uri'));
+
     // Even if we get the thumbnail_uri more than once, it should only be
     // downloaded once. The HTTP client will throw an exception if we try to
     // do another request without setting up another response.
     $source->getMetadata($media, 'thumbnail_uri');
+
     // The downloaded thumbnail should be usable by the image toolkit.
     $this->assertFileExists($expected_uri);
     /** @var \Drupal\Core\Image\Image $image */
