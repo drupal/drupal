@@ -111,7 +111,10 @@ class MenuLink extends DrupalSqlBase {
     }
     $row->setSourceProperty('options', unserialize($row->getSourceProperty('options')));
     $row->setSourceProperty('enabled', !$row->getSourceProperty('hidden'));
-    $row->setSourceProperty('description', Unicode::truncate($row->getSourceProperty('options/attributes/title'), 255));
+    $description = $row->getSourceProperty('options/attributes/title');
+    if ($description !== NULL) {
+      $row->setSourceProperty('description', Unicode::truncate($description, 255));
+    }
 
     return parent::prepareRow($row);
   }
