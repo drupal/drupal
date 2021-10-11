@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
+use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
@@ -404,6 +405,7 @@ class LayoutDeriver extends DeriverBase {
         'id' => 'invalid_provider',
         'provider' => 'invalid_provider',
       ]);
+      $this->derivatives['invalid_provider']->setClass(LayoutInterface::class);
     }
     return $this->derivatives;
   }

@@ -246,6 +246,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
 
     // Keep class definitions standard with no leading slash.
     if ($definition instanceof PluginDefinitionInterface) {
+      assert(is_string($definition->getClass()), 'Plugin definitions must have a class');
       $definition->setClass(ltrim($definition->getClass(), '\\'));
     }
     elseif (is_array($definition) && isset($definition['class'])) {
