@@ -369,7 +369,25 @@ class EntityResource {
    *   The response.
    */
   public function deleteIndividual(EntityInterface $entity) {
-    $entity->delete();
+    // @todo Replace with entity handlers in: https://www.drupal.org/project/drupal/issues/3230434
+    if ($entity->getEntityTypeId() === 'user') {
+      $cancel_method = \Drupal::service('config.factory')->get('user.settings')->get('cancel_method');
+
+      // Allow other modules to act.
+
+      user_cancel([], $entity->id(), $cancel_method);
+      // Since user_cancel() is not invoked via Form API, batch processing
+      // needs to be invoked manually.
+      $batch =& batch_get();
+      // Mark this batch as non-progressive to bypass the progress bar and
+      // redirect.
+      $batch['progressive'] = FALSE;
+      batch_process();
+    }
+    else {
+      $entity->delete();
+    }
+
     return new ResourceResponse(NULL, 204);
   }
 
