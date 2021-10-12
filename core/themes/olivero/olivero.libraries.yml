@@ -118,6 +118,12 @@ dropbutton:
     component:
       css/components/dropbutton.css: {}
 
+drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/components/ui-dialog.css: {}
+
 drupal.node.preview:
   version: VERSION
   css:

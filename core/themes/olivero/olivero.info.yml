@@ -62,6 +62,8 @@ libraries-extend:
     - olivero/messages
   core/drupal.collapse:
     - olivero/details
+  core/drupal.dialog:
+    - olivero/drupal.dialog
   core/drupal.dialog.off_canvas:
     - olivero/dialog.off_canvas
   core/drupal.progress:

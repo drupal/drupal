@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Styles for jQuery UI dialog.
+ */
+.ui-widget-overlay {
+  z-index: 1259;
+}
+
+.ui-dialog {
+  z-index: 1260;
+}
