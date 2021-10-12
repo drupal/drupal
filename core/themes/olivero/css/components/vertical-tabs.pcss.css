@@ -68,6 +68,7 @@
   padding-inline-start: var(--sp0-75);
   padding-inline-end: var(--sp0-75);
   text-decoration: none;
+  color: var(--color--blue-10);
   background-color: var(--color--gray-80);
 
   &:focus,
