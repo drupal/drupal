@@ -54,7 +54,7 @@
        * Update summary.
        */
       onSummaryUpdated() {
-        const text = $.trim(this.$node.drupalGetSummary());
+        const text = this.$node.drupalGetSummary();
         this.$detailsSummarizedContentWrapper.html(
           Drupal.theme('detailsSummarizedContentText', text),
         );

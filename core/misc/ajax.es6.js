@@ -120,7 +120,7 @@
     // exception here.
     try {
       statusText = `\n${Drupal.t('StatusText: !statusText', {
-        '!statusText': $.trim(xmlhttp.statusText),
+        '!statusText': xmlhttp.statusText.trim(),
       })}`;
     } catch (e) {
       // Empty.
@@ -131,7 +131,7 @@
     // xmlhttp.responseText is going to throw an exception. So we'll catch it.
     try {
       responseText = `\n${Drupal.t('ResponseText: !responseText', {
-        '!responseText': $.trim(xmlhttp.responseText),
+        '!responseText': xmlhttp.responseText.trim(),
       })}`;
     } catch (e) {
       // Empty.

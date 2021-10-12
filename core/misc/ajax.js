@@ -83,7 +83,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     try {
       statusText = "\n".concat(Drupal.t('StatusText: !statusText', {
-        '!statusText': $.trim(xmlhttp.statusText)
+        '!statusText': xmlhttp.statusText.trim()
       }));
     } catch (e) {}
 
@@ -91,7 +91,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     try {
       responseText = "\n".concat(Drupal.t('ResponseText: !responseText', {
-        '!responseText': $.trim(xmlhttp.responseText)
+        '!responseText': xmlhttp.responseText.trim()
       }));
     } catch (e) {}
 

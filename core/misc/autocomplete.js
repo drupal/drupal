@@ -30,7 +30,7 @@
     }
 
     if (value.length > 0) {
-      result.push($.trim(current));
+      result.push(current.trim());
     }
 
     return result;

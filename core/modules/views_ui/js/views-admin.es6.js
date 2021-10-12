@@ -312,7 +312,7 @@
    */
   Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
     const $target = $(event.target);
-    const label = $.trim($target.closest('td').next().html());
+    const label = $target.closest('td').next().html().trim();
     // Add/remove the checked item to the list.
     if ($target.is(':checked')) {
       this.$selected_div.show().css('display', 'block');

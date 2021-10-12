@@ -22,7 +22,7 @@
     var $menu = $('#edit-menu');
     var values = [];
     $menu.find('input:checked').each(function () {
-      values.push(Drupal.checkPlain($.trim($(this).val())));
+      values.push(Drupal.checkPlain($(this).val()));
     });
     $.ajax({
       url: "".concat(window.location.protocol, "//").concat(window.location.host).concat(Drupal.url('admin/structure/menu/parents')),

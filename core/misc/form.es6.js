@@ -31,7 +31,7 @@
    */
   $.fn.drupalGetSummary = function () {
     const callback = this.data('summaryCallback');
-    return this[0] && callback ? $.trim(callback(this[0])) : '';
+    return this[0] && callback ? callback(this[0]).trim() : '';
   };
 
   /**

@@ -8,7 +8,7 @@
 (function ($, Drupal, debounce) {
   $.fn.drupalGetSummary = function () {
     var callback = this.data('summaryCallback');
-    return this[0] && callback ? $.trim(callback(this[0])) : '';
+    return this[0] && callback ? callback(this[0]).trim() : '';
   };
 
   $.fn.drupalSetSummary = function (callback) {

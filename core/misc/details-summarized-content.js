@@ -20,7 +20,7 @@
       this.$node.on('summaryUpdated', $.proxy(this.onSummaryUpdated, this)).trigger('summaryUpdated').find('> summary').append(this.$detailsSummarizedContentWrapper);
     },
     onSummaryUpdated: function onSummaryUpdated() {
-      var text = $.trim(this.$node.drupalGetSummary());
+      var text = this.$node.drupalGetSummary();
       this.$detailsSummarizedContentWrapper.html(Drupal.theme('detailsSummarizedContentText', text));
     }
   });

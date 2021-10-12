@@ -32,7 +32,7 @@
 
     $menu.find('input:checked').each(function () {
       // Get the names of all checked menus.
-      values.push(Drupal.checkPlain($.trim($(this).val())));
+      values.push(Drupal.checkPlain($(this).val()));
     });
 
     $.ajax({

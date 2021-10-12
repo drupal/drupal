@@ -48,7 +48,7 @@
     "jquery/no-text": 0,
     "jquery/no-toggle": 0,
     "jquery/no-trigger": 0,
-    "jquery/no-trim": 0,
+    "jquery/no-trim": 2,
     "jquery/no-val": 0,
     "jquery/no-when": 0,
     "jquery/no-wrap": 0
