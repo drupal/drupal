@@ -14,7 +14,7 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
   color: inherit;
-  border: solid 2px var(--color--gray-30);
+  border: solid 2px var(--color--gray-25);
   border-radius: var(--border-radius);
   background-color: var(--color--white);
 }
@@ -42,7 +42,7 @@ _:-ms-fullscreen,
   color: inherit;
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
-  background-color: var(--color--gray-30);
+  background-color: var(--color--gray-25);
   font-size: var(--font-size-l);
   font-weight: 700;
   line-height: var(--line-height-base);
@@ -83,7 +83,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: var(--color--gray-30);
+  color: var(--color--gray-25);
 }
 
 .fieldset__description {
@@ -126,7 +126,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
-  border: solid 2px var(--color--gray-30);
+  border: solid 2px var(--color--gray-25);
   border-bottom-right-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
 }

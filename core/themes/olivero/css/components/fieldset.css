@@ -49,7 +49,7 @@
   padding-top: 0;
   padding-bottom: 0;
   color: inherit;
-  border: solid 2px #7e96a7;
+  border: solid 2px #5d7585;
   border-radius: 0.1875rem;
   background-color: #fff;
 }
@@ -78,7 +78,7 @@ _:-ms-fullscreen,
   color: inherit;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-  background-color: #7e96a7;
+  background-color: #5d7585;
   font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.6875rem
@@ -130,7 +130,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: #7e96a7;
+  color: #5d7585;
 }
 
 .fieldset__description {
@@ -185,7 +185,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
-  border: solid 2px #7e96a7;
+  border: solid 2px #5d7585;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
