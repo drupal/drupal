@@ -128,7 +128,7 @@ class DatabaseStorage implements StorageInterface {
         return $this->doWrite($name, $data);
       }
       // Some other failure that we can not recover from.
-      throw $e;
+      throw new StorageException($e->getMessage(), 0, $e);
     }
   }
 
@@ -161,10 +161,7 @@ class DatabaseStorage implements StorageInterface {
    */
   protected function ensureTableExists() {
     try {
-      if (!$this->connection->schema()->tableExists($this->table)) {
-        $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-        return TRUE;
-      }
+      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
     }
     // If another process has already created the config table, attempting to
     // recreate it will throw an exception. In this case just catch the
@@ -173,9 +170,9 @@ class DatabaseStorage implements StorageInterface {
       return TRUE;
     }
     catch (\Exception $e) {
-      throw new StorageException($e->getMessage(), 0, $e);
+      return FALSE;
     }
-    return FALSE;
+    return TRUE;
   }
 
   /**

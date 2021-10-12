@@ -5,7 +5,7 @@ namespace Drupal\Core\KeyValueStore;
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -255,24 +255,26 @@ class DatabaseStorage extends StorageBase {
   protected function ensureTableExists() {
     try {
       $database_schema = $this->connection->schema();
-      if (!$database_schema->tableExists($this->table)) {
-        $database_schema->createTable($this->table, $this->schemaDefinition());
-        return TRUE;
-      }
+      $database_schema->createTable($this->table, $this->schemaDefinition());
     }
     // If the table already exists, then attempting to recreate it will throw an
     // exception. In this case just catch the exception and do nothing.
-    catch (SchemaObjectExistsException $e) {
-      return TRUE;
+    catch (DatabaseException $e) {
     }
-    return FALSE;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**
    * Act on an exception when the table might not have been created.
    *
    * If the table does not yet exist, that's fine, but if the table exists and
-   * yet the query failed, then the exception needs to propagate.
+   * yet the query failed, then the exception needs to propagate if it is not
+   * a DatabaseException. Due to race conditions it is possible that another
+   * request has created the table in the meantime. Therefore we can not rethrow
+   * for any database exception.
    *
    * @param \Exception $e
    *   The exception.
@@ -280,7 +282,7 @@ class DatabaseStorage extends StorageBase {
    * @throws \Exception
    */
   protected function catchException(\Exception $e) {
-    if ($this->connection->schema()->tableExists($this->table)) {
+    if (!($e instanceof DatabaseException) && $this->connection->schema()->tableExists($this->table)) {
       throw $e;
     }
   }

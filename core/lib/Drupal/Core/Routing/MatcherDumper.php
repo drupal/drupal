@@ -83,6 +83,10 @@ class MatcherDumper implements MatcherDumperInterface {
    *
    * @param array $options
    *   An array of options.
+   *
+   * @throws \Exception
+   *   Thrown if the table could not be created or the database connection
+   *   failed.
    */
   public function dump(array $options = []) {
     // Convert all of the routes into database records.
@@ -100,7 +104,9 @@ class MatcherDumper implements MatcherDumperInterface {
           ->execute();
       }
       catch (\Exception $e) {
-        $this->ensureTableExists();
+        if (!$this->ensureTableExists()) {
+          throw $e;
+        }
       }
 
       // Split the routes into chunks to avoid big INSERT queries.
@@ -174,18 +180,17 @@ class MatcherDumper implements MatcherDumperInterface {
    */
   protected function ensureTableExists() {
     try {
-      if (!$this->connection->schema()->tableExists($this->tableName)) {
-        $this->connection->schema()->createTable($this->tableName, $this->schemaDefinition());
-        return TRUE;
-      }
+      $this->connection->schema()->createTable($this->tableName, $this->schemaDefinition());
     }
     catch (DatabaseException $e) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.
-      return TRUE;
     }
-    return FALSE;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**

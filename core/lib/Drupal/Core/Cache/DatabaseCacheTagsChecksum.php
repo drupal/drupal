@@ -47,7 +47,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       // core install where cache tags are invalidated before the table is
       // created.
       if (!$this->ensureTableExists()) {
-        $this->catchException($e);
+        throw $e;
       }
     }
   }
@@ -63,7 +63,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
     catch (\Exception $e) {
       // If the table does not exist yet, create.
       if (!$this->ensureTableExists()) {
-        $this->catchException($e);
+        throw $e;
       }
     }
     return [];
@@ -75,21 +75,18 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   protected function ensureTableExists() {
     try {
       $database_schema = $this->connection->schema();
-      // Create the cache tags table if it does not exist.
-      if (!$database_schema->tableExists('cachetags')) {
-        $schema_definition = $this->schemaDefinition();
-        $database_schema->createTable('cachetags', $schema_definition);
-
-        return TRUE;
-      }
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable('cachetags', $schema_definition);
     }
     // If another process has already created the cachetags table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
     catch (DatabaseException $e) {
-      return TRUE;
     }
-    return FALSE;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**
@@ -131,8 +128,14 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    *   The exception.
    *
    * @throws \Exception
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3243014
    */
   protected function catchException(\Exception $e) {
+    @trigger_error('\Drupal\Core\Cache\DatabaseCacheTagsChecksum::catchException is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3243014', E_USER_DEPRECATED);
     if ($this->connection->schema()->tableExists('cachetags')) {
       throw $e;
     }

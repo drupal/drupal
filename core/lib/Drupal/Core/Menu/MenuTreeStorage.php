@@ -247,7 +247,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         return $query->execute();
       }
       // Some other failure that we can not recover from.
-      throw $e;
+      throw new PluginException($e->getMessage(), 0, $e);
     }
   }
 
@@ -1157,27 +1157,20 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @return bool
    *   TRUE if the table was created, FALSE otherwise.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
-   *   If a database error occurs.
    */
   protected function ensureTableExists() {
     try {
-      if (!$this->connection->schema()->tableExists($this->table)) {
-        $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-        return TRUE;
-      }
+      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
     }
     catch (DatabaseException $e) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.
-      return TRUE;
     }
     catch (\Exception $e) {
-      throw new PluginException($e->getMessage(), 0, $e);
+      return FALSE;
     }
-    return FALSE;
+    return TRUE;
   }
 
   /**

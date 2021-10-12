@@ -177,19 +177,18 @@ class DatabaseLockBackend extends LockBackendAbstract {
   protected function ensureTableExists() {
     try {
       $database_schema = $this->database->schema();
-      if (!$database_schema->tableExists(static::TABLE_NAME)) {
-        $schema_definition = $this->schemaDefinition();
-        $database_schema->createTable(static::TABLE_NAME, $schema_definition);
-        return TRUE;
-      }
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
     }
     // If another process has already created the semaphore table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
     catch (DatabaseException $e) {
-      return TRUE;
     }
-    return FALSE;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**

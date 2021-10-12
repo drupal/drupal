@@ -159,6 +159,10 @@ trait CacheTagsChecksumTrait {
    *
    * @return int[]
    *   List of invalidation counts keyed by the respective cache tag.
+   *
+   * @throws \Exception
+   *   Thrown if the table could not be created or the database connection
+   *   failed.
    */
   abstract protected function getTagInvalidationCounts(array $tags);
 
@@ -175,6 +179,10 @@ trait CacheTagsChecksumTrait {
    *
    * @param string[] $tags
    *   The set of tags for which to invalidate cache items.
+   *
+   * @throws \Exception
+   *   Thrown if the table could not be created or the database connection
+   *   failed.
    */
   abstract protected function doInvalidateTags(array $tags);
 
