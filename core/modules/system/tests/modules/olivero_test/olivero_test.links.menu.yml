@@ -10,6 +10,12 @@ olivero_test.child:
   parent: olivero_test.front_page
   menu_name: main
   weight: 100
+olivero_test.child_child:
+  title: Child link
+  route_name: <front>
+  parent: olivero_test.child
+  menu_name: main
+  weight: 100
 olivero_test.button:
   title: Button
   route_name: <button>
