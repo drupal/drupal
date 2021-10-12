@@ -38,7 +38,7 @@ select {
     }
   }
 
-  /* Disables border of select specifically for ms browser */
+  /* Hides default chevron within Internet Explorer. */
   &::-ms-expand {
     display: none;
   }
@@ -71,12 +71,25 @@ select {
     height: var(--sp2-5);
   }
 
-  /* Necessary for IE11 to show chevron. */
-  @media screen and (-ms-high-contrast: active) {
-    background-image: var(--form-element-select-icon);
+  /* Necessary to show chevron in forced colors mode in modern browsers. */
+  @media (forced-colors: active) {
+    padding-inline-end: var(--sp);
+    background-image: none;
+    appearance: listbox; /* Default <select> appearance value for modern browsers. */
 
-    &[multiple] {
-      background-image: none;
+    /* Lets browser set <select> appearance to whatever the browser's default is. */
+    @supports (appearance: revert) {
+      appearance: revert;
+    }
+  }
+
+  /* Necessary for Internet Explorer to show chevron. */
+  @media screen and (-ms-high-contrast: active) {
+    padding-inline-end: 0;
+
+    /* Re-enable default chevron for Internet Explorer. */
+    &::-ms-expand {
+      display: block;
     }
   }
 }
