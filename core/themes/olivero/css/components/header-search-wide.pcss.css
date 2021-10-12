@@ -256,6 +256,14 @@
     margin-inline-start: auto;
     margin-inline-end: auto;
   }
+
+  @media (forced-colors: active) {
+    background: ButtonFace;
+
+    & path {
+      fill: ButtonText;
+    }
+  }
 }
 
 /* Provide rudimentary access to site search if JS is disabled. */
