@@ -166,7 +166,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     // the url() path.
     $directory = $directory == '.' ? '' : $directory . '/';
 
-    // Alter all internal url() paths. Leave external paths alone. We don't need
+    // Alter all internal asset paths. Leave external paths alone. We don't need
     // to normalize absolute paths here because that will be done later.
     return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+)([^\'")]+)([\'"]?)\s*\)/i', 'url(\1' . $directory . '\2\3)', $file);
   }
@@ -230,7 +230,9 @@ class CssOptimizer implements AssetOptimizerInterface {
     }
 
     // Replaces @import commands with the actual stylesheet content.
-    // This happens recursively but omits external files.
+    // This happens recursively but omits external files and local files
+    // with supports- or media-query qualifiers, as those are conditionally
+    // loaded depending on the user agent.
     $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)(?!\/\/)([^\'"\()]+)[\'"]?\s*\)?\s*;/', [$this, 'loadNestedFile'], $contents);
 
     return $contents;
