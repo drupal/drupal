@@ -1047,6 +1047,7 @@ nothere
 notnull
 notsimpletest
 nourriture
+nowdoc
 nplurals
 nresponse
 ntfs
