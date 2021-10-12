@@ -68,6 +68,7 @@
 }
 
 .site-header__inner {
+  z-index: 1; /* Appear in front of Drupal's tabs. */
   flex-grow: 1;
   width: calc(100vw - 5.625rem);
   background: #fff;
