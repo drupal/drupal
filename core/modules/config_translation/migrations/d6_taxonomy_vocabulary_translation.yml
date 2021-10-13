@@ -25,6 +25,7 @@ process:
 destination:
   plugin: entity:taxonomy_vocabulary
   destination_module: config_translation
+  translations: true
 migration_dependencies:
   required:
     - d6_taxonomy_vocabulary

@@ -211,7 +211,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   The destination identifier keyed values of the record, e.g. ['nid' => 5].
    *
    * @return array
-   *   The row(s) of data.
+   *   The row(s) of data or an empty array when there is no matching map row.
    */
   public function getRowByDestination(array $destination_id_values);
 

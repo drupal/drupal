@@ -37,7 +37,7 @@ class SubProcessTest extends MigrateTestCase {
    * @dataProvider providerTestSubProcess
    */
   public function testSubProcess($process_configuration, $source_values = []) {
-    $migration = $this->getMigration($process_configuration);
+    $migration = $this->getMigration();
     // Set up the properties for the sub_process.
     $plugin = new SubProcess($process_configuration, 'sub_process', []);
     // Manually create the plugins. Migration::getProcessPlugins does this

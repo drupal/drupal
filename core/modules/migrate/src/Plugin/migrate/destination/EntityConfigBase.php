@@ -50,6 +50,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   bundle: 'constants/bundle'
  *   field_name: name
  *   ...
+ *   property: property
  *   translation: translation
  * destination:
  *   plugin: entity:field_config
@@ -58,7 +59,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Because the translations configuration is set to "true", this will save the
  * migrated, processed row to a "field_config" entity associated with the
- * designated langcode.
+ * designated langcode. Note that the this makes the "translation" and
+ * "property" properties required.
  */
 class EntityConfigBase extends Entity {
 
@@ -190,12 +192,16 @@ class EntityConfigBase extends Entity {
    *   The entity to update.
    * @param \Drupal\migrate\Row $row
    *   The row object to update from.
+   *
+   * @throws \LogicException
+   *   Thrown if the destination is for translations and either the "property"
+   *   or "translation" property does not exist.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
     // This is a translation if the language in the active config does not
     // match the language of this row.
     $translation = FALSE;
-    if ($row->hasDestinationProperty('langcode') && $this->languageManager instanceof ConfigurableLanguageManager) {
+    if ($this->isTranslationDestination() && $row->hasDestinationProperty('langcode') && $this->languageManager instanceof ConfigurableLanguageManager) {
       $config = $entity->getConfigDependencyName();
       $langcode = $this->configFactory->get('langcode');
       if ($langcode != $row->getDestinationProperty('langcode')) {
@@ -204,6 +210,12 @@ class EntityConfigBase extends Entity {
     }
 
     if ($translation) {
+      if (!$row->hasDestinationProperty('property')) {
+        throw new \LogicException('The "property" property is required');
+      }
+      if (!$row->hasDestinationProperty('translation')) {
+        throw new \LogicException('The "translation" property is required');
+      }
       $config_override = $this->languageManager->getLanguageConfigOverride($row->getDestinationProperty('langcode'), $config);
       $config_override->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $row->getDestinationProperty('property')), $row->getDestinationProperty('translation'));
       $config_override->save();

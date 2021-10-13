@@ -53,6 +53,7 @@ process:
   field_name: type
 destination:
   plugin: entity:field_config
+  translations: true
 migration_dependencies:
   required:
     - language
