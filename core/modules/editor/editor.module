@@ -396,13 +396,19 @@ function editor_entity_update(EntityInterface $entity) {
   // File references that existed both in the previous version of the revision
   // and in the new one don't need their usage to be updated.
   else {
-    $original_uuids_by_field = _editor_get_file_uuids_by_field($entity->original);
+    $original_uuids_by_field = empty($entity->original) ? [] :
+      _editor_get_file_uuids_by_field($entity->original);
+
     $uuids_by_field = _editor_get_file_uuids_by_field($entity);
 
     // Detect file usages that should be incremented.
     foreach ($uuids_by_field as $field => $uuids) {
-      $added_files = array_diff($uuids_by_field[$field], $original_uuids_by_field[$field]);
-      _editor_record_file_usage($added_files, $entity);
+      $original_uuids = isset($original_uuids_by_field[$field]) ?
+        $original_uuids_by_field[$field] : [];
+
+      if ($added_files = array_diff($uuids_by_field[$field], $original_uuids)) {
+        _editor_record_file_usage($added_files, $entity);
+      }
     }
 
     // Detect file usages that should be decremented.
