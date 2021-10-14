@@ -5,8 +5,44 @@
  * Helper module for the Text Editor tests.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\file\FileInterface;
+
+/**
+ * Implements hook_entity_update().
+ *
+ * @see \Drupal\Tests\editor\Kernel\EntityUpdateTest
+ */
+function editor_test_entity_update(EntityInterface $entity) {
+  // Only act on nodes.
+  if (!$entity instanceof NodeInterface) {
+    return;
+  }
+
+  // Avoid infinite loop by only going through our post save logic once.
+  if (!empty($entity->editor_test_updating)) {
+    return;
+  }
+
+  // Set flag for whether or not the entity needs to be resaved.
+  $needs_update = FALSE;
+
+  // Perform our post save logic.
+  if ($entity->title->value == 'test updated') {
+    // Change the node title.
+    $entity->title->value = 'test updated 2';
+    $needs_update = TRUE;
+  }
+
+  if ($needs_update) {
+    // Set flag on entity that our logic was already executed.
+    $entity->editor_test_updating = TRUE;
+    // And resave entity.
+    $entity->save();
+  }
+}
 
 /**
  * Implements hook_editor_js_settings_alter().
