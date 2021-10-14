@@ -62,7 +62,7 @@ class Context implements ContextInterface {
    * {@inheritdoc}
    */
   public function hasContextValue() {
-    return (bool) $this->contextValue || (bool) $this->getContextDefinition()->getDefaultValue();
+    return $this->contextValue !== NULL || $this->getContextDefinition()->getDefaultValue() !== NULL;
   }
 
   /**
