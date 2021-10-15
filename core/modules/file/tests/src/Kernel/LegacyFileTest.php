@@ -11,8 +11,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * Tests file.module methods.
  *
  * @group file
+ * @group legacy
  */
-class FileModuleTest extends KernelTestBase {
+class LegacyFileTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -29,6 +30,7 @@ class FileModuleTest extends KernelTestBase {
     $file_info = $this->createMock(UploadedFile::class);
     $file_info->expects($this->once())->method('getError')->willReturn(UPLOAD_ERR_FORM_SIZE);
     $file_info->expects($this->once())->method('getClientOriginalName')->willReturn($file_name);
+    $this->expectDeprecation('_file_save_upload_single() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\Upload\FileUploadHandler::handleFileUpload() instead. See https://www.drupal.org/node/3239547');
     $this->assertFalse(\_file_save_upload_single($file_info, 'name'));
     $expected_message = new TranslatableMarkup('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $file_name, '%maxsize' => format_size(Environment::getUploadMaxSize())]);
     $this->assertEquals($expected_message, \Drupal::messenger()->all()['error'][0]);
