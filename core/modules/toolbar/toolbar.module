@@ -41,7 +41,7 @@ function toolbar_theme($existing, $type, $theme, $path) {
   ];
   $items['menu__toolbar'] = [
     'base hook' => 'menu',
-    'variables' => ['items' => [], 'attributes' => []],
+    'variables' => ['menu_name' => NULL, 'items' => [], 'attributes' => []],
   ];
 
   return $items;
