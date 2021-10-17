@@ -17,7 +17,7 @@ class LogMessageParser implements LogMessageParserInterface {
       $has_psr3 = TRUE;
       // Transform PSR3 style messages containing placeholders to
       // \Drupal\Component\Render\FormattableMarkup style.
-      $message = preg_replace('/\{(.*)\}/U', '@$1', $message);
+      $message = preg_replace('/\{([^\{}]*)\}/U', '@$1', $message);
     }
     foreach ($context as $key => $variable) {
       // PSR3 style placeholders.

@@ -246,6 +246,23 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Test that twig errors are displayed correctly.
+   */
+  public function testMessageParsing() {
+    $this->drupalLogin($this->adminUser);
+    // Log a common twig error with {{ }} and { } variables.
+    \Drupal::service('logger.factory')->get("php")
+      ->error('Incorrect parameter {{foo}} in path {path}: {value}',
+        ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
+      );
+    // View the log page to verify it's correct.
+    $wid = \Drupal::database()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertSession()
+      ->responseContains('Incorrect parameter {bar} in path /baz: horse');
+  }
+
+  /**
    * Verifies setting of the database log row limit.
    *
    * @param int $row_limit
