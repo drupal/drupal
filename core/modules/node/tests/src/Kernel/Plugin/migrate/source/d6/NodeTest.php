@@ -38,6 +38,18 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'active' => '1',
         'locked' => '0',
       ],
+      [
+        'field_name' => 'field_test_empty_db_columns',
+        'type' => 'empty_db_columns',
+        'global_settings' => 'a:0:{}',
+        'required' => '0',
+        'multiple' => '0',
+        'db_storage' => '1',
+        'module' => 'empty_db_columns',
+        'db_columns' => 'a:0:{}',
+        'active' => '1',
+        'locked' => '0',
+      ],
     ];
     $tests[0]['source_data']['content_node_field_instance'] = [
       [
@@ -50,6 +62,18 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'display_settings' => 'a:0:{}',
         'description' => 'An example float field.',
         'widget_module' => 'number',
+        'widget_active' => '1',
+      ],
+      [
+        'field_name' => 'field_test_empty_db_columns',
+        'type_name' => 'story',
+        'weight' => '33',
+        'label' => 'Empty db_columns Field',
+        'widget_type' => 'empty_db_columns',
+        'widget_settings' => 'a:0:{}',
+        'display_settings' => 'a:0:{}',
+        'description' => 'An example field with empty db_columns.',
+        'widget_module' => 'empty_db_columns',
         'widget_active' => '1',
       ],
     ];
