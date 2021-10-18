@@ -77,7 +77,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->entityQueryExpects($count);
     $value = $this->randomMachineName(32);
-    $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
+    $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'foo');
     $expected = mb_substr($value, $start ?? 0, $length);
     $expected .= $count ? $postfix . $count : '';
     $this->assertSame($expected, $actual);
@@ -95,7 +95,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->expectException('Drupal\migrate\MigrateException');
     $this->expectExceptionMessage('The start position configuration key should be an integer. Omit this key to capture from the beginning of the string.');
-    $plugin->transform('test_start', $this->migrateExecutable, $this->row, 'testproperty');
+    $plugin->transform('test_start', $this->migrateExecutable, $this->row, 'foo');
   }
 
   /**
@@ -110,7 +110,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->expectException('Drupal\migrate\MigrateException');
     $this->expectExceptionMessage('The character length configuration key should be an integer. Omit this key to capture the entire string.');
-    $plugin->transform('test_length', $this->migrateExecutable, $this->row, 'testproperty');
+    $plugin->transform('test_length', $this->migrateExecutable, $this->row, 'foo');
   }
 
   /**
@@ -209,11 +209,11 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
       ]);
 
     // Existing entity 'forums' was not migrated, value should not be unique.
-    $actual = $plugin->transform('forums', $this->migrateExecutable, $this->row, 'testproperty');
+    $actual = $plugin->transform('forums', $this->migrateExecutable, $this->row, 'foo');
     $this->assertEquals('forums', $actual, 'Pre-existing name is re-used');
 
     // Entity 'test_vocab' was migrated, value should be unique.
-    $actual = $plugin->transform('test_vocab', $this->migrateExecutable, $this->row, 'testproperty');
+    $actual = $plugin->transform('test_vocab', $this->migrateExecutable, $this->row, 'foo');
     $this->assertEquals('test_vocab1', $actual, 'Migrated name is deduplicated');
   }
 

@@ -9,6 +9,8 @@ use Drupal\Tests\migrate\Unit\TestSqlIdMap;
 use Drupal\migrate\MigrateException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// cspell:ignore sourceid
+
 /**
  * Tests that the migrate map table is created.
  *

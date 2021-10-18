@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Event;
 
+// cspell:ignore idmap
+
 /**
  * Defines events for the migration system.
  *
@@ -167,11 +169,11 @@ final class MigrateEvents {
   const POST_ROW_DELETE = 'migrate.post_row_delete';
 
   /**
-   * Name of the event fired when saving a message to the idmap.
+   * Name of the event fired when saving a message to the ID map.
    *
    * This event allows modules to perform an action whenever a message is being
-   * logged by the idmap. The event listener method
-   * receives a \Drupal\migrate\Event\MigrateIdMapMessageEvent instance.
+   * logged by the ID map. The event listener method receives a
+   * \Drupal\migrate\Event\MigrateIdMapMessageEvent instance.
    *
    * @Event
    *

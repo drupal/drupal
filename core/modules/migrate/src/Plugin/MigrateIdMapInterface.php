@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;
 
+// cspell:ignore destid sourceid
+
 /**
  * Defines an interface for migrate ID mappings.
  *
@@ -124,7 +126,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Prepares to run a full update.
    *
    * Prepares this migration to run as an update - that is, in addition to
-   * unmigrated content (source records not in the map table) being imported,
+   * un-migrated content (source records not in the map table) being imported,
    * previously-migrated content will also be updated in place by marking all
    * previously-imported content as ready to be re-imported.
    */
@@ -158,7 +160,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * Returns the number of items that failed to import.
    *
    * @return int
-   *   The number of items that errored out.
+   *   The number of items that failed to import.
    */
   public function errorCount();
 

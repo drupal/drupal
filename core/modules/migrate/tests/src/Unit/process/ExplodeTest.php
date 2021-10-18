@@ -45,11 +45,11 @@ class ExplodeTest extends MigrateProcessTestCase {
    * Tests if the explode process can be chained with handles_multiple process.
    */
   public function testChainedTransform() {
-    $exploded = $this->plugin->transform('foo,bar,tik', $this->migrateExecutable, $this->row, 'destination_property');
+    $exploded = $this->plugin->transform('One,Two,Three', $this->migrateExecutable, $this->row, 'destination_property');
 
     $concat = new Concat([], 'map', []);
     $concatenated = $concat->transform($exploded, $this->migrateExecutable, $this->row, 'destination_property');
-    $this->assertSame('foobartik', $concatenated);
+    $this->assertSame('OneTwoThree', $concatenated);
   }
 
   /**

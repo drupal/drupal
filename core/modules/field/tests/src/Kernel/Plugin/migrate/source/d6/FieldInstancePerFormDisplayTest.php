@@ -4,6 +4,8 @@ namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore filefield
+
 /**
  * Tests d6_field_instance_per_form_display source plugin.
  *

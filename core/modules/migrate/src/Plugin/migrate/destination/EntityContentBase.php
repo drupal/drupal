@@ -19,6 +19,8 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore validatable
+
 /**
  * Provides destination class for all content entities lacking a specific class.
  *

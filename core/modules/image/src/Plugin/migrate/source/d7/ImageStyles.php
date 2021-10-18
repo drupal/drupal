@@ -5,6 +5,8 @@ namespace Drupal\image\Plugin\migrate\source\d7;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
+// cspell:ignore isid
+
 /**
  * Drupal 7 image styles source from database.
  *

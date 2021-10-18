@@ -10,7 +10,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 
-// cspell:ignore imagelink
+// cspell:ignore filefield imagelink entityreference nodelink spamspan
 
 /**
  * Test FieldDiscovery Service against Drupal 7.

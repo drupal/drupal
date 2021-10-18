@@ -9,6 +9,8 @@ namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
 
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
+// cspell:ignore throttleable
+
 /**
  * Tests the D6 SQL base class.
  *

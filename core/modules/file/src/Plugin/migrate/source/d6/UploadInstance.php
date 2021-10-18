@@ -5,6 +5,8 @@ namespace Drupal\file\Plugin\migrate\source\d6;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
+// cspell:ignore uploadsize
+
 /**
  * Drupal 6 upload instance source from database.
  *

@@ -47,11 +47,11 @@ class TaxonomyTermReferenceFieldTest extends UnitTestCase {
    * @covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
-    $this->plugin->$method($this->migration, 'somefieldname', []);
+    $this->plugin->$method($this->migration, 'field_name', []);
 
     $expected = [
       'plugin' => 'sub_process',
-      'source' => 'somefieldname',
+      'source' => 'field_name',
       'process' => [
         'target_id' => 'tid',
       ],

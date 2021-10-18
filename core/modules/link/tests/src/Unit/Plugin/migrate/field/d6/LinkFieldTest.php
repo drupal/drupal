@@ -47,11 +47,11 @@ class LinkFieldTest extends UnitTestCase {
    * @covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
-    $this->plugin->$method($this->migration, 'somefieldname', []);
+    $this->plugin->$method($this->migration, 'field_name', []);
 
     $expected = [
       'plugin' => 'field_link',
-      'source' => 'somefieldname',
+      'source' => 'field_name',
     ];
     $this->assertSame($expected, $this->migration->getProcess());
   }

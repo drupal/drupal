@@ -5,6 +5,8 @@ namespace Drupal\rdf\Plugin\migrate\source\d7;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore rdftype
+
 /**
  * Drupal 7 rdf source from database.
  *

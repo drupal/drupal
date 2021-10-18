@@ -14,6 +14,8 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore destid sourceid
+
 /**
  * Sources whose data may be fetched via a database connection.
  *

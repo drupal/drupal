@@ -218,7 +218,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'revision_id' => '1',
         'language' => 'en',
         'delta' => '0',
-        'body_value' => 'Foobaz',
+        'body_value' => 'Foo',
         'body_summary' => '',
         'body_format' => 'filtered_html',
       ],
@@ -336,7 +336,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'timestamp' => 1279051598,
         'body' => [
           [
-            'value' => 'Foobaz',
+            'value' => 'Foo',
             'summary' => '',
             'format' => 'filtered_html',
           ],
@@ -610,7 +610,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
         'timestamp' => 1279051598,
         'body' => [
           [
-            'value' => 'Foobaz',
+            'value' => 'Foo',
             'summary' => '',
             'format' => 'filtered_html',
           ],

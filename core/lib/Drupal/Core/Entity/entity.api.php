@@ -14,6 +14,8 @@ use Drupal\Core\Render\Element;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 
+// cspell:ignore rdftype
+
 /**
  * @defgroup entity_crud Entity CRUD, editing, and view hooks
  * @{

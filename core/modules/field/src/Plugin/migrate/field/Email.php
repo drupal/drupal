@@ -5,6 +5,8 @@ namespace Drupal\field\Plugin\migrate\field;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
+// cspell:ignore spamspan
+
 /**
  * MigrateField Plugin for Drupal 6 and 7 email fields.
  *

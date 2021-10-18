@@ -5,6 +5,8 @@ namespace Drupal\comment\Plugin\migrate\source\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore vancode
+
 /**
  * Drupal 6 comment source from database.
  *

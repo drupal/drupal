@@ -51,11 +51,11 @@ class NodeReferenceFieldTest extends UnitTestCase {
    */
   public function testDefineValueProcessPipeline() {
     $this->expectDeprecation('The Drupal\migrate_drupal\Plugin\migrate\field\NodeReference is deprecated in drupal:9.1.0 and will be removed from drupal:10.0.0. Instead use \Drupal\migrate_drupal\Plugin\migrate\field\d6\NodeReference. See https://www.drupal.org/node/3159537.');
-    $this->plugin->defineValueProcessPipeline($this->migration, 'somefieldname', []);
+    $this->plugin->defineValueProcessPipeline($this->migration, 'field_name', []);
 
     $expected = [
       'plugin' => 'sub_process',
-      'source' => 'somefieldname',
+      'source' => 'field_name',
       'process' => ['target_id' => 'nid'],
     ];
     $this->assertSame($expected, $this->migration->getProcess());

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+// cspell:ignore Highwater
+
 /**
  * Tests migration high water property.
  *
@@ -123,15 +125,15 @@ class HighWaterTest extends MigrateTestBase {
     // Execute migration again.
     $this->executeMigration('high_water_test');
 
-    // Item with lower highwater should not be updated.
+    // Item with lower high water should not be updated.
     $this->assertNodeExists('Item 1');
     $this->assertNodeDoesNotExist('Item 1 updated');
 
-    // Item with equal highwater should not be updated.
+    // Item with equal high water should not be updated.
     $this->assertNodeExists('Item 2');
     $this->assertNodeDoesNotExist('Item 2 updated');
 
-    // Item with greater highwater should be updated.
+    // Item with greater high water should be updated.
     $this->assertNodeExists('Item 3 updated');
     $this->assertNodeDoesNotExist('Item 3');
   }
@@ -247,15 +249,15 @@ class HighWaterTest extends MigrateTestBase {
 
     $this->executeMigration('high_water_test');
 
-    // Item with lower highwater should be updated.
+    // Item with lower high water should be updated.
     $this->assertNodeExists('Item 1 updated');
     $this->assertNodeDoesNotExist('Item 1');
 
-    // Item with equal highwater should be updated.
+    // Item with equal high water should be updated.
     $this->assertNodeExists('Item 2 updated');
     $this->assertNodeDoesNotExist('Item 2');
 
-    // Item with greater highwater should be updated.
+    // Item with greater high water should be updated.
     $this->assertNodeExists('Item 3 updated');
     $this->assertNodeDoesNotExist('Item 3');
   }

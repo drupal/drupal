@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   data_rows:
  *     -
  *       user_id: 1
- *       name: johnsmith
+ *       name: JohnSmith
  *       mail: johnsmith@example.com
  *       hash: '5f4dcc3b5aa765d61d8327deb882cf99'
  *   ids:

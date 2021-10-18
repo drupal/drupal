@@ -5,6 +5,8 @@ namespace Drupal\file\Plugin\migrate\field\d7;
 use Drupal\file\Plugin\migrate\field\d6\FileField as D6FileField;
 use Drupal\migrate\Plugin\MigrationInterface;
 
+// cspell:ignore filefield
+
 /**
  * @MigrateField(
  *   id = "file",

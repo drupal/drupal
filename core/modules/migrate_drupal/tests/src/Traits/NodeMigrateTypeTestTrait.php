@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate_drupal\Traits;
 
 use Drupal\migrate_drupal\NodeMigrateType;
 
+// cspell:ignore destid sourceid
+
 /**
  * Helper functions to test complete and classic node migrations.
  */

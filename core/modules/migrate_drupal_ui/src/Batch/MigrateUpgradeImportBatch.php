@@ -17,6 +17,8 @@ use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Plugin\MigrationWithFollowUpInterface;
 
+// cspell:ignore idmap
+
 /**
  * Runs a single migration batch.
  */

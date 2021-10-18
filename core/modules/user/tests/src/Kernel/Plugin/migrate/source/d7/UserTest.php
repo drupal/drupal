@@ -66,7 +66,7 @@ class UserTest extends MigrateSqlSourceTestBase {
       [
         'uid' => '2',
         'name' => 'Odo',
-        'pass' => '$S$DVpvPItXvnsmF3giVEe7Jy2lG.SCoEs8uKwpHsyPvdeNAaNZYxZ8',
+        'pass' => 'password',
         'mail' => 'odo@local.host',
         'theme' => '',
         'signature' => '',
@@ -94,7 +94,7 @@ class UserTest extends MigrateSqlSourceTestBase {
       [
         'uid' => '2',
         'name' => 'Odo',
-        'pass' => '$S$DVpvPItXvnsmF3giVEe7Jy2lG.SCoEs8uKwpHsyPvdeNAaNZYxZ8',
+        'pass' => 'password',
         'mail' => 'odo@local.host',
         'signature' => '',
         'signature_format' => 'filtered_html',

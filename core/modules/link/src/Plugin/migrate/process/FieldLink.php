@@ -80,15 +80,15 @@ class FieldLink extends ProcessPluginBase {
       // &#x0152;, &#x0153; and &#x0178;.
       // @see https://git.drupalcode.org/project/link/blob/7.x-1.5-beta2/link.module#L1382
       // cSpell:disable-next-line
-      $link_ichars = '¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸ';
+      $link_i_chars = '¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸ';
 
       // Pattern specific to internal links.
-      $internal_pattern = "/^(?:[a-z0-9" . $link_ichars . "_\-+\[\] ]+)";
+      $internal_pattern = "/^(?:[a-z0-9" . $link_i_chars . "_\-+\[\] ]+)";
 
-      $directories = "(?:\/[a-z0-9" . $link_ichars . "_\-\.~+%=&,$'#!():;*@\[\]]*)*";
+      $directories = "(?:\/[a-z0-9" . $link_i_chars . "_\-\.~+%=&,$'#!():;*@\[\]]*)*";
       // Yes, four backslashes == a single backslash.
-      $query = "(?:\/?\?([?a-z0-9" . $link_ichars . "+_|\-\.~\/\\\\%=&,$'():;*@\[\]{} ]*))";
-      $anchor = "(?:#[a-z0-9" . $link_ichars . "_\-\.~+%=&,$'():;*@\[\]\/\?]*)";
+      $query = "(?:\/?\?([?a-z0-9" . $link_i_chars . "+_|\-\.~\/\\\\%=&,$'():;*@\[\]{} ]*))";
+      $anchor = "(?:#[a-z0-9" . $link_i_chars . "_\-\.~+%=&,$'():;*@\[\]\/\?]*)";
 
       // The rest of the path for a standard URL.
       $end = $directories . '?' . $query . '?' . $anchor . '?$/i';
@@ -97,8 +97,8 @@ class FieldLink extends ProcessPluginBase {
         $link_domains = '[a-z][a-z0-9-]{1,62}';
 
         // Starting a parenthesis group with (?: means that it is grouped, but is not captured
-        $authentication = "(?:(?:(?:[\w\.\-\+!$&'\(\)*\+,;=" . $link_ichars . "]|%[0-9a-f]{2})+(?::(?:[\w" . $link_ichars . "\.\-\+%!$&'\(\)*\+,;=]|%[0-9a-f]{2})*)?)?@)";
-        $domain = '(?:(?:[a-z0-9' . $link_ichars . ']([a-z0-9' . $link_ichars . '\-_\[\]])*)(\.(([a-z0-9' . $link_ichars . '\-_\[\]])+\.)*(' . $link_domains . '|[a-z]{2}))?)';
+        $authentication = "(?:(?:(?:[\w\.\-\+!$&'\(\)*\+,;=" . $link_i_chars . "]|%[0-9a-f]{2})+(?::(?:[\w" . $link_i_chars . "\.\-\+%!$&'\(\)*\+,;=]|%[0-9a-f]{2})*)?)?@)";
+        $domain = '(?:(?:[a-z0-9' . $link_i_chars . ']([a-z0-9' . $link_i_chars . '\-_\[\]])*)(\.(([a-z0-9' . $link_i_chars . '\-_\[\]])+\.)*(' . $link_domains . '|[a-z]{2}))?)';
         $ipv4 = '(?:[0-9]{1,3}(\.[0-9]{1,3}){3})';
         $ipv6 = '(?:[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7})';
         $port = '(?::([0-9]{1,5}))';

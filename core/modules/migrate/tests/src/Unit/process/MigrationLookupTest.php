@@ -75,11 +75,11 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
 
     $configuration = [
-      'migration' => 'foobaz',
+      'migration' => 'foo',
     ];
     $migration_plugin->id()->willReturn(uniqid());
-    $migration_plugin_manager->createInstances(['foobaz'])
-      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
+    $migration_plugin_manager->createInstances(['foo'])
+      ->willReturn(['foo' => $migration_plugin->reveal()]);
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $this->expectException(MigrateSkipProcessException::class);
     $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
@@ -116,12 +116,12 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $migration_plugin->getIdMap()->willReturn($id_map->reveal());
 
     $configuration = [
-      'migration' => 'foobaz',
+      'migration' => 'foo',
       'no_stub' => TRUE,
     ];
     $migration_plugin->id()->willReturn(uniqid());
-    $migration_plugin_manager->createInstances(['foobaz'])
-      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
+    $migration_plugin_manager->createInstances(['foo'])
+      ->willReturn(['foo' => $migration_plugin->reveal()]);
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $lookup = $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
 
@@ -161,10 +161,10 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    */
   public function testSuccessfulLookup(array $source_id_values, array $destination_id_values, $source_value, $expected_value) {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $this->migrateLookup->lookup('foobaz', $source_id_values)->willReturn([$destination_id_values]);
+    $this->migrateLookup->lookup('foo', $source_id_values)->willReturn([$destination_id_values]);
 
     $configuration = [
-      'migration' => 'foobaz',
+      'migration' => 'foo',
     ];
 
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
@@ -242,9 +242,9 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    */
   public function testMultipleSourceIds() {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $this->migrateLookup->lookup('foobaz', ['id', 6])->willReturn([[2]]);
+    $this->migrateLookup->lookup('foo', ['id', 6])->willReturn([[2]]);
     $configuration = [
-      'migration' => 'foobaz',
+      'migration' => 'foo',
     ];
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $result = $migration->transform(['id', 6], $this->migrateExecutable, $this->row, '');
@@ -256,12 +256,12 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    */
   public function testMultipleMigrations() {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $this->migrateLookup->lookup('foobaz', [1])->willReturn([[2]]);
-    $this->migrateLookup->lookup('foobaz', [2])->willReturn([]);
+    $this->migrateLookup->lookup('example', [1])->willReturn([[2]]);
+    $this->migrateLookup->lookup('example', [2])->willReturn([]);
     $this->migrateLookup->lookup('foobar', [1, 2])->willReturn([]);
     $this->migrateLookup->lookup('foobar', [3, 4])->willReturn([[5]]);
     $configuration = [
-      'migration' => ['foobar', 'foobaz'],
+      'migration' => ['foobar', 'example'],
       'source_ids' => [
         'foobar' => ['foo', 'bar'],
       ],

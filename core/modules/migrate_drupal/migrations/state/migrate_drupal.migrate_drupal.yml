@@ -1,7 +1,9 @@
 # The modules listed here do not have an migration. A status of finished is
 # assigned so that they appear in the will not be upgraded list on the Review
 # form.
-# cspell:ignore imageapi imagefield imagemagick multiupload
+# cspell:ignore blogapi calendarsignup ctools datepicker ddblock entityreference
+# cspell:ignore filefield imageapi imagefield imagemagick multigroup multiupload
+# cspell:ignore nodeaccess openid
 finished:
   6:
     # The following do not have an upgrade path.

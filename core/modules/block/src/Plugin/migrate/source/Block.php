@@ -5,6 +5,8 @@ namespace Drupal\block\Plugin\migrate\source;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore whois
+
 /**
  * Drupal block source from database.
  *

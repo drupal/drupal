@@ -6,6 +6,8 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
+// cspell:ignore entityreference
+
 /**
  * @MigrateProcessPlugin(
  *   id = "d7_field_instance_settings"

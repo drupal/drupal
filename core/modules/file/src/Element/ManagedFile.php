@@ -15,6 +15,8 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore filefield
+
 /**
  * Provides an AJAX/progress aware widget for uploading and saving a file.
  *

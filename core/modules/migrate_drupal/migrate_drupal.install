@@ -7,6 +7,8 @@
 
 use Drupal\Core\Database\Database;
 
+// cspell:ignore sourceid
+
 /**
  * Implements hook_update_last_removed().
  */

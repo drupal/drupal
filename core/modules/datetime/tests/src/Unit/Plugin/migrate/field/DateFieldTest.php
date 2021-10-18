@@ -102,7 +102,7 @@ class DateFieldTest extends UnitTestCase {
 
     $this->expectException(MigrateException::class);
 
-    $plugin->defineValueProcessPipeline($migration, 'field_date', ['type' => 'totoro']);
+    $plugin->defineValueProcessPipeline($migration, 'field_date', ['type' => 'test']);
   }
 
 }

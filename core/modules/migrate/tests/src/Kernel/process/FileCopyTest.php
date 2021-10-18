@@ -164,7 +164,7 @@ class FileCopyTest extends FileTestBase {
     $source = '/non/existent/file';
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage("File '/non/existent/file' does not exist");
-    $this->doTransform($source, 'public://wontmatter.jpg');
+    $this->doTransform($source, 'public://foo.jpg');
   }
 
   /**
@@ -251,7 +251,7 @@ class FileCopyTest extends FileTestBase {
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
     $row = new Row([], []);
 
-    return $plugin->transform([$source_path, $destination_path], $executable, $row, 'foobaz');
+    return $plugin->transform([$source_path, $destination_path], $executable, $row, 'foo');
   }
 
 }

@@ -4,6 +4,8 @@ namespace Drupal\field\Plugin\migrate\field\d7;
 
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
+// cspell:ignore entityreference
+
 /**
  * MigrateField plugin for Drupal 7 entity_reference fields.
  *

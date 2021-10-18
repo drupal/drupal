@@ -8,6 +8,8 @@ use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
+// cspell:ignore rbaz
+
 /**
  * Tests the block_visibility process plugin.
  *

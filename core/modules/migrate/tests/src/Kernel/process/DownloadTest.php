@@ -115,7 +115,7 @@ class DownloadTest extends FileTestBase {
       'http://drupal.org/favicon.ico',
       $destination_uri,
     ];
-    return $plugin->transform($value, $executable, $row, 'foobaz');
+    return $plugin->transform($value, $executable, $row, 'foo');
   }
 
 }

@@ -28,7 +28,7 @@ class FieldFileTest extends UnitTestCase {
     $plugin = new FieldFile([], 'd6_file', [], $migration, $migrate_lookup->reveal());
 
     $options = [
-      'alt' => 'Foobaz',
+      'alt' => 'Foo',
       'title' => 'Bar',
     ];
     $value = [
@@ -42,7 +42,7 @@ class FieldFileTest extends UnitTestCase {
       'target_id' => 1,
       'display' => TRUE,
       'description' => '',
-      'alt' => 'Foobaz',
+      'alt' => 'Foo',
       'title' => 'Bar',
     ];
     $this->assertSame($expected, $transformed);

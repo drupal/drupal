@@ -36,7 +36,7 @@ class SqlBaseTest extends MigrateTestBase {
     parent::setUp();
 
     $this->migration = $this->createMock(MigrationInterface::class);
-    $this->migration->method('id')->willReturn('fubar');
+    $this->migration->method('id')->willReturn('foo');
   }
 
   /**

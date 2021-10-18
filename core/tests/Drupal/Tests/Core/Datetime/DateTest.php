@@ -245,7 +245,7 @@ class DateTest extends UnitTestCase {
    *
    * @covers ::formatDiff
    */
-  public function testformatDiff($expected, $max_age, $timestamp1, $timestamp2, $options = []) {
+  public function testFormatDiff($expected, $max_age, $timestamp1, $timestamp2, $options = []) {
     // Mocks a simple translateString implementation.
     $this->stringTranslation->expects($this->any())
       ->method('translateString')
@@ -267,7 +267,7 @@ class DateTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testformatDiff().
+   * Data provider for testFormatDiff().
    */
   public function providerTestFormatDiff() {
     // This is the fixed request time in the test.
