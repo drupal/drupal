@@ -21,7 +21,7 @@ class ImageStyleMappings extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!is_array($value)) {
-      throw new MigrateException(sprintf('Input should be an array for destination %s', $destination_property));
+      throw new MigrateException('Input should be an array');
     }
 
     list($mappings, $breakpoint_group) = $value;

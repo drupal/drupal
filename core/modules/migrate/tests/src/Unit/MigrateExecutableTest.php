@@ -111,19 +111,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $row->expects($this->once())
-      ->method('getSourceIdValues')
-      ->will($this->returnValue(['id' => 'test']));
-
-    $this->idMap->expects($this->once())
-      ->method('lookupDestinationIds')
-      ->with(['id' => 'test'])
-      ->will($this->returnValue([['test']]));
-
-    $source->expects($this->once())
-      ->method('current')
-      ->will($this->returnValue($row));
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -131,10 +118,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue([]));
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
-    $destination->expects($this->once())
-      ->method('import')
-      ->with($row, ['test'])
-      ->will($this->returnValue(['id' => 'test']));
 
     $this->migration
       ->method('getDestinationPlugin')
@@ -153,19 +136,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $row->expects($this->once())
-      ->method('getSourceIdValues')
-      ->will($this->returnValue(['id' => 'test']));
-
-    $this->idMap->expects($this->once())
-      ->method('lookupDestinationIds')
-      ->with(['id' => 'test'])
-      ->will($this->returnValue([['test']]));
-
-    $source->expects($this->once())
-      ->method('current')
-      ->will($this->returnValue($row));
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -173,10 +143,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue([]));
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
-    $destination->expects($this->once())
-      ->method('import')
-      ->with($row, ['test'])
-      ->will($this->returnValue(TRUE));
 
     $this->migration
       ->method('getDestinationPlugin')
@@ -198,14 +164,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $row->expects($this->once())
-      ->method('getSourceIdValues')
-      ->will($this->returnValue(['id' => 'test']));
-
-    $source->expects($this->once())
-      ->method('current')
-      ->will($this->returnValue($row));
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -213,34 +171,10 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue([]));
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
-    $destination->expects($this->once())
-      ->method('import')
-      ->with($row, ['test'])
-      ->will($this->returnValue([]));
 
     $this->migration
       ->method('getDestinationPlugin')
       ->willReturn($destination);
-
-    $this->idMap->expects($this->once())
-      ->method('saveIdMapping')
-      ->with($row, [], MigrateIdMapInterface::STATUS_FAILED, NULL);
-
-    $this->idMap->expects($this->once())
-      ->method('messageCount')
-      ->will($this->returnValue(0));
-
-    $this->idMap->expects($this->once())
-      ->method('saveMessage');
-
-    $this->idMap->expects($this->once())
-      ->method('lookupDestinationIds')
-      ->with(['id' => 'test'])
-      ->will($this->returnValue([['test']]));
-
-    $this->message->expects($this->once())
-      ->method('display')
-      ->with('New object was not saved, no error provided');
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
   }
@@ -258,14 +192,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $row->expects($this->once())
-      ->method('getSourceIdValues')
-      ->will($this->returnValue(['id' => 'test']));
-
-    $source->expects($this->once())
-      ->method('current')
-      ->will($this->returnValue($row));
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -273,26 +199,10 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue([]));
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
-    $destination->expects($this->once())
-      ->method('import')
-      ->with($row, ['test'])
-      ->will($this->throwException(new MigrateException($exception_message)));
 
     $this->migration
       ->method('getDestinationPlugin')
       ->willReturn($destination);
-
-    $this->idMap->expects($this->once())
-      ->method('saveIdMapping')
-      ->with($row, [], MigrateIdMapInterface::STATUS_FAILED, NULL);
-
-    $this->idMap->expects($this->once())
-      ->method('saveMessage');
-
-    $this->idMap->expects($this->once())
-      ->method('lookupDestinationIds')
-      ->with(['id' => 'test'])
-      ->will($this->returnValue([['test']]));
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
   }
@@ -356,14 +266,6 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $row->expects($this->once())
-      ->method('getSourceIdValues')
-      ->will($this->returnValue(['id' => 'test']));
-
-    $source->expects($this->once())
-      ->method('current')
-      ->will($this->returnValue($row));
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -371,30 +273,10 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->will($this->returnValue([]));
 
     $destination = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
-    $destination->expects($this->once())
-      ->method('import')
-      ->with($row, ['test'])
-      ->will($this->throwException(new \Exception($exception_message)));
 
     $this->migration
       ->method('getDestinationPlugin')
       ->willReturn($destination);
-
-    $this->idMap->expects($this->once())
-      ->method('saveIdMapping')
-      ->with($row, [], MigrateIdMapInterface::STATUS_FAILED, NULL);
-
-    $this->idMap->expects($this->once())
-      ->method('saveMessage');
-
-    $this->idMap->expects($this->once())
-      ->method('lookupDestinationIds')
-      ->with(['id' => 'test'])
-      ->will($this->returnValue([['test']]));
-
-    $this->message->expects($this->once())
-      ->method('display')
-      ->with($exception_message);
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
   }
