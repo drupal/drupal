@@ -229,7 +229,7 @@ views_display:
       type: string
       label: 'Link display'
     link_url:
-      type: string
+      type: text
       label: 'Link URL'
     header:
       type: sequence
@@ -467,7 +467,7 @@ views_field:
           type: boolean
           label: 'Output this field as a custom link'
         path:
-          type: string
+          type: text
           label: 'Link path'
         absolute:
           type: boolean
