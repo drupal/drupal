@@ -212,7 +212,7 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
       ],
       [
         // D7 non-customized menu link, provided by menu module.
-        'menu_name' => 'menu-test-menu',
+        'menu_name' => 'menu-test2-menu',
         'mlid' => 300,
         'plid' => 0,
         'link_path' => 'node/142',
@@ -270,6 +270,26 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
     $tests[0]['expected_data'][] = $expected[3];
     $tests[0]['expected_data'][] = $expected[4];
 
+    // Tests retrieval of links from multiple menus.
+    $tests[1] = $tests[0];
+    $tests[1]['expected_count'] = NULL;
+    $tests[1]['configuration'] = [
+      'menu_name' => ['menu-test-menu', 'menu-test2-menu'],
+    ];
+
+    // Tests retrieval of links from a single menu.
+    $tests[2] = $tests[1];
+    $tests[2]['configuration'] = [
+      'menu_name' => 'menu-test2-menu',
+    ];
+    $tests[2]['expected_data'] = [$expected[6]];
+
+    // Tests retrieval of links from a not existing menu.
+    $tests[3] = $tests[1];
+    $tests[3]['configuration'] = [
+      'menu_name' => 'menu-not-exists',
+    ];
+    $tests[3]['expected_data'] = [];
     return $tests;
   }
 
