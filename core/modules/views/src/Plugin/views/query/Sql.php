@@ -326,8 +326,14 @@ class Sql extends QueryPluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $element = ['#parents' => ['query', 'options', 'query_tags']];
-    $value = explode(',', NestedArray::getValue($form_state->getValues(), $element['#parents']));
-    $value = array_filter(array_map('trim', $value));
+    $value = NestedArray::getValue($form_state->getValues(), $element['#parents']);
+    // When toggling a display to override defaults or vice-versa the submit
+    // handler gets invoked twice, and we don't want to bash the values from the
+    // original call.
+    if (is_array($value)) {
+      return;
+    }
+    $value = array_filter(array_map('trim', explode(',', $value)));
     $form_state->setValueForElement($element, $value);
   }
 
