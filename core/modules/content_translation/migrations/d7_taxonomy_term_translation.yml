@@ -8,18 +8,6 @@ source:
   plugin: d7_taxonomy_term_translation
   translations: true
 process:
-  skip:
-    -
-      plugin: static_map
-      source: i18n_mode
-      default_value: 0
-      map:
-        1: 0
-        2: 2
-        4: 4
-    -
-      plugin: skip_on_empty
-      method: row
   # If you are using this file to build a custom migration consider removing
   # the tid field to allow incremental migrations.
   tid: tid

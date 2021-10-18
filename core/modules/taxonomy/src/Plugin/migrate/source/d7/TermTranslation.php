@@ -28,9 +28,17 @@ class TermTranslation extends Term {
     if ($this->database->schema()->fieldExists('taxonomy_term_data', 'language')) {
       $query->addField('td', 'language', 'td_language');
     }
+    // Get data when the i18n_mode column exists and it is not the Drupal 7
+    // value I18N_MODE_NONE or I18N_MODE_LOCALIZE. Otherwise, return no data.
+    // @see https://git.drupalcode.org/project/i18n/-/blob/7.x-1.x/i18n.module#L26
     if ($this->database->schema()->fieldExists('taxonomy_vocabulary', 'i18n_mode')) {
       $query->addField('tv', 'i18n_mode');
+      $query->condition('tv.i18n_mode', ['0', '1'], 'NOT IN');
     }
+    else {
+      $query->alwaysFalse();
+    }
+
     return $query;
   }
 
