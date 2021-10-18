@@ -4,6 +4,7 @@ namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\NodeMigrateType;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -135,6 +136,15 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
       $this->assertCount(1, $revision->field_user_reference);
       $this->assertSame('Bob', $revision->field_user_reference[0]->entity->getAccountName());
     }
+
+    // Test the translated node reference in the latest revision of node 2. This
+    // references the legacy site node 4 instead of node 2. The reference is
+    // fixed by the followup migrations, 'd7_entity_reference_translation' and
+    // tested in \Drupal\Tests\migrate_drupal\Kernel\d7\FollowUpMigrationsTest.
+    $node = Node::load(2);
+    $this->assertSame('6', $node->get('field_reference_2')->target_id);
+    $translation = $node->getTranslation('is');
+    $this->assertSame('4', $translation->get('field_reference_2')->target_id);
 
     // Test the order in multi-value fields.
     $revision = $this->nodeStorage->loadRevision(1);

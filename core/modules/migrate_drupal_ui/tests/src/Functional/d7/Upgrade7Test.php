@@ -237,7 +237,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function assertFollowUpMigrationResults() {
     $node = Node::load(2);
     $this->assertSame('4', $node->get('field_reference')->target_id);
-    $this->assertSame('4', $node->get('field_reference_2')->target_id);
+    $this->assertSame('6', $node->get('field_reference_2')->target_id);
     $translation = $node->getTranslation('is');
     $this->assertSame('4', $translation->get('field_reference')->target_id);
     $this->assertSame('4', $translation->get('field_reference_2')->target_id);
