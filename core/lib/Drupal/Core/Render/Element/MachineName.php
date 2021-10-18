@@ -44,7 +44,8 @@ use Drupal\Core\Language\LanguageInterface;
  *   - error: (optional) A custom form error message string to show, if the
  *     machine name contains disallowed characters.
  *   - standalone: (optional) Whether the live preview should stay in its own
- *     form element rather than in the suffix of the source element. Defaults
+ *     form element rather than in the suffix of the source element. The source
+ *     element must appear in the form structure before this element. Defaults
  *     to FALSE.
  * - #maxlength: (optional) Maximum allowed length of the machine name. Defaults
  *   to 64.
@@ -181,6 +182,13 @@ class MachineName extends Textfield {
     $source = NestedArray::getValue($form_state->getCompleteForm(), $element['#machine_name']['source'], $key_exists);
     if (!$key_exists) {
       return $element;
+    }
+
+    // The source element must be defined before the machine name element.
+    if (!isset($source['#id'])) {
+      $element_parents = implode('][', $element['#array_parents']);
+      $source_parents = implode('][', $element['#machine_name']['source']);
+      throw new \LogicException(sprintf('The machine name element "%s" is defined before the source element "%s", it must be defined after or the source element must specify an id.', $element_parents, $source_parents));
     }
 
     $suffix_id = $source['#id'] . '-machine-name-suffix';
