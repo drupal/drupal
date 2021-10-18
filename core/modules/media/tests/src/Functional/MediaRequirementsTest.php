@@ -26,10 +26,13 @@ class MediaRequirementsTest extends MediaFunctionalTestBase {
     $field_storage_definition = $field_definition->getFieldStorageDefinition();
     $field_definition->delete();
     $field_storage_definition->delete();
+    $valid_media_type = $this->createMediaType('test');
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('/admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains("The source field definition for the {$media_type->label()} media type is missing.");
+    $this->assertSession()->pageTextNotContains("The source field definition for the {$valid_media_type->label()} media type is missing.");
   }
 
 }
