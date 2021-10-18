@@ -28,6 +28,7 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->startCollectingMessages();
     $this->migrateCommentTypes();
     $this->executeMigrations([
       'language',
@@ -39,6 +40,9 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal7TestBase {
    * Tests migration of content language settings.
    */
   public function testLanguageCommentSettings() {
+    // Confirm there is no message about a missing bundle.
+    $this->assertEmpty($this->migrateMessages, $this->migrateMessages['error'][0] ?? '');
+
     // Article and Blog content type have multilingual settings of 'Enabled,
     // with Translation'. Assert that comments are translatable and the default
     // language is 'current_interface'.
@@ -66,6 +70,15 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal7TestBase {
     $config = ContentLanguageSettings::loadByEntityTypeBundle('comment', 'comment_node_page');
     $this->assertSame('comment', $config->getTargetEntityTypeId());
     $this->assertSame('comment_node_page', $config->getTargetBundle());
+    $this->assertSame('current_interface', $config->getDefaultLangcode());
+    $this->assertTrue($config->isLanguageAlterable());
+    $this->assertSame($third_party_settings, $config->get('third_party_settings'));
+
+    // The content type with a long name has multilingual settings of 'Enabled'.
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('comment', 'comment_node_a_thirty_two_char');
+    $this->assertFalse($config->isNew());
+    $this->assertSame('comment', $config->getTargetEntityTypeId());
+    $this->assertSame('comment_node_a_thirty_two_char', $config->getTargetBundle());
     $this->assertSame('current_interface', $config->getDefaultLangcode());
     $this->assertTrue($config->isLanguageAlterable());
     $this->assertSame($third_party_settings, $config->get('third_party_settings'));

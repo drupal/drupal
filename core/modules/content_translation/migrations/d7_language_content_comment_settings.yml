@@ -8,22 +8,17 @@ source:
   plugin: d7_language_content_settings
   constants:
     target_type: comment
-    id_prefix: comment_node_
-    label_suffix: comment
 process:
   target_bundle:
     -
-      plugin: concat
+      plugin: migration_lookup
+      migration: d7_comment_type
+      no_stub: true
       source:
-        - constants/id_prefix
         - type
     -
-      plugin: static_map
-      bypass: true
-      # The Forum module provides its own comment type (comment_forum), which we
-      # want to reuse if it exists.
-      map:
-        comment_node_forum: comment_forum
+      plugin: skip_on_empty
+      method: row
   target_entity_type_id: constants/target_type
   default_langcode:
     -
