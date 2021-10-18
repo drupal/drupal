@@ -41,9 +41,11 @@ class RestResource extends Plugin {
   /**
    * The serialization class to deserialize serialized data into.
    *
+   * This property is optional and it does not need to be declared.
+   *
    * @see \Symfony\Component\Serializer\SerializerInterface's "type" parameter.
    *
-   * @var string (optional)
+   * @var string
    */
   public $serialization_class;
 

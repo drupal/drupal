@@ -45,7 +45,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * The Editor Plugin Manager.
    *
-   * @var \Drupal\editor\Plugin\EditorManager;
+   * @var \Drupal\editor\Plugin\EditorManager
    */
   protected $manager;
 

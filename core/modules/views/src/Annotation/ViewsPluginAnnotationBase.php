@@ -12,7 +12,9 @@ abstract class ViewsPluginAnnotationBase extends Plugin {
   /**
    * Whether or not to register a theme function automatically.
    *
-   * @var bool (optional)
+   * This property is optional and it does not need to be declared.
+   *
+   * @var bool
    */
   public $register_theme = TRUE;
 

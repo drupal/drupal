@@ -48,7 +48,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
   /**
    * An admin user.
    *
-   * @var \Drupal\user\Entity\User;
+   * @var \Drupal\user\Entity\User
    */
   protected $adminUser;
 
