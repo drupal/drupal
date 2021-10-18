@@ -202,7 +202,14 @@ EOT;
     // executable script named 'git' that always exits with 127, as if git were
     // not found. Note that we run our tests using process isolation, so we do
     // not need to restore the PATH when we are done.
-    $unavailableGitPath = $this->fixtures->binFixtureDir('disable-git-bin');
+    $unavailableGitPath = $sut . '/bin';
+    mkdir($unavailableGitPath);
+    $bash = <<<SH
+#!/bin/bash
+exit 127
+
+SH;
+    file_put_contents($unavailableGitPath . '/git', $bash);
     chmod($unavailableGitPath . '/git', 0755);
     $oldPath = getenv('PATH');
     putenv('PATH=' . $unavailableGitPath . ':' . getenv('PATH'));
