@@ -1,0 +1,4 @@
+layout_builder_test:
+  title: 'Test contextual link'
+  route_name: '<front>'
+  group: 'layout_builder_test'
