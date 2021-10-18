@@ -66,6 +66,10 @@ class FieldLinkTest extends UnitTestCase {
         'https://yahoo.com',
         ['uri_scheme' => 'https://'],
       ],
+      'Absolute URL without explicit protocol (protocol-relative)' => [
+        '//example.com',
+        'http://example.com',
+      ],
       'Absolute URL with non-standard characters' => [
         'http://www.ßÀÑÐ¥ƒå¢ë.com',
         'http://www.ßÀÑÐ¥ƒå¢ë.com',
