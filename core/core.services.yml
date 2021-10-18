@@ -1351,7 +1351,6 @@ services:
     class: Drupal\Core\PathProcessor\PathProcessorFront
     tags:
       - { name: path_processor_inbound, priority: 200 }
-      - { name: path_processor_outbound, priority: 200 }
     arguments: ['@config.factory']
   route_processor_current:
     class: Drupal\Core\RouteProcessor\RouteProcessorCurrent

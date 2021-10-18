@@ -3,16 +3,13 @@
 namespace Drupal\Core\PathProcessor;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Processes the inbound path by resolving it to the front page if empty.
- *
- * @todo - remove ::processOutbound() when we remove UrlGenerator::fromPath().
  */
-class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
+class PathProcessorFront implements InboundPathProcessorInterface {
 
   /**
    * A config factory for retrieving required config settings.
@@ -52,17 +49,6 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
         array_replace($parameters, $request->query->all());
         $request->query->replace($parameters);
       }
-    }
-    return $path;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    // The special path '<front>' links to the default front page.
-    if ($path === '/<front>') {
-      $path = '/';
     }
     return $path;
   }

@@ -68,27 +68,4 @@ class PathProcessorFrontTest extends UnitTestCase {
     $processor->processInbound('/', new Request());
   }
 
-  /**
-   * Tests basic outbound processing functionality.
-   *
-   * @covers ::processOutbound
-   * @dataProvider providerProcessOutbound
-   */
-  public function testProcessOutbound($path, $expected) {
-    $config_factory = $this->prophesize(ConfigFactoryInterface::class);
-    $processor = new PathProcessorFront($config_factory->reveal());
-    $this->assertEquals($expected, $processor->processOutbound($path));
-  }
-
-  /**
-   * Outbound paths and expected results.
-   */
-  public function providerProcessOutbound() {
-    return [
-      ['/<front>', '/'],
-      ['<front>', '<front>'],
-      ['/user', '/user'],
-    ];
-  }
-
 }
