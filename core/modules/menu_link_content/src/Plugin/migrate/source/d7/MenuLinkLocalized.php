@@ -6,7 +6,7 @@ use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 use Drupal\migrate\Row;
 
 /**
- * Gets localized menu link translations from source database.
+ * Drupal 7 localized menu link translations source from database.
  *
  * @MigrateSource(
  *   id = "d7_menu_link_localized",

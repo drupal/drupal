@@ -6,7 +6,7 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
 /**
- * Provides Drupal 7 node entity translations source plugin.
+ * Drupal 7 node entity translations source from database.
  *
  * Available configuration keys:
  * - node_type: The node_types to get from the source - can be a string or

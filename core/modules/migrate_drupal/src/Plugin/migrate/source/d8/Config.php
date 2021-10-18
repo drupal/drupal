@@ -42,7 +42,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * As a result, French versions of specified configuration objects are retrieved
  * from the source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *

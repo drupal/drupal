@@ -6,7 +6,7 @@ use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
 use Drupal\migrate\Row;
 
 /**
- * Drupal 7 i18n taxonomy terms from source database.
+ * Drupal 7 i18n taxonomy terms source from database.
  *
  * For available configuration keys, refer to the parent classes.
  *
