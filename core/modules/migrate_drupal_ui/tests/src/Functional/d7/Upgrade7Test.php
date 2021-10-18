@@ -89,7 +89,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
-      'language_content_settings' => 22,
+      'language_content_settings' => 24,
       'node' => 7,
       'node_type' => 8,
       'rdf_mapping' => 8,

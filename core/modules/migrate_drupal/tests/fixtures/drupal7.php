@@ -59873,6 +59873,10 @@ $connection->insert('variable')
   'value' => 's:1:"2";',
 ))
 ->values(array(
+  'name' => 'language_content_type_a_thirty_two_character_type_name',
+  'value' => 's:1:"1";',
+))
+->values(array(
   'name' => 'language_content_type_blog',
   'value' => 's:1:"2";',
 ))
