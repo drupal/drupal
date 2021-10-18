@@ -25,6 +25,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     'layout_test',
     'block',
     'block_test',
+    'contextual',
     'node',
     'layout_builder_test',
   ];
@@ -637,6 +638,37 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextNotContains('My Menu');
     $assert_session->elementNotExists('css', '.block.menu--my-menu');
+  }
+
+  /**
+   * Tests that block plugins can define custom attributes and contextual links.
+   */
+  public function testPluginsProvidingCustomAttributesAndContextualLinks() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Test Attributes');
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+
+    $this->drupalGet('node/1');
+
+    $assert_session->elementExists('css', '.attribute-test-class');
+    $assert_session->elementExists('css', '[custom-attribute=test]');
+    $assert_session->elementExists('css', 'div[data-contextual-id*="layout_builder_test"]');
   }
 
   /**
