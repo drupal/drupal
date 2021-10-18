@@ -51,8 +51,6 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
       'language',
       'd7_language_content_settings',
       'd7_taxonomy_vocabulary',
-      'd7_node',
-      'd7_node_translation',
     ]);
   }
 
@@ -70,12 +68,16 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
   /**
    * Tests entity reference translations.
+   *
+   * @dataProvider providerTestEntityReferenceTranslations
    */
-  public function testEntityReferenceTranslations() {
+  public function testEntityReferenceTranslations($node_migrations) {
+    $this->executeMigrations($node_migrations);
+
     // Test the entity reference field before the follow-up migrations.
     $node = Node::load(2);
     $this->assertSame('5', $node->get('field_reference')->target_id);
-    $this->assertSame('5', $node->get('field_reference_2')->target_id);
+    $this->assertSame('6', $node->get('field_reference_2')->target_id);
     $translation = $node->getTranslation('is');
     $this->assertSame('4', $translation->get('field_reference')->target_id);
     $this->assertSame('4', $translation->get('field_reference_2')->target_id);
@@ -99,7 +101,7 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
     // Test the entity reference field after the follow-up migrations.
     $node = Node::load(2);
     $this->assertSame('4', $node->get('field_reference')->target_id);
-    $this->assertSame('4', $node->get('field_reference_2')->target_id);
+    $this->assertSame('6', $node->get('field_reference_2')->target_id);
     $translation = $node->getTranslation('is');
     $this->assertSame('4', $translation->get('field_reference')->target_id);
     $this->assertSame('4', $translation->get('field_reference_2')->target_id);
@@ -113,6 +115,20 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
     $user = User::load(2);
     $this->assertSame('2', $user->get('field_reference')->target_id);
+  }
+
+  /**
+   * Data provider for testEntityReferenceTranslations().
+   */
+  public function providerTestEntityReferenceTranslations() {
+    return [
+      [
+        ['d7_node', 'd7_node_translation'],
+      ],
+      [
+        ['d7_node_complete'],
+      ],
+    ];
   }
 
 }

@@ -153,7 +153,7 @@ class EntityReferenceTranslationDeriver extends DeriverBase implements Container
             'plugin' => 'sub_process',
             'source' => $field_name,
             'process' => [
-              'target_id' => [
+              'translation_target_id' => [
                 [
                   'plugin' => 'migration_lookup',
                   'source' => 'target_id',
@@ -162,11 +162,20 @@ class EntityReferenceTranslationDeriver extends DeriverBase implements Container
                 ],
                 [
                   'plugin' => 'skip_on_empty',
-                  'method' => 'row',
+                  'method' => 'process',
                 ],
                 [
                   'plugin' => 'extract',
                   'index' => [0],
+                ],
+              ],
+              'target_id' => [
+                [
+                  'plugin' => 'null_coalesce',
+                  'source' => [
+                    '@translation_target_id',
+                    'target_id',
+                  ],
                 ],
               ],
             ],
