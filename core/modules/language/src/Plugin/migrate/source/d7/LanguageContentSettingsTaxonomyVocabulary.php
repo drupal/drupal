@@ -7,7 +7,8 @@ use Drupal\taxonomy\Plugin\migrate\source\d7\Vocabulary;
 /**
  * Drupal 7 i18n vocabularies source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBas
  *

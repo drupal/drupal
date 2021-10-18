@@ -7,7 +7,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
 /**
- * Drupal menu link source from database.
+ * Drupal 6/7 menu link source from database.
  *
  * Available configuration keys:
  * - menu_name: (optional) The menu name(s) to filter menu links from the source

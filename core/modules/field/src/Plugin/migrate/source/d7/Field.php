@@ -12,7 +12,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * migrated. The values of those fields will be migrated to the base fields they
  * were replacing.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
