@@ -87,27 +87,16 @@ class Connection extends DatabaseConnection {
     // Attach one database for each registered prefix.
     $prefixes = $this->prefixes;
     foreach ($prefixes as &$prefix) {
-      // Empty prefix means query the main database -- no need to attach anything.
-      if (!empty($prefix)) {
-        // Only attach the database once.
-        if (!isset($this->attachedDatabases[$prefix])) {
-          $this->attachedDatabases[$prefix] = $prefix;
-          if ($connection_options['database'] === ':memory:') {
-            // In memory database use ':memory:' as database name. According to
-            // http://www.sqlite.org/inmemorydb.html it will open a unique
-            // database so attaching it twice is not a problem.
-            $this->query('ATTACH DATABASE :database AS :prefix', [':database' => $connection_options['database'], ':prefix' => $prefix]);
-          }
-          else {
-            $this->query('ATTACH DATABASE :database AS :prefix', [':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix]);
-          }
-        }
-
+      // Empty prefix means query the main database -- no need to attach
+      // anything.
+      if ($prefix !== '') {
+        $this->attachDatabase($prefix);
         // Add a ., so queries become prefix.table, which is proper syntax for
         // querying an attached database.
         $prefix .= '.';
       }
     }
+
     // Regenerate the prefixes replacement table.
     $this->setPrefix($prefixes);
   }
@@ -209,6 +198,21 @@ class Connection extends DatabaseConnection {
       }
     }
     parent::__destruct();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function attachDatabase(string $database): void {
+    // Only attach the database once.
+    if (!isset($this->attachedDatabases[$database])) {
+      // In memory database use ':memory:' as database name. According to
+      // http://www.sqlite.org/inmemorydb.html it will open a unique database so
+      // attaching it twice is not a problem.
+      $database_file = $this->connectionOptions['database'] !== ':memory:' ? $this->connectionOptions['database'] . '-' . $database : $this->connectionOptions['database'];
+      $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $database_file, ':database' => $database]);
+      $this->attachedDatabases[$database] = $database;
+    }
   }
 
   /**

@@ -67,6 +67,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     parent::setUp();
     $this->createMigrationConnection();
     $this->sourceDatabase = Database::getConnection('default', 'migrate');
+    // Attach the original test prefix as a database, for SQLite to attach its
+    // database file.
+    $this->sourceDatabase->attachDatabase(substr($this->sourceDatabase->getConnectionOptions()['prefix'], 0, -1));
   }
 
   /**
@@ -94,10 +97,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
       // Simpletest uses 7 character prefixes at most so this can't cause
       // collisions.
       $connection_info[$target]['prefix'] = $prefix . '0';
-
-      // Add the original simpletest prefix so SQLite can attach its database.
-      // @see \Drupal\Core\Database\Driver\sqlite\Connection::init()
-      $connection_info[$target]['extra_prefix'][$prefix] = $prefix;
     }
     Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
   }

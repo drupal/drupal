@@ -438,6 +438,28 @@ abstract class Connection {
   }
 
   /**
+   * Allows the connection to access additional databases.
+   *
+   * Database systems usually group tables in 'databases' or 'schemas', that
+   * can be accessed with syntax like 'SELECT * FROM database.table'. Normally
+   * Drupal accesses tables in a single database/schema, but in some cases it
+   * may be necessary to access tables from other databases/schemas in the same
+   * database server. This method can be called to ensure that the additional
+   * database/schema is accessible.
+   *
+   * For MySQL, PostgreSQL and most other databases no action need to be taken
+   * to query data in another database or schema. For SQLite this is however
+   * necessary and the database driver for SQLite will override this method.
+   *
+   * @param string $database
+   *   The database to be attached to the connection.
+   *
+   * @internal
+   */
+  public function attachDatabase(string $database): void {
+  }
+
+  /**
    * Set the list of prefixes used by this database connection.
    *
    * @param array|string $prefix
