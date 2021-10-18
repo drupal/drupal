@@ -10,7 +10,7 @@ related:
 {% set content_permissions_link_text %}
   {% trans %}Administer content types{% endtrans %}
 {% endset %}
-{% set content_permissions_link = render_var(help_route_link(content_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-node'})) %}
+{% set content_permissions_link = render_var(help_route_link(content_permissions_link_text, 'user.admin_permissions.module', {'modules': 'node'})) %}
 {% set content_types_link_text %}
   {% trans %}Content types{% endtrans %}
 {% endset %}

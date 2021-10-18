@@ -24,7 +24,7 @@ function quickedit_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.quickedit':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Quick Edit module allows users with the <a href=":quickedit_permission">Access in-place editing</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Quick Edit module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/edit', ':quickedit_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-quickedit'])->toString(), ':contextual_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-contextual'])->toString()]) . '</p>';
+      $output .= '<p>' . t('The Quick Edit module allows users with the <a href=":quickedit_permission">Access in-place editing</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Quick Edit module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/edit', ':quickedit_permission' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'quickedit'])->toString(), ':contextual_permission' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'contextual'])->toString()]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Editing content in-place') . '</dt>';

@@ -10,8 +10,8 @@ related:
 {% set user_overview_topic = render_var(help_topic_link('user.overview')) %}
 {% set user_permissions_topic = render_var(help_topic_link('user.permissions')) %}
 {% set workflows_overview_topic = render_var(help_topic_link('workflows.overview')) %}
-{% set content_moderation_permissions = render_var(url('user.admin_permissions', {}, {'fragment': 'module-content_moderation'})) %}
-{% set workflows_permissions = render_var(url('user.admin_permissions', {}, {'fragment': 'module-workflows'})) %}
+{% set content_moderation_permissions = render_var(url('user.admin_permissions.module', {'modules': 'content_moderation'})) %}
+{% set workflows_permissions = render_var(url('user.admin_permissions.module', {'modules': 'workflows'})) %}
 {% set workflows_url = render_var(url('entity.workflow.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Create or edit a workflow with various workflow states (for example <em>Concept</em>, <em>Archived</em>, etc.) for moderating content. See {{ workflows_overview_topic }} for more information on workflows.{% endtrans %}</p>

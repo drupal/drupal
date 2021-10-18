@@ -67,7 +67,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Creating revisions') . '</dt>';
       $output .= '<dd>' . t('The Node module also enables you to create multiple versions of any content, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
-      $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href=":permissions">permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-node'])->toString()]) . '</dd>';
+      $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href=":permissions">permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'node'])->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 

@@ -58,7 +58,7 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('If enabled, each individual content item can have a custom layout. Once the layout for an individual content item is overridden, changes to the Default layout will no longer affect it. Overridden layouts may be reverted to return to matching and being synchronized to their Default layout.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
       $output .= '<dd>' . t('The Layout Builder module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>. For more information, see the <a href=":layout-builder-permissions">Configuring Layout Builder permissions</a> online documentation.', [
-        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-layout_builder'])->toString(),
+        ':permissions' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'layout_builder'])->toString(),
         ':layout-builder-permissions' => 'https://www.drupal.org/docs/8/core/modules/layout-builder/configuring-layout-builder-permissions',
       ]) . '</dd>';
       $output .= '</dl>';

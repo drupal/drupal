@@ -1024,10 +1024,9 @@ function system_get_module_admin_tasks($module, array $info) {
   if ($permission_handler->moduleProvidesPermissions($module)) {
     /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
     $access_manager = \Drupal::service('access_manager');
-    if ($access_manager->checkNamedRoute('user.admin_permissions', [], \Drupal::currentUser())) {
+    if ($access_manager->checkNamedRoute('user.admin_permissions.module', ['modules' => $module], \Drupal::currentUser())) {
       /** @var \Drupal\Core\Url $url */
-      $url = new Url('user.admin_permissions');
-      $url->setOption('fragment', 'module-' . $module);
+      $url = new Url('user.admin_permissions.module', ['modules' => $module]);
       $admin_tasks["user.admin_permissions.$module"] = [
         'title' => t('Configure @module permissions', ['@module' => $info['name']]),
         'description' => '',

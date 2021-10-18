@@ -7,7 +7,7 @@ related:
 {% set path_permissions_link_text %}
   {% trans %}Administer URL aliases{% endtrans %}
 {% endset %}
-{% set path_permissions_link = render_var(help_route_link(path_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-path'})) %}
+{% set path_permissions_link = render_var(help_route_link(path_permissions_link_text, 'user.admin_permissions.module', {'modules': 'path'})) %}
 {% set path_aliases_link_text %}
   {% trans %}URL aliases{% endtrans %}
 {% endset %}

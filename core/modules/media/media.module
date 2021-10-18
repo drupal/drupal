@@ -44,7 +44,7 @@ function media_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('The Media module also enables you to create multiple versions of any media item, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
       $output .= '<dd>' . t('The Media module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>.', [
-        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-media'])->toString(),
+        ':permissions' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'media'])->toString(),
       ]) . '</dd>';
       $output .= '<dt>' . t('Adding media to other content') . '</dt>';
       $output .= '<dd>' . t('Users with permission to administer content types can add media support by adding a media reference field to the content type on the content type administration page. (The same is true of block types, taxonomy terms, user profiles, and other content that supports fields.) A media reference field can refer to any configured media type. It is possible to allow multiple media types in the same field.') . '</dd>';

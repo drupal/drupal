@@ -14,7 +14,7 @@ related:
 {% set views_permissions_link_text %}
   {% trans %}Administer views{% endtrans %}
 {% endset %}
-{% set views_permissions = render_var(help_route_link(views_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-views_ui'})) %}
+{% set views_permissions = render_var(help_route_link(views_permissions_link_text, 'user.admin_permissions.module', {'modules': 'views_ui'})) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Add one or more existing actions as bulk operations to an existing table-style view. If you have the core Actions module installed, see the related topic "Configuring actions" for more information about actions.{% endtrans %}</p>
 <h2>{% trans %}Who can edit views?{% endtrans %}</h2>

@@ -7,7 +7,7 @@ related:
 ---
 {% set workflows_overview_topic = render_var(help_topic_link('workflows.overview')) %}
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
-{% set content_moderation_permissions = render_var(url('user.admin_permissions', {}, {'fragment': 'module-content_moderation'})) %}
+{% set content_moderation_permissions = render_var(url('user.admin_permissions.module', {'modules': 'content_moderation'})) %}
 {% set content = render_var(url('system.admin_content')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Change the workflow state of a particular entity. See {{ workflows_overview_topic }} for an overview of workflows, and {{ content_structure_topic }} for an overview of content entities.{% endtrans %}</p>

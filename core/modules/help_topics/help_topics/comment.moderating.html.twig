@@ -16,7 +16,7 @@ related:
 {% set comment_permissions_link_text %}
   {% trans %}Administer comments and comment settings{% endtrans %}
 {% endset %}
-{% set comment_permissions_link = render_var(help_route_link(comment_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-comment'})) %}
+{% set comment_permissions_link = render_var(help_route_link(comment_permissions_link_text, 'user.admin_permissions.module', {'modules': 'comment'})) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Decide which comments are shown on the website.{% endtrans %}</p>
 <h2>{% trans %}Who can moderate comments?{% endtrans %}</h2>

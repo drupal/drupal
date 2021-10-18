@@ -7,7 +7,7 @@ related:
 {% set comment_permissions_text %}
 {% trans %}Administer comments and comment settings{% endtrans %}
 {% endset %}
-{% set comment_permissions_link = render_var(help_route_link(comment_permissions_text, 'user.admin_permissions', {}, {'fragment': 'module-comment'})) %}
+{% set comment_permissions_link = render_var(help_route_link(comment_permissions_text, 'user.admin_permissions.module', {'modules': 'comment'})) %}
 {% set comment_config_topic = render_var(help_topic_link('comment.configuring')) %}
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>

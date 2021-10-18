@@ -11,7 +11,7 @@ related:
 {% set action_permissions_link_text %}
   {% trans %}Administer actions{% endtrans %}
 {% endset %}
-{% set action_permissions = render_var(help_route_link(action_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-action'})) %}
+{% set action_permissions = render_var(help_route_link(action_permissions_link_text, 'user.admin_permissions.module', {'modules': 'action'})) %}
 {% set action_overview = render_var(help_topic_link('action.overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Create an advanced action. You can, for example, create an action to change the author of multiple content items. See {{ action_overview }} for more about actions.{% endtrans %}</p>
