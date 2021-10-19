@@ -22,7 +22,7 @@ node.add_page:
   options:
     _node_operation_route: TRUE
   requirements:
-    _node_add_access: 'node'
+    _entity_create_any_access: 'node'
 
 node.add:
   path: '/node/add/{node_type}'
@@ -30,7 +30,7 @@ node.add:
     _entity_form: 'node.default'
     _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
   requirements:
-    _node_add_access: 'node:{node_type}'
+    _entity_create_access: 'node:{node_type}'
   options:
     _node_operation_route: TRUE
     parameters:

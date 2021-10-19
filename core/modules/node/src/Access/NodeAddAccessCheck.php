@@ -12,6 +12,11 @@ use Drupal\node\NodeTypeInterface;
  * Determines access to for node add pages.
  *
  * @ingroup node_access
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   _entity_create_access or _entity_create_any_access access checks instead.
+ *
+ * @see https://www.drupal.org/node/2836069
  */
 class NodeAddAccessCheck implements AccessInterface {
 

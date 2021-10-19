@@ -108,6 +108,13 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalGet('node/add/page');
     $this->assertSession()->fieldNotExists('edit-revision', NULL);
+
+    // Check that a user with administer content types permission is not
+    // allowed to create content.
+    $content_types_admin = $this->drupalCreateUser(['administer content types']);
+    $this->drupalLogin($content_types_admin);
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**

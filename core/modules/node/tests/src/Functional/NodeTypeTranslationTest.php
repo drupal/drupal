@@ -59,6 +59,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     $admin_permissions = [
       'administer content types',
+      'bypass node access',
       'administer node fields',
       'administer languages',
       'administer site configuration',

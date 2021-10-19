@@ -85,6 +85,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser([
       'access content',
       'administer content types',
+      'bypass node access',
       'administer node fields',
       'administer node form display',
       'administer node display',
