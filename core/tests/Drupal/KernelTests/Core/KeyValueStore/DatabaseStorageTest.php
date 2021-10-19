@@ -65,7 +65,7 @@ class DatabaseStorageTest extends StorageTestBase {
         $factory = new KeyValueDatabaseFactory($this->container->get('serialization.phpserialize'), Database::getConnection());
         $store = $factory->get('test');
         // Sleep so that all the forks start at the same time.
-        usleep(($time_to_start - microtime(TRUE)) * 1000000);
+        usleep((int) (($time_to_start - microtime(TRUE)) * 1000000));
         if ($function === 'getAll') {
           $this->assertIsArray($store->getAll());
         }
