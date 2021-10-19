@@ -320,6 +320,7 @@ curle
 curlopt
 currenttime
 currentuser
+customevent
 customly
 customrequest
 cweagans
