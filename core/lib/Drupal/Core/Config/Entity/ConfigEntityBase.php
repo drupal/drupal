@@ -235,7 +235,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
       $b_label = $b->label() ?? '';
       return strnatcasecmp($a_label, $b_label);
     }
-    return ($a_weight < $b_weight) ? -1 : 1;
+    return $a_weight <=> $b_weight;
   }
 
   /**

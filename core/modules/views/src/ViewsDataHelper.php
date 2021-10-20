@@ -176,16 +176,12 @@ class ViewsDataHelper {
     $a_group = mb_strtolower($a['group']);
     $b_group = mb_strtolower($b['group']);
     if ($a_group != $b_group) {
-      return $a_group < $b_group ? -1 : 1;
+      return $a_group <=> $b_group;
     }
 
     $a_title = mb_strtolower($a['title']);
     $b_title = mb_strtolower($b['title']);
-    if ($a_title != $b_title) {
-      return $a_title < $b_title ? -1 : 1;
-    }
-
-    return 0;
+    return $a_title <=> $b_title;
   }
 
 }

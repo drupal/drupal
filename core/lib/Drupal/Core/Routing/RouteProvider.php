@@ -392,7 +392,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     }
     // Reverse sort from highest to lowest fit. PHP should cast to int, but
     // the explicit cast makes this sort more robust against unexpected input.
-    return (int) $a['fit'] < (int) $b['fit'] ? 1 : -1;
+    return (int) $b['fit'] <=> (int) $a['fit'];
   }
 
   /**

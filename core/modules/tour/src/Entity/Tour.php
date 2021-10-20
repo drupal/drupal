@@ -123,10 +123,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
       $tips[] = $this->getTip($id);
     }
     uasort($tips, function ($a, $b) {
-      if ($a->getWeight() == $b->getWeight()) {
-        return 0;
-      }
-      return ($a->getWeight() < $b->getWeight()) ? -1 : 1;
+      return $a->getWeight() <=> $b->getWeight();
     });
 
     \Drupal::moduleHandler()->alter('tour_tips', $tips, $this);

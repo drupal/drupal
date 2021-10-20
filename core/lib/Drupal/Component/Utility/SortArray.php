@@ -122,11 +122,7 @@ class SortArray {
     $a_weight = (is_array($a) && isset($a[$key])) ? $a[$key] : 0;
     $b_weight = (is_array($b) && isset($b[$key])) ? $b[$key] : 0;
 
-    if ($a_weight == $b_weight) {
-      return 0;
-    }
-
-    return ($a_weight < $b_weight) ? -1 : 1;
+    return $a_weight <=> $b_weight;
   }
 
 }

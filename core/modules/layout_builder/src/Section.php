@@ -258,7 +258,7 @@ class Section implements ThirdPartySettingsInterface {
       return $component->getRegion() === $region;
     });
     uasort($components, function (SectionComponent $a, SectionComponent $b) {
-      return $a->getWeight() > $b->getWeight() ? 1 : -1;
+      return $a->getWeight() <=> $b->getWeight();
     });
     return $components;
   }

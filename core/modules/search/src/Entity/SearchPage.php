@@ -216,7 +216,7 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
     $a_status = (int) $a->status();
     $b_status = (int) $b->status();
     if ($a_status != $b_status) {
-      return ($a_status > $b_status) ? -1 : 1;
+      return $b_status <=> $a_status;
     }
     return parent::sort($a, $b);
   }

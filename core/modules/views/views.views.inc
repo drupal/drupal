@@ -280,7 +280,7 @@ function views_entity_field_label($entity_type, $field_name) {
     if ($label_counter[$a] === $label_counter[$b]) {
       return strcmp($a, $b);
     }
-    return $label_counter[$a] > $label_counter[$b] ? -1 : 1;
+    return $label_counter[$b] <=> $label_counter[$a];
   });
   $label_counter = array_keys($label_counter);
   return [$label_counter[0], $all_labels];

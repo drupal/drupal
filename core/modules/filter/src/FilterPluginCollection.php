@@ -94,7 +94,7 @@ class FilterPluginCollection extends DefaultLazyPluginCollection {
       return !empty($a->status) ? -1 : 1;
     }
     if ($a->weight != $b->weight) {
-      return $a->weight < $b->weight ? -1 : 1;
+      return $a->weight <=> $b->weight;
     }
     if ($a->provider != $b->provider) {
       return strnatcasecmp($a->provider, $b->provider);

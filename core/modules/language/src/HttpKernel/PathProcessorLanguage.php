@@ -147,14 +147,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
     // Sort the processors list, so that their functions are called in the
     // order specified by the weight of the methods.
     uksort($this->processors[$scope], function ($method_id_a, $method_id_b) use ($weights) {
-      $a_weight = $weights[$method_id_a];
-      $b_weight = $weights[$method_id_b];
-
-      if ($a_weight == $b_weight) {
-        return 0;
-      }
-
-      return ($a_weight < $b_weight) ? -1 : 1;
+      return $weights[$method_id_a] <=> $weights[$method_id_b];
     });
   }
 

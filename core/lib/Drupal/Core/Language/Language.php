@@ -160,7 +160,7 @@ class Language implements LanguageInterface {
         }
         return strnatcasecmp($a_name, $b_name);
       }
-      return ($a_weight < $b_weight) ? -1 : 1;
+      return $a_weight <=> $b_weight;
     });
   }
 
