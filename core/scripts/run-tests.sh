@@ -480,7 +480,7 @@ function simpletest_script_init() {
   // using the presence of 'drupalci' in the sqlite argument.
   // @todo https://www.drupal.org/project/drupalci_testbot/issues/2860941 Use
   //   better environment variable to detect DrupalCI.
-  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'])) {
+  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'] ?? '')) {
     // Update PHPUnit if needed and possible. There is a later check once the
     // autoloader is in place to ensure we're on the correct version. We need to
     // do this before the autoloader is in place to ensure that it is correct.
