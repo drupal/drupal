@@ -3,24 +3,16 @@
 namespace Drupal\layout_builder\Routing;
 
 use Drupal\Core\ParamConverter\ParamConverterInterface;
-use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Loads the section storage from the layout tempstore.
+ * Loads the section storage from the routing defaults.
  *
  * @internal
  *   Tagged services are internal.
  */
-class LayoutTempstoreParamConverter implements ParamConverterInterface {
-
-  /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
+class LayoutSectionStorageParamConverter implements ParamConverterInterface {
 
   /**
    * The section storage manager.
@@ -30,15 +22,12 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
   protected $sectionStorageManager;
 
   /**
-   * Constructs a new LayoutTempstoreParamConverter.
+   * Constructs a new LayoutSectionStorageParamConverter.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
-   *   The layout tempstore repository.
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   The section storage manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, SectionStorageManagerInterface $section_storage_manager) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
+  public function __construct(SectionStorageManagerInterface $section_storage_manager) {
     $this->sectionStorageManager = $section_storage_manager;
   }
 
@@ -55,17 +44,14 @@ class LayoutTempstoreParamConverter implements ParamConverterInterface {
     // Load an empty instance and derive the available contexts.
     $contexts = $this->sectionStorageManager->loadEmpty($type)->deriveContextsFromRoute($value, $definition, $name, $defaults);
     // Attempt to load a full instance based on the context.
-    if ($section_storage = $this->sectionStorageManager->load($type, $contexts)) {
-      // Pass the plugin through the tempstore repository.
-      return $this->layoutTempstoreRepository->get($section_storage);
-    }
+    return $this->sectionStorageManager->load($type, $contexts);
   }
 
   /**
    * {@inheritdoc}
    */
   public function applies($definition, $name, Route $route) {
-    return !empty($definition['layout_builder_tempstore']);
+    return !empty($definition['layout_builder_section_storage']) || !empty($definition['layout_builder_tempstore']);
   }
 
 }
