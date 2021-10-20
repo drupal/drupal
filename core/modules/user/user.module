@@ -675,7 +675,7 @@ function _user_cancel($edit, $account, $method) {
       }
       $account->block();
       $account->save();
-      \Drupal::messenger()->addStatus(t('%name has been disabled.', ['%name' => $account->getDisplayName()]));
+      \Drupal::messenger()->addStatus(t('Account %name has been disabled.', ['%name' => $account->getDisplayName()]));
       $logger->notice('Blocked user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
       break;
 
@@ -686,7 +686,7 @@ function _user_cancel($edit, $account, $method) {
         _user_mail_notify('status_canceled', $account);
       }
       $account->delete();
-      \Drupal::messenger()->addStatus(t('%name has been deleted.', ['%name' => $account->getDisplayName()]));
+      \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));
       $logger->notice('Deleted user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
       break;
   }
@@ -737,11 +737,11 @@ function user_cancel_methods() {
       'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.'),
     ],
     'user_cancel_reassign' => [
-      'title' => t('Delete the account and make its content belong to the %anonymous-name user.', ['%anonymous-name' => $anonymous_name]),
+      'title' => t('Delete the account and make its content belong to the %anonymous-name user. This action cannot be undone.', ['%anonymous-name' => $anonymous_name]),
       'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $anonymous_name]),
     ],
     'user_cancel_delete' => [
-      'title' => t('Delete the account and its content.'),
+      'title' => t('Delete the account and its content. This action cannot be undone.'),
       'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
       'access' => \Drupal::currentUser()->hasPermission('administer users'),
     ],
