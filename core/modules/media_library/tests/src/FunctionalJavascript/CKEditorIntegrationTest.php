@@ -236,8 +236,6 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media'));
-    // @todo Inserting media embed should enable undo.
-    // @see https://www.drupal.org/project/drupal/issues/3073294
     $this->pressEditorButton('source');
     $value = $assert_session->elementExists('css', 'textarea.cke_source')->getValue();
     $dom = Html::load($value);
