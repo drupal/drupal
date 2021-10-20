@@ -4,6 +4,7 @@ namespace Drupal\menu_ui;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a class to build a listing of menu entities.
@@ -49,12 +50,25 @@ class MenuListBuilder extends ConfigEntityListBuilder {
         'title' => t('Add link'),
         'weight' => 20,
         'url' => $entity->toUrl('add-link-form'),
+        'query' => [
+          'destination' => $entity->toUrl('edit-form')->toString(),
+        ],
       ];
     }
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = t('Delete menu');
     }
     return $operations;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function ensureDestination(Url $url) {
+    // We don't want to add the destination URL here, as it means we get
+    // redirected back to the list-builder after adding/deleting menu links from
+    // a menu.
+    return $url;
   }
 
   /**
