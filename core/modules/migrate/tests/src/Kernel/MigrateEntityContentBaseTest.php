@@ -93,7 +93,8 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
       $this->storage,
       [],
       $this->container->get('entity_field.manager'),
-      $this->container->get('plugin.manager.field.field_type')
+      $this->container->get('plugin.manager.field.field_type'),
+      $this->container->get('account_switcher')
     );
   }
 
@@ -299,6 +300,26 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     for ($i = 0; $i < $count; ++$i) {
       $this->assertSame($multi_default_value[$i], $entity->get($multi_field_name)->get($i)->getValue());
     }
+  }
+
+  /**
+   * Test BC injection of account switcher service.
+   *
+   * @group legacy
+   */
+  public function testAccountSwitcherBackwardsCompatibility() {
+    $this->expectDeprecation('Calling Drupal\migrate\Plugin\migrate\destination\EntityContentBase::__construct() without the $account_switcher argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3142975');
+    $destination = new EntityContentBase(
+      [],
+      'fake_plugin_id',
+      [],
+      $this->createMock(MigrationInterface::class),
+      $this->storage,
+      [],
+      $this->container->get('entity_field.manager'),
+      $this->container->get('plugin.manager.field.field_type')
+    );
+    $this->assertInstanceOf(EntityContentBase::class, $destination);
   }
 
 }

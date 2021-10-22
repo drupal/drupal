@@ -10,6 +10,7 @@ namespace Drupal\Tests\migrate\Unit\destination;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityRevision as RealEntityRevision;
 use Drupal\migrate\Row;
@@ -43,6 +44,13 @@ class EntityRevisionTest extends UnitTestCase {
    */
   protected $fieldTypeManager;
 
+  /**
+   * A mock account switcher.
+   *
+   * @var \Prophecy\Prophecy\ObjectProphecy|\Drupal\Core\Session\AccountSwitcherInterface
+   */
+  protected $accountSwitcher;
+
   protected function setUp(): void {
     parent::setUp();
 
@@ -57,6 +65,7 @@ class EntityRevisionTest extends UnitTestCase {
 
     $this->entityFieldManager = $this->prophesize('\Drupal\Core\Entity\EntityFieldManagerInterface');
     $this->fieldTypeManager = $this->prophesize('\Drupal\Core\Field\FieldTypePluginManagerInterface');
+    $this->accountSwitcher = $this->prophesize(AccountSwitcherInterface::class);
   }
 
   /**
@@ -194,7 +203,8 @@ class EntityRevisionTest extends UnitTestCase {
       $this->storage->reveal(),
       [],
       $this->entityFieldManager->reveal(),
-      $this->fieldTypeManager->reveal()
+      $this->fieldTypeManager->reveal(),
+      $this->accountSwitcher->reveal()
     );
   }
 

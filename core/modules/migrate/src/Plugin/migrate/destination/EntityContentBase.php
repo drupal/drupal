@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\migrate\Audit\HighestIdInterface;
@@ -17,6 +18,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore validatable
@@ -106,6 +108,13 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
   protected $fieldTypeManager;
 
   /**
+   * The account switcher service.
+   *
+   * @var \Drupal\Core\Session\AccountSwitcherInterface
+   */
+  protected $accountSwitcher;
+
+  /**
    * Constructs a content entity.
    *
    * @param array $configuration
@@ -124,11 +133,18 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
    *   The entity field manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type plugin manager service.
+   * @param \Drupal\Core\Session\AccountSwitcherInterface $account_switcher
+   *   The account switcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, AccountSwitcherInterface $account_switcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->entityFieldManager = $entity_field_manager;
     $this->fieldTypeManager = $field_type_manager;
+    if ($account_switcher === NULL) {
+      @trigger_error('Calling ' . __NAMESPACE__ . '\EntityContentBase::__construct() without the $account_switcher argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3142975', E_USER_DEPRECATED);
+      $account_switcher = \Drupal::service('account_switcher');
+    }
+    $this->accountSwitcher = $account_switcher;
   }
 
   /**
@@ -144,7 +160,8 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       $container->get('entity_type.manager')->getStorage($entity_type),
       array_keys($container->get('entity_type.bundle.info')->getBundleInfo($entity_type)),
       $container->get('entity_field.manager'),
-      $container->get('plugin.manager.field.field_type')
+      $container->get('plugin.manager.field.field_type'),
+      $container->get('account_switcher')
     );
   }
 
@@ -187,7 +204,28 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
    * {@inheritdoc}
    */
   public function validateEntity(FieldableEntityInterface $entity) {
-    $violations = $entity->validate();
+    // Entity validation can require the user that owns the entity. Switch to
+    // use that user during validation.
+    // As an example:
+    // @see \Drupal\Core\Entity\Plugin\Validation\Constraint\ValidReferenceConstraint
+    $account = $entity instanceof EntityOwnerInterface ? $entity->getOwner() : NULL;
+    // Validate account exists as the owner reference could be invalid for any
+    // number of reasons.
+    if ($account) {
+      $this->accountSwitcher->switchTo($account);
+    }
+    // This finally block ensures that the account is always switched back, even
+    // if an exception was thrown. Any validation exceptions are intentionally
+    // left unhandled. They should be caught and logged by a catch block
+    // surrounding the row import and then added to the migration messages table
+    // for the current row.
+    try {
+      $violations = $entity->validate();
+    } finally {
+      if ($account) {
+        $this->accountSwitcher->switchBack();
+      }
+    }
 
     if (count($violations) > 0) {
       throw new EntityValidationException($violations);

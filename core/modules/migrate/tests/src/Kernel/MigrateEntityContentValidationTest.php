@@ -2,11 +2,18 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterFormatInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 use Drupal\user\Plugin\Validation\Constraint\UserNameConstraint;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests validation of an entity during migration.
@@ -18,7 +25,16 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate', 'system', 'user', 'entity_test'];
+  protected static $modules = [
+    'entity_test',
+    'field',
+    'filter',
+    'filter_test',
+    'migrate',
+    'system',
+    'text',
+    'user',
+  ];
 
   /**
    * Messages accumulated during the migration run.
@@ -33,9 +49,11 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig(['system', 'user']);
     $this->installEntitySchema('user');
+    $this->installEntitySchema('user_role');
     $this->installEntitySchema('entity_test');
+    $this->installSchema('system', ['sequences']);
+    $this->installConfig(['field', 'filter_test', 'system', 'user']);
 
     $this->container
       ->get('event_dispatcher')
@@ -138,6 +156,95 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
     $this->assertSame(sprintf('2: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[1], 'Second message should have 2 validation errors.');
     $this->assertSame(sprintf('3: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[2], 'Third message should have 2 validation errors.');
     $this->assertArrayNotHasKey(3, $this->messages, 'Fourth message should not exist.');
+  }
+
+  /**
+   * Tests validation for entities that are instances of EntityOwnerInterface.
+   */
+  public function testEntityOwnerValidation() {
+    // Text format access is impacted by user permissions.
+    $filter_test_format = FilterFormat::load('filter_test');
+    assert($filter_test_format instanceof FilterFormatInterface);
+
+    // Create 2 users, an admin user who has permission to use this text format
+    // and another who does not have said access.
+    $role = Role::create([
+      'id' => 'admin',
+      'label' => 'admin',
+      'is_admin' => TRUE,
+    ]);
+    assert($role instanceof RoleInterface);
+    $role->grantPermission($filter_test_format->getPermissionName());
+    $role->save();
+    $admin_user = User::create([
+      'name' => 'foobar',
+      'mail' => 'foobar@example.com',
+    ]);
+    $admin_user->addRole($role->id());
+    $admin_user->save();
+    $normal_user = User::create([
+      'name' => 'normal user',
+      'mail' => 'normal@example.com',
+    ]);
+    $normal_user->save();
+
+    // Add a "body" field with the text format.
+    $field_name = mb_strtolower($this->randomMachineName());
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'text',
+    ]);
+    $field_storage->save();
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'entity_test',
+    ])->save();
+
+    // Attempt to migrate entities. The first record is owned by an admin user.
+    $definition = [
+      'source' => [
+        'plugin' => 'embedded_data',
+        'data_rows' => [
+          [
+            'id' => 1,
+            'uid' => $admin_user->id(),
+            'body' => [
+              'value' => 'foo',
+              'format' => 'filter_test',
+            ],
+          ],
+          [
+            'id' => 2,
+            'uid' => $normal_user->id(),
+            'body' => [
+              'value' => 'bar',
+              'format' => 'filter_test',
+            ],
+          ],
+        ],
+        'ids' => [
+          'id' => ['type' => 'integer'],
+        ],
+      ],
+      'process' => [
+        'id' => 'id',
+        'user_id' => 'uid',
+        "$field_name/value" => 'body/value',
+        "$field_name/format" => 'body/format',
+      ],
+      'destination' => [
+        'plugin' => 'entity:entity_test',
+        'validate' => TRUE,
+      ],
+    ];
+    $this->container->get('current_user')->setAccount($normal_user);
+    $this->runImport($definition);
+
+    // The second user import should fail validation because they do not have
+    // access to use "filter_test" filter.
+    $this->assertSame(sprintf('2: [entity_test: 2]: user_id.0.target_id=This entity (<em class="placeholder">user</em>: <em class="placeholder">%s</em>) cannot be referenced.||%s.0.format=The value you selected is not a valid choice.', $normal_user->id(), $field_name), $this->messages[0]);
+    $this->assertArrayNotHasKey(1, $this->messages);
   }
 
   /**

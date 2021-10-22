@@ -5,6 +5,7 @@ namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityRevision;
@@ -53,7 +54,8 @@ class EntityRevisionTest extends EntityTestBase {
       $this->storage->reveal(),
       [],
       $this->entityFieldManager->reveal(),
-      $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
+      $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
+      $this->prophesize(AccountSwitcherInterface::class)->reveal()
     );
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The "foo" entity type does not support revisions.');
@@ -81,7 +83,8 @@ class EntityRevisionTest extends EntityTestBase {
       $this->storage->reveal(),
       [],
       $this->entityFieldManager->reveal(),
-      $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
+      $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
+      $this->prophesize(AccountSwitcherInterface::class)->reveal()
     );
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The "foo" entity type does not support translations.');
