@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
 use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\NoTmpDirFileException;
 use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
@@ -115,7 +114,7 @@ class FileUploadHandler {
   /**
    * Creates a file from an upload.
    *
-   * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile
+   * @param \Drupal\file\Upload\UploadedFileInterface $uploadedFile
    *   The uploaded file object.
    * @param array $validators
    *   The validators to run against the uploaded file.
@@ -140,7 +139,7 @@ class FileUploadHandler {
    * @throws \Drupal\file\Upload\FileValidationException
    *   Thrown when file validation fails.
    */
-  public function handleFileUpload(UploadedFile $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE): FileUploadResult {
+  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE): FileUploadResult {
     $originalName = $uploadedFile->getClientOriginalName();
 
     if (!$uploadedFile->isValid()) {
@@ -217,7 +216,8 @@ class FileUploadHandler {
     }
 
     $file->setFileUri($destinationFilename);
-    if (!$this->fileSystem->moveUploadedFile($uploadedFile->getRealPath(), $file->getFileUri())) {
+
+    if (!$this->moveUploadedFile($uploadedFile, $file->getFileUri())) {
       throw new FileWriteException('File upload error. Could not move uploaded file.');
     }
 
@@ -268,6 +268,26 @@ class FileUploadHandler {
     }
 
     return $result;
+  }
+
+  /**
+   * Move the uploaded file from the temporary path to the destination.
+   *
+   * @todo Allows a sub-class to override this method in order to handle
+   * raw file uploads in https://www.drupal.org/project/drupal/issues/2940383.
+   *
+   * @param \Drupal\file\Upload\UploadedFileInterface $uploadedFile
+   *   The uploaded file.
+   * @param string $uri
+   *   The destination URI.
+   *
+   * @return bool
+   *   Returns FALSE if moving failed.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/2940383
+   */
+  protected function moveUploadedFile(UploadedFileInterface $uploadedFile, string $uri) {
+    return $this->fileSystem->moveUploadedFile($uploadedFile->getRealPath(), $uri);
   }
 
   /**

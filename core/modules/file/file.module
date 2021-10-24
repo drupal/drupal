@@ -27,6 +27,7 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Upload\FileValidationException;
+use Drupal\file\Upload\FormUploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException as SymfonyFileException;
 use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
 use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
@@ -913,7 +914,8 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
   /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploaded_file */
   foreach ($uploaded_files as $i => $uploaded_file) {
     try {
-      $result = $file_upload_handler->handleFileUpload($uploaded_file, $validators, $destination, $replace);
+      $form_uploaded_file = new FormUploadedFile($uploaded_file);
+      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $replace);
       $file = $result->getFile();
       // If the filename has been modified, let the user know.
       if ($result->isRenamed()) {
