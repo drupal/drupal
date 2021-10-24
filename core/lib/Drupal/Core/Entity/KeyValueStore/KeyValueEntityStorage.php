@@ -93,7 +93,8 @@ class KeyValueEntityStorage extends EntityStorageBase {
   public function doCreate(array $values = []) {
     // Set default language to site default if not provided.
     $values += [$this->getEntityType()->getKey('langcode') => $this->languageManager->getDefaultLanguage()->getId()];
-    $entity = new $this->entityClass($values, $this->entityTypeId);
+    $entity_class = $this->getEntityClass();
+    $entity = new $entity_class($values, $this->entityTypeId);
 
     // @todo This is handled by ContentEntityStorageBase, which assumes
     //   FieldableEntityInterface. The current approach in

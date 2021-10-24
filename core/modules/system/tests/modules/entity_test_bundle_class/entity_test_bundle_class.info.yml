@@ -1,0 +1,7 @@
+name: 'Entity Bundle Class Test'
+type: module
+description: 'Support module for testing entity bundle classes.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test

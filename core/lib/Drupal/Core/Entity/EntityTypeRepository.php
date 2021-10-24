@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
 use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -80,11 +81,26 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
 
     $same_class = 0;
     $entity_type_id = NULL;
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
+    $definitions = $this->entityTypeManager->getDefinitions();
+    foreach ($definitions as $entity_type) {
       if ($entity_type->getOriginalClass() == $class_name  || $entity_type->getClass() == $class_name) {
         $entity_type_id = $entity_type->id();
         if ($same_class++) {
           throw new AmbiguousEntityClassException($class_name);
+        }
+      }
+    }
+
+    // If no match was found check if it is a bundle class. This needs to be in
+    // a separate loop to avoid false positives, since an entity class can
+    // subclass another entity class.
+    if (!$entity_type_id) {
+      foreach ($definitions as $entity_type) {
+        if (is_subclass_of($class_name, $entity_type->getOriginalClass()) || is_subclass_of($class_name, $entity_type->getClass())) {
+          $entity_type_id = $entity_type->id();
+          if ($same_class++) {
+            throw new AmbiguousBundleClassException($class_name);
+          }
         }
       }
     }

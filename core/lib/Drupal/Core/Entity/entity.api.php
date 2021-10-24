@@ -848,6 +848,11 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *     the entity type and the bundle, the one for the bundle is used.
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
+ *   - class: (optional) The fully qualified class name for this bundle. If
+ *     omitted, the class from the entity type definition will be used. Multiple
+ *     bundles must not use the same subclass. If a class is reused by multiple
+ *     bundles, an \Drupal\Core\Entity\Exception\AmbiguousBundleClassException
+ *     will be thrown.
  *
  * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info_alter()
@@ -868,6 +873,8 @@ function hook_entity_bundle_info() {
  */
 function hook_entity_bundle_info_alter(&$bundles) {
   $bundles['user']['user']['label'] = t('Full account');
+  // Override the bundle class for the "article" node type in a custom module.
+  $bundles['node']['article']['class'] = 'Drupal\mymodule\Entity\Article';
 }
 
 /**

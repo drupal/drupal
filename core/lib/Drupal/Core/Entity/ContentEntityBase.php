@@ -1129,6 +1129,23 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
+  public static function create(array $values = []) {
+    $entity_type_repository = \Drupal::service('entity_type.repository');
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $class_name = static::class;
+    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass($class_name));
+
+    // Always explicitly specify the bundle if the entity has a bundle class.
+    if ($storage instanceof BundleEntityStorageInterface && ($bundle = $storage->getBundleFromClass($class_name))) {
+      $values[$storage->getEntityType()->getKey('bundle')] = $bundle;
+    }
+
+    return $storage->create($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function createDuplicate() {
     if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {
       throw new \InvalidArgumentException("The entity object refers to a removed translation ({$this->activeLangcode}) and cannot be manipulated.");
