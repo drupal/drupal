@@ -15,7 +15,7 @@
         "doctrine/reflection": "1.2.2",
         "egulias/email-validator": "2.1.25",
         "guzzlehttp/guzzle": "6.5.5",
-        "guzzlehttp/promises": "1.5.0",
+        "guzzlehttp/promises": "1.5.1",
         "guzzlehttp/psr7": "1.8.3",
         "laminas/laminas-diactoros": "2.8.0",
         "laminas/laminas-escaper": "2.9.0",
