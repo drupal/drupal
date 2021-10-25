@@ -56,7 +56,7 @@ entity.node.version_history:
     _title: 'Revisions'
     _controller: '\Drupal\node\Controller\NodeController::revisionOverview'
   requirements:
-    _access_node_revision: 'view'
+    _entity_access: 'node.view all revisions'
     node: \d+
   options:
     _node_operation_route: TRUE
@@ -70,7 +70,7 @@ entity.node.revision:
     _controller: '\Drupal\node\Controller\NodeController::revisionShow'
     _title_callback: '\Drupal\node\Controller\NodeController::revisionPageTitle'
   requirements:
-    _access_node_revision: 'view'
+    _entity_access: 'node_revision.view revision'
     node: \d+
   options:
     parameters:
@@ -85,7 +85,7 @@ node.revision_revert_confirm:
     _form: '\Drupal\node\Form\NodeRevisionRevertForm'
     _title: 'Revert to earlier revision'
   requirements:
-    _access_node_revision: 'update'
+    _entity_access: 'node_revision.revert revision'
     node: \d+
   options:
     _node_operation_route: TRUE
@@ -101,7 +101,7 @@ node.revision_revert_translation_confirm:
     _form: '\Drupal\node\Form\NodeRevisionRevertTranslationForm'
     _title: 'Revert to earlier revision of a translation'
   requirements:
-    _access_node_revision: 'update'
+    _entity_access: 'node_revision.revert revision'
     node: \d+
   options:
     _node_operation_route: TRUE
@@ -117,7 +117,7 @@ node.revision_delete_confirm:
     _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
     _title: 'Delete earlier revision'
   requirements:
-    _access_node_revision: 'delete'
+    _entity_access: 'node_revision.delete revision'
     node: \d+
   options:
     _node_operation_route: TRUE

@@ -24,28 +24,15 @@ class NodeRevisionAccessCheck implements AccessInterface {
   protected $nodeStorage;
 
   /**
-   * The node access control handler.
-   *
-   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
-   */
-  protected $nodeAccess;
-
-  /**
-   * A static cache of access checks.
-   *
-   * @var array
-   */
-  protected $access = [];
-
-  /**
    * Constructs a new NodeRevisionAccessCheck.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    @trigger_error('NodeRevisionAccessCheck is deprecated in drupal:9.3.0 and will be removed before drupal:10.0.0. Use "_entity_access" requirement with relevant operation instead. See https://www.drupal.org/node/3161210', E_USER_DEPRECATED);
+
     $this->nodeStorage = $entity_type_manager->getStorage('node');
-    $this->nodeAccess = $entity_type_manager->getAccessControlHandler('node');
   }
 
   /**
@@ -90,53 +77,16 @@ class NodeRevisionAccessCheck implements AccessInterface {
    *   TRUE if the operation may be performed, FALSE otherwise.
    */
   public function checkAccess(NodeInterface $node, AccountInterface $account, $op = 'view') {
-    $map = [
+    // Converts legacy operations for this access check to new revision
+    // operation found in access control handler.
+    $entity_operation_map = [
       'view' => 'view all revisions',
-      'update' => 'revert all revisions',
-      'delete' => 'delete all revisions',
+      'update' => 'revert revision',
+      'delete' => 'delete revision',
     ];
-    $bundle = $node->bundle();
-    $type_map = [
-      'view' => "view $bundle revisions",
-      'update' => "revert $bundle revisions",
-      'delete' => "delete $bundle revisions",
-    ];
-
-    if (!$node || !isset($map[$op]) || !isset($type_map[$op])) {
-      // If there was no node to check against, or the $op was not one of the
-      // supported ones, we return access denied.
-      return FALSE;
-    }
-
-    // Statically cache access by revision ID, language code, user account ID,
-    // and operation.
-    $langcode = $node->language()->getId();
-    $cid = $node->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $op;
-
-    if (!isset($this->access[$cid])) {
-      // Perform basic permission checks first.
-      if (!$account->hasPermission($map[$op]) && !$account->hasPermission($type_map[$op]) && !$account->hasPermission('administer nodes')) {
-        $this->access[$cid] = FALSE;
-        return FALSE;
-      }
-
-      // If this is the default revision, return access denied for revert or
-      // delete operations.
-      if ($node->isDefaultRevision() && ($op === 'update' || $op === 'delete')) {
-        $this->access[$cid] = FALSE;
-      }
-      elseif ($account->hasPermission('administer nodes')) {
-        $this->access[$cid] = TRUE;
-      }
-      else {
-        // First check the access to the default revision and finally, if the
-        // node passed in is not the default revision then check access to
-        // that, too.
-        $this->access[$cid] = $this->nodeAccess->access($this->nodeStorage->load($node->id()), $op, $account) && ($node->isDefaultRevision() || $this->nodeAccess->access($node, $op, $account));
-      }
-    }
-
-    return $this->access[$cid];
+    return isset($entity_operation_map[$op]) ?
+      $node->access($entity_operation_map[$op], $account) :
+      FALSE;
   }
 
 }

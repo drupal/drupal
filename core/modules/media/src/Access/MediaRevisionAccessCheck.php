@@ -31,19 +31,14 @@ class MediaRevisionAccessCheck implements AccessInterface {
   protected $mediaAccess;
 
   /**
-   * A static cache of access checks.
-   *
-   * @var array
-   */
-  protected $access = [];
-
-  /**
    * Constructs a new MediaRevisionAccessCheck.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    @trigger_error('MediaRevisionAccessCheck is deprecated in drupal:9.3.0 and will be removed before drupal:10.0.0. Use "_entity_access" requirement with relevant operation instead. See https://www.drupal.org/node/3161210', E_USER_DEPRECATED);
+
     $this->mediaStorage = $entity_type_manager->getStorage('media');
     $this->mediaAccess = $entity_type_manager->getAccessControlHandler('media');
   }
@@ -96,50 +91,7 @@ class MediaRevisionAccessCheck implements AccessInterface {
       return FALSE;
     }
 
-    // Statically cache access by revision ID, language code, user account ID,
-    // and operation.
-    $langcode = $media->language()->getId();
-    $cid = $media->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $op;
-
-    if (!isset($this->access[$cid])) {
-      // Perform basic permission checks first.
-      if (!$account->hasPermission('view all media revisions') && !$account->hasPermission('administer media')) {
-        $this->access[$cid] = FALSE;
-        return FALSE;
-      }
-
-      if ($account->hasPermission('administer media')) {
-        $this->access[$cid] = TRUE;
-      }
-      else {
-        // First check the access to the default revision and finally, if the
-        // media passed in is not the default revision then access to that, too.
-        $this->access[$cid] = $this->mediaAccess->access($this->mediaStorage->load($media->id()), $op, $account) && ($media->isDefaultRevision() || $this->mediaAccess->access($media, $op, $account));
-      }
-    }
-
-    return $this->access[$cid];
-  }
-
-  /**
-   * Counts the number of revisions in the default language.
-   *
-   * @param \Drupal\media\MediaInterface $media
-   *   The media item for which to count the revisions.
-   *
-   * @return int
-   *   The number of revisions in the default language.
-   */
-  protected function countDefaultLanguageRevisions(MediaInterface $media) {
-    $entity_type = $media->getEntityType();
-    $count = $this->mediaStorage->getQuery()
-      ->accessCheck(FALSE)
-      ->allRevisions()
-      ->condition($entity_type->getKey('id'), $media->id())
-      ->condition($entity_type->getKey('default_langcode'), 1)
-      ->count()
-      ->execute();
-    return $count;
+    return $this->mediaAccess->access($media, 'view all revisions', $account);
   }
 
 }

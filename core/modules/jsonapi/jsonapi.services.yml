@@ -156,8 +156,6 @@ services:
     public: false
     arguments: ['@jsonapi.resource_type.repository', '@router.no_access_checks', '@current_user', '@entity.repository']
     calls:
-      - [setNodeRevisionAccessCheck, ['@?access_check.node.revision']] # This is only injected when the service is available.
-      - [setMediaRevisionAccessCheck, ['@?access_check.media.revision']] # This is only injected when the service is available.
       # This is a temporary measure. JSON:API should not need to be aware of the Content Moderation module.
       - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
   access_check.jsonapi.relationship_route_access:

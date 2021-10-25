@@ -4,19 +4,59 @@ namespace Drupal\media;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an access control handler for media items.
  */
-class MediaAccessControlHandler extends EntityAccessControlHandler {
+class MediaAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a MediaAccessControlHandler object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager = NULL) {
+    parent::__construct($entity_type);
+    if (!isset($entity_type_manager)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3214171', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::entityTypeManager();
+    }
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity_type.manager'),
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    if ($account->hasPermission('administer media')) {
+    /** @var \Drupal\media\MediaInterface $entity */
+    // Allow admin permission to override all operations.
+    if ($account->hasPermission($this->entityType->getAdminPermission())) {
       return AccessResult::allowed()->cachePerPermissions();
     }
 
@@ -82,6 +122,22 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
         }
         return AccessResult::neutral("The following permissions are required: 'delete any media' OR 'delete own media' OR '$type: delete any media' OR '$type: delete own media'.")->cachePerPermissions();
+
+      case 'view all revisions':
+        // Perform basic permission checks first.
+        if (!$account->hasPermission('view all media revisions')) {
+          return AccessResult::neutral("The 'view all media revisions' permission is required.")->cachePerPermissions();
+        }
+
+        // First check the access to the default revision and finally, if the
+        // media passed in is not the default revision then access to that,
+        // too.
+        $media_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+        $access = $this->access($media_storage->load($entity->id()), 'view', $account, TRUE);
+        if (!$entity->isDefaultRevision()) {
+          $access = $access->orIf($this->access($entity, 'view', $account, TRUE));
+        }
+        return $access->cachePerPermissions()->addCacheableDependency($entity);
 
       default:
         return AccessResult::neutral()->cachePerPermissions();

@@ -504,6 +504,16 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
+   * The expected cache tags when checking revision responses.
+   *
+   * @return string[]
+   *   A set of cache tags.
+   */
+  protected function getExtraRevisionCacheTags() {
+    return [];
+  }
+
+  /**
    * The expected cache contexts for the GET/HEAD response of the test entity.
    *
    * @param array|null $sparse_fieldset
@@ -2945,7 +2955,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // object.
     $expected_document['data']['links']['latest-version']['href'] = $rel_latest_version_url->setAbsolute()->toString();
     $expected_document['data']['links']['working-copy']['href'] = $rel_working_copy_url->setAbsolute()->toString();
-    $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+    $this->assertResourceResponse(200, $expected_document, $actual_response, Cache::mergeTags($expected_cache_tags, $this->getExtraRevisionCacheTags()), $expected_cache_contexts, FALSE, 'MISS');
 
     // Install content_moderation module.
     $this->assertTrue($this->container->get('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
@@ -3109,46 +3119,47 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_document['data']['links']['latest-version']['href'] = $rel_latest_version_url->setAbsolute()->toString();
     $expected_cache_tags = $this->getExpectedCacheTags();
     $expected_cache_contexts = $this->getExpectedCacheContexts();
-    $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+    $this->assertResourceResponse(200, $expected_document, $actual_response, Cache::mergeTags($expected_cache_tags, $this->getExtraRevisionCacheTags()), $expected_cache_contexts, FALSE, 'MISS');
     // And the collection response should also have the latest revision.
     $actual_response = $this->request('GET', $rel_working_copy_collection_url, $request_options);
     $expected_response = static::getExpectedCollectionResponse([$entity], $rel_working_copy_collection_url->toString(), $request_options);
     $expected_collection_document = $expected_response->getResponseData();
     $expected_collection_document['data'] = [$expected_document['data']];
     $expected_cacheability = $expected_response->getCacheableMetadata();
-    $this->assertResourceResponse(200, $expected_collection_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $this->assertResourceResponse(200, $expected_collection_document, $actual_response, Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
 
     // Test relationship responses.
     // Fetch the prior revision's relationship URL.
     $test_relationship_urls = [
-      [
+      'canonical' => [
         NULL,
         $relationship_url,
         $related_url,
       ],
-      [
+      'original' => [
         $original_revision_id,
         $original_revision_id_relationship_url,
         $original_revision_id_related_url,
       ],
-      [
+      'latest' => [
         $latest_revision_id,
         $latest_revision_id_relationship_url,
         $latest_revision_id_related_url,
       ],
-      [
+      'default' => [
         $default_revision_id,
         $rel_latest_version_relationship_url,
         $rel_latest_version_related_url,
       ],
-      [
+      'forward' => [
         $forward_revision_id,
         $rel_working_copy_relationship_url,
         $rel_working_copy_related_url,
       ],
     ];
-    foreach ($test_relationship_urls as $revision_case) {
-      list($revision_id, $relationship_url, $related_url) = $revision_case;
+    $default_revision_types = ['canonical', 'default'];
+    foreach ($test_relationship_urls as $relationship_type => $revision_case) {
+      [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
       $revision = is_null($revision_id)
@@ -3161,7 +3172,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document = $expected_response->getResponseData();
       $expected_cacheability = $expected_response->getCacheableMetadata();
       $expected_document['errors'][0]['links']['via']['href'] = $relationship_url->toString();
-      $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts());
+      // Only add node type check tags for non-default revisions.
+      $expected_cache_tags = !in_array($relationship_type, $default_revision_types, TRUE) ? Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()) : $expected_cacheability->getCacheTags();
+      $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
       // Request the related route.
       $actual_response = $this->request('GET', $related_url, $request_options);
       // @todo: refactor self::getExpectedRelatedResponses() into a function which returns a single response.
@@ -3169,11 +3182,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document = $expected_response->getResponseData();
       $expected_cacheability = $expected_response->getCacheableMetadata();
       $expected_document['errors'][0]['links']['via']['href'] = $related_url->toString();
-      $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts());
+      $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
     }
     $this->grantPermissionsToTestedRole(['field_jsonapi_test_entity_ref view access']);
-    foreach ($test_relationship_urls as $revision_case) {
-      list($revision_id, $relationship_url, $related_url) = $revision_case;
+    foreach ($test_relationship_urls as $relationship_type => $revision_case) {
+      [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
       $revision = is_null($revision_id)
@@ -3186,7 +3199,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document = $expected_response->getResponseData();
       $expected_document['links']['self']['href'] = $relationship_url->setAbsolute()->toString();
       $expected_cacheability = $expected_response->getCacheableMetadata();
-      $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+      // Only add node type check tags for non-default revisions.
+      $expected_cache_tags = !in_array($relationship_type, $default_revision_types, TRUE) ? Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()) : $expected_cacheability->getCacheTags();
+      $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
       // Request the related route.
       $actual_response = $this->request('GET', $related_url, $request_options);
       $expected_response = $this->getExpectedRelatedResponse('field_jsonapi_test_entity_ref', $request_options, $revision);
@@ -3195,7 +3210,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document['links']['self']['href'] = $related_url->toString();
       // MISS or UNCACHEABLE depends on data. It must not be HIT.
       $dynamic_cache = !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
-      $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, $dynamic_cache);
+      $expected_cache_tags = !in_array($relationship_type, $default_revision_types, TRUE) ? Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()) : $expected_cacheability->getCacheTags();
+      $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts(), FALSE, $dynamic_cache);
     }
 
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);

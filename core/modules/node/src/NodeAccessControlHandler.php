@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
@@ -29,16 +30,50 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected $grantStorage;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Map of revision operations.
+   *
+   * Keys contain revision operations, where values are an array containing the
+   * permission operation and entity operation.
+   *
+   * Permission operation is used to build the required permission, e.g.
+   * 'permissionOperation all revisions', 'permissionOperation type revisions'.
+   *
+   * Entity operation is used to determine access, e.g for 'delete revision'
+   * operation, an account must also have access to 'delete' operation on an
+   * entity.
+   */
+  protected const REVISION_OPERATION_MAP = [
+    'view all revisions' => ['view', 'view'],
+    'view revision' => ['view', 'view'],
+    'revert revision' => ['revert', 'update'],
+    'delete revision' => ['delete', 'delete'],
+  ];
+
+  /**
    * Constructs a NodeAccessControlHandler object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\node\NodeGrantDatabaseStorageInterface $grant_storage
    *   The node grant storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, NodeGrantDatabaseStorageInterface $grant_storage) {
+  public function __construct(EntityTypeInterface $entity_type, NodeGrantDatabaseStorageInterface $grant_storage, EntityTypeManagerInterface $entity_type_manager = NULL) {
     parent::__construct($entity_type);
     $this->grantStorage = $grant_storage;
+    if (!isset($entity_type_manager)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3214171', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::entityTypeManager();
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -47,7 +82,8 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('node.grant_storage')
+      $container->get('node.grant_storage'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -57,7 +93,8 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   public function access(EntityInterface $entity, $operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
-    if ($account->hasPermission('bypass node access')) {
+    // Only bypass if not a revision operation, to retain compatibility.
+    if ($account->hasPermission('bypass node access') && !isset(static::REVISION_OPERATION_MAP[$operation])) {
       $result = AccessResult::allowed()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
@@ -102,6 +139,45 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // Check if authors can view their own unpublished nodes.
     if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
       return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
+    }
+
+    [$revision_permission_operation, $entity_operation] = static::REVISION_OPERATION_MAP[$operation] ?? [
+      NULL,
+      NULL,
+    ];
+
+    // Revision operations.
+    if ($revision_permission_operation) {
+      $bundle = $node->bundle();
+      // If user doesn't have any of these then quit.
+      if (!$account->hasPermission("$revision_permission_operation all revisions") && !$account->hasPermission("$revision_permission_operation $bundle revisions") && !$account->hasPermission('administer nodes')) {
+        return AccessResult::neutral()->cachePerPermissions();
+      }
+
+      // If the user has the view all revisions permission and this is the view
+      // all revisions operation then we can allow access.
+      if ($operation === 'view all revisions') {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+
+      // If this is the default revision, return access denied for revert or
+      // delete operations.
+      if ($node->isDefaultRevision() && ($operation === 'revert revision' || $operation === 'delete revision')) {
+        return AccessResult::forbidden()->addCacheableDependency($node);
+      }
+      elseif ($account->hasPermission('administer nodes')) {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+
+      // First check the access to the default revision and finally, if the
+      // node passed in is not the default revision then check access to
+      // that, too.
+      $node_storage = $this->entityTypeManager->getStorage($node->getEntityTypeId());
+      $access = $this->access($node_storage->load($node->id()), 'view', $account, TRUE);
+      if (!$node->isDefaultRevision()) {
+        $access = $access->orIf($this->access($node, 'view', $account, TRUE));
+      }
+      return $access->cachePerPermissions()->addCacheableDependency($node);
     }
 
     // Evaluate node grants.
