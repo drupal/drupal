@@ -2,52 +2,59 @@
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\File\Exception\FileExistsException;
+use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
+use Drupal\file\FileRepository;
 
 /**
- * Tests the file_save_data() function.
+ * Tests the FileRepository.
  *
+ * @coversDefaultClass \Drupal\file\FileRepository
  * @group file
  */
-class SaveDataTest extends FileManagedUnitTestBase {
+class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
-   * Tests the file_save_data() function when no filename is provided.
+   * The file repository service under test.
+   *
+   * @var \Drupal\file\FileRepository
    */
-  public function testWithoutFilename() {
-    $contents = $this->randomMachineName(8);
+  protected $fileRepository;
 
-    $result = file_save_data($contents);
-    $this->assertNotFalse($result, 'Unnamed file saved correctly.');
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
 
-    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-    assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
-    $this->assertEquals(\Drupal::config('system.file')->get('default_scheme'), $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEquals(\Drupal::service('file_system')->basename($result->getFileUri()), $result->getFilename(), "Filename was set to the file's basename.");
-    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEquals('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
-    $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
-
-    // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(['insert']);
-
-    // Verify that what was returned is what's in the database.
-    $this->assertFileUnchanged($result, File::load($result->id()));
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->fileRepository = $this->container->get('file.repository');
+    $this->fileSystem = $this->container->get('file_system');
   }
 
   /**
-   * Tests the file_save_data() function when a filename is provided.
+   * Tests the writeData() method.
+   *
+   * @covers ::writeData
    */
   public function testWithFilename() {
-    $contents = $this->randomMachineName(8);
+    $contents = $this->randomMachineName();
 
     // Using filename with non-latin characters.
     // cSpell:disable-next-line
     $filename = 'Текстовый файл.txt';
 
-    $result = file_save_data($contents, 'public://' . $filename);
+    $result = $this->fileRepository->writeData($contents, 'public://' . $filename);
     $this->assertNotFalse($result, 'Unnamed file saved correctly.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
@@ -66,14 +73,16 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Tests file_save_data() when renaming around an existing file.
+   * Tests writeData() when renaming around an existing file.
+   *
+   * @covers ::writeData
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
     $existing = $this->createFile();
-    $contents = $this->randomMachineName(8);
+    $contents = $this->randomMachineName();
 
-    $result = file_save_data($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_RENAME);
+    $result = $this->fileRepository->writeData($contents, $existing->getFileUri());
     $this->assertNotFalse($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
@@ -96,14 +105,16 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Tests file_save_data() when replacing an existing file.
+   * Tests writeData() when replacing an existing file.
+   *
+   * @covers ::writeData
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
     $existing = $this->createFile();
-    $contents = $this->randomMachineName(8);
+    $contents = $this->randomMachineName();
 
-    $result = file_save_data($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
+    $result = $this->fileRepository->writeData($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
     $this->assertNotFalse($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
@@ -125,15 +136,24 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Tests that file_save_data() fails overwriting an existing file.
+   * Tests that writeData() fails overwriting an existing file.
+   *
+   * @covers ::writeData
    */
   public function testExistingError() {
-    $contents = $this->randomMachineName(8);
+    $contents = $this->randomMachineName();
     $existing = $this->createFile(NULL, $contents);
 
     // Check the overwrite error.
-    $result = file_save_data('asdf', $existing->getFileUri(), FileSystemInterface::EXISTS_ERROR);
-    $this->assertFalse($result, 'Overwriting a file fails when FileSystemInterface::EXISTS_ERROR is specified.');
+    try {
+      $this->fileRepository->writeData('asdf', $existing->getFileUri(), FileSystemInterface::EXISTS_ERROR);
+      $this->fail('expected FileExistsException');
+    }
+    // FileExistsException is a subclass of FileException.
+    catch (FileExistsException $e) {
+      // expected exception.
+      $this->assertStringContainsString("could not be copied because a file by that name already exists in the destination directory", $e->getMessage());
+    }
     $this->assertEquals($contents, file_get_contents($existing->getFileUri()), 'Contents of existing file were unchanged.');
 
     // Check that no hooks were called while failing.
@@ -141,6 +161,65 @@ class SaveDataTest extends FileManagedUnitTestBase {
 
     // Ensure that the existing file wasn't overwritten.
     $this->assertFileUnchanged($existing, File::load($existing->id()));
+  }
+
+  /**
+   * Tests for an invalid stream wrapper.
+   *
+   * @covers ::writeData
+   */
+  public function testInvalidStreamWrapper() {
+    $this->expectException(InvalidStreamWrapperException::class);
+    $this->fileRepository->writeData('asdf', 'foo://');
+  }
+
+  /**
+   * Tests for entity storage exception.
+   *
+   * @covers ::writeData
+   */
+  public function testEntityStorageException() {
+    /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */
+    $entityTypeManager = $this->prophesize(EntityTypeManager::class);
+    $entityTypeManager->getStorage('file')
+      ->willThrow(EntityStorageException::class);
+
+    $fileRepository = new FileRepository(
+      $this->container->get('file_system'),
+      $this->container->get('stream_wrapper_manager'),
+      $entityTypeManager->reveal(),
+      $this->container->get('module_handler'),
+      $this->container->get('file.usage'),
+      $this->container->get('current_user')
+    );
+
+    $this->expectException(EntityStorageException::class);
+    $target = $this->createFile();
+    $fileRepository->writeData('asdf', $target->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
+  }
+
+  /**
+   * Tests loading a file by URI.
+   *
+   * @covers ::loadByUri
+   */
+  public function testLoadByUri() {
+    $source = $this->createFile();
+    $result = $this->fileRepository->loadByUri($source->getFileUri());
+    $this->assertSameFile($source, $result);
+  }
+
+  /**
+   * Tests loading a file by case-sensitive URI.
+   *
+   * @covers ::loadByUri
+   */
+  public function testLoadByUriCaseSensitive() {
+    $source = $this->createFile('FooBar.txt');
+    $result = $this->fileRepository->loadByUri('public://FooBar.txt');
+    $this->assertSameFile($source, $result);
+    $result = $this->fileRepository->loadByUri('public://foobar.txt');
+    $this->assertNull($result);
   }
 
 }

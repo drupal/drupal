@@ -55,7 +55,9 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    *   A file object, or FALSE on error.
    */
   protected function createTemporaryFile($data, UserInterface $user = NULL) {
-    $file = file_save_data($data, NULL, NULL);
+    /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+    $file_repository = \Drupal::service('file.repository');
+    $file = $file_repository->writeData($data, "public://");
 
     if ($file) {
       if ($user) {

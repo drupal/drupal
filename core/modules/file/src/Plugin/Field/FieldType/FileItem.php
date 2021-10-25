@@ -345,7 +345,9 @@ class FileItem extends EntityReferenceItem {
     // Generate a file entity.
     $destination = $dirname . '/' . $random->name(10, TRUE) . '.txt';
     $data = $random->paragraphs(3);
-    $file = file_save_data($data, $destination, FileSystemInterface::EXISTS_ERROR);
+    /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+    $file_repository = \Drupal::service('file.repository');
+    $file = $file_repository->writeData($data, $destination, FileSystemInterface::EXISTS_ERROR);
     $values = [
       'target_id' => $file->id(),
       'display' => (int) $settings['display_default'],

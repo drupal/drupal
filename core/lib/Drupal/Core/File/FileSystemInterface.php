@@ -383,7 +383,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    *
-   * @see file_save_data()
+   * @see \Drupal\file\FileRepositoryInterface::writeData()
    */
   public function saveData($data, $destination, $replace = self::EXISTS_RENAME);
 

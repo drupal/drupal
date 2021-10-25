@@ -13,9 +13,10 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
@@ -1197,13 +1198,20 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     $data = (string) \Drupal::httpClient()
       ->get($url)
       ->getBody();
-    $local = $managed ? file_save_data($data, $path, $replace) : $file_system->saveData($data, $path, $replace);
+    if ($managed) {
+      /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+      $file_repository = \Drupal::service('file.repository');
+      $local = $file_repository->writeData($data, $path, $replace);
+    }
+    else {
+      $local = $file_system->saveData($data, $path, $replace);
+    }
   }
   catch (TransferException $exception) {
     \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
     return FALSE;
   }
-  catch (FileException $e) {
+  catch (FileException | InvalidStreamWrapperException $e) {
     \Drupal::messenger()->addError(t('Failed to save file due to error "%error"', ['%error' => $e->getMessage()]));
     return FALSE;
   }

@@ -120,17 +120,29 @@ function file_field_widget_info_alter(array &$info) {
  * @return \Drupal\file\FileInterface|false
  *   File entity if the copy is successful, or FALSE in the event of an error.
  *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ *   Thrown when there is an error updating the file storage.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\file\FileRepositoryInterface::copy() instead.
+ *
+ * @see https://www.drupal.org/node/3223520
+ * @see \Drupal\file\FileRepositoryInterface::copy()
  * @see \Drupal\Core\File\FileSystemInterface::copy()
  * @see hook_file_copy()
  */
 function file_copy(FileInterface $source, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-
-  if (!$stream_wrapper_manager->isValidUri($destination)) {
-    if (($realpath = $file_system->realpath($source->getFileUri())) !== FALSE) {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::copy() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
+  if (empty($destination)) {
+    $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
+  }
+  /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+  $file_repository = \Drupal::service('file.repository');
+  try {
+    return $file_repository->copy($source, $destination, $replace);
+  }
+  catch (InvalidStreamWrapperException $e) {
+    if (($realpath = \Drupal::service('file_system')->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
     else {
@@ -138,37 +150,6 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FileSy
     }
     \Drupal::messenger()->addError(t('The specified file %file could not be copied because the destination is invalid. More information is available in the system log.', ['%file' => $source->getFileUri()]));
     return FALSE;
-  }
-
-  try {
-    $uri = $file_system->copy($source->getFileUri(), $destination, $replace);
-    $file = $source->createDuplicate();
-    $file->setFileUri($uri);
-    $file->setFilename($file_system->basename($uri));
-    // If we are replacing an existing file re-use its database record.
-    // @todo Do not create a new entity in order to update it. See
-    //   https://www.drupal.org/node/2241865.
-    if ($replace == FileSystemInterface::EXISTS_REPLACE) {
-      $existing_files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
-      if (count($existing_files)) {
-        $existing = reset($existing_files);
-        $file->fid = $existing->id();
-        $file->setOriginalId($existing->id());
-        $file->setFilename($existing->getFilename());
-      }
-    }
-    // If we are renaming around an existing file (rather than a directory),
-    // use its basename for the filename.
-    elseif ($replace == FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename($file_system->basename($destination));
-    }
-
-    $file->save();
-
-    // Inform modules that the file has been copied.
-    \Drupal::moduleHandler()->invokeAll('file_copy', [$file, $source]);
-
-    return $file;
   }
   catch (FileException $e) {
     return FALSE;
@@ -204,17 +185,29 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FileSy
  * @return \Drupal\file\FileInterface|false
  *   Resulting file entity for success, or FALSE in the event of an error.
  *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ *   Thrown when there is an error updating the file storage.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\file\FileRepositoryInterface::move() instead.
+ *
+ * @see https://www.drupal.org/node/3223520
+ * @see \Drupal\file\FileRepositoryInterface::move()
  * @see \Drupal\Core\File\FileSystemInterface::move()
  * @see hook_file_move()
  */
 function file_move(FileInterface $source, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-
-  if (!$stream_wrapper_manager->isValidUri($destination)) {
-    if (($realpath = $file_system->realpath($source->getFileUri())) !== FALSE) {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::move() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
+  if (empty($destination)) {
+    $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
+  }
+  /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+  $file_repository = \Drupal::service('file.repository');
+  try {
+    return $file_repository->move($source, $destination, $replace);
+  }
+  catch (InvalidStreamWrapperException $e) {
+    if (($realpath = \Drupal::service('file_system')->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
     else {
@@ -222,41 +215,6 @@ function file_move(FileInterface $source, $destination = NULL, $replace = FileSy
     }
     \Drupal::messenger()->addError(t('The specified file %file could not be moved because the destination is invalid. More information is available in the system log.', ['%file' => $source->getFileUri()]));
     return FALSE;
-  }
-
-  try {
-    $uri = $file_system->move($source->getFileUri(), $destination, $replace);
-    $delete_source = FALSE;
-
-    $file = clone $source;
-    $file->setFileUri($uri);
-    // If we are replacing an existing file re-use its database record.
-    if ($replace == FileSystemInterface::EXISTS_REPLACE) {
-      $existing_files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
-      if (count($existing_files)) {
-        $existing = reset($existing_files);
-        $delete_source = TRUE;
-        $file->fid = $existing->id();
-        $file->uuid = $existing->uuid();
-      }
-    }
-    // If we are renaming around an existing file (rather than a directory),
-    // use its basename for the filename.
-    elseif ($replace == FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename(\Drupal::service('file_system')->basename($destination));
-    }
-
-    $file->save();
-
-    // Inform modules that the file has been moved.
-    \Drupal::moduleHandler()->invokeAll('file_move', [$file, $source]);
-
-    // Delete the original if it's not in use elsewhere.
-    if ($delete_source && !\Drupal::service('file.usage')->listUsage($source)) {
-      $source->delete();
-    }
-
-    return $file;
   }
   catch (FileException $e) {
     return FALSE;
@@ -547,56 +505,33 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
  * @return \Drupal\file\FileInterface|false
  *   A file entity, or FALSE on error.
  *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ *   Thrown when there is an error updating the file storage.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\file\FileRepositoryInterface::writeData() instead.
+ *
+ * @see https://www.drupal.org/node/3223520
  * @see \Drupal\Core\File\FileSystemInterface::saveData()
  */
 function file_save_data($data, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
-  $user = \Drupal::currentUser();
-
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::writeData() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
   if (empty($destination)) {
     $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
   }
-
-  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-  if (!$stream_wrapper_manager->isValidUri($destination)) {
+  /** @var \Drupal\file\FileRepositoryInterface $fileRepository */
+  $fileRepository = \Drupal::service('file.repository');
+  try {
+    return $fileRepository->writeData($data, $destination, $replace);
+  }
+  catch (InvalidStreamWrapperException $e) {
     \Drupal::logger('file')->notice('The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', ['%destination' => $destination]);
     \Drupal::messenger()->addError(t('The data could not be saved because the destination is invalid. More information is available in the system log.'));
     return FALSE;
   }
-
-  try {
-    $uri = \Drupal::service('file_system')->saveData($data, $destination, $replace);
-    // Create a file entity.
-    $file = File::create([
-      'uri' => $uri,
-      'uid' => $user->id(),
-    ]);
-    $file->setPermanent();
-    // If we are replacing an existing file re-use its database record.
-    // @todo Do not create a new entity in order to update it. See
-    //   https://www.drupal.org/node/2241865.
-    if ($replace == FileSystemInterface::EXISTS_REPLACE) {
-      $existing_files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
-      if (count($existing_files)) {
-        $existing = reset($existing_files);
-        $file->fid = $existing->id();
-        $file->setOriginalId($existing->id());
-        $file->setFilename($existing->getFilename());
-      }
-    }
-    // If we are renaming around an existing file (rather than a directory),
-    // use its basename for the filename.
-    elseif ($replace == FileSystemInterface::EXISTS_RENAME && is_file($destination)) {
-      $file->setFilename(\Drupal::service('file_system')->basename($destination));
-    }
-
-    $file->save();
-    return $file;
-  }
   catch (FileException $e) {
     return FALSE;
   }
-
 }
 
 /**
@@ -653,19 +588,10 @@ function file_theme() {
  */
 function file_file_download($uri) {
   // Get the file record based on the URI. If not in the database just return.
-  /** @var \Drupal\file\FileInterface[] $files */
-  $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
-  if (count($files)) {
-    foreach ($files as $item) {
-      // Since some database servers sometimes use a case-insensitive comparison
-      // by default, double check that the filename is an exact match.
-      if ($item->getFileUri() === $uri) {
-        $file = $item;
-        break;
-      }
-    }
-  }
-  if (!isset($file)) {
+  /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+  $file_repository = \Drupal::service('file.repository');
+  $file = $file_repository->loadByUri($uri);
+  if (!$file) {
     return;
   }
 

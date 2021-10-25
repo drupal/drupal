@@ -404,7 +404,7 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
   if ($file_new && (StreamWrapperManager::getScheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
     $directory = $field_storage->getSetting('uri_scheme') . '://default_images/';
     \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-    file_move($file_new, $directory . $file_new->getFilename());
+    \Drupal::service('file.repository')->move($file_new, $directory . $file_new->getFilename());
   }
 }
 
@@ -442,7 +442,7 @@ function image_field_config_update(FieldConfigInterface $field) {
   if ($file_new && (StreamWrapperManager::getScheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
     $directory = $field_storage->getSetting('uri_scheme') . '://default_images/';
     \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-    file_move($file_new, $directory . $file_new->getFilename());
+    \Drupal::service('file.repository')->move($file_new, $directory . $file_new->getFilename());
   }
 }
 

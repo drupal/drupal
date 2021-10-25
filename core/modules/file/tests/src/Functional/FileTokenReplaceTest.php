@@ -39,7 +39,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     // Coping a file to test uploads with non-latin filenames.
     // cSpell:disable-next-line
     $filename = \Drupal::service('file_system')->dirname($test_file->getFileUri()) . '/текстовый файл.txt';
-    $test_file = file_copy($test_file, $filename);
+    $test_file = \Drupal::service('file.repository')->copy($test_file, $filename);
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);

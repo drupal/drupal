@@ -298,7 +298,9 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Ensure insecure uploads are disabled for this test.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $original_uri = $this->image->getFileUri();
-    $this->image = file_move($this->image, $original_uri . '.foo.' . $this->imageExtension);
+    /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+    $file_repository = \Drupal::service('file.repository');
+    $this->image = $file_repository->move($this->image, $original_uri . '.foo.' . $this->imageExtension);
 
     // Reset the hook counters to get rid of the 'move' we just called.
     file_test_reset();
@@ -324,7 +326,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'insert']);
 
     // Test with uppercase extensions.
-    $this->image = file_move($this->image, $original_uri . '.foo2.' . $this->imageExtension);
+    $this->image = $file_repository->move($this->image, $original_uri . '.foo2.' . $this->imageExtension);
     // Reset the hook counters.
     file_test_reset();
     $extensions = $this->imageExtension;

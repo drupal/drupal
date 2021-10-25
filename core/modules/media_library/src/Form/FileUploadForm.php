@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
@@ -60,6 +61,13 @@ class FileUploadForm extends AddFormBase {
   protected $fileUsage;
 
   /**
+   * The file repository service.
+   *
+   * @var \Drupal\file\FileRepositoryInterface
+   */
+  protected $fileRepository;
+
+  /**
    * Constructs a new FileUploadForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -76,13 +84,20 @@ class FileUploadForm extends AddFormBase {
    *   The opener resolver.
    * @param \Drupal\file\FileUsage\FileUsageInterface $file_usage
    *   The file usage service.
+   * @param \Drupal\file\FileRepositoryInterface|null $file_repository
+   *   The file repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver, FileUsageInterface $file_usage) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver, FileUsageInterface $file_usage, FileRepositoryInterface $file_repository = NULL) {
     parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
     $this->elementInfo = $element_info;
     $this->renderer = $renderer;
     $this->fileSystem = $file_system;
     $this->fileUsage = $file_usage;
+    if (!$file_repository) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $file_repository argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
+      $file_repository = \Drupal::service('file.repository');
+    }
+    $this->fileRepository = $file_repository;
   }
 
   /**
@@ -96,7 +111,8 @@ class FileUploadForm extends AddFormBase {
       $container->get('renderer'),
       $container->get('file_system'),
       $container->get('media_library.opener_resolver'),
-      $container->get('file.usage')
+      $container->get('file.usage'),
+      $container->get('file.repository')
     );
   }
 
@@ -315,7 +331,7 @@ class FileUploadForm extends AddFormBase {
     if (!$this->fileSystem->prepareDirectory($upload_location, FileSystemInterface::CREATE_DIRECTORY)) {
       throw new FileWriteException("The destination directory '$upload_location' is not writable");
     }
-    $file = file_move($file, $upload_location);
+    $file = $this->fileRepository->move($file, $upload_location);
     if (!$file) {
       throw new \RuntimeException("Unable to move file to '$upload_location'");
     }

@@ -429,7 +429,9 @@ class SaveUploadTest extends FileManagedTestBase {
     // Ensure insecure uploads are disabled for this test.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $original_image_uri = $this->image->getFileUri();
-    $this->image = file_move($this->image, $original_image_uri . '.foo.' . $this->imageExtension);
+    /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+    $file_repository = \Drupal::service('file.repository');
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.foo.' . $this->imageExtension);
 
     // Reset the hook counters to get rid of the 'move' we just called.
     file_test_reset();
@@ -476,7 +478,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'insert']);
 
     // Ensure we don't munge files if we're allowing any extension.
-    $this->image = file_move($this->image, $original_image_uri . '.foo.txt.' . $this->imageExtension);
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.foo.txt.' . $this->imageExtension);
     // Reset the hook counters.
     file_test_reset();
 
@@ -497,7 +499,7 @@ class SaveUploadTest extends FileManagedTestBase {
 
     // Test that a dangerous extension such as .php is munged even if it is in
     // the list of allowed extensions.
-    $this->image = file_move($this->image, $original_image_uri . '.php.' . $this->imageExtension);
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.php.' . $this->imageExtension);
     // Reset the hook counters.
     file_test_reset();
 
@@ -537,7 +539,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'insert']);
 
     // Dangerous extensions are munged if is renamed to end in .txt.
-    $this->image = file_move($this->image, $original_image_uri . '.cgi.' . $this->imageExtension . '.txt');
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.cgi.' . $this->imageExtension . '.txt');
     // Reset the hook counters.
     file_test_reset();
 
