@@ -40,10 +40,6 @@ global-styling:
       css/components/links.css: {}
       css/components/messages.css: {}
       css/components/navigation/nav-button-mobile.css: {}
-      css/components/navigation/nav-primary-button.css: {}
-      css/components/navigation/nav-primary.css: {}
-      css/components/navigation/nav-primary-wide.css: {}
-      css/components/navigation/nav-secondary.css: {}
       css/components/node.css: {}
       css/components/node-teaser.css: {}
       css/components/page-title.css: {}
@@ -58,8 +54,7 @@ global-styling:
   js:
     js/checkbox.js: {}
     js/navigation-utils.js: {}
-    js/navigation.js: {}
-    js/second-level-navigation.js: {}
+
   dependencies:
     - core/drupal.element.closest
     - core/drupal.element.matches
@@ -212,6 +207,23 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
+
+navigation-primary:
+  version: VERSION
+  css:
+    component:
+      css/components/navigation/nav-primary.css: {}
+      css/components/navigation/nav-primary-button.css: {}
+      css/components/navigation/nav-primary-wide.css: {}
+  js:
+    js/navigation.js: {}
+    js/second-level-navigation.js: {}
+
+navigation-secondary:
+  version: VERSION
+  css:
+    component:
+      css/components/navigation/nav-secondary.css: {}
 
 powered-by-block:
   version: VERSION
