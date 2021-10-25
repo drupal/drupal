@@ -80,6 +80,7 @@ class RenderAttachedTestController {
     $render['#attached']['html_head_link'][] = [['href' => '/foo?bar=<baz>&baz=false', 'rel' => 'alternate'], TRUE];
     $render['#attached']['html_head_link'][] = [['href' => '/not-added-to-http-headers', 'rel' => 'alternate'], FALSE];
     $render['#attached']['html_head_link'][] = [['href' => '/foo/bar', 'hreflang' => 'nl', 'rel' => 'alternate'], TRUE];
+    $render['#attached']['html_head_link'][] = [['href' => '/foo/bar', 'hreflang' => 'de', 'rel' => 'alternate'], TRUE];
     return $render;
   }
 

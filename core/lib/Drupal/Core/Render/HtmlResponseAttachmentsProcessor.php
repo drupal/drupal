@@ -436,7 +436,15 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
         '#attributes' => $attributes,
       ];
       $href = $attributes['href'];
-      $attached['html_head'][] = [$element, 'html_head_link:' . $attributes['rel'] . ':' . $href];
+      $rel = $attributes['rel'];
+
+      // Allow multiple hreflang tags to use the same href.
+      if (isset($attributes['hreflang'])) {
+        $attached['html_head'][] = [$element, 'html_head_link:' . $rel . ':' . $attributes['hreflang'] . ':' . $href];
+      }
+      else {
+        $attached['html_head'][] = [$element, 'html_head_link:' . $rel . ':' . $href];
+      }
 
       if ($should_add_header) {
         // Also add a HTTP header "Link:".
