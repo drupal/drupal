@@ -25,6 +25,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'content_translation',
     'comment',
     'datetime',
+    'datetime_range',
     'image',
     'language',
     'link',

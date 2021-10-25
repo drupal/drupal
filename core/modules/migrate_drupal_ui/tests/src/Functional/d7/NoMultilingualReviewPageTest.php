@@ -23,6 +23,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'book',
     'config_translation',
     'content_translation',
+    'datetime_range',
     'file',
     'forum',
     'language',

@@ -21,6 +21,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'comment',
     'datetime',
+    'datetime_range',
     'image',
     'link',
     'menu_ui',

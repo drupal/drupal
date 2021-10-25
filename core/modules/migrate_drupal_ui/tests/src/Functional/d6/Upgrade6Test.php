@@ -22,6 +22,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'book',
     'config_translation',
     'content_translation',
+    'datetime_range',
     'forum',
     'language',
     'migrate_drupal_ui',

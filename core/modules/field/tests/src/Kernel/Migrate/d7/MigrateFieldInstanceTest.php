@@ -19,6 +19,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'comment',
     'datetime',
+    'datetime_range',
     'image',
     'link',
     'menu_ui',
@@ -115,6 +116,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', TRUE, FALSE);
     $this->assertEntity('comment.comment_forum.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.forum.body', 'Body', 'text_with_summary', FALSE, FALSE);
+    $this->assertEntity('node.forum.field_event', 'event', 'daterange', FALSE, FALSE);
     $this->assertEntity('comment.comment_node_test_content_type.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.test_content_type.field_boolean', 'Boolean', 'boolean', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_email', 'Email', 'email', FALSE, FALSE);

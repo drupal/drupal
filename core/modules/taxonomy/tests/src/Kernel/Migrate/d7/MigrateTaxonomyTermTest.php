@@ -17,6 +17,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     'comment',
     'content_translation',
     'datetime',
+    'datetime_range',
     'image',
     'language',
     'link',
