@@ -13,7 +13,6 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -47,8 +46,6 @@ function user_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('<em>Roles</em> are used to group and classify users; each user can be assigned one or more roles. Typically there are two pre-defined roles: <em>Anonymous user</em> (users that are not logged in), and <em>Authenticated user</em> (users that are registered and logged in). Depending on how your site was set up, an <em>Administrator</em> role may also be available: users with this role will automatically be assigned any new permissions whenever a module is enabled. You can create additional roles on the <a href=":roles">Roles administration page</a>.', [':roles' => Url::fromRoute('entity.user_role.collection')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Setting permissions') . '</dt>';
       $output .= '<dd>' . t('After creating roles, you can set permissions for each role on the <a href=":permissions_user">Permissions page</a>. Granting a permission allows users who have been assigned a particular role to perform an action on the site, such as viewing content, editing or creating  a particular type of content, administering settings for a particular module, or using a particular function of the site (such as search).', [':permissions_user' => Url::fromRoute('user.admin_permissions')->toString()]) . '</dd>';
-      $output .= '<dt>' . t('Other permissions pages') . '</dt>';
-      $output .= '<dd>' . t('The main Permissions page can be overwhelming, so each module that defines permissions has its own page for setting them. There are links to these pages on the <a href=":modules">Extend page</a>. When editing a content type, vocabulary, etc., there is also a Manage permissions tab for permissions related to that configuration.', [':modules' => Url::fromRoute('system.modules_list')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Managing account settings') . '</dt>';
       $output .= '<dd>' . t('The <a href=":accounts">Account settings page</a> allows you to manage settings for the displayed name of the Anonymous user role, personal contact forms, user registration settings, and account cancellation settings. On this page you can also manage settings for account personalization, and adapt the text for the email messages that users receive when they register or request a password recovery. You may also set which role is automatically assigned new permissions whenever a module is enabled (the Administrator role).', [':accounts' => Url::fromRoute('entity.user.admin_form')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Managing user account fields') . '</dt>';
@@ -1325,33 +1322,4 @@ function user_filter_format_disable(FilterFormatInterface $filter_format) {
       $role->revokePermission($permission)->save();
     }
   }
-}
-
-/**
- * Implements hook_entity_operation().
- */
-function user_entity_operation(EntityInterface $entity) {
-  // Add Manage permissions link if this entity type is the bundle of another.
-  if (!$bundle_entity_type = $entity->bundle()) {
-    return [];
-  }
-
-  $route = "entity.$bundle_entity_type.permission_form";
-  if (empty(\Drupal::service('router.route_provider')->getRoutesByNames([$route]))) {
-    return [];
-  }
-
-  $url = Url::fromRoute($route, [$bundle_entity_type => $entity->id()]);
-  if (!$url->access()) {
-    return [];
-  }
-
-  return [
-    'manage-permissions' => [
-      'title' => t('Manage permissions'),
-      'weight' => 50,
-      'url' => $url,
-    ],
-  ];
-
 }
