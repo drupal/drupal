@@ -208,9 +208,7 @@ class Config extends StorableConfigBase {
       if ($this->typedConfigManager->hasConfigSchema($this->name)) {
         // Ensure that the schema wrapper has the latest data.
         $this->schemaWrapper = NULL;
-        foreach ($this->data as $key => $value) {
-          $this->data[$key] = $this->castValue($key, $value);
-        }
+        $this->data = $this->castValue(NULL, $this->data);
       }
       else {
         foreach ($this->data as $key => $value) {

@@ -351,13 +351,17 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $new_config = new Config($name, $this->getActiveStorages($collection), $this->eventDispatcher, $this->typedConfig);
       }
       if ($config_to_create[$name] !== FALSE) {
-        $new_config->setData($config_to_create[$name]);
         // Add a hash to configuration created through the installer so it is
         // possible to know if the configuration was created by installing an
         // extension and to track which version of the default config was used.
         if (!$this->isSyncing() && $collection == StorageInterface::DEFAULT_COLLECTION) {
-          $new_config->set('_core.default_config_hash', Crypt::hashBase64(serialize($config_to_create[$name])));
+          $config_to_create[$name] = [
+            '_core' => [
+              'default_config_hash' => Crypt::hashBase64(serialize($config_to_create[$name])),
+            ],
+          ] + $config_to_create[$name];
         }
+        $new_config->setData($config_to_create[$name]);
       }
       if ($collection == StorageInterface::DEFAULT_COLLECTION && $entity_type = $this->configManager->getEntityTypeIdByName($name)) {
         // If we are syncing do not create configuration entities. Pluggable

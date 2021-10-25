@@ -354,47 +354,47 @@ class ConfigSchemaTest extends KernelTestBase {
    */
   public function testConfigSaveWithSchema() {
     $untyped_values = [
-      'string' => 1,
-      'empty_string' => '',
-      'null_string' => NULL,
+      // Test a custom type.
+      'config_schema_test_integer' => '1',
+      'config_schema_test_integer_empty_string' => '',
       'integer' => '100',
       'null_integer' => '',
+      'float' => '3.14',
+      'null_float' => '',
+      'string' => 1,
+      'null_string' => NULL,
+      'empty_string' => '',
       'boolean' => 1,
       // If the config schema doesn't have a type it shouldn't be casted.
       'no_type' => 1,
       'mapping' => [
         'string' => 1,
       ],
-      'float' => '3.14',
-      'null_float' => '',
       'sequence' => [1, 0, 1],
       'sequence_bc' => [1, 0, 1],
       // Not in schema and therefore should be left untouched.
       'not_present_in_schema' => TRUE,
-      // Test a custom type.
-      'config_schema_test_integer' => '1',
-      'config_schema_test_integer_empty_string' => '',
     ];
     $untyped_to_typed = $untyped_values;
 
     $typed_values = [
-      'string' => '1',
-      'empty_string' => '',
-      'null_string' => NULL,
+      'config_schema_test_integer' => 1,
+      'config_schema_test_integer_empty_string' => NULL,
       'integer' => 100,
       'null_integer' => NULL,
+      'float' => 3.14,
+      'null_float' => NULL,
+      'string' => '1',
+      'null_string' => NULL,
+      'empty_string' => '',
       'boolean' => TRUE,
       'no_type' => 1,
       'mapping' => [
         'string' => '1',
       ],
-      'float' => 3.14,
-      'null_float' => NULL,
       'sequence' => [TRUE, FALSE, TRUE],
       'sequence_bc' => [TRUE, FALSE, TRUE],
       'not_present_in_schema' => TRUE,
-      'config_schema_test_integer' => 1,
-      'config_schema_test_integer_empty_string' => NULL,
     ];
 
     // Save config which has a schema that enforces types.
@@ -418,6 +418,24 @@ class ConfigSchemaTest extends KernelTestBase {
     $installed_data = $this->config('config_schema_test.ignore')->get();
     unset($installed_data['_core']);
     $this->assertSame($original_data, $installed_data);
+  }
+
+  /**
+   * Test configuration value data type enforcement using schemas.
+   */
+  public function testConfigSaveMappingSort() {
+    // Top level map sorting.
+    $data = [
+      'foo' => '1',
+      'bar' => '2',
+    ];
+    // Save config which has a schema that enforces types.
+    $this->config('config_schema_test.schema_mapping_sort')
+      ->setData($data)
+      ->save();
+    $this->assertSame(['bar' => '2', 'foo' => '1'], $this->config('config_schema_test.schema_mapping_sort')->get());
+    $this->config('config_schema_test.schema_mapping_sort')->set('map', ['sub_bar' => '2', 'sub_foo' => '1'])->save();
+    $this->assertSame(['sub_foo' => '1', 'sub_bar' => '2'], $this->config('config_schema_test.schema_mapping_sort')->get('map'));
   }
 
   /**
@@ -612,9 +630,9 @@ class ConfigSchemaTest extends KernelTestBase {
     $typed_values = [
       'tests' => [
         [
-          'wrapper_value' => 'foo',
           'plugin_id' => 'wrapper:foo',
           'internal_value' => '100',
+          'wrapper_value' => 'foo',
         ],
       ],
     ];
@@ -646,10 +664,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $typed_values = [
       'tests' => [
         [
-          'wrapper_value' => 'foo',
+          'another_key' => 100,
           'foo' => 'turtle',
           'bar' => 'horse',
-          'another_key' => 100,
+          'wrapper_value' => 'foo',
         ],
       ],
     ];
@@ -679,10 +697,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $typed_values = [
       'tests' => [
         [
-          'wrapper_value' => 'foo',
+          'another_key' => '100',
           'foo' => 'cat',
           'bar' => 'dog',
-          'another_key' => '100',
+          'wrapper_value' => 'foo',
         ],
       ],
     ];
@@ -701,16 +719,16 @@ class ConfigSchemaTest extends KernelTestBase {
     $typed_values = [
       'tests' => [
         [
-          'wrapper_value' => 'foo',
+          'another_key' => 100,
           'foo' => 'cat',
           'bar' => 'dog',
-          'another_key' => 100,
+          'wrapper_value' => 'foo',
         ],
         [
-          'wrapper_value' => 'foo',
+          'another_key' => '100',
           'foo' => 'turtle',
           'bar' => 'horse',
-          'another_key' => '100',
+          'wrapper_value' => 'foo',
         ],
       ],
     ];

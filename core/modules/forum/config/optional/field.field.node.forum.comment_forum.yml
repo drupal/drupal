@@ -18,15 +18,15 @@ default_value:
   -
     status: 2
     cid: 0
-    last_comment_name: null
     last_comment_timestamp: 0
+    last_comment_name: null
     last_comment_uid: 0
     comment_count: 0
 default_value_callback: ''
 settings:
   default_mode: 0
   per_page: 50
-  form_location: true
   anonymous: 0
+  form_location: true
   preview: 1
 field_type: comment

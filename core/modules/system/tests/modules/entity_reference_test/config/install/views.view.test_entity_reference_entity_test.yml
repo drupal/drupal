@@ -13,36 +13,22 @@ base_table: entity_test
 base_field: id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: none
-      cache:
-        type: tag
-      query:
-        type: views_query
-      exposed_form:
-        type: basic
-      pager:
-        type: full
-      style:
-        type: default
-      row:
-        type: fields
       fields:
         name:
+          id: name
           table: entity_test
           field: name
-          id: name
-          entity_type: null
-          entity_field: name
-          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: null
+          entity_field: name
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -97,23 +83,37 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-      filters: {  }
+      pager:
+        type: full
+      exposed_form:
+        type: basic
+      access:
+        type: none
+      cache:
+        type: tag
+      empty: {  }
       sorts: {  }
+      arguments: {  }
+      filters: {  }
+      style:
+        type: default
+      row:
+        type: fields
+      query:
+        type: views_query
+      relationships: {  }
       header: {  }
       footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
   entity_reference_1:
-    display_plugin: entity_reference
     id: entity_reference_1
     display_title: EntityReference
+    display_plugin: entity_reference
     position: null
     display_options:
-      display_extenders: {  }
       style:
         type: entity_reference
         options:
           search_fields:
             name: name
+      display_extenders: {  }

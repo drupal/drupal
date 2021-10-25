@@ -11,40 +11,40 @@ mode: default
 content:
   copy:
     weight: 50
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_multiple_value_form_field:
+    type: string_textfield
     weight: 51
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   mail:
     weight: -40
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   message:
     type: string_textarea
     weight: 0
+    region: content
     settings:
       rows: 12
       placeholder: ''
-    region: content
     third_party_settings: {  }
   name:
     weight: -50
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   preview:
     weight: 40
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   subject:
     type: string_textfield
     weight: -10

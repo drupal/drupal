@@ -13,25 +13,11 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: null
     display_options:
-      access:
-        type: none
-      cache:
-        type: tag
-      query:
-        type: views_query
-      exposed_form:
-        type: basic
-      pager:
-        type: full
-      style:
-        type: default
-      row:
-        type: fields
       fields:
         type:
           id: type
@@ -40,6 +26,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -95,9 +84,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: type
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -105,6 +91,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -146,21 +135,14 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: field
-          entity_type: node
-          entity_field: title
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
+      pager:
+        type: full
+      exposed_form:
+        type: basic
+      access:
+        type: none
+      cache:
+        type: tag
       sorts:
         nid:
           id: nid
@@ -169,13 +151,31 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
           entity_type: node
           entity_field: nid
           plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+          exposed: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+      style:
+        type: default
+      row:
+        type: fields
+      query:
+        type: views_query
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -187,22 +187,21 @@ display:
         - user.permissions
       tags: {  }
   entity_reference_1:
-    display_plugin: entity_reference
     id: entity_reference_1
     display_title: EntityReference
+    display_plugin: entity_reference
     position: null
     display_options:
+      pager:
+        type: none
+        options:
+          offset: 0
       style:
         type: entity_reference
         options:
           grouping: {  }
           search_fields:
             title: title
-      pager:
-        type: none
-        options:
-          offset: 0
-      display_extenders: {  }
       row:
         type: entity_reference
         options:
@@ -210,6 +209,7 @@ display:
           inline: {  }
           separator: ': '
           hide_empty: false
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:

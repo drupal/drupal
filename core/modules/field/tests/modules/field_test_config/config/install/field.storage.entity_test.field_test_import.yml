@@ -1,5 +1,9 @@
-id: entity_test.field_test_import
 langcode: en
+dependencies:
+  module:
+    - entity_test
+    - text
+id: entity_test.field_test_import
 field_name: field_test_import
 entity_type: entity_test
 type: text
@@ -12,9 +16,5 @@ translatable: false
 indexes:
   format:
     - format
-dependencies:
-  module:
-    - entity_test
-    - text
 persist_with_no_fields: false
 custom_storage: false

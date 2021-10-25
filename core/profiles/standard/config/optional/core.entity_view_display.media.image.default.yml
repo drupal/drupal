@@ -13,12 +13,12 @@ bundle: image
 mode: default
 content:
   field_media_image:
+    type: image
     label: visually_hidden
     settings:
-      image_style: 'large'
       image_link: ''
+      image_style: large
     third_party_settings: {  }
-    type: image
     weight: 1
     region: content
 hidden:

@@ -1,11 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
 id: test
 label: 'Test type'
 description: 'Test type.'
 source: test
 source_configuration:
-  test_config_value: 'Kakec'
-status: true
-langcode: en
-dependencies: {  }
+  test_config_value: Kakec
 field_map:
-  metadata_attribute: 'field_attribute_config_test'
+  metadata_attribute: field_attribute_config_test

@@ -12,12 +12,12 @@ bundle: comment_forum
 mode: default
 content:
   comment_body:
-    label: hidden
     type: text_default
-    weight: 0
-    region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   links:
     weight: 100
     region: content

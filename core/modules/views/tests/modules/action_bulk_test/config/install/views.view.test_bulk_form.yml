@@ -13,72 +13,32 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: null
     display_options:
-      access:
-        type: perm
-      cache:
-        type: tag
-      query:
-        type: views_query
-      exposed_form:
-        type: basic
-      pager:
-        type: full
-        options:
-          items_per_page: 10
-      style:
-        type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          override: true
-          sticky: false
-          summary: ''
-          columns:
-            title: title
-            node_bulk_form: node_bulk_form
-          info:
-            title:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            bulk_form:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: ''
-          empty_table: false
-      row:
-        type: fields
+      title: form
       fields:
         title:
           id: title
           table: node_field_data
           field: title
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           alter:
             alter_text: false
             make_link: false
             absolute: false
-            trim: false
             word_boundary: false
             ellipsis: false
             strip_tags: false
+            trim: false
             html: false
           hide_empty: false
           empty_zero: false
-          plugin_id: field
-          entity_type: node
-          entity_field: title
         node_bulk_form:
           id: node_bulk_form
           table: node
@@ -86,6 +46,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: node_bulk_form
           label: 'Bulk form'
           exclude: false
           alter:
@@ -127,54 +89,92 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: node_bulk_form
-          entity_type: node
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+      exposed_form:
+        type: basic
+      access:
+        type: perm
+      cache:
+        type: tag
       sorts:
         created:
           id: created
           table: node_field_data
           field: created
-          order: DESC
-          plugin_id: date
           entity_type: node
           entity_field: created
-      title: form
+          plugin_id: date
+          order: DESC
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            title: title
+            node_bulk_form: node_bulk_form
+          default: ''
+          info:
+            title:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            bulk_form:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+      row:
+        type: fields
+      query:
+        type: views_query
   page_1:
-    display_plugin: page
     id: page_1
     display_title: Page
+    display_plugin: page
     position: null
     display_options:
       path: test_bulk_form
   page_2:
-    display_plugin: page
     id: page_2
     display_title: Page
+    display_plugin: page
     position: null
     display_options:
-      path: test_bulk_form_empty
-      defaults:
-        style: false
-        empty: false
-      style:
-        type: default
       empty:
         area:
           id: area
           table: views
           field: area_text_custom
+          plugin_id: text_custom
           empty: true
           content: 'This view is empty.'
-          plugin_id: text_custom
+      style:
+        type: default
+      defaults:
+        empty: false
+        style: false
+      path: test_bulk_form_empty

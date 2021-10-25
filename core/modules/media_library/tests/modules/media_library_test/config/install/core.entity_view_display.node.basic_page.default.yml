@@ -15,61 +15,61 @@ mode: default
 content:
   field_twin_media:
     type: entity_reference_entity_view
-    weight: 102
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 102
     region: content
   field_single_media_type:
     type: entity_reference_entity_view
-    weight: 101
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 101
     region: content
   field_unlimited_media:
     type: entity_reference_entity_view
-    weight: 101
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 101
     region: content
   field_noadd_media:
     type: entity_reference_entity_view
-    weight: 103
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 103
     region: content
   field_empty_types_media:
     type: entity_reference_entity_view
-    weight: 104
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 104
     region: content
   field_null_types_media:
     type: entity_reference_entity_view
-    weight: 105
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 105
     region: content
   links:
-    weight: 100
     settings: {  }
     third_party_settings: {  }
+    weight: 100
     region: content
 hidden: {  }

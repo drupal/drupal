@@ -263,7 +263,7 @@ EOD;
     $this->assertSession()->optionExists('config_name', 'user.settings');
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
-    $this->assertSession()->fieldValueEquals('export', "toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n");
+    $this->assertSession()->fieldValueEquals('export', "_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\ntoolkit: gd\n");
 
     // Verify that the date format entity type is selected when specified in
     // the URL.

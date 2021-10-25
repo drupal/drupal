@@ -14,22 +14,22 @@ bundle: type_one
 mode: media_library
 content:
   field_media_test:
+    type: string
     label: above
     settings:
       link_to_entity: true
     third_party_settings: {  }
-    type: string
     weight: 6
     region: content
   thumbnail:
     type: image
-    weight: 5
     label: hidden
     settings:
-      image_style: thumbnail
       image_link: ''
-    region: content
+      image_style: thumbnail
     third_party_settings: {  }
+    weight: 5
+    region: content
 hidden:
   created: true
   name: true

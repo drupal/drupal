@@ -87,8 +87,8 @@ trait BlockPluginTrait {
     return [
       'id' => $this->getPluginId(),
       'label' => '',
-      'provider' => $this->pluginDefinition['provider'],
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      'provider' => $this->pluginDefinition['provider'],
     ];
   }
 

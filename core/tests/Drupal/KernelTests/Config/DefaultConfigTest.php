@@ -147,6 +147,9 @@ class DefaultConfigTest extends KernelTestBase {
     // the cache layer.
     $active_config_storage = $this->container->get('config.storage');
 
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+
     foreach ($default_config_storage->listAll() as $config_name) {
       if ($active_config_storage->exists($config_name)) {
         // If it is a config entity re-save it. This ensures that any
@@ -158,6 +161,11 @@ class DefaultConfigTest extends KernelTestBase {
           $id = $entity_storage->getIDFromConfigName($config_name, $entity_storage->getEntityType()
             ->getConfigPrefix());
           $entity_storage->load($id)->calculateDependencies()->save();
+        }
+        else {
+          // Ensure simple configuration is re-saved so any schema sorting is
+          // applied.
+          $config_factory->getEditable($config_name)->save();
         }
         $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
         // ::assertConfigDiff will throw an exception if the configuration is

@@ -37,8 +37,8 @@ class BlockInterfaceTest extends KernelTestBase {
     $expected_configuration = [
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
-      'provider' => 'block_test',
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      'provider' => 'block_test',
       'display_message' => 'no message set',
     ];
     // Initial configuration of the block at construction time.

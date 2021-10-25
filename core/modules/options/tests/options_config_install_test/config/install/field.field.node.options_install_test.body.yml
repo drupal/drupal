@@ -4,6 +4,7 @@ dependencies:
   config:
     - field.storage.node.body
     - node.type.options_install_test
+third_party_settings: {  }
 id: node.options_install_test.body
 field_name: body
 entity_type: node
@@ -16,5 +17,4 @@ default_value: {  }
 default_value_callback: ''
 settings:
   display_summary: true
-third_party_settings: {  }
 field_type: text_with_summary

@@ -1,14 +1,14 @@
 langcode: en
 status: true
 dependencies:
-  enforced:
-    config:
-      - search.page.help_search
   module:
     - search
     - system
   theme:
     - seven
+  enforced:
+    config:
+      - search.page.help_search
 id: seven_help_search
 theme: seven
 region: help
@@ -18,12 +18,12 @@ plugin: search_form_block
 settings:
   id: search_form_block
   label: 'Search help'
-  provider: search
   label_display: visible
+  provider: search
   page_id: help_search
 visibility:
   request_path:
     id: request_path
-    pages: /admin/help
     negate: false
     context_mapping: {  }
+    pages: /admin/help

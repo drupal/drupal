@@ -1,5 +1,5 @@
-id: original
-label: Original test menu
-description: 'The original menu for menu_test tests.'
 langcode: en
+id: original
+label: 'Original test menu'
+description: 'The original menu for menu_test tests.'
 locked: true

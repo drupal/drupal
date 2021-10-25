@@ -10,8 +10,6 @@ id: hero_or_banner
 label: 'Hero or Banner'
 image_style_mappings:
   -
-    breakpoint_id: responsive_image.viewport_sizing
-    multiplier: 1x
     image_mapping_type: sizes
     image_mapping:
       sizes: 100vw
@@ -20,5 +18,7 @@ image_style_mappings:
         - large_21_9_2x
         - medium_21_9
         - small_21_9
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
 breakpoint_group: responsive_image
 fallback_image_style: small_21_9

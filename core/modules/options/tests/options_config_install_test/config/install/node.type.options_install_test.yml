@@ -1,6 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+third_party_settings: {  }
 name: options_install_test
 type: options_install_test
 description: null
@@ -8,4 +9,3 @@ help: null
 new_revision: false
 preview_mode: 1
 display_submitted: true
-third_party_settings: {  }

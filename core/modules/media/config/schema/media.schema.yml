@@ -31,14 +31,14 @@ media.type.*:
     source:
       type: string
       label: 'Source'
-    source_configuration:
-      type: media.source.[%parent.source]
     queue_thumbnail_downloads:
       type: boolean
       label: 'Whether the thumbnail downloads should be queued'
     new_revision:
       type: boolean
       label: 'Whether a new revision should be created by default'
+    source_configuration:
+      type: media.source.[%parent.source]
     field_map:
       type: sequence
       label: 'Field map'
@@ -112,15 +112,15 @@ filter_settings.media_embed:
     default_view_mode:
       type: string
       label: 'The view mode that is used by default'
-    allowed_media_types:
-      type: sequence
-      label: 'Media types selectable in the Media Library'
-      sequence:
-        type: string
-        label: 'Media type'
     allowed_view_modes:
       type: sequence
       label: 'View modes selectable in the "Edit media" dialog'
       sequence:
         type: string
         label: 'View mode'
+    allowed_media_types:
+      type: sequence
+      label: 'Media types selectable in the Media Library'
+      sequence:
+        type: string
+        label: 'Media type'

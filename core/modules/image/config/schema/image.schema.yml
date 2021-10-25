@@ -14,14 +14,14 @@ image.style.*:
       sequence:
         type: mapping
         mapping:
-          id:
-            type: string
-          data:
-            type: image.effect.[%parent.id]
-          weight:
-            type: integer
           uuid:
             type: uuid
+          id:
+            type: string
+          weight:
+            type: integer
+          data:
+            type: image.effect.[%parent.id]
 
 image.effect.*:
   type: mapping

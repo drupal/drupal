@@ -1,10 +1,12 @@
-id: tour-test
-module: tour_test
-label: 'Tour test english'
 langcode: en
+id: tour-test
+label: 'Tour test english'
+module: tour_test
 routes:
-  - route_name: tour_test.1
-  - route_name: tour_test.3
+  -
+    route_name: tour_test.1
+  -
+    route_name: tour_test.3
     route_params:
       locale: foo
 tips:
@@ -12,16 +14,16 @@ tips:
     id: tour-test-1
     plugin: text
     label: 'The first tip'
-    body: 'Is <a href="[site:url]">[site:name]</a> always the best dressed?'
     weight: 1
     selector: '#tour-test-1'
+    body: 'Is <a href="[site:url]">[site:name]</a> always the best dressed?'
   tour-test-action:
     id: tour-test-3
     plugin: text
     label: 'The action'
-    body: 'The action button of awesome'
     weight: 2
-    selector: '.button-action'
+    selector: .button-action
+    body: 'The action button of awesome'
   tour-test-3:
     id: tour-test-3
     plugin: image
@@ -32,6 +34,6 @@ tips:
     id: tour-test-6
     plugin: text
     label: 'Im a list'
-    body: '<p>Im all these things:</p><ul><li>Modal</li><li>Awesome</li></ul>'
     weight: 6
     selector: '#tour-test-3'
+    body: '<p>Im all these things:</p><ul><li>Modal</li><li>Awesome</li></ul>'

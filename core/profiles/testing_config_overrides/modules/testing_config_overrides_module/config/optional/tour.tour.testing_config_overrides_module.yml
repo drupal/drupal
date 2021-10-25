@@ -1,13 +1,14 @@
-id: testing_config_overrides_module
-module: testing_config_overrides_module
-label: Config override test
 langcode: en
+id: testing_config_overrides_module
+label: 'Config override test'
+module: testing_config_overrides_module
 routes:
-  - route_name: system.admin
+  -
+    route_name: system.admin
 tips:
   overview:
     id: block-seven-content
     plugin: text
     label: Test
-    body: '<p>This is a test.</p>'
     weight: 1
+    body: '<p>This is a test.</p>'

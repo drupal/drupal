@@ -1,9 +1,10 @@
-id: tour-test-legacy
-module: tour_test
-label: 'Tour test Legacy'
 langcode: en
+id: tour-test-legacy
+label: 'Tour test Legacy'
+module: tour_test
 routes:
-  - route_name: tour_test.legacy
+  -
+    route_name: tour_test.legacy
 tips:
   tour-test-legacy-1:
     id: tour-test-legacy-1

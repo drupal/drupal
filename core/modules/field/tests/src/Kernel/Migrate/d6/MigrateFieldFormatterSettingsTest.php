@@ -47,11 +47,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // Run tests.
     $field_name = "field_test";
     $expected = [
-      'label' => 'above',
-      'weight' => 1,
       'type' => 'text_trimmed',
+      'label' => 'above',
       'settings' => ['trim_length' => 600],
       'third_party_settings' => [],
+      'weight' => 1,
       'region' => 'content',
     ];
 
@@ -95,10 +95,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['weight'] = 2;
     $expected['type'] = 'number_decimal';
     $expected['settings'] = [
-       'scale' => 2,
-       'decimal_separator' => '.',
-       'thousand_separator' => ',',
-       'prefix_suffix' => TRUE,
+      'thousand_separator' => ',',
+      'decimal_separator' => '.',
+      'scale' => 2,
+      'prefix_suffix' => TRUE,
     ];
     $component = $display->getComponent('field_test_three');
     $this->assertSame($expected, $component);
@@ -145,7 +145,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // Test the image field formatter settings.
     $expected['weight'] = 9;
     $expected['type'] = 'image';
-    $expected['settings'] = ['image_style' => '', 'image_link' => ''];
+    $expected['settings'] = ['image_link' => '', 'image_style' => ''];
     $component = $display->getComponent('field_test_imagefield');
     $this->assertSame($expected, $component);
     $display = EntityViewDisplay::load('node.story.teaser');
@@ -161,10 +161,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected, $component);
 
     // Test date field.
-    $defaults = ['format_type' => 'fallback', 'timezone_override' => ''];
     $expected['weight'] = 10;
     $expected['type'] = 'datetime_default';
-    $expected['settings'] = ['format_type' => 'fallback'] + $defaults;
+    $expected['settings'] = ['timezone_override' => '', 'format_type' => 'fallback'];
     $component = $display->getComponent('field_test_date');
     $this->assertSame($expected, $component);
     $display = EntityViewDisplay::load('node.story.default');
@@ -178,13 +177,13 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $component = $display->getComponent('field_test_datestamp');
     $this->assertSame($expected, $component);
     $display = EntityViewDisplay::load('node.story.teaser');
-    $expected['settings'] = ['format_type' => 'medium'] + $defaults;
+    $expected['settings'] = ['timezone_override' => '', 'format_type' => 'medium'];
     $component = $display->getComponent('field_test_datestamp');
     $this->assertSame($expected, $component);
 
     // Test datetime field.
     $expected['weight'] = 12;
-    $expected['settings'] = ['format_type' => 'short'] + $defaults;
+    $expected['settings'] = ['timezone_override' => '', 'format_type' => 'short'];
     $component = $display->getComponent('field_test_datetime');
     $this->assertSame($expected, $component);
     $display = EntityViewDisplay::load('node.story.default');

@@ -108,11 +108,11 @@ _core_config_info:
 config_object:
   type: mapping
   mapping:
+    _core:
+      type: _core_config_info
     langcode:
       type: string
       label: 'Language code'
-    _core:
-      type: _core_config_info
 
 # Mail text with subject and body parts.
 mail:
@@ -303,6 +303,9 @@ block_settings:
     label_display:
       type: string
       label: 'Display title'
+    provider:
+      type: string
+      label: 'Provider'
     status:
       type: boolean
       label: 'Status'
@@ -312,9 +315,6 @@ block_settings:
     view_mode:
       type: string
       label: 'View mode'
-    provider:
-      type: string
-      label: 'Provider'
     context_mapping:
       type: sequence
       label: 'Context assignments'

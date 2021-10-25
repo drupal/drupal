@@ -28,10 +28,10 @@ content:
   message:
     type: string_textarea
     weight: 3
+    region: content
     settings:
       rows: 12
       placeholder: ''
-    region: content
     third_party_settings: {  }
   name:
     weight: 0

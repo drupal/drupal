@@ -25,6 +25,8 @@ dependencies:
     - umami
 third_party_settings:
   layout_builder:
+    enabled: true
+    allow_custom: true
     sections:
       -
         layout_id: layout_onecol
@@ -35,49 +37,49 @@ third_party_settings:
             uuid: eadd557c-6414-40e5-9a95-355720385477
             region: content
             configuration:
+              id: 'field_block:node:recipe:field_tags'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_tags'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 3
+            additional: {  }
           0eff9e1d-4e73-4748-b910-e5568df1d5aa:
             uuid: 0eff9e1d-4e73-4748-b910-e5568df1d5aa
             region: content
             configuration:
+              id: 'field_block:node:recipe:field_recipe_category'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_recipe_category'
               formatter:
+                type: entity_reference_label
                 label: inline
                 settings:
                   link: true
                 third_party_settings: {  }
-                type: entity_reference_label
-            additional: {  }
             weight: 2
+            additional: {  }
           44801518-fe93-421a-bdcb-550493c7925d:
             uuid: 44801518-fe93-421a-bdcb-550493c7925d
             region: content
             configuration:
+              id: 'field_block:node:recipe:field_summary'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_summary'
               formatter:
+                type: text_default
                 label: hidden
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 4
+            additional: {  }
         third_party_settings: {  }
       -
         layout_id: layout_oneplusfourgrid_section
@@ -90,104 +92,104 @@ third_party_settings:
             configuration:
               id: 'field_block:node:recipe:field_media_image'
               label: 'Media Image'
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_reference_entity_view
-                settings:
-                  view_mode: responsive_3x2
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: responsive_3x2
+                third_party_settings: {  }
             weight: 4
+            additional: {  }
           df8bfafc-210c-4d86-9745-e47081ab0fd4:
             uuid: df8bfafc-210c-4d86-9745-e47081ab0fd4
             region: fifth
             configuration:
+              id: 'field_block:node:recipe:field_difficulty'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_difficulty'
               formatter:
+                type: list_default
                 label: inline
                 settings: {  }
                 third_party_settings: {  }
-                type: list_default
-            additional: {  }
             weight: 0
+            additional: {  }
           a2d450d0-08ce-4123-bca0-411bfa1da132:
             uuid: a2d450d0-08ce-4123-bca0-411bfa1da132
             region: fourth
             configuration:
+              id: 'field_block:node:recipe:field_number_of_servings'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_number_of_servings'
               formatter:
+                type: number_integer
                 label: inline
                 settings:
                   thousand_separator: ''
                   prefix_suffix: false
                 third_party_settings: {  }
-                type: number_integer
-            additional: {  }
             weight: 0
+            additional: {  }
           f91febc6-d924-47a2-8ffd-b71d3b2597c7:
             uuid: f91febc6-d924-47a2-8ffd-b71d3b2597c7
             region: third
             configuration:
+              id: 'field_block:node:recipe:field_cooking_time'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_cooking_time'
               formatter:
+                type: number_integer
                 label: inline
                 settings:
                   thousand_separator: ''
                   prefix_suffix: true
                 third_party_settings: {  }
-                type: number_integer
-            additional: {  }
             weight: 0
+            additional: {  }
           00488840-db50-4afe-9c30-a123e6707fa9:
             uuid: 00488840-db50-4afe-9c30-a123e6707fa9
             region: second
             configuration:
+              id: 'field_block:node:recipe:field_preparation_time'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_preparation_time'
               formatter:
+                type: number_integer
                 label: inline
                 settings:
                   thousand_separator: ''
                   prefix_suffix: true
                 third_party_settings: {  }
-                type: number_integer
-            additional: {  }
             weight: 0
+            additional: {  }
           69d8bce1-28ae-4287-a05b-a2166679f867:
             uuid: 69d8bce1-28ae-4287-a05b-a2166679f867
             region: first
             configuration:
               id: 'field_block:node:recipe:field_media_image'
               label: 'Media Image'
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_reference_entity_view
-                settings:
-                  view_mode: responsive_3x2
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
                 view_mode: view_mode
-            additional: {  }
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: responsive_3x2
+                third_party_settings: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
       -
         layout_id: layout_twocol_section
@@ -199,33 +201,33 @@ third_party_settings:
             uuid: 6924bf2e-8baa-4081-803a-7a2d3b7d8e14
             region: first
             configuration:
+              id: 'field_block:node:recipe:field_ingredients'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_ingredients'
               formatter:
+                type: string
                 label: above
                 settings:
                   link_to_entity: false
                 third_party_settings: {  }
-                type: string
-            additional: {  }
             weight: 0
+            additional: {  }
           f61cae40-5865-4c4c-98fa-14b8234e7b98:
             uuid: f61cae40-5865-4c4c-98fa-14b8234e7b98
             region: second
             configuration:
+              id: 'field_block:node:recipe:field_recipe_instruction'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:recipe:field_recipe_instruction'
               formatter:
+                type: text_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: text_default
-            additional: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
       -
         layout_id: layout_onecol
@@ -236,96 +238,94 @@ third_party_settings:
             uuid: d4b753a7-e1b1-4062-a1d0-a2666362693e
             region: content
             configuration:
+              id: 'extra_field_block:node:recipe:content_moderation_control'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:node:recipe:content_moderation_control'
-            additional: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
-    allow_custom: true
-    enabled: true
 id: node.recipe.full
 targetEntityType: node
 bundle: recipe
 mode: full
 content:
   content_moderation_control:
-    weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 10
+    region: content
   field_cooking_time:
-    weight: 5
+    type: number_integer
     label: inline
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 5
     region: content
   field_difficulty:
-    weight: 7
+    type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 7
     region: content
   field_ingredients:
-    weight: 8
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 8
     region: content
   field_number_of_servings:
-    weight: 6
+    type: number_integer
     label: inline
     settings:
       thousand_separator: ''
       prefix_suffix: false
     third_party_settings: {  }
-    type: number_integer
+    weight: 6
     region: content
   field_preparation_time:
-    weight: 4
+    type: number_integer
     label: inline
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 4
     region: content
   field_recipe_category:
-    weight: 1
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 1
     region: content
   field_recipe_instruction:
-    weight: 9
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 9
     region: content
   field_summary:
-    weight: 0
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 0
     region: content
   field_tags:
-    weight: 2
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 2
     region: content
 hidden:
   field_media_image: true

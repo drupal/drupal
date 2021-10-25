@@ -57,9 +57,9 @@ abstract class MediaTypeResourceTestBase extends EntityResourceTestBase {
       'id' => 'camelids',
       'label' => NULL,
       'langcode' => 'en',
-      'new_revision' => FALSE,
-      'queue_thumbnail_downloads' => FALSE,
       'source' => 'file',
+      'queue_thumbnail_downloads' => FALSE,
+      'new_revision' => FALSE,
       'source_configuration' => [
         'source_field' => '',
       ],

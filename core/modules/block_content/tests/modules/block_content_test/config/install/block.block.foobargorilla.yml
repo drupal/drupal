@@ -14,13 +14,13 @@ plugin: 'block_content:fb5e8434-3617-4a1d-a252-8273e95ec30e'
 settings:
   id: 'block_content:fb5e8434-3617-4a1d-a252-8273e95ec30e'
   label: 'Foobar Gorilla'
-  provider: block_content
   label_display: visible
+  provider: block_content
   status: true
   info: ''
   view_mode: default
 visibility:
   request_path:
     id: request_path
-    pages: ''
     negate: false
+    pages: ''

@@ -17,30 +17,30 @@ bundle: forum
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 0
-    region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-  comment_forum:
-    label: hidden
-    type: comment_default
-    weight: 20
+    weight: 0
     region: content
+  comment_forum:
+    type: comment_default
+    label: hidden
     settings:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
+    weight: 20
+    region: content
   links:
     weight: 100
     region: content
   taxonomy_forums:
     type: entity_reference_label
-    weight: -1
-    region: content
     label: above
     settings:
       link: true
     third_party_settings: {  }
+    weight: -1
+    region: content
 hidden: {  }

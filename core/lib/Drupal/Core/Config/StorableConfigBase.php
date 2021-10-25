@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Schema\Ignore;
+use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\Sequence;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\TypedData\PrimitiveInterface;
@@ -164,8 +165,9 @@ abstract class StorableConfigBase extends ConfigBase {
   /**
    * Casts the value to correct data type using the configuration schema.
    *
-   * @param string $key
-   *   A string that maps to a key within the configuration data.
+   * @param string|null $key
+   *   A string that maps to a key within the configuration data. If NULL the
+   *   top level mapping will be processed.
    * @param mixed $value
    *   Value to associate with the key.
    *
@@ -176,7 +178,11 @@ abstract class StorableConfigBase extends ConfigBase {
    *   If the value is unsupported in configuration.
    */
   protected function castValue($key, $value) {
-    $element = $this->getSchemaWrapper()->get($key);
+    $element = $this->getSchemaWrapper();
+    if ($key !== NULL) {
+      $element = $element->get($key);
+    }
+
     // Do not cast value if it is unknown or defined to be ignored.
     if ($element && ($element instanceof Undefined || $element instanceof Ignore)) {
       // Do validate the value (may throw UnsupportedDataTypeConfigException)
@@ -208,7 +214,19 @@ abstract class StorableConfigBase extends ConfigBase {
       }
       // Recurse into any nested keys.
       foreach ($value as $nested_value_key => $nested_value) {
-        $value[$nested_value_key] = $this->castValue($key . '.' . $nested_value_key, $nested_value);
+        $lookup_key = $key ? $key . '.' . $nested_value_key : $nested_value_key;
+        $value[$nested_value_key] = $this->castValue($lookup_key, $nested_value);
+      }
+
+      // Only sort maps when we have more than 1 element to sort.
+      if ($element instanceof Mapping && count($value) > 1) {
+        $mapping = $element->getDataDefinition()['mapping'];
+        if (is_array($mapping)) {
+          // Only sort the keys in $value.
+          $mapping = array_intersect_key($mapping, $value);
+          // Sort the array in $value using the mapping definition.
+          $value = array_replace($mapping, $value);
+        }
       }
 
       if ($element instanceof Sequence) {

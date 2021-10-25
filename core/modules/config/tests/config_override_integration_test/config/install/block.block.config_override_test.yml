@@ -1,24 +1,24 @@
-id: config_override_test
-theme: classy
-weight: 0
-status: true
 langcode: en
-region: content
-plugin: test_cache
-settings:
-  label: 'Test HTML block'
-  provider: block_test
-  label_display: visible
-  status: true
-  info: ''
-  view_mode: default
+status: true
 dependencies:
   module:
     - block_test
   theme:
     - classy
+id: config_override_test
+theme: classy
+region: content
+weight: 0
+plugin: test_cache
+settings:
+  label: 'Test HTML block'
+  label_display: visible
+  provider: block_test
+  status: true
+  info: ''
+  view_mode: default
 visibility:
   request_path:
     id: request_path
-    pages: ''
     negate: false
+    pages: ''

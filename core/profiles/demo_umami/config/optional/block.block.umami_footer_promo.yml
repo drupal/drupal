@@ -3,13 +3,13 @@ status: true
 dependencies:
   content:
     - 'block_content:footer_promo_block:924ab293-8f5f-45a1-9c7f-2423ae61a241'
-  enforced:
-    module:
-      - demo_umami_content
   module:
     - block_content
   theme:
     - umami
+  enforced:
+    module:
+      - demo_umami_content
 id: umami_footer_promo
 theme: umami
 region: footer
@@ -19,8 +19,8 @@ plugin: 'block_content:924ab293-8f5f-45a1-9c7f-2423ae61a241'
 settings:
   id: 'block_content:924ab293-8f5f-45a1-9c7f-2423ae61a241'
   label: 'Umami footer promo'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full

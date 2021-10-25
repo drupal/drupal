@@ -1,13 +1,13 @@
 # Themes are not supposed to provide/install this kind of config normally.
 # This exists for testing purposes only.
 # @see \Drupal\KernelTests\Core\Theme\ThemeInstallerTest
-id: fancy
-label: 'Fancy date'
-status: true
 langcode: en
-locked: false
-pattern: 'U'
+status: true
 dependencies:
   enforced:
     theme:
       - test_basetheme
+id: fancy
+label: 'Fancy date'
+locked: false
+pattern: U

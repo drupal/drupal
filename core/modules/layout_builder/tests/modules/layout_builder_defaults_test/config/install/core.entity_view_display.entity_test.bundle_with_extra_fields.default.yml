@@ -5,32 +5,32 @@ dependencies:
     - layout_builder
 third_party_settings:
   layout_builder:
+    enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: layout_twocol_section
         layout_settings:
-          column_widths: '50-50'
+          column_widths: 50-50
         components:
           1445597a-c674-431d-ac0a-277d99347a7f:
             uuid: 1445597a-c674-431d-ac0a-277d99347a7f
             region: first
             configuration:
+              id: 'extra_field_block:entity_test:bundle_with_extra_fields:display_extra_field'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
-              id: 'extra_field_block:entity_test:bundle_with_extra_fields:display_extra_field'
-            additional: {  }
             weight: 1
-    allow_custom: false
-    enabled: true
+            additional: {  }
 id: entity_test.bundle_with_extra_fields.default
 targetEntityType: entity_test
 bundle: bundle_with_extra_fields
 mode: default
 content:
   display_extra_field:
-    weight: 100
     settings: {  }
     third_party_settings: {  }
+    weight: 100
     region: content
 hidden: {  }

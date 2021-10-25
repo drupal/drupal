@@ -129,13 +129,13 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [
       'user_role' => [
         'id' => 'user_role',
-        'roles' => [
-          'authenticated' => 'authenticated',
-        ],
+        'negate' => FALSE,
         'context_mapping' => [
           'user' => '@user.current_user_context:current_user',
         ],
-        'negate' => FALSE,
+        'roles' => [
+          'authenticated' => 'authenticated',
+        ],
       ],
     ];
     $settings = [
@@ -150,13 +150,13 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [
       'user_role' => [
         'id' => 'user_role',
-        'roles' => [
-          'migrate_test_role_1' => 'migrate_test_role_1',
-        ],
+        'negate' => FALSE,
         'context_mapping' => [
           'user' => '@user.current_user_context:current_user',
         ],
-        'negate' => FALSE,
+        'roles' => [
+          'migrate_test_role_1' => 'migrate_test_role_1',
+        ],
       ],
     ];
     $settings = [

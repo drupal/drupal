@@ -26,20 +26,20 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'logging' => 1,
     ],
     'system.date' => [
+      'first_day' => 4,
       // country is not handled by the migration.
       'country' => [
         'default' => '',
       ],
-      'first_day' => 4,
       // timezone is not handled by the migration.
       'timezone' => [
         'default' => 'Europe/Paris',
         'user' => [
           'configurable' => FALSE,
-          // warn is not handled by the migration.
-          'warn' => FALSE,
           // default is not handled by the migration.
           'default' => 0,
+          // warn is not handled by the migration.
+          'warn' => FALSE,
         ],
       ],
     ],
@@ -60,9 +60,9 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'error_level' => 'some',
     ],
     'system.maintenance' => [
-      'message' => 'Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.',
       // langcode is not handled by the migration.
       'langcode' => 'en',
+      'message' => 'Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.',
     ],
     'system.performance' => [
       'cache' => [
@@ -96,6 +96,8 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       ],
     ],
     'system.site' => [
+      // langcode and default_langcode are not handled by the migration.
+      'langcode' => 'en',
       // uuid is not handled by the migration.
       'uuid' => '',
       'name' => 'site_name',
@@ -108,8 +110,6 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       ],
       'admin_compact_mode' => FALSE,
       'weight_select_max' => 100,
-      // langcode and default_langcode are not handled by the migration.
-      'langcode' => 'en',
       'default_langcode' => 'en',
     ],
   ];

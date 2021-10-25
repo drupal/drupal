@@ -183,8 +183,11 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync->delete('text.settings');
 
     $system_theme = $this->config('system.theme')->get();
-    $system_theme['default'] = 'stark';
-    $system_theme['admin'] = 'stark';
+    $system_theme = [
+      '_core' => $system_theme['_core'],
+      'admin' => 'stark',
+      'default' => 'stark',
+    ];
     $sync->write('system.theme', $system_theme);
 
     // Set the state system to record installations and uninstallations.

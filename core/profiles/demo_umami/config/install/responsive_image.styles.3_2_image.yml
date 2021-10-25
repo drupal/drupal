@@ -10,8 +10,6 @@ id: 3_2_image
 label: '3:2 Image'
 image_style_mappings:
   -
-    breakpoint_id: responsive_image.viewport_sizing
-    multiplier: 1x
     image_mapping_type: sizes
     image_mapping:
       sizes: 100vw
@@ -20,5 +18,7 @@ image_style_mappings:
         - large_3_2_768x512
         - medium_3_2_2x
         - medium_3_2_600x400
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
 breakpoint_group: responsive_image
 fallback_image_style: large_3_2_768x512

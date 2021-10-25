@@ -52,7 +52,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
       ],
       'logging' => 1,
     ];
-    $expected_profile_data['_core']['default_config_hash'] = Crypt::hashBase64(serialize($expected_profile_data));
+    $expected_profile_data = ['_core' => ['default_config_hash' => Crypt::hashBase64(serialize($expected_profile_data))]] + $expected_profile_data;
 
     // Verify that the original data matches. We have to read the module config
     // file directly, because the install profile default system.cron.yml

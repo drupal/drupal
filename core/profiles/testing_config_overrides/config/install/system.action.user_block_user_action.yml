@@ -1,9 +1,9 @@
-id: user_block_user_action
-label: 'Overridden block the selected user(s)'
-status: true
 langcode: en
-type: user
-plugin: user_block_user_action
+status: true
 dependencies:
   module:
     - user
+id: user_block_user_action
+label: 'Overridden block the selected user(s)'
+type: user
+plugin: user_block_user_action

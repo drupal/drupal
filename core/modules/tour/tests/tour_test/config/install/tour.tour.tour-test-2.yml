@@ -1,14 +1,15 @@
-id: tour-test-2
-module: tour_test
-label: 'Tour test english'
 langcode: en
+id: tour-test-2
+label: 'Tour test english'
+module: tour_test
 routes:
-  - route_name: tour_test.2
+  -
+    route_name: tour_test.2
 tips:
   tour-test-2:
     id: tour-test-2
     plugin: text
     label: 'The quick brown fox'
-    body: 'Per lo più in pianura.'
     weight: 2
     selector: '#tour-test-2'
+    body: 'Per lo più in pianura.'

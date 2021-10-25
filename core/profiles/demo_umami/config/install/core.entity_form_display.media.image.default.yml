@@ -20,13 +20,13 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_media_image:
+    type: image_image
+    weight: 1
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
-    weight: 1
-    region: content
   langcode:
     type: language_select
     weight: 2
@@ -50,10 +50,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 7
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   translation:
     weight: 6
@@ -63,12 +63,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 4
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
-    region: content
     third_party_settings: {  }
 hidden:
   moderation_state: true

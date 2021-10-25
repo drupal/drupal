@@ -38,14 +38,14 @@ layout_builder.component:
   type: mapping
   label: 'Component'
   mapping:
-    configuration:
-      type: block.settings.[id]
-    region:
-      type: string
-      label: 'Region'
     uuid:
       type: uuid
       label: 'UUID'
+    region:
+      type: string
+      label: 'Region'
+    configuration:
+      type: block.settings.[id]
     weight:
       type: integer
       label: 'Weight'

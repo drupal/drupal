@@ -42,6 +42,8 @@ class ConditionPluginCollection extends DefaultLazyPluginCollection {
       // configured, so remove the context_mapping from the instance config to
       // compare the remaining values.
       unset($instance_config['context_mapping']);
+      ksort($default_config);
+      ksort($instance_config);
       if ($default_config === $instance_config) {
         unset($configuration[$instance_id]);
       }

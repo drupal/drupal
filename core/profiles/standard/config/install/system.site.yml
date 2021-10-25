@@ -1,3 +1,4 @@
+langcode: en
 uuid: ''
 name: ''
 mail: ''
@@ -8,5 +9,4 @@ page:
   front: /node
 admin_compact_mode: false
 weight_select_max: 100
-langcode: en
 default_langcode: en

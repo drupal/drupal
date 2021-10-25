@@ -14,7 +14,7 @@ plugin: search_form_block
 settings:
   id: search_form_block
   label: 'Search form (narrow)'
-  provider: search
   label_display: '0'
+  provider: search
   page_id: ''
 visibility: {  }

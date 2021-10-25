@@ -1,4 +1,6 @@
+langcode: en
 cancel_confirm:
+  subject: 'Account cancellation request for [user:display-name] at [site:name]'
   body: |-
     [user:display-name]
 
@@ -13,8 +15,8 @@ cancel_confirm:
     This link expires in one day and nothing will happen if it is not used.
 
     --  [site:name] team
-  subject: 'Account cancellation request for [user:display-name] at [site:name]'
 password_reset:
+  subject: 'Replacement login information for [user:display-name] at [site:name]'
   body: |-
     [user:display-name],
 
@@ -27,8 +29,8 @@ password_reset:
     This link can only be used once to log in and will lead you to a page where you can set your password. It expires after one day and nothing will happen if it's not used.
 
     --  [site:name] team
-  subject: 'Replacement login information for [user:display-name] at [site:name]'
 register_admin_created:
+  subject: 'An administrator created an account for you at [site:name]'
   body: |-
     [user:display-name],
 
@@ -44,8 +46,8 @@ register_admin_created:
     password: Your password
 
     --  [site:name] team
-  subject: 'An administrator created an account for you at [site:name]'
 register_no_approval_required:
+  subject: 'Account details for [user:display-name] at [site:name]'
   body: |-
     [user:display-name],
 
@@ -61,22 +63,22 @@ register_no_approval_required:
     password: Your password
 
     --  [site:name] team
-  subject: 'Account details for [user:display-name] at [site:name]'
 register_pending_approval:
+  subject: 'Account details for [user:display-name] at [site:name] (pending admin approval)'
   body: |-
     [user:display-name],
 
     Thank you for registering at [site:name]. Your application for an account is currently pending approval. Once it has been approved, you will receive another email containing information about how to log in, set your password, and other details.
 
     --  [site:name] team
-  subject: 'Account details for [user:display-name] at [site:name] (pending admin approval)'
 register_pending_approval_admin:
+  subject: 'Account details for [user:display-name] at [site:name] (pending admin approval)'
   body: |-
     [user:display-name] has applied for an account.
 
     [user:edit-url]
-  subject: 'Account details for [user:display-name] at [site:name] (pending admin approval)'
 status_activated:
+  subject: 'Account details for [user:display-name] at [site:name] (approved)'
   body: |-
     [user:display-name],
 
@@ -94,21 +96,19 @@ status_activated:
     password: Your password
 
     --  [site:name] team
-  subject: 'Account details for [user:display-name] at [site:name] (approved)'
 status_blocked:
+  subject: 'Account details for [user:display-name] at [site:name] (blocked)'
   body: |-
     [user:display-name],
 
     Your account on [site:name] has been blocked.
 
     --  [site:name] team
-  subject: 'Account details for [user:display-name] at [site:name] (blocked)'
 status_canceled:
+  subject: 'Account details for [user:display-name] at [site:name] (canceled)'
   body: |-
     [user:display-name],
 
     Your account on [site:name] has been canceled.
 
     --  [site:name] team
-  subject: 'Account details for [user:display-name] at [site:name] (canceled)'
-langcode: en

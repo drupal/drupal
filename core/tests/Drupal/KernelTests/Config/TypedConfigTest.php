@@ -75,7 +75,7 @@ class TypedConfigTest extends KernelTestBase {
     $typed_config_manager = \Drupal::service('config.typed');
     $typed_config = $typed_config_manager->createFromNameAndData('config_test.validation', \Drupal::configFactory()->get('config_test.validation')->get());
     $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
-    $this->assertEquals(['llama', 'cat', 'giraffe', 'uuid', '_core'], array_keys($typed_config->getElements()));
+    $this->assertEquals(['_core', 'llama', 'cat', 'giraffe', 'uuid'], array_keys($typed_config->getElements()));
 
     $config_test_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
       'id' => 'asterix',

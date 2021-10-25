@@ -292,8 +292,8 @@ class SectionComponent {
       'uuid' => $this->getUuid(),
       'region' => $this->getRegion(),
       'configuration' => $this->getConfiguration(),
-      'additional' => $this->additional,
       'weight' => $this->getWeight(),
+      'additional' => $this->additional,
     ];
   }
 

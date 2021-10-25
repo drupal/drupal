@@ -11,13 +11,13 @@ bundle: type_five
 mode: media_library
 content:
   field_media_test_oembed_video:
+    type: oembed_textfield
     weight: 1
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: oembed_textfield
-    region: content
   name:
     type: string_textfield
     weight: 0

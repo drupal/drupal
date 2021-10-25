@@ -6,6 +6,7 @@ dependencies:
     - node.type.options_install_test
   module:
     - text
+third_party_settings: {  }
 id: node.options_install_test.default
 targetEntityType: node
 bundle: options_install_test
@@ -37,17 +38,17 @@ content:
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 15
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 16
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   body:
     type: text_textarea_with_summary
@@ -60,4 +61,3 @@ content:
       show_summary: false
     third_party_settings: {  }
 hidden: {  }
-third_party_settings: {  }

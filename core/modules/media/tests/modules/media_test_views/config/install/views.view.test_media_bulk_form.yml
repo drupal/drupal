@@ -13,20 +13,19 @@ base_table: media_field_data
 base_field: mid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: 0
     display_options:
-      style:
-        type: table
-      row:
-        type: fields
+      title: 'Entity bulk form test view'
       fields:
         media_bulk_form:
           id: media_bulk_form
           table: media
           field: media_bulk_form
+          entity_type: media
+          plugin_id: bulk_form
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -42,22 +41,16 @@ display:
           action_title: 'With selection'
           include_exclude: exclude
           selected_actions: {  }
-          entity_type: media
-          plugin_id: bulk_form
         name:
           id: name
           table: media_field_data
           field: name
-          entity_type: media
-          entity_field: media
-          hide_empty: false
-          empty_zero: false
-          settings:
-            link_to_entity: false
-          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: media
+          entity_field: media
+          plugin_id: field
           label: 'Media name'
           exclude: false
           element_type: ''
@@ -69,9 +62,13 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
           type: string
+          settings:
+            link_to_entity: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -89,6 +86,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: media
+          entity_field: status
+          plugin_id: field
           label: Status
           exclude: false
           element_type: ''
@@ -107,8 +107,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_true: Published
             format_custom_false: Unpublished
+            format_custom_true: Published
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -119,9 +119,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: media
-          entity_field: status
-          plugin_id: field
+      empty: {  }
       sorts:
         mid:
           id: mid
@@ -130,24 +128,26 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
           entity_type: media
           entity_field: mid
           plugin_id: standard
-      title: 'Entity bulk form test view'
+          order: ASC
+          expose:
+            label: ''
+          exposed: false
+      arguments: {  }
+      style:
+        type: table
+      row:
+        type: fields
+      relationships: {  }
       header: {  }
       footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
   page_1:
-    display_plugin: page
     id: page_1
     display_title: Page
+    display_plugin: page
     position: 1
     display_options:
       path: test-media-bulk-form

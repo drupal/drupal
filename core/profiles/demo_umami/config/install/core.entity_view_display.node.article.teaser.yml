@@ -18,34 +18,34 @@ mode: teaser
 content:
   body:
     type: text_summary_or_trimmed
-    weight: 2
-    region: content
+    label: hidden
     settings:
       trim_length: 600
     third_party_settings: {  }
-    label: hidden
+    weight: 2
+    region: content
   field_media_image:
     type: entity_reference_entity_view
-    weight: 1
-    region: content
     label: hidden
     settings:
       view_mode: responsive_3x2
       link: false
     third_party_settings: {  }
+    weight: 1
+    region: content
   field_tags:
     type: entity_reference_label
-    weight: 3
-    region: content
+    label: above
     settings:
       link: true
     third_party_settings: {  }
-    label: above
-  links:
-    weight: 4
+    weight: 3
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 4
+    region: content
 hidden:
   content_moderation_control: true
   langcode: true

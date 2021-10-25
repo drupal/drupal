@@ -1,4 +1,5 @@
 uuid: 5cffd3ef-5656-4446-b200-b771d8076568
+langcode: en
 status: true
 dependencies:
   config:
@@ -6,13 +7,10 @@ dependencies:
     - image.style.max_1300x1300
     - image.style.max_650x650
     - image.style.max_325x325
-langcode: en
 id: wide
 label: Wide
 image_style_mappings:
   -
-    breakpoint_id: responsive_image.viewport_sizing
-    multiplier: 1x
     image_mapping_type: sizes
     image_mapping:
       sizes: '(min-width: 1290px) 1290px, 100vw'
@@ -21,5 +19,7 @@ image_style_mappings:
         - max_1300x1300
         - max_650x650
         - max_325x325
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
 breakpoint_group: responsive_image
 fallback_image_style: max_325x325

@@ -1,5 +1,5 @@
-id: changed
-label: Changed test menu
-description: 'The changed menu for menu_test tests.'
 langcode: en
+id: changed
+label: 'Changed test menu'
+description: 'The changed menu for menu_test tests.'
 locked: true

@@ -17,21 +17,21 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: type-three-dir
   file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
   alt_field: true
   alt_field_required: true
   title_field: false
   title_field_required: false
-  max_resolution: ''
-  min_resolution: ''
   default_image:
     uuid: null
     alt: ''
     title: ''
     width: null
     height: null
-  file_directory: 'type-three-dir'
-  max_filesize: ''
-  handler: 'default:file'
-  handler_settings: {  }
 field_type: image

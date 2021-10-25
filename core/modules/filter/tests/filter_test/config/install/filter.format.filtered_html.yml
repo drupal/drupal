@@ -1,12 +1,12 @@
-format: filtered_html
 name: 'Filtered HTML'
+format: filtered_html
 weight: 1
 filters:
   filter_url:
     id: filter_url
     provider: filter
-    weight: -1
     status: true
+    weight: -1
   filter_html:
     id: filter_html
     provider: filter
