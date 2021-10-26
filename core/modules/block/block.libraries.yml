@@ -20,5 +20,4 @@ drupal.block.admin:
     - core/drupal.announce
     - core/drupal.debounce
     - core/drupal.dialog.ajax
-    - core/drupal.string.includes
     - core/once
