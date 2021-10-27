@@ -66,10 +66,10 @@
               fieldModel.set('state', 'active');
             });
           } else {
-              _.defer(function () {
-                fieldModel.set('state', 'active');
-              });
-            }
+            _.defer(function () {
+              fieldModel.set('state', 'active');
+            });
+          }
 
           break;
 

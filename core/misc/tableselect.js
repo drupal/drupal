@@ -86,8 +86,8 @@
           break;
         }
       } else if ($.filter(to, [i]).r.length) {
-          break;
-        }
+        break;
+      }
     }
   };
 })(jQuery, Drupal);

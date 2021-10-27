@@ -67,8 +67,8 @@
 
         this.$allowedHTMLFormItem.val("".concat(this._generateSetting(userTagsWithoutOverrides), " ").concat(this._generateSetting(this.autoTags)));
       } else {
-          this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
-        }
+        this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
+      }
     },
     _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
       var editorRequiredTags = {};
@@ -91,10 +91,10 @@
               filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
               editorRequiredTags[tag] = filterRule;
             } else {
-                filterRule = editorRequiredTags[tag];
-                filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-                filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
-              }
+              filterRule = editorRequiredTags[tag];
+              filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
+              filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
+            }
           }
         }
       });
@@ -103,28 +103,28 @@
         if (!_.has(userAllowedTags, tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
-            var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
-            var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
+          var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
+          var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
 
-            var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
+          var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
 
-            var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
-            var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
+          var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
+          var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
 
-            var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
 
-            if (needsAdditionalAttributes || needsAdditionalClasses) {
-              autoAllowedTags[tag] = userAllowedTags[tag].clone();
-            }
-
-            if (needsAdditionalAttributes) {
-              autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
-            }
-
-            if (needsAdditionalClasses) {
-              autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
-            }
+          if (needsAdditionalAttributes || needsAdditionalClasses) {
+            autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
+
+          if (needsAdditionalAttributes) {
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
+          }
+
+          if (needsAdditionalClasses) {
+            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
+          }
+        }
       });
       return autoAllowedTags;
     },

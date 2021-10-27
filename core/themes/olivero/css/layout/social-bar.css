@@ -148,10 +148,9 @@
     transform-origin: left /* LTR */
 }
 
-    @supports ((width: -webkit-max-content) or (width: max-content)) {
+    @supports (width: max-content) {
 
 .rotate {
-      width: -webkit-max-content;
       width: max-content
 }
     }

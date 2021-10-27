@@ -158,8 +158,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     if (displayWeight) {
       this.showColumns();
     } else {
-        this.hideColumns();
-      }
+      this.hideColumns();
+    }
 
     this.$toggleWeightButton.html(Drupal.theme('toggleButtonContent', displayWeight));
     $(once.filter('tabledrag', 'table')).trigger('columnschange', !!displayWeight);
@@ -538,8 +538,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       if (row.offsetHeight === 0) {
         rowHeight = parseInt(row.firstChild.offsetHeight, 10) / 2;
       } else {
-          rowHeight = parseInt(row.offsetHeight, 10) / 2;
-        }
+        rowHeight = parseInt(row.offsetHeight, 10) / 2;
+      }
 
       if (y > rowY - rowHeight && y < rowY + rowHeight) {
         if (_this3.indentEnabled) {
@@ -551,10 +551,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             };
           }
         } else if (row === _this3.rowObject.element) {
-            return {
-              v: null
-            };
-          }
+          return {
+            v: null
+          };
+        }
 
         if (!_this3.rowObject.isValidSwap(row)) {
           return {
@@ -601,50 +601,50 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     if (rowSettings.relationship === 'self' || rowSettings.relationship === 'group') {
       sourceRow = changedRow;
     } else if (rowSettings.relationship === 'sibling') {
-        $previousRow = $changedRow.prev('tr:first-of-type');
-        previousRow = $previousRow.get(0);
-        var $nextRow = $changedRow.next('tr:first-of-type');
-        var nextRow = $nextRow.get(0);
-        sourceRow = changedRow;
+      $previousRow = $changedRow.prev('tr:first-of-type');
+      previousRow = $previousRow.get(0);
+      var $nextRow = $changedRow.next('tr:first-of-type');
+      var nextRow = $nextRow.get(0);
+      sourceRow = changedRow;
 
-        if ($previousRow.is('.draggable') && $previousRow.find(".".concat(group)).length) {
-          if (this.indentEnabled) {
-            if ($previousRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
-              sourceRow = previousRow;
-            }
-          } else {
+      if ($previousRow.is('.draggable') && $previousRow.find(".".concat(group)).length) {
+        if (this.indentEnabled) {
+          if ($previousRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = previousRow;
           }
-        } else if ($nextRow.is('.draggable') && $nextRow.find(".".concat(group)).length) {
-          if (this.indentEnabled) {
-            if ($nextRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
-              sourceRow = nextRow;
-            }
-          } else {
+        } else {
+          sourceRow = previousRow;
+        }
+      } else if ($nextRow.is('.draggable') && $nextRow.find(".".concat(group)).length) {
+        if (this.indentEnabled) {
+          if ($nextRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = nextRow;
           }
+        } else {
+          sourceRow = nextRow;
         }
-      } else if (rowSettings.relationship === 'parent') {
-          $previousRow = $changedRow.prev('tr');
-          previousRow = $previousRow;
+      }
+    } else if (rowSettings.relationship === 'parent') {
+      $previousRow = $changedRow.prev('tr');
+      previousRow = $previousRow;
 
-          while ($previousRow.length && $previousRow.find('.js-indentation').length >= this.rowObject.indents) {
-            $previousRow = $previousRow.prev('tr');
-            previousRow = $previousRow;
-          }
+      while ($previousRow.length && $previousRow.find('.js-indentation').length >= this.rowObject.indents) {
+        $previousRow = $previousRow.prev('tr');
+        previousRow = $previousRow;
+      }
 
-          if ($previousRow.length) {
-            sourceRow = $previousRow.get(0);
-          } else {
-              sourceRow = $(this.table).find('tr.draggable:first-of-type').get(0);
+      if ($previousRow.length) {
+        sourceRow = $previousRow.get(0);
+      } else {
+        sourceRow = $(this.table).find('tr.draggable:first-of-type').get(0);
 
-              if (sourceRow === this.rowObject.element) {
-                sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
-              }
-
-              useSibling = true;
-            }
+        if (sourceRow === this.rowObject.element) {
+          sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
         }
+
+        useSibling = true;
+      }
+    }
 
     this.copyDragClasses(sourceRow, changedRow, group);
     rowSettings = this.rowSettings(group, changedRow);

@@ -90,28 +90,28 @@
         text += "\n".concat(Drupal.t('Press the down arrow key to activate.'));
         Drupal.announce(text, 'assertive');
       } else if ($group.not('.placeholder').length === 1) {
-          text = Drupal.t('@name @type in position @position of @positionCount in @groupName button group in row @row of @rowCount.', {
-            '@name': $button.children().attr('aria-label'),
-            '@type': type,
-            '@position': position,
-            '@positionCount': positionCount,
-            '@groupName': $group.attr('data-drupal-ckeditor-toolbar-group-name'),
-            '@row': row,
-            '@rowCount': rowCount
-          });
+        text = Drupal.t('@name @type in position @position of @positionCount in @groupName button group in row @row of @rowCount.', {
+          '@name': $button.children().attr('aria-label'),
+          '@type': type,
+          '@position': position,
+          '@positionCount': positionCount,
+          '@groupName': $group.attr('data-drupal-ckeditor-toolbar-group-name'),
+          '@row': row,
+          '@rowCount': rowCount
+        });
 
-          if (groupPosition === 1 && position === 1 && row === rowCount) {
-            text += '\n';
-            text += Drupal.t('Press the down arrow key to create a new button group in a new row.');
-          }
-
-          if (groupPosition === groupPositionCount && position === positionCount) {
-            text += '\n';
-            text += Drupal.t('This is the last group. Move the button forward to create a new group.');
-          }
-
-          Drupal.announce(text, 'assertive');
+        if (groupPosition === 1 && position === 1 && row === rowCount) {
+          text += '\n';
+          text += Drupal.t('Press the down arrow key to create a new button group in a new row.');
         }
+
+        if (groupPosition === groupPositionCount && position === positionCount) {
+          text += '\n';
+          text += Drupal.t('This is the last group. Move the button forward to create a new group.');
+        }
+
+        Drupal.announce(text, 'assertive');
+      }
     },
     announceButtonHelp: function announceButtonHelp(event) {
       var $link = $(event.currentTarget);

@@ -70,58 +70,58 @@
           accept = true;
         }
       } else {
-          if (!Drupal.quickedit.FieldModel.followsStateSequence(from, to)) {
-            accept = false;
+        if (!Drupal.quickedit.FieldModel.followsStateSequence(from, to)) {
+          accept = false;
 
-            if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
-              accept = true;
-            } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
-                accept = true;
-              } else if (from === 'highlighted' && to === 'candidate') {
-                  accept = true;
-                } else if (from === 'saved' && to === 'candidate') {
-                    accept = true;
-                  } else if (from === 'invalid' && to === 'saving') {
-                      accept = true;
-                    } else if (from === 'invalid' && to === 'activating') {
-                        accept = true;
-                      }
-          }
-
-          if (accept) {
-            var activeField;
-            var activeFieldState;
-
-            if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
-              activeField = this.model.get('activeField');
-
-              if (activeField && activeField !== fieldModel) {
-                activeFieldState = activeField.get('state');
-
-                if (this.activeFieldStates.indexOf(activeFieldState) !== -1) {
-                  activeField.set('state', 'candidate');
-                } else if (activeFieldState === 'changed' || activeFieldState === 'invalid') {
-                  activeField.set('state', 'saving');
-                }
-
-                if (from === 'invalid') {
-                  this.model.set('activeField', fieldModel);
-                  accept = false;
-                }
-              }
-            } else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
-                if (context && context.reason === 'mouseleave') {
-                  accept = false;
-                }
-              } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
-                  if (context && context.reason === 'mouseleave') {
-                    accept = false;
-                  } else if (context && context.confirmed) {
-                      accept = true;
-                    }
-                }
+          if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
+            accept = true;
+          } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
+            accept = true;
+          } else if (from === 'highlighted' && to === 'candidate') {
+            accept = true;
+          } else if (from === 'saved' && to === 'candidate') {
+            accept = true;
+          } else if (from === 'invalid' && to === 'saving') {
+            accept = true;
+          } else if (from === 'invalid' && to === 'activating') {
+            accept = true;
           }
         }
+
+        if (accept) {
+          var activeField;
+          var activeFieldState;
+
+          if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
+            activeField = this.model.get('activeField');
+
+            if (activeField && activeField !== fieldModel) {
+              activeFieldState = activeField.get('state');
+
+              if (this.activeFieldStates.indexOf(activeFieldState) !== -1) {
+                activeField.set('state', 'candidate');
+              } else if (activeFieldState === 'changed' || activeFieldState === 'invalid') {
+                activeField.set('state', 'saving');
+              }
+
+              if (from === 'invalid') {
+                this.model.set('activeField', fieldModel);
+                accept = false;
+              }
+            }
+          } else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
+            if (context && context.reason === 'mouseleave') {
+              accept = false;
+            }
+          } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
+            if (context && context.reason === 'mouseleave') {
+              accept = false;
+            } else if (context && context.confirmed) {
+              accept = true;
+            }
+          }
+        }
+      }
 
       return accept;
     },
@@ -274,12 +274,12 @@
         logicalFieldID: updatedField.get('logicalFieldID')
       }).forEach(function (field) {
         if (field === updatedField) {} else if (field.getViewMode() === updatedField.getViewMode()) {
-            field.set('html', updatedField.get('html'));
-          } else if (field.getViewMode() in htmlForOtherViewModes) {
-              field.set('html', htmlForOtherViewModes[field.getViewMode()], {
-                propagation: true
-              });
-            }
+          field.set('html', updatedField.get('html'));
+        } else if (field.getViewMode() in htmlForOtherViewModes) {
+          field.set('html', htmlForOtherViewModes[field.getViewMode()], {
+            propagation: true
+          });
+        }
       });
     },
     rerenderedFieldToCandidate: function rerenderedFieldToCandidate(fieldModel) {
