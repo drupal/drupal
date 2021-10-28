@@ -68,6 +68,7 @@ class UrlHelperTest extends TestCase {
       'john%20doe:secret:foo@example.org/',
       'example.org/~,$\'*;',
       'caf%C3%A9.example.org',
+      // cspell:ignore FEDC
       '[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html',
     ];
 

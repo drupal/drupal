@@ -9,6 +9,8 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Views;
 
+// cspell:ignore wõrd
+
 /**
  * Tests abstract handler definitions.
  *

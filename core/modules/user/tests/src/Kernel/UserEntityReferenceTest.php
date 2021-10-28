@@ -65,6 +65,7 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
     $field_definition->setSetting('handler_settings', $handler_settings);
     $field_definition->save();
 
+    // cspell:ignore aabb aabbb aabbbb aabbbb
     $user1 = $this->createUser(['name' => 'aabb']);
     $user1->addRole($this->role1->id());
     $user1->save();

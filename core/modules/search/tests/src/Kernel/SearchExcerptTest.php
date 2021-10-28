@@ -159,6 +159,7 @@ class SearchExcerptTest extends KernelTestBase {
     // Test with accents and caps in a longer piece of text with the target
     // near the end.
     $text = str_repeat($lorem2, 20) . ' ' . $lorem1;
+    // cspell:ignore Lìbêró
     $result = $this->doSearchExcerpt('Lìbêró', $text);
     $this->assertStringContainsString('<strong>libero</strong>', $result, 'Search excerpt works with caps and accents in longer text');
 

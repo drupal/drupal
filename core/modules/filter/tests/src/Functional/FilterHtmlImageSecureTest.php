@@ -102,6 +102,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
     $test_image = $test_images[0]->filename;
 
     // Put a test image in the files directory with special filename.
+    // cspell:ignore tést fïle nàme
     $special_filename = 'tést fïle nàme.png';
     $special_image = rawurlencode($special_filename);
     $special_uri = str_replace($test_images[0]->filename, $special_filename, $test_images[0]->uri);

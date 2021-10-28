@@ -10,6 +10,8 @@ use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// cspell:ignore baaa
+
 /**
  * Tests the sub_process process plugin.
  *
