@@ -45,7 +45,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Drupal.deprecationError({
       message: "jQuery.cookie() ".concat(deprecatedMessageSuffix)
     });
-    key = key && !$.cookie.raw ? encodeURIComponent(key) : key;
 
     if (value !== undefined && !isFunction(value)) {
       var attributes = _objectSpread(_objectSpread({}, $.cookie.defaults), options);

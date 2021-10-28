@@ -127,14 +127,13 @@
    *   Use the core/js-cookie library instead.
    *
    * @see https://www.drupal.org/node/3104677
-   * @see https://github.com/js-cookie/js-cookie/blob/v3.0.0-rc.0/README.md
+   * @see https://github.com/js-cookie/js-cookie/blob/v3.0.1/README.md
    */
   $.cookie = (key, value = undefined, options = undefined) => {
     Drupal.deprecationError({
       message: `jQuery.cookie() ${deprecatedMessageSuffix}`,
     });
-    // Key should be only encoded if it exists and when not in a raw mode.
-    key = key && !$.cookie.raw ? encodeURIComponent(key) : key;
+
     if (value !== undefined && !isFunction(value)) {
       // The caller is setting a cookie value and not trying to retrieve the
       // cookie value using a converter callback.
@@ -223,7 +222,7 @@
    *   Use the core/js-cookie library instead.
    *
    * @see https://www.drupal.org/node/3104677
-   * @see https://github.com/js-cookie/js-cookie/blob/v3.0.0-rc.0/README.md
+   * @see https://github.com/js-cookie/js-cookie/blob/v3.0.1/README.md
    */
   $.removeCookie = (key, options) => {
     Drupal.deprecationError({

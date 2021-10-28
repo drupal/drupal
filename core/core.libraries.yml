@@ -874,10 +874,10 @@ drupal.dialog.off_canvas:
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
-  version: "3.0.0-rc.0"
+  version: "3.0.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.0-rc.0/LICENSE
+    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
