@@ -150,7 +150,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @covers ::doCreate
    */
   public function testCreateWithPredefinedUuid() {
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->once())
       ->method('getClass')
       ->will($this->returnValue(get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage();
@@ -173,7 +173,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    */
   public function testCreateWithoutUuidKey() {
     // Set up the entity storage to expect no UUID key.
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->once())
       ->method('getClass')
       ->will($this->returnValue(get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage(NULL);
@@ -198,7 +198,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    */
   public function testCreate() {
     $entity = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [], ['toArray']);
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->once())
       ->method('getClass')
       ->will($this->returnValue(get_class($entity)));
     $this->setUpKeyValueEntityStorage();
@@ -512,7 +512,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function testLoadMultipleAll() {
     $expected['foo'] = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [['id' => 'foo']]);
     $expected['bar'] = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [['id' => 'bar']]);
-    $this->entityType->expects($this->exactly(2))
+    $this->entityType->expects($this->once())
       ->method('getClass')
       ->will($this->returnValue(get_class(reset($expected))));
     $this->setUpKeyValueEntityStorage();

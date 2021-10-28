@@ -60,16 +60,16 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $uuidService;
 
   /**
-   * Name of the entity class (if set directly via deprecated means).
+   * Name of the base entity class.
    *
-   * This is a private property since it's only here to support backwards
-   * compatibility for deprecated code paths in contrib and custom code.
+   * This is a private property since it's not meant to be set by child classes.
+   * It holds the name of the entity class defined in the entity type that is
+   * passed in to the constructor when instantiating an entity storage class.
+   *
    * Normally, the entity class is defined via an annotation when defining an
    * entity type, via hook_entity_bundle_info() or via
-   * hook_entity_bundle_info_alter().
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
+   * hook_entity_bundle_info_alter(). However, due to how this property works,
+   * the entity class can also be controlled via hook_entity_type_alter().
    *
    * @var string|null
    */
@@ -100,6 +100,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
+    $this->baseEntityClass = $entity_type->getClass();
     $this->idKey = $this->entityType->getKey('id');
     $this->uuidKey = $this->entityType->getKey('uuid');
     $this->langcodeKey = $this->entityType->getKey('langcode');
@@ -111,9 +112,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function getEntityClass(?string $bundle = NULL): string {
-    // @todo Simplify this in Drupal 10 to return $this->entityType->getClass().
-    // @see https://www.drupal.org/project/drupal/issues/3244802
-    return $this->baseEntityClass ?? $this->entityType->getClass();
+    return $this->baseEntityClass;
   }
 
   /**

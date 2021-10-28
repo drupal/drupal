@@ -8,6 +8,7 @@
 use Drupal\entity_test_bundle_class\Entity\EntityTestAmbiguousBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestUserClass;
+use Drupal\entity_test_bundle_class\Entity\EntityTestVariant;
 use Drupal\entity_test_bundle_class\Entity\NonInheritingBundleClass;
 
 /**
@@ -30,5 +31,15 @@ function entity_test_bundle_class_entity_bundle_info_alter(&$bundles) {
 
   if (\Drupal::state()->get('entity_test_bundle_class_enable_user_class', FALSE)) {
     $bundles['user']['user']['class'] = EntityTestUserClass::class;
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function entity_test_bundle_class_entity_type_alter(&$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  if (\Drupal::state()->get('entity_test_bundle_class_override_base_class', FALSE) && isset($entity_types['entity_test'])) {
+    $entity_types['entity_test']->setClass(EntityTestVariant::class);
   }
 }

@@ -15,6 +15,9 @@ use Drupal\entity_test_deprecated_storage\Storage\DeprecatedEntityStorage;
  * @coversDefaultClass \Drupal\Core\Entity\EntityStorageBase
  * @group Entity
  * @group legacy
+ *
+ * @todo Remove this in Drupal 10.
+ * @see https://www.drupal.org/project/drupal/issues/3244802
  */
 class EntityStorageDeprecationTest extends UnitTestCase {
 

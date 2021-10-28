@@ -6,6 +6,9 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
  * Class for testing deprecation warnings from EntityStorageBase.
+ *
+ * @todo Remove this in Drupal 10.
+ * @see https://www.drupal.org/project/drupal/issues/3244802
  */
 class DeprecatedEntityStorage extends SqlContentEntityStorage {
 
