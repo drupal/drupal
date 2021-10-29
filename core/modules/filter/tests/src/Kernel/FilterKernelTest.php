@@ -336,12 +336,14 @@ class FilterKernelTest extends KernelTestBase {
 <pre>aaa\nbbb\n\nccc</pre>
 <object>aaa\nbbb\n\nccc</object>
 <iframe>aaa\nbbb\n\nccc</iframe>
+<svg>aaa\nbbb\n\nccc</svg>
 " => [
         "<script>aaa\nbbb\n\nccc</script>" => TRUE,
         "<style>aaa\nbbb\n\nccc</style>" => TRUE,
         "<pre>aaa\nbbb\n\nccc</pre>" => TRUE,
         "<object>aaa\nbbb\n\nccc</object>" => TRUE,
         "<iframe>aaa\nbbb\n\nccc</iframe>" => TRUE,
+        "<svg>aaa\nbbb\n\nccc</svg>" => TRUE,
       ],
       // Skip comments entirely.
       "One. <!-- comment --> Two.\n<!--\nThree.\n-->\n" => [
