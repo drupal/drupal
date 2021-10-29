@@ -25,6 +25,7 @@ drupal.contextual-links:
     - core/backbone
     - core/modernizr
     - core/once
+    - core/jquery.once.bc
 
 drupal.contextual-toolbar:
   version: VERSION
@@ -43,5 +44,6 @@ drupal.contextual-toolbar:
     - core/drupal
     - core/backbone
     - core/once
+    - core/jquery.once.bc
     - core/drupal.tabbingmanager
     - core/drupal.announce

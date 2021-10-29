@@ -50,6 +50,7 @@ drupal.ckeditor.admin:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
     - core/backbone
     - core/drupal.dialog
     - core/drupal.announce
@@ -67,6 +68,7 @@ drupal.ckeditor.drupalimage.admin:
     - core/jquery
     - core/drupal
     - core/once
+    - core/jquery.once.bc
     - core/drupal.vertical-tabs
     - core/drupalSettings
 

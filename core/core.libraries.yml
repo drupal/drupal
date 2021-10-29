@@ -85,6 +85,7 @@ drupal.ajax:
     - core/drupalSettings
     - core/drupal.progress
     - core/once
+    - core/jquery.once.bc
     - core/tabbable
 
 drupal.announce:
@@ -165,6 +166,7 @@ drupal.batch:
     - core/drupal.ajax
     - core/drupal.progress
     - core/once
+    - core/jquery.once.bc
 
 drupal.checkbox:
   version: VERSION
@@ -185,6 +187,7 @@ drupal.collapse:
     - core/drupal
     - core/drupal.form
     - core/once
+    - core/jquery.once.bc
 
 drupal.customevent:
   version: VERSION
@@ -296,6 +299,7 @@ drupal.dropbutton:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
 
 drupal.element.closest:
   version: VERSION
@@ -325,6 +329,7 @@ drupal.form:
     - core/drupal
     - core/drupal.debounce
     - core/once
+    - core/jquery.once.bc
 
 drupal.machine-name:
   version: VERSION
@@ -333,6 +338,7 @@ drupal.machine-name:
   dependencies:
     - core/jquery
     - core/once
+    - core/jquery.once.bc
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
@@ -373,6 +379,7 @@ drupal.states:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
 
 drupal.tabbingmanager:
   version: VERSION
@@ -392,6 +399,7 @@ drupal.tabledrag:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
 
 drupal.tableheader:
   version: VERSION
@@ -402,6 +410,7 @@ drupal.tableheader:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
     - core/drupal.displace
 
 drupal.tableresponsive:
@@ -412,6 +421,7 @@ drupal.tableresponsive:
     - core/jquery
     - core/drupal
     - core/once
+    - core/jquery.once.bc
 
 drupal.tableselect:
   version: VERSION
@@ -422,6 +432,7 @@ drupal.tableselect:
     - core/drupal.checkbox
     - core/jquery
     - core/once
+    - core/jquery.once.bc
 
 drupal.timezone:
   version: VERSION
@@ -430,6 +441,7 @@ drupal.timezone:
   dependencies:
     - core/jquery
     - core/once
+    - core/jquery.once.bc
     - core/drupal
 
 drupal.vertical-tabs:
@@ -443,6 +455,7 @@ drupal.vertical-tabs:
   dependencies:
     - core/jquery
     - core/once
+    - core/jquery.once.bc
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
@@ -546,11 +559,15 @@ jquery.once:
     - core/jquery.once.bc
   deprecated: The %library_id% asset library is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256
 
+# Internal library, do not depend on it.
+# The library will be removed in Drupal 10.0.0.
 jquery.once.bc:
   version: VERSION
   js:
-    misc/jquery.once.bc.js: { weight: -19 }
+    assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
+    misc/jquery.once.bc.js: {}
   dependencies:
+    - core/drupal
     - core/jquery
     - core/once
     - core/drupal.object.assign
@@ -866,6 +883,7 @@ drupal.dialog.off_canvas:
   dependencies:
     - core/jquery
     - core/once
+    - core/jquery.once.bc
     - core/drupal
     - core/drupal.ajax
     - core/drupal.announce

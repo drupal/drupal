@@ -5,6 +5,7 @@ drupal.editor.admin:
   dependencies:
     - core/jquery
     - core/once
+    - core/jquery.once.bc
     - core/drupal
 
 drupal.editor:
@@ -16,6 +17,7 @@ drupal.editor:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
     - core/drupal.dialog
 
 drupal.editor.dialog:

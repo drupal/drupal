@@ -33,6 +33,7 @@ ui:
     - core/drupal.ajax
     - core/drupal.announce
     - core/once
+    - core/jquery.once.bc
     - core/jquery
     - media_library/view
     - core/tabbable

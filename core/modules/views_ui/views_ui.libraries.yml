@@ -9,6 +9,7 @@ views_ui.admin:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc
     - core/jquery.form
     - core/drupal.form
     - core/drupal.ajax
@@ -24,6 +25,7 @@ views_ui.listing:
     - core/jquery
     - core/drupal
     - core/once
+    - core/jquery.once.bc
     - views_ui/admin.styling
 
 admin.styling:

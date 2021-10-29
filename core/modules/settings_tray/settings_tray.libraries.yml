@@ -16,4 +16,5 @@ drupal.settings_tray:
     - core/jquery
     - core/drupal
     - core/once
+    - core/jquery.once.bc
     - core/drupal.ajax

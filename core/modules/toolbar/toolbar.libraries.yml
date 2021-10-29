@@ -26,6 +26,7 @@ toolbar:
     - core/drupal.announce
     - core/backbone
     - core/once
+    - core/jquery.once.bc
     - core/drupal.displace
     - toolbar/toolbar.menu
 
@@ -40,6 +41,7 @@ toolbar.menu:
     - core/jquery
     - core/drupal
     - core/once
+    - core/jquery.once.bc
 
 toolbar.escapeAdmin:
   version: VERSION
@@ -50,3 +52,4 @@ toolbar.escapeAdmin:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once.bc

@@ -5,4 +5,5 @@ drupal.text:
   dependencies:
     - core/jquery
     - core/once
+    - core/jquery.once.bc
     - core/drupal
