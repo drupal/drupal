@@ -19142,7 +19142,7 @@ $connection->insert('file_managed')
   'filename' => 'ds9.txt',
   'uri' => 'public://ds9.txt',
   'filemime' => 'text/plain',
-  'filesize' => '4720',
+  'filesize' => '4',
   'status' => '1',
   'timestamp' => '1421727516',
 ))
