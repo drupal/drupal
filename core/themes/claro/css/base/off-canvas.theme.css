@@ -81,3 +81,7 @@
 #drupal-off-canvas .ui-widget-content a {
   color: #85bef4;
 }
+
+#drupal-off-canvas .form-actions {
+  display: block;
+}
