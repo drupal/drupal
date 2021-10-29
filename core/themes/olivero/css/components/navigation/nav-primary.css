@@ -11,6 +11,7 @@
  */
 
 .primary-nav__menu {
+  flex-wrap: wrap;
   list-style: none;
 }
 

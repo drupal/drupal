@@ -82,7 +82,7 @@ body:not(.is-always-mobile-nav) {
     }
 
     & .primary-nav__menu-link-inner {
-      padding-block: var(--sp2);
+      padding-block: var(--sp1);
       padding-inline-start: 0;
       padding-inline-end: 0;
 
