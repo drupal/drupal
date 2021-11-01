@@ -23,7 +23,7 @@ use Drupal\Core\Session\AccountInterface;
  * }
  * @endcode
  *
- * @see \Drupal\node\Plugin\Action\PublishNode
+ * @see \Drupal\Core\Action\Plugin\Action\PublishAction
  */
 abstract class FieldUpdateActionBase extends ActionBase {
 
