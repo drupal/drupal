@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\style\DefaultSummary;
 
@@ -114,7 +113,7 @@ class Result extends AreaPluginBase {
     $replacements['@page_count'] = $page_count;
     // Send the output.
     if (!empty($total) || !empty($this->options['empty'])) {
-      $output .= Xss::filterAdmin(str_replace(array_keys($replacements), array_values($replacements), $format));
+      $output .= str_replace(array_keys($replacements), array_values($replacements), $format);
       // Return as render array.
       return [
         '#markup' => $output,
