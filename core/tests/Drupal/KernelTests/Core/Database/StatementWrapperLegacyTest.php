@@ -20,7 +20,7 @@ class StatementWrapperLegacyTest extends DatabaseTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->statement = $this->connection->prepareStatement('SELECT * FROM {test}', []);
+    $this->statement = $this->connection->prepareStatement('SELECT id FROM {test}', []);
     if (!$this->statement instanceof StatementWrapper) {
       $this->markTestSkipped('This test only works for drivers implementing Drupal\Core\Database\StatementWrapper.');
     }
@@ -31,8 +31,8 @@ class StatementWrapperLegacyTest extends DatabaseTestBase {
    */
   public function testQueryString() {
     $this->expectDeprecation('StatementWrapper::$queryString should not be accessed in drupal:9.1.0 and will error in drupal:10.0.0. Access the client-level statement object via ::getClientStatement(). See https://www.drupal.org/node/3177488');
-    $this->assertStringContainsString('SELECT * FROM ', $this->statement->queryString);
-    $this->assertStringContainsString('SELECT * FROM ', $this->statement->getQueryString());
+    $this->assertStringContainsString('SELECT id FROM ', $this->statement->queryString);
+    $this->assertStringContainsString('SELECT id FROM ', $this->statement->getQueryString());
   }
 
   /**
@@ -49,7 +49,7 @@ class StatementWrapperLegacyTest extends DatabaseTestBase {
   public function testClientStatementMethod() {
     $this->expectDeprecation('StatementWrapper::columnCount should not be called in drupal:9.1.0 and will error in drupal:10.0.0. Access the client-level statement object via ::getClientStatement(). See https://www.drupal.org/node/3177488');
     $this->statement->execute();
-    $this->assertEquals(4, $this->statement->columnCount());
+    $this->assertEquals(1, $this->statement->columnCount());
   }
 
   /**
