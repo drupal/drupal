@@ -16,7 +16,7 @@ use Drupal\Core\Cache\CacheableMetadata;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
-class CacheableNormalization implements CacheableDependencyInterface {
+class CacheableNormalization extends TemporaryArrayObjectThrowingExceptions implements CacheableDependencyInterface {
 
   use CacheableDependencyTrait;
 
