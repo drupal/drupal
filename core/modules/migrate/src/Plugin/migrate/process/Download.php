@@ -155,6 +155,10 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
       throw new MigrateException("{$e->getMessage()} ($source)");
     }
 
+    if (is_resource($destination_stream)) {
+      fclose($destination_stream);
+    }
+
     return $final_destination;
   }
 
