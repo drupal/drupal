@@ -381,6 +381,11 @@ drupal.states:
     - core/once
     - core/jquery.once.bc
 
+drupal.string.includes:
+  version: VERSION
+  js:
+    misc/polyfills/string.includes.js: { weight: -20 }
+
 drupal.tabbingmanager:
   version: VERSION
   js:
