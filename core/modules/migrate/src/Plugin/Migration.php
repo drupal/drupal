@@ -96,7 +96,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *
    * Used to initialize $idMapPlugin.
    *
-   * @var string
+   * @var array
    */
   protected $idMap = [];
 

@@ -111,9 +111,9 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * The result.
    *
-   * @var null
+   * @var \Drupal\Core\Database\StatementInterface
    */
-  protected $result = NULL;
+  protected $result;
 
   /**
    * The source identifiers.
@@ -132,7 +132,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * The current row.
    *
-   * @var null
+   * @var array|false|null
    */
   protected $currentRow = NULL;
 
