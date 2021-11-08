@@ -1536,7 +1536,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Inform others that this cache is usable now.
     $cache_file = $this->originalFileDirectory . '/simpletest/' . $cache_key . '/simpletest-cache-setup';
-    file_put_contents($cache_file, time(NULL));
+    file_put_contents($cache_file, time());
 
     lock_release($lock_key);
     return TRUE;
