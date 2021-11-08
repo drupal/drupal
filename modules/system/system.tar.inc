@@ -41,7 +41,7 @@
 
  /**
  * Note on Drupal 7 porting.
- * This file origin is Tar.php, release 1.4.9 (stable) with some code
+ * This file origin is Tar.php, release 1.4.14 (stable) with some code
  * from PEAR.php, release 1.10.10 (stable) both at http://pear.php.net.
  * To simplify future porting from pear of this file, you should not
  * do cosmetic or other non significant changes to this file.
@@ -792,7 +792,7 @@ class Archive_Tar
      */
     public function setIgnoreList($list)
     {
-        $regexp = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
+        $list = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
         $regexp = '#/' . join('$|/', $list) . '#';
         $this->setIgnoreRegexp($regexp);
     }
@@ -1336,7 +1336,7 @@ class Archive_Tar
             while (($v_buffer = fread($v_file, $this->buffer_length)) != '') {
                 $buffer_length = strlen("$v_buffer");
                 if ($buffer_length != $this->buffer_length) {
-                    $pack_size = ((int)($buffer_length / 512) + 1) * 512;
+                    $pack_size = ((int)($buffer_length / 512) + ($buffer_length % 512 !== 0 ? 1 : 0)) * 512;
                     $pack_format = sprintf('a%d', $pack_size);
                 } else {
                     $pack_format = sprintf('a%d', $this->buffer_length);
@@ -1465,11 +1465,13 @@ class Archive_Tar
             $userinfo = posix_getpwuid($v_info[4]);
             $groupinfo = posix_getgrgid($v_info[5]);
 
-            $v_uname = $userinfo['name'];
-            $v_gname = $groupinfo['name'];
-        } else {
-            $v_uname = '';
-            $v_gname = '';
+            if (isset($userinfo['name'])) {
+                $v_uname = $userinfo['name'];
+            }
+
+            if (isset($groupinfo['name'])) {
+                $v_gname = $groupinfo['name'];
+            }
         }
 
         $v_devmajor = '';
@@ -1578,8 +1580,13 @@ class Archive_Tar
             $userinfo = posix_getpwuid($p_uid);
             $groupinfo = posix_getgrgid($p_gid);
 
-            $v_uname = $userinfo['name'];
-            $v_gname = $groupinfo['name'];
+            if ($userinfo === false || $groupinfo === false) {
+                $v_uname = '';
+                $v_gname = '';
+            } else {
+                $v_uname = $userinfo['name'];
+                $v_gname = $groupinfo['name'];
+            }
         } else {
             $v_uname = '';
             $v_gname = '';
