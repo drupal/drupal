@@ -27,16 +27,6 @@ function twig_extension() {
 }
 
 /**
- * Includes .theme file from themes.
- *
- * @param \Drupal\Core\Extension\Extension $theme
- *   The theme extension object.
- */
-function twig_init(Extension $theme) {
-  $theme->load();
-}
-
-/**
  * Implements hook_render_template().
  *
  * Renders a Twig template.
