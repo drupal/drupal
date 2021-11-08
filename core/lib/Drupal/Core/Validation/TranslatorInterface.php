@@ -9,6 +9,10 @@ namespace Drupal\Core\Validation;
  * to indicate that the Drupal code is actually independent from the
  * Symfony translation component.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the
+ *   interface \Symfony\Contracts\Translation\TranslatorInterface instead.
+ *
+ * @see https://www.drupal.org/node/3238432
  * @see https://github.com/symfony/symfony/pull/6189
  * @see https://github.com/symfony/symfony/issues/15714
  */
