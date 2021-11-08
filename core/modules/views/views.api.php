@@ -70,14 +70,6 @@ use Drupal\views\ViewExecutable;
  */
 
 /**
- * @defgroup views_hooks Views hooks
- * @{
- * Hooks that allow other modules to implement the Views API.
- * @ingroup views_overview
- * @}
- */
-
-/**
  * @addtogroup hooks
  * @{
  */
@@ -1248,8 +1240,4 @@ function hook_views_plugins_sort_alter(array &$plugins) {
 
 /**
  * @} End of "addtogroup hooks".
- */
-
-/**
- * @}
  */
