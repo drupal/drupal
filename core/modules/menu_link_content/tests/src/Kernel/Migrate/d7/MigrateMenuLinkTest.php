@@ -70,7 +70,14 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity(245, 'und', 'Home', 'main', NULL, TRUE, FALSE, [], 'internal:/', 0);
     $this->assertEntity(478, 'und', 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content', 0);
-    $this->assertEntity(479, 'und', 'node link test', 'tools', 'node 2', TRUE, FALSE, ['attributes' => ['title' => 'node 2']], 'entity:node/2', 3);
+    $this->assertEntity(479, 'und', 'node link test', 'tools', 'node 2', TRUE, FALSE, [
+      'attributes' => ['title' => 'node 2'],
+      'query' => [
+        'name' => 'ferret',
+        'color' => 'purple',
+      ],
+    ],
+      'entity:node/2', 3);
 
     $menu_link_tree_service = \Drupal::service('menu.link_tree');
     $parameters = new MenuTreeParameters();

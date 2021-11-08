@@ -89,7 +89,7 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
    */
   public function testMenuLinks() {
     $this->assertEntity('138', 'Test 1', 'secondary-links', 'Test menu link 1', TRUE, FALSE, ['attributes' => ['title' => 'Test menu link 1'], 'langcode' => 'en'], 'internal:/user/login', -50);
-    $this->assertEntity('139', 'Test 2', 'secondary-links', 'Test menu link 2', TRUE, TRUE, ['query' => 'foo=bar', 'attributes' => ['title' => 'Test menu link 2']], 'internal:/admin', -49);
+    $this->assertEntity('139', 'Test 2', 'secondary-links', 'Test menu link 2', TRUE, TRUE, ['query' => ['foo' => 'bar'], 'attributes' => ['title' => 'Test menu link 2']], 'internal:/admin', -49);
     $this->assertEntity('140', 'Drupal.org', 'secondary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'https://www.drupal.org', -50);
 
     // Assert that missing title attributes don't stop or break migration.
