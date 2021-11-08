@@ -3297,3 +3297,45 @@ class BlockInterestCohortTest extends DrupalWebTestCase {
   }
 
 }
+
+/**
+ * Test for drupal_add_html_head_link().
+ */
+class DrupalAddHtmlHeadLinkTest extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Add HTML head link',
+      'description' => 'Test for drupal_add_html_head_link().',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  /**
+   * Tests drupal_add_html_head_link().
+   */
+  function testDrupalAddHtmlHeadLink() {
+    $this->drupalGet('common-test/html_head_link');
+    $expected_link_header = implode(',', array(
+      '</foo?bar=baz>; rel="alternate"',
+      '</foo/bar>; hreflang="nl"; rel="alternate"',
+      '</foo/bar>; hreflang="de"; rel="alternate"',
+    ));
+    $this->assertEqual($this->drupalGetHeader('Link'), $expected_link_header);
+
+    // Check that duplicate alternate URLs with different hreflangs are allowed.
+    $test_link = $this->xpath('//head/link[@rel="alternate"][@href="/foo/bar"]');
+    $this->assertEqual(count($test_link), 2, 'Duplicate alternate URLs are allowed.');
+  }
+
+}

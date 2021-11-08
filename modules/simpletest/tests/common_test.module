@@ -64,6 +64,12 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['common-test/html_head_link'] = array(
+    'title' => 'Test HTML head link',
+    'page callback' => 'common_test_html_head_link',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -313,4 +319,29 @@ function existing_interest_cohort_policy() {
 function existing_permissions_policy_header() {
   drupal_add_http_header('Permissions-Policy', 'geolocation=()');
   print __FUNCTION__;
+}
+
+/**
+ * Page callback.
+ */
+function common_test_html_head_link() {
+  drupal_add_html_head_link(array(
+    'href' => '/foo?bar=baz',
+    'rel' => 'alternate',
+  ), TRUE);
+  drupal_add_html_head_link(array(
+    'href' => '/not-added-to-http-headers',
+    'rel' => 'alternate',
+  ), FALSE);
+  drupal_add_html_head_link(array(
+    'href' => '/foo/bar',
+    'hreflang' => 'nl',
+    'rel' => 'alternate',
+  ), TRUE);
+  drupal_add_html_head_link(array(
+    'href' => '/foo/bar',
+    'hreflang' => 'de',
+    'rel' => 'alternate',
+  ), TRUE);
+  return '';
 }

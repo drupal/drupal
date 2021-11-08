@@ -2944,12 +2944,12 @@ function base_path() {
 }
 
 /**
- * Adds a LINK tag with a distinct 'rel' attribute to the page's HEAD.
+ * Adds a LINK tag with distinct attributes to the page's HEAD.
  *
  * This function can be called as long the HTML header hasn't been sent, which
  * on normal pages is up through the preprocess step of theme('html'). Adding
- * a link will overwrite a prior link with the exact same 'rel' and 'href'
- * attributes.
+ * a link will overwrite a prior link with the exact same 'rel', 'href' and
+ * 'hreflang' attributes.
  *
  * @param $attributes
  *   Associative array of element attributes including 'href' and 'rel'.
@@ -2970,7 +2970,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
     $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
 
-  drupal_add_html_head($element, 'drupal_add_html_head_link:' . $attributes['rel'] . ':' . $href);
+  drupal_add_html_head($element, 'drupal_add_html_head_link:' . $attributes['rel'] . ':' . (isset($attributes['hreflang']) ? "{$attributes['hreflang']}:" : '') . $href);
 }
 
 /**
