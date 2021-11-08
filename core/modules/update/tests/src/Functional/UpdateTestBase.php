@@ -63,8 +63,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     // test child site.
     $request = \Drupal::request();
     $update_root = $this->container->get('update.root') . '/' . DrupalKernel::findSitePath($request);
-    $this->container->set('update.root', $update_root);
-    \Drupal::setContainer($this->container);
+    $this->container->get('update.root')->set($update_root);
 
     // Create the directories within the root path within which the Update
     // Manager will install projects.

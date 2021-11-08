@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Gets the root path used by the Update Manager to install or update projects.
  */
-class UpdateRootFactory {
+class UpdateRoot {
 
   /**
    * The Drupal kernel.
@@ -25,6 +25,13 @@ class UpdateRootFactory {
   protected $requestStack;
 
   /**
+   * The update root.
+   *
+   * @var string
+   */
+  protected $updateRoot;
+
+  /**
    * Constructs an UpdateRootFactory instance.
    *
    * @param \Drupal\Core\DrupalKernelInterface $drupal_kernel
@@ -38,6 +45,16 @@ class UpdateRootFactory {
   }
 
   /**
+   * Sets the root path under which projects are installed or updated.
+   *
+   * @param string $update_root
+   *   The update root.
+   */
+  public function set(string $update_root): void {
+    $this->updateRoot = $update_root;
+  }
+
+  /**
    * Gets the root path under which projects are installed or updated.
    *
    * The Update Manager will ensure that project files can only be copied to
@@ -45,7 +62,12 @@ class UpdateRootFactory {
    *
    * @return string
    */
-  public function get() {
+  public function __toString(): string {
+    // Return the $updateRoot when it is set.
+    if (isset($this->updateRoot)) {
+      return $this->updateRoot;
+    }
+
     // Normally the Update Manager's root path is the same as the app root (the
     // directory in which the Drupal site is installed).
     $root_path = $this->drupalKernel->getAppRoot();
