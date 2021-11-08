@@ -1060,6 +1060,23 @@ EOD;
     return strtr($hash, ['+' => '_', '/' => '_', '=' => '']);
   }
 
+  /**
+   * Determines whether the PostgreSQL extension is created.
+   *
+   * @param string $name
+   *   The name of the extension.
+   *
+   * @return bool
+   *   Return TRUE when the extension is created, FALSE otherwise.
+   *
+   * @internal
+   */
+  public function extensionExists($name): bool {
+    return (bool) $this->connection->query('SELECT installed_version FROM pg_available_extensions WHERE name = :name', [
+      ':name' => $name,
+    ])->fetchField();
+  }
+
 }
 
 /**
