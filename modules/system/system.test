@@ -3096,3 +3096,98 @@ class ConfirmFormTest extends DrupalWebTestCase {
     return $this->assertTrue(isset($links[0]), $message, $group);
   }
 }
+
+/**
+ * Test case for Archiver classes.
+ *
+ * Cannot be a DrupalUnitTestCase as it requires access to the db and files.
+ */
+class SystemArchiverTest extends DrupalWebTestCase
+{
+
+  public static function getInfo()
+  {
+    return array(
+      'name' => 'Archiver tests',
+      'description' => 'Test the Archiver classes.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Tests interacting with a tarball archive.
+   */
+  public function testArchiverTarball() {
+    $src_tarball = DRUPAL_ROOT . '/' . drupal_get_path('module', 'system') . '/tests/system_test_archive.tar.gz';
+    $tmp = file_directory_temp();
+    $tarball = $tmp . '/' . basename($src_tarball);
+    file_unmanaged_copy($src_tarball, $tarball);
+    try {
+      $archiver = archiver_get_archiver($tarball);
+    }
+    catch (Exception $e) {
+      // The file's not there (this is not part of the test).
+      $this->assertTrue(FALSE, $e);
+      return;
+    }
+
+    // Test \ArchiverTar::listContents
+    $listing = $archiver->listContents();
+    $this->assertEqual(count($listing), 4, 'Tarball listing has 4 entries.');
+    $this->assertTrue((strpos(implode(',', $listing), 'tarball.module') !== FALSE), 'Tarball listing includes tarball.module');
+
+    // Test \ArchiverTar::extract
+    $extract_dir = file_directory_temp() . '/testArchiverTarball';
+    $archiver->extract($extract_dir);
+    $this->assertTrue(file_exists($extract_dir . '/system_test_archive/test.txt'), 'test.txt extracted from tarball');
+    $this->assertEqual(count(glob($extract_dir . '/system_test_archive/*')), 3, '3 files extracted from tarball');
+
+    // Test \ArchiverTar::add
+    $extra_file = DRUPAL_ROOT . '/misc/druplicon.png';
+    $archiver->add($extra_file);
+    $new_listing = $archiver->listContents();
+    // \ArchiverTar::add probably should not add the new file with its absolute
+    // path. However that's how \Archive_Tar::add works. If we wanted to modify
+    // the file path within the archive, we could call \Archive_Tar::addModify
+    // directly and use its additional parameters. That could be done using
+    // \ArchiverTar::getArchive like in _testArchiverOutOfPath() which calls
+    // \Archive_Tar::extract directly.
+    $this->assertTrue(in_array($extra_file, $new_listing), 'Druplicon added to tarball');
+  }
+
+  /**
+   * Tests out-of-path extraction protection.
+   */
+  public function testArchiverOutOfPath() {
+    $this->_testArchiverOutOfPath('system_test_archive_rel.tar', 'Relative out-of-path extraction caught');
+    $this->_testArchiverOutOfPath('system_test_archive_abs.tgz', 'Absolute out-of-path extraction caught');
+  }
+
+  /**
+   * Helper to test out-of-path extraction protection.
+   */
+  public function _testArchiverOutOfPath($archive, $message) {
+    $src_tarball = DRUPAL_ROOT . '/modules/system/tests/' . $archive;
+    $tarball = file_directory_temp() . '/' . $archive;
+    file_unmanaged_copy($src_tarball, $tarball);
+    try {
+      $archiver = archiver_get_archiver($tarball);
+    } catch (Exception $e) {
+      // The file's not there (this is not part of the test).
+      $this->assertTrue(FALSE, $e);
+      return;
+    }
+
+    $extract_dir = file_directory_temp() . '/testArchiverTarball';
+    $caught_exception = FALSE;
+    try {
+      // Drupal's \ArchiverTar::extract() doesn't support symlinks, so we have
+      // to access the underlying Archive_Tar object.
+      $archiver->getArchive()->extract($extract_dir, FALSE, TRUE);
+    }
+    catch (Exception $e) {
+      $caught_exception = (strpos($e->getMessage(), 'Out-of-path file extraction') !== FALSE);
+    }
+    $this->assertTrue($caught_exception, $message);
+  }
+}
