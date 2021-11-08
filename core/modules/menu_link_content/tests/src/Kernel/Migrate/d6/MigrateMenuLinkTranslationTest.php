@@ -53,7 +53,7 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame('secondary-links', $menu_link->getMenuName());
     $this->assertTrue($menu_link->isEnabled());
     $this->assertTrue($menu_link->isExpanded());
-    $this->assertSame(['query' => 'foo=bar', 'attributes' => ['title' => 'Test menu link 2']], $menu_link->link->options);
+    $this->assertSame(['query' => ['foo' => 'bar'], 'attributes' => ['title' => 'Test menu link 2']], $menu_link->link->options);
     $this->assertSame('internal:/admin', $menu_link->link->uri);
     $this->assertSame(-49, $menu_link->getWeight());
 
@@ -64,7 +64,7 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame('secondary-links', $menu_link->getMenuName());
     $this->assertTrue($menu_link->isEnabled());
     $this->assertTrue($menu_link->isExpanded());
-    $this->assertSame(['query' => 'foo=bar', 'attributes' => ['title' => 'Test menu link 2']], $menu_link->link->options);
+    $this->assertSame(['query' => ['foo' => 'bar'], 'attributes' => ['title' => 'Test menu link 2']], $menu_link->link->options);
     $this->assertSame('internal:/admin', $menu_link->link->uri);
     $this->assertSame(-49, $menu_link->getWeight());
 
