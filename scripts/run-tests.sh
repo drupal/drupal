@@ -142,6 +142,8 @@ All arguments are long options.
   --all       Run all available tests.
 
   --class     Run tests identified by specific class names, instead of group names.
+              A specific test method can be added, for example,
+              'UserAccountLinksUnitTests::testDisabledAccountLink'.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension (i.e. 'modules/user/user.test').
@@ -408,10 +410,19 @@ function simpletest_script_run_one_test($test_id, $test_class) {
 
     simpletest_classloader_register();
 
-    $test = new $test_class($test_id);
+    if (strpos($test_class, '::') > 0) {
+      list($class_name, $method) = explode('::', $test_class, 2);
+      $methods = array($method);
+    }
+    else {
+      $class_name = $test_class;
+      // Use empty array to run all the test methods.
+      $methods = array();
+    }
+    $test = new $class_name($test_id);
     $test->useSetupInstallationCache = !empty($args['cache']);
     $test->useSetupModulesCache = !empty($args['cache-modules']);
-    $test->run();
+    $test->run($methods);
     $info = $test->getInfo();
 
     $had_fails = (isset($test->results['#fail']) && $test->results['#fail'] > 0);
@@ -477,8 +488,16 @@ function simpletest_script_get_test_list() {
       // Check for valid class names.
       $test_list = array();
       foreach ($args['test_names'] as $test_class) {
-        if (class_exists($test_class)) {
-          $test_list[] = $test_class;
+        list($class_name, $method) = explode('::', $test_class, 2);
+        if (class_exists($class_name)) {
+          if (empty($method) || method_exists($class_name, $method)) {
+            $test_list[] = $test_class;
+          } else {
+            $all_methods = get_class_methods($class_name);
+            simpletest_script_print_error('Test method not found: ' . $test_class);
+            simpletest_script_print_alternatives($method, $all_methods, 6);
+            exit(1);
+          }
         }
         else {
           $groups = simpletest_test_get_all();
@@ -486,8 +505,8 @@ function simpletest_script_get_test_list() {
           foreach ($groups as $group) {
             $all_classes = array_merge($all_classes, array_keys($group));
           }
-          simpletest_script_print_error('Test class not found: ' . $test_class);
-          simpletest_script_print_alternatives($test_class, $all_classes, 6);
+          simpletest_script_print_error('Test class not found: ' . $class_name);
+          simpletest_script_print_alternatives($class_name, $all_classes, 6);
           exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
       }
@@ -597,9 +616,14 @@ function simpletest_script_reporter_init() {
   }
   else {
     echo "Tests to be run:\n";
-    foreach ($test_list as $class_name) {
-      $info = call_user_func(array($class_name, 'getInfo'));
-      echo " - " . $info['name'] . ' (' . $class_name . ')' . "\n";
+    foreach ($test_list as $test_name) {
+      if (strpos($test_name, '::') > 0) {
+        list($test_class, $method) = explode('::', $test_name, 2);
+        $info = call_user_func(array($test_class, 'getInfo'));
+      } else {
+        $info = call_user_func(array($test_name, 'getInfo'));
+      }
+      echo " - " . $info['name'] . ' (' . $test_name . ')' . "\n";
     }
     echo "\n";
   }
