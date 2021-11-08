@@ -1347,4 +1347,19 @@ class SchemaTest extends KernelTestBase {
     $this->assertSame('default value', $result->column7);
   }
 
+  /**
+   * @covers \Drupal\Core\Database\Driver\pgsql\Schema::extensionExists
+   */
+  public function testPgsqlExtensionExists() {
+    if ($this->connection->databaseType() !== 'pgsql') {
+      $this->markTestSkipped("This test only runs for PostgreSQL.");
+    }
+
+    // Test the method for a non existing extension.
+    $this->assertFalse($this->schema->extensionExists('non_existing_extension'));
+
+    // Test the method for an existing extension.
+    $this->assertTrue($this->schema->extensionExists('pg_trgm'));
+  }
+
 }

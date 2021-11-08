@@ -472,6 +472,21 @@ function system_requirements($phase) {
     }
   }
 
+  // Test with PostgreSQL databases for the status of the pg_trgm extension.
+  if ($phase === 'runtime') {
+    if (Database::isActiveConnection() && (Database::getConnection()->driver() == 'pgsql') && !Database::getConnection()->schema()->extensionExists('pg_trgm')) {
+      $requirements['pgsql_extension_pg_trgm'] = [
+        'severity' => REQUIREMENT_WARNING,
+        'title' => t('PostgreSQL pg_trgm extension'),
+        'value' => t('Not created'),
+        'description' => t('The <a href=":pg_trgm">pg_trgm</a> PostgreSQL extension is not present. The extension will be required by Drupal 10 to improve performance when using PostgreSQL. See <a href=":requirements">Drupal database server requirements</a> for more information.', [
+          ':pg_trgm' => 'https://www.postgresql.org/docs/current/pgtrgm.html',
+          ':requirements' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
+        ]),
+      ];
+    }
+  }
+
   // Test PHP memory_limit
   $memory_limit = ini_get('memory_limit');
   $requirements['php_memory_limit'] = [
