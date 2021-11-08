@@ -437,6 +437,18 @@ function user_admin_settings() {
     '#description' => t("This text is displayed at the picture upload form in addition to the default guidelines. It's useful for helping or instructing your users."),
   );
 
+  $form['privacy'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Privacy'),
+  );
+  $form['privacy']['user_password_reset_text'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Password reset text'),
+    '#default_value' => variable_get('user_password_reset_text', t('If %identifier is a valid account, an email will be sent with instructions to reset your password.')),
+    '#description' => t('The text that appears when a user successfully submits the password reset form. Due to privacy concerns, it should not contain any information about previously registered users. %identifier will be replaced with what the user entered into the form field.'),
+    '#required' => TRUE,
+  );
+
   $form['email_title'] = array(
     '#type' => 'item',
     '#title' => t('E-mails'),

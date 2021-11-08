@@ -534,10 +534,19 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     // Attempt to reset password.
     $edit = array('name' => $account->name);
     $this->drupalPost('user/password', $edit, t('E-mail new password'));
-    // Confirm the password reset.
-    $this->assertText(t('Further instructions have been sent to your e-mail address.'), 'Password reset instructions mailed message displayed.');
+    // Ensure the correct message is shown for a valid user name.
+    $password_reset_text = variable_get('user_password_reset_text', t('If %identifier is a valid account, an email will be sent with instructions to reset your password.'));
+    $this->assertRaw(format_string($password_reset_text, array('%identifier' => $account->name)), 'Password reset instructions mailed message displayed for a valid user.');
+
     // Ensure that flood control was not triggered.
     $this->assertNoText(t('is temporarily blocked. Try again later'), 'Flood control was not triggered by single password reset.');
+
+    // Ensure the correct message is shown for a non-existent user name.
+    $name = $this->randomName();
+    $edit = array('name' => $name);
+    $this->drupalPost('user/password', $edit, t('E-mail new password'));
+    $password_reset_text = variable_get('user_password_reset_text', t('If %identifier is a valid account, an email will be sent with instructions to reset your password.'));
+    $this->assertRaw(format_string($password_reset_text, array('%identifier' => $name)), 'Password reset instructions mailed message displayed for a non-existent user.');
 
     // Create an image field to enable an Ajax request on the user profile page.
     $field = array(
@@ -619,7 +628,8 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     for ($i = 0; $i < 2; $i++) {
       $this->drupalPost('user/password', $edit, t('E-mail new password'));
       // Confirm the password reset.
-      $this->assertText(t('Further instructions have been sent to your e-mail address.'), 'Password reset instructions mailed message displayed.');
+      $password_reset_text = variable_get('user_password_reset_text', t('If %identifier is a valid account, an email will be sent with instructions to reset your password.'));
+      $this->assertRaw(format_string($password_reset_text, array('%identifier' => $account->name)), 'Password reset instructions mailed message displayed.');
       // Ensure that flood control was not triggered.
       $this->assertNoText(t('is temporarily blocked. Try again later'), 'Flood control was not triggered by password reset.');
     }
@@ -636,7 +646,8 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     for ($i = 0; $i < 2; $i++) {
       $this->drupalPost('user/password', $edit, t('E-mail new password'));
       // Confirm the password reset.
-      $this->assertText(t('Further instructions have been sent to your e-mail address.'), 'Password reset instructions mailed message displayed.');
+      $password_reset_text = variable_get('user_password_reset_text', t('If %identifier is a valid account, an email will be sent with instructions to reset your password.'));
+      $this->assertRaw(format_string($password_reset_text, array('%identifier' => $account->name)), 'Password reset instructions mailed message displayed.');
       // Ensure that flood control was not triggered.
       $this->assertNoText(t('is temporarily blocked. Try again later'), 'Flood control was not triggered by password reset.');
     }
@@ -661,9 +672,9 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
       $name = $this->randomName();
       $edit = array('name' => $name);
       $this->drupalPost('user/password', $edit, t('E-mail new password'));
-      // Confirm the password reset was not blocked. Note that @name is used
-      // instead of %name as assertText() works with plain text not HTML.
-      $this->assertText(t('Sorry, @name is not recognized as a user name or an e-mail address.', array('@name' => $name)), 'User name not recognized message displayed.');
+      // Confirm the password reset was not blocked.
+      $password_reset_text = variable_get('user_password_reset_text', t('If %identifier is a valid account, an email will be sent with instructions to reset your password.'));
+      $this->assertRaw(format_string($password_reset_text, array('%identifier' => $name)), 'Password reset instructions mailed message displayed.');
       // Ensure that flood control was not triggered.
       $this->assertNoText(t('is temporarily blocked. Try again later'), 'Flood control was not triggered by password reset.');
     }
