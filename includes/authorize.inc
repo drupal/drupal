@@ -104,11 +104,6 @@ function authorize_filetransfer_form($form, &$form_state) {
     // Start non-JS code.
     if (isset($form_state['values']['connection_settings']['authorize_filetransfer_default']) && $form_state['values']['connection_settings']['authorize_filetransfer_default'] == $name) {
 
-      // If the user switches from JS to non-JS, Drupal (and Batch API) will
-      // barf. This is a known bug: http://drupal.org/node/229825.
-      setcookie('has_js', '', time() - 3600, '/');
-      unset($_COOKIE['has_js']);
-
       // Change the submit button to the submit_process one.
       $form['submit_process']['#attributes'] = array();
       unset($form['submit_connection']);

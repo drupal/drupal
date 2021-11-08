@@ -4342,6 +4342,7 @@ function drupal_add_js($data = NULL, $options = NULL) {
           'data' => array(
             array('basePath' => base_path()),
             array('pathPrefix' => empty($prefix) ? '' : $prefix),
+            array('setHasJsCookie' => variable_get('set_has_js_cookie', FALSE) ? 1 : 0),
           ),
           'type' => 'setting',
           'scope' => 'header',

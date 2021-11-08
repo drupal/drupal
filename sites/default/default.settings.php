@@ -760,3 +760,13 @@ $conf['mail_display_name_site_name'] = TRUE;
  * to FALSE.
  */
 # $conf['block_interest_cohort'] = TRUE;
+
+/**
+ * Retain legacy has_js cookie.
+ *
+ * Older releases of Drupal set a has_js cookie with a boolean value which
+ * server-side code can use to determine whether JavaScript is available.
+ *
+ * This functionality can be re-enabled by setting this variable to TRUE.
+ */
+# $conf['set_has_js_cookie'] = FALSE;

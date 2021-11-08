@@ -1484,8 +1484,8 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    */
   function testAddSetting() {
     $javascript = drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
-    $this->assertEqual(280342800, $javascript['settings']['data'][2]['dries'], 'JavaScript setting is set correctly.');
-    $this->assertEqual('rocks', $javascript['settings']['data'][2]['drupal'], 'The other JavaScript setting is set correctly.');
+    $this->assertEqual(280342800, $javascript['settings']['data'][3]['dries'], 'JavaScript setting is set correctly.');
+    $this->assertEqual('rocks', $javascript['settings']['data'][3]['drupal'], 'The other JavaScript setting is set correctly.');
   }
 
   /**
@@ -1921,6 +1921,18 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->drupalGet('common-test/query-string');
     $query_string = variable_get('css_js_query_string', '0');
     $this->assertRaw(drupal_get_path('module', 'node') . '/node.js?' . $query_string, 'Query string was appended correctly to js.');
+  }
+
+  /**
+   * Tests that the set_has_js_cookie variable is reflected in Drupal.settings.
+   */
+  function testSetHasJsCookie() {
+    $this->drupalGet('');
+    $this->assertRaw('"setHasJsCookie":0', 'setHasJsCookie set to 0 by default.');
+
+    variable_set('set_has_js_cookie', TRUE);
+    $this->drupalGet('');
+    $this->assertRaw('"setHasJsCookie":1', 'setHasJsCookie set to 1 when set_has_js_cookie is set to TRUE.');
   }
 
   /**

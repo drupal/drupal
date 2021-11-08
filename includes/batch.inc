@@ -72,7 +72,9 @@ function _batch_page() {
   $output = NULL;
   switch ($op) {
     case 'start':
-      $output = _batch_start();
+      // Display the full progress page on startup and on each additional
+      // non-JavaScript iteration.
+      $output = _batch_progress_page();
       break;
 
     case 'do':
@@ -82,7 +84,7 @@ function _batch_page() {
 
     case 'do_nojs':
       // Non-JavaScript-based progress page.
-      $output = _batch_progress_page_nojs();
+      $output = _batch_progress_page();
       break;
 
     case 'finished':
@@ -94,68 +96,11 @@ function _batch_page() {
 }
 
 /**
- * Initializes the batch processing.
- *
- * JavaScript-enabled clients are identified by the 'has_js' cookie set in
- * drupal.js. If no JavaScript-enabled page has been visited during the current
- * user's browser session, the non-JavaScript version is returned.
- */
-function _batch_start() {
-  if (isset($_COOKIE['has_js']) && $_COOKIE['has_js']) {
-    return _batch_progress_page_js();
-  }
-  else {
-    return _batch_progress_page_nojs();
-  }
-}
-
-/**
- * Outputs a batch processing page with JavaScript support.
- *
- * This initializes the batch and error messages. Note that in JavaScript-based
- * processing, the batch processing page is displayed only once and updated via
- * AHAH requests, so only the first batch set gets to define the page title.
- * Titles specified by subsequent batch sets are not displayed.
- *
- * @see batch_set()
- * @see _batch_do()
- */
-function _batch_progress_page_js() {
-  $batch = batch_get();
-
-  $current_set = _batch_current_set();
-  drupal_set_title($current_set['title'], PASS_THROUGH);
-
-  // Merge required query parameters for batch processing into those provided by
-  // batch_set() or hook_batch_alter().
-  $batch['url_options']['query']['id'] = $batch['id'];
-
-  $js_setting = array(
-    'batch' => array(
-      'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
-      'initMessage' => $current_set['init_message'],
-      'uri' => url($batch['url'], $batch['url_options']),
-    ),
-  );
-  drupal_add_js($js_setting, 'setting');
-  drupal_add_library('system', 'drupal.batch');
-
-  return '<div id="progress"></div>';
-}
-
-/**
  * Does one execution pass with JavaScript and returns progress to the browser.
  *
- * @see _batch_progress_page_js()
  * @see _batch_process()
  */
 function _batch_do() {
-  // HTTP POST required.
-  if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    drupal_set_message(t('HTTP POST is required.'), 'error');
-    drupal_set_title(t('Error'));
-    return '';
-  }
 
   // Perform actual processing.
   list($percentage, $message) = _batch_process();
@@ -164,11 +109,11 @@ function _batch_do() {
 }
 
 /**
- * Outputs a batch processing page without JavaScript support.
+ * Outputs a batch processing page.
  *
  * @see _batch_process()
  */
-function _batch_progress_page_nojs() {
+function _batch_progress_page() {
   $batch = &batch_get();
 
   $current_set = _batch_current_set();
@@ -216,6 +161,9 @@ function _batch_progress_page_nojs() {
 
   $url = url($batch['url'], $batch['url_options']);
   $element = array(
+    // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
+    '#prefix' => '<noscript>',
+    '#suffix' => '</noscript>',
     '#tag' => 'meta',
     '#attributes' => array(
       'http-equiv' => 'Refresh',
@@ -223,6 +171,17 @@ function _batch_progress_page_nojs() {
     ),
   );
   drupal_add_html_head($element, 'batch_progress_meta_refresh');
+
+  // Adds JavaScript code and settings for clients where JavaScript is enabled.
+  $js_setting = array(
+    'batch' => array(
+      'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
+      'initMessage' => $current_set['init_message'],
+      'uri' => $url,
+    ),
+  );
+  drupal_add_js($js_setting, 'setting');
+  drupal_add_library('system', 'drupal.batch');
 
   return theme('progress_bar', array('percent' => $percentage, 'message' => $message));
 }

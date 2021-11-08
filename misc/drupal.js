@@ -588,8 +588,12 @@ Drupal.ajaxError = function (xmlhttp, uri, customMessage) {
 // Class indicating that JS is enabled; used for styling purpose.
 $('html').addClass('js');
 
-// 'js enabled' cookie.
-document.cookie = 'has_js=1; path=/';
+$(function () {
+  if (Drupal.settings.setHasJsCookie === 1) {
+    // 'js enabled' cookie.
+    document.cookie = 'has_js=1; path=/; SameSite=Lax';
+  }
+});
 
 /**
  * Additions to jQuery.support.

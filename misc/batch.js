@@ -7,6 +7,9 @@ Drupal.behaviors.batch = {
   attach: function (context, settings) {
     $('#progress', context).once('batch', function () {
       var holder = $(this);
+      // Remove HTML from no-js progress bar. The JS progress bar is created
+      // later on.
+      holder.empty();
 
       // Success: redirect to the summary.
       var updateCallback = function (progress, status, pb) {
