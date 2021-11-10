@@ -35,9 +35,9 @@
     tabs.querySelector('.tabs__trigger').addEventListener('click', handleTriggerClick);
   }
 
-  Drupal.behaviors.tabs = {
+  Drupal.behaviors.primaryTabs = {
     attach: function attach(context) {
-      once('olivero-tabs', '[data-drupal-nav-tabs]', context).forEach(init);
+      once('olivero-tabs', '[data-drupal-nav-primary-tabs]', context).forEach(init);
     }
   };
 })(Drupal, once);
