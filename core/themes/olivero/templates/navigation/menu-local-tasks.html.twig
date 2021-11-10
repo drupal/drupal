@@ -18,13 +18,13 @@
 
 {% if primary %}
   <h2 id="primary-tabs-title" class="visually-hidden">{{ 'Primary tabs'|t }}</h2>
-  <nav role="navigation" class="tabs-wrapper" aria-labelledby="primary-tabs-title" data-drupal-nav-tabs>
+  <nav role="navigation" class="tabs-wrapper" aria-labelledby="primary-tabs-title" data-drupal-nav-primary-tabs>
     <ul class="tabs tabs--primary">{{ primary }}</ul>
   </nav>
 {% endif %}
 {% if secondary %}
   <h2 id="secondary-tabs-title" class="visually-hidden">{{ 'Secondary tabs'|t }}</h2>
-  <nav role="navigation" class="tabs-wrapper" aria-labelledby="secondary-tabs-title" data-drupal-nav-tabs>
+  <nav role="navigation" class="tabs-wrapper" aria-labelledby="secondary-tabs-title">
     <ul class="tabs tabs--secondary">{{ secondary }}</ul>
   </nav>
 {% endif %}
