@@ -2257,6 +2257,7 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
     $this->setFetchMode(PDO::FETCH_OBJ);
   }
 
+  #[\ReturnTypeWillChange]
   public function execute($args = array(), $options = array()) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
@@ -2394,23 +2395,27 @@ class DatabaseStatementEmpty implements Iterator, DatabaseStatementInterface {
   }
 
   /* Implementations of Iterator. */
-
+  #[\ReturnTypeWillChange]
   public function current() {
     return NULL;
   }
 
+  #[\ReturnTypeWillChange]
   public function key() {
     return NULL;
   }
 
+  #[\ReturnTypeWillChange]
   public function rewind() {
     // Nothing to do: our DatabaseStatement can't be rewound.
   }
 
+  #[\ReturnTypeWillChange]
   public function next() {
     // Do nothing, since this is an always-empty implementation.
   }
 
+  #[\ReturnTypeWillChange]
   public function valid() {
     return FALSE;
   }
