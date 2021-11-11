@@ -259,7 +259,7 @@ function image_rotate_effect(&$image, $data) {
   );
 
   // Convert short #FFF syntax to full #FFFFFF syntax.
-  if (strlen($data['bgcolor']) == 4) {
+  if (strlen((string) $data['bgcolor']) == 4) {
     $c = $data['bgcolor'];
     $data['bgcolor'] = $c[0] . $c[1] . $c[1] . $c[2] . $c[2] . $c[3] . $c[3];
   }

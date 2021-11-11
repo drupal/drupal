@@ -1369,7 +1369,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
       $this->assertRaw($text, 'File size cited as reason for failure.');
 
       // Check if file is not uploaded.
-      $this->assertFalse(is_file($pic_path), 'File was not uploaded.');
+      $this->assertFalse(is_file((string) $pic_path), 'File was not uploaded.');
     }
   }
 

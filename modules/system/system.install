@@ -522,7 +522,7 @@ function system_requirements($phase) {
 
   // Warning for httpoxy on IIS with affected PHP versions.
   // @see https://www.drupal.org/node/2783079
-  if (strpos($software, 'Microsoft-IIS') !== FALSE && (version_compare(PHP_VERSION, '5.5.38', '<')
+  if (strpos((string) $software, 'Microsoft-IIS') !== FALSE && (version_compare(PHP_VERSION, '5.5.38', '<')
     || (version_compare(PHP_VERSION, '5.6.0', '>=') && version_compare(PHP_VERSION, '5.6.24', '<'))
     || (version_compare(PHP_VERSION, '7.0.0', '>=') && version_compare(PHP_VERSION, '7.0.9', '<'))
     )) {

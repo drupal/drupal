@@ -169,6 +169,6 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
     if (!isset($message)) {
       $message = "Class .$class not found.";
     }
-    $this->assertTrue(strpos($element['class'], $class) === FALSE, $message);
+    $this->assertTrue(strpos((string) $element['class'], $class) === FALSE, $message);
   }
 }

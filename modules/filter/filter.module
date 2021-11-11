@@ -785,7 +785,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 
   // Convert all Windows and Mac newlines to a single newline, so filters only
   // need to deal with one possibility.
-  $text = str_replace(array("\r\n", "\r"), "\n", $text);
+  $text = str_replace(array("\r\n", "\r"), "\n", (string) $text);
 
   // Get a complete list of filters, ordered properly.
   $filters = filter_list_format($format->format);
@@ -1661,7 +1661,7 @@ function _filter_url_trim($text, $length = NULL) {
   }
 
   // Use +3 for '...' string length.
-  if ($_length && strlen($text) > $_length + 3) {
+  if ($_length && strlen((string) $text) > $_length + 3) {
     $text = substr($text, 0, $_length) . '...';
   }
 

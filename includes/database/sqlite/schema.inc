@@ -433,7 +433,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
           'type' => $type,
           'size' => $size,
           'not null' => !empty($row->notnull),
-          'default' => trim($row->dflt_value, "'"),
+          'default' => trim((string) $row->dflt_value, "'"),
         );
         if ($length) {
           $schema['fields'][$row->name]['length'] = $length;

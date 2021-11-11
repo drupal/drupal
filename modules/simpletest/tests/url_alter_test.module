@@ -57,7 +57,7 @@ function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language
  */
 function url_alter_test_url_outbound_alter(&$path, &$options, $original_path) {
   // Rewrite user/uid to user/username.
-  if (preg_match('!^user/([0-9]+)(/.*)?!', $path, $matches)) {
+  if (preg_match('!^user/([0-9]+)(/.*)?!', (string) $path, $matches)) {
     if ($account = user_load($matches[1])) {
       $matches += array(2 => '');
       $path = 'user/' . $account->name . $matches[2];
@@ -65,7 +65,7 @@ function url_alter_test_url_outbound_alter(&$path, &$options, $original_path) {
   }
 
   // Rewrite forum/ to community/.
-  if ($path == 'forum' || strpos($path, 'forum/') === 0) {
+  if ($path == 'forum' || strpos((string) $path, 'forum/') === 0) {
     $path = 'community' . substr($path, 5);
   }
 }

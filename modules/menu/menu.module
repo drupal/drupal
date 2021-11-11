@@ -659,7 +659,7 @@ function _menu_get_menu_weight_delta($menu_names, $max_delta = NULL) {
 
   $weight_info = db_query("SELECT MAX(weight) AS max_weight, MIN(weight) as min_weight FROM {menu_links} WHERE menu_name IN (:menu_names)", array(':menu_names' => $menu_names))->fetchObject();
 
-  $delta = max(abs($weight_info->min_weight), abs($weight_info->max_weight)) + 1;
+  $delta = max(abs((int) $weight_info->min_weight), abs((int) $weight_info->max_weight)) + 1;
 
   // Honor max param, if given.
   if (!is_null($max_delta) && $delta > $max_delta) {

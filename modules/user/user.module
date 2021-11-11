@@ -304,7 +304,7 @@ class UserController extends DrupalDefaultEntityController {
     $picture_fids = array();
     foreach ($queried_users as $key => $record) {
       $picture_fids[] = $record->picture;
-      $queried_users[$key]->data = unserialize($record->data);
+      $queried_users[$key]->data = unserialize((string) $record->data);
       $queried_users[$key]->roles = array();
       if ($record->uid) {
         $queried_users[$record->uid]->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';

@@ -114,7 +114,7 @@ class TestFileTransfer extends FileTransfer {
     $parts = explode(':', $this->hostname);
     $port = (count($parts) == 2) ? $parts[1] : $this->port;
     $this->connection = new MockTestConnection();
-    $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
+    $this->connection->connectionString = 'test://' . urlencode((string) $this->username) . ':' . urlencode((string) $this->password) . "@$this->host:$this->port/";
   }
 
   function copyFileJailed($source, $destination) {

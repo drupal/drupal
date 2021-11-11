@@ -445,7 +445,7 @@ function _openid_signature($association, $message_array, $keys_to_sign) {
   }
 
   $message = _openid_create_message($sign_data);
-  $secret = base64_decode($association->mac_key);
+  $secret = base64_decode((string) $association->mac_key);
   $signature = _openid_hmac($secret, $message);
 
   return base64_encode($signature);
