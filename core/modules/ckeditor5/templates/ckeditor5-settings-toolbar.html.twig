@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display CKEditor 5 toolbar settings.
+ *
+ * @internal
+ *   This template is internal because it's used for rendering the CKEditor 5
+ *   toolbar settings UI in the Drupal admin UI. The toolbar settings UI is
+ *   internal, and utilizing or overriding it outside of core usages is not
+ *   supported because the UI can change at any point.
+ */
+#}
+{% apply spaceless %}
+  <fieldset aria-labelledby="ckeditor5-toolbar-configuration" aria-describedby="ckeditor5-toolbar-description">
+    <legend id="ckeditor5-toolbar-configuration">{{ 'Toolbar configuration'|t }}</legend>
+    <div class="fieldset-wrapper">
+      <div id="ckeditor5-toolbar-description" class="fieldset-description">
+        {%- trans -%}
+          Move a button into the <em>Active toolbar</em> to enable it, or into the list of <em>Available buttons</em> to disable it. Buttons may be moved with the mouse or keyboard arrow keys.
+        {%- endtrans -%}
+      </div>
+      <div id="ckeditor5-toolbar-app"></div>
+      {{ form }}
+    </div>
+  </fieldset>
+{% endapply %}

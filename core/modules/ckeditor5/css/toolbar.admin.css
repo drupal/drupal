@@ -1,0 +1,99 @@
+.ckeditor5-toolbar-disabled {
+  display: flex;
+  justify-content: space-between;
+}
+.ckeditor5-toolbar-available {
+  flex: 1;
+}
+
+.ckeditor5-toolbar-tray {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  min-height: 40px;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+  list-style: none;
+  /* Disallow any user selections in the drag-and-drop toolbar config UI. */
+  user-select: none;
+}
+
+.ckeditor5-toolbar-active__buttons {
+  margin: 5px 0;
+  padding: 0.1667em 0.1667em 0.08em;
+  border: 1px solid #c4c4c4;
+  border-radius: 2px;
+  background: #fafafa;
+}
+
+.ckeditor5-toolbar-item,
+.ckeditor5-toolbar-button {
+  display: block;
+  min-width: 36px;
+  height: 36px;
+  cursor: move;
+  border-radius: 2px;
+}
+
+.ckeditor5-toolbar-item {
+  position: relative;
+  margin: 5px 8px 5px 0;
+}
+
+.ckeditor5-toolbar-disabled .ckeditor5-toolbar-item {
+  border: 1px solid #e6e6e6;
+}
+
+.ckeditor5-toolbar-button {
+  border: none;
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+}
+
+.ckeditor5-toolbar-button:focus,
+.ckeditor5-toolbar-button:hover {
+  color: #000;
+  background-color: #e6e6e6;
+}
+
+.ckeditor5-toolbar-button:focus,
+.ckeditor5-toolbar-button:hover,
+.ckeditor5-toolbar-button {
+  text-decoration: none;
+}
+.ckeditor5-toolbar-tooltip {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  display: block;
+  padding: 6px 10px;
+  transform: translate(-50%, 2px);
+  text-transform: capitalize;
+  color: #fff;
+  border-radius: 3px;
+  background: #333;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.ckeditor5-toolbar-tooltip::before {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 0;
+  height: 5px;
+  content: "";
+  transform: translateX(-50%);
+  border-right: solid 5px transparent;
+  border-bottom: solid 5px #333;
+  border-left: solid 5px transparent;
+}
+
+.ckeditor5-toolbar-button + .ckeditor5-toolbar-tooltip {
+  visibility: hidden;
+}
+.ckeditor5-toolbar-button[data-expanded="true"] + .ckeditor5-toolbar-tooltip {
+  visibility: visible;
+}

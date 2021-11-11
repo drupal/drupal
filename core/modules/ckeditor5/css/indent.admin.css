@@ -1,0 +1,7 @@
+.ckeditor5-toolbar-button-indent {
+  background-image: url(../icons/indent.svg);
+}
+
+.ckeditor5-toolbar-button-outdent {
+  background-image: url(../icons/outdent.svg);
+}

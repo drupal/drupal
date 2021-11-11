@@ -1,0 +1,7 @@
+name: CKEditor 5 Plugin Elements Subset Test
+type: module
+description: "Provides test plugin to test CKEditor5PluginElementsSubsetInterface"
+package: Testing
+core_version_requirement: ^9
+dependencies:
+  - ckeditor5:ckeditor5

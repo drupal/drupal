@@ -1,0 +1,76 @@
+# Schema for the configuration files of the CKEditor5 module.
+
+editor.settings.ckeditor5:
+  type: mapping
+  label: 'CKEditor 5 settings'
+  mapping:
+    toolbar:
+      type: mapping
+      label: 'Toolbar configuration'
+      mapping:
+        items:
+          type: sequence
+          label: 'Items'
+          sequence:
+            type: ckeditor5.toolbar_item
+            label: 'Button'
+            constraints:
+              # Each active CKEditor 5 toolbar item whose plugin has conditions must have those conditions met.
+              CKEditor5ToolbarItemConditionsMet: []
+    plugins:
+      type: sequence
+      label: 'Plugins'
+      sequence:
+        type: ckeditor5.plugin.[%key]
+  constraints:
+    # Each enabled CKEditor 5 plugin that implements \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface
+    # must exist in here.
+    CKEditor5EnabledConfigurablePlugins: []
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
+ckeditor5.plugin.ckeditor5_language:
+  type: mapping
+  label: 'Language'
+  mapping:
+    language_list:
+      type: string
+      label: 'Language list ID'
+      constraints:
+        # Configuring this does not make sense without the corresponding button.
+        CKEditor5ToolbarItemDependencyConstraint:
+          toolbarItem: textPartLanguage
+        # Only two possible values are accepted.
+        Choice:
+          - un
+          - all
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
+ckeditor5.plugin.ckeditor5_heading:
+  type: mapping
+  label: Headings
+  mapping:
+    enabled_headings:
+      type: sequence
+      label: 'Enabled Headings'
+      constraints:
+        NotBlank:
+          message: "Enable at least one heading, otherwise disable the Heading plugin."
+      sequence:
+        type: string
+        label: 'Heading type'
+        constraints:
+          Choice:
+            callback: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading::validChoices
+
+ckeditor5.plugin.ckeditor5_sourceEditing:
+  type: mapping
+  label: Source Editing
+  mapping:
+    allowed_tags:
+      type: sequence
+      label: 'Allowed Tags'
+      sequence:
+        type: ckeditor5.element
+        label: 'Allowed Tag'
+        constraints:
+          SourceEditingRedundantTags: []

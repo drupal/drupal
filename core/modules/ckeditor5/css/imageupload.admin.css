@@ -1,0 +1,4 @@
+/* cspell:ignore imageupload */
+.ckeditor5-toolbar-button-uploadImage {
+  background-image: url(../icons/imageupload.svg);
+}

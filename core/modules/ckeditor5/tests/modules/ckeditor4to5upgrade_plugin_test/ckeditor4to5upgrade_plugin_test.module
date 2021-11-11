@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Implements hooks for the CKEditor 4 to 5 Upgrade plugin Test module.
+ */
+
+declare(strict_types = 1);
+
+/**
+ * Implements hook_ckeditor4to5upgrade_plugin_info_alter().
+ */
+function ckeditor4to5upgrade_plugin_test_ckeditor4to5upgrade_plugin_info_alter(array &$plugin_definitions): void {
+  switch (\Drupal::state()->get('ckeditor4to5upgrade_plugin_test')) {
+    case 'duplicate_button':
+      $plugin_definitions['foo'] = array_intersect_key($plugin_definitions['core'], ['cke4_buttons' => TRUE]);
+      break;
+
+    case 'duplicate_plugin_settings':
+      $plugin_definitions['foo'] = array_intersect_key($plugin_definitions['core'], ['cke4_plugin_settings' => TRUE]);
+      break;
+
+    case 'duplicate_subset':
+      $plugin_definitions['foo'] = array_intersect_key($plugin_definitions['core'], ['cke5_plugin_elements_subset_configuration' => TRUE]);
+      break;
+
+    case 'lying_button':
+      $plugin_definitions['foo'] = [
+        'cke4_buttons' => ['foo'],
+        'class' => $plugin_definitions['core']['class'],
+      ];
+      break;
+
+    case 'lying_plugin_settings':
+      $plugin_definitions['foo'] = [
+        'cke4_plugin_settings' => ['foo'],
+        'class' => $plugin_definitions['core']['class'],
+      ];
+      break;
+
+    case 'lying_subset':
+      $plugin_definitions['foo'] = [
+        'cke5_plugin_elements_subset_configuration' => ['foo'],
+        'class' => $plugin_definitions['core']['class'],
+      ];
+      break;
+
+    default:
+      throw new \LogicException();
+  }
+}

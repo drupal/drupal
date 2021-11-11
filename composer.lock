@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "f3d27c6d13a1d3b6b5e3f2bf2074f63d24c17603"
+                "reference": "1349b63771ae6c0b66e9d870c692bf7f51024171"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -599,6 +599,7 @@
                 "drupal/book": "self.version",
                 "drupal/breakpoint": "self.version",
                 "drupal/ckeditor": "self.version",
+                "drupal/ckeditor5": "self.version",
                 "drupal/claro": "self.version",
                 "drupal/classy": "self.version",
                 "drupal/color": "self.version",

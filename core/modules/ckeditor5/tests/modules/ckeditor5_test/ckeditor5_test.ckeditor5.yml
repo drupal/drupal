@@ -1,0 +1,16 @@
+# cspell:ignore layercake
+ckeditor5_test_layercake:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — Layercake
+    library: ckeditor5_test/layercake
+    toolbar_items:
+      simpleBox:
+        label: Simple Box
+      twoCol:
+        label: Two Col layout
+    elements:
+      - <h1 class>
+      - <div class>
+      - <section class>

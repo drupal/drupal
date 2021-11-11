@@ -1,0 +1,6 @@
+ckeditor5_test.off_canvas:
+  path: '/ckeditor5_test/off_canvas'
+  defaults:
+    _controller: '\Drupal\ckeditor5_test\Controller\CKEditor5OffCanvasTestController::testOffCanvas'
+  requirements:
+    _access: 'TRUE'

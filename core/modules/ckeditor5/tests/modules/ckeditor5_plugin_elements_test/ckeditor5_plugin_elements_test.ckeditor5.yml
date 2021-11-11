@@ -1,0 +1,33 @@
+# cspell:ignore everyblock justblockquote
+ckeditor5_plugin_elements_test_blockquoteCombo:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — block quote combo
+    elements:
+      - <blockquote data-justblockquote>
+      - <$block data-everyblock>
+
+ckeditor5_plugin_elements_test_headingsWithOtherAttributes:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — headings with other attributes
+    elements:
+      - <h1 data-just-h1>
+      - <h2 class="additional-allowed-class">
+      - <h3 data-just-h3 data-just-h3-limited="i-am-the-only-allowed-value">
+      - <h5 data-just-h5-limited="first-allowed-value second-allowed-value">
+
+ckeditor5_plugin_elements_test_headingsUseClassAnyValue:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — headings with any class
+    elements:
+      - <h1 class>
+      - <h2 class>
+      - <h3 class>
+      - <h4 class>
+      - <h5 class>
+      - <h6 class>

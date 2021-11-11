@@ -1,0 +1,184 @@
+# cspell:ignore imageupload
+
+ckeditor5.language:
+  css:
+    component:
+      css/language.css: {}
+  dependencies:
+    - core/ckeditor5.language
+
+drupal.ckeditor5.internal:
+  js:
+    js/build/drupalHtmlEngine.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5.internal
+
+drupal.ckeditor5:
+  js:
+    js/ckeditor5.js: {}
+  css:
+    theme:
+      css/quickedit.css: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce
+    - core/ckeditor5.editorClassic
+    - core/ckeditor5.editorDecoupled
+    - core/ckeditor5
+    - editor/drupal.editor
+    - ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around
+
+drupal.ckeditor5.quickedit-temporary-work-around:
+  deprecated: "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."
+  css:
+    theme:
+      css/quickedit-override.css: {}
+
+drupal.ckeditor5.image:
+  js:
+    js/build/drupalImage.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5.image
+
+drupal.ckeditor5.emphasis:
+  version: VERSION
+  js:
+    js/build/drupalEmphasis.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5.basic
+
+drupal.ckeditor5.media:
+  js:
+    js/media_embed_ckeditor5.theme.js: {}
+    js/build/drupalMedia.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/drupal
+
+ie11.user.warnings:
+  js:
+    js/ie11.user.warnings.js: { }
+  css:
+    theme:
+      css/ie-warnings.css: { }
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+    - editor/drupal.editor
+    - core/modernizr
+
+ie11.filter.warnings:
+  js:
+    js/ie11.filter.warnings.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+    - core/once
+    - core/modernizr
+
+drupal.ckeditor5.filter.admin:
+  js:
+    js/ckeditor5.filter.admin.js: {}
+  css:
+    theme:
+      css/filter.admin.css: { }
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+    - core/once
+    - core/drupal.ajax
+
+admin:
+  js:
+    js/ckeditor5.admin.js: { }
+  css:
+    theme:
+      css/toolbar.admin.css: { }
+  dependencies:
+    - core/sortable
+    - filter/drupal.filter.admin
+    - core/jquery
+    - core/once
+
+admin.specialCharacters:
+  css:
+    theme:
+      css/special-characters.css: { }
+
+admin.removeFormat:
+  css:
+    theme:
+      css/remove-format.css: { }
+
+admin.internal:
+  css:
+    theme:
+      css/internal.admin.css: { }
+
+admin.basic:
+  css:
+    theme:
+      css/basic.admin.css: { }
+
+admin.blockquote:
+  css:
+    theme:
+      css/blockquote.admin.css: { }
+
+admin.link:
+  css:
+    theme:
+      css/link.admin.css: { }
+
+admin.list:
+  css:
+    theme:
+      css/list.admin.css: { }
+
+admin.heading:
+  css:
+    theme:
+      css/heading.admin.css: { }
+  dependencies:
+    - core/ckeditor5.internal
+
+admin.horizontalLine:
+  css:
+    theme:
+      css/horizontal-line.admin.css: { }
+
+admin.alignment:
+  css:
+    theme:
+      css/alignment.admin.css: { }
+
+admin.imageupload:
+  css:
+    theme:
+      css/imageupload.admin.css: { }
+
+admin.indent:
+  css:
+    theme:
+      css/indent.admin.css: { }
+
+admin.language:
+  css:
+    theme:
+      css/language.admin.css: { }
+
+admin.drupalmedia:
+  css:
+    theme:
+      css/drupalmedia.admin.css: { }
+
+admin.sourceEditing:
+  css:
+    theme:
+      css/source-editing.admin.css: { }
+
+admin.table:
+  css:
+    theme:
+      css/table.admin.css: { }

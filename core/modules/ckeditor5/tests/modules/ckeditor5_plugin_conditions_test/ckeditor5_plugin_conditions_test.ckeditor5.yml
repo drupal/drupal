@@ -1,0 +1,14 @@
+ckeditor5_plugin_conditions_test_plugins_condition:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: TEST — Plugins Condition
+    toolbar_items:
+      fooBarConditions:
+        label: Foo Bar (Test Plugins Condition)
+    conditions:
+      plugins:
+        - ckeditor5_heading
+        - ckeditor5_table
+    elements:
+      - <foo>

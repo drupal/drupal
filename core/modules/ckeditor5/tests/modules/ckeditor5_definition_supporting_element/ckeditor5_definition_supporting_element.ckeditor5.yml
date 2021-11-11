@@ -1,0 +1,111 @@
+ckeditor5_definition_supporting_element_just_nav:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <nav>
+    elements:
+      - <nav>
+
+ckeditor5_definition_supporting_element_just_article:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <article>
+    elements:
+      - <article>
+
+ckeditor5_definition_supporting_element_article_class:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <article class>
+    elements:
+      - <article class>
+
+ckeditor5_definition_supporting_element_article_class_with_values:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <article class="…">
+    elements:
+      - <article class="this-value that-value">
+
+ckeditor5_definition_supporting_element_just_footer:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <footer>
+    elements:
+      - <footer>
+
+ckeditor5_definition_supporting_element_footer_class:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <footer class>
+    elements:
+      - <footer class>
+
+ckeditor5_definition_supporting_element_just_aside:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <aside>
+    elements:
+      - <aside>
+
+ckeditor5_definition_supporting_element_aside_class_with_values:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <article class="…">
+    elements:
+      - <aside class="this-value that-value">
+
+ckeditor5_definition_supporting_element_main_class:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <main class>
+    elements:
+      - <main class>
+
+ckeditor5_definition_supporting_element_main_class_with_values:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <main class="…">
+    elements:
+      - <main class="this-value that-value">
+
+ckeditor5_definition_supporting_element_figure_one_attrib:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <figure data-one>
+    elements:
+      - <figure data-one>
+
+ckeditor5_definition_supporting_element_figure_two_attrib:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <figure data-one data-two>
+    elements:
+      - <figure data-one data-two>
+
+ckeditor5_definition_supporting_element_dialog_two_attrib:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <dialog data-one data-two>
+    elements:
+      - <dialog data-one data-two>
+
+ckeditor5_definition_supporting_element_dialog_one_attrib:
+  ckeditor5:
+    plugins: []
+  drupal:
+    label: TEST — <dialog data-one>
+    elements:
+      - <dialog data-one>

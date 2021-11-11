@@ -1,0 +1,12 @@
+# @see https://ckeditor.com/docs/ckeditor5/latest/features/toolbar/toolbar.html
+ckeditor5.toolbar_item:
+  type: string
+  label: 'Toolbar item'
+  constraints:
+    CKEditor5ToolbarItem: []
+
+ckeditor5.element:
+  type: string
+  label: 'Element'
+  constraints:
+    CKEditor5Element: []

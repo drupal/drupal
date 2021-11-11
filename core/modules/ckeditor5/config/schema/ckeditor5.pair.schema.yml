@@ -1,0 +1,15 @@
+# @see ckeditor5_config_schema_info_alter()
+ckeditor5_valid_pair__format_and_editor:
+  type: mapping
+  label: 'Text Format plus Text Editor pair using CKEditor 5'
+  constraints:
+    CKEditor5FundamentalCompatibility: []
+  mapping:
+    settings:
+      type: editor.settings.ckeditor5
+    # @see ckeditor5_config_schema_info_alter()
+    # @see filter.format.*.filters
+    filters: {}
+    # @see ckeditor5_config_schema_info_alter()
+    # @see editor.editor.*.image_upload
+    image_upload: {}

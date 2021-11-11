@@ -13,6 +13,7 @@
       "**/LICENSE.txt",
       "../**/LICENSE.txt",
       "modules/**/Migrate*Test.php",
+      "modules/ckeditor5/js/build/*",
       "modules/color/preview.html",
       "modules/color/tests/modules/color_test/themes/color_test_theme/color/preview.html",
       "modules/media/tests/fixtures/oembed/*",

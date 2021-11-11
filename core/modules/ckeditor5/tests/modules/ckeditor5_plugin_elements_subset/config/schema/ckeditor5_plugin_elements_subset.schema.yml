@@ -1,0 +1,10 @@
+ckeditor5.plugin.ckeditor5_plugin_elements_subset_sneakySuperset:
+  type: mapping
+  label: Sneaky Superset
+  mapping:
+    configured_subset:
+      type: sequence
+      label: 'Allowed Tags'
+      sequence:
+        type: ckeditor5.element
+        label: 'Allowed Tag'
