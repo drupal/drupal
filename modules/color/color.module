@@ -724,7 +724,7 @@ function _color_blend($img, $hex1, $hex2, $alpha) {
   $in2 = _color_unpack($hex2);
   $out = array($img);
   for ($i = 0; $i < 3; ++$i) {
-    $out[] = $in1[$i] + ($in2[$i] - $in1[$i]) * $alpha;
+    $out[] = (int) ($in1[$i] + ($in2[$i] - $in1[$i]) * $alpha);
   }
 
   return call_user_func_array('imagecolorallocate', $out);
@@ -740,7 +740,7 @@ function _color_unpack($hex, $normalize = FALSE) {
   }
   $c = hexdec($hex);
   for ($i = 16; $i >= 0; $i -= 8) {
-    $out[] = (($c >> $i) & 0xFF) / ($normalize ? 255 : 1);
+    $out[] = (int) ((($c >> $i) & 0xFF) / ($normalize ? 255 : 1));
   }
 
   return $out;
@@ -752,7 +752,7 @@ function _color_unpack($hex, $normalize = FALSE) {
 function _color_pack($rgb, $normalize = FALSE) {
   $out = 0;
   foreach ($rgb as $k => $v) {
-    $out |= (($v * ($normalize ? 255 : 1)) << (16 - $k * 8));
+    $out |= (((int) $v * ($normalize ? 255 : 1)) << (16 - $k * 8));
   }
 
   return '#' . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);

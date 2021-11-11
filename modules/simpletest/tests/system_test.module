@@ -566,6 +566,6 @@ function system_test_module_implements_alter(&$implementations, $hook) {
     $group = $implementations['system_test'];
     unset($implementations['system_test']);
     $count = count($implementations);
-    $implementations = array_merge(array_slice($implementations, 0, $count / 2, TRUE), array('system_test' => $group), array_slice($implementations, $count / 2, NULL, TRUE));
+    $implementations = array_merge(array_slice($implementations, 0, (int) ($count / 2), TRUE), array('system_test' => $group), array_slice($implementations, (int) ($count / 2), NULL, TRUE));
   }
 }
