@@ -409,11 +409,13 @@ class SkipDotsRecursiveDirectoryIterator extends RecursiveDirectoryIterator {
     $this->skipdots();
   }
 
+  #[\ReturnTypeWillChange]
   function rewind() {
     parent::rewind();
     $this->skipdots();
   }
 
+  #[\ReturnTypeWillChange]
   function next() {
     parent::next();
     $this->skipdots();
