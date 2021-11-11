@@ -1,0 +1,15 @@
+services:
+  plugin.manager.ckeditor5.plugin:
+    class: Drupal\ckeditor5\Plugin\CKEditor5PluginManager
+    parent: default_plugin_manager
+  # @todo Remove in Drupal 11: https://www.drupal.org/project/ckeditor5/issues/3239012
+  plugin.manager.ckeditor4to5upgrade.plugin:
+    public: false
+    class: Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginManager
+    parent: default_plugin_manager
+  ckeditor5.smart_default_settings:
+    class: Drupal\ckeditor5\SmartDefaultSettings
+    arguments:
+      - '@plugin.manager.ckeditor5.plugin'
+      - '@plugin.manager.ckeditor4to5upgrade.plugin'
+      - '@?plugin.manager.ckeditor.plugin'

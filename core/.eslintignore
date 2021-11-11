@@ -3,6 +3,7 @@ node_modules/**/*
 **/js_test_files/**/*
 *.js
 !*.es6.js
+!modules/ckeditor5/js/ckeditor5_plugins/**/*.js
 modules/locale/tests/locale_test.es6.js
 !tests/Drupal/Nightwatch/**/*.js
 misc/polyfills/array.find.es6.js

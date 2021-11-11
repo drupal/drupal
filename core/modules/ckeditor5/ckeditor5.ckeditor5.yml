@@ -1,0 +1,510 @@
+# CKEditor 5 Drupal plugin definitions.
+# @see this module's README.md for details on defining CKEditor 5 plugins in
+# Drupal.
+
+ckeditor5_essentials:
+  ckeditor5:
+    plugins:
+      - drupalHtmlEngine.DrupalHtmlEngine
+      - essentials.Essentials
+  drupal:
+    label: Essentials
+    library: ckeditor5/drupal.ckeditor5.internal
+    admin_library: ckeditor5/admin.internal
+    toolbar_items:
+      undo:
+        label: Undo
+      redo:
+        label: Redo
+    elements:
+      - <br>
+    conditions: []
+
+ckeditor5_paragraph:
+  ckeditor5:
+    plugins: [paragraph.Paragraph]
+  drupal:
+    label: Paragraph
+    library: core/ckeditor5.internal
+    admin_library: ckeditor5/admin.internal
+    elements:
+      - <p>
+
+ckeditor5_heading:
+  ckeditor5:
+    plugins: [heading.Heading]
+    config:
+      heading:
+        # These are the options passed to the CKEditor heading constructor
+        # @see https://ckeditor.com/docs/ckeditor5/latest/api/module_heading_heading-HeadingConfig.html#member-options
+        #   for details on what each of these config properties do.
+        options:
+          - { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' }
+          - { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' }
+          - { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+          - { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+          - { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' }
+          - { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' }
+          - { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
+  drupal:
+    label: Headings
+    library: core/ckeditor5.internal
+    admin_library: ckeditor5/admin.heading
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
+    toolbar_items:
+      heading:
+        label: Heading
+    elements:
+      - <h1>
+      - <h2>
+      - <h3>
+      - <h4>
+      - <h5>
+      - <h6>
+
+ckeditor5_htmlSupport:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+    config:
+      htmlSupport:
+        allow:
+          -
+            name:
+              regexp:
+                pattern: /.*/
+            attributes: true
+            classes: true
+            styles: true
+  drupal:
+    label: Arbitrary HTML support
+    elements: false
+    library: core/ckeditor5.htmlSupport
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
+    conditions: []
+
+ckeditor5_specialCharacters:
+  ckeditor5:
+    plugins:
+      - specialCharacters.SpecialCharacters
+      - specialCharacters.SpecialCharactersEssentials
+  drupal:
+    label: Special characters
+    library: core/ckeditor5.specialCharacters
+    admin_library: ckeditor5/admin.specialCharacters
+    toolbar_items:
+      specialCharacters:
+        label: Special characters
+    elements: false
+
+ckeditor5_sourceEditing:
+  ckeditor5:
+    plugins:
+      - sourceEditing.SourceEditing
+      - htmlSupport.GeneralHtmlSupport
+  drupal:
+    label: Source editing
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+    # This is the only CKEditor 5 plugin allowed to generate a superset of elements.
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getElementsSubset()
+    elements: ['<*>']
+    library: core/ckeditor5.sourceEditing
+    admin_library: ckeditor5/admin.sourceEditing
+    toolbar_items:
+      sourceEditing:
+        label: Source
+
+ckeditor5_bold:
+  ckeditor5:
+    plugins: [basicStyles.Bold]
+  drupal:
+    label: Bold
+    library: core/ckeditor5.basic
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      bold:
+        label: Bold
+    elements:
+      - <strong>
+
+ckeditor5_emphasis:
+  ckeditor5:
+    plugins:
+      - basicStyles.Italic
+      - drupalEmphasis.DrupalEmphasis
+  drupal:
+    label: Emphasis
+    library: ckeditor5/drupal.ckeditor5.emphasis
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      italic:
+        label: Italic
+    elements:
+      - <em>
+
+ckeditor5_underline:
+  ckeditor5:
+    plugins: [basicStyles.Underline]
+  drupal:
+    label: Underline
+    library: core/ckeditor5.basic
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      underline:
+        label: Underline
+    elements:
+      - <u>
+
+ckeditor5_code:
+  ckeditor5:
+    plugins: [basicStyles.Code]
+  drupal:
+    label: Code
+    library: core/ckeditor5.basic
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      code:
+        label: Code
+    elements:
+      - <code>
+
+ckeditor5_strikethrough:
+  ckeditor5:
+    plugins: [basicStyles.Strikethrough]
+  drupal:
+    label: Strikethrough
+    library: core/ckeditor5.basic
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      strikethrough:
+        label: Strikethrough
+    elements:
+      - <s>
+
+ckeditor5_subscript:
+  ckeditor5:
+    plugins: [basicStyles.Subscript]
+  drupal:
+    label: Subscript
+    library: core/ckeditor5.basic
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      subscript:
+        label: Subscript
+    elements:
+      - <sub>
+
+ckeditor5_superscript:
+  ckeditor5:
+    plugins: [basicStyles.Superscript]
+  drupal:
+    label: Superscript
+    library: core/ckeditor5.basic
+    admin_library: ckeditor5/admin.basic
+    toolbar_items:
+      superscript:
+        label: Superscript
+    elements:
+      - <sup>
+
+ckeditor5_blockquote:
+  ckeditor5:
+    plugins:
+      - blockQuote.BlockQuote
+  drupal:
+    label: Block quote
+    library: core/ckeditor5.blockquote
+    admin_library: ckeditor5/admin.blockquote
+    toolbar_items:
+      blockQuote:
+        label: Block quote
+    elements:
+      - <blockquote>
+
+ckeditor5_link:
+  ckeditor5:
+    plugins:
+      - link.Link
+  drupal:
+    label: Link
+    library: core/ckeditor5.link
+    admin_library: ckeditor5/admin.link
+    toolbar_items:
+      link:
+        label: Link
+    elements:
+      - <a href>
+
+ckeditor5_linkImage:
+  ckeditor5:
+    plugins:
+      - link.LinkImage
+    config:
+      # Append the "Link" button to the image balloon toolbar.
+      image:
+        toolbar:
+          - '|'
+          - linkImage
+  drupal:
+    label: Linked Image
+    elements: false
+    conditions:
+      plugins:
+        - ckeditor5_link
+        - ckeditor5_image
+
+ckeditor5_linkMedia:
+  ckeditor5:
+    plugins:
+      - drupalMedia.DrupalLinkMedia
+    config:
+      # Append the "Link" button to the media balloon toolbar.
+      drupalMedia:
+        toolbar: [drupalLinkMedia]
+  drupal:
+    label: Linked Media
+    elements: false
+    conditions:
+      plugins:
+        - ckeditor5_link
+        - media_media
+
+ckeditor5_list:
+  ckeditor5:
+    plugins: [list.List]
+  drupal:
+    label: List
+    library: core/ckeditor5.list
+    admin_library: ckeditor5/admin.list
+    toolbar_items:
+      bulletedList:
+        label: Bulleted list
+      numberedList:
+        label: Numbered list
+    elements:
+      - <ul>
+      - <ol>
+      - <li>
+
+ckeditor5_horizontalLine:
+  ckeditor5:
+    plugins: [horizontalLine.HorizontalLine]
+  drupal:
+    label: Horizontal line
+    library: core/ckeditor5.horizontalLine
+    admin_library: ckeditor5/admin.horizontalLine
+    toolbar_items:
+      horizontalLine:
+        label: Horizontal line
+    elements:
+      - <hr>
+
+ckeditor5_alignment:
+  ckeditor5:
+    plugins: [alignment.Alignment]
+    config:
+      # @see core/modules/system/css/components/align.module.css
+      alignment:
+        options:
+          - name: left
+            className: text-align-left
+          - name: center
+            className: text-align-center
+          - name: right
+            className: text-align-right
+          - name: justify
+            className: text-align-justify
+  drupal:
+    label: Alignment
+    library: core/ckeditor5.alignment
+    admin_library: ckeditor5/admin.alignment
+    toolbar_items:
+      alignment:
+        label: Text alignment
+      "alignment:left":
+        label: Align left
+      "alignment:center":
+        label: Align center
+      "alignment:right":
+        label: Align right
+      "alignment:justify":
+        label: justify
+    elements:
+      - <$block class="text-align-left text-align-center text-align-right text-align-justify">
+
+ckeditor5_removeFormat:
+  ckeditor5:
+    plugins: [removeFormat.RemoveFormat]
+  drupal:
+    label: Remove Format
+    library: core/ckeditor5.removeFormat
+    admin_library: ckeditor5/admin.removeFormat
+    toolbar_items:
+      removeFormat:
+        label: Remove Format
+    elements: false
+
+ckeditor5_pasteFromOffice:
+  ckeditor5:
+    plugins: [pasteFromOffice.PasteFromOffice]
+  drupal:
+    label: Paste From Office
+    library: core/ckeditor5.pasteFromOffice
+    elements: false
+    conditions: []
+
+ckeditor5_table:
+  ckeditor5:
+    plugins:
+      - table.Table
+      - table.TableToolbar
+    config:
+      table:
+        contentToolbar: [tableColumn, tableRow, mergeTableCells]
+  drupal:
+    label: Table
+    library: core/ckeditor5.table
+    admin_library: ckeditor5/admin.table
+    toolbar_items:
+      insertTable:
+        label: table
+    elements:
+      - <table>
+      - <tr>
+      - <td>
+      - <th>
+      - <thead>
+      - <tbody>
+      - <tfoot>
+
+ckeditor5_image:
+  ckeditor5:
+    plugins:
+      - image.Image
+      - image.ImageToolbar
+      - drupalImage.DrupalImage
+    config:
+      image:
+        toolbar: [imageTextAlternative]
+  drupal:
+    label: Image
+    library: ckeditor5/drupal.ckeditor5.image
+    elements:
+      - <img src alt data-entity-uuid data-entity-type height width>
+    conditions:
+      toolbarItem: uploadImage
+      imageUploadStatus: true
+
+ckeditor5_imageCaption:
+  ckeditor5:
+    plugins:
+      - image.ImageCaption
+    config:
+      image:
+        toolbar: [toggleImageCaption]
+  drupal:
+    label: Image caption
+    elements:
+      - <img data-caption>
+    conditions:
+      toolbarItem: uploadImage
+      imageUploadStatus: true
+      filter: filter_caption
+
+ckeditor5_imageAlign:
+  ckeditor5:
+    plugins:
+      - image.ImageStyle
+    config:
+      image:
+        toolbar:
+          - name: 'imageStyle:icons'
+            items:
+              - 'imageStyle:alignLeft'
+              - 'imageStyle:alignCenter'
+              - 'imageStyle:alignRight'
+            defaultItem: 'imageStyle:alignCenter'
+  drupal:
+    label: Image align
+    elements:
+      - <img data-align>
+    conditions:
+      toolbarItem: uploadImage
+      imageUploadStatus: true
+      filter: filter_align
+
+ckeditor5_indent:
+  ckeditor5:
+    plugins: [indent.Indent]
+  drupal:
+    label: Indent
+    elements: false
+    library: core/ckeditor5.indent
+    admin_library: ckeditor5/admin.indent
+    toolbar_items:
+      indent:
+        label: Indent
+      outdent:
+        label: Outdent
+
+ckeditor5_language:
+  ckeditor5:
+    plugins: [language.TextPartLanguage]
+  drupal:
+    label: Language
+    library: ckeditor5/ckeditor5.language
+    admin_library: ckeditor5/admin.language
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
+    toolbar_items:
+      textPartLanguage:
+        label: Language
+    elements:
+      - <span lang dir>
+
+media_media:
+  provider: media
+  ckeditor5:
+    plugins:
+      - drupalMedia.DrupalMedia
+    config:
+      drupalMedia:
+        toolbar: [mediaImageTextAlternative]
+        themeError:
+          func:
+            name: Drupal.theme
+            args: [mediaEmbedPreviewError]
+            invoke: true
+  drupal:
+    label: Media
+    library: ckeditor5/drupal.ckeditor5.media
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
+    elements:
+      - <drupal-media data-entity-type data-entity-uuid alt>
+    conditions:
+      filter: media_embed
+
+media_library_mediaLibrary:
+  provider: media_library
+  ckeditor5:
+    plugins: []
+    config:
+      drupalMedia:
+        openDialog:
+          func:
+            name: Drupal.ckeditor5.openDialog
+            invoke: false
+        dialogSettings:
+          height: 75%
+          dialogClass: media-library-widget-modal
+          title: Add or select media
+  drupal:
+    label: Media Library
+    elements: false
+    admin_library: ckeditor5/admin.drupalmedia
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\MediaLibrary
+    library: editor/drupal.editor.dialog
+    toolbar_items:
+        drupalMedia:
+          label: Drupal media
+    conditions:
+      filter: media_embed
+      toolbarItem: drupalMedia

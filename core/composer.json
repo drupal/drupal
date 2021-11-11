@@ -65,6 +65,7 @@
         "drupal/book": "self.version",
         "drupal/breakpoint": "self.version",
         "drupal/ckeditor": "self.version",
+        "drupal/ckeditor5": "self.version",
         "drupal/claro": "self.version",
         "drupal/classy": "self.version",
         "drupal/color": "self.version",

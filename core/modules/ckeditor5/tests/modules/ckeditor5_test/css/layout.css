@@ -1,0 +1,14 @@
+.layout--two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.simple-box {
+  padding: 0.5rem;
+  background: #ccc;
+}
+
+.simple-box-title,
+.simple-box-description {
+  background: #fff;
+}

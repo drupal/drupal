@@ -1,0 +1,23 @@
+/**
+ * @file
+ * Styles for header options in the admin UI.
+ *
+ * These styles are copied from CKEditor 5's editor styles, which load when an
+ * editor is present, but are not guaranteed to load in the admin UI.
+ */
+
+.ck.ck-heading_heading1 {
+  font-size: 20px;
+}
+
+.ck.ck-heading_heading2 {
+  font-size: 17px;
+}
+
+.ck.ck-heading_heading3 {
+  font-size: 14px;
+}
+
+.ck[class*="ck-heading_heading"] {
+  font-weight: bold;
+}

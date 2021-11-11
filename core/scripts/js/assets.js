@@ -8,7 +8,7 @@
  */
 
 const path = require('path');
-const { copyFile, writeFile, readFile, chmod } = require('fs').promises;
+const { copyFile, writeFile, readFile, chmod, rmdir, mkdir, readdir, appendFile } = require('fs').promises;
 
 const coreFolder = path.resolve(__dirname, '../../');
 const packageFolder = `${coreFolder}/node_modules`;
@@ -28,13 +28,23 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       const libraryDeclaration = libraries[libraryIndex];
       // Get the previous package version.
       const currentVersion = libraryDeclaration.match(/version: "(.*)"\n/)[1];
-      // Replace the version value and the version in the licence URL.
+      // Replace the version value and the version in the license URL.
       libraries[libraryIndex] = libraryDeclaration.replace(
         new RegExp(currentVersion, 'g'),
         version,
       );
     }
   }
+
+  // CKEditor 5 translation files need some special handling. Start by ensuring
+  // that an empty /translations directory exists in the
+  // /core/assets/vendor/ckeditor5 directory.
+  const ckeditor5Path = `${assetsFolder}/ckeditor5`;
+  await rmdir(`${ckeditor5Path}/translations`, { recursive: true })
+    .catch(() => {
+      // Nothing to do if the directory doesn't exist.
+    });
+  await mkdir(`${ckeditor5Path}/translations`);
 
   /**
    * Declare the array that defines what needs to be copied over.
@@ -171,66 +181,249 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       pack: 'loadjs',
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
-  ].map(async ({ pack, files = [], folder = false, library = false }) => {
-    const sourceFolder = pack;
-    const libraryName = library || folder || pack;
-    const destFolder = folder || pack;
-
-    let packageInfo;
-    // Take the version info from the package.json file.
-    if (!['joyride', 'farbtastic'].includes(pack)) {
-      packageInfo = JSON.parse(
-        await readFile(`${packageFolder}/${sourceFolder}/package.json`),
-      );
+    {
+      pack: '@ckeditor/ckeditor5-alignment',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/alignment.js', to: 'alignment.js' }
+      ],
+      library: 'ckeditor5.alignment',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-basic-styles',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/basic-styles.js', to: 'basic-styles.js' }
+      ],
+      library: 'ckeditor5.basic',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-block-quote',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/block-quote.js', to: 'block-quote.js' }
+      ],
+      library: 'ckeditor5.blockquote',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-editor-classic',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/editor-classic.js', to: 'editor-classic.js' }
+      ],
+      library: 'ckeditor5.editorClassic',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-editor-decoupled',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/editor-decoupled.js', to: 'editor-decoupled.js' }
+      ],
+      library: 'ckeditor5.editorDecoupled',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-essentials',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/essentials.js', to: 'essentials.js' }
+      ],
+      library: 'ckeditor5.internal',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-heading',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/heading.js', to: 'heading.js' }
+      ],
+      library: 'ckeditor5.internal',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-horizontal-line',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/horizontal-line.js', to: 'horizontal-line.js' }
+      ],
+      library: 'ckeditor5.horizontalLine',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-image',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/image.js', to: 'image.js' }
+      ],
+      library: 'ckeditor5.image',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-indent',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/indent.js', to: 'indent.js' }
+      ],
+      library: 'ckeditor5.indent',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-language',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/language.js', to: 'language.js' },
+      ],
+      library: 'ckeditor5.language',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-link',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/link.js', to: 'link.js' }
+      ],
+      library: 'ckeditor5.link',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-list',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/list.js', to: 'list.js' }
+      ],
+      library: 'ckeditor5.list',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-paste-from-office',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/paste-from-office.js', to: 'paste-from-office.js' }
+      ],
+      library: 'ckeditor5.pasteFromOffice',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-remove-format',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/remove-format.js', to: 'remove-format.js' }
+      ],
+      library: 'ckeditor5.removeFormat',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-source-editing',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/source-editing.js', to: 'source-editing.js' }
+      ],
+      library: 'ckeditor5.sourceEditing',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-table',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/table.js', to: 'table.js' }
+      ],
+      library: 'ckeditor5.table',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-html-support',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/html-support.js', to: 'html-support.js' }
+      ],
+      library: 'ckeditor5.htmlSupport',
+    },
+    {
+      pack: '@ckeditor/ckeditor5-special-characters',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/special-characters.js', to: 'special-characters.js' }
+      ],
+      library: 'ckeditor5.specialCharacters',
+    },
+    {
+      pack: 'ckeditor5',
+      files: [
+        { from: 'build/ckeditor5-dll.js', to: 'ckeditor5-dll.js' }
+      ],
     }
-    if (packageInfo) {
-      updateLibraryVersion(libraryName, packageInfo);
-    }
+  ];
 
-    files.forEach(async (file) => {
-      let source = file;
-      let dest = file;
-      if (typeof file === 'object') {
-        source = file.from;
-        dest = file.to;
+  // Use Array.reduce for sequential processing to avoid corrupting the
+  // contents of the concatenated CKEditor 5 translation files.
+  process.reduce(async (previous, { pack, files = [], folder = false, library = false }) => {
+    return previous.then(async () => {
+      const sourceFolder = pack;
+      const libraryName = library || folder || pack;
+      const destFolder = folder || pack;
+
+      let packageInfo;
+      // Take the version info from the package.json file.
+      if (!['joyride', 'farbtastic'].includes(pack)) {
+        packageInfo = JSON.parse(
+          await readFile(`${packageFolder}/${sourceFolder}/package.json`),
+        );
       }
-      // For map files, make sure the sources files don't leak outside the
-      // library folder. In the `sources` member, remove all "../" values at
-      // the start of the files names to avoid having the virtual files outside
-      // of the library vendor folder in dev tools.
-      if (path.extname(source) === '.map') {
-        console.log('Process map file', source);
-        const map = await readFile(
-          `${packageFolder}/${sourceFolder}/${source}`,
-        );
-        const json = JSON.parse(map);
-        json.sources = json.sources.map((source) =>
-          source.replace(/^(\.\.\/)+/, ''),
-        );
-        await writeFile(
-          `${assetsFolder}/${destFolder}/${dest}`,
-          JSON.stringify(json),
-        );
-      } else {
-        console.log(
-          'Copy',
-          `${sourceFolder}/${source}`,
-          'to',
-          `${destFolder}/${dest}`,
-        );
-        await copyFile(
-          `${packageFolder}/${sourceFolder}/${source}`,
-          `${assetsFolder}/${destFolder}/${dest}`,
-        );
-        // These 2 files come from a zip file that hasn't been updated in years
-        // hardcode the permission fix to pass the commit checks.
-        if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
-          await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+      if (packageInfo) {
+        updateLibraryVersion(libraryName, packageInfo);
+      }
+
+      // CKEditor 5 packages ship with translation files.
+      if (pack.startsWith('@ckeditor') || pack === 'ckeditor5') {
+        const packageTranslationPath = `${packageFolder}/${sourceFolder}/build/translations`;
+        await readdir(packageTranslationPath, { withFileTypes: true }).then(async (translationFiles) => {
+          return translationFiles.map(async (translationFile) => {
+            if (!translationFile.isDirectory()) {
+              // Translation files are concatenated to a single translation
+              // file to avoid having to make multiple network requests to
+              // various translation files. As a trade off, this leads into
+              // some redundant translations depending on configuration.
+              await readFile(`${packageTranslationPath}/${translationFile.name}`).then(async (contents) => {
+                return appendFile(`${assetsFolder}/${destFolder}/translations/${translationFile.name}`, contents);
+              });
+            }
+          }, Promise.resolve());
+        }).catch(() => {
+          // Do nothing as it's expected that not all packages ship translations.
+        });
+      }
+
+      return files.forEach(async (file) => {
+        let source = file;
+        let dest = file;
+        if (typeof file === 'object') {
+          source = file.from;
+          dest = file.to;
         }
-      }
+        // For map files, make sure the sources files don't leak outside the
+        // library folder. In the `sources` member, remove all "../" values at
+        // the start of the files names to avoid having the virtual files outside
+        // of the library vendor folder in dev tools.
+        if (path.extname(source) === '.map') {
+          console.log('Process map file', source);
+          const map = await readFile(
+            `${packageFolder}/${sourceFolder}/${source}`,
+          );
+          const json = JSON.parse(map);
+          json.sources = json.sources.map((source) =>
+            source.replace(/^(\.\.\/)+/, ''),
+          );
+          await writeFile(
+            `${assetsFolder}/${destFolder}/${dest}`,
+            JSON.stringify(json),
+          );
+        } else {
+          console.log(
+            'Copy',
+            `${sourceFolder}/${source}`,
+            'to',
+            `${destFolder}/${dest}`,
+          );
+          await copyFile(
+            `${packageFolder}/${sourceFolder}/${source}`,
+            `${assetsFolder}/${destFolder}/${dest}`,
+          );
+          // These 2 files come from a zip file that hasn't been updated in years
+          // hardcode the permission fix to pass the commit checks.
+          if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
+            await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+          }
+        }
+      });
     });
-  });
+  }, Promise.resolve());
 
-  await Promise.all(process);
   await writeFile(librariesPath, libraries.join('\n\n'));
 })();

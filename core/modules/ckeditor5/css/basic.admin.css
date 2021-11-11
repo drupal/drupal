@@ -1,0 +1,27 @@
+.ckeditor5-toolbar-button-bold {
+  background-image: url(../icons/bold.svg);
+}
+
+.ckeditor5-toolbar-button-italic {
+  background-image: url(../icons/italic.svg);
+}
+
+.ckeditor5-toolbar-button-underline {
+  background-image: url(../icons/underline.svg);
+}
+
+.ckeditor5-toolbar-button-code {
+  background-image: url(../icons/code.svg);
+}
+
+.ckeditor5-toolbar-button-strikethrough {
+  background-image: url(../icons/strikethrough.svg);
+}
+
+.ckeditor5-toolbar-button-subscript {
+  background-image: url(../icons/subscript.svg);
+}
+
+.ckeditor5-toolbar-button-superscript {
+  background-image: url(../icons/superscript.svg);
+}

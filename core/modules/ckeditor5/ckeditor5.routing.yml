@@ -1,0 +1,27 @@
+ckeditor5.upload_image:
+  path: '/ckeditor5/upload-image/{editor}'
+  defaults:
+    _controller: '\Drupal\ckeditor5\Controller\CKEditor5ImageController::upload'
+  methods: [POST]
+  requirements:
+    _entity_access: 'editor.use'
+    _custom_access: '\Drupal\ckeditor5\Controller\CKEditor5ImageController::imageUploadEnabledAccess'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      editor:
+        type: entity:editor
+
+ckeditor5.media_image:
+  path: '/ckeditor5/{editor}/is-media-image'
+  defaults:
+    _controller: '\Drupal\ckeditor5\Controller\CKEditor5MediaController::isMediaImage'
+  methods: [GET]
+  requirements:
+    _entity_access: 'editor.use'
+    _custom_access: '\Drupal\ckeditor5\Controller\CKEditor5MediaController::access'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      editor:
+        type: entity:editor

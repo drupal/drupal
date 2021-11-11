@@ -22,6 +22,234 @@ ckeditor:
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
 
+ckeditor5:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/ckeditor5-dll.js: { preprocess: false, minified: true }
+
+ckeditor5.editorClassic:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/editor-classic.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.editorDecoupled:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/editor-decoupled.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/ckeditor5.htmlSupport
+
+ckeditor5.internal:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/essentials.js: { preprocess: false, minified: true }
+    assets/vendor/ckeditor5/heading.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.basic:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/basic-styles.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.specialCharacters:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/special-characters.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.blockquote:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/block-quote.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.image:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/image.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.link:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/link.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.list:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/list.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.horizontalLine:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/horizontal-line.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.htmlSupport:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/html-support.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.alignment:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/alignment.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.removeFormat:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/remove-format.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.pasteFromOffice:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/paste-from-office.js: { preprocess: false, minified: true }
+  dependencies:
+    - ckeditor5/ckeditor5
+
+ckeditor5.indent:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/indent.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.sourceEditing:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/source-editing.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.table:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/table.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+ckeditor5.language:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/language.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
 css.escape:
   remote: https://github.com/mathiasbynens/CSS.escape
   version: "1.5.1"
