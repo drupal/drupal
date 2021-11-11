@@ -245,8 +245,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    *   TRUE, when the view should override the given route.
    */
   protected function overrideApplies($view_path, Route $view_route, Route $route) {
-    return $this->overrideAppliesPathAndMethod($view_path, $view_route, $route)
-      && (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html');
+    return (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html')
+      && $this->overrideAppliesPathAndMethod($view_path, $view_route, $route);
   }
 
   /**
