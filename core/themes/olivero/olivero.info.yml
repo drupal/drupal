@@ -17,7 +17,6 @@ description: 'A clean, accessible, and flexible Drupal front-end theme.'
 alt text: 'Screenshot of Olivero, Drupal front-end theme.'
 package: Core
 version: VERSION
-experimental: true
 libraries:
   - olivero/global-styling
 regions:
