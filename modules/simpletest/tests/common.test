@@ -3342,12 +3342,15 @@ class DrupalAddHtmlHeadLinkTest extends DrupalWebTestCase {
       '</foo?bar=baz>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
       '</foo/bar>; hreflang="de"; rel="alternate"',
+      '</foo?bar=baz&baz=false>; hreflang="en"; rel="alternate"',
     ));
     $this->assertEqual($this->drupalGetHeader('Link'), $expected_link_header);
 
     // Check that duplicate alternate URLs with different hreflangs are allowed.
     $test_link = $this->xpath('//head/link[@rel="alternate"][@href="/foo/bar"]');
     $this->assertEqual(count($test_link), 2, 'Duplicate alternate URLs are allowed.');
+    // Check that link element attributes are HTML-encoded.
+    $this->assertRaw('<link href="/foo?bar=baz&amp;baz=false" hreflang="en" rel="alternate" />');
   }
 
 }

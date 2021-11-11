@@ -343,5 +343,10 @@ function common_test_html_head_link() {
     'hreflang' => 'de',
     'rel' => 'alternate',
   ), TRUE);
+  drupal_add_html_head_link(array(
+    'href' => '/foo?bar=baz&baz=false',
+    'hreflang' => 'en',
+    'rel' => 'alternate',
+  ), TRUE);
   return '';
 }

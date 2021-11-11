@@ -2965,7 +2965,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
 
   if ($header) {
     // Also add a HTTP header "Link:".
-    $href = '<' . check_plain($attributes['href']) . '>;';
+    $href = '<' . $attributes['href'] . '>;';
     unset($attributes['href']);
     $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
