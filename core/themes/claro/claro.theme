@@ -964,12 +964,12 @@ function claro_preprocess_form_element__password_confirm(&$variables) {
  * Implements hook_preprocess_HOOK() for form_element__password.
  */
 function claro_preprocess_form_element__password(&$variables) {
-  if (!empty($variables['element']['#array_parents']) && in_array('pass1', $variables['element']['#array_parents'])) {
+  if (!empty($variables['element']['#array_parents']) && in_array('pass1', $variables['element']['#array_parents'], TRUE)) {
     // This is the main password form element.
     $variables['attributes']['class'][] = 'password-confirm__password';
   }
 
-  if (!empty($variables['element']['#array_parents']) && in_array('pass2', $variables['element']['#array_parents'])) {
+  if (!empty($variables['element']['#array_parents']) && in_array('pass2', $variables['element']['#array_parents'], TRUE)) {
     // This is the password confirm form element.
     $variables['attributes']['class'][] = 'password-confirm__confirm';
   }
