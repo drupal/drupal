@@ -1041,7 +1041,8 @@ function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $asset
 /**
  * Add attachments (typically assets) to a page before it is rendered.
  *
- * Use this hook when you want to conditionally add attachments to a page.
+ * Use this hook when you want to conditionally add attachments to a page. This
+ * hook can only be implemented by modules.
  *
  * If you want to alter the attachments added by other modules or if your module
  * depends on the elements of other modules, use hook_page_attachments_alter()
@@ -1070,7 +1071,8 @@ function hook_page_attachments(array &$attachments) {
  *
  * Use this hook when you want to remove or alter attachments on the page, or
  * add attachments to the page that depend on another module's attachments (this
- * hook runs after hook_page_attachments().
+ * hook runs after hook_page_attachments(). This hook can be implemented by both
+ * modules and themes.
  *
  * If you try to add anything but #attached and #cache to the array, an
  * exception is thrown.
