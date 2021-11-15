@@ -517,8 +517,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_superset' => '<br> <p>',
       'expected_fundamental_compatibility_violations' => [
         '' => [
-          0 => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-          1 => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
+          0 => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
+          1 => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
         ],
       ],
       'expected_messages' => [

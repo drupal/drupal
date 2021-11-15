@@ -416,7 +416,7 @@ class ValidatorsTest extends KernelTestBase {
           'id' => 'filter_url',
           'provider' => 'filter',
           'status' => TRUE,
-          'weight' => 0,
+          'weight' => -10,
           'settings' => [
             'filter_url_length' => 72,
           ],
@@ -426,6 +426,43 @@ class ValidatorsTest extends KernelTestBase {
         '' => [
           'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
           'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
+        ],
+      ],
+    ];
+    $data['INVALID: non-HTML format: filter_autop + filter_url (different order)'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'bold',
+          ],
+        ],
+        'plugins' => [],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_autop' => [
+          'id' => 'filter_autop',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+        'filter_url' => [
+          'id' => 'filter_url',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 10,
+          'settings' => [
+            'filter_url_length' => 72,
+          ],
+        ],
+      ],
+      'violations' => [
+        '' => [
+          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
+          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
         ],
       ],
     ];
@@ -456,7 +493,7 @@ class ValidatorsTest extends KernelTestBase {
         '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are forbidden by the "<em class="placeholder">Tag and attribute restricting filter</em>" (<em class="placeholder">filter_test_restrict_tags_and_attributes</em>) filter.',
       ],
     ];
-    $restricted_html_format_filters = Yaml::parseFile('profiles/standard/config/install/filter.format.restricted_html.yml')['filters'];
+    $restricted_html_format_filters = Yaml::parseFile(__DIR__ . '/../../../../../profiles/standard/config/install/filter.format.restricted_html.yml')['filters'];
     $data['INVALID: the default restricted_html text format'] = [
       'settings' => [
         'toolbar' => [
@@ -470,8 +507,8 @@ class ValidatorsTest extends KernelTestBase {
       'filters' => $restricted_html_format_filters,
       'violations' => [
         '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
           'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
+          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
         ],
       ],
     ];
