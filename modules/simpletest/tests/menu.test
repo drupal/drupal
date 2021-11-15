@@ -1738,3 +1738,41 @@ class MenuTrailTestCase extends MenuWebTestCase {
     }
   }
 }
+
+/**
+ * Tests value integrity.
+ */
+class MenuDataIntegrityTestCase extends MenuWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Menu item array integrity',
+      'description' => 'Tests the values passed on to menu items array.',
+      'group' => 'Menu',
+    );
+  }
+
+  /**
+   * Tests for null/casting weight parameter.
+   */
+  public function testNullMenuWeight() {
+    $base_options = array(
+      'link_title' => 'Menu link test',
+      'module' => 'menu_test',
+      'menu_name' => 'menu_test',
+      'weight' => NULL,
+      'link_path' => 'menu-test/parent',
+    );
+
+    try {
+      menu_link_save($base_options);
+    }
+    catch (PDOException $exception) {
+      $this->fail('Menu weight is not being cast properly.');
+      return;
+    }
+
+    $this->pass('Menu weight is being cast properly.');
+  }
+
+}
