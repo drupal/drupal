@@ -13,6 +13,8 @@ use Masterminds\HTML5\Elements;
  * Utilities for interacting with HTML restrictions.
  *
  * @internal
+ *
+ * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
  */
 final class HTMLRestrictionsUtilities {
 
@@ -29,10 +31,13 @@ final class HTMLRestrictionsUtilities {
    * Formats HTML elements for display.
    *
    * @param array $elements
-   *   List of elements to format.
+   *   List of elements to format. The structure is the same as the allowed tags
+   *   array documented in FilterInterface::getHTMLRestrictions().
    *
-   * @return string
+   * @return string[]
    *   A formatted list; a string representation of the given HTML elements.
+   *
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public static function toReadableElements(array $elements): array {
     $readable = [];
@@ -77,10 +82,14 @@ final class HTMLRestrictionsUtilities {
    *   A string of HTML tags, potentially with attributes.
    *
    * @return array
-   *   An elements array in the structure expected by filter_html.
+   *   An elements array. The structure is the same as the allowed tags array
+   *   documented in FilterInterface::getHTMLRestrictions().
    *
-   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::WILDCARD_ELEMENT_METHODS
+   * @see \Drupal\ckeditor5\HTMLRestrictionsUtilities::WILDCARD_ELEMENT_METHODS
    *   Each key in this array represents a valid wildcard tag.
+   *
+   * @see \Drupal\filter\Plugin\Filter\FilterHtml
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public static function allowedElementsStringToHtmlFilterArray(string $elements_string): array {
     preg_match('/<(\$[A-Z,a-z]*)/', $elements_string, $wildcard_matches);
@@ -105,7 +114,7 @@ final class HTMLRestrictionsUtilities {
       if ($node->hasAttributes()) {
         foreach ($node->attributes as $attribute_name => $attribute) {
           $value = empty($attribute->value) ? TRUE : explode(' ', $attribute->value);
-          self::providedElementsAttributes($elements, $tag, $attribute_name, $value);
+          self::addAllowedAttributeToElements($elements, $tag, $attribute_name, $value);
         }
       }
       else {
@@ -121,10 +130,13 @@ final class HTMLRestrictionsUtilities {
    * Cleans unwanted artifacts from "allowed HTML" arrays.
    *
    * @param array $elements
-   *   An array of allowed elements, structured as expected by filter_html.
+   *   An array of allowed elements. The structure is the same as the allowed
+   *   tags array documented in FilterInterface::getHTMLRestrictions().
    *
    * @return array
    *   The array without unwanted artifacts.
+   *
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public static function cleanAllowedHtmlArray(array $elements): array {
     // When recursively merging elements arrays, unkeyed boolean values can
@@ -141,21 +153,35 @@ final class HTMLRestrictionsUtilities {
    * Adds allowed attributes to the elements array.
    *
    * @param array $elements
-   *   The elements array.
+   *   The elements array. The structure is the same as the allowed tags array
+   *   documented in FilterInterface::getHTMLRestrictions().
    * @param string $tag
    *   The tag having its attributes configured.
    * @param string $attribute
    *   The attribute being configured.
-   * @param array|bool $value
+   * @param array|true $value
    *   The attribute config value.
+   *
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public static function providedElementsAttributes(array &$elements, string $tag, string $attribute, $value): void {
-    $attribute_already_allows_all = isset($elements[$tag][$attribute]) && $elements[$tag][$attribute] === TRUE;
+  public static function addAllowedAttributeToElements(array &$elements, string $tag, string $attribute, $value): void {
+    if (isset($elements[$tag][$attribute]) && $elements[$tag][$attribute] === TRUE) {
+      // There's nothing to change as the tag/attribute combination is already
+      // set to allow all.
+      return;
+    }
+
+    if (isset($elements[$tag]) && $elements[$tag] === FALSE) {
+      // If the tag is already allowed with no attributes then the value will be
+      // FALSE. We need to convert the value to an empty array so that attribute
+      // configuration can be added.
+      $elements[$tag] = [];
+    }
 
     if ($value === TRUE) {
       $elements[$tag][$attribute] = TRUE;
     }
-    elseif (!$attribute_already_allows_all) {
+    else {
       foreach ($value as $attribute_value) {
         $elements[$tag][$attribute][$attribute_value] = TRUE;
       }
@@ -165,6 +191,9 @@ final class HTMLRestrictionsUtilities {
   /**
    * Compares two HTML restrictions.
    *
+   * The structure of the arrays is the same as the allowed tags array
+   * documented in FilterInterface::getHTMLRestrictions().
+   *
    * @param array $elements_array_1
    *   The array to compare from.
    * @param array $elements_array_2
@@ -173,6 +202,8 @@ final class HTMLRestrictionsUtilities {
    * @return array
    *   Returns an array with all the values in $elements_array_1 that are not
    *   present in $elements_array_1, including values that are FALSE
+   *
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public static function diffAllowedElements(array $elements_array_1, array $elements_array_2): array {
     return array_filter(

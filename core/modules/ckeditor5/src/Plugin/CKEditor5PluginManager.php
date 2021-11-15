@@ -326,10 +326,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
               if (is_array($attribute_value)) {
                 $attribute_value = array_keys($attribute_value);
               }
-              $element_already_allows_all_values = isset($elements[$wildcard_tag][$attribute_name]) && $elements[$wildcard_tag][$attribute_name] === TRUE;
-              if (!$element_already_allows_all_values) {
-                HTMLRestrictionsUtilities::providedElementsAttributes($elements, $wildcard_tag, $attribute_name, $attribute_value);
-              }
+              HTMLRestrictionsUtilities::addAllowedAttributeToElements($elements, $wildcard_tag, $attribute_name, $attribute_value);
             }
           }
         }
