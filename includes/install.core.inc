@@ -1505,8 +1505,19 @@ function install_configure_form($form, &$form_state, &$install_state) {
   // especially out of place on the last page of the installer, where it would
   // distract from the message that the Drupal installation has completed
   // successfully.)
-  if (empty($_POST) && (!drupal_verify_install_file(DRUPAL_ROOT . '/' . $settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file(DRUPAL_ROOT . '/' . $settings_dir, FILE_NOT_WRITABLE, 'dir'))) {
-    drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href="@handbook_url">online handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'warning');
+
+  $skip_permissions_hardening = variable_get('skip_permissions_hardening', FALSE);
+  // Allow system administrators to ignore permissions hardening for the site
+  // directory. This allows additional files in the site directory to be
+  // updated when they are managed in a version control system.
+  if (!$skip_permissions_hardening) {
+    if (empty($_POST) && (!drupal_verify_install_file(DRUPAL_ROOT . '/' . $settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE) || !drupal_verify_install_file(DRUPAL_ROOT . '/' . $settings_dir, FILE_NOT_WRITABLE, 'dir'))) {
+      drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href="@handbook_url">online handbook</a>.', array(
+        '%dir' => $settings_dir,
+        '%file' => $settings_file,
+        '@handbook_url' => 'http://drupal.org/server-permissions'
+      )), 'warning');
+    }
   }
 
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');

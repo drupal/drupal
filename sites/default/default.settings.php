@@ -770,3 +770,15 @@ $conf['mail_display_name_site_name'] = TRUE;
  * This functionality can be re-enabled by setting this variable to TRUE.
  */
 # $conf['set_has_js_cookie'] = FALSE;
+
+/**
+ * Skip file system permissions hardening.
+ *
+ * The system module will periodically check the permissions of your site's
+ * site directory to ensure that it is not writable by the website user. For
+ * sites that are managed with a version control system, this can cause problems
+ * when files in that directory such as settings.php are updated, because the
+ * user pulling in the changes won't have permissions to modify files in the
+ * directory.
+ */
+# $conf['skip_permissions_hardening'] = TRUE;
