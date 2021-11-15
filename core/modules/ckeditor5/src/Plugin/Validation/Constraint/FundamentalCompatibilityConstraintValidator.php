@@ -84,13 +84,11 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       $text_format,
       FilterInterface::TYPE_MARKUP_LANGUAGE
     );
-    if (!empty($markup_filters)) {
-      foreach ($markup_filters as $markup_filter) {
-        $this->context->buildViolation($constraint->noMarkupFiltersMessage)
-          ->setParameter('%filter_label', $markup_filter->getLabel())
-          ->setParameter('%filter_plugin_id', $markup_filter->getPluginId())
-          ->addViolation();
-      }
+    foreach ($markup_filters as $markup_filter) {
+      $this->context->buildViolation($constraint->noMarkupFiltersMessage)
+        ->setParameter('%filter_label', $markup_filter->getLabel())
+        ->setParameter('%filter_plugin_id', $markup_filter->getPluginId())
+        ->addViolation();
     }
   }
 
@@ -194,25 +192,21 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *   conditions to be met. Must return TRUE when it meets the conditions,
    *   FALSE otherwise.
    *
-   * @return \Drupal\filter\Plugin\FilterInterface[]
-   *   The matched filter plugins.
+   * @return iterable|\Drupal\filter\Plugin\FilterInterface[]
+   *   An iterable of matched filter plugins.
    */
-  private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, int $filter_type, callable $extra_requirements = NULL): array {
+  private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, int $filter_type, callable $extra_requirements = NULL): iterable {
     assert(in_array($filter_type, [
       FilterInterface::TYPE_MARKUP_LANGUAGE,
       FilterInterface::TYPE_HTML_RESTRICTOR,
       FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
       FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
     ]));
-    return array_filter($text_format->filters()->getAll(), function (FilterInterface $filter) use ($filter_type, $extra_requirements) {
-      if (!$filter->status) {
-        return FALSE;
+    foreach ($text_format->filters() as $id => $filter) {
+      if ($filter->status && $filter->getType() === $filter_type && ($extra_requirements === NULL || $extra_requirements($filter))) {
+        yield $id => $filter;
       }
-      if ($filter->getType() === $filter_type && ($extra_requirements === NULL || $extra_requirements($filter))) {
-        return TRUE;
-      }
-      return FALSE;
-    });
+    }
   }
 
   /**
