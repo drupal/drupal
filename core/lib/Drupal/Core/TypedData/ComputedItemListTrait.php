@@ -80,7 +80,7 @@ trait ComputedItemListTrait {
     // @see \Drupal\Core\TypedData\Plugin\DataType\ItemList::get().
     $this->ensureComputedValue();
 
-    return isset($this->list[$index]) ? $this->list[$index] : NULL;
+    return $this->list[$index] ?? NULL;
   }
 
   /**

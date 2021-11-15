@@ -86,7 +86,7 @@ class PluralFormula implements PluralFormulaInterface {
    */
   public function getFormula($langcode) {
     $this->loadFormulae();
-    return isset($this->formulae[$langcode]['formula']) ? $this->formulae[$langcode]['formula'] : FALSE;
+    return $this->formulae[$langcode]['formula'] ?? FALSE;
   }
 
   /**

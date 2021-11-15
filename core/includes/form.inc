@@ -193,10 +193,10 @@ function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id']);
   RenderElement::setAttributes($element);
-  $variables['attributes'] = isset($element['#attributes']) ? $element['#attributes'] : [];
-  $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
-  $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
-  $variables['title_display'] = isset($element['#title_display']) ? $element['#title_display'] : NULL;
+  $variables['attributes'] = $element['#attributes'] ?? [];
+  $variables['prefix'] = $element['#field_prefix'] ?? NULL;
+  $variables['suffix'] = $element['#field_suffix'] ?? NULL;
+  $variables['title_display'] = $element['#title_display'] ?? NULL;
   $variables['children'] = $element['#children'];
   $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 
@@ -477,8 +477,8 @@ function template_preprocess_form_element(&$variables) {
 
   $variables['title_display'] = $element['#title_display'];
 
-  $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
-  $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
+  $variables['prefix'] = $element['#field_prefix'] ?? NULL;
+  $variables['suffix'] = $element['#field_suffix'] ?? NULL;
 
   $variables['description'] = NULL;
   if (!empty($element['#description'])) {
@@ -883,7 +883,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
     $process_info = [
       'current_set' => 0,
       'progressive' => TRUE,
-      'url' => isset($url) ? $url : Url::fromRoute('system.batch_page.html'),
+      'url' => $url ?? Url::fromRoute('system.batch_page.html'),
       'source_url' => Url::fromRouteMatch(\Drupal::routeMatch())->mergeOptions(['query' => \Drupal::request()->query->all()]),
       'batch_redirect' => $redirect,
       'theme' => \Drupal::theme()->getActiveTheme()->getName(),

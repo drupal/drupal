@@ -167,12 +167,12 @@ class EntityAutocomplete extends Textfield {
         throw new \InvalidArgumentException("Missing required #autocreate['bundle'] parameter.");
       }
       // Default the autocreate user ID to the current user.
-      $element['#autocreate']['uid'] = isset($element['#autocreate']['uid']) ? $element['#autocreate']['uid'] : \Drupal::currentUser()->id();
+      $element['#autocreate']['uid'] = $element['#autocreate']['uid'] ?? \Drupal::currentUser()->id();
     }
 
     // Store the selection settings in the key/value store and pass a hashed key
     // in the route parameters.
-    $selection_settings = isset($element['#selection_settings']) ? $element['#selection_settings'] : [];
+    $selection_settings = $element['#selection_settings'] ?? [];
     $data = serialize($selection_settings) . $element['#target_type'] . $element['#selection_handler'];
     $selection_settings_key = Crypt::hmacBase64($data, Settings::getHashSalt());
 
@@ -287,7 +287,7 @@ class EntityAutocomplete extends Textfield {
       // matches (tags).
       if (!$element['#tags'] && !empty($value)) {
         $last_value = $value[count($value) - 1];
-        $value = isset($last_value['target_id']) ? $last_value['target_id'] : $last_value;
+        $value = $last_value['target_id'] ?? $last_value;
       }
     }
 

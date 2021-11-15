@@ -282,7 +282,7 @@ function editor_load($format_id) {
   // formats for administrators). Loading a small number of editors all at once
   // is more efficient than loading multiple editors individually.
   $editors = Editor::loadMultiple();
-  return isset($editors[$format_id]) ? $editors[$format_id] : NULL;
+  return $editors[$format_id] ?? NULL;
 }
 
 /**
@@ -403,8 +403,7 @@ function editor_entity_update(EntityInterface $entity) {
 
     // Detect file usages that should be incremented.
     foreach ($uuids_by_field as $field => $uuids) {
-      $original_uuids = isset($original_uuids_by_field[$field]) ?
-        $original_uuids_by_field[$field] : [];
+      $original_uuids = $original_uuids_by_field[$field] ?? [];
 
       if ($added_files = array_diff($uuids_by_field[$field], $original_uuids)) {
         _editor_record_file_usage($added_files, $entity);

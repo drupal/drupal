@@ -152,8 +152,8 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
    */
   public function query() {
     $view = $this->view;
-    $exposed_data = isset($view->exposed_data) ? $view->exposed_data : [];
-    $sort_by = isset($exposed_data['sort_by']) ? $exposed_data['sort_by'] : NULL;
+    $exposed_data = $view->exposed_data ?? [];
+    $sort_by = $exposed_data['sort_by'] ?? NULL;
     if (!empty($sort_by)) {
       // Make sure the original order of sorts is preserved
       // (e.g. a sticky sort is often first)

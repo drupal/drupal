@@ -251,7 +251,7 @@ class CommentDefaultFormatter extends FormatterBase {
   public function settingsSummary() {
     $view_mode = $this->getSetting('view_mode');
     $view_modes = $this->getViewModes();
-    $view_mode_label = isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : 'default';
+    $view_mode_label = $view_modes[$view_mode] ?? 'default';
     $summary = [$this->t('Comment view mode: @mode', ['@mode' => $view_mode_label])];
     if ($pager_id = $this->getSetting('pager_id')) {
       $summary[] = $this->t('Pager ID: @id', ['@id' => $pager_id]);

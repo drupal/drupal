@@ -271,7 +271,7 @@ function media_field_widget_complete_form_alter(array &$field_widget_complete_fo
 
   // Use the title set on the element if it exists, otherwise fall back to the
   // field label.
-  $elements['#media_help']['#original_label'] = isset($elements['#title']) ? $elements['#title'] : $context['items']->getFieldDefinition()->getLabel();
+  $elements['#media_help']['#original_label'] = $elements['#title'] ?? $context['items']->getFieldDefinition()->getLabel();
 
   // Customize the label for the field widget.
   // @todo Research a better approach https://www.drupal.org/node/2943024.
@@ -316,7 +316,7 @@ function media_preprocess_media_reference_help(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id']);
   RenderElement::setAttributes($element);
-  $variables['attributes'] = isset($element['#attributes']) ? $element['#attributes'] : [];
+  $variables['attributes'] = $element['#attributes'] ?? [];
   $variables['legend_attributes'] = new Attribute();
   $variables['header_attributes'] = new Attribute();
   $variables['description']['attributes'] = new Attribute();

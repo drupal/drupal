@@ -632,7 +632,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   public function loadRevision($revision_id) {
     $revisions = $this->loadMultipleRevisions([$revision_id]);
 
-    return isset($revisions[$revision_id]) ? $revisions[$revision_id] : NULL;
+    return $revisions[$revision_id] ?? NULL;
   }
 
   /**

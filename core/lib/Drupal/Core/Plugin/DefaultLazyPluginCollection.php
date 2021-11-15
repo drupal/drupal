@@ -74,7 +74,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    * {@inheritdoc}
    */
   protected function initializePlugin($instance_id) {
-    $configuration = isset($this->configurations[$instance_id]) ? $this->configurations[$instance_id] : [];
+    $configuration = $this->configurations[$instance_id] ?? [];
     if (!isset($configuration[$this->pluginKey])) {
       throw new PluginNotFoundException($instance_id);
     }

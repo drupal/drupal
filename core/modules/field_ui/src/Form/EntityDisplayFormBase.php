@@ -604,7 +604,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
           // Only store settings actually used by the selected plugin.
           $default_settings = $this->pluginManager->getDefaultSettings($options['type']);
           $options['settings'] = isset($values['settings_edit_form']['settings']) ? array_intersect_key($values['settings_edit_form']['settings'], $default_settings) : [];
-          $options['third_party_settings'] = isset($values['settings_edit_form']['third_party_settings']) ? $values['settings_edit_form']['third_party_settings'] : [];
+          $options['third_party_settings'] = $values['settings_edit_form']['third_party_settings'] ?? [];
           $form_state->set('plugin_settings_update', NULL);
         }
 
@@ -704,8 +704,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
     foreach ($updated_rows as $name) {
       foreach ($updated_columns as $key) {
         $element = &$form['fields'][$name][$key];
-        $element['#prefix'] = '<div class="ajax-new-content">' . (isset($element['#prefix']) ? $element['#prefix'] : '');
-        $element['#suffix'] = (isset($element['#suffix']) ? $element['#suffix'] : '') . '</div>';
+        $element['#prefix'] = '<div class="ajax-new-content">' . ($element['#prefix'] ?? '');
+        $element['#suffix'] = ($element['#suffix'] ?? '') . '</div>';
       }
     }
 
@@ -724,7 +724,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
   protected function getExtraFields() {
     $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
     $extra_fields = $this->entityFieldManager->getExtraFields($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle());
-    return isset($extra_fields[$context]) ? $extra_fields[$context] : [];
+    return $extra_fields[$context] ?? [];
   }
 
   /**

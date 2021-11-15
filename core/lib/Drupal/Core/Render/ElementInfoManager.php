@@ -76,7 +76,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
     if (!isset($this->elementInfo[$theme_name])) {
       $this->elementInfo[$theme_name] = $this->buildInfo($theme_name);
     }
-    $info = isset($this->elementInfo[$theme_name][$type]) ? $this->elementInfo[$theme_name][$type] : [];
+    $info = $this->elementInfo[$theme_name][$type] ?? [];
     $info['#defaults_loaded'] = TRUE;
     return $info;
   }
@@ -87,7 +87,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
   public function getInfoProperty($type, $property_name, $default = NULL) {
     $info = $this->getInfo($type);
 
-    return isset($info[$property_name]) ? $info[$property_name] : $default;
+    return $info[$property_name] ?? $default;
   }
 
   /**

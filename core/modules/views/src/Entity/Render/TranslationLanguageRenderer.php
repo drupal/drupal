@@ -60,8 +60,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
     // use the revision table or the revision data table, depending on which one
     // is being used as query base table.
     if ($this->entityType->isRevisionable()) {
-      $query_base_table = isset($query->relationships[$relationship]['base']) ?
-        $query->relationships[$relationship]['base'] :
+      $query_base_table = $query->relationships[$relationship]['base'] ??
         $this->view->storage->get('base_table');
       $revision_table = $storage->getRevisionTable();
       $revision_data_table = $storage->getRevisionDataTable();
@@ -104,7 +103,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
    * {@inheritdoc}
    */
   public function getLangcode(ResultRow $row) {
-    return isset($row->{$this->langcodeAlias}) ? $row->{$this->langcodeAlias} : $this->languageManager->getDefaultLanguage()->getId();
+    return $row->{$this->langcodeAlias} ?? $this->languageManager->getDefaultLanguage()->getId();
   }
 
   /**

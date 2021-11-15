@@ -38,7 +38,7 @@ class State implements StateInterface {
    */
   public function get($key, $default = NULL) {
     $values = $this->getMultiple([$key]);
-    return isset($values[$key]) ? $values[$key] : $default;
+    return $values[$key] ?? $default;
   }
 
   /**

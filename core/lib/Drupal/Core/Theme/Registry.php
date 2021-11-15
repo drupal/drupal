@@ -500,7 +500,7 @@ class Registry implements DestructableInterface {
         // system.module to declare theme functions on behalf of core .include
         // files.
         if (isset($info['file'])) {
-          $include_file = isset($info['path']) ? $info['path'] : $path;
+          $include_file = $info['path'] ?? $path;
           $include_file .= '/' . $info['file'];
           include_once $this->root . '/' . $include_file;
           $result[$hook]['includes'][] = $include_file;

@@ -415,8 +415,8 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   // A valid Simpletest request will contain a hashed and salted authentication
   // code. Check if this code is present in a cookie or custom user agent
   // string.
-  $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
-  $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
+  $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? NULL;
+  $user_agent = $_COOKIE['SIMPLETEST_USER_AGENT'] ?? $http_user_agent;
   if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
     $check_string = $prefix . ':' . $time . ':' . $salt;

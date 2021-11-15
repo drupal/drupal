@@ -806,7 +806,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
       $views_data = Views::viewsData()->get($this->view->storage->get('base_table'));
-      $name = isset($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
+      $name = $views_data['table']['base']['query_id'] ?? 'views_query';
     }
     else {
       $name = $options['type'];
@@ -2205,9 +2205,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $cache = $this->getPlugin('cache');
 
     (new CacheableMetadata())
-      ->setCacheTags(Cache::mergeTags($this->view->getCacheTags(), isset($this->display['cache_metadata']['tags']) ? $this->display['cache_metadata']['tags'] : []))
-      ->setCacheContexts(isset($this->display['cache_metadata']['contexts']) ? $this->display['cache_metadata']['contexts'] : [])
-      ->setCacheMaxAge(Cache::mergeMaxAges($cache->getCacheMaxAge(), isset($this->display['cache_metadata']['max-age']) ? $this->display['cache_metadata']['max-age'] : Cache::PERMANENT))
+      ->setCacheTags(Cache::mergeTags($this->view->getCacheTags(), $this->display['cache_metadata']['tags'] ?? []))
+      ->setCacheContexts($this->display['cache_metadata']['contexts'] ?? [])
+      ->setCacheMaxAge(Cache::mergeMaxAges($cache->getCacheMaxAge(), $this->display['cache_metadata']['max-age'] ?? Cache::PERMANENT))
       ->merge(CacheableMetadata::createFromRenderArray($element))
       ->applyTo($element);
   }
@@ -2232,7 +2232,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $element['#feed_icons'] = !empty($view->feedIcons) ? $view->feedIcons : [];
 
     if ($view->display_handler->renderPager()) {
-      $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
+      $exposed_input = $view->exposed_raw_input ?? NULL;
       $element['#pager'] = $view->renderPager($exposed_input);
     }
 

@@ -204,7 +204,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    */
   public function getByTypeName($type_name) {
     $resource_types = $this->all();
-    return isset($resource_types[$type_name]) ? $resource_types[$type_name] : NULL;
+    return $resource_types[$type_name] ?? NULL;
   }
 
   /**

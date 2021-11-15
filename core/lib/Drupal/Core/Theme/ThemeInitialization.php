@@ -261,8 +261,8 @@ class ThemeInitialization implements ThemeInitializationInterface {
       }
     }
 
-    $values['engine'] = isset($theme->engine) ? $theme->engine : NULL;
-    $values['owner'] = isset($theme->owner) ? $theme->owner : NULL;
+    $values['engine'] = $theme->engine ?? NULL;
+    $values['owner'] = $theme->owner ?? NULL;
     $values['extension'] = $theme;
 
     $base_active_themes = [];

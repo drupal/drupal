@@ -133,7 +133,7 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
    */
   protected function getModuleSchemaVersion($module) {
     $system_data = $this->getSystemData();
-    return isset($system_data['module'][$module]['schema_version']) ? $system_data['module'][$module]['schema_version'] : FALSE;
+    return $system_data['module'][$module]['schema_version'] ?? FALSE;
   }
 
   /**

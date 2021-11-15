@@ -57,7 +57,7 @@ class Checkbox extends FormElement {
       // NULL to 0, because FormBuilder::handleInputElement() would otherwise
       // replace NULL with empty string, but an empty string is a potentially
       // valid value for a checked checkbox.
-      return isset($element['#default_value']) ? $element['#default_value'] : 0;
+      return $element['#default_value'] ?? 0;
     }
     else {
       // Checked checkboxes are submitted with a value (possibly '0' or ''):

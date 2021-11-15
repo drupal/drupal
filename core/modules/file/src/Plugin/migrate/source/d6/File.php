@@ -54,7 +54,7 @@ class File extends DrupalSqlBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() {
-    $site_path = isset($this->configuration['site_path']) ? $this->configuration['site_path'] : 'sites/default';
+    $site_path = $this->configuration['site_path'] ?? 'sites/default';
     $this->filePath = $this->variableGet('file_directory_path', $site_path . '/files') . '/';
     $this->tempFilePath = $this->variableGet('file_directory_temp', '/tmp') . '/';
 

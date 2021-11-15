@@ -186,7 +186,7 @@ class DbDumpCommand extends DbCommandBase {
       elseif (!isset($definition['fields'][$name]['size'])) {
         // Try use the provided length, if it doesn't exist default to 100. It's
         // not great but good enough for our dumps at this point.
-        $definition['fields'][$name]['length'] = isset($matches[2]) ? $matches[2] : 100;
+        $definition['fields'][$name]['length'] = $matches[2] ?? 100;
       }
 
       if (isset($row['Default'])) {

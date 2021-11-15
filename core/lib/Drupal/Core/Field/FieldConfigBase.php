@@ -505,7 +505,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    */
   public function getConstraint($constraint_name) {
     $constraints = $this->getConstraints();
-    return isset($constraints[$constraint_name]) ? $constraints[$constraint_name] : NULL;
+    return $constraints[$constraint_name] ?? NULL;
   }
 
   /**

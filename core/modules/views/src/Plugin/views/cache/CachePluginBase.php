@@ -110,7 +110,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'results':
         $data = [
           'result' => $this->prepareViewResult($this->view->result),
-          'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
+          'total_rows' => $this->view->total_rows ?? 0,
           'current_page' => $this->view->getCurrentPage(),
         ];
         $expire = ($this->cacheSetMaxAge($type) === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->view->getRequest()->server->get('REQUEST_TIME') + $this->cacheSetMaxAge($type);

@@ -183,7 +183,7 @@ class EntityController implements ContainerInjectionInterface {
     foreach ($bundles as $bundle_name => $bundle_info) {
       $build['#bundles'][$bundle_name] = [
         'label' => $bundle_info['label'],
-        'description' => isset($bundle_info['description']) ? $bundle_info['description'] : '',
+        'description' => $bundle_info['description'] ?? '',
         'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, [$bundle_argument => $bundle_name]),
       ];
     }

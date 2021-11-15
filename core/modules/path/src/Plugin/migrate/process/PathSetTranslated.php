@@ -64,7 +64,7 @@ class PathSetTranslated extends ProcessPluginBase {
       throw new MigrateException("The input value should be an array.");
     }
 
-    $path = isset($value[0]) ? $value[0] : '';
+    $path = $value[0] ?? '';
     $nid = (is_array($value[1]) && isset($value[1][0])) ? $value[1][0] : FALSE;
     if (preg_match('/^\/node\/\d+$/', $path) && $nid) {
       return '/node/' . $nid;

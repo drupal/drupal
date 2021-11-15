@@ -42,7 +42,7 @@ class LanguageArgument extends ArgumentPluginBase {
    */
   public function language($langcode) {
     $languages = $this->listLanguages();
-    return isset($languages[$langcode]) ? $languages[$langcode] : $this->t('Unknown language');
+    return $languages[$langcode] ?? $this->t('Unknown language');
   }
 
 }

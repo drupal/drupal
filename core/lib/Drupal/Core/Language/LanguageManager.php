@@ -149,7 +149,7 @@ class LanguageManager implements LanguageManagerInterface {
    */
   public function getLanguage($langcode) {
     $languages = $this->getLanguages(LanguageInterface::STATE_ALL);
-    return isset($languages[$langcode]) ? $languages[$langcode] : NULL;
+    return $languages[$langcode] ?? NULL;
   }
 
   /**

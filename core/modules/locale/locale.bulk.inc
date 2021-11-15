@@ -484,7 +484,7 @@ function locale_translate_file_attach_properties($file, array $options = []) {
   if (isset($matches[5])) {
     $file->project = $matches[2] . $matches[3];
     $file->version = $matches[4];
-    $file->langcode = isset($options['langcode']) ? $options['langcode'] : $matches[5];
+    $file->langcode = $options['langcode'] ?? $matches[5];
   }
   else {
     $file->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
@@ -634,7 +634,7 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, &$cont
  */
 function locale_config_batch_finished($success, array $results) {
   if ($success) {
-    $configuration = isset($results['stats']['config']) ? $results['stats']['config'] : 0;
+    $configuration = $results['stats']['config'] ?? 0;
     if ($configuration) {
       \Drupal::messenger()->addStatus(t('The configuration was successfully updated. There are %number configuration objects updated.', ['%number' => $configuration]));
       \Drupal::logger('locale')->notice('The configuration was successfully updated. %number configuration objects updated.', ['%number' => $configuration]);

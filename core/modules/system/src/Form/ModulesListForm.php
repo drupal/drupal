@@ -276,7 +276,7 @@ class ModulesListForm extends FormBase {
 
     // Generate link for module's configuration page, if it has one.
     if ($module->status && isset($module->info['configure'])) {
-      $route_parameters = isset($module->info['configure_parameters']) ? $module->info['configure_parameters'] : [];
+      $route_parameters = $module->info['configure_parameters'] ?? [];
       if ($this->accessManager->checkNamedRoute($module->info['configure'], $route_parameters, $this->currentUser)) {
         $row['links']['configure'] = [
           '#type' => 'link',
@@ -320,7 +320,7 @@ class ModulesListForm extends FormBase {
         '@core_version' => \Drupal::VERSION,
       ]);
       $row['#requires']['core'] = $this->t('Drupal Core (@core_requirement) (<span class="admin-missing">incompatible with</span> version @core_version)', [
-        '@core_requirement' => isset($module->info['core_version_requirement']) ? $module->info['core_version_requirement'] : $module->info['core'],
+        '@core_requirement' => $module->info['core_version_requirement'] ?? $module->info['core'],
         '@core_version' => \Drupal::VERSION,
       ]);
     }

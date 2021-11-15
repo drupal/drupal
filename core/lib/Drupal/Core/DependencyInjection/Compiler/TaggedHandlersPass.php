@@ -134,9 +134,9 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *   The service container.
    */
   protected function processServiceCollectorPass(array $pass, $consumer_id, ContainerBuilder $container) {
-    $tag = isset($pass['tag']) ? $pass['tag'] : $consumer_id;
-    $method_name = isset($pass['call']) ? $pass['call'] : 'addHandler';
-    $required = isset($pass['required']) ? $pass['required'] : FALSE;
+    $tag = $pass['tag'] ?? $consumer_id;
+    $method_name = $pass['call'] ?? 'addHandler';
+    $required = $pass['required'] ?? FALSE;
 
     // Determine parameters.
     $consumer = $container->getDefinition($consumer_id);
@@ -181,10 +181,10 @@ class TaggedHandlersPass implements CompilerPassInterface {
       if (!is_subclass_of($handler->getClass(), $interface)) {
         throw new LogicException("Service '$id' for consumer '$consumer_id' does not implement $interface.");
       }
-      $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $handlers[$id] = $attributes[0]['priority'] ?? 0;
       // Keep track of other tagged handlers arguments.
       foreach ($extra_params as $name => $pos) {
-        $extra_arguments[$id][$pos] = isset($attributes[0][$name]) ? $attributes[0][$name] : $params[$pos]->getDefaultValue();
+        $extra_arguments[$id][$pos] = $attributes[0][$name] ?? $params[$pos]->getDefaultValue();
       }
     }
 
@@ -228,15 +228,15 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *   The service container.
    */
   protected function processServiceIdCollectorPass(array $pass, $consumer_id, ContainerBuilder $container) {
-    $tag = isset($pass['tag']) ? $pass['tag'] : $consumer_id;
-    $required = isset($pass['required']) ? $pass['required'] : FALSE;
+    $tag = $pass['tag'] ?? $consumer_id;
+    $required = $pass['required'] ?? FALSE;
 
     $consumer = $container->getDefinition($consumer_id);
 
     // Find all tagged handlers.
     $handlers = [];
     foreach ($this->tagCache[$tag] ?? [] as $id => $attributes) {
-      $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $handlers[$id] = $attributes[0]['priority'] ?? 0;
     }
 
     if ($required && empty($handlers)) {

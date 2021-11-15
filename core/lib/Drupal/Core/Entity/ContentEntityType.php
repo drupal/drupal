@@ -65,7 +65,7 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
    */
   public function getRevisionMetadataKey($key) {
     $keys = $this->getRevisionMetadataKeys();
-    return isset($keys[$key]) ? $keys[$key] : FALSE;
+    return $keys[$key] ?? FALSE;
   }
 
   /**

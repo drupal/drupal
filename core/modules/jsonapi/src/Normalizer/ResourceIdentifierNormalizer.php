@@ -97,7 +97,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
           implode(', ', $target_resource_type_names)
         ));
       }
-      return new ResourceIdentifier($value['type'], $value['id'], isset($value['meta']) ? $value['meta'] : []);
+      return new ResourceIdentifier($value['type'], $value['id'], $value['meta'] ?? []);
     }, $data['data']);
     if (!ResourceIdentifier::areResourceIdentifiersUnique($resource_identifiers)) {
       throw new BadRequestHttpException('Duplicate relationships are not permitted. Use `meta.arity` to distinguish resource identifiers with matching `type` and `id` values.');

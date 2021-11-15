@@ -177,7 +177,7 @@ class RssFields extends RowPluginBase {
       '#view' => $this->view,
       '#options' => $this->options,
       '#row' => $item,
-      '#field_alias' => isset($this->field_alias) ? $this->field_alias : '',
+      '#field_alias' => $this->field_alias ?? '',
     ];
 
     return $build;

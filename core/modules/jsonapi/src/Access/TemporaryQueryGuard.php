@@ -588,7 +588,7 @@ class TemporaryQueryGuard {
       // This complex expression is needed to handle the string, "0", which
       // would be evaluated as FALSE.
       if (!is_null(($field_name = array_shift($parts)))) {
-        $previous = isset($merged[$field_name]) ? $merged[$field_name] : [];
+        $previous = $merged[$field_name] ?? [];
         $merged[$field_name] = array_merge($previous, [$parts]);
       }
     }

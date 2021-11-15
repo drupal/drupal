@@ -452,10 +452,10 @@ class LocalTaskManagerTest extends UnitTestCase {
       $mock->getRouteParameters(Argument::cetera())->willReturn([]);
       $mock->getOptions(Argument::cetera())->willReturn([]);
       $mock->getActive()->willReturn($plugin_id === $active_plugin_id);
-      $mock->getWeight()->willReturn(isset($info['weight']) ? $info['weight'] : 0);
-      $mock->getCacheContexts()->willReturn(isset($info['cache_contexts']) ? $info['cache_contexts'] : []);
-      $mock->getCacheTags()->willReturn(isset($info['cache_tags']) ? $info['cache_tags'] : []);
-      $mock->getCacheMaxAge()->willReturn(isset($info['cache_max_age']) ? $info['cache_max_age'] : Cache::PERMANENT);
+      $mock->getWeight()->willReturn($info['weight'] ?? 0);
+      $mock->getCacheContexts()->willReturn($info['cache_contexts'] ?? []);
+      $mock->getCacheTags()->willReturn($info['cache_tags'] ?? []);
+      $mock->getCacheMaxAge()->willReturn($info['cache_max_age'] ?? Cache::PERMANENT);
 
       $access_manager_map[] = [$info['route_name'], [], $this->account, TRUE, $info['access']];
 

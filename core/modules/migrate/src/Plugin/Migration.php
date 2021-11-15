@@ -412,7 +412,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   public function getIdMap() {
     if (!isset($this->idMapPlugin)) {
       $configuration = $this->idMap;
-      $plugin = isset($configuration['plugin']) ? $configuration['plugin'] : 'sql';
+      $plugin = $configuration['plugin'] ?? 'sql';
       $this->idMapPlugin = $this->idMapPluginManager->createInstance($plugin, $configuration, $this);
     }
     return $this->idMapPlugin;
@@ -657,7 +657,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     // While normal plugins do not change their definitions on the fly, this
     // one does so accommodate for that.
     foreach (parent::getPluginDefinition() as $key => $value) {
-      $definition[$key] = isset($this->$key) ? $this->$key : $value;
+      $definition[$key] = $this->$key ?? $value;
     }
     return $definition;
   }

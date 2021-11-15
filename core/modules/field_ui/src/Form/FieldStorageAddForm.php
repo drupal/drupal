@@ -363,10 +363,10 @@ class FieldStorageAddForm extends FormBase {
           }
         }
 
-        $widget_id = isset($field_options['entity_form_display']['type']) ? $field_options['entity_form_display']['type'] : NULL;
-        $widget_settings = isset($field_options['entity_form_display']['settings']) ? $field_options['entity_form_display']['settings'] : [];
-        $formatter_id = isset($field_options['entity_view_display']['type']) ? $field_options['entity_view_display']['type'] : NULL;
-        $formatter_settings = isset($field_options['entity_view_display']['settings']) ? $field_options['entity_view_display']['settings'] : [];
+        $widget_id = $field_options['entity_form_display']['type'] ?? NULL;
+        $widget_settings = $field_options['entity_form_display']['settings'] ?? [];
+        $formatter_id = $field_options['entity_view_display']['type'] ?? NULL;
+        $formatter_settings = $field_options['entity_view_display']['settings'] ?? [];
       }
 
       // Create the field storage and field.

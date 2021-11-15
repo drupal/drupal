@@ -1705,7 +1705,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ])
       ->addCacheableDependency($entity)
       ->addCacheableDependency($access);
-    $status_code = isset($expected_document['errors'][0]['status']) ? $expected_document['errors'][0]['status'] : 200;
+    $status_code = $expected_document['errors'][0]['status'] ?? 200;
     $resource_response = new CacheableResourceResponse($expected_document, $status_code);
     $resource_response->addCacheableDependency($expected_cacheability);
     return $resource_response;

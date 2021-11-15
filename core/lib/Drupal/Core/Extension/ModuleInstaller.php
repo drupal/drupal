@@ -583,9 +583,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $definitions = Yaml::decode(file_get_contents($service_yaml_file));
 
     $cache_bin_services = array_filter(
-      isset($definitions['services']) ? $definitions['services'] : [],
+      $definitions['services'] ?? [],
       function ($definition) {
-        $tags = isset($definition['tags']) ? $definition['tags'] : [];
+        $tags = $definition['tags'] ?? [];
         foreach ($tags as $tag) {
           if (isset($tag['name']) && ($tag['name'] == 'cache.bin')) {
             return TRUE;

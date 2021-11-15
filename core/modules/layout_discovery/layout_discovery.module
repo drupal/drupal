@@ -37,8 +37,8 @@ function layout_discovery_theme() {
  *     Properties used: #settings, #layout.
  */
 function template_preprocess_layout(&$variables) {
-  $variables['settings'] = isset($variables['content']['#settings']) ? $variables['content']['#settings'] : [];
-  $variables['layout'] = isset($variables['content']['#layout']) ? $variables['content']['#layout'] : [];
+  $variables['settings'] = $variables['content']['#settings'] ?? [];
+  $variables['layout'] = $variables['content']['#layout'] ?? [];
 
   // Create an attributes variable for each region.
   foreach (Element::children($variables['content']) as $name) {

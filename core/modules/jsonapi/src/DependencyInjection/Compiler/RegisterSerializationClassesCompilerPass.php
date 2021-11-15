@@ -70,14 +70,14 @@ class RegisterSerializationClassesCompilerPass extends DrupalRegisterSerializati
       // Normalizers are not an API: mark private.
       $container->getDefinition($id)->setPublic(FALSE);
 
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priority = $attributes[0]['priority'] ?? 0;
       $normalizers[$priority][] = new Reference($id);
     }
     foreach ($container->findTaggedServiceIds(static::OVERRIDDEN_SERVICE_ENCODER_TAG) as $id => $attributes) {
       // Encoders are not an API: mark private.
       $container->getDefinition($id)->setPublic(FALSE);
 
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priority = $attributes[0]['priority'] ?? 0;
       $encoders[$priority][] = new Reference($id);
     }
 

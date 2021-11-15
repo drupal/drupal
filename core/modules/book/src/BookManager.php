@@ -540,7 +540,7 @@ class BookManager implements BookManagerInterface {
    */
   public function bookTreeAllData($bid, $link = NULL, $max_depth = NULL) {
     // Use $nid as flag for whether the data being loaded is for the whole tree.
-    $nid = isset($link['nid']) ? $link['nid'] : 0;
+    $nid = $link['nid'] ?? 0;
     $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
 
     // Create a cache ID for the given $nid, $link, $langcode and $max_depth.
@@ -747,7 +747,7 @@ class BookManager implements BookManagerInterface {
       return $cache->data;
     }
 
-    $min_depth = (isset($parameters['min_depth']) ? $parameters['min_depth'] : 1);
+    $min_depth = $parameters['min_depth'] ?? 1;
     $result = $this->bookOutlineStorage->getBookMenuTree($bid, $parameters, $min_depth, static::BOOK_MAX_DEPTH);
 
     // Build an ordered array of links using the query result object.
@@ -756,7 +756,7 @@ class BookManager implements BookManagerInterface {
       $link = (array) $link;
       $links[$link['nid']] = $link;
     }
-    $active_trail = (isset($parameters['active_trail']) ? $parameters['active_trail'] : []);
+    $active_trail = $parameters['active_trail'] ?? [];
     $data['tree'] = $this->buildBookOutlineData($links, $active_trail, $min_depth);
     $data['node_links'] = [];
     $this->bookTreeCollectNodeLinks($data['tree'], $data['node_links']);
@@ -821,7 +821,7 @@ class BookManager implements BookManagerInterface {
    */
   public function loadBookLink($nid, $translate = TRUE) {
     $links = $this->loadBookLinks([$nid], $translate);
-    return isset($links[$nid]) ? $links[$nid] : FALSE;
+    return $links[$nid] ?? FALSE;
   }
 
   /**

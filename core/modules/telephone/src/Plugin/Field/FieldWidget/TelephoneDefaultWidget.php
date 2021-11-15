@@ -64,7 +64,7 @@ class TelephoneDefaultWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element['value'] = $element + [
       '#type' => 'tel',
-      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+      '#default_value' => $items[$delta]->value ?? NULL,
       '#placeholder' => $this->getSetting('placeholder'),
     ];
     return $element;

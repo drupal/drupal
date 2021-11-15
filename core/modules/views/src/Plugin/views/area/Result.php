@@ -80,7 +80,7 @@ class Result extends AreaPluginBase {
     $per_page = (int) $this->view->getItemsPerPage();
     // @TODO: Maybe use a possible is views empty functionality.
     // Not every view has total_rows set, use view->result instead.
-    $total = isset($this->view->total_rows) ? $this->view->total_rows : count($this->view->result);
+    $total = $this->view->total_rows ?? count($this->view->result);
     $label = Html::escape($this->view->storage->label());
     // If there is no result the "start" and "current_record_count" should be
     // equal to 0. To have the same calculation logic, we use a "start offset"

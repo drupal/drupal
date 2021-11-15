@@ -29,7 +29,7 @@ class SourceString extends StringBase {
    * {@inheritdoc}
    */
   public function getString() {
-    return isset($this->source) ? $this->source : '';
+    return $this->source ?? '';
   }
 
   /**

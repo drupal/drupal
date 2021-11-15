@@ -56,7 +56,7 @@ class WideModalRenderer extends ModalRenderer {
     $response->setAttachments($main_content['#attached']);
 
     // If the main content doesn't provide a title, use the title resolver.
-    $title = isset($main_content['#title']) ? $main_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     // Determine the title: use the title provided by the main content if any,
     // otherwise get it from the routing information.

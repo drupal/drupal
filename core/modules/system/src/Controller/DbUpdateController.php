@@ -191,7 +191,7 @@ class DbUpdateController extends ControllerBase {
     if ($output instanceof Response) {
       return $output;
     }
-    $title = isset($output['#title']) ? $output['#title'] : $this->t('Drupal database update');
+    $title = $output['#title'] ?? $this->t('Drupal database update');
 
     return $this->bareHtmlPageRenderer->renderBarePage($output, $title, 'maintenance_page', $regions);
   }

@@ -348,7 +348,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#title_display' => 'invisible',
         '#type' => 'textfield',
         '#size' => 10,
-        '#default_value' => isset($this->options['info'][$field]['separator']) ? $this->options['info'][$field]['separator'] : '',
+        '#default_value' => $this->options['info'][$field]['separator'] ?? '',
         '#states' => [
           'visible' => [
             $column_selector => ['value' => $field],
@@ -359,7 +359,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#title' => $this->t('Hide empty column for @field', ['@field' => $field]),
         '#title_display' => 'invisible',
         '#type' => 'checkbox',
-        '#default_value' => isset($this->options['info'][$field]['empty_column']) ? $this->options['info'][$field]['empty_column'] : FALSE,
+        '#default_value' => $this->options['info'][$field]['empty_column'] ?? FALSE,
         '#states' => [
           'visible' => [
             $column_selector => ['value' => $field],
@@ -370,7 +370,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#title' => $this->t('Responsive setting for @field', ['@field' => $field]),
         '#title_display' => 'invisible',
         '#type' => 'select',
-        '#default_value' => isset($this->options['info'][$field]['responsive']) ? $this->options['info'][$field]['responsive'] : '',
+        '#default_value' => $this->options['info'][$field]['responsive'] ?? '',
         '#options' => ['' => $this->t('High'), RESPONSIVE_PRIORITY_MEDIUM => $this->t('Medium'), RESPONSIVE_PRIORITY_LOW => $this->t('Low')],
         '#states' => [
           'visible' => [

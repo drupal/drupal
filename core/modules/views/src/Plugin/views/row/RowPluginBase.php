@@ -169,7 +169,7 @@ abstract class RowPluginBase extends PluginBase {
       '#view' => $this->view,
       '#options' => $this->options,
       '#row' => $row,
-      '#field_alias' => isset($this->field_alias) ? $this->field_alias : '',
+      '#field_alias' => $this->field_alias ?? '',
     ];
   }
 

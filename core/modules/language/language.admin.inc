@@ -74,7 +74,7 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
     }
 
     // Unset configurable to prevent rendering twice with children.
-    $configurable = isset($form[$type]['configurable']) ? $form[$type]['configurable'] : NULL;
+    $configurable = $form[$type]['configurable'] ?? NULL;
     unset($form[$type]['configurable']);
 
     $variables['language_types'][] = [

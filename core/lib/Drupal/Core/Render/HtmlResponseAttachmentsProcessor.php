@@ -429,7 +429,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
     foreach ($html_head_link as $item) {
       $attributes = $item[0];
-      $should_add_header = isset($item[1]) ? $item[1] : FALSE;
+      $should_add_header = $item[1] ?? FALSE;
 
       $element = [
         '#tag' => 'link',

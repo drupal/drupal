@@ -77,7 +77,7 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
     elseif (isset($button['image']) || isset($button['image' . $rtl])) {
       $value = [
         '#theme' => 'image',
-        '#uri' => isset($button['image' . $rtl]) ? $button['image' . $rtl] : $button['image'],
+        '#uri' => $button['image' . $rtl] ?? $button['image'],
         '#title' => $button['label'],
         '#prefix' => '<a href="#" role="button" title="' . $button['label'] . '" aria-label="' . $button['label'] . '"><span class="cke_button_icon">',
         '#suffix' => '</span></a>',

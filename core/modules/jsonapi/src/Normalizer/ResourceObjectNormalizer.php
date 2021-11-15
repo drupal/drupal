@@ -122,11 +122,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
     }
     // Add links if missing.
     $base = &$normalizer_values[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_BASE];
-    $base['links'] = isset($base['links'])
-      ? $base['links']
-      : $this->serializer
-        ->normalize($object->getLinks(), $format, $context)
-        ->omitIfEmpty();
+    $base['links'] = $base['links'] ?? $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty();
 
     if (!empty($non_cached_requested_fields)) {
       $this->cacher->saveOnTerminate($object, $normalizer_values);

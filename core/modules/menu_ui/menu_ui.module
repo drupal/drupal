@@ -114,7 +114,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   $entity->description->value = trim($values['description']);
   $entity->menu_name->value = $values['menu_name'];
   $entity->parent->value = $values['parent'];
-  $entity->weight->value = isset($values['weight']) ? $values['weight'] : 0;
+  $entity->weight->value = $values['weight'] ?? 0;
   $entity->isDefaultRevision($node->isDefaultRevision());
   $entity->save();
 }

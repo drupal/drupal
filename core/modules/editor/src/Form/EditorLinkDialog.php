@@ -40,7 +40,7 @@ class EditorLinkDialog extends FormBase {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
     $user_input = $form_state->getUserInput();
-    $input = isset($user_input['editor_object']) ? $user_input['editor_object'] : [];
+    $input = $user_input['editor_object'] ?? [];
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
@@ -52,7 +52,7 @@ class EditorLinkDialog extends FormBase {
     $form['attributes']['href'] = [
       '#title' => $this->t('URL'),
       '#type' => 'textfield',
-      '#default_value' => isset($input['href']) ? $input['href'] : '',
+      '#default_value' => $input['href'] ?? '',
       '#maxlength' => 2048,
     ];
 

@@ -129,7 +129,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    *   The bundle for this row.
    */
   public function getBundle(Row $row) {
-    $default_bundle = isset($this->configuration['default_bundle']) ? $this->configuration['default_bundle'] : '';
+    $default_bundle = $this->configuration['default_bundle'] ?? '';
     $bundle_key = $this->getKey('bundle');
     return $row->getDestinationProperty($bundle_key) ?: $default_bundle;
   }

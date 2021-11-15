@@ -40,12 +40,12 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
           $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $params]];
         }
         elseif (is_string($params[0])) {
-          $priority = isset($params[1]) ? $params[1] : 0;
+          $priority = $params[1] ?? 0;
           $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $params[0]]];
         }
         else {
           foreach ($params as $listener) {
-            $priority = isset($listener[1]) ? $listener[1] : 0;
+            $priority = $listener[1] ?? 0;
             $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $listener[0]]];
           }
         }

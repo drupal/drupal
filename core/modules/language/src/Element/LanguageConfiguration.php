@@ -32,7 +32,7 @@ class LanguageConfiguration extends FormElement {
    * Process handler for the language_configuration form element.
    */
   public static function processLanguageConfiguration(&$element, FormStateInterface $form_state, &$form) {
-    $options = isset($element['#options']) ? $element['#options'] : [];
+    $options = $element['#options'] ?? [];
     // Avoid validation failure since we are moving the '#options' key in the
     // nested 'language' select element.
     unset($element['#options']);

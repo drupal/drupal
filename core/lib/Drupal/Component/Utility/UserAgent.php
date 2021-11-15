@@ -68,7 +68,7 @@ class UserAgent {
         // to the same langcode for different qvalues. Keep the highest.
         $ua_langcodes[$langcode] = max(
           (int) ($qvalue * 1000),
-          (isset($ua_langcodes[$langcode]) ? $ua_langcodes[$langcode] : 0)
+          ($ua_langcodes[$langcode] ?? 0)
         );
       }
     }
@@ -113,7 +113,7 @@ class UserAgent {
 
       // If nothing matches below, the default qvalue is the one of the wildcard
       // language, if set, or is 0 (which will never match).
-      $qvalue = isset($ua_langcodes['*']) ? $ua_langcodes['*'] : 0;
+      $qvalue = $ua_langcodes['*'] ?? 0;
 
       // Find the longest possible prefix of the user agent supplied language
       // ('the language-range') that matches this site language ('the language

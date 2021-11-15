@@ -249,7 +249,7 @@ class IncludeResolver {
       if (!$field_name = array_shift($parts)) {
         continue;
       }
-      $previous = isset($merged[$field_name]) ? $merged[$field_name] : [];
+      $previous = $merged[$field_name] ?? [];
       $merged[$field_name] = array_merge($previous, [$parts]);
     }
     return !empty($merged) ? array_map([static::class, __FUNCTION__], $merged) : $merged;

@@ -80,12 +80,12 @@ class EntityTranslationSettings extends DrupalSqlBase {
       // settings variable exists for that node type, otherwise use default
       // values.
       foreach ($node_types as $node_type) {
-        $settings = isset($results['entity_translation_settings_node__' . $node_type]) ? $results['entity_translation_settings_node__' . $node_type] : [];
+        $settings = $results['entity_translation_settings_node__' . $node_type] ?? [];
         $rows[] = [
           'id' => 'node.' . $node_type,
           'target_entity_type_id' => 'node',
           'target_bundle' => $node_type,
-          'default_langcode' => isset($settings['default_language']) ? $settings['default_language'] : 'und',
+          'default_langcode' => $settings['default_language'] ?? 'und',
           // The Drupal 7 'hide_language_selector' configuration has become
           // 'language_alterable' in Drupal 8 so we need to negate the value we
           // receive from the source. The Drupal 7 'hide_language_selector'
@@ -104,7 +104,7 @@ class EntityTranslationSettings extends DrupalSqlBase {
       // if a settings variable exists for that comment type, otherwise use
       // default values.
       foreach ($node_types as $node_type) {
-        $settings = isset($results['entity_translation_settings_comment__comment_node_' . $node_type]) ? $results['entity_translation_settings_comment__comment_node_' . $node_type] : [];
+        $settings = $results['entity_translation_settings_comment__comment_node_' . $node_type] ?? [];
         // Forum uses a hardcoded comment type name, so make sure we use it
         // when we're dealing with forum comment type.
         $bundle = $node_type == 'forum' ? 'comment_forum' : 'comment_node_' . $node_type;
@@ -112,7 +112,7 @@ class EntityTranslationSettings extends DrupalSqlBase {
           'id' => 'comment.' . $bundle,
           'target_entity_type_id' => 'comment',
           'target_bundle' => $bundle,
-          'default_langcode' => isset($settings['default_language']) ? $settings['default_language'] : 'xx-et-current',
+          'default_langcode' => $settings['default_language'] ?? 'xx-et-current',
           // The Drupal 7 'hide_language_selector' configuration has become
           // 'language_alterable' in Drupal 8 so we need to negate the value we
           // receive from the source. The Drupal 7 'hide_language_selector'
@@ -129,12 +129,12 @@ class EntityTranslationSettings extends DrupalSqlBase {
       // settings variable exists for that vocabulary, otherwise use default
       // values.
       foreach ($vocabularies as $vocabulary) {
-        $settings = isset($results['entity_translation_settings_taxonomy_term__' . $vocabulary]) ? $results['entity_translation_settings_taxonomy_term__' . $vocabulary] : [];
+        $settings = $results['entity_translation_settings_taxonomy_term__' . $vocabulary] ?? [];
         $rows[] = [
           'id' => 'taxonomy_term.' . $vocabulary,
           'target_entity_type_id' => 'taxonomy_term',
           'target_bundle' => $vocabulary,
-          'default_langcode' => isset($settings['default_language']) ? $settings['default_language'] : 'xx-et-default',
+          'default_langcode' => $settings['default_language'] ?? 'xx-et-default',
           // The Drupal 7 'hide_language_selector' configuration has become
           // 'language_alterable' in Drupal 8 so we need to negate the value we
           // receive from the source. The Drupal 7 'hide_language_selector'
@@ -149,12 +149,12 @@ class EntityTranslationSettings extends DrupalSqlBase {
     if (in_array('user', $entity_types, TRUE)) {
       // User entity type is not bundleable. Check if a settings variable
       // exists, otherwise use default values.
-      $settings = isset($results['entity_translation_settings_user__user']) ? $results['entity_translation_settings_user__user'] : [];
+      $settings = $results['entity_translation_settings_user__user'] ?? [];
       $rows[] = [
         'id' => 'user.user',
         'target_entity_type_id' => 'user',
         'target_bundle' => 'user',
-        'default_langcode' => isset($settings['default_language']) ? $settings['default_language'] : 'xx-et-default',
+        'default_langcode' => $settings['default_language'] ?? 'xx-et-default',
         // The Drupal 7 'hide_language_selector' configuration has become
         // 'language_alterable' in Drupal 8 so we need to negate the value we
         // receive from the source. The Drupal 7 'hide_language_selector'

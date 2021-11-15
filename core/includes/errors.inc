@@ -323,7 +323,7 @@ function _drupal_get_error_level() {
     $error_level = \Drupal::config('system.logging')->get('error_level');
   }
   catch (\Exception $e) {
-    $error_level = isset($GLOBALS['config']['system.logging']['error_level']) ? $GLOBALS['config']['system.logging']['error_level'] : ERROR_REPORTING_HIDE;
+    $error_level = $GLOBALS['config']['system.logging']['error_level'] ?? ERROR_REPORTING_HIDE;
   }
 
   // If there is no container or if it has no config.factory service, we are

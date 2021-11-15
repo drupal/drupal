@@ -85,8 +85,8 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
     $variables['attributes']['title'][] = t('Overridden');
   }
 
-  $variables['name'] = isset($element['#name']) ? $element['#name'] : NULL;
-  $variables['overridden'] = isset($element['#overridden']) ? $element['#overridden'] : NULL;
+  $variables['name'] = $element['#name'] ?? NULL;
+  $variables['overridden'] = $element['#overridden'] ?? NULL;
   $variables['content'] = $element['#children'];
   $variables['title'] = $element['#title'];
   $variables['actions'] = !empty($element['#actions']) ? $element['#actions'] : [];
