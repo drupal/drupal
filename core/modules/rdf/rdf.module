@@ -170,7 +170,7 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
   $attributes = [];
 
   // The type of mapping defaults to 'property'.
-  $type = isset($mapping['mapping_type']) ? $mapping['mapping_type'] : 'property';
+  $type = $mapping['mapping_type'] ?? 'property';
 
   switch ($type) {
     // The mapping expresses the relationship between two resources.
@@ -187,7 +187,7 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
         // Convert $data to a specific format as per the callback function.
         if (isset($data) && !empty($mapping['datatype_callback'])) {
           $callback = $mapping['datatype_callback']['callable'];
-          $arguments = isset($mapping['datatype_callback']['arguments']) ? $mapping['datatype_callback']['arguments'] : NULL;
+          $arguments = $mapping['datatype_callback']['arguments'] ?? NULL;
           $attributes['content'] = call_user_func($callback, $data, $arguments);
         }
         if (isset($mapping['datatype'])) {

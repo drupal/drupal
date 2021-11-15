@@ -33,7 +33,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   protected function parse() {
     $elements = [];
     foreach ($this->getAllKeys() as $key) {
-      $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
+      $value = $this->value[$key] ?? NULL;
       $definition = $this->getElementDefinition($key);
       $elements[$key] = $this->createElement($definition, $value, $key);
     }
@@ -98,7 +98,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * {@inheritdoc}
    */
   public function toArray() {
-    return isset($this->value) ? $this->value : [];
+    return $this->value ?? [];
   }
 
   /**

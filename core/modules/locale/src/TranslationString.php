@@ -84,7 +84,7 @@ class TranslationString extends StringBase {
    * {@inheritdoc}
    */
   public function getString() {
-    return isset($this->translation) ? $this->translation : '';
+    return $this->translation ?? '';
   }
 
   /**

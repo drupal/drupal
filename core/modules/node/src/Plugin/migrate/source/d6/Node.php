@@ -255,7 +255,7 @@ class Node extends DrupalSqlBase {
       }
     }
 
-    return isset($this->fieldInfo[$node_type]) ? $this->fieldInfo[$node_type] : [];
+    return $this->fieldInfo[$node_type] ?? [];
   }
 
   /**

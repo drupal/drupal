@@ -139,7 +139,7 @@ class Config {
     // Merge root config with defaults.
     foreach (array_change_key_case(static::$defaultConfig, CASE_LOWER) as $package => $paths) {
       $this->configData[$package] = array_merge(
-        isset($this->configData[$package]) ? $this->configData[$package] : [],
+        $this->configData[$package] ?? [],
         $paths);
     }
     return $this->configData;
@@ -157,7 +157,7 @@ class Config {
   public function getPathsForPackage($package) {
     $package = strtolower($package);
     $paths = $this->getAllCleanupPaths();
-    return isset($paths[$package]) ? $paths[$package] : [];
+    return $paths[$package] ?? [];
   }
 
 }

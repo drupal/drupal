@@ -49,8 +49,8 @@ trait EntityDefinitionTestTrait {
         $original_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
 
         foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
-          $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
-          $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
+          $storage_definition = $storage_definitions[$field_name] ?? NULL;
+          $original_storage_definition = $original_storage_definitions[$field_name] ?? NULL;
           $this->doFieldUpdate($change, $storage_definition, $original_storage_definition);
         }
       }

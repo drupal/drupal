@@ -142,7 +142,7 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
       '#required' => TRUE,
       '#options' => array_map([State::class, 'labelCallback'], $this->workflowType->getStates()),
       '#description' => $this->t('Select the state that new content will be assigned. This state will appear as the default in content forms and the available target states will be based on the transitions available from this state.'),
-      '#default_value' => isset($workflow_type_configuration['default_moderation_state']) ? $workflow_type_configuration['default_moderation_state'] : 'draft',
+      '#default_value' => $workflow_type_configuration['default_moderation_state'] ?? 'draft',
     ];
     return $form;
   }

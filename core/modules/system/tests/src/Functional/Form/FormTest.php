@@ -651,8 +651,8 @@ class FormTest extends BrowserTestBase {
         // Create placeholder array.
         $placeholders = [
           '%name' => $form[$element]['#title'],
-          '%min' => isset($form[$element]['#min']) ? $form[$element]['#min'] : '0',
-          '%max' => isset($form[$element]['#max']) ? $form[$element]['#max'] : '0',
+          '%min' => $form[$element]['#min'] ?? '0',
+          '%max' => $form[$element]['#max'] ?? '0',
         ];
 
         foreach ($error_messages as $id => $message) {
@@ -860,7 +860,7 @@ class FormTest extends BrowserTestBase {
       $element = $this->xpath($path, [
         ':name' => Html::escape($name),
         ':div-class' => $class,
-        ':value' => isset($item['#value']) ? $item['#value'] : '',
+        ':value' => $item['#value'] ?? '',
       ]);
       $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
     }

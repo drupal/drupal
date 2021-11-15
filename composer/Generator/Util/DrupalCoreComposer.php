@@ -83,7 +83,7 @@ class DrupalCoreComposer {
    */
   public function getRequireDev() {
     $composerJsonData = $this->rootComposerJson();
-    return isset($composerJsonData['require-dev']) ? $composerJsonData['require-dev'] : [];
+    return $composerJsonData['require-dev'] ?? [];
   }
 
   /**

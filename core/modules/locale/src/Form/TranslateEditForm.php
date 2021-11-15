@@ -128,7 +128,7 @@ class TranslateEditForm extends TranslateFormBase {
               // @todo Should use better labels https://www.drupal.org/node/2499639
               '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
               '#rows' => $rows,
-              '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
+              '#default_value' => $translation_array[$i] ?? '',
               '#attributes' => ['lang' => $langcode],
               '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', ['@language' => $langname]) . '</span>') : '',
             ];
@@ -207,7 +207,7 @@ class TranslateEditForm extends TranslateFormBase {
 
       if ($is_changed) {
         // Only update or insert if we have a value to use.
-        $target = isset($existing_translation_objects[$lid]) ? $existing_translation_objects[$lid] : $this->localeStorage->createTranslation(['lid' => $lid, 'language' => $langcode]);
+        $target = $existing_translation_objects[$lid] ?? $this->localeStorage->createTranslation(['lid' => $lid, 'language' => $langcode]);
         $target->setPlurals($new_translation['translations'])
           ->setCustomized()
           ->save();

@@ -100,7 +100,7 @@ trait WorkspaceTestTrait {
     $workspace_association = \Drupal::service('workspaces.association');
     foreach ($expected as $workspace_id => $expected_tracked_revision_ids) {
       $tracked_entities = $workspace_association->getTrackedEntities($workspace_id, $entity_type_id);
-      $tracked_revision_ids = isset($tracked_entities[$entity_type_id]) ? $tracked_entities[$entity_type_id] : [];
+      $tracked_revision_ids = $tracked_entities[$entity_type_id] ?? [];
       $this->assertEquals($expected_tracked_revision_ids, array_keys($tracked_revision_ids));
     }
   }

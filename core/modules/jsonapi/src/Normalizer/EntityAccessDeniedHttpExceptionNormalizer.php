@@ -40,9 +40,8 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
       $entity = $error['entity'];
       $pointer = $error['pointer'];
       $reason = $error['reason'];
-      $relationship_field = isset($error['relationship_field'])
-        ? $error['relationship_field']
-        : NULL;
+      $relationship_field = $error['relationship_field']
+        ?? NULL;
 
       if (isset($entity)) {
         $entity_type_id = $entity->getEntityTypeId();

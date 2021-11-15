@@ -1074,7 +1074,7 @@ class Sql extends QueryPluginBase {
    * @see \Drupal\views\Plugin\views\query\Sql::addField
    */
   protected function getFieldAlias($table_alias, $field) {
-    return isset($this->fieldAliases[$table_alias][$field]) ? $this->fieldAliases[$table_alias][$field] : FALSE;
+    return $this->fieldAliases[$table_alias][$field] ?? FALSE;
   }
 
   /**

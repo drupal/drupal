@@ -80,7 +80,7 @@ class Checkboxes extends FormElement {
           '#return_value' => $key,
           '#default_value' => isset($value[$key]) ? $key : NULL,
           '#attributes' => $element['#attributes'],
-          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+          '#ajax' => $element['#ajax'] ?? NULL,
           // Errors should only be shown on the parent checkboxes element.
           '#error_no_message' => TRUE,
           '#weight' => $weight,

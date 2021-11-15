@@ -150,7 +150,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function get($property_name) {
-    return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
+    return $this->{$property_name} ?? NULL;
   }
 
   /**
@@ -228,8 +228,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * Helper callback for uasort() to sort configuration entities by weight and label.
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
-    $a_weight = isset($a->weight) ? $a->weight : 0;
-    $b_weight = isset($b->weight) ? $b->weight : 0;
+    $a_weight = $a->weight ?? 0;
+    $b_weight = $b->weight ?? 0;
     if ($a_weight == $b_weight) {
       $a_label = $a->label() ?? '';
       $b_label = $b->label() ?? '';
@@ -521,7 +521,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function getThirdPartySettings($module) {
-    return isset($this->third_party_settings[$module]) ? $this->third_party_settings[$module] : [];
+    return $this->third_party_settings[$module] ?? [];
   }
 
   /**

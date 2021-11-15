@@ -22,7 +22,7 @@ class SequenceDataDefinition extends ListDataDefinition {
    *   be sorted).
    */
   public function getOrderBy() {
-    return isset($this->definition['orderby']) ? $this->definition['orderby'] : NULL;
+    return $this->definition['orderby'] ?? NULL;
   }
 
 }

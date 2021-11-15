@@ -146,7 +146,7 @@ class HtmlTag extends RenderElement {
    *   added to '#prefix' and '#suffix'.
    */
   public static function preRenderConditionalComments($element) {
-    $browsers = isset($element['#browsers']) ? $element['#browsers'] : [];
+    $browsers = $element['#browsers'] ?? [];
     $browsers += [
       'IE' => TRUE,
       '!IE' => TRUE,
@@ -181,11 +181,11 @@ class HtmlTag extends RenderElement {
 
     // Ensure what we are dealing with is safe. This would be done later anyway
     // in \Drupal::service('renderer')->render().
-    $prefix = isset($element['#prefix']) ? $element['#prefix'] : '';
+    $prefix = $element['#prefix'] ?? '';
     if ($prefix && !($prefix instanceof MarkupInterface)) {
       $prefix = Xss::filterAdmin($prefix);
     }
-    $suffix = isset($element['#suffix']) ? $element['#suffix'] : '';
+    $suffix = $element['#suffix'] ?? '';
     if ($suffix && !($suffix instanceof MarkupInterface)) {
       $suffix = Xss::filterAdmin($suffix);
     }

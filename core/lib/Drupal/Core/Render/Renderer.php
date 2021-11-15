@@ -370,9 +370,9 @@ class Renderer implements RendererInterface {
     }
 
     // Defaults for bubbleable rendering metadata.
-    $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : [];
-    $elements['#cache']['max-age'] = isset($elements['#cache']['max-age']) ? $elements['#cache']['max-age'] : Cache::PERMANENT;
-    $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : [];
+    $elements['#cache']['tags'] = $elements['#cache']['tags'] ?? [];
+    $elements['#cache']['max-age'] = $elements['#cache']['max-age'] ?? Cache::PERMANENT;
+    $elements['#attached'] = $elements['#attached'] ?? [];
 
     // Allow #pre_render to abort rendering.
     if (!empty($elements['#printed'])) {
@@ -581,7 +581,7 @@ class Renderer implements RendererInterface {
    */
   protected function getCurrentRenderContext() {
     $request = $this->requestStack->getCurrentRequest();
-    return isset(static::$contextCollection[$request]) ? static::$contextCollection[$request] : NULL;
+    return static::$contextCollection[$request] ?? NULL;
   }
 
   /**
@@ -731,7 +731,7 @@ class Renderer implements RendererInterface {
     }
     elseif (!($elements['#markup'] instanceof MarkupInterface)) {
       // The default behavior is to XSS filter using the admin tag list.
-      $tags = isset($elements['#allowed_tags']) ? $elements['#allowed_tags'] : Xss::getAdminTagList();
+      $tags = $elements['#allowed_tags'] ?? Xss::getAdminTagList();
       $elements['#markup'] = Markup::create(Xss::filter($elements['#markup'], $tags));
     }
 

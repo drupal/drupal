@@ -232,7 +232,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
       }
     }
 
-    return isset($this->handlers['route_provider'][$entity_type_id]) ? $this->handlers['route_provider'][$entity_type_id] : [];
+    return $this->handlers['route_provider'][$entity_type_id] ?? [];
   }
 
   /**

@@ -1048,7 +1048,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
         }
         else {
-          $value = isset($entity->$field_name->$column_name) ? $entity->$field_name->$column_name : NULL;
+          $value = $entity->$field_name->$column_name ?? NULL;
         }
         if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
           $value = serialize($value);

@@ -144,7 +144,7 @@ class Tour extends ConfigEntityBase implements TourInterface {
     if (!isset($this->keyedRoutes)) {
       $this->keyedRoutes = [];
       foreach ($this->getRoutes() as $route) {
-        $this->keyedRoutes[$route['route_name']] = isset($route['route_params']) ? $route['route_params'] : [];
+        $this->keyedRoutes[$route['route_name']] = $route['route_params'] ?? [];
       }
     }
     if (!isset($this->keyedRoutes[$route_name])) {

@@ -228,7 +228,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function clickSortable() {
-    return isset($this->definition['click sortable']) ? $this->definition['click sortable'] : TRUE;
+    return $this->definition['click sortable'] ?? TRUE;
   }
 
   /**

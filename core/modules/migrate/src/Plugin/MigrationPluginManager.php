@@ -108,7 +108,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
 
     $instances = [];
     foreach ($plugin_ids as $plugin_id) {
-      $instances[$plugin_id] = $factory->createInstance($plugin_id, isset($configuration[$plugin_id]) ? $configuration[$plugin_id] : []);
+      $instances[$plugin_id] = $factory->createInstance($plugin_id, $configuration[$plugin_id] ?? []);
     }
 
     foreach ($instances as $migration) {
@@ -226,7 +226,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *   The dynamic ID mapping.
    */
   protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
-    $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : [$dependency];
+    $dependencies = $dynamic_ids[$dependency] ?? [$dependency];
     if (!isset($graph[$id]['edges'])) {
       $graph[$id]['edges'] = [];
     }
@@ -237,7 +237,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    * {@inheritdoc}
    */
   public function createStubMigration(array $definition) {
-    $id = isset($definition['id']) ? $definition['id'] : uniqid();
+    $id = $definition['id'] ?? uniqid();
     return Migration::create(\Drupal::getContainer(), [], $id, $definition);
   }
 

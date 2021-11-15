@@ -154,7 +154,7 @@ class ViewUI implements ViewEntityInterface {
       return $this->storage->get($property_name, $langcode);
     }
 
-    return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
+    return $this->{$property_name} ?? NULL;
   }
 
   /**

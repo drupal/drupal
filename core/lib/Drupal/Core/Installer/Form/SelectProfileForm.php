@@ -48,7 +48,7 @@ class SelectProfileForm extends FormBase {
 
       // Determine the name of the profile; default to file name if defined name
       // is unspecified.
-      $name = isset($details['name']) ? $details['name'] : $profile->getName();
+      $name = $details['name'] ?? $profile->getName();
       $names[$profile->getName()] = $name;
     }
 

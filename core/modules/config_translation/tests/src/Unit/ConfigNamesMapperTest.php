@@ -668,7 +668,7 @@ class TestConfigNamesMapper extends ConfigNamesMapper {
    *   The language code of this mapper if it is set; NULL otherwise.
    */
   public function getInternalLangcode() {
-    return isset($this->langcode) ? $this->langcode : NULL;
+    return $this->langcode ?? NULL;
   }
 
   /**

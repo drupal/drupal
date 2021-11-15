@@ -263,7 +263,7 @@ class Connection extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    return isset(static::$postgresqlConditionOperatorMap[$operator]) ? static::$postgresqlConditionOperatorMap[$operator] : NULL;
+    return static::$postgresqlConditionOperatorMap[$operator] ?? NULL;
   }
 
   /**

@@ -135,7 +135,7 @@ class EditorMediaDialog extends FormBase {
         $media = $media->getTranslation($editor_object['hostEntityLangcode']);
       }
       $settings = $media->{$image_field_name}->getItemDefinition()->getSettings();
-      $alt = isset($media_embed_element['alt']) ? $media_embed_element['alt'] : NULL;
+      $alt = $media_embed_element['alt'] ?? NULL;
       $form['alt'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Alternate text'),

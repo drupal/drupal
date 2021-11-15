@@ -254,7 +254,7 @@ class FieldStorageConfigEditForm extends EntityForm {
     /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $definition = $field_type_manager->getDefinition($this->entity->getType());
-    return isset($definition['cardinality']) ? $definition['cardinality'] : NULL;
+    return $definition['cardinality'] ?? NULL;
   }
 
 }

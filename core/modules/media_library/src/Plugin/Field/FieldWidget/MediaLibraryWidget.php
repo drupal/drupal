@@ -138,7 +138,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $handler_settings = $this->getFieldSetting('handler_settings');
     // The target bundles will be blank when saving field storage settings,
     // when first adding a media reference field.
-    $allowed_media_type_ids = isset($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : NULL;
+    $allowed_media_type_ids = $handler_settings['target_bundles'] ?? NULL;
 
     // When there are no allowed media types, return the empty array.
     if ($allowed_media_type_ids === []) {
@@ -238,7 +238,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    */
   public static function setMediaTypesValue(array &$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
-      return isset($element['#default_value']) ? $element['#default_value'] : [];
+      return $element['#default_value'] ?? [];
     }
 
     // Sort the media types by weight value and set the value in the form state.
@@ -305,7 +305,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $element += [
       '#type' => 'fieldset',
       '#cardinality' => $this->fieldDefinition->getFieldStorageDefinition()->getCardinality(),
-      '#target_bundles' => isset($settings['target_bundles']) ? $settings['target_bundles'] : FALSE,
+      '#target_bundles' => $settings['target_bundles'] ?? FALSE,
       '#attributes' => [
         'id' => $wrapper_id,
         'class' => ['js-media-library-widget'],
@@ -636,7 +636,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $error, array $form, FormStateInterface $form_state) {
-    return isset($element['target_id']) ? $element['target_id'] : FALSE;
+    return $element['target_id'] ?? FALSE;
   }
 
   /**
@@ -920,10 +920,10 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // is used, the unvalidated user input is not added to the form state.
     // @see FormValidator::handleErrorsWithLimitedValidation()
     $values = NestedArray::getValue($form_state->getUserInput(), $path);
-    $selection = isset($values['selection']) ? $values['selection'] : [];
+    $selection = $values['selection'] ?? [];
 
     $widget_state = static::getWidgetState($element['#field_parents'], $element['#field_name'], $form_state);
-    $widget_state['items'] = isset($widget_state['items']) ? $widget_state['items'] : $selection;
+    $widget_state['items'] = $widget_state['items'] ?? $selection;
     return $widget_state;
   }
 

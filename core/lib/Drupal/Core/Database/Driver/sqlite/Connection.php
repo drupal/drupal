@@ -428,7 +428,7 @@ class Connection extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    return isset(static::$sqliteConditionOperatorMap[$operator]) ? static::$sqliteConditionOperatorMap[$operator] : NULL;
+    return static::$sqliteConditionOperatorMap[$operator] ?? NULL;
   }
 
   /**

@@ -310,7 +310,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
 
       // Get weights of all children for use by the region label.
       $weights = array_map(function ($a) {
-        return isset($a['#weight']) ? $a['#weight'] : 0;
+        return $a['#weight'] ?? 0;
       }, $build[$region]);
 
       // The region label is made visible when the move block dialog is open.

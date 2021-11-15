@@ -901,8 +901,8 @@ class EntityResource {
     if (isset($params[Sort::KEY_NAME]) && $sort = $params[Sort::KEY_NAME]) {
       foreach ($sort->fields() as $field) {
         $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type, $field[Sort::PATH_KEY]);
-        $direction = isset($field[Sort::DIRECTION_KEY]) ? $field[Sort::DIRECTION_KEY] : 'ASC';
-        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : NULL;
+        $direction = $field[Sort::DIRECTION_KEY] ?? 'ASC';
+        $langcode = $field[Sort::LANGUAGE_KEY] ?? NULL;
         $query->sort($path, $direction, $langcode);
       }
     }

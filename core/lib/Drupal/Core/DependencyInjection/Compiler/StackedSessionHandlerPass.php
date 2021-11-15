@@ -24,7 +24,7 @@ class StackedSessionHandlerPass implements CompilerPassInterface {
     $priorities = [];
 
     foreach ($container->findTaggedServiceIds('session_handler_proxy') as $id => $attributes) {
-      $priorities[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priorities[$id] = $attributes[0]['priority'] ?? 0;
       $session_handler_proxies[$id] = $container->getDefinition($id);
     }
 

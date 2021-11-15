@@ -35,7 +35,7 @@ class PluralVariants extends FormElementBase {
         '#title' => $i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form'),
         '#markup' => new FormattableMarkup('<span lang="@langcode">@value</span>', [
           '@langcode' => $source_language->getId(),
-          '@value' => isset($values[$i]) ? $values[$i] : $this->t('(Empty)'),
+          '@value' => $values[$i] ?? $this->t('(Empty)'),
         ]),
       ];
     }
@@ -62,7 +62,7 @@ class PluralVariants extends FormElementBase {
         '#type' => 'textfield',
         // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => $i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form'),
-        '#default_value' => isset($values[$i]) ? $values[$i] : '',
+        '#default_value' => $values[$i] ?? '',
         '#attributes' => ['lang' => $translation_language->getId()],
       ];
     }

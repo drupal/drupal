@@ -207,8 +207,8 @@ class TranslationStatusForm extends FormBase {
         }
         // Translation update found for this project-language combination.
         elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
-          $local = isset($project_info->files[LOCALE_TRANSLATION_LOCAL]) ? $project_info->files[LOCALE_TRANSLATION_LOCAL] : NULL;
-          $remote = isset($project_info->files[LOCALE_TRANSLATION_REMOTE]) ? $project_info->files[LOCALE_TRANSLATION_REMOTE] : NULL;
+          $local = $project_info->files[LOCALE_TRANSLATION_LOCAL] ?? NULL;
+          $remote = $project_info->files[LOCALE_TRANSLATION_REMOTE] ?? NULL;
           $recent = _locale_translation_source_compare($local, $remote) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $remote : $local;
           $updates[$langcode]['updates'][] = [
             'name' => $project_info->name == 'drupal' ? $this->t('Drupal core') : $project_data[$project_info->name]->info['name'],
@@ -237,8 +237,8 @@ class TranslationStatusForm extends FormBase {
    *   The string which contains debug information.
    */
   protected function createInfoString($project_info) {
-    $remote_path = isset($project_info->files['remote']->uri) ? $project_info->files['remote']->uri : FALSE;
-    $local_path = isset($project_info->files['local']->uri) ? $project_info->files['local']->uri : FALSE;
+    $remote_path = $project_info->files['remote']->uri ?? FALSE;
+    $local_path = $project_info->files['local']->uri ?? FALSE;
 
     if (locale_translation_use_remote_source() && $remote_path && $local_path) {
       return $this->t('File not found at %remote_path nor at %local_path', [

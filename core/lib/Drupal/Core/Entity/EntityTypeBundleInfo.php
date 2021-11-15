@@ -78,7 +78,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
    */
   public function getBundleInfo($entity_type_id) {
     $bundle_info = $this->getAllBundleInfo();
-    return isset($bundle_info[$entity_type_id]) ? $bundle_info[$entity_type_id] : [];
+    return $bundle_info[$entity_type_id] ?? [];
   }
 
   /**

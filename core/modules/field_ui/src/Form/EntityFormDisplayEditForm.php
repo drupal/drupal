@@ -62,7 +62,7 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
    * {@inheritdoc}
    */
   protected function getDefaultPlugin($field_type) {
-    return isset($this->fieldTypes[$field_type]['default_widget']) ? $this->fieldTypes[$field_type]['default_widget'] : NULL;
+    return $this->fieldTypes[$field_type]['default_widget'] ?? NULL;
   }
 
   /**

@@ -153,7 +153,7 @@ class LanguageAddForm extends LanguageFormBase {
     else {
       $standard_languages = LanguageManager::getStandardLanguageList();
       $label = $standard_languages[$langcode][0];
-      $direction = isset($standard_languages[$langcode][2]) ? $standard_languages[$langcode][2] : ConfigurableLanguage::DIRECTION_LTR;
+      $direction = $standard_languages[$langcode][2] ?? ConfigurableLanguage::DIRECTION_LTR;
     }
     $entity->set('id', $langcode);
     $entity->set('label', $label);

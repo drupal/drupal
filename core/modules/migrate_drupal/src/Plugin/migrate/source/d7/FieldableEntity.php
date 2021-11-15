@@ -40,7 +40,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
     $query = $this->select('field_config_instance', 'fci')
       ->fields('fci')
       ->condition('fci.entity_type', $entity_type)
-      ->condition('fci.bundle', isset($bundle) ? $bundle : $entity_type)
+      ->condition('fci.bundle', $bundle ?? $entity_type)
       ->condition('fci.deleted', 0);
 
     // Join the 'field_config' table and add the 'translatable' setting to the

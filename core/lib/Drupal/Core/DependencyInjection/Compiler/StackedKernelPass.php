@@ -68,7 +68,7 @@ class StackedKernelPass implements CompilerPassInterface {
     $responders = [];
 
     foreach ($container->findTaggedServiceIds('http_middleware') as $id => $attributes) {
-      $priorities[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priorities[$id] = $attributes[0]['priority'] ?? 0;
       $middlewares[$id] = $container->getDefinition($id);
       $responders[$id] = !empty($attributes[0]['responder']);
     }

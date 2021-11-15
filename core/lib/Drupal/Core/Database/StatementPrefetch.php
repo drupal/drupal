@@ -435,7 +435,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   public function fetch($fetch_style = NULL, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
     if (isset($this->currentRow)) {
       // Set the fetch parameter.
-      $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
+      $this->fetchStyle = $fetch_style ?? $this->defaultFetchStyle;
       $this->fetchOptions = $this->defaultFetchOptions;
 
       // Grab the row in the format specified above.
@@ -521,7 +521,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    $this->fetchStyle = isset($mode) ? $mode : $this->defaultFetchStyle;
+    $this->fetchStyle = $mode ?? $this->defaultFetchStyle;
     $this->fetchOptions = $this->defaultFetchOptions;
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;
@@ -586,7 +586,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch_style = NULL) {
-    $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
+    $this->fetchStyle = $fetch_style ?? $this->defaultFetchStyle;
     $this->fetchOptions = $this->defaultFetchOptions;
 
     $result = [];

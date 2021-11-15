@@ -112,9 +112,9 @@ class FormatDate extends ProcessPluginBase {
     $toFormat = $this->configuration['to_format'];
     $system_timezone = date_default_timezone_get();
     $default_timezone = !empty($system_timezone) ? $system_timezone : 'UTC';
-    $from_timezone = isset($this->configuration['from_timezone']) ? $this->configuration['from_timezone'] : $default_timezone;
-    $to_timezone = isset($this->configuration['to_timezone']) ? $this->configuration['to_timezone'] : $default_timezone;
-    $settings = isset($this->configuration['settings']) ? $this->configuration['settings'] : [];
+    $from_timezone = $this->configuration['from_timezone'] ?? $default_timezone;
+    $to_timezone = $this->configuration['to_timezone'] ?? $default_timezone;
+    $settings = $this->configuration['settings'] ?? [];
 
     // Older versions of Drupal where omitting certain granularity values (also
     // known as "collected date attributes") resulted in invalid timestamps

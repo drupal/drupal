@@ -465,7 +465,7 @@ class Routes implements ContainerInjectionInterface {
    */
   public static function getResourceTypeNameFromParameters(array $parameters) {
     if (isset($parameters[static::JSON_API_ROUTE_FLAG_KEY]) && $parameters[static::JSON_API_ROUTE_FLAG_KEY]) {
-      return isset($parameters[static::RESOURCE_TYPE_KEY]) ? $parameters[static::RESOURCE_TYPE_KEY] : NULL;
+      return $parameters[static::RESOURCE_TYPE_KEY] ?? NULL;
     }
     return NULL;
   }

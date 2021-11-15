@@ -48,7 +48,7 @@ class ChainedFastBackendFactory implements CacheFactoryInterface {
     // Default the consistent backend to the site's default backend.
     if (!isset($consistent_service_name)) {
       $cache_settings = isset($settings) ? $settings->get('cache') : [];
-      $consistent_service_name = isset($cache_settings['default']) ? $cache_settings['default'] : 'cache.backend.database';
+      $consistent_service_name = $cache_settings['default'] ?? 'cache.backend.database';
     }
 
     // Default the fast backend to APCu if it's available.

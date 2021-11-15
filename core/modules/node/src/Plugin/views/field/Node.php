@@ -37,7 +37,7 @@ class Node extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_node'] = ['default' => isset($this->definition['link_to_node default']) ? $this->definition['link_to_node default'] : FALSE];
+    $options['link_to_node'] = ['default' => $this->definition['link_to_node default'] ?? FALSE];
     return $options;
   }
 

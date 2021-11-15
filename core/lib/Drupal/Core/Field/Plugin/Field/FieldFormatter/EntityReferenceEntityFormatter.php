@@ -146,7 +146,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
     $view_modes = $this->entityDisplayRepository->getViewModeOptions($this->getFieldSetting('target_type'));
     $view_mode = $this->getSetting('view_mode');
-    $summary[] = t('Rendered as @mode', ['@mode' => isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : $view_mode]);
+    $summary[] = t('Rendered as @mode', ['@mode' => $view_modes[$view_mode] ?? $view_mode]);
 
     return $summary;
   }

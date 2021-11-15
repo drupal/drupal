@@ -500,7 +500,7 @@ function simpletest_script_init() {
     $parsed_url = parse_url($args['url']);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
-    $port = (isset($parsed_url['port']) ? $parsed_url['port'] : $port);
+    $port = $parsed_url['port'] ?? $port;
     if ($path == '/') {
       $path = '';
     }

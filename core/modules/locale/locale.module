@@ -298,7 +298,7 @@ function locale_get_plural($count, $langcode = NULL) {
       // modulo used but storing 0-99 is not enough because below 100 we often
       // find exceptions (1, 2, etc).
       $index = $count > 199 ? 100 + ($count % 100) : $count;
-      $plural_indexes[$langcode][$count] = isset($plural_formulas[$index]) ? $plural_formulas[$index] : $plural_formulas['default'];
+      $plural_indexes[$langcode][$count] = $plural_formulas[$index] ?? $plural_formulas['default'];
     }
     // In case there is no plural formula for English (no imported translation
     // for English), use a default formula.

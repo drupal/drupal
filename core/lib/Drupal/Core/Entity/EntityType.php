@@ -332,10 +332,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function get($property) {
     if (property_exists($this, $property)) {
-      $value = isset($this->{$property}) ? $this->{$property} : NULL;
+      $value = $this->{$property} ?? NULL;
     }
     else {
-      $value = isset($this->additional[$property]) ? $this->additional[$property] : NULL;
+      $value = $this->additional[$property] ?? NULL;
     }
     return $value;
   }
@@ -393,7 +393,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getKey($key) {
     $keys = $this->getKeys();
-    return isset($keys[$key]) ? $keys[$key] : FALSE;
+    return $keys[$key] ?? FALSE;
   }
 
   /**
@@ -627,7 +627,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getLinkTemplate($key) {
     $links = $this->getLinkTemplates();
-    return isset($links[$key]) ? $links[$key] : FALSE;
+    return $links[$key] ?? FALSE;
   }
 
   /**

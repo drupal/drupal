@@ -293,11 +293,11 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
         $this->addListener($event_name, [$subscriber, $params]);
       }
       elseif (is_string($params[0])) {
-        $this->addListener($event_name, [$subscriber, $params[0]], isset($params[1]) ? $params[1] : 0);
+        $this->addListener($event_name, [$subscriber, $params[0]], $params[1] ?? 0);
       }
       else {
         foreach ($params as $listener) {
-          $this->addListener($event_name, [$subscriber, $listener[0]], isset($listener[1]) ? $listener[1] : 0);
+          $this->addListener($event_name, [$subscriber, $listener[0]], $listener[1] ?? 0);
         }
       }
     }

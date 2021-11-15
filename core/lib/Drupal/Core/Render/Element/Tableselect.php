@@ -254,7 +254,7 @@ class Tableselect extends Table {
               '#return_value' => $key,
               '#default_value' => isset($value[$key]) ? $key : NULL,
               '#attributes' => $element['#attributes'],
-              '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+              '#ajax' => $element['#ajax'] ?? NULL,
             ];
           }
           else {
@@ -269,7 +269,7 @@ class Tableselect extends Table {
               '#attributes' => $element['#attributes'],
               '#parents' => $element['#parents'],
               '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $parents_for_id)),
-              '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+              '#ajax' => $element['#ajax'] ?? NULL,
             ];
           }
           if (isset($element['#options'][$key]['#weight'])) {

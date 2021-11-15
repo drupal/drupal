@@ -38,7 +38,7 @@ class Text extends TokenizeAreaPluginBase {
       '#type' => 'text_format',
       '#default_value' => $this->options['content']['value'],
       '#rows' => 6,
-      '#format' => isset($this->options['content']['format']) ? $this->options['content']['format'] : filter_default_format(),
+      '#format' => $this->options['content']['format'] ?? filter_default_format(),
       '#editor' => FALSE,
     ];
   }
@@ -58,7 +58,7 @@ class Text extends TokenizeAreaPluginBase {
    * {@inheritdoc}
    */
   public function render($empty = FALSE) {
-    $format = isset($this->options['content']['format']) ? $this->options['content']['format'] : filter_default_format();
+    $format = $this->options['content']['format'] ?? filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
       return [
         '#type' => 'processed_text',

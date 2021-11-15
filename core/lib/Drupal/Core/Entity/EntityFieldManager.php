@@ -656,7 +656,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
     $this->moduleHandler->alter('entity_extra_field_info', $extra);
-    $info = isset($extra[$entity_type_id][$bundle]) ? $extra[$entity_type_id][$bundle] : [];
+    $info = $extra[$entity_type_id][$bundle] ?? [];
     $info += [
       'form' => [],
       'display' => [],

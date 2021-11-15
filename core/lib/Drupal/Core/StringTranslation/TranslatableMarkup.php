@@ -156,7 +156,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *   The value of this option or empty string of option is not set.
    */
   public function getOption($name) {
-    return isset($this->options[$name]) ? $this->options[$name] : '';
+    return $this->options[$name] ?? '';
   }
 
   /**

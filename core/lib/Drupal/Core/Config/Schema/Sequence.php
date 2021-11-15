@@ -23,7 +23,7 @@ class Sequence extends ArrayElement {
    * {@inheritdoc}
    */
   protected function getElementDefinition($key) {
-    $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
+    $value = $this->value[$key] ?? NULL;
     // @todo: Remove BC layer for sequence with hyphen in front. https://www.drupal.org/node/2444979
     $definition = [];
     if (isset($this->definition['sequence'][0])) {

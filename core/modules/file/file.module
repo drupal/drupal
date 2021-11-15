@@ -713,9 +713,9 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   // from the messenger service.
   $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
 
-  $upload_location = isset($element['#upload_location']) ? $element['#upload_location'] : FALSE;
+  $upload_location = $element['#upload_location'] ?? FALSE;
   $upload_name = implode('_', $element['#parents']);
-  $upload_validators = isset($element['#upload_validators']) ? $element['#upload_validators'] : [];
+  $upload_validators = $element['#upload_validators'] ?? [];
 
   $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
 
@@ -1431,7 +1431,7 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   }
   $file_upload = $all_files[$upload_name];
 
-  $destination = isset($element['#upload_location']) ? $element['#upload_location'] : NULL;
+  $destination = $element['#upload_location'] ?? NULL;
   if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
     \Drupal::logger('file')->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', ['%directory' => $destination, '%name' => $element['#field_name']]);
     $form_state->setError($element, t('The file could not be uploaded.'));
@@ -1725,7 +1725,7 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
   if (!isset($references[$file->id()][$age])) {
     $references[$file->id()][$age] = [];
     $usage_list = \Drupal::service('file.usage')->listUsage($file);
-    $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : [];
+    $file_usage_list = $usage_list['file'] ?? [];
     foreach ($file_usage_list as $entity_type_id => $entity_ids) {
       $entities = \Drupal::entityTypeManager()
         ->getStorage($entity_type_id)->loadMultiple(array_keys($entity_ids));
@@ -1807,7 +1807,7 @@ function _views_file_status($choice = NULL) {
   ];
 
   if (isset($choice)) {
-    return isset($status[$choice]) ? $status[$choice] : t('Unknown');
+    return $status[$choice] ?? t('Unknown');
   }
 
   return $status;

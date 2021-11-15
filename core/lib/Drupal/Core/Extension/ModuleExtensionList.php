@@ -162,7 +162,7 @@ class ModuleExtensionList extends ExtensionList {
     // Add status, weight, and schema version.
     $installed_modules = $this->configFactory->get('core.extension')->get('module') ?: [];
     foreach ($extensions as $name => $module) {
-      $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
+      $module->weight = $installed_modules[$name] ?? 0;
       $module->status = (int) isset($installed_modules[$name]);
       $module->schema_version = UpdateHookRegistry::SCHEMA_UNINSTALLED;
     }

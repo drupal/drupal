@@ -124,7 +124,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * {@inheritdoc}
    */
   public function isDisplayConfigurable($display_context) {
-    return isset($this->definition['display'][$display_context]['configurable']) ? $this->definition['display'][$display_context]['configurable'] : FALSE;
+    return $this->definition['display'][$display_context]['configurable'] ?? FALSE;
   }
 
   /**
@@ -157,14 +157,14 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * {@inheritdoc}
    */
   public function getDisplayOptions($display_context) {
-    return isset($this->definition['display'][$display_context]['options']) ? $this->definition['display'][$display_context]['options'] : NULL;
+    return $this->definition['display'][$display_context]['options'] ?? NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultValueLiteral() {
-    return isset($this->definition['default_value']) ? $this->definition['default_value'] : [];
+    return $this->definition['default_value'] ?? [];
   }
 
   /**
@@ -187,7 +187,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * {@inheritdoc}
    */
   public function getDefaultValueCallback() {
-    return isset($this->definition['default_value_callback']) ? $this->definition['default_value_callback'] : NULL;
+    return $this->definition['default_value_callback'] ?? NULL;
   }
 
   /**

@@ -99,7 +99,7 @@ class TourHelpSection extends HelpSectionPluginBase implements ContainerFactoryP
         // out with a missing parameter exception if the route leads to a set
         // of pages instead of a single page.
         try {
-          $params = isset($route['route_params']) ? $route['route_params'] : [];
+          $params = $route['route_params'] ?? [];
           $url = Url::fromRoute($route['route_name'], $params);
           // Skip this route if the current user cannot access it.
           if (!$url->access()) {

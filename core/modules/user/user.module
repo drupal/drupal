@@ -522,7 +522,7 @@ function user_user_logout(AccountInterface $account) {
  */
 function user_pass_reset_url($account, $options = []) {
   $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
+  $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   return Url::fromRoute('user.reset',
     [
       'uid' => $account->id(),
@@ -555,7 +555,7 @@ function user_pass_reset_url($account, $options = []) {
  */
 function user_cancel_url(UserInterface $account, $options = []) {
   $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
+  $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   $url_options = ['absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode)];
   return Url::fromRoute('user.cancel_confirm', [
     'user' => $account->id(),

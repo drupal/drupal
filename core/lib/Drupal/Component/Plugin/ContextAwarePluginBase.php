@@ -37,7 +37,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    *   The plugin implementation definition.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    $context_configuration = isset($configuration['context']) ? $configuration['context'] : [];
+    $context_configuration = $configuration['context'] ?? [];
     unset($configuration['context']);
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);

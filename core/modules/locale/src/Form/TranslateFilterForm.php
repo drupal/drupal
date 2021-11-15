@@ -43,7 +43,7 @@ class TranslateFilterForm extends TranslateFormBase {
         ];
       }
       else {
-        $empty_option = isset($filter['options'][$filter['default']]) ? $filter['options'][$filter['default']] : '- None -';
+        $empty_option = $filter['options'][$filter['default']] ?? '- None -';
         $form['filters']['status'][$key] = [
           '#title' => $filter['title'],
           '#type' => 'select',

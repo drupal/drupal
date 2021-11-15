@@ -325,7 +325,7 @@ class StringFilter extends FilterPluginBase {
    */
   protected function getConditionOperator($operator) {
     $mapping = $this->connection->mapConditionOperator($operator);
-    return isset($mapping['operator']) ? $mapping['operator'] : $operator;
+    return $mapping['operator'] ?? $operator;
   }
 
   /**

@@ -189,7 +189,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     }
 
     $languages = $this->languageManager->getLanguages();
-    return isset($languages[$langcode]) ? $languages[$langcode] : NULL;
+    return $languages[$langcode] ?? NULL;
   }
 
   /**
