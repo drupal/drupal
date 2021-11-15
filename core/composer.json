@@ -23,7 +23,7 @@
         "symfony/event-dispatcher": "^4.4",
         "symfony/http-foundation": "^4.4.7",
         "symfony/http-kernel": "^4.4",
-        "symfony/mime": "^5.3.0",
+        "symfony/mime": "^5.4@beta",
         "symfony/routing": "^4.4",
         "symfony/serializer": "^4.4",
         "symfony/translation": "^4.4",
