@@ -582,7 +582,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     $form_state->setValues([
       'label' => 'Test type',
       'id' => $source_plugin_id,
-      'op' => t('Save'),
+      'op' => 'Save',
     ]);
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */

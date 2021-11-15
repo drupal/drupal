@@ -76,7 +76,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->submitForm([], 'Save');
 
           // Remove, then Submit.
-          $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
+          $remove_button_title = $multiple ? 'Remove selected' : 'Remove';
           $this->drupalGet($path . '/' . $last_fid);
           if ($multiple) {
             $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $last_fid . '][selected]';

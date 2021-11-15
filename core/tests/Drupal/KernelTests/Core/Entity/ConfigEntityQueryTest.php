@@ -510,8 +510,8 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   public function testTableSort() {
     $header = [
-      ['data' => t('ID'), 'specifier' => 'id'],
-      ['data' => t('Number'), 'specifier' => 'number'],
+      ['data' => 'ID', 'specifier' => 'id'],
+      ['data' => 'Number', 'specifier' => 'number'],
     ];
 
     // Sort key: id

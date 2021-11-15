@@ -34,12 +34,12 @@ class HandlerFieldPermissionTest extends UserKernelTestBase {
     $expected_permissions = [];
     $expected_permissions[$this->users[0]->id()] = [];
     $expected_permissions[$this->users[1]->id()] = [];
-    $expected_permissions[$this->users[2]->id()][] = t('Administer roles and permissions');
+    $expected_permissions[$this->users[2]->id()][] = 'Administer roles and permissions';
     // View user profiles comes first, because we sort by the permission
     // machine name.
-    $expected_permissions[$this->users[3]->id()][] = t('View user information');
-    $expected_permissions[$this->users[3]->id()][] = t('Administer roles and permissions');
-    $expected_permissions[$this->users[3]->id()][] = t('Administer users');
+    $expected_permissions[$this->users[3]->id()][] = 'View user information';
+    $expected_permissions[$this->users[3]->id()][] = 'Administer roles and permissions';
+    $expected_permissions[$this->users[3]->id()][] = 'Administer users';
 
     foreach ($view->result as $index => $row) {
       $uid = $view->field['uid']->getValue($row);

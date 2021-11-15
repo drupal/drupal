@@ -49,7 +49,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
     $expected_action = $view->display_handler->getUrlInfo()->toString();
     $this->assertFieldByXPath('//form/@action', $expected_action, 'The expected value for the action attribute was found.');
     // Make sure the description is shown.
-    $result = $this->xpath('//form//div[contains(@id, :id) and normalize-space(text())=:description]', [':id' => 'edit-type--2--description', ':description' => t('Exposed description')]);
+    $result = $this->xpath('//form//div[contains(@id, "edit-type--2--description") and normalize-space(text())="Exposed description"]');
     $this->assertCount(1, $result, 'Filter description was found.');
   }
 

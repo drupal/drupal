@@ -87,7 +87,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
     $edit['langcode'] = 'en';
     $edit['vid'] = $vid;
     $edit['default_language[content_translation]'] = TRUE;
-    $this->submitForm($edit, t('Save'));
+    $this->submitForm($edit, 'Save');
 
     $langcode = $this->additionalLangcodes[0];
     $vid_name = $edit['name'];
@@ -100,7 +100,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
     $this->drupalGet("admin/structure/taxonomy/manage/$vid/translate/$langcode/add");
 
     // Translate the name label.
-    $this->submitForm(["translation[config_names][taxonomy.vocabulary.$vid][name]" => $translated_vid_name], t('Save translation'));
+    $this->submitForm(["translation[config_names][taxonomy.vocabulary.$vid][name]" => $translated_vid_name], 'Save translation');
 
     // Assert that the right name label is displayed on the taxonomy term
     // overview page.

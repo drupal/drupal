@@ -85,7 +85,7 @@ class FormTest extends BrowserTestBase {
     $elements['textarea']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textarea'];
     $elements['textarea']['empty_values'] = $empty_strings;
 
-    $elements['radios']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'radios', '#options' => ['' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
+    $elements['radios']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'radios', '#options' => ['' => 'None', $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
     $elements['radios']['empty_values'] = $empty_arrays;
 
     $elements['checkbox']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'checkbox', '#required' => TRUE];
@@ -94,7 +94,7 @@ class FormTest extends BrowserTestBase {
     $elements['checkboxes']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'checkboxes', '#options' => [$this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
-    $elements['select']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'select', '#options' => ['' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
+    $elements['select']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'select', '#options' => ['' => 'None', $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
     $elements['select']['empty_values'] = $empty_strings;
 
     $elements['file']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'file'];
@@ -109,7 +109,7 @@ class FormTest extends BrowserTestBase {
           $form_id = $this->randomMachineName();
           $form = [];
           $form_state = new FormState();
-          $form['op'] = ['#type' => 'submit', '#value' => t('Submit')];
+          $form['op'] = ['#type' => 'submit', '#value' => 'Submit'];
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
           $form[$element]['#required'] = $required;
@@ -185,7 +185,7 @@ class FormTest extends BrowserTestBase {
         $expected[] = $form[$key]['#form_test_required_error'];
       }
       else {
-        $expected[] = t('@name field is required.', ['@name' => $form[$key]['#title']]);
+        $expected[] = $form[$key]['#title'] . ' field is required.';
       }
     }
 

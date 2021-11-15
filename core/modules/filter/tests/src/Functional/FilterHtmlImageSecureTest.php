@@ -94,8 +94,6 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
 
     $druplicon = 'core/misc/druplicon.png';
     $red_x_image = base_path() . 'core/misc/icons/e32700/error.svg';
-    $alt_text = t('Image removed.');
-    $title_text = t('This image has been removed. For security reasons, only images from the local domain are allowed.');
 
     // Put a test image in the files directory.
     $test_images = $this->getTestFiles('image');
@@ -152,8 +150,8 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
         $found = TRUE;
         if ($converted == $red_x_image) {
           $this->assertEquals($red_x_image, $element->getAttribute('src'));
-          $this->assertEquals($alt_text, $element->getAttribute('alt'));
-          $this->assertEquals($title_text, $element->getAttribute('title'));
+          $this->assertEquals('Image removed.', $element->getAttribute('alt'));
+          $this->assertEquals('This image has been removed. For security reasons, only images from the local domain are allowed.', $element->getAttribute('title'));
           $this->assertEquals('16', $element->getAttribute('height'));
           $this->assertEquals('16', $element->getAttribute('width'));
         }

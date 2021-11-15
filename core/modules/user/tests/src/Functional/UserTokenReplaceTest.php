@@ -118,7 +118,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     // Generate tokens for the anonymous user.
     $anonymous_user = User::load(0);
     $tests = [];
-    $tests['[user:uid]'] = t('not yet assigned');
+    $tests['[user:uid]'] = 'not yet assigned';
     $tests['[user:display-name]'] = $anonymous_user->getDisplayName();
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($anonymous_user);

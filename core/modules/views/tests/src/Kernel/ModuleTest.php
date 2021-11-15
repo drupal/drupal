@@ -175,7 +175,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $expected_opt_groups = [];
     foreach ($all_views as $view) {
       foreach ($view->get('display') as $display) {
-        $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = (string) t('@view : @display', ['@view' => $view->id(), '@display' => $display['id']]);
+        $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = $view->id() . ' : ' . $display['id'];
       }
     }
     $this->assertEquals($expected_opt_groups, Views::getViewsAsOptions(FALSE, 'all', NULL, TRUE), 'Expected option array for an option group returned.');
@@ -325,8 +325,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $expected_options = [];
     foreach ($views as $view) {
       foreach ($view->get('display') as $display) {
-        $expected_options[$view->id() . ':' . $display['id']] = (string) t('View: @view - Display: @display',
-          ['@view' => $view->id(), '@display' => $display['id']]);
+        $expected_options[$view->id() . ':' . $display['id']] = "View: {$view->id()} - Display: {$display['id']}";
       }
     }
 

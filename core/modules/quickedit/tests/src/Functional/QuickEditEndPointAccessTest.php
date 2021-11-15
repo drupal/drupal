@@ -61,7 +61,7 @@ class QuickEditEndPointAccessTest extends BrowserTestBase {
     $edit['body[0][summary]'] = '';
     $edit['body[0][value]'] = '<p>Malicious content.</p>';
     $edit['body[0][format]'] = 'filtered_html';
-    $edit['op'] = t('Save');
+    $edit['op'] = 'Save';
     $this->assertAccessIsBlocked($url, $edit);
 
     $post = ['nocssjs' => 'true'];

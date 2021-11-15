@@ -36,8 +36,8 @@ class ViewsFormMultipleTest extends ViewTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['field_form_button_test']['field'] = [
-      'title' => t('Button test'),
-      'help' => t('Adds a test form button.'),
+      'title' => 'Button test',
+      'help' => 'Adds a test form button.',
       'id' => 'field_form_button_test',
     ];
     return $data;

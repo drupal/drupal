@@ -73,8 +73,9 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->createTerm($vocabulary1);
 
     // Assert expected help texts on first vocabulary.
-    $edit_help_text = t('You can reorganize the terms in @capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', ['@capital_name' => Unicode::ucfirst($vocabulary1->label())]);
-    $no_edit_help_text = t('@capital_name contains the following terms.', ['@capital_name' => Unicode::ucfirst($vocabulary1->label())]);
+    $vocabulary1_label = Unicode::ucfirst($vocabulary1->label());
+    $edit_help_text = "You can reorganize the terms in $vocabulary1_label using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.";
+    $no_edit_help_text = "$vocabulary1_label contains the following terms.";
 
     $assert_session = $this->assertSession();
 

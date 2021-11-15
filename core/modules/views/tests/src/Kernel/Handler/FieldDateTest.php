@@ -122,10 +122,10 @@ class FieldDateTest extends ViewsKernelTestBase {
     $time_since = $date_formatter->formatTimeDiffSince($time);
     $intervals = [
       'raw time ago' => $time_since,
-      'time ago' => t('%time ago', ['%time' => $time_since]),
+      'time ago' => "$time_since ago",
       'raw time span' => $time_since,
       'inverse time span' => "-$time_since",
-      'time span' => t('%time ago', ['%time' => $time_since]),
+      'time span' => "$time_since ago",
     ];
     $this->assertRenderedDatesEqual($view, $intervals);
 
@@ -134,9 +134,7 @@ class FieldDateTest extends ViewsKernelTestBase {
     $formatted = $date_formatter->formatTimeDiffUntil($time);
     $intervals = [
       'raw time span' => "-$formatted",
-      'time span' => t('%time hence', [
-        '%time' => $formatted,
-      ]),
+      'time span' => "$formatted hence",
     ];
     $this->assertRenderedFutureDatesEqual($view, $intervals);
   }
@@ -154,20 +152,15 @@ class FieldDateTest extends ViewsKernelTestBase {
   protected function assertRenderedDatesEqual($view, $map, $timezone = NULL) {
     foreach ($map as $date_format => $expected_result) {
       $view->field['created']->options['date_format'] = $date_format;
-      $t_args = [
-        '%value' => $expected_result,
-        '%format' => $date_format,
-      ];
       if (isset($timezone)) {
-        $t_args['%timezone'] = $timezone;
-        $message = t('Value %value in %format format for timezone %timezone matches.', $t_args);
+        $message = "$date_format format for timezone $timezone matches.";
         $view->field['created']->options['timezone'] = $timezone;
       }
       else {
-        $message = t('Value %value in %format format matches.', $t_args);
+        $message = "$date_format format matches.";
       }
       $actual_result = $view->field['created']->advancedRender($view->result[0]);
-      $this->assertEquals($expected_result, $actual_result, $message);
+      $this->assertEquals($expected_result, strip_tags($actual_result), $message);
     }
   }
 
@@ -183,13 +176,7 @@ class FieldDateTest extends ViewsKernelTestBase {
     foreach ($map as $format => $result) {
       $view->field['destroyed']->options['date_format'] = $format;
       $view_result = $view->field['destroyed']->advancedRender($view->result[0]);
-      $t_args = [
-        '%value' => $result,
-        '%format' => $format,
-        '%actual' => $view_result,
-      ];
-      $message = t('Value %value in %format matches %actual', $t_args);
-      $this->assertEquals($result, $view_result, $message);
+      $this->assertEquals($result, strip_tags($view_result), "$format format matches.");
     }
   }
 

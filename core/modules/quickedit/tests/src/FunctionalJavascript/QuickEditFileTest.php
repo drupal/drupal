@@ -70,7 +70,7 @@ class QuickEditFileTest extends QuickEditJavascriptTestBase {
     // Create test node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('My Test Node'),
+      'title' => 'My Test Node',
       'field_file' => [
         'target_id' => $file->id(),
       ],

@@ -456,7 +456,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     if (!$entity->isNew() && $entity->isTranslatable()) {
       $translations = $entity->getTranslationLanguages();
       if ((count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
-        return ' ' . ($field->isTranslatable() ? t('(this translation)') : t('(all translations)'));
+        return ' ' . ($field->isTranslatable() ? '(this translation)' : '(all translations)');
       }
     }
     return '';

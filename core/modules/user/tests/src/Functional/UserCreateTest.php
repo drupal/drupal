@@ -61,7 +61,7 @@ class UserCreateTest extends BrowserTestBase {
       'entity_type' => 'user',
       'label' => 'Picture',
       'bundle' => 'user',
-      'description' => t('Your virtual face or picture.'),
+      'description' => 'Your virtual face or picture.',
       'required' => FALSE,
       'settings' => [
         'file_extensions' => 'png gif jpg jpeg',

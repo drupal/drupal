@@ -31,7 +31,7 @@ class ItemWithoutFeedTest extends KernelTestBase {
    */
   public function testEntityCreation() {
     $entity = Item::create([
-      'title' => t('Llama 2'),
+      'title' => 'Llama 2',
       'path' => 'https://groups.drupal.org/',
     ]);
     $violations = $entity->validate();

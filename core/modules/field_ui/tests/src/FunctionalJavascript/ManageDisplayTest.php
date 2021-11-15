@@ -454,7 +454,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $field_field_name->setValue($field_name);
     $assert_session->assertWaitOnAjaxRequest();
 
-    $page->findButton(t('Save and continue'))->click();
+    $page->findButton('Save and continue')->click();
 
     $assert_session->pageTextContains("These settings apply to the $label field everywhere it is used.");
     $breadcrumb_link = $page->findLink($label);

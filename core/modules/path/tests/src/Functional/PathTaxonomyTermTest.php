@@ -28,7 +28,7 @@ class PathTaxonomyTermTest extends PathTestBase {
 
     // Create a Tags vocabulary for the Article node type.
     $vocabulary = Vocabulary::create([
-      'name' => t('Tags'),
+      'name' => 'Tags',
       'vid' => 'tags',
     ]);
     $vocabulary->save();
