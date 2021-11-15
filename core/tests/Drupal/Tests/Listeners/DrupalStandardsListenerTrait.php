@@ -102,7 +102,7 @@ trait DrupalStandardsListenerTrait {
         $class = $covers;
         $method = '';
         if (strpos($covers, '::') !== FALSE) {
-          list($class, $method) = explode('::', $covers);
+          [$class, $method] = explode('::', $covers);
         }
         // Check for the existence of the class if it's specified by @covers.
         if (!empty($class)) {

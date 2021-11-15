@@ -51,7 +51,7 @@ class EntityCreateAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
-    list($entity_type, $bundle) = explode(':', $route->getRequirement($this->requirementsKey) . ':');
+    [$entity_type, $bundle] = explode(':', $route->getRequirement($this->requirementsKey) . ':');
 
     // The bundle argument can contain request argument placeholders like
     // {name}, loop over the raw variables and attempt to replace them in the

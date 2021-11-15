@@ -829,7 +829,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $ids = $this->configFactory()->listAll($config_prefix . '.' . $this->entity->getTargetEntityTypeId() . '.' . $this->entity->getTargetBundle() . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);
-      list(,, $display_mode) = explode('.', $config_id);
+      [,, $display_mode] = explode('.', $config_id);
       if ($display_mode != 'default') {
         $load_ids[] = $config_id;
       }

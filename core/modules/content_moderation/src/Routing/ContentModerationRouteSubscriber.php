@@ -65,7 +65,7 @@ class ContentModerationRouteSubscriber extends RouteSubscriberBase {
       return;
     }
     // Only set the flag on entity types which are revisionable.
-    list($entity_type) = explode('.', $entity_form, 2);
+    [$entity_type] = explode('.', $entity_form, 2);
     if (!isset($this->getModeratedEntityTypes()[$entity_type]) || !$this->getModeratedEntityTypes()[$entity_type]->isRevisionable()) {
       return;
     }

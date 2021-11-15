@@ -129,7 +129,7 @@ class HtmlRenderer implements MainContentRendererInterface {
    * The entire HTML: takes a #type 'page' and wraps it in a #type 'html'.
    */
   public function renderResponse(array $main_content, Request $request, RouteMatchInterface $route_match) {
-    list($page, $title) = $this->prepare($main_content, $request, $route_match);
+    [$page, $title] = $this->prepare($main_content, $request, $route_match);
 
     if (!isset($page['#type']) || $page['#type'] !== 'page') {
       throw new \LogicException('Must be #type page');

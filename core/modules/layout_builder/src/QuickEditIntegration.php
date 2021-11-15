@@ -219,7 +219,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    * @see \Drupal\layout_builder\QuickEditIntegration::getViewModeId()
    */
   public static function deconstructViewModeId($quick_edit_view_mode_id) {
-    list(, $entity_view_mode_id, $delta, $component_uuid, $entity_id) = explode('-', $quick_edit_view_mode_id, 7);
+    [, $entity_view_mode_id, $delta, $component_uuid, $entity_id] = explode('-', $quick_edit_view_mode_id, 7);
     return [
       $entity_view_mode_id,
       // @todo Explicitly cast delta to an integer, remove this in
@@ -247,7 +247,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    *   The re-rendered field.
    */
   public function quickEditRenderField(FieldableEntityInterface $entity, $field_name, $quick_edit_view_mode_id, $langcode) {
-    list($entity_view_mode, $delta, $component_uuid) = static::deconstructViewModeId($quick_edit_view_mode_id);
+    [$entity_view_mode, $delta, $component_uuid] = static::deconstructViewModeId($quick_edit_view_mode_id);
 
     $entity_build = $this->entityTypeManager->getViewBuilder($entity->getEntityTypeId())->view($entity, $entity_view_mode, $langcode);
     $this->buildEntityView($entity_build);

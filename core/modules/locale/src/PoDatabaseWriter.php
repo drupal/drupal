@@ -177,7 +177,7 @@ class PoDatabaseWriter implements PoWriterInterface {
       // Get and store the plural formula if available.
       $plural = $header->getPluralForms();
       if (isset($plural) && $p = $header->parsePluralForms($plural)) {
-        list($nplurals, $formula) = $p;
+        [$nplurals, $formula] = $p;
         \Drupal::service('locale.plural.formula')->setPluralFormula($langcode, $nplurals, $formula);
       }
     }

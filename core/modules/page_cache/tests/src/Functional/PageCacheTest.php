@@ -610,7 +610,7 @@ class PageCacheTest extends BrowserTestBase {
       ],
     ];
 
-    foreach ($tests as list($url_raw, $url_normalized)) {
+    foreach ($tests as [$url_raw, $url_normalized]) {
       // Initialize cache on raw URL.
       $headers = $this->getHeaders($url_raw);
       $this->assertEquals('MISS', $headers['X-Drupal-Cache']);
@@ -651,7 +651,7 @@ class PageCacheTest extends BrowserTestBase {
     $headers = [];
     foreach (explode("\n", $output) as $header) {
       if (strpos($header, ':')) {
-        list($key, $value) = explode(':', $header, 2);
+        [$key, $value] = explode(':', $header, 2);
         $headers[trim($key)] = trim($value);
       }
     }

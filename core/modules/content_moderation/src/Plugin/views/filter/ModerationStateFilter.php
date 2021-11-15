@@ -177,7 +177,7 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
     // we need to create a complex WHERE condition.
     $field = $this->view->query->getConnection()->condition('OR');
     foreach ((array) $this->value as $value) {
-      list($workflow_id, $state_id) = explode('-', $value, 2);
+      [$workflow_id, $state_id] = explode('-', $value, 2);
 
       $and = $this->view->query->getConnection()->condition('AND');
       $and
@@ -247,7 +247,7 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
   protected function getWorkflowIds() {
     $workflow_ids = [];
     foreach ((array) $this->value as $value) {
-      list($workflow_id) = explode('-', $value, 2);
+      [$workflow_id] = explode('-', $value, 2);
       $workflow_ids[] = $workflow_id;
     }
 

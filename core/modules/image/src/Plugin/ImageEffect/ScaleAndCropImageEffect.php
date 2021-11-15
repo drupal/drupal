@@ -23,7 +23,7 @@ class ScaleAndCropImageEffect extends CropImageEffect {
     $height = $this->configuration['height'];
     $scale = max($width / $image->getWidth(), $height / $image->getHeight());
 
-    list($x, $y) = explode('-', $this->configuration['anchor']);
+    [$x, $y] = explode('-', $this->configuration['anchor']);
     $x = image_filter_keyword($x, $image->getWidth() * $scale, $width);
     $y = image_filter_keyword($y, $image->getHeight() * $scale, $height);
 

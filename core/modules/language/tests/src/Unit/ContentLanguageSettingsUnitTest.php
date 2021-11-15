@@ -240,7 +240,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
    * @dataProvider providerLoadByEntityTypeBundle
    */
   public function testLoadByEntityTypeBundle($config_id, ContentLanguageSettings $existing_config = NULL, $expected_langcode, $expected_language_alterable) {
-    list($type, $bundle) = explode('.', $config_id);
+    [$type, $bundle] = explode('.', $config_id);
 
     $nullConfig = new ContentLanguageSettings([
       'target_entity_type_id' => $type,

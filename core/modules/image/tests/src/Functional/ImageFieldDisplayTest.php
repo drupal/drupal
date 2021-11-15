@@ -239,7 +239,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $test_image = current($this->drupalGetTestFiles('image'));
-    list(, $test_image_extension) = explode('.', $test_image->filename);
+    [, $test_image_extension] = explode('.', $test_image->filename);
     $field_name = strtolower($this->randomMachineName());
     $field_settings = [
       'alt_field' => 1,

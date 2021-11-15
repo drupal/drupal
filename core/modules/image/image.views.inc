@@ -45,7 +45,7 @@ function image_field_views_data_views_data_alter(array &$data, FieldStorageConfi
   /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
   $table_mapping = $entity_type_manager->getStorage($entity_type_id)->getTableMapping();
 
-  list($label) = views_entity_field_label($entity_type_id, $field_name);
+  [$label] = views_entity_field_label($entity_type_id, $field_name);
 
   $data['file_managed'][$pseudo_field_name]['relationship'] = [
     'title' => t('@entity using @field', ['@entity' => $entity_type->getLabel(), '@field' => $label]),

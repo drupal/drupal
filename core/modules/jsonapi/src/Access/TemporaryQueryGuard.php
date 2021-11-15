@@ -150,7 +150,7 @@ class TemporaryQueryGuard {
         // portion. JSON:API will have already validated that the property
         // exists.
         $split_specifier = explode(':', $specifier, 2);
-        list($property_name, $target_entity_type_id) = array_merge($split_specifier, count($split_specifier) === 2 ? [] : [NULL]);
+        [$property_name, $target_entity_type_id] = array_merge($split_specifier, count($split_specifier) === 2 ? [] : [NULL]);
         // The specifier is either a field property or a delta. If it is a data
         // reference or a delta, then it needs to be traversed to the next
         // specifier. However, if the specific is a simple field property, i.e.

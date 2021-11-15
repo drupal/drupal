@@ -33,7 +33,7 @@ abstract class DateElementBase extends FormElement {
   protected static function datetimeRangeYears($string, $date = NULL) {
     $datetime = new DrupalDateTime();
     $this_year = $datetime->format('Y');
-    list($min_year, $max_year) = explode(':', $string);
+    [$min_year, $max_year] = explode(':', $string);
 
     // Valid patterns would be -5:+5, 0:+1, 2008:2010.
     $plus_pattern = '@[\+|\-][0-9]{1,4}@';

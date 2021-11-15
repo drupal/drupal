@@ -500,7 +500,7 @@ class Schema extends DatabaseSchema {
         $length = NULL;
       }
       if (isset($mapped_fields[$type])) {
-        list($type, $size) = explode(':', $mapped_fields[$type]);
+        [$type, $size] = explode(':', $mapped_fields[$type]);
         $schema['fields'][$row->name] = [
           'type' => $type,
           'size' => $size,

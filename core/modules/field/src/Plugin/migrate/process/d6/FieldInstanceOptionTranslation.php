@@ -20,7 +20,7 @@ class FieldInstanceOptionTranslation extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($field_type, $global_settings) = $value;
+    [$field_type, $global_settings] = $value;
 
     $option_key = 0;
     $translation = '';

@@ -153,7 +153,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // intermediary suggestion.
       $pattern = $info['pattern'] ?? ($hook . '__');
       // Grep only the functions which are within the prefix group.
-      list($first_prefix,) = explode('_', $prefix, 2);
+      [$first_prefix] = explode('_', $prefix, 2);
       if (!isset($info['base hook']) && !empty($pattern) && isset($grouped_functions[$first_prefix])) {
         $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $grouped_functions[$first_prefix]);
         if ($matches) {

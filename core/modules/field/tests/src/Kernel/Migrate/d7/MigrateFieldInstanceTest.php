@@ -52,7 +52,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *   Whether or not the field is expected to be translatable.
    */
   protected function assertEntity($id, $expected_label, $expected_field_type, $is_required, $expected_translatable) {
-    list ($expected_entity_type, $expected_bundle, $expected_name) = explode('.', $id);
+    [$expected_entity_type, $expected_bundle, $expected_name] = explode('.', $id);
 
     /** @var \Drupal\field\FieldConfigInterface $field */
     $field = FieldConfig::load($id);

@@ -127,7 +127,7 @@ class BooleanFormatterTest extends KernelTestBase {
     $data[] = [1, $format, 'TRUE'];
 
     foreach ($data as $test_data) {
-      list($value, $settings, $expected) = $test_data;
+      [$value, $settings, $expected] = $test_data;
 
       $component = $this->display->getComponent($this->fieldName);
       $component['settings'] = $settings;

@@ -393,7 +393,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   if (isset($info['base_image'])) {
     // Fetch source image dimensions.
     $source = \Drupal::service('extension.list.theme')->getPath($theme) . '/' . $info['base_image'];
-    list($width, $height) = getimagesize($source);
+    [$width, $height] = getimagesize($source);
 
     // We need at least a copy of the source and a target buffer of the same
     // size (both at 32bpp).
@@ -523,7 +523,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   // Split off the "Don't touch" section of the stylesheet.
   $split = "Color Module: Don't touch";
   if (strpos($style, $split) !== FALSE) {
-    list($style, $fixed) = explode($split, $style);
+    [$style, $fixed] = explode($split, $style);
   }
 
   // Find all colors in the stylesheet and the chunks in between.
@@ -637,7 +637,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
 
   // Cut out slices.
   foreach ($info['slices'] as $file => $coord) {
-    list($x, $y, $width, $height) = $coord;
+    [$x, $y, $width, $height] = $coord;
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $base = $file_system->basename($file);

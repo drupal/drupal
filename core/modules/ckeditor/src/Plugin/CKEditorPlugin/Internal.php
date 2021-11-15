@@ -112,7 +112,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
     // and attributes that are allowed by the text format for this text editor.
-    list($config['allowedContent'], $config['disallowedContent']) = $this->generateACFSettings($editor);
+    [$config['allowedContent'], $config['disallowedContent']] = $this->generateACFSettings($editor);
 
     // Add the format_tags setting, if its button is enabled.
     $toolbar_buttons = CKEditorPluginManager::getEnabledButtons($editor);

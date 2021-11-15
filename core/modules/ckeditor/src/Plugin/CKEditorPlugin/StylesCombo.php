@@ -146,7 +146,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       }
 
       // Parse.
-      list($selector, $label) = explode('|', $style);
+      [$selector, $label] = explode('|', $style);
       $classes = explode('.', $selector);
       $element = array_shift($classes);
 

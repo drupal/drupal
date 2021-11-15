@@ -134,7 +134,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
 
     $options = [];
     foreach ($displays as $data) {
-      list($view_id, $display_id) = $data;
+      [$view_id, $display_id] = $data;
       $view = $view_storage->load($view_id);
       if (in_array($view->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
         $display = $view->get('display');
@@ -318,7 +318,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
   public static function settingsFormValidate($element, FormStateInterface $form_state, $form) {
     // Split view name and display name from the 'view_and_display' value.
     if (!empty($element['view_and_display']['#value'])) {
-      list($view, $display) = explode(':', $element['view_and_display']['#value']);
+      [$view, $display] = explode(':', $element['view_and_display']['#value']);
     }
     else {
       $form_state->setError($element, t('The views entity selection mode requires a view.'));

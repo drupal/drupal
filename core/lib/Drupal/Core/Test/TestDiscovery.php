@@ -439,7 +439,7 @@ class TestDiscovery {
     // @see https://www.drupal.org/node/1273478
     if (isset($annotations['requires'])) {
       foreach ($annotations['requires'] as $i => $value) {
-        list($type, $value) = explode(' ', $value, 2);
+        [$type, $value] = explode(' ', $value, 2);
         if ($type === 'module') {
           $annotations['requires']['module'][$value] = $value;
           unset($annotations['requires'][$i]);

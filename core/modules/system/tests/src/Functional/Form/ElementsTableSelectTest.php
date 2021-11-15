@@ -156,7 +156,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleTrueOptionchecker() {
 
-    list($header, $options) = _form_test_tableselect_get_data();
+    [$header, $options] = _form_test_tableselect_get_data();
 
     $form['tableselect'] = [
       '#type' => 'tableselect',
@@ -165,11 +165,11 @@ class ElementsTableSelectTest extends BrowserTestBase {
     ];
 
     // Test with a valid value.
-    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => ['row1' => 'row1']]);
+    [, , $errors] = $this->formSubmitHelper($form, ['tableselect' => ['row1' => 'row1']]);
     $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for checkboxes.');
 
     // Test with an invalid value.
-    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => ['non_existing_value' => 'non_existing_value']]);
+    [, , $errors] = $this->formSubmitHelper($form, ['tableselect' => ['non_existing_value' => 'non_existing_value']]);
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for checkboxes.');
 
   }
@@ -180,7 +180,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleFalseOptionchecker() {
 
-    list($header, $options) = _form_test_tableselect_get_data();
+    [$header, $options] = _form_test_tableselect_get_data();
 
     $form['tableselect'] = [
       '#type' => 'tableselect',
@@ -190,11 +190,11 @@ class ElementsTableSelectTest extends BrowserTestBase {
     ];
 
     // Test with a valid value.
-    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'row1']);
+    [, , $errors] = $this->formSubmitHelper($form, ['tableselect' => 'row1']);
     $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for radio buttons.');
 
     // Test with an invalid value.
-    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'non_existing_value']);
+    [, , $errors] = $this->formSubmitHelper($form, ['tableselect' => 'non_existing_value']);
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for radio buttons.');
   }
 

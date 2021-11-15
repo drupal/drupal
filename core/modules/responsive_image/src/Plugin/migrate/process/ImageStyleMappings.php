@@ -24,7 +24,7 @@ class ImageStyleMappings extends ProcessPluginBase {
       throw new MigrateException('Input should be an array');
     }
 
-    list($mappings, $breakpoint_group) = $value;
+    [$mappings, $breakpoint_group] = $value;
 
     $new_value = [];
     foreach ($mappings as $mapping_id => $mapping) {

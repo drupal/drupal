@@ -525,7 +525,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $profile_storages = $this->getProfileStorages($name);
 
     // Check the dependencies of configuration provided by the module.
-    list($invalid_default_config, $missing_dependencies) = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
+    [$invalid_default_config, $missing_dependencies] = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
     if (!empty($invalid_default_config)) {
       throw UnmetDependenciesException::create($name, array_unique($missing_dependencies, SORT_REGULAR));
     }
@@ -593,7 +593,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected function validateDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
     if (!isset($data['dependencies'])) {
       // Simple config or a config entity without dependencies.
-      list($provider) = explode('.', $config_name, 2);
+      [$provider] = explode('.', $config_name, 2);
       return in_array($provider, $enabled_extensions, TRUE);
     }
 
@@ -619,7 +619,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected function getMissingDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
     $missing = [];
     if (isset($data['dependencies'])) {
-      list($provider) = explode('.', $config_name, 2);
+      [$provider] = explode('.', $config_name, 2);
       $all_dependencies = $data['dependencies'];
 
       // Ensure enforced dependencies are included.

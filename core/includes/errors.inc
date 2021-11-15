@@ -58,7 +58,7 @@ function drupal_error_levels() {
 function _drupal_error_handler_real($error_level, $message, $filename, $line) {
   if ($error_level & error_reporting()) {
     $types = drupal_error_levels();
-    list($severity_msg, $severity_level) = $types[$error_level];
+    [$severity_msg, $severity_level] = $types[$error_level];
     $backtrace = debug_backtrace();
     $caller = Error::getLastCaller($backtrace);
 

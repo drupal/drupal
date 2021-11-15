@@ -78,7 +78,7 @@ class LocalActionTest extends BrowserTestBase {
     $index = 0;
     foreach ($actions as $action) {
       /** @var \Drupal\Core\Url $url */
-      list($url, $title) = $action;
+      [$url, $title] = $action;
       // SimpleXML gives us the unescaped text, not the actual escaped markup,
       // so use a pattern instead to check the raw content.
       // This behavior is a bug in libxml, see

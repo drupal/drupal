@@ -74,7 +74,7 @@ class LinkFieldUITest extends BrowserTestBase {
    */
   public function testFieldUI() {
     foreach ($this->providerTestFieldUI() as $item) {
-      list($cardinality, $link_type, $title, $label, $field_name, $default_uri) = $item;
+      [$cardinality, $link_type, $title, $label, $field_name, $default_uri] = $item;
       $this->runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri);
     }
   }

@@ -587,7 +587,7 @@ CORE_INCOMPATIBILITY;
    * Data provider for testCoreIncompatibility().
    */
   public function providerCoreIncompatibility() {
-    list($major, $minor) = explode('.', \Drupal::VERSION);
+    [$major, $minor] = explode('.', \Drupal::VERSION);
 
     $next_minor = $minor + 1;
     $next_major = $major + 1;

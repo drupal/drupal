@@ -227,7 +227,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     foreach ($config_importer->getStorageComparer()->getSourceStorage()->listAll() as $name) {
       // Ensure that the config owner is installed. This checks all
       // configuration including configuration entities.
-      list($owner,) = explode('.', $name, 2);
+      [$owner] = explode('.', $name, 2);
       if ($owner !== 'core') {
         $message = FALSE;
         if (!isset($core_extension['module'][$owner]) && isset($module_data[$owner])) {

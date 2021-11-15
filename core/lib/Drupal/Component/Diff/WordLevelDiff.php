@@ -14,8 +14,8 @@ class WordLevelDiff extends MappedDiff {
   const MAX_LINE_LENGTH = 10000;
 
   public function __construct($orig_lines, $closing_lines) {
-    list($orig_words, $orig_stripped) = $this->_split($orig_lines);
-    list($closing_words, $closing_stripped) = $this->_split($closing_lines);
+    [$orig_words, $orig_stripped] = $this->_split($orig_lines);
+    [$closing_words, $closing_stripped] = $this->_split($closing_lines);
 
     parent::__construct($orig_words, $closing_words, $orig_stripped, $closing_stripped);
   }

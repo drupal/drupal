@@ -727,7 +727,7 @@ class InstallHelper implements ContainerInjectionInterface {
     $filename = $entity_type . '/' . $bundle_machine_name . '.csv';
 
     // Read all multilingual content from the file.
-    list($all_content, $translated_languages) = $this->readMultilingualContent($filename);
+    [$all_content, $translated_languages] = $this->readMultilingualContent($filename);
 
     // English is no longer needed in the list of languages to translate.
     $key = array_search('en', $translated_languages);

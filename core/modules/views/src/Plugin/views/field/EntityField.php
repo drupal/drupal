@@ -541,7 +541,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
     // Make the string translatable by keeping it as a whole rather than
     // translating prefix and suffix separately.
-    list($prefix, $suffix) = explode('@count', $this->t('Display @count value(s)'));
+    [$prefix, $suffix] = explode('@count', $this->t('Display @count value(s)'));
 
     if ($field->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $type = 'textfield';
@@ -600,7 +600,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       '#fieldset' => 'multiple_field_settings',
     ];
 
-    list($prefix, $suffix) = explode('@count', $this->t('starting from @count'));
+    [$prefix, $suffix] = explode('@count', $this->t('starting from @count'));
     $form['delta_offset'] = [
       '#type' => 'textfield',
       '#size' => 5,

@@ -82,7 +82,7 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($old_visibility, $pages, $roles) = $value;
+    [$old_visibility, $pages, $roles] = $value;
 
     $visibility = [];
 

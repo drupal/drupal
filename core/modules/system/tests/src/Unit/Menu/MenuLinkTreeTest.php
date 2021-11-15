@@ -193,7 +193,7 @@ class MenuLinkTreeTest extends UnitTestCase {
     ];
 
     for ($i = 0; $i < count($access_scenarios); $i++) {
-      list($access, $access_cache_contexts) = $access_scenarios[$i];
+      [$access, $access_cache_contexts] = $access_scenarios[$i];
 
       for ($j = 0; $j < count($links_scenarios); $j++) {
         $links = $links_scenarios[$j];

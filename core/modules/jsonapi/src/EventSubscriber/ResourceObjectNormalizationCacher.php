@@ -110,7 +110,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    */
   public function onTerminate(TerminateEvent $event) {
     foreach ($this->toCache as $value) {
-      list($object, $normalization_parts) = $value;
+      [$object, $normalization_parts] = $value;
       $this->set($object, $normalization_parts);
     }
   }

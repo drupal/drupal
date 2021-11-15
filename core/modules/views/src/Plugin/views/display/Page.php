@@ -488,7 +488,7 @@ class Page extends PathPluginBase {
     switch ($form_state->get('section')) {
       case 'menu':
         $menu = $form_state->getValue('menu');
-        list($menu['menu_name'], $menu['parent']) = explode(':', $menu['parent'], 2);
+        [$menu['menu_name'], $menu['parent']] = explode(':', $menu['parent'], 2);
         $this->setOption('menu', $menu);
         // send ajax form to options page if we use it.
         if ($form_state->getValue(['menu', 'type']) == 'default tab') {

@@ -140,7 +140,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
           // @todo https://www.drupal.org/project/drupal/issues/3001920 Doing
-          //   list($field_name, $langcode, $values) = $units[$key]; causes
+          //   [$field_name, $langcode, $values] = $units[$key]; causes
           //   problems in PHP 7.3. Revert to better variable names once
           //   https://bugs.php.net/bug.php?id=76937 is fixed.
           $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
