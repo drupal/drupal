@@ -418,7 +418,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? NULL;
   $user_agent = $_COOKIE['SIMPLETEST_USER_AGENT'] ?? $http_user_agent;
   if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
-    list(, $prefix, $time, $salt, $hmac) = $matches;
+    [, $prefix, $time, $salt, $hmac] = $matches;
     $check_string = $prefix . ':' . $time . ':' . $salt;
     // Read the hash salt prepared by drupal_generate_test_ua().
     // This function is called before settings.php is read and Drupal's error

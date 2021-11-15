@@ -126,7 +126,7 @@ class QuickEditController extends ControllerBase {
 
     $metadata = [];
     foreach ($fields as $field) {
-      list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode('/', $field);
+      [$entity_type, $entity_id, $field_name, $langcode, $view_mode] = explode('/', $field);
 
       // Load the entity.
       if (!$entity_type || !$this->entityTypeManager()->getDefinition($entity_type)) {

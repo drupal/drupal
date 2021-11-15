@@ -22,7 +22,7 @@ class BlockSettings extends ProcessPluginBase {
    * Set the block configuration.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($plugin, $delta, $old_settings, $title) = $value;
+    [$plugin, $delta, $old_settings, $title] = $value;
     $settings = [];
     $settings['label'] = $title;
     if ($title && $title !== '<none>') {
@@ -33,7 +33,7 @@ class BlockSettings extends ProcessPluginBase {
     }
     switch ($plugin) {
       case 'aggregator_feed_block':
-        list(, $id) = explode('-', $delta);
+        [, $id] = explode('-', $delta);
         $settings['block_count'] = $old_settings['aggregator']['item_count'];
         $settings['feed'] = $id;
         break;

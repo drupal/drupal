@@ -205,7 +205,7 @@ class UpdateRegistry {
 
     $ret = [];
     foreach ($functions as $function) {
-      list($module, $update) = explode("_{$this->updateType}_", $function);
+      [$module, $update] = explode("_{$this->updateType}_", $function);
       // The description for an update comes from its Doxygen.
       $func = new \ReflectionFunction($function);
       $description = trim(str_replace(["\n", '*', '/'], '', $func->getDocComment()), ' ');
@@ -247,7 +247,7 @@ class UpdateRegistry {
     $all_functions = $this->getAvailableUpdateFunctions();
 
     return array_filter($all_functions, function ($function_name) use ($module_name) {
-      list($function_module_name,) = explode("_{$this->updateType}_", $function_name);
+      [$function_module_name] = explode("_{$this->updateType}_", $function_name);
       return $function_module_name === $module_name;
     });
   }

@@ -96,7 +96,7 @@ class CacheableMetadataTest extends UnitTestCase {
     ];
 
     foreach ($add_expected as $row => $data) {
-      list($add, $expected) = $data;
+      [$add, $expected] = $data;
       $metadata->addCacheTags($add);
       $this->assertEquals($expected, $metadata->getCacheTags(), sprintf("Dataset in %d row failed on validation.", $row + 1));
     }

@@ -112,7 +112,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
       else {
         $this->displayModeInfo[$display_type] = [];
         foreach ($this->entityTypeManager->getStorage($entity_type_id)->loadMultiple() as $display_mode) {
-          list($display_mode_entity_type, $display_mode_name) = explode('.', $display_mode->id(), 2);
+          [$display_mode_entity_type, $display_mode_name] = explode('.', $display_mode->id(), 2);
           $this->displayModeInfo[$display_type][$display_mode_entity_type][$display_mode_name] = $display_mode->toArray();
         }
         $this->moduleHandler->alter($key, $this->displayModeInfo[$display_type]);

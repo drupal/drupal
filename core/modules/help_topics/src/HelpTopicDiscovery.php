@@ -99,7 +99,7 @@ class HelpTopicDiscovery implements DiscoveryInterface {
       foreach ($files as $file => $provider) {
         $plugin_id = substr(basename($file), 0, -10);
         // The plugin ID begins with provider.
-        list($file_name_provider,) = explode('.', $plugin_id, 2);
+        [$file_name_provider] = explode('.', $plugin_id, 2);
         // Only the Help Topics module can provide help for other extensions.
         // @todo https://www.drupal.org/project/drupal/issues/3072312 Remove
         //   help_topics special case once Help Topics is stable and core

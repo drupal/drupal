@@ -416,7 +416,7 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
     $scaling = FALSE;
     if ($maximum_dimensions) {
       // Check that it is smaller than the given dimensions.
-      list($width, $height) = explode('x', $maximum_dimensions);
+      [$width, $height] = explode('x', $maximum_dimensions);
       if ($image->getWidth() > $width || $image->getHeight() > $height) {
         // Try to resize the image to fit the dimensions.
         if ($image->scale($width, $height)) {
@@ -456,7 +456,7 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
 
     if ($minimum_dimensions) {
       // Check that it is larger than the given dimensions.
-      list($width, $height) = explode('x', $minimum_dimensions);
+      [$width, $height] = explode('x', $minimum_dimensions);
       if ($image->getWidth() < $width || $image->getHeight() < $height) {
         if ($scaling) {
           $errors[] = t('The resized image is too small. The minimum dimensions are %dimensions pixels and after resizing, the image size will be %widthx%height pixels.',

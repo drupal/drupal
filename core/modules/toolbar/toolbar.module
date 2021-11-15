@@ -164,7 +164,7 @@ function toolbar_toolbar() {
   // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
   // script here with the hash parameter that is needed for that route.
   // @see toolbar_subtrees_jsonp()
-  list($hash, $hash_cacheability) = _toolbar_get_subtrees_hash();
+  [$hash, $hash_cacheability] = _toolbar_get_subtrees_hash();
   $subtrees_attached['drupalSettings']['toolbar'] = [
     'subtreesHash' => $hash,
   ];
@@ -286,7 +286,7 @@ function toolbar_get_rendered_subtrees() {
  *   The hash of the admin_menu subtrees.
  */
 function _toolbar_get_subtrees_hash() {
-  list($subtrees, $cacheability) = toolbar_get_rendered_subtrees();
+  [$subtrees, $cacheability] = toolbar_get_rendered_subtrees();
   $hash = Crypt::hashBase64(serialize($subtrees));
   return [$hash, $cacheability];
 }

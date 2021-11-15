@@ -118,7 +118,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $this->logger = $logger;
 
     // Get the entity type and field name from the plugin ID.
-    list (, $entity_type_id, $bundle, $field_name) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
+    [, $entity_type_id, $bundle, $field_name] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $this->fieldName = $field_name;

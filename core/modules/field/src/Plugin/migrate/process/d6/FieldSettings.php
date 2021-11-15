@@ -26,7 +26,7 @@ class FieldSettings extends ProcessPluginBase {
     if (count($value) == 2) {
       $value[] = NULL;
     }
-    list($field_type, $global_settings, $original_field_type) = $value;
+    [$field_type, $global_settings, $original_field_type] = $value;
     return $this->getSettings($field_type, $global_settings, $original_field_type);
   }
 

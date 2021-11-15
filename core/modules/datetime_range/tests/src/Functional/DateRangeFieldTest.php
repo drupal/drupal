@@ -854,7 +854,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Test the widget for validation notifications.
     foreach ($this->datelistDataProvider() as $data) {
-      list($start_date_value, $end_date_value, $expected) = $data;
+      [$start_date_value, $end_date_value, $expected] = $data;
 
       // Display creation form.
       $this->drupalGet('entity_test/add');

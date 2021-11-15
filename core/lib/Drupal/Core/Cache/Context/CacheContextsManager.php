@@ -106,7 +106,7 @@ class CacheContextsManager {
     // Iterate over cache contexts that have been optimized away and get their
     // cacheability metadata.
     foreach (static::parseTokens(array_diff($context_tokens, $optimized_tokens)) as $context_token) {
-      list($context_id, $parameter) = $context_token;
+      [$context_id, $parameter] = $context_token;
       $context = $this->getService($context_id);
       $cacheable_metadata = $cacheable_metadata->merge($context->getCacheableMetadata($parameter));
     }
@@ -114,7 +114,7 @@ class CacheContextsManager {
     sort($optimized_tokens);
     $keys = [];
     foreach (array_combine($optimized_tokens, static::parseTokens($optimized_tokens)) as $context_token => $context) {
-      list($context_id, $parameter) = $context;
+      [$context_id, $parameter] = $context;
       $keys[] = '[' . $context_token . ']=' . $this->getService($context_id)->getContext($parameter);
     }
 
@@ -164,7 +164,7 @@ class CacheContextsManager {
       $parameter = NULL;
       $context_id = $context_token;
       if (strpos($context_token, ':') !== FALSE) {
-        list($context_id, $parameter) = explode(':', $context_token);
+        [$context_id, $parameter] = explode(':', $context_token);
       }
 
       // Context tokens without:
@@ -236,7 +236,7 @@ class CacheContextsManager {
       $context_id = $context;
       $parameter = NULL;
       if (strpos($context, ':') !== FALSE) {
-        list($context_id, $parameter) = explode(':', $context, 2);
+        [$context_id, $parameter] = explode(':', $context, 2);
       }
       $contexts_with_parameters[] = [$context_id, $parameter];
     }

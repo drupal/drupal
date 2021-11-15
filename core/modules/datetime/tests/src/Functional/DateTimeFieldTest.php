@@ -562,7 +562,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Test the widget for validation notifications.
     foreach ($this->datelistDataProvider($field_label) as $data) {
-      list($date_value, $expected) = $data;
+      [$date_value, $expected] = $data;
 
       // Display creation form.
       $this->drupalGet('entity_test/add');

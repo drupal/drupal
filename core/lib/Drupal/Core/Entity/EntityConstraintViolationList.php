@@ -64,7 +64,7 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
       foreach ($this as $offset => $violation) {
         if ($path = $violation->getPropertyPath()) {
           // An example of $path might be 'title.0.value'.
-          list($field_name) = explode('.', $path, 2);
+          [$field_name] = explode('.', $path, 2);
           if ($this->entity->hasField($field_name)) {
             $this->violationOffsetsByField[$field_name][$offset] = $offset;
           }

@@ -91,10 +91,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     }
 
     // Create a referencing and a non-referencing entity.
-    list(
+    [
       $this->referencingEntity,
       $this->nonReferencingEntity,
-    ) = $this->createReferenceTestEntities($this->entity);
+    ] = $this->createReferenceTestEntities($this->entity);
   }
 
   /**

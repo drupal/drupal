@@ -215,7 +215,7 @@ class ViewUI implements ViewEntityInterface {
     // Determine whether the values the user entered are intended to apply to
     // the current display or the default display.
 
-    list($was_defaulted, $is_defaulted, $revert) = $this->getOverrideValues($form, $form_state);
+    [$was_defaulted, $is_defaulted, $revert] = $this->getOverrideValues($form, $form_state);
 
     // Based on the user's choice in the display dropdown, determine which display
     // these changes apply to.
@@ -429,7 +429,7 @@ class ViewUI implements ViewEntityInterface {
     $display_id = $form_state->get('display_id');
 
     // Handle the override select.
-    list($was_defaulted, $is_defaulted) = $this->getOverrideValues($form, $form_state);
+    [$was_defaulted, $is_defaulted] = $this->getOverrideValues($form, $form_state);
     if ($was_defaulted && !$is_defaulted) {
       // We were using the default display's values, but we're now overriding
       // the default display and saving values specific to this display.
@@ -450,7 +450,7 @@ class ViewUI implements ViewEntityInterface {
     if (!$form_state->isValueEmpty('name') && is_array($form_state->getValue('name'))) {
       // Loop through each of the items that were checked and add them to the view.
       foreach (array_keys(array_filter($form_state->getValue('name'))) as $field) {
-        list($table, $field) = explode('.', $field, 2);
+        [$table, $field] = explode('.', $field, 2);
 
         if ($cut = strpos($field, '$')) {
           $field = substr($field, 0, $cut);

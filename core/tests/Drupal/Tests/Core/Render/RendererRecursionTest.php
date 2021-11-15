@@ -33,7 +33,7 @@ class RendererRecursionTest extends RendererTestBase {
    * @covers ::doRender
    */
   public function testRenderRecursionWithNestedRenderRoot() {
-    list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
+    [$complex_child_markup, $parent_markup, $complex_child_template] = $this->setUpRenderRecursionComplexElements();
     $renderer = $this->renderer;
     $this->setUpRequest();
 
@@ -65,7 +65,7 @@ class RendererRecursionTest extends RendererTestBase {
    * @covers ::doRender
    */
   public function testRenderRecursionWithNestedRender() {
-    list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
+    [$complex_child_markup, $parent_markup, $complex_child_template] = $this->setUpRenderRecursionComplexElements();
     $renderer = $this->renderer;
     $this->setUpRequest();
 
@@ -99,7 +99,7 @@ class RendererRecursionTest extends RendererTestBase {
    * @covers ::renderPlain
    */
   public function testRenderRecursionWithNestedRenderPlain() {
-    list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
+    [$complex_child_markup, $parent_markup, $complex_child_template] = $this->setUpRenderRecursionComplexElements();
     $renderer = $this->renderer;
     $this->setUpRequest();
 

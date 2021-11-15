@@ -41,7 +41,7 @@ const SIMPLETEST_SCRIPT_EXIT_FAILURE = 1;
 const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 2;
 
 // Set defaults and get overrides.
-list($args, $count) = simpletest_script_parse_args();
+[$args, $count] = simpletest_script_parse_args();
 
 if ($args['help'] || $count == 0) {
   simpletest_script_help();
@@ -467,7 +467,7 @@ function simpletest_script_init() {
   elseif ($sudo = getenv('SUDO_COMMAND')) {
     // 'SUDO_COMMAND' is an environment variable set by the sudo program.
     // Extract only the PHP interpreter, not the rest of the command.
-    list($php) = explode(' ', $sudo, 2);
+    [$php] = explode(' ', $sudo, 2);
   }
   else {
     simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
@@ -824,7 +824,7 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     // tests and that none ran.
     $status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
     if (strpos($test_class, '::') > 0) {
-      list($class_name, $method) = explode('::', $test_class, 2);
+      [$class_name, $method] = explode('::', $test_class, 2);
       $methods = [$method];
     }
     else {
@@ -1048,7 +1048,7 @@ function simpletest_script_get_test_list() {
     if ($args['class']) {
       $test_list = [];
       foreach ($args['test_names'] as $test_class) {
-        list($class_name) = explode('::', $test_class, 2);
+        [$class_name] = explode('::', $test_class, 2);
         if (class_exists($class_name)) {
           $test_list[] = $test_class;
         }
@@ -1264,7 +1264,7 @@ function simpletest_script_reporter_write_xml_results() {
       $case = $dom_document->createElement('testcase');
       $case->setAttribute('classname', $test_class);
       if (strpos($result->function, '->') !== FALSE) {
-        list($class, $name) = explode('->', $result->function, 2);
+        [$class, $name] = explode('->', $result->function, 2);
       }
       else {
         $name = $result->function;

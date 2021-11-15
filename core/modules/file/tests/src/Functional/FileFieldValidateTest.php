@@ -132,7 +132,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('image');
-    list(, $test_file_extension) = explode('.', $test_file->getFilename());
+    [, $test_file_extension] = explode('.', $test_file->getFilename());
 
     // Disable extension checking.
     $this->updateFileField($field_name, $type_name, ['file_extensions' => '']);

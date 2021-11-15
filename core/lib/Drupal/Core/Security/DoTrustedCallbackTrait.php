@@ -53,10 +53,10 @@ trait DoTrustedCallbackTrait {
     $safe_callback = FALSE;
 
     if (is_array($callback)) {
-      list($object_or_classname, $method_name) = $callback;
+      [$object_or_classname, $method_name] = $callback;
     }
     elseif (is_string($callback) && strpos($callback, '::') !== FALSE) {
-      list($object_or_classname, $method_name) = explode('::', $callback, 2);
+      [$object_or_classname, $method_name] = explode('::', $callback, 2);
     }
 
     if (isset($method_name)) {

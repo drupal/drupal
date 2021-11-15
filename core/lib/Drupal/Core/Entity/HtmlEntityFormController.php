@@ -64,7 +64,7 @@ class HtmlEntityFormController extends FormController {
   protected function getFormObject(RouteMatchInterface $route_match, $form_arg) {
     // If no operation is provided, use 'default'.
     $form_arg .= '.default';
-    list ($entity_type_id, $operation) = explode('.', $form_arg);
+    [$entity_type_id, $operation] = explode('.', $form_arg);
 
     $form_object = $this->entityTypeManager->getFormObject($entity_type_id, $operation);
 

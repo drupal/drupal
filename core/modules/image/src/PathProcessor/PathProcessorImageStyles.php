@@ -63,7 +63,7 @@ class PathProcessorImageStyles implements InboundPathProcessorInterface {
 
     // Get the image style, scheme and path.
     if (substr_count($rest, '/') >= 2) {
-      list($image_style, $scheme, $file) = explode('/', $rest, 3);
+      [$image_style, $scheme, $file] = explode('/', $rest, 3);
 
       // Set the file as query parameter.
       $request->query->set('file', $file);

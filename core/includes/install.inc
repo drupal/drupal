@@ -282,7 +282,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
     $state = 'default';
     foreach (token_get_all($contents) as $token) {
       if (is_array($token)) {
-        list($type, $value) = $token;
+        [$type, $value] = $token;
       }
       else {
         $type = -1;

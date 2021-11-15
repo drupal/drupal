@@ -20,7 +20,7 @@ class ProfileFieldOptionTranslation extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($field_type, $translation) = $value;
+    [$field_type, $translation] = $value;
 
     $new_value = NULL;
     if (isset($translation)) {

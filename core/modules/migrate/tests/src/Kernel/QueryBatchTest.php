@@ -100,7 +100,7 @@ class QueryBatchTest extends KernelTestBase {
     $tests = [];
     $data_set = 0;
     foreach ($test_parameters as $data) {
-      list($num_rows, $batch_size) = $data;
+      [$num_rows, $batch_size] = $data;
       for ($i = 0; $i < $num_rows; $i++) {
         $tests[$data_set]['source_data'][$table][] = [
           'id' => $i,

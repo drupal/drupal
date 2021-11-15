@@ -1022,7 +1022,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Don't add a sort if there is no form value or the user set the sort to
     // 'none'.
     if (($sort_type = $form_state->getValue(['show', 'sort'])) && $sort_type != 'none') {
-      list($column, $sort) = explode(':', $sort_type);
+      [$column, $sort] = explode(':', $sort_type);
       // Column either be a column-name or the table-column-name.
       $column = explode('-', $column);
       if (count($column) > 1) {
@@ -1096,7 +1096,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     if (!empty($page['link'])) {
       $display_options['menu']['type'] = 'normal';
       $display_options['menu']['title'] = $page['link_properties']['title'];
-      list($display_options['menu']['menu_name'], $display_options['menu']['parent']) = explode(':', $page['link_properties']['parent'], 2);
+      [$display_options['menu']['menu_name'], $display_options['menu']['parent']] = explode(':', $page['link_properties']['parent'], 2);
     }
     return $display_options;
   }

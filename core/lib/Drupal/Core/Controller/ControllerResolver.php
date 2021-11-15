@@ -104,11 +104,11 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
     // Controller in the service:method notation.
     $count = substr_count($controller, ':');
     if ($count == 1) {
-      list($class_or_service, $method) = explode(':', $controller, 2);
+      [$class_or_service, $method] = explode(':', $controller, 2);
     }
     // Controller in the class::method notation.
     elseif (strpos($controller, '::') !== FALSE) {
-      list($class_or_service, $method) = explode('::', $controller, 2);
+      [$class_or_service, $method] = explode('::', $controller, 2);
     }
     else {
       throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));

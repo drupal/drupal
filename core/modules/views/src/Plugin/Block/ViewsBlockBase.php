@@ -64,7 +64,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
-    list($name, $this->displayID) = explode('-', $delta, 2);
+    [$name, $this->displayID] = explode('-', $delta, 2);
     // Load the view.
     $view = $storage->load($name);
     $this->view = $executable_factory->get($view);

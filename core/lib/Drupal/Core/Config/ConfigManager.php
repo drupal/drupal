@@ -466,7 +466,7 @@ class ConfigManager implements ConfigManagerInterface {
           }
           else {
             // Ignore the bundle.
-            list($entity_type_id,, $uuid) = explode(':', $name);
+            [$entity_type_id,, $uuid] = explode(':', $name);
             return $this->entityRepository->loadEntityByConfigTarget($entity_type_id, $uuid);
           }
         }, $affected_dependencies[$type]);
@@ -513,7 +513,7 @@ class ConfigManager implements ConfigManagerInterface {
     }
     foreach (array_unique($content_dependencies) as $content_dependency) {
       // Format of the dependency is entity_type:bundle:uuid.
-      list($entity_type, $bundle, $uuid) = explode(':', $content_dependency, 3);
+      [$entity_type, $bundle, $uuid] = explode(':', $content_dependency, 3);
       if (!$this->entityRepository->loadEntityByUuid($entity_type, $uuid)) {
         $missing_dependencies[$uuid] = [
           'entity_type' => $entity_type,

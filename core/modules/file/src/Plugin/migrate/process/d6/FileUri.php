@@ -24,7 +24,7 @@ class FileUri extends ProcessPluginBase {
     if ($row->isStub()) {
       return NULL;
     }
-    list($filepath, $file_directory_path, $temp_directory_path, $is_public) = $value;
+    [$filepath, $file_directory_path, $temp_directory_path, $is_public] = $value;
 
     // Specific handling using $temp_directory_path for temporary files.
     if (substr($filepath, 0, strlen($temp_directory_path)) === $temp_directory_path) {

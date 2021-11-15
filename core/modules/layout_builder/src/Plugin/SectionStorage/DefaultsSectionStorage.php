@@ -261,7 +261,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
     }
 
     if (is_string($value) && strpos($value, '.') !== FALSE) {
-      list($entity_type_id, $bundle, $view_mode) = explode('.', $value, 3);
+      [$entity_type_id, $bundle, $view_mode] = explode('.', $value, 3);
     }
     elseif (!empty($defaults['entity_type_id']) && !empty($defaults['bundle']) && !empty($defaults['view_mode_name'])) {
       $entity_type_id = $defaults['entity_type_id'];

@@ -97,7 +97,7 @@ final class ProjectSecurityRequirement {
       return new static();
     }
     if (isset($project_data['existing_version'])) {
-      list($major, $minor) = explode('.', $project_data['existing_version']);
+      [$major, $minor] = explode('.', $project_data['existing_version']);
       $existing_version = "$major.$minor";
       $next_version = "$major." . ((int) $minor + 1);
       return new static($project_data['title'], $security_coverage_info, $existing_version, $next_version);

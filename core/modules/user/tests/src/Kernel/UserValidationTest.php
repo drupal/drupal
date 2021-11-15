@@ -69,7 +69,7 @@ class UserValidationTest extends KernelTestBase {
     ];
     // cSpell:enable
     foreach ($test_cases as $name => $test_case) {
-      list($description, $test) = $test_case;
+      [$description, $test] = $test_case;
       $result = user_validate_name($name);
       $this->$test($result, $description . ' (' . $name . ')');
     }

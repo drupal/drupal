@@ -56,7 +56,7 @@ class EntityAccessCheck implements AccessInterface {
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
     // Split the entity type and the operation.
     $requirement = $route->getRequirement('_entity_access');
-    list($entity_type, $operation) = explode('.', $requirement);
+    [$entity_type, $operation] = explode('.', $requirement);
     // If $entity_type parameter is a valid entity, call its own access check.
     $parameters = $route_match->getParameters();
     if ($parameters->has($entity_type)) {
