@@ -40,7 +40,7 @@ class LanguageBreadcrumbTest extends BrowserTestBase {
   public function testBreadCrumbs() {
     // Prepare common base breadcrumb elements.
     $home = ['' => 'Home'];
-    $admin = $home + ['admin' => t('Administration')];
+    $admin = $home + ['admin' => 'Administration'];
 
     $page = $this->getSession()->getPage();
 

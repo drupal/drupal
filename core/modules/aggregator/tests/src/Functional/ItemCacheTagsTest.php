@@ -56,7 +56,7 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
     // Create a "Llama" aggregator feed item.
     $item = Item::create([
       'fid' => $feed->id(),
-      'title' => t('Llama'),
+      'title' => 'Llama',
       'path' => 'https://www.drupal.org/',
     ]);
     $item->save();
@@ -77,7 +77,7 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
     // Now create a feed item in that feed.
     Item::create([
       'fid' => $this->entity->getFeedId(),
-      'title' => t('Llama 2'),
+      'title' => 'Llama 2',
       'path' => 'https://groups.drupal.org/',
     ])->save();
 

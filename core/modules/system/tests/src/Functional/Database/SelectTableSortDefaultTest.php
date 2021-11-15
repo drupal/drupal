@@ -24,10 +24,10 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
    */
   public function testTableSortQuery() {
     $sorts = [
-      ['field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
-      ['field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
-      ['field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
-      ['field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
+      ['field' => 'Task ID', 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
+      ['field' => 'Task ID', 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
+      ['field' => 'Task', 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
+      ['field' => 'Task', 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
       // more elements here
 
     ];
@@ -52,10 +52,10 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
    */
   public function testTableSortQueryFirst() {
     $sorts = [
-      ['field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
-      ['field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
-      ['field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
-      ['field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
+      ['field' => 'Task ID', 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
+      ['field' => 'Task ID', 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
+      ['field' => 'Task', 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
+      ['field' => 'Task', 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
       // more elements here
 
     ];

@@ -166,12 +166,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $type = empty($type) ? $this->contentType : $type;
     $this->drupalGet('admin/structure/types/manage/' . $type . '/fields');
     // Check all table columns.
-    $table_headers = [
-      t('Label'),
-      t('Machine name'),
-      t('Field type'),
-      t('Operations'),
-    ];
+    $table_headers = ['Label', 'Machine name', 'Field type', 'Operations'];
     foreach ($table_headers as $table_header) {
       // We check that the label appear in the table headings.
       $this->assertSession()->responseContains($table_header . '</th>');
@@ -688,7 +683,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'field_name' => $field_name,
       'bundle' => $this->contentType,
       'entity_type' => 'node',
-      'label' => t('Hidden field'),
+      'label' => 'Hidden field',
     ];
     FieldConfig::create($field)->save();
     \Drupal::service('entity_display.repository')

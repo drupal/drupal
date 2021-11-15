@@ -490,7 +490,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   public function assertValidPasswordReset($name) {
     $this->assertSession()->pageTextContains("If $name is a valid account, an email will be sent with instructions to reset your password.");
     $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
-    $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => \Drupal::config('system.site')->get('name')]);
+    $subject = 'Replacement login information for ' . $this->account->getAccountName() . ' at Drupal';
     $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
   }
 

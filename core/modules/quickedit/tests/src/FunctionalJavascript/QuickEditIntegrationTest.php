@@ -127,7 +127,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
 
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('My Test Node'),
+      'title' => 'My Test Node',
       'body' => [
         'value' => '<p>Hello world!</p><p>I do not know what to say…</p><p>I wish I were eloquent.</p>',
         'format' => 'some_format',

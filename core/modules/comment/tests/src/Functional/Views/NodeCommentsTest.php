@@ -51,7 +51,7 @@ class NodeCommentsTest extends CommentTestBase {
     $this->assertCount(1, $comment_count_without_comment);
 
     // Create a content type with no comment field, and add a node.
-    $this->drupalCreateContentType(['type' => 'no_comment', 'name' => t('No comment page')]);
+    $this->drupalCreateContentType(['type' => 'no_comment', 'name' => 'No comment page']);
     $this->nodeUserPosted = $this->drupalCreateNode(['type' => 'no_comment']);
     $this->drupalGet('test-comment-count');
 

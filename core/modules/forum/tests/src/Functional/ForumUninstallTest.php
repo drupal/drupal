@@ -45,7 +45,7 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Create a taxonomy term.
     $term = Term::create([
-      'name' => t('A term'),
+      'name' => 'A term',
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
       'description' => '',
       'parent' => [0],

@@ -70,7 +70,7 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     $this->article = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('My Test Node'),
+      'title' => 'My Test Node',
       'body' => [
         'value' => 'Hello Layout Builder!',
         'format' => 'plain_text',

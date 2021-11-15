@@ -216,7 +216,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $form_id = $this->randomMachineName();
     $form_state = new FormState();
 
-    $form['op'] = ['#type' => 'submit', '#value' => t('Submit')];
+    $form['op'] = ['#type' => 'submit', '#value' => 'Submit'];
     // The form token CSRF protection should not interfere with this test, so we
     // bypass it by setting the token to FALSE.
     $form['#token'] = FALSE;

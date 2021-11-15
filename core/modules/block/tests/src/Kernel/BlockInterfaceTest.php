@@ -59,7 +59,7 @@ class BlockInterfaceTest extends KernelTestBase {
       ],
       'admin_label' => [
         '#type' => 'item',
-        '#title' => t('Block description'),
+        '#title' => 'Block description',
         '#plain_text' => $definition['admin_label'],
       ],
       'label' => [
@@ -78,7 +78,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'context_mapping' => [],
       'display_message' => [
         '#type' => 'textfield',
-        '#title' => t('Display message'),
+        '#title' => 'Display message',
         '#default_value' => 'My custom display message.',
       ],
     ];

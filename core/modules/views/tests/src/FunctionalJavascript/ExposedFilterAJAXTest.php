@@ -179,7 +179,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $ajax_views_before = $drupal_settings['views']['ajaxViews'];
 
     // Search for "Page One".
-    $this->submitForm(['title' => 'Page One'], t('Filter'));
+    $this->submitForm(['title' => 'Page One'], 'Filter');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Verify that only the "Page One" Node is present.

@@ -65,7 +65,7 @@ class ShortcutTest extends ResourceTestBase {
   protected function createEntity() {
     $shortcut = Shortcut::create([
       'shortcut_set' => 'default',
-      'title' => t('Comments'),
+      'title' => 'Comments',
       'weight' => -20,
       'link' => [
         'uri' => 'internal:/user/logout',

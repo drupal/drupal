@@ -77,7 +77,7 @@ class QuickEditCustomPipelineTest extends BrowserTestBase {
       'body[0][summary]' => '',
       'body[0][value]' => '<p>Fine thanks.</p>',
       'body[0][format]' => 'filtered_html',
-      'op' => t('Save'),
+      'op' => 'Save',
     ];
     // Assume there is another field on this page, which doesn't use a custom
     // render pipeline, but the default one, and it uses the "full" view mode.

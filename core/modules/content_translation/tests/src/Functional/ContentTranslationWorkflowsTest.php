@@ -225,7 +225,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $this->doTestWorkflows($this->administrator, $expected_status);
 
     // Check that translation permissions allow the associated operations.
-    $ops = ['create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete')];
+    $ops = ['create' => 'Add', 'update' => 'Edit', 'delete' => 'Delete'];
     $translations_url = $this->entity->toUrl('drupal:content-translation-overview');
     foreach ($ops as $current_op => $item) {
       $user = $this->drupalCreateUser([

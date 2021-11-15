@@ -32,8 +32,8 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $this->submitCredentialForm();
 
     // Ensure we get errors about missing modules.
-    $session->pageTextContains(t('Resolve all issues below to continue the upgrade.'));
-    $session->pageTextContains(t('The no_source_module plugin must define the source_module property.'));
+    $session->pageTextContains('Resolve all issues below to continue the upgrade.');
+    $session->pageTextContains('The no_source_module plugin must define the source_module property.');
 
     // Uninstall the module causing the missing module error messages.
     $this->container->get('module_installer')
@@ -45,10 +45,10 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $this->submitForm($this->edits, 'Review upgrade');
 
     // Ensure there are no errors about missing modules from the test module.
-    $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
-    $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
+    $session->pageTextNotContains('Source module not found for migration_provider_no_annotation.');
+    $session->pageTextNotContains('Source module not found for migration_provider_test.');
     // Ensure there are no errors about any other missing migration providers.
-    $session->pageTextNotContains(t('module not found'));
+    $session->pageTextNotContains('module not found');
   }
 
   /**

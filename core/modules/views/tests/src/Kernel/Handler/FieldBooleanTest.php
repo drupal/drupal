@@ -70,7 +70,7 @@ class FieldBooleanTest extends ViewsKernelTestBase {
     $this->assertEquals('✔', $view->field['age']->advancedRender($view->result[1]));
 
     // Set a custom output format.
-    $view->field['age']->formats['test'] = [t('Test-True'), t('Test-False')];
+    $view->field['age']->formats['test'] = ['Test-True', 'Test-False'];
     $view->field['age']->options['type'] = 'test';
     $this->assertEquals('Test-False', $view->field['age']->advancedRender($view->result[0]));
     $this->assertEquals('Test-True', $view->field['age']->advancedRender($view->result[1]));

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\contact\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Test\AssertMailTrait;
@@ -93,14 +92,9 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->assertEquals($this->config('system.site')->get('mail'), $mail['from']);
     $this->assertEquals($this->webUser->getEmail(), $mail['reply-to']);
     $this->assertEquals('user_mail', $mail['key']);
-    $variables = [
-      '@site-name' => $this->config('system.site')->get('name'),
-      '@subject' => $message['subject[0][value]'],
-      '@recipient-name' => $this->contactUser->getDisplayName(),
-    ];
-    $subject = PlainTextOutput::renderFromHtml(t('[@site-name] @subject', $variables));
+    $subject = '[' . $this->config('system.site')->get('name') . '] ' . $message['subject[0][value]'];
     $this->assertEquals($subject, $mail['subject'], 'Subject is in sent message.');
-    $this->assertStringContainsString('Hello ' . $variables['@recipient-name'], $mail['body'], 'Recipient name is in sent message.');
+    $this->assertStringContainsString('Hello ' . $this->contactUser->getDisplayName(), $mail['body'], 'Recipient name is in sent message.');
     $this->assertStringContainsString($this->webUser->getDisplayName(), $mail['body'], 'Sender name is in sent message.');
     $this->assertStringContainsString($message['message[0][value]'], $mail['body'], 'Message body is in sent message.');
 
@@ -128,7 +122,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $message = $this->submitPersonalContact($this->contactUser, $message);
 
     // Assert mail content.
-    $this->assertMailString('body', 'Hello ' . $variables['@recipient-name'], 1);
+    $this->assertMailString('body', 'Hello ' . $this->contactUser->getDisplayName(), 1);
     $this->assertMailString('body', $this->webUser->getDisplayName(), 1);
     $this->assertMailString('body', Html::Escape($message['message[0][value]']), 1);
   }

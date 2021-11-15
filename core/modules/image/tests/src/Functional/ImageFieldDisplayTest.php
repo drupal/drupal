@@ -437,7 +437,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Can't use fillField cause Mink can't fill hidden fields.
     $this->drupalGet("admin/structure/types/manage/article/fields/node.article.$field_name/storage");
     $this->getSession()->getPage()->find('css', 'input[name="settings[default_image][uuid][fids]"]')->setValue(0);
-    $this->getSession()->getPage()->pressButton(t('Save field settings'));
+    $this->getSession()->getPage()->pressButton('Save field settings');
 
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();

@@ -53,7 +53,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // Create a page node type and make it translatable.
     NodeType::create([
       'type' => 'page',
-      'name' => t('Page'),
+      'name' => 'Page',
     ])->save();
 
     $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'page');
