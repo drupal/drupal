@@ -66,7 +66,7 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
     $current_request = $this->view->getRequest();
 
     if ($current_request->query->has($this->options['query_param'])) {
-      $param = $current_request->query->get($this->options['query_param']);
+      $param = $current_request->query->all()[$this->options['query_param']];
       if (is_array($param)) {
         $conjunction = ($this->options['multiple'] == 'and') ? ',' : '+';
         $param = implode($conjunction, $param);
