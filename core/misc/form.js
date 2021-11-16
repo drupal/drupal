@@ -50,10 +50,9 @@
   }
 
   function fieldsList(form) {
-    var $fieldList = $(form).find('[name]').map(function (index, element) {
-      return element.getAttribute('id');
+    return [].map.call(form.querySelectorAll('[name][id]'), function (el) {
+      return el.id;
     });
-    return $.makeArray($fieldList);
   }
 
   Drupal.behaviors.formUpdated = {
