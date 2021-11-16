@@ -27,6 +27,13 @@ class BlockRepository implements BlockRepositoryInterface {
   protected $themeManager;
 
   /**
+   * The context handler.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
+   */
+  protected $contextHandler;
+
+  /**
    * Constructs a new BlockRepository.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
