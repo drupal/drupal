@@ -33,9 +33,8 @@ class DrupalTranslator implements TranslatorInterface {
     // Symfony violation messages may separate singular and plural versions
     // with "|".
     $ids = explode('|', $id);
-    if (count($ids) > 1) {
-      $number = $parameters['%count%'] ?? 1;
-      return \Drupal::translation()->formatPlural($number, $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
+    if ((count($ids) > 1) && isset($parameters['%count%'])) {
+      return \Drupal::translation()->formatPlural($parameters['%count%'], $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
     }
 
     return new TranslatableMarkup($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
