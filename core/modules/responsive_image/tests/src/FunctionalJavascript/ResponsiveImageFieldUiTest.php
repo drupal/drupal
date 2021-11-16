@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\responsive_image\Tests;
+namespace Drupal\Tests\responsive_image\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
@@ -11,6 +11,11 @@ use Drupal\responsive_image\Entity\ResponsiveImageStyle;
  * @group responsive_image
  */
 class ResponsiveImageFieldUiTest extends WebDriverTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Modules to install.
