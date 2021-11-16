@@ -68,12 +68,9 @@ DEVELOPING FOR DRUPAL
 ---------------------
 
 Drupal contains an extensive API that allows you to add to and modify the
-functionality of your site. The API consists of "hooks", which allow modules to
-react to system events and customize Drupal's behavior, and functions that
-standardize common operations such as database queries and form generation. The
-flexible hook architecture means that you should never need to directly modify
-the files that come with Drupal core to achieve the functionality you want;
-instead, functionality modifications take the form of modules.
+functionality of your site. This means that you should never need to directly
+modify the files that come with Drupal core to achieve the behavior you want;
+instead, modifications take the form of modules.
 
 When you need new functionality for your Drupal site, search for existing
 contributed modules. If you find a module that matches except for a bug or an
@@ -82,6 +79,8 @@ back to the project in the form of a "patch". Create new custom modules only
 when nothing existing comes close to what you need.
 
 More about developing:
+ * Extending and altering Drupal
+   https://api.drupal.org/api/drupal/core%21core.api.php/group/extending
  * Search for existing contributed modules:
    https://www.drupal.org/project/project_module
  * Contribute a patch:
@@ -91,6 +90,6 @@ More about developing:
  * Follow programming best practices:
    https://www.drupal.org/docs/develop/standards
  * Refer to the API documentation:
-   https://api.drupal.org/api/drupal/9
+   https://api.drupal.org
  * Learn from documented Drupal API examples:
    https://www.drupal.org/project/examples
