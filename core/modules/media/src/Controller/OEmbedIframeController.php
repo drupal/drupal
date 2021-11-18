@@ -121,8 +121,8 @@ class OEmbedIframeController implements ContainerInjectionInterface {
    */
   public function render(Request $request) {
     $url = $request->query->get('url');
-    $max_width = $request->query->getInt('max_width', NULL);
-    $max_height = $request->query->getInt('max_height', NULL);
+    $max_width = $request->query->getInt('max_width');
+    $max_height = $request->query->getInt('max_height');
 
     // Hash the URL and max dimensions, and ensure it is equal to the hash
     // parameter passed in the query string.
