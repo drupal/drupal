@@ -8,8 +8,8 @@
     "node": ">= 12.0"
   },
   "scripts": {
-    "build": "yarn build:css & yarn build:js & yarn build:jqueryui",
-    "watch": "yarn watch:css & yarn watch:js",
+    "build": "yarn build:css & yarn build:js & yarn build:jqueryui & yarn build:ckeditor5",
+    "watch": "yarn watch:css & yarn watch:js & yarn watch:ckeditor5",
     "build:css": "node ./scripts/css/postcss-build.js",
     "watch:css": "node ./scripts/css/postcss-watch.js",
     "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
@@ -29,8 +29,8 @@
     "spellcheck:make-drupal-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --wordsOnly | tr '[:upper:]' '[:lower:]' | tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
     "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\"",
     "vendor-update": "node ./scripts/js/assets.js",
-    "ckeditor5:watch": "webpack --mode development --config ./modules/ckeditor5/webpack.config.js --watch",
-    "ckeditor5:build": "webpack --config ./modules/ckeditor5/webpack.config.js"
+    "watch:ckeditor5": "webpack --mode development --config ./modules/ckeditor5/webpack.config.js --watch",
+    "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
