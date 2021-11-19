@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Datetime;
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -15,20 +16,6 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Form
  */
 class DatetimeElementFormTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
-
-  /**
-   * Tracks whether a date-time date callback was executed.
-   *
-   * @var bool
-   */
-  protected $dateCallbackExecuted = FALSE;
-
-  /**
-   * Tracks whether a date-time time callback was executed.
-   *
-   * @var bool
-   */
-  protected $timeCallbackExecuted = FALSE;
 
   /**
    * Modules to enable.
@@ -54,29 +41,41 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datetimeDateCallbackTrusted() {
-    $this->dateCallbackExecuted = TRUE;
+  public function datetimeDateCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['datetimeDateCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('datetimeDateCallbackExecuted', TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datetimeDateCallback() {
-    $this->dateCallbackExecuted = TRUE;
+  public function datetimeDateCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['datetimeDateCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('datetimeDateCallbackExecuted', TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datetimeTimeCallbackTrusted() {
-    $this->timeCallbackExecuted = TRUE;
+  public function datetimeTimeCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['timeCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('timeCallbackExecuted', TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datetimeTimeCallback() {
-    $this->timeCallbackExecuted = TRUE;
+  public function datetimeTimeCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['timeCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('timeCallbackExecuted', TRUE);
   }
 
   /**
@@ -133,11 +132,14 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    * Tests that default handlers are added even if custom are specified.
    */
   public function testDatetimeElement() {
-    $form = \Drupal::formBuilder()->getForm($this);
+    $form_state = new FormState();
+    $form = \Drupal::formBuilder()->buildForm($this, $form_state);
     $this->render($form);
 
-    $this->assertTrue($this->dateCallbackExecuted);
-    $this->assertTrue($this->timeCallbackExecuted);
+    $this->assertTrue($form['datetime_element']['datetimeDateCallbackExecuted']['#value']);
+    $this->assertTrue($form['datetime_element']['timeCallbackExecuted']['#value']);
+    $this->assertTrue($form_state->get('datetimeDateCallbackExecuted'));
+    $this->assertTrue($form_state->get('timeCallbackExecuted'));
   }
 
   /**
@@ -161,8 +163,8 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
     }
     $this->render($form);
 
-    $this->assertTrue($this->dateCallbackExecuted);
-    $this->assertTrue($this->timeCallbackExecuted);
+    $this->assertTrue($form['datetime_element']['datetimeDateCallbackExecuted']['#value']);
+    $this->assertTrue($form['datetime_element']['timeCallbackExecuted']['#value']);
   }
 
   /**
