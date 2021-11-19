@@ -51,7 +51,7 @@ class EnabledConfigurablePluginsConstraintValidator extends ConstraintValidator 
 
       if (!isset($plugin_settings[$id]) || empty($plugin_settings[$id])) {
         $this->context->buildViolation($constraint->message)
-          ->setParameter('%plugin_label', $definition->label())
+          ->setParameter('%plugin_label', (string) $definition->label())
           ->setParameter('%plugin_id', $id)
           ->atPath("plugins.$id")
           ->addViolation();

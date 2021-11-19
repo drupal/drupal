@@ -61,7 +61,7 @@ class ToolbarItemConditionsMetConstraintValidator extends ConstraintValidator im
           $image_upload_settings = $text_editor->getImageUploadSettings();
           if (!isset($image_upload_settings['status']) || (bool) $image_upload_settings['status'] !== TRUE) {
             $this->context->buildViolation($constraint->imageUploadStatusRequiredMessage)
-              ->setParameter('%toolbar_item', $toolbar_item_label)
+              ->setParameter('%toolbar_item', (string) $toolbar_item_label)
               ->setInvalidValue($toolbar_item)
               ->addViolation();
           }
@@ -74,8 +74,8 @@ class ToolbarItemConditionsMetConstraintValidator extends ConstraintValidator im
               ? $filters->get($required_value)->getLabel()
               : $required_value;
             $this->context->buildViolation($constraint->filterRequiredMessage)
-              ->setParameter('%toolbar_item', $toolbar_item_label)
-              ->setParameter('%filter', $filter_label)
+              ->setParameter('%toolbar_item', (string) $toolbar_item_label)
+              ->setParameter('%filter', (string) $filter_label)
               ->setInvalidValue($toolbar_item)
               ->addViolation();
           }
@@ -101,7 +101,7 @@ class ToolbarItemConditionsMetConstraintValidator extends ConstraintValidator im
               $parameter = '%plugins';
             }
             $this->context->buildViolation($message)
-              ->setParameter('%toolbar_item', $toolbar_item_label)
+              ->setParameter('%toolbar_item', (string) $toolbar_item_label)
               ->setParameter($parameter, implode(', ', $missing_plugin_labels))
               ->setInvalidValue($toolbar_item)
               ->addViolation();

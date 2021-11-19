@@ -86,7 +86,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     );
     foreach ($markup_filters as $markup_filter) {
       $this->context->buildViolation($constraint->noMarkupFiltersMessage)
-        ->setParameter('%filter_label', $markup_filter->getLabel())
+        ->setParameter('%filter_label', (string) $markup_filter->getLabel())
         ->setParameter('%filter_plugin_id', $markup_filter->getPluginId())
         ->addViolation();
     }
@@ -111,7 +111,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if (!empty($forbidden_minimum_tags)) {
       $offending_filter = static::findHtmlRestrictorFilterForbiddingTags($text_format, $minimum_tags);
       $this->context->buildViolation($constraint->forbiddenElementsMessage)
-        ->setParameter('%filter_label', $offending_filter->getLabel())
+        ->setParameter('%filter_label', (string) $offending_filter->getLabel())
         ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
         ->addViolation();
     }
@@ -122,7 +122,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if (!empty($not_allowed_minimum_tags)) {
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $minimum_tags);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
-        ->setParameter('%filter_label', $offending_filter->getLabel())
+        ->setParameter('%filter_label', (string) $offending_filter->getLabel())
         ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
         ->addViolation();
     }
