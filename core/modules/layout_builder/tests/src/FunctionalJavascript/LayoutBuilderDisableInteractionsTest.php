@@ -6,6 +6,7 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
@@ -183,8 +184,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       $this->fail(new FormattableMarkup("@tag_name was clickable when it shouldn't have been", ['@tag_name' => $tag_name]));
     }
     catch (\Exception $e) {
-      // cspell:ignore interactable
-      $this->assertMatchesRegularExpression('/(is not clickable at point|element not interactable)/', $e->getMessage());
+      $this->assertTrue(JSWebAssert::isExceptionNotClickable($e));
     }
   }
 

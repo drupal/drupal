@@ -1,0 +1,10 @@
+js_interaction_test:
+  version: VERSION
+  js:
+    js/js_interaction_test.trigger_link.js: {}
+  css:
+    theme:
+      css/js-interaction-test-blocker-element.css: {}
+  dependencies:
+    - core/drupal
+    - core/once
