@@ -125,6 +125,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * Detect disallowed authentication methods on access denied exceptions.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event.
    */
   public function onExceptionAccessDenied(ExceptionEvent $event) {
     if (isset($this->filter) && $event->isMainRequest()) {

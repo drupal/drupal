@@ -84,6 +84,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * Reacts to a config save and records information in state for testing.
    *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
+   *   The event.
    */
   public function onConfigSave(ConfigCrudEvent $event) {
     $config = $event->getConfig();
@@ -116,6 +117,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * Reacts to a config delete and records information in state for testing.
    *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
+   *   The event.
    */
   public function onConfigDelete(ConfigCrudEvent $event) {
     $config = $event->getConfig();

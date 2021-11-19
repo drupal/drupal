@@ -803,7 +803,9 @@ class UserTest extends ResourceTestBase {
 
   /**
    * @param \Drupal\user\UserInterface $account
+   *   The user account.
    * @param string $cancel_method
+   *   The cancel method.
    */
   private function sendDeleteRequestForUser(UserInterface $account, string $cancel_method) {
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);

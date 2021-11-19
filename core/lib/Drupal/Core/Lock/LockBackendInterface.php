@@ -127,6 +127,7 @@ interface LockBackendInterface {
    * Releases the given lock.
    *
    * @param string $name
+   *   The lock name.
    */
   public function release($name);
 

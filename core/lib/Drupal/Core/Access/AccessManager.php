@@ -66,6 +66,7 @@ class AccessManager implements AccessManagerInterface {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param CheckProviderInterface $check_provider
+   *   The check access provider.
    */
   public function __construct(RouteProviderInterface $route_provider, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory, AccountInterface $current_user, CheckProviderInterface $check_provider) {
     $this->routeProvider = $route_provider;

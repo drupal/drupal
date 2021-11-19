@@ -40,6 +40,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * Constructs a new ThemeTestSubscriber.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   The route match handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */

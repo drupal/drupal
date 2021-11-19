@@ -1147,7 +1147,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    * Sets site name and slogan for default language, helps in tests.
    *
    * @param string $site_name
+   *   The site name.
    * @param string $site_slogan
+   *   The site slogan.
    */
   protected function setSiteInformation($site_name, $site_slogan) {
     $edit = [

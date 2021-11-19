@@ -498,6 +498,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Helper function to make assertions about an invalid password reset.
    *
    * @param string $name
+   *   The user name.
    */
   public function assertNoValidPasswordReset($name) {
     // This message is the same as the valid reset for privacy reasons.

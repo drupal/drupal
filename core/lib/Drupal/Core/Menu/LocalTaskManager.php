@@ -389,6 +389,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * @param string $route_name
    *   The route name of the local task to determine the active status.
    * @param array $route_parameters
+   *   The parameter for the route.
    *
    * @return bool
    *   Returns TRUE if the passed route_name and route_parameters is considered

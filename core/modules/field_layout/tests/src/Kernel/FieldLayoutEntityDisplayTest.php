@@ -176,8 +176,11 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
    * Asserts than an entity has the correct values.
    *
    * @param mixed $expected
+   *   The expected values.
    * @param array $values
+   *   The actual values.
    * @param string $message
+   *   (optional) An error message.
    */
   public static function assertEntityValues($expected, array $values, $message = '') {
 

@@ -149,6 +149,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * Asserts the max age header.
    *
    * @param int $max_age
+   *   The maximum age of the cache.
    */
   protected function assertCacheMaxAge($max_age) {
     $this->assertSession()->responseHeaderContains('Cache-Control', 'max-age:' . $max_age);

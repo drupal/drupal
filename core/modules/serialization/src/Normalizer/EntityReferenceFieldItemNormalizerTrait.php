@@ -20,6 +20,7 @@ trait EntityReferenceFieldItemNormalizerTrait {
    * Determines if a field item references a taxonomy term.
    *
    * @param \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $field_item
+   *   The entity reference item.
    *
    * @return bool
    */

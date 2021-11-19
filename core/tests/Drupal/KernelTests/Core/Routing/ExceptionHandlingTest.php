@@ -128,6 +128,7 @@ class ExceptionHandlingTest extends KernelTestBase {
    * Sets the given path to use as the 404 page and triggers a 404.
    *
    * @param string $path
+   *   The path to test.
    *
    * @return \Drupal\Core\Render\HtmlResponse
    *

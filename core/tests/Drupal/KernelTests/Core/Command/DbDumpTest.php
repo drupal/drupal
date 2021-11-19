@@ -220,6 +220,7 @@ class DbDumpTest extends KernelTestBase {
    * Helper function to get a simplified schema for a given table.
    *
    * @param string $table
+   *   The table name.
    *
    * @return array
    *   Array keyed by field name, with the values being the field type.
