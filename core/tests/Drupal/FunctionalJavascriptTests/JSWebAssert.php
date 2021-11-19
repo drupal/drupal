@@ -8,7 +8,10 @@ use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
+use WebDriver\Exception;
 use WebDriver\Exception\CurlExec;
+
+// cspell:ignore interactable
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.
@@ -504,6 +507,20 @@ JS;
     } while (microtime(TRUE) < $end);
 
     throw new ElementHtmlException($message, $this->session->getDriver(), $node);
+  }
+
+  /**
+   * Determines if an exception is due to an element not being clickable.
+   *
+   * @param \WebDriver\Exception $exception
+   *   The exception to check.
+   *
+   * @return bool
+   *   TRUE if the exception is due to an element not being clickable,
+   *   interactable or visible.
+   */
+  public static function isExceptionNotClickable(Exception $exception): bool {
+    return (bool) preg_match('/not (clickable|interactable|visible)/', $exception->getMessage());
   }
 
 }

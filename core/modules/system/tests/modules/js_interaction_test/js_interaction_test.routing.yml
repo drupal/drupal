@@ -1,0 +1,6 @@
+js_interaction_test.js_interaction_test:
+  path: '/js_interaction_test'
+  defaults:
+    _form: '\Drupal\js_interaction_test\Controller\JSInteractionTestForm'
+  requirements:
+    _access: 'TRUE'

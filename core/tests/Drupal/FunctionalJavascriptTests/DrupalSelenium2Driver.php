@@ -4,6 +4,7 @@ namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
+use WebDriver\Exception;
 use WebDriver\Exception\UnknownError;
 use WebDriver\ServiceFactory;
 
@@ -132,6 +133,85 @@ class DrupalSelenium2Driver extends Selenium2Driver {
     }
 
     return $remotePath;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function click($xpath) {
+    /** @var \Exception $not_clickable_exception */
+    $not_clickable_exception = NULL;
+    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath) {
+      try {
+        parent::click($xpath);
+        return TRUE;
+      }
+      catch (Exception $exception) {
+        if (!JSWebAssert::isExceptionNotClickable($exception)) {
+          // Rethrow any unexpected exceptions.
+          throw $exception;
+        }
+        $not_clickable_exception = $exception;
+        return NULL;
+      }
+    });
+    if ($result !== TRUE) {
+      throw $not_clickable_exception;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($xpath, $value) {
+    /** @var \Exception $not_clickable_exception */
+    $not_clickable_exception = NULL;
+    $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath, $value) {
+      try {
+        parent::setValue($xpath, $value);
+        return TRUE;
+      }
+      catch (Exception $exception) {
+        if (!JSWebAssert::isExceptionNotClickable($exception) && !str_contains($exception->getMessage(), 'invalid element state')) {
+          // Rethrow any unexpected exceptions.
+          throw $exception;
+        }
+        $not_clickable_exception = $exception;
+        return NULL;
+      }
+    });
+    if ($result !== TRUE) {
+      throw $not_clickable_exception;
+    }
+  }
+
+  /**
+   * Waits for a callback to return a truthy result and returns it.
+   *
+   * @param int|float $timeout
+   *   Maximal allowed waiting time in seconds.
+   * @param callable $callback
+   *   Callback, which result is both used as waiting condition and returned.
+   *   Will receive reference to `this driver` as first argument.
+   *
+   * @return mixed
+   *   The result of the callback.
+   */
+  private function waitFor($timeout, callable $callback) {
+    $start = microtime(TRUE);
+    $end = $start + $timeout;
+
+    do {
+      $result = call_user_func($callback, $this);
+
+      if ($result) {
+        break;
+      }
+
+      usleep(10000);
+    } while (microtime(TRUE) < $end);
+
+    return $result;
   }
 
 }

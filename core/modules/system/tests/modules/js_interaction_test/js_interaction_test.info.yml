@@ -1,0 +1,5 @@
+name: 'JS Interaction Test'
+type: module
+description: 'Module for testing fault-tolerant interactions in JavaScript tests.'
+package: Testing
+version: VERSION
