@@ -32,6 +32,7 @@ class ExceptionTestSiteSubscriber extends HttpExceptionSubscriberBase {
    *   vestigial and can be removed.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event.
    */
   public function on500(ExceptionEvent $event) {
     $exception = $event->getThrowable();

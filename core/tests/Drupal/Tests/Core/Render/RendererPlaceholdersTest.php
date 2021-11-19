@@ -548,6 +548,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
   /**
    * @param false|array $cid_parts
+   *   The cid parts.
    * @param string[] $bubbled_cache_contexts
    *   Additional cache contexts that were bubbled when the placeholder was
    *   rendered.

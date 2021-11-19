@@ -238,6 +238,7 @@ class ModulesListForm extends FormBase {
    * @param \Drupal\Core\Extension\Extension $module
    *   The module for which to build the form row.
    * @param $distribution
+   *   The distribution.
    *
    * @return array
    *   The form row for the given module.

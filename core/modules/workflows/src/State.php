@@ -103,6 +103,7 @@ class State implements StateInterface {
    * Helper method to convert a State value object to a label.
    *
    * @param \Drupal\workflows\StateInterface $state
+   *   The state.
    *
    * @return string
    *   The label of the state.

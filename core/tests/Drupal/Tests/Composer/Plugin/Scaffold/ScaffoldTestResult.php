@@ -14,7 +14,9 @@ class ScaffoldTestResult {
    * Holds the location of the scaffold fixture and the stdout from the test.
    *
    * @param string $docroot
+   *   The location of the scaffold fixture.
    * @param string $scaffoldOutput
+   *   The stdout from the test.
    */
   public function __construct($docroot, $scaffoldOutput) {
     $this->docroot = $docroot;

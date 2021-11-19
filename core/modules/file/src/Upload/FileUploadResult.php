@@ -51,6 +51,7 @@ class FileUploadResult {
    * Sets the sanitized filename.
    *
    * @param string $sanitizedFilename
+   *   The sanitized filename.
    *
    * @return $this
    */
@@ -72,6 +73,7 @@ class FileUploadResult {
    * Sets the original filename.
    *
    * @param string $originalFilename
+   *   The original filename.
    *
    * @return $this
    */
@@ -84,6 +86,7 @@ class FileUploadResult {
    * Sets the File entity.
    *
    * @param \Drupal\file\FileInterface $file
+   *   A file entity.
    *
    * @return $this
    */

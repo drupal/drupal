@@ -116,6 +116,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    * bag so the setParameter() call effects the parent container as well.
    *
    * @param $service
+   *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
    */
@@ -135,6 +136,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    * bag so the setParameter() call effects the parent container as well.
    *
    * @param $service
+   *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
    */
@@ -152,6 +154,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    * bag so the setParameter() call effects the parent container as well.
    *
    * @param $service
+   *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
    */

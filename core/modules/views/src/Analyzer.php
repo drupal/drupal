@@ -107,6 +107,7 @@ class Analyzer {
    * for items that are definitely broken are much more useful.
    *
    * @param string $message
+   *   The message.
    * @param string $type
    *   The type of message. This should be "ok", "warning" or "error". Other
    *   values can be used but how they are treated by the output routine

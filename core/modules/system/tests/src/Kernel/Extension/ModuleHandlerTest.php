@@ -59,6 +59,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * @param array $expected_values
    *   The expected values, sorted by weight and module name.
    * @param $condition
+   *   The condition being tested, such as 'After adding a module'.
    */
   protected function assertModuleList(array $expected_values, $condition) {
     $expected_values = array_values(array_unique($expected_values));

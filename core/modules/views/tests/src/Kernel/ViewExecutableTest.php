@@ -361,6 +361,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    * Asserts that expected view properties have been unset by destroy().
    *
    * @param \Drupal\views\ViewExecutable $view
+   *   The view executable.
    */
   protected function assertViewDestroy(ViewExecutable $view) {
     $reflection = new \ReflectionClass($view);

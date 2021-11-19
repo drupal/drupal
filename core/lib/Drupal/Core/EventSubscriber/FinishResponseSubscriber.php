@@ -213,6 +213,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response object.
    *
    * @return bool
    *   TRUE when Cache-Control header was set explicitly on the given response.

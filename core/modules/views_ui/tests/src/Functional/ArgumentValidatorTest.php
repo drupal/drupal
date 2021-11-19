@@ -49,6 +49,7 @@ class ArgumentValidatorTest extends UITestBase {
    * both with and without specify_validation turned on.
    *
    * @param bool $specify_validation
+   *   The form validation.
    */
   protected function saveArgumentHandlerWithValidationOptions($specify_validation) {
     $options = [
