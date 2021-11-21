@@ -172,7 +172,7 @@ class StandardProfileTest extends BrowserTestBase {
     // Set URIs.
     // Image.
     $image_file = $this->article->get('field_image')->entity;
-    $this->imageUri = ImageStyle::load('large')->buildUrl($image_file->getFileUri());
+    $this->imageUri = ImageStyle::load('wide')->buildUrl($image_file->getFileUri());
     // Term.
     $this->termUri = $this->term->toUrl('canonical', ['absolute' => TRUE])->toString();
     // Article.
