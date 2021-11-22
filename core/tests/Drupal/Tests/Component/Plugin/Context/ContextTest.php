@@ -103,7 +103,7 @@ class ContextTest extends TestCase {
    */
   public function testHasContextValue($has_context_value, $default_value): void {
     $mock_definition = $this->getMockBuilder('Drupal\Component\Plugin\Context\ContextDefinitionInterface')
-      ->setMethods(['getDefaultValue'])
+      ->onlyMethods(['getDefaultValue'])
       ->getMockForAbstractClass();
 
     $mock_definition->expects($this->atLeastOnce())
