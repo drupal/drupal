@@ -35,8 +35,10 @@ class EntityUUIDTest extends EntityKernelTestBase {
    *
    * @param string $entity_type
    *   The entity type to run the tests with.
+   *
+   * @internal
    */
-  protected function assertCRUD($entity_type) {
+  protected function assertCRUD(string $entity_type): void {
     // Verify that no UUID is auto-generated when passing one for creation.
     $uuid_service = $this->container->get('uuid');
     $uuid = $uuid_service->generate();

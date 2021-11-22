@@ -462,20 +462,13 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use new FormattableMarkup() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
    *
-   * @return bool
-   *   TRUE if the assertion succeeded.
+   * @internal
    */
-  protected function assertShortcutQuickLink($label, $index = 0, $message = '', $group = 'Other') {
+  protected function assertShortcutQuickLink(string $label, int $index = 0, string $message = ''): void {
     $links = $this->xpath('//a[normalize-space()=:label]', [':label' => $label]);
     $message = ($message ? $message : new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
     $this->assertArrayHasKey($index, $links, $message);
-    return TRUE;
   }
 
 }

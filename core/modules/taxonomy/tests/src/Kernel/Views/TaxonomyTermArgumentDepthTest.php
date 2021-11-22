@@ -178,6 +178,8 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
    *   The depth to search.
    * @param bool $break_phrase
    *   Whether to break the argument up into multiple terms.
+   *
+   * @internal
    */
   protected function assertTermWithDepthResult(array $expected, $tid, int $depth, bool $break_phrase = FALSE): void {
     $this->view->destroy();

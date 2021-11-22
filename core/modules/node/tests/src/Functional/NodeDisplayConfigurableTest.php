@@ -114,8 +114,10 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *   The region of the node html content where meta data is expected.
    * @param bool $field_classes
    *   If TRUE, check for field--name-XXX classes.
+   *
+   * @internal
    */
-  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes) {
+  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes): void {
     $assert = $this->assertSession();
 
     $html_element = $is_inline ? 'span' : 'div';

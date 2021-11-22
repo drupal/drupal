@@ -32,8 +32,10 @@ class MigrateCommentFieldTest extends MigrateDrupal7TestBase {
    *
    * @param string $comment_type
    *   The comment type.
+   *
+   * @internal
    */
-  protected function assertEntity($comment_type) {
+  protected function assertEntity(string $comment_type): void {
     $entity = FieldStorageConfig::load('node.' . $comment_type);
     $this->assertInstanceOf(FieldStorageConfig::class, $entity);
     $this->assertSame('node', $entity->getTargetEntityTypeId());

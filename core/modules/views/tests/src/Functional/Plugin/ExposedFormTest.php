@@ -414,8 +414,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
+   *
+   * @internal
    */
-  protected function assertIds(array $ids) {
+  protected function assertIds(array $ids): void {
     $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
     $actual_ids = [];
     foreach ($elements as $element) {
@@ -492,8 +494,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param array $bundles
    *   Bundles of nodes.
+   *
+   * @internal
    */
-  protected function assertNodesExist(array $bundles) {
+  protected function assertNodesExist(array $bundles): void {
     foreach ($this->nodes as $node) {
       if (in_array($node->bundle(), $bundles)) {
         $this->assertSession()->pageTextContains($node->label());

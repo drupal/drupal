@@ -89,8 +89,10 @@ class UserAccountFormFieldsTest extends KernelTestBase {
    *
    * @param array $elements
    *   A form array section that contains the user account form elements.
+   *
+   * @internal
    */
-  protected function assertFieldOrder(array $elements) {
+  protected function assertFieldOrder(array $elements): void {
     $name_index = 0;
     $name_weight = 0;
     $pass_index = 0;

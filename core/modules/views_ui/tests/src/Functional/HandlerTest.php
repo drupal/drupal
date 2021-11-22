@@ -294,8 +294,10 @@ class HandlerTest extends UITestBase {
    *   The field name.
    * @param string $entity_type
    *   The entity type to which the field belongs.
+   *
+   * @internal
    */
-  public function assertNoDuplicateField($field_name, $entity_type) {
+  public function assertNoDuplicateField(string $field_name, string $entity_type): void {
     $elements = $this->xpath('//td[.=:entity_type]/preceding-sibling::td[@class="title" and .=:title]', [':title' => $field_name, ':entity_type' => $entity_type]);
     $this->assertCount(1, $elements, $field_name . ' appears just once in ' . $entity_type . '.');
   }

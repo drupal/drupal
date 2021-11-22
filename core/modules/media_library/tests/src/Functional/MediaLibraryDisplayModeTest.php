@@ -222,8 +222,10 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
    * @param bool $has_source_field
    *   Whether the media library form display should contain the source field or
    *   not.
+   *
+   * @internal
    */
-  protected function assertFormDisplay($type_id, $has_name, $has_source_field) {
+  protected function assertFormDisplay(string $type_id, bool $has_name, bool $has_source_field): void {
     // These components are added by default and invisible.
     $components = [
       'revision_log_message',
@@ -254,8 +256,10 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
    *   The media type ID.
    * @param string $image_style
    *   The ID of the image style that should be configured for the thumbnail.
+   *
+   * @internal
    */
-  protected function assertViewDisplay($type_id, $image_style) {
+  protected function assertViewDisplay(string $type_id, string $image_style): void {
     $view_display = EntityViewDisplay::load('media.' . $type_id . '.media_library');
     $this->assertInstanceOf(EntityViewDisplay::class, $view_display);
     // Assert the media library view display contains only the thumbnail.

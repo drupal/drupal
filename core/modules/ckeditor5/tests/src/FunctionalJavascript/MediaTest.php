@@ -664,11 +664,13 @@ class MediaTest extends WebDriverTestBase {
    *
    * @param string $attribute
    *   The attribute to check.
-   * @param mixed $value
+   * @param string|null $value
    *   Either a string value or if NULL, asserts that <drupal-media> element
    *   doesn't have the attribute.
+   *
+   * @internal
    */
-  protected function assertSourceAttributeSame($attribute, $value) {
+  protected function assertSourceAttributeSame(string $attribute, ?string $value): void {
     $dom = $this->getEditorDataAsDom();
     $drupal_media = (new \DOMXPath($dom))->query('//drupal-media');
     $this->assertNotEmpty($drupal_media);

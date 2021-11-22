@@ -726,8 +726,10 @@ class ConfigEntityQueryTest extends KernelTestBase {
    *
    * @param array $expected
    *   Array of expected entity IDs.
+   *
+   * @internal
    */
-  protected function assertResults($expected) {
+  protected function assertResults(array $expected): void {
     $expected_count = count($expected);
     $this->assertCount($expected_count, $this->queryResults);
     foreach ($expected as $value) {

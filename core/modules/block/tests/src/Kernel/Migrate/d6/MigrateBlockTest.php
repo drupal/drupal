@@ -69,14 +69,16 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    *   The display region.
    * @param string $theme
    *   The theme.
-   * @param string $weight
+   * @param int $weight
    *   The block weight.
    * @param array $settings
    *   (optional) The block settings.
    * @param bool $status
    *   Whether the block is expected to be enabled or disabled.
+   *
+   * @internal
    */
-  public function assertEntity($id, $visibility, $region, $theme, $weight, array $settings = NULL, $status = TRUE) {
+  public function assertEntity(string $id, array $visibility, string $region, string $theme, int $weight, array $settings = NULL, bool $status = TRUE): void {
     $block = Block::load($id);
     $this->assertInstanceOf(Block::class, $block);
     $this->assertSame($visibility, $block->getVisibility());

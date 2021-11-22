@@ -109,8 +109,10 @@ class MessageCommandTest extends WebDriverTestBase {
    *
    * @param string $expected_message
    *   The text expected to be present in #drupal-live-announce.
+   *
+   * @internal
    */
-  protected function assertAnnounceContains($expected_message) {
+  protected function assertAnnounceContains(string $expected_message): void {
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')"));
   }
@@ -120,8 +122,10 @@ class MessageCommandTest extends WebDriverTestBase {
    *
    * @param string $expected_message
    *   The text expected to be absent from #drupal-live-announce.
+   *
+   * @internal
    */
-  protected function assertAnnounceNotContains($expected_message) {
+  protected function assertAnnounceNotContains(string $expected_message): void {
     $assert_session = $this->assertSession();
     $this->assertEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')", 1000));
   }

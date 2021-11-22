@@ -152,8 +152,10 @@ class DisplayPageWebTest extends ViewTestBase {
    *
    * @param string $path
    *   Path that will be set as the view page display path.
+   *
+   * @internal
    */
-  public function assertPagePath($path) {
+  public function assertPagePath(string $path): void {
     $view = Views::getView('test_page_display_path');
     $view->initDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('path', $path);

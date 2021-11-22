@@ -53,7 +53,7 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
    *   The expected title of the link.
    * @param string $menu
    *   The expected ID of the menu to which the link will belong.
-   * @param string $description
+   * @param string|null $description
    *   The link's expected description.
    * @param bool $enabled
    *   Whether the link is enabled.
@@ -66,10 +66,9 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
    * @param int $weight
    *   The expected weight of the link.
    *
-   * @return \Drupal\menu_link_content\MenuLinkContentInterface
-   *   The menu link content.
+   * @internal
    */
-  protected function assertEntity($id, $title, $menu, $description, $enabled, $expanded, array $attributes, $uri, $weight) {
+  protected function assertEntity(string $id, string $title, string $menu, ?string $description, bool $enabled, bool $expanded, array $attributes, string $uri, int $weight): void {
     /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link */
     $menu_link = MenuLinkContent::load($id);
     $this->assertInstanceOf(MenuLinkContentInterface::class, $menu_link);
@@ -81,7 +80,6 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
     $this->assertSame($attributes, $menu_link->link->options);
     $this->assertSame($uri, $menu_link->link->uri);
     $this->assertSame($weight, $menu_link->getWeight());
-    return $menu_link;
   }
 
   /**

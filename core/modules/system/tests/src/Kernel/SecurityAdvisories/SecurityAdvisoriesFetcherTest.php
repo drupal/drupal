@@ -730,6 +730,8 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    *
    * @param string[] $expected_messages
    *   The expected error messages.
+   *
+   * @internal
    */
   protected function assertServiceAdvisoryLoggedErrors(array $expected_messages): void {
     $this->assertSame($expected_messages, $this->logErrorMessages);

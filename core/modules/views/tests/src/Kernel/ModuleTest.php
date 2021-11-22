@@ -8,6 +8,7 @@ use Drupal\views\Plugin\views\area\Broken as BrokenArea;
 use Drupal\views\Plugin\views\field\Broken as BrokenField;
 use Drupal\views\Plugin\views\filter\Broken as BrokenFilter;
 use Drupal\views\Plugin\views\filter\Standard;
+use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\Views;
 
 /**
@@ -334,8 +335,10 @@ class ModuleTest extends ViewsKernelTestBase {
 
   /**
    * Ensure that a certain handler is an instance of a certain table/field.
+   *
+   * @internal
    */
-  public function assertInstanceHandler($handler, $table, $field, $id) {
+  public function assertInstanceHandler(ViewsHandlerInterface $handler, string $table, string $field, string $id): void {
     $table_data = $this->container->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 

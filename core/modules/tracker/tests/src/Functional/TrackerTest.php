@@ -474,8 +474,10 @@ class TrackerTest extends BrowserTestBase {
    *   data-history-node-last-comment-timestamp attribute.
    * @param bool $library_is_present
    *   Whether the drupal.tracker-history library should be present or not.
+   *
+   * @internal
    */
-  public function assertHistoryMetadata($node_id, $node_timestamp, $node_last_comment_timestamp, $library_is_present = TRUE) {
+  public function assertHistoryMetadata(int $node_id, int $node_timestamp, int $node_last_comment_timestamp, bool $library_is_present = TRUE): void {
     $settings = $this->getDrupalSettings();
     $this->assertSame($library_is_present, isset($settings['ajaxPageState']) && in_array('tracker/history', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.tracker-history library is present.');
     $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]'), 'Tracker table cell contains the data-history-node-id and data-history-node-timestamp attributes for the node.');

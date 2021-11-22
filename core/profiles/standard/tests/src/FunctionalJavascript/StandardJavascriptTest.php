@@ -50,7 +50,7 @@ class StandardJavascriptTest extends WebDriverTestBase {
    * @param int $expected_count
    *   The expected number of BigPipe placeholders.
    */
-  protected function assertBigPipePlaceholderReplacementCount($expected_count) {
+  protected function assertBigPipePlaceholderReplacementCount($expected_count): void {
     $web_assert = $this->assertSession();
     $web_assert->waitForElement('css', 'script[data-big-pipe-event="stop"]');
     $page = $this->getSession()->getPage();

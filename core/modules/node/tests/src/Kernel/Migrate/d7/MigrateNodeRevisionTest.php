@@ -92,30 +92,32 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
    *   The revision language.
    * @param string $title
    *   The expected title.
-   * @param string $log
+   * @param string|null $log
    *   The revision log message.
    * @param int $timestamp
    *   The revision's time stamp.
+   *
+   * @internal
    */
-  protected function assertRevision($id, $langcode, $title, $log, $timestamp) {
+  protected function assertRevision(int $id, string $langcode, string $title, ?string $log, int $timestamp): void {
     $revision = $this->nodeStorage->loadRevision($id);
     $this->assertInstanceOf(NodeInterface::class, $revision);
     $this->assertSame($title, $revision->getTitle());
     $this->assertSame($langcode, $revision->language()->getId());
     $this->assertSame($log, $revision->revision_log->value);
-    $this->assertSame($timestamp, $revision->getRevisionCreationTime());
+    $this->assertSame($timestamp, (int) $revision->getRevisionCreationTime());
   }
 
   /**
    * Tests the migration of node revisions with translated nodes.
    */
   public function testNodeRevisions() {
-    $this->assertRevision(1, 'en', 'An English Node', NULL, '1441032132');
-    $this->assertRevision(2, 'en', 'The thing about Deep Space 9 (1st rev)', 'DS9 1st rev', '1564543588');
-    $this->assertRevision(4, 'is', 'is - The thing about Firefly (1st rev)', 'is - Firefly 1st rev', '1478755274');
-    $this->assertRevision(6, 'en', 'Comments are closed :-(', NULL, '1504715414');
-    $this->assertRevision(7, 'en', 'Comments are open :-)', NULL, '1504715432');
-    $this->assertRevision(8, 'en', 'The number 47', NULL, '1552126363');
+    $this->assertRevision(1, 'en', 'An English Node', NULL, 1441032132);
+    $this->assertRevision(2, 'en', 'The thing about Deep Space 9 (1st rev)', 'DS9 1st rev', 1564543588);
+    $this->assertRevision(4, 'is', 'is - The thing about Firefly (1st rev)', 'is - Firefly 1st rev', 1478755274);
+    $this->assertRevision(6, 'en', 'Comments are closed :-(', NULL, 1504715414);
+    $this->assertRevision(7, 'en', 'Comments are open :-)', NULL, 1504715432);
+    $this->assertRevision(8, 'en', 'The number 47', NULL, 1552126363);
 
     // Test that the revision translation are not migrated and there should not
     // be a revision with id of 9.

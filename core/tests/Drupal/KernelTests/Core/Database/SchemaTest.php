@@ -672,10 +672,12 @@ class SchemaTest extends KernelTestBase {
    * The addition test covers both defining a field of a given specification
    * when initially creating at table and extending an existing table.
    *
-   * @param $field_spec
+   * @param array $field_spec
    *   The schema specification of the field.
+   *
+   * @internal
    */
-  protected function assertFieldAdditionRemoval($field_spec) {
+  protected function assertFieldAdditionRemoval(array $field_spec): void {
     // Try creating the field on a new table.
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = [
@@ -737,8 +739,10 @@ class SchemaTest extends KernelTestBase {
 
   /**
    * Asserts that a newly added field has the correct characteristics.
+   *
+   * @internal
    */
-  protected function assertFieldCharacteristics($table_name, $field_name, $field_spec) {
+  protected function assertFieldCharacteristics(string $table_name, string $field_name, array $field_spec): void {
     // Check that the initial value has been registered.
     if (isset($field_spec['initial'])) {
       // There should be no row with a value different then $field_spec['initial'].
@@ -1007,14 +1011,16 @@ class SchemaTest extends KernelTestBase {
   /**
    * Asserts that a field can be changed from one spec to another.
    *
-   * @param $old_spec
+   * @param array $old_spec
    *   The beginning field specification.
-   * @param $new_spec
+   * @param array $new_spec
    *   The ending field specification.
-   * @param $test_data
+   * @param mixed $test_data
    *   (optional) A test value to insert and test, if specified.
+   *
+   * @internal
    */
-  protected function assertFieldChange($old_spec, $new_spec, $test_data = NULL) {
+  protected function assertFieldChange(array $old_spec, array $new_spec, $test_data = NULL): void {
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = [
       'fields' => [

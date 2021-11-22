@@ -39,8 +39,10 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
    *   The entity ID.
    * @param string $component_id
    *   The ID of the display component.
+   *
+   * @internal
    */
-  protected function assertDisplay($id, $component_id) {
+  protected function assertDisplay(string $id, string $component_id): void {
     $component = EntityViewDisplay::load($id)->getComponent($component_id);
     $this->assertIsArray($component);
     $this->assertSame('hidden', $component['label']);

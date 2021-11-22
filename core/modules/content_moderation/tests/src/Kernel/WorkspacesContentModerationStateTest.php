@@ -253,7 +253,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  protected function assertDefaultRevision(EntityInterface $entity, $revision_id, $published = TRUE) {
+  protected function assertDefaultRevision(EntityInterface $entity, int $revision_id, $published = TRUE): void {
     // In the context of a workspace, the default revision ID is always the
     // latest workspace-specific revision, so we need to adjust the expectation
     // of the parent assertion.

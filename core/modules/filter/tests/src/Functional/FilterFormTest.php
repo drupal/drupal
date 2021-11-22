@@ -175,8 +175,10 @@ class FilterFormTest extends BrowserTestBase {
    *
    * @param string $id
    *   The HTML ID of the select element.
+   *
+   * @internal
    */
-  protected function assertNoSelect($id) {
+  protected function assertNoSelect(string $id): void {
     $this->assertSession()->elementNotExists('xpath', "//select[@id=$id]");
   }
 
@@ -190,10 +192,9 @@ class FilterFormTest extends BrowserTestBase {
    * @param string $selected
    *   The value of the selected option.
    *
-   * @return bool
-   *   TRUE if the assertion passed; FALSE otherwise.
+   * @internal
    */
-  protected function assertOptions($id, array $expected_options, $selected) {
+  protected function assertOptions(string $id, array $expected_options, string $selected): void {
     $select = $this->assertSession()->selectExists($id);
     $found_options = $select->findAll('css', 'option');
     $found_options = array_map(function ($item) {
@@ -212,10 +213,9 @@ class FilterFormTest extends BrowserTestBase {
    *   An array of option values that are contained in the select element
    *   besides the "- Select -" option.
    *
-   * @return bool
-   *   TRUE if the assertion passed; FALSE otherwise.
+   * @internal
    */
-  protected function assertRequiredSelectAndOptions($id, array $options) {
+  protected function assertRequiredSelectAndOptions(string $id, array $options): void {
     $select = $this->assertSession()->selectExists($id);
     $this->assertSame('required', $select->getAttribute('required'));
     // A required select element has a "- Select -" option whose key is an empty
@@ -230,10 +230,9 @@ class FilterFormTest extends BrowserTestBase {
    * @param string $id
    *   The HTML ID of the textarea.
    *
-   * @return bool
-   *   TRUE if the assertion passed; FALSE otherwise.
+   * @internal
    */
-  protected function assertEnabledTextarea($id) {
+  protected function assertEnabledTextarea(string $id): void {
     $textarea = $this->assertSession()->fieldEnabled($id);
     $this->assertSame('textarea', $textarea->getTagName());
   }
@@ -244,10 +243,9 @@ class FilterFormTest extends BrowserTestBase {
    * @param string $id
    *   The HTML ID of the textarea.
    *
-   * @return bool
-   *   TRUE if the assertion passed; FALSE otherwise.
+   * @internal
    */
-  protected function assertDisabledTextarea($id) {
+  protected function assertDisabledTextarea(string $id): void {
     $textarea = $this->assertSession()->fieldDisabled($id);
     $this->assertSame('textarea', $textarea->getTagName());
     $this->assertSame('This field has been disabled because you do not have sufficient permissions to edit it.', $textarea->getText());

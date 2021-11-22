@@ -60,9 +60,9 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
    *   The label the migrated entity should have.
    * @param string $expected_vid
    *   The parent vocabulary the migrated entity should have.
-   * @param string $expected_description
+   * @param string|null $expected_description
    *   The description the migrated entity should have.
-   * @param string $expected_format
+   * @param string|null $expected_format
    *   The format the migrated entity should have.
    * @param int $expected_weight
    *   The weight the migrated entity should have.
@@ -72,8 +72,10 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
    *   The value the migrated entity field should have.
    * @param int $expected_term_reference_tid
    *   The term reference ID the migrated entity field should have.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $expected_language, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, array $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL) {
+  protected function assertEntity(int $id, string $expected_language, string $expected_label, string $expected_vid, ?string $expected_description = '', ?string $expected_format = NULL, int $expected_weight = 0, array $expected_parents = [], int $expected_field_integer_value = NULL, int $expected_term_reference_tid = NULL): void {
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load($id);
     $this->assertInstanceOf(TermInterface::class, $entity);
@@ -82,7 +84,7 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected_vid, $entity->bundle());
     $this->assertSame($expected_description, $entity->getDescription());
     $this->assertSame($expected_format, $entity->getFormat());
-    $this->assertSame($expected_weight, $entity->getWeight());
+    $this->assertSame($expected_weight, (int) $entity->getWeight());
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }
 
@@ -95,8 +97,10 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
    *   ID of the term to check.
    * @param array $parent_ids
    *   The expected parent term IDs.
+   *
+   * @internal
    */
-  protected function assertHierarchy($vid, $tid, array $parent_ids) {
+  protected function assertHierarchy(string $vid, int $tid, array $parent_ids): void {
     if (!isset($this->treeData[$vid])) {
       $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
       $this->treeData[$vid] = [];
@@ -114,8 +118,8 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 i18n localized taxonomy term to Drupal 8 migration.
    */
   public function testTranslatedLocalizedTaxonomyTerms() {
-    $this->assertEntity(14, 'en', 'Talos IV', 'vocabulary_name_much_longer_th', 'The home of Captain Christopher Pike.', NULL, '0', []);
-    $this->assertEntity(15, 'en', 'Vulcan', 'vocabulary_name_much_longer_th', NULL, NULL, '0', []);
+    $this->assertEntity(14, 'en', 'Talos IV', 'vocabulary_name_much_longer_th', 'The home of Captain Christopher Pike.', NULL, 0, []);
+    $this->assertEntity(15, 'en', 'Vulcan', 'vocabulary_name_much_longer_th', NULL, NULL, 0, []);
 
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load(14);

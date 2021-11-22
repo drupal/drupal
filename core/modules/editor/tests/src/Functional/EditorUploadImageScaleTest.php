@@ -214,12 +214,14 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
   /**
    * Asserts whether the saved maximum dimensions equal the ones provided.
    *
-   * @param string $width
+   * @param int|null $width
    *   The expected width of the uploaded image.
-   * @param string $height
+   * @param int|null $height
    *   The expected height of the uploaded image.
+   *
+   * @internal
    */
-  protected function assertSavedMaxDimensions($width, $height) {
+  protected function assertSavedMaxDimensions(?int $width, ?int $height): void {
     $image_upload_settings = Editor::load('basic_html')->getImageUploadSettings();
     $expected = [
       'width' => $image_upload_settings['max_dimensions']['width'],

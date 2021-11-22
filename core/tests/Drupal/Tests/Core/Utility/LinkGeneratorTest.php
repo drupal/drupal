@@ -650,8 +650,10 @@ class LinkGeneratorTest extends UnitTestCase {
    *   The HTML to check.
    * @param int $count
    *   How many times the link should be present in the HTML. Defaults to 1.
+   *
+   * @internal
    */
-  public static function assertLink(array $properties, MarkupInterface $html, $count = 1) {
+  public static function assertLink(array $properties, MarkupInterface $html, int $count = 1): void {
     // Provide default values.
     $properties += ['attributes' => []];
 
@@ -686,10 +688,9 @@ class LinkGeneratorTest extends UnitTestCase {
    * @param string $html
    *   The HTML snippet to check.
    *
-   * @return int
-   *   The number of results that are found.
+   * @internal
    */
-  protected function assertNoXPathResults($query, $html) {
+  protected function assertNoXPathResults(string $query, string $html): void {
     $document = new \DOMDocument();
     $document->loadHTML($html);
     $xpath = new \DOMXPath($document);

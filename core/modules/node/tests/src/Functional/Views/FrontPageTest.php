@@ -166,8 +166,10 @@ class FrontPageTest extends ViewTestBase {
    *   An array of nids which should not be part of the resultset.
    * @param string $message
    *   (optional) A custom message to display with the assertion.
+   *
+   * @internal
    */
-  protected function assertNotInResultSet(ViewExecutable $view, array $not_expected_nids, $message = '') {
+  protected function assertNotInResultSet(ViewExecutable $view, array $not_expected_nids, string $message = ''): void {
     $found_nids = array_filter($view->result, function ($row) use ($not_expected_nids) {
       return in_array($row->nid, $not_expected_nids);
     });

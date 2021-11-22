@@ -72,8 +72,10 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
    *   The value the migrated entity field should have.
    * @param int $expected_term_reference_tid
    *   The term reference ID the migrated entity field should have.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $expected_language, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL) {
+  protected function assertEntity(int $id, string $expected_language, string $expected_label, string $expected_vid, string $expected_description = '', string $expected_format = NULL, int $expected_weight = 0, array $expected_parents = [], int $expected_field_integer_value = NULL, int $expected_term_reference_tid = NULL): void {
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load($id);
     $this->assertInstanceOf(TermInterface::class, $entity);
@@ -82,7 +84,7 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected_vid, $entity->bundle());
     $this->assertSame($expected_description, $entity->getDescription());
     $this->assertSame($expected_format, $entity->getFormat());
-    $this->assertSame($expected_weight, $entity->getWeight());
+    $this->assertSame($expected_weight, (int) $entity->getWeight());
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }
 
@@ -95,8 +97,10 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
    *   ID of the term to check.
    * @param array $parent_ids
    *   The expected parent term IDs.
+   *
+   * @internal
    */
-  protected function assertHierarchy($vid, $tid, array $parent_ids) {
+  protected function assertHierarchy(string $vid, int $tid, array $parent_ids): void {
     if (!isset($this->treeData[$vid])) {
       $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
       $this->treeData[$vid] = [];
@@ -119,13 +123,13 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 i18n taxonomy term to Drupal 8 migration.
    */
   public function testTranslatedTaxonomyTerms() {
-    $this->assertEntity(1, 'zu', 'zu - term 1 of vocabulary 1', 'vocabulary_1_i_0_', 'zu - description of term 1 of vocabulary 1', NULL, '0', []);
-    $this->assertEntity(2, 'fr', 'fr - term 2 of vocabulary 2', 'vocabulary_2_i_1_', 'fr - description of term 2 of vocabulary 2', NULL, '3', []);
-    $this->assertEntity(3, 'fr', 'fr - term 3 of vocabulary 2', 'vocabulary_2_i_1_', 'fr - description of term 3 of vocabulary 2', NULL, '4', ['2']);
-    $this->assertEntity(4, 'en', 'term 4 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 4 of vocabulary 3', NULL, '6', []);
-    $this->assertEntity(5, 'en', 'term 5 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 5 of vocabulary 3', NULL, '7', ['4']);
-    $this->assertEntity(6, 'en', 'term 6 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 6 of vocabulary 3', NULL, '8', ['4', '5']);
-    $this->assertEntity(7, 'fr', 'fr - term 2 of vocabulary 1', 'vocabulary_1_i_0_', 'fr - desc of term 2 vocab 1', NULL, '0', []);
+    $this->assertEntity(1, 'zu', 'zu - term 1 of vocabulary 1', 'vocabulary_1_i_0_', 'zu - description of term 1 of vocabulary 1', NULL, 0, []);
+    $this->assertEntity(2, 'fr', 'fr - term 2 of vocabulary 2', 'vocabulary_2_i_1_', 'fr - description of term 2 of vocabulary 2', NULL, 3, []);
+    $this->assertEntity(3, 'fr', 'fr - term 3 of vocabulary 2', 'vocabulary_2_i_1_', 'fr - description of term 3 of vocabulary 2', NULL, 4, ['2']);
+    $this->assertEntity(4, 'en', 'term 4 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 4 of vocabulary 3', NULL, 6, []);
+    $this->assertEntity(5, 'en', 'term 5 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 5 of vocabulary 3', NULL, 7, ['4']);
+    $this->assertEntity(6, 'en', 'term 6 of vocabulary 3', 'vocabulary_3_i_2_', 'description of term 6 of vocabulary 3', NULL, 8, ['4', '5']);
+    $this->assertEntity(7, 'fr', 'fr - term 2 of vocabulary 1', 'vocabulary_1_i_0_', 'fr - desc of term 2 vocab 1', NULL, 0, []);
   }
 
 }

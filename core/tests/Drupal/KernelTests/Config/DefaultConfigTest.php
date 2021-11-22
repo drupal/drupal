@@ -71,8 +71,10 @@ class DefaultConfigTest extends KernelTestBase {
    *   Extension name.
    * @param string $type
    *   Extension type, either 'module' or 'theme'.
+   *
+   * @internal
    */
-  protected function assertExtensionConfig(string $name, string $type) {
+  protected function assertExtensionConfig(string $name, string $type): void {
     // System and user are required in order to be able to install some of the
     // other modules. Therefore they are put into static::$modules, which though
     // doesn't install config files, so import those config files explicitly. Do

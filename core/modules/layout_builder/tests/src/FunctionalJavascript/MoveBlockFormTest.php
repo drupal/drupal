@@ -142,8 +142,10 @@ class MoveBlockFormTest extends WebDriverTestBase {
    *
    * @param string[] $expected_block_labels
    *   The expected block labels.
+   *
+   * @internal
    */
-  protected function assertBlockTable(array $expected_block_labels) {
+  protected function assertBlockTable(array $expected_block_labels): void {
     $page = $this->getSession()->getPage();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $block_tds = $page->findAll('css', '.layout-builder-components-table__block-label');
@@ -202,8 +204,10 @@ class MoveBlockFormTest extends WebDriverTestBase {
    *   The region.
    * @param array $expected_block_selectors
    *   The block selectors.
+   *
+   * @internal
    */
-  protected function assertRegionBlocksOrder($section_delta, $region, array $expected_block_selectors) {
+  protected function assertRegionBlocksOrder(int $section_delta, string $region, array $expected_block_selectors): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

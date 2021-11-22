@@ -4,6 +4,7 @@ namespace Drupal\Tests\field\Functional\Number;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\FieldConfigInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -426,8 +427,10 @@ class NumberFieldTest extends BrowserTestBase {
 
   /**
    * Helper function to set the minimum value of a field.
+   *
+   * @internal
    */
-  public function assertSetMinimumValue($field, $minimum_value) {
+  public function assertSetMinimumValue(FieldConfigInterface $field, int $minimum_value): void {
     $field_configuration_url = 'entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field->getName();
 
     // Set the minimum value.

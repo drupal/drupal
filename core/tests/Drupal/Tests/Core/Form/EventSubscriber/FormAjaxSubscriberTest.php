@@ -52,6 +52,13 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   protected $messenger;
 
   /**
+   * The event used to derive the response.
+   *
+   * @var \Symfony\Component\HttpKernel\Event\ExceptionEvent
+   */
+  protected $event = NULL;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -84,9 +91,9 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with($request, $expected_form, $form_state, $commands)
       ->willReturn($response);
 
-    $event = $this->assertResponseFromException($request, $exception, $response);
-    $this->assertTrue($event->isAllowingCustomResponseCode());
-    $this->assertSame(200, $event->getResponse()->getStatusCode());
+    $this->assertResponseFromException($request, $exception, $response);
+    $this->assertTrue($this->event->isAllowingCustomResponseCode());
+    $this->assertSame(200, $this->event->getResponse()->getStatusCode());
   }
 
   /**
@@ -109,9 +116,9 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with($request, $expected_form, $form_state, $commands)
       ->willReturn($response);
 
-    $event = $this->assertResponseFromException($request, $exception, $response);
-    $this->assertTrue($event->isAllowingCustomResponseCode());
-    $this->assertSame(200, $event->getResponse()->getStatusCode());
+    $this->assertResponseFromException($request, $exception, $response);
+    $this->assertTrue($this->event->isAllowingCustomResponseCode());
+    $this->assertSame(200, $this->event->getResponse()->getStatusCode());
   }
 
   /**
@@ -146,8 +153,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with($request, $expected_form, $form_state, $commands)
       ->willThrowException($expected_exception);
 
-    $event = $this->assertResponseFromException($request, $exception, NULL);
-    $this->assertSame($expected_exception, $event->getThrowable());
+    $this->assertResponseFromException($request, $exception, NULL);
+    $this->assertSame($expected_exception, $this->event->getThrowable());
   }
 
   /**
@@ -256,15 +263,13 @@ class FormAjaxSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\HttpFoundation\Response|null $expected_response
    *   The response expected to be set on the event.
    *
-   * @return \Symfony\Component\HttpKernel\Event\ExceptionEvent
-   *   The event used to derive the response.
+   * @internal
    */
-  protected function assertResponseFromException(Request $request, \Exception $exception, $expected_response) {
-    $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
-    $this->subscriber->onException($event);
+  protected function assertResponseFromException(Request $request, \Exception $exception, ?Response $expected_response): void {
+    $this->event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+    $this->subscriber->onException($this->event);
 
-    $this->assertSame($expected_response, $event->getResponse());
-    return $event;
+    $this->assertSame($expected_response, $this->event->getResponse());
   }
 
 }

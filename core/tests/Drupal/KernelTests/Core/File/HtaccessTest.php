@@ -97,8 +97,10 @@ class HtaccessTest extends KernelTestBase {
    *   The URI of the file to check.
    * @param int $expected
    *   The expected file permissions; e.g., 0444.
+   *
+   * @internal
    */
-  protected function assertFilePermissions($uri, $expected) {
+  protected function assertFilePermissions(string $uri, int $expected): void {
     $actual = fileperms($uri) & 0777;
     $this->assertSame($actual, $expected, new FormattableMarkup('@uri file permissions @actual are identical to @expected.', [
       '@uri' => $uri,

@@ -29,10 +29,12 @@ class MigrateUserRoleTest extends MigrateDrupal7TestBase {
    *   The role ID.
    * @param string $label
    *   The role's expected label.
-   * @param int|null $original_rid
+   * @param int $original_rid
    *   The original (integer) ID of the role, to check permissions.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $label, $original_rid) {
+  protected function assertEntity(string $id, string $label, int $original_rid): void {
     /** @var \Drupal\user\RoleInterface $entity */
     $entity = Role::load($id);
     $this->assertInstanceOf(RoleInterface::class, $entity);

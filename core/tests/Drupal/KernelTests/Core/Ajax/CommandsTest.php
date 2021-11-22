@@ -88,14 +88,16 @@ class CommandsTest extends KernelTestBase {
    * the actual command contains additional settings that aren't part of
    * $needle.
    *
-   * @param $haystack
+   * @param array $haystack
    *   An array of rendered Ajax commands returned by the server.
-   * @param $needle
+   * @param array $needle
    *   Array of info we're expecting in one of those commands.
-   * @param $message
+   * @param string $message
    *   An assertion message.
+   *
+   * @internal
    */
-  protected function assertCommand($haystack, $needle, $message) {
+  protected function assertCommand(array $haystack, array $needle, string $message): void {
     $found = FALSE;
     foreach ($haystack as $command) {
       // If the command has additional settings that we're not testing for, do

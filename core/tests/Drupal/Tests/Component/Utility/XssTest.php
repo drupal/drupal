@@ -594,10 +594,10 @@ class XssTest extends TestCase {
    *   Lowercase, plain text to look for.
    * @param string $message
    *   (optional) Message to display if failed. Defaults to an empty string.
-   * @param string $group
-   *   (optional) The group this message belongs to. Defaults to 'Other'.
+   *
+   * @internal
    */
-  protected function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNormalized(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
@@ -616,10 +616,10 @@ class XssTest extends TestCase {
    *   Lowercase, plain text to look for.
    * @param string $message
    *   (optional) Message to display if failed. Defaults to an empty string.
-   * @param string $group
-   *   (optional) The group this message belongs to. Defaults to 'Other'.
+   *
+   * @internal
    */
-  protected function assertNotNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotNormalized(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 

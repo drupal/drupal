@@ -307,8 +307,10 @@ class SearchCommentTest extends BrowserTestBase {
 
   /**
    * Update search index and search for comment.
+   *
+   * @internal
    */
-  public function assertCommentAccess($assume_access, $message) {
+  public function assertCommentAccess(bool $assume_access, string $message): void {
     // Invoke search index update.
     \Drupal::service('search.index')->markForReindex('node_search', $this->node->id());
     $this->cronRun();

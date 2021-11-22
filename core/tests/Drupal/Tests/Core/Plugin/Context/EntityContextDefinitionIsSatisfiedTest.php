@@ -89,8 +89,10 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *   The context definition to check.
    * @param mixed $value
    *   (optional) The value to set on the context, defaults to NULL.
+   *
+   * @internal
    */
-  protected function assertRequirementIsSatisfied($expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL) {
+  protected function assertRequirementIsSatisfied(bool $expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL): void {
     $context = new EntityContext($definition, $value);
     $this->assertSame($expected, $requirement->isSatisfiedBy($context));
   }

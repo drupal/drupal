@@ -381,8 +381,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    *   Whether the entity type was revisionable prior to the update.
    * @param bool $translatable
    *   Whether the entity type was translatable prior to the update.
+   *
+   * @internal
    */
-  protected function assertEntityData($revisionable, $translatable) {
+  protected function assertEntityData(bool $revisionable, bool $translatable): void {
     $entities = $this->entityTypeManager->getStorage($this->entityTypeId)->loadMultiple();
     $this->assertCount(3, $entities);
     foreach ($entities as $entity_id => $entity) {
@@ -456,8 +458,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @param bool $new_base_field
    *   (optional) Whether a new base field was added as part of the update.
    *   Defaults to FALSE.
+   *
+   * @internal
    */
-  protected function assertEntityTypeSchema($revisionable, $translatable, $new_base_field = FALSE) {
+  protected function assertEntityTypeSchema(bool $revisionable, bool $translatable, bool $new_base_field = FALSE): void {
     // Check whether the 'new_base_field' field has been installed correctly.
     $field_storage_definition = $this->entityDefinitionUpdateManager->getFieldStorageDefinition('new_base_field', $this->entityTypeId);
     if ($new_base_field) {
@@ -485,8 +489,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Asserts the revisionable characteristics of an entity type.
+   *
+   * @internal
    */
-  protected function assertRevisionable() {
+  protected function assertRevisionable(): void {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityDefinitionUpdateManager->getEntityType($this->entityTypeId);
     $this->assertTrue($entity_type->isRevisionable());
@@ -524,8 +530,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Asserts the translatable characteristics of an entity type.
+   *
+   * @internal
    */
-  protected function assertTranslatable() {
+  protected function assertTranslatable(): void {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityDefinitionUpdateManager->getEntityType($this->entityTypeId);
     $this->assertTrue($entity_type->isTranslatable());
@@ -553,8 +561,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Asserts the revisionable / translatable characteristics of an entity type.
+   *
+   * @internal
    */
-  protected function assertRevisionableAndTranslatable() {
+  protected function assertRevisionableAndTranslatable(): void {
     $this->assertRevisionable();
     $this->assertTranslatable();
 
@@ -599,8 +609,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Asserts that an entity type is neither revisionable nor translatable.
+   *
+   * @internal
    */
-  protected function assertNonRevisionableAndNonTranslatable() {
+  protected function assertNonRevisionableAndNonTranslatable(): void {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityDefinitionUpdateManager->getEntityType($this->entityTypeId);
     $this->assertFalse($entity_type->isRevisionable());
@@ -618,8 +630,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    *
    * @param bool $revisionable
    *   Whether the entity type is revisionable or not.
+   *
+   * @internal
    */
-  protected function assertBundleFieldSchema($revisionable) {
+  protected function assertBundleFieldSchema(bool $revisionable): void {
     $entity_type_id = 'entity_test_update';
     $field_storage_definition = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id)['new_bundle_field'];
     $database_schema = $this->database->schema();
@@ -635,8 +649,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
   /**
    * Asserts that the backup tables have been kept after a successful update.
+   *
+   * @internal
    */
-  protected function assertBackupTables() {
+  protected function assertBackupTables(): void {
     $backups = \Drupal::keyValue('entity.update_backup')->getAll();
     $backup = reset($backups);
 

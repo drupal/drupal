@@ -234,8 +234,10 @@ class PathContentModerationTest extends BrowserTestBase {
    *
    * @param string[] $paths
    *   An array of paths to check for.
+   *
+   * @internal
    */
-  public function assertPathsAreAccessible(array $paths) {
+  public function assertPathsAreAccessible(array $paths): void {
     foreach ($paths as $path) {
       $this->drupalGet($path);
       $this->assertSession()->statusCodeEquals(200);

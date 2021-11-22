@@ -254,8 +254,10 @@ class ConfigEntityImportTest extends KernelTestBase {
    *   The original data stored in the config object.
    * @param array $custom_data
    *   The new data to store in the config object.
+   *
+   * @internal
    */
-  public function assertConfigUpdateImport($name, $original_data, $custom_data) {
+  public function assertConfigUpdateImport(string $name, array $original_data, array $custom_data): void {
     $this->container->get('config.storage.sync')->write($name, $custom_data);
 
     // Verify the active configuration still returns the default values.

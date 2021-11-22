@@ -57,8 +57,10 @@ class MigrateActionsTest extends MigrateDrupal6TestBase {
    *   The expected Action type.
    * @param array $configuration
    *   The expected Action configuration.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $label, $type, $configuration) {
+  protected function assertEntity(string $id, string $label, string $type, array $configuration): void {
     $action = Action::load($id);
 
     $this->assertInstanceOf(Action::class, $action);

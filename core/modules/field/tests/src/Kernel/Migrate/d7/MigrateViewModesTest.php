@@ -34,8 +34,10 @@ class MigrateViewModesTest extends MigrateDrupal7TestBase {
    *   The expected label of the view mode.
    * @param string $entity_type
    *   The expected entity type ID which owns the view mode.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $label, $entity_type) {
+  protected function assertEntity(string $id, string $label, string $entity_type): void {
     /** @var \Drupal\Core\Entity\EntityViewModeInterface $view_mode */
     $view_mode = EntityViewMode::load($id);
     $this->assertInstanceOf(EntityViewModeInterface::class, $view_mode);

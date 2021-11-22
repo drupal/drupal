@@ -306,8 +306,10 @@ class FieldLayoutTest extends WebDriverTestBase {
    *   The field selector, one of field id|name|label|value.
    * @param string $region_name
    *   The machine name of the region.
+   *
+   * @internal
    */
-  protected function assertFieldInRegion($field_selector, $region_name) {
+  protected function assertFieldInRegion(string $field_selector, string $region_name): void {
     $region_element = $this->getSession()->getPage()->find('css', ".layout__region--$region_name");
     $this->assertNotNull($region_element);
     $this->assertSession()->fieldExists($field_selector, $region_element);

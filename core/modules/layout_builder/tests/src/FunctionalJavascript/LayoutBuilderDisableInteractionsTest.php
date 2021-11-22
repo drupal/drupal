@@ -174,8 +174,10 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    *
    * @param \Behat\Mink\Element\NodeElement $element
    *   Element being checked for.
+   *
+   * @internal
    */
-  protected function assertElementUnclickable(NodeElement $element) {
+  protected function assertElementUnclickable(NodeElement $element): void {
     try {
       $element->click();
       $tag_name = $element->getTagName();
@@ -188,8 +190,10 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
   /**
    * Asserts that forms, links, and iframes in preview are non-interactive.
+   *
+   * @internal
    */
-  protected function assertLinksFormIframeNotInteractive() {
+  protected function assertLinksFormIframeNotInteractive(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -204,8 +208,10 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
   /**
    * Confirms that Layout Builder contextual links remain active.
+   *
+   * @internal
    */
-  protected function assertContextualLinksClickable() {
+  protected function assertContextualLinksClickable(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->getUrl());
@@ -233,8 +239,10 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * This is confirmed by clicking a contextual link then moving the mouse
    * pointer. If mouseup is working properly, the draggable element will not
    * be moved by the pointer moving.
+   *
+   * @internal
    */
-  protected function assertContextualLinkRetainsMouseup() {
+  protected function assertContextualLinkRetainsMouseup(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $body_field_selector = '.block-field-blocknodebundle-with-section-fieldbody';

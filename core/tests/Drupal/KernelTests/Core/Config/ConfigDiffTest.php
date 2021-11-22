@@ -151,8 +151,10 @@ class ConfigDiffTest extends KernelTestBase {
    * @param mixed $closing
    *   (optional) The closing value of the edit. If not supplied, assertion
    *   is skipped.
+   *
+   * @internal
    */
-  protected function assertYamlEdit(array $edits, $field, $type, $orig = NULL, $closing = NULL) {
+  protected function assertYamlEdit(array $edits, string $field, string $type, $orig = NULL, $closing = NULL): void {
     $match = FALSE;
     foreach ($edits as $edit) {
       // Choose which section to search for the field.

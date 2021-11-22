@@ -127,8 +127,10 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
    *   The WebAssert object.
    * @param string $expected
    *   The expected response text.
+   *
+   * @internal
    */
-  protected function assertFirstForm(WebAssert $session, $expected) {
+  protected function assertFirstForm(WebAssert $session, string $expected): void {
     $paths = [
       '',
       '/incremental',

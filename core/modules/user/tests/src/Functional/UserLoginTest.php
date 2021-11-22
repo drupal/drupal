@@ -188,15 +188,16 @@ class UserLoginTest extends BrowserTestBase {
    *
    * @param \Drupal\user\Entity\User $account
    *   A user object with name and passRaw attributes for the login attempt.
-   * @param mixed $flood_trigger
+   * @param string $flood_trigger
    *   (optional) Whether or not to expect that the flood control mechanism
    *    will be triggered. Defaults to NULL.
    *   - Set to 'user' to expect a 'too many failed logins error.
-   *   - Set to any value to expect an error for too many failed logins per IP
-   *   .
+   *   - Set to any value to expect an error for too many failed logins per IP.
    *   - Set to NULL to expect a failed login.
+   *
+   * @internal
    */
-  public function assertFailedLogin($account, $flood_trigger = NULL) {
+  public function assertFailedLogin(User $account, string $flood_trigger = NULL): void {
     $database = \Drupal::database();
     $edit = [
       'name' => $account->getAccountName(),
