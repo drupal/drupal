@@ -488,20 +488,6 @@ function olivero_preprocess_field__node__created(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK().
- */
-function olivero_preprocess_field__node__field_image__article(&$variables) {
-  if ($variables['element']['#view_mode'] == 'full') {
-    $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide');
-    if ($image_style) {
-      foreach (Element::children($variables['items']) as $key) {
-        $variables['items'][$key]['content']['#image_style'] = 'wide';
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for setting classes.
  */
 function olivero_preprocess_filter_caption(&$variables) {
