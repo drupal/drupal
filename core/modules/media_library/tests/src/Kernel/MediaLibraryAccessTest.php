@@ -257,11 +257,29 @@ class MediaLibraryAccessTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the field widget opener respects entity field-level access.
+   * Data provider for ::testFieldWidgetEntityFieldAccess().
+   *
+   * @return array[]
+   *   Sets of arguments to pass to the test method.
    */
-  public function testFieldWidgetEntityFieldAccess() {
+  public function providerFieldWidgetEntityFieldAccess(): array {
+    return [
+      ['entity_reference'],
+      ['entity_reference_subclass'],
+    ];
+  }
+
+  /**
+   * Tests that the field widget opener respects entity field-level access.
+   *
+   * @param string $field_type
+   *   The field type.
+   *
+   * @dataProvider providerFieldWidgetEntityFieldAccess
+   */
+  public function testFieldWidgetEntityFieldAccess(string $field_type) {
     $field_storage = FieldStorageConfig::create([
-      'type' => 'entity_reference',
+      'type' => $field_type,
       'entity_type' => 'entity_test',
       // The media_library_test module will deny access to this field.
       // @see media_library_test_entity_field_access()

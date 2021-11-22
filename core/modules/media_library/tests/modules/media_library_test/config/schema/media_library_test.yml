@@ -1,0 +1,7 @@
+field.storage_settings.entity_reference_subclass:
+  type: base_entity_reference_field_settings
+  label: 'Entity reference subclass field storage settings'
+
+field.field_settings.entity_reference_subclass:
+  type: field.field_settings.entity_reference
+  label: 'Entity reference subclass field settings'

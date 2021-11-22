@@ -39,3 +39,10 @@ function media_library_test_entity_type_alter(array &$entity_types) {
     $entity_types['node']->setFormClass('edit', TestNodeFormOverride::class);
   }
 }
+
+/**
+ * Implements hook_field_widget_info_alter().
+ */
+function media_library_test_field_widget_info_alter(array &$info) {
+  $info['media_library_widget']['field_types'][] = 'entity_reference_subclass';
+}
