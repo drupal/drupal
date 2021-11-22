@@ -381,7 +381,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
-    $assert_session->assertWaitOnAjaxRequest();
+    // Wait until preview for the image has rendered to ensure that the image
+    // upload has completed and the image has been downcast.
+    // @see https://www.drupal.org/project/drupal/issues/3250587
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-content img[data-entity-uuid]'));
     $page->pressButton('Save');
 
     $uploaded_image = File::load(1);
