@@ -91,6 +91,8 @@ abstract class NodeAccessTestBase extends KernelTestBase {
    *   The node object to check.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to check access.
+   *
+   * @internal
    */
   public function assertNodeAccess(array $ops, NodeInterface $node, AccountInterface $account) {
     foreach ($ops as $op => $result) {
@@ -111,8 +113,10 @@ abstract class NodeAccessTestBase extends KernelTestBase {
    * @param string|null $langcode
    *   (optional) The language code indicating which translation of the node
    *   to check. If NULL, the untranslated (fallback) access is checked.
+   *
+   * @internal
    */
-  public function assertNodeCreateAccess($bundle, $result, AccountInterface $account, $langcode = NULL) {
+  public function assertNodeCreateAccess(string $bundle, bool $result, AccountInterface $account, ?string $langcode = NULL) {
     $this->assertEquals($result, $this->accessHandler->createAccess($bundle, $account, [
       'langcode' => $langcode,
     ]), $this->nodeAccessAssertMessage('create', $result, $langcode));

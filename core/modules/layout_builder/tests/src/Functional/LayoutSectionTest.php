@@ -293,8 +293,10 @@ class LayoutSectionTest extends BrowserTestBase {
    *   A string of cache tags to be found in the header.
    * @param string $expected_dynamic_cache
    *   The expected dynamic cache header. Either 'HIT', 'MISS' or 'UNCACHEABLE'.
+   *
+   * @internal
    */
-  protected function assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts = '', $expected_cache_tags = '', $expected_dynamic_cache = 'MISS') {
+  protected function assertLayoutSection($expected_selector, $expected_content, string $expected_cache_contexts = '', string $expected_cache_tags = '', string $expected_dynamic_cache = 'MISS'): void {
     $assert_session = $this->assertSession();
     // Find the given selector.
     foreach ((array) $expected_selector as $selector) {

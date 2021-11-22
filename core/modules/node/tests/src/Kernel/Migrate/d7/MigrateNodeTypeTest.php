@@ -45,14 +45,16 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    *   If submission information is displayed.
    * @param bool $new_revision
    *   If this is a new revision.
-   * @param array $expected_available_menus
+   * @param array|null $expected_available_menus
    *   The expected menus.
-   * @param string $expected_parent
+   * @param string|null $expected_parent
    *   The expected menu parents.
    * @param string|null $body_label
    *   (optional) The label for the body field.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $label, $description, $help, $display_submitted, $new_revision, $expected_available_menus, $expected_parent, $body_label = NULL) {
+  protected function assertEntity(string $id, string $label, string $description, string $help, bool $display_submitted, bool $new_revision, ?array $expected_available_menus, ?string $expected_parent, ?string $body_label = NULL): void {
     /** @var \Drupal\node\NodeTypeInterface $entity */
     $entity = NodeType::load($id);
     $this->assertInstanceOf(NodeTypeInterface::class, $entity);

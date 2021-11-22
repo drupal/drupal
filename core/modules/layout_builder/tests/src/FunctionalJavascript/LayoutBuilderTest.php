@@ -477,7 +477,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param string $expected_form_id
    *   The expected form ID.
    */
-  private function assertOffCanvasFormAfterWait($expected_form_id) {
+  private function assertOffCanvasFormAfterWait(string $expected_form_id): void {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $off_canvas = $this->assertSession()->waitForElementVisible('css', '#drupal-off-canvas');
     $this->assertNotNull($off_canvas);
@@ -503,7 +503,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @todo Remove in https://www.drupal.org/project/drupal/issues/2909782.
    */
-  private function assertPageNotReloaded() {
+  private function assertPageNotReloaded(): void {
     $this->assertSession()->pageTextContains($this->pageReloadMarker);
   }
 

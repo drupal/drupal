@@ -211,8 +211,10 @@ class LinkFieldTest extends BrowserTestBase {
    *   The field name.
    * @param array $valid_entries
    *   An array of valid URL entries.
+   *
+   * @internal
    */
-  protected function assertValidEntries($field_name, array $valid_entries) {
+  protected function assertValidEntries(string $field_name, array $valid_entries): void {
     foreach ($valid_entries as $uri => $string) {
       $edit = [
         "{$field_name}[0][uri]" => $uri,
@@ -233,8 +235,10 @@ class LinkFieldTest extends BrowserTestBase {
    *   The field name.
    * @param array $invalid_entries
    *   An array of invalid URL entries.
+   *
+   * @internal
    */
-  protected function assertInvalidEntries($field_name, array $invalid_entries) {
+  protected function assertInvalidEntries(string $field_name, array $invalid_entries): void {
     foreach ($invalid_entries as $invalid_value => $error_message) {
       $edit = [
         "{$field_name}[0][uri]" => $invalid_value,

@@ -281,8 +281,10 @@ class NodeLanguageTest extends NodeTestBase {
    *
    * @param bool $native
    *   (optional) Whether to assert the language name in its native form.
+   *
+   * @internal
    */
-  protected function assertLanguageNames($native = FALSE) {
+  protected function assertLanguageNames(bool $native = FALSE): void {
     $this->drupalGet('test-language');
     if ($native) {
       $this->assertSession()->pageTextContains('Français');

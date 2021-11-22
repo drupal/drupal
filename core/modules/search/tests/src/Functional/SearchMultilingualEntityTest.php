@@ -284,8 +284,10 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
    *   Count of total items to verify.
    * @param string $message
    *   Message to use, something like "after updating the search index".
+   *
+   * @internal
    */
-  protected function assertIndexCounts($remaining, $total, $message) {
+  protected function assertIndexCounts(int $remaining, int $total, string $message): void {
     // Check status via plugin method call.
     $status = $this->plugin->indexStatus();
     $this->assertEquals($remaining, $status['remaining'], 'Remaining items ' . $message . ' is ' . $remaining);
@@ -320,8 +322,10 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
    *   Count of "foo" items to assert.
    * @param string $message
    *   Message suffix to use.
+   *
+   * @internal
    */
-  protected function assertDatabaseCounts($count_node, $count_foo, $message) {
+  protected function assertDatabaseCounts(int $count_node, int $count_foo, string $message): void {
     // Count number of distinct nodes by ID.
     $connection = Database::getConnection();
     $results = $connection->select('search_dataset', 'i')

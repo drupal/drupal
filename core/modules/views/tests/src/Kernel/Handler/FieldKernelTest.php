@@ -104,13 +104,10 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
+   *
+   * @internal
    */
-  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertSubString(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringContainsString($needle, $haystack, $message);
   }
 
@@ -126,13 +123,10 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
+   *
+   * @internal
    */
-  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotSubString(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 

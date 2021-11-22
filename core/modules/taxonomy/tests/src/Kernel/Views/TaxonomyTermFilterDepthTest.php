@@ -155,6 +155,8 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
    *   The term ID or IDs to filter on.
    * @param int $depth
    *   The depth to search.
+   *
+   * @internal
    */
   protected function assertTermWithDepthResult(array $expected, $tid, int $depth): void {
     $this->view->destroy();

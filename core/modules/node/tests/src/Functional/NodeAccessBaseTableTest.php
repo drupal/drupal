@@ -207,12 +207,14 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   /**
    * Checks taxonomy/term listings to ensure only accessible nodes are listed.
    *
-   * @param $is_admin
+   * @param bool $is_admin
    *   A boolean indicating whether the current user is an administrator. If
    *   TRUE, all nodes should be listed. If FALSE, only public nodes and the
    *   user's own private nodes should be listed.
+   *
+   * @internal
    */
-  protected function assertTaxonomyPage($is_admin) {
+  protected function assertTaxonomyPage(bool $is_admin): void {
     foreach ([$this->publicTid, $this->privateTid] as $tid_is_private => $tid) {
       $this->drupalGet("taxonomy/term/$tid");
       $this->nidsVisible = [];

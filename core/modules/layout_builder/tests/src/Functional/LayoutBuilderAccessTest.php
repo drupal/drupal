@@ -279,7 +279,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
    * @param bool $expected_access
    *   The expected access.
    */
-  private function assertExpectedAccess($expected_access) {
+  private function assertExpectedAccess(bool $expected_access): void {
     $expected_status_code = $expected_access ? 200 : 403;
     $this->assertSession()->statusCodeEquals($expected_status_code);
   }

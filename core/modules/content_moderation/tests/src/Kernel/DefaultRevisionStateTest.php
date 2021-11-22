@@ -123,8 +123,10 @@ class DefaultRevisionStateTest extends KernelTestBase {
    *   The state the content moderation state revision should be in.
    * @param string $expected_workflow
    *   The workflow the content moderation state revision should be using.
+   *
+   * @internal
    */
-  protected function assertModerationState($revision_id, $langcode, $expected_state, $expected_workflow = 'editorial') {
+  protected function assertModerationState(int $revision_id, string $langcode, string $expected_state, string $expected_workflow = 'editorial'): void {
     $moderation_state_storage = $this->entityTypeManager->getStorage('content_moderation_state');
 
     $query = $moderation_state_storage->getQuery()->accessCheck(FALSE);

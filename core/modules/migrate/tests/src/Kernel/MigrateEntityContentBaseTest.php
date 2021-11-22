@@ -67,8 +67,10 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
    *   The expected default translation language code.
    * @param string[] $others
    *   The expected other translation language codes.
+   *
+   * @internal
    */
-  protected function assertTranslations($id, $default, $others = []) {
+  protected function assertTranslations(int $id, string $default, array $others = []): void {
     $entity = $this->storage->load($id);
     $this->assertNotEmpty($entity, "Entity exists");
     $this->assertEquals($default, $entity->language()->getId(), "Entity default translation");

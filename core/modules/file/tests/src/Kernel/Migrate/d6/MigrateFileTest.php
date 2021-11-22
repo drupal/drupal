@@ -49,26 +49,28 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
    *   The expected MIME type.
    * @param int $uid
    *   The expected file owner ID.
+   *
+   * @internal
    */
-  protected function assertEntity($fid, $name, $size, $uri, $type, $uid) {
+  protected function assertEntity(int $fid, string $name, int $size, string $uri, string $type, int $uid): void {
     /** @var \Drupal\file\FileInterface $file */
     $file = File::load($fid);
     $this->assertInstanceOf(FileInterface::class, $file);
     $this->assertSame($name, $file->getFilename());
-    $this->assertSame($size, $file->getSize());
+    $this->assertSame($size, (int) $file->getSize());
     $this->assertSame($uri, $file->getFileUri());
     $this->assertSame($type, $file->getMimeType());
-    $this->assertSame($uid, $file->getOwnerId());
+    $this->assertSame($uid, (int) $file->getOwnerId());
   }
 
   /**
    * Tests the Drupal 6 files to Drupal 8 migration.
    */
   public function testFiles() {
-    $this->assertEntity(1, 'Image1.png', '39325', 'public://image-1.png', 'image/png', '1');
-    $this->assertEntity(2, 'Image2.jpg', '1831', 'public://image-2.jpg', 'image/jpeg', '1');
-    $this->assertEntity(3, 'image-3.jpg', '1831', 'public://image-3.jpg', 'image/jpeg', '1');
-    $this->assertEntity(4, 'html-1.txt', '24', 'public://html-1.txt', 'text/plain', '1');
+    $this->assertEntity(1, 'Image1.png', 39325, 'public://image-1.png', 'image/png', 1);
+    $this->assertEntity(2, 'Image2.jpg', 1831, 'public://image-2.jpg', 'image/jpeg', 1);
+    $this->assertEntity(3, 'image-3.jpg', 1831, 'public://image-3.jpg', 'image/jpeg', 1);
+    $this->assertEntity(4, 'html-1.txt', 24, 'public://html-1.txt', 'text/plain', 1);
     // Ensure temporary file was not migrated.
     $this->assertNull(File::load(6));
 

@@ -4,10 +4,12 @@ namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\MediaType;
+use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
@@ -128,8 +130,10 @@ class MediaLibraryWidgetTest extends KernelTestBase {
    *   The media library state.
    *
    * @throws \Exception
+   *
+   * @internal
    */
-  protected function assertMediaLibraryStateAccess($access, $user, $state) {
+  protected function assertMediaLibraryStateAccess(bool $access, AccountInterface $user, MediaLibraryState $state): void {
     $ui_builder = $this->container->get('media_library.ui_builder');
     $access_result = $ui_builder->checkAccess($user, $state);
     $this->assertEquals($access, $access_result->isAllowed());

@@ -67,7 +67,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    * @param \Drupal\Core\Config\StorageInterface $active_config_storage
    *   The active configuration storage.
    */
-  protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $active_config_storage) {
+  protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $active_config_storage): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 

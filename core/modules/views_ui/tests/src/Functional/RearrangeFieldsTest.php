@@ -40,12 +40,14 @@ class RearrangeFieldsTest extends UITestBase {
   /**
    * Check if the fields are in the correct order.
    *
-   * @param $view_name
+   * @param string $view_name
    *   The name of the view.
-   * @param $fields
+   * @param array $fields
    *   Array of field names.
+   *
+   * @internal
    */
-  protected function assertFieldOrder($view_name, $fields) {
+  protected function assertFieldOrder(string $view_name, array $fields): void {
     $this->drupalGet('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field');
 
     foreach ($fields as $idx => $field) {

@@ -554,8 +554,10 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *   rendered.
    * @param array $expected_data
    *   A render array with the expected values.
+   *
+   * @internal
    */
-  protected function assertPlaceholderRenderCache($cid_parts, array $bubbled_cache_contexts, array $expected_data) {
+  protected function assertPlaceholderRenderCache($cid_parts, array $bubbled_cache_contexts, array $expected_data): void {
     if ($cid_parts !== FALSE) {
       if ($bubbled_cache_contexts) {
         // Verify render cached placeholder.

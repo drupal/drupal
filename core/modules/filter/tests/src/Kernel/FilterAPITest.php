@@ -430,10 +430,12 @@ class FilterAPITest extends EntityKernelTestBase {
    *
    * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
    *   The violations to assert.
-   * @param mixed $invalid_value
+   * @param string $invalid_value
    *   The expected invalid value.
+   *
+   * @internal
    */
-  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, $invalid_value) {
+  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, string $invalid_value): void {
     $filter_format_violation_found = FALSE;
     foreach ($violations as $violation) {
       if ($violation->getRoot() instanceof FilterFormatDataType && $violation->getInvalidValue() === $invalid_value) {

@@ -231,8 +231,10 @@ class InstallUninstallTest extends ModuleTestBase {
    *
    * @param string $name
    *   Name of the module to check.
+   *
+   * @internal
    */
-  protected function assertModuleNotInstalled($name) {
+  protected function assertModuleNotInstalled(string $name): void {
     $this->assertModules([$name], FALSE);
     $this->assertModuleTablesDoNotExist($name);
   }
@@ -242,8 +244,10 @@ class InstallUninstallTest extends ModuleTestBase {
    *
    * @param string $name
    *   Name of the module to check.
+   *
+   * @internal
    */
-  protected function assertModuleSuccessfullyInstalled($name) {
+  protected function assertModuleSuccessfullyInstalled(string $name): void {
     $this->assertModules([$name], TRUE);
     $this->assertModuleTablesExist($name);
     $this->assertModuleConfig($name);
@@ -257,8 +261,10 @@ class InstallUninstallTest extends ModuleTestBase {
    * @param string $package
    *   (optional) The package of the module to uninstall. Defaults
    *   to 'Core'.
+   *
+   * @internal
    */
-  protected function assertSuccessfulUninstall($module, $package = 'Core') {
+  protected function assertSuccessfulUninstall(string $module, string $package = 'Core'): void {
     $edit = [];
     $edit['uninstall[' . $module . ']'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');
@@ -286,8 +292,10 @@ class InstallUninstallTest extends ModuleTestBase {
    *
    * @param string $module
    *   The module that got installed.
+   *
+   * @internal
    */
-  protected function assertInstallModuleUpdates($module) {
+  protected function assertInstallModuleUpdates(string $module): void {
     /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
     $post_update_registry = \Drupal::service('update.post_update_registry');
     $all_update_functions = $post_update_registry->getPendingUpdateFunctions();
@@ -323,8 +331,10 @@ class InstallUninstallTest extends ModuleTestBase {
    *
    * @param string $module
    *   The module that got installed.
+   *
+   * @internal
    */
-  protected function assertUninstallModuleUpdates($module) {
+  protected function assertUninstallModuleUpdates(string $module): void {
     /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
     $post_update_registry = \Drupal::service('update.post_update_registry');
     $all_update_functions = $post_update_registry->getPendingUpdateFunctions();
@@ -350,8 +360,10 @@ class InstallUninstallTest extends ModuleTestBase {
    *   Machine name of the module to verify.
    * @param string $name
    *   Human-readable name of the module to verify.
+   *
+   * @internal
    */
-  protected function assertHelp($module, $name) {
+  protected function assertHelp(string $module, string $name): void {
     $this->drupalGet('admin/help/' . $module);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($name . ' module');

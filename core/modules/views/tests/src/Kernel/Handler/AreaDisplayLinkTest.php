@@ -302,8 +302,10 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
    *   The view to check.
    * @param string $display_link_id
    *   The display link ID to check the options for.
+   *
+   * @internal
    */
-  protected function assertFormOptions(ViewExecutable $view, $display_link_id) {
+  protected function assertFormOptions(ViewExecutable $view, string $display_link_id): void {
     $form = [];
     $form_state = new FormState();
     $view->display_handler->getHandler('header', $display_link_id)->buildOptionsForm($form, $form_state);
@@ -319,8 +321,10 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
    *   The view to check.
    * @param string $display_id
    *   The display ID to check the links for.
+   *
+   * @internal
    */
-  protected function assertRenderedDisplayLinks(ViewExecutable $view, $display_id) {
+  protected function assertRenderedDisplayLinks(ViewExecutable $view, string $display_id): void {
     $page_1_active = $display_id === 'page_1' ? ' is-active' : '';
     $page_2_active = $display_id === 'page_2' ? ' is-active' : '';
 
@@ -368,8 +372,10 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The view to check.
+   *
+   * @internal
    */
-  protected function assertNoWarningMessages(ViewExecutable $view) {
+  protected function assertNoWarningMessages(ViewExecutable $view): void {
     $messenger = $this->container->get('messenger');
 
     $view->validate();
@@ -385,8 +391,10 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
    *   An array of options that should be unequal.
    *
    * @throws \Exception
+   *
+   * @internal
    */
-  protected function assertWarningMessages(ViewExecutable $view, array $unequal_options) {
+  protected function assertWarningMessages(ViewExecutable $view, array $unequal_options): void {
     $messenger = $this->container->get('messenger');
 
     // Create a list of options to check.

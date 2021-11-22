@@ -362,8 +362,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The view executable.
+   *
+   * @internal
    */
-  protected function assertViewDestroy(ViewExecutable $view) {
+  protected function assertViewDestroy(ViewExecutable $view): void {
     $reflection = new \ReflectionClass($view);
     $defaults = $reflection->getDefaultProperties();
     // The storage and user should remain.

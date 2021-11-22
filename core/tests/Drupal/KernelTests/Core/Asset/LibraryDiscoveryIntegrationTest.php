@@ -262,25 +262,24 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *   The extension in which the $library is defined.
    * @param string $library_name
    *   Name of the library.
-   * @param mixed $sub_key
+   * @param string $sub_key
    *   The library sub key where the given asset is defined.
    * @param string $message
    *   (optional) A message to display with the assertion.
    *
-   * @return bool
-   *   TRUE if the specified asset is found in the library.
+   * @internal
    */
-  protected function assertAssetInLibrary($asset, $extension, $library_name, $sub_key, $message = NULL) {
+  protected function assertAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, string $message = NULL): void {
     if (!isset($message)) {
       $message = sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
     }
     $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
-        return TRUE;
+        return;
       }
     }
-    return $this->fail($message);
+    $this->fail($message);
   }
 
   /**
@@ -292,25 +291,23 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *   The extension in which the $library_name is defined.
    * @param string $library_name
    *   Name of the library.
-   * @param mixed $sub_key
+   * @param string $sub_key
    *   The library sub key where the given asset is defined.
    * @param string $message
    *   (optional) A message to display with the assertion.
    *
-   * @return bool
-   *   TRUE if the specified asset is not found in the library.
+   * @internal
    */
-  protected function assertNoAssetInLibrary($asset, $extension, $library_name, $sub_key, $message = NULL) {
+  protected function assertNoAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, string $message = NULL): void {
     if (!isset($message)) {
       $message = sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
     }
     $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
-        return $this->fail($message);
+        $this->fail($message);
       }
     }
-    return TRUE;
   }
 
 }

@@ -312,8 +312,10 @@ class ContentModerationTest extends WebDriverTestBase {
 
   /**
    * Asserts all media items are visible.
+   *
+   * @internal
    */
-  protected function assertAllMedia() {
+  protected function assertAllMedia(): void {
     $assert_session = $this->assertSession();
     $assert_session->pageTextContains('Hoglet');
     $assert_session->pageTextContains('Panda');
@@ -322,8 +324,10 @@ class ContentModerationTest extends WebDriverTestBase {
 
   /**
    * Asserts only published media items are visible.
+   *
+   * @internal
    */
-  protected function assertOnlyPublishedMedia() {
+  protected function assertOnlyPublishedMedia(): void {
     $assert_session = $this->assertSession();
     $assert_session->pageTextNotContains('Hoglet');
     $assert_session->pageTextContains('Panda');

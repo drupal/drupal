@@ -220,18 +220,17 @@ class ManageDisplayTest extends BrowserTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node.
-   * @param $view_mode
+   * @param string $view_mode
    *   The view mode in which the node should be displayed.
-   * @param $text
+   * @param string $text
    *   Plain text to look for.
-   * @param $message
+   * @param string $message
    *   Message to display.
    *
-   * @return
-   *   TRUE on pass, FALSE on fail.
+   * @internal
    */
-  public function assertNodeViewText(EntityInterface $node, $view_mode, $text, $message) {
-    return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
+  public function assertNodeViewText(EntityInterface $node, string $view_mode, string $text, string $message): void {
+    $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
   }
 
   /**
@@ -239,18 +238,17 @@ class ManageDisplayTest extends BrowserTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node.
-   * @param $view_mode
+   * @param string $view_mode
    *   The view mode in which the node should be displayed.
-   * @param $text
+   * @param string $text
    *   Plain text to look for.
-   * @param $message
+   * @param string $message
    *   Message to display.
    *
-   * @return
-   *   TRUE on pass, FALSE on fail.
+   * @internal
    */
-  public function assertNodeViewNoText(EntityInterface $node, $view_mode, $text, $message) {
-    return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
+  public function assertNodeViewNoText(EntityInterface $node, string $view_mode, string $text, string $message): void {
+    $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
   }
 
   /**
@@ -261,16 +259,18 @@ class ManageDisplayTest extends BrowserTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node.
-   * @param $view_mode
+   * @param string $view_mode
    *   The view mode in which the node should be displayed.
-   * @param $text
+   * @param string $text
    *   Plain text to look for.
-   * @param $message
+   * @param string $message
    *   Message to display.
-   * @param $not_exists
+   * @param bool $not_exists
    *   TRUE if this text should not exist, FALSE if it should.
+   *
+   * @internal
    */
-  public function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
+  public function assertNodeViewTextHelper(EntityInterface $node, string $view_mode, string $text, string $message, bool $not_exists): void {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -297,8 +297,10 @@ class ManageDisplayTest extends BrowserTestBase {
    *   The field name.
    * @param array $expected_options
    *   An array of expected options.
+   *
+   * @internal
    */
-  protected function assertFieldSelectOptions($name, array $expected_options) {
+  protected function assertFieldSelectOptions(string $name, array $expected_options): void {
     $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
     $fields = $this->xpath($xpath);
     if ($fields) {

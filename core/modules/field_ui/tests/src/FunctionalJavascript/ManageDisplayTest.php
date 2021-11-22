@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
@@ -387,10 +388,12 @@ class ManageDisplayTest extends WebDriverTestBase {
    *   The select field to validate.
    * @param array $expected_options
    *   An array of expected options.
-   * @param null $selected
+   * @param string|null $selected
    *   The default value to validate.
+   *
+   * @internal
    */
-  protected function assertFieldSelectOptions($field, array $expected_options, $selected = NULL) {
+  protected function assertFieldSelectOptions(NodeElement $field, array $expected_options, ?string $selected = NULL): void {
     /** @var \Behat\Mink\Element\NodeElement[] $select_options */
     $select_options = $field->findAll('xpath', 'option');
 

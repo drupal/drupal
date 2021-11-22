@@ -29,7 +29,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
   /**
    * Validate a migrated vocabulary contains the expected values.
    *
-   * @param $id
+   * @param string $id
    *   Entity ID to load and check.
    * @param $expected_label
    *   The label the migrated entity should have.
@@ -37,14 +37,16 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
    *   The description the migrated entity should have.
    * @param $expected_weight
    *   The weight the migrated entity should have.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $expected_label, $expected_description, $expected_weight) {
+  protected function assertEntity(string $id, string $expected_label, string $expected_description, int $expected_weight): void {
     /** @var \Drupal\taxonomy\VocabularyInterface $entity */
     $entity = Vocabulary::load($id);
     $this->assertInstanceOf(VocabularyInterface::class, $entity);
     $this->assertSame($expected_label, $entity->label());
     $this->assertSame($expected_description, $entity->getDescription());
-    $this->assertSame($expected_weight, $entity->get('weight'));
+    $this->assertSame($expected_weight, (int) $entity->get('weight'));
   }
 
   /**

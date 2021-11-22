@@ -112,8 +112,10 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
    *
    * @param string $width_class
    *   The width class.
+   *
+   * @internal
    */
-  protected function assertWidthClassApplied($width_class) {
+  protected function assertWidthClassApplied(string $width_class): void {
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', ".{$width_class}[data-layout-delta=\"0\"]"));
   }
 

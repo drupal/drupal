@@ -637,18 +637,22 @@ class EntityViewsDataTest extends KernelTestBase {
    *   The views data to check.
    * @param string $field_name
    *   The entity field name.
+   *
+   * @internal
    */
-  protected function assertViewsDataField($data, $field_name) {
+  protected function assertViewsDataField(array $data, string $field_name): void {
     $this->assertEquals($field_name, $data['entity field']);
   }
 
   /**
    * Tests views data for a string field.
    *
-   * @param $data
+   * @param array $data
    *   The views data to check.
+   *
+   * @internal
    */
-  protected function assertStringField($data) {
+  protected function assertStringField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('string', $data['filter']['id']);
     $this->assertEquals('string', $data['argument']['id']);
@@ -658,10 +662,12 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests views data for a URI field.
    *
-   * @param $data
+   * @param array $data
    *   The views data to check.
+   *
+   * @internal
    */
-  protected function assertUriField($data) {
+  protected function assertUriField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('string', $data['field']['default_formatter']);
     $this->assertEquals('string', $data['filter']['id']);
@@ -672,12 +678,14 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests views data for a long text field.
    *
-   * @param $data
+   * @param array $data
    *   The views data for the table this field is in.
-   * @param $field_name
+   * @param string $field_name
    *   The name of the field being checked.
+   *
+   * @internal
    */
-  protected function assertLongTextField($data, $field_name) {
+  protected function assertLongTextField(array $data, string $field_name): void {
     $value_field = $data[$field_name . '__value'];
     $this->assertEquals('field', $value_field['field']['id']);
     $this->assertEquals($field_name . '__format', $value_field['field']['format']);
@@ -693,8 +701,10 @@ class EntityViewsDataTest extends KernelTestBase {
    *
    * @param array $data
    *   The views data to check.
+   *
+   * @internal
    */
-  protected function assertUuidField($data) {
+  protected function assertUuidField(array $data): void {
     // @todo Can we provide additional support for UUIDs in views?
     $this->assertEquals('field', $data['field']['id']);
     $this->assertFalse($data['field']['click sortable']);
@@ -708,8 +718,10 @@ class EntityViewsDataTest extends KernelTestBase {
    *
    * @param array $data
    *   The views data to check.
+   *
+   * @internal
    */
-  protected function assertNumericField($data) {
+  protected function assertNumericField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
     $this->assertEquals('numeric', $data['argument']['id']);
@@ -721,8 +733,10 @@ class EntityViewsDataTest extends KernelTestBase {
    *
    * @param array $data
    *   The views data to check.
+   *
+   * @internal
    */
-  protected function assertLanguageField($data) {
+  protected function assertLanguageField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
@@ -731,8 +745,10 @@ class EntityViewsDataTest extends KernelTestBase {
 
   /**
    * Tests views data for an entity reference field.
+   *
+   * @internal
    */
-  protected function assertEntityReferenceField($data) {
+  protected function assertEntityReferenceField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
     $this->assertEquals('numeric', $data['argument']['id']);
@@ -741,8 +757,10 @@ class EntityViewsDataTest extends KernelTestBase {
 
   /**
    * Tests views data for a bundle field.
+   *
+   * @internal
    */
-  protected function assertBundleField($data) {
+  protected function assertBundleField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('bundle', $data['filter']['id']);
     $this->assertEquals('string', $data['argument']['id']);

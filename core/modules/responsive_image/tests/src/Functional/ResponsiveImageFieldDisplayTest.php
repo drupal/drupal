@@ -469,7 +469,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    * @param string $link_type
    *   The link type to test. Either 'file' or 'content'.
    */
-  private function assertResponsiveImageFieldFormattersLink($link_type) {
+  private function assertResponsiveImageFieldFormattersLink(string $link_type): void {
     $field_name = mb_strtolower($this->randomMachineName());
     $field_settings = ['alt_field_required' => 0];
     $this->createImageField($field_name, 'article', ['uri_scheme' => 'public'], $field_settings);

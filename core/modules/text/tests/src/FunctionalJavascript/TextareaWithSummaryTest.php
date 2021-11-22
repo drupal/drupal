@@ -40,8 +40,10 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
 
   /**
    * Helper to test toggling the summary area.
+   *
+   * @internal
    */
-  protected function assertSummaryToggle() {
+  protected function assertSummaryToggle(): void {
     $this->drupalGet('node/add/page');
     $widget = $this->getSession()->getPage()->findById('edit-body-wrapper');
     $summary_field = $widget->findField('edit-body-0-summary');

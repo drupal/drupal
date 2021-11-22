@@ -45,7 +45,10 @@ class AccessResultTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  protected function assertDefaultCacheability(AccessResult $access) {
+  /**
+   * @internal
+   */
+  protected function assertDefaultCacheability(AccessResult $access): void {
     $this->assertSame([], $access->getCacheContexts());
     $this->assertSame([], $access->getCacheTags());
     $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());

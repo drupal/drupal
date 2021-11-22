@@ -162,8 +162,10 @@ JS;
    *   Expected result.
    * @param string $script
    *   Script for additional theming.
+   *
+   * @internal
    */
-  public function assertInsert($render_type, $expected, $script = '') {
+  public function assertInsert(string $render_type, string $expected, string $script = ''): void {
     // Check insert to block element.
     $this->drupalGet('ajax-test/insert-block-wrapper');
     $this->getSession()->executeScript($script);
@@ -192,8 +194,10 @@ JS;
    *
    * @param string $expected
    *   A needle text.
+   *
+   * @internal
    */
-  protected function assertWaitPageContains($expected) {
+  protected function assertWaitPageContains(string $expected): void {
     $page = $this->getSession()->getPage();
     $this->assertTrue($page->waitFor(10, function () use ($page, $expected) {
       // Clear content from empty styles and "processed" classes after effect.

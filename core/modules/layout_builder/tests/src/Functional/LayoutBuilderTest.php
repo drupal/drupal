@@ -1452,8 +1452,10 @@ class LayoutBuilderTest extends BrowserTestBase {
 
   /**
    * Asserts that the correct layouts are available.
+   *
+   * @internal
    */
-  protected function assertCorrectLayouts() {
+  protected function assertCorrectLayouts(): void {
     $assert_session = $this->assertSession();
     // Ensure the layouts provided by layout_builder are available.
     $expected_layouts_hrefs = [

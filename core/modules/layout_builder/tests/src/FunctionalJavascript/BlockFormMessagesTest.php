@@ -91,8 +91,10 @@ class BlockFormMessagesTest extends WebDriverTestBase {
 
   /**
    * Asserts that the validation messages are shown correctly.
+   *
+   * @internal
    */
-  protected function assertMessagesDisplayed() {
+  protected function assertMessagesDisplayed(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $messages_locator = '#drupal-off-canvas .messages--error';

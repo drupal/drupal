@@ -294,19 +294,15 @@ class ExposedFormUITest extends UITestBase {
    *
    * @param string $message
    *   The assert message.
-   * @param string $group
-   *   The assertion group.
    *
-   * @return bool
-   *   Result of the assertion.
+   * @internal
    */
-  protected function assertNoGroupedFilterErrors($message = '', $group = 'Other') {
+  protected function assertNoGroupedFilterErrors(string $message = ''): void {
     foreach ($this->groupFormUiErrors as $error) {
       if (empty($message)) {
-        return $this->assertSession()->responseNotContains($error);
+        $this->assertSession()->responseNotContains($error);
       }
     }
-    return TRUE;
   }
 
   /**

@@ -107,8 +107,10 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
    *   Expected cache contexts for both users.
    * @param string $message
    *   (optional) A verbose message to output.
+   *
+   * @internal
    */
-  protected function assertToolbarCacheContexts(array $cache_contexts, $message = NULL) {
+  protected function assertToolbarCacheContexts(array $cache_contexts, string $message = NULL): void {
     // Default cache contexts that should exist on all test cases.
     $default_cache_contexts = [
       'languages:language_interface',

@@ -156,8 +156,10 @@ class TableDragTest extends WebDriverTestBase {
    * @param array|null $structure
    *   The expected table structure. If this isn't specified or equals NULL,
    *   then the expected structure will be set by this method. Defaults to NULL.
+   *
+   * @internal
    */
-  protected function assertKeyboardAccessibility($drupal_path = 'tabledrag_test', $structure = NULL) {
+  protected function assertKeyboardAccessibility(string $drupal_path = 'tabledrag_test', ?array $structure = NULL): void {
     $expected_table = $structure ?: [
       ['id' => 1, 'weight' => 0, 'parent' => '', 'indentation' => 0, 'changed' => FALSE],
       ['id' => 2, 'weight' => 0, 'parent' => '', 'indentation' => 0, 'changed' => FALSE],
@@ -321,8 +323,10 @@ class TableDragTest extends WebDriverTestBase {
    *   When any of the given string is not found.
    *
    * @todo Remove this and use the WebAssert method when #2817657 is done.
+   *
+   * @internal
    */
-  protected function assertOrder(array $items) {
+  protected function assertOrder(array $items): void {
     $session = $this->getSession();
     $text = $session->getPage()->getHtml();
     $strings = [];
@@ -484,8 +488,10 @@ class TableDragTest extends WebDriverTestBase {
    * @param bool $skip_missing
    *   Whether assertions done on missing elements value may be skipped or not.
    *   Defaults to FALSE.
+   *
+   * @internal
    */
-  protected function assertDraggableTable(array $structure, $table_id = 'tabledrag-test-table', $skip_missing = FALSE) {
+  protected function assertDraggableTable(array $structure, string $table_id = 'tabledrag-test-table', bool $skip_missing = FALSE): void {
     $rows = $this->getSession()->getPage()->findAll('xpath', "//table[@id='$table_id']/tbody/tr");
     $this->assertSession()->elementsCount('xpath', "//table[@id='$table_id']/tbody/tr", count($structure));
 
@@ -513,8 +519,10 @@ class TableDragTest extends WebDriverTestBase {
    * @param bool $skip_missing
    *   Whether assertions done on missing elements value may be skipped or not.
    *   Defaults to FALSE.
+   *
+   * @internal
    */
-  protected function assertTableRow(NodeElement $row, $id, $weight, $parent = '', $indentation = 0, $changed = FALSE, $skip_missing = FALSE) {
+  protected function assertTableRow(NodeElement $row, string $id, int $weight, string $parent = '', int $indentation = 0, ?bool $changed = FALSE, bool $skip_missing = FALSE): void {
     // Assert that the row position is correct by checking that the id
     // corresponds.
     $id_name = "table[$id][id]";

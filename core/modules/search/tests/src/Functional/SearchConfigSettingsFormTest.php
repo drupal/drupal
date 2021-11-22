@@ -408,17 +408,17 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
   /**
    * Checks that the default search page matches expectations.
    *
-   * @param string $expected
+   * @param string|false $expected
    *   The expected search page.
    * @param string $message
    *   (optional) A message to display with the assertion.
-   * @param string $group
-   *   (optional) The group this message is in.
+   *
+   * @internal
    */
-  protected function assertDefaultSearch($expected, $message = '', $group = 'Other') {
+  protected function assertDefaultSearch($expected, string $message = ''): void {
     /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
-    $this->assertSame($expected, $search_page_repository->getDefaultSearchPage(), $message, $group);
+    $this->assertSame($expected, $search_page_repository->getDefaultSearchPage(), $message);
   }
 
   /**

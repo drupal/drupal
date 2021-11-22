@@ -315,8 +315,10 @@ class UserTest extends ResourceTestBase {
    *   The username to log in with.
    * @param string $password
    *   The password to log in with.
+   *
+   * @internal
    */
-  protected function assertRpcLogin($username, $password) {
+  protected function assertRpcLogin(string $username, string $password): void {
     $request_body = [
       'name' => $username,
       'pass' => $password,

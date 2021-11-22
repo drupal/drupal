@@ -50,8 +50,10 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *   Whether or not the field is required.
    * @param bool $expected_translatable
    *   Whether or not the field is expected to be translatable.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $expected_label, $expected_field_type, $is_required, $expected_translatable) {
+  protected function assertEntity(string $id, string $expected_label, string $expected_field_type, bool $is_required, bool $expected_translatable): void {
     [$expected_entity_type, $expected_bundle, $expected_name] = explode('.', $id);
 
     /** @var \Drupal\field\FieldConfigInterface $field */
@@ -70,12 +72,14 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
   /**
    * Asserts the settings of a link field config entity.
    *
-   * @param $id
+   * @param string $id
    *   The entity ID in the form ENTITY_TYPE.BUNDLE.FIELD_NAME.
-   * @param $title_setting
+   * @param int $title_setting
    *   The expected title setting.
+   *
+   * @internal
    */
-  protected function assertLinkFields($id, $title_setting) {
+  protected function assertLinkFields(string $id, int $title_setting): void {
     $field = FieldConfig::load($id);
     $this->assertSame($title_setting, $field->getSetting('title'));
   }
@@ -87,8 +91,10 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *   The entity ID in the form ENTITY_TYPE.BUNDLE.FIELD_NAME.
    * @param string[] $target_bundles
    *   An array of expected target bundles.
+   *
+   * @internal
    */
-  protected function assertEntityReferenceFields($id, array $target_bundles) {
+  protected function assertEntityReferenceFields(string $id, array $target_bundles): void {
     $field = FieldConfig::load($id);
     $handler_settings = $field->getSetting('handler_settings');
     $this->assertArrayHasKey('target_bundles', $handler_settings);

@@ -581,8 +581,10 @@ class ConfigTest extends UnitTestCase {
    *
    * @param array $data
    *   Config data to be checked.
+   *
+   * @internal
    */
-  public function assertConfigDataEquals($data) {
+  public function assertConfigDataEquals(array $data): void {
     foreach ($data as $key => $value) {
       $this->assertEquals($value, $this->config->get($key));
     }
@@ -595,8 +597,10 @@ class ConfigTest extends UnitTestCase {
    *   Config data to be checked.
    * @param bool $apply_overrides
    *   Apply any overrides to the original data.
+   *
+   * @internal
    */
-  public function assertOriginalConfigDataEquals($data, $apply_overrides) {
+  public function assertOriginalConfigDataEquals(array $data, bool $apply_overrides): void {
     foreach ($data as $key => $value) {
       $config_value = $this->config->getOriginal($key, $apply_overrides);
       $this->assertEquals($value, $config_value);
@@ -632,8 +636,10 @@ class ConfigTest extends UnitTestCase {
    *   The original data.
    * @param array $overridden_data
    *   The overridden data.
+   *
+   * @internal
    */
-  protected function assertOverriddenKeys(array $data, array $overridden_data) {
+  protected function assertOverriddenKeys(array $data, array $overridden_data): void {
     if (empty($overridden_data)) {
       $this->assertFalse($this->config->hasOverrides());
     }

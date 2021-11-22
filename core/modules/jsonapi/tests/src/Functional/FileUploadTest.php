@@ -910,8 +910,10 @@ class FileUploadTest extends ResourceTestBase {
    *   The expected data.
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The file upload response.
+   *
+   * @internal
    */
-  protected function assertResponseData(array $expected, ResponseInterface $response) {
+  protected function assertResponseData(array $expected, ResponseInterface $response): void {
     static::recursiveKSort($expected);
     $actual = Json::decode((string) $response->getBody());
     static::recursiveKSort($actual);

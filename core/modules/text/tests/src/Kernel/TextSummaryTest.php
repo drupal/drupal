@@ -238,8 +238,10 @@ class TextSummaryTest extends KernelTestBase {
 
   /**
    * Calls text_summary() and asserts that the expected teaser is returned.
+   *
+   * @internal
    */
-  public function assertTextSummary($text, $expected, $format = NULL, $size = NULL) {
+  public function assertTextSummary(string $text, string $expected, ?string $format = NULL, int $size = NULL): void {
     $summary = text_summary($text, $format, $size);
     $this->assertSame($expected, $summary, new FormattableMarkup('<pre style="white-space: pre-wrap">@actual</pre> is identical to <pre style="white-space: pre-wrap">@expected</pre>', ['@actual' => $summary, '@expected' => $expected]));
   }

@@ -196,8 +196,10 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
    *   The name of the test entity.
    * @param \Drupal\Core\Entity\EntityInterface[] $referenced_entities
    *   An array of referenced entities.
+   *
+   * @internal
    */
-  protected function assertFieldValues($entity_name, $referenced_entities) {
+  protected function assertFieldValues(string $entity_name, array $referenced_entities): void {
     $entity = current($this->container->get('entity_type.manager')->getStorage(
     $this->entityType)->loadByProperties(['name' => $entity_name]));
 

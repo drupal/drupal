@@ -305,8 +305,10 @@ class PathWorkspacesTest extends BrowserTestBase {
    *
    * @param string[] $paths
    *   An array of paths to check for.
+   *
+   * @internal
    */
-  protected function assertAccessiblePaths(array $paths) {
+  protected function assertAccessiblePaths(array $paths): void {
     foreach ($paths as $path) {
       $this->drupalGet($path);
       $this->assertSession()->statusCodeEquals(200);
@@ -318,8 +320,10 @@ class PathWorkspacesTest extends BrowserTestBase {
    *
    * @param string[] $paths
    *   An array of paths to check for.
+   *
+   * @internal
    */
-  protected function assertNotAccessiblePaths(array $paths) {
+  protected function assertNotAccessiblePaths(array $paths): void {
     foreach ($paths as $path) {
       $this->drupalGet($path);
       $this->assertSession()->statusCodeEquals(404);

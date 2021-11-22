@@ -1186,10 +1186,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    * @param string $id
    *   The HTML ID of the textarea.
    *
-   * @return bool
-   *   TRUE if the assertion passed; FALSE otherwise.
+   * @internal
    */
-  protected function assertDisabledTextarea($id) {
+  protected function assertDisabledTextarea(string $id): void {
     $textarea = $this->assertSession()->fieldDisabled($id);
     $this->assertSame('textarea', $textarea->getTagName());
     $this->assertSame('This field has been disabled because you do not have sufficient permissions to edit it.', $textarea->getText());

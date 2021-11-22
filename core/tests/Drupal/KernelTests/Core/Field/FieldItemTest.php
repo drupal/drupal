@@ -83,10 +83,12 @@ class FieldItemTest extends EntityKernelTestBase {
    *
    * @param \Drupal\entity_test\Entity\EntityTest $entity
    *   The test entity.
-   * @param $expected_value
+   * @param string $expected_value
    *   The expected field item value.
+   *
+   * @internal
    */
-  protected function assertSavedFieldItemValue(EntityTest $entity, $expected_value) {
+  protected function assertSavedFieldItemValue(EntityTest $entity, string $expected_value): void {
     $entity->setNewRevision(TRUE);
     $entity->save();
     $base_field_expected_value = str_replace($this->fieldName, 'field_test_item', $expected_value);

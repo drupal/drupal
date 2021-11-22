@@ -731,10 +731,12 @@ class RendererTest extends RendererTestBase {
    *
    * @param array $build
    *   A render array with either #access or #access_callback.
-   * @param bool $access
+   * @param \Drupal\Core\Access\AccessResultInterface|bool $access
    *   Whether the render array is accessible or not.
+   *
+   * @internal
    */
-  protected function assertAccess($build, $access) {
+  protected function assertAccess(array $build, $access): void {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
     if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {

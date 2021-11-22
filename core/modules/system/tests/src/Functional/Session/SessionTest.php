@@ -372,8 +372,10 @@ class SessionTest extends BrowserTestBase {
 
   /**
    * Assert whether the SimpleTest browser sent a session cookie.
+   *
+   * @internal
    */
-  public function assertSessionCookie($sent) {
+  public function assertSessionCookie(bool $sent): void {
     if ($sent) {
       $this->assertNotEmpty($this->getSessionCookies()->count(), 'Session cookie was sent.');
     }
@@ -384,8 +386,10 @@ class SessionTest extends BrowserTestBase {
 
   /**
    * Assert whether $_SESSION is empty at the beginning of the request.
+   *
+   * @internal
    */
-  public function assertSessionEmpty($empty) {
+  public function assertSessionEmpty(bool $empty): void {
     if ($empty) {
       $this->assertSession()->responseHeaderEquals('X-Session-Empty', '1');
     }

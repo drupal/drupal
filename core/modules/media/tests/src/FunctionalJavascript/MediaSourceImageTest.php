@@ -159,8 +159,10 @@ class MediaSourceImageTest extends MediaSourceTestBase {
    *
    * @param string $media_type_id
    *   The media type ID.
+   *
+   * @internal
    */
-  protected function assertViewDisplayConfigured($media_type_id) {
+  protected function assertViewDisplayConfigured(string $media_type_id): void {
     $assert_session = $this->assertSession();
     $type = MediaType::load($media_type_id);
     $display = EntityViewDisplay::load('media.' . $media_type_id . '.' . EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);

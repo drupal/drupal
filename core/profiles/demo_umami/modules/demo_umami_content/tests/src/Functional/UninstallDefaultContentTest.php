@@ -85,7 +85,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Node storage.
    */
-  protected function assertRecipesImported(EntityStorageInterface $node_storage) {
+  protected function assertRecipesImported(EntityStorageInterface $node_storage): void {
     $count = $node_storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', 'recipe')
@@ -104,7 +104,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Node storage.
    */
-  protected function assertArticlesImported(EntityStorageInterface $node_storage) {
+  protected function assertArticlesImported(EntityStorageInterface $node_storage): void {
     $count = $node_storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', 'article')
@@ -123,7 +123,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $block_storage
    *   Block storage.
    */
-  protected function assertImportedCustomBlock(EntityStorageInterface $block_storage) {
+  protected function assertImportedCustomBlock(EntityStorageInterface $block_storage): void {
     $assert = $this->assertSession();
     foreach ($this->expectedBlocks() as $block_info) {
       $this->drupalGet($block_info['path']);

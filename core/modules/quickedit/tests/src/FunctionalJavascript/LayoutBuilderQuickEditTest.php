@@ -214,14 +214,14 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertEntityInstanceFieldStates($entity_type_id, $entity_id, $entity_instance_id, array $expected_field_states) {
+  protected function assertEntityInstanceFieldStates($entity_type_id, $entity_id, $entity_instance_id, array $expected_field_states): void {
     parent::assertEntityInstanceFieldStates($entity_type_id, $entity_id, $entity_instance_id, $this->replaceLayoutBuilderFieldIdKeys($expected_field_states));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function assertEntityInstanceFieldMarkup($expected_field_attributes) {
+  protected function assertEntityInstanceFieldMarkup($expected_field_attributes): void {
     if (func_num_args() === 4) {
       $expected_field_attributes = func_get_arg(3);
       @trigger_error('Calling ' . __METHOD__ . '() with 4 arguments is deprecated in drupal:9.1.0 and will throw an error in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3037436', E_USER_DEPRECATED);
@@ -327,7 +327,7 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
    * @param string[] $fields
    *   The fields test.
    */
-  private function assertQuickEditInit(array $fields) {
+  private function assertQuickEditInit(array $fields): void {
     $this->assertNotEmpty($fields);
     $node = $this->article;
     $this->drupalGet('node/' . $node->id());

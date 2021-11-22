@@ -40,8 +40,10 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
    *
    * @param string $entity_type_id
    *   The entity type to run the tests with.
+   *
+   * @internal
    */
-  protected function assertDefaultValues($entity_type_id) {
+  protected function assertDefaultValues(string $entity_type_id): void {
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type_id)
       ->create();

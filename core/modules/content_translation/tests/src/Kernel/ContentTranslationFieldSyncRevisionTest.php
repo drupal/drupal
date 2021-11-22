@@ -449,8 +449,10 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
    *
    * @param \Drupal\Core\Entity\EntityConstraintViolationListInterface $violations
    *   A list of violations.
+   *
+   * @internal
    */
-  protected function assertViolations(EntityConstraintViolationListInterface $violations) {
+  protected function assertViolations(EntityConstraintViolationListInterface $violations): void {
     $entity_type_id = $this->storage->getEntityTypeId();
     $settings = $this->contentTranslationManager->getBundleTranslationSettings($entity_type_id, $entity_type_id);
     $message = !empty($settings['untranslatable_fields_hide']) ?
@@ -478,8 +480,10 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
    *   - target ID (it)
    *   - alt (en)
    *   - alt (it)
+   *
+   * @internal
    */
-  protected function assertLatestRevisionFieldValues($entity_id, array $expected_values) {
+  protected function assertLatestRevisionFieldValues(int $entity_id, array $expected_values): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->storage->loadRevision($this->storage->getLatestRevisionId($entity_id));
     @[$revision_id, $target_id_en, $target_id_it, $alt_en, $alt_it] = $expected_values;

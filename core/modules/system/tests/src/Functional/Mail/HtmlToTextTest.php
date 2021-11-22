@@ -41,18 +41,20 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Helper function to test \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    *
-   * @param $html
+   * @param string $html
    *   The source HTML string to be converted.
-   * @param $text
+   * @param string $text
    *   The expected result of converting $html to text.
-   * @param $message
+   * @param string $message
    *   A text message to display in the assertion message.
-   * @param $allowed_tags
+   * @param array|null $allowed_tags
    *   (optional) An array of allowed tags, or NULL to default to the full
    *   set of tags supported by
    *   \Drupal\Core\Mail\MailFormatHelper::htmlToText().
+   *
+   * @internal
    */
-  protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
+  protected function assertHtmlToText(string $html, string $text, string $message, ?array $allowed_tags = NULL): void {
     preg_match_all('/<([a-z0-6]+)/', mb_strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';

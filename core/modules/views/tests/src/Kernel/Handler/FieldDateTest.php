@@ -3,6 +3,7 @@
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
@@ -142,14 +143,16 @@ class FieldDateTest extends ViewsKernelTestBase {
   /**
    * Asserts properly formatted display against 'created' field in view.
    *
-   * @param mixed $view
+   * @param \Drupal\views\ViewExecutable $view
    *   View to be tested.
    * @param array $map
    *   Data map.
-   * @param null $timezone
+   * @param string|null $timezone
    *   Optional timezone.
+   *
+   * @internal
    */
-  protected function assertRenderedDatesEqual($view, $map, $timezone = NULL) {
+  protected function assertRenderedDatesEqual(ViewExecutable $view, array $map, ?string $timezone = NULL): void {
     foreach ($map as $date_format => $expected_result) {
       $view->field['created']->options['date_format'] = $date_format;
       if (isset($timezone)) {
@@ -167,12 +170,14 @@ class FieldDateTest extends ViewsKernelTestBase {
   /**
    * Asserts properly formatted display against 'destroyed' field in view.
    *
-   * @param mixed $view
+   * @param \Drupal\views\ViewExecutable $view
    *   View to be tested.
    * @param array $map
    *   Data map.
+   *
+   * @internal
    */
-  protected function assertRenderedFutureDatesEqual($view, $map) {
+  protected function assertRenderedFutureDatesEqual(ViewExecutable $view, array $map): void {
     foreach ($map as $format => $result) {
       $view->field['destroyed']->options['date_format'] = $format;
       $view_result = $view->field['destroyed']->advancedRender($view->result[0]);

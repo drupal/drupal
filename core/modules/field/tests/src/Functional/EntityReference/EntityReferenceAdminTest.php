@@ -398,8 +398,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    *   The field name.
    * @param array $expected_options
    *   An array of expected options.
+   *
+   * @internal
    */
-  protected function assertFieldSelectOptions($name, array $expected_options) {
+  protected function assertFieldSelectOptions(string $name, array $expected_options): void {
     $options = $this->assertSession()->selectExists($name)->findAll('xpath', 'option');
     array_walk($options, function (NodeElement &$option) {
       $option = $option->getValue();

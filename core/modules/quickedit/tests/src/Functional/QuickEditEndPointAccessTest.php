@@ -76,8 +76,10 @@ class QuickEditEndPointAccessTest extends BrowserTestBase {
    *   The URL to check.
    * @param array $body
    *   The payload to send with the request.
+   *
+   * @internal
    */
-  protected function assertAccessIsBlocked($url, array $body) {
+  protected function assertAccessIsBlocked(string $url, array $body): void {
     $client = $this->getHttpClient();
     $message = ['message' => "The 'access in-place editing' permission is required."];
 

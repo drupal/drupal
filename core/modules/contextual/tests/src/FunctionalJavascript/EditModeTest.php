@@ -100,8 +100,10 @@ class EditModeTest extends WebDriverTestBase {
 
   /**
    * Asserts that the correct message was announced when entering edit mode.
+   *
+   * @internal
    */
-  protected function assertAnnounceEditMode() {
+  protected function assertAnnounceEditMode(): void {
     $web_assert = $this->assertSession();
     // Wait for contextual trigger button.
     $web_assert->waitForElementVisible('css', '.contextual trigger');
@@ -111,8 +113,10 @@ class EditModeTest extends WebDriverTestBase {
 
   /**
    * Assert that the correct message was announced when leaving edit mode.
+   *
+   * @internal
    */
-  protected function assertAnnounceLeaveEditMode() {
+  protected function assertAnnounceLeaveEditMode(): void {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Wait till all the contextual links are hidden.
