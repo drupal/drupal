@@ -73,7 +73,7 @@ abstract class Connection {
   /**
    * The name of the Statement class for this connection.
    *
-   * @var string
+   * @var string|null
    *
    * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database
    *   drivers should use or extend StatementWrapper instead, and encapsulate
@@ -86,7 +86,7 @@ abstract class Connection {
   /**
    * The name of the StatementWrapper class for this connection.
    *
-   * @var string
+   * @var string|null
    */
   protected $statementWrapperClass = NULL;
 
