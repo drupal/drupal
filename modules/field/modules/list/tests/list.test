@@ -407,17 +407,35 @@ class ListFieldUITestCase extends FieldTestCase {
   }
 
   /**
+   * List (text) : test 'allowed values function' input.
+   */
+  function testDynamicListAllowedValuesText() {
+    $this->field_name = 'field_list_text';
+    $this->createListField('list_text', array(
+      'allowed_values_function' => 'list_test_dynamic_values_callback',
+      'allowed_values' => '',
+    ));
+    $this->drupalGet($this->admin_path);
+  }
+
+  /**
    * Helper function to create list field of a given type.
    *
    * @param string $type
    *   'list_integer', 'list_float', 'list_text' or 'list_boolean'
+   * @param array $settings
+   *
+   * @throws \FieldException
    */
-  protected function createListField($type) {
+  protected function createListField($type, $settings = array()) {
     // Create a test field and instance.
     $field = array(
       'field_name' => $this->field_name,
       'type' => $type,
     );
+    if (!empty($settings)) {
+      $field['settings'] = $settings;
+    }
     field_create_field($field);
     $instance = array(
       'field_name' => $this->field_name,
