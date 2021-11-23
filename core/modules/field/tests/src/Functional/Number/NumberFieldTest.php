@@ -430,7 +430,7 @@ class NumberFieldTest extends BrowserTestBase {
    *
    * @internal
    */
-  public function assertSetMinimumValue(FieldConfigInterface $field, int $minimum_value): void {
+  public function assertSetMinimumValue(FieldConfigInterface $field, $minimum_value): void {
     $field_configuration_url = 'entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field->getName();
 
     // Set the minimum value.
