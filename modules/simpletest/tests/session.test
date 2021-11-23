@@ -773,3 +773,31 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Unit tests for session handling.
+ */
+class SessionUnitTestCase extends DrupalUnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Session unit tests',
+      'description' => 'Test session handling functionality.',
+      'group' => 'Session',
+    );
+  }
+
+  function testCookieDomain() {
+     $tests = array(
+       array('example.com', '.example.com'),
+       array('www.example.com', '.www.example.com'),
+       array('subdomain.example.com', '.subdomain.example.com'),
+     );
+
+     foreach ($tests as $test) {
+       $this->assertEqual(_drupal_get_cookie_domain($test[0]), $test[1], 'Correct $cookie_domain for host ' . $test[0]);
+     }
+  }
+}

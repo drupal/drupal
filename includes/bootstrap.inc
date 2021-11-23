@@ -807,14 +807,7 @@ function drupal_settings_initialize() {
     // HTTP_HOST can be modified by a visitor, but we already sanitized it
     // in drupal_settings_initialize().
     if (!empty($_SERVER['HTTP_HOST'])) {
-      $cookie_domain = $_SERVER['HTTP_HOST'];
-      // Strip leading periods, www., and port numbers from cookie domain.
-      $cookie_domain = ltrim($cookie_domain, '.');
-      if (strpos($cookie_domain, 'www.') === 0) {
-        $cookie_domain = substr($cookie_domain, 4);
-      }
-      $cookie_domain = explode(':', $cookie_domain);
-      $cookie_domain = '.' . $cookie_domain[0];
+      $cookie_domain = _drupal_get_cookie_domain($_SERVER['HTTP_HOST']);
     }
   }
   // Per RFC 2109, cookie domains must contain at least one dot other than the
@@ -833,6 +826,24 @@ function drupal_settings_initialize() {
   }
   $prefix = ini_get('session.cookie_secure') ? 'SSESS' : 'SESS';
   session_name($prefix . substr(hash('sha256', $session_name), 0, 32));
+}
+
+/**
+ * Derive the cookie domain to use for session cookies.
+ *
+ * @param $host
+ *   The value of the HTTP host name.
+ *
+ * @return
+ *   The string to use as a cookie domain.
+ */
+function _drupal_get_cookie_domain($host) {
+  $cookie_domain = $host;
+  // Strip leading periods and port numbers from cookie domain.
+  $cookie_domain = ltrim($cookie_domain, '.');
+  $cookie_domain = explode(':', $cookie_domain);
+  $cookie_domain = '.' . $cookie_domain[0];
+  return $cookie_domain;
 }
 
 /**
