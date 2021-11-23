@@ -89,7 +89,7 @@ trait DeprecationListenerTrait {
       '%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%',
       '%The "Drupal\\\\[^"]+" method will require a new "[^"]+" argument in the next major version of its interface "Drupal\\\\[^"]+", not defining it is deprecated%',
       // Symfony 5.4
-      '%Method "Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\NormalizerInterface::normalize\(\)" might add "array|string|int|float|bool|\\\\ArrayObject|null" as a native return type declaration in the future. Do the same in implementation "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%',
+      '%Method "Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\NormalizerInterface::normalize\(\)" might add "array\|string\|int\|float\|bool\|\\\\ArrayObject\|null" as a native return type declaration in the future. Do the same in implementation "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
