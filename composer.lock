@@ -535,14 +535,14 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "60f96b86b97f28bf6a18f9a7e392f56caea5eba3"
+                "reference": "a986b9e62a8273bbdb670ac6e8829ff8e69d9cec"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
                 "composer/semver": "^3.0",
                 "doctrine/annotations": "^1.12",
                 "doctrine/reflection": "^1.1",
-                "egulias/email-validator": "^2.0",
+                "egulias/email-validator": "^2.1.22",
                 "ext-date": "*",
                 "ext-dom": "*",
                 "ext-filter": "*",
@@ -5521,9 +5521,6 @@
             "require": {
                 "php": "^7.1 || ^8.0"
             },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
-            },
             "require-dev": {
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.6",
@@ -6968,6 +6965,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
