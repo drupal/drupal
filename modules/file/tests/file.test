@@ -1354,10 +1354,11 @@ class FileFieldPathTestCase extends FileFieldTestCase {
     // Create a new node.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
-    // Check that the file was uploaded to the file root.
+    // Check that the file was uploaded to the correct location.
     $node = node_load($nid, NULL, TRUE);
     $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
-    $this->assertPathMatch('public://' . $test_file->filename, $node_file->uri, format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
+    $expected_path = 'public://' . date('Y', REQUEST_TIME) . '-' . date('m', REQUEST_TIME) . '/' . $test_file->filename;
+    $this->assertPathMatch($expected_path, $node_file->uri, format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
     // Change the path to contain multiple subdirectories.
     $field = $this->updateFileField($field_name, $type_name, array('file_directory' => 'foo/bar/baz'));
