@@ -164,6 +164,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($new_user->theme, '', 'Correct theme field.');
     $this->assertEqual($new_user->signature, '', 'Correct signature field.');
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), 'Correct creation time.');
+    $this->assertEqual($new_user->changed,  $new_user->created, 'Correct changed time.');
     $this->assertEqual($new_user->status, variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
     $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), 'Correct time zone field.');
     $this->assertEqual($new_user->language, '', 'Correct language field.');
@@ -2543,6 +2544,8 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->language);
     $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->language);
     $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->language);
+    $tests['[user:changed]'] = format_date($account->changed, 'medium', '', NULL, $language->language);
+    $tests['[user:changed:short]'] = format_date($account->changed, 'short', '', NULL, $language->language);
     $tests['[current-user:name]'] = check_plain(format_username($global_account));
 
     // Test to make sure that we generated something for each token.

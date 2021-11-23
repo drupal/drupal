@@ -52,6 +52,12 @@ function user_token_info() {
     'type' => 'date',
   );
 
+  $user['changed'] = array(
+    'name' => t("Changed"),
+    'description' => t("The date the user account was changed."),
+    'type' => 'date',
+  );
+
   return array(
     'types' => $types,
     'tokens' => array('user' => $user),
@@ -110,6 +116,11 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
           // In the case of user_presave the created date may not yet be set.
           $replacements[$original] = !empty($account->created) ? format_date($account->created, 'medium', '', NULL, $language_code) : t('not yet created');
           break;
+
+        case 'changed':
+          // In the case of user_presave the created date may not yet be set.
+          $replacements[$original] = !empty($account->changed) ? format_date($account->changed, 'medium', '', NULL, $language_code) : t('not yet created');
+          break;
       }
     }
 
@@ -119,6 +130,10 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
 
     if ($registered_tokens = token_find_with_prefix($tokens, 'created')) {
       $replacements += token_generate('date', $registered_tokens, array('date' => $account->created), $options);
+    }
+
+    if ($changed_tokens = token_find_with_prefix($tokens, 'changed')) {
+      $replacements += token_generate('date', $changed_tokens, array('date' => $account->changed), $options);
     }
   }
 

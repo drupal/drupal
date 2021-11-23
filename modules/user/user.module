@@ -506,6 +506,8 @@ function user_save($account, $edit = array(), $category = 'account') {
 
       // Do not allow 'uid' to be changed.
       $account->uid = $account->original->uid;
+      // Save current time as last changed time.
+      $account->changed = REQUEST_TIME;
       // Save changes to the user table.
       $success = drupal_write_record('users', $account, 'uid');
       // Restore the picture object.
@@ -577,6 +579,8 @@ function user_save($account, $edit = array(), $category = 'account') {
       if (!isset($account->created)) {
         $account->created = REQUEST_TIME;
       }
+      // Save current time as last changed time.
+      $account->changed = REQUEST_TIME;
       $success = drupal_write_record('users', $account);
       if ($success === FALSE) {
         // On a failed INSERT some other existing user's uid may be returned.

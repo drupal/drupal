@@ -182,6 +182,12 @@ function user_schema() {
         'default' => 0,
         'description' => 'Timestamp for when user was created.',
       ),
+      'changed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for when user was changed.',
+      ),
       'access' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -238,6 +244,7 @@ function user_schema() {
     'indexes' => array(
       'access' => array('access'),
       'created' => array('created'),
+      'changed' => array('changed'),
       'mail' => array('mail'),
       'picture' => array('picture'),
     ),
@@ -312,6 +319,7 @@ function user_install() {
       'name' => 'placeholder-for-uid-1',
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
       'status' => 1,
       'data' => NULL,
     ))
@@ -921,6 +929,29 @@ function user_update_7019() {
   if (!db_index_exists('authmap', 'uid_module')) {
     db_add_index('authmap', 'uid_module', array('uid', 'module'));
   }
+}
+
+/**
+ * Add changed field to users table.
+ */
+function user_update_7020() {
+  $spec = array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'Timestamp for when user was changed.',
+  );
+  $keys = array(
+    'indexes' => array(
+      'changed' => array('changed'),
+    ),
+  );
+  db_add_field('users', 'changed', $spec, $keys);
+
+  // Set the initial value for existing users
+  db_update('users')
+    ->expression('changed', 'created')
+    ->execute();
 }
 /**
  * @} End of "addtogroup updates-7.x-extra".

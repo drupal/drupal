@@ -167,6 +167,7 @@ function user_admin_account() {
     'status' => array('data' => t('Status'), 'field' => 'u.status'),
     'roles' => array('data' => t('Roles')),
     'member_for' => array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc'),
+    'changed' => array('data' => t('Last changed'), 'field' => 'u.changed', 'sort' => 'desc'),
     'access' => array('data' => t('Last access'), 'field' => 'u.access'),
     'operations' => array('data' => t('Operations')),
   );
@@ -180,7 +181,7 @@ function user_admin_account() {
 
   $query = $query->extend('PagerDefault')->extend('TableSort');
   $query
-    ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
+    ->fields('u', array('uid', 'name', 'status', 'created', 'changed', 'access'))
     ->limit(50)
     ->orderByHeader($header)
     ->setCountQuery($count_query);
@@ -226,6 +227,7 @@ function user_admin_account() {
       'status' =>  $status[$account->status],
       'roles' => theme('item_list', array('items' => $users_roles)),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
+      'changed' => t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->changed))),
       'access' =>  $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
       'operations' => array('data' => array('#type' => 'link', '#title' => t('edit'), '#href' => "user/$account->uid/edit", '#options' => array('query' => $destination))),
     );
