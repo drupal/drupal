@@ -27,7 +27,7 @@
     "conflict": {
         "drupal/drupal": "*"
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "sort-packages": true
