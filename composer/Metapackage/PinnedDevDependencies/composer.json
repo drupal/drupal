@@ -13,7 +13,7 @@
         "composer/ca-bundle": "1.3.1",
         "composer/composer": "2.1.12",
         "composer/metadata-minifier": "1.0.0",
-        "composer/spdx-licenses": "1.5.5",
+        "composer/spdx-licenses": "1.5.6",
         "composer/xdebug-handler": "2.0.2",
         "doctrine/instantiator": "1.4.0",
         "drupal/coder": "8.3.13",
@@ -58,7 +58,7 @@
         "symfony/filesystem": "v4.4.27",
         "symfony/finder": "v4.4.30",
         "symfony/lock": "v4.4.33",
-        "symfony/phpunit-bridge": "v5.4.0-BETA2",
+        "symfony/phpunit-bridge": "v5.4.0-RC1",
         "theseer/tokenizer": "1.2.1",
         "webmozart/assert": "1.10.0"
     }
