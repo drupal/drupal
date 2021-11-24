@@ -378,6 +378,11 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
     $directory = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/' . $this->randomName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomName()));
     $this->assertFalse(file_exists($directory), 'New directory was not created in the filesystem when requesting an unauthorized image.');
+
+    // Check that requesting a partial image style path returns access denied.
+    $partial_url = $scheme . '://styles/' . $this->style_name . '/';
+    $this->drupalGet(file_create_url($partial_url) . '/');
+    $this->assertResponse(403, 'Access was denied to a partial image style path.');
   }
 }
 
