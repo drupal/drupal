@@ -747,10 +747,10 @@ function hook_node_update_index($node) {
 /**
  * Perform node validation before a node is created or updated.
  *
- * This hook is invoked from node_validate(), after a user has has finished
- * editing the node and is previewing or submitting it. It is invoked at the
- * end of all the standard validation steps, and after the type-specific
- * hook_validate() is invoked.
+ * This hook is invoked from node_validate(), after a user has finished editing
+ * the node and is previewing or submitting it. It is invoked at the end of all
+ * the standard validation steps, and after the type-specific hook_validate() is
+ * invoked.
  *
  * To indicate a validation error, use form_set_error().
  *
