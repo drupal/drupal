@@ -93,7 +93,7 @@ class ManageGitIgnoreTest extends TestCase {
     $this->mustExec('git add .', $sut);
     $this->mustExec('git commit -m "Initial commit."', $sut);
     // Run composer install, but suppress scaffolding.
-    $this->fixtures->runComposer("install --no-ansi --no-scripts", $sut);
+    $this->fixtures->runComposer("install --no-ansi --no-scripts --no-plugins", $sut);
     return $sut;
   }
 
