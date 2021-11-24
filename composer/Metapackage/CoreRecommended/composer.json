@@ -55,7 +55,7 @@
         "symfony/process": "v4.4.25",
         "symfony/psr-http-message-bridge": "v2.1.0",
         "symfony/routing": "v4.4.25",
-        "symfony/serializer": "v4.4.25",
+        "symfony/serializer": "v4.4.35",
         "symfony/service-contracts": "v2.4.0",
         "symfony/translation": "v4.4.25",
         "symfony/translation-contracts": "v2.4.0",

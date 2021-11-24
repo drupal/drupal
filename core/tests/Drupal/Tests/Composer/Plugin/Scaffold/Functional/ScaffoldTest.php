@@ -111,7 +111,7 @@ class ScaffoldTest extends TestCase {
   public function scaffoldSut($fixture_name, $is_link = FALSE, $relocated_docroot = TRUE) {
     $sut = $this->createSut($fixture_name, ['SYMLINK' => $is_link ? 'true' : 'false']);
     // Run composer install to get the dependencies we need to test.
-    $this->fixtures->runComposer("install --no-ansi --no-scripts", $sut);
+    $this->fixtures->runComposer("install --no-ansi --no-scripts --no-plugins", $sut);
     // Test drupal:scaffold.
     $scaffoldOutput = $this->fixtures->runScaffold($sut);
 
