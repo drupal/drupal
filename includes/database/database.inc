@@ -1925,6 +1925,11 @@ class DatabaseTransactionOutOfOrderException extends Exception { }
 class InvalidMergeQueryException extends Exception {}
 
 /**
+ * Exception thrown if an invalid query condition is specified.
+ */
+class InvalidQueryConditionOperatorException extends Exception {}
+
+/**
  * Exception thrown if an insert query specifies a field twice.
  *
  * It is not allowed to specify a field as default and insert field, this

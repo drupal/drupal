@@ -27,6 +27,7 @@ class DatabaseTestCase extends DrupalWebTestCase {
     $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
     $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
     $schema['test_task'] = drupal_get_schema('test_task');
+    $schema['TEST_UPPERCASE'] = drupal_get_schema('TEST_UPPERCASE');
 
     $this->installTables($schema);
 
@@ -3448,6 +3449,67 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
       ->execute()
       ->fetchField();
     $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+  }
+
+  /**
+   * Tests SQL injection via condition operator.
+   */
+  public function testConditionOperatorArgumentsSQLInjection() {
+
+    $injection = "IS NOT NULL); INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
+    try {
+      $result = db_select('test', 't')
+        ->fields('t')
+        ->condition('name', 1, $injection)
+        ->execute();
+      $this->fail('Should not be able to attempt SQL injection via condition operator.');
+    }
+    catch (InvalidQueryConditionOperatorException $e) {
+      $this->pass('SQL injection attempt via condition arguments should result in a database exception.');
+    }
+
+    // Test that the insert query that was used in the SQL injection attempt did
+    // not result in a row being inserted in the database.
+    $result = db_select('test')
+      ->condition('name', 'test12345678')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+
+    // Attempt SQLi via union query with no unsafe characters.
+    db_insert('test')
+      ->fields(array('name' => '123456'))
+      ->execute();
+
+    $injection = "= 1 UNION ALL SELECT password FROM user WHERE uid =";
+    try {
+      $result = db_select('test', 't')
+        ->fields('t', array('name', 'name'))
+        ->condition('name', 1, $injection)
+        ->execute();
+      $this->fail('Should not be able to attempt SQL injection via operator.');
+    }
+    catch (InvalidQueryConditionOperatorException $e) {
+      $this->pass('SQL injection attempt via condition arguments should result in a database exception.');
+    }
+
+    // Attempt SQLi via union query - uppercase tablename.
+    db_insert('TEST_UPPERCASE')
+      ->fields(array('name' => 'secrets'))
+      ->execute();
+
+    $injection = "IS NOT NULL) UNION ALL SELECT name FROM {TEST_UPPERCASE} -- ";
+    try {
+      $result = db_select('test', 't')
+        ->fields('t', array('name'))
+        ->condition('name', 1, $injection)
+        ->execute();
+      $this->fail('Should not be able to attempt SQL injection via operator.');
+    }
+    catch (InvalidQueryConditionOperatorException $e) {
+      $this->pass('SQL injection attempt via condition arguments should result in a database exception.');
+    }
   }
 }
 

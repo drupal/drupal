@@ -1173,6 +1173,31 @@ function _drupal_trigger_error_with_delayed_logging($error_msg, $error_type = E_
 }
 
 /**
+ * Invoke trigger_error() using a fatal error that will terminate the request.
+ *
+ * Normally, Drupal's error handler does not terminate script execution on
+ * user-level errors, even if the error is of type E_USER_ERROR. This function
+ * triggers an error of type E_USER_ERROR that is explicitly forced to be a
+ * fatal error which terminates script execution.
+ *
+ * @param string $error_msg
+ *   The error message to trigger. As with trigger_error() itself, this is
+ *   limited to 1024 bytes; additional characters beyond that will be removed.
+ *
+ * @see _drupal_error_handler_real()
+ */
+function drupal_trigger_fatal_error($error_msg) {
+  $fatal_error = &drupal_static(__FUNCTION__, FALSE);
+  $fatal_error = TRUE;
+  trigger_error($error_msg, E_USER_ERROR);
+  $fatal_error = FALSE;
+  // The standard Drupal error handler should have treated this as a fatal
+  // error and already ended the page request. But in case another error
+  // handler is being used, terminate execution explicitly here also.
+  exit;
+}
+
+/**
  * Writes the file scan cache to the persistent cache.
  *
  * This cache stores all files marked as missing or moved after a file scan
