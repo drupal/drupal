@@ -784,10 +784,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
       $localpath = $this->getLocalPath($uri);
     }
     if ($options & STREAM_REPORT_ERRORS) {
-      return mkdir($localpath, $mode, $recursive);
+      return drupal_mkdir($localpath, $mode, $recursive);
     }
     else {
-      return @mkdir($localpath, $mode, $recursive);
+      return @drupal_mkdir($localpath, $mode, $recursive);
     }
   }
 

@@ -108,6 +108,7 @@ class FileTestCase extends DrupalWebTestCase {
 
     // Mask out all but the last three octets.
     $actual_mode = fileperms($filepath) & 0777;
+    $expected_mode = $expected_mode & 0777;
 
     // PHP on Windows has limited support for file permissions. Usually each of
     // "user", "group" and "other" use one octal digit (3 bits) to represent the
@@ -143,6 +144,7 @@ class FileTestCase extends DrupalWebTestCase {
 
     // Mask out all but the last three octets.
     $actual_mode = fileperms($directory) & 0777;
+    $expected_mode = $expected_mode & 0777;
 
     // PHP on Windows has limited support for file permissions. Usually each of
     // "user", "group" and "other" use one octal digit (3 bits) to represent the
@@ -1053,6 +1055,39 @@ class FileDirectoryTest extends FileTestCase {
       'description' => 'Tests operations dealing with directories.',
       'group' => 'File API',
     );
+  }
+
+  /**
+   * Test local directory handling functions.
+   */
+  function testFileCheckLocalDirectoryHandling() {
+    $directory = file_default_scheme() . '://';
+
+    // Check a new recursively created local directory for correct file system
+    // permissions.
+    $parent = $this->randomName();
+    $child = $this->randomName();
+
+    // Files directory already exists.
+    $this->assertTrue(is_dir($directory), 'Files directory already exists.', 'File');
+    // Make files directory writable only.
+    $old_mode = fileperms($directory);
+
+    // Create the directories.
+    $parent_path = $directory . DIRECTORY_SEPARATOR . $parent;
+    $child_path = $parent_path . DIRECTORY_SEPARATOR . $child;
+    $this->assertTrue(drupal_mkdir($child_path, 0775, TRUE), 'No error reported when creating new local directories.', 'File');
+
+    // Ensure new directories also exist.
+    $this->assertTrue(is_dir($parent_path), 'New parent directory actually exists.', 'File');
+    $this->assertTrue(is_dir($child_path), 'New child directory actually exists.', 'File');
+
+    // Check that new directory permissions were set properly.
+    $this->assertDirectoryPermissions($parent_path, 0775);
+    $this->assertDirectoryPermissions($child_path, 0775);
+
+    // Check that existing directory permissions were not modified.
+    $this->assertDirectoryPermissions($directory, $old_mode);
   }
 
   /**
