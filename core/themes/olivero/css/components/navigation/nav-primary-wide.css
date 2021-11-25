@@ -111,8 +111,8 @@
     }
 
     body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
-      padding-top: 1.125rem;
-      padding-bottom: 1.125rem
+      padding-top: 2.25rem;
+      padding-bottom: 2.25rem
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner:after {
