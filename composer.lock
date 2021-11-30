@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecbf82b278efeb981800307d22242bf8",
+    "content-hash": "562b32f689c2ece1649aeb3c21d6bd11",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "7a98829a05bab8c01cf51eb9885417ba39848606"
+                "reference": "5f80d6033e50a621512a12ca2cb2afe9b257f1c1"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -570,7 +570,7 @@
                 "symfony/event-dispatcher": "^4.4",
                 "symfony/http-foundation": "^4.4.7",
                 "symfony/http-kernel": "^4.4",
-                "symfony/mime": "^5.4@beta",
+                "symfony/mime": "^5.4",
                 "symfony/polyfill-iconv": "^1.0",
                 "symfony/polyfill-php80": "^1.16",
                 "symfony/process": "^4.4",
@@ -2999,7 +2999,7 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v5.4.0-RC1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
@@ -3062,7 +3062,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v5.4.0-RC1"
+                "source": "https://github.com/symfony/mime/tree/v5.4.0"
             },
             "funding": [
                 {
@@ -4264,16 +4264,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v5.4.0-RC1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "8dcd0b137b3fb45df7df6f06f0ef6a9fad7f587d"
+                "reference": "89ab66eaef230c9cd1992de2e9a1b26652b127b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/8dcd0b137b3fb45df7df6f06f0ef6a9fad7f587d",
-                "reference": "8dcd0b137b3fb45df7df6f06f0ef6a9fad7f587d",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/89ab66eaef230c9cd1992de2e9a1b26652b127b9",
+                "reference": "89ab66eaef230c9cd1992de2e9a1b26652b127b9",
                 "shasum": ""
             },
             "require": {
@@ -4333,7 +4333,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v5.4.0-RC1"
+                "source": "https://github.com/symfony/var-dumper/tree/v5.4.0"
             },
             "funding": [
                 {
@@ -4349,7 +4349,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-12T11:42:37+00:00"
+            "time": "2021-11-29T15:30:56+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -7716,16 +7716,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v5.4.0-RC1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "abc162ab677ce0e6a2763c4016a2502077f1477c"
+                "reference": "59bbd98ee7aa15b9f75c0fc088c7a5cbf7aa9b5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/abc162ab677ce0e6a2763c4016a2502077f1477c",
-                "reference": "abc162ab677ce0e6a2763c4016a2502077f1477c",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/59bbd98ee7aa15b9f75c0fc088c7a5cbf7aa9b5c",
+                "reference": "59bbd98ee7aa15b9f75c0fc088c7a5cbf7aa9b5c",
                 "shasum": ""
             },
             "require": {
@@ -7779,7 +7779,7 @@
             "description": "Provides utilities for PHPUnit, especially user deprecation notices management",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/phpunit-bridge/tree/v5.4.0-RC1"
+                "source": "https://github.com/symfony/phpunit-bridge/tree/v5.4.0"
             },
             "funding": [
                 {
@@ -7795,7 +7795,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-23T10:19:22+00:00"
+            "time": "2021-11-29T15:30:56+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -7911,9 +7911,7 @@
     "stability-flags": {
         "drupal/core": 20,
         "drupal/core-project-message": 20,
-        "drupal/core-vendor-hardening": 20,
-        "symfony/phpunit-bridge": 10,
-        "symfony/var-dumper": 10
+        "drupal/core-vendor-hardening": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

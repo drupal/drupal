@@ -44,7 +44,7 @@
         "symfony/http-client-contracts": "v2.5.0",
         "symfony/http-foundation": "v4.4.34",
         "symfony/http-kernel": "v4.4.35",
-        "symfony/mime": "v5.4.0-RC1",
+        "symfony/mime": "v5.4.0",
         "symfony/polyfill-ctype": "v1.23.0",
         "symfony/polyfill-iconv": "v1.23.0",
         "symfony/polyfill-intl-idn": "v1.23.0",
@@ -59,7 +59,7 @@
         "symfony/translation": "v4.4.34",
         "symfony/translation-contracts": "v2.5.0",
         "symfony/validator": "v4.4.35",
-        "symfony/var-dumper": "v5.4.0-RC1",
+        "symfony/var-dumper": "v5.4.0",
         "symfony/yaml": "v4.4.34",
         "twig/twig": "v2.14.7",
         "typo3/phar-stream-wrapper": "v3.1.7"
