@@ -58,7 +58,7 @@
         "symfony/filesystem": "v4.4.27",
         "symfony/finder": "v4.4.30",
         "symfony/lock": "v4.4.33",
-        "symfony/phpunit-bridge": "v5.4.0-RC1",
+        "symfony/phpunit-bridge": "v5.4.0",
         "theseer/tokenizer": "1.2.1",
         "webmozart/assert": "1.10.0"
     }
