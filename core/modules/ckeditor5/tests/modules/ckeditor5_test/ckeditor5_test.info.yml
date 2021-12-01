@@ -2,7 +2,6 @@ name: CKEditor 5 Test
 type: module
 description: "Provides test layout and component plugins for CKEditor 5."
 package: Testing
-core_version_requirement: ^9
 dependencies:
   - drupal:editor
   - ckeditor5:ckeditor5

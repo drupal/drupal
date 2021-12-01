@@ -2,6 +2,5 @@ name: CKEditor 5 Plugin Conditions Test
 type: module
 description: "Provides test plugins for CKEditor 5 to test plugin conditions."
 package: Testing
-core_version_requirement: ^9
 dependencies:
   - ckeditor5:ckeditor5
