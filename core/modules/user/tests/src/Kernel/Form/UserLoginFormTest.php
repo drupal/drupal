@@ -4,6 +4,7 @@ namespace Drupal\Tests\user\Kernel\Form;
 
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Form\UserLoginForm;
 use Drupal\user\UserAuthInterface;
@@ -29,11 +30,13 @@ class UserLoginFormTest extends KernelTestBase {
     $user_storage = $this->prophesize(UserStorageInterface::class);
     $user_auth = $this->prophesize(UserAuthInterface::class);
     $renderer = $this->prophesize(RendererInterface::class);
+    $bare_html_renderer = $this->prophesize(BareHtmlPageRendererInterface::class);
     $form = new UserLoginForm(
       $flood->reveal(),
       $user_storage->reveal(),
       $user_auth->reveal(),
-      $renderer->reveal()
+      $renderer->reveal(),
+      $bare_html_renderer->reveal()
     );
     $this->assertNotNull($form);
   }
