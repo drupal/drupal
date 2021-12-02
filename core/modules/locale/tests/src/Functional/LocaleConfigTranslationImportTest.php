@@ -84,6 +84,36 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
     // cSpell:disable-next-line
     $this->assertEquals('Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees.', $override->get('message'));
+
+    // Ensure that \Drupal\locale\LocaleConfigSubscriber::onConfigSave() works
+    // as expected during a configuration install that installs locale.
+    /** @var \Drupal\Core\Config\FileStorage $sync */
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($this->container->get('config.storage'), $sync);
+
+    // Add our own translation to the config that will be imported.
+    $af_sync = $sync->createCollection('language.af');
+    $data = $af_sync->read('system.maintenance');
+    $data['message'] = 'Test af message';
+    $af_sync->write('system.maintenance', $data);
+
+    // Uninstall locale module.
+    $this->container->get('module_installer')->uninstall(['locale_test_translate']);
+    $this->container->get('module_installer')->uninstall(['locale']);
+    $this->resetAll();
+
+    $this->configImporter()->import();
+
+    $this->drupalGet('admin/reports/translations/check');
+    $status = locale_translation_get_status();
+    $status['drupal']['af']->type = 'current';
+    \Drupal::state()->set('locale.translation_status', $status);
+    $this->drupalGet('admin/reports/translations');
+    $this->submitForm([], 'Update translations');
+
+    // Check if configuration translations have been imported.
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
+    $this->assertEquals('Test af message', $override->get('message'));
   }
 
   /**
