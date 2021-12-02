@@ -383,6 +383,11 @@ drupal.array.find:
   js:
     misc/polyfills/array.find.js: { weight: -20 }
 
+drupal.array.includes:
+  version: VERSION
+  js:
+    misc/polyfills/array.includes.js: { weight: -20 }
+
 drupal.batch:
   version: VERSION
   js:
