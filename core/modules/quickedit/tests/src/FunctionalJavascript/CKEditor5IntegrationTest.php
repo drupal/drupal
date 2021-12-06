@@ -1,21 +1,20 @@
 <?php
 
-namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
+namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
-use Drupal\Tests\quickedit\FunctionalJavascript\QuickEditJavascriptTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests that Quick Edit can load CKEditor 5.
  *
- * @group ckeditor5
+ * @group quickedit
  * @internal
  */
-class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
+class CKEditor5IntegrationTest extends QuickEditJavascriptTestBase {
 
   use EntityReferenceTestTrait;
 
