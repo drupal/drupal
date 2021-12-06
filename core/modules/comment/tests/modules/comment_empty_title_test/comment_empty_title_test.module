@@ -9,6 +9,6 @@
 /**
  * Implements hook_preprocess_comment().
  */
-function comment_empty_titles_test_preprocess_comment(&$variables) {
+function comment_empty_title_test_preprocess_comment(&$variables) {
   $variables['title'] = '';
 }
