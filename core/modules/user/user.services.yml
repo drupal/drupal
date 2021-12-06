@@ -52,11 +52,6 @@ services:
   user.permissions:
     class: Drupal\user\PermissionHandler
     arguments: ['@module_handler', '@string_translation', '@controller_resolver']
-  user.route_subscriber:
-    class: Drupal\user\Routing\RouteSubscriber
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: event_subscriber }
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
     arguments: ['@current_user', '@entity_type.manager']
