@@ -123,7 +123,7 @@ JS;
   }
 
   /**
-   * Waits for the specified text and returns its element when available.
+   * Waits for the specified text and returns TRUE when it is available.
    *
    * @param string $text
    *   The text to wait for.
@@ -131,7 +131,7 @@ JS;
    *   (Optional) Timeout in milliseconds, defaults to 10000.
    *
    * @return bool
-   *   TRUE if not found, FALSE if found.
+   *   TRUE if found, FALSE if not found.
    */
   public function waitForText($text, $timeout = 10000) {
     return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
