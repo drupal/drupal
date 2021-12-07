@@ -48,7 +48,7 @@
         "preferred-install": "dist",
         "autoloader-suffix": "Drupal9",
         "platform": {
-            "php": "7.3.0"
+            "php": "8.0.0"
         }
     },
     "extra": {
