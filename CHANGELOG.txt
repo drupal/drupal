@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.84, 2021-12-13
 -----------------------
 - Hotfix for session cookie domain on www subdomains
