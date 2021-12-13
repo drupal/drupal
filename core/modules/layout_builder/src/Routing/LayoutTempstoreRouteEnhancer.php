@@ -3,9 +3,9 @@
 namespace Drupal\layout_builder\Routing;
 
 use Drupal\Core\Routing\EnhancerInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
