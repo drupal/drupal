@@ -80,7 +80,7 @@ final class Serializer extends SymfonySerializer {
   /**
    * {@inheritdoc}
    */
-  public function supportsNormalization($data, $format = NULL, array $context = []) {
+  public function supportsNormalization($data, $format = NULL, array $context = []): bool {
     return $this->selfSupportsNormalization($data, $format, $context) || $this->fallbackNormalizer->supportsNormalization($data, $format, $context);
   }
 

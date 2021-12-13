@@ -30,7 +30,7 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
   /**
    * {@inheritdoc}
    */
-  public function supportsNormalization($data, $format = NULL) {
+  public function supportsNormalization($data, $format = NULL): bool {
     // If we aren't dealing with an object or the format is not supported return
     // now.
     if (!is_object($data) || !$this->checkFormat($format)) {

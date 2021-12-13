@@ -47,7 +47,7 @@ class SerializationTestNormalizer implements NormalizerInterface {
    * @return bool
    *   Returns TRUE if the normalizer can handle the request.
    */
-  public function supportsNormalization($data, $format = NULL) {
+  public function supportsNormalization($data, $format = NULL): bool {
     return static::$format === $format;
   }
 
