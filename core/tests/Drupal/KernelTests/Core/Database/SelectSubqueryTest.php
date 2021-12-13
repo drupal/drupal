@@ -232,7 +232,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // Subquery to {test_people}.
     $subquery = $this->connection->select('test_people', 'tp')
       ->fields('tp', ['name'])
-      ->where('[tp].[name] = [t].[name]');
+      ->where('[tp].[age] = [t].[age]');
     $query->exists($subquery);
     $result = $query->execute();
 
@@ -263,7 +263,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // Subquery to {test_people}.
     $subquery = $this->connection->select('test_people', 'tp')
       ->fields('tp', ['name'])
-      ->where('[tp].[name] = [t].[name]');
+      ->where('[tp].[age] = [t].[age]');
     $query->notExists($subquery);
 
     // Ensure that we got the right number of records.
