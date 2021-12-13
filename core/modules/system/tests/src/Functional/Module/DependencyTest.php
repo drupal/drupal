@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -94,6 +95,48 @@ class DependencyTest extends ModuleTestBase {
     $this->assertSession()->pageTextContains('System core incompatible semver test (incompatible with this version of Drupal core)');
     $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-incompatible-core-version-dependencies-test"]//span[@class="admin-missing"]', 'incompatible with');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_core_version_dependencies_test][enable]');
+  }
+
+  /**
+   * Tests visiting admin/modules when a module outside of core has no version.
+   */
+  public function testNoVersionInfo() {
+    // Create a module for testing. We set core_version_requirement to '*' for
+    // the test so that it does not need to be updated between major versions.
+    $info = [
+      'type' => 'module',
+      'core_version_requirement' => '*',
+      'name' => 'System no module version dependency test',
+    ];
+    $path = $this->siteDirectory . '/modules/system_no_module_version_dependency_test';
+    mkdir($path, 0777, TRUE);
+    file_put_contents("$path/system_no_module_version_dependency_test.info.yml", Yaml::encode($info));
+
+    $info = [
+      'type' => 'module',
+      'core_version_requirement' => '*',
+      'name' => 'System no module version test',
+      'dependencies' => ['system_no_module_version_dependency_test'],
+    ];
+    $path = $this->siteDirectory . '/modules/system_no_module_version_test';
+    mkdir($path, 0777, TRUE);
+    file_put_contents("$path/system_no_module_version_test.info.yml", Yaml::encode($info));
+
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->pageTextContains('System no module version dependency test');
+    $this->assertSession()->pageTextContains('System no module version test');
+
+    // Ensure the modules can actually be installed.
+    $edit['modules[system_no_module_version_test][enable]'] = 'system_no_module_version_test';
+    $edit['modules[system_no_module_version_dependency_test][enable]'] = 'system_no_module_version_dependency_test';
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('2 modules have been enabled: System no module version dependency test, System no module version test.');
+
+    // Ensure status report is working.
+    $this->drupalLogin($this->createUser(['administer site configuration']));
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
