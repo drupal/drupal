@@ -63,7 +63,6 @@ class UpdateContribTest extends UpdateTestBase {
     ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => 'no-releases']);
-    $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
@@ -277,9 +276,6 @@ class UpdateContribTest extends UpdateTestBase {
           'aaa_update_test' => str_replace('.', '_', $version) . $extra_version,
         ]);
         $this->standardTests();
-        $this->drupalGet('admin/reports/updates');
-        $this->clickLink('Check manually');
-        $this->checkForMetaRefresh();
         $assert_session->pageTextNotContains('Security update required!');
         // The XML test fixtures for this method all contain the '8.x-3.0'
         // release but because '8.x-3.0' is not in a supported branch it will
@@ -550,7 +546,6 @@ class UpdateContribTest extends UpdateTestBase {
         'aaa_update_test' => '1_0',
       ]
     );
-    $this->drupalGet('admin/reports/updates');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextContains('Security update required!');
     $this->assertSession()->linkExists('AAA Update test');
