@@ -70,7 +70,7 @@ final class Serializer extends SymfonySerializer {
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $type, $format = NULL, array $context = []) {
+  public function denormalize($data, $type, $format = NULL, array $context = []): mixed {
     if ($this->selfSupportsDenormalization($data, $type, $format, $context)) {
       return parent::denormalize($data, $type, $format, $context);
     }

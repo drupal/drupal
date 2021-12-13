@@ -63,7 +63,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     // If we get here, it's via a relationship POST/PATCH.
     /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
     $resource_type = $context['resource_type'];

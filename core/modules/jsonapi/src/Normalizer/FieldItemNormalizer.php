@@ -89,7 +89,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $item_definition = $context['field_definition']->getItemDefinition();
     assert($item_definition instanceof FieldItemDataDefinitionInterface);
 

@@ -24,7 +24,7 @@ class ConfigEntityNormalizer extends EntityNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     return parent::denormalize(static::getDataWithoutInternals($data), $class, $format, $context);
   }
 

@@ -40,7 +40,7 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $entity_type_id = $this->determineEntityTypeId($class, $context);
     $entity_type_definition = $this->getEntityTypeDefinition($entity_type_id);
 

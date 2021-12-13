@@ -81,7 +81,7 @@ abstract class EntityDenormalizerBase extends NormalizerBase implements Denormal
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     if (empty($context['resource_type']) || !$context['resource_type'] instanceof ResourceType) {
       throw new PreconditionFailedHttpException('Missing context during denormalization.');
     }

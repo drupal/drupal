@@ -42,7 +42,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $field_definition = $context['field_definition'];
     assert($field_definition instanceof FieldDefinitionInterface);
     $resource_type = $context['resource_type'];
