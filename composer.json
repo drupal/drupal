@@ -49,6 +49,11 @@
         "autoloader-suffix": "Drupal9",
         "platform": {
             "php": "8.0.0"
+        },
+        "allow-plugins": {
+            "composer/installers": true,
+            "drupal/core-project-message": true,
+            "drupal/core-vendor-hardening": true
         }
     },
     "extra": {
