@@ -56,7 +56,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * {@inheritdoc}
    */
-  public function dump(array $options = []) {
+  public function dump(array $options = []): string|array {
     return serialize($this->getArray());
   }
 
