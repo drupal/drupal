@@ -12,7 +12,7 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group update
  */
-class UpdateUploadTest extends UpdateTestBase {
+class UpdateUploadTest extends UpdateUploaderTestBase {
 
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
