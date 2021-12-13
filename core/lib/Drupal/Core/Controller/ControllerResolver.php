@@ -78,7 +78,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   /**
    * {@inheritdoc}
    */
-  public function getController(Request $request) {
+  public function getController(Request $request): callable|FALSE {
     if (!$controller = $request->attributes->get('_controller')) {
       return FALSE;
     }
