@@ -32,7 +32,7 @@ class DbImportCommand extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $script = $input->getArgument('script');
     if (!is_file($script)) {
       $output->writeln('File must exist.');

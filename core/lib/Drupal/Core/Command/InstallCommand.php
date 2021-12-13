@@ -60,7 +60,7 @@ class InstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $io = new SymfonyStyle($input, $output);
     if (!extension_loaded('pdo_sqlite')) {
       $io->getErrorStyle()->error('You must have the pdo_sqlite PHP extension installed. See core/INSTALL.sqlite.txt for instructions.');

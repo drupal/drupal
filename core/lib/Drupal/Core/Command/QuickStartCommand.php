@@ -44,7 +44,7 @@ class QuickStartCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $command = $this->getApplication()->find('install');
 
     $arguments = [

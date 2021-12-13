@@ -48,7 +48,7 @@ class DbDumpCommand extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $connection = $this->getDatabaseConnection($input);
 
     // If not explicitly set, disable ANSI which will break generated php.

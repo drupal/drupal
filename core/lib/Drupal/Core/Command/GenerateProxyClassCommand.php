@@ -50,7 +50,7 @@ class GenerateProxyClassCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $class_name = ltrim($input->getArgument('class_name'), '\\');
     $namespace_root = $input->getArgument('namespace_root_path');
 

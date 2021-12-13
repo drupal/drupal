@@ -37,7 +37,7 @@ class TestSiteTearDownCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $db_prefix = $input->getArgument('db-prefix');
     // Validate the db_prefix argument.
     try {

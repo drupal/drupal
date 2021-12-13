@@ -81,7 +81,7 @@ class TestSiteInstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     // Determines and validates the setup class prior to installing a database
     // to avoid creating unnecessary sites.
     $root = dirname(__DIR__, 5);

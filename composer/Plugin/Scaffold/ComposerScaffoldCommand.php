@@ -47,7 +47,7 @@ EOT
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $handler = new Handler($this->getComposer(), $this->getIO());
     $handler->scaffold();
     return 0;
