@@ -860,7 +860,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     if ($this->options['field_api_classes']) {
-      return [['rendered' => $this->renderer->render($build_list)]];
+      return [['rendered' => $build_list]];
     }
 
     // Render using the formatted data itself.

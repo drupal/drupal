@@ -340,6 +340,27 @@ class FieldFieldTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests the result of a view field with field_api_classes enabled.
+   */
+  public function testFieldApiClassesRender() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $executable = Views::getView('test_field_field_test');
+    $executable->initHandlers();
+
+    // Enable field_api_classes for the id field.
+    $id_field = $executable->field['id'];
+    $id_field->options['field_api_classes'] = TRUE;
+
+    // Test that the ID field renders with multiple divs from field template.
+    $output = $executable->preview();
+    $output = $renderer->renderRoot($output);
+    $this->setRawContent($output);
+    $field_values = $this->xpath('//div[contains(@class, "views-field-id")]/span[contains(@class, :class)]/div', [':class' => 'field-content']);
+    $this->assertNotEmpty($field_values);
+  }
+
+  /**
    * Tests the result of a view with complex field configuration.
    *
    * A complex field configuration contains multiple times the same field, with
