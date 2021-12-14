@@ -29,7 +29,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Add a node classic migrate table to the destination site so that tests
     // run by default with the classic node migrations.

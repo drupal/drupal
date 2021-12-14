@@ -50,7 +50,7 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $auth = isset(static::$auth) ? [static::$auth] : [];

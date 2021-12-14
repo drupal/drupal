@@ -22,7 +22,7 @@ class VendorHardeningPluginTest extends TestCase {
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
 
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     vfsStream::setup('vendor', NULL, [
       'drupal' => [

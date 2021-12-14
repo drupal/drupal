@@ -20,7 +20,7 @@ class MigrateResponsiveImageStylesTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations(['d7_image_styles', 'd7_responsive_image_styles']);
   }

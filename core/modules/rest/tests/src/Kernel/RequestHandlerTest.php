@@ -40,7 +40,7 @@ class RequestHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $serializer = $this->prophesize(SerializerInterface::class);
     $serializer->willImplement(DecoderInterface::class);

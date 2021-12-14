@@ -83,11 +83,6 @@ final class ClassWriter {
     $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/abstract class TestCase[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillTestCaseTrait;" . \PHP_EOL, $alteredCode, 1);
     $alteredCode = str_replace("__DIR__ . '/../Util/", "'$phpunit_dir/src/Util/", $alteredCode);
-    // While Drupal still allows methods in test base classes that inherit from
-    // TestCase with no void return typehints specified, we also alter TestCase
-    // to remove the typehints.
-    // @see https://www.drupal.org/project/drupal/issues/3182103
-    $alteredCode = preg_replace('/^    ((?:protected|public)(?: static)? function \w+\(\)): void/m', '    $1', $alteredCode);
     include static::flushAlteredCodeToFile('TestCase.php', $alteredCode);
   }
 

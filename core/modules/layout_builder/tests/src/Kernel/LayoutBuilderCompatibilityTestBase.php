@@ -37,7 +37,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_base_field_display');

@@ -36,7 +36,7 @@ class MigrateLookupTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->setTestLogger();
     $this->migrateLookup = $this->container->get('migrate.lookup');

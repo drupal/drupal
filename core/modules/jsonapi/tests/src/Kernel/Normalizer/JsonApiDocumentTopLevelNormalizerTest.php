@@ -199,7 +199,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown(): void {
+  protected function tearDown(): void {
     if ($this->node) {
       $this->node->delete();
     }

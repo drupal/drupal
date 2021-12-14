@@ -30,7 +30,7 @@ abstract class StorageTestBase extends KernelTestBase {
    */
   protected $factory = 'keyvalue';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Define two data collections,

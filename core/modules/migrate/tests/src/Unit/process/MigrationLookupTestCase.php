@@ -28,7 +28,7 @@ abstract class MigrationLookupTestCase extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migrateStub = $this->prophesize(MigrateStub::class);
     $this->migrateLookup = $this->prophesize(MigrateLookupInterface::class);

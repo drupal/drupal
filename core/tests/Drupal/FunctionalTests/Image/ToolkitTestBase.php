@@ -52,7 +52,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
    */
   protected $image;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Set the image factory service.

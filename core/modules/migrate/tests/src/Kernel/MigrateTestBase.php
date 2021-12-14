@@ -63,7 +63,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->createMigrationConnection();
     $this->sourceDatabase = Database::getConnection('default', 'migrate');
@@ -104,7 +104,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     $this->cleanupMigrateConnection();
     parent::tearDown();
     $this->databaseDumpFiles = [];

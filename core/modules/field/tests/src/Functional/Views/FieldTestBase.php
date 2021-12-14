@@ -42,7 +42,7 @@ abstract class FieldTestBase extends ViewTestBase {
    */
   public $fields;
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     // Ensure the page node type exists.

@@ -75,7 +75,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUpAppRoot();
 
     $this->isInstalled = FALSE;

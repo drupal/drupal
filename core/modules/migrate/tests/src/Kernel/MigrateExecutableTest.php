@@ -16,7 +16,7 @@ class MigrateExecutableTest extends MigrateTestBase {
     'user',
   ];
 
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');

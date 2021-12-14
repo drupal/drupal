@@ -45,7 +45,7 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $plugin_definition = new TestContextAwarePluginDefinition();
     $plugin_definition->addContextDefinition('nato_letter', ContextDefinition::create('string'));

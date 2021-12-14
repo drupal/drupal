@@ -48,7 +48,7 @@ class MonthDatePluginTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp($import_test_views = TRUE): void {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $utc = new \DateTimeZone('UTC');
     $format = 'Y-m-d h:i:s';

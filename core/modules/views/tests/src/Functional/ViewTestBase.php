@@ -29,7 +29,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    */
   protected static $modules = ['views', 'views_test_config'];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
     if ($import_test_views) {
       ViewTestData::createTestViews(static::class, ['views_test_config']);

@@ -145,7 +145,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     static::checkClassCommandRequirements();
   }
@@ -153,7 +153,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     static::checkMethodCommandRequirements($this->getName());
     $this->phpFinder = new PhpExecutableFinder();
@@ -169,7 +169,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
 
     $this->stopServer();

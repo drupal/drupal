@@ -12,7 +12,7 @@ class UpdateUploaderTestBase extends UpdateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Change the root path which Update Manager uses to install and update

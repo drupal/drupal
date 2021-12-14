@@ -49,7 +49,7 @@ class SqlTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->database = \Drupal::database();
     $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class)

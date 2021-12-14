@@ -72,7 +72,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
   /**
    * Sets the test up.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->workflow = $this->createEditorialWorkflow();
     $this->adminUser = $this->drupalCreateUser($this->permissions);

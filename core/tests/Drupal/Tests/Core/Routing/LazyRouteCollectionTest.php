@@ -32,7 +32,7 @@ class LazyRouteCollectionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->routeProvider = $this->createMock(RouteProviderInterface::class);
     $this->testRoutes = new \ArrayIterator([

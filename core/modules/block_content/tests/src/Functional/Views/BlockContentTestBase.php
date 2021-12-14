@@ -40,7 +40,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     'block_content_test_views',
   ];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     // Ensure the basic bundle exists. This is provided by the standard profile.
     $this->createBlockContentType(['id' => 'basic']);

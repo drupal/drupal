@@ -16,7 +16,7 @@ class MigrationProcessTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     self::$modules = array_keys($this->coreModuleListDataProvider());
     parent::setUp();
   }

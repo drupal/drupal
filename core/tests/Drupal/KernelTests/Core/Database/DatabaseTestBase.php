@@ -22,7 +22,7 @@ abstract class DatabaseTestBase extends KernelTestBase {
    */
   protected $connection;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->connection = Database::getConnection();
     $this->installSchema('database_test', [
