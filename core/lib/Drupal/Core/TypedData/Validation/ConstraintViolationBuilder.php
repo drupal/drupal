@@ -146,7 +146,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function atPath($path)
+    public function atPath($path): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::atPath() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->propertyPath = PropertyPath::append($this->propertyPath, $path);
@@ -163,7 +163,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setParameter($key, $value)
+    public function setParameter($key, $value): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setParameter() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->parameters[$key] = $value;
@@ -180,7 +180,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setParameters(array $parameters)
+    public function setParameters(array $parameters): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setParameters() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->parameters = $parameters;
@@ -197,7 +197,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setTranslationDomain($translationDomain)
+    public function setTranslationDomain($translationDomain): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setTranslationDomain() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->translationDomain = $translationDomain;
@@ -214,7 +214,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setInvalidValue($invalidValue)
+    public function setInvalidValue($invalidValue): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setInvalidValue() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->invalidValue = $invalidValue;
@@ -231,7 +231,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setPlural($number)
+    public function setPlural($number): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setPlural() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->plural = $number;
@@ -248,7 +248,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setCode($code)
+    public function setCode($code): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setCode() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->code = $code;
@@ -265,7 +265,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
      *
      * @see https://www.drupal.org/node/3238432
      */
-    public function setCause($cause)
+    public function setCause($cause): static
     {
       @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Validator\Violation\ConstraintViolationBuilder::setCause() instead. See https://www.drupal.org/node/3238432', E_USER_DEPRECATED);
       $this->cause = $cause;
