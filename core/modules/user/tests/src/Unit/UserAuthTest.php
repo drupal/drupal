@@ -3,8 +3,15 @@
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Tests\UnitTestCase;
+use Drupal\user\Authentication\Provider\Cookie;
 use Drupal\user\UserAuth;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * @coversDefaultClass \Drupal\user\UserAuth
@@ -218,6 +225,59 @@ class UserAuthTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $this->assertSame(1, $this->userAuth->authenticate($this->username, $this->password));
+  }
+
+  /**
+   * Tests the auth that ends in a redirect from subdomain to TLD.
+   */
+  public function testAddCheckToUrlForTrustedRedirectResponse(): void {
+    $site_domain = 'site.com';
+    $frontend_url = "https://$site_domain";
+    $backend_url = "https://api.$site_domain";
+    $request = Request::create($backend_url);
+    $response = new TrustedRedirectResponse($frontend_url);
+
+    $request_context = $this->createMock(RequestContext::class);
+    $request_context
+      ->method('getCompleteBaseUrl')
+      ->willReturn($backend_url);
+
+    $container = new ContainerBuilder();
+    $container->set('router.request_context', $request_context);
+    \Drupal::setContainer($container);
+
+    $session_mock = $this->createMock(SessionInterface::class);
+    $session_mock
+      ->expects($this->once())
+      ->method('has')
+      ->with('check_logged_in')
+      ->willReturn(TRUE);
+    $session_mock
+      ->expects($this->once())
+      ->method('remove')
+      ->with('check_logged_in');
+
+    $event_mock = $this->createMock(ResponseEvent::class);
+    $event_mock
+      ->expects($this->once())
+      ->method('getResponse')
+      ->willReturn($response);
+    $event_mock
+      ->expects($this->exactly(3))
+      ->method('getRequest')
+      ->willReturn($request);
+
+    $request
+      ->setSession($session_mock);
+
+    $this
+      ->getMockBuilder(Cookie::class)
+      ->disableOriginalConstructor()
+      ->onlyMethods([])
+      ->getMock()
+      ->addCheckToUrl($event_mock);
+
+    $this->assertSame("$frontend_url?check_logged_in=1", $response->getTargetUrl());
   }
 
 }
