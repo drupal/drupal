@@ -550,4 +550,4 @@ participate in mentoring.
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
 - Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
 - (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
-- (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
+- AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
