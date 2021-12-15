@@ -5,6 +5,7 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -208,9 +209,27 @@ function system_post_update_delete_authorize_settings() {
 /**
  * Sort all configuration according to its schema.
  */
-function system_post_update_sort_all_config() {
+function system_post_update_sort_all_config(&$sandbox) {
   $factory = \Drupal::configFactory();
-  foreach ($factory->listAll() as $name) {
-    $factory->getEditable($name)->save();
+  $iteration_size = Settings::get('entity_update_batch_size', 50);
+
+  if (empty($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['all_config_names'] = $factory->listAll();
+    $sandbox['max'] = count($sandbox['all_config_names']);
+  }
+
+  $start = $sandbox['progress'];
+  $end = min($sandbox['max'], $start + $iteration_size);
+  for ($i = $start; $i < $end; $i++) {
+    $factory->getEditable($sandbox['all_config_names'][$i])->save();
+  }
+
+  if ($sandbox['max'] > 0 && $end < $sandbox['max']) {
+    $sandbox['progress'] = $end;
+    $sandbox['#finished'] = ($end - 1) / $sandbox['max'];
+  }
+  else {
+    $sandbox['#finished'] = 1;
   }
 }
