@@ -78,7 +78,6 @@ class Composer {
     'symfony/translation' => ['Tests'],
     'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
-    'symfony-cmf/routing' => ['Test', 'Tests'],
     'theseer/tokenizer' => ['tests'],
     'twig/twig' => ['doc', 'ext', 'test', 'tests'],
   ];

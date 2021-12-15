@@ -82,7 +82,6 @@ trait DeprecationListenerTrait {
       // Skip non-Symfony DebugClassLoader forward compatibility warnings.
       '%Method "(?!Symfony\\\\)[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%',
       // Skip DebugClassLoader false positives.
-      '%Method "Symfony\\\\Cmf\\\\[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "Drupal\\\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%',
       '%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%',
       '%The "Drupal\\\\[^"]+" method will require a new "[^"]+" argument in the next major version of its interface "Drupal\\\\[^"]+", not defining it is deprecated%',
       // Symfony 5.4

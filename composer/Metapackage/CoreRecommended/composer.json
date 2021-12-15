@@ -34,7 +34,6 @@
         "psr/log": "1.1.4",
         "ralouphie/getallheaders": "3.0.3",
         "stack/builder": "v1.0.6",
-        "symfony-cmf/routing": "2.3.4",
         "symfony/console": "v4.4.34",
         "symfony/debug": "v4.4.31",
         "symfony/dependency-injection": "v4.4.34",

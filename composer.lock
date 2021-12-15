@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "811ef6ec909223af09916b37daed1f40e4648b61"
+                "reference": "ded302b3b87ab926e48cbf067878daa142d624d2"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -564,7 +564,6 @@
                 "php": ">=8.0.0",
                 "psr/log": "^1.0",
                 "stack/builder": "^1.0",
-                "symfony-cmf/routing": "^2.1",
                 "symfony/console": "^4.4",
                 "symfony/dependency-injection": "^4.4",
                 "symfony/event-dispatcher": "^4.4",
@@ -2245,69 +2244,6 @@
                 "source": "https://github.com/stackphp/builder/tree/v1.0.6"
             },
             "time": "2020-01-30T12:17:27+00:00"
-        },
-        {
-            "name": "symfony-cmf/routing",
-            "version": "2.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony-cmf/Routing.git",
-                "reference": "bbcdf2f6301d740454ba9ebb8adaefd436c36a6b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony-cmf/Routing/zipball/bbcdf2f6301d740454ba9ebb8adaefd436c36a6b",
-                "reference": "bbcdf2f6301d740454ba9ebb8adaefd436c36a6b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ^8.0",
-                "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/http-kernel": "^4.4 || ^5.0",
-                "symfony/routing": "^4.4 || ^5.0"
-            },
-            "require-dev": {
-                "symfony-cmf/testing": "^3@dev",
-                "symfony/config": "^4.4 || ^5.0",
-                "symfony/dependency-injection": "^4.4 || ^5.0",
-                "symfony/event-dispatcher": "^4.4 || ^5.0",
-                "symfony/phpunit-bridge": "^5.0"
-            },
-            "suggest": {
-                "symfony/event-dispatcher": "DynamicRouter can optionally trigger an event at the start of matching. Minimal version (^4.4 || ^5.0)"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Cmf\\Component\\Routing\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony CMF Community",
-                    "homepage": "https://github.com/symfony-cmf/Routing/contributors"
-                }
-            ],
-            "description": "Extends the Symfony routing component for dynamic routes and chaining several routers",
-            "homepage": "http://cmf.symfony.com",
-            "keywords": [
-                "database",
-                "routing"
-            ],
-            "support": {
-                "issues": "https://github.com/symfony-cmf/Routing/issues",
-                "source": "https://github.com/symfony-cmf/Routing/tree/2.3.4"
-            },
-            "time": "2021-11-08T16:33:10+00:00"
         },
         {
             "name": "symfony/console",
