@@ -245,7 +245,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Should run after any other response subscriber that modifies the markup.
     $events[KernelEvents::RESPONSE][] = ['onResponse', -512];
 

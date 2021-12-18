@@ -33,7 +33,7 @@ class UserFloodSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[UserEvents::FLOOD_BLOCKED_USER][] = ['blockedUser'];
     $events[UserEvents::FLOOD_BLOCKED_IP][] = ['blockedIp'];
     return $events;

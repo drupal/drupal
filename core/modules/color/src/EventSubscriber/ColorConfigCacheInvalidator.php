@@ -46,7 +46,7 @@ class ColorConfigCacheInvalidator implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[ConfigEvents::SAVE][] = ['onChange'];
     $events[ConfigEvents::DELETE][] = ['onChange'];
 

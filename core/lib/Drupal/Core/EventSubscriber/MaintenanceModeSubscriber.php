@@ -154,7 +154,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::REQUEST][] = ['onKernelRequestMaintenance', 30];
     $events[KernelEvents::EXCEPTION][] = ['onKernelRequestMaintenance'];
     return $events;

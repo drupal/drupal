@@ -154,7 +154,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::RESPONSE][] = ['addCheckToUrl', -1000];
     return $events;
   }

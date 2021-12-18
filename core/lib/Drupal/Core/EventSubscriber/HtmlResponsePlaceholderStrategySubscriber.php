@@ -61,7 +61,7 @@ class HtmlResponsePlaceholderStrategySubscriber implements EventSubscriberInterf
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run shortly before HtmlResponseSubscriber.
     $events[KernelEvents::RESPONSE][] = ['onRespond', 5];
     return $events;

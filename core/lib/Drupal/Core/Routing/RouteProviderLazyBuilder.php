@@ -171,7 +171,7 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Eve
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[RoutingEvents::DYNAMIC][] = ['routerRebuilding', 3000];
     $events[RoutingEvents::FINISHED][] = ['routerRebuildFinished', -3000];
     return $events;

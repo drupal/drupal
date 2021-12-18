@@ -304,7 +304,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = [];
 
     // Run after AuthenticationSubscriber (necessary for the 'user' cache

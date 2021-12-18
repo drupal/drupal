@@ -35,7 +35,7 @@ class RouteMethodSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Set a higher priority to ensure that routes get the default HTTP methods
     // as early as possible.
     $events[RoutingEvents::ALTER][] = ['onRouteBuilding', 5000];

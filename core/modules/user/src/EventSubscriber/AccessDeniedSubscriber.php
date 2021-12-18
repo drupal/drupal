@@ -78,7 +78,7 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Use a higher priority than
     // \Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber, because there's
     // no need to log the exception if we can redirect.

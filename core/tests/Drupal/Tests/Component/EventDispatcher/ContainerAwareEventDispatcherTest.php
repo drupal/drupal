@@ -621,7 +621,7 @@ class TestWithDispatcher {
 
 class TestEventSubscriber implements EventSubscriberInterface {
 
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return ['pre.foo' => 'preFoo', 'post.foo' => 'postFoo'];
   }
 
@@ -629,7 +629,7 @@ class TestEventSubscriber implements EventSubscriberInterface {
 
 class TestEventSubscriberWithPriorities implements EventSubscriberInterface {
 
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       'pre.foo' => ['preFoo', 10],
       'post.foo' => ['postFoo'],
@@ -640,7 +640,7 @@ class TestEventSubscriberWithPriorities implements EventSubscriberInterface {
 
 class TestEventSubscriberWithMultipleListeners implements EventSubscriberInterface {
 
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       'pre.foo' => [
         ['preFoo1'],

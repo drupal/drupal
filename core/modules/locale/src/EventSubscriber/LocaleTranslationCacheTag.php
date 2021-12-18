@@ -38,7 +38,7 @@ class LocaleTranslationCacheTag implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[LocaleEvents::SAVE_TRANSLATION][] = ['saveTranslation'];
     return $events;
   }

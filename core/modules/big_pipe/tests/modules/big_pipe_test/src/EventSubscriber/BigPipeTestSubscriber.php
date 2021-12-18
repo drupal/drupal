@@ -71,7 +71,7 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run just before \Drupal\big_pipe\EventSubscriber\HtmlResponseBigPipeSubscriber::onRespond().
     $events[KernelEvents::RESPONSE][] = ['onRespondSetBigPipeDebugPlaceholderHeaders', -9999];
 

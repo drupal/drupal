@@ -64,7 +64,7 @@ class PathRootsSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = [];
     // Try to set a low priority to ensure that all routes are already added.
     $events[RoutingEvents::ALTER][] = ['onRouteAlter', -1024];

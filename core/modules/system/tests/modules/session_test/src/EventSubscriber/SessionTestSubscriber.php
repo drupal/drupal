@@ -48,7 +48,7 @@ class SessionTestSubscriber implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::RESPONSE][] = ['onKernelResponseSessionTest'];
     $events[KernelEvents::REQUEST][] = ['onKernelRequestSessionTest'];
     return $events;

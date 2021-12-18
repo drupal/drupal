@@ -30,7 +30,7 @@ class FinalMissingContentSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // This should always be the final event as it will mark all content
     // dependencies as resolved.
     $events[ConfigEvents::IMPORT_MISSING_CONTENT][] = ['onMissingContent', -1024];

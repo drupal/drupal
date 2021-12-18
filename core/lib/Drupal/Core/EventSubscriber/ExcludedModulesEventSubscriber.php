@@ -54,7 +54,7 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // React early on export and late on import.
     return [
       'config.transform.import' => ['onConfigTransformImport', -500],

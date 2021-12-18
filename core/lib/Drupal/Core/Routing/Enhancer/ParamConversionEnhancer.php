@@ -85,7 +85,7 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::EXCEPTION][] = ['onException', 75];
     return $events;
   }

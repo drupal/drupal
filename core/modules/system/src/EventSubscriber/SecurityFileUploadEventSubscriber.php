@@ -34,7 +34,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // This event must be run last to ensure the filename obeys the security
     // rules.
     $events[FileUploadSanitizeNameEvent::class][] = ['sanitizeName', PHP_INT_MIN];

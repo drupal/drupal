@@ -424,7 +424,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[RoutingEvents::FINISHED][] = ['reset'];
     return $events;
   }

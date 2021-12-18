@@ -34,7 +34,7 @@ class RenderArrayNonHtmlSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::VIEW][] = ['onRespond', -10];
     return $events;
   }

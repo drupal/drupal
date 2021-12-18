@@ -64,7 +64,7 @@ class EntityResourcePostRouteSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Priority -10, to run after \Drupal\rest\Routing\ResourceRoutes, which has
     // priority 0.
     $events[RoutingEvents::DYNAMIC][] = ['onDynamicRouteEvent', -10];

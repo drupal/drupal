@@ -156,7 +156,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run before exception.logger.
     $events[KernelEvents::EXCEPTION] = ['onException', 51];
     // Run before main_content_view_subscriber.

@@ -166,7 +166,7 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::CONTROLLER][] = ['onController'];
 
     return $events;

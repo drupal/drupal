@@ -70,7 +70,7 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Should run after any other response subscriber that modifies the markup.
     // @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     $events[KernelEvents::RESPONSE][] = ['onResponse', -512];

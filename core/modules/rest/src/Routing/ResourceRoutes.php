@@ -140,7 +140,7 @@ class ResourceRoutes implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[RoutingEvents::DYNAMIC] = 'onDynamicRouteEvent';
     return $events;
   }

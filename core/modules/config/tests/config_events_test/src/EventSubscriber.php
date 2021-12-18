@@ -47,7 +47,7 @@ class EventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[ConfigEvents::SAVE][] = ['configEventRecorder'];
     $events[ConfigEvents::DELETE][] = ['configEventRecorder'];
     $events[ConfigEvents::RENAME][] = ['configEventRecorder'];

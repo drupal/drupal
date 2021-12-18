@@ -101,7 +101,7 @@ class NodeTranslationMigrateSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = [];
 
     $events[MigrateEvents::POST_ROW_SAVE] = ['onPostRowSave'];

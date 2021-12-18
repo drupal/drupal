@@ -48,7 +48,7 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return static::getEntityTypeEvents();
   }
 

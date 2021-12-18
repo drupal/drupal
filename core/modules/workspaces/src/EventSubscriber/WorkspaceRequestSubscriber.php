@@ -95,7 +95,7 @@ class WorkspaceRequestSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritDoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Use a priority of 190 in order to run after the generic core subscriber.
     // @see \Drupal\Core\EventSubscriber\PathSubscriber::getSubscribedEvents()
     $events[KernelEvents::CONTROLLER][] = ['onKernelController', 190];

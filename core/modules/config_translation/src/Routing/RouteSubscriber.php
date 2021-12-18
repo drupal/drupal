@@ -46,7 +46,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Come after field_ui.
     $events[RoutingEvents::ALTER] = ['onAlterRoutes', -110];
     return $events;

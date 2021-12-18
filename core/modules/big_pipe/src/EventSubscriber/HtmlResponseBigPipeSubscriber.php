@@ -112,7 +112,7 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run after HtmlResponsePlaceholderStrategySubscriber (priority 5), i.e.
     // after BigPipeStrategy has been applied, but before normal (priority 0)
     // response subscribers have been applied, because by then it'll be too late

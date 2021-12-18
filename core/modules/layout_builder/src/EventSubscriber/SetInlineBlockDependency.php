@@ -79,7 +79,7 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       BlockContentEvents::BLOCK_CONTENT_GET_DEPENDENCY => 'onGetDependency',
     ];

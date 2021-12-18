@@ -74,7 +74,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = parent::getSubscribedEvents();
     $events[RoutingEvents::FINISHED] = ['routeRebuildFinished'];
     // Ensure to run after the entity resolver subscriber

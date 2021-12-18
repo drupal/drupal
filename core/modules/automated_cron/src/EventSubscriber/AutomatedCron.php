@@ -73,7 +73,7 @@ class AutomatedCron implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [KernelEvents::TERMINATE => [['onTerminate', 100]]];
   }
 
