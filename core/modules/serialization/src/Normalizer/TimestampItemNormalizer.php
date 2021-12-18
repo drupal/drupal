@@ -24,7 +24,7 @@ class TimestampItemNormalizer extends FieldItemNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     return parent::normalize($object, $format, $context) + [
       // 'format' is not a property on Timestamp objects. This is present to
       // assist consumers of this data.

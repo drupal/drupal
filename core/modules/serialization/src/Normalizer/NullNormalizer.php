@@ -20,7 +20,7 @@ class NullNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     return NULL;
   }
 

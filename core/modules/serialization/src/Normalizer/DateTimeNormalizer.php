@@ -54,7 +54,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
   /**
    * {@inheritdoc}
    */
-  public function normalize($datetime, $format = NULL, array $context = []) {
+  public function normalize($datetime, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($datetime instanceof DateTimeInterface);
     $drupal_date_time = $datetime->getDateTime();
     if ($drupal_date_time === NULL) {

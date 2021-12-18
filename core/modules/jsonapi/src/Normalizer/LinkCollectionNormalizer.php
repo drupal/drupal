@@ -90,7 +90,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof LinkCollection);
     $normalized = [];
     /** @var \Drupal\jsonapi\JsonApiResource\Link $link */

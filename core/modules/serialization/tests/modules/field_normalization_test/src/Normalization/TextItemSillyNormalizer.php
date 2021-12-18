@@ -18,7 +18,7 @@ class TextItemSillyNormalizer extends FieldItemNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $data = parent::normalize($object, $format, $context);
     $data['value'] .= '::silly_suffix';
     return $data;

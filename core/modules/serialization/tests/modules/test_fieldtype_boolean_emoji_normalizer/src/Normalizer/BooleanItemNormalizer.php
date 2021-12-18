@@ -19,7 +19,7 @@ class BooleanItemNormalizer extends FieldItemNormalizer implements DenormalizerI
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $data = parent::normalize($object, $format, $context);
     $data['value'] = $data['value'] ? '👍' : '👎';
     return $data;

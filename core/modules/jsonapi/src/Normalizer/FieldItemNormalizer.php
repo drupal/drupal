@@ -59,7 +59,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    * cacheability in mind, and hence bubbles cacheability out of band. This must
    * catch it, and pass it to the value object that JSON:API uses.
    */
-  public function normalize($field_item, $format = NULL, array $context = []) {
+  public function normalize($field_item, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($field_item instanceof FieldItemInterface);
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
     $values = [];

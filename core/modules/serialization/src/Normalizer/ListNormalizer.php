@@ -23,7 +23,7 @@ class ListNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $attributes = [];
     foreach ($object as $fieldItem) {
       $attributes[] = $this->serializer->normalize($fieldItem, $format, $context);

@@ -63,7 +63,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   /**
    * {@inheritdoc}
    */
-  public function normalize($field_item, $format = NULL, array $context = []) {
+  public function normalize($field_item, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     // If this is not a fieldable entity, let the parent implementation handle
     // it, only fieldable entities are supported as embedded resources.
     if (!$this->targetEntityIsFieldable($field_item)) {

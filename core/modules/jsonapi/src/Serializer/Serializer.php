@@ -57,7 +57,7 @@ final class Serializer extends SymfonySerializer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($data, $format = NULL, array $context = []) {
+  public function normalize($data, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     if ($this->selfSupportsNormalization($data, $format, $context)) {
       return parent::normalize($data, $format, $context);
     }

@@ -48,7 +48,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof ResourceIdentifier);
     $normalization = [
       'type' => $object->getTypeName(),

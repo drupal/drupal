@@ -172,7 +172,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof JsonApiDocumentTopLevel);
     $data = $object->getData();
     $document['jsonapi'] = CacheableNormalization::permanent([

@@ -74,7 +74,7 @@ abstract class EntityDenormalizerBase extends NormalizerBase implements Denormal
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     throw new \LogicException('This method should never be called.');
   }
 
