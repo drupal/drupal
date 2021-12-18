@@ -3,7 +3,7 @@
  * Node preview container styling.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .node-preview-container {
   padding-block: 0;

@@ -3,8 +3,6 @@
  * Icon link component.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   /* default */
   --icon-link-bg-color: var(--color-white);

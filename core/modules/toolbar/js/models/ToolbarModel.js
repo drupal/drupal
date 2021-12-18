@@ -25,10 +25,12 @@
         left: 0
       }
     },
-    validate: function validate(attributes, options) {
+
+    validate(attributes, options) {
       if (attributes.orientation === 'horizontal' && this.get('locked') && !options.override) {
         return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');
       }
     }
+
   });
 })(Backbone, Drupal);

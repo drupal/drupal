@@ -10,6 +10,19 @@
  * Styling for the Filter module.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 /**
  * Filter information under field.
  */
@@ -23,8 +36,8 @@
 }
 
 .filter-wrapper {
-  margin-top: 1.125rem;
-  margin-bottom: 0.5625rem;
+  margin-top: var(--sp1);
+  margin-bottom: var(--sp0-5);
 }
 
 .filter-wrapper .form-item {
@@ -40,9 +53,9 @@
 }
 
 .filter-help {
-  padding-top: 0.5625rem;
-  padding-bottom: 0.5625rem;
-  font-size: 0.75rem;
+  padding-top: var(--sp0-5);
+  padding-bottom: var(--sp0-5);
+  font-size: var(--font-size-xxs);
 }
 
 /**
@@ -52,8 +65,8 @@
  */
 
 .compose-tips__item {
-  margin-top: 1.6875rem;
-  margin-bottom: 1.6875rem;
+  margin-top: var(--sp1-5);
+  margin-bottom: var(--sp1-5);
 }
 
 /**
@@ -61,13 +74,13 @@
  */
 
 .filter-guidelines__item {
-  margin-top: 1.125rem;
-  font-size: 0.875rem;
-  line-height: 1.125rem;
+  margin-top: var(--sp1);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-s);
 }
 
 .filter-guidelines p {
-  margin-top: 0.28125rem;
+  margin-top: var(--sp0-25);
   margin-bottom: 0;
 }
 
@@ -79,16 +92,16 @@
  */
 
 .filter-tips--long {
-  margin-bottom: 1.6875rem;
+  margin-bottom: var(--sp1-5);
 }
 
 .filter-tips__item,
 .filter-tips--long p {
-  margin-top: 0.84375rem;
-  margin-bottom: 0.84375rem;
+  margin-top: var(--sp0-75);
+  margin-bottom: var(--sp0-75);
 }
 
 .filter-tips__item--short {
-  margin-top: 0.28125rem;
+  margin-top: var(--sp0-25);
   margin-bottom: 0;
 }

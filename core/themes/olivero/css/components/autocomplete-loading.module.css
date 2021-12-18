@@ -10,45 +10,63 @@
  * Visual styles for autocomplete input field.
  */
 
-:root { /* 18 18 */
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
+:root {
+  --autocomplete-search-icon-url: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18.8' viewBox='0 0 18 18.8'%3e  %3cpath fill='%237e96a7' d='M17.8,17.4l-3.6-3.6c1.4-1.5,2.2-3.4,2.2-5.6c0-4.5-3.7-8.2-8.2-8.2S0,3.7,0,8.2s3.7,8.2,8.2,8.2c1.8,0,3.4-0.6,4.7-1.5l3.7,3.7c0.3,0.3,0.8,0.3,1.2,0C18.1,18.3,18.1,17.7,17.8,17.4z M8.2,14.7c-3.6,0-6.5-2.9-6.5-6.5s2.9-6.5,6.5-6.5s6.5,2.9,6.5,6.5S11.8,14.7,8.2,14.7z'/%3e%3c/svg%3e");
+  --autocomplete-throbber-icon-url: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 10 10'%3e  %3cstyle type='text/css'%3e%40keyframes s%7b0%25%7btransform:rotate(0deg) translate(-50%25,-50%25)%7d50%25%7btransform:rotate(430deg) translate(-50%25,-50%25);stroke-dashoffset:20%7d100%25%7btransform:rotate(720deg) translate(-50%25,-50%25)%7d%7dellipse%7banimation:s 1s linear infinite%7d%3c/style%3e  %3cg transform='translate(5 5)'%3e    %3cellipse fill='none' ry='4' rx='4' cy='5' cx='5' stroke='%237e96a7' stroke-width='1' stroke-dashoffset='6.125' stroke-dasharray='25' transform='translate(-5 -5)'/%3e  %3c/g%3e%3c/svg%3e");
+  --autocomplete-throbber-IE-icon-url: url("../../images/throbber.gif");
+  --autocomplete-throbber-IE-size: 1.125rem 1.125rem; /* 18 18 */
+  --autocomplete-icon-right-offset: var(--sp1);
 }
 
 html[dir="ltr"].js .form-autocomplete {
-  padding-right: 3.375rem;
+  padding-right: var(--sp3);
 }
 
 html[dir="rtl"].js .form-autocomplete {
-  padding-left: 3.375rem;
+  padding-left: var(--sp3);
 }
 
 html.js .form-autocomplete {
-  background-color: #fff;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18.8' viewBox='0 0 18 18.8'%3e  %3cpath fill='%237e96a7' d='M17.8,17.4l-3.6-3.6c1.4-1.5,2.2-3.4,2.2-5.6c0-4.5-3.7-8.2-8.2-8.2S0,3.7,0,8.2s3.7,8.2,8.2,8.2c1.8,0,3.4-0.6,4.7-1.5l3.7,3.7c0.3,0.3,0.8,0.3,1.2,0C18.1,18.3,18.1,17.7,17.8,17.4z M8.2,14.7c-3.6,0-6.5-2.9-6.5-6.5s2.9-6.5,6.5-6.5s6.5,2.9,6.5,6.5S11.8,14.7,8.2,14.7z'/%3e%3c/svg%3e");
+  background-color: var(--color--white);
+  background-image: var(--autocomplete-search-icon-url);
   background-repeat: no-repeat;
-  background-position: right 18px center  /* LTR */
+  background-position: right var(--autocomplete-icon-right-offset) center  /* LTR */
 }
 
 html.js .form-autocomplete:disabled {
-    background-color: #f1f4f7;
+    background-color: var(--color--gray-90);
   }
 
 html.js .form-autocomplete.ui-autocomplete-loading {
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 10 10'%3e  %3cstyle type='text/css'%3e%40keyframes s%7b0%25%7btransform:rotate(0deg) translate(-50%25,-50%25)%7d50%25%7btransform:rotate(430deg) translate(-50%25,-50%25);stroke-dashoffset:20%7d100%25%7btransform:rotate(720deg) translate(-50%25,-50%25)%7d%7dellipse%7banimation:s 1s linear infinite%7d%3c/style%3e  %3cg transform='translate(5 5)'%3e    %3cellipse fill='none' ry='4' rx='4' cy='5' cx='5' stroke='%237e96a7' stroke-width='1' stroke-dashoffset='6.125' stroke-dasharray='25' transform='translate(-5 -5)'/%3e  %3c/g%3e%3c/svg%3e") no-repeat right 1.125rem center;
+    background: var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center;
   }
 
 html.js[dir="rtl"] .form-autocomplete {
-  background-color: #fff;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18.8' viewBox='0 0 18 18.8'%3e  %3cpath fill='%237e96a7' d='M17.8,17.4l-3.6-3.6c1.4-1.5,2.2-3.4,2.2-5.6c0-4.5-3.7-8.2-8.2-8.2S0,3.7,0,8.2s3.7,8.2,8.2,8.2c1.8,0,3.4-0.6,4.7-1.5l3.7,3.7c0.3,0.3,0.8,0.3,1.2,0C18.1,18.3,18.1,17.7,17.8,17.4z M8.2,14.7c-3.6,0-6.5-2.9-6.5-6.5s2.9-6.5,6.5-6.5s6.5,2.9,6.5,6.5S11.8,14.7,8.2,14.7z'/%3e%3c/svg%3e");
+  background-color: var(--color--white);
+  background-image: var(--autocomplete-search-icon-url);
   background-repeat: no-repeat;
-  background-position: left 18px center
+  background-position: left var(--autocomplete-icon-right-offset) center
 }
 
 html.js[dir="rtl"] .form-autocomplete:disabled {
-    background-color: #f1f4f7;
+    background-color: var(--color--gray-90);
   }
 
 html.js[dir="rtl"] .form-autocomplete.ui-autocomplete-loading {
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 10 10'%3e  %3cstyle type='text/css'%3e%40keyframes s%7b0%25%7btransform:rotate(0deg) translate(-50%25,-50%25)%7d50%25%7btransform:rotate(430deg) translate(-50%25,-50%25);stroke-dashoffset:20%7d100%25%7btransform:rotate(720deg) translate(-50%25,-50%25)%7d%7dellipse%7banimation:s 1s linear infinite%7d%3c/style%3e  %3cg transform='translate(5 5)'%3e    %3cellipse fill='none' ry='4' rx='4' cy='5' cx='5' stroke='%237e96a7' stroke-width='1' stroke-dashoffset='6.125' stroke-dasharray='25' transform='translate(-5 -5)'/%3e  %3c/g%3e%3c/svg%3e") no-repeat left 1.125rem center;
+    background: var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center;
   }
 
 /* IE11 does not animate inline SVG. */
@@ -59,12 +77,12 @@ html.js[dir="rtl"] .form-autocomplete.ui-autocomplete-loading {
 
 _:-ms-fullscreen,
 html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading {
-  background: url("../../images/throbber.gif") no-repeat right 1.125rem center / 1.125rem 1.125rem;
+  background: var(--autocomplete-throbber-IE-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center / var(--autocomplete-throbber-IE-size);
 }
 
 /* stylelint-disable-next-line selector-type-no-unknown */
 
 _:-ms-fullscreen,
 html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading {
-  background: url("../../images/throbber.gif") no-repeat left 1.125rem center / 1.125rem 1.125rem;
+  background: var(--autocomplete-throbber-IE-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center / var(--autocomplete-throbber-IE-size);
 }

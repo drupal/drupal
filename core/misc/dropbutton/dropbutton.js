@@ -7,17 +7,17 @@
 
 (function ($, Drupal) {
   function DropButton(dropbutton, settings) {
-    var options = $.extend({
+    const options = $.extend({
       title: Drupal.t('List additional actions')
     }, settings);
-    var $dropbutton = $(dropbutton);
+    const $dropbutton = $(dropbutton);
     this.$dropbutton = $dropbutton;
     this.$list = $dropbutton.find('.dropbutton');
     this.$actions = this.$list.find('li').addClass('dropbutton-action');
 
     if (this.$actions.length > 1) {
-      var $primary = this.$actions.slice(0, 1);
-      var $secondary = this.$actions.slice(1);
+      const $primary = this.$actions.slice(0, 1);
+      const $secondary = this.$actions.slice(1);
       $secondary.addClass('secondary-action');
       $primary.after(Drupal.theme('dropbuttonToggle', options));
       this.$dropbutton.addClass('dropbutton-multiple').on({
@@ -37,56 +37,65 @@
   }
 
   Drupal.behaviors.dropButton = {
-    attach: function attach(context, settings) {
-      var dropbuttons = once('dropbutton', '.dropbutton-wrapper', context);
+    attach(context, settings) {
+      const dropbuttons = once('dropbutton', '.dropbutton-wrapper', context);
 
       if (dropbuttons.length) {
-        var body = once('dropbutton-click', 'body');
+        const body = once('dropbutton-click', 'body');
 
         if (body.length) {
           $(body).on('click', '.dropbutton-toggle', dropbuttonClickHandler);
         }
 
-        dropbuttons.forEach(function (dropbutton) {
+        dropbuttons.forEach(dropbutton => {
           DropButton.dropbuttons.push(new DropButton(dropbutton, settings.dropbutton));
         });
       }
     }
+
   };
   $.extend(DropButton, {
     dropbuttons: []
   });
   $.extend(DropButton.prototype, {
-    toggle: function toggle(show) {
-      var isBool = typeof show === 'boolean';
+    toggle(show) {
+      const isBool = typeof show === 'boolean';
       show = isBool ? show : !this.$dropbutton.hasClass('open');
       this.$dropbutton.toggleClass('open', show);
     },
-    hoverIn: function hoverIn() {
+
+    hoverIn() {
       if (this.timerID) {
         window.clearTimeout(this.timerID);
       }
     },
-    hoverOut: function hoverOut() {
+
+    hoverOut() {
       this.timerID = window.setTimeout($.proxy(this, 'close'), 500);
     },
-    open: function open() {
+
+    open() {
       this.toggle(true);
     },
-    close: function close() {
+
+    close() {
       this.toggle(false);
     },
-    focusOut: function focusOut(e) {
+
+    focusOut(e) {
       this.hoverOut.call(this, e);
     },
-    focusIn: function focusIn(e) {
+
+    focusIn(e) {
       this.hoverIn.call(this, e);
     }
+
   });
   $.extend(Drupal.theme, {
-    dropbuttonToggle: function dropbuttonToggle(options) {
-      return "<li class=\"dropbutton-toggle\"><button type=\"button\"><span class=\"dropbutton-arrow\"><span class=\"visually-hidden\">".concat(options.title, "</span></span></button></li>");
+    dropbuttonToggle(options) {
+      return `<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
     }
+
   });
   Drupal.DropButton = DropButton;
 })(jQuery, Drupal);

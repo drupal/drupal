@@ -3,8 +3,6 @@
  * Visual styles for views exposed form.
  */
 
-@import "../base/variables.pcss.css";
-
 /**
  * Use flexbox and some margin resets to make the fields + actions go inline.
  *

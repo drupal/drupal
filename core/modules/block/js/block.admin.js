@@ -7,18 +7,18 @@
 
 (function ($, Drupal, debounce, once) {
   Drupal.behaviors.blockFilterByText = {
-    attach: function attach(context, settings) {
-      var $input = $(once('block-filter-text', 'input.block-filter-text'));
-      var $table = $($input.attr('data-element'));
-      var $filterRows;
+    attach(context, settings) {
+      const $input = $(once('block-filter-text', 'input.block-filter-text'));
+      const $table = $($input.attr('data-element'));
+      let $filterRows;
 
       function filterBlockList(e) {
-        var query = $(e.target).val().toLowerCase();
+        const query = $(e.target).val().toLowerCase();
 
         function toggleBlockEntry(index, label) {
-          var $label = $(label);
-          var $row = $label.parent().parent();
-          var textMatch = $label.text().toLowerCase().includes(query);
+          const $label = $(label);
+          const $row = $label.parent().parent();
+          const textMatch = $label.text().toLowerCase().includes(query);
           $row.toggle(textMatch);
         }
 
@@ -37,17 +37,19 @@
         $input.on('keyup', debounce(filterBlockList, 200));
       }
     }
+
   };
   Drupal.behaviors.blockHighlightPlacement = {
-    attach: function attach(context, settings) {
+    attach(context, settings) {
       if (settings.blockPlacement && $('.js-block-placed').length) {
-        once('block-highlight', '[data-drupal-selector="edit-blocks"]', context).forEach(function (container) {
-          var $container = $(container);
+        once('block-highlight', '[data-drupal-selector="edit-blocks"]', context).forEach(container => {
+          const $container = $(container);
           $('html, body').animate({
             scrollTop: $('.js-block-placed').offset().top - $container.offset().top + $container.scrollTop()
           }, 500);
         });
       }
     }
+
   };
 })(jQuery, Drupal, Drupal.debounce, once);

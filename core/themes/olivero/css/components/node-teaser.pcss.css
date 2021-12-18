@@ -3,7 +3,7 @@
  * Node Teaser specific styles.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .node--view-mode-teaser {
   position: relative; /* Anchor after pseudo-element. */

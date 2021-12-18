@@ -10,6 +10,24 @@
  * Styles for primary navigation when JavaScript is disabled.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
+:root {
+  --no-js-nav-column-width: 18.75rem;
+  --no-js-nav-column-gap: var(--sp2);
+}
+
 html:not(.js) {
   /**
    * Mobile styles for primary navigation when JS is disabled.
@@ -18,8 +36,8 @@ html:not(.js) {
 
 @media (max-width: 75rem) {
     html:not(.js) .primary-nav__menu--level-1 {
-      column-width: 18.75rem;
-      grid-column-gap: 2.25rem;
+      column-width: var(--no-js-nav-column-width);
+      grid-column-gap: var(--no-js-nav-column-gap);
     }
 
     html:not(.js) .primary-nav__menu-item {
@@ -36,35 +54,35 @@ html:not(.js) {
     }
 
     html[dir="ltr"]:not(.js) .header-nav {
-      margin-left: 2.25rem;
+      margin-left: var(--sp2);
   }
 
     html[dir="rtl"]:not(.js) .header-nav {
-      margin-right: 2.25rem;
+      margin-right: var(--sp2);
   }
 
     html[dir="ltr"]:not(.js) .header-nav {
-      margin-right: 2.25rem;
+      margin-right: var(--sp2);
   }
 
     html[dir="rtl"]:not(.js) .header-nav {
-      margin-left: 2.25rem;
+      margin-left: var(--sp2);
   }
 
     html[dir="ltr"]:not(.js) .header-nav {
-      padding-left: 2.25rem;
+      padding-left: var(--sp2);
   }
 
     html[dir="rtl"]:not(.js) .header-nav {
-      padding-right: 2.25rem;
+      padding-right: var(--sp2);
   }
 
     html[dir="ltr"]:not(.js) .header-nav {
-      padding-right: 2.25rem;
+      padding-right: var(--sp2);
   }
 
     html[dir="rtl"]:not(.js) .header-nav {
-      padding-left: 2.25rem;
+      padding-left: var(--sp2);
   }
 
     html:not(.js) .header-nav {
@@ -73,13 +91,13 @@ html:not(.js) {
       flex-basis: 100%;
       width: 100%;
       max-width: none;
-      margin-top: 2.25rem;
+      margin-top: var(--sp2);
       margin-bottom: 0;
-      padding-top: 2.25rem;
+      padding-top: var(--sp2);
       padding-bottom: 0;
       transform: none;
-      border: solid 1px #e7edf1 !important;
-      box-shadow: 0 0 36px #d7e1e8;
+      border: solid 1px var(--color--gray-80) !important;
+      box-shadow: 0 0 36px var(--color--gray-70);
     }
 
     html[dir="ltr"]:not(.js) .primary-nav__menu--level-2 {
@@ -107,8 +125,8 @@ html:not(.js) {
      */
 }
       html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-1 {
-        column-width: 18.75rem;
-        grid-column-gap: 2.25rem;
+        column-width: var(--no-js-nav-column-width);
+        grid-column-gap: var(--no-js-nav-column-gap);
       }
 
       html:not(.js) body.is-always-mobile-nav .primary-nav__menu-item {
@@ -125,35 +143,35 @@ html:not(.js) {
       }
 
       html[dir="ltr"]:not(.js) body.is-always-mobile-nav .header-nav {
-        margin-left: 2.25rem;
+        margin-left: var(--sp2);
   }
 
       html[dir="rtl"]:not(.js) body.is-always-mobile-nav .header-nav {
-        margin-right: 2.25rem;
+        margin-right: var(--sp2);
   }
 
       html[dir="ltr"]:not(.js) body.is-always-mobile-nav .header-nav {
-        margin-right: 2.25rem;
+        margin-right: var(--sp2);
   }
 
       html[dir="rtl"]:not(.js) body.is-always-mobile-nav .header-nav {
-        margin-left: 2.25rem;
+        margin-left: var(--sp2);
   }
 
       html[dir="ltr"]:not(.js) body.is-always-mobile-nav .header-nav {
-        padding-left: 2.25rem;
+        padding-left: var(--sp2);
   }
 
       html[dir="rtl"]:not(.js) body.is-always-mobile-nav .header-nav {
-        padding-right: 2.25rem;
+        padding-right: var(--sp2);
   }
 
       html[dir="ltr"]:not(.js) body.is-always-mobile-nav .header-nav {
-        padding-right: 2.25rem;
+        padding-right: var(--sp2);
   }
 
       html[dir="rtl"]:not(.js) body.is-always-mobile-nav .header-nav {
-        padding-left: 2.25rem;
+        padding-left: var(--sp2);
   }
 
       html:not(.js) body.is-always-mobile-nav .header-nav {
@@ -162,13 +180,13 @@ html:not(.js) {
         flex-basis: 100%;
         width: 100%;
         max-width: none;
-        margin-top: 2.25rem;
+        margin-top: var(--sp2);
         margin-bottom: 0;
-        padding-top: 2.25rem;
+        padding-top: var(--sp2);
         padding-bottom: 0;
         transform: none;
-        border: solid 1px #e7edf1 !important;
-        box-shadow: 0 0 36px #d7e1e8;
+        border: solid 1px var(--color--gray-80) !important;
+        box-shadow: 0 0 36px var(--color--gray-70);
       }
 
       html[dir="ltr"]:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-2 {

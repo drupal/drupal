@@ -7,28 +7,28 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.color = {
-    attach: function attach(context, settings) {
-      var i;
-      var j;
-      var colors;
-      var form = $(once('color', '#system-theme-settings .color-form', context));
+    attach(context, settings) {
+      let i;
+      let j;
+      let colors;
+      const form = $(once('color', '#system-theme-settings .color-form', context));
 
       if (form.length === 0) {
         return;
       }
 
-      var inputs = [];
-      var hooks = [];
-      var locks = [];
-      var focused = null;
+      const inputs = [];
+      const hooks = [];
+      const locks = [];
+      let focused = null;
       $(once('color', $('<div class="color-placeholder"></div>'))).prependTo(form);
-      var farb = $.farbtastic('.color-placeholder');
-      var reference = settings.color.reference;
-      Object.keys(reference || {}).forEach(function (color) {
+      const farb = $.farbtastic('.color-placeholder');
+      const reference = settings.color.reference;
+      Object.keys(reference || {}).forEach(color => {
         reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
       });
-      var height = [];
-      var width = [];
+      const height = [];
+      const width = [];
 
       function preview() {
         Drupal.color.callback(context, settings, form, farb, height, width);
@@ -41,7 +41,7 @@
       }
 
       function shiftColor(given, ref1, ref2) {
-        var d;
+        let d;
         given = farb.RGBToHSL(farb.unpack(given));
         given[0] += ref2[0] - ref1[0];
 
@@ -73,7 +73,7 @@
       }
 
       function callback(input, color, propagate, colorScheme) {
-        var matched;
+        let matched;
         $(input).css({
           backgroundColor: color,
           color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
@@ -112,9 +112,9 @@
         }
       }
 
-      Object.keys(settings.gradients || {}).forEach(function (i) {
-        $(once('color', '.color-preview')).append("<div id=\"gradient-".concat(i, "\"></div>"));
-        var gradient = $(".color-preview #gradient-".concat(i));
+      Object.keys(settings.gradients || {}).forEach(i => {
+        $(once('color', '.color-preview')).append(`<div id="gradient-${i}"></div>`);
+        const gradient = $(`.color-preview #gradient-${i}`);
         height.push(parseInt(gradient.css('height'), 10) / 10);
         width.push(parseInt(gradient.css('width'), 10) / 10);
 
@@ -123,27 +123,27 @@
         }
       });
       form.find('#edit-scheme').on('change', function () {
-        var schemes = settings.color.schemes;
-        var colorScheme = this.options[this.selectedIndex].value;
+        const schemes = settings.color.schemes;
+        const colorScheme = this.options[this.selectedIndex].value;
 
         if (colorScheme !== '' && schemes[colorScheme]) {
           colors = schemes[colorScheme];
-          Object.keys(colors || {}).forEach(function (fieldName) {
-            callback($("#edit-palette-".concat(fieldName)), colors[fieldName], false, true);
+          Object.keys(colors || {}).forEach(fieldName => {
+            callback($(`#edit-palette-${fieldName}`), colors[fieldName], false, true);
           });
           preview();
         }
       });
 
       function focus(e) {
-        var input = e.target;
+        const input = e.target;
 
         if (focused) {
           $(focused).off('keyup', farb.updateValue).off('keyup', preview).off('keyup', resetScheme).parent().removeClass('item-selected');
         }
 
         focused = input;
-        farb.linkTo(function (color) {
+        farb.linkTo(color => {
           callback(input, color, true, false);
         });
         farb.setColor(input.value);
@@ -152,12 +152,12 @@
 
       form.find('.js-color-palette input.form-text').each(function () {
         this.key = this.id.substring(13);
-        farb.linkTo(function () {}).setColor('#000').linkTo(this);
-        var i = inputs.length;
+        farb.linkTo(() => {}).setColor('#000').linkTo(this);
+        const i = inputs.length;
 
         if (inputs.length) {
-          var toggleClick = true;
-          var lock = $("<button class=\"color-palette__lock\">".concat(Drupal.t('Unlock'), "</button>")).on('click', function (e) {
+          let toggleClick = true;
+          const lock = $(`<button class="color-palette__lock">${Drupal.t('Unlock')}</button>`).on('click', function (e) {
             e.preventDefault();
 
             if (toggleClick) {
@@ -176,7 +176,7 @@
           locks.push(lock);
         }
 
-        var hook = $('<div class="color-palette__hook"></div>');
+        const hook = $('<div class="color-palette__hook"></div>');
         $(this).after(hook);
         hooks.push(hook);
         $(this).parent().find('.color-palette__lock').trigger('click');
@@ -187,5 +187,6 @@
       inputs[0].focus();
       preview();
     }
+
   };
 })(jQuery, Drupal);

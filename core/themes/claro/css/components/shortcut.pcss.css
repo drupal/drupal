@@ -4,8 +4,6 @@
  * Styling for the shortcut module.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   /**
   * Shortcut action.

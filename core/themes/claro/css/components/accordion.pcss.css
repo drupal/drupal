@@ -3,8 +3,6 @@
  * Accordion styles.
  */
 
-@import "../base/variables.pcss.css";
-
 .accordion {
   color: var(--color-text);
   border: var(--details-border-size) solid var(--details-border-color);

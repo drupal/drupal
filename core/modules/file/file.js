@@ -7,9 +7,9 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.fileValidateAutoAttach = {
-    attach: function attach(context, settings) {
-      var $context = $(context);
-      var elements;
+    attach(context, settings) {
+      const $context = $(context);
+      let elements;
 
       function initFileValidation(selector) {
         $(once('fileValidate', $context.find(selector))).on('change.fileValidate', {
@@ -22,9 +22,10 @@
         Object.keys(elements).forEach(initFileValidation);
       }
     },
-    detach: function detach(context, settings, trigger) {
-      var $context = $(context);
-      var elements;
+
+    detach(context, settings, trigger) {
+      const $context = $(context);
+      let elements;
 
       function removeFileValidation(selector) {
         $(once.remove('fileValidate', $context.find(selector))).off('change.fileValidate', Drupal.file.validateExtension);
@@ -35,98 +36,110 @@
         Object.keys(elements).forEach(removeFileValidation);
       }
     }
+
   };
   Drupal.behaviors.fileAutoUpload = {
-    attach: function attach(context) {
+    attach(context) {
       $(once('auto-file-upload', 'input[type="file"]', context)).on('change.autoFileUpload', Drupal.file.triggerUploadButton);
     },
-    detach: function detach(context, settings, trigger) {
+
+    detach(context, settings, trigger) {
       if (trigger === 'unload') {
         $(once.remove('auto-file-upload', 'input[type="file"]', context)).off('.autoFileUpload');
       }
     }
+
   };
   Drupal.behaviors.fileButtons = {
-    attach: function attach(context) {
-      var $context = $(context);
+    attach(context) {
+      const $context = $(context);
       $context.find('.js-form-submit').on('mousedown', Drupal.file.disableFields);
       $context.find('.js-form-managed-file .js-form-submit').on('mousedown', Drupal.file.progressBar);
     },
-    detach: function detach(context, settings, trigger) {
+
+    detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        var $context = $(context);
+        const $context = $(context);
         $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
         $context.find('.js-form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
       }
     }
+
   };
   Drupal.behaviors.filePreviewLinks = {
-    attach: function attach(context) {
+    attach(context) {
       $(context).find('div.js-form-managed-file .file a').on('click', Drupal.file.openInNewWindow);
     },
-    detach: function detach(context) {
+
+    detach(context) {
       $(context).find('div.js-form-managed-file .file a').off('click', Drupal.file.openInNewWindow);
     }
+
   };
   Drupal.file = Drupal.file || {
-    validateExtension: function validateExtension(event) {
+    validateExtension(event) {
       event.preventDefault();
       $('.file-upload-js-error').remove();
-      var extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
+      const extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
 
       if (extensionPattern.length > 1 && this.value.length > 0) {
-        var acceptableMatch = new RegExp("\\.(".concat(extensionPattern, ")$"), 'gi');
+        const acceptableMatch = new RegExp(`\\.(${extensionPattern})$`, 'gi');
 
         if (!acceptableMatch.test(this.value)) {
-          var error = Drupal.t('The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.', {
+          const error = Drupal.t('The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.', {
             '%filename': this.value.replace('C:\\fakepath\\', ''),
             '%extensions': extensionPattern.replace(/\|/g, ', ')
           });
-          $(this).closest('div.js-form-managed-file').prepend("<div class=\"messages messages--error file-upload-js-error\" aria-live=\"polite\">".concat(error, "</div>"));
+          $(this).closest('div.js-form-managed-file').prepend(`<div class="messages messages--error file-upload-js-error" aria-live="polite">${error}</div>`);
           this.value = '';
           event.stopImmediatePropagation();
         }
       }
     },
-    triggerUploadButton: function triggerUploadButton(event) {
+
+    triggerUploadButton(event) {
       $(event.target).closest('.js-form-managed-file').find('.js-form-submit[data-drupal-selector$="upload-button"]').trigger('mousedown');
     },
-    disableFields: function disableFields(event) {
-      var $clickedButton = $(this);
+
+    disableFields(event) {
+      const $clickedButton = $(this);
       $clickedButton.trigger('formUpdated');
-      var $enabledFields = [];
+      let $enabledFields = [];
 
       if ($clickedButton.closest('div.js-form-managed-file').length > 0) {
         $enabledFields = $clickedButton.closest('div.js-form-managed-file').find('input.js-form-file');
       }
 
-      var $fieldsToTemporarilyDisable = $('div.js-form-managed-file input.js-form-file').not($enabledFields).not(':disabled');
+      const $fieldsToTemporarilyDisable = $('div.js-form-managed-file input.js-form-file').not($enabledFields).not(':disabled');
       $fieldsToTemporarilyDisable.prop('disabled', true);
-      setTimeout(function () {
+      setTimeout(() => {
         $fieldsToTemporarilyDisable.prop('disabled', false);
       }, 1000);
     },
-    progressBar: function progressBar(event) {
-      var $clickedButton = $(this);
-      var $progressId = $clickedButton.closest('div.js-form-managed-file').find('input.file-progress');
+
+    progressBar(event) {
+      const $clickedButton = $(this);
+      const $progressId = $clickedButton.closest('div.js-form-managed-file').find('input.file-progress');
 
       if ($progressId.length) {
-        var originalName = $progressId.attr('name');
+        const originalName = $progressId.attr('name');
         $progressId.attr('name', originalName.match(/APC_UPLOAD_PROGRESS|UPLOAD_IDENTIFIER/)[0]);
-        setTimeout(function () {
+        setTimeout(() => {
           $progressId.attr('name', originalName);
         }, 1000);
       }
 
-      setTimeout(function () {
+      setTimeout(() => {
         $clickedButton.closest('div.js-form-managed-file').find('div.ajax-progress-bar').slideDown();
       }, 500);
       $clickedButton.trigger('fileUpload');
     },
-    openInNewWindow: function openInNewWindow(event) {
+
+    openInNewWindow(event) {
       event.preventDefault();
       $(this).attr('target', '_blank');
       window.open(this.href, 'filePreview', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=500,height=550');
     }
+
   };
 })(jQuery, Drupal);

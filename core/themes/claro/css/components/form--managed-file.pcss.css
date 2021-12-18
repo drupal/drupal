@@ -5,8 +5,6 @@
  * This includes the styles for the file widgets and the image widgets.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   --file-widget-form-item-min-width: 16rem;
   --file-widget-form-item-max-width: 32rem;

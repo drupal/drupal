@@ -76,8 +76,8 @@
 
 @media screen and (min-width: 61rem) {
   .system-status-report-counters__item {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: var(--space-s);
+    padding-bottom: var(--space-s);
   }
   .system-status-counter__status-icon,
   .system-status-counter {

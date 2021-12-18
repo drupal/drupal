@@ -7,16 +7,16 @@
 
 (function ($, _, Drupal) {
   Drupal.quickedit.editors.image = Drupal.quickedit.EditorView.extend({
-    initialize: function initialize(options) {
+    initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
       this.model.set('originalValue', this.$el.html().trim());
       this.model.set('currentValue', function (index, value) {
-        var matches = $(this).attr('name').match(/(alt|title)]$/);
+        const matches = $(this).attr('name').match(/(alt|title)]$/);
 
         if (matches) {
-          var name = matches[1];
-          var $toolgroup = $("#".concat(options.fieldModel.toolbarView.getMainWysiwygToolgroupId()));
-          var $input = $toolgroup.find(".quickedit-image-field-info input[name=\"".concat(name, "\"]"));
+          const name = matches[1];
+          const $toolgroup = $(`#${options.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`);
+          const $input = $toolgroup.find(`.quickedit-image-field-info input[name="${name}"]`);
 
           if ($input.length) {
             return $input.val();
@@ -24,8 +24,9 @@
         }
       });
     },
-    stateChange: function stateChange(fieldModel, state, options) {
-      var from = fieldModel.previous('state');
+
+    stateChange(fieldModel, state, options) {
+      const from = fieldModel.previous('state');
 
       switch (state) {
         case 'inactive':
@@ -47,7 +48,7 @@
           break;
 
         case 'activating':
-          _.defer(function () {
+          _.defer(() => {
             fieldModel.set('state', 'active');
           });
 
@@ -55,9 +56,9 @@
 
         case 'active':
           {
-            var self = this;
+            const self = this;
             this.$el.addClass('quickedit-image-element');
-            var $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
+            const $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
             $dropzone.on('dragenter', function (e) {
               $(this).addClass('hover');
             });
@@ -70,14 +71,14 @@
                 self.uploadImage(e.originalEvent.dataTransfer.files[0]);
               }
             });
-            $dropzone.on('click', function (e) {
+            $dropzone.on('click', e => {
               $('<input type="file">').trigger('click').on('change', function () {
                 if (this.files.length) {
                   self.uploadImage(this.files[0]);
                 }
               });
             });
-            $dropzone.on('dragover dragenter dragleave drop click', function (e) {
+            $dropzone.on('dragover dragenter dragleave drop click', e => {
               e.preventDefault();
               e.stopPropagation();
             });
@@ -104,42 +105,48 @@
           break;
       }
     },
-    uploadImage: function uploadImage(file) {
+
+    uploadImage(file) {
       this.renderDropzone('upload loading', Drupal.t('Uploading <i>@file</i>…', {
         '@file': file.name
       }));
-      var fieldID = this.fieldModel.get('fieldID');
-      var url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/upload/!entity_type/!id/!field_name/!langcode/!view_mode'));
-      var data = new FormData();
+      const fieldID = this.fieldModel.get('fieldID');
+      const url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/upload/!entity_type/!id/!field_name/!langcode/!view_mode'));
+      const data = new FormData();
       data.append('files[image]', file);
-      var self = this;
+      const self = this;
       this.ajax({
         type: 'POST',
-        url: url,
-        data: data,
-        success: function success(response) {
-          var $el = $(self.fieldModel.get('el'));
+        url,
+        data,
+
+        success(response) {
+          const $el = $(self.fieldModel.get('el'));
           self.fieldModel.set('state', 'changed');
           self.fieldModel.get('entity').set('inTempStore', true);
           self.removeValidationErrors();
-          var $content = $(response.html).closest('[data-quickedit-field-id]').children();
+          const $content = $(response.html).closest('[data-quickedit-field-id]').children();
           $el.empty().append($content);
         }
+
       });
     },
-    ajax: function ajax(options) {
-      var defaultOptions = {
+
+    ajax(options) {
+      const defaultOptions = {
         context: this,
         dataType: 'json',
         cache: false,
         contentType: false,
         processData: false,
-        error: function error() {
+
+        error() {
           this.renderDropzone('error', Drupal.t('A server error has occurred.'));
         }
+
       };
-      var ajaxOptions = $.extend(defaultOptions, options);
-      var successCallback = ajaxOptions.success;
+      const ajaxOptions = $.extend(defaultOptions, options);
+      const successCallback = ajaxOptions.success;
 
       ajaxOptions.success = function (response) {
         if (response.main_error) {
@@ -157,47 +164,53 @@
 
       $.ajax(ajaxOptions);
     },
-    renderToolbar: function renderToolbar(fieldModel) {
-      var $toolgroup = $("#".concat(fieldModel.toolbarView.getMainWysiwygToolgroupId()));
-      var $toolbar = $toolgroup.find('.quickedit-image-field-info');
+
+    renderToolbar(fieldModel) {
+      const $toolgroup = $(`#${fieldModel.toolbarView.getMainWysiwygToolgroupId()}`);
+      let $toolbar = $toolgroup.find('.quickedit-image-field-info');
 
       if ($toolbar.length === 0) {
-        var fieldID = fieldModel.get('fieldID');
-        var url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/info/!entity_type/!id/!field_name/!langcode/!view_mode'));
-        var self = this;
+        const fieldID = fieldModel.get('fieldID');
+        const url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/info/!entity_type/!id/!field_name/!langcode/!view_mode'));
+        const self = this;
         self.ajax({
           type: 'GET',
-          url: url,
-          success: function success(response) {
+          url,
+
+          success(response) {
             $toolbar = $(Drupal.theme.quickeditImageToolbar(response));
             $toolgroup.append($toolbar);
-            $toolbar.on('keyup paste', function () {
+            $toolbar.on('keyup paste', () => {
               fieldModel.set('state', 'changed');
             });
             fieldModel.get('entity').toolbarView.position();
           }
+
         });
       }
     },
-    renderDropzone: function renderDropzone(state, text) {
-      var $dropzone = this.$el.find('.quickedit-image-dropzone');
+
+    renderDropzone(state, text) {
+      let $dropzone = this.$el.find('.quickedit-image-dropzone');
 
       if ($dropzone.length) {
-        $dropzone.removeClass('upload error hover loading').addClass(".quickedit-image-dropzone ".concat(state)).children('.quickedit-image-text').html(text);
+        $dropzone.removeClass('upload error hover loading').addClass(`.quickedit-image-dropzone ${state}`).children('.quickedit-image-text').html(text);
       } else {
         $dropzone = $(Drupal.theme('quickeditImageDropzone', {
-          state: state,
-          text: text
+          state,
+          text
         }));
         this.$el.append($dropzone);
       }
 
       return $dropzone;
     },
-    revert: function revert() {
+
+    revert() {
       this.$el.html(this.model.get('originalValue'));
     },
-    getQuickEditUISettings: function getQuickEditUISettings() {
+
+    getQuickEditUISettings() {
       return {
         padding: false,
         unifiedToolbar: true,
@@ -205,17 +218,20 @@
         popup: false
       };
     },
-    showValidationErrors: function showValidationErrors() {
-      var errors = Drupal.theme('quickeditImageErrors', {
+
+    showValidationErrors() {
+      const errors = Drupal.theme('quickeditImageErrors', {
         errors: this.model.get('validationErrors')
       });
-      $("#".concat(this.fieldModel.toolbarView.getMainWysiwygToolgroupId())).append(errors);
+      $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`).append(errors);
       this.getEditedElement().addClass('quickedit-validation-error');
       this.fieldModel.get('entity').toolbarView.position();
     },
-    removeValidationErrors: function removeValidationErrors() {
-      $("#".concat(this.fieldModel.toolbarView.getMainWysiwygToolgroupId())).find('.quickedit-image-errors').remove();
+
+    removeValidationErrors() {
+      $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`).find('.quickedit-image-errors').remove();
       this.getEditedElement().removeClass('quickedit-validation-error');
     }
+
   });
 })(jQuery, _, Drupal);

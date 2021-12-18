@@ -7,10 +7,11 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.tableDragTest = {
-    attach: function attach(context) {
-      $(once('tabledrag-test', '.tabledrag-handle', context)).on('keydown.tabledrag-test', function (event) {
+    attach(context) {
+      $(once('tabledrag-test', '.tabledrag-handle', context)).on('keydown.tabledrag-test', event => {
         $(event.currentTarget).removeClass('tabledrag-test-dragging');
       });
     }
+
   };
 })(jQuery, Drupal);

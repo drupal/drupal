@@ -9,12 +9,20 @@
  * CKEditor frame styles.
  */
 /** cspell:ignore grouptitle */
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+/* Navigation related breakpoints */
+/* Grid related breakpoints */
+/* Grid shifts from 6 to 14 columns. */
+/* Width of the entire grid maxes out. */
 .cke_editable {
-  margin: 1.125rem;
+  margin: var(--sp1);
   background-image: none;
 }
 [dir].cke_panel_container body {
-  background: #fff;
+  background: var(--color--white);
 }
 .cke_panel_listItem a > * {
   margin-top: 0;
@@ -24,10 +32,10 @@
   margin: 0;
 }
 [dir="ltr"] .cke_editable blockquote {
-  margin-left: 3.375rem;
+  margin-left: var(--sp3);
 }
 [dir="rtl"] .cke_editable blockquote {
-  margin-right: 3.375rem;
+  margin-right: var(--sp3);
 }
 [dir="ltr"] .cke_editable .align-right {
   margin-right: 0;
@@ -48,7 +56,7 @@ figure.cke_widget_element {
   margin: 0;
 }
 figcaption.cke_widget_editable {
-  background-color: #fff;
+  background-color: var(--color--white);
 }
 [dir="ltr"] .cke_panel_list {
   margin-left: 0;

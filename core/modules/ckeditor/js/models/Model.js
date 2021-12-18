@@ -16,8 +16,10 @@
       featuresMetadata: null,
       groupNamesVisible: false
     },
-    sync: function sync() {
+
+    sync() {
       this.get('$textarea').val(JSON.stringify(this.get('activeEditorConfig')));
     }
+
   });
 })(Drupal, Backbone);

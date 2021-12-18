@@ -35,5 +35,5 @@ small .admin-link:after {
  */
 
 .system-cron-settings__link {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

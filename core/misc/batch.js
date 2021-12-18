@@ -7,15 +7,15 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.batch = {
-    attach: function attach(context, settings) {
-      var batch = settings.batch;
-      var $progress = $(once('batch', '[data-drupal-progress]'));
-      var progressBar;
+    attach(context, settings) {
+      const batch = settings.batch;
+      const $progress = $(once('batch', '[data-drupal-progress]'));
+      let progressBar;
 
       function updateCallback(progress, status, pb) {
         if (progress === '100') {
           pb.stopMonitoring();
-          window.location = "".concat(batch.uri, "&op=finished");
+          window.location = `${batch.uri}&op=finished`;
         }
       }
 
@@ -27,10 +27,11 @@
       if ($progress.length) {
         progressBar = new Drupal.ProgressBar('updateprogress', updateCallback, 'POST', errorCallback);
         progressBar.setProgress(-1, batch.initMessage);
-        progressBar.startMonitoring("".concat(batch.uri, "&op=do"), 10);
+        progressBar.startMonitoring(`${batch.uri}&op=do`, 10);
         $progress.empty();
         $progress.append(progressBar.element);
       }
     }
+
   };
 })(jQuery, Drupal);

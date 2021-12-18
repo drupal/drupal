@@ -5,22 +5,28 @@
 * @preserve
 **/
 
-(function (Drupal) {
-  Drupal.theme.passwordConfirmMessage = function (_ref) {
-    var confirmTitle = _ref.confirmTitle;
-    var confirmTextWrapper = '<span data-drupal-selector="password-match-status-text"></span>';
-    return "<div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-confirm-message\" data-drupal-selector=\"password-confirm-message\">".concat(confirmTitle, " ").concat(confirmTextWrapper, "</div>");
+(Drupal => {
+  Drupal.theme.passwordConfirmMessage = ({
+    confirmTitle
+  }) => {
+    const confirmTextWrapper = '<span data-drupal-selector="password-match-status-text"></span>';
+    return `<div aria-live="polite" aria-atomic="true" class="password-confirm-message" data-drupal-selector="password-confirm-message">${confirmTitle} ${confirmTextWrapper}</div>`;
   };
 
-  Drupal.theme.passwordStrength = function (_ref2) {
-    var strengthTitle = _ref2.strengthTitle;
-    var strengthIndicator = '<div class="password-strength__indicator" data-drupal-selector="password-strength-indicator"></div>';
-    var strengthText = '<span class="password-strength__text" data-drupal-selector="password-strength-text"></span>';
-    return "\n      <div class=\"password-strength\">\n        <div class=\"password-strength__meter\" data-drupal-selector=\"password-strength-meter\">".concat(strengthIndicator, "</div>\n        <div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-strength__title\">").concat(strengthTitle, " ").concat(strengthText, "</div>\n      </div>\n    ");
+  Drupal.theme.passwordStrength = ({
+    strengthTitle
+  }) => {
+    const strengthIndicator = '<div class="password-strength__indicator" data-drupal-selector="password-strength-indicator"></div>';
+    const strengthText = '<span class="password-strength__text" data-drupal-selector="password-strength-text"></span>';
+    return `
+      <div class="password-strength">
+        <div class="password-strength__meter" data-drupal-selector="password-strength-meter">${strengthIndicator}</div>
+        <div aria-live="polite" aria-atomic="true" class="password-strength__title">${strengthTitle} ${strengthText}</div>
+      </div>
+    `;
   };
 
-  Drupal.theme.passwordSuggestions = function (_ref3, tips) {
-    var hasWeaknesses = _ref3.hasWeaknesses;
-    return "<div class=\"password-suggestions\">".concat(tips.length ? "".concat(hasWeaknesses, "<ul><li>").concat(tips.join('</li><li>'), "</li></ul>") : '', "</div>");
-  };
+  Drupal.theme.passwordSuggestions = ({
+    hasWeaknesses
+  }, tips) => `<div class="password-suggestions">${tips.length ? `${hasWeaknesses}<ul><li>${tips.join('</li><li>')}</li></ul>` : ''}</div>`;
 })(Drupal);

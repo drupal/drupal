@@ -11,5 +11,5 @@
  */
 
 .region-breadcrumb {
-  min-height: 1.25rem;
+  min-height: var(--breadcrumb-height);
 }

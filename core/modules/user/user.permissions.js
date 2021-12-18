@@ -7,13 +7,11 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.permissions = {
-    attach: function attach(context) {
-      var _this = this;
-
-      once('permissions', 'table#permissions').forEach(function (table) {
-        var $table = $(table);
-        var $ancestor;
-        var method;
+    attach(context) {
+      once('permissions', 'table#permissions').forEach(table => {
+        const $table = $(table);
+        let $ancestor;
+        let method;
 
         if ($table.prev().length) {
           $ancestor = $table.prev();
@@ -24,15 +22,16 @@
         }
 
         $table.detach();
-        var $dummy = $(Drupal.theme('checkbox')).removeClass('form-checkbox').addClass('dummy-checkbox js-dummy-checkbox').attr('disabled', 'disabled').attr('checked', 'checked').attr('title', Drupal.t('This permission is inherited from the authenticated user role.')).hide();
+        const $dummy = $(Drupal.theme('checkbox')).removeClass('form-checkbox').addClass('dummy-checkbox js-dummy-checkbox').attr('disabled', 'disabled').attr('checked', 'checked').attr('title', Drupal.t('This permission is inherited from the authenticated user role.')).hide();
         $table.find('input[type="checkbox"]').not('.js-rid-anonymous, .js-rid-authenticated').addClass('real-checkbox js-real-checkbox').after($dummy);
-        $table.find('input[type=checkbox].js-rid-authenticated').on('click.permissions', _this.toggle).each(_this.toggle);
+        $table.find('input[type=checkbox].js-rid-authenticated').on('click.permissions', this.toggle).each(this.toggle);
         $ancestor[method]($table);
       });
     },
-    toggle: function toggle() {
-      var authCheckbox = this;
-      var $row = $(this).closest('tr');
+
+    toggle() {
+      const authCheckbox = this;
+      const $row = $(this).closest('tr');
       $row.find('.js-real-checkbox').each(function () {
         this.style.display = authCheckbox.checked ? 'none' : '';
       });
@@ -40,5 +39,6 @@
         this.style.display = authCheckbox.checked ? '' : 'none';
       });
     }
+
   };
 })(jQuery, Drupal);

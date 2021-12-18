@@ -3,7 +3,7 @@
  * Header Mobile Buttons.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .mobile-buttons {
   margin-block-start: var(--sp0-5);

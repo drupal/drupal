@@ -10,21 +10,34 @@
  * Grid system definition for the footer top and footer bottom layouts.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .site-footer__inner {
-  padding-top: 2.25rem;
-  padding-bottom: 2.25rem
+  padding-top: var(--sp2);
+  padding-bottom: var(--sp2)
 }
 
 @media (min-width: 75rem) {
 
 .site-footer__inner {
-    padding-top: 4.5rem;
-    padding-bottom: 14.625rem
+    padding-top: var(--sp4);
+    padding-bottom: calc(var(--sp)*13)
 }
   }
 
 .region--footer_top__inner > *, .region--footer_bottom__inner > * {
-    margin-bottom: 2.25rem
+    margin-bottom: var(--sp2)
   }
 
 @media (min-width: 43.75rem) {
@@ -35,11 +48,11 @@
   }
 
       [dir="ltr"] .region--footer_top__inner > *:not(:last-child),[dir="ltr"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-right: 2.25rem
+        margin-right: var(--sp2)
   }
 
       [dir="rtl"] .region--footer_top__inner > *:not(:last-child),[dir="rtl"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-left: 2.25rem
+        margin-left: var(--sp2)
   }
     }
 

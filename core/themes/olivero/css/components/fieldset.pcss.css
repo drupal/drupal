@@ -3,7 +3,7 @@
  * Fieldset.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .fieldset {
   min-width: 0;

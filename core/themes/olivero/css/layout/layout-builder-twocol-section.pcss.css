@@ -3,7 +3,7 @@
  * Provides the layout styles for two-column layout section.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .layout--twocol-section {
   display: flex;

@@ -5,32 +5,32 @@
 * @preserve
 **/
 
-(function ($, Drupal, window) {
+(($, Drupal, window) => {
   Drupal.behaviors.MediaLibraryItemSelectionClaro = {
-    attach: function attach() {
+    attach() {
       if (!once('media-library-selection-info-claro-event', 'html').length) {
         return;
       }
 
-      $(window).on('dialog:aftercreate', function (event, dialog, $element, settings) {
-        var moveCounter = function moveCounter($selectedCount, $buttonPane) {
-          var $moveSelectedCount = $selectedCount.detach();
+      $(window).on('dialog:aftercreate', (event, dialog, $element, settings) => {
+        const moveCounter = ($selectedCount, $buttonPane) => {
+          const $moveSelectedCount = $selectedCount.detach();
           $buttonPane.prepend($moveSelectedCount);
         };
 
-        var $buttonPane = $element.closest('.media-library-widget-modal').find('.ui-dialog-buttonpane');
+        const $buttonPane = $element.closest('.media-library-widget-modal').find('.ui-dialog-buttonpane');
 
         if (!$buttonPane.length) {
           return;
         }
 
-        var $selectedCount = $buttonPane.find('.js-media-library-selected-count');
+        const $selectedCount = $buttonPane.find('.js-media-library-selected-count');
 
         if ($selectedCount.length) {
           moveCounter($selectedCount, $buttonPane);
         } else {
-          var selectedCountObserver = new MutationObserver(function () {
-            var $selectedCountFind = $buttonPane.find('.js-media-library-selected-count');
+          const selectedCountObserver = new MutationObserver(() => {
+            const $selectedCountFind = $buttonPane.find('.js-media-library-selected-count');
 
             if ($selectedCountFind.length) {
               moveCounter($selectedCountFind, $buttonPane);
@@ -46,5 +46,6 @@
         }
       });
     }
+
   };
 })(jQuery, Drupal, window);

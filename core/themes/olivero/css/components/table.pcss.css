@@ -3,7 +3,7 @@
  * User generated tables.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .forum table,
 .text-content table,

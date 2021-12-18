@@ -9,9 +9,9 @@
   function CollapsibleDetails(node) {
     this.$node = $(node);
     this.$node.data('details', this);
-    var anchor = window.location.hash && window.location.hash !== '#' ? ", ".concat(window.location.hash) : '';
+    const anchor = window.location.hash && window.location.hash !== '#' ? `, ${window.location.hash}` : '';
 
-    if (this.$node.find(".error".concat(anchor)).length) {
+    if (this.$node.find(`.error${anchor}`).length) {
       this.$node.attr('open', true);
     }
 
@@ -22,22 +22,22 @@
     instances: []
   });
   $.extend(CollapsibleDetails.prototype, {
-    setupSummaryPolyfill: function setupSummaryPolyfill() {
-      var $summary = this.$node.find('> summary');
+    setupSummaryPolyfill() {
+      const $summary = this.$node.find('> summary');
       $summary.attr('tabindex', '-1');
       $('<span class="details-summary-prefix visually-hidden"></span>').append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show')).prependTo($summary).after(document.createTextNode(' '));
-      $('<a class="details-title"></a>').attr('href', "#".concat(this.$node.attr('id'))).prepend($summary.contents()).appendTo($summary);
+      $('<a class="details-title"></a>').attr('href', `#${this.$node.attr('id')}`).prepend($summary.contents()).appendTo($summary);
       $summary.append(this.$summary).on('click', $.proxy(this.onSummaryClick, this));
     },
-    onSummaryClick: function onSummaryClick(e) {
+
+    onSummaryClick(e) {
       this.toggle();
       e.preventDefault();
     },
-    toggle: function toggle() {
-      var _this = this;
 
-      var isOpen = !!this.$node.attr('open');
-      var $summaryPrefix = this.$node.find('> summary span.details-summary-prefix');
+    toggle() {
+      const isOpen = !!this.$node.attr('open');
+      const $summaryPrefix = this.$node.find('> summary span.details-summary-prefix');
 
       if (isOpen) {
         $summaryPrefix.html(Drupal.t('Show'));
@@ -45,25 +45,27 @@
         $summaryPrefix.html(Drupal.t('Hide'));
       }
 
-      setTimeout(function () {
-        _this.$node.attr('open', !isOpen);
+      setTimeout(() => {
+        this.$node.attr('open', !isOpen);
       }, 0);
     }
+
   });
   Drupal.behaviors.collapse = {
-    attach: function attach(context) {
+    attach(context) {
       if (Modernizr.details) {
         return;
       }
 
-      once('collapse', 'details', context).forEach(function (detail) {
+      once('collapse', 'details', context).forEach(detail => {
         detail.classList.add('collapse-processed');
         CollapsibleDetails.instances.push(new CollapsibleDetails(detail));
       });
     }
+
   };
 
-  var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
+  const handleFragmentLinkClickOrHashChange = (e, $target) => {
     $target.parents('details').not('[open]').find('> summary').trigger('click');
   };
 

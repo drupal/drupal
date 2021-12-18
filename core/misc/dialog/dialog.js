@@ -11,16 +11,18 @@
     dialogClass: '',
     buttonClass: 'button',
     buttonPrimaryClass: 'button--primary',
-    close: function close(event) {
+
+    close(event) {
       Drupal.dialog(event.target).close();
       Drupal.detachBehaviors(event.target, null, 'unload');
     }
+
   };
 
   Drupal.dialog = function (element, options) {
-    var undef;
-    var $element = $(element);
-    var dialog = {
+    let undef;
+    const $element = $(element);
+    const dialog = {
       open: false,
       returnValue: undef
     };
@@ -41,13 +43,13 @@
       $(window).trigger('dialog:afterclose', [dialog, $element]);
     }
 
-    dialog.show = function () {
+    dialog.show = () => {
       openDialog({
         modal: false
       });
     };
 
-    dialog.showModal = function () {
+    dialog.showModal = () => {
       openDialog({
         modal: true
       });

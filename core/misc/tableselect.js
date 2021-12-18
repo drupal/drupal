@@ -7,11 +7,10 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.tableSelect = {
-    attach: function attach(context, settings) {
-      once('table-select', $(context).find('th.select-all').closest('table')).forEach(function (table) {
-        return Drupal.tableSelect.call(table);
-      });
+    attach(context, settings) {
+      once('table-select', $(context).find('th.select-all').closest('table')).forEach(table => Drupal.tableSelect.call(table));
     }
+
   };
 
   Drupal.tableSelect = function () {
@@ -19,19 +18,19 @@
       return;
     }
 
-    var table = this;
-    var checkboxes;
-    var lastChecked;
-    var $table = $(table);
-    var strings = {
+    const table = this;
+    let checkboxes;
+    let lastChecked;
+    const $table = $(table);
+    const strings = {
       selectAll: Drupal.t('Select all rows in this table'),
       selectNone: Drupal.t('Deselect all rows in this table')
     };
 
-    var updateSelectAll = function updateSelectAll(state) {
+    const updateSelectAll = function (state) {
       $table.prev('table.sticky-header').addBack().find('th.select-all input[type="checkbox"]').each(function () {
-        var $checkbox = $(this);
-        var stateChanged = $checkbox.prop('checked') !== state;
+        const $checkbox = $(this);
+        const stateChanged = $checkbox.prop('checked') !== state;
         $checkbox.attr('title', state ? strings.selectNone : strings.selectAll);
 
         if (stateChanged) {
@@ -40,11 +39,11 @@
       });
     };
 
-    $table.find('th.select-all').prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll)).on('click', function (event) {
+    $table.find('th.select-all').prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll)).on('click', event => {
       if ($(event.target).is('input[type="checkbox"]')) {
         checkboxes.each(function () {
-          var $checkbox = $(this);
-          var stateChanged = $checkbox.prop('checked') !== event.target.checked;
+          const $checkbox = $(this);
+          const stateChanged = $checkbox.prop('checked') !== event.target.checked;
 
           if (stateChanged) {
             $checkbox.prop('checked', event.target.checked).trigger('change');
@@ -69,10 +68,10 @@
   };
 
   Drupal.tableSelectRange = function (from, to, state) {
-    var mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
+    const mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
 
-    for (var i = from[mode]; i; i = i[mode]) {
-      var $i = $(i);
+    for (let i = from[mode]; i; i = i[mode]) {
+      const $i = $(i);
 
       if (i.nodeType !== 1) {
         continue;

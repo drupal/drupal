@@ -11,7 +11,7 @@
  */
 
 .system-status-general-info {
-  padding-top: 1rem;
+  padding-top: var(--space-m);
 }
 
 .system-status-general-info__header {
@@ -23,7 +23,7 @@
   display: block;
   overflow-x: auto;
   box-sizing: border-box;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-l);
   padding: 1.125rem;
 }
 

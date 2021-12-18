@@ -7,12 +7,12 @@
 
 (function ($, Drupal, drupalSettings, CKEDITOR) {
   function parseAttributes(editor, element) {
-    var parsedAttributes = {};
-    var domElement = element.$;
-    var attribute;
-    var attributeName;
+    const parsedAttributes = {};
+    const domElement = element.$;
+    let attribute;
+    let attributeName;
 
-    for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
+    for (let attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
       attribute = domElement.attributes.item(attrIndex);
       attributeName = attribute.nodeName.toLowerCase();
 
@@ -20,7 +20,7 @@
         continue;
       }
 
-      parsedAttributes[attributeName] = element.data("cke-saved-".concat(attributeName)) || attribute.nodeValue;
+      parsedAttributes[attributeName] = element.data(`cke-saved-${attributeName}`) || attribute.nodeValue;
     }
 
     if (parsedAttributes.class) {
@@ -31,29 +31,29 @@
   }
 
   function getAttributes(editor, data) {
-    var set = {};
-    Object.keys(data || {}).forEach(function (attributeName) {
+    const set = {};
+    Object.keys(data || {}).forEach(attributeName => {
       set[attributeName] = data[attributeName];
     });
     set['data-cke-saved-href'] = set.href;
-    var removed = {};
-    Object.keys(set).forEach(function (s) {
+    const removed = {};
+    Object.keys(set).forEach(s => {
       delete removed[s];
     });
     return {
-      set: set,
+      set,
       removed: CKEDITOR.tools.objectKeys(removed)
     };
   }
 
-  var registeredLinkableWidgets = [];
+  const registeredLinkableWidgets = [];
 
   function registerLinkableWidget(widgetName) {
     registeredLinkableWidgets.push(widgetName);
   }
 
   function getFocusedLinkableWidget(editor) {
-    var widget = editor.widgets.focused;
+    const widget = editor.widgets.focused;
 
     if (widget && registeredLinkableWidgets.indexOf(widget.name) !== -1) {
       return widget;
@@ -63,14 +63,14 @@
   }
 
   function getSelectedLink(editor) {
-    var selection = editor.getSelection();
-    var selectedElement = selection.getSelectedElement();
+    const selection = editor.getSelection();
+    const selectedElement = selection.getSelectedElement();
 
     if (selectedElement && selectedElement.is('a')) {
       return selectedElement;
     }
 
-    var range = selection.getRanges(true)[0];
+    const range = selection.getRanges(true)[0];
 
     if (range) {
       range.shrink(CKEDITOR.SHRINK_TEXT);
@@ -83,7 +83,8 @@
   CKEDITOR.plugins.add('drupallink', {
     icons: 'drupallink,drupalunlink',
     hidpi: true,
-    init: function init(editor) {
+
+    init(editor) {
       editor.addCommand('drupallink', {
         allowedContent: {
           a: {
@@ -103,10 +104,11 @@
           wysiwyg: 1
         },
         canUndo: true,
-        exec: function exec(editor) {
-          var focusedLinkableWidget = getFocusedLinkableWidget(editor);
-          var linkElement = getSelectedLink(editor);
-          var existingValues = {};
+
+        exec(editor) {
+          const focusedLinkableWidget = getFocusedLinkableWidget(editor);
+          let linkElement = getSelectedLink(editor);
+          let existingValues = {};
 
           if (linkElement && linkElement.$) {
             existingValues = parseAttributes(editor, linkElement);
@@ -114,7 +116,7 @@
             existingValues = CKEDITOR.tools.clone(focusedLinkableWidget.data.link);
           }
 
-          var saveCallback = function saveCallback(returnValues) {
+          const saveCallback = function (returnValues) {
             if (focusedLinkableWidget) {
               focusedLinkableWidget.setData('link', CKEDITOR.tools.extend(returnValues.attributes, focusedLinkableWidget.data.link));
               editor.fire('saveSnapshot');
@@ -124,16 +126,16 @@
             editor.fire('saveSnapshot');
 
             if (!linkElement && returnValues.attributes.href) {
-              var selection = editor.getSelection();
-              var range = selection.getRanges(1)[0];
+              const selection = editor.getSelection();
+              const range = selection.getRanges(1)[0];
 
               if (range.collapsed) {
-                var text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
+                const text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
                 range.insertNode(text);
                 range.selectNodeContents(text);
               }
 
-              var style = new CKEDITOR.style({
+              const style = new CKEDITOR.style({
                 element: 'a',
                 attributes: returnValues.attributes
               });
@@ -142,10 +144,10 @@
               range.select();
               linkElement = getSelectedLink(editor);
             } else if (linkElement) {
-              Object.keys(returnValues.attributes || {}).forEach(function (attrName) {
+              Object.keys(returnValues.attributes || {}).forEach(attrName => {
                 if (returnValues.attributes[attrName].length > 0) {
-                  var value = returnValues.attributes[attrName];
-                  linkElement.data("cke-saved-".concat(attrName), value);
+                  const value = returnValues.attributes[attrName];
+                  linkElement.data(`cke-saved-${attrName}`, value);
                   linkElement.setAttribute(attrName, value);
                 } else {
                   linkElement.removeAttribute(attrName);
@@ -156,12 +158,13 @@
             editor.fire('saveSnapshot');
           };
 
-          var dialogSettings = {
+          const dialogSettings = {
             title: linkElement ? editor.config.drupalLink_dialogTitleEdit : editor.config.drupalLink_dialogTitleAdd,
             dialogClass: 'editor-link-dialog'
           };
-          Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/link/".concat(editor.config.drupal.format)), existingValues, saveCallback, dialogSettings);
+          Drupal.ckeditor.openDialog(editor, Drupal.url(`editor/dialog/link/${editor.config.drupal.format}`), existingValues, saveCallback, dialogSettings);
         }
+
       });
       editor.addCommand('drupalunlink', {
         contextSensitive: 1,
@@ -172,16 +175,18 @@
             href: ''
           }
         }),
-        exec: function exec(editor) {
-          var style = new CKEDITOR.style({
+
+        exec(editor) {
+          const style = new CKEDITOR.style({
             element: 'a',
             type: CKEDITOR.STYLE_INLINE,
             alwaysRemoveElement: 1
           });
           editor.removeStyle(style);
         },
-        refresh: function refresh(editor, path) {
-          var element = path.lastElement && path.lastElement.getAscendant('a', true);
+
+        refresh(editor, path) {
+          const element = path.lastElement && path.lastElement.getAscendant('a', true);
 
           if (element && element.getName() === 'a' && element.getAttribute('href') && element.getChildCount()) {
             this.setState(CKEDITOR.TRISTATE_OFF);
@@ -189,6 +194,7 @@
             this.setState(CKEDITOR.TRISTATE_DISABLED);
           }
         }
+
       });
       editor.setKeystroke(CKEDITOR.CTRL + 75, 'drupallink');
 
@@ -203,8 +209,8 @@
         });
       }
 
-      editor.on('doubleclick', function (evt) {
-        var element = getSelectedLink(editor) || evt.data.element;
+      editor.on('doubleclick', evt => {
+        const element = getSelectedLink(editor) || evt.data.element;
 
         if (!element.isReadOnly()) {
           if (element.is('a')) {
@@ -232,18 +238,18 @@
       }
 
       if (editor.contextMenu) {
-        editor.contextMenu.addListener(function (element, selection) {
+        editor.contextMenu.addListener((element, selection) => {
           if (!element || element.isReadOnly()) {
             return null;
           }
 
-          var anchor = getSelectedLink(editor);
+          const anchor = getSelectedLink(editor);
 
           if (!anchor) {
             return null;
           }
 
-          var menu = {};
+          let menu = {};
 
           if (anchor.getAttribute('href') && anchor.getChildCount()) {
             menu = {
@@ -256,10 +262,11 @@
         });
       }
     }
+
   });
   CKEDITOR.plugins.drupallink = {
     parseLinkAttributes: parseAttributes,
     getLinkAttributes: getAttributes,
-    registerLinkableWidget: registerLinkableWidget
+    registerLinkableWidget
   };
 })(jQuery, Drupal, drupalSettings, CKEDITOR);

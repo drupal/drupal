@@ -3,7 +3,7 @@
  * Grid system definition for the content wide layout.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .layout--content-medium,
 .layout--pass--content-medium > * {

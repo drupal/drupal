@@ -3,7 +3,7 @@
  * Header Search Narrow Block.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .block-search-narrow {
   margin-inline: calc(-1 * var(--sp));

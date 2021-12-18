@@ -7,12 +7,12 @@
 
 (function ($, Drupal) {
   Drupal.AjaxCommands.prototype.jsAjaxTestCommand = function (ajax, response) {
-    var $domElement = $(response.selector);
+    const $domElement = $(response.selector);
     ajax.element_settings.cat = 'catbro';
-    var data = {
+    const data = {
       element_settings: ajax.element_settings.cat || {},
       elementSettings: ajax.elementSettings.cat || {}
     };
-    $domElement.html("<div id=\"js_ajax_test_form_element\">".concat(JSON.stringify(data), "</div>"));
+    $domElement.html(`<div id="js_ajax_test_form_element">${JSON.stringify(data)}</div>`);
   };
 })(jQuery, Drupal);

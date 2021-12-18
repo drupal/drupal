@@ -3,7 +3,7 @@
  * Secondary menu region layout styling.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .region--secondary-menu {
   display: flex;

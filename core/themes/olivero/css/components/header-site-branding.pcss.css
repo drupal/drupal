@@ -3,7 +3,7 @@
  * Site branding in header.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .site-branding {
   display: flex;

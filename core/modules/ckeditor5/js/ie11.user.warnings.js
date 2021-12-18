@@ -5,22 +5,22 @@
 * @preserve
 **/
 
-(function (Drupal, Modernizr) {
-  var isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
+((Drupal, Modernizr) => {
+  const isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
 
   if (isIE11) {
-    var quickEditLabelObserver = null;
+    let quickEditLabelObserver = null;
     Drupal.editors.ckeditor5 = {
       attach: function attach(element) {
-        var editorMessageContainer = document.createElement('div');
+        const editorMessageContainer = document.createElement('div');
         element.parentNode.insertBefore(editorMessageContainer, element);
-        var editorMessages = new Drupal.Message(editorMessageContainer);
+        const editorMessages = new Drupal.Message(editorMessageContainer);
         editorMessages.add(Drupal.t('Internet Explorer 11 user: a rich text editor is available for this field when used with any other supported browser.'), {
           type: 'warning'
         });
       },
       detach: function detach() {
-        var quickEditToolbar = document.querySelector('#quickedit-entity-toolbar .quickedit-toolbar');
+        const quickEditToolbar = document.querySelector('#quickedit-entity-toolbar .quickedit-toolbar');
 
         if (quickEditToolbar) {
           quickEditToolbar.classList.remove('ck5-ie11');
@@ -30,13 +30,13 @@
       },
       onChange: function onChange() {},
       attachInlineEditor: function attachInlineEditor(element) {
-        var quickEditToolbar = document.querySelector('#quickedit-entity-toolbar .quickedit-toolbar');
-        var notEditableAlert = Drupal.t('Field Not Editable');
-        var notEditableMessage = Drupal.t('CKEditor 5 is not compatible with IE11.');
+        const quickEditToolbar = document.querySelector('#quickedit-entity-toolbar .quickedit-toolbar');
+        const notEditableAlert = Drupal.t('Field Not Editable');
+        const notEditableMessage = Drupal.t('CKEditor 5 is not compatible with IE11.');
 
         function quickEditLabelWarnIE11(toolbarLabel) {
           quickEditLabelObserver.disconnect();
-          toolbarLabel.innerHTML = "<div><b>".concat(notEditableAlert, "</b><div>").concat(notEditableMessage, "</div></div>");
+          toolbarLabel.innerHTML = `<div><b>${notEditableAlert}</b><div>${notEditableMessage}</div></div>`;
           quickEditLabelObserver.observe(toolbarLabel, {
             childList: true
           });
@@ -46,9 +46,9 @@
           quickEditToolbar.classList.add('ck5-ie11');
           quickEditToolbar.classList.remove('icon-pencil');
           element.classList.add('ck5-ie11');
-          var toolbarLabel = quickEditToolbar.querySelector('.quickedit-toolbar-label');
-          quickEditLabelObserver = new MutationObserver(function (mutations) {
-            for (var i = 0; i < mutations.length; i++) {
+          const toolbarLabel = quickEditToolbar.querySelector('.quickedit-toolbar-label');
+          quickEditLabelObserver = new MutationObserver(mutations => {
+            for (let i = 0; i < mutations.length; i++) {
               if (mutations[i].type === 'childList') {
                 quickEditLabelWarnIE11(toolbarLabel);
               }

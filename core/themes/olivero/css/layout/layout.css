@@ -10,24 +10,37 @@
  * Base Layout.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .container {
   width: 100%;
-  max-width: 84.375rem;
-  padding-left: 1.125rem;
-  padding-right: 1.125rem
+  max-width: var(--max-width);
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding)
 }
 
 @media (min-width: 75rem) {
 
 .container {
-    padding-left: 2.25rem;
-    padding-right: 2.25rem
+    padding-left: var(--container-padding-nav);
+    padding-right: var(--container-padding-nav)
 }
   }
 
 .page-wrapper {
-  max-width: 98.125rem;
-  background: #fff;
+  max-width: var(--max-bg-color);
+  background: var(--color--white);
 }
 
 /* Contains the social sidebar, and the primary content area. */
@@ -52,17 +65,17 @@
   }
 
 .main-content {
-    width: calc(100% - 5.625rem)
+    width: calc(100% - var(--content-left))
 }
   }
 
 .main-content__container {
-  padding-top: 3.375rem
+  padding-top: var(--sp3)
 }
 
 @media (min-width: 43.75rem) {
 
 .main-content__container {
-    padding-top: 5.625rem
+    padding-top: var(--sp5)
 }
   }

@@ -3,7 +3,7 @@
  * Collapsible details.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 :root {
   --details-border-width: 1px;

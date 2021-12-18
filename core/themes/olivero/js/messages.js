@@ -5,38 +5,40 @@
 * @preserve
 **/
 
-(function (Drupal, once) {
-  var closeMessage = function closeMessage(message) {
-    var messageContainer = message.querySelector('[data-drupal-selector="messages-container"]');
-    var closeBtnWrapper = document.createElement('div');
+((Drupal, once) => {
+  const closeMessage = message => {
+    const messageContainer = message.querySelector('[data-drupal-selector="messages-container"]');
+    const closeBtnWrapper = document.createElement('div');
     closeBtnWrapper.setAttribute('class', 'messages__button');
-    var closeBtn = document.createElement('button');
+    const closeBtn = document.createElement('button');
     closeBtn.setAttribute('type', 'button');
     closeBtn.setAttribute('class', 'messages__close');
-    var closeBtnText = document.createElement('span');
+    const closeBtnText = document.createElement('span');
     closeBtnText.setAttribute('class', 'visually-hidden');
     closeBtnText.innerText = Drupal.t('Close message');
     messageContainer.appendChild(closeBtnWrapper);
     closeBtnWrapper.appendChild(closeBtn);
     closeBtn.appendChild(closeBtnText);
-    closeBtn.addEventListener('click', function () {
+    closeBtn.addEventListener('click', () => {
       message.classList.add('hidden');
     });
   };
 
-  Drupal.theme.message = function (_ref, _ref2) {
-    var text = _ref.text;
-    var type = _ref2.type,
-        id = _ref2.id;
-    var messagesTypes = Drupal.Message.getMessageTypeLabels();
-    var messageWrapper = document.createElement('div');
-    messageWrapper.setAttribute('class', "messages-list__item messages messages--".concat(type));
+  Drupal.theme.message = ({
+    text
+  }, {
+    type,
+    id
+  }) => {
+    const messagesTypes = Drupal.Message.getMessageTypeLabels();
+    const messageWrapper = document.createElement('div');
+    messageWrapper.setAttribute('class', `messages-list__item messages messages--${type}`);
     messageWrapper.setAttribute('data-drupal-selector', 'messages');
     messageWrapper.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
-    messageWrapper.setAttribute('aria-labelledby', "".concat(id, "-title"));
+    messageWrapper.setAttribute('aria-labelledby', `${id}-title`);
     messageWrapper.setAttribute('data-drupal-message-id', id);
     messageWrapper.setAttribute('data-drupal-message-type', type);
-    var svg = '';
+    let svg = '';
 
     if (['error', 'warning', 'status', 'info'].includes(type)) {
       svg = '<div class="messages__icon"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">';
@@ -56,14 +58,25 @@
       svg += '</svg></div>';
     }
 
-    messageWrapper.innerHTML = "\n    <div class=\"messages__container\" data-drupal-selector=\"messages-container\">\n      <div class=\"messages__header".concat(!svg ? ' no-icon' : '', "\">\n        <h2 class=\"visually-hidden\">").concat(messagesTypes[type], "</h2>\n        ").concat(svg, "\n      </div>\n      <div class=\"messages__content\">\n        ").concat(text, "\n      </div>\n    </div>\n    ");
+    messageWrapper.innerHTML = `
+    <div class="messages__container" data-drupal-selector="messages-container">
+      <div class="messages__header${!svg ? ' no-icon' : ''}">
+        <h2 class="visually-hidden">${messagesTypes[type]}</h2>
+        ${svg}
+      </div>
+      <div class="messages__content">
+        ${text}
+      </div>
+    </div>
+    `;
     closeMessage(messageWrapper);
     return messageWrapper;
   };
 
   Drupal.behaviors.messages = {
-    attach: function attach(context) {
+    attach(context) {
       once('messages', '[data-drupal-selector="messages"]', context).forEach(closeMessage);
     }
+
   };
 })(Drupal, once);

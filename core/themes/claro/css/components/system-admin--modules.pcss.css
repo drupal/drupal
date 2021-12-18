@@ -3,8 +3,6 @@
  * System admin module: modules page.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   --module-table-cell-padding-vertical: var(--space-m);
   --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));

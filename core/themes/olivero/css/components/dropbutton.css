@@ -10,25 +10,44 @@
  * Dropbutton styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
+:root {
+  --dropbutton--height: var(--sp1-5);
+  --dropbutton--bg-color: var(--color--gray-75);
+  --dropbutton--border-color: var(--color--blue-20);
+}
+
 .dropbutton-wrapper.open {
   position: relative;
   z-index: 100; /* Ensure this appears above all other dropbuttons. */
-  filter: drop-shadow(0 2px 2px #e3e3e5);
+  filter: drop-shadow(0 2px 2px var(--dropbutton--bg-color));
 }
 
 [dir="ltr"] .dropbutton-widget {
-  padding-right: 1.6875rem;
+  padding-right: var(--dropbutton--height);
 }
 
 [dir="rtl"] .dropbutton-widget {
-  padding-left: 1.6875rem;
+  padding-left: var(--dropbutton--height);
 }
 
 .dropbutton-widget {
   position: relative;
   width: 12.5rem;
-  height: 1.6875rem;
-  border-radius: 0.1875rem
+  height: var(--dropbutton--height);
+  border-radius: var(--border-radius)
 }
 
 @supports (width: max-content) {
@@ -63,11 +82,11 @@
 }
 
 .dropbutton {
-  height: 1.6875rem;
+  height: var(--dropbutton--height);
   margin-top: 0;
   margin-bottom: 0;
   list-style: none;
-  font-size: 0.875rem;
+  font-size: var(--font-size-s);
 }
 
 [dir="ltr"] .dropbutton-toggle button {
@@ -84,32 +103,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.6875rem;
-  height: 1.6875rem;
+  width: var(--dropbutton--height);
+  height: var(--dropbutton--height);
   padding: 0;
   cursor: pointer;
   border-color: transparent;
-  border-radius: 0 0.1875rem 0.1875rem 0; /* LTR */
-  background: #e3e3e5
+  border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
+  background: var(--dropbutton--bg-color)
 }
 
 .dropbutton-toggle button:focus {
-    outline: solid 2px #0d77b5;
+    outline: solid 2px var(--dropbutton--border-color);
     outline-offset: -2px;
   }
 
 .dropbutton-toggle button:before {
     display: block;
-    width: 0.5625rem;
-    height: 0.5625rem;
+    width: var(--sp0-5);
+    height: var(--sp0-5);
     content: "";
     transform: translateY(-25%) rotate(45deg);
-    border-right: solid 2px #0d77b5;
-    border-bottom: solid 2px #0d77b5;
+    border-right: solid 2px var(--dropbutton--border-color);
+    border-bottom: solid 2px var(--dropbutton--border-color);
   }
 
 [dir="rtl"] .dropbutton-toggle button {
-  border-radius: 0.1875rem 0 0 0.1875rem;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
 [dir="ltr"] .dropbutton-action:first-child {
@@ -122,8 +141,8 @@
 
 .dropbutton-action:first-child {
     border: solid 1px transparent;
-    border-radius: 0.1875rem 0 0 0.1875rem; /* LTR */
-    background: #e3e3e5;
+    border-radius: var(--border-radius) 0 0 var(--border-radius); /* LTR */
+    background: var(--dropbutton--bg-color);
   }
 
 .dropbutton-action a {
@@ -132,12 +151,12 @@
     margin-bottom: -2px; /* Account for borders. */
     padding: 0 0.5625rem;
     text-decoration: none;
-    color: #313637;
+    color: var(--color--gray-10);
     font-weight: 600
   }
 
 .dropbutton-action a:focus {
-      border: solid 2px #0d77b5;
+      border: solid 2px var(--dropbutton--border-color);
       outline: 0
 
       /* Negate specific IE rules. */
@@ -147,14 +166,14 @@
 
 .dropbutton-action a:focus {
         border: 0;
-        outline: solid 2px #0d77b5;
+        outline: solid 2px var(--dropbutton--border-color);
         outline-offset: -1px /* Overlap parent container by 1px. */
     }
       }
 
 .dropbutton-single .dropbutton-action:first-child {
     border-right: solid 1px transparent; /* LTR */
-    border-radius: 0.1875rem;
+    border-radius: var(--border-radius);
   }
 
 .dropbutton-single .dropbutton-action a {
@@ -163,7 +182,7 @@
 
 [dir="rtl"] .dropbutton-action:first-child {
     border: solid 1px transparent;
-    border-radius: 0 0.1875rem 0.1875rem 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
   }
 
 [dir="rtl"] .dropbutton-single .dropbutton-action:first-child {
@@ -172,14 +191,14 @@
 
 .secondary-action {
   visibility: hidden;
-  width: calc(100% + 1.6875rem);
-  border-right: 1px solid #e3e3e5;
-  border-left: 1px solid #e3e3e5;
-  background: #fff
+  width: calc(100% + var(--dropbutton--height));
+  border-right: 1px solid var(--dropbutton--bg-color);
+  border-left: 1px solid var(--dropbutton--bg-color);
+  background: var(--color--white)
 }
 
 .secondary-action:last-child {
-    border-bottom: 1px solid #e3e3e5;
+    border-bottom: 1px solid var(--dropbutton--bg-color);
   }
 
 .dropbutton-wrapper.open .dropbutton-toggle button:before {
@@ -187,7 +206,7 @@
   }
 
 .dropbutton-wrapper.open .dropbutton-widget {
-    border-radius: 0.1875rem 0.1875rem 0 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
   }
 
 .dropbutton-wrapper.open .secondary-action {

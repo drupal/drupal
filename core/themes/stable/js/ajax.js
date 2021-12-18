@@ -5,8 +5,6 @@
 * @preserve
 **/
 
-(function (Drupal) {
-  Drupal.theme.ajaxProgressBar = function ($element) {
-    return $element.addClass('ajax-progress ajax-progress-bar');
-  };
+(Drupal => {
+  Drupal.theme.ajaxProgressBar = $element => $element.addClass('ajax-progress ajax-progress-bar');
 })(Drupal);

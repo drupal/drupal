@@ -3,8 +3,6 @@
  * Styles for multiple file widget table.
  */
 
-@import "../base/variables.pcss.css";
-
 .table-file-multiple-widget tbody {
   vertical-align: top;
 }

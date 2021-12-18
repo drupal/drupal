@@ -10,6 +10,19 @@
  * Buttons.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .button {
   margin-left: 0
 }
@@ -19,31 +32,31 @@
 }
 
 [dir="ltr"] .button {
-  margin-right: 1.125rem
+  margin-right: var(--sp1)
 }
 
 [dir="rtl"] .button {
-  margin-left: 1.125rem
+  margin-left: var(--sp1)
 }
 
 .button {
   display: inline-block;
-  height: 3.375rem;
-  margin-top: 1.125rem;
-  margin-bottom: 1.125rem;
-  padding-top: 1.125rem;
-  padding-bottom: 1.125rem;
-  padding-left: 1.6875rem;
-  padding-right: 1.6875rem;
+  height: var(--sp3);
+  margin-top: var(--sp1);
+  margin-bottom: var(--sp1);
+  padding-top: calc(var(--sp3)/2 - var(--line-height-s)/2);
+  padding-bottom: calc(var(--sp3)/2 - var(--line-height-s)/2);
+  padding-left: var(--sp1-5);
+  padding-right: var(--sp1-5);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #0d77b5;
-  border: solid 2px #0d77b5;
-  border-radius: 0.1875rem;
-  background-color: #fff;
+  color: var(--color--blue-20);
+  border: solid 2px var(--color--blue-20);
+  border-radius: var(--border-radius);
+  background-color: var(--color--white);
   font-family: inherit;
-  font-size: 1.125rem;
+  font-size: var(--font-size-l);
   font-weight: 700;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -54,27 +67,27 @@
 .button:hover,
   .button:focus {
     text-decoration: none;
-    color: #0f6292;
-    border: solid 2px #0f6292;
+    color: var(--color--blue-10);
+    border: solid 2px var(--color--blue-10);
     background: none;
     font-weight: 700;
   }
 
 .button:focus {
-    outline: 2px solid #53b0eb;
+    outline: 2px solid var(--color--blue-70);
     outline-offset: 2px;
   }
 
 .button:active {
-    color: #0d77b5;
-    border-color: #0d77b5;
+    color: var(--color--blue-20);
+    border-color: var(--color--blue-20);
   }
 
 .button:disabled,
   .button.is-disabled {
     cursor: default;
-    color: #d7e1e8;
-    border-color: #d7e1e8;
+    color: var(--color--gray-70);
+    border-color: var(--color--gray-70);
   }
 
 .button {
@@ -94,9 +107,9 @@
     /* Top padding accounts for font not being vertically centered within line-height. */
     padding-top: 1px;
     padding-bottom: 0;
-    padding-left: 1.6875rem;
-    padding-right: 1.6875rem;
-    line-height: 1.125rem
+    padding-left: var(--sp1-5);
+    padding-right: var(--sp1-5);
+    line-height: var(--line-height-s)
 }
   }
 
@@ -124,36 +137,36 @@
 }
 
 .button--small {
-  height: 2.8125rem;
-  padding-top: 0.84375rem;
-  padding-bottom: 0.84375rem;
-  padding-left: 1.125rem;
-  padding-right: 1.125rem;
-  font-size: 1rem;
+  height: var(--sp2-5);
+  padding-top: calc(var(--sp2-5)/2 - var(--line-height-s)/2);
+  padding-bottom: calc(var(--sp2-5)/2 - var(--line-height-s)/2);
+  padding-left: var(--sp);
+  padding-right: var(--sp);
+  font-size: var(--font-size-base);
   line-height: normal;
 }
 
 .button--primary {
-  color: #fff;
-  background-color: #0d77b5
+  color: var(--color--white);
+  background-color: var(--color--blue-20)
 }
 
 .button--primary:hover,
   .button--primary:focus {
-    color: #fff;
-    border-color: #0f6292;
-    background-color: #0f6292;
+    color: var(--color--white);
+    border-color: var(--color--blue-10);
+    background-color: var(--color--blue-10);
   }
 
 .button--primary:active {
-    color: #fff;
-    background-color: #0d77b5;
+    color: var(--color--white);
+    background-color: var(--color--blue-20);
   }
 
 .button--primary:disabled,
   .button--primary.is-disabled {
-    color: #fff;
-    background-color: #d7e1e8;
+    color: var(--color--white);
+    background-color: var(--color--gray-70);
   }
 
 .button--icon-back {

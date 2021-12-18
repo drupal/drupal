@@ -11,11 +11,11 @@
  */
 
 .block-page-title-block {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-s);
 }
 
 .block-page-title-block:last-child {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-l);
 }
 
 /**
@@ -25,13 +25,13 @@
  */
 
 .region-header > .page-title {
-  margin-top: 1.25rem;
-  margin-bottom: 1.5rem;
+  margin-top: var(--breadcrumb-height);
+  margin-bottom: var(--space-l);
 }
 
 .page-title {
   display: inline-block;
   margin: 0;
-  font-size: 2.027rem;
+  font-size: var(--font-size-h1);
   -webkit-font-smoothing: antialiased;
 }

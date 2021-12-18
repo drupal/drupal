@@ -11,13 +11,14 @@
     textFormatHasTransformations: null,
     textEditor: null,
     $textElement: null,
-    initialize: function initialize(options) {
+
+    initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
-      var metadata = Drupal.quickedit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
+      const metadata = Drupal.quickedit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
       this.textFormat = drupalSettings.editor.formats[metadata.format];
       this.textFormatHasTransformations = metadata.formatHasTransformations;
       this.textEditor = Drupal.editors[this.textFormat.editor];
-      var $fieldItems = this.$el.find('.quickedit-field');
+      const $fieldItems = this.$el.find('.quickedit-field');
 
       if ($fieldItems.length) {
         this.$textElement = $fieldItems.eq(0);
@@ -27,13 +28,15 @@
 
       this.model.set('originalValue', this.$textElement.html());
     },
-    getEditedElement: function getEditedElement() {
+
+    getEditedElement() {
       return this.$textElement;
     },
-    stateChange: function stateChange(fieldModel, state) {
-      var editorModel = this.model;
-      var from = fieldModel.previous('state');
-      var to = state;
+
+    stateChange(fieldModel, state) {
+      const editorModel = this.model;
+      const from = fieldModel.previous('state');
+      const to = state;
 
       switch (to) {
         case 'inactive':
@@ -59,14 +62,14 @@
 
         case 'activating':
           if (this.textFormatHasTransformations) {
-            var $textElement = this.$textElement;
+            const $textElement = this.$textElement;
 
-            this._getUntransformedText(function (untransformedText) {
+            this._getUntransformedText(untransformedText => {
               $textElement.html(untransformedText);
               fieldModel.set('state', 'active');
             });
           } else {
-            _.defer(function () {
+            _.defer(() => {
               fieldModel.set('state', 'active');
             });
           }
@@ -75,10 +78,10 @@
 
         case 'active':
           {
-            var textElement = this.$textElement.get(0);
-            var toolbarView = fieldModel.toolbarView;
+            const textElement = this.$textElement.get(0);
+            const toolbarView = fieldModel.toolbarView;
             this.textEditor.attachInlineEditor(textElement, this.textFormat, toolbarView.getMainWysiwygToolgroupId(), toolbarView.getFloatedWysiwygToolgroupId());
-            this.textEditor.onChange(textElement, function (htmlText) {
+            this.textEditor.onChange(textElement, htmlText => {
               editorModel.set('currentValue', htmlText);
               fieldModel.set('state', 'changed');
             });
@@ -104,7 +107,8 @@
           break;
       }
     },
-    getQuickEditUISettings: function getQuickEditUISettings() {
+
+    getQuickEditUISettings() {
       return {
         padding: true,
         unifiedToolbar: true,
@@ -112,12 +116,14 @@
         popup: false
       };
     },
-    revert: function revert() {
+
+    revert() {
       this.$textElement.html(this.model.get('originalValue'));
     },
-    _getUntransformedText: function _getUntransformedText(callback) {
-      var fieldID = this.fieldModel.get('fieldID');
-      var textLoaderAjax = Drupal.ajax({
+
+    _getUntransformedText(callback) {
+      const fieldID = this.fieldModel.get('fieldID');
+      const textLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {
           nocssjs: true
@@ -130,5 +136,6 @@
 
       textLoaderAjax.execute();
     }
+
   });
 })(jQuery, Drupal, drupalSettings, _);

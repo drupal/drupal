@@ -10,8 +10,6 @@
  *  - system-status-report-counters.css
  */
 
-@import "../base/variables.pcss.css";
-
 .system-status-report {
   position: relative;
   padding-top: var(--space-m);

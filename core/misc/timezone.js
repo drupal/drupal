@@ -7,28 +7,28 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.setTimezone = {
-    attach: function attach(context, settings) {
-      var timezone = once('timezone', '.timezone-detect', context);
+    attach(context, settings) {
+      const timezone = once('timezone', '.timezone-detect', context);
 
       if (timezone.length) {
-        var $timezone = $(timezone);
-        var tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const $timezone = $(timezone);
+        const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        if (tz && $timezone.find("option[value=\"".concat(tz, "\"]")).length) {
+        if (tz && $timezone.find(`option[value="${tz}"]`).length) {
           $timezone.val(tz);
           return;
         }
 
-        var dateString = Date();
-        var matches = dateString.match(/\(([A-Z]{3,5})\)/);
-        var abbreviation = matches ? matches[1] : 0;
-        var dateNow = new Date();
-        var offsetNow = dateNow.getTimezoneOffset() * -60;
-        var dateJan = new Date(dateNow.getFullYear(), 0, 1, 12, 0, 0, 0);
-        var dateJul = new Date(dateNow.getFullYear(), 6, 1, 12, 0, 0, 0);
-        var offsetJan = dateJan.getTimezoneOffset() * -60;
-        var offsetJul = dateJul.getTimezoneOffset() * -60;
-        var isDaylightSavingTime;
+        const dateString = Date();
+        const matches = dateString.match(/\(([A-Z]{3,5})\)/);
+        const abbreviation = matches ? matches[1] : 0;
+        const dateNow = new Date();
+        const offsetNow = dateNow.getTimezoneOffset() * -60;
+        const dateJan = new Date(dateNow.getFullYear(), 0, 1, 12, 0, 0, 0);
+        const dateJul = new Date(dateNow.getFullYear(), 6, 1, 12, 0, 0, 0);
+        const offsetJan = dateJan.getTimezoneOffset() * -60;
+        const offsetJul = dateJul.getTimezoneOffset() * -60;
+        let isDaylightSavingTime;
 
         if (offsetJan === offsetJul) {
           isDaylightSavingTime = '';
@@ -38,7 +38,7 @@
           isDaylightSavingTime = 0;
         }
 
-        var path = "system/timezone/".concat(abbreviation, "/").concat(offsetNow, "/").concat(isDaylightSavingTime);
+        const path = `system/timezone/${abbreviation}/${offsetNow}/${isDaylightSavingTime}`;
         $.ajax({
           async: false,
           url: Drupal.url(path),
@@ -46,13 +46,16 @@
             date: dateString
           },
           dataType: 'json',
-          success: function success(data) {
+
+          success(data) {
             if (data) {
               $timezone.val(data);
             }
           }
+
         });
       }
     }
+
   };
 })(jQuery, Drupal);

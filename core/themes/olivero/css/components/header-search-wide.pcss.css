@@ -3,7 +3,7 @@
  * Header Search Wide Block.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 /* Override contextual links so we can position against .site-header. */
 .block-search-wide.contextual-region {

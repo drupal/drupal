@@ -5,25 +5,25 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(Drupal => {
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    var navButtons = document.querySelector('[data-drupal-selector="mobile-buttons"]');
+    const navButtons = document.querySelector('[data-drupal-selector="mobile-buttons"]');
     return navButtons ? window.getComputedStyle(navButtons).getPropertyValue('display') === 'none' : false;
   }
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
-  var stickyHeaderToggleButton = document.querySelector('[data-drupal-selector="sticky-header-toggle"]');
-  var siteHeaderFixable = document.querySelector('[data-drupal-selector="site-header-fixable"]');
+  const stickyHeaderToggleButton = document.querySelector('[data-drupal-selector="sticky-header-toggle"]');
+  const siteHeaderFixable = document.querySelector('[data-drupal-selector="site-header-fixable"]');
 
   function stickyHeaderIsEnabled() {
     return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
   }
 
   function setStickyHeaderStorage(expandedState) {
-    var now = new Date();
-    var item = {
+    const now = new Date();
+    const item = {
       value: expandedState,
       expiry: now.getTime() + 20160000
     };
@@ -44,10 +44,10 @@
   }
 
   function getStickyHeaderStorage() {
-    var stickyHeaderState = localStorage.getItem('Drupal.olivero.stickyHeaderState');
+    const stickyHeaderState = localStorage.getItem('Drupal.olivero.stickyHeaderState');
     if (!stickyHeaderState) return false;
-    var item = JSON.parse(stickyHeaderState);
-    var now = new Date();
+    const item = JSON.parse(stickyHeaderState);
+    const now = new Date();
 
     if (now.getTime() > item.expiry) {
       localStorage.removeItem('Drupal.olivero.stickyHeaderState');
@@ -58,27 +58,24 @@
   }
 
   if ('IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
-    var fixableElements = document.querySelectorAll('[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]');
+    const fixableElements = document.querySelectorAll('[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]');
 
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
-      entries.forEach(function (entry) {
+      entries.forEach(entry => {
         if (entry.intersectionRatio < 1) {
-          fixableElements.forEach(function (el) {
-            return el.classList.add('is-fixed');
-          });
+          fixableElements.forEach(el => el.classList.add('is-fixed'));
         } else {
-          fixableElements.forEach(function (el) {
-            return el.classList.remove('is-fixed');
-          });
+          fixableElements.forEach(el => el.classList.remove('is-fixed'));
         }
       });
     }
 
     function getRootMargin() {
-      var rootMarginTop = 72;
-      var _document = document,
-          body = _document.body;
+      let rootMarginTop = 72;
+      const {
+        body
+      } = document;
 
       if (body.classList.contains('toolbar-fixed')) {
         rootMarginTop -= 39;
@@ -88,16 +85,16 @@
         rootMarginTop -= 40;
       }
 
-      return "".concat(rootMarginTop, "px 0px 0px 0px");
+      return `${rootMarginTop}px 0px 0px 0px`;
     }
 
     function monitorNavPosition() {
-      var primaryNav = document.querySelector('[data-drupal-selector="site-header"]');
-      var options = {
+      const primaryNav = document.querySelector('[data-drupal-selector="site-header"]');
+      const options = {
         rootMargin: getRootMargin(),
         threshold: [0.999, 1]
       };
-      var observer = new IntersectionObserver(toggleDesktopNavVisibility, options);
+      const observer = new IntersectionObserver(toggleDesktopNavVisibility, options);
 
       if (primaryNav) {
         observer.observe(primaryNav);
@@ -105,19 +102,19 @@
     }
 
     if (stickyHeaderToggleButton) {
-      stickyHeaderToggleButton.addEventListener('click', function () {
+      stickyHeaderToggleButton.addEventListener('click', () => {
         toggleStickyHeaderState(!stickyHeaderIsEnabled());
       });
     }
 
-    var siteHeaderInner = document.querySelector('[data-drupal-selector="site-header-inner"]');
+    const siteHeaderInner = document.querySelector('[data-drupal-selector="site-header-inner"]');
 
     if (siteHeaderInner) {
-      siteHeaderInner.addEventListener('focusin', function () {
+      siteHeaderInner.addEventListener('focusin', () => {
         if (isDesktopNav() && !stickyHeaderIsEnabled()) {
-          var header = document.querySelector('[data-drupal-selector="site-header"]');
-          var headerNav = header.querySelector('[data-drupal-selector="header-nav"]');
-          var headerMargin = header.clientHeight - headerNav.clientHeight;
+          const header = document.querySelector('[data-drupal-selector="site-header"]');
+          const headerNav = header.querySelector('[data-drupal-selector="header-nav"]');
+          const headerMargin = header.clientHeight - headerNav.clientHeight;
 
           if (window.scrollY > headerMargin) {
             window.scrollTo(0, headerMargin);

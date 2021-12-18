@@ -13,14 +13,14 @@
 .ui-dialog {
   padding: 0;
   border: 0;
-  border-radius: 0.25rem;
+  border-radius: var(--jui-dialog-border-radius);
   background: transparent;
-  box-shadow: 0 0 1rem -0.25rem #232429;
+  box-shadow: var(--jui-dialog-box-shadow);
 }
 
 .ui-dialog:focus {
-  outline: 2px dotted transparent;
-  box-shadow: 0 0 0 3px #26a769;
+  outline: var(--jui-dialog--focus-outline);
+  box-shadow: var(--jui-dialog--focus-box-shadow);
 }
 
 @media all and (max-width: 48em) { /* 768px */
@@ -33,22 +33,22 @@
 .ui-dialog .ui-dialog-titlebar {
   position: relative;
   box-sizing: border-box;
-  padding: 1rem 4rem 1rem 1.5rem; /* LTR */
-  color: #fff;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  background: #232429;
-  line-height: 2rem;
+  padding: var(--space-m) var(--jui-dialog-close-button-reserved-space) var(--space-m) var(--space-l); /* LTR */
+  color: var(--jui-dialog-title-color);
+  border-top-left-radius: var(--jui-dialog-border-radius);
+  border-top-right-radius: var(--jui-dialog-border-radius);
+  background: var(--jui-dialog-title-bg-color);
+  line-height: calc(var(--space-m)*2);
 }
 
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar {
-  padding-right: 1.5rem;
-  padding-left: 4rem;
+  padding-right: var(--space-l);
+  padding-left: var(--jui-dialog-close-button-reserved-space);
 }
 
 .ui-dialog .ui-dialog-title {
   -webkit-font-smoothing: antialiased;
-  font-size: 1.424rem;
+  font-size: var(--jui-dialog-title-font-size);
   font-weight: bold;
 }
 
@@ -57,14 +57,14 @@
   top: 50%;
   right: 0; /* LTR */
   box-sizing: border-box;
-  width: 2rem;
-  height: 2rem;
-  margin: 0 1.5rem;
+  width: var(--jui-dialog-close-button-size);
+  height: var(--jui-dialog-close-button-size);
+  margin: 0 var(--space-l);
   padding: 0;
   transition: all 0.1s;
   transform: translateY(-50%);
   border: 2px solid transparent;
-  border-radius: 50%;
+  border-radius: var(--jui-dialog-close-button-border-radius);
   background: none;
 }
 
@@ -74,12 +74,12 @@
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover {
-  border-color: #fff;
+  border-color: var(--color-white);
 }
 
 .ui-dialog .ui-dialog-titlebar-close:focus {
-  border-color: #26a769;
-  outline: 2px dotted transparent;
+  border-color: var(--color-focus);
+  outline: var(--jui-dialog--focus-outline);
   box-shadow: none;
 }
 
@@ -93,21 +93,21 @@
 
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
-  padding: 1rem 1.5rem;
-  color: #232429;
-  background: #fff;
+  padding: var(--space-m) var(--space-l);
+  color: var(--color-text);
+  background: var(--color-white);
 }
 
 .ui-dialog > .ui-dialog-buttonpane {
-  color: #232429;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  background: #f3f4f9;
+  color: var(--color-text);
+  border-bottom-right-radius: var(--jui-dialog-border-radius);
+  border-bottom-left-radius: var(--jui-dialog-border-radius);
+  background: var(--color-gray-050);
 }
 
 .ui-dialog-buttonpane .ui-dialog-buttonset {
   justify-content: flex-end;
-  margin: 0 0.75rem;
+  margin: 0 var(--space-s);
 }
 
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {

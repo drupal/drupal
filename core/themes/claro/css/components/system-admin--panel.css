@@ -14,13 +14,13 @@
   margin-top: 1em;
   margin-bottom: 3em;
   padding: 0;
-  border-bottom: 0.0625em solid #d3d4d9;
+  border-bottom: 0.0625em solid var(--color-gray-200);
 }
 
 .panel__title {
   margin: 0;
   padding: 0.66667em 1.33333em;
-  background: #f3f4f9;
+  background: var(--color-gray-050);
   font-size: 1.125em;
   line-height: 1.33333em;
 }

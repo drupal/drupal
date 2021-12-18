@@ -7,20 +7,20 @@
 
 (function ($, Backbone, Drupal) {
   Drupal.toolbar.MenuVisualView = Backbone.View.extend({
-    initialize: function initialize() {
+    initialize() {
       this.listenTo(this.model, 'change:subtrees', this.render);
     },
-    render: function render() {
-      var _this = this;
 
-      var subtrees = this.model.get('subtrees');
-      Object.keys(subtrees || {}).forEach(function (id) {
-        $(once('toolbar-subtrees', _this.$el.find("#toolbar-link-".concat(id)))).after(subtrees[id]);
+    render() {
+      const subtrees = this.model.get('subtrees');
+      Object.keys(subtrees || {}).forEach(id => {
+        $(once('toolbar-subtrees', this.$el.find(`#toolbar-link-${id}`))).after(subtrees[id]);
       });
 
       if ('drupalToolbarMenu' in $.fn) {
         this.$el.children('.toolbar-menu').drupalToolbarMenu();
       }
     }
+
   });
 })(jQuery, Backbone, Drupal);

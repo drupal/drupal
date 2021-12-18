@@ -5,11 +5,11 @@
 * @preserve
 **/
 
-(function ($) {
+($ => {
   jQuery.event.addProp('which', function (event) {
-    var keyEventRegex = /^key/;
-    var mouseEventRegex = /^(?:mouse|pointer|contextmenu|drag|drop)|click/;
-    var button = event.button;
+    const keyEventRegex = /^key/;
+    const mouseEventRegex = /^(?:mouse|pointer|contextmenu|drag|drop)|click/;
+    const button = event.button;
 
     if (event.which == null && keyEventRegex.test(event.type)) {
       return event.charCode != null ? event.charCode : event.keyCode;

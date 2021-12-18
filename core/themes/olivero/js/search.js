@@ -5,9 +5,9 @@
 * @preserve
 **/
 
-(function (Drupal) {
-  var searchWideButton = document.querySelector('[data-drupal-selector="block-search-wide-button"]');
-  var searchWideWrapper = document.querySelector('[data-drupal-selector="block-search-wide-wrapper"]');
+(Drupal => {
+  const searchWideButton = document.querySelector('[data-drupal-selector="block-search-wide-button"]');
+  const searchWideWrapper = document.querySelector('[data-drupal-selector="block-search-wide-wrapper"]');
 
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
@@ -38,24 +38,25 @@
   }
 
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
-  document.addEventListener('keyup', function (e) {
+  document.addEventListener('keyup', e => {
     if (e.key === 'Escape' || e.key === 'Esc') {
       toggleSearchVisibility(false);
     }
   });
-  searchWideButton.addEventListener('click', function () {
+  searchWideButton.addEventListener('click', () => {
     toggleSearchVisibility(!searchIsVisible());
   });
   Drupal.behaviors.searchWide = {
-    attach: function attach(context) {
-      var searchWideButton = once('search-wide', '[data-drupal-selector="block-search-wide-button"]', context).shift();
+    attach(context) {
+      const searchWideButton = once('search-wide', '[data-drupal-selector="block-search-wide-button"]', context).shift();
 
       if (searchWideButton) {
         searchWideButton.setAttribute('aria-expanded', 'false');
       }
     }
+
   };
-  document.querySelector('[data-drupal-selector="search-block-form-2"]').addEventListener('focusout', function (e) {
+  document.querySelector('[data-drupal-selector="search-block-form-2"]').addEventListener('focusout', e => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
       toggleSearchVisibility(false);
     }

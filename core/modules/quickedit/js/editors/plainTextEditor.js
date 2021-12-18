@@ -8,17 +8,18 @@
 (function ($, _, Drupal) {
   Drupal.quickedit.editors.plain_text = Drupal.quickedit.EditorView.extend({
     $textElement: null,
-    initialize: function initialize(options) {
+
+    initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
-      var editorModel = this.model;
-      var fieldModel = this.fieldModel;
-      var $fieldItems = this.$el.find('.quickedit-field');
-      var $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
+      const editorModel = this.model;
+      const fieldModel = this.fieldModel;
+      const $fieldItems = this.$el.find('.quickedit-field');
+      const $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
       this.$textElement = $textElement;
       editorModel.set('originalValue', this.$textElement.text().trim());
-      var previousText = editorModel.get('originalValue');
-      $textElement.on('keyup paste', function (event) {
-        var currentText = $textElement.text().trim();
+      let previousText = editorModel.get('originalValue');
+      $textElement.on('keyup paste', event => {
+        const currentText = $textElement.text().trim();
 
         if (previousText !== currentText) {
           previousText = currentText;
@@ -27,12 +28,14 @@
         }
       });
     },
-    getEditedElement: function getEditedElement() {
+
+    getEditedElement() {
       return this.$textElement;
     },
-    stateChange: function stateChange(fieldModel, state, options) {
-      var from = fieldModel.previous('state');
-      var to = state;
+
+    stateChange(fieldModel, state, options) {
+      const from = fieldModel.previous('state');
+      const to = state;
 
       switch (to) {
         case 'inactive':
@@ -53,7 +56,7 @@
           break;
 
         case 'activating':
-          _.defer(function () {
+          _.defer(() => {
             fieldModel.set('state', 'active');
           });
 
@@ -82,7 +85,8 @@
           break;
       }
     },
-    getQuickEditUISettings: function getQuickEditUISettings() {
+
+    getQuickEditUISettings() {
       return {
         padding: true,
         unifiedToolbar: false,
@@ -90,8 +94,10 @@
         popup: false
       };
     },
-    revert: function revert() {
+
+    revert() {
       this.$textElement.html(this.model.get('originalValue'));
     }
+
   });
 })(jQuery, _, Drupal);

@@ -24,7 +24,7 @@
 }
 
 .ui-dialog {
-  z-index: 1260;
+  z-index: var(--jui-dialog-z-index);
 }
 
 /**
@@ -544,9 +544,9 @@
  */
 
 .ui-widget-overlay {
-  z-index: 1259;
+  z-index: calc(var(--jui-dialog-z-index) - 1);
   opacity: 0.7;
-  background: #232429;
+  background: var(--color-text);
 }
 
 /**
@@ -597,12 +597,12 @@
 
 .ui-autocomplete {
   overflow: hidden;
-  color: #55565b;
-  border: 1px solid rgba(216, 217, 224, 0.8);
+  color: var(--jui-dropdown-fg-color);
+  border: var(--input-border-size) solid var(--jui-dropdown-border-color);
   border-top: 0;
-  border-radius: 0 0 0.125rem 0.125rem;
-  background: #fff;
-  box-shadow: 0 0.125rem 0.25rem rgba(34, 35, 48, 0.1);
+  border-radius: 0 0 var(--input-border-radius-size) var(--input-border-radius-size);
+  background: var(--jui-dropdown-bg-color);
+  box-shadow: 0 0.125rem 0.25rem var(--jui-dropdown-shadow-color);
 }
 
 /* Suggestion list */
@@ -625,8 +625,8 @@
 
 .ui-autocomplete .ui-menu-item-wrapper.ui-state-active {
   margin: 0;
-  color: #fff;
-  background: #003cc5;
+  color: var(--jui-dropdown--active-fg-color);
+  background: var(--jui-dropdown--active-bg-color);
 }
 
 .ui-autocomplete .ui-menu-item.ui-state-focus,

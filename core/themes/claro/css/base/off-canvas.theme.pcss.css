@@ -5,8 +5,6 @@
  * Contains overrides for jQuery UI dialog.
  */
 
-@import "./variables.pcss.css";
-
 /* Style the dialog-off-canvas container. */
 .ui-dialog.ui-dialog-off-canvas {
   /* Layer the dialog just under the toolbar. */

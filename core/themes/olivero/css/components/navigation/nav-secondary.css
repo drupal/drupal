@@ -10,9 +10,22 @@
  * Secondary navigation styling.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .secondary-nav {
   letter-spacing: 0.02em;
-  font-size: 0.875rem;
+  font-size: var(--font-size-s);
   font-weight: 600;
 }
 
@@ -70,18 +83,18 @@
 }
 
 [dir="ltr"] .secondary-nav__menu-item:not(:last-child) {
-    margin-right: 1.6875rem;
+    margin-right: var(--sp1-5);
 }
 
 [dir="rtl"] .secondary-nav__menu-item:not(:last-child) {
-    margin-left: 1.6875rem;
+    margin-left: var(--sp1-5);
 }
 
 .secondary-nav__menu-link {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 2.25rem;
+  height: var(--sp2);
   text-decoration: none;
   color: inherit
 }
@@ -107,16 +120,16 @@
 
 @media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-left: 1.125rem;
+      margin-left: var(--sp);
   }
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-right: 1.125rem;
+      margin-right: var(--sp);
   }
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-left: 2.25rem;
+      padding-left: var(--sp2);
   }
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-right: 2.25rem;
+      padding-right: var(--sp2);
   }
     body:not(.is-always-mobile-nav) .secondary-nav {
       position: relative;
@@ -135,18 +148,18 @@
         position: absolute;
         top: 50%;
         width: 2px;
-        height: 2.25rem;
+        height: var(--sp2);
         content: "";
         transform: translateY(-50%);
-        background-color: #d7e1e8;
+        background-color: var(--color--gray-70);
       }
 
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav__menu-item:not(:last-child) {
-      margin-right: 2.25rem;
+      margin-right: var(--sp2);
   }
 
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav__menu-item:not(:last-child) {
-      margin-left: 2.25rem;
+      margin-left: var(--sp2);
   }
       body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus {
         position: relative;
@@ -157,11 +170,11 @@
           position: absolute;
           top: 50%;
           left: 50%;
-          width: calc(100% + 1.125rem);
-          height: 3.375rem;
+          width: calc(100% + var(--sp));
+          height: var(--sp3);
           content: "";
           transform: translate(-50%, -50%);
-          border: solid 2px #2494db;
+          border: solid 2px var(--color--blue-50);
           border-radius: 0.25rem;
         }
   }

@@ -5,17 +5,18 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(Drupal => {
   Drupal.behaviors.focusFirstTest = {
-    attach: function attach() {
-      once('focusin', document.body).forEach(function (element) {
-        element.addEventListener('focusin', function (e) {
-          document.querySelectorAll('[data-has-focus]').forEach(function (wasFocused) {
+    attach() {
+      once('focusin', document.body).forEach(element => {
+        element.addEventListener('focusin', e => {
+          document.querySelectorAll('[data-has-focus]').forEach(wasFocused => {
             wasFocused.removeAttribute('data-has-focus');
           });
           e.target.setAttribute('data-has-focus', true);
         });
       });
     }
+
   };
 })(Drupal, once);

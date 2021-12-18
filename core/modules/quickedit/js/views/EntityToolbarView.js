@@ -8,35 +8,38 @@
 (function ($, _, Backbone, Drupal, debounce, Popper) {
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend({
     _fieldToolbarRoot: null,
-    events: function events() {
-      var map = {
+
+    events() {
+      const map = {
         'click button.action-save': 'onClickSave',
         'click button.action-cancel': 'onClickCancel',
         mouseenter: 'onMouseenter'
       };
       return map;
     },
-    initialize: function initialize(options) {
-      var that = this;
+
+    initialize(options) {
+      const that = this;
       this.appModel = options.appModel;
       this.$entity = $(this.model.get('el'));
       this.listenTo(this.model, 'change:isActive change:isDirty change:state', this.render);
       this.listenTo(this.appModel, 'change:highlightedField change:activeField', this.render);
       this.listenTo(this.model.get('fields'), 'change:state', this.fieldStateChange);
       $(window).on('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit', debounce($.proxy(this.windowChangeHandler, this), 150));
-      $(document).on('drupalViewportOffsetChange.quickedit', function (event, offsets) {
+      $(document).on('drupalViewportOffsetChange.quickedit', (event, offsets) => {
         if (that.$fence) {
           that.$fence.css(offsets);
         }
       });
-      var $toolbar = this.buildToolbarEl();
+      const $toolbar = this.buildToolbarEl();
       this.setElement($toolbar);
       this._fieldToolbarRoot = $toolbar.find('.quickedit-toolbar-field').get(0);
       this.render();
     },
-    render: function render() {
+
+    render() {
       if (this.model.get('isActive')) {
-        var $body = $('body');
+        const $body = $('body');
 
         if ($body.children('#quickedit-entity-toolbar').length === 0) {
           $body.append(this.$el);
@@ -51,8 +54,8 @@
         this.position();
       }
 
-      var $button = this.$el.find('.quickedit-button.action-save');
-      var isDirty = this.model.get('isDirty');
+      const $button = this.$el.find('.quickedit-button.action-save');
+      const isDirty = this.model.get('isDirty');
 
       switch (this.model.get('state')) {
         case 'opened':
@@ -70,16 +73,19 @@
 
       return this;
     },
-    remove: function remove() {
+
+    remove() {
       this.$fence.remove();
       $(window).off('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit');
       $(document).off('drupalViewportOffsetChange.quickedit');
       Backbone.View.prototype.remove.call(this);
     },
-    windowChangeHandler: function windowChangeHandler(event) {
+
+    windowChangeHandler(event) {
       this.position();
     },
-    fieldStateChange: function fieldStateChange(model, state) {
+
+    fieldStateChange(model, state) {
       switch (state) {
         case 'active':
           this.render();
@@ -90,16 +96,17 @@
           break;
       }
     },
-    position: function position(element) {
+
+    position(element) {
       clearTimeout(this.timer);
-      var that = this;
-      var edge = document.documentElement.dir === 'rtl' ? 'right' : 'left';
-      var delay = 0;
-      var check = 0;
-      var horizontalPadding = 0;
-      var of;
-      var activeField;
-      var highlightedField;
+      const that = this;
+      const edge = document.documentElement.dir === 'rtl' ? 'right' : 'left';
+      let delay = 0;
+      let check = 0;
+      let horizontalPadding = 0;
+      let of;
+      let activeField;
+      let highlightedField;
 
       do {
         switch (check) {
@@ -129,12 +136,12 @@
 
           default:
             {
-              var fieldModels = this.model.get('fields').models;
-              var topMostPosition = 1000000;
-              var topMostField = null;
+              const fieldModels = this.model.get('fields').models;
+              let topMostPosition = 1000000;
+              let topMostField = null;
 
-              for (var i = 0; i < fieldModels.length; i++) {
-                var pos = fieldModels[i].get('el').getBoundingClientRect().top;
+              for (let i = 0; i < fieldModels.length; i++) {
+                const pos = fieldModels[i].get('el').getBoundingClientRect().top;
 
                 if (pos < topMostPosition) {
                   topMostPosition = pos;
@@ -151,23 +158,24 @@
         check++;
       } while (!of);
 
-      function refinePopper(_ref) {
-        var state = _ref.state;
-        var isBelow = state.placement.split('-')[0] === 'bottom';
-        var classListMethod = isBelow ? 'add' : 'remove';
+      function refinePopper({
+        state
+      }) {
+        const isBelow = state.placement.split('-')[0] === 'bottom';
+        const classListMethod = isBelow ? 'add' : 'remove';
         state.elements.popper.classList[classListMethod]('quickedit-toolbar-pointer-top');
       }
 
       function positionToolbar() {
-        var popperElement = that.el;
-        var referenceElement = of;
-        var boundariesElement = that.$fence[0];
-        var popperedge = edge === 'left' ? 'start' : 'end';
+        const popperElement = that.el;
+        const referenceElement = of;
+        const boundariesElement = that.$fence[0];
+        const popperedge = edge === 'left' ? 'start' : 'end';
 
         if (referenceElement !== undefined) {
           if (!popperElement.classList.contains('js-popper-processed')) {
             that.popper = Popper.createPopper(referenceElement, popperElement, {
-              placement: "top-".concat(popperedge),
+              placement: `top-${popperedge}`,
               modifiers: [{
                 name: 'flip',
                 options: {
@@ -210,24 +218,28 @@
         });
       }
 
-      this.timer = setTimeout(function () {
+      this.timer = setTimeout(() => {
         _.defer(positionToolbar);
       }, delay);
     },
-    onClickSave: function onClickSave(event) {
+
+    onClickSave(event) {
       event.stopPropagation();
       event.preventDefault();
       this.model.set('state', 'committing');
     },
-    onClickCancel: function onClickCancel(event) {
+
+    onClickCancel(event) {
       event.preventDefault();
       this.model.set('state', 'deactivating');
     },
-    onMouseenter: function onMouseenter(event) {
+
+    onMouseenter(event) {
       clearTimeout(this.timer);
     },
-    buildToolbarEl: function buildToolbarEl() {
-      var $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
+
+    buildToolbarEl() {
+      const $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
         id: 'quickedit-entity-toolbar'
       }));
       $toolbar.find('.quickedit-toolbar-entity').prepend(Drupal.theme('quickeditToolgroup', {
@@ -250,25 +262,27 @@
       });
       return $toolbar;
     },
-    getToolbarRoot: function getToolbarRoot() {
+
+    getToolbarRoot() {
       return this._fieldToolbarRoot;
     },
-    label: function label() {
-      var label = '';
-      var entityLabel = this.model.get('label');
-      var activeField = Drupal.quickedit.app.model.get('activeField');
-      var activeFieldLabel = activeField && activeField.get('metadata').label;
-      var highlightedField = Drupal.quickedit.app.model.get('highlightedField');
-      var highlightedFieldLabel = highlightedField && highlightedField.get('metadata').label;
+
+    label() {
+      let label = '';
+      const entityLabel = this.model.get('label');
+      const activeField = Drupal.quickedit.app.model.get('activeField');
+      const activeFieldLabel = activeField && activeField.get('metadata').label;
+      const highlightedField = Drupal.quickedit.app.model.get('highlightedField');
+      const highlightedFieldLabel = highlightedField && highlightedField.get('metadata').label;
 
       if (activeFieldLabel) {
         label = Drupal.theme('quickeditEntityToolbarLabel', {
-          entityLabel: entityLabel,
+          entityLabel,
           fieldLabel: activeFieldLabel
         });
       } else if (highlightedFieldLabel) {
         label = Drupal.theme('quickeditEntityToolbarLabel', {
-          entityLabel: entityLabel,
+          entityLabel,
           fieldLabel: highlightedFieldLabel
         });
       } else {
@@ -277,17 +291,22 @@
 
       this.$el.find('.quickedit-toolbar-label').html(label);
     },
-    addClass: function addClass(toolgroup, classes) {
+
+    addClass(toolgroup, classes) {
       this._find(toolgroup).addClass(classes);
     },
-    removeClass: function removeClass(toolgroup, classes) {
+
+    removeClass(toolgroup, classes) {
       this._find(toolgroup).removeClass(classes);
     },
-    _find: function _find(toolgroup) {
-      return this.$el.find(".quickedit-toolbar .quickedit-toolgroup.".concat(toolgroup));
+
+    _find(toolgroup) {
+      return this.$el.find(`.quickedit-toolbar .quickedit-toolgroup.${toolgroup}`);
     },
-    show: function show(toolgroup) {
+
+    show(toolgroup) {
       this.$el.removeClass('quickedit-animate-invisible');
     }
+
   });
 })(jQuery, _, Backbone, Drupal, Drupal.debounce, Popper);

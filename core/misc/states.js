@@ -6,7 +6,7 @@
 **/
 
 (function ($, Drupal) {
-  var states = {
+  const states = {
     postponed: []
   };
   Drupal.states = states;
@@ -15,7 +15,7 @@
     return invertState && typeof a !== 'undefined' ? !a : a;
   }
 
-  function _compare2(a, b) {
+  function compare(a, b) {
     if (a === b) {
       return typeof a === 'undefined' ? a : true;
     }
@@ -36,119 +36,119 @@
   }
 
   Drupal.behaviors.states = {
-    attach: function attach(context, settings) {
-      var $states = $(context).find('[data-drupal-states]');
-      var il = $states.length;
+    attach(context, settings) {
+      const $states = $(context).find('[data-drupal-states]');
+      const il = $states.length;
 
-      var _loop = function _loop(i) {
-        var config = JSON.parse($states[i].getAttribute('data-drupal-states'));
-        Object.keys(config || {}).forEach(function (state) {
+      for (let i = 0; i < il; i++) {
+        const config = JSON.parse($states[i].getAttribute('data-drupal-states'));
+        Object.keys(config || {}).forEach(state => {
           new states.Dependent({
             element: $($states[i]),
             state: states.State.sanitize(state),
             constraints: config[state]
           });
         });
-      };
-
-      for (var i = 0; i < il; i++) {
-        _loop(i);
       }
 
       while (states.postponed.length) {
         states.postponed.shift()();
       }
     }
+
   };
 
   states.Dependent = function (args) {
-    var _this = this;
-
     $.extend(this, {
       values: {},
       oldValue: null
     }, args);
     this.dependees = this.getDependees();
-    Object.keys(this.dependees || {}).forEach(function (selector) {
-      _this.initializeDependee(selector, _this.dependees[selector]);
+    Object.keys(this.dependees || {}).forEach(selector => {
+      this.initializeDependee(selector, this.dependees[selector]);
     });
   };
 
   states.Dependent.comparisons = {
-    RegExp: function RegExp(reference, value) {
+    RegExp(reference, value) {
       return reference.test(value);
     },
-    Function: function Function(reference, value) {
+
+    Function(reference, value) {
       return reference(value);
     },
-    Number: function Number(reference, value) {
-      return typeof value === 'string' ? _compare2(reference.toString(), value) : _compare2(reference, value);
+
+    Number(reference, value) {
+      return typeof value === 'string' ? compare(reference.toString(), value) : compare(reference, value);
     }
+
   };
   states.Dependent.prototype = {
-    initializeDependee: function initializeDependee(selector, dependeeStates) {
-      var _this2 = this;
-
+    initializeDependee(selector, dependeeStates) {
       this.values[selector] = {};
-      Object.keys(dependeeStates).forEach(function (i) {
-        var state = dependeeStates[i];
+      Object.keys(dependeeStates).forEach(i => {
+        let state = dependeeStates[i];
 
         if ($.inArray(state, dependeeStates) === -1) {
           return;
         }
 
         state = states.State.sanitize(state);
-        _this2.values[selector][state.name] = null;
-        $(selector).on("state:".concat(state), {
-          selector: selector,
-          state: state
-        }, function (e) {
-          _this2.update(e.data.selector, e.data.state, e.value);
+        this.values[selector][state.name] = null;
+        $(selector).on(`state:${state}`, {
+          selector,
+          state
+        }, e => {
+          this.update(e.data.selector, e.data.state, e.value);
         });
         new states.Trigger({
-          selector: selector,
-          state: state
+          selector,
+          state
         });
       });
     },
-    compare: function compare(reference, selector, state) {
-      var value = this.values[selector][state.name];
+
+    compare(reference, selector, state) {
+      const value = this.values[selector][state.name];
 
       if (reference.constructor.name in states.Dependent.comparisons) {
         return states.Dependent.comparisons[reference.constructor.name](reference, value);
       }
 
-      return _compare2(reference, value);
+      return compare(reference, value);
     },
-    update: function update(selector, state, value) {
+
+    update(selector, state, value) {
       if (value !== this.values[selector][state.name]) {
         this.values[selector][state.name] = value;
         this.reevaluate();
       }
     },
-    reevaluate: function reevaluate() {
-      var value = this.verifyConstraints(this.constraints);
+
+    reevaluate() {
+      let value = this.verifyConstraints(this.constraints);
 
       if (value !== this.oldValue) {
         this.oldValue = value;
         value = invert(value, this.state.invert);
         this.element.trigger({
-          type: "state:".concat(this.state),
-          value: value,
+          type: `state:${this.state}`,
+          value,
           trigger: true
         });
       }
     },
-    verifyConstraints: function verifyConstraints(constraints, selector) {
-      var result;
+
+    verifyConstraints(constraints, selector) {
+      let result;
 
       if ($.isArray(constraints)) {
-        var hasXor = $.inArray('xor', constraints) === -1;
-        var len = constraints.length;
+        const hasXor = $.inArray('xor', constraints) === -1;
+        const len = constraints.length;
 
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
           if (constraints[i] !== 'xor') {
-            var constraint = this.checkConstraints(constraints[i], selector, i);
+            const constraint = this.checkConstraints(constraints[i], selector, i);
 
             if (constraint && (hasXor || result)) {
               return hasXor;
@@ -158,7 +158,7 @@
           }
         }
       } else if ($.isPlainObject(constraints)) {
-        for (var n in constraints) {
+        for (const n in constraints) {
           if (constraints.hasOwnProperty(n)) {
             result = ternary(result, this.checkConstraints(constraints[n], selector, n));
 
@@ -171,7 +171,8 @@
 
       return result;
     },
-    checkConstraints: function checkConstraints(value, selector, state) {
+
+    checkConstraints(value, selector, state) {
       if (typeof state !== 'string' || /[0-9]/.test(state[0])) {
         state = null;
       } else if (typeof selector === 'undefined') {
@@ -186,9 +187,10 @@
 
       return this.verifyConstraints(value, selector);
     },
-    getDependees: function getDependees() {
-      var cache = {};
-      var _compare = this.compare;
+
+    getDependees() {
+      const cache = {};
+      const _compare = this.compare;
 
       this.compare = function (reference, selector, state) {
         (cache[selector] || (cache[selector] = [])).push(state.name);
@@ -198,6 +200,7 @@
       this.compare = _compare;
       return cache;
     }
+
   };
 
   states.Trigger = function (args) {
@@ -206,94 +209,99 @@
     if (this.state in states.Trigger.states) {
       this.element = $(this.selector);
 
-      if (!this.element.data("trigger:".concat(this.state))) {
+      if (!this.element.data(`trigger:${this.state}`)) {
         this.initialize();
       }
     }
   };
 
   states.Trigger.prototype = {
-    initialize: function initialize() {
-      var _this3 = this;
-
-      var trigger = states.Trigger.states[this.state];
+    initialize() {
+      const trigger = states.Trigger.states[this.state];
 
       if (typeof trigger === 'function') {
         trigger.call(window, this.element);
       } else {
-        Object.keys(trigger || {}).forEach(function (event) {
-          _this3.defaultTrigger(event, trigger[event]);
+        Object.keys(trigger || {}).forEach(event => {
+          this.defaultTrigger(event, trigger[event]);
         });
       }
 
-      this.element.data("trigger:".concat(this.state), true);
+      this.element.data(`trigger:${this.state}`, true);
     },
-    defaultTrigger: function defaultTrigger(event, valueFn) {
-      var oldValue = valueFn.call(this.element);
+
+    defaultTrigger(event, valueFn) {
+      let oldValue = valueFn.call(this.element);
       this.element.on(event, $.proxy(function (e) {
-        var value = valueFn.call(this.element, e);
+        const value = valueFn.call(this.element, e);
 
         if (oldValue !== value) {
           this.element.trigger({
-            type: "state:".concat(this.state),
-            value: value,
-            oldValue: oldValue
+            type: `state:${this.state}`,
+            value,
+            oldValue
           });
           oldValue = value;
         }
       }, this));
       states.postponed.push($.proxy(function () {
         this.element.trigger({
-          type: "state:".concat(this.state),
+          type: `state:${this.state}`,
           value: oldValue,
           oldValue: null
         });
       }, this));
     }
+
   };
   states.Trigger.states = {
     empty: {
-      keyup: function keyup() {
+      keyup() {
         return this.val() === '';
       }
+
     },
     checked: {
-      change: function change() {
-        var checked = false;
+      change() {
+        let checked = false;
         this.each(function () {
           checked = $(this).prop('checked');
           return !checked;
         });
         return checked;
       }
+
     },
     value: {
-      keyup: function keyup() {
+      keyup() {
         if (this.length > 1) {
           return this.filter(':checked').val() || false;
         }
 
         return this.val();
       },
-      change: function change() {
+
+      change() {
         if (this.length > 1) {
           return this.filter(':checked').val() || false;
         }
 
         return this.val();
       }
+
     },
     collapsed: {
-      collapsed: function collapsed(e) {
+      collapsed(e) {
         return typeof e !== 'undefined' && 'value' in e ? e.value : !this.is('[open]');
       }
+
     }
   };
 
   states.State = function (state) {
     this.pristine = state;
     this.name = state;
-    var process = true;
+    let process = true;
 
     do {
       while (this.name.charAt(0) === '!') {
@@ -333,21 +341,23 @@
   };
   states.State.prototype = {
     invert: false,
-    toString: function toString() {
+
+    toString() {
       return this.name;
     }
+
   };
-  var $document = $(document);
-  $document.on('state:disabled', function (e) {
+  const $document = $(document);
+  $document.on('state:disabled', e => {
     if (e.trigger) {
       $(e.target).prop('disabled', e.value).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value).find('select, input, textarea').prop('disabled', e.value);
     }
   });
-  $document.on('state:required', function (e) {
+  $document.on('state:required', e => {
     if (e.trigger) {
       if (e.value) {
-        var label = "label".concat(e.target.id ? "[for=".concat(e.target.id, "]") : '');
-        var $label = $(e.target).attr({
+        const label = `label${e.target.id ? `[for=${e.target.id}]` : ''}`;
+        const $label = $(e.target).attr({
           required: 'required',
           'aria-required': 'true'
         }).closest('.js-form-item, .js-form-wrapper').find(label);
@@ -360,17 +370,17 @@
       }
     }
   });
-  $document.on('state:visible', function (e) {
+  $document.on('state:visible', e => {
     if (e.trigger) {
       $(e.target).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggle(e.value);
     }
   });
-  $document.on('state:checked', function (e) {
+  $document.on('state:checked', e => {
     if (e.trigger) {
       $(e.target).prop('checked', e.value);
     }
   });
-  $document.on('state:collapsed', function (e) {
+  $document.on('state:collapsed', e => {
     if (e.trigger) {
       if ($(e.target).is('[open]') === e.value) {
         $(e.target).find('> summary').trigger('click');

@@ -10,23 +10,26 @@
     $editedElement: null,
     editorView: null,
     _id: null,
-    initialize: function initialize(options) {
+
+    initialize(options) {
       this.$editedElement = options.$editedElement;
       this.editorView = options.editorView;
       this.$root = this.$el;
-      this._id = "quickedit-toolbar-for-".concat(this.model.id.replace(/[/[\]]/g, '_'));
+      this._id = `quickedit-toolbar-for-${this.model.id.replace(/[/[\]]/g, '_')}`;
       this.listenTo(this.model, 'change:state', this.stateChange);
     },
-    render: function render() {
+
+    render() {
       this.setElement($(Drupal.theme('quickeditFieldToolbar', {
         id: this._id
       })));
       this.$el.prependTo(this.$root);
       return this;
     },
-    stateChange: function stateChange(model, state) {
-      var from = model.previous('state');
-      var to = state;
+
+    stateChange(model, state) {
+      const from = model.previous('state');
+      const to = state;
 
       switch (to) {
         case 'inactive':
@@ -72,7 +75,8 @@
           break;
       }
     },
-    insertWYSIWYGToolGroups: function insertWYSIWYGToolGroups() {
+
+    insertWYSIWYGToolGroups() {
       this.$el.append(Drupal.theme('quickeditToolgroup', {
         id: this.getFloatedWysiwygToolgroupId(),
         classes: ['wysiwyg-floated', 'quickedit-animate-slow', 'quickedit-animate-invisible', 'quickedit-animate-delay-veryfast'],
@@ -85,27 +89,33 @@
       this.show('wysiwyg-floated');
       this.show('wysiwyg-main');
     },
-    getId: function getId() {
-      return "quickedit-toolbar-for-".concat(this._id);
-    },
-    getFloatedWysiwygToolgroupId: function getFloatedWysiwygToolgroupId() {
-      return "quickedit-wysiwyg-floated-toolgroup-for-".concat(this._id);
-    },
-    getMainWysiwygToolgroupId: function getMainWysiwygToolgroupId() {
-      return "quickedit-wysiwyg-main-toolgroup-for-".concat(this._id);
-    },
-    _find: function _find(toolgroup) {
-      return this.$el.find(".quickedit-toolgroup.".concat(toolgroup));
-    },
-    show: function show(toolgroup) {
-      var $group = this._find(toolgroup);
 
-      $group.on(Drupal.quickedit.util.constants.transitionEnd, function (event) {
+    getId() {
+      return `quickedit-toolbar-for-${this._id}`;
+    },
+
+    getFloatedWysiwygToolgroupId() {
+      return `quickedit-wysiwyg-floated-toolgroup-for-${this._id}`;
+    },
+
+    getMainWysiwygToolgroupId() {
+      return `quickedit-wysiwyg-main-toolgroup-for-${this._id}`;
+    },
+
+    _find(toolgroup) {
+      return this.$el.find(`.quickedit-toolgroup.${toolgroup}`);
+    },
+
+    show(toolgroup) {
+      const $group = this._find(toolgroup);
+
+      $group.on(Drupal.quickedit.util.constants.transitionEnd, event => {
         $group.off(Drupal.quickedit.util.constants.transitionEnd);
       });
-      window.setTimeout(function () {
+      window.setTimeout(() => {
         $group.removeClass('quickedit-animate-invisible');
       }, 0);
     }
+
   });
 })(jQuery, _, Backbone, Drupal);

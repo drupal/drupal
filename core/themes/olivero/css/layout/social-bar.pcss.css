@@ -4,7 +4,7 @@
  .
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .social-bar {
   @media (--nav) {

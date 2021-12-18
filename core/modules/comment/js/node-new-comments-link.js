@@ -19,15 +19,15 @@
   }
 
   function processNodeNewCommentLinks(placeholders) {
-    var $placeholdersToUpdate = {};
-    var fieldName = 'comment';
-    var $placeholder;
-    placeholders.forEach(function (placeholder) {
+    const $placeholdersToUpdate = {};
+    let fieldName = 'comment';
+    let $placeholder;
+    placeholders.forEach(placeholder => {
       $placeholder = $(placeholder);
-      var timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+      const timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
       fieldName = $placeholder.attr('data-history-node-field-name');
-      var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
-      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+      const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+      const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
         $placeholdersToUpdate[nodeID] = $placeholder;
@@ -35,14 +35,14 @@
         remove($placeholder);
       }
     });
-    var nodeIDs = Object.keys($placeholdersToUpdate);
+    const nodeIDs = Object.keys($placeholdersToUpdate);
 
     if (nodeIDs.length === 0) {
       return;
     }
 
     function render(results) {
-      Object.keys(results || {}).forEach(function (nodeID) {
+      Object.keys(results || {}).forEach(nodeID => {
         if ($placeholdersToUpdate.hasOwnProperty(nodeID)) {
           $placeholdersToUpdate[nodeID].attr('href', results[nodeID].first_new_comment_link).text(Drupal.formatPlural(results[nodeID].new_comment_count, '1 new comment', '@count new comments')).removeClass('hidden');
           show($placeholdersToUpdate[nodeID]);
@@ -67,12 +67,12 @@
   }
 
   Drupal.behaviors.nodeNewCommentsLink = {
-    attach: function attach(context) {
-      var nodeIDs = [];
-      var placeholders = once('history', '[data-history-node-last-comment-timestamp]', context).filter(function (placeholder) {
-        var $placeholder = $(placeholder);
-        var lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
-        var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+    attach(context) {
+      const nodeIDs = [];
+      const placeholders = once('history', '[data-history-node-last-comment-timestamp]', context).filter(placeholder => {
+        const $placeholder = $(placeholder);
+        const lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+        const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
 
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
           nodeIDs.push(nodeID);
@@ -88,9 +88,10 @@
         return;
       }
 
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
+      Drupal.history.fetchTimestamps(nodeIDs, () => {
         processNodeNewCommentLinks(placeholders);
       });
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

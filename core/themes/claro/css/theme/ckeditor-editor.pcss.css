@@ -2,8 +2,6 @@
  * @file
  * CKEditor appearance overrides.
  */
-@import "../base/variables.pcss.css";
-
 :root {
   --ckeditor-chrome-border-size: var(--input-border-size); /* 1px */
   --ckeditor-chrome-border-radius: var(--base-border-radius);

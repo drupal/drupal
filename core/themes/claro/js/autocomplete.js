@@ -5,20 +5,20 @@
 * @preserve
 **/
 
-(function ($, Drupal, once) {
+(($, Drupal, once) => {
   Drupal.behaviors.claroAutoCompete = {
-    attach: function attach(context) {
-      once('claroAutoComplete', 'input.form-autocomplete', context).forEach(function (value) {
-        var $input = $(value);
-        var timeout = 400;
-        var classRemoveTimeout;
+    attach(context) {
+      once('claroAutoComplete', 'input.form-autocomplete', context).forEach(value => {
+        const $input = $(value);
+        const timeout = 400;
+        let classRemoveTimeout;
 
-        var classRemove = function classRemove($autoCompleteElem) {
+        const classRemove = $autoCompleteElem => {
           $autoCompleteElem.removeClass('is-autocompleting');
           $autoCompleteElem.siblings('[data-drupal-selector="autocomplete-message"]').addClass('hidden');
         };
 
-        $input.on('input autocompletesearch autocompleteresponses', function (event) {
+        $input.on('input autocompletesearch autocompleteresponses', event => {
           if (event && event.type && event.type === 'autocompletesearch') {
             $(event.target).addClass('is-autocompleting');
             $(event.target).siblings('[data-drupal-selector="autocomplete-message"]').removeClass('hidden');
@@ -29,5 +29,6 @@
         });
       });
     }
+
   };
 })(jQuery, Drupal, once);

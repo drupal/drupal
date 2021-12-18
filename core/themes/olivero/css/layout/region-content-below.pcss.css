@@ -3,7 +3,7 @@
  * Content below region layout.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .region--content-below {
   @media (--md) {

@@ -5,27 +5,31 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(($, Drupal) => {
   Drupal.behaviors.ClickToSelect = {
-    attach: function attach(context) {
-      $(once('media-library-click-to-select', '.js-click-to-select-trigger', context)).on('click', function (event) {
+    attach(context) {
+      $(once('media-library-click-to-select', '.js-click-to-select-trigger', context)).on('click', event => {
         event.preventDefault();
-        var $input = $(event.currentTarget).closest('.js-click-to-select').find('.js-click-to-select-checkbox input');
+        const $input = $(event.currentTarget).closest('.js-click-to-select').find('.js-click-to-select-checkbox input');
         $input.prop('checked', !$input.prop('checked')).trigger('change');
       });
-      $(once('media-library-click-to-select', '.js-click-to-select-checkbox input', context)).on('change', function (_ref) {
-        var currentTarget = _ref.currentTarget;
+      $(once('media-library-click-to-select', '.js-click-to-select-checkbox input', context)).on('change', ({
+        currentTarget
+      }) => {
         $(currentTarget).closest('.js-click-to-select').toggleClass('checked', $(currentTarget).prop('checked'));
-      }).on('focus blur', function (_ref2) {
-        var currentTarget = _ref2.currentTarget,
-            type = _ref2.type;
+      }).on('focus blur', ({
+        currentTarget,
+        type
+      }) => {
         $(currentTarget).closest('.js-click-to-select').toggleClass('is-focus', type === 'focus');
       });
-      $(once('media-library-click-to-select-hover', '.js-click-to-select-trigger, .js-click-to-select-checkbox', context)).on('mouseover mouseout', function (_ref3) {
-        var currentTarget = _ref3.currentTarget,
-            type = _ref3.type;
+      $(once('media-library-click-to-select-hover', '.js-click-to-select-trigger, .js-click-to-select-checkbox', context)).on('mouseover mouseout', ({
+        currentTarget,
+        type
+      }) => {
         $(currentTarget).closest('.js-click-to-select').toggleClass('is-hover', type === 'mouseover');
       });
     }
+
   };
 })(jQuery, Drupal);

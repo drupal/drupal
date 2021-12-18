@@ -3,7 +3,7 @@
  * Checkbox and radio input elements.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 input[type="checkbox"],
 input[type="radio"] {

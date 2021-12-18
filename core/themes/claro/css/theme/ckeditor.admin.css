@@ -19,5 +19,5 @@
  */
 
 .ckeditor-toolbar-disabled .ckeditor-buttons li a:focus {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
+  box-shadow: var(--focus-box-shadow);
 }

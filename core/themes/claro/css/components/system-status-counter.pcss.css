@@ -3,8 +3,6 @@
  * Styles for the system status counter component.
  */
 
-@import "../base/variables.pcss.css";
-
 .system-status-counter {
   display: inline-block;
   overflow-y: hidden;

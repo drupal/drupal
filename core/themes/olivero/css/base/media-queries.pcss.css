@@ -1,0 +1,18 @@
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+@custom-media --sm (min-width: 500px);
+@custom-media --md (min-width: 700px);
+@custom-media --lg (min-width: 1000px);
+@custom-media --xl (min-width: 1300px);
+
+/* Navigation related breakpoints */
+@custom-media --nav-md (min-width: 500px);
+@custom-media --nav (min-width: 1200px);
+@custom-media --max-nav (max-width: 1200px);
+
+/* Grid related breakpoints */
+@custom-media --grid-md (min-width: 700px);   /* Grid shifts from 6 to 14 columns. */
+@custom-media --grid-max (min-width: 1440px); /* Width of the entire grid maxes out. */

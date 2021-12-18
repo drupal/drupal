@@ -3,7 +3,7 @@
  * Special grid system for sidebar.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .sidebar-grid {
   & > .site-main {

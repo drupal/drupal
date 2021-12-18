@@ -22,14 +22,16 @@
       fieldsInTempStore: [],
       reload: false
     },
-    initialize: function initialize() {
+
+    initialize() {
       this.set('fields', new Drupal.quickedit.FieldCollection());
       this.listenTo(this, 'change:state', this.stateChange);
       this.listenTo(this.get('fields'), 'change:state', this.fieldStateChange);
       Drupal.quickedit.BaseModel.prototype.initialize.call(this);
     },
-    stateChange: function stateChange(entityModel, state, options) {
-      var to = state;
+
+    stateChange(entityModel, state, options) {
+      const to = state;
 
       switch (to) {
         case 'closed':
@@ -44,7 +46,7 @@
           break;
 
         case 'opening':
-          entityModel.get('fields').each(function (fieldModel) {
+          entityModel.get('fields').each(fieldModel => {
             fieldModel.set('state', 'candidate', options);
           });
           break;
@@ -55,15 +57,11 @@
 
         case 'committing':
           {
-            var fields = this.get('fields');
-            fields.chain().filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], ['active']).length;
-            }).each(function (fieldModel) {
+            const fields = this.get('fields');
+            fields.chain().filter(fieldModel => _.intersection([fieldModel.get('state')], ['active']).length).each(fieldModel => {
               fieldModel.set('state', 'candidate');
             });
-            fields.chain().filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], Drupal.quickedit.app.changedFieldStates).length;
-            }).each(function (fieldModel) {
+            fields.chain().filter(fieldModel => _.intersection([fieldModel.get('state')], Drupal.quickedit.app.changedFieldStates).length).each(fieldModel => {
               fieldModel.set('state', 'saving');
             });
             break;
@@ -71,24 +69,20 @@
 
         case 'deactivating':
           {
-            var changedFields = this.get('fields').filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length;
-            });
+            const changedFields = this.get('fields').filter(fieldModel => _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length);
 
             if ((changedFields.length || this.get('fieldsInTempStore').length) && !options.saved && !options.confirmed) {
               this.set('state', 'opened', {
                 confirming: true
               });
 
-              _.defer(function () {
+              _.defer(() => {
                 Drupal.quickedit.app.confirmEntityDeactivation(entityModel);
               });
             } else {
-              var invalidFields = this.get('fields').filter(function (fieldModel) {
-                return _.intersection([fieldModel.get('state')], ['invalid']).length;
-              });
+              const invalidFields = this.get('fields').filter(fieldModel => _.intersection([fieldModel.get('state')], ['invalid']).length);
               entityModel.set('reload', this.get('fieldsInTempStore').length || invalidFields.length);
-              entityModel.get('fields').each(function (fieldModel) {
+              entityModel.get('fields').each(fieldModel => {
                 if (_.intersection([fieldModel.get('state')], ['candidate', 'highlighted']).length) {
                   fieldModel.trigger('change:state', fieldModel, fieldModel.get('state'), options);
                 } else {
@@ -102,7 +96,7 @@
 
         case 'closing':
           options.reason = 'stop';
-          this.get('fields').each(function (fieldModel) {
+          this.get('fields').each(fieldModel => {
             fieldModel.set({
               inTempStore: false,
               state: 'inactive'
@@ -111,10 +105,11 @@
           break;
       }
     },
-    _updateInTempStoreAttributes: function _updateInTempStoreAttributes(entityModel, fieldModel) {
-      var current = fieldModel.get('state');
-      var previous = fieldModel.previous('state');
-      var fieldsInTempStore = entityModel.get('fieldsInTempStore');
+
+    _updateInTempStoreAttributes(entityModel, fieldModel) {
+      const current = fieldModel.get('state');
+      const previous = fieldModel.previous('state');
+      let fieldsInTempStore = entityModel.get('fieldsInTempStore');
 
       if (current === 'saved') {
         entityModel.set('inTempStore', true);
@@ -126,9 +121,10 @@
         fieldModel.set('inTempStore', _.intersection([fieldModel.get('fieldID')], fieldsInTempStore).length > 0);
       }
     },
-    fieldStateChange: function fieldStateChange(fieldModel, state) {
-      var entityModel = this;
-      var fieldState = state;
+
+    fieldStateChange(fieldModel, state) {
+      const entityModel = this;
+      const fieldState = state;
 
       switch (this.get('state')) {
         case 'closed':
@@ -136,7 +132,7 @@
           break;
 
         case 'opening':
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'opened', {
               'accept-field-states': Drupal.quickedit.app.readyFieldStates
             });
@@ -156,7 +152,7 @@
         case 'committing':
           {
             if (fieldState === 'invalid') {
-              _.defer(function () {
+              _.defer(() => {
                 entityModel.set('state', 'opened', {
                   reason: 'invalid'
                 });
@@ -165,13 +161,13 @@
               this._updateInTempStoreAttributes(entityModel, fieldModel);
             }
 
-            var options = {
+            const options = {
               'accept-field-states': Drupal.quickedit.app.readyFieldStates
             };
 
             if (entityModel.set('isCommitting', true, options)) {
               entityModel.save({
-                success: function success() {
+                success() {
                   entityModel.set({
                     state: 'deactivating',
                     isCommitting: false
@@ -179,16 +175,18 @@
                     saved: true
                   });
                 },
-                error: function error() {
+
+                error() {
                   entityModel.set('isCommitting', false);
                   entityModel.set('state', 'opened', {
                     reason: 'networkerror'
                   });
-                  var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', {
+                  const message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', {
                     '@entity-title': entityModel.get('label')
                   });
                   Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
                 }
+
               });
             }
 
@@ -196,7 +194,7 @@
           }
 
         case 'deactivating':
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'closing', {
               'accept-field-states': Drupal.quickedit.app.readyFieldStates
             });
@@ -205,7 +203,7 @@
           break;
 
         case 'closing':
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'closed', {
               'accept-field-states': ['inactive']
             });
@@ -214,17 +212,20 @@
           break;
       }
     },
-    save: function save(options) {
-      var entityModel = this;
-      var entitySaverAjax = Drupal.ajax({
-        url: Drupal.url("quickedit/entity/".concat(entityModel.get('entityID'))),
-        error: function error() {
+
+    save(options) {
+      const entityModel = this;
+      const entitySaverAjax = Drupal.ajax({
+        url: Drupal.url(`quickedit/entity/${entityModel.get('entityID')}`),
+
+        error() {
           options.error.call(entityModel);
         }
+
       });
 
       entitySaverAjax.commands.quickeditEntitySaved = function (ajax, response, status) {
-        entityModel.get('fields').each(function (fieldModel) {
+        entityModel.get('fields').each(fieldModel => {
           fieldModel.set('inTempStore', false);
         });
         entityModel.set('inTempStore', false);
@@ -239,14 +240,15 @@
       entitySaverAjax.options.headers['X-Drupal-Quickedit-CSRF-Token'] = drupalSettings.quickedit.csrf_token;
       entitySaverAjax.execute();
     },
-    validate: function validate(attrs, options) {
-      var acceptedFieldStates = options['accept-field-states'] || [];
-      var currentState = this.get('state');
-      var nextState = attrs.state;
+
+    validate(attrs, options) {
+      const acceptedFieldStates = options['accept-field-states'] || [];
+      const currentState = this.get('state');
+      const nextState = attrs.state;
 
       if (currentState !== nextState) {
         if (_.indexOf(this.constructor.states, nextState) === -1) {
-          return "\"".concat(nextState, "\" is an invalid state");
+          return `"${nextState}" is an invalid state`;
         }
 
         if (!this._acceptStateChange(currentState, nextState, options)) {
@@ -258,8 +260,8 @@
         }
       }
 
-      var currentIsCommitting = this.get('isCommitting');
-      var nextIsCommitting = attrs.isCommitting;
+      const currentIsCommitting = this.get('isCommitting');
+      const nextIsCommitting = attrs.isCommitting;
 
       if (currentIsCommitting === false && nextIsCommitting === true) {
         if (!this._fieldsHaveAcceptableStates(acceptedFieldStates)) {
@@ -269,8 +271,9 @@
         return 'isCommitting is a mutex, hence only changes are allowed';
       }
     },
-    _acceptStateChange: function _acceptStateChange(from, to, context) {
-      var accept = true;
+
+    _acceptStateChange(from, to, context) {
+      let accept = true;
 
       if (!this.constructor.followsStateSequence(from, to)) {
         accept = false;
@@ -288,11 +291,12 @@
 
       return accept;
     },
-    _fieldsHaveAcceptableStates: function _fieldsHaveAcceptableStates(acceptedFieldStates) {
-      var accept = true;
+
+    _fieldsHaveAcceptableStates(acceptedFieldStates) {
+      let accept = true;
 
       if (acceptedFieldStates.length > 0) {
-        var fieldStates = this.get('fields').pluck('state') || [];
+        const fieldStates = this.get('fields').pluck('state') || [];
 
         if (_.difference(fieldStates, acceptedFieldStates).length) {
           accept = false;
@@ -301,17 +305,22 @@
 
       return accept;
     },
-    destroy: function destroy(options) {
+
+    destroy(options) {
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
       this.stopListening();
       this.get('fields').reset();
     },
-    sync: function sync() {}
+
+    sync() {}
+
   }, {
     states: ['closed', 'launching', 'opening', 'opened', 'committing', 'deactivating', 'closing'],
-    followsStateSequence: function followsStateSequence(from, to) {
+
+    followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
     }
+
   });
   Drupal.quickedit.EntityCollection = Backbone.Collection.extend({
     model: Drupal.quickedit.EntityModel

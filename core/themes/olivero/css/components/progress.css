@@ -10,14 +10,27 @@
  * Progress bar specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .progress__track {
   overflow: hidden;
-  height: 1.125rem;
-  border: 1px solid #0d77b5;
-  border-radius: 0.1875rem;
+  height: var(--sp);
+  border: 1px solid var(--color--blue-20);
+  border-radius: var(--border-radius);
 }
 
 .progress__bar {
-  height: 1.125rem;
-  background-color: #0d77b5;
+  height: var(--sp);
+  background-color: var(--color--blue-20);
 }

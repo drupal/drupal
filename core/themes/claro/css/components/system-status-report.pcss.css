@@ -3,8 +3,6 @@
  * Claro styles for the System Status Report.
  */
 
-@import "../base/variables.pcss.css";
-
 .system-status-report__requirements-group {
   padding-top: 20px;
 }

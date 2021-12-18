@@ -3,7 +3,7 @@
  * Block styling.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .block__title {
   margin-block: 0 var(--sp);

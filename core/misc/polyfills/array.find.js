@@ -7,7 +7,7 @@
 
 if (!Array.prototype.find) {
   Object.defineProperty(Array.prototype, 'find', {
-    value: function value(predicate) {
+    value: function (predicate) {
       if (this == null) {
         throw TypeError('"this" is null or not defined');
       }

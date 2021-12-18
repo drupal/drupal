@@ -12,27 +12,27 @@
   }, drupalSettings.dialog);
 
   function resetPosition(options) {
-    var offsets = displace.offsets;
-    var left = offsets.left - offsets.right;
-    var top = offsets.top - offsets.bottom;
-    var leftString = "".concat((left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2)), "px");
-    var topString = "".concat((top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2)), "px");
+    const offsets = displace.offsets;
+    const left = offsets.left - offsets.right;
+    const top = offsets.top - offsets.bottom;
+    const leftString = `${(left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2))}px`;
+    const topString = `${(top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2))}px`;
     options.position = {
-      my: "center".concat(left !== 0 ? leftString : '', " center").concat(top !== 0 ? topString : ''),
+      my: `center${left !== 0 ? leftString : ''} center${top !== 0 ? topString : ''}`,
       of: window
     };
     return options;
   }
 
   function resetSize(event) {
-    var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
-    var adjustedOptions = {};
-    var windowHeight = $(window).height();
-    var option;
-    var optionValue;
-    var adjustedValue;
+    const positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
+    let adjustedOptions = {};
+    let windowHeight = $(window).height();
+    let option;
+    let optionValue;
+    let adjustedValue;
 
-    for (var n = 0; n < positionOptions.length; n++) {
+    for (let n = 0; n < positionOptions.length; n++) {
       option = positionOptions[n];
       optionValue = event.data.settings[option];
 
@@ -58,11 +58,11 @@
   }
 
   $(window).on({
-    'dialog:aftercreate': function dialogAftercreate(event, dialog, $element, settings) {
-      var autoResize = debounce(resetSize, 20);
-      var eventData = {
-        settings: settings,
-        $element: $element
+    'dialog:aftercreate': function (event, dialog, $element, settings) {
+      const autoResize = debounce(resetSize, 20);
+      const eventData = {
+        settings,
+        $element
       };
 
       if (settings.autoResize === true || settings.autoResize === 'true') {
@@ -74,7 +74,7 @@
         $(document).on('drupalViewportOffsetChange.dialogResize', eventData, autoResize);
       }
     },
-    'dialog:beforeclose': function dialogBeforeclose(event, dialog, $element) {
+    'dialog:beforeclose': function (event, dialog, $element) {
       $(window).off('.dialogResize');
       $(document).off('.dialogResize');
     }

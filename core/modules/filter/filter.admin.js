@@ -7,14 +7,14 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.filterStatus = {
-    attach: function attach(context, settings) {
-      var $context = $(context);
-      once('filter-status', '#filters-status-wrapper input.form-checkbox', context).forEach(function (checkbox) {
-        var $checkbox = $(checkbox);
-        var $row = $context.find("#".concat($checkbox.attr('id').replace(/-status$/, '-weight'))).closest('tr');
-        var $filterSettings = $context.find("[data-drupal-selector='".concat($checkbox.attr('id').replace(/-status$/, '-settings'), "']"));
-        var filterSettingsTab = $filterSettings.data('verticalTab');
-        $checkbox.on('click.filterUpdate', function () {
+    attach(context, settings) {
+      const $context = $(context);
+      once('filter-status', '#filters-status-wrapper input.form-checkbox', context).forEach(checkbox => {
+        const $checkbox = $(checkbox);
+        const $row = $context.find(`#${$checkbox.attr('id').replace(/-status$/, '-weight')}`).closest('tr');
+        const $filterSettings = $context.find(`[data-drupal-selector='${$checkbox.attr('id').replace(/-status$/, '-settings')}']`);
+        const filterSettingsTab = $filterSettings.data('verticalTab');
+        $checkbox.on('click.filterUpdate', () => {
           if ($checkbox.is(':checked')) {
             $row.show();
 
@@ -37,13 +37,12 @@
         });
 
         if (filterSettingsTab) {
-          filterSettingsTab.details.drupalSetSummary(function () {
-            return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
-          });
+          filterSettingsTab.details.drupalSetSummary(() => $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled'));
         }
 
         $checkbox.triggerHandler('click.filterUpdate');
       });
     }
+
   };
 })(jQuery, Drupal);

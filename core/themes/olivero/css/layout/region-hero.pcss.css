@@ -3,7 +3,7 @@
  * Region default layout.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .region--hero {
   & > *:last-child {

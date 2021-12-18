@@ -18,19 +18,20 @@
   }
 
   Drupal.behaviors.tableResponsive = {
-    attach: function attach(context, settings) {
-      once('tableresponsive', 'table.responsive-enabled', context).forEach(function (table) {
+    attach(context, settings) {
+      once('tableresponsive', 'table.responsive-enabled', context).forEach(table => {
         TableResponsive.tables.push(new TableResponsive(table));
       });
     }
+
   };
   $.extend(TableResponsive, {
     tables: []
   });
   $.extend(TableResponsive.prototype, {
-    eventhandlerEvaluateColumnVisibility: function eventhandlerEvaluateColumnVisibility(e) {
-      var pegged = parseInt(this.$link.data('pegged'), 10);
-      var hiddenLength = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden').length;
+    eventhandlerEvaluateColumnVisibility(e) {
+      const pegged = parseInt(this.$link.data('pegged'), 10);
+      const hiddenLength = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden').length;
 
       if (hiddenLength > 0) {
         this.$link.show().text(this.showText);
@@ -40,18 +41,19 @@
         this.$link.hide().text(this.hideText);
       }
     },
-    eventhandlerToggleColumns: function eventhandlerToggleColumns(e) {
+
+    eventhandlerToggleColumns(e) {
       e.preventDefault();
-      var self = this;
-      var $hiddenHeaders = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden');
+      const self = this;
+      const $hiddenHeaders = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden');
       this.$revealedCells = this.$revealedCells || $();
 
       if ($hiddenHeaders.length > 0) {
         $hiddenHeaders.each(function (index, element) {
-          var $header = $(this);
-          var position = $header.prevAll('th').length;
+          const $header = $(this);
+          const position = $header.prevAll('th').length;
           self.$table.find('tbody tr').each(function () {
-            var $cells = $(this).find('td').eq(position);
+            const $cells = $(this).find('td').eq(position);
             $cells.show();
             self.$revealedCells = $().add(self.$revealedCells).add($cells);
           });
@@ -62,15 +64,15 @@
       } else {
         this.$revealedCells.hide();
         this.$revealedCells.each(function (index, element) {
-          var $cell = $(this);
-          var properties = $cell.attr('style').split(';');
-          var newProps = [];
-          var match = /^display\s*:\s*none$/;
+          const $cell = $(this);
+          const properties = $cell.attr('style').split(';');
+          const newProps = [];
+          const match = /^display\s*:\s*none$/;
 
-          for (var i = 0; i < properties.length; i++) {
-            var prop = properties[i];
+          for (let i = 0; i < properties.length; i++) {
+            const prop = properties[i];
             prop.trim();
-            var isDisplayNone = match.exec(prop);
+            const isDisplayNone = match.exec(prop);
 
             if (isDisplayNone) {
               continue;
@@ -85,6 +87,7 @@
         $(window).trigger('resize.tableresponsive');
       }
     }
+
   });
   Drupal.TableResponsive = TableResponsive;
 })(jQuery, Drupal, window);

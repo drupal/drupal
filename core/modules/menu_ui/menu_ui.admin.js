@@ -7,41 +7,44 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.menuUiChangeParentItems = {
-    attach: function attach(context, settings) {
-      var menu = once('menu-parent', '#edit-menu');
+    attach(context, settings) {
+      const menu = once('menu-parent', '#edit-menu');
 
       if (menu.length) {
-        var $menu = $(menu);
+        const $menu = $(menu);
         Drupal.menuUiUpdateParentList();
         $menu.on('change', 'input', Drupal.menuUiUpdateParentList);
       }
     }
+
   };
 
   Drupal.menuUiUpdateParentList = function () {
-    var $menu = $('#edit-menu');
-    var values = [];
+    const $menu = $('#edit-menu');
+    const values = [];
     $menu.find('input:checked').each(function () {
       values.push(Drupal.checkPlain($(this).val()));
     });
     $.ajax({
-      url: "".concat(window.location.protocol, "//").concat(window.location.host).concat(Drupal.url('admin/structure/menu/parents')),
+      url: `${window.location.protocol}//${window.location.host}${Drupal.url('admin/structure/menu/parents')}`,
       type: 'POST',
       data: {
         'menus[]': values
       },
       dataType: 'json',
-      success: function success(options) {
-        var $select = $('#edit-menu-parent');
-        var selected = $select.val();
+
+      success(options) {
+        const $select = $('#edit-menu-parent');
+        const selected = $select.val();
         $select.children().remove();
-        var totalOptions = 0;
-        Object.keys(options || {}).forEach(function (machineName) {
-          $select.append($("<option ".concat(machineName === selected ? ' selected="selected"' : '', "></option>")).val(machineName).text(options[machineName]));
+        let totalOptions = 0;
+        Object.keys(options || {}).forEach(machineName => {
+          $select.append($(`<option ${machineName === selected ? ' selected="selected"' : ''}></option>`).val(machineName).text(options[machineName]));
           totalOptions++;
         });
         $select.closest('div').toggle(totalOptions > 0).attr('hidden', totalOptions === 0);
       }
+
     });
   };
 })(jQuery, Drupal);

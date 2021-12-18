@@ -3,7 +3,7 @@
  * Powered by block specific styles.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .block-system-powered-by-block {
   letter-spacing: 0.02em;

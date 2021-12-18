@@ -6,17 +6,17 @@
 **/
 
 (function ($, Drupal, drupalSettings, storage) {
-  var currentUserID = parseInt(drupalSettings.user.uid, 10);
-  var secondsIn30Days = 2592000;
-  var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
-  var embeddedLastReadTimestamps = false;
+  const currentUserID = parseInt(drupalSettings.user.uid, 10);
+  const secondsIn30Days = 2592000;
+  const thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
+  let embeddedLastReadTimestamps = false;
 
   if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
 
   Drupal.history = {
-    fetchTimestamps: function fetchTimestamps(nodeIDs, callback) {
+    fetchTimestamps(nodeIDs, callback) {
       if (embeddedLastReadTimestamps) {
         callback();
         return;
@@ -29,36 +29,43 @@
           'node_ids[]': nodeIDs
         },
         dataType: 'json',
-        success: function success(results) {
-          Object.keys(results || {}).forEach(function (nodeID) {
-            storage.setItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID), results[nodeID]);
+
+        success(results) {
+          Object.keys(results || {}).forEach(nodeID => {
+            storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, results[nodeID]);
           });
           callback();
         }
+
       });
     },
-    getLastRead: function getLastRead(nodeID) {
+
+    getLastRead(nodeID) {
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
 
-      return parseInt(storage.getItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID)) || 0, 10);
+      return parseInt(storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0, 10);
     },
-    markAsRead: function markAsRead(nodeID) {
+
+    markAsRead(nodeID) {
       $.ajax({
-        url: Drupal.url("history/".concat(nodeID, "/read")),
+        url: Drupal.url(`history/${nodeID}/read`),
         type: 'POST',
         dataType: 'json',
-        success: function success(timestamp) {
+
+        success(timestamp) {
           if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
             return;
           }
 
-          storage.setItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID), timestamp);
+          storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, timestamp);
         }
+
       });
     },
-    needsServerCheck: function needsServerCheck(nodeID, contentTimestamp) {
+
+    needsServerCheck(nodeID, contentTimestamp) {
       if (contentTimestamp < thirtyDaysAgo) {
         return false;
       }
@@ -67,8 +74,9 @@
         return contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
 
-      var minLastReadTimestamp = parseInt(storage.getItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID)) || 0, 10);
+      const minLastReadTimestamp = parseInt(storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0, 10);
       return contentTimestamp > minLastReadTimestamp;
     }
+
   };
 })(jQuery, Drupal, drupalSettings, window.localStorage);

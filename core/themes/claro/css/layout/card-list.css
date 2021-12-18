@@ -11,7 +11,11 @@
  */
 
 :root {
+  --card-list-spacing: var(--space-m);
   /* Using 100% as base causes issues in IE11. */
+  --cards-two-cols-width: calc(49.95% + var(--card-list-spacing)/2 - var(--card-list-spacing));
+  --cards-three-cols-width: calc(33.3% + var(--card-list-spacing)/3 - var(--card-list-spacing));
+  --cards-four-cols-width: calc(24.975% + var(--card-list-spacing)/4 - var(--card-list-spacing));
 }
 
 .card-list {
@@ -29,7 +33,7 @@
 
 .card-list__item {
   box-sizing: border-box;
-  margin-bottom: 1rem;
+  margin-bottom: var(--card-list-spacing);
 }
 
 .card-list--two-cols .card-list__item,
@@ -41,16 +45,16 @@
 
 @media screen and (min-width: 36.75rem) {
   .card-list--four-cols .card-list__item {
-    flex-basis: calc(49.95% - 0.5rem);
-    max-width: calc(49.95% - 0.5rem);
+    flex-basis: var(--cards-two-cols-width);
+    max-width: var(--cards-two-cols-width);
   }
 
   .card-list--four-cols .card-list__item {
-    margin-right: 1rem;
+    margin-right: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: var(--card-list-spacing);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
@@ -75,16 +79,16 @@
 
 @media screen and (min-width: 70rem) {
   .card-list--four-cols .card-list__item {
-    flex-basis: calc(33.3% - 0.66667rem);
-    max-width: calc(33.3% - 0.66667rem);
+    flex-basis: var(--cards-three-cols-width);
+    max-width: var(--cards-three-cols-width);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 1rem;
+    margin-right: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: var(--card-list-spacing);
   }
 
   .card-list--four-cols .card-list__item:nth-child(3n) {
@@ -98,13 +102,13 @@
 
 @media screen and (min-width: 85.375rem) {
   .card-list--two-cols .card-list__item {
-    flex-basis: calc(49.95% - 0.5rem);
-    max-width: calc(49.95% - 0.5rem);
-    margin-right: 1rem;
+    flex-basis: var(--cards-two-cols-width);
+    max-width: var(--cards-two-cols-width);
+    margin-right: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--two-cols .card-list__item {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: var(--card-list-spacing);
   }
 
   .card-list--two-cols .card-list__item:nth-child(even) {
@@ -116,24 +120,24 @@
   }
 
   .card-list--four-cols .card-list__item {
-    flex-basis: calc(24.975% - 0.75rem);
-    max-width: calc(24.975% - 0.75rem);
+    flex-basis: var(--cards-four-cols-width);
+    max-width: var(--cards-four-cols-width);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 1rem;
+    margin-right: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: var(--card-list-spacing);
   }
 
   .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 1rem;
+    margin-right: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(3n) {
     margin-right: 0;
-    margin-left: 1rem;
+    margin-left: var(--card-list-spacing);
   }
 
   .card-list--four-cols .card-list__item:nth-child(4n) {

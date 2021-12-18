@@ -3,7 +3,7 @@
  * Styling for the Filter module.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 /**
  * Filter information under field.

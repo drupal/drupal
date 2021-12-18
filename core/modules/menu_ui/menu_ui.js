@@ -7,9 +7,9 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.menuUiDetailsSummaries = {
-    attach: function attach(context) {
-      $(context).find('.menu-link-form').drupalSetSummary(function (context) {
-        var $context = $(context);
+    attach(context) {
+      $(context).find('.menu-link-form').drupalSetSummary(context => {
+        const $context = $(context);
 
         if ($context.find('.js-form-item-menu-enabled input').is(':checked')) {
           return Drupal.checkPlain($context.find('.js-form-item-menu-title input').val());
@@ -18,15 +18,16 @@
         return Drupal.t('Not in menu');
       });
     }
+
   };
   Drupal.behaviors.menuUiLinkAutomaticTitle = {
-    attach: function attach(context) {
-      var $context = $(context);
+    attach(context) {
+      const $context = $(context);
       $context.find('.menu-link-form').each(function () {
-        var $this = $(this);
-        var $checkbox = $this.find('.js-form-item-menu-enabled input');
-        var $linkTitle = $context.find('.js-form-item-menu-title input');
-        var $title = $this.closest('form').find('.js-form-item-title-0-value input');
+        const $this = $(this);
+        const $checkbox = $this.find('.js-form-item-menu-enabled input');
+        const $linkTitle = $context.find('.js-form-item-menu-title input');
+        const $title = $this.closest('form').find('.js-form-item-title-0-value input');
 
         if (!($checkbox.length && $linkTitle.length && $title.length)) {
           return;
@@ -36,10 +37,10 @@
           $linkTitle.data('menuLinkAutomaticTitleOverridden', true);
         }
 
-        $linkTitle.on('keyup', function () {
+        $linkTitle.on('keyup', () => {
           $linkTitle.data('menuLinkAutomaticTitleOverridden', true);
         });
-        $checkbox.on('change', function () {
+        $checkbox.on('change', () => {
           if ($checkbox.is(':checked')) {
             if (!$linkTitle.data('menuLinkAutomaticTitleOverridden')) {
               $linkTitle.val($title.val());
@@ -52,7 +53,7 @@
           $checkbox.closest('.vertical-tabs-pane').trigger('summaryUpdated');
           $checkbox.trigger('formUpdated');
         });
-        $title.on('keyup', function () {
+        $title.on('keyup', () => {
           if (!$linkTitle.data('menuLinkAutomaticTitleOverridden') && $checkbox.is(':checked')) {
             $linkTitle.val($title.val());
             $linkTitle.val($title.val()).trigger('formUpdated');
@@ -60,5 +61,6 @@
         });
       });
     }
+
   };
 })(jQuery, Drupal);

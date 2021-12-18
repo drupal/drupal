@@ -5,30 +5,30 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(($, Drupal) => {
   function init(tab) {
-    var $tab = $(tab);
-    var $target = $tab.find('[data-drupal-nav-tabs-target]');
-    var $active = $target.find('.js-active-tab');
+    const $tab = $(tab);
+    const $target = $tab.find('[data-drupal-nav-tabs-target]');
+    const $active = $target.find('.js-active-tab');
 
-    var openMenu = function openMenu() {
+    const openMenu = () => {
       $target.toggleClass('is-open');
     };
 
-    var toggleOrder = function toggleOrder(reset) {
-      var current = $active.index();
-      var original = $active.data('original-order');
+    const toggleOrder = reset => {
+      const current = $active.index();
+      const original = $active.data('original-order');
 
       if (original === 0 || reset === (current === original)) {
         return;
       }
 
-      var siblings = {
+      const siblings = {
         first: '[data-original-order="0"]',
-        previous: "[data-original-order=\"".concat(original - 1, "\"]")
+        previous: `[data-original-order="${original - 1}"]`
       };
-      var $first = $target.find(siblings.first);
-      var $previous = $target.find(siblings.previous);
+      const $first = $target.find(siblings.first);
+      const $previous = $target.find(siblings.previous);
 
       if (reset && current !== original) {
         $active.insertAfter($previous);
@@ -37,17 +37,17 @@
       }
     };
 
-    var toggleCollapsed = function toggleCollapsed() {
+    const toggleCollapsed = () => {
       if (window.matchMedia('(min-width: 48em)').matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
-          var width = 0;
-          $target.find('.js-tabs-link').each(function (index, value) {
+          let width = 0;
+          $target.find('.js-tabs-link').each((index, value) => {
             width += $(value).outerWidth();
           });
           $tab.attr('data-width', width);
         }
 
-        var isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
+        const isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
         toggleOrder(isHorizontal);
       } else {
@@ -56,8 +56,8 @@
     };
 
     $tab.addClass('position-container is-horizontal-enabled');
-    $target.find('.js-tab').each(function (index, element) {
-      var $item = $(element);
+    $target.find('.js-tab').each((index, element) => {
+      const $item = $(element);
       $item.attr('data-original-order', $item.index());
     });
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
@@ -65,8 +65,9 @@
   }
 
   Drupal.behaviors.navTabs = {
-    attach: function attach(context) {
+    attach(context) {
       once('nav-tabs', '[data-drupal-nav-tabs].is-collapsible', context).forEach(init);
     }
+
   };
 })(jQuery, Drupal);

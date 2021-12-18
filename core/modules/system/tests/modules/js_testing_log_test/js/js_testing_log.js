@@ -7,19 +7,19 @@
 
 (function (Drupal) {
   if (typeof console !== 'undefined' && console.warn) {
-    var originalWarnFunction = console.warn;
+    const originalWarnFunction = console.warn;
 
-    console.warn = function (warning) {
-      var warnings = JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]));
+    console.warn = warning => {
+      const warnings = JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]));
       warnings.push(warning);
       sessionStorage.setItem('js_testing_log_test.warnings', JSON.stringify(warnings));
       originalWarnFunction(warning);
     };
 
-    var originalThrowFunction = Drupal.throwError;
+    const originalThrowFunction = Drupal.throwError;
 
-    Drupal.throwError = function (error) {
-      var errors = JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]));
+    Drupal.throwError = error => {
+      const errors = JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]));
       errors.push(error.stack);
       sessionStorage.setItem('js_testing_log_test.errors', JSON.stringify(errors));
       originalThrowFunction(error);

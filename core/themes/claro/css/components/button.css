@@ -37,16 +37,16 @@
 
 .button {
   display: inline-block;
-  margin: 1rem 0.75rem 1rem 0; /* LTR */
-  padding: calc(1rem - 1px) calc(1.5rem - 1px); /* 1 */
+  margin: var(--space-m) var(--space-s) var(--space-m) 0; /* LTR */
+  padding: calc(var(--space-m) - 1px) calc(var(--space-l) - 1px); /* 1 */
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #232429;
+  color: var(--button-fg-color);
   border: 1px solid transparent !important;  /* 2 */
-  border-radius: 2px;
-  background-color: #d3d4d9;
-  font-size: 1rem;
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--button-bg-color);
+  font-size: var(--font-size-base);
   font-weight: 700;
   line-height: 1rem;
   -webkit-appearance: none;
@@ -56,7 +56,7 @@
 }
 
 [dir="rtl"] .button {
-  margin: 1rem 0 1rem 0.75rem;
+  margin: var(--space-m) 0 var(--space-m) var(--space-s);
 }
 
 .button:not(:focus) {
@@ -65,7 +65,7 @@
 
 .button:hover {
   text-decoration: none;
-  background-color: #c1c2c7;
+  background-color: var(--button--hover-bg-color);
 }
 
 .button:focus {
@@ -73,29 +73,29 @@
 }
 
 .button:active {
-  background-color: #adaeb3;
+  background-color: var(--button--active-bg-color);
 }
 
 /* Common styles for small buttons */
 
 .no-touchevents .button--small {
-  margin: 0.75rem 0.5rem 0.75rem 0; /* LTR */
-  padding: calc(0.5rem - 1px) calc(1rem - 1px); /* 1 */
-  font-size: 0.79rem;
+  margin: var(--space-s) var(--space-xs) var(--space-s) 0; /* LTR */
+  padding: calc(var(--space-xs) - 1px) calc(var(--space-m) - 1px); /* 1 */
+  font-size: var(--font-size-xs);
 }
 
 /* Common styles for extra small buttons */
 
 .no-touchevents .button--extrasmall {
-  margin: 0.5rem 0.5rem 0.5rem 0; /* LTR */
-  padding: calc(0.25rem - 1px) calc(0.75rem - 1px); /* 1 */
-  font-size: 0.79rem;
+  margin: var(--space-xs) var(--space-xs) var(--space-xs) 0; /* LTR */
+  padding: calc(var(--space-xs)/2 - 1px) calc(var(--space-s) - 1px); /* 1 */
+  font-size: var(--font-size-xs);
 }
 
 [dir="rtl"].no-touchevents .button--small,
 [dir="rtl"].no-touchevents .button--extrasmall {
   margin-right: 0;
-  margin-left: 0.5rem;
+  margin-left: var(--space-xs);
 }
 
 /* Styles for action link buttons */
@@ -120,49 +120,49 @@
 
 a.button:hover,
 a.button:active {
-  color: #232429;
+  color: var(--button-fg-color);
 }
 
 /* Primary button styles */
 
 .button--primary {
-  color: #fff;
-  background-color: #003cc5;
+  color: var(--button-fg-color--primary);
+  background-color: var(--button-bg-color--primary);
 }
 
 .button--primary:hover {
-  color: #fff;
-  background-color: #0036b1;
+  color: var(--button-fg-color--primary);
+  background-color: var(--button--hover-bg-color--primary);
 }
 
 .button--primary:active {
-  background-color: #00339a;
+  background-color: var(--button--active-bg-color--primary);
 }
 
 a.button--primary:hover,
 a.button--primary:active {
-  color: #fff;
+  color: var(--button-fg-color--primary);
 }
 
 /* Danger button styles */
 
 .button--danger {
-  color: #fff;
-  background-color: #d72222;
+  color: var(--button-fg-color--danger);
+  background-color: var(--button-bg-color--danger);
 }
 
 .button--danger:hover {
-  color: #fff;
-  background-color: #c11f1f;
+  color: var(--button-fg-color--danger);
+  background-color: var(--button--hover-bg-color--danger);
 }
 
 .button--danger:active {
-  background-color: #ab1b1b;
+  background-color: var(--button--active-bg-color--danger);
 }
 
 a.button--danger:hover,
 a.button--danger:active {
-  color: #fff;
+  color: var(--button-fg-color--danger);
 }
 
 /**
@@ -173,21 +173,20 @@ a.button--danger:active {
 
 .button:disabled,
 .button.is-disabled {
-  color: #919297;
-  background-color: #ebebed;
+  color: var(--button--disabled-fg-color);
+  background-color: var(--button--disabled-bg-color);
 }
 
 .button--primary:disabled,
 .button--primary.is-disabled {
-  color: #828388;
-  background-color: #d3d4d9;
+  color: var(--button--disabled-fg-color--primary);
+  background-color: var(--button--disabled-bg-color--primary);
 }
 
 /* Make disabled <link> behave like a [disabled] <input> or <button> */
 
 .button.is-disabled {
   -webkit-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   pointer-events: none;
 }

@@ -10,21 +10,21 @@
  */
 
 html {
-  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: var(--font-family);
   font-size: 100%;
   font-weight: normal;
   font-style: normal;
-  line-height: 1.5;
+  line-height: var(--line-height);
 }
 
 body {
-  color: #232429;
-  background: #fff;
+  color: var(--color-fg);
+  background: var(--color-bg);
 }
 
 a,
 .link {
-  color: #003cc5;
+  color: var(--color-link);
 }
 
 a:hover,
@@ -37,20 +37,20 @@ a:focus,
 
 a:hover,
 .link:hover {
-  color: #0036b1;
+  color: var(--color-link-hover);
 }
 
 a:active,
 .link:active {
-  color: #00339a;
+  color: var(--color-link-active);
 }
 
 hr {
   height: 1px;
-  margin: 1rem 0;
+  margin: var(--space-m) 0;
   padding: 0;
   border: none;
-  background: rgba(142, 146, 156, 0.5);
+  background: var(--color-divider);
 }
 
 summary {
@@ -64,50 +64,50 @@ summary {
 
 h1,
 .heading-a {
-  margin: 1rem 0 0.75rem;
-  font-size: 2.027rem;
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h1);
   font-weight: bold;
-  line-height: 1.3;
+  line-height: var(--line-height-heading);
 }
 
 h2,
 .heading-b {
-  margin: 1rem 0 0.75rem;
-  font-size: 1.802rem;
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h2);
   font-weight: bold;
-  line-height: 1.3;
+  line-height: var(--line-height-heading);
 }
 
 h3,
 .heading-c {
-  margin: 1rem 0 0.75rem;
-  font-size: 1.602rem;
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h3);
   font-weight: bold;
-  line-height: 1.3;
+  line-height: var(--line-height-heading);
 }
 
 h4,
 .heading-d {
-  margin: 1rem 0 0.75rem;
-  font-size: 1.424rem;
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h4);
   font-weight: bold;
-  line-height: 1.3;
+  line-height: var(--line-height-heading);
 }
 
 h5,
 .heading-e {
-  margin: 1rem 0 0.75rem;
-  font-size: 1.266rem;
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h5);
   font-weight: bold;
-  line-height: 1.3;
+  line-height: var(--line-height-heading);
 }
 
 h6,
 .heading-f {
-  margin: 1rem 0 0.75rem;
-  font-size: 1.125rem;
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h6);
   font-weight: bold;
-  line-height: 1.3;
+  line-height: var(--line-height-heading);
 }
 
 p {
@@ -222,7 +222,7 @@ pre {
 }
 
 details {
-  line-height: 1.295rem;
+  line-height: var(--details-line-height);
 }
 
 details summary {
@@ -250,6 +250,6 @@ img {
 
 .page-wrapper *:focus,
 .ui-dialog *:focus {
-  outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
+  outline: var(--focus-outline);
+  box-shadow: var(--focus-box-shadow);
 }

@@ -10,22 +10,25 @@
     events: {
       'focus .trigger': 'focus',
       'focus .contextual-links a': 'focus',
-      'blur .trigger': function blurTrigger() {
+      'blur .trigger': function () {
         this.model.blur();
       },
-      'blur .contextual-links a': function blurContextualLinksA() {
-        var that = this;
-        this.timer = window.setTimeout(function () {
+      'blur .contextual-links a': function () {
+        const that = this;
+        this.timer = window.setTimeout(() => {
           that.model.close().blur();
         }, 150);
       }
     },
-    initialize: function initialize() {
+
+    initialize() {
       this.timer = NaN;
     },
-    focus: function focus() {
+
+    focus() {
       window.clearTimeout(this.timer);
       this.model.focus();
     }
+
   });
 })(Drupal, Backbone);

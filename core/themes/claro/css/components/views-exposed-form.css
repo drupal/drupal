@@ -27,13 +27,13 @@
 .views-exposed-form.views-exposed-form {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
-  border: 1px solid #dedfe4;
-  border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-l);
+  padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--details-border-size-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--details-box-shadow);
 }
 
 .views-exposed-form--preview.views-exposed-form--preview {
@@ -42,21 +42,21 @@
 
 .views-exposed-form__item.views-exposed-form__item {
   max-width: 100%;
-  margin: 0.75rem 0.5rem 0 0; /* LTR */
+  margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
 }
 
 [dir="rtl"] .views-exposed-form__item.views-exposed-form__item {
   margin-right: 0;
-  margin-left: 0.5rem;
+  margin-left: var(--space-xs);
 }
 
 .views-exposed-form__item--preceding-actions.views-exposed-form__item--preceding-actions {
-  margin-right: 1rem; /* LTR */
+  margin-right: var(--space-m); /* LTR */
 }
 
 [dir="rtl"] .views-exposed-form__item--preceding-actions.views-exposed-form__item--preceding-actions {
   margin-right: 0;
-  margin-left: 1rem;
+  margin-left: var(--space-m);
 }
 
 .views-exposed-form__item--actions.views-exposed-form__item--actions .button {
@@ -75,5 +75,5 @@
 .views-exposed-form .form-item--no-label,
 .views-exposed-form__item.views-exposed-form__item.views-exposed-form__item--actions {
   /* Line height of a label + existing margin for the element + margin for label */
-  margin-top: 2.375rem;
+  margin-top: calc(var(--line-height-form-label) + var(--space-s) + var(--space-xs));
 }

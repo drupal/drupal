@@ -7,16 +7,19 @@
 
 (function ($, Drupal, Backbone) {
   Drupal.toolbar.BodyVisualView = Backbone.View.extend({
-    initialize: function initialize() {
+    initialize() {
       this.listenTo(this.model, 'change:activeTray ', this.render);
       this.listenTo(this.model, 'change:isFixed change:isViewportOverflowConstrained', this.isToolbarFixed);
     },
-    isToolbarFixed: function isToolbarFixed() {
-      var isViewportOverflowConstrained = this.model.get('isViewportOverflowConstrained');
+
+    isToolbarFixed() {
+      const isViewportOverflowConstrained = this.model.get('isViewportOverflowConstrained');
       $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed'));
     },
-    render: function render() {
+
+    render() {
       $('body').toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
     }
+
   });
 })(jQuery, Drupal, Backbone);

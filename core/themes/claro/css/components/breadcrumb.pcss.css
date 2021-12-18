@@ -3,8 +3,6 @@
  * Breadcrumbs.
  */
 
-@import "../base/variables.pcss.css";
-
 .breadcrumb {
   padding: 0;
   color: var(--color-text);

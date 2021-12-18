@@ -3,8 +3,6 @@
  * Replacement styles for Field UI admin.
  */
 
-@import "../base/variables.pcss.css";
-
 /* 'Manage fields' and 'Manage display' overviews */
 .field-ui-overview .region-title td {
   font-weight: bold;

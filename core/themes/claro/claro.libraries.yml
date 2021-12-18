@@ -2,6 +2,7 @@ global-styling:
   version: VERSION
   css:
     base:
+      css/base/variables.css: {}
       css/base/elements.css: {}
       css/base/typography.css: {}
       css/base/print.css: {}

@@ -6,7 +6,7 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-  $(document).ready(function () {
+  $(document).ready(() => {
     $.ajax({
       type: 'POST',
       cache: false,

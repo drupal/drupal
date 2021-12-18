@@ -10,10 +10,23 @@
  * Secondary menu region layout styling.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .region--secondary-menu {
   display: flex;
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem
+  margin-top: var(--sp2);
+  margin-bottom: var(--sp2)
 }
 
 .region--secondary-menu > * {

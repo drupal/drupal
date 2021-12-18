@@ -7,10 +7,10 @@
 
 (function ($, window, Drupal) {
   Drupal.behaviors.insertTest = {
-    attach: function attach(context) {
-      $(once('ajax-insert', '.ajax-insert')).on('click', function (event) {
+    attach(context) {
+      $(once('ajax-insert', '.ajax-insert')).on('click', event => {
         event.preventDefault();
-        var ajaxSettings = {
+        const ajaxSettings = {
           url: event.currentTarget.getAttribute('href'),
           wrapper: 'ajax-target',
           base: false,
@@ -18,12 +18,12 @@
           method: event.currentTarget.getAttribute('data-method'),
           effect: event.currentTarget.getAttribute('data-effect')
         };
-        var myAjaxObject = Drupal.ajax(ajaxSettings);
+        const myAjaxObject = Drupal.ajax(ajaxSettings);
         myAjaxObject.execute();
       });
-      $(once('ajax-insert', '.ajax-insert-inline')).on('click', function (event) {
+      $(once('ajax-insert', '.ajax-insert-inline')).on('click', event => {
         event.preventDefault();
-        var ajaxSettings = {
+        const ajaxSettings = {
           url: event.currentTarget.getAttribute('href'),
           wrapper: 'ajax-target-inline',
           base: false,
@@ -31,10 +31,11 @@
           method: event.currentTarget.getAttribute('data-method'),
           effect: event.currentTarget.getAttribute('data-effect')
         };
-        var myAjaxObject = Drupal.ajax(ajaxSettings);
+        const myAjaxObject = Drupal.ajax(ajaxSettings);
         myAjaxObject.execute();
       });
       $(context).addClass('processed');
     }
+
   };
 })(jQuery, window, Drupal);

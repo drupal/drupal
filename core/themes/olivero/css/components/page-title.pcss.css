@@ -3,7 +3,7 @@
  * Page title.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .page-title {
   /*

@@ -7,18 +7,21 @@
 
 (function ($, Backbone, Drupal) {
   Drupal.quickedit.EditorView = Backbone.View.extend({
-    initialize: function initialize(options) {
+    initialize(options) {
       this.fieldModel = options.fieldModel;
       this.listenTo(this.fieldModel, 'change:state', this.stateChange);
     },
-    remove: function remove() {
+
+    remove() {
       this.setElement();
       Backbone.View.prototype.remove.call(this);
     },
-    getEditedElement: function getEditedElement() {
+
+    getEditedElement() {
       return this.$el;
     },
-    getQuickEditUISettings: function getQuickEditUISettings() {
+
+    getQuickEditUISettings() {
       return {
         padding: false,
         unifiedToolbar: false,
@@ -26,9 +29,10 @@
         popup: false
       };
     },
-    stateChange: function stateChange(fieldModel, state) {
-      var from = fieldModel.previous('state');
-      var to = state;
+
+    stateChange(fieldModel, state) {
+      const from = fieldModel.previous('state');
+      const to = state;
 
       switch (to) {
         case 'inactive':
@@ -46,11 +50,11 @@
 
         case 'activating':
           {
-            var loadDependencies = function loadDependencies(callback) {
+            const loadDependencies = function (callback) {
               callback();
             };
 
-            loadDependencies(function () {
+            loadDependencies(() => {
               fieldModel.set('state', 'active');
             });
             break;
@@ -78,33 +82,35 @@
           break;
       }
     },
-    revert: function revert() {},
-    save: function save() {
-      var fieldModel = this.fieldModel;
-      var editorModel = this.model;
-      var backstageId = "quickedit_backstage-".concat(this.fieldModel.id.replace(/[/[\]_\s]/g, '-'));
+
+    revert() {},
+
+    save() {
+      const fieldModel = this.fieldModel;
+      const editorModel = this.model;
+      const backstageId = `quickedit_backstage-${this.fieldModel.id.replace(/[/[\]_\s]/g, '-')}`;
 
       function fillAndSubmitForm(value) {
-        var $form = $("#".concat(backstageId)).find('form');
+        const $form = $(`#${backstageId}`).find('form');
         $form.find(':input[type!="hidden"][type!="submit"]:not(select)').not('[name$="\\[summary\\]"]').val(value);
         $form.find('.quickedit-form-submit').trigger('click.quickedit');
       }
 
-      var formOptions = {
+      const formOptions = {
         fieldID: this.fieldModel.get('fieldID'),
         $el: this.$el,
         nocssjs: true,
         other_view_modes: fieldModel.findOtherViewModes(),
         reset: !this.fieldModel.get('entity').get('inTempStore')
       };
-      var self = this;
-      Drupal.quickedit.util.form.load(formOptions, function (form, ajax) {
-        var $backstage = $(Drupal.theme('quickeditBackstage', {
+      const self = this;
+      Drupal.quickedit.util.form.load(formOptions, (form, ajax) => {
+        const $backstage = $(Drupal.theme('quickeditBackstage', {
           id: backstageId
         })).appendTo('body');
-        var $form = $(form).appendTo($backstage);
+        const $form = $(form).appendTo($backstage);
         $form.prop('novalidate', true);
-        var $submit = $form.find('.quickedit-form-submit');
+        const $submit = $form.find('.quickedit-form-submit');
         self.formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving(formOptions, $submit);
 
         function removeHiddenForm() {
@@ -131,12 +137,15 @@
         fillAndSubmitForm(editorModel.get('currentValue'));
       });
     },
-    showValidationErrors: function showValidationErrors() {
-      var $errors = $('<div class="quickedit-validation-errors"></div>').append(this.model.get('validationErrors'));
+
+    showValidationErrors() {
+      const $errors = $('<div class="quickedit-validation-errors"></div>').append(this.model.get('validationErrors'));
       this.getEditedElement().addClass('quickedit-validation-error').after($errors);
     },
-    removeValidationErrors: function removeValidationErrors() {
+
+    removeValidationErrors() {
       this.getEditedElement().removeClass('quickedit-validation-error').next('.quickedit-validation-errors').remove();
     }
+
   });
 })(jQuery, Backbone, Drupal);

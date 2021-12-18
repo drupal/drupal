@@ -5,18 +5,18 @@
 * @preserve
 **/
 
-(function (_ref) {
-  var deprecationError = _ref.deprecationError,
-      deprecatedProperty = _ref.deprecatedProperty,
-      behaviors = _ref.behaviors;
-
-  var deprecatedFunction = function deprecatedFunction() {
+(function ({
+  deprecationError,
+  deprecatedProperty,
+  behaviors
+}) {
+  const deprecatedFunction = () => {
     deprecationError({
       message: 'This function is deprecated for testing purposes.'
     });
   };
 
-  var objectWithDeprecatedProperty = deprecatedProperty({
+  const objectWithDeprecatedProperty = deprecatedProperty({
     target: {
       deprecatedProperty: 'Kitten'
     },
@@ -24,9 +24,9 @@
     message: 'This property is deprecated for testing purposes.'
   });
   behaviors.testDeprecations = {
-    attach: function attach() {
+    attach: () => {
       deprecatedFunction();
-      var deprecatedProperty = objectWithDeprecatedProperty.deprecatedProperty;
+      const deprecatedProperty = objectWithDeprecatedProperty.deprecatedProperty;
     }
   };
 })(Drupal);

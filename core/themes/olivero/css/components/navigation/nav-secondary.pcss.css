@@ -3,7 +3,7 @@
  * Secondary navigation styling.
  */
 
-@import "../../base/variables.pcss.css";
+@import "../../base/media-queries.pcss.css";
 
 .secondary-nav {
   letter-spacing: 0.02em;

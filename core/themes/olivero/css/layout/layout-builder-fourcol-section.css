@@ -10,6 +10,19 @@
  * Provides the layout styles for four-column layout section.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .layout--fourcol-section {
   display: flex;
   flex-wrap: wrap
@@ -17,13 +30,13 @@
 
 .layout--fourcol-section > .layout__region {
     flex: 1 0 100%;
-    margin-bottom: 1.125rem
+    margin-bottom: var(--grid-gap)
   }
 
 @media (min-width: 43.75rem) {
 
 .layout--fourcol-section > .layout__region {
-      flex-basis: calc(50% - 1.125rem);
+      flex-basis: calc(50% - var(--grid-gap--md)*0.5);
       flex-grow: 0;
       flex-shrink: 0;
       margin-bottom: 0
@@ -38,27 +51,27 @@
 @media (min-width: 43.75rem) {
     .layout--fourcol-section > .layout__region--first,
     .layout--fourcol-section > .layout__region--second {
-      margin-bottom: 2.25rem;
+      margin-bottom: var(--grid-gap--md);
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--first,[dir="ltr"] 
     .layout--fourcol-section > .layout__region--third {
-      margin-right: 1.125rem
+      margin-right: calc(var(--grid-gap--md)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--first,[dir="rtl"] 
     .layout--fourcol-section > .layout__region--third {
-      margin-left: 1.125rem
+      margin-left: calc(var(--grid-gap--md)*0.5)
   }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--second,[dir="ltr"] 
     .layout--fourcol-section > .layout__region--fourth {
-      margin-left: 1.125rem
+      margin-left: calc(var(--grid-gap--md)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--second,[dir="rtl"] 
     .layout--fourcol-section > .layout__region--fourth {
-      margin-right: 1.125rem
+      margin-right: calc(var(--grid-gap--md)*0.5)
   }
   }
 
@@ -69,7 +82,7 @@
 
 @media (min-width: 62.5rem) {
     .layout--fourcol-section > .layout__region {
-      flex-basis: calc(25% - 1.6875rem);
+      flex-basis: calc(25% - var(--grid-gap--md)*0.75);
     }
 
     .layout--fourcol-section > .layout__region--first,
@@ -78,24 +91,24 @@
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--first {
-      margin-right: 1.125rem
+      margin-right: calc(var(--grid-gap--md)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--first {
-      margin-left: 1.125rem
+      margin-left: calc(var(--grid-gap--md)*0.5)
   }
 
     .layout--fourcol-section > .layout__region--second,
     .layout--fourcol-section > .layout__region--third {
-      margin-left: 1.125rem;
-      margin-right: 1.125rem;
+      margin-left: calc(var(--grid-gap--md)*0.5);
+      margin-right: calc(var(--grid-gap--md)*0.5);
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--fourth {
-      margin-left: 1.125rem
+      margin-left: calc(var(--grid-gap--md)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--fourth {
-      margin-right: 1.125rem
+      margin-right: calc(var(--grid-gap--md)*0.5)
   }
   }

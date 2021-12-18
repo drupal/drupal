@@ -13,14 +13,14 @@
 .form-element {
   box-sizing: border-box;
   max-width: 100%;
-  min-height: 3rem; /* iOS. */
-  padding: calc(0.75rem - 1px) calc(1rem - 1px);
-  color: #232429;
-  border: 1px solid #919297;
-  border-radius: 0.125rem;
-  background: #fff;
-  font-size: 1rem;
-  line-height: 1.5rem;
+  min-height: calc(var(--input-padding-vertical)*2 + var(--input-border-size)*2 + var(--input-line-height)); /* iOS. */
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  color: var(--input-fg-color);
+  border: var(--input-border-size) solid var(--input-border-color);
+  border-radius: var(--input-border-radius-size);
+  background: var(--input-bg-color);
+  font-size: var(--input-font-size);
+  line-height: var(--input-line-height);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none; /* Being able to control inner box shadow on iOS. */
@@ -28,10 +28,10 @@
 
 .no-touchevents .form-element--extrasmall,
 .no-touchevents .form-element[name$="][_weight]"] {
-  min-height: 1.5rem; /* iOS. */
-  padding: calc(0.15rem - 1px) calc(0.5rem - 1px);
-  font-size: 0.889rem;
-  line-height: 1.2rem;
+  min-height: calc(var(--input--extrasmall-padding-vertical)*2 + var(--input-border-size)*2 + var(--input--extrasmall-line-height)); /* iOS. */
+  padding: var(--input--extrasmall-padding-vertical) var(--input--extrasmall-padding-horizontal);
+  font-size: var(--input--extrasmall-font-size);
+  line-height: var(--input--extrasmall-line-height);
 }
 
 /**
@@ -65,7 +65,7 @@
 .form-element--type-color {
   min-width: 3rem; /* Bigger input for webkit */
   padding: 0; /* Bigger pickable area */
-  text-indent: calc(0.75rem - 1px); /* Text-input fallback for non-supporting browsers like Safari */
+  text-indent: calc(0.75rem - var(--input-border-size)); /* Text-input fallback for non-supporting browsers like Safari */
 }
 
 /**
@@ -105,25 +105,25 @@ _:-ms-fullscreen,
  */
 
 .form-element:active {
-  border-color: #003cc5;
+  border-color: var(--input--focus-border-color);
 }
 
 .form-element:hover {
-  border-color: #232429;
-  box-shadow: inset 0 0 0 1px #232429;
+  border-color: var(--input--hover-border-color);
+  box-shadow: inset 0 0 0 var(--input-border-size) var(--input--hover-border-color);
 }
 
 .form-element:focus {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
 }
 
 .form-element:hover:focus {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #232429;
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 var(--input-border-size) var(--input--hover-border-color);
 }
 
 .form-element.error {
-  border-width: 2px;
-  border-color: #d72222;
+  border-width: var(--input--error-border-size);
+  border-color: var(--input--error-border-color);
 }
 
 .form-element.error:hover {
@@ -131,20 +131,20 @@ _:-ms-fullscreen,
 }
 
 .form-element.error:hover:focus {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
 }
 
 .form-element--type-textarea.error + .cke {
-  border-color: #d72222;
+  border-color: var(--input--error-border-color);
 }
 
 .form-element[disabled] {
-  color: #828388;
-  border-color: #bababf;
-  background-color: #f2f2f3;
+  color: var(--input--disabled-fg-color);
+  border-color: var(--input--disabled-border-color);
+  background-color: var(--input--disabled-bg-color);
   box-shadow: none;
   /* https://stackoverflow.com/q/262158#answer-23511280 */
-  -webkit-text-fill-color: #828388;
+  -webkit-text-fill-color: var(--input--disabled-fg-color);
 }
 
 /**

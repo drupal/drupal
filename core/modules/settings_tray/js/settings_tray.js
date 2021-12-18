@@ -5,12 +5,12 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
-  var blockConfigureSelector = '[data-settings-tray-edit]';
-  var toggleEditSelector = '[data-drupal-settingstray="toggle"]';
-  var itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
-  var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
-  var quickEditItemSelector = '[data-quickedit-entity-id]';
+(($, Drupal) => {
+  const blockConfigureSelector = '[data-settings-tray-edit]';
+  const toggleEditSelector = '[data-drupal-settingstray="toggle"]';
+  const itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
+  const contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
+  const quickEditItemSelector = '[data-quickedit-entity-id]';
 
   function preventClick(event) {
     if ($(event.target).closest('.contextual-links').length) {
@@ -42,8 +42,8 @@
     }
 
     editMode = !!editMode;
-    var $editButton = $(toggleEditSelector);
-    var $editables;
+    const $editButton = $(toggleEditSelector);
+    let $editables;
 
     if (editMode) {
       $editButton.text(Drupal.t('Editing'));
@@ -52,7 +52,7 @@
 
       if ($editables.length) {
         document.querySelector('[data-off-canvas-main-canvas]').addEventListener('click', preventClick, true);
-        $editables.not(contextualItemsSelector).on('click.settingstray', function (e) {
+        $editables.not(contextualItemsSelector).on('click.settingstray', e => {
           if ($(e.target).closest('.contextual').length || !localStorage.getItem('Drupal.contextualToolbar.isViewing')) {
             return;
           }
@@ -60,7 +60,7 @@
           $(e.currentTarget).find(blockConfigureSelector).trigger('click');
           disableQuickEdit();
         });
-        $(quickEditItemSelector).not(contextualItemsSelector).on('click.settingstray', function (e) {
+        $(quickEditItemSelector).not(contextualItemsSelector).on('click.settingstray', e => {
           if (!$(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
             closeOffCanvas();
           }
@@ -99,9 +99,7 @@
   }
 
   function prepareAjaxLinks() {
-    Drupal.ajax.instances.filter(function (instance) {
-      return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
-    }).forEach(function (instance) {
+    Drupal.ajax.instances.filter(instance => instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas').forEach(instance => {
       if (!instance.options.data.hasOwnProperty('dialogOptions')) {
         instance.options.data.dialogOptions = {};
       }
@@ -113,16 +111,16 @@
     });
   }
 
-  $(document).on('drupalContextualLinkAdded', function (event, data) {
+  $(document).on('drupalContextualLinkAdded', (event, data) => {
     prepareAjaxLinks();
-    once('settings_tray.edit_mode_init', 'body').forEach(function () {
-      var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
+    once('settings_tray.edit_mode_init', 'body').forEach(() => {
+      const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
 
       if (editMode) {
         setEditModeState(true);
       }
     });
-    data.$el.find(blockConfigureSelector).on('click.settingstray', function () {
+    data.$el.find(blockConfigureSelector).on('click.settingstray', () => {
       if (!isInEditMode()) {
         $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
       }
@@ -130,29 +128,30 @@
       disableQuickEdit();
     });
   });
-  $(document).on('keyup.settingstray', function (e) {
+  $(document).on('keyup.settingstray', e => {
     if (isInEditMode() && e.keyCode === 27) {
       Drupal.announce(Drupal.t('Exited edit mode.'));
       toggleEditMode();
     }
   });
   Drupal.behaviors.toggleEditMode = {
-    attach: function attach() {
+    attach() {
       $(once('settingstray', toggleEditSelector)).on('click.settingstray', toggleEditMode);
     }
+
   };
   $(window).on({
-    'dialog:beforecreate': function dialogBeforecreate(event, dialog, $element, settings) {
+    'dialog:beforecreate': (event, dialog, $element, settings) => {
       if ($element.is('#drupal-off-canvas')) {
         $('body .settings-tray-active-editable').removeClass('settings-tray-active-editable');
-        var $activeElement = $("#".concat(settings.settingsTrayActiveEditableId));
+        const $activeElement = $(`#${settings.settingsTrayActiveEditableId}`);
 
         if ($activeElement.length) {
           $activeElement.addClass('settings-tray-active-editable');
         }
       }
     },
-    'dialog:beforeclose': function dialogBeforeclose(event, dialog, $element) {
+    'dialog:beforeclose': (event, dialog, $element) => {
       if ($element.is('#drupal-off-canvas')) {
         $('body .settings-tray-active-editable').removeClass('settings-tray-active-editable');
       }

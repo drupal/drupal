@@ -10,6 +10,19 @@
  * Book module styling.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .book-pager {
   margin-left: 0;
 }
@@ -45,11 +58,11 @@
 .book-pager {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 0 1.125rem;
+  margin-top: 0 var(--sp);
   padding-top: 0;
-  padding-bottom: 1.125rem;
+  padding-bottom: var(--sp);
   list-style: none;
-  border-bottom: solid 1px #0d77b5;
+  border-bottom: solid 1px var(--color--blue-20);
 }
 
 .book-pager__item {
@@ -93,8 +106,8 @@
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: #0d77b5;
-  font-family: "Lora", "georgia", serif;
+  color: var(--color--blue-20);
+  font-family: var(--font-serif);
   font-size: 1.125rem;
   font-weight: 600;
 }
@@ -117,8 +130,8 @@
 
 .book-pager__link--previous:before {
     display: block;
-    width: 0.5625rem;
-    height: 0.5625rem;
+    width: var(--sp0-5);
+    height: var(--sp0-5);
     content: "";
     transform: rotate(-45deg);
     border-top: solid 3px currentColor;
@@ -142,8 +155,8 @@
 
 .book-pager__link--next:after {
     display: block;
-    width: 0.5625rem;
-    height: 0.5625rem;
+    width: var(--sp0-5);
+    height: var(--sp0-5);
     content: "";
     transform: rotate(135deg);
     border-top: solid 3px currentColor;
@@ -182,8 +195,8 @@
 }
 
 .book-navigation__menu {
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
+  margin-top: var(--sp2);
+  margin-bottom: var(--sp2);
   padding-top: 0;
   padding-bottom: 0;
   list-style: none;

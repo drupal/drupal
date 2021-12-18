@@ -14,6 +14,10 @@
   /**
   * Shortcut action.
   */
+  --shortcut-bg-color: var(--color-gray-800);
+  --shortcut-border-radius-size: var(--base-border-radius);
+  --shortcut-padding-size: calc(var(--space-xs)*0.5) var(--space-m);
+  --shortcut-icon-size: var(--space-l);
 }
 
 /**
@@ -22,31 +26,31 @@
 
 .shortcut-action {
   display: inline-block;
-  margin-left: 0.5rem; /* LTR */
+  margin-left: var(--space-xs); /* LTR */
 }
 
 [dir="rtl"] .shortcut-action {
-  margin-right: 0.5rem;
+  margin-right: var(--space-xs);
 }
 
 .shortcut-action__message {
   display: inline-block;
-  margin-left: 0.75rem; /* LTR */
-  padding: 0.25rem 1rem;
-  transition: all 0.2s ease-out;
-  transform: translateY(-0.5rem);
+  margin-left: var(--space-s); /* LTR */
+  padding: var(--shortcut-padding-size);
+  transition: var(--transition);
+  transform: translateY(calc(var(--space-xs)*-1));
   vertical-align: top;
   opacity: 0;
-  color: #fff;
-  border-radius: 2px;
-  background: #55565b;
-  font-size: 0.889rem;
+  color: var(--color-white);
+  border-radius: var(--shortcut-border-radius-size);
+  background: var(--shortcut-bg-color);
+  font-size: var(--font-size-label);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
 [dir="rtl"] .shortcut-action__message {
-  margin-right: 0.75rem;
+  margin-right: var(--space-s);
   margin-left: 0;
 }
 
@@ -58,10 +62,10 @@
 
 .shortcut-action__icon {
   display: inline-block;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--shortcut-icon-size);
+  height: var(--shortcut-icon-size);
   vertical-align: -0.0625rem;
-  background: transparent url("data:image/svg+xml,%3csvg height='24' width='96' xmlns='http://www.w3.org/2000/svg'%3e%3cg stroke='%238e929c'%3e%3cpath d='m94.46 9.667h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007zm-24 0h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007z' fill='%23ffd23f'/%3e%3cg fill='none'%3e%3cpath d='m38.42 9.327.11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665zm-24.002 0 .11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665z'/%3e%3cpath d='m42.5 1v7m-3.5-3.5h7m42 2.5 6-6m0 6-6-6' stroke-linecap='square' stroke-miterlimit='3'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") left top / 6rem 1.5rem no-repeat;
+  background: transparent url("data:image/svg+xml,%3csvg height='24' width='96' xmlns='http://www.w3.org/2000/svg'%3e%3cg stroke='%238e929c'%3e%3cpath d='m94.46 9.667h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007zm-24 0h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007z' fill='%23ffd23f'/%3e%3cg fill='none'%3e%3cpath d='m38.42 9.327.11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665zm-24.002 0 .11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665z'/%3e%3cpath d='m42.5 1v7m-3.5-3.5h7m42 2.5 6-6m0 6-6-6' stroke-linecap='square' stroke-miterlimit='3'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") left top / calc(var(--shortcut-icon-size)*4) var(--shortcut-icon-size) no-repeat;
 }
 
 [dir="rtl"] .shortcut-action__icon {
@@ -70,14 +74,14 @@
 
 .shortcut-action--add:hover .shortcut-action__icon,
 .shortcut-action--add:focus .shortcut-action__icon {
-  background-position: -1.5rem top;
+  background-position: calc(var(--shortcut-icon-size)*-1) top;
 }
 
 .shortcut-action--remove .shortcut-action__icon {
-  background-position: -3rem top;
+  background-position: calc(var(--shortcut-icon-size)*-2) top;
 }
 
 .shortcut-action--remove:focus .shortcut-action__icon,
 .shortcut-action--remove:hover .shortcut-action__icon {
-  background-position: -4.5rem top;
+  background-position: calc(var(--shortcut-icon-size)*-3) top;
 }

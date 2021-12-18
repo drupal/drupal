@@ -7,18 +7,18 @@
 
 (function (Drupal, Backbone, Modernizr) {
   Drupal.contextual.VisualView = Backbone.View.extend({
-    events: function events() {
-      var touchEndToClick = function touchEndToClick(event) {
+    events() {
+      const touchEndToClick = function (event) {
         event.preventDefault();
         event.target.click();
       };
 
-      var mapping = {
-        'click .trigger': function clickTrigger() {
+      const mapping = {
+        'click .trigger': function () {
           this.model.toggleOpen();
         },
         'touchend .trigger': touchEndToClick,
-        'click .contextual-links a': function clickContextualLinksA() {
+        'click .contextual-links a': function () {
           this.model.close().blur();
         },
         'touchend .contextual-links a': touchEndToClick
@@ -32,12 +32,14 @@
 
       return mapping;
     },
-    initialize: function initialize() {
+
+    initialize() {
       this.listenTo(this.model, 'change', this.render);
     },
-    render: function render() {
-      var isOpen = this.model.get('isOpen');
-      var isVisible = this.model.get('isLocked') || this.model.get('regionIsHovered') || isOpen;
+
+    render() {
+      const isOpen = this.model.get('isOpen');
+      const isVisible = this.model.get('isLocked') || this.model.get('regionIsHovered') || isOpen;
       this.$el.toggleClass('open', isOpen).find('.trigger').toggleClass('visually-hidden', !isVisible);
 
       if ('isOpen' in this.model.changed) {
@@ -46,5 +48,6 @@
 
       return this;
     }
+
   });
 })(Drupal, Backbone, Modernizr);

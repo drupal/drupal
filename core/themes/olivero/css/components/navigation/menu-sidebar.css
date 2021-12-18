@@ -10,6 +10,19 @@
  * Styles for menu placed in sidebar region.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .menu--sidebar {
   list-style: none
 }
@@ -41,9 +54,9 @@
 .menu--sidebar .menu__link {
     position: relative;
     display: block;
-    padding-top: 0.84375rem;
-    padding-bottom: 0.84375rem;
-    font-family: "Lora", "georgia", serif;
+    padding-top: var(--sp0-75);
+    padding-bottom: var(--sp0-75);
+    font-family: var(--font-serif);
     font-size: 1.125rem
 
     /* Bottom divider line. */
@@ -60,20 +73,20 @@
 .menu--sidebar .menu__link:after {
       position: absolute;
       bottom: 0;
-      width: 4.5rem;
+      width: var(--sp4);
       height: 0;
       content: "";
-      border-top: solid 2px #e7edf1;
+      border-top: solid 2px var(--color--gray-80);
     }
 
 .menu--sidebar .menu__link--link {
     text-decoration: none;
-    color: #0d1214;
+    color: var(--color--gray-0);
     font-weight: 600
   }
 
 .menu--sidebar .menu__link--link:hover {
-      color: #2494db;
+      color: var(--color--blue-50);
     }
 
 .menu--sidebar {

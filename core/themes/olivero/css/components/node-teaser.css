@@ -10,27 +10,40 @@
  * Node Teaser specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .node--view-mode-teaser {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: 1.6875rem
+  margin-bottom: var(--sp1-5)
 }
 
 .node--view-mode-teaser:after {
     position: absolute;
     bottom: 0;
-    width: 3.375rem;
+    width: var(--sp3);
     height: 0;
     content: "";
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 2px #e7edf1;
+    border-top: solid 2px var(--color--gray-80);
   }
 
 .node--view-mode-teaser .node__meta {
-    margin-bottom: 1.125rem
+    margin-bottom: var(--sp)
   }
 
 .node--view-mode-teaser .node__meta a {
-      color: #0d77b5;
+      color: var(--color--blue-20);
       font-weight: bold;
     }
 
@@ -49,23 +62,23 @@
     }
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-    margin-right: 1.125rem
+    margin-right: var(--sp1)
 }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-    margin-left: 1.125rem
+    margin-left: var(--sp1)
 }
 
 .node--view-mode-teaser .primary-image {
     flex-shrink: 0;
     margin: 0;
-    margin-bottom: 1.125rem
+    margin-bottom: var(--sp1)
 
     /* Ensure title does not wrap under image until necessary. */
   }
 
 .node--view-mode-teaser .primary-image + .node__title {
-      flex-basis: calc(100% - 5.0625rem)
+      flex-basis: calc(100% - var(--sp)*4.5)
     }
 
 @media (min-width: 62.5rem) {
@@ -80,8 +93,8 @@
     }
 
 .node--view-mode-teaser .primary-image img {
-      width: 3.9375rem;
-      height: 3.9375rem;
+      width: calc(var(--sp)*3.5);
+      height: calc(var(--sp)*3.5);
       object-fit: cover;
       border-radius: 50%
     }
@@ -89,35 +102,35 @@
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .primary-image img {
-        width: calc(7.14286vw - 2.31696rem);
-        height: calc(7.14286vw - 2.31696rem)
+        width: var(--grid-col-width--lg);
+        height: var(--grid-col-width--lg)
     }
       }
 
 @media (min-width: 75rem) {
 
 .node--view-mode-teaser .primary-image img {
-        width: calc(7.14286vw - 2.87946rem);
-        height: calc(7.14286vw - 2.87946rem)
+        width: var(--grid-col-width--nav);
+        height: var(--grid-col-width--nav)
     }
       }
 
 @media (min-width: 90rem) {
 
 .node--view-mode-teaser .primary-image img {
-        width: 3.61607rem;
-        height: 3.61607rem
+        width: var(--grid-col-width--max);
+        height: var(--grid-col-width--max)
     }
       }
 
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-      left: calc(-7.14286vw - -1.07143px)
+      left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
   }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-      right: calc(-7.14286vw - -1.07143px)
+      right: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
   }
 
 .node--view-mode-teaser .primary-image {
@@ -130,38 +143,38 @@
 @media (min-width: 75rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-      left: calc(-7.14286vw - -0.62946rem)
+      left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
   }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-      right: calc(-7.14286vw - -0.62946rem)
+      right: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
   }
     }
 
 @media (min-width: 90rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-      left: -5.86607rem
+      left: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1)
   }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-      right: -5.86607rem
+      right: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1)
   }
     }
 
 .node--view-mode-teaser .node__title {
     margin: 0;
-    margin-bottom: 1.125rem;
-    color: #0d1214;
+    margin-bottom: var(--sp1);
+    color: var(--color--gray-0);
     font-size: 1.5rem;
-    line-height: 1.6875rem
+    line-height: var(--line-height-base)
   }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__title {
-      font-size: 2.25rem;
-      line-height: 3.375rem
+      font-size: var(--sp2);
+      line-height: var(--sp3)
   }
     }
 
@@ -198,7 +211,7 @@
 }
 
 .node--view-mode-teaser .field--tag-ref {
-    margin-top: 1.125rem;
+    margin-top: var(--sp1);
     margin-bottom: 0;
     padding-top: 0;
     padding-bottom: 0;
@@ -208,14 +221,14 @@
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field--tag-ref {
-      margin-top: 2.25rem
+      margin-top: var(--sp2)
   }
     }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser {
-    margin-bottom: 3.375rem
+    margin-bottom: var(--sp3)
 }
   }
 

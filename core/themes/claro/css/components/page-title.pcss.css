@@ -3,8 +3,6 @@
  * Page title.
  */
 
-@import "../base/variables.pcss.css";
-
 .block-page-title-block {
   margin-bottom: var(--space-s);
 }

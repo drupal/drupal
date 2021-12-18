@@ -10,6 +10,19 @@
  * Search results specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .search-results {
   padding-left: 0
 }
@@ -27,7 +40,7 @@
 }
 
 .search-results {
-  margin-bottom: 2.25rem;
+  margin-bottom: var(--sp2);
   padding-top: 0;
   padding-bottom: 0;
   list-style: none
@@ -36,7 +49,7 @@
 @media (min-width: 43.75rem) {
 
 .search-results {
-    margin-bottom: 3.375rem
+    margin-bottom: var(--sp3)
 }
   }
 
@@ -59,9 +72,9 @@
 .search-result__title {
   margin-top: 0;
   margin-bottom: 0;
-  color: #0d1214;
+  color: var(--color--gray-0);
   font-size: 1.25rem;
-  line-height: 1.6875rem
+  line-height: var(--line-height-base)
 }
 
 .search-result__title a {
@@ -69,22 +82,22 @@
     transition: background-size 0.2s, color 0.2s;
     text-decoration: none;
     background-color: transparent;
-    background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
+    background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
     background-size: 0 0.1875rem
   }
 
 .search-result__title a:hover {
-      color: #0d77b5;
+      color: var(--color--blue-20);
     }
 
 @media (min-width: 62.5rem) {
 
 .search-result__title {
-    margin-bottom: 1.125rem;
+    margin-bottom: var(--sp1);
     font-size: 1.875rem;
-    line-height: 3.375rem
+    line-height: var(--sp3)
 }
   }
 
@@ -93,43 +106,43 @@
 }
 
 .search-result__snippet {
-  padding-bottom: 1.5625rem
+  padding-bottom: calc(var(--sp1-5) - 2px)
 }
 
 @media (min-width: 62.5rem) {
 
 .search-result__snippet {
-    padding-bottom: 3.375rem
+    padding-bottom: var(--sp3)
 }
   }
 
 .search-result__meta {
   display: flex;
   align-items: center;
-  margin-bottom: 1.125rem;
-  color: #6e7172;
+  margin-bottom: var(--sp1);
+  color: var(--color--gray-20);
   font-size: 0.875rem;
-  line-height: 1.125rem
+  line-height: var(--sp)
 }
 
 .search-result__meta a {
-    color: #0d77b5;
+    color: var(--color--blue-20);
     font-weight: bold;
   }
 
 .search-results__item {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: 1.6875rem
+  margin-bottom: var(--sp1-5)
 }
 
 .search-results__item:after {
     position: absolute;
     bottom: 0;
-    width: 3.375rem;
+    width: var(--sp3);
     height: 0;
     content: "";
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 2px #e7edf1;
+    border-top: solid 2px var(--color--gray-80);
   }
 
 .search-results__item:last-child {
@@ -139,6 +152,6 @@
 @media (min-width: 62.5rem) {
 
 .search-results__item {
-    margin-bottom: 3.375rem
+    margin-bottom: var(--sp3)
 }
   }

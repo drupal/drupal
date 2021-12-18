@@ -8,17 +8,18 @@
 (function ($, Drupal, _, document) {
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
-      getRules: function getRules() {
-        var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
+      getRules() {
+        const currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
 
-        var rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
+        const rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
 
-        var rule = new Drupal.FilterHTMLRule();
+        const rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = ['*'];
         rule.restrictedTags.forbidden.attributes = ['style', 'on*'];
         rules.push(rule);
         return rules;
       }
+
     };
   }
 
@@ -28,23 +29,24 @@
     userTags: {},
     autoTags: null,
     newFeatures: {},
-    attach: function attach(context, settings) {
-      var that = this;
-      once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(function (formItem) {
+
+    attach(context, settings) {
+      const that = this;
+      once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(formItem => {
         that.$allowedHTMLFormItem = $(formItem);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('.description');
         that.userTags = that._parseSetting(formItem.value);
-        $(document).on('drupalEditorFeatureAdded', function (e, feature) {
+        $(document).on('drupalEditorFeatureAdded', (e, feature) => {
           that.newFeatures[feature.name] = feature.rules;
 
           that._updateAllowedTags();
-        }).on('drupalEditorFeatureModified', function (e, feature) {
+        }).on('drupalEditorFeatureModified', (e, feature) => {
           if (that.newFeatures.hasOwnProperty(feature.name)) {
             that.newFeatures[feature.name] = feature.rules;
 
             that._updateAllowedTags();
           }
-        }).on('drupalEditorFeatureRemoved', function (e, feature) {
+        }).on('drupalEditorFeatureRemoved', (e, feature) => {
           if (that.newFeatures.hasOwnProperty(feature.name)) {
             delete that.newFeatures[feature.name];
 
@@ -56,32 +58,34 @@
         });
       });
     },
-    _updateAllowedTags: function _updateAllowedTags() {
+
+    _updateAllowedTags() {
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
       if (!_.isEmpty(this.autoTags)) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
 
-        var userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
+        const userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
 
-        this.$allowedHTMLFormItem.val("".concat(this._generateSetting(userTagsWithoutOverrides), " ").concat(this._generateSetting(this.autoTags)));
+        this.$allowedHTMLFormItem.val(`${this._generateSetting(userTagsWithoutOverrides)} ${this._generateSetting(this.autoTags)}`);
       } else {
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
       }
     },
-    _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
-      var editorRequiredTags = {};
-      Object.keys(newFeatures || {}).forEach(function (featureName) {
-        var feature = newFeatures[featureName];
-        var featureRule;
-        var filterRule;
-        var tag;
 
-        for (var f = 0; f < feature.length; f++) {
+    _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
+      const editorRequiredTags = {};
+      Object.keys(newFeatures || {}).forEach(featureName => {
+        const feature = newFeatures[featureName];
+        let featureRule;
+        let filterRule;
+        let tag;
+
+        for (let f = 0; f < feature.length; f++) {
           featureRule = feature[f];
 
-          for (var t = 0; t < featureRule.required.tags.length; t++) {
+          for (let t = 0; t < featureRule.required.tags.length; t++) {
             tag = featureRule.required.tags[t];
 
             if (!_.has(editorRequiredTags, tag)) {
@@ -98,20 +102,20 @@
           }
         }
       });
-      var autoAllowedTags = {};
-      Object.keys(editorRequiredTags).forEach(function (tag) {
+      const autoAllowedTags = {};
+      Object.keys(editorRequiredTags).forEach(tag => {
         if (!_.has(userAllowedTags, tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
-          var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
-          var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
+          const requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
+          const allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
 
-          var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
+          const needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
 
-          var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
-          var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
+          const requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
+          const allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
 
-          var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          const needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
@@ -128,27 +132,28 @@
       });
       return autoAllowedTags;
     },
-    _parseSetting: function _parseSetting(setting) {
-      var tag;
-      var rule;
-      var attributes;
-      var attribute;
-      var allowedTags = setting.match(/(<[^>]+>)/g);
-      var rules = {};
 
-      for (var t = 0; t < allowedTags.length; t++) {
-        var $tagObject = $(allowedTags[t]);
+    _parseSetting(setting) {
+      let tag;
+      let rule;
+      let attributes;
+      let attribute;
+      const allowedTags = setting.match(/(<[^>]+>)/g);
+      const rules = {};
+
+      for (let t = 0; t < allowedTags.length; t++) {
+        const $tagObject = $(allowedTags[t]);
         tag = $tagObject.prop('tagName').toLowerCase();
         rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = [tag];
         attributes = $tagObject.prop('attributes');
 
-        for (var i = 0; i < attributes.length; i++) {
+        for (let i = 0; i < attributes.length; i++) {
           attribute = attributes.item(i);
-          var attributeName = attribute.nodeName;
+          const attributeName = attribute.nodeName;
 
           if (attributeName === 'class') {
-            var attributeValue = attribute.textContent;
+            const attributeValue = attribute.textContent;
             rule.restrictedTags.allowed.classes = attributeValue.split(' ');
           } else {
             rule.restrictedTags.allowed.attributes.push(attributeName);
@@ -160,32 +165,34 @@
 
       return rules;
     },
-    _generateSetting: function _generateSetting(tags) {
-      return _.reduce(tags, function (setting, rule, tag) {
+
+    _generateSetting(tags) {
+      return _.reduce(tags, (setting, rule, tag) => {
         if (setting.length) {
           setting += ' ';
         }
 
-        setting += "<".concat(tag);
+        setting += `<${tag}`;
 
         if (rule.restrictedTags.allowed.attributes.length) {
-          setting += " ".concat(rule.restrictedTags.allowed.attributes.join(' '));
+          setting += ` ${rule.restrictedTags.allowed.attributes.join(' ')}`;
         }
 
         if (rule.restrictedTags.allowed.classes.length) {
-          setting += " class=\"".concat(rule.restrictedTags.allowed.classes.join(' '), "\"");
+          setting += ` class="${rule.restrictedTags.allowed.classes.join(' ')}"`;
         }
 
         setting += '>';
         return setting;
       }, '');
     }
+
   };
 
   Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
-    var html = '';
+    let html = '';
 
-    var tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);
+    const tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);
 
     html += '<p class="editor-update-message">';
     html += Drupal.t('Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.', {

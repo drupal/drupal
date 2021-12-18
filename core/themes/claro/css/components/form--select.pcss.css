@@ -3,8 +3,6 @@
  * Select input elements.
  */
 
-@import "../base/variables.pcss.css";
-
 .form-element--type-select {
   padding-right: calc(2rem - var(--input-border-size));
   background-image: url(../../images/icons/545560/chevron-down.svg);

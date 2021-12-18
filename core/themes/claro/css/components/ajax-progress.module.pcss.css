@@ -3,8 +3,6 @@
  * Throbber.
  */
 
-@import "../base/variables.pcss.css";
-
 .ajax-progress {
   display: inline-block;
 }

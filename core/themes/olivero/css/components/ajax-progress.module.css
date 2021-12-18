@@ -10,6 +10,19 @@
  * Visual styles for ajax-progress throbber.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .ajax-progress {
   display: inline-block;
 }
@@ -19,19 +32,19 @@
  */
 
 [dir="ltr"] .ajax-progress-throbber {
-  margin-left: 0.5625rem;
+  margin-left: var(--sp0-5);
 }
 
 [dir="rtl"] .ajax-progress-throbber {
-  margin-right: 0.5625rem;
+  margin-right: var(--sp0-5);
 }
 
 [dir="ltr"] .ajax-progress-throbber {
-  margin-right: 0.5625rem;
+  margin-right: var(--sp0-5);
 }
 
 [dir="rtl"] .ajax-progress-throbber {
-  margin-left: 0.5625rem;
+  margin-left: var(--sp0-5);
 }
 
 .ajax-progress-throbber {
@@ -50,20 +63,20 @@
   width: 1.125rem;
   height: 1.125rem;
   border-width: 2px;
-  border-color: #2494db transparent #2494db #2494db;
+  border-color: var(--color--blue-50) transparent var(--color--blue-50) var(--color--blue-50);
 }
 
 [dir="ltr"] .ajax-progress-throbber .message {
-  padding-left: 0.5625rem;
+  padding-left: var(--sp0-5);
 }
 
 [dir="rtl"] .ajax-progress-throbber .message {
-  padding-right: 0.5625rem;
+  padding-right: var(--sp0-5);
 }
 
 .ajax-progress-throbber .message {
   display: inline-block;
-  font-size: 0.875rem;
+  font-size: var(--font-size-s);
   font-weight: 400;
 }
 
@@ -86,9 +99,9 @@
   width: 3.5rem;
   height: 3.5rem;
   margin: -1.75rem;
-  border: 1px solid #afb8be;
+  border: 1px solid var(--color--gray-45);
   border-radius: 3.5rem;
-  background-color: #fff;
+  background-color: var(--color--white);
   box-shadow: 0 0.25rem 0.625rem rgba(34, 35, 48, 0.1) /* LTR */
 }
 
@@ -122,7 +135,7 @@
 .ajax-progress-fullscreen:before {
   animation: olivero-throbber 0.75s linear infinite;
   border-style: solid dotted solid solid;
-  border-color: #2494db transparent #2494db #2494db;
+  border-color: var(--color--blue-50) transparent var(--color--blue-50) var(--color--blue-50);
   border-radius: 50%;
 }
 

@@ -7,31 +7,33 @@
 
 (function ($, Drupal, Backbone, _) {
   Drupal.ckeditor.KeyboardView = Backbone.View.extend({
-    initialize: function initialize() {
+    initialize() {
       this.$el.on('keydown.ckeditor', '.ckeditor-buttons a, .ckeditor-multiple-buttons a', this.onPressButton.bind(this));
       this.$el.on('keydown.ckeditor', '[data-drupal-ckeditor-type="group"]', this.onPressGroup.bind(this));
     },
-    render: function render() {},
-    onPressButton: function onPressButton(event) {
-      var upDownKeys = [38, 63232, 40, 63233];
-      var leftRightKeys = [37, 63234, 39, 63235];
+
+    render() {},
+
+    onPressButton(event) {
+      const upDownKeys = [38, 63232, 40, 63233];
+      const leftRightKeys = [37, 63234, 39, 63235];
 
       if (event.keyCode === 13) {
         event.stopPropagation();
       }
 
       if (_.indexOf(_.union(upDownKeys, leftRightKeys), event.keyCode) > -1) {
-        var view = this;
-        var $target = $(event.currentTarget);
-        var $button = $target.parent();
-        var $container = $button.parent();
-        var $group = $button.closest('.ckeditor-toolbar-group');
-        var $row;
-        var containerType = $container.data('drupal-ckeditor-button-sorting');
-        var $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
-        var $activeButtons = this.$el.find('.ckeditor-toolbar-active');
-        var $originalGroup = $group;
-        var dir;
+        let view = this;
+        let $target = $(event.currentTarget);
+        let $button = $target.parent();
+        const $container = $button.parent();
+        let $group = $button.closest('.ckeditor-toolbar-group');
+        let $row;
+        const containerType = $container.data('drupal-ckeditor-button-sorting');
+        const $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
+        const $activeButtons = this.$el.find('.ckeditor-toolbar-active');
+        const $originalGroup = $group;
+        let dir;
 
         if (containerType === 'source') {
           if (_.indexOf([40, 63233], event.keyCode) > -1) {
@@ -39,8 +41,8 @@
           }
         } else if (containerType === 'target') {
           if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
-            var $siblings = $container.children();
-            var index = $siblings.index($button);
+            const $siblings = $container.children();
+            const index = $siblings.index($button);
 
             if (_.indexOf([37, 63234], event.keyCode) > -1) {
               if (index > 0) {
@@ -85,7 +87,7 @@
         }
 
         view = this;
-        Drupal.ckeditor.registerButtonMove(this, $button, function (result) {
+        Drupal.ckeditor.registerButtonMove(this, $button, result => {
           if (!result && $originalGroup) {
             $originalGroup.find('.ckeditor-buttons').append($button);
           }
@@ -96,13 +98,14 @@
         event.stopPropagation();
       }
     },
-    onPressGroup: function onPressGroup(event) {
-      var upDownKeys = [38, 63232, 40, 63233];
-      var leftRightKeys = [37, 63234, 39, 63235];
+
+    onPressGroup(event) {
+      const upDownKeys = [38, 63232, 40, 63233];
+      const leftRightKeys = [37, 63234, 39, 63235];
 
       if (event.keyCode === 13) {
-        var view = this;
-        window.setTimeout(function () {
+        const view = this;
+        window.setTimeout(() => {
           Drupal.ckeditor.openGroupNameDialog(view, $(event.currentTarget));
         }, 0);
         event.preventDefault();
@@ -110,11 +113,11 @@
       }
 
       if (_.indexOf(_.union(upDownKeys, leftRightKeys), event.keyCode) > -1) {
-        var $group = $(event.currentTarget);
-        var $container = $group.parent();
-        var $siblings = $container.children();
-        var index;
-        var dir;
+        const $group = $(event.currentTarget);
+        const $container = $group.parent();
+        const $siblings = $container.children();
+        let index;
+        let dir;
 
         if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
           index = $siblings.index($group);
@@ -123,7 +126,7 @@
             if (index > 0) {
               $group.insertBefore($siblings.eq(index - 1));
             } else {
-              var $rowChildElement = $container.closest('.ckeditor-row').prev().find('.ckeditor-toolbar-groups').children().eq(-1);
+              const $rowChildElement = $container.closest('.ckeditor-row').prev().find('.ckeditor-toolbar-groups').children().eq(-1);
               $group.insertBefore($rowChildElement);
             }
           } else if (_.indexOf([39, 63235], event.keyCode) > -1) {
@@ -144,5 +147,6 @@
         event.stopPropagation();
       }
     }
+
   });
 })(jQuery, Drupal, Backbone, _);

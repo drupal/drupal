@@ -11,35 +11,48 @@
  .
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 @media (min-width: 75rem) {
 
 .social-bar {
     flex-shrink: 0;
-    width: 5.625rem;
-    background-color: #f7f9fa
+    width: var(--content-left);
+    background-color: var(--color--gray-95)
 }
   }
 
 [dir="ltr"] .social-bar__inner {
-  padding-left: 1.125rem
+  padding-left: var(--sp)
 }
 
 [dir="rtl"] .social-bar__inner {
-  padding-right: 1.125rem
+  padding-right: var(--sp)
 }
 
 [dir="ltr"] .social-bar__inner {
-  padding-right: 1.125rem
+  padding-right: var(--sp)
 }
 
 [dir="rtl"] .social-bar__inner {
-  padding-left: 1.125rem
+  padding-left: var(--sp)
 }
 
 .social-bar__inner {
   position: relative;
-  padding-top: 0.5625rem;
-  padding-bottom: 0.5625rem
+  padding-top: var(--sp0-5);
+  padding-bottom: var(--sp0-5)
 }
 
 @media (min-width: 75rem) {
@@ -62,9 +75,9 @@
 
 .social-bar__inner {
     position: relative;
-    width: 5.625rem;
-    padding-top: 5.625rem;
-    padding-bottom: 5.625rem
+    width: var(--content-left);
+    padding-top: calc(var(--sp)*5);
+    padding-bottom: calc(var(--sp)*5)
 }
 
     [dir="ltr"] .social-bar__inner.is-fixed {
@@ -77,13 +90,13 @@
 
     .social-bar__inner.is-fixed {
       position: fixed;
-      top: 6.75rem;
-      height: calc(100vh - 6.75rem);
+      top: var(--sp6);
+      height: calc(100vh - var(--sp)*6);
     }
   }
 
 .rotate > * {
-    margin-bottom: 2.25rem
+    margin-bottom: var(--sp2)
   }
 
 @media (min-width: 75rem) {
@@ -95,11 +108,11 @@
   }
 
       [dir="ltr"] .rotate > *:not(:first-child) {
-        margin-right: 2.25rem
+        margin-right: var(--sp2)
 }
 
       [dir="rtl"] .rotate > *:not(:first-child) {
-        margin-left: 2.25rem
+        margin-left: var(--sp2)
 }
     }
 

@@ -3,7 +3,7 @@
  * Provides the layout styles for three-column layout section.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .layout--threecol-section {
   display: flex;

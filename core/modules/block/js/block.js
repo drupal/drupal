@@ -7,17 +7,17 @@
 
 (function ($, window, Drupal, once) {
   Drupal.behaviors.blockSettingsSummary = {
-    attach: function attach() {
+    attach() {
       if (typeof $.fn.drupalSetSummary === 'undefined') {
         return;
       }
 
       function checkboxesSummary(context) {
-        var vals = [];
-        var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
-        var il = $checkboxes.length;
+        const vals = [];
+        const $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
+        const il = $checkboxes.length;
 
-        for (var i = 0; i < il; i++) {
+        for (let i = 0; i < il; i++) {
           vals.push($($checkboxes[i]).html());
         }
 
@@ -29,8 +29,8 @@
       }
 
       $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-entity-bundlenode"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
-      $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {
-        var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
+      $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(context => {
+        const $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
 
         if (!$pages.val()) {
           return Drupal.t('Not restricted');
@@ -39,16 +39,17 @@
         return Drupal.t('Restricted to certain pages');
       });
     }
+
   };
   Drupal.behaviors.blockDrag = {
-    attach: function attach(context, settings) {
+    attach(context, settings) {
       if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag.blocks === 'undefined') {
         return;
       }
 
       function checkEmptyRegions(table, rowObject) {
         table.find('tr.region-message').each(function () {
-          var $this = $(this);
+          const $this = $(this);
 
           if ($this.prev('tr').get(0) === rowObject.element) {
             if (rowObject.method !== 'keyboard' || rowObject.direction === 'down') {
@@ -66,7 +67,7 @@
 
       function updateLastPlaced(table, rowObject) {
         table.find('.color-success').removeClass('color-success');
-        var $rowObject = $(rowObject);
+        const $rowObject = $(rowObject);
 
         if (!$rowObject.is('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
@@ -75,14 +76,12 @@
       }
 
       function updateBlockWeights(table, region) {
-        var weight = -Math.round(table.find('.draggable').length / 2);
-        table.find(".region-".concat(region, "-message")).nextUntil('.region-title').find('select.block-weight').val(function () {
-          return ++weight;
-        });
+        let weight = -Math.round(table.find('.draggable').length / 2);
+        table.find(`.region-${region}-message`).nextUntil('.region-title').find('select.block-weight').val(() => ++weight);
       }
 
-      var table = $('#blocks');
-      var tableDrag = Drupal.tableDrag.blocks;
+      const table = $('#blocks');
+      const tableDrag = Drupal.tableDrag.blocks;
 
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
@@ -90,22 +89,22 @@
       };
 
       tableDrag.onDrop = function () {
-        var dragObject = this;
-        var $rowElement = $(dragObject.rowObject.element);
-        var regionRow = $rowElement.prevAll('tr.region-message').get(0);
-        var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-        var regionField = $rowElement.find('select.block-region-select');
+        const dragObject = this;
+        const $rowElement = $(dragObject.rowObject.element);
+        const regionRow = $rowElement.prevAll('tr.region-message').get(0);
+        const regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+        const regionField = $rowElement.find('select.block-region-select');
 
-        if (regionField.find("option[value=".concat(regionName, "]")).length === 0) {
+        if (regionField.find(`option[value=${regionName}]`).length === 0) {
           window.alert(Drupal.t('The block cannot be placed in this region.'));
           regionField.trigger('change');
         }
 
-        if (!regionField.is(".block-region-".concat(regionName))) {
-          var weightField = $rowElement.find('select.block-weight');
-          var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
-          regionField.removeClass("block-region-".concat(oldRegionName)).addClass("block-region-".concat(regionName));
-          weightField.removeClass("block-weight-".concat(oldRegionName)).addClass("block-weight-".concat(regionName));
+        if (!regionField.is(`.block-region-${regionName}`)) {
+          const weightField = $rowElement.find('select.block-weight');
+          const oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
+          regionField.removeClass(`block-region-${oldRegionName}`).addClass(`block-region-${regionName}`);
+          weightField.removeClass(`block-weight-${oldRegionName}`).addClass(`block-weight-${regionName}`);
           regionField.val(regionName);
         }
 
@@ -113,11 +112,11 @@
       };
 
       $(once('block-region-select', 'select.block-region-select', context)).on('change', function (event) {
-        var row = $(this).closest('tr');
-        var select = $(this);
+        const row = $(this).closest('tr');
+        const select = $(this);
         tableDrag.rowObject = new tableDrag.row(row[0]);
-        var regionMessage = table.find(".region-".concat(select[0].value, "-message"));
-        var regionItems = regionMessage.nextUntil('.region-message, .region-title');
+        const regionMessage = table.find(`.region-${select[0].value}-message`);
+        const regionItems = regionMessage.nextUntil('.region-message, .region-title');
 
         if (regionItems.length) {
           regionItems.last().after(row);
@@ -137,5 +136,6 @@
         select.trigger('blur');
       });
     }
+
   };
 })(jQuery, window, Drupal, once);

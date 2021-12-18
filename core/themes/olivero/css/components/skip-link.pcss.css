@@ -5,7 +5,7 @@
  * Allows keyboard users to quickly skip to the main content of the page.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .skip-link {
   display: block;

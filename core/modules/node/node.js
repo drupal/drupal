@@ -7,12 +7,12 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.nodeDetailsSummaries = {
-    attach: function attach(context) {
-      var $context = $(context);
-      $context.find('.node-form-author').drupalSetSummary(function (context) {
-        var $authorContext = $(context);
-        var name = $authorContext.find('.field--name-uid input').val();
-        var date = $authorContext.find('.field--name-created input').val();
+    attach(context) {
+      const $context = $(context);
+      $context.find('.node-form-author').drupalSetSummary(context => {
+        const $authorContext = $(context);
+        const name = $authorContext.find('.field--name-uid input').val();
+        const date = $authorContext.find('.field--name-created input').val();
 
         if (name && date) {
           return Drupal.t('By @name on @date', {
@@ -33,9 +33,9 @@
           });
         }
       });
-      $context.find('.node-form-options').drupalSetSummary(function (context) {
-        var $optionsContext = $(context);
-        var vals = [];
+      $context.find('.node-form-options').drupalSetSummary(context => {
+        const $optionsContext = $(context);
+        const vals = [];
 
         if ($optionsContext.find('input').is(':checked')) {
           $optionsContext.find('input:checked').next('label').each(function () {
@@ -47,5 +47,6 @@
         return Drupal.t('Not promoted');
       });
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

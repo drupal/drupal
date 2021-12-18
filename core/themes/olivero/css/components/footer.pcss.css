@@ -3,7 +3,7 @@
  * Footer regions.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .site-footer {
   position: relative; /* stack above left social bar */

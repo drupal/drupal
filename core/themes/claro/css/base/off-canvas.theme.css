@@ -16,7 +16,7 @@
 
 .ui-dialog.ui-dialog-off-canvas {
   /* Layer the dialog just under the toolbar. */
-  z-index: 501;
+  z-index: var(--jui-dialog-off-canvas-z-index);
   padding: 0;
   color: #ddd;
   border-radius: 0;
@@ -31,40 +31,40 @@
 /* Style the off-canvas dialog header. */
 
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
-  padding: 0.75rem 3rem 0.75rem 1rem; /* LTR */
+  padding: var(--space-s) var(--jui-dialog-off-canvas-close-button-reserved-space) var(--space-s) var(--space-m); /* LTR */
   border: 0;
   border-bottom: 1px solid #000;
   border-radius: 0;
   background: #2d2d2d;
-  line-height: 1.5;
+  line-height: var(--line-height);
 }
 
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
-  padding-right: 1rem;
-  padding-left: 3rem;
+  padding-right: var(--space-m);
+  padding-left: var(--jui-dialog-off-canvas-close-button-reserved-space);
 }
 
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
   /* Push the text away from the icon. */
-  padding-left: 1.75rem; /* LTR */
+  padding-left: calc(var(--space-m) + var(--space-s)); /* LTR */
   /* Ensure that long titles are not truncated. */
   white-space: normal;
   background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: 0 50%; /* LTR */
   background-size: 1.25rem 1.25rem;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
 }
 
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
-  padding-right: 1.75rem;
+  padding-right: calc(var(--space-m) + var(--space-s));
   padding-left: 0;
   background-position: 100% 50%;
 }
 
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-right: var(--space-m);
+  margin-left: var(--space-m);
 }
 
 /* Override default styling from jQuery UI. */
@@ -74,7 +74,7 @@
 #drupal-off-canvas .ui-widget-header .ui-state-default {
   color: #333;
   border: 0;
-  font-size: 0.889rem;
+  font-size: var(--font-size-s);
   font-weight: normal;
 }
 

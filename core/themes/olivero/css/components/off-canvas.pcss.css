@@ -3,7 +3,7 @@
  * Settings tray specific styles.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 #drupal-off-canvas {
   & .form-type-boolean {

@@ -7,15 +7,15 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.contentTypes = {
-    attach: function attach(context) {
-      var $context = $(context);
-      $context.find('#edit-submission').drupalSetSummary(function (context) {
-        var vals = [];
+    attach(context) {
+      const $context = $(context);
+      $context.find('#edit-submission').drupalSetSummary(context => {
+        const vals = [];
         vals.push(Drupal.checkPlain($(context).find('#edit-title-label').val()) || Drupal.t('Requires a title'));
         return vals.join(', ');
       });
-      $context.find('#edit-workflow').drupalSetSummary(function (context) {
-        var vals = [];
+      $context.find('#edit-workflow').drupalSetSummary(context => {
+        const vals = [];
         $(context).find('input[name^="options"]:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
@@ -26,17 +26,17 @@
 
         return vals.join(', ');
       });
-      $('#edit-language', context).drupalSetSummary(function (context) {
-        var vals = [];
+      $('#edit-language', context).drupalSetSummary(context => {
+        const vals = [];
         vals.push($('.js-form-item-language-configuration-langcode select option:selected', context).text());
         $('input:checked', context).next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
         return vals.join(', ');
       });
-      $context.find('#edit-display').drupalSetSummary(function (context) {
-        var vals = [];
-        var $editContext = $(context);
+      $context.find('#edit-display').drupalSetSummary(context => {
+        const vals = [];
+        const $editContext = $(context);
         $editContext.find('input:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
@@ -48,5 +48,6 @@
         return vals.join(', ');
       });
     }
+
   };
 })(jQuery, Drupal);

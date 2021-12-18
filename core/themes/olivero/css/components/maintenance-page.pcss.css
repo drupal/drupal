@@ -3,7 +3,7 @@
  * Maintenance page.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .maintenance-page {
   & .site-header__initial {

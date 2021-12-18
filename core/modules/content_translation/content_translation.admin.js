@@ -7,10 +7,10 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.contentTranslationDependentOptions = {
-    attach: function attach(context) {
-      var $context = $(context);
-      var options = drupalSettings.contentTranslationDependentOptions;
-      var $fields;
+    attach(context) {
+      const $context = $(context);
+      const options = drupalSettings.contentTranslationDependentOptions;
+      let $fields;
 
       function fieldsChangeHandler($fields, dependentColumns) {
         return function (e) {
@@ -19,42 +19,44 @@
       }
 
       if (options && options.dependent_selectors) {
-        Object.keys(options.dependent_selectors).forEach(function (field) {
-          $fields = $context.find("input[name^=\"".concat(field, "\"]"));
-          var dependentColumns = options.dependent_selectors[field];
+        Object.keys(options.dependent_selectors).forEach(field => {
+          $fields = $context.find(`input[name^="${field}"]`);
+          const dependentColumns = options.dependent_selectors[field];
           $fields.on('change', fieldsChangeHandler($fields, dependentColumns));
           Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns);
         });
       }
     },
-    check: function check($fields, dependentColumns, $changed) {
-      var $element = $changed;
-      var column;
+
+    check($fields, dependentColumns, $changed) {
+      let $element = $changed;
+      let column;
 
       function filterFieldsList(index, field) {
         return $(field).val() === column;
       }
 
-      Object.keys(dependentColumns || {}).forEach(function (index) {
+      Object.keys(dependentColumns || {}).forEach(index => {
         column = dependentColumns[index];
 
         if (!$changed) {
           $element = $fields.filter(filterFieldsList);
         }
 
-        if ($element.is("input[value=\"".concat(column, "\"]:checked"))) {
+        if ($element.is(`input[value="${column}"]:checked`)) {
           $fields.prop('checked', true).not($element).prop('disabled', true);
         } else {
           $fields.prop('disabled', false);
         }
       });
     }
+
   };
   Drupal.behaviors.contentTranslation = {
-    attach: function attach(context) {
-      once('translation-entity-admin-hide', $(context).find('table .bundle-settings .translatable :input')).forEach(function (input) {
-        var $input = $(input);
-        var $bundleSettings = $input.closest('.bundle-settings');
+    attach(context) {
+      once('translation-entity-admin-hide', $(context).find('table .bundle-settings .translatable :input')).forEach(input => {
+        const $input = $(input);
+        const $bundleSettings = $input.closest('.bundle-settings');
 
         if (!$input.is(':checked')) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
@@ -62,11 +64,11 @@
           $bundleSettings.nextUntil('.bundle-settings', '.field-settings').find('.translatable :input:not(:checked)').closest('.field-settings').nextUntil(':not(.column-settings)').hide();
         }
       });
-      $(once('translation-entity-admin-bind', 'body')).on('click', 'table .bundle-settings .translatable :input', function (e) {
-        var $target = $(e.target);
-        var $bundleSettings = $target.closest('.bundle-settings');
-        var $settings = $bundleSettings.nextUntil('.bundle-settings');
-        var $fieldSettings = $settings.filter('.field-settings');
+      $(once('translation-entity-admin-bind', 'body')).on('click', 'table .bundle-settings .translatable :input', e => {
+        const $target = $(e.target);
+        const $bundleSettings = $target.closest('.bundle-settings');
+        const $settings = $bundleSettings.nextUntil('.bundle-settings');
+        const $fieldSettings = $settings.filter('.field-settings');
 
         if ($target.is(':checked')) {
           $bundleSettings.find('.operations :input[name$="[language_alterable]"]').prop('checked', true);
@@ -75,10 +77,10 @@
         } else {
           $settings.hide();
         }
-      }).on('click', 'table .field-settings .translatable :input', function (e) {
-        var $target = $(e.target);
-        var $fieldSettings = $target.closest('.field-settings');
-        var $columnSettings = $fieldSettings.nextUntil('.field-settings, .bundle-settings');
+      }).on('click', 'table .field-settings .translatable :input', e => {
+        const $target = $(e.target);
+        const $fieldSettings = $target.closest('.field-settings');
+        const $columnSettings = $fieldSettings.nextUntil('.field-settings, .bundle-settings');
 
         if ($target.is(':checked')) {
           $columnSettings.show();
@@ -87,5 +89,6 @@
         }
       });
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

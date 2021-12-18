@@ -8,16 +8,20 @@
  * @file
  * CKEditor appearance overrides.
  */
-:root { /* 1px */
-  /* Inner border size must be based on chrome border size. */ /* 1px */
+:root {
+  --ckeditor-chrome-border-size: var(--input-border-size); /* 1px */
+  --ckeditor-chrome-border-radius: var(--base-border-radius);
+  /* Inner border size must be based on chrome border size. */
+  --ckeditor-inner-border-size: calc(var(--input--error-border-size) - var(--ckeditor-chrome-border-size)); /* 1px */
   /* Inner border radius must be based on chrome border radius and size. */
+  --ckeditor-inner-border-radius: calc(var(--ckeditor-chrome-border-radius) - var(--ckeditor-chrome-border-size));
 }
 .cke.cke_chrome {
-  border-width: 1px;
-  border-radius: 2px;
+  border-width: var(--ckeditor-chrome-border-size);
+  border-radius: var(--ckeditor-chrome-border-radius);
 }
 .cke .cke_inner {
-  border-radius: 1px;
+  border-radius: var(--ckeditor-inner-border-radius);
 }
 .cke_path_empty:only-child::after {
   position: absolute;
@@ -26,49 +30,49 @@
   bottom: 0;
   left: 0;
   content: "";
-  background: #fff;
+  background: var(--input-bg-color);
 }
 .cke .cke_top {
-  border: 1px solid transparent;
+  border: var(--ckeditor-inner-border-size) solid transparent;
   border-bottom: 0;
-  border-radius: 1px 1px 0 0;
+  border-radius: var(--ckeditor-inner-border-size) var(--ckeditor-inner-border-size) 0 0;
 }
 .cke .cke_contents {
-  border: 1px solid transparent;
+  border: var(--ckeditor-inner-border-size) solid transparent;
   border-top: 0;
   border-bottom: 0;
 }
 .cke .cke_bottom {
-  border: 1px solid transparent;
+  border: var(--ckeditor-inner-border-size) solid transparent;
   border-top: 0;
-  border-radius: 0 0 1px 1px;
+  border-radius: 0 0 var(--ckeditor-inner-border-size) var(--ckeditor-inner-border-size);
 }
 /* Default */
 .cke.cke_chrome {
-  border-color: #919297;
+  border-color: var(--input-border-color);
 }
 /* Hover. */
 .cke.cke_chrome:hover,
 .cke:hover .cke_contents,
 .cke:hover .cke_top,
 .cke:hover .cke_bottom {
-  border-color: #232429;
+  border-color: var(--input--hover-border-color);
 }
 /* Focus. */
 .cke.cke_chrome.cke_focus {
-  outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
+  outline: var(--focus-outline);
+  box-shadow: var(--focus-box-shadow);
 }
 /* Error. */
 .error + .cke.cke_chrome,
 .error + .cke .cke_contents,
 .error + .cke .cke_top,
 .error + .cke .cke_bottom {
-  border-color: #d72222;
+  border-color: var(--input--error-border-color);
 }
 /* Disabled. */
 [disabled] + .cke.cke_chrome {
-  border-color: #bababf;
+  border-color: var(--input--disabled-border-color);
 }
 [disabled] + .cke .cke_contents,
 [disabled] + .cke .cke_top,
@@ -76,7 +80,7 @@
   border-color: transparent;
 }
 [disabled] + .cke .cke_contents {
-  border-color: #f2f2f3;
+  border-color: var(--input--disabled-bg-color);
   background: hsl(240, 4%, 90%); /* Calculated from disabled input bg and iframe opacity. */
 }
 [disabled] + .cke iframe,
@@ -84,7 +88,7 @@
   opacity: 0.505;
 }
 [disabled] + .cke .cke_bottom {
-  background: #f2f2f3;
+  background: var(--input--disabled-bg-color);
 }
 [disabled] + .cke .cke_bottom > * {
   /* Don't show element path dor disabled editor. */

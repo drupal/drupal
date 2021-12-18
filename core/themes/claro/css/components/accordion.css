@@ -11,11 +11,11 @@
  */
 
 .accordion {
-  color: #232429;
-  border: 1px solid #dedfe4;
-  border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--color-text);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--details-accordion-border-size-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--details-box-shadow);
 }
 
 .accordion__item {
@@ -25,8 +25,8 @@
 
 .accordion__item:first-child {
   margin-top: -1px;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-left-radius: var(--details-accordion-border-size-radius);
+  border-top-right-radius: var(--details-accordion-border-size-radius);
 }
 
 .accordion__item + .accordion__item {
@@ -35,12 +35,12 @@
 
 .accordion__item:last-child {
   margin-bottom: -1px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: var(--details-accordion-border-size-radius);
+  border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }
 
 .accordion__item .claro-details__summary .summary {
   display: block;
-  color: #55565b;
+  color: var(--color-gray-800);
   font-weight: normal;
 }

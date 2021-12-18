@@ -10,6 +10,19 @@
  * Header Mobile Buttons.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .mobile-buttons {
   margin-left: auto
 }
@@ -19,27 +32,27 @@
 }
 
 .mobile-buttons {
-  margin-top: 0.5625rem
+  margin-top: var(--sp0-5)
 }
 
 @media (min-width: 31.25rem) {
 
 .mobile-buttons {
-    margin-top: 2.25rem
+    margin-top: var(--sp2)
 }
   }
 
 @media (min-width: 43.75rem) {
 
 .mobile-buttons {
-    margin-top: 4.5rem
+    margin-top: var(--sp4)
 }
   }
 
 @media (min-width: 75rem) {
 
 .mobile-buttons {
-    margin-top: 6.75rem
+    margin-top: var(--sp6)
 }
   }
 

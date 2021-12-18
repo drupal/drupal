@@ -5,8 +5,6 @@
  * Replaces /core/misc/vertical-tabs.css.
  */
 
-@import "../base/variables.pcss.css";
-
 /**
  * Main wrapper of vertical tabs.
  * This wrapper div is added by JavaScript.

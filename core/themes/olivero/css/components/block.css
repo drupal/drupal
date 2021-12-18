@@ -10,15 +10,28 @@
  * Block styling.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .block__title {
   margin-top: 0;
-  margin-bottom: 1.125rem;
+  margin-bottom: var(--sp);
   letter-spacing: 0.02em;
-  color: #6e7172;
-  font-size: 0.875rem;
-  line-height: 1.125rem;
+  color: var(--color--gray-20);
+  font-size: var(--font-size-s);
+  line-height: var(--sp);
 }
 
 .site-footer .block__title {
-  color: #9ea0a1;
+  color: var(--color--gray-50);
 }

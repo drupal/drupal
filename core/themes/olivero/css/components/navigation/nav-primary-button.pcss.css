@@ -3,7 +3,7 @@
  * Button that expands second level nav when clicked.
  */
 
-@import "../../base/variables.pcss.css";
+@import "../../base/media-queries.pcss.css";
 
 .primary-nav__button-toggle {
   position: relative;

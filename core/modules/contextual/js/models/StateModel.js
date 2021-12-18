@@ -14,8 +14,9 @@
       isOpen: false,
       isLocked: false
     },
-    toggleOpen: function toggleOpen() {
-      var newIsOpen = !this.get('isOpen');
+
+    toggleOpen() {
+      const newIsOpen = !this.get('isOpen');
       this.set('isOpen', newIsOpen);
 
       if (newIsOpen) {
@@ -24,26 +25,30 @@
 
       return this;
     },
-    close: function close() {
+
+    close() {
       this.set('isOpen', false);
       return this;
     },
-    focus: function focus() {
+
+    focus() {
       this.set('hasFocus', true);
-      var cid = this.cid;
-      this.collection.each(function (model) {
+      const cid = this.cid;
+      this.collection.each(model => {
         if (model.cid !== cid) {
           model.close().blur();
         }
       });
       return this;
     },
-    blur: function blur() {
+
+    blur() {
       if (!this.get('isOpen')) {
         this.set('hasFocus', false);
       }
 
       return this;
     }
+
   });
 })(Drupal, Backbone);

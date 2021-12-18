@@ -10,11 +10,24 @@
  * Text Content.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .text-content,
 .cke_editable {
-  color: #313637;
-  font-family: "Lora", "georgia", serif;
-  line-height: 1.6875rem
+  color: var(--color--gray-10);
+  font-family: var(--font-serif);
+  line-height: var(--sp1-5)
 
   /*
     @todo
@@ -27,11 +40,11 @@
 }
 
 .text-content a, .cke_editable a {
-    color: #0d77b5;
-    -webkit-text-decoration-color: #0d77b5;
-    text-decoration-color: #0d77b5;
+    color: var(--color--blue-20);
+    -webkit-text-decoration-color: var(--color--blue-20);
+    text-decoration-color: var(--color--blue-20);
     text-decoration-thickness: 2px;
-    word-wrap: break-word
+    overflow-wrap: break-word
   }
 
 @supports (box-shadow: none) {
@@ -39,12 +52,12 @@
 .text-content a, .cke_editable a {
       transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
       text-decoration: none;
-      box-shadow: inset 0 -2px 0 0 #2494db
+      box-shadow: inset 0 -2px 0 0 var(--color--blue-50)
   }
 
       .text-content a:hover, .cke_editable a:hover {
         text-decoration: underline;
-        color: #000;
+        color: var(--color--black);
 
         /* @todo - #d9ecfa isn't currently a variable. */
         box-shadow: inset 0 -2em 0 0 #d9ecfa;
@@ -54,8 +67,8 @@
     }
 
 .text-content p, .cke_editable p {
-    margin-top: 1.125rem;
-    margin-bottom: 1.125rem
+    margin-top: var(--sp);
+    margin-bottom: var(--sp)
   }
 
 .text-content p:first-child, .cke_editable p:first-child {
@@ -69,37 +82,37 @@
 @media (min-width: 43.75rem) {
 
 .text-content p, .cke_editable p {
-      margin-top: 2.25rem;
-      margin-bottom: 2.25rem
+      margin-top: var(--sp2);
+      margin-bottom: var(--sp2)
   }
     }
 
 .text-content code, .cke_editable code {
-    background-color: #f7f9fa;
+    background-color: var(--color--gray-95);
   }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-left: 1.125rem
+    padding-left: var(--sp)
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-right: 1.125rem
+    padding-right: var(--sp)
 }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-right: 1.125rem
+    padding-right: var(--sp)
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-left: 1.125rem
+    padding-left: var(--sp)
 }
 
 .text-content pre code, .cke_editable pre code {
     display: block;
     overflow: auto;
-    padding-top: 1.125rem;
-    padding-bottom: 1.125rem;
-    color: #6e7172;
+    padding-top: var(--sp);
+    padding-bottom: var(--sp);
+    color: var(--color--gray-20);
   }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
@@ -119,21 +132,21 @@
 }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    padding-left: 2.25rem
+    padding-left: var(--sp2)
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    padding-right: 2.25rem
+    padding-right: var(--sp2)
 }
 
 .text-content blockquote, .cke_editable blockquote {
     position: relative;
-    margin-top: 2.25rem;
-    margin-bottom: 2.25rem;
+    margin-top: var(--sp2);
+    margin-bottom: var(--sp2);
     letter-spacing: -0.01em;
-    font-family: "Lora", "georgia", serif;
+    font-family: var(--font-serif);
     font-size: 1.3125rem;
-    line-height: 2.25rem
+    line-height: var(--sp2)
   }
 
 [dir="ltr"] .text-content blockquote:before,[dir="ltr"]  .cke_editable blockquote:before {
@@ -148,7 +161,7 @@
       position: absolute;
       top: 0;
       content: "“";
-      color: #53b0eb;
+      color: var(--color--blue-70);
       font-size: 3.375rem;
     }
 
@@ -171,17 +184,17 @@
 .text-content blockquote:after, .cke_editable blockquote:after {
       position: absolute;
       bottom: 0;
-      width: 0.5625rem;
+      width: var(--sp0-5);
       height: calc(100% - 1.875rem);
       content: "";
-      background: #f7f9fa;
+      background: var(--color--gray-95);
     }
 
 @media (min-width: 43.75rem) {
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2rem;
-      line-height: 3.375rem
+      line-height: var(--sp3)
   }
     }
 
@@ -189,7 +202,7 @@
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2.5rem;
-      line-height: 3.9375rem
+      line-height: calc(var(--sp)*3.5)
   }
     }
 
@@ -198,7 +211,7 @@
 .text-content,
 .cke_editable {
     font-size: 1.125rem;
-    line-height: 2.25rem
+    line-height: var(--sp2)
 }
   }
 
@@ -216,13 +229,13 @@
 
 .site-footer .text-content a {
     text-decoration: underline;
-    color: #fff;
+    color: var(--color--white);
     box-shadow: none
   }
 
 .site-footer .text-content a:hover {
       text-decoration: none;
-      color: #fff;
+      color: var(--color--white);
       box-shadow: none;
     }
 
@@ -234,6 +247,6 @@
 
 .region--sidebar .text-content blockquote {
     font-size: 1.5rem;
-    line-height: 2.25rem
+    line-height: var(--sp2)
 }
   }

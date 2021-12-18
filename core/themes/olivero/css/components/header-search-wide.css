@@ -10,6 +10,19 @@
  * Header Search Wide Block.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 /* Override contextual links so we can position against .site-header. */
 
 .block-search-wide.contextual-region {
@@ -57,11 +70,11 @@
 }
 
 [dir="ltr"] .block-search-wide__wrapper {
-  border-left: solid 90px #313637;
+  border-left: solid var(--content-left) var(--color--gray-10);
 }
 
 [dir="rtl"] .block-search-wide__wrapper {
-  border-right: solid 90px #313637;
+  border-right: solid var(--content-left) var(--color--gray-10);
 }
 
 .block-search-wide__wrapper {
@@ -72,35 +85,33 @@
   visibility: hidden;
   overflow: hidden;
   width: 100vw;
-  max-width: 98.125rem;
-  height: 9rem;
+  max-width: var(--max-bg-color);
+  height: var(--sp8);
   max-height: 0;
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 0;
   padding-bottom: 0;
   transition: all 0.2s;
-  background: #000
+  background: var(--color--black)
 }
 
 .block-search-wide__wrapper.is-active {
     visibility: visible;
-    max-height: 9rem;
+    max-height: var(--sp8);
   }
 
 .block-search-wide__wrapper form {
     display: flex;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 13;
     grid-column: 1 / 14;
   }
 
 [dir="ltr"] .block-search-wide__wrapper input[type="search"] {
-    padding-left: 13.5rem;
+    padding-left: var(--sp12);
 }
 
 [dir="rtl"] .block-search-wide__wrapper input[type="search"] {
-    padding-right: 13.5rem;
+    padding-right: var(--sp12);
 }
 
 [dir="ltr"] .block-search-wide__wrapper input[type="search"] {
@@ -112,12 +123,12 @@
 }
 
 .block-search-wide__wrapper input[type="search"] {
-    width: calc(100% + 2.25rem);
-    height: 9rem;
+    width: calc(100% + var(--sp2));
+    height: var(--sp8);
     padding-top: 0;
     padding-bottom: 0;
     transition: background-size 0.4s;
-    color: #fff;
+    color: var(--color--white);
     border: solid 1px transparent;
     box-shadow: none;
     font-family: serif;
@@ -143,7 +154,7 @@
 @media screen and (-ms-high-contrast: active) {
 
 .block-search-wide__wrapper input[type="search"]:focus {
-        border-bottom-width: 9px
+        border-bottom-width: var(--sp0-5)
     }
       }
 
@@ -192,7 +203,6 @@
 .block-search-wide__wrapper .search-form__submit {
     position: relative;
     overflow: hidden;
-    -ms-grid-row-align: stretch;
     align-self: stretch;
     width: 6.25rem;
     height: auto;
@@ -248,7 +258,7 @@
         transition: transform 0.2s;
         transform: scaleX(0);
         transform-origin: left;
-        border-top: solid 9px #2494db;
+        border-top: solid var(--sp0-5) var(--color--blue-50);
       }
 
 .block-search-wide__wrapper .search-form__submit:focus {
@@ -264,7 +274,7 @@
 @media screen and (-ms-high-contrast: active) {
 
 .block-search-wide__wrapper .search-form__submit:focus {
-        border-bottom-width: 9px
+        border-bottom-width: var(--sp0-5)
     }
 
         .block-search-wide__wrapper .search-form__submit:focus span:after {
@@ -296,23 +306,21 @@
     }
 
 [dir="ltr"] .block-search-wide__container {
-  padding-right: 2.25rem;
+  padding-right: var(--sp2);
 }
 
 [dir="rtl"] .block-search-wide__container {
-  padding-left: 2.25rem;
+  padding-left: var(--sp2);
 }
 
 .block-search-wide__container {
-  max-width: 84.375rem;
+  max-width: var(--max-width);
 }
 
 .block-search-wide__grid {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[14];
-  grid-template-columns: repeat(14, 1fr);
-  grid-column-gap: 2.25rem;
+  grid-template-columns: repeat(var(--grid-col-count--md), 1fr);
+  grid-column-gap: var(--grid-gap--md);
 }
 
 /* Override specificity from container-inline.module.css */
@@ -322,17 +330,16 @@
   }
 
 .container-inline .block-search-wide__grid {
-    display: -ms-grid;
     display: grid;
   }
 
 .block-search-wide__button {
   position: relative;
   display: none;
-  width: 3.375rem;
-  height: 6.75rem;
+  width: var(--sp3);
+  height: var(--sp6);
   cursor: pointer;
-  color: #0d1214; /* Affects SVG search icon. */
+  color: var(--color--gray-0); /* Affects SVG search icon. */
   border: 0;
   background: transparent;
   -webkit-appearance: none
@@ -348,19 +355,19 @@
       top: 50%;
       left: 50%;
       width: 80%;
-      height: 3.375rem;
+      height: var(--sp3);
       content: "";
       transform: translate(-50%, -50%);
-      border: solid 2px #2494db;
+      border: solid 2px var(--color--blue-50);
       border-radius: 0.25rem;
     }
 
 .block-search-wide__button[aria-expanded="true"] {
-    background: #000
+    background: var(--color--black)
   }
 
 .block-search-wide__button[aria-expanded="true"]:focus:after {
-      border-color: #fff;
+      border-color: var(--color--white);
     }
 
 .block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close:before,
@@ -368,10 +375,10 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 1.6875rem;
+        width: var(--sp1-5);
         height: 0;
         content: "";
-        border-top: solid 2px #fff;
+        border-top: solid 2px var(--color--white);
       }
 
 .block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close:before {
@@ -417,21 +424,21 @@
 
 html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
   visibility: visible;
-  max-height: 9rem;
+  max-height: var(--sp8);
 }
 
 /* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */
 
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
-  background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
+  background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 0.625rem
 }
 
 [dir] .block-search-wide__wrapper input[type="search"]:focus {
-    background-size: 100% 0.5625rem;
+    background-size: 100% var(--sp0-5);
   }
 
 [dir="rtl"] .block-search-wide__wrapper input[type="search"] {

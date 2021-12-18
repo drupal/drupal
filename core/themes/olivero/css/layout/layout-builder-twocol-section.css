@@ -10,6 +10,19 @@
  * Provides the layout styles for two-column layout section.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .layout--twocol-section {
   display: flex;
   flex-wrap: wrap
@@ -17,7 +30,7 @@
 
 .layout--twocol-section > .layout__region {
     flex: 1 0 100%;
-    margin-bottom: 1.125rem
+    margin-bottom: var(--grid-gap)
   }
 
 @media (min-width: 43.75rem) {
@@ -31,108 +44,108 @@
 
 @media (min-width: 43.75rem) {
     [dir="ltr"] .layout--twocol-section--50-50 > .layout__region--first {
-      margin-right: 1.125rem
+      margin-right: calc(var(--grid-gap--md)*0.5)
   }
     [dir="rtl"] .layout--twocol-section--50-50 > .layout__region--first {
-      margin-left: 1.125rem
+      margin-left: calc(var(--grid-gap--md)*0.5)
   }
     .layout--twocol-section--50-50 > .layout__region--first {
-      flex-basis: calc(50% - 1.125rem);
+      flex-basis: calc(50% - var(--grid-gap--md)*0.5);
     }
 
     [dir="ltr"] .layout--twocol-section--50-50 > .layout__region--second {
-      margin-left: 1.125rem
+      margin-left: calc(var(--grid-gap--md)*0.5)
   }
 
     [dir="rtl"] .layout--twocol-section--50-50 > .layout__region--second {
-      margin-right: 1.125rem
+      margin-right: calc(var(--grid-gap--md)*0.5)
   }
 
     .layout--twocol-section--50-50 > .layout__region--second {
-      flex-basis: calc(50% - 1.125rem);
+      flex-basis: calc(50% - var(--grid-gap--md)*0.5);
     }
     [dir="ltr"] .layout--twocol-section--33-67 > .layout__region--first {
-      margin-right: 0.74993rem
+      margin-right: calc(var(--grid-gap--md)*0.3333)
   }
     [dir="rtl"] .layout--twocol-section--33-67 > .layout__region--first {
-      margin-left: 0.74993rem
+      margin-left: calc(var(--grid-gap--md)*0.3333)
   }
     .layout--twocol-section--33-67 > .layout__region--first {
-      flex-basis: calc(33.33% - 0.74993rem);
+      flex-basis: calc(33.33% - var(--grid-gap--md)*0.3333);
     }
 
     [dir="ltr"] .layout--twocol-section--33-67 > .layout__region--second {
-      margin-left: 1.49985rem
+      margin-left: calc(var(--grid-gap--md)*0.6666)
   }
 
     [dir="rtl"] .layout--twocol-section--33-67 > .layout__region--second {
-      margin-right: 1.49985rem
+      margin-right: calc(var(--grid-gap--md)*0.6666)
   }
 
     .layout--twocol-section--33-67 > .layout__region--second {
-      flex-basis: calc(66.66% - 1.49985rem);
+      flex-basis: calc(66.66% - var(--grid-gap--md)*0.6666);
     }
     [dir="ltr"] .layout--twocol-section--67-33 > .layout__region--first {
-      margin-right: 1.49985rem
+      margin-right: calc(var(--grid-gap--md)*0.6666)
   }
     [dir="rtl"] .layout--twocol-section--67-33 > .layout__region--first {
-      margin-left: 1.49985rem
+      margin-left: calc(var(--grid-gap--md)*0.6666)
   }
     .layout--twocol-section--67-33 > .layout__region--first {
-      flex-basis: calc(66.66% - 1.49985rem);
+      flex-basis: calc(66.66% - var(--grid-gap--md)*0.6666);
     }
 
     [dir="ltr"] .layout--twocol-section--67-33 > .layout__region--second {
-      margin-left: 0.74993rem
+      margin-left: calc(var(--grid-gap--md)*0.3333)
   }
 
     [dir="rtl"] .layout--twocol-section--67-33 > .layout__region--second {
-      margin-right: 0.74993rem
+      margin-right: calc(var(--grid-gap--md)*0.3333)
   }
 
     .layout--twocol-section--67-33 > .layout__region--second {
-      flex-basis: calc(33.33% - 0.74993rem);
+      flex-basis: calc(33.33% - var(--grid-gap--md)*0.3333);
     }
     [dir="ltr"] .layout--twocol-section--25-75 > .layout__region--first {
-      margin-right: 0.5625rem
+      margin-right: calc(var(--grid-gap--md)*0.25)
   }
     [dir="rtl"] .layout--twocol-section--25-75 > .layout__region--first {
-      margin-left: 0.5625rem
+      margin-left: calc(var(--grid-gap--md)*0.25)
   }
     .layout--twocol-section--25-75 > .layout__region--first {
-      flex-basis: calc(25% - 0.5625rem);
+      flex-basis: calc(25% - var(--grid-gap--md)*0.25);
     }
 
     [dir="ltr"] .layout--twocol-section--25-75 > .layout__region--second {
-      margin-left: 1.6875rem
+      margin-left: calc(var(--grid-gap--md)*0.75)
   }
 
     [dir="rtl"] .layout--twocol-section--25-75 > .layout__region--second {
-      margin-right: 1.6875rem
+      margin-right: calc(var(--grid-gap--md)*0.75)
   }
 
     .layout--twocol-section--25-75 > .layout__region--second {
-      flex-basis: calc(75% - 1.6875rem);
+      flex-basis: calc(75% - var(--grid-gap--md)*0.75);
     }
     [dir="ltr"] .layout--twocol-section--75-25 > .layout__region--first {
-      margin-right: 1.6875rem
+      margin-right: calc(var(--grid-gap--md)*0.75)
   }
     [dir="rtl"] .layout--twocol-section--75-25 > .layout__region--first {
-      margin-left: 1.6875rem
+      margin-left: calc(var(--grid-gap--md)*0.75)
   }
     .layout--twocol-section--75-25 > .layout__region--first {
-      flex-basis: calc(75% - 1.6875rem);
+      flex-basis: calc(75% - var(--grid-gap--md)*0.75);
     }
 
     [dir="ltr"] .layout--twocol-section--75-25 > .layout__region--second {
-      margin-left: 0.5625rem
+      margin-left: calc(var(--grid-gap--md)*0.25)
   }
 
     [dir="rtl"] .layout--twocol-section--75-25 > .layout__region--second {
-      margin-right: 0.5625rem
+      margin-right: calc(var(--grid-gap--md)*0.25)
   }
 
     .layout--twocol-section--75-25 > .layout__region--second {
-      flex-basis: calc(25% - 0.5625rem);
+      flex-basis: calc(25% - var(--grid-gap--md)*0.25);
     }
 }

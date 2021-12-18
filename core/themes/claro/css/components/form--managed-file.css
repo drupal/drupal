@@ -12,6 +12,11 @@
  * This includes the styles for the file widgets and the image widgets.
  */
 
+:root {
+  --file-widget-form-item-min-width: 16rem;
+  --file-widget-form-item-max-width: 32rem;
+}
+
 /**
  * The root element of the file/image widget.
  */
@@ -55,7 +60,7 @@
 /* Add some bottom margin for single widgets if no meta is present. */
 
 .form-managed-file.is-single.has-value .form-managed-file__main:last-child {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-m);
 }
 
 /**
@@ -77,7 +82,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin-top: 1rem; /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
+  margin-top: var(--space-m); /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
 }
 
 /**
@@ -113,18 +118,18 @@
 .form-managed-file__image-preview {
   flex: 0 0 auto;
   max-width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-m);
 }
 
 /* Add some 'end' margin if there are other meta inputs. */
 
 .form-managed-file.has-meta .form-managed-file__image-preview {
-  margin-right: 1rem; /* LTR */
+  margin-right: var(--space-m); /* LTR */
 }
 
 [dir="rtl"] .form-managed-file.has-meta .form-managed-file__image-preview {
   margin-right: 0;
-  margin-left: 1rem;
+  margin-left: var(--space-m);
 }
 
 /**
@@ -133,7 +138,7 @@
  */
 
 td .form-managed-file.no-meta .form-managed-file__image-preview {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-xs);
 }
 
 /**
@@ -148,7 +153,7 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .form-managed-file__meta-items {
-  flex: 1 1 16rem;
+  flex: 1 1 var(--file-widget-form-item-min-width);
   max-width: 100%;
 }
 
@@ -160,7 +165,7 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   *::-ms-backdrop,
   .form-managed-file__meta-items {
-    flex-basis: 32rem;
+    flex-basis: var(--file-widget-form-item-max-width);
   }
 }
 
@@ -190,7 +195,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 .form-managed-file .file {
   word-break: break-all;
   -webkit-hyphens: auto;
-  -ms-hyphens: auto;
   hyphens: auto;
 }
 
@@ -200,12 +204,12 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 
 .form-managed-file__main .file {
   flex: 1 1 auto;
-  margin: 0.5rem 1rem 0.5rem 0; /* LTR */
+  margin: var(--space-xs) var(--space-m) var(--space-xs) 0; /* LTR */
 }
 
 [dir="rtl"] .form-managed-file__main .file {
   margin-right: 0;
-  margin-left: 1rem;
+  margin-left: var(--space-m);
 }
 
 /**
@@ -247,9 +251,9 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .form-managed-file__meta .form-item {
-  max-width: 32rem;
+  max-width: var(--file-widget-form-item-max-width);
   margin-top: 0; /* Top margin is added by the parent element */
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-m);
 }
 
 /**
@@ -258,7 +262,7 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .form-managed-file__meta .form-item:last-child {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-xs);
 }
 
 .form-managed-file__meta .form-element {
@@ -270,6 +274,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .file-widget-multiple.has-table .form-type--managed-file {
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-right: var(--space-m);
+  margin-left: var(--space-m);
 }

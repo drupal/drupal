@@ -13,6 +13,19 @@
  * toggles fixing the header to the top of the viewport.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .sticky-header-toggle {
   display: none
 }
@@ -24,20 +37,20 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 5.625rem;
-    height: 6.75rem;
+    width: var(--content-left);
+    height: var(--sp6);
     pointer-events: none;
     opacity: 0;
     border: 0;
     outline: 0;
-    background-color: #2494db
+    background-color: var(--color--blue-50)
 }
 
     .sticky-header-toggle:focus {
       cursor: pointer;
       pointer-events: auto;
       opacity: 1;
-      outline: solid 2px #fff;
+      outline: solid 2px var(--color--white);
       outline-offset: -4px;
     }
   }
@@ -58,7 +71,7 @@ body.is-always-mobile-nav .sticky-header-toggle {
 
 .sticky-header-toggle__icon {
   position: relative;
-  width: 2.25rem;
+  width: var(--sp2);
   height: 1.3125rem;
   transition: opacity 0.2s;
   pointer-events: none;
@@ -69,7 +82,7 @@ body.is-always-mobile-nav .sticky-header-toggle {
     display: block;
     height: 0;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 3px #fff
+    border-top: solid 3px var(--color--white)
   }
 
 [dir="ltr"] .sticky-header-toggle__icon > span:nth-child(1) {
@@ -86,7 +99,7 @@ body.is-always-mobile-nav .sticky-header-toggle {
       width: 100%;
       height: 0;
       transition: transform 0.2s;
-      background-color: #fff;
+      background-color: var(--color--white);
     }
 
 [dir="ltr"] .sticky-header-toggle__icon > span:nth-child(2) {
@@ -103,7 +116,7 @@ body.is-always-mobile-nav .sticky-header-toggle {
       width: 100%;
       height: 0;
       transition: opacity 0.2s;
-      background-color: #fff;
+      background-color: var(--color--white);
     }
 
 [dir="ltr"] .sticky-header-toggle__icon > span:nth-child(3) {
@@ -121,7 +134,7 @@ body.is-always-mobile-nav .sticky-header-toggle {
       width: 100%;
       height: 0;
       transition: transform 0.2s;
-      background-color: #fff;
+      background-color: var(--color--white);
     }
 
 .is-fixed .sticky-header-toggle {

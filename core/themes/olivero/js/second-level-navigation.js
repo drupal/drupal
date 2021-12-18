@@ -5,18 +5,20 @@
 * @preserve
 **/
 
-(function (Drupal) {
-  var isDesktopNav = Drupal.olivero.isDesktopNav;
-  var secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="primary-nav-menu-item-has-children"]');
+(Drupal => {
+  const {
+    isDesktopNav
+  } = Drupal.olivero;
+  const secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="primary-nav-menu-item-has-children"]');
 
   function toggleSubNav(topLevelMenuItem, toState) {
-    var buttonSelector = '[data-drupal-selector="primary-nav-submenu-toggle-button"]';
-    var button = topLevelMenuItem.querySelector(buttonSelector);
-    var state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
+    const buttonSelector = '[data-drupal-selector="primary-nav-submenu-toggle-button"]';
+    const button = topLevelMenuItem.querySelector(buttonSelector);
+    const state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
       if (isDesktopNav()) {
-        secondLevelNavMenus.forEach(function (el) {
+        secondLevelNavMenus.forEach(el => {
           el.querySelector(buttonSelector).setAttribute('aria-expanded', 'false');
           el.querySelector('[data-drupal-selector="primary-nav-menu--level-2"]').classList.remove('is-active-menu-parent');
           el.querySelector('[data-drupal-selector="primary-nav-menu-🥕"]').classList.remove('is-active-menu-parent');
@@ -38,8 +40,8 @@
 
   function handleBlur(e) {
     if (!Drupal.olivero.isDesktopNav()) return;
-    setTimeout(function () {
-      var menuParentItem = e.target.closest('[data-drupal-selector="primary-nav-menu-item-has-children"]');
+    setTimeout(() => {
+      const menuParentItem = e.target.closest('[data-drupal-selector="primary-nav-menu-item-has-children"]');
 
       if (!menuParentItem.contains(document.activeElement)) {
         toggleSubNav(menuParentItem, false);
@@ -47,30 +49,30 @@
     }, 200);
   }
 
-  secondLevelNavMenus.forEach(function (el) {
-    var button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
+  secondLevelNavMenus.forEach(el => {
+    const button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
     button.removeAttribute('aria-hidden');
     button.removeAttribute('tabindex');
-    el.addEventListener('touchstart', function () {
+    el.addEventListener('touchstart', () => {
       el.classList.add('is-touch-event');
     }, {
       passive: true
     });
-    el.addEventListener('mouseover', function () {
+    el.addEventListener('mouseover', () => {
       if (isDesktopNav() && !el.classList.contains('is-touch-event')) {
         el.classList.add('is-active-mouseover-event');
         toggleSubNav(el, true);
-        setTimeout(function () {
+        setTimeout(() => {
           el.classList.remove('is-active-mouseover-event');
         }, 500);
       }
     });
-    button.addEventListener('click', function () {
+    button.addEventListener('click', () => {
       if (!el.classList.contains('is-active-mouseover-event')) {
         toggleSubNav(el);
       }
     });
-    el.addEventListener('mouseout', function () {
+    el.addEventListener('mouseout', () => {
       if (isDesktopNav() && !document.activeElement.matches('[aria-expanded="true"], .is-active-menu-parent *')) {
         toggleSubNav(el, false);
       }
@@ -79,7 +81,7 @@
   });
 
   function closeAllSubNav() {
-    secondLevelNavMenus.forEach(function (el) {
+    secondLevelNavMenus.forEach(el => {
       if (el.contains(document.activeElement)) {
         el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]').focus();
       }
@@ -91,10 +93,10 @@
   Drupal.olivero.closeAllSubNav = closeAllSubNav;
 
   function areAnySubNavsOpen() {
-    var subNavsAreOpen = false;
-    secondLevelNavMenus.forEach(function (el) {
-      var button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
-      var state = button.getAttribute('aria-expanded') === 'true';
+    let subNavsAreOpen = false;
+    secondLevelNavMenus.forEach(el => {
+      const button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
+      const state = button.getAttribute('aria-expanded') === 'true';
 
       if (state) {
         subNavsAreOpen = true;
@@ -104,12 +106,12 @@
   }
 
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
-  document.addEventListener('keyup', function (e) {
+  document.addEventListener('keyup', e => {
     if (e.key === 'Escape' || e.key === 'Esc') {
       if (isDesktopNav()) closeAllSubNav();
     }
   });
-  document.addEventListener('touchstart', function (e) {
+  document.addEventListener('touchstart', e => {
     if (areAnySubNavsOpen() && !e.target.matches('[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *')) {
       closeAllSubNav();
     }

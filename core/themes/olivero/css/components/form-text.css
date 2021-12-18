@@ -10,6 +10,19 @@
  * Text input elements.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [type="color"],
 [type="date"],
 [type="datetime-local"],
@@ -27,12 +40,12 @@
 textarea {
   width: 100%;
   max-width: 100%;
-  min-height: 3.375rem;
-  padding: 0 1.125rem;
-  color: #0d1214;
-  border: 1px solid #7e96a7;
-  border-radius: 0.1875rem;
-  background-color: #fff;
+  min-height: var(--sp3);
+  padding: 0 var(--sp);
+  color: var(--color--gray-0);
+  border: 1px solid var(--color--gray-30);
+  border-radius: var(--border-radius);
+  background-color: var(--color--white);
   font-family: inherit;
   font-size: inherit;
   -webkit-appearance: none;
@@ -41,8 +54,8 @@ textarea {
 }
 
 [type="color"]:focus, [type="date"]:focus, [type="datetime-local"]:focus, [type="email"]:focus, [type="file"]:focus, [type="month"]:focus, [type="number"]:focus, [type="password"]:focus, [type="search"]:focus, [type="tel"]:focus, [type="text"]:focus, [type="time"]:focus, [type="url"]:focus, [type="week"]:focus, textarea:focus {
-    border: solid 2px #2494db;
-    outline: solid 2px #2494db
+    border: solid 2px var(--color--blue-50);
+    outline: solid 2px var(--color--blue-50)
   }
 
 @supports (outline-style: double) {
@@ -60,21 +73,21 @@ textarea {
   }
 
 [type="color"][disabled], [type="date"][disabled], [type="datetime-local"][disabled], [type="email"][disabled], [type="file"][disabled], [type="month"][disabled], [type="number"][disabled], [type="password"][disabled], [type="search"][disabled], [type="tel"][disabled], [type="text"][disabled], [type="time"][disabled], [type="url"][disabled], [type="week"][disabled], textarea[disabled] {
-    color: #7e96a7;
-    background-color: #f1f4f7;
+    color: var(--color--gray-30);
+    background-color: var(--color--gray-90);
   }
 
 [type="color"].error, [type="date"].error, [type="datetime-local"].error, [type="email"].error, [type="file"].error, [type="month"].error, [type="number"].error, [type="password"].error, [type="search"].error, [type="tel"].error, [type="text"].error, [type="time"].error, [type="url"].error, [type="week"].error, textarea.error {
-    border: solid 2px #e33f1e
+    border: solid 2px var(--color--red)
   }
 
 [type="color"].error:focus, [type="date"].error:focus, [type="datetime-local"].error:focus, [type="email"].error:focus, [type="file"].error:focus, [type="month"].error:focus, [type="number"].error:focus, [type="password"].error:focus, [type="search"].error:focus, [type="tel"].error:focus, [type="text"].error:focus, [type="time"].error:focus, [type="url"].error:focus, [type="week"].error:focus, textarea.error:focus {
-      outline-color: #e33f1e;
+      outline-color: var(--color--red);
       outline-offset: -2px;
     }
 
 [type="color"].form-element--small, [type="date"].form-element--small, [type="datetime-local"].form-element--small, [type="email"].form-element--small, [type="file"].form-element--small, [type="month"].form-element--small, [type="number"].form-element--small, [type="password"].form-element--small, [type="search"].form-element--small, [type="tel"].form-element--small, [type="text"].form-element--small, [type="time"].form-element--small, [type="url"].form-element--small, [type="week"].form-element--small, textarea.form-element--small {
-    min-height: 2.8125rem;
+    min-height: var(--sp2-5);
   }
 
 @media (min-width: 31.25rem) {
@@ -125,11 +138,11 @@ textarea {
 
 [type="file"] {
   height: auto;
-  padding-top: 0.84375rem;
-  padding-bottom: 0.84375rem;
+  padding-top: var(--sp0-75);
+  padding-bottom: var(--sp0-75);
 }
 
 [type="color"] {
-  width: 3.375rem;
+  width: var(--sp3);
   padding: 0;
 }

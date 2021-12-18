@@ -3,7 +3,7 @@
  * Visual styles for autocomplete input field.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 :root {
   --autocomplete-search-icon-url: url("../../images/magnifying-glass.svg");

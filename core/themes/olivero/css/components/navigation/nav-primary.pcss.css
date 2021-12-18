@@ -3,7 +3,7 @@
  * Nav Primary.
  */
 
-@import "../../base/variables.pcss.css";
+@import "../../base/media-queries.pcss.css";
 
 .primary-nav__menu {
   flex-wrap: wrap;

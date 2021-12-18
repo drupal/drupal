@@ -3,8 +3,6 @@
  * Card.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   --card-bg-color: var(--color-white);
   --card-border-size: 1px;

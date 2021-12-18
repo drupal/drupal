@@ -3,7 +3,7 @@
  * Text Content.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .text-content,
 .cke_editable {

@@ -11,8 +11,8 @@
  */
 
 .field-multiple-table {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
 }
 
 .form-item--multiple .field-add-more-submit {

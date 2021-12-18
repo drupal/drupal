@@ -12,13 +12,13 @@
 
 .fieldset {
   min-width: 0;
-  margin: 1rem 0;
+  margin: var(--space-m) 0;
   padding: 0;
-  color: #232429;
-  border: 1px solid #dedfe4;
-  border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--color-text);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--base-border-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--details-box-shadow);
 }
 
 .fieldset--group {
@@ -48,14 +48,14 @@ _:-ms-fullscreen,
   display: contents; /* For Firefox. */
   float: left; /* iOS Safari, Android Chrome, Edge. */
   width: 100%; /* iOS Safari, Android Chrome, Edge. */
-  margin-bottom: 1rem;
-  color: #55565b;
+  margin-bottom: var(--space-m);
+  color: var(--color-gray-800);
   font-weight: bold;
 }
 
 @media screen and (min-width: 48em) {
   .fieldset__legend {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-l);
   }
 }
 
@@ -63,9 +63,9 @@ _:-ms-fullscreen,
   float: none;
   width: auto;
   margin-top: 0; /* IE11 and Edge do not collapse this margin. Ideally this would be 4px */
-  margin-bottom: 0.25rem; /* 4px */
+  margin-bottom: calc(var(--space-xs)/2); /* 4px */
   color: inherit;
-  font-size: 0.889rem; /* 14px */
+  font-size: var(--font-size-s); /* 14px */
   line-height: 1.125rem; /* 18px */
 }
 
@@ -78,14 +78,14 @@ _:-ms-fullscreen,
 
 .fieldset__label {
   display: block;
-  padding: 1rem;
-  line-height: 1rem;
+  padding: var(--space-m);
+  line-height: var(--space-m);
 }
 
 @media screen and (min-width: 48em) {
   .fieldset__label {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
+    padding-right: var(--space-l);
+    padding-left: var(--space-l);
   }
 }
 
@@ -95,23 +95,23 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: #828388;
+  color: var(--input--disabled-fg-color);
 }
 
 .fieldset__label.has-error {
-  color: #d72222;
+  color: var(--input--error-color);
 }
 
 .fieldset__description {
   margin-top: 0.375rem; /* 6px */
   margin-bottom: 0.375rem; /* 6px */
-  color: #55565b;
-  font-size: 0.79rem; /* ~13px */
+  color: var(--input-fg-color--description);
+  font-size: var(--font-size-xs); /* ~13px */
   line-height: 1.0625rem; /* 17px */
 }
 
 .fieldset__description.is-disabled {
-  color: #828388;
+  color: var(--input--disabled-fg-color);
 }
 
 /* Error message (Inline form errors). */
@@ -119,19 +119,19 @@ _:-ms-fullscreen,
 .fieldset__error-message {
   margin-top: 0.375rem; /* 6px */
   margin-bottom: 0.375rem; /* 6px */
-  color: #d72222;
-  font-size: 0.79rem; /* ~13px */
+  color: var(--input--error-color);
+  font-size: var(--font-size-xs); /* ~13px */
   font-weight: normal;
   line-height: 1.0625rem; /* 17px */
 }
 
 .fieldset__wrapper {
-  margin: 1rem;
+  margin: var(--space-m);
 }
 
 @media screen and (min-width: 48em) {
   .fieldset__wrapper {
-    margin: 1.5rem 1.5rem 1.75rem;
+    margin: var(--space-l) var(--space-l) calc(var(--space-m) + var(--space-s));
   }
 }
 

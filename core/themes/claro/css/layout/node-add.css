@@ -9,12 +9,16 @@
  * Layout overrides for node add/edit form.
  */
 
+:root {
+  --node-meta-width: 22.5rem;
+}
+
 .layout-region {
   box-sizing: border-box;
 }
 
 .layout-region--node-footer .layout-region__content {
-  margin-top: 1.5rem;
+  margin-top: var(--space-l);
 }
 
 /**
@@ -25,14 +29,14 @@
   .layout-region--node-main,
   .layout-region--node-footer {
     float: left; /* LTR */
-    width: calc(100% - 22.5rem);
-    padding-right: 1.5rem; /* LTR */
+    width: calc(100% - var(--node-meta-width));
+    padding-right: var(--space-l); /* LTR */
   }
   [dir="rtl"] .layout-region--node-main,
   [dir="rtl"] .layout-region--node-footer {
     float: right;
     padding-right: 0;
-    padding-left: 1.5rem;
+    padding-left: var(--space-l);
   }
 
   .layout-region--node-main .layout-region__content,
@@ -43,12 +47,12 @@
   }
 
   .layout-region--node-footer .layout-region__content {
-    margin-top: 0.5rem;
+    margin-top: var(--space-xs);
   }
 
   .layout-region--node-secondary {
     float: right; /* LTR */
-    width: 22.5rem;
+    width: var(--node-meta-width);
   }
   [dir="rtl"] .layout-region--node-secondary {
     float: left;
@@ -56,6 +60,6 @@
 
   /* Push sidebar down to horizontal align with form section */
   .layout-region--node-secondary {
-    margin-top: 1.5rem;
+    margin-top: var(--space-l);
   }
 }

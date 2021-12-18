@@ -5,31 +5,32 @@
 * @preserve
 **/
 
-(function ($, Drupal, window, _ref) {
-  var tabbable = _ref.tabbable;
+(($, Drupal, window, {
+  tabbable
+}) => {
   Drupal.MediaLibrary = {
     currentSelection: []
   };
 
   Drupal.AjaxCommands.prototype.updateMediaLibrarySelection = function (ajax, response, status) {
-    Object.values(response.mediaIds).forEach(function (value) {
+    Object.values(response.mediaIds).forEach(value => {
       Drupal.MediaLibrary.currentSelection.push(value);
     });
   };
 
   Drupal.behaviors.MediaLibraryTabs = {
-    attach: function attach(context) {
-      var $menu = $('.js-media-library-menu');
-      $(once('media-library-menu-item', $menu.find('a'))).on('keypress', function (e) {
+    attach(context) {
+      const $menu = $('.js-media-library-menu');
+      $(once('media-library-menu-item', $menu.find('a'))).on('keypress', e => {
         if (e.which === 32) {
           e.preventDefault();
           e.stopPropagation();
           $(e.currentTarget).trigger('click');
         }
-      }).on('click', function (e) {
+      }).on('click', e => {
         e.preventDefault();
         e.stopPropagation();
-        var ajaxObject = Drupal.ajax({
+        const ajaxObject = Drupal.ajax({
           wrapper: 'media-library-content',
           url: e.currentTarget.href,
           dialogType: 'ajax',
@@ -40,8 +41,6 @@
         });
 
         ajaxObject.success = function (response, status) {
-          var _this = this;
-
           if (this.progress.element) {
             $(this.progress.element).remove();
           }
@@ -51,15 +50,15 @@
           }
 
           $(this.element).prop('disabled', false);
-          Object.keys(response || {}).forEach(function (i) {
-            if (response[i].command && _this.commands[response[i].command]) {
-              _this.commands[response[i].command](_this, response[i], status);
+          Object.keys(response || {}).forEach(i => {
+            if (response[i].command && this.commands[response[i].command]) {
+              this.commands[response[i].command](this, response[i], status);
             }
           });
-          var mediaLibraryContent = document.getElementById('media-library-content');
+          const mediaLibraryContent = document.getElementById('media-library-content');
 
           if (mediaLibraryContent) {
-            var tabbableContent = tabbable(mediaLibraryContent);
+            const tabbableContent = tabbable(mediaLibraryContent);
 
             if (tabbableContent.length) {
               tabbableContent[0].focus();
@@ -80,18 +79,19 @@
         }));
       });
     }
+
   };
   Drupal.behaviors.MediaLibraryViewsDisplay = {
-    attach: function attach(context) {
-      var $view = $(context).hasClass('.js-media-library-view') ? $(context) : $('.js-media-library-view', context);
+    attach(context) {
+      const $view = $(context).hasClass('.js-media-library-view') ? $(context) : $('.js-media-library-view', context);
       $view.closest('.views-element-container').attr('id', 'media-library-view');
-      $(once('media-library-views-display-link', '.views-display-link-widget, .views-display-link-widget_table', context)).on('click', function (e) {
+      $(once('media-library-views-display-link', '.views-display-link-widget, .views-display-link-widget_table', context)).on('click', e => {
         e.preventDefault();
         e.stopPropagation();
-        var $link = $(e.currentTarget);
-        var loadingAnnouncement = '';
-        var displayAnnouncement = '';
-        var focusSelector = '';
+        const $link = $(e.currentTarget);
+        let loadingAnnouncement = '';
+        let displayAnnouncement = '';
+        let focusSelector = '';
 
         if ($link.hasClass('views-display-link-widget')) {
           loadingAnnouncement = Drupal.t('Loading grid view.');
@@ -103,7 +103,7 @@
           focusSelector = '.views-display-link-widget_table';
         }
 
-        var ajaxObject = Drupal.ajax({
+        const ajaxObject = Drupal.ajax({
           wrapper: 'media-library-view',
           url: e.currentTarget.href,
           dialogType: 'ajax',
@@ -114,7 +114,7 @@
         });
 
         if (displayAnnouncement || focusSelector) {
-          var success = ajaxObject.success;
+          const success = ajaxObject.success;
 
           ajaxObject.success = function (response, status) {
             success.bind(this)(response, status);
@@ -136,17 +136,18 @@
         }
       });
     }
+
   };
   Drupal.behaviors.MediaLibraryItemSelection = {
-    attach: function attach(context, settings) {
-      var $form = $('.js-media-library-views-form, .js-media-library-add-form', context);
-      var currentSelection = Drupal.MediaLibrary.currentSelection;
+    attach(context, settings) {
+      const $form = $('.js-media-library-views-form, .js-media-library-add-form', context);
+      const currentSelection = Drupal.MediaLibrary.currentSelection;
 
       if (!$form.length) {
         return;
       }
 
-      var $mediaItems = $('.js-media-library-item input[type="checkbox"]', $form);
+      const $mediaItems = $('.js-media-library-item input[type="checkbox"]', $form);
 
       function disableItems($items) {
         $items.prop('disabled', true).closest('.js-media-library-item').addClass('media-library-item--disabled');
@@ -157,15 +158,15 @@
       }
 
       function updateSelectionCount(remaining) {
-        var selectItemsText = remaining < 0 ? Drupal.formatPlural(currentSelection.length, '1 item selected', '@count items selected') : Drupal.formatPlural(remaining, '@selected of @count item selected', '@selected of @count items selected', {
+        const selectItemsText = remaining < 0 ? Drupal.formatPlural(currentSelection.length, '1 item selected', '@count items selected') : Drupal.formatPlural(remaining, '@selected of @count item selected', '@selected of @count items selected', {
           '@selected': currentSelection.length
         });
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
-      $(once('media-item-change', $mediaItems)).on('change', function (e) {
-        var id = e.currentTarget.value;
-        var position = currentSelection.indexOf(id);
+      $(once('media-item-change', $mediaItems)).on('change', e => {
+        const id = e.currentTarget.value;
+        const position = currentSelection.indexOf(id);
 
         if (e.currentTarget.checked) {
           if (position === -1) {
@@ -178,7 +179,7 @@
         $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
         $('.js-media-library-add-form-current-selection').val(currentSelection.join());
       });
-      $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
+      $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', e => {
         updateSelectionCount(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {
@@ -188,16 +189,16 @@
           enableItems($mediaItems);
         }
       });
-      currentSelection.forEach(function (value) {
-        $form.find("input[type=\"checkbox\"][value=\"".concat(value, "\"]")).prop('checked', true).trigger('change');
+      currentSelection.forEach(value => {
+        $form.find(`input[type="checkbox"][value="${value}"]`).prop('checked', true).trigger('change');
       });
 
       if (!once('media-library-selection-info', 'html').length) {
         return;
       }
 
-      $(window).on('dialog:aftercreate', function () {
-        var $buttonPane = $('.media-library-widget-modal .ui-dialog-buttonpane');
+      $(window).on('dialog:aftercreate', () => {
+        const $buttonPane = $('.media-library-widget-modal .ui-dialog-buttonpane');
 
         if (!$buttonPane.length) {
           return;
@@ -207,20 +208,22 @@
         updateSelectionCount(settings.media_library.selection_remaining);
       });
     }
+
   };
   Drupal.behaviors.MediaLibraryModalClearSelection = {
-    attach: function attach() {
+    attach() {
       if (!once('media-library-clear-selection', 'html').length) {
         return;
       }
 
-      $(window).on('dialog:afterclose', function () {
+      $(window).on('dialog:afterclose', () => {
         Drupal.MediaLibrary.currentSelection = [];
       });
     }
+
   };
 
   Drupal.theme.mediaLibrarySelectionCount = function () {
-    return "<div class=\"media-library-selected-count js-media-library-selected-count\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\"></div>";
+    return `<div class="media-library-selected-count js-media-library-selected-count" role="status" aria-live="polite" aria-atomic="true"></div>`;
   };
 })(jQuery, Drupal, window, window.tabbable);

@@ -15,7 +15,7 @@
  */
 
 .local-actions {
-  margin: 1rem 0;
+  margin: var(--space-m) 0;
   padding: 0;
   list-style: none;
 }
@@ -28,7 +28,7 @@
 
 .local-actions__item {
   display: inline-block;
-  margin: 0 0.25rem;
+  margin: 0 calc(var(--space-xs)/2);
 }
 
 .local-actions__item:first-child {
@@ -37,7 +37,7 @@
 
 [dir="rtl"] .local-actions__item:first-child {
   margin-right: 0;
-  margin-left: 0.25rem;
+  margin-left: calc(var(--space-xs)/2);
 }
 
 .local-actions__item:last-child {
@@ -45,7 +45,7 @@
 }
 
 [dir="rtl"] .local-actions__item:last-child {
-  margin-right: 0.25rem;
+  margin-right: calc(var(--space-xs)/2);
   margin-left: 0;
 }
 

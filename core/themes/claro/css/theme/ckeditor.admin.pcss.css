@@ -3,8 +3,6 @@
  * Claro specific styling for CKEditor admin.
  */
 
-@import "../base/variables.pcss.css";
-
 /*
  * This rule is needed to provide Claro's green focus outline. There is a style
  * in the CKEditor module CSS that adds a box-shadow at a higher specificity

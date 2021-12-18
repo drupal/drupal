@@ -7,10 +7,11 @@
 
 (function (Drupal) {
   Drupal.behaviors.responsiveImageAJAX = {
-    attach: function attach() {
+    attach() {
       if (window.picturefill) {
         window.picturefill();
       }
     }
+
   };
 })(Drupal);

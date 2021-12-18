@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(($, Drupal) => {
   function DetailsSummarizedContent(node) {
     this.$node = $(node);
     this.setupSummary();
@@ -15,29 +15,26 @@
     instances: []
   });
   $.extend(DetailsSummarizedContent.prototype, {
-    setupSummary: function setupSummary() {
+    setupSummary() {
       this.$detailsSummarizedContentWrapper = $(Drupal.theme('detailsSummarizedContentWrapper'));
       this.$node.on('summaryUpdated', $.proxy(this.onSummaryUpdated, this)).trigger('summaryUpdated').find('> summary').append(this.$detailsSummarizedContentWrapper);
     },
-    onSummaryUpdated: function onSummaryUpdated() {
-      var text = this.$node.drupalGetSummary();
+
+    onSummaryUpdated() {
+      const text = this.$node.drupalGetSummary();
       this.$detailsSummarizedContentWrapper.html(Drupal.theme('detailsSummarizedContentText', text));
     }
+
   });
   Drupal.behaviors.detailsSummary = {
-    attach: function attach(context) {
-      DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat(once('details', 'details', context).map(function (details) {
-        return new DetailsSummarizedContent(details);
-      }));
+    attach(context) {
+      DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat(once('details', 'details', context).map(details => new DetailsSummarizedContent(details)));
     }
+
   };
   Drupal.DetailsSummarizedContent = DetailsSummarizedContent;
 
-  Drupal.theme.detailsSummarizedContentWrapper = function () {
-    return "<span class=\"summary\"></span>";
-  };
+  Drupal.theme.detailsSummarizedContentWrapper = () => `<span class="summary"></span>`;
 
-  Drupal.theme.detailsSummarizedContentText = function (text) {
-    return text ? " (".concat(text, ")") : '';
-  };
+  Drupal.theme.detailsSummarizedContentText = text => text ? ` (${text})` : '';
 })(jQuery, Drupal);

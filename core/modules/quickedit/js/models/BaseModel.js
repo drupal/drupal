@@ -5,17 +5,16 @@
 * @preserve
 **/
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 (function (Drupal, Backbone) {
   Drupal.quickedit.BaseModel = Backbone.Model.extend({
-    initialize: function initialize(options) {
+    initialize(options) {
       this.__initialized = true;
       return Backbone.Model.prototype.initialize.call(this, options);
     },
-    set: function set(key, val, options) {
+
+    set(key, val, options) {
       if (this.__initialized) {
-        if (_typeof(key) === 'object') {
+        if (typeof key === 'object') {
           key.validate = true;
         } else {
           if (!options) {
@@ -28,5 +27,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       return Backbone.Model.prototype.set.call(this, key, val, options);
     }
+
   });
 })(Drupal, Backbone);

@@ -3,8 +3,6 @@
  * Breadcrumb region.
  */
 
-@import "../base/variables.pcss.css";
-
 .region-breadcrumb {
   min-height: var(--breadcrumb-height);
 }

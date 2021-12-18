@@ -5,24 +5,26 @@
 * @preserve
 **/
 
-(function (_ref) {
-  var behaviors = _ref.behaviors;
+(({
+  behaviors
+}) => {
   behaviors.js_interaction_test_trigger_link = {
-    attach: function attach() {
-      var removeBlockerTrigger = once('remove-blocker-trigger', '.remove-blocker-trigger').shift();
-      removeBlockerTrigger.addEventListener('click', function (event) {
+    attach() {
+      const removeBlockerTrigger = once('remove-blocker-trigger', '.remove-blocker-trigger').shift();
+      removeBlockerTrigger.addEventListener('click', event => {
         event.preventDefault();
-        setTimeout(function () {
+        setTimeout(() => {
           document.querySelector('.blocker-element').remove();
         }, 100);
       });
-      var enableFieldTrigger = once('enable-field-trigger', '.enable-field-trigger').shift();
-      enableFieldTrigger.addEventListener('click', function (event) {
+      const enableFieldTrigger = once('enable-field-trigger', '.enable-field-trigger').shift();
+      enableFieldTrigger.addEventListener('click', event => {
         event.preventDefault();
-        setTimeout(function () {
+        setTimeout(() => {
           document.querySelector('input[name="target_field"]').disabled = false;
         }, 100);
       });
     }
+
   };
 })(Drupal);

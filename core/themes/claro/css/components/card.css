@@ -10,16 +10,25 @@
  * Card.
  */
 
+:root {
+  --card-bg-color: var(--color-white);
+  --card-border-size: 1px;
+  --card-border-color: var(--color-gray-200-o-80);
+  --card-border-radius-size: var(--base-border-radius);
+  --card-image-border-radius-size: calc(var(--card-border-radius-size) - var(--card-border-size));
+  --card-box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+}
+
 .card {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-items: flex-start;
   padding: 0;
-  border: 1px solid rgba(212, 212, 218, 0.8);
-  border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: var(--card-border-size) solid var(--card-border-color);
+  border-radius: var(--card-border-radius-size);
+  background-color: var(--card-bg-color);
+  box-shadow: var(--card-box-shadow);
 }
 
 /* 588px theme screenshot width */
@@ -48,17 +57,17 @@
 
 .card__image {
   overflow: hidden;
-  border-radius: 1px 1px 0 0;
+  border-radius: var(--card-image-border-radius-size) var(--card-image-border-radius-size) 0 0;
   line-height: 0;
 }
 
 @media screen and (min-width: 36.75rem) {
   .card--horizontal .card__image {
     flex-basis: 35%;
-    border-radius: 1px 0 0 1px; /* LTR */
+    border-radius: var(--card-image-border-radius-size) 0 0 var(--card-image-border-radius-size); /* LTR */
   }
   [dir="rtl"] .card--horizontal .card__image {
-    border-radius: 0 1px 1px 0;
+    border-radius: 0 var(--card-image-border-radius-size) var(--card-image-border-radius-size) 0;
   }
 }
 
@@ -90,7 +99,7 @@
   flex-grow: 1;
   flex-shrink: 0;
   box-sizing: border-box;
-  padding: 1.5rem;
+  padding: var(--space-l);
 }
 
 @media screen and (min-width: 36.75rem) {
@@ -100,11 +109,11 @@
 
   /* Card content with image. */
   .card--horizontal .card__image ~ .card__content-wrapper {
-    padding-left: 1rem;
+    padding-left: var(--space-m);
   }
   [dir="rtl"] .card--horizontal .card__image ~ .card__content-wrapper {
-    padding-right: 1rem;
-    padding-left: 1.5rem;
+    padding-right: var(--space-m);
+    padding-left: var(--space-l);
   }
 }
 
@@ -134,7 +143,7 @@
 
 .card__content-item {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-m);
 }
 
 .card__content-item:last-child {
@@ -152,7 +161,7 @@
    */
   flex-shrink: 0;
   order: 100;
-  margin-top: 1.5rem;
+  margin-top: var(--space-l);
 }
 
 .card__footer .action-links,

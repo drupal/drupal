@@ -2,8 +2,6 @@
  * Content header.
  */
 
-@import "../base/variables.pcss.css";
-
 .content-header {
   overflow: hidden;
   margin-bottom: var(--space-s);

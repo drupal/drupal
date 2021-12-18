@@ -3,8 +3,6 @@
  * Maintenance theming.
  */
 
-@import "../base/variables.pcss.css";
-
 .maintenance-page {
   min-height: 100%;
   background-color: var(--color-gray-100);

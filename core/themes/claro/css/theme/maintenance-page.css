@@ -12,24 +12,24 @@
 
 .maintenance-page {
   min-height: 100%;
-  background-color: #dedfe4;
+  background-color: var(--color-gray-100);
 }
 
 .site-name {
-  margin-top: 1rem;
+  margin-top: var(--space-m);
   word-wrap: break-word;
-  color: #55565b;
-  font-size: 1.424rem;
+  color: var(--color-gray-800);
+  font-size: var(--font-size-h4);
 }
 
 .site-name,
 .title {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-l);
 }
 
 .content {
-  margin-bottom: 1rem;
-  color: #55565b;
+  margin-bottom: var(--space-m);
+  color: var(--color-gray-800);
 }
 
 .site-name,
@@ -121,10 +121,10 @@
   width: auto;
   margin-right: 1.25em;
   margin-left: 1.25em;
-  padding: 3rem;
+  padding: var(--space-xl);
   border-radius: 0.5rem;
   background: #fff;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-z3);
 }
 
 .layout-container:after { /* no reason for a clearfix in the markup */
@@ -136,7 +136,7 @@
 @media all and (max-width: 48em) { /* 768px */
   .layout-container {
     margin: 1.25em;
-    padding: 1rem 1.5rem;
+    padding: var(--space-m) var(--space-l);
   }
 }
 

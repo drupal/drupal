@@ -10,7 +10,8 @@
     requires: 'drupalmedia',
     icons: 'drupalmedialibrary',
     hidpi: true,
-    beforeInit: function beforeInit(editor) {
+
+    beforeInit(editor) {
       editor.addCommand('drupalmedialibrary', {
         allowedContent: {
           'drupal-media': {
@@ -37,12 +38,13 @@
           wysiwyg: 1
         },
         canUndo: true,
-        exec: function exec(editor) {
-          var saveCallback = function saveCallback(values) {
+
+        exec(editor) {
+          const saveCallback = function (values) {
             editor.fire('saveSnapshot');
-            var mediaElement = editor.document.createElement('drupal-media');
-            var attributes = values.attributes;
-            Object.keys(attributes).forEach(function (key) {
+            const mediaElement = editor.document.createElement('drupal-media');
+            const attributes = values.attributes;
+            Object.keys(attributes).forEach(key => {
               mediaElement.setAttribute(key, attributes[key]);
             });
             editor.insertHtml(mediaElement.getOuterHtml());
@@ -51,6 +53,7 @@
 
           Drupal.ckeditor.openDialog(editor, editor.config.DrupalMediaLibrary_url, {}, saveCallback, editor.config.DrupalMediaLibrary_dialogOptions);
         }
+
       });
 
       if (editor.ui.addButton) {
@@ -60,5 +63,6 @@
         });
       }
     }
+
   });
 })(Drupal, CKEDITOR);

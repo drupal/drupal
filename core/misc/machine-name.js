@@ -7,14 +7,14 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.machineName = {
-    attach: function attach(context, settings) {
-      var self = this;
-      var $context = $(context);
-      var timeout = null;
-      var xhr = null;
+    attach(context, settings) {
+      const self = this;
+      const $context = $(context);
+      let timeout = null;
+      let xhr = null;
 
       function clickEditHandler(e) {
-        var data = e.data;
+        const data = e.data;
         data.$wrapper.removeClass('visually-hidden');
         data.$target.trigger('focus');
         data.$suffix.hide();
@@ -22,11 +22,11 @@
       }
 
       function machineNameHandler(e) {
-        var data = e.data;
-        var options = data.options;
-        var baseValue = $(e.target).val();
-        var rx = new RegExp(options.replace_pattern, 'g');
-        var expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
+        const data = e.data;
+        const options = data.options;
+        const baseValue = $(e.target).val();
+        const rx = new RegExp(options.replace_pattern, 'g');
+        const expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
 
         if (xhr && xhr.readystate !== 4) {
           xhr.abort();
@@ -39,8 +39,8 @@
         }
 
         if (baseValue.toLowerCase() !== expected) {
-          timeout = setTimeout(function () {
-            xhr = self.transliterate(baseValue, options).done(function (machine) {
+          timeout = setTimeout(() => {
+            xhr = self.transliterate(baseValue, options).done(machine => {
               self.showMachineName(machine.substr(0, options.maxlength), data);
             });
           }, 300);
@@ -49,12 +49,12 @@
         }
       }
 
-      Object.keys(settings.machineName).forEach(function (sourceId) {
-        var options = settings.machineName[sourceId];
-        var $source = $(once('machine-name', $context.find(sourceId).addClass('machine-name-source')));
-        var $target = $context.find(options.target).addClass('machine-name-target');
-        var $suffix = $context.find(options.suffix);
-        var $wrapper = $target.closest('.js-form-item');
+      Object.keys(settings.machineName).forEach(sourceId => {
+        const options = settings.machineName[sourceId];
+        const $source = $(once('machine-name', $context.find(sourceId).addClass('machine-name-source')));
+        const $target = $context.find(options.target).addClass('machine-name-target');
+        const $suffix = $context.find(options.suffix);
+        const $wrapper = $target.closest('.js-form-item');
 
         if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
           return;
@@ -66,12 +66,12 @@
 
         options.maxlength = $target.attr('maxlength');
         $wrapper.addClass('visually-hidden');
-        var machine = $target.val();
-        var $preview = $("<span class=\"machine-name-value\">".concat(options.field_prefix).concat(Drupal.checkPlain(machine)).concat(options.field_suffix, "</span>"));
+        const machine = $target.val();
+        const $preview = $(`<span class="machine-name-value">${options.field_prefix}${Drupal.checkPlain(machine)}${options.field_suffix}</span>`);
         $suffix.empty();
 
         if (options.label) {
-          $suffix.append("<span class=\"machine-name-label\">".concat(options.label, ": </span>"));
+          $suffix.append(`<span class="machine-name-label">${options.label}: </span>`);
         }
 
         $suffix.append($preview);
@@ -80,22 +80,22 @@
           return;
         }
 
-        var eventData = {
-          $source: $source,
-          $target: $target,
-          $suffix: $suffix,
-          $wrapper: $wrapper,
-          $preview: $preview,
-          options: options
+        const eventData = {
+          $source,
+          $target,
+          $suffix,
+          $wrapper,
+          $preview,
+          options
         };
 
         if (machine === '' && $source.val() !== '') {
-          self.transliterate($source.val(), options).done(function (machineName) {
+          self.transliterate($source.val(), options).done(machineName => {
             self.showMachineName(machineName.substr(0, options.maxlength), eventData);
           });
         }
 
-        var $link = $("<span class=\"admin-link\"><button type=\"button\" class=\"link\">".concat(Drupal.t('Edit'), "</button></span>")).on('click', eventData, clickEditHandler);
+        const $link = $(`<span class="admin-link"><button type="button" class="link">${Drupal.t('Edit')}</button></span>`).on('click', eventData, clickEditHandler);
         $suffix.append($link);
 
         if ($target.val() === '') {
@@ -105,8 +105,9 @@
         $target.on('invalid', eventData, clickEditHandler);
       });
     },
-    showMachineName: function showMachineName(machine, data) {
-      var settings = data.options;
+
+    showMachineName(machine, data) {
+      const settings = data.options;
 
       if (machine !== '') {
         if (machine !== settings.replace) {
@@ -121,7 +122,8 @@
         data.$preview.empty();
       }
     },
-    transliterate: function transliterate(source, settings) {
+
+    transliterate(source, settings) {
       return $.get(Drupal.url('machine_name/transliterate'), {
         text: source,
         langcode: drupalSettings.langcode,
@@ -131,5 +133,6 @@
         lowercase: true
       });
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

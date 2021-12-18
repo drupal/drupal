@@ -6,10 +6,10 @@
 **/
 
 (function (Drupal, debounce) {
-  var liveElement;
-  var announcements = [];
+  let liveElement;
+  const announcements = [];
   Drupal.behaviors.drupalAnnounce = {
-    attach: function attach(context) {
+    attach(context) {
       if (!liveElement) {
         liveElement = document.createElement('div');
         liveElement.id = 'drupal-live-announce';
@@ -19,15 +19,16 @@
         document.body.appendChild(liveElement);
       }
     }
+
   };
 
   function announce() {
-    var text = [];
-    var priority = 'polite';
-    var announcement;
-    var il = announcements.length;
+    const text = [];
+    let priority = 'polite';
+    let announcement;
+    const il = announcements.length;
 
-    for (var i = 0; i < il; i++) {
+    for (let i = 0; i < il; i++) {
       announcement = announcements.pop();
       text.unshift(announcement.text);
 
@@ -47,8 +48,8 @@
 
   Drupal.announce = function (text, priority) {
     announcements.push({
-      text: text,
-      priority: priority
+      text,
+      priority
     });
     return debounce(announce, 200)();
   };

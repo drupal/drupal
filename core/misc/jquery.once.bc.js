@@ -5,26 +5,26 @@
 * @preserve
 **/
 
-(function ($, once) {
-  var deprecatedMessageSuffix = "is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256";
-  var originalJQOnce = $.fn.once;
-  var originalJQRemoveOnce = $.fn.removeOnce;
+(($, once) => {
+  const deprecatedMessageSuffix = `is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256`;
+  const originalJQOnce = $.fn.once;
+  const originalJQRemoveOnce = $.fn.removeOnce;
 
   $.fn.once = function jQueryOnce(id) {
     Drupal.deprecationError({
-      message: "jQuery.once() ".concat(deprecatedMessageSuffix)
+      message: `jQuery.once() ${deprecatedMessageSuffix}`
     });
     return originalJQOnce.apply(this, [id]);
   };
 
   $.fn.removeOnce = function jQueryRemoveOnce(id) {
     Drupal.deprecationError({
-      message: "jQuery.removeOnce() ".concat(deprecatedMessageSuffix)
+      message: `jQuery.removeOnce() ${deprecatedMessageSuffix}`
     });
     return originalJQRemoveOnce.apply(this, [id]);
   };
 
-  var drupalOnce = once;
+  const drupalOnce = once;
 
   function augmentedOnce(id, selector, context) {
     originalJQOnce.apply($(selector, context), [id]);
@@ -37,6 +37,6 @@
   }
 
   window.once = Object.assign(augmentedOnce, drupalOnce, {
-    remove: remove
+    remove
   });
 })(jQuery, once);

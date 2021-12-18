@@ -3,7 +3,7 @@
  * Links component.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .links.inline {
   margin-inline-start: 0;

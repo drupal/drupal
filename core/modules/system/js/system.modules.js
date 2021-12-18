@@ -5,49 +5,35 @@
 * @preserve
 **/
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 (function ($, Drupal, debounce) {
   Drupal.behaviors.tableFilterByText = {
-    attach: function attach(context, settings) {
-      var _once = once('table-filter-text', 'input.table-filter-text'),
-          _once2 = _slicedToArray(_once, 1),
-          input = _once2[0];
+    attach(context, settings) {
+      const [input] = once('table-filter-text', 'input.table-filter-text');
 
       if (!input) {
         return;
       }
 
-      var $table = $(input.getAttribute('data-table'));
-      var $rowsAndDetails;
-      var $rows;
-      var $details;
-      var searching = false;
+      const $table = $(input.getAttribute('data-table'));
+      let $rowsAndDetails;
+      let $rows;
+      let $details;
+      let searching = false;
 
       function hidePackageDetails(index, element) {
-        var $packDetails = $(element);
-        var $visibleRows = $packDetails.find('tbody tr:visible');
+        const $packDetails = $(element);
+        const $visibleRows = $packDetails.find('tbody tr:visible');
         $packDetails.toggle($visibleRows.length > 0);
       }
 
       function filterModuleList(e) {
-        var query = $(e.target).val();
-        var re = new RegExp("\\b".concat(query), 'i');
+        const query = $(e.target).val();
+        const re = new RegExp(`\\b${query}`, 'i');
 
         function showModuleRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
-          var textMatch = $sources.text().search(re) !== -1;
+          const $row = $(row);
+          const $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
+          const textMatch = $sources.text().search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 
@@ -85,5 +71,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         });
       }
     }
+
   };
 })(jQuery, Drupal, Drupal.debounce);

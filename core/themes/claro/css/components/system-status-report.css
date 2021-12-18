@@ -39,7 +39,7 @@
 
 .system-status-report .claro-details {
   border: none;
-  border-bottom: 1px solid #dedfe4;
+  border-bottom: var(--details-border-size) solid var(--details-border-color);
   box-shadow: none;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .claro-details__summary--system-status-report {
-  background: #f3f4f9;
+  background: var(--color-gray-050);
 }
 
 @media screen and (max-width: 48em) {

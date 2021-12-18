@@ -13,26 +13,31 @@
       contextualCount: 0,
       tabbingContext: null
     },
-    initialize: function initialize(attrs, options) {
+
+    initialize(attrs, options) {
       this.listenTo(options.contextualCollection, 'reset remove add', this.countContextualLinks);
       this.listenTo(options.contextualCollection, 'add', this.lockNewContextualLinks);
       this.listenTo(this, 'change:contextualCount', this.updateVisibility);
-      this.listenTo(this, 'change:isViewing', function (model, isViewing) {
-        options.contextualCollection.each(function (contextualModel) {
+      this.listenTo(this, 'change:isViewing', (model, isViewing) => {
+        options.contextualCollection.each(contextualModel => {
           contextualModel.set('isLocked', !isViewing);
         });
       });
     },
-    countContextualLinks: function countContextualLinks(contextualModel, contextualCollection) {
+
+    countContextualLinks(contextualModel, contextualCollection) {
       this.set('contextualCount', contextualCollection.length);
     },
-    lockNewContextualLinks: function lockNewContextualLinks(contextualModel, contextualCollection) {
+
+    lockNewContextualLinks(contextualModel, contextualCollection) {
       if (!this.get('isViewing')) {
         contextualModel.set('isLocked', true);
       }
     },
-    updateVisibility: function updateVisibility() {
+
+    updateVisibility() {
       this.set('isVisible', this.get('contextualCount') > 0);
     }
+
   });
 })(Drupal, Backbone);

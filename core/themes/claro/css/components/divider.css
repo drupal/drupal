@@ -11,5 +11,5 @@
 
 .divider {
   height: 1px;
-  background-color: rgba(142, 146, 156, 0.5);
+  background-color: var(--color-divider);
 }

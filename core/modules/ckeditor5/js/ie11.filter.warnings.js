@@ -5,20 +5,20 @@
 * @preserve
 **/
 
-(function (Drupal, once, Modernizr) {
+((Drupal, once, Modernizr) => {
   Drupal.behaviors.ckEditor5warn = {
     attach: function attach() {
-      var isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
-      var editorSelect = once('editor-select', document.querySelector('#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor'));
+      const isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
+      const editorSelect = once('editor-select', document.querySelector('#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor'));
 
       if (typeof editorSelect[0] !== 'undefined') {
-        var select = editorSelect[0];
-        var selectMessageContainer = document.createElement('div');
+        const select = editorSelect[0];
+        const selectMessageContainer = document.createElement('div');
         select.parentNode.insertBefore(selectMessageContainer, select);
-        var selectMessages = new Drupal.Message(selectMessageContainer);
-        var editorSettings = document.querySelector('#editor-settings-wrapper');
+        const selectMessages = new Drupal.Message(selectMessageContainer);
+        const editorSettings = document.querySelector('#editor-settings-wrapper');
 
-        var ck5Warning = function ck5Warning() {
+        const ck5Warning = () => {
           selectMessages.add(Drupal.t('CKEditor 5 is not compatible with Internet Explorer 11. Text fields using CKEditor 5 will still be editable but without the benefits of CKEditor.'), {
             type: 'warning'
           });
@@ -33,7 +33,7 @@
           }
         };
 
-        var updateWarningStatus = function updateWarningStatus() {
+        const updateWarningStatus = () => {
           if (select.value === 'ckeditor5' && !select.classList.contains('error')) {
             ck5Warning();
           } else {
@@ -42,11 +42,11 @@
           }
         };
 
-        var selectChangeHandler = function selectChangeHandler() {
-          var editorSelectObserver = null;
+        const selectChangeHandler = () => {
+          let editorSelectObserver = null;
 
           function whenSelectAttributeChanges(mutations) {
-            for (var i = 0; i < mutations.length; i++) {
+            for (let i = 0; i < mutations.length; i++) {
               if (mutations[i].type === 'attributes' && mutations[i].attributeName === 'disabled' && !select.disabled) {
                 updateWarningStatus();
                 editorSelectObserver.disconnect();

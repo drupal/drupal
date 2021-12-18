@@ -3,7 +3,7 @@
  * Main Hero.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .hero__content {
   grid-column: 1 / 7;

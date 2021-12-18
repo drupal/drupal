@@ -24,7 +24,7 @@
 
 .field-plugin-summary {
   float: left; /* LTR */
-  font-size: 0.889rem;
+  font-size: var(--font-size-s);
 }
 
 [dir="rtl"] .field-plugin-summary {
@@ -52,7 +52,7 @@
 }
 
 .field-plugin-settings-edit {
-  width: 1rem;
+  width: var(--space-m);
   margin: 0;
   padding: 1px 0.5rem;
 }

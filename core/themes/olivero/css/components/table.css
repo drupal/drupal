@@ -10,19 +10,32 @@
  * User generated tables.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .forum table,
 .text-content table,
 .views-table,
 .draggable-table {
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
+  margin-top: var(--sp2);
+  margin-bottom: var(--sp2);
   border-spacing: 0;
-  color: #313637;
+  color: var(--color--gray-10);
   border: 0;
   border-collapse: collapse;
-  font-family: "metropolis", sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  line-height: 1.6875rem
+  line-height: var(--sp1-5)
 }
 
 [dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption,[dir="ltr"]  .draggable-table caption {
@@ -34,12 +47,12 @@
 }
 
 .forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
-    margin-bottom: 1.125rem;
-    color: #313637;
-    font-family: "Lora", "georgia", serif;
+    margin-bottom: var(--sp1);
+    color: var(--color--gray-10);
+    font-family: var(--font-serif);
     font-size: 0.875rem;
     font-style: italic;
-    line-height: 1.125rem;
+    line-height: var(--sp);
   }
 
 .forum table tr:last-child td, .text-content table tr:last-child td, .views-table tr:last-child td, .draggable-table tr:last-child td {
@@ -76,7 +89,7 @@
   .views-table th,[dir="ltr"] 
   .draggable-table td,[dir="ltr"] 
   .draggable-table th {
-    padding-right: 1.125rem
+    padding-right: var(--sp1)
 }
 
 [dir="rtl"] .forum table td,[dir="rtl"] 
@@ -87,7 +100,7 @@
   .views-table th,[dir="rtl"] 
   .draggable-table td,[dir="rtl"] 
   .draggable-table th {
-    padding-left: 1.125rem
+    padding-left: var(--sp1)
 }
 
 .forum table td,
@@ -98,8 +111,8 @@
   .views-table th,
   .draggable-table td,
   .draggable-table th {
-    padding-top: 1.125rem;
-    padding-bottom: 1.125rem;
+    padding-top: var(--sp1);
+    padding-bottom: var(--sp1);
     vertical-align: top;
   }
 
@@ -131,11 +144,11 @@
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 0.02em;
-    color: #0d1214;
-    border-bottom: 2px solid #2494db;
-    font-family: "metropolis", sans-serif;
+    color: var(--color--gray-0);
+    border-bottom: 2px solid var(--color--blue-50);
+    font-family: var(--font-sans);
     font-size: 0.875rem;
-    line-height: 1.125rem
+    line-height: var(--sp)
 
     /**
      * Fixes for styles injected by CKEditor
@@ -168,7 +181,7 @@
 
 .forum table td, .text-content table td, .views-table td, .draggable-table td {
     white-space: normal;
-    border-bottom: 2px solid #98abb9;
+    border-bottom: 2px solid var(--color--gray-40);
   }
 
 .forum table th.checkbox,
@@ -197,7 +210,7 @@
 .sticky-header {
   z-index: 0;
   margin: 0;
-  border-bottom: 4px solid #2494db;
+  border-bottom: 4px solid var(--color--blue-50);
 }
 
 /* Properly align VBO checkboxes. */

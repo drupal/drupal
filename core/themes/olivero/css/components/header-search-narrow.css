@@ -10,11 +10,24 @@
  * Header Search Narrow Block.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .block-search-narrow {
-  margin-left: -1.125rem;
-  margin-right: -1.125rem;
-  margin-bottom: 2.25rem;
-  background: #000
+  margin-left: calc(var(--sp)*-1);
+  margin-right: calc(var(--sp)*-1);
+  margin-bottom: var(--sp2);
+  background: var(--color--black)
 }
 
 .block-search-narrow .search-block-form {
@@ -31,31 +44,31 @@
   }
 
 [dir="ltr"] .block-search-narrow input[type="search"] {
-    padding-left: 1.125rem
+    padding-left: var(--sp)
 }
 
 [dir="rtl"] .block-search-narrow input[type="search"] {
-    padding-right: 1.125rem
+    padding-right: var(--sp)
 }
 
 [dir="ltr"] .block-search-narrow input[type="search"] {
-    padding-right: 1.125rem
+    padding-right: var(--sp)
 }
 
 [dir="rtl"] .block-search-narrow input[type="search"] {
-    padding-left: 1.125rem
+    padding-left: var(--sp)
 }
 
 .block-search-narrow input[type="search"] {
-    width: calc(100% + 2.25rem);
-    height: 3.375rem;
+    width: calc(100% + var(--sp2));
+    height: calc(var(--sp)*3);
     padding-top: 0;
     padding-bottom: 0;
     transition: background-size 0.4s;
-    color: #fff;
+    color: var(--color--white);
     border: solid 1px transparent;
     background-color: transparent;
-    background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
+    background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
     background-size: 0% 0.3125rem;
@@ -91,23 +104,23 @@
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .block-search-narrow input[type="search"] {
-      padding-left: 2.25rem
+      padding-left: var(--sp2)
   }
 
 [dir="rtl"] .block-search-narrow input[type="search"] {
-      padding-right: 2.25rem
+      padding-right: var(--sp2)
   }
 
 [dir="ltr"] .block-search-narrow input[type="search"] {
-      padding-right: 2.25rem
+      padding-right: var(--sp2)
   }
 
 [dir="rtl"] .block-search-narrow input[type="search"] {
-      padding-left: 2.25rem
+      padding-left: var(--sp2)
   }
 
 .block-search-narrow input[type="search"] {
-      height: 4.5rem
+      height: calc(var(--sp)*4)
   }
     }
 
@@ -146,9 +159,8 @@
 .block-search-narrow .search-form__submit {
     position: relative;
     overflow: hidden;
-    -ms-grid-row-align: stretch;
     align-self: stretch;
-    width: 3.375rem;
+    width: var(--sp3);
     height: auto;
     margin-top: 0;
     margin-bottom: 0;
@@ -202,7 +214,7 @@
         transition: transform 0.2s;
         transform: scaleX(0);
         transform-origin: left; /* LTR */
-        border-top: solid 5px #2494db;
+        border-top: solid 5px var(--color--blue-50);
       }
 
 .block-search-narrow .search-form__submit:focus {
@@ -218,7 +230,7 @@
 @media screen and (-ms-high-contrast: active) {
 
 .block-search-narrow .search-form__submit:focus {
-        border-bottom-width: 9px
+        border-bottom-width: var(--sp0-5)
     }
 
         .block-search-narrow .search-form__submit:focus span:after {

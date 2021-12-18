@@ -5,8 +5,6 @@
  *   has been resolved.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   --messages-bg-color: #353641;
   --messages-fg-color: var(--color-white);

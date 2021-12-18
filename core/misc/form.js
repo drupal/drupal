@@ -7,32 +7,32 @@
 
 (function ($, Drupal, debounce) {
   $.fn.drupalGetSummary = function () {
-    var callback = this.data('summaryCallback');
+    const callback = this.data('summaryCallback');
     return this[0] && callback ? callback(this[0]).trim() : '';
   };
 
   $.fn.drupalSetSummary = function (callback) {
-    var self = this;
+    const self = this;
 
     if (typeof callback !== 'function') {
-      var val = callback;
+      const val = callback;
 
-      callback = function callback() {
+      callback = function () {
         return val;
       };
     }
 
-    return this.data('summaryCallback', callback).off('formUpdated.summary').on('formUpdated.summary', function () {
+    return this.data('summaryCallback', callback).off('formUpdated.summary').on('formUpdated.summary', () => {
       self.trigger('summaryUpdated');
     }).trigger('summaryUpdated');
   };
 
   Drupal.behaviors.formSingleSubmit = {
-    attach: function attach() {
+    attach() {
       function onFormSubmit(e) {
-        var $form = $(e.currentTarget);
-        var formValues = $form.serialize();
-        var previousValues = $form.attr('data-drupal-form-submit-last');
+        const $form = $(e.currentTarget);
+        const formValues = $form.serialize();
+        const previousValues = $form.attr('data-drupal-form-submit-last');
 
         if (previousValues === formValues) {
           e.preventDefault();
@@ -43,6 +43,7 @@
 
       $(once('form-single-submit', 'body')).on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
     }
+
   };
 
   function triggerFormUpdated(element) {
@@ -50,22 +51,20 @@
   }
 
   function fieldsList(form) {
-    return [].map.call(form.querySelectorAll('[name][id]'), function (el) {
-      return el.id;
-    });
+    return [].map.call(form.querySelectorAll('[name][id]'), el => el.id);
   }
 
   Drupal.behaviors.formUpdated = {
-    attach: function attach(context) {
-      var $context = $(context);
-      var contextIsForm = $context.is('form');
-      var $forms = $(once('form-updated', contextIsForm ? $context : $context.find('form')));
-      var formFields;
+    attach(context) {
+      const $context = $(context);
+      const contextIsForm = $context.is('form');
+      const $forms = $(once('form-updated', contextIsForm ? $context : $context.find('form')));
+      let formFields;
 
       if ($forms.length) {
-        $.makeArray($forms).forEach(function (form) {
-          var events = 'change.formUpdated input.formUpdated ';
-          var eventHandler = debounce(function (event) {
+        $.makeArray($forms).forEach(form => {
+          const events = 'change.formUpdated input.formUpdated ';
+          const eventHandler = debounce(event => {
             triggerFormUpdated(event.target);
           }, 300);
           formFields = fieldsList(form).join(',');
@@ -76,35 +75,37 @@
 
       if (contextIsForm) {
         formFields = fieldsList(context).join(',');
-        var currentFields = $(context).attr('data-drupal-form-fields');
+        const currentFields = $(context).attr('data-drupal-form-fields');
 
         if (formFields !== currentFields) {
           triggerFormUpdated(context);
         }
       }
     },
-    detach: function detach(context, settings, trigger) {
-      var $context = $(context);
-      var contextIsForm = $context.is('form');
+
+    detach(context, settings, trigger) {
+      const $context = $(context);
+      const contextIsForm = $context.is('form');
 
       if (trigger === 'unload') {
-        once.remove('form-updated', contextIsForm ? $context : $context.find('form')).forEach(function (form) {
+        once.remove('form-updated', contextIsForm ? $context : $context.find('form')).forEach(form => {
           form.removeAttribute('data-drupal-form-fields');
           $(form).off('.formUpdated');
         });
       }
     }
+
   };
   Drupal.behaviors.fillUserInfoFromBrowser = {
-    attach: function attach(context, settings) {
-      var userInfo = ['name', 'mail', 'homepage'];
-      var $forms = $(once('user-info-from-browser', '[data-user-info-from-browser]'));
+    attach(context, settings) {
+      const userInfo = ['name', 'mail', 'homepage'];
+      const $forms = $(once('user-info-from-browser', '[data-user-info-from-browser]'));
 
       if ($forms.length) {
-        userInfo.forEach(function (info) {
-          var $element = $forms.find("[name=".concat(info, "]"));
-          var browserData = localStorage.getItem("Drupal.visitor.".concat(info));
-          var emptyOrDefault = $element.val() === '' || $element.attr('data-drupal-default-value') === $element.val();
+        userInfo.forEach(info => {
+          const $element = $forms.find(`[name=${info}]`);
+          const browserData = localStorage.getItem(`Drupal.visitor.${info}`);
+          const emptyOrDefault = $element.val() === '' || $element.attr('data-drupal-default-value') === $element.val();
 
           if ($element.length && emptyOrDefault && browserData) {
             $element.val(browserData);
@@ -112,20 +113,21 @@
         });
       }
 
-      $forms.on('submit', function () {
-        userInfo.forEach(function (info) {
-          var $element = $forms.find("[name=".concat(info, "]"));
+      $forms.on('submit', () => {
+        userInfo.forEach(info => {
+          const $element = $forms.find(`[name=${info}]`);
 
           if ($element.length) {
-            localStorage.setItem("Drupal.visitor.".concat(info), $element.val());
+            localStorage.setItem(`Drupal.visitor.${info}`, $element.val());
           }
         });
       });
     }
+
   };
 
-  var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e) {
-    var url;
+  const handleFragmentLinkClickOrHashChange = e => {
+    let url;
 
     if (e.type === 'click') {
       url = e.currentTarget.location ? e.currentTarget.location : e.currentTarget;
@@ -133,18 +135,16 @@
       url = window.location;
     }
 
-    var hash = url.hash.substr(1);
+    const hash = url.hash.substr(1);
 
     if (hash) {
-      var $target = $("#".concat(hash));
+      const $target = $(`#${hash}`);
       $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
-      setTimeout(function () {
-        return $target.trigger('focus');
-      }, 300);
+      setTimeout(() => $target.trigger('focus'), 300);
     }
   };
 
-  var debouncedHandleFragmentLinkClickOrHashChange = debounce(handleFragmentLinkClickOrHashChange, 300, true);
+  const debouncedHandleFragmentLinkClickOrHashChange = debounce(handleFragmentLinkClickOrHashChange, 300, true);
   $(window).on('hashchange.form-fragment', debouncedHandleFragmentLinkClickOrHashChange);
   $(document).on('click.form-fragment', 'a[href*="#"]', debouncedHandleFragmentLinkClickOrHashChange);
 })(jQuery, Drupal, Drupal.debounce);

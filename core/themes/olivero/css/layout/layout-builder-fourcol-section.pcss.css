@@ -3,7 +3,7 @@
  * Provides the layout styles for four-column layout section.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .layout--fourcol-section {
   display: flex;

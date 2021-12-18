@@ -7,15 +7,18 @@
 
 (function (Drupal, $, Backbone) {
   Drupal.quickedit.EntityDecorationView = Backbone.View.extend({
-    initialize: function initialize() {
+    initialize() {
       this.listenTo(this.model, 'change', this.render);
     },
-    render: function render() {
+
+    render() {
       this.$el.toggleClass('quickedit-entity-active', this.model.get('isActive'));
     },
-    remove: function remove() {
+
+    remove() {
       this.setElement(null);
       Backbone.View.prototype.remove.call(this);
     }
+
   });
 })(Drupal, jQuery, Backbone);

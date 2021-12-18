@@ -10,6 +10,19 @@
  * Nav Button Mobile.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .mobile-nav-button {
   margin-left: auto
 }
@@ -47,10 +60,9 @@
   z-index: 110; /* Appear above mobile nav. */
   display: flex;
   align-items: center;
-  -ms-grid-row-align: center;
   align-self: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--sp2);
+  height: var(--sp2);
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
@@ -62,7 +74,7 @@
 }
 
 .mobile-nav-button:focus {
-    outline: solid 2px #0d77b5;
+    outline: solid 2px var(--color--blue-20);
   }
 
 .mobile-nav-button:active {
@@ -72,11 +84,11 @@
 @media (min-width: 31.25rem) {
 
 [dir="ltr"] .mobile-nav-button {
-    padding-left: 1.125rem
+    padding-left: var(--sp)
   }
 
 [dir="rtl"] .mobile-nav-button {
-    padding-right: 1.125rem
+    padding-right: var(--sp)
   }
 
 .mobile-nav-button {
@@ -122,9 +134,9 @@
 .mobile-nav-button__icon {
   position: relative;
   display: block;
-  width: 2.25rem;
+  width: var(--sp2);
   height: 0.1875rem;
-  background-color: #2494db
+  background-color: var(--color--blue-50)
 }
 
 [dir="ltr"] .mobile-nav-button__icon:before {
@@ -142,7 +154,7 @@
     height: 0.1875rem;
     content: "";
     transition: all 0.2s;
-    background-color: #2494db;
+    background-color: var(--color--blue-50);
   }
 
 [dir="ltr"] .mobile-nav-button__icon:after {
@@ -161,7 +173,7 @@
     height: 0.1875rem;
     content: "";
     transition: all 0.2s;
-    background-color: #2494db;
+    background-color: var(--color--blue-50);
   }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {

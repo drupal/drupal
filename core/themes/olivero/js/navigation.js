@@ -5,13 +5,13 @@
 * @preserve
 **/
 
-(function (Drupal, once, tabbable) {
+((Drupal, once, tabbable) => {
   function isNavOpen(navWrapper) {
     return navWrapper.classList.contains('is-active');
   }
 
   function toggleNav(props, state) {
-    var value = !!state;
+    const value = !!state;
     props.navButton.setAttribute('aria-expanded', value);
 
     if (value) {
@@ -28,10 +28,10 @@
   function init(props) {
     props.navButton.setAttribute('aria-controls', props.navWrapperId);
     props.navButton.setAttribute('aria-expanded', 'false');
-    props.navButton.addEventListener('click', function () {
+    props.navButton.addEventListener('click', () => {
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
-    document.addEventListener('keyup', function (e) {
+    document.addEventListener('keyup', e => {
       if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
@@ -40,18 +40,18 @@
         }
       }
     });
-    props.overlay.addEventListener('click', function () {
+    props.overlay.addEventListener('click', () => {
       toggleNav(props, false);
     });
-    props.overlay.addEventListener('touchstart', function () {
+    props.overlay.addEventListener('touchstart', () => {
       toggleNav(props, false);
     });
-    props.header.addEventListener('keydown', function (e) {
+    props.header.addEventListener('keydown', e => {
       if (e.key === 'Tab' && isNavOpen(props.navWrapper)) {
-        var tabbableNavElements = tabbable.tabbable(props.navWrapper);
+        const tabbableNavElements = tabbable.tabbable(props.navWrapper);
         tabbableNavElements.unshift(props.navButton);
-        var firstTabbableEl = tabbableNavElements[0];
-        var lastTabbableEl = tabbableNavElements[tabbableNavElements.length - 1];
+        const firstTabbableEl = tabbableNavElements[0];
+        const lastTabbableEl = tabbableNavElements[tabbableNavElements.length - 1];
 
         if (e.shiftKey) {
           if (document.activeElement === firstTabbableEl && !props.olivero.isDesktopNav()) {
@@ -64,7 +64,7 @@
         }
       }
     });
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', () => {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
         props.body.classList.remove('is-overlay-active');
@@ -73,35 +73,38 @@
 
       Drupal.olivero.closeAllSubNav();
     });
-    props.navWrapper.addEventListener('click', function (e) {
-      if (e.target.matches("[href*=\"".concat(window.location.pathname, "#\"], [href*=\"").concat(window.location.pathname, "#\"] *, [href^=\"#\"], [href^=\"#\"] *"))) {
+    props.navWrapper.addEventListener('click', e => {
+      if (e.target.matches(`[href*="${window.location.pathname}#"], [href*="${window.location.pathname}#"] *, [href^="#"], [href^="#"] *`)) {
         toggleNav(props, false);
       }
     });
   }
 
   Drupal.behaviors.oliveroNavigation = {
-    attach: function attach(context) {
-      var headerId = 'header';
-      var header = once('navigation', "#".concat(headerId), context).shift();
-      var navWrapperId = 'header-nav';
+    attach(context) {
+      const headerId = 'header';
+      const header = once('navigation', `#${headerId}`, context).shift();
+      const navWrapperId = 'header-nav';
 
       if (header) {
-        var navWrapper = header.querySelector("#".concat(navWrapperId));
-        var olivero = Drupal.olivero;
-        var navButton = context.querySelector('[data-drupal-selector="mobile-nav-button"]');
-        var body = context.querySelector('body');
-        var overlay = context.querySelector('[data-drupal-selector="overlay"]');
+        const navWrapper = header.querySelector(`#${navWrapperId}`);
+        const {
+          olivero
+        } = Drupal;
+        const navButton = context.querySelector('[data-drupal-selector="mobile-nav-button"]');
+        const body = context.querySelector('body');
+        const overlay = context.querySelector('[data-drupal-selector="overlay"]');
         init({
-          olivero: olivero,
-          header: header,
-          navWrapperId: navWrapperId,
-          navWrapper: navWrapper,
-          navButton: navButton,
-          body: body,
-          overlay: overlay
+          olivero,
+          header,
+          navWrapperId,
+          navWrapper,
+          navButton,
+          body,
+          overlay
         });
       }
     }
+
   };
 })(Drupal, once, tabbable);

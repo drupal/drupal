@@ -3,7 +3,7 @@
  * Buttons.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .button {
   display: inline-block;

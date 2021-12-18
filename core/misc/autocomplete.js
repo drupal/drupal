@@ -6,16 +6,16 @@
 **/
 
 (function ($, Drupal) {
-  var autocomplete;
+  let autocomplete;
 
   function autocompleteSplitValues(value) {
-    var result = [];
-    var quote = false;
-    var current = '';
-    var valueLength = value.length;
-    var character;
+    const result = [];
+    let quote = false;
+    let current = '';
+    const valueLength = value.length;
+    let character;
 
-    for (var i = 0; i < valueLength; i++) {
+    for (let i = 0; i < valueLength; i++) {
       character = value.charAt(i);
 
       if (character === '"') {
@@ -41,13 +41,13 @@
   }
 
   function searchHandler(event) {
-    var options = autocomplete.options;
+    const options = autocomplete.options;
 
     if (options.isComposing) {
       return false;
     }
 
-    var term = autocomplete.extractLastTerm(event.target.value);
+    const term = autocomplete.extractLastTerm(event.target.value);
 
     if (term.length > 0 && options.firstCharacterBlacklist.indexOf(term[0]) !== -1) {
       return false;
@@ -57,18 +57,18 @@
   }
 
   function sourceData(request, response) {
-    var elementId = this.element.attr('id');
+    const elementId = this.element.attr('id');
 
     if (!(elementId in autocomplete.cache)) {
       autocomplete.cache[elementId] = {};
     }
 
     function showSuggestions(suggestions) {
-      var tagged = autocomplete.splitValues(request.term);
-      var il = tagged.length;
+      const tagged = autocomplete.splitValues(request.term);
+      const il = tagged.length;
 
-      for (var i = 0; i < il; i++) {
-        var index = suggestions.indexOf(tagged[i]);
+      for (let i = 0; i < il; i++) {
+        const index = suggestions.indexOf(tagged[i]);
 
         if (index >= 0) {
           suggestions.splice(index, 1);
@@ -78,7 +78,7 @@
       response(suggestions);
     }
 
-    var term = autocomplete.extractLastTerm(request.term);
+    const term = autocomplete.extractLastTerm(request.term);
 
     function sourceCallbackHandler(data) {
       autocomplete.cache[elementId][term] = data;
@@ -88,7 +88,7 @@
     if (autocomplete.cache[elementId].hasOwnProperty(term)) {
       showSuggestions(autocomplete.cache[elementId][term]);
     } else {
-      var options = $.extend({
+      const options = $.extend({
         success: sourceCallbackHandler,
         data: {
           q: term
@@ -103,7 +103,7 @@
   }
 
   function selectHandler(event, ui) {
-    var terms = autocomplete.splitValues(event.target.value);
+    const terms = autocomplete.splitValues(event.target.value);
     terms.pop();
     terms.push(ui.item.value);
     event.target.value = terms.join(', ');
@@ -115,41 +115,43 @@
   }
 
   Drupal.behaviors.autocomplete = {
-    attach: function attach(context) {
-      var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
+    attach(context) {
+      const $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
 
       if ($autocomplete.length) {
-        var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
+        const blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
         $.extend(autocomplete.options, {
           firstCharacterBlacklist: blacklist || ''
         });
         $autocomplete.autocomplete(autocomplete.options).each(function () {
           $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
         });
-        $autocomplete.on('compositionstart.autocomplete', function () {
+        $autocomplete.on('compositionstart.autocomplete', () => {
           autocomplete.options.isComposing = true;
         });
-        $autocomplete.on('compositionend.autocomplete', function () {
+        $autocomplete.on('compositionend.autocomplete', () => {
           autocomplete.options.isComposing = false;
         });
       }
     },
-    detach: function detach(context, settings, trigger) {
+
+    detach(context, settings, trigger) {
       if (trigger === 'unload') {
         $(once.remove('autocomplete', 'input.form-autocomplete', context)).autocomplete('destroy');
       }
     }
+
   };
   autocomplete = {
     cache: {},
     splitValues: autocompleteSplitValues,
-    extractLastTerm: extractLastTerm,
+    extractLastTerm,
     options: {
       source: sourceData,
       focus: focusHandler,
       search: searchHandler,
       select: selectHandler,
-      renderItem: renderItem,
+      renderItem,
       minLength: 1,
       firstCharacterBlacklist: '',
       isComposing: false

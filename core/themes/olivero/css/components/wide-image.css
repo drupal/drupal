@@ -10,6 +10,19 @@
  * Wide image component.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .wide-image {
   margin-left: 0
 }
@@ -27,69 +40,69 @@
 }
 
 .wide-image {
-  margin-top: 0.5625rem;
-  margin-bottom: 2.25rem
+  margin-top: var(--sp0-5);
+  margin-bottom: var(--sp2)
 }
 
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .wide-image {
-    margin-left: -7.14286vw
+    margin-left: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1)
   }
 
 [dir="rtl"] .wide-image {
-    margin-right: -7.14286vw
+    margin-right: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1)
   }
 
 .wide-image {
-    width: calc(100vw - 2.25rem);
-    margin-top: 2.25rem;
-    margin-bottom: 4.5rem
+    width: calc(var(--grid-col-width--md)*14 + var(--grid-gap--md)*13);
+    margin-top: var(--sp2);
+    margin-bottom: var(--sp4)
 }
   }
 
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .wide-image {
-    margin-left: calc(-7.14286vw - -1.07143px)
+    margin-left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
   }
 
 [dir="rtl"] .wide-image {
-    margin-right: calc(-7.14286vw - -1.07143px)
+    margin-right: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
   }
 
 .wide-image {
-    width: calc(85.71429vw - 3.05357rem)
+    width: calc(var(--grid-col-width--lg)*12 + var(--grid-gap--lg)*11)
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .wide-image {
-    margin-left: calc(-7.14286vw - -0.62946rem)
+    margin-left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
   }
 
 [dir="rtl"] .wide-image {
-    margin-right: calc(-7.14286vw - -0.62946rem)
+    margin-right: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
   }
 
 .wide-image {
-    width: calc(85.71429vw - 9.80357rem)
+    width: calc(var(--grid-col-width--nav)*12 + var(--grid-gap--nav)*11)
 }
   }
 
 @media (min-width: 90rem) {
 
 [dir="ltr"] .wide-image {
-    margin-left: -5.86607rem
+    margin-left: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1)
   }
 
 [dir="rtl"] .wide-image {
-    margin-right: -5.86607rem
+    margin-right: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1)
   }
 
 .wide-image {
-    width: 68.14286rem
+    width: calc(var(--grid-col-width--max)*12 + var(--grid-gap--max)*11)
 }
   }
 
@@ -98,28 +111,28 @@
 @media (min-width: 62.5rem) {
 
 .sidebar-grid .wide-image {
-    width: calc(64.28571vw - 2.85268rem)
+    width: calc(var(--grid-col-width--lg)*9 + var(--grid-gap--lg)*8)
 }
   }
 
 @media (min-width: 75rem) {
 
 .sidebar-grid .wide-image {
-    width: calc(64.28571vw - 7.91518rem)
+    width: calc(var(--grid-col-width--nav)*9 + var(--grid-gap--nav)*8)
 }
   }
 
 @media (min-width: 81.25rem) {
 
 .sidebar-grid .wide-image {
-    width: calc(71.42857vw - 8.54464rem)
+    width: calc(var(--grid-col-width--nav)*10 + var(--grid-gap--nav)*9)
 }
   }
 
 @media (min-width: 90rem) {
 
 .sidebar-grid .wide-image {
-    width: 56.41071rem
+    width: calc(var(--grid-col-width--max)*10 + var(--grid-gap--max)*9)
 }
   }
 

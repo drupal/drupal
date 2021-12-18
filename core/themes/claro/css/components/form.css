@@ -10,18 +10,14 @@
  * Main form and form item styles.
  */
 
-:-ms-input-placeholder {
-  color: #919297;
-}
-
 ::placeholder {
-  color: #919297;
+  color: var(--input-fg-color--placeholder);
 }
 
 /* IE 10 and 11 needs this set as important. */
 
 :-ms-input-placeholder {
-  color: #919297 !important;
+  color: var(--input-fg-color--placeholder) !important;
 }
 
 /**
@@ -29,8 +25,8 @@
  */
 
 .form-item {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-l);
 }
 
 /**
@@ -41,8 +37,8 @@
 
 tr .form-item,
 .container-inline .form-item {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: var(--space-s);
+  margin-bottom: var(--space-s);
 }
 
 /**
@@ -51,11 +47,11 @@ tr .form-item,
 
 .form-item__label {
   display: table;
-  margin-top: 0.25rem; /* 4px */
-  margin-bottom: 0.25rem; /* 4px */
-  font-size: 0.889rem; /* ~14px */
+  margin-top: calc(var(--space-xs)/2); /* 4px */
+  margin-bottom: calc(var(--space-xs)/2); /* 4px */
+  font-size: var(--font-size-s); /* ~14px */
   font-weight: bold;
-  line-height: 1.125rem;
+  line-height: var(--line-height-form-label);
 }
 
 .form-item__label--multiple-value-form {
@@ -78,7 +74,7 @@ tr .form-item,
 /* Label states. */
 
 .form-item__label.has-error {
-  color: #d72222;
+  color: var(--input--error-color);
 }
 
 .form-item__label.option.has-error {
@@ -87,7 +83,7 @@ tr .form-item,
 
 .form-item__label.is-disabled {
   cursor: default; /* @todo ...or auto? */
-  color: #828388;
+  color: var(--input--disabled-fg-color);
 }
 
 .form-item__label.form-required::after,
@@ -96,7 +92,7 @@ tr .form-item,
   margin-right: 0.15em;
   margin-left: 0.15em;
   content: "*";
-  color: #d72222;
+  color: var(--color-maximumred);
   font-size: 0.875rem;
 }
 
@@ -107,15 +103,15 @@ tr .form-item,
 .form-item__description {
   margin-top: 0.375rem; /* 6px */
   margin-bottom: 0.375rem; /* 6px */
-  color: #55565b;
-  font-size: 0.79rem; /* ~13px */
+  color: var(--input-fg-color--description);
+  font-size: var(--font-size-xs); /* ~13px */
   line-height: 1.0625rem; /* 17px */
 }
 
 /* Description states. */
 
 .form-item__description.is-disabled {
-  color: #828388;
+  color: var(--input--disabled-fg-color);
 }
 
 /**
@@ -125,26 +121,26 @@ tr .form-item,
 .form-item__error-message {
   margin-top: 0.375rem; /* 6px */
   margin-bottom: 0.375rem; /* 6px */
-  color: #d72222;
-  font-size: 0.79rem; /* ~13px */
+  color: var(--input--error-color);
+  font-size: var(--font-size-xs); /* ~13px */
   font-weight: normal;
   line-height: 1.0625rem; /* 17px */
 }
 
 .form-item__prefix.is-disabled,
 .form-item__suffix.is-disabled {
-  color: #828388;
+  color: var(--input--disabled-fg-color);
 }
 
 /* Add some spacing so that the focus ring and suffix don't overlap. */
 
 @media screen and (min-width: 37.5625rem) {
   .form-item__suffix {
-    margin-left: 0.5rem; /* LTR */
+    margin-left: var(--space-xs); /* LTR */
   }
 
   [dir="rtl"] .form-item__suffix {
-    margin-right: 0.5rem;
+    margin-right: var(--space-xs);
     margin-left: 0;
   }
 }
@@ -157,18 +153,17 @@ tr .form-item,
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
 }
 
 .form-actions .button,
 .form-actions .action-link {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
 }
 
 .form-actions .ajax-progress--throbber {
-  -ms-grid-row-align: center;
   align-self: center;
 }
 
@@ -211,14 +206,14 @@ tr .form-item,
 .form-item--editor-format .form-item__label,
 .form-item--editor-format .form-item__prefix,
 .form-item--editor-format .form-item__suffix {
-  margin-right: 0.5rem; /* LTR */
+  margin-right: var(--space-xs); /* LTR */
 }
 
 [dir="rtl"] .form-item--editor-format .form-item__label,
 [dir="rtl"] .form-item--editor-format .form-item__prefix,
 [dir="rtl"] .form-item--editor-format .form-item__suffix {
   margin-right: 0;
-  margin-left: 0.5rem;
+  margin-left: var(--space-xs);
 }
 
 .form-item--editor-format .form-item__description,

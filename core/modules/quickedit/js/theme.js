@@ -7,14 +7,14 @@
 
 (function ($, Drupal) {
   Drupal.theme.quickeditBackstage = function (settings) {
-    var html = '';
-    html += "<div id=\"".concat(settings.id, "\"></div>");
+    let html = '';
+    html += `<div id="${settings.id}"></div>`;
     return html;
   };
 
   Drupal.theme.quickeditEntityToolbar = function (settings) {
-    var html = '';
-    html += "<div id=\"".concat(settings.id, "\" class=\"quickedit quickedit-toolbar-container clearfix\">");
+    let html = '';
+    html += `<div id="${settings.id}" class="quickedit quickedit-toolbar-container clearfix">`;
     html += '<i class="quickedit-toolbar-pointer"></i>';
     html += '<div class="quickedit-toolbar-content">';
     html += '<div class="quickedit-toolbar quickedit-toolbar-entity clearfix icon icon-pencil">';
@@ -26,7 +26,7 @@
   };
 
   Drupal.theme.quickeditEntityToolbarLabel = function (settings) {
-    return "<span class=\"field\">".concat(Drupal.checkPlain(settings.fieldLabel), "</span>").concat(Drupal.checkPlain(settings.entityLabel));
+    return `<span class="field">${Drupal.checkPlain(settings.fieldLabel)}</span>${Drupal.checkPlain(settings.entityLabel)}`;
   };
 
   Drupal.theme.quickeditEntityToolbarFence = function () {
@@ -34,17 +34,17 @@
   };
 
   Drupal.theme.quickeditFieldToolbar = function (settings) {
-    return "<div id=\"".concat(settings.id, "\"></div>");
+    return `<div id="${settings.id}"></div>`;
   };
 
   Drupal.theme.quickeditToolgroup = function (settings) {
-    var classes = settings.classes || [];
+    const classes = settings.classes || [];
     classes.unshift('quickedit-toolgroup');
-    var html = '';
-    html += "<div class=\"".concat(classes.join(' '), "\"");
+    let html = '';
+    html += `<div class="${classes.join(' ')}"`;
 
     if (settings.id) {
-      html += " id=\"".concat(settings.id, "\"");
+      html += ` id="${settings.id}"`;
     }
 
     html += '>';
@@ -56,33 +56,29 @@
   };
 
   Drupal.theme.quickeditButtons = function (settings) {
-    var html = '';
+    let html = '';
 
-    var _loop = function _loop(i) {
-      var button = settings.buttons[i];
+    for (let i = 0; i < settings.buttons.length; i++) {
+      const button = settings.buttons[i];
 
       if (!button.hasOwnProperty('type')) {
         button.type = 'button';
       }
 
-      var attributes = [];
-      var attrMap = settings.buttons[i].attributes || {};
-      Object.keys(attrMap).forEach(function (attr) {
-        attributes.push(attr + (attrMap[attr] ? "=\"".concat(attrMap[attr], "\"") : ''));
+      const attributes = [];
+      const attrMap = settings.buttons[i].attributes || {};
+      Object.keys(attrMap).forEach(attr => {
+        attributes.push(attr + (attrMap[attr] ? `="${attrMap[attr]}"` : ''));
       });
-      html += "<button type=\"".concat(button.type, "\" class=\"").concat(button.classes, "\" ").concat(attributes.join(' '), ">").concat(button.label, "</button>");
-    };
-
-    for (var i = 0; i < settings.buttons.length; i++) {
-      _loop(i);
+      html += `<button type="${button.type}" class="${button.classes}" ${attributes.join(' ')}>${button.label}</button>`;
     }
 
     return html;
   };
 
   Drupal.theme.quickeditFormContainer = function (settings) {
-    var html = '';
-    html += "<div id=\"".concat(settings.id, "\" class=\"quickedit-form-container\">");
+    let html = '';
+    html += `<div id="${settings.id}" class="quickedit-form-container">`;
     html += '  <div class="quickedit-form">';
     html += '    <div class="placeholder">';
     html += settings.loadingMsg;

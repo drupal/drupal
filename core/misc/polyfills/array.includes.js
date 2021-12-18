@@ -11,15 +11,15 @@ if (!Array.prototype.includes) {
       throw new TypeError('Array.prototype.includes called on null or undefined');
     }
 
-    var O = Object(this);
-    var len = parseInt(O.length, 10) || 0;
+    const O = Object(this);
+    const len = parseInt(O.length, 10) || 0;
 
     if (len === 0) {
       return false;
     }
 
-    var n = parseInt(arguments[1], 10) || 0;
-    var k;
+    const n = parseInt(arguments[1], 10) || 0;
+    let k;
 
     if (n >= 0) {
       k = n;
@@ -31,7 +31,7 @@ if (!Array.prototype.includes) {
       }
     }
 
-    var currentElement;
+    let currentElement;
 
     while (k < len) {
       currentElement = O[k];

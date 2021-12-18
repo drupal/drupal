@@ -11,6 +11,19 @@
  */
 
 /*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
+/*
   ie11-autorow
 
   IE11 does not automatically place new rows, which leads to overlapping

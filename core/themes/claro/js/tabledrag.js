@@ -5,54 +5,57 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(($, Drupal) => {
   Drupal.behaviors.claroTableDrag = {
-    attach: function attach(context, settings) {
-      var createItemWrapBoundaries = function createItemWrapBoundaries(row) {
-        var $row = $(row);
-        var $firstCell = $row.find('td:first-of-type').eq(0).wrapInner(Drupal.theme('tableDragCellContentWrapper')).wrapInner($(Drupal.theme('tableDragCellItemsWrapper')).addClass('js-tabledrag-cell-content'));
-        var $targetElem = $firstCell.find('.js-tabledrag-cell-content');
+    attach(context, settings) {
+      const createItemWrapBoundaries = row => {
+        const $row = $(row);
+        const $firstCell = $row.find('td:first-of-type').eq(0).wrapInner(Drupal.theme('tableDragCellContentWrapper')).wrapInner($(Drupal.theme('tableDragCellItemsWrapper')).addClass('js-tabledrag-cell-content'));
+        const $targetElem = $firstCell.find('.js-tabledrag-cell-content');
         $targetElem.eq(0).find('> .tabledrag-cell-content__item > .js-tabledrag-handle, > .tabledrag-cell-content__item > .js-indentation').prependTo($targetElem);
       };
 
-      Object.keys(settings.tableDrag || {}).forEach(function (base) {
-        once('claroTabledrag', $(context).find("#".concat(base)).find('> tr.draggable, > tbody > tr.draggable')).forEach(createItemWrapBoundaries);
+      Object.keys(settings.tableDrag || {}).forEach(base => {
+        once('claroTabledrag', $(context).find(`#${base}`).find('> tr.draggable, > tbody > tr.draggable')).forEach(createItemWrapBoundaries);
       });
     }
+
   };
   $.extend(Drupal.tableDrag.prototype.row.prototype, {
-    markChanged: function markChanged() {
-      var marker = $(Drupal.theme('tableDragChangedMarker')).addClass('js-tabledrag-changed-marker');
-      var cell = $(this.element).find('td:first-of-type');
+    markChanged() {
+      const marker = $(Drupal.theme('tableDragChangedMarker')).addClass('js-tabledrag-changed-marker');
+      const cell = $(this.element).find('td:first-of-type');
 
       if (cell.find('.js-tabledrag-changed-marker').length === 0) {
         cell.find('.js-tabledrag-handle').after(marker);
       }
     },
-    onIndent: function onIndent() {
-      $(this.table).find('.tabledrag-cell > .js-indentation').each(function (index, indentToMove) {
-        var $indentToMove = $(indentToMove);
-        var $cellContent = $indentToMove.siblings('.tabledrag-cell-content');
+
+    onIndent() {
+      $(this.table).find('.tabledrag-cell > .js-indentation').each((index, indentToMove) => {
+        const $indentToMove = $(indentToMove);
+        const $cellContent = $indentToMove.siblings('.tabledrag-cell-content');
         $indentToMove.prependTo($cellContent);
       });
     }
+
   });
   $.extend(Drupal.theme, {
-    tableDragIndentation: function tableDragIndentation() {
+    tableDragIndentation() {
       return '<div class="js-indentation indentation"><svg xmlns="http://www.w3.org/2000/svg" class="tree" width="25" height="25" viewBox="0 0 25 25"><path class="tree__item tree__item-child-ltr tree__item-child-last-ltr tree__item-horizontal tree__item-horizontal-right" d="M12,12.5 H25" stroke="#888"/><path class="tree__item tree__item-child-rtl tree__item-child-last-rtl tree__item-horizontal tree__horizontal-left" d="M0,12.5 H13" stroke="#888"/><path class="tree__item tree__item-child-ltr tree__item-child-rtl tree__item-child-last-ltr tree__item-child-last-rtl tree__vertical tree__vertical-top" d="M12.5,12 v-99" stroke="#888"/><path class="tree__item tree__item-child-ltr tree__item-child-rtl tree__vertical tree__vertical-bottom" d="M12.5,12 v99" stroke="#888"/></svg></div>';
     },
-    tableDragChangedWarning: function tableDragChangedWarning() {
-      return "<div class=\"tabledrag-changed-warning messages messages--warning\" role=\"alert\">".concat(Drupal.theme('tableDragChangedMarker'), " ").concat(Drupal.t('You have unsaved changes.'), "</div>");
+
+    tableDragChangedWarning() {
+      return `<div class="tabledrag-changed-warning messages messages--warning" role="alert">${Drupal.theme('tableDragChangedMarker')} ${Drupal.t('You have unsaved changes.')}</div>`;
     },
-    tableDragHandle: function tableDragHandle() {
-      return "<a href=\"#\" title=\"".concat(Drupal.t('Drag to re-order'), "\" class=\"tabledrag-handle js-tabledrag-handle\"></a>");
-    },
-    tableDragToggle: function tableDragToggle() {
-      return "<div class=\"tabledrag-toggle-weight-wrapper\" data-drupal-selector=\"tabledrag-toggle-weight-wrapper\">\n            <button type=\"button\" class=\"link action-link tabledrag-toggle-weight\" data-drupal-selector=\"tabledrag-toggle-weight\"></button>\n            </div>";
-    },
-    toggleButtonContent: function toggleButtonContent(show) {
-      var classes = ['action-link', 'action-link--extrasmall', 'tabledrag-toggle-weight'];
-      var text = '';
+
+    tableDragHandle: () => `<a href="#" title="${Drupal.t('Drag to re-order')}" class="tabledrag-handle js-tabledrag-handle"></a>`,
+    tableDragToggle: () => `<div class="tabledrag-toggle-weight-wrapper" data-drupal-selector="tabledrag-toggle-weight-wrapper">
+            <button type="button" class="link action-link tabledrag-toggle-weight" data-drupal-selector="tabledrag-toggle-weight"></button>
+            </div>`,
+    toggleButtonContent: show => {
+      const classes = ['action-link', 'action-link--extrasmall', 'tabledrag-toggle-weight'];
+      let text = '';
 
       if (show) {
         classes.push('action-link--icon-hide');
@@ -62,13 +65,16 @@
         text = Drupal.t('Show row weights');
       }
 
-      return "<span class=\"".concat(classes.join(' '), "\">").concat(text, "</a>");
+      return `<span class="${classes.join(' ')}">${text}</a>`;
     },
-    tableDragCellContentWrapper: function tableDragCellContentWrapper() {
+
+    tableDragCellContentWrapper() {
       return '<div class="tabledrag-cell-content__item"></div>';
     },
-    tableDragCellItemsWrapper: function tableDragCellItemsWrapper() {
+
+    tableDragCellItemsWrapper() {
       return '<div class="tabledrag-cell-content"></div>';
     }
+
   });
 })(jQuery, Drupal);

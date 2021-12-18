@@ -2,7 +2,7 @@
  * @file
  * Styles for action links.
 */
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .action-links {
   margin-block: 0;

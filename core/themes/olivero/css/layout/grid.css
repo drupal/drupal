@@ -10,14 +10,24 @@
  * Grid system.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .grid-full {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-rows: 1fr;
   grid-template-rows: 1fr;
-  -ms-grid-columns: (minmax(0, 1fr))[6];
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-column-gap: 1.125rem
+  grid-template-columns: repeat(var(--grid-col-count), minmax(0, 1fr));
+  grid-column-gap: var(--grid-gap)
 
   /* .grid-full classes nested 3 or more deep go full width. */
 }
@@ -29,9 +39,8 @@
 @media (min-width: 43.75rem) {
 
 .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))[14];
-    grid-template-columns: repeat(14, minmax(0, 1fr));
-    grid-column-gap: 2.25rem
+    grid-template-columns: repeat(var(--grid-col-count--md), minmax(0, 1fr));
+    grid-column-gap: var(--grid-gap--md)
 }
   }
 
@@ -45,8 +54,7 @@
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
-    grid-template-columns: repeat(12, minmax(0, 1fr))
+    grid-template-columns: repeat(calc(var(--grid-col-count--md) - 2), minmax(0, 1fr))
 }
   }
 
@@ -54,8 +62,7 @@
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))[ 8 ];
-    grid-template-columns: repeat(8, minmax(0, 1fr))
+    grid-template-columns: repeat(calc(var(--grid-col-count--lg) - 6), minmax(0, 1fr))
 }
   }
 
@@ -69,8 +76,7 @@
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
-    grid-template-columns: repeat(12, minmax(0, 1fr))
+    grid-template-columns: repeat(calc(var(--grid-col-count--md) - 2), minmax(0, 1fr))
 }
   }
 
@@ -78,7 +84,6 @@
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
-    -ms-grid-columns: (minmax(0, 1fr))[ 10 ];
-    grid-template-columns: repeat(10, minmax(0, 1fr))
+    grid-template-columns: repeat(calc(var(--grid-col-count--md) - 4), minmax(0, 1fr))
 }
   }

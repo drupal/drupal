@@ -4,8 +4,6 @@
  * Styling for Media Library.
  */
 
-@import "../base/variables.pcss.css";
-
 /**
  * Negative margins compensate for modal dialog padding and compensate for
  * positioning that would otherwise hide the active tab indicator on the left.

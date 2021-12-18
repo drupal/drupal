@@ -10,6 +10,19 @@
  * Button which expands the navigation at wide viewport widths.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .wide-nav-expand {
   display: none
 }
@@ -22,13 +35,13 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 5.625rem;
-    height: 6.75rem;
+    width: var(--content-left);
+    height: var(--sp6);
     cursor: pointer;
     pointer-events: auto;
-    color: #fff;
+    color: var(--color--white);
     border: 0;
-    background-color: #2494db
+    background-color: var(--color--blue-50)
 }
 
     .wide-nav-expand:focus {
@@ -53,7 +66,7 @@ body.is-always-mobile-nav .wide-nav-expand {
 
 .wide-nav-expand__icon {
   position: relative;
-  width: 2.25rem;
+  width: var(--sp2);
   height: 1.3125rem;
   transition: opacity 0.2s;
   pointer-events: none;

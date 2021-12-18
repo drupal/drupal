@@ -66,7 +66,7 @@
 
 .filter-guidelines__item {
   margin-top: 0.5em; /* (6 / 12) */
-  color: #55565b;
+  color: var(--input-fg-color--description);
   font-size: 0.75em; /* (12 / 16) */
 }
 

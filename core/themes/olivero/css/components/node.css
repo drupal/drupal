@@ -10,13 +10,26 @@
  * Node specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .node__meta {
   display: flex;
   align-items: center;
-  margin-bottom: 1.125rem;
-  color: #6e7172;
+  margin-bottom: var(--sp1);
+  color: var(--color--gray-20);
   font-size: 0.875rem;
-  line-height: 1.125rem
+  line-height: var(--sp)
 }
 
 .node__meta a {
@@ -26,21 +39,21 @@
 @media (min-width: 31.25rem) {
 
 .node__meta {
-    margin-bottom: 2.25rem
+    margin-bottom: var(--sp2)
 }
   }
 
 [dir="ltr"] .node__author-image img {
-  margin-right: 0.5625rem
+  margin-right: var(--sp0-5)
 }
 
 [dir="rtl"] .node__author-image img {
-  margin-left: 0.5625rem
+  margin-left: var(--sp0-5)
 }
 
 .node__author-image img {
-  width: 2.8125rem;
-  height: 2.8125rem;
+  width: var(--sp2-5);
+  height: var(--sp2-5);
   object-fit: cover;
   border-radius: 50%;
 }
@@ -49,9 +62,9 @@
     padding-bottom: 0.1875rem;
     transition: background-size 0.2s, color 0.2s;
     text-decoration: none;
-    color: #0d1214;
+    color: var(--color--gray-0);
     background-color: transparent;
-    background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
+    background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
     background-size: 0 0.1875rem
@@ -59,7 +72,7 @@
 
 .node__title a:hover,
     .node__title a:focus {
-      color: #0d77b5;
+      color: var(--color--blue-20);
     }
 
 [dir="rtl"] .node__title {
@@ -67,13 +80,13 @@
 }
 
 .node__content {
-  padding-bottom: 1.6875rem
+  padding-bottom: var(--sp1-5)
 }
 
 @media (min-width: 62.5rem) {
 
 .node__content {
-    padding-bottom: 3.375rem
+    padding-bottom: var(--sp3)
 }
   }
 

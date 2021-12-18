@@ -5,8 +5,6 @@
  * @see tableselect.js
  */
 
-@import "../base/variables.pcss.css";
-
 td.checkbox,
 th.checkbox {
   text-align: center;

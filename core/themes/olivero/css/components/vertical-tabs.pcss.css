@@ -3,7 +3,7 @@
  * Vertical Tabs.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 :root {
   --vertical-tabs-menu-width: 15rem;

@@ -5,29 +5,26 @@
 * @preserve
 **/
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 (function ($, Drupal, drupalSettings) {
-  var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
+  let showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
   Drupal.behaviors.tableDrag = {
-    attach: function attach(context, settings) {
+    attach(context, settings) {
       function initTableDrag(table, base) {
         if (table.length) {
           Drupal.tableDrag[base] = new Drupal.tableDrag(table[0], settings.tableDrag[base]);
         }
       }
 
-      Object.keys(settings.tableDrag || {}).forEach(function (base) {
-        initTableDrag($(once('tabledrag', "#".concat(base), context)), base);
+      Object.keys(settings.tableDrag || {}).forEach(base => {
+        initTableDrag($(once('tabledrag', `#${base}`, context)), base);
       });
     }
+
   };
 
   Drupal.tableDrag = function (table, tableSettings) {
-    var _this = this;
-
-    var self = this;
-    var $table = $(table);
+    const self = this;
+    const $table = $(table);
     this.$table = $(table);
     this.table = table;
     this.tableSettings = tableSettings;
@@ -49,24 +46,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.windowHeight = 0;
     this.$toggleWeightButton = null;
     this.indentEnabled = false;
-    Object.keys(tableSettings || {}).forEach(function (group) {
-      Object.keys(tableSettings[group] || {}).forEach(function (n) {
+    Object.keys(tableSettings || {}).forEach(group => {
+      Object.keys(tableSettings[group] || {}).forEach(n => {
         if (tableSettings[group][n].relationship === 'parent') {
-          _this.indentEnabled = true;
+          this.indentEnabled = true;
         }
 
         if (tableSettings[group][n].limit > 0) {
-          _this.maxDepth = tableSettings[group][n].limit;
+          this.maxDepth = tableSettings[group][n].limit;
         }
       });
     });
 
     if (this.indentEnabled) {
       this.indentCount = 1;
-      var indent = Drupal.theme('tableDragIndentation');
-      var testRow = $('<tr></tr>').addClass('draggable').appendTo(table);
-      var testCell = $('<td></td>').appendTo(testRow).prepend(indent).prepend(indent);
-      var $indentation = testCell.find('.js-indentation');
+      const indent = Drupal.theme('tableDragIndentation');
+      const testRow = $('<tr></tr>').addClass('draggable').appendTo(table);
+      const testCell = $('<td></td>').appendTo(testRow).prepend(indent).prepend(indent);
+      const $indentation = testCell.find('.js-indentation');
       this.indentAmount = $indentation.get(1).offsetLeft - $indentation.get(0).offsetLeft;
       testRow.remove();
     }
@@ -74,7 +71,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     $table.find('> tr.draggable, > tbody > tr.draggable').each(function () {
       self.makeDraggable(this);
     });
-    var $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
+    const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
     this.$toggleWeightButton = $toggleWeightWrapper.find('[data-drupal-selector="tabledrag-toggle-weight"]');
     this.$toggleWeightButton.on('click', $.proxy(function (e) {
       e.preventDefault();
@@ -82,18 +79,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, this));
     $table.before($toggleWeightWrapper);
     self.initColumns();
-    $(document).on('touchmove', function (event) {
-      return self.dragRow(event.originalEvent.touches[0], self);
-    });
-    $(document).on('touchend', function (event) {
-      return self.dropRow(event.originalEvent.touches[0], self);
-    });
-    $(document).on('mousemove pointermove', function (event) {
-      return self.dragRow(event, self);
-    });
-    $(document).on('mouseup pointerup', function (event) {
-      return self.dropRow(event, self);
-    });
+    $(document).on('touchmove', event => self.dragRow(event.originalEvent.touches[0], self));
+    $(document).on('touchend', event => self.dropRow(event.originalEvent.touches[0], self));
+    $(document).on('mousemove pointermove', event => self.dragRow(event, self));
+    $(document).on('mouseup pointerup', event => self.dropRow(event, self));
     $(window).on('storage', $.proxy(function (e) {
       if (e.originalEvent.key === 'Drupal.tableDrag.showWeight') {
         showWeight = JSON.parse(e.originalEvent.newValue);
@@ -103,18 +92,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.initColumns = function () {
-    var _this2 = this;
+    const $table = this.$table;
+    let hidden;
+    let cell;
+    let columnIndex;
+    Object.keys(this.tableSettings || {}).forEach(group => {
+      Object.keys(this.tableSettings[group]).some(tableSetting => {
+        const field = $table.find(`.${this.tableSettings[group][tableSetting].target}`).eq(0);
 
-    var $table = this.$table;
-    var hidden;
-    var cell;
-    var columnIndex;
-    Object.keys(this.tableSettings || {}).forEach(function (group) {
-      Object.keys(_this2.tableSettings[group]).some(function (tableSetting) {
-        var field = $table.find(".".concat(_this2.tableSettings[group][tableSetting].target)).eq(0);
-
-        if (field.length && _this2.tableSettings[group][tableSetting].hidden) {
-          hidden = _this2.tableSettings[group][tableSetting].hidden;
+        if (field.length && this.tableSettings[group][tableSetting].hidden) {
+          hidden = this.tableSettings[group][tableSetting].hidden;
           cell = field.closest('td');
           return true;
         }
@@ -124,7 +111,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       if (hidden && cell[0]) {
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
-        $table.find('> thead > tr, > tbody > tr, > tr').each(_this2.addColspanClass(columnIndex));
+        $table.find('> thead > tr, > tbody > tr, > tr').each(this.addColspanClass(columnIndex));
       }
     });
     this.displayColumns(showWeight);
@@ -132,10 +119,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   Drupal.tableDrag.prototype.addColspanClass = function (columnIndex) {
     return function () {
-      var $row = $(this);
-      var index = columnIndex;
-      var cells = $row.children();
-      var cell;
+      const $row = $(this);
+      let index = columnIndex;
+      const cells = $row.children();
+      let cell;
       cells.each(function (n) {
         if (n < index && this.colSpan && this.colSpan > 1) {
           index -= this.colSpan - 1;
@@ -143,7 +130,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
 
       if (index > 0) {
-        cell = cells.filter(":nth-child(".concat(index, ")"));
+        cell = cells.filter(`:nth-child(${index})`);
 
         if (cell[0].colSpan && cell[0].colSpan > 1) {
           cell.addClass('tabledrag-has-colspan');
@@ -177,7 +164,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.hideColumns = function () {
-    var $tables = $(once.filter('tabledrag', 'table'));
+    const $tables = $(once.filter('tabledrag', 'table'));
     $tables.find('.tabledrag-hide').css('display', 'none');
     $tables.find('.tabledrag-handle').css('display', '');
     $tables.find('.tabledrag-has-colspan').each(function () {
@@ -186,7 +173,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.showColumns = function () {
-    var $tables = $(once.filter('tabledrag', 'table'));
+    const $tables = $(once.filter('tabledrag', 'table'));
     $tables.find('.tabledrag-hide').css('display', '');
     $tables.find('.tabledrag-handle').css('display', 'none');
     $tables.find('.tabledrag-has-colspan').each(function () {
@@ -195,31 +182,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
-    var field = $(row).find(".".concat(group));
-    var tableSettingsGroup = this.tableSettings[group];
-    return Object.keys(tableSettingsGroup).map(function (delta) {
-      var targetClass = tableSettingsGroup[delta].target;
-      var rowSettings;
+    const field = $(row).find(`.${group}`);
+    const tableSettingsGroup = this.tableSettings[group];
+    return Object.keys(tableSettingsGroup).map(delta => {
+      const targetClass = tableSettingsGroup[delta].target;
+      let rowSettings;
 
-      if (field.is(".".concat(targetClass))) {
+      if (field.is(`.${targetClass}`)) {
         rowSettings = {};
-        Object.keys(tableSettingsGroup[delta]).forEach(function (n) {
+        Object.keys(tableSettingsGroup[delta]).forEach(n => {
           rowSettings[n] = tableSettingsGroup[delta][n];
         });
       }
 
       return rowSettings;
-    }).filter(function (rowSetting) {
-      return rowSetting;
-    })[0];
+    }).filter(rowSetting => rowSetting)[0];
   };
 
   Drupal.tableDrag.prototype.makeDraggable = function (item) {
-    var self = this;
-    var $item = $(item);
+    const self = this;
+    const $item = $(item);
     $item.find('td:first-of-type').find('a').addClass('menu-item__link');
-    var $handle = $(Drupal.theme('tableDragHandle'));
-    var $indentationLast = $item.find('td:first-of-type').find('.js-indentation').eq(-1);
+    const $handle = $(Drupal.theme('tableDragHandle'));
+    const $indentationLast = $item.find('td:first-of-type').find('.js-indentation').eq(-1);
 
     if ($indentationLast.length) {
       $indentationLast.after($handle);
@@ -228,7 +213,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       $item.find('td').eq(0).prepend($handle);
     }
 
-    $handle.on('mousedown touchstart pointerdown', function (event) {
+    $handle.on('mousedown touchstart pointerdown', event => {
       event.preventDefault();
 
       if (event.originalEvent.type === 'touchstart') {
@@ -237,24 +222,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       self.dragStart(event, self, item);
     });
-    $handle.on('click', function (e) {
+    $handle.on('click', e => {
       e.preventDefault();
     });
-    $handle.on('focus', function () {
+    $handle.on('focus', () => {
       self.safeBlur = true;
     });
-    $handle.on('blur', function (event) {
+    $handle.on('blur', event => {
       if (self.rowObject && self.safeBlur) {
         self.dropRow(event, self);
       }
     });
-    $handle.on('keydown', function (event) {
+    $handle.on('keydown', event => {
       if (event.keyCode !== 9 && !self.rowObject) {
         self.rowObject = new self.row(item, 'keyboard', self.indentEnabled, self.maxDepth, true);
       }
 
-      var keyChange = false;
-      var groupHeight;
+      let keyChange = false;
+      let groupHeight;
 
       switch (event.keyCode) {
         case 37:
@@ -266,8 +251,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         case 38:
         case 63232:
           {
-            var $previousRow = $(self.rowObject.element).prev('tr').eq(0);
-            var previousRow = $previousRow.get(0);
+            let $previousRow = $(self.rowObject.element).prev('tr').eq(0);
+            let previousRow = $previousRow.get(0);
 
             while (previousRow && $previousRow.is(':hidden')) {
               $previousRow = $(previousRow).prev('tr').eq(0);
@@ -314,8 +299,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         case 40:
         case 63233:
           {
-            var $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
-            var nextRow = $nextRow.get(0);
+            let $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
+            let nextRow = $nextRow.get(0);
 
             while (nextRow && $nextRow.is(':hidden')) {
               $nextRow = $(nextRow).next('tr').eq(0);
@@ -329,13 +314,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
               if ($(item).is('.tabledrag-root')) {
                 groupHeight = 0;
-                var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
+                const nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
 
                 if (nextGroup) {
                   $(nextGroup.group).each(function () {
                     groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
                   });
-                  var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
+                  const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                   self.rowObject.swap('after', nextGroupRow);
                   window.scrollBy(0, parseInt(groupHeight, 10));
                 }
@@ -373,7 +358,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         return false;
       }
     });
-    $handle.on('keypress', function (event) {
+    $handle.on('keypress', event => {
       switch (event.keyCode) {
         case 37:
         case 38:
@@ -413,20 +398,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   Drupal.tableDrag.prototype.dragRow = function (event, self) {
     if (self.dragObject) {
       self.currentPointerCoords = self.pointerCoords(event);
-      var y = self.currentPointerCoords.y - self.dragObject.initOffset.y;
-      var x = self.currentPointerCoords.x - self.dragObject.initOffset.x;
+      const y = self.currentPointerCoords.y - self.dragObject.initOffset.y;
+      const x = self.currentPointerCoords.x - self.dragObject.initOffset.x;
 
       if (y !== self.oldY) {
         self.rowObject.direction = y > self.oldY ? 'down' : 'up';
         self.oldY = y;
-        var scrollAmount = self.checkScroll(self.currentPointerCoords.y);
+        const scrollAmount = self.checkScroll(self.currentPointerCoords.y);
         clearInterval(self.scrollInterval);
 
         if (scrollAmount > 0 && self.rowObject.direction === 'down' || scrollAmount < 0 && self.rowObject.direction === 'up') {
           self.setScroll(scrollAmount);
         }
 
-        var currentRow = self.findDropTargetRow(x, y);
+        const currentRow = self.findDropTargetRow(x, y);
 
         if (currentRow) {
           if (self.rowObject.direction === 'down') {
@@ -442,9 +427,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
       if (self.indentEnabled) {
-        var xDiff = self.currentPointerCoords.x - self.dragObject.indentPointerPos.x;
-        var indentDiff = Math.round(xDiff / self.indentAmount);
-        var indentChange = self.rowObject.indent(indentDiff);
+        const xDiff = self.currentPointerCoords.x - self.dragObject.indentPointerPos.x;
+        const indentDiff = Math.round(xDiff / self.indentAmount);
+        const indentChange = self.rowObject.indent(indentDiff);
         self.dragObject.indentPointerPos.x += self.indentAmount * indentChange * self.rtl;
         self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
       }
@@ -454,8 +439,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.dropRow = function (event, self) {
-    var droppedRow;
-    var $droppedRow;
+    let droppedRow;
+    let $droppedRow;
 
     if (self.rowObject !== null) {
       droppedRow = self.rowObject.element;
@@ -463,11 +448,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       if (self.rowObject.changed === true) {
         self.updateFields(droppedRow);
-        Object.keys(self.tableSettings || {}).forEach(function (group) {
-          var rowSettings = self.rowSettings(group, droppedRow);
+        Object.keys(self.tableSettings || {}).forEach(group => {
+          const rowSettings = self.rowSettings(group, droppedRow);
 
           if (rowSettings.relationship === 'group') {
-            Object.keys(self.rowObject.children || {}).forEach(function (n) {
+            Object.keys(self.rowObject.children || {}).forEach(n => {
               self.updateField(self.rowObject.children[n], group);
             });
           }
@@ -516,8 +501,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.getPointerOffset = function (target, event) {
-    var docPos = $(target).offset();
-    var pointerPos = this.pointerCoords(event);
+    const docPos = $(target).offset();
+    const pointerPos = this.pointerCoords(event);
     return {
       x: pointerPos.x - docPos.left,
       y: pointerPos.y - docPos.top
@@ -525,15 +510,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
-    var _this3 = this;
+    const rows = $(this.table.tBodies[0].rows).not(':hidden');
 
-    var rows = $(this.table.tBodies[0].rows).not(':hidden');
-
-    var _loop = function _loop(n) {
-      var row = rows[n];
-      var $row = $(row);
-      var rowY = $row.offset().top;
-      var rowHeight = void 0;
+    for (let n = 0; n < rows.length; n++) {
+      let row = rows[n];
+      let $row = $(row);
+      const rowY = $row.offset().top;
+      let rowHeight;
 
       if (row.offsetHeight === 0) {
         rowHeight = parseInt(row.firstChild.offsetHeight, 10) / 2;
@@ -542,24 +525,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
       if (y > rowY - rowHeight && y < rowY + rowHeight) {
-        if (_this3.indentEnabled) {
-          if (Object.keys(_this3.rowObject.group).some(function (o) {
-            return _this3.rowObject.group[o] === row;
-          })) {
-            return {
-              v: null
-            };
+        if (this.indentEnabled) {
+          if (Object.keys(this.rowObject.group).some(o => this.rowObject.group[o] === row)) {
+            return null;
           }
-        } else if (row === _this3.rowObject.element) {
-          return {
-            v: null
-          };
+        } else if (row === this.rowObject.element) {
+          return null;
         }
 
-        if (!_this3.rowObject.isValidSwap(row)) {
-          return {
-            v: null
-          };
+        if (!this.rowObject.isValidSwap(row)) {
+          return null;
         }
 
         while ($row.is(':hidden') && $row.prev('tr').is(':hidden')) {
@@ -567,47 +542,37 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           row = $row.get(0);
         }
 
-        return {
-          v: row
-        };
+        return row;
       }
-    };
-
-    for (var n = 0; n < rows.length; n++) {
-      var _ret = _loop(n);
-
-      if (_typeof(_ret) === "object") return _ret.v;
     }
 
     return null;
   };
 
   Drupal.tableDrag.prototype.updateFields = function (changedRow) {
-    var _this4 = this;
-
-    Object.keys(this.tableSettings || {}).forEach(function (group) {
-      _this4.updateField(changedRow, group);
+    Object.keys(this.tableSettings || {}).forEach(group => {
+      this.updateField(changedRow, group);
     });
   };
 
   Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
-    var rowSettings = this.rowSettings(group, changedRow);
-    var $changedRow = $(changedRow);
-    var sourceRow;
-    var $previousRow;
-    var previousRow;
-    var useSibling;
+    let rowSettings = this.rowSettings(group, changedRow);
+    const $changedRow = $(changedRow);
+    let sourceRow;
+    let $previousRow;
+    let previousRow;
+    let useSibling;
 
     if (rowSettings.relationship === 'self' || rowSettings.relationship === 'group') {
       sourceRow = changedRow;
     } else if (rowSettings.relationship === 'sibling') {
       $previousRow = $changedRow.prev('tr:first-of-type');
       previousRow = $previousRow.get(0);
-      var $nextRow = $changedRow.next('tr:first-of-type');
-      var nextRow = $nextRow.get(0);
+      const $nextRow = $changedRow.next('tr:first-of-type');
+      const nextRow = $nextRow.get(0);
       sourceRow = changedRow;
 
-      if ($previousRow.is('.draggable') && $previousRow.find(".".concat(group)).length) {
+      if ($previousRow.is('.draggable') && $previousRow.find(`.${group}`).length) {
         if (this.indentEnabled) {
           if ($previousRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = previousRow;
@@ -615,7 +580,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         } else {
           sourceRow = previousRow;
         }
-      } else if ($nextRow.is('.draggable') && $nextRow.find(".".concat(group)).length) {
+      } else if ($nextRow.is('.draggable') && $nextRow.find(`.${group}`).length) {
         if (this.indentEnabled) {
           if ($nextRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = nextRow;
@@ -654,12 +619,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       rowSettings.source = rowSettings.target;
     }
 
-    var targetClass = ".".concat(rowSettings.target);
-    var targetElement = $changedRow.find(targetClass).get(0);
+    const targetClass = `.${rowSettings.target}`;
+    const targetElement = $changedRow.find(targetClass).get(0);
 
     if (targetElement) {
-      var sourceClass = ".".concat(rowSettings.source);
-      var sourceElement = $(sourceClass, sourceRow).get(0);
+      const sourceClass = `.${rowSettings.source}`;
+      const sourceElement = $(sourceClass, sourceRow).get(0);
 
       switch (rowSettings.action) {
         case 'depth':
@@ -672,14 +637,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         case 'order':
           {
-            var siblings = this.rowObject.findSiblings(rowSettings);
+            const siblings = this.rowObject.findSiblings(rowSettings);
 
             if ($(targetElement).is('select')) {
-              var values = [];
+              const values = [];
               $(targetElement).find('option').each(function () {
                 values.push(this.value);
               });
-              var maxVal = values[values.length - 1];
+              const maxVal = values[values.length - 1];
               $(siblings).find(targetClass).each(function () {
                 if (values.length > 0) {
                   this.value = values.shift();
@@ -688,7 +653,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 }
               });
             } else {
-              var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
+              let weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
               $(siblings).find(targetClass).each(function () {
                 this.value = weight;
                 weight++;
@@ -702,8 +667,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.copyDragClasses = function (sourceRow, targetRow, group) {
-    var sourceElement = $(sourceRow).find(".".concat(group));
-    var targetElement = $(targetRow).find(".".concat(group));
+    const sourceElement = $(sourceRow).find(`.${group}`);
+    const targetElement = $(targetRow).find(`.${group}`);
 
     if (sourceElement.length && targetElement.length) {
       targetElement[0].className = sourceElement[0].className;
@@ -711,11 +676,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.checkScroll = function (cursorY) {
-    var de = document.documentElement;
-    var b = document.body;
-    var windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
+    const de = document.documentElement;
+    const b = document.body;
+    const windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
     this.windowHeight = windowHeight;
-    var scrollY;
+    let scrollY;
 
     if (document.all) {
       scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
@@ -724,8 +689,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     this.scrollY = scrollY;
-    var trigger = this.scrollSettings.trigger;
-    var delta = 0;
+    const trigger = this.scrollSettings.trigger;
+    let delta = 0;
 
     if (cursorY - scrollY > windowHeight - trigger) {
       delta = trigger / (windowHeight + scrollY - cursorY);
@@ -741,11 +706,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.setScroll = function (scrollAmount) {
-    var self = this;
-    this.scrollInterval = setInterval(function () {
+    const self = this;
+    this.scrollInterval = setInterval(() => {
       self.checkScroll(self.currentPointerCoords.y);
-      var aboveTable = self.scrollY > self.table.topY;
-      var belowTable = self.scrollY + self.windowHeight < self.table.bottomY;
+      const aboveTable = self.scrollY > self.table.topY;
+      const belowTable = self.scrollY + self.windowHeight < self.table.bottomY;
 
       if (scrollAmount > 0 && belowTable || scrollAmount < 0 && aboveTable) {
         window.scrollBy(0, scrollAmount);
@@ -766,7 +731,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.row = function (tableRow, method, indentEnabled, maxDepth, addClasses) {
-    var $tableRow = $(tableRow);
+    const $tableRow = $(tableRow);
     this.element = tableRow;
     this.method = method;
     this.group = [tableRow];
@@ -782,20 +747,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       this.children = this.findChildren(addClasses);
       this.group = this.group.concat(this.children);
 
-      for (var n = 0; n < this.group.length; n++) {
+      for (let n = 0; n < this.group.length; n++) {
         this.groupDepth = Math.max($(this.group[n]).find('.js-indentation').length, this.groupDepth);
       }
     }
   };
 
   Drupal.tableDrag.prototype.row.prototype.findChildren = function (addClasses) {
-    var parentIndentation = this.indents;
-    var currentRow = $(this.element, this.table).next('tr.draggable');
-    var rows = [];
-    var child = 0;
+    const parentIndentation = this.indents;
+    let currentRow = $(this.element, this.table).next('tr.draggable');
+    const rows = [];
+    let child = 0;
 
     function rowIndentation(indentNum, el) {
-      var self = $(el);
+      const self = $(el);
 
       if (child === 1 && indentNum === parentIndentation) {
         self.addClass('tree-child-first');
@@ -824,18 +789,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     if (addClasses && rows.length) {
-      $(rows[rows.length - 1]).find(".js-indentation:nth-child(".concat(parentIndentation + 1, ")")).addClass('tree-child-last');
+      $(rows[rows.length - 1]).find(`.js-indentation:nth-child(${parentIndentation + 1})`).addClass('tree-child-last');
     }
 
     return rows;
   };
 
   Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
-    var $row = $(row);
+    const $row = $(row);
 
     if (this.indentEnabled) {
-      var prevRow;
-      var nextRow;
+      let prevRow;
+      let nextRow;
 
       if (this.direction === 'down') {
         prevRow = row;
@@ -860,11 +825,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.row.prototype.swap = function (position, row) {
-    this.group.forEach(function (row) {
+    this.group.forEach(row => {
       Drupal.detachBehaviors(row, drupalSettings, 'move');
     });
     $(row)[position](this.group);
-    this.group.forEach(function (row) {
+    this.group.forEach(row => {
       Drupal.attachBehaviors(row, drupalSettings);
     });
     this.changed = true;
@@ -872,9 +837,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow, nextRow) {
-    var $prevRow = $(prevRow);
-    var maxIndent;
-    var minIndent = nextRow ? $(nextRow).find('.js-indentation').length : 0;
+    const $prevRow = $(prevRow);
+    let maxIndent;
+    const minIndent = nextRow ? $(nextRow).find('.js-indentation').length : 0;
 
     if (!prevRow || $prevRow.is(':not(.draggable)') || $(this.element).is('.tabledrag-root')) {
       maxIndent = 0;
@@ -893,20 +858,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.row.prototype.indent = function (indentDiff) {
-    var $group = $(this.group);
+    const $group = $(this.group);
 
     if (!this.interval) {
-      var prevRow = $(this.element).prev('tr').get(0);
-      var nextRow = $group.eq(-1).next('tr').get(0);
+      const prevRow = $(this.element).prev('tr').get(0);
+      const nextRow = $group.eq(-1).next('tr').get(0);
       this.interval = this.validIndentInterval(prevRow, nextRow);
     }
 
-    var indent = this.indents + indentDiff;
+    let indent = this.indents + indentDiff;
     indent = Math.max(indent, this.interval.min);
     indent = Math.min(indent, this.interval.max);
     indentDiff = indent - this.indents;
 
-    for (var n = 1; n <= Math.abs(indentDiff); n++) {
+    for (let n = 1; n <= Math.abs(indentDiff); n++) {
       if (indentDiff < 0) {
         $group.find('.js-indentation:first-of-type').remove();
         this.indents--;
@@ -926,16 +891,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
-    var siblings = [];
-    var directions = ['prev', 'next'];
-    var rowIndentation = this.indents;
-    var checkRowIndentation;
+    const siblings = [];
+    const directions = ['prev', 'next'];
+    const rowIndentation = this.indents;
+    let checkRowIndentation;
 
-    for (var d = 0; d < directions.length; d++) {
-      var checkRow = $(this.element)[directions[d]]();
+    for (let d = 0; d < directions.length; d++) {
+      let checkRow = $(this.element)[directions[d]]();
 
       while (checkRow.length) {
-        if (checkRow.find(".".concat(rowSettings.target))) {
+        if (checkRow.find(`.${rowSettings.target}`)) {
           if (this.indentEnabled) {
             checkRowIndentation = checkRow.find('.js-indentation').length;
           }
@@ -962,16 +927,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
-    var _this5 = this;
-
-    Object.keys(this.children || {}).forEach(function (n) {
-      $(_this5.children[n]).find('.js-indentation').removeClass('tree-child').removeClass('tree-child-first').removeClass('tree-child-last').removeClass('tree-child-horizontal');
+    Object.keys(this.children || {}).forEach(n => {
+      $(this.children[n]).find('.js-indentation').removeClass('tree-child').removeClass('tree-child-first').removeClass('tree-child-last').removeClass('tree-child-horizontal');
     });
   };
 
   Drupal.tableDrag.prototype.row.prototype.markChanged = function () {
-    var marker = Drupal.theme('tableDragChangedMarker');
-    var cell = $(this.element).find('td:first-of-type');
+    const marker = Drupal.theme('tableDragChangedMarker');
+    const cell = $(this.element).find('td:first-of-type');
 
     if (cell.find('abbr.tabledrag-changed').length === 0) {
       cell.append(marker);
@@ -987,23 +950,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   };
 
   $.extend(Drupal.theme, {
-    tableDragChangedMarker: function tableDragChangedMarker() {
-      return "<abbr class=\"warning tabledrag-changed\" title=\"".concat(Drupal.t('Changed'), "\">*</abbr>");
+    tableDragChangedMarker() {
+      return `<abbr class="warning tabledrag-changed" title="${Drupal.t('Changed')}">*</abbr>`;
     },
-    tableDragIndentation: function tableDragIndentation() {
+
+    tableDragIndentation() {
       return '<div class="js-indentation indentation">&nbsp;</div>';
     },
-    tableDragChangedWarning: function tableDragChangedWarning() {
-      return "<div class=\"tabledrag-changed-warning messages messages--warning\" role=\"alert\">".concat(Drupal.theme('tableDragChangedMarker'), " ").concat(Drupal.t('You have unsaved changes.'), "</div>");
+
+    tableDragChangedWarning() {
+      return `<div class="tabledrag-changed-warning messages messages--warning" role="alert">${Drupal.theme('tableDragChangedMarker')} ${Drupal.t('You have unsaved changes.')}</div>`;
     },
-    tableDragToggle: function tableDragToggle() {
-      return "<div class=\"tabledrag-toggle-weight-wrapper\" data-drupal-selector=\"tabledrag-toggle-weight-wrapper\">\n            <button type=\"button\" class=\"link tabledrag-toggle-weight\" data-drupal-selector=\"tabledrag-toggle-weight\"></button>\n            </div>";
-    },
-    toggleButtonContent: function toggleButtonContent(show) {
-      return show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights');
-    },
-    tableDragHandle: function tableDragHandle() {
-      return "<a href=\"#\" title=\"".concat(Drupal.t('Drag to re-order'), "\"\n        class=\"tabledrag-handle\"><div class=\"handle\">&nbsp;</div></a>");
+
+    tableDragToggle: () => `<div class="tabledrag-toggle-weight-wrapper" data-drupal-selector="tabledrag-toggle-weight-wrapper">
+            <button type="button" class="link tabledrag-toggle-weight" data-drupal-selector="tabledrag-toggle-weight"></button>
+            </div>`,
+    toggleButtonContent: show => show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights'),
+
+    tableDragHandle() {
+      return `<a href="#" title="${Drupal.t('Drag to re-order')}"
+        class="tabledrag-handle"><div class="handle">&nbsp;</div></a>`;
     }
+
   });
 })(jQuery, Drupal, drupalSettings);

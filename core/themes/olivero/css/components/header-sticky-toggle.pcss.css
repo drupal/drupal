@@ -6,7 +6,7 @@
  * toggles fixing the header to the top of the viewport.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .sticky-header-toggle {
   display: none;

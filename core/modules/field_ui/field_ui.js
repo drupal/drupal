@@ -7,22 +7,22 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
-    attach: function attach(context) {
-      var form = once('field_ui_add', '[data-drupal-selector="field-ui-field-storage-add-form"]', context);
+    attach(context) {
+      const form = once('field_ui_add', '[data-drupal-selector="field-ui-field-storage-add-form"]', context);
 
       if (form.length) {
-        var $form = $(form);
+        const $form = $(form);
         $form.find('.js-form-item-label label,' + '.js-form-item-field-name label,' + '.js-form-item-existing-storage-label label').addClass('js-form-required form-required');
-        var $newFieldType = $form.find('select[name="new_storage_type"]');
-        var $existingStorageName = $form.find('select[name="existing_storage_name"]');
-        var $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
+        const $newFieldType = $form.find('select[name="new_storage_type"]');
+        const $existingStorageName = $form.find('select[name="existing_storage_name"]');
+        const $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
         $newFieldType.on('change', function () {
           if ($(this).val() !== '') {
             $existingStorageName.val('').trigger('change');
           }
         });
         $existingStorageName.on('change', function () {
-          var value = $(this).val();
+          const value = $(this).val();
 
           if (value !== '') {
             $newFieldType.val('').trigger('change');
@@ -34,37 +34,40 @@
         });
       }
     }
+
   };
   Drupal.behaviors.fieldUIDisplayOverview = {
-    attach: function attach(context, settings) {
-      once('field-display-overview', 'table#field-display-overview', context).forEach(function (overview) {
+    attach(context, settings) {
+      once('field-display-overview', 'table#field-display-overview', context).forEach(overview => {
         Drupal.fieldUIOverview.attach(overview, settings.fieldUIRowsData, Drupal.fieldUIDisplayOverview);
       });
     }
+
   };
   Drupal.fieldUIOverview = {
-    attach: function attach(table, rowsData, rowHandlers) {
-      var tableDrag = Drupal.tableDrag[table.id];
+    attach(table, rowsData, rowHandlers) {
+      const tableDrag = Drupal.tableDrag[table.id];
       tableDrag.onDrop = this.onDrop;
       tableDrag.row.prototype.onSwap = this.onSwap;
       $(table).find('tr.draggable').each(function () {
-        var row = this;
+        const row = this;
 
         if (row.id in rowsData) {
-          var data = rowsData[row.id];
+          const data = rowsData[row.id];
           data.tableDrag = tableDrag;
-          var rowHandler = new rowHandlers[data.rowHandler](row, data);
+          const rowHandler = new rowHandlers[data.rowHandler](row, data);
           $(row).data('fieldUIRowHandler', rowHandler);
         }
       });
     },
-    onChange: function onChange() {
-      var $trigger = $(this);
-      var $row = $trigger.closest('tr');
-      var rowHandler = $row.data('fieldUIRowHandler');
-      var refreshRows = {};
+
+    onChange() {
+      const $trigger = $(this);
+      const $row = $trigger.closest('tr');
+      const rowHandler = $row.data('fieldUIRowHandler');
+      const refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
-      var region = rowHandler.getRegion();
+      const region = rowHandler.getRegion();
 
       if (region !== rowHandler.region) {
         $row.find('select.js-field-parent').val('');
@@ -74,27 +77,29 @@
 
       Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
     },
-    onDrop: function onDrop() {
-      var dragObject = this;
-      var row = dragObject.rowObject.element;
-      var $row = $(row);
-      var rowHandler = $row.data('fieldUIRowHandler');
+
+    onDrop() {
+      const dragObject = this;
+      const row = dragObject.rowObject.element;
+      const $row = $(row);
+      const rowHandler = $row.data('fieldUIRowHandler');
 
       if (typeof rowHandler !== 'undefined') {
-        var regionRow = $row.prevAll('tr.region-message').get(0);
-        var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+        const regionRow = $row.prevAll('tr.region-message').get(0);
+        const region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
 
         if (region !== rowHandler.region) {
-          var refreshRows = rowHandler.regionChange(region);
+          const refreshRows = rowHandler.regionChange(region);
           rowHandler.region = region;
           Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
         }
       }
     },
-    onSwap: function onSwap(draggedRow) {
-      var rowObject = this;
+
+    onSwap(draggedRow) {
+      const rowObject = this;
       $(rowObject.table).find('tr.region-message').each(function () {
-        var $this = $(this);
+        const $this = $(this);
 
         if ($this.prev('tr').get(0) === rowObject.group[rowObject.group.length - 1]) {
           if (rowObject.method !== 'keyboard' || rowObject.direction === 'down') {
@@ -109,10 +114,11 @@
         }
       });
     },
-    AJAXRefreshRows: function AJAXRefreshRows(rows) {
-      var rowNames = [];
-      var ajaxElements = [];
-      Object.keys(rows || {}).forEach(function (rowName) {
+
+    AJAXRefreshRows(rows) {
+      const rowNames = [];
+      const ajaxElements = [];
+      Object.keys(rows || {}).forEach(rowName => {
         rowNames.push(rowName);
         ajaxElements.push(rows[rowName]);
       });
@@ -124,6 +130,7 @@
         $(ajaxElements).prop('disabled', true);
       }
     }
+
   };
   Drupal.fieldUIDisplayOverview = {};
 
@@ -141,24 +148,26 @@
   };
 
   Drupal.fieldUIDisplayOverview.field.prototype = {
-    getRegion: function getRegion() {
+    getRegion() {
       return this.$regionSelect.val();
     },
-    regionChange: function regionChange(region) {
+
+    regionChange(region) {
       region = region.replace(/-/g, '_');
       this.$regionSelect.val(region);
 
       if (this.region === 'hidden') {
-        var value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option').val();
+        const value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option').val();
 
         if (typeof value !== 'undefined') {
           this.$pluginSelect.val(value);
         }
       }
 
-      var refreshRows = {};
+      const refreshRows = {};
       refreshRows[this.name] = this.$pluginSelect.get(0);
       return refreshRows;
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

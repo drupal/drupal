@@ -10,31 +10,44 @@
  * Styles for content moderation toolbar.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .entity-moderation-form {
-  padding-left: 1.125rem
+  padding-left: var(--sp)
 }
 
 [dir="rtl"] .entity-moderation-form {
-  padding-right: 1.125rem
+  padding-right: var(--sp)
 }
 
 [dir="ltr"] .entity-moderation-form {
-  padding-right: 1.125rem
+  padding-right: var(--sp)
 }
 
 [dir="rtl"] .entity-moderation-form {
-  padding-left: 1.125rem
+  padding-left: var(--sp)
 }
 
 .entity-moderation-form {
   flex-direction: column;
-  border: 1px solid #e7edf1;
-  background-color: #f7f9fa
+  border: 1px solid var(--color--gray-80);
+  background-color: var(--color--gray-95)
 }
 
 .entity-moderation-form select,
   .entity-moderation-form input:not([type="submit"]) {
-    background-color: #fff;
+    background-color: var(--color--white);
   }
 
 @media (min-width: 43.75rem) {
@@ -45,11 +58,11 @@
   }
 
 [dir="ltr"] .entity-moderation-form__item {
-  margin-right: 1.125rem
+  margin-right: var(--sp)
 }
 
 [dir="rtl"] .entity-moderation-form__item {
-  margin-left: 1.125rem
+  margin-left: var(--sp)
 }
 
 .entity-moderation-form__item {
@@ -97,47 +110,47 @@
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-left: -14.28571vw
+      margin-left: calc(var(--grid-col-width--md)*-2 + var(--grid-gap--md)*-2)
   }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-right: -14.28571vw
+      margin-right: calc(var(--grid-col-width--md)*-2 + var(--grid-gap--md)*-2)
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: calc(100vw - 2.25rem);
-      margin-top: 2.25rem;
-      margin-bottom: 4.5rem
+      width: calc(var(--grid-col-width--md)*14 + var(--grid-gap--md)*13);
+      margin-top: var(--sp2);
+      margin-bottom: var(--sp4)
   }
     }
 
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-left: calc(-7.14286vw - -1.07143px)
+      margin-left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
   }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-right: calc(-7.14286vw - -1.07143px)
+      margin-right: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: calc(85.71429vw - 3.05357rem)
+      width: calc(var(--grid-col-width--lg)*12 + var(--grid-gap--lg)*11)
   }
     }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-left: calc(-7.14286vw - -0.62946rem)
+      margin-left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
   }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-right: calc(-7.14286vw - -0.62946rem)
+      margin-right: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: calc(85.71429vw - 9.80357rem)
+      width: calc(var(--grid-col-width--nav)*12 + var(--grid-gap--nav)*11)
   }
     }
 
@@ -152,6 +165,6 @@
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: 60.91071rem
+      width: calc(var(--grid-col-width--max)*10 + var(--grid-gap--max)*11)
   }
     }

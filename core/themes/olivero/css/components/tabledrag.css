@@ -10,20 +10,33 @@
  * Styles for tabledrag.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .draggable:hover {
-  background-color: #f7f9fa;
+  background-color: var(--color--gray-95);
 }
 
 .draggable.drag {
-  background-color: #f1f4f7;
+  background-color: var(--color--gray-90);
 }
 
 .draggable.drag-previous {
-  background-color: #e7edf1;
+  background-color: var(--color--gray-80);
 }
 
 .drag-previous a {
-  color: #313637; /* Ensure proper contrast. */
+  color: var(--color--gray-10); /* Ensure proper contrast. */
 }
 
 a.tabledrag-handle,
@@ -41,14 +54,14 @@ a.tabledrag-handle,
 }
 
 a.tabledrag-handle .handle {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--sp2);
+  height: var(--sp2);
   margin: 0;
   background-position: 50% 5px;
 }
 
 .touchevents a.tabledrag-handle .handle {
-  height: 2.25rem;
+  height: var(--sp2);
   background-position: 50% 5px;
 }
 
@@ -61,16 +74,16 @@ a.tabledrag-handle .handle {
 }
 
 [dir="ltr"] .touchevents .draggable td {
-  padding-right: 0.5625rem;
+  padding-right: var(--sp0-5);
 }
 
 [dir="rtl"] .touchevents .draggable td {
-  padding-left: 0.5625rem;
+  padding-left: var(--sp0-5);
 }
 
 .touchevents .draggable td {
-  padding-top: 0.5625rem;
-  padding-bottom: 0.5625rem;
+  padding-top: var(--sp0-5);
+  padding-bottom: var(--sp0-5);
 }
 
 .touchevents .draggable .menu-item__link {

@@ -10,6 +10,19 @@
  * Site header.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .site-header {
   position: relative
 }
@@ -18,7 +31,7 @@
 
 .site-header {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
-    min-height: 11.25rem;
+    min-height: var(--site-header-height-wide);
     border-bottom: solid 1px transparent /* Will show in Windows high contrast mode. */
 }
   }
@@ -28,9 +41,8 @@
   z-index: 102;
   display: flex;
   align-items: flex-end;
-  -ms-grid-row-align: stretch;
   align-self: stretch;
-  background-color: #2494db;
+  background-color: var(--color--blue-50);
 }
 
 .site-header__fixable {
@@ -49,29 +61,29 @@
     body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
       position: fixed;
       z-index: 102; /* Appear above body content that is position: relative */
-      top: -4.5rem;
-      max-width: 98.125rem;
+      top: calc(var(--sp4)*-1);
+      max-width: var(--max-bg-color);
     }
   body:not(.is-always-mobile-nav) {
 
     /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
   }
       body:not(.is-always-mobile-nav).toolbar-vertical.toolbar-fixed .site-header__fixable.is-fixed, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .site-header__fixable.is-fixed {
-        top: -2.0625rem;
+        top: calc(var(--toolbar-height) - var(--sp4));
       }
   body:not(.is-always-mobile-nav) {
     /* Toolbar is fixed, and tray is open and horizontal. */
   }
     body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.is-fixed {
-      top: 0.4375rem;
+      top: calc(var(--toolbar-tray-height) + var(--toolbar-height) - var(--sp4));
     }
 }
 
 .site-header__inner {
   z-index: 1; /* Appear in front of Drupal's tabs. */
   flex-grow: 1;
-  width: calc(100vw - 5.625rem);
-  background: #fff;
+  width: calc(100vw - var(--content-left));
+  background: var(--color--white);
 }
 
 /*

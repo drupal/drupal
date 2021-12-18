@@ -3,7 +3,7 @@
  * Styles for content moderation toolbar.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .entity-moderation-form {
   flex-direction: column;

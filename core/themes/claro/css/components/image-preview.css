@@ -10,6 +10,11 @@
  * Image preview component.
  */
 
+:root {
+  --color-pattern: var(--color-gray-200);
+  --size-pattern-square: 0.4375rem;
+}
+
 /**
  * Image preview.
  */
@@ -21,22 +26,22 @@
 .image-preview__img-wrapper {
   display: inline-block;
   max-width: 100%;
-  background-color: #fff;
-  box-shadow: inset 0 0 0.4375rem #d3d4d9;
+  background-color: var(--color-white);
+  box-shadow: inset 0 0 var(--size-pattern-square) var(--color-pattern);
 }
 
 .image-preview img {
   background-image:
-    linear-gradient(-45deg, #d3d4d9 25%, transparent 26%),
-    linear-gradient(-45deg, #d3d4d9 25%, transparent 26%),
-    linear-gradient(135deg, #d3d4d9 25%, transparent 26%),
-    linear-gradient(135deg, #d3d4d9 25%, transparent 26%);
+    linear-gradient(-45deg, var(--color-pattern) 25%, transparent 26%),
+    linear-gradient(-45deg, var(--color-pattern) 25%, transparent 26%),
+    linear-gradient(135deg, var(--color-pattern) 25%, transparent 26%),
+    linear-gradient(135deg, var(--color-pattern) 25%, transparent 26%);
   background-position:
     0 0,
-    0.4375rem 0.4375rem,
-    0.4375rem 0.4375rem,
+    var(--size-pattern-square) var(--size-pattern-square),
+    var(--size-pattern-square) var(--size-pattern-square),
     0 0;
-  background-size: 0.875rem 0.875rem;
+  background-size: calc(var(--size-pattern-square)*2) calc(var(--size-pattern-square)*2);
 }
 
 @media screen and (-ms-high-contrast: active) {

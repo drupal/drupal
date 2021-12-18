@@ -7,14 +7,14 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.dialog = {
-    attach: function attach(context, settings) {
-      var $context = $(context);
+    attach(context, settings) {
+      const $context = $(context);
 
       if (!$('#drupal-modal').length) {
         $('<div id="drupal-modal" class="ui-front"></div>').hide().appendTo('body');
       }
 
-      var $dialog = $context.closest('.ui-dialog-content');
+      const $dialog = $context.closest('.ui-dialog-content');
 
       if ($dialog.length) {
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
@@ -24,28 +24,26 @@
         $dialog.dialog('widget').trigger('focus');
       }
 
-      var originalClose = settings.dialog.close;
+      const originalClose = settings.dialog.close;
 
-      settings.dialog.close = function (event) {
-        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          args[_key - 1] = arguments[_key];
-        }
-
-        originalClose.apply(settings.dialog, [event].concat(args));
+      settings.dialog.close = function (event, ...args) {
+        originalClose.apply(settings.dialog, [event, ...args]);
         $(event.target).remove();
       };
     },
-    prepareDialogButtons: function prepareDialogButtons($dialog) {
-      var buttons = [];
-      var $buttons = $dialog.find('.form-actions input[type=submit], .form-actions a.button');
+
+    prepareDialogButtons($dialog) {
+      const buttons = [];
+      const $buttons = $dialog.find('.form-actions input[type=submit], .form-actions a.button');
       $buttons.each(function () {
-        var $originalButton = $(this).css({
+        const $originalButton = $(this).css({
           display: 'none'
         });
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
-          click: function click(e) {
+
+          click(e) {
             if ($originalButton.is('a')) {
               $originalButton[0].click();
             } else {
@@ -53,10 +51,12 @@
               e.preventDefault();
             }
           }
+
         });
       });
       return buttons;
     }
+
   };
 
   Drupal.AjaxCommands.prototype.openDialog = function (ajax, response, status) {
@@ -64,10 +64,10 @@
       return false;
     }
 
-    var $dialog = $(response.selector);
+    let $dialog = $(response.selector);
 
     if (!$dialog.length) {
-      $dialog = $("<div id=\"".concat(response.selector.replace(/^#/, ''), "\" class=\"ui-front\"></div>")).appendTo('body');
+      $dialog = $(`<div id="${response.selector.replace(/^#/, '')}" class="ui-front"></div>`).appendTo('body');
     }
 
     if (!ajax.wrapper) {
@@ -83,12 +83,12 @@
       response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
 
-    $dialog.on('dialogButtonsChange', function () {
-      var buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
+    $dialog.on('dialogButtonsChange', () => {
+      const buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
       $dialog.dialog('option', 'buttons', buttons);
     });
     response.dialogOptions = response.dialogOptions || {};
-    var dialog = Drupal.dialog($dialog.get(0), response.dialogOptions);
+    const dialog = Drupal.dialog($dialog.get(0), response.dialogOptions);
 
     if (response.dialogOptions.modal) {
       dialog.showModal();
@@ -100,7 +100,7 @@
   };
 
   Drupal.AjaxCommands.prototype.closeDialog = function (ajax, response, status) {
-    var $dialog = $(response.selector);
+    const $dialog = $(response.selector);
 
     if ($dialog.length) {
       Drupal.dialog($dialog.get(0)).close();
@@ -114,21 +114,21 @@
   };
 
   Drupal.AjaxCommands.prototype.setDialogOption = function (ajax, response, status) {
-    var $dialog = $(response.selector);
+    const $dialog = $(response.selector);
 
     if ($dialog.length) {
       $dialog.dialog('option', response.optionName, response.optionValue);
     }
   };
 
-  $(window).on('dialog:aftercreate', function (e, dialog, $element, settings) {
-    $element.on('click.dialog', '.dialog-cancel', function (e) {
+  $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
+    $element.on('click.dialog', '.dialog-cancel', e => {
       dialog.close('cancel');
       e.preventDefault();
       e.stopPropagation();
     });
   });
-  $(window).on('dialog:beforeclose', function (e, dialog, $element) {
+  $(window).on('dialog:beforeclose', (e, dialog, $element) => {
     $element.off('.dialog');
   });
 })(jQuery, Drupal);

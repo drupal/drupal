@@ -10,10 +10,23 @@
  * Footer regions.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .site-footer {
   position: relative; /* stack above left social bar */
-  color: #9ea0a1;
-  background: linear-gradient(180deg, #0c0d0e 0%, #171e23 100%)
+  color: var(--color--gray-50);
+  background: linear-gradient(180deg, var(--color--gray-5) 0%, var(--color--gray-8) 100%)
 }
 
 [dir="ltr"] .site-footer .menu {
@@ -29,15 +42,15 @@
   }
 
 [dir="ltr"] .site-footer .menu ul {
-      margin-left: 1.125rem
+      margin-left: var(--sp)
 }
 
 [dir="rtl"] .site-footer .menu ul {
-      margin-right: 1.125rem
+      margin-right: var(--sp)
 }
 
 .site-footer .menu li {
-      margin-bottom: 0.5625rem;
+      margin-bottom: var(--sp0-5);
     }
 
 .site-footer a {
@@ -50,9 +63,9 @@
 
 @media (min-width: 75rem) {
   [dir="ltr"] body:not(.is-always-mobile-nav) .site-footer {
-    border-left: solid 90px #000
+    border-left: solid var(--content-left) var(--color--black)
   }
   [dir="rtl"] body:not(.is-always-mobile-nav) .site-footer {
-    border-right: solid 90px #000
+    border-right: solid var(--content-left) var(--color--black)
   }
 }

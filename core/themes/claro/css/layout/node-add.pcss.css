@@ -2,8 +2,6 @@
  * Layout overrides for node add/edit form.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   --node-meta-width: 22.5rem;
 }

@@ -15,18 +15,21 @@
       'tabIn.quickedit': 'onMouseEnter',
       'tabOut.quickedit': 'onMouseLeave'
     },
-    initialize: function initialize(options) {
+
+    initialize(options) {
       this.editorView = options.editorView;
       this.listenTo(this.model, 'change:state', this.stateChange);
       this.listenTo(this.model, 'change:isChanged change:inTempStore', this.renderChanged);
     },
-    remove: function remove() {
+
+    remove() {
       this.setElement();
       Backbone.View.prototype.remove.call(this);
     },
-    stateChange: function stateChange(model, state) {
-      var from = model.previous('state');
-      var to = state;
+
+    stateChange(model, state) {
+      const from = model.previous('state');
+      const to = state;
 
       switch (to) {
         case 'inactive':
@@ -82,47 +85,57 @@
           break;
       }
     },
-    renderChanged: function renderChanged() {
+
+    renderChanged() {
       this.$el.toggleClass('quickedit-changed', this.model.get('isChanged') || this.model.get('inTempStore'));
     },
-    onMouseEnter: function onMouseEnter(event) {
-      var that = this;
+
+    onMouseEnter(event) {
+      const that = this;
       that.model.set('state', 'highlighted');
       event.stopPropagation();
     },
-    onMouseLeave: function onMouseLeave(event) {
-      var that = this;
+
+    onMouseLeave(event) {
+      const that = this;
       that.model.set('state', 'candidate', {
         reason: 'mouseleave'
       });
       event.stopPropagation();
     },
-    onClick: function onClick(event) {
+
+    onClick(event) {
       this.model.set('state', 'activating');
       event.preventDefault();
       event.stopPropagation();
     },
-    decorate: function decorate() {
+
+    decorate() {
       this.$el.addClass('quickedit-candidate quickedit-editable');
     },
-    undecorate: function undecorate() {
+
+    undecorate() {
       this.$el.removeClass('quickedit-candidate quickedit-editable quickedit-highlighted quickedit-editing');
     },
-    startHighlight: function startHighlight() {
-      var that = this;
+
+    startHighlight() {
+      const that = this;
       that.$el.addClass('quickedit-highlighted');
     },
-    stopHighlight: function stopHighlight() {
+
+    stopHighlight() {
       this.$el.removeClass('quickedit-highlighted');
     },
-    prepareEdit: function prepareEdit() {
+
+    prepareEdit() {
       this.$el.addClass('quickedit-editing');
 
       if (this.editorView.getQuickEditUISettings().popup) {
         this.$el.addClass('quickedit-editor-is-popup');
       }
     },
-    stopEdit: function stopEdit() {
+
+    stopEdit() {
       this.$el.removeClass('quickedit-highlighted quickedit-editing');
 
       if (this.editorView.getQuickEditUISettings().popup) {
@@ -131,81 +144,86 @@
 
       $('.quickedit-candidate').addClass('quickedit-editable');
     },
-    _pad: function _pad() {
+
+    _pad() {
       if (this.$el.data('quickedit-padded')) {
         return;
       }
 
-      var self = this;
+      const self = this;
 
       if (this.$el[0].style.width === '') {
         this._widthAttributeIsEmpty = true;
         this.$el.addClass('quickedit-animate-disable-width').css('width', this.$el.width());
       }
 
-      var posProp = this._getPositionProperties(this.$el);
+      const posProp = this._getPositionProperties(this.$el);
 
-      setTimeout(function () {
+      setTimeout(() => {
         self.$el.removeClass('quickedit-animate-disable-width');
         self.$el.css({
           position: 'relative',
-          top: "".concat(posProp.top - 5, "px"),
-          left: "".concat(posProp.left - 5, "px"),
-          'padding-top': "".concat(posProp['padding-top'] + 5, "px"),
-          'padding-left': "".concat(posProp['padding-left'] + 5, "px"),
-          'padding-right': "".concat(posProp['padding-right'] + 5, "px"),
-          'padding-bottom': "".concat(posProp['padding-bottom'] + 5, "px"),
-          'margin-bottom': "".concat(posProp['margin-bottom'] - 10, "px")
+          top: `${posProp.top - 5}px`,
+          left: `${posProp.left - 5}px`,
+          'padding-top': `${posProp['padding-top'] + 5}px`,
+          'padding-left': `${posProp['padding-left'] + 5}px`,
+          'padding-right': `${posProp['padding-right'] + 5}px`,
+          'padding-bottom': `${posProp['padding-bottom'] + 5}px`,
+          'margin-bottom': `${posProp['margin-bottom'] - 10}px`
         }).data('quickedit-padded', true);
       }, 0);
     },
-    _unpad: function _unpad() {
+
+    _unpad() {
       if (!this.$el.data('quickedit-padded')) {
         return;
       }
 
-      var self = this;
+      const self = this;
 
       if (this._widthAttributeIsEmpty) {
         this.$el.addClass('quickedit-animate-disable-width').css('width', '');
       }
 
-      var posProp = this._getPositionProperties(this.$el);
+      const posProp = this._getPositionProperties(this.$el);
 
-      setTimeout(function () {
+      setTimeout(() => {
         self.$el.removeClass('quickedit-animate-disable-width');
         self.$el.css({
           position: 'relative',
-          top: "".concat(posProp.top + 5, "px"),
-          left: "".concat(posProp.left + 5, "px"),
-          'padding-top': "".concat(posProp['padding-top'] - 5, "px"),
-          'padding-left': "".concat(posProp['padding-left'] - 5, "px"),
-          'padding-right': "".concat(posProp['padding-right'] - 5, "px"),
-          'padding-bottom': "".concat(posProp['padding-bottom'] - 5, "px"),
-          'margin-bottom': "".concat(posProp['margin-bottom'] + 10, "px")
+          top: `${posProp.top + 5}px`,
+          left: `${posProp.left + 5}px`,
+          'padding-top': `${posProp['padding-top'] - 5}px`,
+          'padding-left': `${posProp['padding-left'] - 5}px`,
+          'padding-right': `${posProp['padding-right'] - 5}px`,
+          'padding-bottom': `${posProp['padding-bottom'] - 5}px`,
+          'margin-bottom': `${posProp['margin-bottom'] + 10}px`
         });
       }, 0);
       this.$el.removeData('quickedit-padded');
     },
-    _getPositionProperties: function _getPositionProperties($e) {
-      var p;
-      var r = {};
-      var props = ['top', 'left', 'bottom', 'right', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom', 'margin-bottom'];
-      var propCount = props.length;
 
-      for (var i = 0; i < propCount; i++) {
+    _getPositionProperties($e) {
+      let p;
+      const r = {};
+      const props = ['top', 'left', 'bottom', 'right', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom', 'margin-bottom'];
+      const propCount = props.length;
+
+      for (let i = 0; i < propCount; i++) {
         p = props[i];
         r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
       }
 
       return r;
     },
-    _replaceBlankPosition: function _replaceBlankPosition(pos) {
+
+    _replaceBlankPosition(pos) {
       if (pos === 'auto' || !pos) {
         pos = '0px';
       }
 
       return pos;
     }
+
   });
 })(jQuery, Backbone, Drupal);

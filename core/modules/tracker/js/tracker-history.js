@@ -7,32 +7,32 @@
 
 (function ($, Drupal, window) {
   function processNodeNewIndicators(placeholders) {
-    var newNodeString = Drupal.t('new');
-    var updatedNodeString = Drupal.t('updated');
-    placeholders.forEach(function (placeholder) {
-      var timestamp = parseInt(placeholder.getAttribute('data-history-node-timestamp'), 10);
-      var nodeID = placeholder.getAttribute('data-history-node-id');
-      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+    const newNodeString = Drupal.t('new');
+    const updatedNodeString = Drupal.t('updated');
+    placeholders.forEach(placeholder => {
+      const timestamp = parseInt(placeholder.getAttribute('data-history-node-timestamp'), 10);
+      const nodeID = placeholder.getAttribute('data-history-node-id');
+      const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
-        var message = lastViewTimestamp === 0 ? newNodeString : updatedNodeString;
-        $(placeholder).append("<span class=\"marker\">".concat(message, "</span>"));
+        const message = lastViewTimestamp === 0 ? newNodeString : updatedNodeString;
+        $(placeholder).append(`<span class="marker">${message}</span>`);
       }
     });
   }
 
   function processNewRepliesIndicators(placeholders) {
-    var placeholdersToUpdate = {};
-    placeholders.forEach(function (placeholder) {
-      var timestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
-      var nodeID = placeholder.previousSibling.previousSibling.getAttribute('data-history-node-id');
-      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+    const placeholdersToUpdate = {};
+    placeholders.forEach(placeholder => {
+      const timestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
+      const nodeID = placeholder.previousSibling.previousSibling.getAttribute('data-history-node-id');
+      const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
         placeholdersToUpdate[nodeID] = placeholder;
       }
     });
-    var nodeIDs = Object.keys(placeholdersToUpdate);
+    const nodeIDs = Object.keys(placeholdersToUpdate);
 
     if (nodeIDs.length === 0) {
       return;
@@ -45,24 +45,26 @@
         'node_ids[]': nodeIDs
       },
       dataType: 'json',
-      success: function success(results) {
-        Object.keys(results || {}).forEach(function (nodeID) {
+
+      success(results) {
+        Object.keys(results || {}).forEach(nodeID => {
           if (placeholdersToUpdate.hasOwnProperty(nodeID)) {
-            var url = results[nodeID].first_new_comment_link;
-            var text = Drupal.formatPlural(results[nodeID].new_comment_count, '1 new', '@count new');
-            $(placeholdersToUpdate[nodeID]).append("<br /><a href=\"".concat(url, "\">").concat(text, "</a>"));
+            const url = results[nodeID].first_new_comment_link;
+            const text = Drupal.formatPlural(results[nodeID].new_comment_count, '1 new', '@count new');
+            $(placeholdersToUpdate[nodeID]).append(`<br /><a href="${url}">${text}</a>`);
           }
         });
       }
+
     });
   }
 
   Drupal.behaviors.trackerHistory = {
-    attach: function attach(context) {
-      var nodeIDs = [];
-      var nodeNewPlaceholders = once('history', '[data-history-node-timestamp]', context).filter(function (placeholder) {
-        var nodeTimestamp = parseInt(placeholder.getAttribute('data-history-node-timestamp'), 10);
-        var nodeID = placeholder.getAttribute('data-history-node-id');
+    attach(context) {
+      const nodeIDs = [];
+      const nodeNewPlaceholders = once('history', '[data-history-node-timestamp]', context).filter(placeholder => {
+        const nodeTimestamp = parseInt(placeholder.getAttribute('data-history-node-timestamp'), 10);
+        const nodeID = placeholder.getAttribute('data-history-node-id');
 
         if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
           nodeIDs.push(nodeID);
@@ -71,15 +73,15 @@
 
         return false;
       });
-      var newRepliesPlaceholders = once('history', '[data-history-node-last-comment-timestamp]', context).filter(function (placeholder) {
-        var lastCommentTimestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
-        var nodeTimestamp = parseInt(placeholder.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
+      const newRepliesPlaceholders = once('history', '[data-history-node-last-comment-timestamp]', context).filter(placeholder => {
+        const lastCommentTimestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
+        const nodeTimestamp = parseInt(placeholder.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
 
         if (lastCommentTimestamp === nodeTimestamp) {
           return false;
         }
 
-        var nodeID = placeholder.previousSibling.previousSibling.getAttribute('data-history-node-id');
+        const nodeID = placeholder.previousSibling.previousSibling.getAttribute('data-history-node-id');
 
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
           if (nodeIDs.indexOf(nodeID) === -1) {
@@ -96,10 +98,11 @@
         return;
       }
 
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
+      Drupal.history.fetchTimestamps(nodeIDs, () => {
         processNodeNewIndicators(nodeNewPlaceholders);
         processNewRepliesIndicators(newRepliesPlaceholders);
       });
     }
+
   };
 })(jQuery, Drupal, window);

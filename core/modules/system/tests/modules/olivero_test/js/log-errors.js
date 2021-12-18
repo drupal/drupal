@@ -6,6 +6,6 @@
 **/
 
 Drupal.errorLog = [];
-window.addEventListener('error', function (e) {
+window.addEventListener('error', e => {
   Drupal.errorLog.push(e);
 });

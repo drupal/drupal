@@ -5,8 +5,6 @@
  * Replaces the styles provided by the views_ui module.
  */
 
-@import "../base/variables.pcss.css";
-
 .views-admin .links {
   margin: 0;
   list-style: none outside none;

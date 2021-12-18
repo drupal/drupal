@@ -3,8 +3,6 @@
  * Fieldset styles.
  */
 
-@import "../base/variables.pcss.css";
-
 .fieldset {
   min-width: 0;
   margin: var(--space-m) 0;

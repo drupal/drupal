@@ -3,8 +3,6 @@
  * Claro styles for Tables.
  */
 
-@import "../base/variables.pcss.css";
-
 table {
   width: 100%;
   margin-top: var(--space-l);

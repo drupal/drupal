@@ -10,96 +10,109 @@
  * Site branding in header.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .site-branding {
-  margin-left: -1.125rem;
-  margin-right: 1.125rem
+  margin-left: calc(var(--container-padding)*-1);
+  margin-right: var(--sp)
 }
 
 [dir="rtl"] .site-branding {
-  margin-right: -1.125rem;
-  margin-left: 1.125rem
+  margin-right: calc(var(--container-padding)*-1);
+  margin-left: var(--sp)
 }
 
 [dir="ltr"] .site-branding {
-  padding-left: 1.125rem
+  padding-left: var(--container-padding)
 }
 
 [dir="rtl"] .site-branding {
-  padding-right: 1.125rem
+  padding-right: var(--container-padding)
 }
 
 [dir="ltr"] .site-branding {
-  padding-right: 1.125rem
+  padding-right: var(--container-padding)
 }
 
 [dir="rtl"] .site-branding {
-  padding-left: 1.125rem
+  padding-left: var(--container-padding)
 }
 
 .site-branding {
   display: flex;
   flex-shrink: 1;
   align-items: flex-end;
-  min-width: calc(33.33333vw + 0.75rem);
-  min-height: 3.375rem;
+  min-width: calc(var(--grid-col-width)*2 + var(--grid-gap)*2 + var(--container-padding));
+  min-height: var(--sp3);
   padding-top: 0;
-  padding-bottom: 0.5625rem;
+  padding-bottom: var(--sp0-5);
 
   /* @todo - #0d7ab8 isn't currently a variable. */
-  background-image: linear-gradient(160deg, #2494db 0%, #0d7ab8 78.66%)
+  background-image: linear-gradient(160deg, var(--color--blue-50) 0%, #0d7ab8 78.66%)
 }
 
 @media (min-width: 31.25rem) {
 
 .site-branding {
-    min-height: 4.5rem
+    min-height: var(--sp4)
 }
   }
 
 @media (min-width: 43.75rem) {
 
 .site-branding {
-    min-height: 6.75rem;
-    padding-bottom: 1.125rem
+    min-height: var(--sp6);
+    padding-bottom: var(--sp)
 }
   }
 
 @media (min-width: 62.5rem) {
 
 .site-branding {
-    min-width: calc(14.28571vw + 0.99107rem)
+    min-width: calc(var(--grid-col-width--lg)*2 + var(--grid-gap--lg)*2 + var(--container-padding))
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .site-branding {
-    margin-left: -2.25rem
+    margin-left: calc(var(--container-padding-nav)*-1)
   }
 
 [dir="rtl"] .site-branding {
-    margin-right: -2.25rem
+    margin-right: calc(var(--container-padding-nav)*-1)
   }
 
 [dir="ltr"] .site-branding {
-    padding-left: 2.25rem
+    padding-left: var(--container-padding-nav)
   }
 
 [dir="rtl"] .site-branding {
-    padding-right: 2.25rem
+    padding-right: var(--container-padding-nav)
   }
 
 [dir="ltr"] .site-branding {
-    padding-right: 2.25rem
+    padding-right: var(--container-padding-nav)
   }
 
 [dir="rtl"] .site-branding {
-    padding-left: 2.25rem
+    padding-left: var(--container-padding-nav)
   }
 
 .site-branding {
-    min-width: calc(14.28571vw + 0.99107rem);
-    min-height: 11.25rem;
+    min-width: calc(var(--grid-col-width--nav)*2 + var(--grid-gap--nav)*2 + var(--container-padding-nav));
+    min-height: var(--site-header-height-wide);
     padding-top: 0;
     padding-bottom: 0
 }
@@ -108,20 +121,20 @@
 @media (min-width: 90rem) {
 
 .site-branding {
-    min-width: 13.98214rem
+    min-width: calc(var(--grid-col-width--max)*2 + var(--grid-gap--max)*2 + var(--container-padding-nav))
 }
   }
 
 [dir="rtl"] .site-branding {
-  background-image: linear-gradient(-160deg, #2494db 0%, #0d7ab8 78.66%);
+  background-image: linear-gradient(-160deg, var(--color--blue-50) 0%, #0d7ab8 78.66%);
 }
 
 .site-branding--bg-gray {
-  background: #f7f9fa;
+  background: var(--color--gray-95);
 }
 
 .site-branding--bg-white {
-  background: #fff;
+  background: var(--color--white);
 }
 
 .site-branding__inner {
@@ -152,9 +165,9 @@
   }
 
 .site-branding__inner {
-    height: 6.75rem;
-    padding-top: 0.5625rem;
-    padding-bottom: 0.5625rem
+    height: var(--header-height-wide-when-fixed);
+    padding-top: var(--sp0-5);
+    padding-bottom: var(--sp0-5)
 }
   }
 
@@ -166,32 +179,32 @@
 .site-branding__logo img {
     width: auto;
     max-width: 100%;
-    max-height: 2.25rem
+    max-height: var(--sp2)
   }
 
 @media (min-width: 31.25rem) {
 
 .site-branding__logo img {
-      max-height: 3.375rem
+      max-height: var(--sp3)
   }
     }
 
 @media (min-width: 43.75rem) {
 
 .site-branding__logo img {
-      max-height: 4.5rem
+      max-height: var(--sp4)
   }
     }
 
 @media (min-width: 75rem) {
 
 .site-branding__logo img {
-      max-height: 5.625rem
+      max-height: calc(var(--header-height-wide-when-fixed) - var(--sp))
   }
     }
 
 .site-branding__text {
-  color: #fff;
+  color: var(--color--white);
   font-size: 1.125rem;
   font-weight: bold
 }
@@ -213,13 +226,13 @@
 .site-branding__text {
     letter-spacing: 0.02em;
     font-size: 2rem;
-    line-height: 2.25rem
+    line-height: var(--sp2)
 }
   }
 
 .site-branding--bg-gray .site-branding__text,
 .site-branding--bg-white .site-branding__text {
-  color: #2494db;
+  color: var(--color--blue-50);
 }
 
 [dir="ltr"] .site-branding__logo + .site-branding__text {

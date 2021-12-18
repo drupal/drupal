@@ -10,6 +10,19 @@
  * Button that expands second level nav when clicked.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .primary-nav__button-toggle {
   padding-left: 0
 }
@@ -29,9 +42,9 @@
 .primary-nav__button-toggle {
   position: relative;
   overflow: hidden;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-top: 0.5625rem; /* Visually align button with menu link text. */
+  width: var(--sp2);
+  height: var(--sp2);
+  margin-top: var(--sp0-5); /* Visually align button with menu link text. */
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
@@ -42,7 +55,7 @@
 }
 
 .primary-nav__button-toggle:focus {
-    outline: auto 2px #2494db;
+    outline: auto 2px var(--color--blue-50);
     outline-offset: 2px;
   }
 
@@ -66,12 +79,12 @@
       top: 50%;
       left: 50%;
       /* stylelint-enable csstools/use-logical */
-      width: 1.125rem;
+      width: var(--sp);
       height: 0;
       content: "";
       transform: translate(-50%, -50%);
       /* Intentionally not using CSS logical properties. */
-      border-top: solid 3px #2494db;
+      border-top: solid 3px var(--color--blue-50);
     }
 
 .primary-nav__button-toggle .icon--menu-toggle:after {
@@ -96,16 +109,15 @@
 
 @media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-right: -2.25rem
+      margin-right: calc(var(--sp2)*-1)
   }
     [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-left: -2.25rem
+      margin-left: calc(var(--sp2)*-1)
   }
     body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
       flex-shrink: 0;
-      -ms-grid-row-align: stretch;
       align-self: stretch;
-      width: 2.75rem;
+      width: calc(var(--sp2) + 0.5rem);
       height: auto;
       margin-top: 0
     }
@@ -116,7 +128,7 @@
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus .icon--menu-toggle {
-          border: solid 2px #0d77b5;
+          border: solid 2px var(--color--blue-20);
         }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle:active {
@@ -140,7 +152,7 @@
         width: 1.125rem;
         transform: translateY(-50%);
         border-radius: 0.25rem;
-        background-color: #fff
+        background-color: var(--color--white)
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle:before {

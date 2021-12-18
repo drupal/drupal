@@ -8,19 +8,19 @@
 (function ($, Drupal, drupalSettings, _) {
   Drupal.ckeditor = Drupal.ckeditor || {};
   Drupal.behaviors.ckeditorAdmin = {
-    attach: function attach(context) {
-      var configurationForm = once('ckeditor-configuration', '.ckeditor-toolbar-configuration', context);
+    attach(context) {
+      const configurationForm = once('ckeditor-configuration', '.ckeditor-toolbar-configuration', context);
 
       if (configurationForm.length) {
-        var $configurationForm = $(configurationForm);
-        var $textarea = $configurationForm.find('.js-form-item-editor-settings-toolbar-button-groups').hide().find('textarea');
+        const $configurationForm = $(configurationForm);
+        const $textarea = $configurationForm.find('.js-form-item-editor-settings-toolbar-button-groups').hide().find('textarea');
         $configurationForm.append(drupalSettings.ckeditor.toolbarAdmin);
         Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
-          $textarea: $textarea,
+          $textarea,
           activeEditorConfig: JSON.parse($textarea.val()),
           hiddenEditorConfig: drupalSettings.ckeditor.hiddenCKEditorConfig
         });
-        var viewDefaults = {
+        const viewDefaults = {
           model: Drupal.ckeditor.models.Model,
           el: $('.ckeditor-toolbar-configuration')
         };
@@ -32,29 +32,32 @@
         };
       }
     },
-    detach: function detach(context, settings, trigger) {
+
+    detach(context, settings, trigger) {
       if (trigger !== 'unload') {
         return;
       }
 
-      var configurationForm = once.filter('ckeditor-configuration', '.ckeditor-toolbar-configuration', context);
+      const configurationForm = once.filter('ckeditor-configuration', '.ckeditor-toolbar-configuration', context);
 
       if (configurationForm.length && Drupal.ckeditor.models && Drupal.ckeditor.models.Model) {
-        var config = Drupal.ckeditor.models.Model.toJSON().activeEditorConfig;
-        var buttons = Drupal.ckeditor.views.controller.getButtonList(config);
-        var $activeToolbar = $('.ckeditor-toolbar-configuration').find('.ckeditor-toolbar-active');
+        const config = Drupal.ckeditor.models.Model.toJSON().activeEditorConfig;
+        const buttons = Drupal.ckeditor.views.controller.getButtonList(config);
+        const $activeToolbar = $('.ckeditor-toolbar-configuration').find('.ckeditor-toolbar-active');
 
-        for (var i = 0; i < buttons.length; i++) {
+        for (let i = 0; i < buttons.length; i++) {
           $activeToolbar.trigger('CKEditorToolbarChanged', ['removed', buttons[i]]);
         }
       }
     }
+
   };
   Drupal.ckeditor = {
     views: {},
     models: {},
-    registerButtonMove: function registerButtonMove(view, $button, callback) {
-      var $group = $button.closest('.ckeditor-toolbar-group');
+
+    registerButtonMove(view, $button, callback) {
+      const $group = $button.closest('.ckeditor-toolbar-group');
 
       if ($group.hasClass('placeholder')) {
         if (view.isProcessing) {
@@ -68,8 +71,9 @@
         callback(true);
       }
     },
-    registerGroupMove: function registerGroupMove(view, $group) {
-      var $row = $group.closest('.ckeditor-row');
+
+    registerGroupMove(view, $group) {
+      let $row = $group.closest('.ckeditor-row');
 
       if ($row.hasClass('placeholder')) {
         $row.removeClass('placeholder');
@@ -84,16 +88,17 @@
       });
       view.model.set('isDirty', true);
     },
-    openGroupNameDialog: function openGroupNameDialog(view, $group, callback) {
+
+    openGroupNameDialog(view, $group, callback) {
       callback = callback || function () {};
 
       function validateForm(form) {
         if (form.elements[0].value.length === 0) {
-          var $form = $(form);
+          const $form = $(form);
 
           if (!$form.hasClass('errors')) {
             $form.addClass('errors').find('input').addClass('error').attr('aria-invalid', 'true');
-            $("<div class=\"description\" >".concat(Drupal.t('Please provide a name for the button group.'), "</div>")).insertAfter(form.elements[0]);
+            $(`<div class="description" >${Drupal.t('Please provide a name for the button group.')}</div>`).insertAfter(form.elements[0]);
           }
 
           return true;
@@ -110,7 +115,7 @@
 
         function namePlaceholderGroup($group, name) {
           if ($group.hasClass('placeholder')) {
-            var groupID = "ckeditor-toolbar-group-aria-label-for-".concat(Drupal.checkPlain(name.toLowerCase().replace(/\s/g, '-')));
+            const groupID = `ckeditor-toolbar-group-aria-label-for-${Drupal.checkPlain(name.toLowerCase().replace(/\s/g, '-'))}`;
             $group.removeAttr('aria-label').attr('data-drupal-ckeditor-type', 'group').attr('tabindex', 0).children('.ckeditor-toolbar-group-name').attr('id', groupID).end().children('.ckeditor-toolbar-group-buttons').attr('aria-labelledby', groupID);
           }
 
@@ -136,33 +141,38 @@
         }
       }
 
-      var $ckeditorButtonGroupNameForm = $(Drupal.theme('ckeditorButtonGroupNameForm'));
-      var dialog = Drupal.dialog($ckeditorButtonGroupNameForm.get(0), {
+      const $ckeditorButtonGroupNameForm = $(Drupal.theme('ckeditorButtonGroupNameForm'));
+      const dialog = Drupal.dialog($ckeditorButtonGroupNameForm.get(0), {
         title: Drupal.t('Button group name'),
         dialogClass: 'ckeditor-name-toolbar-group',
         resizable: false,
         buttons: [{
           text: Drupal.t('Apply'),
-          click: function click() {
+
+          click() {
             closeDialog('apply', this);
           },
+
           primary: true
         }, {
           text: Drupal.t('Cancel'),
-          click: function click() {
+
+          click() {
             closeDialog('cancel');
           }
+
         }],
-        open: function open() {
-          var form = this;
-          var $form = $(this);
-          var $widget = $form.parent();
+
+        open() {
+          const form = this;
+          const $form = $(this);
+          const $widget = $form.parent();
           $widget.find('.ui-dialog-titlebar-close').remove();
-          $widget.on('keypress.ckeditor', 'input, button', function (event) {
+          $widget.on('keypress.ckeditor', 'input, button', event => {
             if (event.keyCode === 13) {
-              var $target = $(event.currentTarget);
-              var data = $target.data('ui-button');
-              var action = 'apply';
+              const $target = $(event.currentTarget);
+              const data = $target.data('ui-button');
+              let action = 'apply';
 
               if (data && data.options && data.options.label) {
                 action = data.options.label.toLowerCase();
@@ -174,7 +184,7 @@
               event.preventDefault();
             }
           });
-          var text = Drupal.t('Editing the name of the new button group in a dialog.');
+          let text = Drupal.t('Editing the name of the new button group in a dialog.');
 
           if (typeof $group.attr('data-drupal-ckeditor-toolbar-group-name') !== 'undefined') {
             text = Drupal.t('Editing the name of the "@groupName" button group in a dialog.', {
@@ -184,23 +194,26 @@
 
           Drupal.announce(text);
         },
-        close: function close(event) {
+
+        close(event) {
           $(event.target).remove();
         }
+
       });
       dialog.showModal();
       $(document.querySelector('.ckeditor-name-toolbar-group').querySelector('input')).attr('value', $group.attr('data-drupal-ckeditor-toolbar-group-name')).trigger('focus');
     }
+
   };
   Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
-    attach: function attach(context) {
-      var $context = $(context);
-      var ckeditorPluginSettings = once('ckeditor-plugin-settings', '#ckeditor-plugin-settings', context);
+    attach(context) {
+      const $context = $(context);
+      const ckeditorPluginSettings = once('ckeditor-plugin-settings', '#ckeditor-plugin-settings', context);
 
       if (ckeditorPluginSettings.length) {
-        var $ckeditorPluginSettings = $(ckeditorPluginSettings);
+        const $ckeditorPluginSettings = $(ckeditorPluginSettings);
         $ckeditorPluginSettings.find('[data-ckeditor-buttons]').each(function () {
-          var $this = $(this);
+          const $this = $(this);
 
           if ($this.data('verticalTab')) {
             $this.data('verticalTab').tabHide();
@@ -210,15 +223,15 @@
 
           $this.data('ckeditorButtonPluginSettingsActiveButtons', []);
         });
-        $context.find('.ckeditor-toolbar-active').off('CKEditorToolbarChanged.ckeditorAdminPluginSettings').on('CKEditorToolbarChanged.ckeditorAdminPluginSettings', function (event, action, button) {
-          var $pluginSettings = $ckeditorPluginSettings.find("[data-ckeditor-buttons~=".concat(button, "]"));
+        $context.find('.ckeditor-toolbar-active').off('CKEditorToolbarChanged.ckeditorAdminPluginSettings').on('CKEditorToolbarChanged.ckeditorAdminPluginSettings', (event, action, button) => {
+          const $pluginSettings = $ckeditorPluginSettings.find(`[data-ckeditor-buttons~=${button}]`);
 
           if ($pluginSettings.length === 0) {
             return;
           }
 
-          var verticalTab = $pluginSettings.data('verticalTab');
-          var activeButtons = $pluginSettings.data('ckeditorButtonPluginSettingsActiveButtons');
+          const verticalTab = $pluginSettings.data('verticalTab');
+          const activeButtons = $pluginSettings.data('ckeditorButtonPluginSettingsActiveButtons');
 
           if (action === 'added') {
             activeButtons.push(button);
@@ -244,6 +257,7 @@
         });
       }
     }
+
   };
 
   Drupal.theme.ckeditorRow = function () {
@@ -251,9 +265,9 @@
   };
 
   Drupal.theme.ckeditorToolbarGroup = function () {
-    var group = '';
-    group += "<li class=\"ckeditor-toolbar-group placeholder\" role=\"presentation\" aria-label=\"".concat(Drupal.t('Place a button to create a new button group.'), "\">");
-    group += "<h3 class=\"ckeditor-toolbar-group-name\">".concat(Drupal.t('New group'), "</h3>");
+    let group = '';
+    group += `<li class="ckeditor-toolbar-group placeholder" role="presentation" aria-label="${Drupal.t('Place a button to create a new button group.')}">`;
+    group += `<h3 class="ckeditor-toolbar-group-name">${Drupal.t('New group')}</h3>`;
     group += '<ul class="ckeditor-buttons ckeditor-toolbar-group-buttons" role="toolbar" data-drupal-ckeditor-button-sorting="target"></ul>';
     group += '</li>';
     return group;
@@ -268,6 +282,6 @@
   };
 
   Drupal.theme.ckeditorNewButtonGroup = function () {
-    return "<li class=\"ckeditor-add-new-group\"><button aria-label=\"".concat(Drupal.t('Add a CKEditor button group to the end of this row.'), "\">").concat(Drupal.t('Add group'), "</button></li>");
+    return `<li class="ckeditor-add-new-group"><button aria-label="${Drupal.t('Add a CKEditor button group to the end of this row.')}">${Drupal.t('Add group')}</button></li>`;
   };
 })(jQuery, Drupal, drupalSettings, _);

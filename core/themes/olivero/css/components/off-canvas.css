@@ -10,6 +10,19 @@
  * Settings tray specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] #drupal-off-canvas .form-type-boolean {
     margin-left: 0
 }
@@ -19,14 +32,14 @@
 }
 
 #drupal-off-canvas .form-type-boolean {
-    line-height: 1.125rem
+    line-height: var(--line-height-s)
   }
 
 #drupal-off-canvas .form-type-boolean input[type="checkbox"],
     #drupal-off-canvas .form-type-boolean input[type="radio"] {
       float: none;
-      width: 0.84375rem;
-      height: 0.84375rem;
+      width: var(--sp0-75);
+      height: var(--sp0-75);
       transform: none;
       vertical-align: middle;
     }
@@ -61,7 +74,6 @@
 
 #drupal-off-canvas .olivero-details__summary {
     display: block;
-    list-style: disc outside none;
     list-style: initial
   }
 

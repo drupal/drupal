@@ -5,19 +5,21 @@
 * @preserve
 **/
 
-(function ($, _ref) {
-  var tabbable = _ref.tabbable,
-      isTabbable = _ref.isTabbable;
+(function ($, {
+  tabbable,
+  isTabbable
+}) {
   $.widget('ui.dialog', $.ui.dialog, {
     options: {
       buttonClass: 'button',
       buttonPrimaryClass: 'button--primary'
     },
-    _createButtons: function _createButtons() {
-      var opts = this.options;
-      var primaryIndex;
-      var index;
-      var il = opts.buttons.length;
+
+    _createButtons() {
+      const opts = this.options;
+      let primaryIndex;
+      let index;
+      const il = opts.buttons.length;
 
       for (index = 0; index < il; index++) {
         if (opts.buttons[index].primary && opts.buttons[index].primary === true) {
@@ -29,27 +31,28 @@
 
       this._super();
 
-      var $buttons = this.uiButtonSet.children().addClass(opts.buttonClass);
+      const $buttons = this.uiButtonSet.children().addClass(opts.buttonClass);
 
       if (typeof primaryIndex !== 'undefined') {
         $buttons.eq(index).addClass(opts.buttonPrimaryClass);
       }
     },
-    _focusTabbable: function _focusTabbable() {
-      var hasFocus = this._focusedElement ? this._focusedElement.get(0) : null;
+
+    _focusTabbable() {
+      let hasFocus = this._focusedElement ? this._focusedElement.get(0) : null;
 
       if (!hasFocus) {
         hasFocus = this.element.find('[autofocus]').get(0);
       }
 
       if (!hasFocus) {
-        var $elements = [this.element, this.uiDialogButtonPane];
+        const $elements = [this.element, this.uiDialogButtonPane];
 
-        for (var i = 0; i < $elements.length; i++) {
-          var element = $elements[i].get(0);
+        for (let i = 0; i < $elements.length; i++) {
+          const element = $elements[i].get(0);
 
           if (element) {
-            var elementTabbable = tabbable(element);
+            const elementTabbable = tabbable(element);
             hasFocus = elementTabbable.length ? elementTabbable[0] : null;
           }
 
@@ -60,7 +63,7 @@
       }
 
       if (!hasFocus) {
-        var closeBtn = this.uiDialogTitlebarClose.get(0);
+        const closeBtn = this.uiDialogTitlebarClose.get(0);
         hasFocus = closeBtn && isTabbable(closeBtn) ? closeBtn : null;
       }
 
@@ -70,5 +73,6 @@
 
       $(hasFocus).eq(0).trigger('focus');
     }
+
   });
 })(jQuery, window.tabbable);

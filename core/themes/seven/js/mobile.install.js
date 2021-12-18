@@ -7,7 +7,7 @@
 
 (function () {
   function findActiveStep(steps) {
-    for (var i = 0; i < steps.length; i++) {
+    for (let i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {
         return i + 1;
       }
@@ -21,13 +21,13 @@
   }
 
   function installStepsSetup() {
-    var steps = document.querySelectorAll('.task-list li');
+    const steps = document.querySelectorAll('.task-list li');
 
     if (steps.length) {
-      var header = document.querySelector('header[role="banner"]');
-      var stepIndicator = document.createElement('div');
+      const header = document.querySelector('header[role="banner"]');
+      const stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
-      stepIndicator.innerHTML = "".concat(findActiveStep(steps), "/").concat(steps.length);
+      stepIndicator.innerHTML = `${findActiveStep(steps)}/${steps.length}`;
       header.appendChild(stepIndicator);
     }
   }

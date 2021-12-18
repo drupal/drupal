@@ -58,8 +58,8 @@ details.fieldset-no-legend {
 }
 
 .views-ui-dialog .form-item {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
 }
 
 .views-ui-dialog .form-type--boolean {
@@ -85,9 +85,9 @@ details.fieldset-no-legend {
 }
 
 .views-ui-dialog .form-item:first-of-type.description {
-  margin: 0 0 1.5rem 0;
-  padding-bottom: 0.75rem;
-  border-bottom: 0.0625rem solid #d3d4d9;
+  margin: 0 0 var(--space-l) 0;
+  padding-bottom: var(--space-s);
+  border-bottom: 0.0625rem solid var(--color-gray-200);
   font-weight: bold;
 }
 
@@ -99,14 +99,14 @@ details.fieldset-no-legend {
 }
 
 .views-ui-dialog .form-element {
-  min-height: calc(2.3125rem - 2px); /* iOS. */
-  padding: calc(0.5rem - 2px) calc(1rem - 1px);
-  font-size: 0.79rem;
-  line-height: 1.3125rem;
+  min-height: calc(var(--input-padding-vertical--small)*2 + var(--input-border-size)*2 + var(--input-line-height--small)); /* iOS. */
+  padding: var(--input-padding-vertical--small) var(--input-padding-horizontal--small);
+  font-size: var(--input-font-size--small);
+  line-height: var(--input-line-height--small);
 }
 
 .views-ui-dialog .form-element--type-select {
-  padding-right: calc(2rem + 2px);
+  padding-right: calc(var(--space-m)*2 + var(--input-border-size)*2);
   background-position: 100% 56%;
 }
 
@@ -184,7 +184,7 @@ details.fieldset-no-legend {
 }
 
 .views-display-top__extra-actions-wrapper {
-  margin: 0.25rem 0.5rem 0.5rem;
+  margin: calc(var(--space-xs)/2) var(--space-xs) var(--space-xs);
 }
 
 /* @end */
@@ -219,7 +219,7 @@ details.fieldset-no-legend {
   display: flex;
   overflow: visible;
   flex-wrap: wrap;
-  margin: 0 1.5rem 0 0; /* LTR */
+  margin: 0 var(--space-l) 0 0; /* LTR */
   padding: 0;
   list-style: none;
   text-align: left; /* LTR */
@@ -228,7 +228,7 @@ details.fieldset-no-legend {
 
 [dir="rtl"] .views-tabs {
   margin-right: 0;
-  margin-left: 1.5rem;
+  margin-left: var(--space-l);
   text-align: right;
 }
 
@@ -273,7 +273,7 @@ details.fieldset-no-legend {
 .views-tabs a {
   display: inline-block;
   padding: 0.625rem;
-  border: 1px solid #cbcbcb;
+  border: var(--input-border-size) solid #cbcbcb;
   border-radius: 0.4375rem;
   font-size: small;
   line-height: 1.3333;
@@ -309,26 +309,26 @@ details.fieldset-no-legend {
 
 .views-tabs .add a {
   padding: 0.5625rem 0.8125rem 0.5625rem 0.5625rem;
-  color: #55565b;
+  color: var(--color-gray-800);
   border: none;
-  border-radius: 2px;
+  border-radius: var(--base-border-radius);
   background-color: transparent;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   font-weight: 700;
 }
 
 .views-tabs .add a::before {
   display: inline-block;
   width: 1em;
-  height: calc(1em - 2px);
+  height: calc(1em - var(--input-border-size)*2);
   content: "";
   /* Copy of icon from .action-link--icon-plus */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' stroke-width='2' stroke='%23545560'%3E%3Cpath d='m3 8h10'/%3E%3Cpath d='m8 3v10'/%3E%3C/svg%3E");
 }
 
 .views-tabs .add a:hover {
-  color: #0036b1;
-  background-color: #f0f5fd;
+  color: var(--color-absolutezero-hover);
+  background-color: var(--color-bgblue-hover);
 }
 
 .views-tabs .add a:hover::before {
@@ -337,13 +337,13 @@ details.fieldset-no-legend {
 }
 
 .views-tabs .add a:focus {
-  background-color: #e6ecf8;
+  background-color: var(--color-bgblue-active);
   box-shadow: 0 0 0 3px #26a769;
 }
 
 .views-tabs .add.open a {
-  color: #fff;
-  background-color: #003cc5;
+  color: var(--color-white);
+  background-color: var(--color-absolutezero);
 }
 
 .views-tabs .add.open a::before {
@@ -362,7 +362,7 @@ details.fieldset-no-legend {
   top: 2.375rem;
   left: -2px; /* LTR */
   margin: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--details-box-shadow);
 }
 
 [dir="rtl"] .views-tabs .action-list {
@@ -383,25 +383,25 @@ details.fieldset-no-legend {
 
 .views-tabs .action-list li:first-child {
   border-width: 1px 1px 0;
-  border-radius: 0 2px 0 0; /* LTR */
+  border-radius: 0 var(--base-border-radius) 0 0; /* LTR */
 }
 
 [dir="rtl"] .views-tabs .action-list li:first-child {
-  border-radius: 0 0 0 2px;
+  border-radius: 0 0 0 var(--base-border-radius);
 }
 
 .views-tabs .action-list li:last-child,
 .views-displays .action-list li:last-child {
   padding-bottom: 0.4rem;
   border-width: 0 1px 1px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: var(--button-border-radius-size);
+  border-bottom-left-radius: var(--button-border-radius-size);
 }
 
 .views-tabs__action-list-button {
   width: 100%;
   margin: 0;
-  padding: 0.75rem 1.5rem;
+  padding: var(--space-s) var(--space-l);
   text-align: left;
   border: medium none;
   border-radius: 0;
@@ -417,8 +417,8 @@ details.fieldset-no-legend {
 
 .views-tabs__action-list-button.button:hover,
 .views-tabs__action-list-button.button:focus {
-  color: #fff;
-  background-color: #003cc5;
+  color: var(--color-white);
+  background-color: var(--color-absolutezero);
 }
 
 /* Remove outline provided by default styling */
@@ -456,7 +456,7 @@ details.fieldset-no-legend {
 }
 
 .views-ui-rearrange-filter-form tr:first-of-type {
-  border-top: 0.0625rem solid #d3d4d9;
+  border-top: 0.0625rem solid var(--color-gray-200);
 }
 
 .views-ui-rearrange-filter-form tr:not(.draggable):hover {
@@ -486,7 +486,6 @@ details.fieldset-no-legend {
 }
 
 [dir="rtl"] .views-ui-rearrange-filter-form tr td:last-child {
-  border-right: 0;
   border-right: initial;
   border-left: medium none;
 }
@@ -531,7 +530,6 @@ details.fieldset-no-legend {
 }
 
 [dir="rtl"] .views-query-info table tr td:last-child {
-  border-right: 0;
   border-right: initial;
   border-left: 0 none;
 }
@@ -576,26 +574,26 @@ details.fieldset-no-legend {
 
 .views-config-group-region {
   display: table;
-  margin: 1.5rem 0;
-  border: 0.0625rem solid #d3d4d9;
+  margin: var(--space-l) 0;
+  border: 0.0625rem solid var(--color-gray-200);
   border-collapse: collapse;
 }
 
 .views-config-group-region .views-group-box {
   position: relative;
   display: table-cell;
-  padding: 1.5rem;
-  border: 0.0625rem solid #d3d4d9;
+  padding: var(--space-l);
+  border: 0.0625rem solid var(--color-gray-200);
 }
 
 .views-config-group-region .views-group-box--operator {
-  padding-right: 3rem;
+  padding-right: var(--space-xl);
   border-right-width: 0;
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--operator {
-  padding-right: 1.5rem;
-  padding-left: 3rem;
+  padding-right: var(--space-l);
+  padding-left: var(--space-xl);
   border-right-width: 0.0625rem;
   border-left-width: 0;
 }
@@ -611,13 +609,13 @@ details.fieldset-no-legend {
 }
 
 .views-config-group-region .views-group-box--value > .form-item {
-  margin-right: 1.5rem; /* LTR */
-  margin-left: 3rem; /* LTR */
+  margin-right: var(--space-l); /* LTR */
+  margin-left: var(--space-xl); /* LTR */
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item {
-  margin-right: 3rem; /* LTR */
-  margin-left: 1.5rem; /* LTR */
+  margin-right: var(--space-xl); /* LTR */
+  margin-left: var(--space-l); /* LTR */
 }
 
 .views-config-group-region .views-group-box--value > .form-item::before {
@@ -627,7 +625,7 @@ details.fieldset-no-legend {
   width: 0.0625rem;
   height: 100%;
   content: "";
-  border-left: 0.0625rem solid #d3d4d9;
+  border-left: 0.0625rem solid var(--color-gray-200);
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::before {
@@ -638,19 +636,19 @@ details.fieldset-no-legend {
   position: absolute;
   z-index: 1;
   top: 3.8rem;
-  left: -1rem; /* LTR */
+  left: calc(0 - var(--space-m)); /* LTR */
   padding: 0 0.3rem 0.3rem 0.4rem; /* LTR */
   content: ">";
-  color: #828388;
-  border: 0.0625rem solid #d3d4d9;
+  color: var(--color-gray-600);
+  border: 0.0625rem solid var(--color-gray-200);
   background: #fff;
-  font-size: 2.027rem;
+  font-size: var(--font-size-h1);
   font-weight: bold;
-  line-height: 2.027rem;
+  line-height: var(--font-size-h1);
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::after {
-  right: -1rem;
+  right: calc(0 - var(--space-m));
   left: auto;
   padding-right: 0.4rem;
   padding-left: 0.3rem;
@@ -688,6 +686,6 @@ details.fieldset-no-legend {
   }
   [dir="rtl"] .views-display-top__extra-actions-wrapper {
     margin-right: auto;
-    margin-left: 0.25rem;
+    margin-left: calc(var(--space-xs)/2);
   }
 }

@@ -7,21 +7,22 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.negotiationLanguage = {
-    attach: function attach() {
-      var $configForm = $('#language-negotiation-configure-form');
-      var inputSelector = 'input[name$="[configurable]"]';
+    attach() {
+      const $configForm = $('#language-negotiation-configure-form');
+      const inputSelector = 'input[name$="[configurable]"]';
 
       function toggleTable(checkbox) {
-        var $checkbox = $(checkbox);
+        const $checkbox = $(checkbox);
         $checkbox.closest('.table-language-group').find('table, .tabledrag-toggle-weight').toggle($checkbox.prop('checked'));
       }
 
-      $(once('negotiation-language-admin-bind', $configForm)).on('change', inputSelector, function (event) {
+      $(once('negotiation-language-admin-bind', $configForm)).on('change', inputSelector, event => {
         toggleTable(event.target);
       });
-      $configForm.find("".concat(inputSelector, ":not(:checked)")).each(function (index, element) {
+      $configForm.find(`${inputSelector}:not(:checked)`).each((index, element) => {
         toggleTable(element);
       });
     }
+
   };
 })(jQuery, Drupal);

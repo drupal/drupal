@@ -3,7 +3,7 @@
  * Search results specific styles.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .search-results {
   margin-block-end: var(--sp2);

@@ -3,8 +3,6 @@
  * Entity meta.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   --size-entity-meta-spacing: var(--space-xs);
 }

@@ -12,6 +12,15 @@
  * @see progress.js
  */
 
+:root {
+  --progress-bar-bg-color: var(--color-absolutezero);
+  --progress-bar-border-color: var(--color-absolutezero);
+  --progress-bar-label-font-size: var(--font-size-base);
+  --progress-bar-small-label-font-size: var(--font-size-label);
+  --progress-bar-default-size: calc(var(--space-m) - var(--progress-bar-border-size)*2);
+  --progress-bar-default-size-radius: var(--space-m);
+}
+
 .progress::after {
   display: table;
   clear: both;
@@ -19,41 +28,41 @@
 }
 
 .progress--small .progress__track {
-  height: calc(0.5rem - 2px);
+  height: var(--progress-bar-small-size);
 }
 
 .progress--small .progress__bar {
-  width: calc(0.5rem - 2px);
-  min-width: calc(0.5rem - 2px);
-  height: calc(0.5rem - 2px);
+  width: var(--progress-bar-small-size);
+  min-width: var(--progress-bar-small-size);
+  height: var(--progress-bar-small-size);
 }
 
 .progress--small .progress__label {
-  font-size: 0.889rem;
+  font-size: var(--progress-bar-small-label-font-size);
 }
 
 .progress__track {
-  height: calc(1rem - 2px);
+  height: var(--progress-bar-default-size);
   margin-top: 0;
-  border: 1px #919297 solid;
-  border-radius: 1rem;
-  background-color: #d3d4d9;
+  border: var(--progress-bar-border-size) var(--progress-track-border-color) solid;
+  border-radius: var(--progress-bar-default-size-radius);
+  background-color: var(--progress-track-bg-color);
 }
 
 .progress__bar {
-  width: calc(1rem - 2px);
-  min-width: calc(1rem - 2px);
-  height: calc(1rem - 2px);
-  margin-top: -1px;
-  margin-left: -1px; /* LTR */
-  transition: width 0.5s ease-out;
-  border: 1px #003cc5 solid;
-  border-radius: 1rem;
-  background-color: #003cc5;
+  width: var(--progress-bar-default-size);
+  min-width: var(--progress-bar-default-size);
+  height: var(--progress-bar-default-size);
+  margin-top: calc(var(--progress-bar-border-size)*-1);
+  margin-left: calc(var(--progress-bar-border-size)*-1); /* LTR */
+  transition: var(--progress-bar-transition);
+  border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
+  border-radius: var(--progress-bar-default-size-radius);
+  background-color: var(--progress-bar-bg-color);
 }
 
 [dir="rtl"] .progress__bar {
-  margin-right: -1px;
+  margin-right: calc(var(--progress-bar-border-size)*-1);
   margin-left: 0;
 }
 
@@ -64,17 +73,17 @@
 }
 
 .progress__label {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+  margin-bottom: var(--progress-bar-spacing-size);
+  font-size: var(--progress-bar-label-font-size);
   font-weight: bold;
 }
 
 .progress__description,
 .progress__percentage {
   overflow: hidden;
-  margin-top: 0.5rem;
-  color: #55565b;
-  font-size: 0.79rem;
+  margin-top: var(--progress-bar-spacing-size);
+  color: var(--progress-bar-description-color);
+  font-size: var(--progress-bar-description-font-size);
 }
 
 @media screen and (prefers-reduced-motion: reduce) {

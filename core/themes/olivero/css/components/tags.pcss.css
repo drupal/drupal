@@ -3,7 +3,7 @@
  * Tags field styling.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .field--tags {
   display: flex;

@@ -18,8 +18,8 @@
  */
 
 .vertical-tabs {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: var(--vertical-tabs-margin-vertical);
+  margin-bottom: var(--vertical-tabs-margin-vertical);
   border-top: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
 }
 
@@ -37,11 +37,11 @@
   position: relative;
   display: none;
   float: left; /* LTR */
-  width: 20em;
+  width: var(--vertical-tabs-menu-width);
   margin: 0;
-  padding-top: 0.5rem;
+  padding-top: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
-  color: #232429;
+  color: var(--color-text);
 }
 
 [dir="rtl"] .vertical-tabs__menu {
@@ -52,7 +52,7 @@
 @media screen and (min-width: 85em) {
   .vertical-tabs__menu {
     display: block;
-    width: 20em;
+    width: var(--vertical-tabs-menu-width);
   }
 }
 
@@ -62,14 +62,14 @@
 
 .vertical-tabs__menu-item {
   overflow: hidden;
-  margin: -1rem -1px -0.5rem -0.5rem; /* LTR */
-  padding: 0.5rem 0 0.5rem 0.5rem; /* LTR */
+  margin: var(--vertical-tabs-menu-item--top-margin) var(--vertical-tabs-menu-item--right-margin) var(--vertical-tabs-menu-item--bottom-margin) var(--vertical-tabs-menu-item--left-margin); /* LTR */
+  padding: var(--vertical-tabs-menu-item-shadow-extraspace) 0 var(--vertical-tabs-menu-item-shadow-extraspace) var(--vertical-tabs-menu-item-shadow-extraspace); /* LTR */
 }
 
 [dir="rtl"] .vertical-tabs__menu-item {
-  margin-right: -0.5rem;
-  margin-left: -1px;
-  padding-right: 0.5rem;
+  margin-right: var(--vertical-tabs-menu-item--left-margin);
+  margin-left: var(--vertical-tabs-menu-item--right-margin);
+  padding-right: var(--vertical-tabs-menu-item-shadow-extraspace);
   padding-left: 0;
 }
 
@@ -84,8 +84,8 @@
   z-index: 1; /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
   width: 100%;
-  margin-top: -1px;
-  border-top: 1px solid #d3d4d9;
+  margin-top: calc(var(--vertical-tabs-menu-separator-size)*-1);
+  border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
 
 /**
@@ -100,7 +100,7 @@
 
 .vertical-tabs__menu-item::after {
   z-index: 2;
-  border-color: #fff;
+  border-color: var(--color-white);
 }
 
 /**
@@ -136,24 +136,23 @@
 .vertical-tabs__menu-link {
   position: relative;
   display: block;
-  margin-top: -1px;
-  padding: 0.75rem 0.75rem 0.75rem calc(1.5rem - 0.25rem); /* LTR */
+  margin-top: calc(var(--vertical-tabs-border-size)*-1);
+  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
   text-decoration: none;
   word-wrap: break-word;
   -webkit-hyphens: auto;
-  -ms-hyphens: auto;
   hyphens: auto;
-  color: #232429;
-  border: 1px solid transparent;
-  border-width: 1px 0 1px 4px; /* LTR */
-  border-radius: 2px 0 0 2px; /* LTR */
+  color: var(--color-text);
+  border: var(--vertical-tabs-border-size) solid transparent;
+  border-width: var(--vertical-tabs-border-size) 0 var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size); /* LTR */
+  border-radius: var(--vertical-tabs-border-radius) 0 0 var(--vertical-tabs-border-radius); /* LTR */
 }
 
 [dir="rtl"] .vertical-tabs__menu-link {
-  padding-right: calc(1.5rem - 0.25rem);
-  padding-left: 0.75rem;
-  border-width: 1px 4px 1px 0;
-  border-radius: 0 2px 2px 0;
+  padding-right: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
+  padding-left: var(--space-s);
+  border-width: var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size) var(--vertical-tabs-border-size) 0;
+  border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
 }
 
 @media screen and (-ms-high-contrast: active) {
@@ -172,7 +171,7 @@
 
 .vertical-tabs__menu-link:hover {
   text-decoration: none;
-  color: #003cc5;
+  color: var(--color-absolutezero);
 }
 
 /* This pseudo element provides the background for the hover state. */
@@ -180,22 +179,22 @@
 .vertical-tabs__menu-link::before {
   position: absolute;
   z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
-  top: -1px;
+  top: calc(var(--vertical-tabs-border-size)*-1);
   right: 0; /* LTR */
-  bottom: -1px;
-  left: -0.25rem; /* LTR */
+  bottom: calc(var(--vertical-tabs-border-size)*-1);
+  left: calc(var(--vertical-tabs-menu-link--active-border-size)*-1); /* LTR */
   content: "";
   pointer-events: none;
   background-clip: padding-box;
 }
 
 [dir="rtl"] .vertical-tabs__menu-link::before {
-  right: -0.25rem;
+  right: calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
   left: 0;
 }
 
 .vertical-tabs__menu-link:hover::before {
-  background: #f0f5fd;
+  background: var(--color-bgblue-hover);
 }
 
 .vertical-tabs__menu-link:focus::after {
@@ -204,36 +203,36 @@
   right: 0;
   bottom: 0;
   left: 0;
-  margin: -1px -0.25rem;
+  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
   content: "";
   pointer-events: none;
-  border: 3px solid #26a769;
-  border-radius: 2px;
+  border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
+  border-radius: var(--vertical-tabs-border-radius);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
   z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
-  color: #003cc5;
-  border-color: #dedfe4 transparent;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--color-absolutezero);
+  border-color: var(--vertical-tabs-border-color) transparent;
+  background-color: var(--color-white);
+  box-shadow: var(--vertical-tabs-shadow);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover {
-  color: #0036b1;
-  background-color: #f0f5fd;
+  color: var(--color-absolutezero-hover);
+  background-color: var(--color-bgblue-hover);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
-  border-left: 4px solid #003cc5; /* LTR */
-  border-radius: 2px 0 0 2px; /* LTR */
+  border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
+  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
 }
 
 [dir=rtl] .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
-  border-right: 4px solid #003cc5;
+  border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
   border-left: 0;
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
@@ -265,8 +264,8 @@
 
 .vertical-tabs__menu-link-summary {
   display: block;
-  color: #55565b;
-  font-size: 0.889rem;
+  color: var(--color-gray-800);
+  font-size: var(--font-size-s);
   font-weight: normal;
 }
 
@@ -276,13 +275,13 @@
 
 .vertical-tabs__items {
   box-sizing: border-box;
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-  color: #232429;
-  border: 1px solid #dedfe4;
-  border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: var(--vertical-tabs-margin-vertical);
+  margin-bottom: var(--vertical-tabs-margin-vertical);
+  color: var(--color-text);
+  border: var(--vertical-tabs-border);
+  border-radius: var(--vertical-tabs-border-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--vertical-tabs-shadow);
 }
 
 /* This modifier is added by JavaScript (this is inherited from Drupal core). */
@@ -305,14 +304,14 @@
 
 @media screen and (min-width: 85em) {
   .vertical-tabs__items--processed {
-    margin-left: 20em; /* LTR */
+    margin-left: var(--vertical-tabs-menu-width); /* LTR */
     border-top-left-radius: 0; /* LTR */
   }
 
   .js[dir="rtl"] .vertical-tabs__items--processed {
-    margin-right: 20em;
+    margin-right: var(--vertical-tabs-menu-width);
     margin-left: 0;
-    border-top-left-radius: 2px;
+    border-top-left-radius: var(--vertical-tabs-border-radius);
     border-top-right-radius: 0;
   }
 }
@@ -326,19 +325,19 @@
 
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */
-  margin: -1px -1px 0;
+  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-border-size)*-1) 0;
   border-radius: 0;
 }
 
 .vertical-tabs__item--first {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-left-radius: var(--details-accordion-border-size-radius);
+  border-top-right-radius: var(--details-accordion-border-size-radius);
 }
 
 .vertical-tabs__item--last {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  margin-bottom: calc(var(--vertical-tabs-border-size)*-1);
+  border-bottom-right-radius: var(--details-accordion-border-size-radius);
+  border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }
 
 @media screen and (min-width: 85em) {

@@ -14,15 +14,17 @@
       'focus .ckeditor-button-separator a': 'onFocus',
       'focus .ckeditor-toolbar-group': 'onFocus'
     },
-    initialize: function initialize() {
+
+    initialize() {
       this.listenTo(this.model, 'change:isDirty', this.announceMove);
     },
-    announceMove: function announceMove(model, isDirty) {
+
+    announceMove(model, isDirty) {
       if (!isDirty) {
-        var item = document.activeElement || null;
+        const item = document.activeElement || null;
 
         if (item) {
-          var $item = $(item);
+          const $item = $(item);
 
           if ($item.hasClass('ckeditor-toolbar-group')) {
             this.announceButtonGroupPosition($item);
@@ -32,11 +34,12 @@
         }
       }
     },
-    onFocus: function onFocus(event) {
+
+    onFocus(event) {
       event.stopPropagation();
-      var $originalTarget = $(event.target);
-      var $currentTarget = $(event.currentTarget);
-      var $parent = $currentTarget.parent();
+      const $originalTarget = $(event.target);
+      const $currentTarget = $(event.currentTarget);
+      const $parent = $currentTarget.parent();
 
       if ($parent.hasClass('ckeditor-button') || $parent.hasClass('ckeditor-button-separator')) {
         this.announceButtonPosition($currentTarget.parent());
@@ -44,15 +47,16 @@
         this.announceButtonGroupPosition($currentTarget);
       }
     },
-    announceButtonGroupPosition: function announceButtonGroupPosition($group) {
-      var $groups = $group.parent().children();
-      var $row = $group.closest('.ckeditor-row');
-      var $rows = $row.parent().children();
-      var position = $groups.index($group) + 1;
-      var positionCount = $groups.not('.placeholder').length;
-      var row = $rows.index($row) + 1;
-      var rowCount = $rows.not('.placeholder').length;
-      var text = Drupal.t('@groupName button group in position @position of @positionCount in row @row of @rowCount.', {
+
+    announceButtonGroupPosition($group) {
+      const $groups = $group.parent().children();
+      const $row = $group.closest('.ckeditor-row');
+      const $rows = $row.parent().children();
+      const position = $groups.index($group) + 1;
+      const positionCount = $groups.not('.placeholder').length;
+      const row = $rows.index($row) + 1;
+      const rowCount = $rows.not('.placeholder').length;
+      let text = Drupal.t('@groupName button group in position @position of @positionCount in row @row of @rowCount.', {
         '@groupName': $group.attr('data-drupal-ckeditor-toolbar-group-name'),
         '@position': position,
         '@positionCount': positionCount,
@@ -67,27 +71,28 @@
 
       Drupal.announce(text, 'assertive');
     },
-    announceButtonPosition: function announceButtonPosition($button) {
-      var $row = $button.closest('.ckeditor-row');
-      var $rows = $row.parent().children();
-      var $buttons = $button.closest('.ckeditor-buttons').children();
-      var $group = $button.closest('.ckeditor-toolbar-group');
-      var $groups = $group.parent().children();
-      var groupPosition = $groups.index($group) + 1;
-      var groupPositionCount = $groups.not('.placeholder').length;
-      var position = $buttons.index($button) + 1;
-      var positionCount = $buttons.length;
-      var row = $rows.index($row) + 1;
-      var rowCount = $rows.not('.placeholder').length;
-      var type = $button.attr('data-drupal-ckeditor-type') === 'separator' ? '' : Drupal.t('button');
-      var text;
+
+    announceButtonPosition($button) {
+      const $row = $button.closest('.ckeditor-row');
+      const $rows = $row.parent().children();
+      const $buttons = $button.closest('.ckeditor-buttons').children();
+      const $group = $button.closest('.ckeditor-toolbar-group');
+      const $groups = $group.parent().children();
+      const groupPosition = $groups.index($group) + 1;
+      const groupPositionCount = $groups.not('.placeholder').length;
+      const position = $buttons.index($button) + 1;
+      const positionCount = $buttons.length;
+      const row = $rows.index($row) + 1;
+      const rowCount = $rows.not('.placeholder').length;
+      const type = $button.attr('data-drupal-ckeditor-type') === 'separator' ? '' : Drupal.t('button');
+      let text;
 
       if ($button.closest('.ckeditor-toolbar-disabled').length > 0) {
         text = Drupal.t('@name @type.', {
           '@name': $button.children().attr('aria-label'),
           '@type': type
         });
-        text += "\n".concat(Drupal.t('Press the down arrow key to activate.'));
+        text += `\n${Drupal.t('Press the down arrow key to activate.')}`;
         Drupal.announce(text, 'assertive');
       } else if ($group.not('.placeholder').length === 1) {
         text = Drupal.t('@name @type in position @position of @positionCount in @groupName button group in row @row of @rowCount.', {
@@ -113,50 +118,53 @@
         Drupal.announce(text, 'assertive');
       }
     },
-    announceButtonHelp: function announceButtonHelp(event) {
-      var $link = $(event.currentTarget);
-      var $button = $link.parent();
-      var enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
-      var message;
+
+    announceButtonHelp(event) {
+      const $link = $(event.currentTarget);
+      const $button = $link.parent();
+      const enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
+      let message;
 
       if (enabled) {
         message = Drupal.t('The "@name" button is currently enabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n".concat(Drupal.t('Use the keyboard arrow keys to change the position of this button.'));
-        message += "\n".concat(Drupal.t('Press the up arrow key on the top row to disable the button.'));
+        message += `\n${Drupal.t('Use the keyboard arrow keys to change the position of this button.')}`;
+        message += `\n${Drupal.t('Press the up arrow key on the top row to disable the button.')}`;
       } else {
         message = Drupal.t('The "@name" button is currently disabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n".concat(Drupal.t('Use the down arrow key to move this button into the active toolbar.'));
+        message += `\n${Drupal.t('Use the down arrow key to move this button into the active toolbar.')}`;
       }
 
       Drupal.announce(message);
       event.preventDefault();
     },
-    announceSeparatorHelp: function announceSeparatorHelp(event) {
-      var $link = $(event.currentTarget);
-      var $button = $link.parent();
-      var enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
-      var message;
+
+    announceSeparatorHelp(event) {
+      const $link = $(event.currentTarget);
+      const $button = $link.parent();
+      const enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
+      let message;
 
       if (enabled) {
         message = Drupal.t('This @name is currently enabled.', {
           '@name': $link.attr('aria-label')
         });
-        message += "\n".concat(Drupal.t('Use the keyboard arrow keys to change the position of this separator.'));
+        message += `\n${Drupal.t('Use the keyboard arrow keys to change the position of this separator.')}`;
       } else {
         message = Drupal.t('Separators are used to visually split individual buttons.');
-        message += "\n".concat(Drupal.t('This @name is currently disabled.', {
+        message += `\n${Drupal.t('This @name is currently disabled.', {
           '@name': $link.attr('aria-label')
-        }));
-        message += "\n".concat(Drupal.t('Use the down arrow key to move this separator into the active toolbar.'));
-        message += "\n".concat(Drupal.t('You may add multiple separators to each button group.'));
+        })}`;
+        message += `\n${Drupal.t('Use the down arrow key to move this separator into the active toolbar.')}`;
+        message += `\n${Drupal.t('You may add multiple separators to each button group.')}`;
       }
 
       Drupal.announce(message);
       event.preventDefault();
     }
+
   });
 })(Drupal, Backbone, jQuery);

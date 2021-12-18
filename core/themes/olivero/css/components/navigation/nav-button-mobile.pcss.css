@@ -3,7 +3,7 @@
  * Nav Button Mobile.
  */
 
-@import "../../base/variables.pcss.css";
+@import "../../base/media-queries.pcss.css";
 
 .mobile-nav-button {
   position: relative;

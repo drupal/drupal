@@ -10,23 +10,27 @@
  * Entity meta.
  */
 
+:root {
+  --size-entity-meta-spacing: var(--space-xs);
+}
+
 .entity-meta__header {
-  padding: 0.5rem 1rem 1rem;
-  color: #232429;
-  border: 1px solid #dedfe4;
-  border-radius: 2px;
-  background-color: #fff;
+  padding: calc(var(--space-m) - var(--size-entity-meta-spacing)) var(--space-m) calc(var(--space-l) - var(--size-entity-meta-spacing));
+  color: var(--color-fg);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--details-accordion-border-size-radius);
+  background-color: var(--color-bg);
 }
 
 @media screen and (min-width: 48em) {
   .entity-meta__header {
-    padding: 1rem 1.5rem 1.5rem;
+    padding: calc(var(--space-l) - var(--size-entity-meta-spacing)) var(--space-l) var(--space-l);
   }
 }
 
 .entity-meta__header .form-item {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: var(--size-entity-meta-spacing);
+  margin-bottom: var(--size-entity-meta-spacing);
 }
 
 .entity-meta__title {
@@ -37,13 +41,13 @@
 }
 
 .entity-meta__revision {
-  margin-top: 1.5rem;
+  margin-top: var(--space-l);
 }
 
 .entity-meta__header .form-type--item .form-item__label {
   display: inline-block;
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
 }
 
 .entity-meta__header .form-type--item .form-item__label::after {

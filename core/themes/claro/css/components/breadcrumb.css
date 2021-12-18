@@ -12,7 +12,7 @@
 
 .breadcrumb {
   padding: 0;
-  color: #232429;
+  color: var(--color-text);
   font-size: 0.79rem;
 }
 
@@ -27,7 +27,7 @@
 .breadcrumb__link {
   display: inline;
   text-decoration: none;
-  color: #232429;
+  color: var(--color-text);
   font-weight: bold;
 }
 

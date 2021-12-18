@@ -6,8 +6,8 @@
 **/
 
 (function () {
-  var toggler = document.querySelector('[data-drupal-selector="menu-main-toggle"]');
-  var menu = document.querySelector('[data-drupal-selector="menu-main"]');
+  const toggler = document.querySelector('[data-drupal-selector="menu-main-toggle"]');
+  const menu = document.querySelector('[data-drupal-selector="menu-main"]');
 
   function toggleMenu() {
     toggler.classList.toggle('menu-main-toggle--active');

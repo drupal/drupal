@@ -7,7 +7,7 @@
 
 (function ($, Drupal, displace) {
   function TableHeader(table) {
-    var $table = $(table);
+    const $table = $(table);
     this.$originalTable = $table;
     this.$originalHeader = $table.children('thead');
     this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
@@ -17,8 +17,8 @@
     this.tableOffset = this.$originalTable.offset();
     this.$originalTable.on('columnschange', {
       tableHeader: this
-    }, function (e, display) {
-      var tableHeader = e.data.tableHeader;
+    }, (e, display) => {
+      const tableHeader = e.data.tableHeader;
 
       if (tableHeader.displayWeight === null || tableHeader.displayWeight !== display) {
         tableHeader.recalculateSticky();
@@ -30,27 +30,28 @@
   }
 
   function forTables(method, arg) {
-    var tables = TableHeader.tables;
-    var il = tables.length;
+    const tables = TableHeader.tables;
+    const il = tables.length;
 
-    for (var i = 0; i < il; i++) {
+    for (let i = 0; i < il; i++) {
       tables[i][method](arg);
     }
   }
 
   function tableHeaderInitHandler(e) {
-    once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(function (table) {
+    once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(table => {
       TableHeader.tables.push(new TableHeader(table));
     });
     forTables('onScroll');
   }
 
   Drupal.behaviors.tableHeader = {
-    attach: function attach(context) {
+    attach(context) {
       $(window).one('scroll.TableHeaderInit', {
-        context: context
+        context
       }, tableHeaderInitHandler);
     }
+
   };
 
   function scrollValue(position) {
@@ -85,9 +86,10 @@
     tableOffset: null,
     tableHeight: null,
     stickyVisible: false,
-    createSticky: function createSticky() {
+
+    createSticky() {
       this.$html = $('html');
-      var $stickyHeader = this.$originalHeader.clone(true);
+      const $stickyHeader = this.$originalHeader.clone(true);
       this.$stickyTable = $('<table class="sticky-header"></table>').css({
         visibility: 'hidden',
         position: 'fixed',
@@ -96,25 +98,27 @@
       this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
       this.recalculateSticky();
     },
-    stickyPosition: function stickyPosition(offsetTop, offsetLeft) {
-      var css = {};
+
+    stickyPosition(offsetTop, offsetLeft) {
+      const css = {};
 
       if (typeof offsetTop === 'number') {
-        css.top = "".concat(offsetTop, "px");
+        css.top = `${offsetTop}px`;
       }
 
       if (typeof offsetLeft === 'number') {
-        css.left = "".concat(this.tableOffset.left - offsetLeft, "px");
+        css.left = `${this.tableOffset.left - offsetLeft}px`;
       }
 
       this.$html.css('scroll-padding-top', displace.offsets.top + (this.stickyVisible ? this.$stickyTable.height() : 0));
       return this.$stickyTable.css(css);
     },
-    checkStickyVisible: function checkStickyVisible() {
-      var scrollTop = scrollValue('scrollTop');
-      var tableTop = this.tableOffset.top - displace.offsets.top;
-      var tableBottom = tableTop + this.tableHeight;
-      var visible = false;
+
+    checkStickyVisible() {
+      const scrollTop = scrollValue('scrollTop');
+      const tableTop = this.tableOffset.top - displace.offsets.top;
+      const tableBottom = tableTop + this.tableHeight;
+      let visible = false;
 
       if (tableTop < scrollTop && scrollTop < tableBottom - this.minHeight) {
         visible = true;
@@ -123,22 +127,24 @@
       this.stickyVisible = visible;
       return visible;
     },
-    onScroll: function onScroll(e) {
+
+    onScroll(e) {
       this.checkStickyVisible();
       this.stickyPosition(null, scrollValue('scrollLeft'));
       this.$stickyTable.css('visibility', this.stickyVisible ? 'visible' : 'hidden');
     },
-    recalculateSticky: function recalculateSticky(event) {
+
+    recalculateSticky(event) {
       this.tableHeight = this.$originalTable[0].clientHeight;
       displace.offsets.top = displace.calculateOffset('top');
       this.tableOffset = this.$originalTable.offset();
       this.stickyPosition(displace.offsets.top, scrollValue('scrollLeft'));
-      var $that = null;
-      var $stickyCell = null;
-      var display = null;
-      var il = this.$originalHeaderCells.length;
+      let $that = null;
+      let $stickyCell = null;
+      let display = null;
+      const il = this.$originalHeaderCells.length;
 
-      for (var i = 0; i < il; i++) {
+      for (let i = 0; i < il; i++) {
         $that = $(this.$originalHeaderCells[i]);
         $stickyCell = this.$stickyHeaderCells.eq($that.index());
         display = $that.css('display');
@@ -146,7 +152,7 @@
         if (display !== 'none') {
           $stickyCell.css({
             width: $that.css('width'),
-            display: display
+            display
           });
         } else {
           $stickyCell.css('display', 'none');
@@ -155,6 +161,7 @@
 
       this.$stickyTable.css('width', this.$originalTable.outerWidth());
     }
+
   });
   Drupal.TableHeader = TableHeader;
 })(jQuery, Drupal, window.Drupal.displace);

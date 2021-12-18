@@ -7,7 +7,7 @@
 
 (function (jQuery, Drupal, CKEDITOR) {
   function getFocusedWidget(editor) {
-    var widget = editor.widgets.focused;
+    const widget = editor.widgets.focused;
 
     if (widget && widget.name === 'drupalmedia') {
       return widget;
@@ -23,7 +23,7 @@
 
     CKEDITOR.plugins.drupallink.registerLinkableWidget('drupalmedia');
     editor.getCommand('drupalunlink').on('exec', function (evt) {
-      var widget = getFocusedWidget(editor);
+      const widget = getFocusedWidget(editor);
 
       if (!widget) {
         return;
@@ -34,7 +34,7 @@
       evt.cancel();
     });
     editor.getCommand('drupalunlink').on('refresh', function (evt) {
-      var widget = getFocusedWidget(editor);
+      const widget = getFocusedWidget(editor);
 
       if (!widget) {
         return;
@@ -45,8 +45,8 @@
     });
 
     if (editor.contextMenu) {
-      editor.contextMenu.addListener(function () {
-        var widget = getFocusedWidget(editor);
+      editor.contextMenu.addListener(() => {
+        const widget = getFocusedWidget(editor);
 
         if (!widget) {
           return;
@@ -66,12 +66,15 @@
 
   CKEDITOR.plugins.add('drupalmedia', {
     requires: 'widget',
-    beforeInit: function beforeInit(editor) {
-      var dtd = CKEDITOR.dtd;
+
+    beforeInit(editor) {
+      const {
+        dtd
+      } = CKEDITOR;
       dtd['drupal-media'] = {
         '#': 1
       };
-      Object.keys(dtd).forEach(function (tagName) {
+      Object.keys(dtd).forEach(tagName => {
         if (dtd[tagName].div) {
           dtd[tagName]['drupal-media'] = 1;
         }
@@ -106,15 +109,19 @@
             pathName: Drupal.t('Caption')
           }
         },
-        getLabel: function getLabel() {
+
+        getLabel() {
           if (this.data.label) {
             return this.data.label;
           }
 
           return Drupal.t('Embedded media');
         },
-        upcast: function upcast(element, data) {
-          var attributes = element.attributes;
+
+        upcast(element, data) {
+          const {
+            attributes
+          } = element;
 
           if (element.name !== 'drupal-media' || attributes['data-entity-type'] !== 'media' || attributes['data-entity-uuid'] === undefined) {
             return;
@@ -132,14 +139,14 @@
 
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
-            Object.keys(element.parent.attributes).forEach(function (attrName) {
+            Object.keys(element.parent.attributes).forEach(attrName => {
               if (attrName.indexOf('data-cke-') !== -1) {
                 delete data.link[attrName];
               }
             });
           }
 
-          var hostEntityLangcode = document.getElementById(editor.name).getAttribute('data-media-embed-host-entity-langcode');
+          const hostEntityLangcode = document.getElementById(editor.name).getAttribute('data-media-embed-host-entity-langcode');
 
           if (hostEntityLangcode) {
             data.hostEntityLangcode = hostEntityLangcode;
@@ -147,12 +154,12 @@
 
           return element;
         },
-        destroy: function destroy() {
+
+        destroy() {
           this._tearDownDynamicEditables();
         },
-        data: function data(event) {
-          var _this = this;
 
+        data(event) {
           if (this.oldData) {
             if (!this.data.hasCaption && this.oldData.hasCaption) {
               delete this.data.attributes['data-caption'];
@@ -166,7 +173,7 @@
 
             this._tearDownDynamicEditables();
 
-            this._loadPreview(function (widget) {
+            this._loadPreview(widget => {
               widget._setUpDynamicEditables();
 
               widget._setUpEditButton();
@@ -176,36 +183,35 @@
           }
 
           if (this.oldData) {
-            Object.keys(this.oldData.attributes).forEach(function (attrName) {
-              _this.element.removeAttribute(attrName);
+            Object.keys(this.oldData.attributes).forEach(attrName => {
+              this.element.removeAttribute(attrName);
             });
           }
 
           this.element.setAttributes(this.data.attributes);
           this.oldData = CKEDITOR.tools.clone(this.data);
         },
-        downcast: function downcast() {
-          var downcastElement = new CKEDITOR.htmlParser.element('drupal-media', this.data.attributes);
+
+        downcast() {
+          const downcastElement = new CKEDITOR.htmlParser.element('drupal-media', this.data.attributes);
 
           if (this.data.link) {
-            var link = new CKEDITOR.htmlParser.element('a', this.data.link);
+            const link = new CKEDITOR.htmlParser.element('a', this.data.link);
             link.add(downcastElement);
             return link;
           }
 
           return downcastElement;
         },
-        _setUpDynamicEditables: function _setUpDynamicEditables() {
-          var _this2 = this;
 
+        _setUpDynamicEditables() {
           if (this.initEditable('caption', this.definition.editables.caption)) {
-            var captionEditable = this.editables.caption;
+            const captionEditable = this.editables.caption;
             captionEditable.setAttribute('data-placeholder', Drupal.t('Enter caption here'));
-            this.captionObserver = new MutationObserver(function () {
-              var mediaAttributes = CKEDITOR.tools.clone(_this2.data.attributes);
+            this.captionObserver = new MutationObserver(() => {
+              const mediaAttributes = CKEDITOR.tools.clone(this.data.attributes);
               mediaAttributes['data-caption'] = captionEditable.getData();
-
-              _this2.setData('attributes', mediaAttributes);
+              this.setData('attributes', mediaAttributes);
             });
             this.captionObserver.observe(captionEditable.$, {
               characterData: true,
@@ -219,34 +225,35 @@
             }
           }
         },
-        _setUpEditButton: function _setUpEditButton() {
+
+        _setUpEditButton() {
           if (this.element.findOne('.media-embed-error')) {
             return;
           }
 
-          var isElementNode = function isElementNode(n) {
+          const isElementNode = function (n) {
             return n.type === CKEDITOR.NODE_ELEMENT;
           };
 
-          var embeddedMediaContainer = this.data.hasCaption ? this.element.findOne('figure') : this.element;
-          var embeddedMedia = embeddedMediaContainer.getFirst(isElementNode);
+          const embeddedMediaContainer = this.data.hasCaption ? this.element.findOne('figure') : this.element;
+          let embeddedMedia = embeddedMediaContainer.getFirst(isElementNode);
 
           if (this.data.link) {
             embeddedMedia = embeddedMedia.getFirst(isElementNode);
           }
 
           embeddedMedia.setStyle('position', 'relative');
-          var editButton = CKEDITOR.dom.element.createFromHtml(Drupal.theme('mediaEmbedEditButton'));
+          const editButton = CKEDITOR.dom.element.createFromHtml(Drupal.theme('mediaEmbedEditButton'));
           embeddedMedia.getFirst().insertBeforeMe(editButton);
-          var widget = this;
-          this.element.findOne('.media-library-item__edit').on('click', function (event) {
-            var saveCallback = function saveCallback(values) {
+          const widget = this;
+          this.element.findOne('.media-library-item__edit').on('click', event => {
+            const saveCallback = function (values) {
               event.cancel();
               editor.fire('saveSnapshot');
 
               if (values.hasOwnProperty('attributes')) {
                 CKEDITOR.tools.extend(values.attributes, widget.data.attributes);
-                Object.keys(values.attributes).forEach(function (prop) {
+                Object.keys(values.attributes).forEach(prop => {
                   if (values.attributes[prop] === false || prop === 'data-align' && values.attributes[prop] === 'none') {
                     delete values.attributes[prop];
                   }
@@ -260,14 +267,14 @@
               editor.fire('saveSnapshot');
             };
 
-            Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/media/".concat(editor.config.drupal.format)), widget.data, saveCallback, {});
+            Drupal.ckeditor.openDialog(editor, Drupal.url(`editor/dialog/media/${editor.config.drupal.format}`), widget.data, saveCallback, {});
           });
-          this.element.findOne('.media-library-item__edit').on('keydown', function (event) {
-            var returnKey = 13;
-            var spaceBar = 32;
+          this.element.findOne('.media-library-item__edit').on('keydown', event => {
+            const returnKey = 13;
+            const spaceBar = 32;
 
             if (typeof event.data !== 'undefined') {
-              var keypress = event.data.getKey();
+              const keypress = event.data.getKey();
 
               if (keypress === returnKey || keypress === spaceBar) {
                 event.sender.$.click();
@@ -278,20 +285,23 @@
             }
           });
         },
-        _tearDownDynamicEditables: function _tearDownDynamicEditables() {
+
+        _tearDownDynamicEditables() {
           if (this.captionObserver) {
             this.captionObserver.disconnect();
           }
         },
-        _previewNeedsServerSideUpdate: function _previewNeedsServerSideUpdate() {
+
+        _previewNeedsServerSideUpdate() {
           if (!this.ready) {
             return true;
           }
 
           return this._hashData(this.oldData) !== this._hashData(this.data);
         },
-        _hashData: function _hashData(data) {
-          var dataToHash = CKEDITOR.tools.clone(data);
+
+        _hashData(data) {
+          const dataToHash = CKEDITOR.tools.clone(data);
           delete dataToHash.attributes['data-caption'];
           delete dataToHash.label;
 
@@ -301,11 +311,10 @@
 
           return JSON.stringify(dataToHash);
         },
-        _loadPreview: function _loadPreview(callback) {
-          var _this3 = this;
 
+        _loadPreview(callback) {
           jQuery.get({
-            url: Drupal.url("media/".concat(editor.config.drupal.format, "/preview")),
+            url: Drupal.url(`media/${editor.config.drupal.format}/preview`),
             data: {
               text: this.downcast().getOuterHtml(),
               uuid: this.data.attributes['data-entity-uuid']
@@ -314,22 +323,23 @@
             headers: {
               'X-Drupal-MediaPreview-CSRF-Token': editor.config.drupalMedia_previewCsrfToken
             },
-            success: function success(previewHtml, textStatus, jqXhr) {
-              _this3.element.setHtml(previewHtml);
-
-              _this3.setData('label', jqXhr.getResponseHeader('Drupal-Media-Label'));
-
-              callback(_this3);
+            success: (previewHtml, textStatus, jqXhr) => {
+              this.element.setHtml(previewHtml);
+              this.setData('label', jqXhr.getResponseHeader('Drupal-Media-Label'));
+              callback(this);
             },
-            error: function error() {
-              _this3.element.setHtml(Drupal.theme('mediaEmbedPreviewError'));
+            error: () => {
+              this.element.setHtml(Drupal.theme('mediaEmbedPreviewError'));
             }
           });
         }
+
       });
     },
-    afterInit: function afterInit(editor) {
+
+    afterInit(editor) {
       linkCommandIntegrator(editor);
     }
+
   });
 })(jQuery, Drupal, CKEDITOR);

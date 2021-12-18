@@ -12,8 +12,8 @@ if (window.jQuery) {
 document.documentElement.className += ' js';
 
 (function (Drupal, drupalSettings) {
-  var domReady = function domReady(callback) {
-    var listener = function listener() {
+  const domReady = callback => {
+    const listener = () => {
       callback();
       document.removeEventListener('DOMContentLoaded', listener);
     };
@@ -25,7 +25,7 @@ document.documentElement.className += ' js';
     }
   };
 
-  domReady(function () {
+  domReady(() => {
     Drupal.attachBehaviors(document, drupalSettings);
   });
 })(Drupal, window.drupalSettings);

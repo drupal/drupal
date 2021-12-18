@@ -12,7 +12,7 @@ window.Drupal = {
 
 (function (Drupal, drupalSettings, drupalTranslations, console, Proxy, Reflect) {
   Drupal.throwError = function (error) {
-    setTimeout(function () {
+    setTimeout(() => {
       throw error;
     }, 0);
   };
@@ -20,8 +20,8 @@ window.Drupal = {
   Drupal.attachBehaviors = function (context, settings) {
     context = context || document;
     settings = settings || drupalSettings;
-    var behaviors = Drupal.behaviors;
-    Object.keys(behaviors || {}).forEach(function (i) {
+    const behaviors = Drupal.behaviors;
+    Object.keys(behaviors || {}).forEach(i => {
       if (typeof behaviors[i].attach === 'function') {
         try {
           behaviors[i].attach(context, settings);
@@ -36,8 +36,8 @@ window.Drupal = {
     context = context || document;
     settings = settings || drupalSettings;
     trigger = trigger || 'unload';
-    var behaviors = Drupal.behaviors;
-    Object.keys(behaviors || {}).forEach(function (i) {
+    const behaviors = Drupal.behaviors;
+    Object.keys(behaviors || {}).forEach(i => {
       if (typeof behaviors[i].detach === 'function') {
         try {
           behaviors[i].detach(context, settings, trigger);
@@ -54,8 +54,8 @@ window.Drupal = {
   };
 
   Drupal.formatString = function (str, args) {
-    var processedArgs = {};
-    Object.keys(args || {}).forEach(function (key) {
+    const processedArgs = {};
+    Object.keys(args || {}).forEach(key => {
       switch (key.charAt(0)) {
         case '@':
           processedArgs[key] = Drupal.checkPlain(args[key]);
@@ -80,20 +80,18 @@ window.Drupal = {
 
     if (!Array.isArray(keys)) {
       keys = Object.keys(args || {});
-      keys.sort(function (a, b) {
-        return a.length - b.length;
-      });
+      keys.sort((a, b) => a.length - b.length);
     }
 
     if (keys.length === 0) {
       return str;
     }
 
-    var key = keys.pop();
-    var fragments = str.split(key);
+    const key = keys.pop();
+    const fragments = str.split(key);
 
     if (keys.length) {
-      for (var i = 0; i < fragments.length; i++) {
+      for (let i = 0; i < fragments.length; i++) {
         fragments[i] = Drupal.stringReplace(fragments[i], args, keys.slice(0));
       }
     }
@@ -121,7 +119,7 @@ window.Drupal = {
   };
 
   Drupal.url.toAbsolute = function (url) {
-    var urlParsingNode = document.createElement('a');
+    const urlParsingNode = document.createElement('a');
 
     try {
       url = decodeURIComponent(url);
@@ -132,14 +130,16 @@ window.Drupal = {
   };
 
   Drupal.url.isLocal = function (url) {
-    var absoluteUrl = Drupal.url.toAbsolute(url);
-    var protocol = window.location.protocol;
+    let absoluteUrl = Drupal.url.toAbsolute(url);
+    let {
+      protocol
+    } = window.location;
 
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
 
-    var baseUrl = "".concat(protocol, "//").concat(window.location.host).concat(drupalSettings.path.baseUrl.slice(0, -1));
+    let baseUrl = `${protocol}//${window.location.host}${drupalSettings.path.baseUrl.slice(0, -1)}`;
 
     try {
       absoluteUrl = decodeURIComponent(absoluteUrl);
@@ -149,15 +149,15 @@ window.Drupal = {
       baseUrl = decodeURIComponent(baseUrl);
     } catch (e) {}
 
-    return absoluteUrl === baseUrl || absoluteUrl.indexOf("".concat(baseUrl, "/")) === 0;
+    return absoluteUrl === baseUrl || absoluteUrl.indexOf(`${baseUrl}/`) === 0;
   };
 
   Drupal.formatPlural = function (count, singular, plural, args, options) {
     args = args || {};
     args['@count'] = count;
-    var pluralDelimiter = drupalSettings.pluralDelimiter;
-    var translations = Drupal.t(singular + pluralDelimiter + plural, args, options).split(pluralDelimiter);
-    var index = 0;
+    const pluralDelimiter = drupalSettings.pluralDelimiter;
+    const translations = Drupal.t(singular + pluralDelimiter + plural, args, options).split(pluralDelimiter);
+    let index = 0;
 
     if (typeof drupalTranslations !== 'undefined' && drupalTranslations.pluralFormula) {
       index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula.default;
@@ -172,53 +172,43 @@ window.Drupal = {
     return window.encodeURIComponent(item).replace(/%2F/g, '/');
   };
 
-  Drupal.deprecationError = function (_ref) {
-    var message = _ref.message;
-
+  Drupal.deprecationError = ({
+    message
+  }) => {
     if (drupalSettings.suppressDeprecationErrors === false && typeof console !== 'undefined' && console.warn) {
-      console.warn("[Deprecation] ".concat(message));
+      console.warn(`[Deprecation] ${message}`);
     }
   };
 
-  Drupal.deprecatedProperty = function (_ref2) {
-    var target = _ref2.target,
-        deprecatedProperty = _ref2.deprecatedProperty,
-        message = _ref2.message;
-
+  Drupal.deprecatedProperty = ({
+    target,
+    deprecatedProperty,
+    message
+  }) => {
     if (!Proxy || !Reflect) {
       return target;
     }
 
     return new Proxy(target, {
-      get: function get(target, key) {
+      get: (target, key, ...rest) => {
         if (key === deprecatedProperty) {
           Drupal.deprecationError({
-            message: message
+            message
           });
         }
 
-        for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-          rest[_key - 2] = arguments[_key];
-        }
-
-        return Reflect.get.apply(Reflect, [target, key].concat(rest));
+        return Reflect.get(target, key, ...rest);
       }
     });
   };
 
-  Drupal.theme = function (func) {
+  Drupal.theme = function (func, ...args) {
     if (func in Drupal.theme) {
-      var _Drupal$theme;
-
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
-
-      return (_Drupal$theme = Drupal.theme)[func].apply(_Drupal$theme, args);
+      return Drupal.theme[func](...args);
     }
   };
 
   Drupal.theme.placeholder = function (str) {
-    return "<em class=\"placeholder\">".concat(Drupal.checkPlain(str), "</em>");
+    return `<em class="placeholder">${Drupal.checkPlain(str)}</em>`;
   };
 })(Drupal, window.drupalSettings, window.drupalTranslations, window.console, window.Proxy, window.Reflect);

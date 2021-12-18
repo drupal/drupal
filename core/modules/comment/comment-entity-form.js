@@ -7,11 +7,10 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.commentFieldsetSummaries = {
-    attach: function attach(context) {
-      var $context = $(context);
-      $context.find('fieldset.comment-entity-settings-form').drupalSetSummary(function (context) {
-        return Drupal.checkPlain($(context).find('.js-form-item-comment input:checked').next('label').text());
-      });
+    attach(context) {
+      const $context = $(context);
+      $context.find('fieldset.comment-entity-settings-form').drupalSetSummary(context => Drupal.checkPlain($(context).find('.js-form-item-comment input:checked').next('label').text()));
     }
+
   };
 })(jQuery, Drupal);

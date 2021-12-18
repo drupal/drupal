@@ -87,8 +87,8 @@ _:-ms-fullscreen,
   bottom: 100%;
   max-width: 100%;
   margin-bottom: 0.15rem;
-  color: #003cc5;
-  font-size: 0.702rem; /* ~11px */
+  color: var(--color-link);
+  font-size: var(--font-size-xxs); /* ~11px */
   font-weight: bold;
   line-height: 1.125rem; /* 18px */
 }

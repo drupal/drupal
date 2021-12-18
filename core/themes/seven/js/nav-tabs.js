@@ -7,9 +7,9 @@
 
 (function ($, Drupal) {
   function init(tab) {
-    var $tab = $(tab);
-    var $target = $tab.find('[data-drupal-nav-tabs-target]');
-    var isCollapsible = $tab.hasClass('is-collapsible');
+    const $tab = $(tab);
+    const $target = $tab.find('[data-drupal-nav-tabs-target]');
+    const isCollapsible = $tab.hasClass('is-collapsible');
 
     function openMenu(e) {
       $target.toggleClass('is-open');
@@ -17,8 +17,8 @@
 
     function handleResize(e) {
       $tab.addClass('is-horizontal');
-      var $tabs = $tab.find('.tabs');
-      var isHorizontal = $tabs.outerHeight() <= $tabs.find('.tabs__tab').outerHeight();
+      const $tabs = $tab.find('.tabs');
+      const isHorizontal = $tabs.outerHeight() <= $tabs.find('.tabs__tab').outerHeight();
       $tab.toggleClass('is-horizontal', isHorizontal);
 
       if (isCollapsible) {
@@ -36,12 +36,13 @@
   }
 
   Drupal.behaviors.navTabs = {
-    attach: function attach(context, settings) {
-      var notSmartPhone = window.matchMedia('(min-width: 300px)');
+    attach(context, settings) {
+      const notSmartPhone = window.matchMedia('(min-width: 300px)');
 
       if (notSmartPhone.matches) {
         once('nav-tabs', '[data-drupal-nav-tabs]', context).forEach(init);
       }
     }
+
   };
 })(jQuery, Drupal);

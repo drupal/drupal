@@ -3,7 +3,7 @@
  * Generic base elements.
  */
 
-@import "variables.pcss.css";
+@import "media-queries.pcss.css";
 
 *,
 *:before,

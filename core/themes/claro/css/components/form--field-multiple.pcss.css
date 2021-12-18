@@ -3,8 +3,6 @@
  * Styles for multiple field tables.
  */
 
-@import "../base/variables.pcss.css";
-
 .field-multiple-table {
   margin-top: var(--space-m);
   margin-bottom: var(--space-m);
