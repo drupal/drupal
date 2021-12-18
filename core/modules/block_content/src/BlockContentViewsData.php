@@ -36,27 +36,6 @@ class BlockContentViewsData extends EntityViewsData {
     $data['block_content_field_revision']['table']['base']['help'] = $this->t('Block Content revision is a history of changes to block content.');
     $data['block_content_field_revision']['table']['base']['defaults']['title'] = 'info';
 
-    // @todo EntityViewsData should add these relationships by default.
-    //   https://www.drupal.org/node/2410275
-    $data['block_content_field_revision']['id']['relationship']['id'] = 'standard';
-    $data['block_content_field_revision']['id']['relationship']['base'] = 'block_content_field_data';
-    $data['block_content_field_revision']['id']['relationship']['base field'] = 'id';
-    $data['block_content_field_revision']['id']['relationship']['title'] = $this->t('Block Content');
-    $data['block_content_field_revision']['id']['relationship']['label'] = $this->t('Get the actual block content from a block content revision.');
-
-    $data['block_content_field_revision']['revision_id']['relationship']['id'] = 'standard';
-    $data['block_content_field_revision']['revision_id']['relationship']['base'] = 'block_content_field_data';
-    $data['block_content_field_revision']['revision_id']['relationship']['base field'] = 'revision_id';
-    $data['block_content_field_revision']['revision_id']['relationship']['title'] = $this->t('Block Content');
-    $data['block_content_field_revision']['revision_id']['relationship']['label'] = $this->t('Get the actual block content from a block content revision.');
-
-    $data['block_content_revision']['revision_user']['help'] = $this->t('The user who created the revision.');
-    $data['block_content_revision']['revision_user']['relationship']['label'] = $this->t('revision user');
-    $data['block_content_revision']['revision_user']['filter']['id'] = 'user_name';
-
-    $data['block_content_revision']['table']['join']['block_content_field_data']['left_field'] = 'revision_id';
-    $data['block_content_revision']['table']['join']['block_content_field_data']['field'] = 'revision_id';
-
     return $data;
   }
 
