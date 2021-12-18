@@ -87,3 +87,10 @@ function views_post_update_sort_identifier(?array &$sandbox = NULL): void {
     return $view_config_updater->needsSortFieldIdentifierUpdate($view);
   });
 }
+
+/**
+ * Clear caches due to adding a relationship from revision table to base table.
+ */
+function views_post_update_provide_revision_table_relationship() {
+  // Empty post-update hook.
+}
