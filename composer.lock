@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4da5f467b822f165f9e26ae5faa8ec08",
+    "content-hash": "c349b824aa23e0ca51171bd05b895db3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "ded302b3b87ab926e48cbf067878daa142d624d2"
+                "reference": "4768651a943f1afe5c2b2a1122dbfdfc7bf221a7"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -561,7 +561,7 @@
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
                 "pear/archive_tar": "^1.4.14",
-                "php": ">=8.0.0",
+                "php": ">=8.0.2",
                 "psr/log": "^1.0",
                 "stack/builder": "^1.0",
                 "symfony/console": "^4.4",
@@ -8327,7 +8327,7 @@
     "platform": [],
     "platform-dev": [],
     "platform-overrides": {
-        "php": "8.0.0"
+        "php": "8.0.2"
     },
     "plugin-api-version": "2.1.0"
 }
