@@ -32,6 +32,11 @@ AddEncoding gzip svgz
   php_value assert.active                   0
 </IfModule>
 
+# PHP 8, Apache 1 and 2.
+<IfModule mod_php.c>
+  php_value assert.active                   0
+</IfModule>
+
 # Requires mod_expires to be enabled.
 <IfModule mod_expires.c>
   # Enable expirations.
