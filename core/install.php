@@ -29,8 +29,8 @@ define('MAINTENANCE_MODE', 'install');
 // hardcoded minimum PHP version below (both in the version_compare() call and
 // in the printed message to the user) whenever \Drupal::MINIMUM_PHP is
 // updated.
-if (version_compare(PHP_VERSION, '8.0.2') < 0) {
-  print 'Your PHP installation is too old. Drupal requires at least PHP 8.0.2. See the <a href="https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement">Environment requirements of Drupal 9</a> page for more information.';
+if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+  print 'Your PHP installation is too old. Drupal requires at least PHP 8.0.0. See the <a href="https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement">Environment requirements of Drupal 9</a> page for more information.';
   exit;
 }
 

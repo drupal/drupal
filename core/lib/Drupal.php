@@ -96,7 +96,7 @@ class Drupal {
    *   that Drupal no longer supports that PHP version.
    * - An error is shown in the status report that the PHP version is too old.
    */
-  const MINIMUM_SUPPORTED_PHP = '8.0.2';
+  const MINIMUM_SUPPORTED_PHP = '8.0.0';
 
   /**
    * Minimum allowed version of PHP for Drupal to be bootstrapped.
@@ -114,7 +114,7 @@ class Drupal {
    * - Once in the error message printed to the user immediately after.
    * Remember to update both whenever this constant is updated.
    */
-  const MINIMUM_PHP = '8.0.2';
+  const MINIMUM_PHP = '8.0.0';
 
   /**
    * Minimum recommended value of PHP memory_limit.
