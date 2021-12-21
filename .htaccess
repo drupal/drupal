@@ -26,13 +26,6 @@ AddEncoding gzip svgz
 # sites/default/default.settings.php and
 # Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be
 # changed at runtime.
-
-# PHP 7, Apache 1 and 2.
-<IfModule mod_php7.c>
-  php_value assert.active                   0
-</IfModule>
-
-# PHP 8, Apache 1 and 2.
 <IfModule mod_php.c>
   php_value assert.active                   0
 </IfModule>

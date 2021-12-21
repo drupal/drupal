@@ -180,7 +180,7 @@ trait BrowserHtmlDebugTrait {
               $html_output .= '<hr />' . $request->getMethod() . ' request to: ' . $request->getUri();
 
               // Get the response body as a string. Any errors are silenced as
-              // tests should not fail if there is a problem. On PHP 7.4
+              // tests should not fail if there is a problem.
               // \Drupal\Tests\migrate\Functional\process\DownloadFunctionalTest
               // fails without the usage of a silence operator.
               $body = @(string) $response->getBody();

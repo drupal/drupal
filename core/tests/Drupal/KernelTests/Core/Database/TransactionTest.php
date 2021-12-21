@@ -264,9 +264,7 @@ class TransactionTest extends DatabaseTestBase {
         // Rollback the outer transaction.
         $transaction->rollBack();
         // @see \Drupal\Core\Database\Driver\mysql\Connection::rollBack()
-        if (PHP_VERSION_ID >= 80000) {
-          $this->fail('Rolling back a transaction containing DDL should produce a warning.');
-        }
+        $this->fail('Rolling back a transaction containing DDL should produce a warning.');
       }
       catch (Warning $warning) {
         $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());

@@ -26,13 +26,11 @@
 
 namespace Drupal\Component\Annotation\Doctrine;
 
-use Drupal\Component\Annotation\Doctrine\Compatibility\ReflectionClass as CompatibilityReflectionClass;
 use ReflectionClass;
 use ReflectionException;
 
 class StaticReflectionClass extends ReflectionClass
 {
-    use CompatibilityReflectionClass;
 
     /**
      * The static reflection parser object.
@@ -454,6 +452,24 @@ class StaticReflectionClass extends ReflectionClass
      */
     #[\ReturnTypeWillChange]
     public function setStaticPropertyValue($name, $value)
+    {
+        throw new ReflectionException('Method not implemented');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    #[\ReturnTypeWillChange]
+    public function getConstants(?int $filter = null)
+    {
+        throw new ReflectionException('Method not implemented');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    #[\ReturnTypeWillChange]
+    public function newInstance(mixed ...$args)
     {
         throw new ReflectionException('Method not implemented');
     }

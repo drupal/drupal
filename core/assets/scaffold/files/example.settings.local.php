@@ -26,9 +26,9 @@
  * @see http://php.net/assert
  * @see https://www.drupal.org/node/2492225
  *
- * If you are using PHP 7.0 it is strongly recommended that you set
- * zend.assertions=1 in the PHP.ini file (It cannot be changed from .htaccess
- * or runtime) on development machines and to 0 in production.
+ * It is strongly recommended that you set zend.assertions=1 in the PHP.ini file
+ * (It cannot be changed from .htaccess or runtime) on development machines and
+ * to 0 or -1 in production.
  *
  * @see https://wiki.php.net/rfc/expectations
  */

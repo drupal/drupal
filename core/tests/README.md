@@ -42,7 +42,6 @@ to install the following additional software:
 * Google Chrome or Chromium browser
 * chromedriver (tested with version 2.45) -- see
   https://sites.google.com/chromium.org/driver/
-* PHP 7.1 or higher
 
 ## Running tests
 
