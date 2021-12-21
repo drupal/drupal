@@ -225,7 +225,7 @@ class FieldUiTable extends Table {
    */
   public static function reduceOrder($array, $a) {
     $array = !$array ? [] : $array;
-    if ($a['name']) {
+    if (!empty($a['name'])) {
       $array[] = $a['name'];
     }
     if (!empty($a['children'])) {
