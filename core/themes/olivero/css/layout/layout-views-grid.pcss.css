@@ -1,0 +1,43 @@
+/**
+ * @file
+ * Responsive styles for views grid horizontal layout.
+ *
+ * This creates the correct count of columns and automatically resizes the
+ * grid-items to fit into it. The grid-items will flow onto the next row when
+ * they reach the --views-grid-item--min-width value.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+.views-view-grid {
+  --views-grid--layout-gap: var(--sp);
+  --views-grid--column-count: 4; /* Will be overridden by an inline style. */
+  --views-grid-item--min-width: 100px;
+}
+
+.views-view-grid--horizontal {
+  /**
+   * Calculated values.
+   */
+  --views-grid--gap-count: calc(var(--views-grid--column-count) - 1);
+  --views-grid--total-gap-width: calc(var(--views-grid--gap-count) * var(--views-grid--layout-gap));
+  --views-grid-item--max-width: calc((100% - var(--views-grid--total-gap-width)) / var(--views-grid--column-count));
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--views-grid-item--min-width), var(--views-grid-item--max-width)), 1fr));
+  grid-gap: var(--views-grid--layout-gap);
+}
+
+.views-view-grid--vertical {
+  margin-block-end: calc(-1 * var(--views-grid--layout-gap)); /* Offset the bottom row's padding. */
+  column-width: var(--views-grid-item--min-width);
+  column-count: var(--views-grid--column-count);
+  column-gap: var(--views-grid--layout-gap);
+
+  & .views-view-grid__item {
+    & > * {
+      padding-block-end: var(--views-grid--layout-gap);
+      break-inside: avoid;
+    }
+  }
+}

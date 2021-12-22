@@ -24,31 +24,24 @@
  * @see template_preprocess_views_view_grid()
  */
 #}
-{% if options.alignment == 'vertical' %}
-  {{ attach_library('olivero/layout-views-grid-vertical') }}
-{% else %}
-  {{ attach_library('olivero/layout-views-grid-horizontal') }}
-{% endif %}
-
-{% set columns = options.columns <= 8 ? options.columns : 8 %}
+{{ attach_library('olivero/layout-views-grid') }}
 
 {%
   set classes = [
     'views-view-grid',
     'views-view-grid--' ~ options.alignment,
-    'cols-' ~ columns,
   ]
 %}
 
 {% if title %}
   <h3>{{ title }}</h3>
 {% endif %}
-<div{{ attributes.addClass(classes) }}>
+<div{{ attributes.addClass(classes).setAttribute('style', '--views-grid--column-count: ' ~ options.columns) }}>
   {% for row in items %}
-    {% for column in row.content %}
+    {% for item in row.content %}
       <div class="views-view-grid__item">
         <div class="views-view-grid__item-inner">
-          {{- column.content -}}
+          {{- item.content -}}
         </div>
       </div>
     {% endfor %}
