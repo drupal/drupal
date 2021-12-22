@@ -4,7 +4,6 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
@@ -54,18 +53,6 @@ class NullGenerator extends UrlGenerator {
    */
   protected function getInternalPathFromRoute($name, Route $route, $parameters = [], &$query_params = []) {
     return $route->getPath();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContext(SymfonyRequestContext $context) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContext() {
   }
 
   /**

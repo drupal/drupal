@@ -9,10 +9,8 @@ use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
-use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -23,7 +21,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * The router doing the actual routing.
    *
-   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface
+   * @var \Symfony\Component\Routing\RouterInterface
    */
   protected $router;
 
@@ -44,14 +42,14 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * Constructs a router for Drupal with access check and upcasting.
    *
-   * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
+   * @param \Symfony\Component\Routing\RouterInterface $router
    *   The router doing the actual routing.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account to use in access checks.
    */
-  public function __construct(RequestMatcherInterface $router, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(RouterInterface $router, AccessManagerInterface $access_manager, AccountInterface $account) {
     $this->router = $router;
     $this->accessManager = $access_manager;
     $this->account = $account;
@@ -69,18 +67,14 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * {@inheritdoc}
    */
   public function setContext(SymfonyRequestContext $context) {
-    if ($this->router instanceof RequestContextAwareInterface) {
-      $this->router->setContext($context);
-    }
+    $this->router->setContext($context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
-    if ($this->router instanceof RequestContextAwareInterface) {
-      return $this->router->getContext();
-    }
+  public function getContext(): SymfonyRequestContext {
+    return $this->router->getContext();
   }
 
   /**
@@ -127,18 +121,14 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * {@inheritdoc}
    */
   public function getRouteCollection(): RouteCollection {
-    if ($this->router instanceof RouterInterface) {
-      return $this->router->getRouteCollection();
-    }
+    return $this->router->getRouteCollection();
   }
 
   /**
    * {@inheritdoc}
    */
   public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
-    if ($this->router instanceof UrlGeneratorInterface) {
-      return $this->router->generate($name, $parameters, $referenceType);
-    }
+    return $this->router->generate($name, $parameters, $referenceType);
   }
 
   /**
