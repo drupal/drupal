@@ -224,7 +224,7 @@ body.is-always-mobile-nav.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .he
 
 body.is-always-mobile-nav .header-nav {
       overflow: auto;
-      max-width: calc(var(--grid-col-width--nav)*7 + var(--grid-gap--nav)*7);
+      max-width: calc(var(--grid-col-width)*7 + var(--grid-gap)*7);
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: var(--sp11)
   }
@@ -241,7 +241,7 @@ body.is-always-mobile-nav .header-nav {
   }
 
 body.is-always-mobile-nav .header-nav {
-      max-width: calc(100vw - var(--max-width) - var(--content-left) + var(--grid-col-width--max)*7 + var(--grid-gap--max)*7)
+      max-width: calc(100vw - var(--max-width) - var(--content-left) + var(--grid-col-width)*7 + var(--grid-gap)*7)
   }
     }
 

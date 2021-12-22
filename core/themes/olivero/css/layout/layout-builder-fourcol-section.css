@@ -36,7 +36,7 @@
 @media (min-width: 43.75rem) {
 
 .layout--fourcol-section > .layout__region {
-      flex-basis: calc(50% - var(--grid-gap--md)*0.5);
+      flex-basis: calc(50% - var(--grid-gap)*0.5);
       flex-grow: 0;
       flex-shrink: 0;
       margin-bottom: 0
@@ -51,27 +51,27 @@
 @media (min-width: 43.75rem) {
     .layout--fourcol-section > .layout__region--first,
     .layout--fourcol-section > .layout__region--second {
-      margin-bottom: var(--grid-gap--md);
+      margin-bottom: var(--grid-gap);
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--first,[dir="ltr"] 
     .layout--fourcol-section > .layout__region--third {
-      margin-right: calc(var(--grid-gap--md)*0.5)
+      margin-right: calc(var(--grid-gap)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--first,[dir="rtl"] 
     .layout--fourcol-section > .layout__region--third {
-      margin-left: calc(var(--grid-gap--md)*0.5)
+      margin-left: calc(var(--grid-gap)*0.5)
   }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--second,[dir="ltr"] 
     .layout--fourcol-section > .layout__region--fourth {
-      margin-left: calc(var(--grid-gap--md)*0.5)
+      margin-left: calc(var(--grid-gap)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--second,[dir="rtl"] 
     .layout--fourcol-section > .layout__region--fourth {
-      margin-right: calc(var(--grid-gap--md)*0.5)
+      margin-right: calc(var(--grid-gap)*0.5)
   }
   }
 
@@ -82,7 +82,7 @@
 
 @media (min-width: 62.5rem) {
     .layout--fourcol-section > .layout__region {
-      flex-basis: calc(25% - var(--grid-gap--md)*0.75);
+      flex-basis: calc(25% - var(--grid-gap)*0.75);
     }
 
     .layout--fourcol-section > .layout__region--first,
@@ -91,24 +91,24 @@
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--first {
-      margin-right: calc(var(--grid-gap--md)*0.5)
+      margin-right: calc(var(--grid-gap)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--first {
-      margin-left: calc(var(--grid-gap--md)*0.5)
+      margin-left: calc(var(--grid-gap)*0.5)
   }
 
     .layout--fourcol-section > .layout__region--second,
     .layout--fourcol-section > .layout__region--third {
-      margin-left: calc(var(--grid-gap--md)*0.5);
-      margin-right: calc(var(--grid-gap--md)*0.5);
+      margin-left: calc(var(--grid-gap)*0.5);
+      margin-right: calc(var(--grid-gap)*0.5);
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--fourth {
-      margin-left: calc(var(--grid-gap--md)*0.5)
+      margin-left: calc(var(--grid-gap)*0.5)
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--fourth {
-      margin-right: calc(var(--grid-gap--md)*0.5)
+      margin-right: calc(var(--grid-gap)*0.5)
   }
   }

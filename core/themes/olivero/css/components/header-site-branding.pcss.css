@@ -9,9 +9,9 @@
   display: flex;
   flex-shrink: 1;
   align-items: flex-end;
-  min-width: calc((2 * var(--grid-col-width)) + (2 * var(--grid-gap)) + var(--container-padding));
+  min-width: calc((2 * var(--grid-col-width)) + (2 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 2 column widths. */
   min-height: var(--sp3);
-  margin-inline: calc(-1 * var(--container-padding)) var(--sp);
+  margin-inline: calc(-1 * var(--container-padding)) var(--sp); /* Negative margin to break out of .container element. */
   padding-block: 0 var(--sp0-5);
   padding-inline-start: var(--container-padding);
   padding-inline-end: var(--container-padding);
@@ -24,25 +24,19 @@
   }
 
   @media (--md) {
+    min-width: calc((4 * var(--grid-col-width)) + (4 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 4 column widths. */
     min-height: var(--sp6);
     padding-block-end: var(--sp);
   }
 
   @media (--lg) {
-    min-width: calc((2 * var(--grid-col-width--lg)) + (2 * var(--grid-gap--lg)) + var(--container-padding));
+    min-width: calc((2 * var(--grid-col-width)) + (2 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 2 column widths. */
   }
 
   @media (--nav) {
-    min-width: calc((2 * var(--grid-col-width--nav)) + (2 * var(--grid-gap--nav)) + var(--container-padding-nav));
     min-height: var(--site-header-height-wide);
-    margin-inline-start: calc(-1 * var(--container-padding-nav));
+    margin-inline-start: calc(-1 * var(--container-padding));
     padding-block: 0;
-    padding-inline-start: var(--container-padding-nav);
-    padding-inline-end: var(--container-padding-nav);
-  }
-
-  @media (--grid-max) {
-    min-width: calc((2 * var(--grid-col-width--max)) + (2 * var(--grid-gap--max)) + var(--container-padding-nav));
   }
 }
 

@@ -11,10 +11,10 @@
     flex-wrap: wrap;
 
     & > * {
-      flex-basis: calc(50% - (var(--grid-gap--md) / 2));
+      flex-basis: calc(50% - (var(--grid-gap) / 2));
       flex-grow: 1;
       flex-shrink: 0;
-      margin-inline-end: var(--grid-gap--md);
+      margin-inline-end: var(--grid-gap);
 
       &:nth-child(2n),
       &:last-child {
@@ -25,11 +25,11 @@
 
   @media (--md) {
     & > * {
-      flex-basis: calc(33.33% - (var(--grid-gap--md) * 0.667));
+      flex-basis: calc(33.33% - (var(--grid-gap) * 0.667));
 
       &:nth-child(2n),
       &:last-child {
-        margin-inline-end: var(--grid-gap--md);
+        margin-inline-end: var(--grid-gap);
       }
 
       &:nth-child(3n),

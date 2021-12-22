@@ -27,16 +27,8 @@
   width: 100%;
   max-width: var(--max-width);
   padding-left: var(--container-padding);
-  padding-right: var(--container-padding)
+  padding-right: var(--container-padding);
 }
-
-@media (min-width: 75rem) {
-
-.container {
-    padding-left: var(--container-padding-nav);
-    padding-right: var(--container-padding-nav)
-}
-  }
 
 .page-wrapper {
   max-width: var(--max-bg-color);
@@ -57,11 +49,11 @@
 @media (min-width: 75rem) {
 
 [dir="ltr"] .main-content {
-    margin-right: auto
+    margin-right: auto;
   }
 
 [dir="rtl"] .main-content {
-    margin-left: auto
+    margin-left: auto;
   }
 
 .main-content {

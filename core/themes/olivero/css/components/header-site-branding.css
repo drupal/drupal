@@ -53,8 +53,8 @@
   display: flex;
   flex-shrink: 1;
   align-items: flex-end;
-  min-width: calc(var(--grid-col-width)*2 + var(--grid-gap)*2 + var(--container-padding));
-  min-height: var(--sp3);
+  min-width: calc(var(--grid-col-width)*2 + var(--grid-gap)*2 + var(--container-padding)); /* Span minimum of 2 column widths. */
+  min-height: var(--sp3); /* Negative margin to break out of .container element. */
   padding-top: 0;
   padding-bottom: var(--sp0-5);
 
@@ -72,6 +72,7 @@
 @media (min-width: 43.75rem) {
 
 .site-branding {
+    min-width: calc(var(--grid-col-width)*4 + var(--grid-gap)*4 + var(--container-padding)); /* Span minimum of 4 column widths. */
     min-height: var(--sp6);
     padding-bottom: var(--sp)
 }
@@ -80,48 +81,24 @@
 @media (min-width: 62.5rem) {
 
 .site-branding {
-    min-width: calc(var(--grid-col-width--lg)*2 + var(--grid-gap--lg)*2 + var(--container-padding))
+    min-width: calc(var(--grid-col-width)*2 + var(--grid-gap)*2 + var(--container-padding)) /* Span minimum of 2 column widths. */
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .site-branding {
-    margin-left: calc(var(--container-padding-nav)*-1)
+    margin-left: calc(var(--container-padding)*-1)
   }
 
 [dir="rtl"] .site-branding {
-    margin-right: calc(var(--container-padding-nav)*-1)
-  }
-
-[dir="ltr"] .site-branding {
-    padding-left: var(--container-padding-nav)
-  }
-
-[dir="rtl"] .site-branding {
-    padding-right: var(--container-padding-nav)
-  }
-
-[dir="ltr"] .site-branding {
-    padding-right: var(--container-padding-nav)
-  }
-
-[dir="rtl"] .site-branding {
-    padding-left: var(--container-padding-nav)
+    margin-right: calc(var(--container-padding)*-1)
   }
 
 .site-branding {
-    min-width: calc(var(--grid-col-width--nav)*2 + var(--grid-gap--nav)*2 + var(--container-padding-nav));
     min-height: var(--site-header-height-wide);
     padding-top: 0;
     padding-bottom: 0
-}
-  }
-
-@media (min-width: 90rem) {
-
-.site-branding {
-    min-width: calc(var(--grid-col-width--max)*2 + var(--grid-gap--max)*2 + var(--container-padding-nav))
 }
   }
 

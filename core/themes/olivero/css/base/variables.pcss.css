@@ -1,13 +1,16 @@
 /*
-  Custom CSS properties.
-
-  These are "compiled" by postcss/postcss-custom-properties for IE11 compatibility.
+  Global CSS custom properties.
 */
+
+@import "./media-queries.pcss.css";
+
+/* stylelint-disable */
+
 :root {
   --font-sans: "metropolis", sans-serif;
   --font-serif: "Lora", "georgia", serif;
 
-  /* Typography */
+  /* Typography helpers. */
   --font-size-base: 16px;
   --font-size-l: 18px;
   --font-size-s: 14px;
@@ -16,68 +19,52 @@
   --line-height-base: 27px;
   --line-height-s: 18px;
 
-  /* Layout */
+  /* Layout helpers. */
   --max-width: 1350px;
-  --max-bg-color: 1570px;
+  --max-bg-color: 1570px; /* Width to which the background color extends to. */
   --sp: 18px;
   --content-left: 90px;
-  --container-padding: var(--sp);
-  --container-padding-nav: var(--sp2);
   --site-header-height-wide: var(--sp10);
+  --container-padding: var(--sp); /* Inline padding on .container elements. */
+
+  @media (--nav) {
+    --container-padding: var(--sp2);
+  }
 
   /* Drupal administrative toolbar heights and width. */
   --toolbar-height: 39px;
   --toolbar-tray-height: 40px;
   --toolbar-tray-vertical-width: 239px;
 
-  /*
-    Grid helpers.
-
-    These variables help authors apply widths and negative margins to break items out of
-    the grid, while still conforming to the larger grid system.
-
-    Note we cannot change the values of these custom properties within media queries,
-    as they are processed by postcss/postcss-custom-properties (for IE11 compatibility),
-    which does not support that functionality. Therefore, we need a separate custom
-    property for each breakpoint. 😭
-  */
-
-  --scrollbar-width: 15px; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
-
-  /* Grid gap across various breakpoints. */
-  --grid-gap: var(--sp);
-  --grid-gap--md: var(--sp2);
-  --grid-gap--lg: var(--grid-gap--md);
-  --grid-gap--nav: var(--grid-gap--md);
-  --grid-gap--max: var(--grid-gap--md);
-
-  /* Column counts at various breakpoints. */
+  /**
+   * Grid helpers.
+   *
+   * These variables help authors apply widths and negative margins to break items out of
+   * the grid, while still conforming to the larger grid system.
+   */
+  --scrollbar-width: 0px; /* Unit must be specified here for calc() to work properly.*/
   --grid-col-count: 6;
-  --grid-col-count--md: 14;
-  --grid-col-count--lg: var(--grid-col-count--md);
-  --grid-col-count--nav: var(--grid-col-count--md);
-  --grid-col-count--max: var(--grid-col-count--md);
+  --grid-gap: var(--sp);
+  --grid-gap-count: calc(var(--grid-col-count) - 1); /* Count of grid-gaps. */
+  --grid-full-width: calc(100vw - var(--sp2) - var(--scrollbar-width)); /* Width of the entire grid. */
+  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count)); /* Width of a grid column. */
 
-  /* Count of grid-gaps at various breakpoints. */
-  --grid-gap-count: calc(var(--grid-col-count) - 1);
-  --grid-gap-count--md: calc(var(--grid-col-count--md) - 1);
-  --grid-gap-count--lg: var(--grid-gap-count--md);
-  --grid-gap-count--nav: var(--grid-gap-count--md);
-  --grid-gap-count--max: var(--grid-gap-count--md);
+  @media (--md) {
+    --grid-col-count: 14;
+    --grid-gap: var(--sp2);
+  }
 
-  /* Width of the entire grid at various breakpoints. */
-  --grid-full-width: calc(100vw - var(--sp2));
-  --grid-full-width--md: var(--grid-full-width);
-  --grid-full-width--lg: calc(var(--grid-full-width) - var(--scrollbar-width));
-  --grid-full-width--nav: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
-  --grid-full-width--max: calc(var(--max-width) - var(--sp4));
+  @media (--lg) {
+    --scrollbar-width: 15px; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
+  }
 
-  /* Width of a grid column at various breakpoints */
-  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count));
-  --grid-col-width--md: calc((var(--grid-full-width--md) - (var(--grid-gap-count--md) * var(--grid-gap--md))) / var(--grid-col-count--md));
-  --grid-col-width--lg: calc((var(--grid-full-width--lg) - (var(--grid-gap-count--lg) * var(--grid-gap--lg))) / var(--grid-col-count--lg));
-  --grid-col-width--nav: calc((var(--grid-full-width--nav) - (var(--grid-gap-count--nav) * var(--grid-gap--nav))) / var(--grid-col-count--nav));
-  --grid-col-width--max: calc((var(--grid-full-width--max) - (var(--grid-gap-count--max) * var(--grid-gap--max))) / var(--grid-col-count--max));
+  @media (--nav) {
+    --grid-full-width: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
+  }
+
+  @media (--grid-max) {
+    --grid-full-width: calc(var(--max-width) - var(--sp4));
+  }
 
   /* Layout helpers */
   --sp0-25: calc(0.25 * var(--sp));

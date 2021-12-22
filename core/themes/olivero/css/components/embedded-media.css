@@ -136,16 +136,21 @@ figcaption {
 
 /* Pull out of grid if nested in content narrow layout. */
 
+.layout--content-narrow .align-right,
+.layout--pass--content-narrow > * .align-right {
+  /* @todo this can be simplified. */
+}
+
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1);
+    margin-right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1);
+    margin-left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
   }
   }
 
@@ -153,12 +158,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width--lg)*-2 + var(--grid-gap--lg)*-2);
+    margin-right: calc(var(--grid-col-width)*-2 + var(--grid-gap)*-2);
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width--lg)*-2 + var(--grid-gap--lg)*-2);
+    margin-left: calc(var(--grid-col-width)*-2 + var(--grid-gap)*-2);
   }
   }
 
@@ -166,12 +171,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width--nav)*-3 + var(--grid-gap--nav)*-3);
+    margin-right: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width--nav)*-3 + var(--grid-gap--nav)*-3);
+    margin-left: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
   }
   }
 
@@ -179,12 +184,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width--max)*-3 + var(--grid-gap--max)*-3);
+    margin-right: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width--max)*-3 + var(--grid-gap--max)*-3);
+    margin-left: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
   }
   }
 
@@ -250,51 +255,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-left: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1);
+    margin-left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
   }
 
 [dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-right: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1);
-  }
-  }
-
-@media (min-width: 62.5rem) {
-
-[dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
-.layout--pass--content-narrow > * .align-left {
-    margin-left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1);
-  }
-
-[dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
-.layout--pass--content-narrow > * .align-left {
-    margin-right: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1);
-  }
-  }
-
-@media (min-width: 75rem) {
-
-[dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
-.layout--pass--content-narrow > * .align-left {
-    margin-left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1);
-  }
-
-[dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
-.layout--pass--content-narrow > * .align-left {
-    margin-right: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1);
-  }
-  }
-
-@media (min-width: 90rem) {
-
-[dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
-.layout--pass--content-narrow > * .align-left {
-    margin-left: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1);
-  }
-
-[dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
-.layout--pass--content-narrow > * .align-left {
-    margin-right: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1);
+    margin-right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
   }
   }
 

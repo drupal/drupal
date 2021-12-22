@@ -319,8 +319,8 @@
 
 .block-search-wide__grid {
   display: grid;
-  grid-template-columns: repeat(var(--grid-col-count--md), 1fr);
-  grid-column-gap: var(--grid-gap--md);
+  grid-template-columns: repeat(var(--grid-col-count), 1fr);
+  grid-column-gap: var(--grid-gap);
 }
 
 /* Override specificity from container-inline.module.css */

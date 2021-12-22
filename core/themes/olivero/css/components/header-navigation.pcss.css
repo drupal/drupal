@@ -123,14 +123,14 @@ body.is-always-mobile-nav {
   & .header-nav {
     @media (--nav) {
       overflow: auto;
-      max-width: calc((7 * (var(--grid-col-width--nav) + var(--grid-gap--nav))));
+      max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
       padding-inline-end: var(--sp);
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: var(--sp11);
     }
 
     @media (--grid-max) {
-      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width--max) + var(--grid-gap--max)))));
+      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
       padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
     }
   }

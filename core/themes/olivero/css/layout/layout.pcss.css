@@ -9,10 +9,6 @@
   width: 100%;
   max-width: var(--max-width);
   padding-inline: var(--container-padding);
-
-  @media (--nav) {
-    padding-inline: var(--container-padding-nav);
-  }
 }
 
 .page-wrapper {
