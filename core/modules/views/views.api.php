@@ -820,36 +820,37 @@ function hook_views_pre_render(ViewExecutable $view) {
 }
 
 /**
- * Post-process any rendered data.
+ * Post-process any render data.
  *
- * This can be valuable to be able to cache a view and still have some level of
- * dynamic output. In an ideal world, the actual output will include HTML
- * comment-based tokens, and then the post process can replace those tokens.
- * This hook can be used by themes.
+ * The module or theme may add, modify or remove elements in $output after
+ * rendering.
  *
- * Example usage. If it is known that the view is a node view and that the
- * primary field will be a nid, you can do something like this:
+ * If a module wishes to act on the rendered HTML of the view rather than the
+ * structured content array, it may use this hook to add a #post_render
+ * callback:
  * @code
- *   <!--post-FIELD-NID-->
+ * // The object must implement \Drupal\Core\Security\TrustedCallbackInterface.
+ * $output['#post_render'][] = '\Drupal\my_module\View::postRender';
  * @endcode
- * And then in the post-render, create an array with the text that should
- * go there:
- * @code
- *   strtr($output, array('<!--post-FIELD-1-->' => 'output for FIELD of nid 1');
- * @endcode
- * All of the cached result data will be available in $view->result, as well,
- * so all ids used in the query should be discoverable.
+ *
+ * See \Drupal\Core\Render\RendererInterface::render() for #post_render
+ * documentation.
+ *
+ * Alternatively, it could also implement hook_preprocess_HOOK() for
+ * the particular view template, if there is one.
  *
  * @param \Drupal\views\ViewExecutable $view
- *   The view object about to be processed.
- * @param string $output
- *   A flat string with the rendered output of the view.
+ *   The view object being processed.
+ * @param array $output
+ *   A structured content array representing the view output. The given array
+ *   depends on the style plugin and can be either a render array or an array of
+ *   render arrays.
  * @param \Drupal\views\Plugin\views\cache\CachePluginBase $cache
  *   The cache settings.
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+function hook_views_post_render(ViewExecutable $view, array &$output, CachePluginBase $cache) {
   // When using full pager, disable any time-based caching if there are fewer
   // than 10 results.
   if ($view->pager instanceof Drupal\views\Plugin\views\pager\Full && $cache instanceof Drupal\views\Plugin\views\cache\Time && count($view->result) < 10) {
