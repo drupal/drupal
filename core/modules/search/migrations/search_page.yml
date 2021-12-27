@@ -21,6 +21,9 @@ process:
   id: 'constants/id'
   path: 'constants/path'
   plugin: 'constants/plugin'
+  configuration:
+    plugin: default_value
+    default_value: [ ]
   'configuration/rankings':
     plugin: search_configuration_rankings
 destination:
