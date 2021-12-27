@@ -79,6 +79,19 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
     $this->executeMigration($migration);
     $configuration['rankings']['comments'] = 4;
     $this->assertEntity('node_search', 'node', TRUE, $configuration);
+
+    // Test that a configurable search without a configuration imports. Do this
+    // by removing the node rankings from the source database.
+    Database::getConnection('default', 'migrate')
+      ->delete('variable')
+      ->condition('name', 'node_rank_%', 'LIKE')
+      ->execute();
+
+    $migration = $this->getMigration('d7_search_page');
+    $migration->getIdMap()->prepareUpdate();
+    $this->executeMigration($migration);
+    $configuration = ['rankings' => []];
+    $this->assertEntity('node_search', 'node', TRUE, $configuration);
   }
 
   /**
