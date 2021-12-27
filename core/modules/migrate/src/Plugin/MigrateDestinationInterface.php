@@ -105,6 +105,14 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
    *   plugin's getIds() method if the plugin wants to save the IDs to the ID
    *   map, TRUE to indicate success without saving IDs to the ID map, or
    *   FALSE to indicate a failure.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   *   Throws an exception if there is a problem importing the row. By default,
+   *   this causes the migration system to treat this row as having failed;
+   *   however, any \Drupal\migrate\Plugin\MigrateIdMapInterface status constant
+   *   can be set using the $status parameter of
+   *   \Drupal\migrate\MigrateException, such as
+   *   \Drupal\migrate\Plugin\MigrateIdMapInterface::STATUS_IGNORED.
    */
   public function import(Row $row, array $old_destination_id_values = []);
 
