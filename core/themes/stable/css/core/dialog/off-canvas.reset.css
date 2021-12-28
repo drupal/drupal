@@ -799,8 +799,12 @@
   box-shadow: none;
 }
 
-#drupal-off-canvas input:placeholder,
-#drupal-off-canvas textarea:placeholder {
+#drupal-off-canvas input:-ms-input-placeholder, #drupal-off-canvas textarea:-ms-input-placeholder {
+  color: gray;
+}
+
+#drupal-off-canvas input::placeholder,
+#drupal-off-canvas textarea::placeholder {
   color: gray;
 }
 
