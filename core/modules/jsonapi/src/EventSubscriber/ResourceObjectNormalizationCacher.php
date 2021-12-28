@@ -164,7 +164,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
   protected static function generateLookupRenderArray(ResourceObject $object) {
     return [
       '#cache' => [
-        'keys' => [$object->getResourceType()->getTypeName(), $object->getId()],
+        'keys' => [$object->getResourceType()->getTypeName(), $object->getId(), $object->getLanguage()->getId()],
         'bin' => 'jsonapi_normalizations',
       ],
     ];

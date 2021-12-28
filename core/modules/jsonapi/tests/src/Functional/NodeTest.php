@@ -377,9 +377,10 @@ class NodeTest extends ResourceTestBase {
     // Save the entity to invalidate caches.
     $this->entity->save();
     $uuid = $this->entity->uuid();
+    $language = $this->entity->language()->getId();
     $cache = \Drupal::service('render_cache')->get([
       '#cache' => [
-        'keys' => ['node--camelids', $uuid],
+        'keys' => ['node--camelids', $uuid, $language],
         'bin' => 'jsonapi_normalizations',
       ],
     ]);
@@ -415,7 +416,7 @@ class NodeTest extends ResourceTestBase {
   protected function assertNormalizedFieldsAreCached(array $field_names): void {
     $cache = \Drupal::service('render_cache')->get([
       '#cache' => [
-        'keys' => ['node--camelids', $this->entity->uuid()],
+        'keys' => ['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()],
         'bin' => 'jsonapi_normalizations',
       ],
     ]);
