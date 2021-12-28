@@ -48,7 +48,7 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
       ->method('schema')
       ->willReturn($schema);
 
-    $actual_version_string = MigrationConfigurationTrait::getLegacyDrupalVersion($connection);
+    $actual_version_string = TestMigrationConfigurationTrait::getLegacyDrupalVersion($connection);
     $this->assertSame($expected_version_string, $actual_version_string);
   }
 
@@ -140,5 +140,13 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
       ],
     ];
   }
+
+}
+
+/**
+ * Test class that uses the trait we are testing.
+ */
+class TestMigrationConfigurationTrait {
+  use MigrationConfigurationTrait;
 
 }
