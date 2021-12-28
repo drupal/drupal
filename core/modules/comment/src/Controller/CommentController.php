@@ -337,11 +337,12 @@ class CommentController extends ControllerBase {
       throw new AccessDeniedHttpException();
     }
 
-    $nids = $request->request->get('node_ids');
-    $field_name = $request->request->get('field_name');
-    if (!isset($nids)) {
+    if (!$request->request->has('node_ids') || !$request->request->has('field_name')) {
       throw new NotFoundHttpException();
     }
+    $nids = $request->request->all('node_ids');
+    $field_name = $request->request->get('field_name');
+
     // Only handle up to 100 nodes.
     $nids = array_slice($nids, 0, 100);
 

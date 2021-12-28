@@ -207,7 +207,7 @@ class FieldConfigEditForm extends EntityForm {
     $this->messenger()->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
 
     $request = $this->getRequest();
-    if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
+    if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
       $request->query->remove('destinations');
       $form_state->setRedirectUrl($next_destination);
     }

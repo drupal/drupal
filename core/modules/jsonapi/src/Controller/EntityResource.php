@@ -1235,13 +1235,13 @@ class EntityResource {
    */
   protected function getJsonApiParams(Request $request, ResourceType $resource_type) {
     if ($request->query->has('filter')) {
-      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
+      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->all('filter'), $resource_type, $this->fieldResolver);
     }
     if ($request->query->has('sort')) {
-      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->get('sort'));
+      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->all()['sort']);
     }
     if ($request->query->has('page')) {
-      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->get('page'));
+      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->all('page'));
     }
     else {
       $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter(['page' => ['offset' => OffsetPage::DEFAULT_OFFSET, 'limit' => OffsetPage::SIZE_MAX]]);

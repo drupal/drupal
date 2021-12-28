@@ -118,11 +118,11 @@ class QuickEditController extends ControllerBase {
    *   The JSON response.
    */
   public function metadata(Request $request) {
-    $fields = $request->request->get('fields');
-    if (!isset($fields)) {
+    if (!$request->request->has('fields')) {
       throw new NotFoundHttpException();
     }
-    $entities = $request->request->get('entities');
+    $fields = $request->request->all('fields');
+    $entities = $request->request->all('entities');
 
     $metadata = [];
     foreach ($fields as $field) {
@@ -196,10 +196,10 @@ class QuickEditController extends ControllerBase {
    */
   public function attachments(Request $request) {
     $response = new AjaxResponse();
-    $editors = $request->request->get('editors');
-    if (!isset($editors)) {
+    if (!$request->request->has('editors')) {
       throw new NotFoundHttpException();
     }
+    $editors = $request->request->all('editors');
 
     $response->setAttachments($this->editorSelector->getEditorAttachments($editors));
 
@@ -257,7 +257,7 @@ class QuickEditController extends ControllerBase {
 
       // Re-render the updated field for other view modes (i.e. for other
       // instances of the same logical field on the user's page).
-      $other_view_mode_ids = $request->request->get('other_view_modes') ?: [];
+      $other_view_mode_ids = $request->request->all('other_view_modes');
       $other_view_modes = array_map($render_field_in_view_mode, array_combine($other_view_mode_ids, $other_view_mode_ids));
 
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
