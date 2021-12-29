@@ -41,13 +41,13 @@ class ModulesListFormWebTest extends BrowserTestBase {
     $this->drupalGet('admin/modules');
 
     // Check that system_test's configure link was rendered correctly.
-    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/system-test/configure/bar') and text()='Configure ']/span[contains(@class, 'visually-hidden') and text()='the System test module']");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/system-test/configure/bar') and text()='Configure ']/span[contains(@class, 'visually-hidden') and text()='System test']");
 
     // Check that system_test's permissions link was rendered correctly.
-    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/people/permissions/module/system_test') and @title='Configure permissions']");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/people/permissions/module/system_test') and text()='Permissions ']/span[contains(@class, 'visually-hidden') and text()='for System test']");
 
     // Check that system_test's help link was rendered correctly.
-    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/help/system_test') and @title='Help']");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/help/system_test') and text()='Help ']/span[contains(@class, 'visually-hidden') and text()='for System test']");
 
     // Ensure that the Database Logging module's machine name is printed. This
     // module is used because its machine name is different than its human
