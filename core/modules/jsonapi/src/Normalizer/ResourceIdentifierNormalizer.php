@@ -142,4 +142,11 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
     return $data;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

@@ -27,4 +27,11 @@ class TypedDataNormalizer extends NormalizerBase {
     return $value;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

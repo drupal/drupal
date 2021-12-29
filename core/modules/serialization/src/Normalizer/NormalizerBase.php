@@ -3,13 +3,14 @@
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 
 /**
  * Base class for Normalizers.
  */
-abstract class NormalizerBase implements SerializerAwareInterface, CacheableNormalizerInterface {
+abstract class NormalizerBase implements SerializerAwareInterface, CacheableNormalizerInterface, CacheableSupportsMethodInterface {
 
   use SerializerAwareTrait;
 
@@ -96,6 +97,13 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
     if ($data instanceof CacheableDependencyInterface && isset($context[static::SERIALIZATION_CONTEXT_CACHEABILITY])) {
       $context[static::SERIALIZATION_CONTEXT_CACHEABILITY]->addCacheableDependency($data);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return FALSE;
   }
 
 }

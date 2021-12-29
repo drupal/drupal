@@ -96,4 +96,11 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
     return $normalizer_items;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

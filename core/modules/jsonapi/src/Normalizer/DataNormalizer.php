@@ -30,4 +30,11 @@ class DataNormalizer extends NormalizerBase {
       : CacheableNormalization::aggregate($cacheable_normalizations);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

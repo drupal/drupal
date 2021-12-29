@@ -332,4 +332,11 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
     return substr(str_replace(['-', '_'], '', Crypt::hashBase64($salt . $link_href)), 0, 7);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

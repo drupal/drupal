@@ -30,4 +30,11 @@ class LayoutEntityDisplayNormalizer extends ConfigEntityNormalizer {
     return $data;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

@@ -33,4 +33,11 @@ class BooleanNormalizer extends NormalizerBase implements DenormalizerInterface 
     return $data === '👍';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }
