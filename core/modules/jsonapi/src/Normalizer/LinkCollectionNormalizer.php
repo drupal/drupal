@@ -154,4 +154,11 @@ class LinkCollectionNormalizer extends NormalizerBase {
     return substr(str_replace(['-', '_'], '', $b64_hash), 0, 7);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

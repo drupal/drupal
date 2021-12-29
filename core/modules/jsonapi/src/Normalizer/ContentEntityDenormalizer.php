@@ -88,4 +88,11 @@ final class ContentEntityDenormalizer extends EntityDenormalizerBase {
     return $data_internal;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }

@@ -41,4 +41,11 @@ class PrimitiveDataNormalizer extends NormalizerBase {
     return $object->getValue() === NULL ? NULL : $object->getCastedValue();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
+  }
+
 }
