@@ -238,7 +238,7 @@ class SelectComplexTest extends DatabaseTestBase {
     // Check that the ordering clause is handled properly.
     $orderby = $query->getOrderBy();
     // The orderby string is different for PostgreSQL.
-    // @see Drupal\Core\Database\Driver\pgsql\Select::orderBy()
+    // @see Drupal\pgsql\Driver\Database\pgsql\Select::orderBy()
     $db_type = Database::getConnection()->databaseType();
     $this->assertEquals($db_type == 'pgsql' ? 'ASC NULLS FIRST' : 'ASC', $orderby['name'], 'Query correctly sets ordering clause.');
     $orderby = $count->getOrderBy();

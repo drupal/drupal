@@ -171,12 +171,13 @@ function drupal_get_database_types() {
   // The internal database driver name is any valid PHP identifier.
   $mask = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
 
-  // Find drivers in the Drupal\Core and Drupal\Driver namespaces.
+  // Find drivers in the Drupal\Driver namespace.
+  // @todo remove discovering in the Drupal\Driver namespace in D10.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-  $files = $file_system->scanDirectory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, ['recurse' => FALSE]);
+  $files = [];
   if (is_dir(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database')) {
-    $files += $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
+    $files = $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
   }
   foreach ($files as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {

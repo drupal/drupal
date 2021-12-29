@@ -2,7 +2,9 @@
 
 namespace Drupal\driver_test\Driver\Database\DrivertestPgsql;
 
-use Drupal\Core\Database\Driver\pgsql\Truncate as CoreTruncate;
+include_once dirname(__DIR__, 8) . '/pgsql/src/Driver/Database/pgsql/Truncate.php';
+
+use Drupal\pgsql\Driver\Database\pgsql\Truncate as CoreTruncate;
 
 /**
  * PostgreSQL implementation of \Drupal\Core\Database\Query\Truncate.

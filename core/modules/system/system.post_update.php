@@ -7,6 +7,7 @@
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\ContentEntityType;
@@ -231,5 +232,31 @@ function system_post_update_sort_all_config(&$sandbox) {
   }
   else {
     $sandbox['#finished'] = 1;
+  }
+}
+
+/**
+ * Enable the modules that are providing the listed database drivers.
+ */
+function system_post_update_enable_provider_database_driver() {
+  $modules_to_install = [];
+  foreach (Database::getAllConnectionInfo() as $targets) {
+    foreach ($targets as $target) {
+      // Provider determination taken from Connection::getProvider().
+      [$first, $second] = explode('\\', $target['namespace'] ?? '', 3);
+      $provider = ($first === 'Drupal' && strtolower($second) === $second) ? $second : 'core';
+      if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
+        $autoload = $target['autoload'] ?? '';
+        // We are only enabling the module for database drivers that are
+        // provided by a module.
+        if (str_contains($autoload, 'src/Driver/Database/')) {
+          $modules_to_install[$provider] = TRUE;
+        }
+      }
+    }
+  }
+
+  if ($modules_to_install !== []) {
+    \Drupal::service('module_installer')->install(array_keys($modules_to_install));
   }
 }

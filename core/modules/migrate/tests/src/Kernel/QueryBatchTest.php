@@ -6,7 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 
 /**
  * Tests query batching.
@@ -224,7 +224,7 @@ class QueryBatchTest extends KernelTestBase {
    *   The source data, keyed by table name. Each table is an array containing
    *   the rows in that table.
    *
-   * @return \Drupal\Core\Database\Driver\sqlite\Connection
+   * @return \Drupal\sqlite\Driver\Database\sqlite\Connection
    *   The SQLite database connection.
    */
   protected function getDatabase(array $source_data) {

@@ -238,7 +238,7 @@ abstract class Database {
 
     // Fallback for Drupal 7 settings.php if namespace is not provided.
     if (empty($info['namespace'])) {
-      $info['namespace'] = 'Drupal\\Core\\Database\\Driver\\' . $info['driver'];
+      $info['namespace'] = 'Drupal\\' . $info['driver'] . '\\Driver\\Database\\' . $info['driver'];
     }
 
     return $info;
@@ -465,38 +465,42 @@ abstract class Database {
     $driver = $matches[1];
 
     // Determine if the database driver is provided by a module.
+    // @todo https://www.drupal.org/project/drupal/issues/3250999. Refactor when
+    // all database drivers are provided by modules.
     $module = NULL;
     $connection_class = NULL;
     $url_components = parse_url($url);
-    if (isset($url_components['query'])) {
-      parse_str($url_components['query'], $query);
-      if (isset($query['module']) && $query['module']) {
-        $module = $query['module'];
-        // Set up an additional autoloader. We don't use the main autoloader as
-        // this method can be called before Drupal is installed and is never
-        // called during regular runtime.
-        $namespace = "Drupal\\$module\\Driver\\Database\\$driver";
-        $psr4_base_directory = Database::findDriverAutoloadDirectory($namespace, $root, TRUE);
-        $additional_class_loader = new ClassLoader();
-        $additional_class_loader->addPsr4($namespace . '\\', $psr4_base_directory);
-        $additional_class_loader->register(TRUE);
-        $connection_class = $custom_connection_class = $namespace . '\\Connection';
-      }
+    $url_component_query = $url_components['query'] ?? '';
+    parse_str($url_component_query, $query);
+
+    // Add the module key for core database drivers when the module key is not
+    // set.
+    if (!isset($query['module']) && in_array($driver, ['mysql', 'pgsql', 'sqlite'], TRUE)) {
+      $query['module'] = $driver;
+    }
+
+    if (isset($query['module']) && $query['module']) {
+      $module = $query['module'];
+      // Set up an additional autoloader. We don't use the main autoloader as
+      // this method can be called before Drupal is installed and is never
+      // called during regular runtime.
+      $namespace = "Drupal\\$module\\Driver\\Database\\$driver";
+      $psr4_base_directory = Database::findDriverAutoloadDirectory($namespace, $root, TRUE);
+      $additional_class_loader = new ClassLoader();
+      $additional_class_loader->addPsr4($namespace . '\\', $psr4_base_directory);
+      $additional_class_loader->register(TRUE);
+      $connection_class = $namespace . '\\Connection';
     }
 
     if (!$module) {
       // Determine the connection class to use. Discover if the URL has a valid
-      // driver scheme. Try with Drupal 8 style custom drivers first, since
-      // those can override/extend the core ones.
-      $connection_class = $custom_connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
-      if (!class_exists($connection_class)) {
-        // If the URL is not relative to a custom driver, try with core ones.
-        $connection_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
-      }
+      // driver scheme for a Drupal 8 style custom driver.
+      // @todo Remove this in Drupal 10.
+      $connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
     }
 
     if (!class_exists($connection_class)) {
-      throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$custom_connection_class' does not exist");
+      throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
     }
 
     $options = $connection_class::createConnectionOptionsFromUrl($url, $root);
@@ -641,8 +645,8 @@ abstract class Database {
     if (isset($connection_info['namespace'])) {
       return $connection_info['namespace'];
     }
-    // Fallback for Drupal 7 settings.php.
-    return 'Drupal\\Core\\Database\\Driver\\' . $connection_info['driver'];
+    // Fallback for when the namespace is not provided in settings.php.
+    return 'Drupal\\' . $connection_info['driver'] . '\\Driver\\Database\\' . $connection_info['driver'];
   }
 
   /**

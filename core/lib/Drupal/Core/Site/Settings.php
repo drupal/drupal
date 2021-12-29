@@ -162,6 +162,43 @@ final class Settings {
     // Initialize databases.
     foreach ($databases as $key => $targets) {
       foreach ($targets as $target => $info) {
+        // Backwards compatibility layer for Drupal 8 style database connection
+        // arrays. Those do not have the 'autoload' key set for core database
+        // drivers.
+        if (empty($info['autoload'])) {
+          switch (strtolower($info['driver'])) {
+            case 'mysql':
+              $info['autoload'] = 'core/modules/mysql/src/Driver/Database/mysql/';
+              break;
+
+            case 'pgsql':
+              $info['autoload'] = 'core/modules/pgsql/src/Driver/Database/pgsql/';
+              break;
+
+            case 'sqlite':
+              $info['autoload'] = 'core/modules/sqlite/src/Driver/Database/sqlite/';
+              break;
+          }
+        }
+        // Backwards compatibility layer for Drupal 8 style database connection
+        // arrays. Those have the wrong 'namespace' key set, or not set at all
+        // for core supported database drivers.
+        if (empty($info['namespace']) || (strpos($info['namespace'], 'Drupal\\Core\\Database\\Driver\\') === 0)) {
+          switch (strtolower($info['driver'])) {
+            case 'mysql':
+              $info['namespace'] = 'Drupal\\mysql\\Driver\\Database\\mysql';
+              break;
+
+            case 'pgsql':
+              $info['namespace'] = 'Drupal\\pgsql\\Driver\\Database\\pgsql';
+              break;
+
+            case 'sqlite':
+              $info['namespace'] = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
+              break;
+          }
+        }
+
         Database::addConnectionInfo($key, $target, $info);
         // If the database driver is provided by a module, then its code may
         // need to be instantiated prior to when the module's root namespace

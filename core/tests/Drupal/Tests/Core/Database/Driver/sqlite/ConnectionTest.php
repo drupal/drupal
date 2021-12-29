@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\Core\Database\Driver\sqlite;
 
-use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Database\Driver\sqlite\Connection
+ * @coversDefaultClass \Drupal\sqlite\Driver\Database\sqlite\Connection
  * @group Database
  */
 class ConnectionTest extends UnitTestCase {

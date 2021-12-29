@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * The SQLite module provides the connection between Drupal and a SQLite database.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function sqlite_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.sqlite':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The SQLite module provides the connection between Drupal and a SQLite database. For more information, see the <a href=":sqlite">online documentation for the SQLite module</a>.', [':sqlite' => 'https://www.drupal.org/documentation/modules/sqlite']) . '</p>';
+      return $output;
+
+  }
+}

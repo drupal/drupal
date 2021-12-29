@@ -15,7 +15,7 @@ class PrefixInfoTest extends DatabaseTestBase {
    * Tests that DatabaseSchema::getPrefixInfo() returns the right database.
    *
    * We are testing if the return array of the method
-   * \Drupal\Core\Database\Driver\mysql\Schema::getPrefixInfo(). This return
+   * \Drupal\mysql\Driver\Database\mysql\Schema::getPrefixInfo(). This return
    * array is a keyed array with info about amongst other things the database.
    * The other two by Drupal core supported databases do not have this variable
    * set in the return array.

@@ -263,7 +263,7 @@ class TransactionTest extends DatabaseTestBase {
       try {
         // Rollback the outer transaction.
         $transaction->rollBack();
-        // @see \Drupal\Core\Database\Driver\mysql\Connection::rollBack()
+        // @see \Drupal\mysql\Driver\Database\mysql\Connection::rollBack()
         $this->fail('Rolling back a transaction containing DDL should produce a warning.');
       }
       catch (Warning $warning) {

@@ -138,7 +138,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests numeric query parameter expansion in expressions.
    *
-   * @see \Drupal\Core\Database\Driver\sqlite\Statement::getStatement()
+   * @see \Drupal\sqlite\Driver\Database\sqlite\Statement::getStatement()
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {

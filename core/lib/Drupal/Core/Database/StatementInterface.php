@@ -2,18 +2,20 @@
 
 namespace Drupal\Core\Database;
 
+// cSpell:ignore mydriver
+
 /**
  * Represents a prepared statement.
  *
- * Child implementations should either extend PDOStatement:
+ * Child implementations should either extend StatementWrapper:
  * @code
- * class Drupal\Core\Database\Driver\oracle\Statement extends PDOStatement implements Drupal\Core\Database\StatementInterface {}
+ * class Drupal\mymodule\Driver\Database\mydriver\Statement extends Drupal\Core\Database\StatementWrapper {}
  * @endcode
  * or define their own class. If defining their own class, they will also have
  * to implement either the Iterator or IteratorAggregate interface before
  * Drupal\Core\Database\StatementInterface:
  * @code
- * class Drupal\Core\Database\Driver\oracle\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
+ * class Drupal\mymodule\Driver\Database\mydriver\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
  * @endcode
  *
  * @ingroup database
