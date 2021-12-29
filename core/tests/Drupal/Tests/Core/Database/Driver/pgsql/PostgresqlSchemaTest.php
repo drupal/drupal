@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\Core\Database\Driver\pgsql;
 
-use Drupal\Core\Database\Driver\pgsql\Schema;
+use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
 
 // cSpell:ignore conname
 
 /**
- * @coversDefaultClass \Drupal\Core\Database\Driver\pgsql\Schema
+ * @coversDefaultClass \Drupal\pgsql\Driver\Database\pgsql\Schema
  * @group Database
  */
 class PostgresqlSchemaTest extends UnitTestCase {
@@ -16,7 +16,7 @@ class PostgresqlSchemaTest extends UnitTestCase {
   /**
    * The PostgreSql DB connection.
    *
-   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Database\Driver\pgsql\Connection
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\pgsql\Driver\Database\pgsql\Connection
    */
   protected $connection;
 
@@ -26,7 +26,7 @@ class PostgresqlSchemaTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->connection = $this->getMockBuilder('\Drupal\Core\Database\Driver\pgsql\Connection')
+    $this->connection = $this->getMockBuilder('\Drupal\pgsql\Driver\Database\pgsql\Connection')
       ->disableOriginalConstructor()
       ->getMock();
   }

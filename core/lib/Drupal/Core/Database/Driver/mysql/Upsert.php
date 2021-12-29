@@ -2,42 +2,16 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\Query\Upsert as QueryUpsert;
+use Drupal\mysql\Driver\Database\mysql\Upsert as MysqlUpsert;
+
+@trigger_error('\Drupal\Core\Database\Driver\mysql\Upsert is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The MySQL database driver has been moved to the mysql module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
 
 /**
  * MySQL implementation of \Drupal\Core\Database\Query\Upsert.
+ *
+ * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The MySQL
+ *   database driver has been moved to the mysql module.
+ *
+ * @see https://www.drupal.org/node/3129492
  */
-class Upsert extends QueryUpsert {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __toString() {
-    // Create a sanitized comment string to prepend to the query.
-    $comments = $this->connection->makeComment($this->comments);
-
-    // Default fields are always placed first for consistency.
-    $insert_fields = array_merge($this->defaultFields, $this->insertFields);
-    $insert_fields = array_map(function ($field) {
-      return $this->connection->escapeField($field);
-    }, $insert_fields);
-
-    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
-
-    $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
-    $query .= implode(', ', $values);
-
-    // Updating the unique / primary key is not necessary.
-    unset($insert_fields[$this->key]);
-
-    $update = [];
-    foreach ($insert_fields as $field) {
-      $update[] = "$field = VALUES($field)";
-    }
-
-    $query .= ' ON DUPLICATE KEY UPDATE ' . implode(', ', $update);
-
-    return $query;
-  }
-
-}
+class Upsert extends MysqlUpsert {}

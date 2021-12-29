@@ -3,7 +3,7 @@
 namespace Drupal\BuildTests\Framework\Tests;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
-use Drupal\Core\Database\Driver\sqlite\Install\Tasks;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 
 /**
  * @coversDefaultClass \Drupal\BuildTests\Framework\BuildTestBase

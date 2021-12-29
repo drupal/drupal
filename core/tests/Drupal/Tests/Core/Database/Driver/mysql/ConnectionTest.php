@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests MySQL database connections.
  *
- * @coversDefaultClass \Drupal\Core\Database\Driver\mysql\Connection
+ * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Connection
  * @group Database
  */
 class ConnectionTest extends UnitTestCase {
@@ -38,7 +38,7 @@ class ConnectionTest extends UnitTestCase {
   /**
    * Creates a Connection object for testing.
    *
-   * @return \Drupal\Core\Database\Driver\mysql\Connection
+   * @return \Drupal\mysql\Driver\Database\mysql\Connection
    */
   private function createConnection(): Connection {
     /** @var \PDO $pdo_connection */

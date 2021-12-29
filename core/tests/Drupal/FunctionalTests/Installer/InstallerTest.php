@@ -2,8 +2,10 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Test\PerformanceTestRecorder;
+use Drupal\Core\Extension\ModuleUninstallValidatorException;
 
 /**
  * Tests the interactive installer.
@@ -116,6 +118,33 @@ class InstallerTest extends InstallerTestBase {
 
     // Assert the title is correct and has the title suffix.
     $this->assertSession()->titleEquals('Choose language | Drupal');
+  }
+
+  /**
+   * Confirms that the installation succeeded.
+   */
+  public function testInstalled() {
+    $this->assertSession()->addressEquals('user/1');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $database = Database::getConnection();
+    $module = $database->getProvider();
+    $module_handler = \Drupal::service('module_handler');
+
+    // Assert that the module that is providing the database driver has been
+    // installed.
+    $this->assertTrue($module_handler->moduleExists($module));
+
+    // The module that is providing the database driver should be uninstallable.
+    try {
+      $this->container->get('module_installer')->uninstall([$module]);
+      $this->fail("Uninstalled $module module.");
+    }
+    catch (ModuleUninstallValidatorException $e) {
+      $module_name = $module_handler->getName($module);
+      $driver = $database->driver();
+      $this->assertStringContainsString("The module '$module_name' is providing the database driver '$driver'.", $e->getMessage());
+    }
   }
 
 }

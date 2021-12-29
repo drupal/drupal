@@ -276,9 +276,9 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Database\Driver\mysql\Schema::introspectIndexSchema
-   * @covers \Drupal\Core\Database\Driver\pgsql\Schema::introspectIndexSchema
-   * @covers \Drupal\Core\Database\Driver\sqlite\Schema::introspectIndexSchema
+   * @covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
+   * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::introspectIndexSchema
+   * @covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema() {
     $table_specification = [
@@ -355,7 +355,7 @@ class SchemaTest extends KernelTestBase {
   /**
    * Tests that indexes on string fields are limited to 191 characters on MySQL.
    *
-   * @see \Drupal\Core\Database\Driver\mysql\Schema::getNormalizedIndexes()
+   * @see \Drupal\mysql\Driver\Database\mysql\Schema::getNormalizedIndexes()
    */
   public function testIndexLength() {
     if ($this->connection->databaseType() !== 'mysql') {

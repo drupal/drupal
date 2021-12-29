@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Core\Command;
 
-use Drupal\Core\Database\Driver\sqlite\Install\Tasks;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Client;

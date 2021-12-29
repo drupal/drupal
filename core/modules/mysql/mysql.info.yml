@@ -1,0 +1,5 @@
+name: MySQL
+type: module
+description: 'Database driver for MySQL.'
+package: Core
+version: VERSION

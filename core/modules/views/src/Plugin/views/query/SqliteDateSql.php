@@ -97,7 +97,7 @@ class SqliteDateSql implements DateSqlInterface {
     // case the comparison value is a float, integer, or numeric. All of the
     // above SQLite format tokens only produce integers. However, the given
     // $format may contain 'Y-m-d', which results in a string.
-    // @see \Drupal\Core\Database\Driver\sqlite\Connection::expandArguments()
+    // @see \Drupal\sqlite\Driver\Database\sqlite\Connection::expandArguments()
     // @see http://www.sqlite.org/lang_datefunc.html
     // @see http://www.sqlite.org/lang_expr.html#castexpr
     if (preg_match('/^(?:%\w)+$/', $format)) {

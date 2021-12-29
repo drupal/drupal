@@ -2,7 +2,9 @@
 
 namespace Drupal\driver_test\Driver\Database\DrivertestMysqlDeprecatedVersion\Install;
 
-use Drupal\Core\Database\Driver\mysql\Install\Tasks as CoreTasks;
+include_once dirname(__DIR__, 9) . '/mysql/src/Driver/Database/mysql/Install/Tasks.php';
+
+use Drupal\mysql\Driver\Database\mysql\Install\Tasks as CoreTasks;
 
 /**
  * Specifies installation tasks for MySQL test databases.

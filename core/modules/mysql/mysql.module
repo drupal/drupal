@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * The MySQL module provides the connection between Drupal and a MySQL, MariaDB or equivalent database.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function mysql_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.mysql':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The MySQL module provides the connection between Drupal and a MySQL, MariaDB or equivalent database. For more information, see the <a href=":mysql">online documentation for the MySQL module</a>.', [':mysql' => 'https://www.drupal.org/documentation/modules/mysql']) . '</p>';
+      return $output;
+
+  }
+}

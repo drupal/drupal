@@ -2,21 +2,16 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
-use Drupal\Core\Database\Query\Truncate as QueryTruncate;
+use Drupal\sqlite\Driver\Database\sqlite\Truncate as SqliteTruncate;
+
+@trigger_error('\Drupal\Core\Database\Driver\sqlite\Truncate is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Query\Truncate.
  *
- * SQLite doesn't support TRUNCATE, but a DELETE query with no condition has
- * exactly the effect (it is implemented by DROPing the table).
+ * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite
+ *   database driver has been moved to the sqlite module.
+ *
+ * @see https://www.drupal.org/node/3129492
  */
-class Truncate extends QueryTruncate {
-
-  public function __toString() {
-    // Create a sanitized comment string to prepend to the query.
-    $comments = $this->connection->makeComment($this->comments);
-
-    return $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
-  }
-
-}
+class Truncate extends SqliteTruncate {}

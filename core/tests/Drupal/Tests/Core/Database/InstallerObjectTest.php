@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Core\Database\Driver\mysql\Install\Tasks as MysqlInstallTasks;
+use Drupal\mysql\Driver\Database\mysql\Install\Tasks as MysqlInstallTasks;
 use Drupal\Driver\Database\fake\Install\Tasks as FakeInstallTasks;
 use Drupal\Driver\Database\corefake\Install\Tasks as CustomCoreFakeInstallTasks;
 use Drupal\driver_test\Driver\Database\DrivertestMysql\Install\Tasks as DriverTestMysqlInstallTasks;
@@ -58,7 +58,7 @@ class InstallerObjectTest extends UnitTestCase {
   public function providerDbInstallerObject() {
     return [
       // A driver only in the core namespace.
-      ['mysql', NULL, MysqlInstallTasks::class],
+      ['mysql', "Drupal\\mysql\\Driver\\Database\\mysql", MysqlInstallTasks::class],
 
       // A driver only in the custom namespace.
       ['fake', "Drupal\\Driver\\Database\\fake", FakeInstallTasks::class],

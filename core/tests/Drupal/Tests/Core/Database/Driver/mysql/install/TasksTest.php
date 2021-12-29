@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\Core\Database\Driver\mysql\install;
 
-use Drupal\Core\Database\Driver\mysql\Connection;
-use Drupal\Core\Database\Driver\mysql\Install\Tasks;
+use Drupal\mysql\Driver\Database\mysql\Connection;
+use Drupal\mysql\Driver\Database\mysql\Install\Tasks;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the MySQL install tasks.
  *
- * @coversDefaultClass \Drupal\Core\Database\Driver\mysql\Install\Tasks
+ * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Install\Tasks
  * @group Database
  */
 class TasksTest extends UnitTestCase {
@@ -17,7 +17,7 @@ class TasksTest extends UnitTestCase {
   /**
    * A connection object prophecy.
    *
-   * @var \Drupal\Core\Database\Driver\mysql\Connection|\Prophecy\Prophecy\ObjectProphecy
+   * @var \Drupal\mysql\Driver\Database\mysql\Connection|\Prophecy\Prophecy\ObjectProphecy
    */
   private $connection;
 
@@ -31,10 +31,10 @@ class TasksTest extends UnitTestCase {
   /**
    * Creates a Tasks object for testing.
    *
-   * @return \Drupal\Core\Database\Driver\mysql\Install\Tasks
+   * @return \Drupal\mysql\Driver\Database\mysql\Install\Tasks
    */
   private function createTasks(): Tasks {
-    /** @var \Drupal\Core\Database\Driver\mysql\Connection $connection */
+    /** @var \Drupal\mysql\Driver\Database\mysql\Connection $connection */
     $connection = $this->connection->reveal();
 
     return new class($connection) extends Tasks {
@@ -63,7 +63,7 @@ class TasksTest extends UnitTestCase {
   /**
    * Creates a Tasks object for testing, without connection.
    *
-   * @return \Drupal\Core\Database\Driver\mysql\Install\Tasks
+   * @return \Drupal\mysql\Driver\Database\mysql\Install\Tasks
    */
   private function createTasksNoConnection(): Tasks {
     return new class() extends Tasks {

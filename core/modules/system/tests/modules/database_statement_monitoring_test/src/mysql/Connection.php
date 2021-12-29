@@ -2,7 +2,7 @@
 
 namespace Drupal\database_statement_monitoring_test\mysql;
 
-use Drupal\Core\Database\Driver\mysql\Connection as BaseConnection;
+use Drupal\mysql\Driver\Database\mysql\Connection as BaseConnection;
 use Drupal\database_statement_monitoring_test\LoggedStatementsTrait;
 
 /**
