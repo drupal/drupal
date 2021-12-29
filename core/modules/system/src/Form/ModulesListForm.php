@@ -259,9 +259,9 @@ class ModulesListForm extends FormBase {
     if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
       $row['links']['help'] = [
         '#type' => 'link',
-        '#title' => $this->t('Help'),
+        '#title' => $this->t('Help <span class="visually-hidden">for @module</span>', ['@module' => $module->info['name']]),
         '#url' => Url::fromRoute('help.page', ['name' => $module->getName()]),
-        '#options' => ['attributes' => ['class' => ['module-link', 'module-link-help'], 'title' => $this->t('Help')]],
+        '#options' => ['attributes' => ['class' => ['module-link', 'module-link-help']]],
       ];
     }
 
@@ -269,9 +269,9 @@ class ModulesListForm extends FormBase {
     if ($module->status && $this->currentUser->hasPermission('administer permissions') && $this->permissionHandler->moduleProvidesPermissions($module->getName())) {
       $row['links']['permissions'] = [
         '#type' => 'link',
-        '#title' => $this->t('Permissions'),
+        '#title' => $this->t('Permissions <span class="visually-hidden">for @module</span>', ['@module' => $module->info['name']]),
         '#url' => Url::fromRoute('user.admin_permissions.module', ['modules' => $module->getName()]),
-        '#options' => ['attributes' => ['class' => ['module-link', 'module-link-permissions'], 'title' => $this->t('Configure permissions')]],
+        '#options' => ['attributes' => ['class' => ['module-link', 'module-link-permissions']]],
       ];
     }
 
@@ -281,7 +281,7 @@ class ModulesListForm extends FormBase {
       if ($this->accessManager->checkNamedRoute($module->info['configure'], $route_parameters, $this->currentUser)) {
         $row['links']['configure'] = [
           '#type' => 'link',
-          '#title' => $this->t('Configure <span class="visually-hidden">the @module module</span>', ['@module' => $module->info['name']]),
+          '#title' => $this->t('Configure <span class="visually-hidden">@module</span>', ['@module' => $module->info['name']]),
           '#url' => Url::fromRoute($module->info['configure'], $route_parameters),
           '#options' => [
             'attributes' => [
