@@ -8,7 +8,7 @@
  */
 
 use Drupal\Component\Assertion\Handle;
-use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
+use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 
 /**
  * Finds all valid extension directories recursively within a given directory.

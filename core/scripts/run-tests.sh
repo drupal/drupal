@@ -18,7 +18,7 @@ use Drupal\Core\Test\RunTests\TestFileParser;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestDiscovery;
-use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
+use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;

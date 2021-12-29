@@ -44,7 +44,6 @@ class Composer {
     'phpspec/prophecy' => ['fixtures', 'spec', 'tests'],
     'phpunit/php-code-coverage' => ['tests'],
     'phpunit/php-timer' => ['tests'],
-    'phpunit/php-token-stream' => ['tests'],
     'phpunit/phpunit' => ['tests'],
     'sebastian/code-unit-reverse-lookup' => ['tests'],
     'sebastian/comparator' => ['tests'],

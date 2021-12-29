@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
-use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
+use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 use PHPUnit\Util\Test;
 
 /**

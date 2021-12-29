@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit8;
+namespace Drupal\TestTools\PhpUnitCompatibility;
 
 use Composer\Autoload\ClassLoader;
 
