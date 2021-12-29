@@ -82,41 +82,50 @@ abstract class Tasks {
 
   /**
    * Ensure the PDO driver is supported by the version of PHP in use.
+   *
+   * @return bool
+   *   TRUE if the PDO driver is supported, otherwise FALSE.
    */
   protected function hasPdoDriver() {
     return in_array($this->pdoDriver, \PDO::getAvailableDrivers());
   }
 
   /**
-   * Assert test as failed.
+   * Asserts test as failed.
    */
   protected function fail($message) {
     $this->results['fail'][] = $message;
   }
 
   /**
-   * Assert test as a pass.
+   * Asserts test as a pass.
    */
   protected function pass($message) {
     $this->results['pass'][] = $message;
   }
 
   /**
-   * Check whether Drupal is installable on the database.
+   * Checks whether Drupal is installable on the database.
+   *
+   * @return bool
+   *   TRUE if Drupal can be installed on the database, otherwise FALSE.
    */
   public function installable() {
     return $this->hasPdoDriver() && empty($this->error);
   }
 
   /**
-   * Return the human-readable name of the driver.
+   * Returns the human-readable name of the driver.
+   *
+   * @return string
+   *   The human-readable name of the driver.
    */
   abstract public function name();
 
   /**
-   * Return the minimum required version of the engine.
+   * Returns the minimum required version of the engine.
    *
-   * @return
+   * @return string|null
    *   A version string. If not NULL, it will be checked against the version
    *   reported by the Database engine using version_compare().
    */
@@ -125,9 +134,9 @@ abstract class Tasks {
   }
 
   /**
-   * Run database tasks and tests to see if Drupal can run on the database.
+   * Runs database tasks and tests to see if Drupal can run on the database.
    *
-   * @return array
+   * @return string[]
    *   A list of error messages.
    */
   public function runTasks() {
@@ -165,7 +174,10 @@ abstract class Tasks {
   }
 
   /**
-   * Check if we can connect to the database.
+   * Checks if we can connect to the database.
+   *
+   * @return bool
+   *   TRUE if we can connect to the database, otherwise FALSE.
    */
   protected function connect() {
     try {
@@ -183,7 +195,7 @@ abstract class Tasks {
   }
 
   /**
-   * Run SQL tests to ensure the database can execute commands with the current user.
+   * Ensures the database can execute commands with the current user.
    */
   protected function runTestQuery($query, $pass, $fail, $fatal = FALSE) {
     try {
@@ -197,7 +209,7 @@ abstract class Tasks {
   }
 
   /**
-   * Check the engine version.
+   * Checks the engine version.
    */
   protected function checkEngineVersion() {
     // Ensure that the database server has the right version.
@@ -222,12 +234,12 @@ abstract class Tasks {
   }
 
   /**
-   * Return driver specific configuration options.
+   * Returns driver specific configuration options.
    *
-   * @param $database
+   * @param string[] $database
    *   An array of driver specific configuration options.
    *
-   * @return
+   * @return array
    *   The options form array.
    */
   public function getFormOptions(array $database) {
@@ -319,13 +331,13 @@ abstract class Tasks {
    * Checks to ensure correct basic database settings and that a proper
    * connection to the database can be established.
    *
-   * @param $database
+   * @param string[] $database
    *   An array of driver specific configuration options.
    *
-   * @return
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
    *   An array of driver configuration errors, keyed by form element name.
    */
-  public function validateDatabaseSettings($database) {
+  public function validateDatabaseSettings(array $database) {
     $errors = [];
 
     // Verify the table prefix.
@@ -338,6 +350,16 @@ abstract class Tasks {
 
   /**
    * Translates a string to the current language or to a given language.
+   *
+   * @param string $string
+   *   The string literal to translate.
+   * @param array $args
+   *   Placeholder arguments to use inside the translated string (if any).
+   * @param array $options
+   *   Options for the translation.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   An object representing the translatable markup for the given string.
    *
    * @see \Drupal\Core\StringTranslation\TranslatableMarkup::__construct()
    */
