@@ -105,8 +105,8 @@ class SchemaTest extends KernelTestBase {
           $string_ascii_check = ($column->Collation == 'ascii_general_ci');
         }
       }
-      $this->assertTrue(!empty($string_check), 'string field has the right collation.');
-      $this->assertTrue(!empty($string_ascii_check), 'ASCII string field has the right collation.');
+      $this->assertNotEmpty($string_check, 'string field has the right collation.');
+      $this->assertNotEmpty($string_ascii_check, 'ASCII string field has the right collation.');
     }
 
     // An insert without a value for the column 'test_table' should fail.

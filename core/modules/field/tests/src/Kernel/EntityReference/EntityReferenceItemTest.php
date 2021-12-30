@@ -347,7 +347,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->name->value = $this->randomMachineName();
     // Now get the field value.
     $value = $entity->get('field_test_taxonomy_term');
-    $this->assertTrue(empty($value['target_id']));
+    $this->assertArrayNotHasKey('target_id', $value);
     $this->assertNull($entity->field_test_taxonomy_term->target_id);
     // And then set it.
     $entity->field_test_taxonomy_term = $value;

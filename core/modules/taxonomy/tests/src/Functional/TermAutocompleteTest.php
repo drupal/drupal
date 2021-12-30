@@ -172,7 +172,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       $this->autocompleteUrl,
       ['query' => ['q' => 'zzz']]
     );
-    $this->assertTrue(empty($data), 'Autocomplete returned no results');
+    $this->assertEmpty($data, 'Autocomplete returned no results');
 
     // Test that only one matching term found, when only one matches.
     $data = $this->drupalGetJson(

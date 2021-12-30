@@ -297,8 +297,8 @@ class TextSummaryTest extends KernelTestBase {
       'test_textwithsummary' => ['value' => $this->randomMachineName()],
     ]);
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
-    $this->assertTrue(!empty($form['test_textwithsummary']['widget'][0]['summary']), 'Summary field is shown');
-    $this->assertTrue(!empty($form['test_textwithsummary']['widget'][0]['summary']['#required']), 'Summary field is required');
+    $this->assertNotEmpty($form['test_textwithsummary']['widget'][0]['summary'], 'Summary field is shown');
+    $this->assertNotEmpty($form['test_textwithsummary']['widget'][0]['summary']['#required'], 'Summary field is required');
 
     // Test validation.
     /** @var \Symfony\Component\Validator\ConstraintViolation[] $violations */

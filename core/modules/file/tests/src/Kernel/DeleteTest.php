@@ -52,7 +52,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
     $this->assertFileHooksCalled(['load', 'update']);
-    $this->assertTrue(empty($usage), 'File usage data was removed.');
+    $this->assertEmpty($usage, 'File usage data was removed.');
     $this->assertFileExists($file->getFileUri());
     $file = File::load($file->id());
     $this->assertNotEmpty($file, 'File still exists in the database.');

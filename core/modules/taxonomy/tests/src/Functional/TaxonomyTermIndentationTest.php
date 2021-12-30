@@ -97,7 +97,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     // Check explicitly that term 2 has no parents.
     \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertTrue(empty($parents), 'Term 2 has no parents now');
+    $this->assertEmpty($parents, 'Term 2 has no parents now');
   }
 
 }

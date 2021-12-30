@@ -64,7 +64,7 @@ class SearchBlockTest extends BrowserTestBase {
     // Check that name attribute is not empty.
     $pattern = "//input[@type='submit' and @name='']";
     $elements = $this->xpath($pattern);
-    $this->assertTrue(empty($elements), 'The search input field does not have empty name attribute.');
+    $this->assertEmpty($elements, 'The search input field does not have empty name attribute.');
 
     // Test a normal search via the block form, from the front page.
     $terms = ['keys' => 'test'];

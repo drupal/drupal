@@ -114,7 +114,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block');
     // Look for the blocks table.
     $blocks_table = $this->xpath("//table[@id='blocks']");
-    $this->assertTrue(!empty($blocks_table), 'The blocks table is being rendered.');
+    $this->assertNotEmpty($blocks_table, 'The blocks table is being rendered.');
     // Look for test blocks in the table.
     foreach ($this->blockValues as $delta => $values) {
       $block = $this->blocks[$delta];
@@ -142,7 +142,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_powered_by_block', ['region' => 'header', 'id' => 'header']);
     $this->drupalGet('admin/structure/block');
     $element = $this->xpath('//tr[contains(@class, :class)]', [':class' => 'region-title-header']);
-    $this->assertTrue(!empty($element));
+    $this->assertNotEmpty($element);
 
     // Ensure hidden themes do not appear in the UI. Enable another non base
     // theme and place the local tasks block.
@@ -184,7 +184,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
     $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The test block appears in the category for its module.');
+    $this->assertNotEmpty($elements, 'The test block appears in the category for its module.');
 
     // Trigger the custom category addition in block_test_block_alter().
     $this->container->get('state')->set('block_test_info_alter', TRUE);
@@ -194,7 +194,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->clickLink('Place block');
     $arguments[':category'] = 'Custom category';
     $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The test block appears in a custom category controlled by block_test_block_alter().');
+    $this->assertNotEmpty($elements, 'The test block appears in a custom category controlled by block_test_block_alter().');
   }
 
   /**
@@ -207,7 +207,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', '//tr[.//td/div[text()="Test context-aware unsatisfied block"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/structure/block/add/test_context_aware_unsatisfied/classy")]]');
 
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware_unsatisfied');
-    $this->assertTrue(!empty($definition), 'The context-aware test block does not exist.');
+    $this->assertNotEmpty($definition, 'The context-aware test block does not exist.');
   }
 
   /**
@@ -230,9 +230,9 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
     $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue(!empty($elements), 'The context-aware test block appears.');
+    $this->assertNotEmpty($elements, 'The context-aware test block appears.');
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware');
-    $this->assertTrue(!empty($definition), 'The context-aware test block exists.');
+    $this->assertNotEmpty($definition, 'The context-aware test block exists.');
     $edit = [
       'region' => 'content',
       'settings[context_mapping][user]' => '@block_test.multiple_static_context:userB',

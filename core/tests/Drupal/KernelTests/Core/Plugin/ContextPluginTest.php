@@ -72,7 +72,7 @@ class ContextPluginTest extends KernelTestBase {
     // Try to pass the wrong class type as a context value.
     $plugin->setContextValue('user', $node);
     $violations = $plugin->validateContexts();
-    $this->assertTrue(!empty($violations), 'The provided context value does not pass validation.');
+    $this->assertNotEmpty($violations, 'The provided context value does not pass validation.');
 
     // Set an appropriate context value and check to make sure its methods work
     // as expected.

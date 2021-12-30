@@ -147,7 +147,7 @@ class FormTest extends BrowserTestBase {
             else {
               // Make sure there is *no* form error for this element. We're
               // not using assertEmpty() because the array key might not exist.
-              $this->assertTrue(empty($errors[$element]), "Optional '$type' field '$element' has no errors with empty input");
+              $this->assertArrayNotHasKey($element, $errors, "Optional '$type' field '$element' should have no errors with empty input.");
             }
           }
         }

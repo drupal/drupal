@@ -595,7 +595,7 @@ class EntityDisplayTest extends KernelTestBase {
     // Reload the form display.
     $form_display = EntityFormDisplay::load($form_display->id());
     // The display exists.
-    $this->assertFalse(empty($form_display));
+    $this->assertNotEmpty($form_display);
     // The form display should not depend on $role[0] anymore.
     $this->assertNoDependency('config', $dependencies[0], $form_display);
     // The form display should depend on 'anonymous' user role.
@@ -612,7 +612,7 @@ class EntityDisplayTest extends KernelTestBase {
     // Reload the form display.
     $form_display = EntityFormDisplay::load($form_display->id());
     // The display exists.
-    $this->assertFalse(empty($form_display));
+    $this->assertNotEmpty($form_display);
     // The component is still enabled.
     $this->assertNotNull($form_display->getComponent($field_name));
     // The form display should not depend on 'color' module anymore.
@@ -624,7 +624,7 @@ class EntityDisplayTest extends KernelTestBase {
     // Reload the form display.
     $form_display = EntityFormDisplay::load($form_display->id());
     // The display exists.
-    $this->assertFalse(empty($form_display));
+    $this->assertNotEmpty($form_display);
     // The component has been disabled.
     $this->assertNull($form_display->getComponent($field_name));
     $this->assertTrue($form_display->get('hidden')[$field_name]);

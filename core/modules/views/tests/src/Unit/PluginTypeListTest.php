@@ -39,7 +39,7 @@ class PluginTypeListTest extends UnitTestCase {
     ];
 
     $diff = array_diff($plugin_list, ViewExecutable::getPluginTypes());
-    $this->assertTrue(empty($diff), 'The plugin list is correct');
+    $this->assertEmpty($diff);
   }
 
 }

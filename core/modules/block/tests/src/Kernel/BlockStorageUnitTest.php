@@ -77,7 +77,7 @@ class BlockStorageUnitTest extends KernelTestBase {
 
     // Verify all of the block properties.
     $actual_properties = $this->config('block.block.test_block')->get();
-    $this->assertTrue(!empty($actual_properties['uuid']), 'The block UUID is set.');
+    $this->assertNotEmpty($actual_properties['uuid'], 'The block UUID is set.');
     unset($actual_properties['uuid']);
 
     // Ensure that default values are filled in.
@@ -129,14 +129,14 @@ class BlockStorageUnitTest extends KernelTestBase {
     // Ensure that the storage isn't currently empty.
     $config_storage = $this->container->get('config.storage');
     $config = $config_storage->listAll('block.block.');
-    $this->assertFalse(empty($config), 'There are blocks in config storage.');
+    $this->assertNotEmpty($config, 'There are blocks in config storage.');
 
     // Delete the block.
     $entity->delete();
 
     // Ensure that the storage is now empty.
     $config = $config_storage->listAll('block.block.');
-    $this->assertTrue(empty($config), 'There are no blocks in config storage.');
+    $this->assertEmpty($config, 'There are no blocks in config storage.');
   }
 
   /**
@@ -145,7 +145,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   public function testDefaultBlocks() {
     \Drupal::service('theme_installer')->install(['classy']);
     $entities = $this->controller->loadMultiple();
-    $this->assertTrue(empty($entities), 'There are no blocks initially.');
+    $this->assertEmpty($entities, 'There are no blocks initially.');
 
     // Install the block_test.module, so that its default config is installed.
     $this->installConfig(['block_test']);

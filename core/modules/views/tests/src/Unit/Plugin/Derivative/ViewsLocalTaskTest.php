@@ -159,7 +159,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $this->assertEquals(12, $definitions['view.example_view.page_1']['weight']);
     $this->assertEquals('Example title', $definitions['view.example_view.page_1']['title']);
     $this->assertEquals($this->baseDefinition['class'], $definitions['view.example_view.page_1']['class']);
-    $this->assertTrue(empty($definitions['view.example_view.page_1']['base_route']));
+    $this->assertArrayNotHasKey('base_route', $definitions['view.example_view.page_1']);
   }
 
   /**

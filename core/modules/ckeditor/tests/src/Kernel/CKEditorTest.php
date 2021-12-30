@@ -422,7 +422,7 @@ class CKEditorTest extends KernelTestBase {
     $this->ckeditor->getJSSettings($editor);
     $localeStorage = $this->container->get('locale.storage');
     $string = $localeStorage->findString(['source' => 'Edit Link', 'context' => '']);
-    $this->assertTrue(!empty($string), 'String from JavaScript file saved.');
+    $this->assertNotEmpty($string, 'String from JavaScript file saved.');
 
     // With locale module, CKEditor should not adhere to the language selected.
     $this->assertCKEditorLanguage();

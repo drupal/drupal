@@ -45,7 +45,7 @@ class InfoParserUnitTest extends UnitTestCase {
   public function testInfoParserNonExisting() {
     vfsStream::setup('modules');
     $info = $this->infoParser->parse(vfsStream::url('modules') . '/does_not_exist.info.txt');
-    $this->assertTrue(empty($info), 'Non existing info.yml returns empty array.');
+    $this->assertEmpty($info, 'Non existing info.yml returns empty array.');
   }
 
   /**
