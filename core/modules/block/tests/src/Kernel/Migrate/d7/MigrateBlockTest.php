@@ -167,7 +167,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
       'seven_statistics_popular',
       'seven_block_1',
     ];
-    $this->assertTrue(empty(Block::loadMultiple($non_existent_blocks)));
+    $this->assertEmpty(Block::loadMultiple($non_existent_blocks));
   }
 
 }

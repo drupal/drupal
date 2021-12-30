@@ -85,7 +85,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $defaults = $route_enhancer->enhance($defaults, $request);
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityViewController::view', $defaults['_controller'], 'The entity view controller was not set.');
     $this->assertEquals('Mock entity', $defaults['_entity']);
-    $this->assertTrue(empty($defaults['view_mode']));
+    $this->assertArrayNotHasKey('view_mode', $defaults);
     $this->assertFalse(isset($defaults['_entity_view']));
   }
 

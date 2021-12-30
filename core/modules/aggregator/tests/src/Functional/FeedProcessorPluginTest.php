@@ -51,7 +51,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     $this->updateAndDelete($feed, NULL);
     // Make sure the feed title is changed.
     $entities = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->loadByProperties(['description' => $description]);
-    $this->assertTrue(empty($entities));
+    $this->assertEmpty($entities);
   }
 
   /**

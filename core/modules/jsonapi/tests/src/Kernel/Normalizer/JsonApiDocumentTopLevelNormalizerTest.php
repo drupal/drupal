@@ -299,7 +299,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
         'related' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/uid', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
       ],
     ], $normalized['data']['relationships']['uid']);
-    $this->assertTrue(empty($normalized['meta']['omitted']));
+    $this->assertArrayNotHasKey('meta', $normalized);
     $this->assertSame($this->user->uuid(), $normalized['included'][0]['id']);
     $this->assertSame('user--user', $normalized['included'][0]['type']);
     $this->assertSame('user1', $normalized['included'][0]['attributes']['display_name']);
@@ -394,8 +394,8 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertStringMatchesFormat($this->node->uuid(), $normalized['data']['id']);
     $this->assertEquals($this->node->type->entity->uuid(), $normalized['data']['relationships']['node_type']['data']['id']);
     $this->assertEquals($this->user->uuid(), $normalized['data']['relationships']['uid']['data']['id']);
-    $this->assertFalse(empty($normalized['included'][0]['id']));
-    $this->assertTrue(empty($normalized['meta']['omitted']));
+    $this->assertNotEmpty($normalized['included'][0]['id']);
+    $this->assertArrayNotHasKey('meta', $normalized);
     $this->assertEquals($this->user->uuid(), $normalized['included'][0]['id']);
     $this->assertCount(1, $normalized['included'][0]['attributes']);
     $this->assertCount(12, $normalized['included'][1]['attributes']);

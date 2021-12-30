@@ -358,7 +358,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertSession()->pageTextContains($new_title);
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
-    $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
+    $this->assertEmpty($node_revision->revision_log->value, 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
 
   /**

@@ -440,7 +440,7 @@ class BookTest extends BrowserTestBase {
     $this->submitForm($edit, 'Remove');
     $node_storage->resetCache([$nodes[4]->id()]);
     $node4 = $node_storage->load($nodes[4]->id());
-    $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
+    $this->assertEmpty($node4->book, 'Deleting child book node properly allowed.');
 
     // $nodes[4] is stale, trying to delete it directly will cause an error.
     $node4->delete();
@@ -453,7 +453,7 @@ class BookTest extends BrowserTestBase {
     $this->submitForm($edit, 'Remove');
     $node_storage->resetCache([$this->book->id()]);
     $node = $node_storage->load($this->book->id());
-    $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
+    $this->assertEmpty($node->book, 'Deleting childless top-level book node properly allowed.');
 
     // Tests directly deleting a book parent.
     $nodes = $this->createBook();
@@ -681,7 +681,7 @@ class BookTest extends BrowserTestBase {
     // @see node_access_test_node_grants().
     $this->drupalLogin($this->webUserWithoutNodeAccess);
     $book_node = $node_storage->load($this->book->id());
-    $this->assertTrue(!empty($book_node->book));
+    $this->assertNotEmpty($book_node->book);
     $this->assertEquals($this->book->id(), $book_node->book['bid']);
 
     // Reset the internal cache to retrigger the hook_node_load() call.
@@ -689,7 +689,7 @@ class BookTest extends BrowserTestBase {
 
     $this->drupalLogin($this->webUser);
     $book_node = $node_storage->load($this->book->id());
-    $this->assertTrue(!empty($book_node->book));
+    $this->assertNotEmpty($book_node->book);
     $this->assertEquals($this->book->id(), $book_node->book['bid']);
   }
 

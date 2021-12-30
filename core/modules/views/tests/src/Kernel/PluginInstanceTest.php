@@ -75,7 +75,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
 
     // Tests that the plugin list has not missed any types.
     $diff = array_diff(array_keys($this->definitions), $this->pluginTypes);
-    $this->assertTrue(empty($diff), 'All plugins were found and matched.');
+    $this->assertEmpty($diff, 'All plugins were found and matched.');
   }
 
   /**

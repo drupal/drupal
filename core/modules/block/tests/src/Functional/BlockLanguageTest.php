@@ -116,13 +116,13 @@ class BlockLanguageTest extends BrowserTestBase {
     // it is deleted.
     $block = Block::load($block->id());
     $visibility = $block->getVisibility();
-    $this->assertTrue(empty($visibility['language']['langcodes']['fr']), 'Language is no longer not set in the block configuration after deleting the block.');
+    $this->assertArrayNotHasKey('language', $visibility, 'Language is no longer not set in the block configuration after deleting the block.');
 
     // Ensure that the block visibility for language is gone from the UI.
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Configure');
     $elements = $this->xpath('//details[@id="edit-visibility-language"]');
-    $this->assertTrue(empty($elements));
+    $this->assertEmpty($elements);
   }
 
   /**

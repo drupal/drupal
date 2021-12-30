@@ -177,7 +177,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     // 'target_bundles' field setting.
     $field_config = FieldConfig::loadByName('node', $this->nodeType->id(), $name);
     $handler_settings = $field_config->getSetting('handler_settings');
-    $this->assertTrue(empty($handler_settings['target_bundles']));
+    $this->assertEmpty($handler_settings['target_bundles']);
   }
 
   /**

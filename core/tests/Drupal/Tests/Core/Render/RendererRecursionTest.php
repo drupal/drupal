@@ -122,7 +122,7 @@ class RendererRecursionTest extends RendererTestBase {
     $output = $renderer->renderRoot($page);
     $this->assertEquals('<p>This is a rendered placeholder!</p>' . $parent_markup, $output, 'Rendered output as expected, with the placeholder replaced.');
     $this->assertNotContains('test:complex_child', $page['#cache']['tags'], 'Cache tag bubbling not performed.');
-    $this->assertTrue(empty($page['#attached']), 'Asset bubbling not performed.');
+    $this->assertEmpty($page['#attached'], 'Asset bubbling not performed.');
   }
 
 }

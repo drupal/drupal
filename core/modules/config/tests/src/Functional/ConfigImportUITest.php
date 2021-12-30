@@ -162,7 +162,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
     $expected = ['automated_cron', 'ban', 'text', 'options'];
     $this->assertSame($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
-    $this->assertTrue(empty($uninstalled), 'No modules uninstalled during import');
+    $this->assertEmpty($uninstalled, 'No modules uninstalled during import');
 
     // Verify that the automated_cron configuration object was only written
     // once during the import process and only with the value set in the staged
@@ -218,7 +218,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
     $expected = ['options', 'text', 'ban', 'automated_cron'];
     $this->assertSame($expected, $uninstalled, 'Options, Text, Ban and Automated Cron modules uninstalled in the correct order.');
-    $this->assertTrue(empty($installed), 'No modules installed during import');
+    $this->assertEmpty($installed, 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
     $this->assertFalse(isset($theme_info['bartik']), 'Bartik theme uninstalled during import.');

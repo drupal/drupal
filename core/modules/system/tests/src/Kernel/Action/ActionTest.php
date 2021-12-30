@@ -45,13 +45,13 @@ class ActionTest extends KernelTestBase {
     $definitions = $this->actionManager->getDefinitions();
     // Verify that the action definitions are found.
     $this->assertGreaterThan(1, count($definitions));
-    $this->assertTrue(!empty($definitions['action_test_no_type']), 'The test action is among the definitions found.');
+    $this->assertNotEmpty($definitions['action_test_no_type'], 'The test action is among the definitions found.');
 
     $definition = $this->actionManager->getDefinition('action_test_no_type');
-    $this->assertTrue(!empty($definition), 'The test action definition is found.');
+    $this->assertNotEmpty($definition, 'The test action definition is found.');
 
     $definitions = $this->actionManager->getDefinitionsByType('user');
-    $this->assertTrue(empty($definitions['action_test_no_type']), 'An action with no type is not found.');
+    $this->assertArrayNotHasKey('action_test_no_type', $definitions, 'An action with no type is not found.');
 
     // Create an instance of the 'save entity' action.
     $action = $this->actionManager->createInstance('action_test_save_entity');

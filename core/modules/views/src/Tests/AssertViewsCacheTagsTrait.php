@@ -138,7 +138,7 @@ trait AssertViewsCacheTagsTrait {
 
     $render_cache_item = $render_cache->get($original);
     if ($views_caching_is_enabled) {
-      $this->assertTrue(!empty($render_cache_item), 'Render cache item found.');
+      $this->assertNotEmpty($render_cache_item, 'Render cache item found.');
       if ($render_cache_item) {
         $this->assertEqualsCanonicalizing($expected_render_array_cache_tags, $render_cache_item['#cache']['tags']);
       }

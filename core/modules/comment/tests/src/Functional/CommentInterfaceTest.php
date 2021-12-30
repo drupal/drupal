@@ -92,7 +92,7 @@ class CommentInterfaceTest extends CommentTestBase {
     ];
     $pattern_permalink = '//footer[contains(@class,"comment__meta")]/a[contains(@href,:link) and text()="Permalink"]';
     $permalink = $this->xpath($pattern_permalink, $arguments);
-    $this->assertTrue(!empty($permalink), 'Permalink link found.');
+    $this->assertNotEmpty($permalink, 'Permalink link found.');
 
     // Set comments to have subject and preview to optional.
     $this->drupalLogout();
@@ -317,7 +317,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Comment displayed in 'default' display mode found and has body text.
     $comment_element = $this->cssSelect('.comment-wrapper');
-    $this->assertTrue(!empty($comment_element));
+    $this->assertNotEmpty($comment_element);
     $this->assertSession()->responseContains('<p>' . $comment_text . '</p>');
 
     // Create a new comment entity view mode.
@@ -350,7 +350,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // The comment should exist but without the body text because we used $mode
     // mode this time.
     $comment_element = $this->cssSelect('.comment-wrapper');
-    $this->assertTrue(!empty($comment_element));
+    $this->assertNotEmpty($comment_element);
     $this->assertSession()->responseNotContains('<p>' . $comment_text . '</p>');
   }
 

@@ -134,7 +134,7 @@ class PreviewTest extends WebDriverTestBase {
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertTrue(!empty($elements), 'Full pager found.');
+    $this->assertNotEmpty($elements, 'Full pager found.');
 
     // Verify elements and links to pages.
     // We expect to find 5 elements: current page == 1, links to pages 2 and
@@ -160,7 +160,7 @@ class PreviewTest extends WebDriverTestBase {
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertTrue(!empty($elements), 'Full pager found.');
+    $this->assertNotEmpty($elements, 'Full pager found.');
 
     // Verify elements and links to pages.
     // We expect to find 7 elements: links to '<< first' and '< previous'
@@ -192,7 +192,7 @@ class PreviewTest extends WebDriverTestBase {
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertTrue(!empty($elements), 'Mini pager found.');
+    $this->assertNotEmpty($elements, 'Mini pager found.');
 
     // Verify elements and links to pages.
     // We expect to find current pages element with no link, next page element
@@ -208,7 +208,7 @@ class PreviewTest extends WebDriverTestBase {
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertTrue(!empty($elements), 'Mini pager found.');
+    $this->assertNotEmpty($elements, 'Mini pager found.');
 
     // Verify elements and links to pages.
     // We expect to find 3 elements: previous page with a link, current
