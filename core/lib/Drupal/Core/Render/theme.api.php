@@ -853,7 +853,6 @@ function hook_element_plugin_alter(array &$definitions) {
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
  *
- * @see drupal_js_defaults()
  * @see \Drupal\Core\Asset\AssetResolver
  */
 function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
