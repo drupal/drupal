@@ -5,3 +5,13 @@ jsonapi.settings:
     read_only:
       type: boolean
       label: 'Restrict JSON:API to only read operations'
+    maintenance_header_retry_seconds:
+      type: mapping
+      label: 'Maintenance mode Retry-After header settings'
+      mapping:
+        min:
+          type: integer
+          label: 'Minimum value for Retry-After header in seconds'
+        max:
+          type: integer
+          label: 'Maximum value for Retry-After header in seconds'
