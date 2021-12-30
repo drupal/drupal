@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Modernizr, Drupal, once) {
+(function (Modernizr, Drupal, once) {
   Drupal.behaviors.date = {
     attach(context, settings) {
       if (Modernizr.inputtypes.date === false) {
@@ -76,4 +76,4 @@
   }) => `<div class="no-native-datepicker-help">
        <span id="${dateId}">${dateDesc}</span> <span id="${timeId}">${timeDesc}</span>
      </div>`;
-})(jQuery, Modernizr, Drupal, once);
+})(Modernizr, Drupal, once);
