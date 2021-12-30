@@ -34,7 +34,7 @@ class FeedFetcherPluginTest extends AggregatorTestBase {
     // Create feed with local url.
     $feed = $this->createFeed();
     $this->updateFeedItems($feed);
-    $this->assertFalse(empty($feed->items));
+    $this->assertNotEmpty($feed->items);
 
     // Delete items and restore checked property to 0.
     $this->deleteFeedItems($feed);
@@ -43,7 +43,7 @@ class FeedFetcherPluginTest extends AggregatorTestBase {
     $feed->save();
     $this->updateFeedItems($feed);
     // Fetch should fail due to feed name.
-    $this->assertTrue(empty($feed->items));
+    $this->assertEmpty($feed->items);
   }
 
 }

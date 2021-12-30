@@ -196,7 +196,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
-    $this->assertTrue(empty($result), 'The more link is not shown.');
+    $this->assertEmpty($result, 'The more link is not shown.');
 
     $view = Views::getView('test_display_more');
     $view->setDisplay();
@@ -214,7 +214,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
-    $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
+    $this->assertEmpty($result, 'The more link is not shown when view has more records.');
 
     // Test the default value of use_more_always.
     $view = View::create()->getExecutable();

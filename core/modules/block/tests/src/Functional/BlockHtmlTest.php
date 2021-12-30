@@ -49,7 +49,7 @@ class BlockHtmlTest extends BrowserTestBase {
 
     // Ensure expected markup for a menu block.
     $elements = $this->xpath('//nav[contains(@class, :nav-class)]/ul[contains(@class, :ul-class)]/li', [':nav-class' => 'block-menu', ':ul-class' => 'menu']);
-    $this->assertTrue(!empty($elements), 'The proper block markup was found.');
+    $this->assertNotEmpty($elements, 'The proper block markup was found.');
   }
 
 }

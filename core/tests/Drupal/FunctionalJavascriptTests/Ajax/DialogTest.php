@@ -173,7 +173,7 @@ class DialogTest extends WebDriverTestBase {
     // Check we get a chunk of the code, we can't test the whole form as form
     // build id and token with be different.
     $contact_form = $this->xpath("//form[@id='contact-form-add-form']");
-    $this->assertTrue(!empty($contact_form), 'Non-JS entity form page present.');
+    $this->assertNotEmpty($contact_form, 'Non-JS entity form page present.');
 
     // Reset: Return to the dialog links page.
     $this->drupalGet('ajax-test/dialog');

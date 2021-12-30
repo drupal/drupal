@@ -38,7 +38,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field is present on the comment bundle.
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertTrue(!empty($field), 'The comment_body field is added when a comment bundle is created');
+    $this->assertNotEmpty($field, 'The comment_body field is added when a comment bundle is created');
 
     $field->delete();
 

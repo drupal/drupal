@@ -67,7 +67,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // the dependencies array.
     $raw_config = $this->config('config_test.dynamic.entity1');
     $root_module_dependencies = $raw_config->get('dependencies.module');
-    $this->assertTrue(empty($root_module_dependencies), 'Node module is not written to the root dependencies array as it is enforced.');
+    $this->assertEmpty($root_module_dependencies, 'Node module is not written to the root dependencies array as it is enforced.');
 
     // Create additional entities to test dependencies on config entities.
     $entity2 = $storage->create(['id' => 'entity2', 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]]);
@@ -516,8 +516,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // \Drupal\Core\Config\ConfigManager::getConfigEntitiesToChangeOnDependencyRemoval().
     $config_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval('config', [$entity1->getConfigDependencyName()]);
     $this->assertEquals($entity2->uuid(), reset($config_entities['delete'])->uuid(), 'Entity 2 will be deleted.');
-    $this->assertTrue(empty($config_entities['update']), 'No dependent configuration entities will be updated.');
-    $this->assertTrue(empty($config_entities['unchanged']), 'No dependent configuration entities will be unchanged.');
+    $this->assertEmpty($config_entities['update'], 'No dependent configuration entities will be updated.');
+    $this->assertEmpty($config_entities['unchanged'], 'No dependent configuration entities will be unchanged.');
 
     // Test that doing a delete of entity1 deletes entity2 since it is dependent
     // on entity1.
@@ -568,7 +568,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // Do a dry run using
     // \Drupal\Core\Config\ConfigManager::getConfigEntitiesToChangeOnDependencyRemoval().
     $config_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval('config', [$entity1->getConfigDependencyName()]);
-    $this->assertTrue(empty($config_entities['delete']), 'No dependent configuration entities will be deleted.');
+    $this->assertEmpty($config_entities['delete'], 'No dependent configuration entities will be deleted.');
     $this->assertEquals($entity2->uuid(), reset($config_entities['update'])->uuid(), 'Entity 2 will be updated.');
     $this->assertEquals($entity3->uuid(), reset($config_entities['unchanged'])->uuid(), 'Entity 3 is not changed.');
 
@@ -634,8 +634,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $config_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval('content', [$content_entity->getConfigDependencyName()]);
     $this->assertEquals($entity1->uuid(), $config_entities['delete'][1]->uuid(), 'Entity 1 will be deleted.');
     $this->assertEquals($entity2->uuid(), $config_entities['delete'][0]->uuid(), 'Entity 2 will be deleted.');
-    $this->assertTrue(empty($config_entities['update']), 'No dependencies of the content entity will be updated.');
-    $this->assertTrue(empty($config_entities['unchanged']), 'No dependencies of the content entity will be unchanged.');
+    $this->assertEmpty($config_entities['update'], 'No dependencies of the content entity will be updated.');
+    $this->assertEmpty($config_entities['unchanged'], 'No dependencies of the content entity will be unchanged.');
   }
 
   /**

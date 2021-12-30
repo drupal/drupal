@@ -662,7 +662,7 @@ class UserCancelTest extends BrowserTestBase {
     $node = $this->drupalCreateNode(['type' => 'page', 'uid' => $account->id()]);
     $account->delete();
     $load2 = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
-    $this->assertTrue(empty($load2));
+    $this->assertEmpty($load2);
   }
 
 }

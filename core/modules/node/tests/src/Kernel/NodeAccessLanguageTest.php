@@ -231,7 +231,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Because no nodes are created in German, no nodes are returned.
-    $this->assertTrue(empty($nids), 'Query returns an empty result.');
+    $this->assertEmpty($nids, 'Query returns an empty result.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.

@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
@@ -222,9 +221,7 @@ class ConfigCRUDTest extends KernelTestBase {
         unset($test_characters[$i]);
       }
     }
-    $this->assertTrue(empty($test_characters), new FormattableMarkup('Expected ConfigNameException was thrown for all invalid name characters: @characters', [
-      '@characters' => implode(' ', $characters),
-    ]));
+    $this->assertEmpty($test_characters, sprintf('Expected ConfigNameException was thrown for all invalid name characters: %s', implode(' ', $characters)));
 
     // Verify that a valid config object name can be saved.
     $name = 'namespace.object';

@@ -59,7 +59,7 @@ abstract class TourTestBase extends BrowserTestBase {
         }
         elseif (!empty($tip['data-class'])) {
           $elements = $this->getSession()->getPage()->findAll('css', '.' . $tip['data-class']);
-          $this->assertFalse(empty($elements), new FormattableMarkup('Found corresponding page element for tour tip with class .%data-class', ['%data-class' => $tip['data-class']]));
+          $this->assertNotEmpty($elements, sprintf("Page element for tour tip with class .%s should be present", $tip['data-class']));
         }
         else {
           // It's a modal.

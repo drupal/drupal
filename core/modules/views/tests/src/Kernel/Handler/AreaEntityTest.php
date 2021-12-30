@@ -71,7 +71,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
 
     // Test that all expected entity types have data.
     foreach (array_keys($expected_entities) as $entity) {
-      $this->assertTrue(!empty($data['entity_' . $entity]), new FormattableMarkup('Views entity area data found for @entity', ['@entity' => $entity]));
+      $this->assertNotEmpty($data['entity_' . $entity], "Views entity '$entity' should have a data area.");
       // Test that entity_type is set correctly in the area data.
       $this->assertEquals($data['entity_' . $entity]['area']['entity_type'], $entity, new FormattableMarkup('Correct entity_type set for @entity', ['@entity' => $entity]));
     }
@@ -82,7 +82,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
 
     // Test that no configuration entity types have data.
     foreach (array_keys($expected_entities) as $entity) {
-      $this->assertTrue(empty($data['entity_' . $entity]), new FormattableMarkup('Views config entity area data not found for @entity', ['@entity' => $entity]));
+      $this->assertArrayNotHasKey('entity_' . $entity, $data, "Views config entity '$entity' should not have a data area.");
     }
   }
 

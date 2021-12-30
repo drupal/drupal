@@ -51,7 +51,7 @@ class FieldItemTest extends EntityKernelTestBase {
 
     $this->entityTypeManager->clearCachedDefinitions();
     $definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
-    $this->assertTrue(!empty($definitions[$this->fieldName]));
+    $this->assertNotEmpty($definitions[$this->fieldName]);
   }
 
   /**

@@ -195,14 +195,14 @@ class EntityFieldTest extends EntityKernelTestBase {
     unset($entity->name->value);
     $this->assertFalse(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
     $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(empty($entity->name->value), new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(empty($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($entity->name->value, new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($entity->name[0]->value, new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
 
     $entity->name->value = 'a value';
     $this->assertTrue(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(empty($entity->name->value), new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(empty($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertNotEmpty($entity->name->value, new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertNotEmpty($entity->name[0]->value, new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name string item is set.', ['%entity_type' => $entity_type]));
     $this->assertFalse(isset($entity->name[1]), new FormattableMarkup('%entity_type: Second name string item is not set as it does not exist', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));

@@ -464,7 +464,7 @@ class ForumTest extends BrowserTestBase {
       'description__value' => $description,
     ]);
     $term = array_shift($term);
-    $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
+    $this->assertNotEmpty($term, "The forum type '$type' should exist in the database.");
 
     // Verify forum hierarchy.
     $tid = $term->id();

@@ -213,7 +213,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check that we see the class of the node type on the body element.
     $body_class_element = $this->xpath("//body[contains(@class, 'page-node-type-page')]");
-    $this->assertTrue(!empty($body_class_element), 'Node type body class found.');
+    $this->assertNotEmpty($body_class_element, 'Node type body class found.');
 
     // Get the UUID.
     $url = parse_url($this->getUrl());

@@ -115,7 +115,7 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
     // completely removed once the data is purged.
     field_purge_batch(10);
     $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertTrue(empty($deleted_storages), 'Fields are deleted');
+    $this->assertEmpty($deleted_storages, 'Fields are deleted');
   }
 
 }

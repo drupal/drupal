@@ -211,8 +211,8 @@ class StorageTest extends BrowserTestBase {
     $original = json_decode($response, TRUE);
     $this->assertEquals($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
     $this->assertNotEquals($original['form']['#build_id'], $build_id, 'New build_id was generated');
-    $this->assertTrue(empty($original['form']['#poisoned']), 'Original form structure was preserved');
-    $this->assertTrue(empty($original['form_state']['poisoned']), 'Original form state was preserved');
+    $this->assertArrayNotHasKey('#poisoned', $original['form'], 'Original form structure was preserved');
+    $this->assertArrayNotHasKey('poisoned', $original['form_state'], 'Original form state was preserved');
   }
 
 }

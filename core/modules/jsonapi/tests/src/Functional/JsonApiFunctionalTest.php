@@ -179,9 +179,9 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'user--user',
       $first_include['type']
     );
-    $this->assertFalse(empty($first_include['attributes']));
-    $this->assertTrue(empty($first_include['attributes']['mail']));
-    $this->assertTrue(empty($first_include['attributes']['pass']));
+    $this->assertNotEmpty($first_include['attributes']);
+    $this->assertArrayNotHasKey('mail', $first_include['attributes']);
+    $this->assertArrayNotHasKey('pass', $first_include['attributes']);
     // 12. Collection with one access denied.
     $this->nodes[1]->set('status', FALSE);
     $this->nodes[1]->save();
@@ -284,8 +284,8 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertEquals('user--user', $single_output['data']['type']);
     $this->assertEquals($this->user->get('name')->value, $single_output['data']['attributes']['name']);
-    $this->assertTrue(empty($single_output['data']['attributes']['mail']));
-    $this->assertTrue(empty($single_output['data']['attributes']['pass']));
+    $this->assertArrayNotHasKey('mail', $single_output['data']['attributes']);
+    $this->assertArrayNotHasKey('pass', $single_output['data']['attributes']);
     // 18. Test filtering on the column of a link.
     $filter = [
       'linkUri' => [

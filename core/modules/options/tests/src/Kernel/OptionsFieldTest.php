@@ -28,9 +28,9 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // All three options appear.
     $entity = EntityTest::create();
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
+    $this->assertArrayHasKey(1, $form[$this->fieldName]['widget'], 'Option 1 exists');
+    $this->assertArrayHasKey(2, $form[$this->fieldName]['widget'], 'Option 2 exists');
+    $this->assertArrayHasKey(3, $form[$this->fieldName]['widget'], 'Option 3 exists');
 
     // Use one of the values in an actual entity, and check that this value
     // cannot be removed from the list.
@@ -54,9 +54,9 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->fieldStorage->save();
     $entity = EntityTest::create();
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
-    $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
-    $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
+    $this->assertArrayNotHasKey(1, $form[$this->fieldName]['widget'], 'Option 1 does not exist');
+    $this->assertArrayHasKey(2, $form[$this->fieldName]['widget'], 'Option 2 exists');
+    $this->assertArrayNotHasKey(3, $form[$this->fieldName]['widget'], 'Option 3 does not exist');
 
     // Completely new options appear.
     $this->fieldStorage->setSetting('allowed_values', [10 => 'Update', 20 => 'Twenty']);
@@ -65,11 +65,11 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // setting, so we need to reinitialize the entity object.
     $entity = EntityTest::create();
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
-    $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
-    $this->assertTrue(empty($form[$this->fieldName]['widget'][2]), 'Option 2 does not exist');
-    $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][10]), 'Option 10 exists');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][20]), 'Option 20 exists');
+    $this->assertArrayNotHasKey(1, $form[$this->fieldName]['widget'], 'Option 1 does not exist');
+    $this->assertArrayNotHasKey(2, $form[$this->fieldName]['widget'], 'Option 2 does not exist');
+    $this->assertArrayNotHasKey(3, $form[$this->fieldName]['widget'], 'Option 3 does not exist');
+    $this->assertArrayHasKey(10, $form[$this->fieldName]['widget'], 'Option 10 exists');
+    $this->assertArrayHasKey(20, $form[$this->fieldName]['widget'], 'Option 20 exists');
 
     // Options are reset when a new field with the same name is created.
     $this->fieldStorage->delete();
@@ -88,9 +88,9 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
       ->save();
     $entity = EntityTest::create();
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
-    $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
+    $this->assertArrayHasKey(1, $form[$this->fieldName]['widget'], 'Option 1 exists');
+    $this->assertArrayHasKey(2, $form[$this->fieldName]['widget'], 'Option 2 exists');
+    $this->assertArrayHasKey(3, $form[$this->fieldName]['widget'], 'Option 3 exists');
 
     // Test the generateSampleValue() method.
     $entity = EntityTest::create();

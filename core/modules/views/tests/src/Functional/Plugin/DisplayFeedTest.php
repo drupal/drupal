@@ -176,7 +176,7 @@ class DisplayFeedTest extends ViewTestBase {
     // Ensure there is no link rel present on the page.
     $this->drupalGet('/test-attached-disabled');
     $result = $this->xpath('//link[@rel="alternate"]');
-    $this->assertTrue(empty($result), 'Page display does not contain a feed header.');
+    $this->assertEmpty($result, 'Page display does not contain a feed header.');
 
     // Ensure the feed attachment returns 'Not found'.
     $this->drupalGet('/test-attached-disabled.xml');

@@ -304,7 +304,7 @@ class HandlerTest extends ViewTestBase {
 
     $field->options['relationship'] = 'valid_relationship';
     $field->setRelationship();
-    $this->assertFalse(!empty($field->relationship), 'Make sure that the relationship alias was not set without building a views query before.');
+    $this->assertEmpty($field->relationship, 'Make sure that the relationship alias was not set without building a views query before.');
 
     // Remove the invalid relationship.
     unset($view->relationship['broken_relationship']);

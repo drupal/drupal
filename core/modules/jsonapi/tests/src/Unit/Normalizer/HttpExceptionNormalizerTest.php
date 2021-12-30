@@ -49,8 +49,8 @@ class HttpExceptionNormalizerTest extends UnitTestCase {
     $normalized = $normalizer->normalize($exception, 'api_json');
     $normalized = $normalized->getNormalization();
     $error = $normalized[0];
-    $this->assertTrue(empty($error['meta']));
-    $this->assertTrue(empty($error['source']));
+    $this->assertArrayNotHasKey('meta', $error);
+    $this->assertArrayNotHasKey('source', $error);
   }
 
 }

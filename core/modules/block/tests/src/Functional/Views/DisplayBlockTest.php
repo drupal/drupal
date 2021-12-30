@@ -214,7 +214,7 @@ class DisplayBlockTest extends ViewTestBase {
     $block = $storage->load('views_block__test_view_block_block_1');
     // This will only return a result if our new block has been created with the
     // expected machine name.
-    $this->assertTrue(!empty($block), 'The expected block was loaded.');
+    $this->assertNotEmpty($block, 'The expected block was loaded.');
 
     for ($i = 2; $i <= 3; $i++) {
       // Place the same block again and make sure we have a new ID.
@@ -223,7 +223,7 @@ class DisplayBlockTest extends ViewTestBase {
       $block = $storage->load('views_block__test_view_block_block_1_' . $i);
       // This will only return a result if our new block has been created with the
       // expected machine name.
-      $this->assertTrue(!empty($block), 'The expected block was loaded.');
+      $this->assertNotEmpty($block, 'The expected block was loaded.');
     }
 
     // Tests the override capability of items per page.

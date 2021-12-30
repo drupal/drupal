@@ -188,7 +188,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertSession()->responseContains('</body>');
 
     // Verifying BigPipe assets are present.
-    $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings present.');
+    $this->assertNotEmpty($this->getDrupalSettings());
     $this->assertContains('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries']), 'BigPipe asset library is present.');
 
     // Verify that the two expected exceptions are logged as errors.
@@ -506,12 +506,25 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertEquals(302, $statuses[0], 'The first response was a 302 (redirect).');
     $this->assertStringStartsWith('big_pipe_nojs=1', $headers[0]['Set-Cookie'][0], 'The first response sets the big_pipe_nojs cookie.');
     $this->assertEquals($original_url, $headers[0]['Location'][0], 'The first response redirected back to the original page.');
-    $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0]))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
+    $this->assertEmpty(
+      array_diff([
+        'cookies:big_pipe_nojs',
+        'session.exists',
+      ], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0])),
+      'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.'
+    );
     $this->assertFalse(isset($headers[0]['Surrogate-Control']), 'The first response has no "Surrogate-Control" header.');
 
     // Second response: redirect followed.
     $this->assertEquals(200, $statuses[1], 'The second response was a 200.');
-    $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0]))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
+    $this->assertEmpty(
+      array_diff([
+        'cookies:big_pipe_nojs',
+        'session.exists',
+      ], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0])),
+      'The second response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.'
+    );
+
     $this->assertEquals('no-store, content="BigPipe/1.0"', $headers[1]['Surrogate-Control'][0], 'The second response has a "Surrogate-Control" header.');
 
     // Check that the <meta> refresh is absent, only one redirect ever happens.

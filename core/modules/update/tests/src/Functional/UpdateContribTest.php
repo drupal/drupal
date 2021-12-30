@@ -442,7 +442,7 @@ class UpdateContribTest extends UpdateTestBase {
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
 
-    $this->assertTrue(!empty($projects['update_test_basetheme']), 'Valid base theme (update_test_basetheme) was found.');
+    $this->assertNotEmpty($projects['update_test_basetheme'], 'Valid base theme (update_test_basetheme) was found.');
   }
 
   /**
