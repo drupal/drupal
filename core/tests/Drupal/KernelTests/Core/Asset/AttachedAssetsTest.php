@@ -487,4 +487,14 @@ class AttachedAssetsTest extends KernelTestBase {
     $this->assertStringContainsString('<script src="' . str_replace('&', '&amp;', $this->fileUrlGenerator->generateString('core/modules/system/tests/modules/common_test/querystring.js?arg1=value1&arg2=value2')) . '&amp;' . $query_string . '"></script>', $rendered_js, 'JavaScript file with query string gets version query string correctly appended.');
   }
 
+  /**
+   * Tests deprecated drupal_js_defaults() function.
+   *
+   * @group legacy
+   */
+  public function testDeprecatedDrupalJsDefaults() {
+    $this->expectDeprecation('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679');
+    $this->assertIsArray(drupal_js_defaults());
+  }
+
 }

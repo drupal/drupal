@@ -201,9 +201,13 @@ function base_path() {
  * @param $data
  *   (optional) The default data parameter for the JavaScript asset array.
  *
- * @see hook_js_alter()
+ * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3197679
  */
 function drupal_js_defaults($data = NULL) {
+  @trigger_error('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679', E_USER_DEPRECATED);
   return [
     'type' => 'file',
     'group' => JS_DEFAULT,

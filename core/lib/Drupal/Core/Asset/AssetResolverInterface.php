@@ -60,8 +60,7 @@ interface AssetResolverInterface {
    * Note that hook_js_alter(&$javascript) is called during this function call
    * to allow alterations of the JavaScript during its presentation. The correct
    * way to add JavaScript during hook_js_alter() is to add another element to
-   * the $javascript array, deriving from drupal_js_defaults(). See
-   * locale_js_alter() for an example of this.
+   * the $javascript array. See locale_js_alter() for an example of this.
    *
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
    *   The assets attached to the current response.
