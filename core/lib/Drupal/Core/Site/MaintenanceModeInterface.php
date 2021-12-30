@@ -32,4 +32,12 @@ interface MaintenanceModeInterface {
    */
   public function exempt(AccountInterface $account);
 
+  /**
+   * Gets the site maintenance message.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   *   The formatted site maintenance message.
+   */
+  public function getSiteMaintenanceMessage();
+
 }

@@ -211,6 +211,11 @@ services:
       - [setValidator, []]
     tags:
       - { name: event_subscriber, priority: 1000 }
+  jsonapi.maintenance_mode_subscriber:
+    class: Drupal\jsonapi\EventSubscriber\JsonapiMaintenanceModeSubscriber
+    arguments: ['@maintenance_mode', '@config.factory']
+    tags:
+      - { name: event_subscriber }
 
   # Revision management.
   jsonapi.version_negotiator:

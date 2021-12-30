@@ -2,13 +2,13 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Maintenance mode subscriber for controller requests.
@@ -67,6 +68,13 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   protected $messenger;
 
   /**
+   * An event dispatcher instance to use for configuration events.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a new MaintenanceModeSubscriber.
    *
    * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
@@ -83,8 +91,10 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The bare HTML page renderer.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->maintenanceMode = $maintenance_mode;
     $this->config = $config_factory;
     $this->stringTranslation = $translation;
@@ -92,6 +102,11 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->messenger = $messenger;
+    if (!$event_dispatcher) {
+      @trigger_error('Calling MaintenanceModeSubscriber::__construct() without the $event_dispatcher argument is deprecated in drupal:9.4.0 and the $event_dispatcher argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3255799', E_USER_DEPRECATED);
+      $event_dispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -108,20 +123,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       \Drupal::service('page_cache_kill_switch')->trigger();
 
       if (!$this->maintenanceMode->exempt($this->account)) {
-        // Deliver the 503 page if the site is in maintenance mode and the
-        // logged in user is not allowed to bypass it.
-
-        // If the request format is not 'html' then show default maintenance
-        // mode page else show a text/plain page with maintenance message.
-        if ($request->getRequestFormat() !== 'html') {
-          $response = new Response($this->getSiteMaintenanceMessage(), 503, ['Content-Type' => 'text/plain']);
-          $event->setResponse($response);
-          return;
-        }
-        drupal_maintenance_theme();
-        $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $this->getSiteMaintenanceMessage()], $this->t('Site under maintenance'), 'maintenance_page');
-        $response->setStatusCode(503);
-        $event->setResponse($response);
+        // When the account is not exempt, other subscribers handle request.
+        $this->eventDispatcher->dispatch($event, MaintenanceModeEvents::MAINTENANCE_MODE_REQUEST);
       }
       else {
         // Display a message if the logged in user has access to the site in
@@ -140,15 +143,24 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Gets the site maintenance message.
+   * Returns response when site is in maintenance mode and user is not exempt.
    *
-   * @return \Drupal\Component\Render\MarkupInterface
-   *   The formatted site maintenance message.
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   *   The event to process.
    */
-  protected function getSiteMaintenanceMessage() {
-    return new FormattableMarkup($this->config->get('system.maintenance')->get('message'), [
-      '@site' => $this->config->get('system.site')->get('name'),
-    ]);
+  public function onMaintenanceModeRequest(RequestEvent $event) {
+    $request = $event->getRequest();
+    if ($request->getRequestFormat() !== 'html') {
+      $response = new Response($this->maintenanceMode->getSiteMaintenanceMessage(), 503, ['Content-Type' => 'text/plain']);
+      // Calling RequestEvent::setResponse() also stops propagation of event.
+      $event->setResponse($response);
+      return;
+    }
+    drupal_maintenance_theme();
+    $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $this->maintenanceMode->getSiteMaintenanceMessage()], $this->t('Site under maintenance'), 'maintenance_page');
+    $response->setStatusCode(503);
+    // Calling RequestEvent::setResponse() also stops propagation of the event.
+    $event->setResponse($response);
   }
 
   /**
@@ -157,6 +169,10 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = ['onKernelRequestMaintenance', 30];
     $events[KernelEvents::EXCEPTION][] = ['onKernelRequestMaintenance'];
+    $events[MaintenanceModeEvents::MAINTENANCE_MODE_REQUEST][] = [
+      'onMaintenanceModeRequest',
+      -1000,
+    ];
     return $events;
   }
 

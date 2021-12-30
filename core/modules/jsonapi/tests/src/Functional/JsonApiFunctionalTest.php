@@ -513,6 +513,39 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertCount(0, $collection_output['data']);
+
+    // Request in maintenance mode returns valid JSON.
+    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    $response = $this->drupalGet('/jsonapi/taxonomy_term/tags');
+    $this->assertSession()->statusCodeEquals(503);
+    $this->assertSession()->responseHeaderContains('Content-Type', 'application/vnd.api+json');
+    $retry_after_time = $this->getSession()->getResponseHeader('Retry-After');
+    $this->assertTrue($retry_after_time >= 5 && $retry_after_time <= 10);
+    $expected_message = 'Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.';
+    $this->assertSame($expected_message, Json::decode($response)['errors'][0]['detail']);
+
+    // Test that logged in user does not get logged out in maintenance mode
+    // when hitting jsonapi route.
+    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    $this->drupalLogin($this->userCanViewProfiles);
+    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    $this->drupalGet('/jsonapi/taxonomy_term/tags');
+    $this->assertSession()->statusCodeEquals(503);
+    $this->assertTrue($this->drupalUserIsLoggedIn($this->userCanViewProfiles));
+    // Test that user gets logged out when hitting non-jsonapi route.
+    $this->drupalGet('/some/normal/route');
+    $this->assertFalse($this->drupalUserIsLoggedIn($this->userCanViewProfiles));
+    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+
+    // Test that admin user can bypass maintenance mode.
+    $admin_user = $this->drupalCreateUser([], NULL, TRUE);
+    $this->drupalLogin($admin_user);
+    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    $this->drupalGet('/jsonapi/taxonomy_term/tags');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($this->drupalUserIsLoggedIn($admin_user));
+    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    $this->drupalLogout();
   }
 
   /**
