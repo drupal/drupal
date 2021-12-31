@@ -215,7 +215,7 @@ class LanguageManager implements LanguageManagerInterface {
    * {@inheritdoc}
    */
   public function getLanguageSwitchLinks($type, Url $url) {
-    return [];
+    return NULL;
   }
 
   /**
