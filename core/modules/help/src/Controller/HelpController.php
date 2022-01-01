@@ -85,7 +85,7 @@ class HelpController extends ControllerBase {
 
     foreach ($plugins as $plugin_id => $plugin_definition) {
       // Check the provided permission.
-      if (!empty($plugin_definition['permission']) && !$this->currentuser()->hasPermission($plugin_definition['permission'])) {
+      if (!empty($plugin_definition['permission']) && !$this->currentUser()->hasPermission($plugin_definition['permission'])) {
         continue;
       }
 

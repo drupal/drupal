@@ -180,7 +180,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->expectedExceptionMessage = PHP_VERSION_ID >= 80000 ?
       'Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure}(): Argument #1 ($container) must be of type Drupal\FunctionalTests\Bootstrap\ErrorContainer' :
-      'Argument 1 passed to Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closur';
+      'Argument 1 passed to Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure';
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
 

@@ -222,7 +222,7 @@ class RegistryTest extends UnitTestCase {
 
     // Test the discovery of suggestions via the presence of preprocess
     // functions that follow the "__" naming pattern.
-    $data['base_hook_with_autodiscovered_suggestions'] = [
+    $data['base_hook_with_auto-discovered_suggestions'] = [
       'defined_functions' => [
         'test_preprocess_test_hook__suggestion',
         'test_preprocess_test_hook__suggestion__another',

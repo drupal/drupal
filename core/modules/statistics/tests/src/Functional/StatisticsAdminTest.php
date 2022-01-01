@@ -181,7 +181,7 @@ class StatisticsAdminTest extends BrowserTestBase {
       ->condition('nid', $this->testNode->id(), '=')
       ->execute()
       ->fetchField();
-    $this->assertEmpty($result, 'Daycounter is zero.');
+    $this->assertEmpty($result, 'Daycount is zero.');
   }
 
 }

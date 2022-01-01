@@ -80,7 +80,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     }
 
     // Hey, Drupal kills old history, so nodes that haven't been updated
-    // since HISTORY_READ_LIMIT are bzzzzzzzt outta here!
+    // since HISTORY_READ_LIMIT are outta here!
     $limit = REQUEST_TIME - HISTORY_READ_LIMIT;
 
     $this->ensureMyTable();

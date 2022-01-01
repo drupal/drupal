@@ -174,7 +174,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
 
     // When not building the user registration form, prevent web browsers from
-    // autofilling/prefilling the email, username, and password fields.
+    // auto-filling/prefilling the email, username, and password fields.
     if (!$register) {
       foreach (['mail', 'name', 'pass'] as $key) {
         if (isset($form['account'][$key])) {

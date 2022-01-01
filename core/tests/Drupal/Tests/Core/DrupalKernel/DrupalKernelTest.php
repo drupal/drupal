@@ -93,7 +93,7 @@ class DrupalKernelTest extends UnitTestCase {
 
     // Tests mismatch.
     $data[] = [
-      'www.blackhat.com',
+      'www.black_hat.com',
       'www.example.com',
       'unspecified host is untrusted',
       FALSE,

@@ -203,7 +203,7 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the cacheability of Basic Auth's 401 response.
+   * Tests the cacheability of the Basic Auth 401 response.
    *
    * @see \Drupal\basic_auth\Authentication\Provider\BasicAuth::challengeException()
    */

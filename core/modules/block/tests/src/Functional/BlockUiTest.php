@@ -282,7 +282,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
-    // Now, check to make sure the form starts by autoincrementing correctly.
+    // Now, check to make sure the form starts by auto-incrementing correctly.
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
     $this->drupalGet($url);

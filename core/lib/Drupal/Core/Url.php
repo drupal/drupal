@@ -14,6 +14,8 @@ use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore abempty
+
 /**
  * Defines an object that holds information about a URL.
  *

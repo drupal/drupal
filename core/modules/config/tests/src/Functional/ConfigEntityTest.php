@@ -225,7 +225,7 @@ class ConfigEntityTest extends BrowserTestBase {
   /**
    * Tests CRUD operations through the UI.
    */
-  public function testCRUDUI() {
+  public function testCrudUi() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

@@ -67,7 +67,7 @@ class LinkTest extends UnitTestCase {
       ],
       'same href and same link relation type and same nested target attributes' => [
         new Link(new CacheableMetadata(), Url::fromUri('https://jsonapi.org/foo'), 'self', ['data' => ['foo' => 'bar']]),
-        new Link(new cacheablemetadata(), Url::fromUri('https://jsonapi.org/foo'), 'self', ['data' => ['foo' => 'bar']]),
+        new Link(new CacheableMetadata(), Url::fromUri('https://jsonapi.org/foo'), 'self', ['data' => ['foo' => 'bar']]),
         TRUE,
       ],
       'same href and same link relation type and different nested target attributes' => [

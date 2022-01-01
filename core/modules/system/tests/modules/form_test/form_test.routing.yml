@@ -298,7 +298,7 @@ form_test.radios_checked:
   path: '/form-test/radios-checked'
   defaults:
     _form: '\Drupal\form_test\Form\FormTestRadiosCheckedForm'
-    _title: 'Radios checked defalt value'
+    _title: 'Radios checked default value'
   requirements:
     _access: 'TRUE'
 

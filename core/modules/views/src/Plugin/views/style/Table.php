@@ -103,7 +103,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     $query = $this->view->getRequest()->query;
     $order = $query->get('order');
     if (!isset($order)) {
-      // check for a 'default' clicksort. If there isn't one, exit gracefully.
+      // check for a 'default' clickSort. If there isn't one, exit gracefully.
       if (empty($this->options['default'])) {
         return;
       }

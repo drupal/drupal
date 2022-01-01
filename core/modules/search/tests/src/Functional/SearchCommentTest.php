@@ -147,7 +147,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Post a comment with a keyword inside an evil script tag in the comment
     // body. Use the 'FULL HTML' text format so the script tag is stored.
     $edit_comment3 = [];
-    $edit_comment3['subject[0][value]'] = 'asubject';
+    $edit_comment3['subject[0][value]'] = 'a subject';
     $edit_comment3['comment_body[0][value]'] = "<script>alert('insidekeyword');</script>";
     $edit_comment3['comment_body[0][format]'] = $full_html_format_id;
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
