@@ -1131,7 +1131,7 @@ function hook_page_bottom(array &$page_bottom) {
  *   - 'base_theme': A base theme is being checked for theme implementations.
  *   - 'theme': The actual theme in use is being checked.
  * @param $theme
- *   The actual name of theme, module, etc. that is being being processed.
+ *   The actual name of theme, module, etc. that is being processed.
  * @param $path
  *   The directory path of the theme or module, so that it doesn't need to be
  *   looked up.

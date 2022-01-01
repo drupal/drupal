@@ -251,8 +251,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field->setSetting('default_image', $default_image_settings);
     $field->save();
 
-    // Confirm the new field field default is used on the article field
-    // admin form.
+    // Confirm the new field default is used on the article field admin form.
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_private']->id());
   }

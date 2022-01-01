@@ -67,7 +67,7 @@ class ImageFormatter extends ImageFormatterBase {
    * @param string $view_mode
    *   The view mode.
    * @param array $third_party_settings
-   *   Any third party settings settings.
+   *   Any third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage

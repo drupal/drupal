@@ -138,7 +138,7 @@ class DbUpdateController extends ControllerBase {
    *   The current request object.
    *
    * @return \Symfony\Component\HttpFoundation\Response
-   *   A response object object.
+   *   A response object.
    */
   public function handle($op, Request $request) {
     require_once $this->root . '/core/includes/install.inc';

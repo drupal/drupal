@@ -235,7 +235,7 @@
   margin: 8px 0 0;
 }
 
-/* Align remove buttons with with Save button and compensate for IE scrollbar and focus padding. */
+/* Align remove buttons with Save button and compensate for IE scrollbar and focus padding. */
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .ui-dialog > .ui-dialog-content {
     padding-right: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));

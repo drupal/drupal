@@ -29,7 +29,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    *   Term entity that needs to be added to term hierarchy information.
    *
    * @todo remove this method Drupal 9.0.x. Now the parent references are
-   *   automatically updates when when a taxonomy term is added/updated.
+   *   automatically updates when a taxonomy term is added/updated.
    *   https://www.drupal.org/node/2785693
    */
   public function updateTermHierarchy(EntityInterface $term);

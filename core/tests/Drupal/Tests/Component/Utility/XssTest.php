@@ -86,7 +86,7 @@ class XssTest extends TestCase {
    *     - The value to filter.
    *     - The value to expect after filtering.
    *     - The assertion message.
-   *     - (optional) The allowed HTML HTML tags array that should be passed to
+   *     - (optional) The allowed HTML tags array that should be passed to
    *       \Drupal\Component\Utility\Xss::filter().
    */
   public function providerTestFilterXssNormalized() {
@@ -153,7 +153,7 @@ class XssTest extends TestCase {
    *     - The value to filter.
    *     - The value to expect that's missing after filtering.
    *     - The assertion message.
-   *     - (optional) The allowed HTML HTML tags array that should be passed to
+   *     - (optional) The allowed HTML tags array that should be passed to
    *       \Drupal\Component\Utility\Xss::filter().
    */
   public function providerTestFilterXssNotNormalized() {

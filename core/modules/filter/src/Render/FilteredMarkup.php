@@ -14,7 +14,7 @@ use Drupal\Component\Render\MarkupTrait;
  *
  * @internal
  *   This object is marked as internal because it should only be used in the
- *   Filter module on strings that have already been been filtered and sanitized
+ *   Filter module on strings that have already been filtered and sanitized
  *   in \Drupal\filter\Plugin\FilterInterface.
  *
  * @see \Drupal\Core\Render\Markup

@@ -266,7 +266,7 @@
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
       if (once('views-ui-add-handler-form', $form).length) {
-        // If we we have an unprocessed views-ui-add-handler-form, let's
+        // If we have an unprocessed views-ui-add-handler-form, let's
         // instantiate.
         new Drupal.viewsUi.AddItemForm($form);
       }

@@ -112,12 +112,12 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
-   * Provide the default form form for validating options.
+   * Provide the default form for validating options.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Provide the default form form for submitting options.
+   * Provide the default form for submitting options.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 

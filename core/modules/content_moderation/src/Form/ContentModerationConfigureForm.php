@@ -35,7 +35,7 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
   protected $moderationInfo;
 
   /**
-   * The entity type type bundle info service.
+   * The entity type bundle info service.
    *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */

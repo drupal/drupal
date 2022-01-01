@@ -176,7 +176,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->assertEquals('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub2']['provider']);
     $this->assertEquals('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub3']['provider']);
 
-    // Test that we we correctly apply the active class to tabs where one of the
+    // Test that we correctly apply the active class to tabs where one of the
     // request attributes is upcast to an entity object.
     $entity = \Drupal::entityTypeManager()->getStorage('entity_test')->create(['bundle' => 'test']);
     $entity->save();

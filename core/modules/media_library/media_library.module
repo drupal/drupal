@@ -479,8 +479,8 @@ function _media_library_configure_view_display(MediaTypeInterface $type) {
  * Implements hook_form_FORM_ID_alter().
  */
 function media_library_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  // Add an additional validate callback so so we can ensure the media_embed
-  // filter is enabled when the DrupalMediaLibrary button is enabled.
+  // Add an additional validate callback so we can ensure the media_embed filter
+  // is enabled when the DrupalMediaLibrary button is enabled.
   $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
 }
 
@@ -488,8 +488,8 @@ function media_library_form_filter_format_edit_form_alter(array &$form, FormStat
  * Implements hook_form_FORM_ID_alter().
  */
 function media_library_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  // Add an additional validate callback so so we can ensure the media_embed
-  // filter is enabled when the DrupalMediaLibrary button is enabled.
+  // Add an additional validate callback so we can ensure the media_embed filter
+  // is enabled when the DrupalMediaLibrary button is enabled.
   $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
 }
 

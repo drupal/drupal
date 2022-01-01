@@ -7,7 +7,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Views;
 
 /**
- * Tests the UI of the field field handler.
+ * Tests the UI of the field handler.
  *
  * @group field
  * @see \Drupal\field\Plugin\views\field\Field
