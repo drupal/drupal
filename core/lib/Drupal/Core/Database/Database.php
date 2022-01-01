@@ -19,21 +19,41 @@ abstract class Database {
    *
    * This is used for queries that have no reasonable return value anyway, such
    * as INSERT statements to a table without a serial primary key.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3185520
    */
   const RETURN_NULL = 0;
 
   /**
    * Flag to indicate a query call should return the prepared statement.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3185520
    */
   const RETURN_STATEMENT = 1;
 
   /**
    * Flag to indicate a query call should return the number of affected rows.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3185520
    */
   const RETURN_AFFECTED = 2;
 
   /**
    * Flag to indicate a query call should return the "last insert id".
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3185520
    */
   const RETURN_INSERT_ID = 3;
 

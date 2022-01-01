@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\sqlite\Driver\Database\sqlite;
+namespace Drupal\mysql\Driver\Database\mysql;
 
 use Drupal\Core\Database\Query\Select as QuerySelect;
 
 /**
- * SQLite implementation of \Drupal\Core\Database\Query\Select.
+ * MySQL implementation of \Drupal\Core\Database\Query\Select.
  */
 class Select extends QuerySelect {
 
@@ -17,11 +17,6 @@ class Select extends QuerySelect {
     // @see https://www.drupal.org/project/drupal/issues/3256524
     parent::__construct($connection, $table, $alias, $options);
     unset($this->queryOptions['return']);
-  }
-
-  public function forUpdate($set = TRUE) {
-    // SQLite does not support FOR UPDATE so nothing to do.
-    return $this;
   }
 
 }

@@ -435,6 +435,10 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
+    if (isset($options['return'])) {
+      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+    }
+
     try {
       $query = $this->preprocessStatement($query, $options);
       $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);

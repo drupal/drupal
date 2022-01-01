@@ -31,6 +31,8 @@ class Insert extends Query implements \Countable {
    *   Array of database options.
    */
   public function __construct($connection, $table, array $options = []) {
+    // @todo Remove $options['return'] in Drupal 11.
+    // @see https://www.drupal.org/project/drupal/issues/3256524
     if (!isset($options['return'])) {
       $options['return'] = Database::RETURN_INSERT_ID;
     }
@@ -82,11 +84,12 @@ class Insert extends Query implements \Countable {
     // we wrap it in a transaction so that it is atomic where possible. On many
     // databases, such as SQLite, this is also a notable performance boost.
     $transaction = $this->connection->startTransaction();
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
 
     try {
-      $sql = (string) $this;
       foreach ($this->insertValues as $insert_values) {
-        $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
+        $stmt->execute($insert_values, $this->queryOptions);
+        $last_insert_id = $this->connection->lastInsertId();
       }
     }
     catch (\Exception $e) {

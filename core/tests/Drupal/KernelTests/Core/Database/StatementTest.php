@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\StatementInterface;
 
 /**
@@ -24,7 +23,6 @@ class StatementTest extends DatabaseTestBase {
       ':age' => '30',
     ];
     $options = [
-      'return' => Database::RETURN_STATEMENT,
       'allow_square_brackets' => FALSE,
     ];
 
