@@ -812,16 +812,16 @@ services:
   psr7.http_foundation_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
   psr17.server_request_factory:
-    class: Laminas\Diactoros\ServerRequestFactory
+    class: GuzzleHttp\Psr7\HttpFactory
     public: false
   psr17.stream_factory:
-    class: Laminas\Diactoros\StreamFactory
+    class: GuzzleHttp\Psr7\HttpFactory
     public: false
   psr17.uploaded_file_factory:
-    class: Laminas\Diactoros\UploadedFileFactory
+    class: GuzzleHttp\Psr7\HttpFactory
     public: false
   psr17.response_factory:
-    class: Laminas\Diactoros\ResponseFactory
+    class: GuzzleHttp\Psr7\HttpFactory
     public: false
   psr7.http_message_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory

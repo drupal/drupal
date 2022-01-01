@@ -344,7 +344,6 @@ deutscher
 devel
 deviantart
 dflt
-diactoros
 dialogcreate
 dialogsave
 diffchange
