@@ -15,10 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore abbrfilter adsense autofloat biblio cincopa codefilter
 // cspell:ignore commonmark deepzoom emogrifier emptyparagraphkiller forena
-// cspell:ignore gotwo htmlpurifier htmltidy intlinks intlinks lazyloader
-// cspell:ignore linktitle multicolumn multilink mytube openlayers opengraph
-// cspell:ignore sanitizable shortcode shortcode spamspan typogrify wordfilter
-// cspell:ignore xbbcode
+// cspell:ignore gotwo htmlpurifier htmltidy intlinks lazyloader linktitle
+// cspell:ignore multicolumn multilink mytube openlayers opengraph sanitizable
+// cspell:ignore shortcode spamspan typogrify wordfilter xbbcode
 
 /**
  * @MigrateProcessPlugin(

@@ -83,7 +83,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $memoryCache;
 
   /**
-   * The memory cache cache tag.
+   * The memory cache tag.
    *
    * @var string
    */

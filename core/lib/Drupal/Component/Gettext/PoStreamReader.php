@@ -438,7 +438,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           return FALSE;
         }
 
-        // Remove 'msgstr' and trim away away whitespaces.
+        // Remove 'msgstr' and trim away whitespaces.
         $line = trim(substr($line, 6));
 
         // Only the msgstr string is left, parse it.

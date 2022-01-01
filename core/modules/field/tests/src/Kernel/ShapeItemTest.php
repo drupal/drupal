@@ -46,7 +46,7 @@ class ShapeItemTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests using entity fields of the field field type.
+   * Tests using entity fields of the shape field type.
    */
   public function testShapeItem() {
     // Verify entity creation.

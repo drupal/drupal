@@ -713,9 +713,9 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $assert_session->fieldValueEquals('attributes[alt]', $cobra_commander_bio);
 
     // Test that setting alt value to two double quotes will signal to the
-    // MediaEmbed filter to unset the attribute on the media image field.
-    // We intentionally add a space space after the two double quotes to test
-    // the string is trimmed to two quotes.
+    // MediaEmbed filter to unset the attribute on the media image field. We
+    // intentionally add a space after the two double quotes to test the string
+    // is trimmed to two quotes.
     $page->fillField('attributes[alt]', '"" ');
     $this->submitDialog();
     $this->getSession()->switchToIFrame('ckeditor');

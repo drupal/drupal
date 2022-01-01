@@ -41,7 +41,7 @@ trait BrowserHtmlDebugTrait {
   protected $htmlOutputCounter = 1;
 
   /**
-   * HTML output output enabled.
+   * HTML output enabled.
    *
    * @var bool
    */

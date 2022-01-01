@@ -310,7 +310,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
           $current .= $parts[$length - $j];
         }
         else {
-          // Bit zero means means wildcard.
+          // Bit zero means wildcard.
           $current .= '%';
         }
         // Unless we are at offset 0, add a slash.

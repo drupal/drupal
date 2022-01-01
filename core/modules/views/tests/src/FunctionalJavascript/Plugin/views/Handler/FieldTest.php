@@ -9,7 +9,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\views\Tests\ViewTestData;
 
 /**
- * Tests the field field handler UI.
+ * Tests the field handler UI.
  *
  * @group views
  */

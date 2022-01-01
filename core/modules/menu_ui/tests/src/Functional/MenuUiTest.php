@@ -801,7 +801,7 @@ class MenuUiTest extends BrowserTestBase {
       $title = $parent->getTitle();
       $this->assertSession()->linkExists($title, 0, 'Parent menu link was displayed');
 
-      // Verify menu link link.
+      // Verify menu link.
       $this->clickLink($title);
       $title = $parent_node->label();
       $this->assertSession()->titleEquals("$title | Drupal");
@@ -811,7 +811,7 @@ class MenuUiTest extends BrowserTestBase {
     $title = $item->getTitle();
     $this->assertSession()->linkExists($title, 0, 'Menu link was displayed');
 
-    // Verify menu link link.
+    // Verify menu link.
     $this->clickLink($title);
     $title = $item_node->label();
     $this->assertSession()->titleEquals("$title | Drupal");

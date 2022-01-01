@@ -97,7 +97,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   }
 
   /**
-   * Tests image field field synchronization.
+   * Tests image field synchronization.
    */
   public function testImageFieldSync() {
     // Check that the alt and title fields are enabled for the image field.

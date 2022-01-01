@@ -391,7 +391,7 @@ abstract class CommentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a comment comment type (bundle).
+   * Creates a comment type (bundle).
    *
    * @param string $label
    *   The comment type label.
