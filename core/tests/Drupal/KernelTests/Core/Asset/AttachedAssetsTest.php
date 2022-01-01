@@ -493,7 +493,7 @@ class AttachedAssetsTest extends KernelTestBase {
    * @group legacy
    */
   public function testDeprecatedDrupalJsDefaults() {
-    $this->expectDeprecation('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679');
+    $this->expectDeprecation('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679');
     $this->assertIsArray(drupal_js_defaults());
   }
 
