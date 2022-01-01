@@ -196,33 +196,6 @@ function base_path() {
 }
 
 /**
- * Constructs an array of the defaults that are used for JavaScript assets.
- *
- * @param $data
- *   (optional) The default data parameter for the JavaScript asset array.
- *
- * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. No direct
- *   replacement is provided.
- *
- * @see https://www.drupal.org/node/3197679
- */
-function drupal_js_defaults($data = NULL) {
-  @trigger_error('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679', E_USER_DEPRECATED);
-  return [
-    'type' => 'file',
-    'group' => JS_DEFAULT,
-    'weight' => 0,
-    'scope' => 'header',
-    'cache' => TRUE,
-    'preprocess' => TRUE,
-    'attributes' => [],
-    'version' => NULL,
-    'data' => $data,
-    'browsers' => [],
-  ];
-}
-
-/**
  * Assists in attaching the tableDrag JavaScript behavior to a themed table.
  *
  * Draggable tables should be used wherever an outline or list of sortable items
