@@ -314,6 +314,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     try {
       if (!$original) {
         // Generate a new mlid.
+        // @todo Remove the 'return' option in Drupal 11.
+        // @see https://www.drupal.org/project/drupal/issues/3256524
         $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
         $link['mlid'] = $this->connection->insert($this->table, $options)
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])

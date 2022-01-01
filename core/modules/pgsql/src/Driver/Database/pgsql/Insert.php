@@ -3,7 +3,6 @@
 namespace Drupal\pgsql\Driver\Database\pgsql;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 // cSpell:ignore nextval setval
@@ -17,6 +16,16 @@ use Drupal\Core\Database\Query\Insert as QueryInsert;
  * PostgreSQL implementation of \Drupal\Core\Database\Query\Insert.
  */
 class Insert extends QueryInsert {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(Connection $connection, string $table, array $options = []) {
+    // @todo Remove the __construct in Drupal 11.
+    // @see https://www.drupal.org/project/drupal/issues/3256524
+    parent::__construct($connection, $table, $options);
+    unset($this->queryOptions['return']);
+  }
 
   public function execute() {
     if (!$this->preExecute()) {
@@ -92,20 +101,9 @@ class Insert extends QueryInsert {
       }
       $this->connection->releaseSavepoint();
     }
-    catch (\PDOException $e) {
-      $this->connection->rollbackSavepoint();
-      $message = $e->getMessage() . ": " . $stmt->getQueryString();
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-      }
-      else {
-        throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
-      }
-    }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
-      throw $e;
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.

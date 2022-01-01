@@ -932,6 +932,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
       }
       else {
+        // @todo Remove the 'return' option in Drupal 11.
+        // @see https://www.drupal.org/project/drupal/issues/3256524
         $insert_id = $this->database
           ->insert($this->baseTable, ['return' => Database::RETURN_INSERT_ID])
           ->fields((array) $record)
@@ -1135,6 +1137,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $entity->preSaveRevision($this, $record);
 
     if ($entity->isNewRevision()) {
+      // @todo Remove the 'return' option in Drupal 11.
+      // @see https://www.drupal.org/project/drupal/issues/3256524
       $insert_id = $this->database
         ->insert($this->revisionTable, ['return' => Database::RETURN_INSERT_ID])
         ->fields((array) $record)

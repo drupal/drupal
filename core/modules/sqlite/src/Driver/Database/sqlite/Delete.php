@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\pgsql\Driver\Database\pgsql;
+namespace Drupal\sqlite\Driver\Database\sqlite;
 
 use Drupal\Core\Database\Query\Delete as QueryDelete;
 
 /**
- * PostgreSQL implementation of \Drupal\Core\Database\Query\Delete.
+ * SQLite implementation of \Drupal\Core\Database\Query\Delete.
  */
 class Delete extends QueryDelete {
 
@@ -17,23 +17,6 @@ class Delete extends QueryDelete {
     // @see https://www.drupal.org/project/drupal/issues/3256524
     parent::__construct($connection, $table, $options);
     unset($this->queryOptions['return']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function execute() {
-    $this->connection->addSavepoint();
-    try {
-      $result = parent::execute();
-    }
-    catch (\Exception $e) {
-      $this->connection->rollbackSavepoint();
-      throw $e;
-    }
-    $this->connection->releaseSavepoint();
-
-    return $result;
   }
 
 }

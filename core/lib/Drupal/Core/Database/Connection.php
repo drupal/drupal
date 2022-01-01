@@ -367,12 +367,12 @@ abstract class Connection {
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
    *   See http://php.net/manual/pdostatement.fetch.php
-   * - return: Depending on the type of query, different return values may be
-   *   meaningful. This directive instructs the system which type of return
-   *   value is desired. The system will generally set the correct value
-   *   automatically, so it is extremely rare that a module developer will ever
-   *   need to specify this value. Setting it incorrectly will likely lead to
-   *   unpredictable results or fatal errors. Legal values include:
+   * - return: (deprecated) Depending on the type of query, different return
+   *   values may be meaningful. This directive instructs the system which type
+   *   of return value is desired. The system will generally set the correct
+   *   value automatically, so it is extremely rare that a module developer will
+   *   ever need to specify this value. Setting it incorrectly will likely lead
+   *   to unpredictable results or fatal errors. Legal values include:
    *   - Database::RETURN_STATEMENT: Return the prepared statement object for
    *     the query. This is usually only meaningful for SELECT queries, where
    *     the statement object is how one accesses the result set returned by the
@@ -414,7 +414,6 @@ abstract class Connection {
   protected function defaultOptions() {
     return [
       'fetch' => \PDO::FETCH_OBJ,
-      'return' => Database::RETURN_STATEMENT,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
       'pdo' => [],
@@ -616,6 +615,10 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
+    if (isset($options['return'])) {
+      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+    }
+
     try {
       $query = $this->preprocessStatement($query, $options);
 
@@ -914,6 +917,11 @@ abstract class Connection {
   public function query($query, array $args = [], $options = []) {
     // Use default values if not already set.
     $options += $this->defaultOptions();
+
+    if (isset($options['return'])) {
+      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+    }
+
     assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     // We allow either a pre-bound statement object (deprecated) or a literal
@@ -946,7 +954,7 @@ abstract class Connection {
       // Depending on the type of query we may need to return a different value.
       // See DatabaseConnection::defaultOptions() for a description of each
       // value.
-      switch ($options['return']) {
+      switch ($options['return'] ?? Database::RETURN_STATEMENT) {
         case Database::RETURN_STATEMENT:
           return $stmt;
 
@@ -1232,6 +1240,40 @@ abstract class Connection {
   public function insert($table, array $options = []) {
     $class = $this->getDriverClass('Insert');
     return new $class($this, $table, $options);
+  }
+
+  /**
+   * Returns the ID of the last inserted row or sequence value.
+   *
+   * This method should normally be used only within database driver code.
+   *
+   * This is a proxy to invoke lastInsertId() from the wrapped connection.
+   * If a sequence name is not specified for the name parameter, this returns a
+   * string representing the row ID of the last row that was inserted into the
+   * database.
+   * If a sequence name is specified for the name parameter, this returns a
+   * string representing the last value retrieved from the specified sequence
+   * object.
+   *
+   * @param string|null $name
+   *   (Optional) Name of the sequence object from which the ID should be
+   *   returned.
+   *
+   * @return string
+   *   The value returned by the wrapped connection.
+   *
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   *   In case of failure.
+   *
+   * @see \PDO::lastInsertId
+   *
+   * @internal
+   */
+  public function lastInsertId(?string $name = NULL): string {
+    if (($last_insert_id = $this->connection->lastInsertId($name)) === FALSE) {
+      throw new DatabaseExceptionWrapper("Could not determine last insert id" . $name === NULL ? '' : " for sequence $name");
+    }
+    return $last_insert_id;
   }
 
   /**

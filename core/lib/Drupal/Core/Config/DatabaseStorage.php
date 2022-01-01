@@ -143,6 +143,8 @@ class DatabaseStorage implements StorageInterface {
    * @return bool
    */
   protected function doWrite($name, $data) {
+    // @todo Remove the 'return' option in Drupal 11.
+    // @see https://www.drupal.org/project/drupal/issues/3256524
     $options = ['return' => Database::RETURN_AFFECTED] + $this->options;
     return (bool) $this->connection->merge($this->table, $options)
       ->keys(['collection', 'name'], [$this->collection, $name])
@@ -218,6 +220,8 @@ class DatabaseStorage implements StorageInterface {
    * @todo Ignore replica targets for data manipulation operations.
    */
   public function delete($name) {
+    // @todo Remove the 'return' option in Drupal 11.
+    // @see https://www.drupal.org/project/drupal/issues/3256524
     $options = ['return' => Database::RETURN_AFFECTED] + $this->options;
     return (bool) $this->connection->delete($this->table, $options)
       ->condition('collection', $this->collection)
@@ -231,6 +235,8 @@ class DatabaseStorage implements StorageInterface {
    * @throws PDOException
    */
   public function rename($name, $new_name) {
+    // @todo Remove the 'return' option in Drupal 11.
+    // @see https://www.drupal.org/project/drupal/issues/3256524
     $options = ['return' => Database::RETURN_AFFECTED] + $this->options;
     return (bool) $this->connection->update($this->table, $options)
       ->fields(['name' => $new_name])
@@ -280,6 +286,8 @@ class DatabaseStorage implements StorageInterface {
    */
   public function deleteAll($prefix = '') {
     try {
+      // @todo Remove the 'return' option in Drupal 11.
+      // @see https://www.drupal.org/project/drupal/issues/3256524
       $options = ['return' => Database::RETURN_AFFECTED] + $this->options;
       return (bool) $this->connection->delete($this->table, $options)
         ->condition('name', $prefix . '%', 'LIKE')
