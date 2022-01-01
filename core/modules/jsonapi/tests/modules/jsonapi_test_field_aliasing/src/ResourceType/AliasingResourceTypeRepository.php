@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
 
 /**
- * Provides a repository of JSON:API resource types with aliasable field names.
+ * Provides a repository of resource types with field names that can be aliased.
  */
 class AliasingResourceTypeRepository extends ResourceTypeRepository {
 

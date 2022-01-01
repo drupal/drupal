@@ -72,7 +72,7 @@ class ProcessedText extends RenderElement {
     if (!isset($format_id)) {
       $filter_settings = static::configFactory()->get('filter.settings');
       $format_id = $filter_settings->get('fallback_format');
-      // Ensure 'filter.settings' config's cacheability is respected.
+      // Ensure 'filter.settings' cacheability is respected.
       CacheableMetadata::createFromRenderArray($element)
         ->addCacheableDependency($filter_settings)
         ->applyTo($element);

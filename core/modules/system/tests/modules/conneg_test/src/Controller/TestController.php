@@ -32,7 +32,7 @@ class TestController {
   }
 
   /**
-   * Returns different responses dependening on the request format.
+   * Returns different responses depending on the request format.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request

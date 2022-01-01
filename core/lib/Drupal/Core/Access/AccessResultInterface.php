@@ -74,7 +74,7 @@ interface AccessResultInterface {
   /**
    * Combine this access result with another using AND.
    *
-   * When ANDing two access results, the result is:
+   * When AND is performed on two access results, the result is:
    * - isForbidden() in either ⇒ isForbidden()
    * - otherwise, if isAllowed() in both ⇒ isAllowed()
    * - otherwise, one of them is isNeutral()  ⇒ isNeutral()

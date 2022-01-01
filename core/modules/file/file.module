@@ -35,6 +35,8 @@ use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
+// cspell:ignore abiword
+
 /**
  * The regex pattern used when checking for insecure file types.
  *

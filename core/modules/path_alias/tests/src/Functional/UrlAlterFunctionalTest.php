@@ -39,7 +39,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
 
     // User names can have quotes and plus signs so we should ensure that URL
     // altering works with this.
-    $account = $this->drupalCreateUser(['administer url aliases'], "a'foo+bar");
+    $account = $this->drupalCreateUser(['administer url aliases'], "it's+bar");
     $this->drupalLogin($account);
 
     $uid = $account->id();

@@ -367,7 +367,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests .po file import with user.settings configuration.
    */
-  public function testConfigtranslationImportingPoFile() {
+  public function testConfigTranslationImportingPoFile() {
     // Set the language code.
     $langcode = 'de';
 

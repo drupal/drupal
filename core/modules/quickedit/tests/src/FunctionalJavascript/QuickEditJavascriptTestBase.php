@@ -78,7 +78,7 @@ class QuickEditJavascriptTestBase extends WebDriverTestBase {
     }
     $this->assertTrue(TRUE, 'All contextual links triggers are visible.');
 
-    // @todo Press tab key to verify that tabbing is now contrained to only
+    // @todo Press tab key to verify that tabbing is now constrained to only
     // contextual links triggers: https://www.drupal.org/node/2834776
 
     // Assert that the contextual links associated with the entity's contextual
