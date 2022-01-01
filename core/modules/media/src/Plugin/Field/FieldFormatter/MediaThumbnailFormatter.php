@@ -50,7 +50,7 @@ class MediaThumbnailFormatter extends ImageFormatter {
    * @param string $view_mode
    *   The view mode.
    * @param array $third_party_settings
-   *   Any third party settings settings.
+   *   Any third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\image\ImageStyleStorageInterface $image_style_storage

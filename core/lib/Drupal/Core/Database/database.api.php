@@ -162,7 +162,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * remains in scope; when $transaction is destroyed, the transaction will be
  * committed. If your transaction is nested inside of another then Drupal will
  * track each transaction and only commit the outer-most transaction when the
- * last transaction object goes out out of scope (when all relevant queries have
+ * last transaction object goes out of scope (when all relevant queries have
  * completed successfully).
  *
  * Example:

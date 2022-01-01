@@ -62,7 +62,7 @@ interface QueueInterface {
    *   problem.
    *
    *   If returned, the object will have at least the following properties:
-   *   - data: the same as what what passed into createItem().
+   *   - data: the same as what passed into createItem().
    *   - item_id: the unique ID returned from createItem().
    *   - created: timestamp when the item was put into the queue.
    */

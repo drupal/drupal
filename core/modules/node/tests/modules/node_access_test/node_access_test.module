@@ -99,7 +99,7 @@ function node_access_test_node_access_records(NodeInterface $node) {
       'priority' => 0,
     ];
     // For the author realm, the group ID is equivalent to a user ID, which
-    // means there are many many groups of just 1 user.
+    // means there are many groups of just 1 user.
     $grants[] = [
       'realm' => 'node_access_test_author',
       'gid' => $node->getOwnerId(),

@@ -5,7 +5,7 @@ namespace Drupal\entity_test\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Constraint on entity entity level.
+ * Constraint on entity level.
  *
  * @Constraint(
  *   id = "EntityTestEntityLevel",

@@ -49,7 +49,7 @@ class SqliteDateSql implements DateSqlInterface {
     'j' => '%d',
     'W' => '%W',
     'H' => '%H',
-    // No format for 12 hour hour with leading zeros.
+    // No format for 12 hour with leading zeros.
     'h' => '%H',
     'i' => '%M',
     's' => '%S',

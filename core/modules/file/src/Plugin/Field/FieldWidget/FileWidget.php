@@ -503,7 +503,7 @@ class FileWidget extends WidgetBase {
   }
 
   /**
-   * Retrieves the file description from a field field element.
+   * Retrieves the file description from a field element.
    *
    * This helper static method is used by processMultiple() method.
    *
