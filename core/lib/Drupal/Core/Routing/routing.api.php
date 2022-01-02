@@ -13,7 +13,7 @@
  * @section sec_overview Overview and terminology
  * The Drupal routing system defines how Drupal responds to URL requests that
  * the web server passes on to Drupal. The routing system is based on the
- * @link http://symfony.com Symfony framework. @endlink The central idea is
+ * @link http://symfony.com Symfony routing system. @endlink The central idea is
  * that Drupal subsystems and modules can register routes (basically, URL
  * paths and context); they can also register to respond dynamically to
  * routes, for more flexibility. When Drupal receives a URL request, it will
@@ -65,10 +65,10 @@
  *   - _entity_form: A form for editing an entity. See the
  *     @link entity_api Entity API topic @endlink for more information.
  * - The 'requirements' section is used in Drupal to give access permission
- *   instructions (it has other uses in the Symfony framework). Most
- *   routes have a simple permission-based access scheme, as shown in this
- *   example. See the @link user_api Permission system topic @endlink for
- *   more information about permissions.
+ *   instructions (it has other uses in Symfony components). Most routes have a
+ *   simple permission-based access scheme, as shown in this example. See the
+ *   @link user_api Permission system topic @endlink for more information about
+ *   permissions.
  *
  * See https://www.drupal.org/node/2092643 for more details about *.routing.yml
  * files, and https://www.drupal.org/node/2122201 for information on how to
