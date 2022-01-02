@@ -68,7 +68,7 @@ function update_authorize_run_update($filetransfer, $projects) {
  * Callback for system_authorized_init() in
  * update_manager_install_form_submit().
  *
- * @param FileTransfer $filetransfer
+ * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
  *   The FileTransfer object created by authorize.php for use during this
  *   operation.
  * @param string $project
@@ -123,7 +123,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
  * @param string $local_url
  *   The URL to the locally installed temp directory where the project has
  *   already been downloaded and extracted into.
- * @param FileTransfer $filetransfer
+ * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
  *   The FileTransfer object to use for performing this operation.
  * @param array $context
  *   Reference to an array used for Batch API storage.
