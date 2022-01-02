@@ -47,8 +47,17 @@ process:
       plugin: forum_vocabulary
       machine_name: taxonomy_forums
   label: name
+  _vid:
+    -
+      plugin: migration_lookup
+      migration:  d6_taxonomy_vocabulary
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
   'settings/handler': 'constants/selection_handler'
-  'settings/handler_settings/target_bundles/0': '@field_name'
+  'settings/handler_settings/target_bundles':
+    plugin: target_bundle
   'settings/handler_settings/auto_create': 'constants/auto_create'
   required: required
    # Get the i18n taxonomy translation setting for this vocabulary.
