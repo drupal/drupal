@@ -4,15 +4,17 @@ namespace Drupal\layout_builder\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\layout_builder\OverridesSectionStorageInterface;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 
 /**
  * Determines whether Layout Builder is active for a given entity type or not.
  *
  * Cache context ID: 'layout_builder_is_active:%entity_type_id', e.g.
- * 'layout_builder_is_active:node' (to vary by whether the Node entity type has
- * Layout Builder enabled).
+ * 'layout_builder_is_active:node' (to vary by whether custom layout overrides
+ * are allowed for the Node entity specified by the route parameter).
  *
  * @internal
  *   Tagged services are internal.
@@ -81,8 +83,14 @@ class LayoutBuilderIsActiveCacheContext implements CalculatedCacheContextInterfa
    */
   protected function getDisplay($entity_type_id) {
     if ($entity = $this->routeMatch->getParameter($entity_type_id)) {
-      if ($entity instanceof OverridesSectionStorageInterface) {
-        return $entity->getDefaultSectionStorage();
+      if ($entity instanceof FieldableEntityInterface) {
+        // @todo Expand to work for all view modes in
+        //   https://www.drupal.org/node/2907413.
+        $view_mode = 'full';
+        $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+        if ($display instanceof LayoutEntityDisplayInterface) {
+          return $display;
+        }
       }
     }
   }
