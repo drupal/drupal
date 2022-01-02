@@ -734,18 +734,19 @@
  *
  * @section sec_overview Overview of container, injection, and services
  * The Services and Dependency Injection Container concepts have been adopted by
- * Drupal from the @link http://symfony.com/ Symfony framework. @endlink A
- * "service" (such as accessing the database, sending email, or translating user
- * interface text) is defined (given a name and an interface or at least a
- * class that defines the methods that may be called), and a default class is
- * designated to provide the service. These two steps must be done together, and
- * can be done by Drupal Core or a module. Other modules can then define
- * alternative classes to provide the same services, overriding the default
- * classes. Classes and functions that need to use the service should always
- * instantiate the class via the dependency injection container (also known
- * simply as the "container"), rather than instantiating a particular service
- * provider class directly, so that they get the correct class (default or
- * overridden).
+ * Drupal from the
+ * @link http://symfony.com/doc/current/components/dependency_injection.html
+ * Symfony DependencyInjection component. @endlink A "service" (such as
+ * accessing the database, sending email, or translating user interface text) is
+ * defined (given a name and an interface or at least a class that defines the
+ * methods that may be called), and a default class is designated to provide the
+ * service. These two steps must be done together, and can be done by Drupal
+ * Core or a module. Other modules can then define alternative classes to
+ * provide the same services, overriding the default classes. Classes and
+ * functions that need to use the service should always instantiate the class
+ * via the dependency injection container (also known simply as the
+ * "container"), rather than instantiating a particular service provider class
+ * directly, so that they get the correct class (default or overridden).
  *
  * See https://www.drupal.org/node/2133171 for more detailed information on
  * services and the dependency injection container.
@@ -2496,14 +2497,13 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Overview of event dispatch and subscribing
  *
  * @section sec_intro Introduction and terminology
- * Events are part of the Symfony framework: they allow for different components
- * of the system to interact and communicate with each other. Each event has a
- * unique string name. One system component dispatches the event at an
- * appropriate time; many events are dispatched by Drupal core and the Symfony
- * framework in every request. Other system components can register as event
- * subscribers; when an event is dispatched, a method is called on each
- * registered subscriber, allowing each one to react. For more on the general
- * concept of events, see
+ * Events allow different components of the system to interact and communicate
+ * with each other. One system component dispatches the event at an appropriate
+ * time; many events are dispatched by Drupal core and the Symfony event system
+ * in every request. Other system components can register as event subscribers;
+ * when an event is dispatched, a method is called on each registered
+ * subscriber, allowing each one to react. For more on the general concept of
+ * events, see
  * http://symfony.com/doc/current/components/event_dispatcher/introduction.html
  *
  * @section sec_dispatch Dispatching events
