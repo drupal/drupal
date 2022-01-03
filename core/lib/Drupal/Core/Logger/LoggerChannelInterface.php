@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * add a service for that class to a services.yml file tagged with the 'logger'
  * tag. The default logger channel implementation will call the log() method
  * of every logger service with some useful data set in the $context argument
- * of log(): request_uri, referer, ip, user, uid.
+ * of log(): request_uri, referer, ip, uid, link, channel, timestamp.
  *
  * SECURITY NOTE: the caller might also set a 'link' in the $context array
  * which will be printed as-is by the dblog module under an "operations"
