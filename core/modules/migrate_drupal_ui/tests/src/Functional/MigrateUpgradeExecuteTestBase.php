@@ -36,6 +36,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Test the review form.
     $this->assertReviewForm();
 
+    $this->useTestMailCollector();
     $this->submitForm([], 'Perform upgrade');
     $this->assertUpgrade($this->getEntityCounts());
 
@@ -55,6 +56,18 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Run the incremental migration and check the results.
     $this->submitForm([], 'Perform upgrade');
     $this->assertUpgrade($this->getEntityCountsIncremental());
+  }
+
+  /**
+   * Helper to set the test mail collector in settings.php.
+   */
+  public function useTestMailCollector() {
+    // Set up an override.
+    $settings['config']['system.mail']['interface']['default'] = (object) [
+      'value' => 'test_mail_collector',
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
   }
 
 }
