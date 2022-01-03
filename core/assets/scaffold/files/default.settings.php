@@ -703,6 +703,8 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * @endcode
  * will allow the site to run off of all variants of example.com and
  * example.org, with all subdomains included.
+ *
+ * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
 
 /**
