@@ -305,7 +305,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $element += [
       '#type' => 'fieldset',
       '#cardinality' => $this->fieldDefinition->getFieldStorageDefinition()->getCardinality(),
-      '#target_bundles' => $settings['target_bundles'] ?? FALSE,
+      // If no target bundles are specified, all target bundles are allowed.
+      '#target_bundles' => $settings['target_bundles'] ?? [],
       '#attributes' => [
         'id' => $wrapper_id,
         'class' => ['js-media-library-widget'],
