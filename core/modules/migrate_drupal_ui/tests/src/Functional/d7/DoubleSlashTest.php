@@ -61,6 +61,7 @@ class DoubleSlashTest extends MigrateUpgradeExecuteTestBase {
     $this->submitForm([], 'Continue');
     $this->submitForm($edits, 'Review upgrade');
     $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
+    $this->useTestMailCollector();
     $this->submitForm([], 'Perform upgrade');
 
     // Tests the migration log contains an error message.
