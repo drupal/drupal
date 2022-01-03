@@ -20,7 +20,7 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  *   element. Table elements would contain rows elements that would in turn
  *   contain column elements.
  * - #empty: Text to display when no rows are present.
- * - #responsive: Indicates whether to add the drupal.responsive_table library
+ * - #responsive: Indicates whether to add the drupal.tableresponsive library
  *   providing responsive tables.  Defaults to TRUE.
  * - #sticky: Indicates whether to add the drupal.tableheader library that makes
  *   table headers always visible at the top of the page. Defaults to FALSE.
