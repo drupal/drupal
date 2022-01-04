@@ -229,6 +229,20 @@ class LinkWidget extends WidgetBase {
       $element['uri']['#description'] = $this->t('This must be an external URL such as %url.', ['%url' => 'http://example.com']);
     }
 
+    // Make uri required on the front-end when title filled-in.
+    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') !== DRUPAL_DISABLED && !$element['uri']['#required']) {
+      $parents = $element['#field_parents'];
+      $parents[] = $this->fieldDefinition->getName();
+      $selector = $root = array_shift($parents);
+      if ($parents) {
+        $selector = $root . '[' . implode('][', $parents) . ']';
+      }
+
+      $element['uri']['#states']['required'] = [
+        ':input[name="' . $selector . '[' . $delta . '][title]"]' => ['filled' => TRUE],
+      ];
+    }
+
     $element['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Link text'),
@@ -250,10 +264,9 @@ class LinkWidget extends WidgetBase {
 
       if (!$element['title']['#required']) {
         // Make title required on the front-end when URI filled-in.
-        $field_name = $this->fieldDefinition->getName();
 
         $parents = $element['#field_parents'];
-        $parents[] = $field_name;
+        $parents[] = $this->fieldDefinition->getName();
         $selector = $root = array_shift($parents);
         if ($parents) {
           $selector = $root . '[' . implode('][', $parents) . ']';
