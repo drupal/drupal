@@ -601,7 +601,8 @@ abstract class StylePluginBase extends PluginBase {
           if (isset($this->view->field[$field])) {
             $group_content = $this->getField($index, $field);
             if ($this->view->field[$field]->options['label']) {
-              $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
+              $delimiter = $this->view->field[$field]->options['element_label_colon'] ? ': ' : ' ';
+              $group_content = $this->view->field[$field]->options['label'] . $delimiter . $group_content;
             }
             if ($rendered) {
               $grouping = (string) $group_content;

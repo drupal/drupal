@@ -227,15 +227,49 @@ class StyleTest extends ViewsKernelTestBase {
     }
 
     $sets_new_rendered = $view->style_plugin->renderGrouping($view->result, $view->style_plugin->options['grouping'], TRUE);
-
+    $no_label_expected = $expected;
     // Remove labels from expected results.
-    foreach ($expected as $job => $data) {
-      unset($expected[$job]);
+    foreach ($no_label_expected as $job => $data) {
+      unset($no_label_expected[$job]);
       $job = str_replace('Job: ', '', $job);
       $data['group'] = $job;
-      $expected[$job] = $data;
+      $no_label_expected[$job] = $data;
     }
-    $this->assertEquals($expected, $sets_new_rendered);
+    $this->assertEquals($no_label_expected, $sets_new_rendered);
+
+    // Test that grouping works on fields having no colon after the label.
+    $fields['job']['label'] = 'Job';
+    $fields['job']['element_label_colon'] = FALSE;
+    $view->destroy();
+    $view->setDisplay();
+    $view->initStyle();
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields);
+    $view->style_plugin->options['grouping'] = [
+      ['field' => 'job'],
+      ['field' => 'age'],
+    ];
+
+    $this->executeView($view);
+
+    if ($stripped) {
+      $view->result[0]->views_test_data_job .= $rand1;
+      $view->result[1]->views_test_data_job .= $rand2;
+      $view->result[2]->views_test_data_job .= $rand3;
+      $view->style_plugin->options['grouping'][0] = ['field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE];
+      $view->style_plugin->options['grouping'][1] = ['field' => 'age', 'rendered' => TRUE, 'rendered_strip' => TRUE];
+    }
+
+    $sets_new_rendered = $view->style_plugin->renderGrouping($view->result, $view->style_plugin->options['grouping'], TRUE);
+
+    // Remove colons from expected results.
+    $no_colon_expected = $expected;
+    foreach ($no_colon_expected as $job => $data) {
+      unset($no_colon_expected[$job]);
+      $job = str_replace('Job: ', 'Job ', $job);
+      $data['group'] = $job;
+      $no_colon_expected[$job] = $data;
+    }
+    $this->assertEquals($no_colon_expected, $sets_new_rendered);
   }
 
   /**
