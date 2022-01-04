@@ -190,6 +190,19 @@ abstract class StorageTestBase extends KernelTestBase {
   }
 
   /**
+   * Tests the rename operation.
+   */
+  public function testRenameNoChange() {
+    $stores = $this->createStorage();
+    $store = $stores[0];
+
+    $store->set('old', 'thing');
+    $this->assertSame($store->get('old'), 'thing');
+    $store->rename('old', 'old');
+    $this->assertSame($store->get('old'), 'thing');
+  }
+
+  /**
    * Creates storage objects for each collection defined for this class.
    *
    * Storing the storage objects in a class member variable causes a fatal
