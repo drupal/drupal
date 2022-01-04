@@ -42,11 +42,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected $statementClass = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
   protected $statementWrapperClass = StatementWrapper::class;
 
   /**
@@ -212,16 +207,6 @@ class Connection extends DatabaseConnection {
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function queryTemporary($query, array $args = [], array $options = []) {
-    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
-    $tablename = $this->generateTemporaryTableName();
-    $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
-    return $tablename;
   }
 
   public function driver() {

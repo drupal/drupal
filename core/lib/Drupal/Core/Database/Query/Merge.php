@@ -362,63 +362,50 @@ class Merge extends Query implements ConditionInterface {
    *     and an INSERT query is executed.
    *   - Merge::STATUS_UPDATE: If the entry already exists,
    *     and an UPDATE query is executed.
-   *   - NULL: (deprecated) If there is a problem and
-   *     queryOptions['throw_exception'] is FALSE.
    *
    * @throws \Drupal\Core\Database\Query\InvalidMergeQueryException
    *   When there are no conditions found to merge.
    */
   public function execute() {
+    if (!count($this->condition)) {
+      throw new InvalidMergeQueryException('Invalid merge query: no conditions');
+    }
 
-    try {
-      if (!count($this->condition)) {
-        throw new InvalidMergeQueryException('Invalid merge query: no conditions');
+    $select = $this->connection->select($this->conditionTable)
+      ->condition($this->condition);
+    $select->addExpression('1');
+
+    if (!$select->execute()->fetchField()) {
+      try {
+        $insert = $this->connection->insert($this->table)->fields($this->insertFields);
+        if ($this->defaultFields) {
+          $insert->useDefaults($this->defaultFields);
+        }
+        $insert->execute();
+        return self::STATUS_INSERT;
       }
-      $select = $this->connection->select($this->conditionTable)
-        ->condition($this->condition);
-      $select->addExpression('1');
-      if (!$select->execute()->fetchField()) {
-        try {
-          $insert = $this->connection->insert($this->table)->fields($this->insertFields);
-          if ($this->defaultFields) {
-            $insert->useDefaults($this->defaultFields);
-          }
-          $insert->execute();
-          return self::STATUS_INSERT;
+      catch (IntegrityConstraintViolationException $e) {
+        // The insert query failed, maybe it's because a racing insert query
+        // beat us in inserting the same row. Retry the select query, if it
+        // returns a row, ignore the error and continue with the update
+        // query below.
+        if (!$select->execute()->fetchField()) {
+          throw $e;
         }
-        catch (IntegrityConstraintViolationException $e) {
-          // The insert query failed, maybe it's because a racing insert query
-          // beat us in inserting the same row. Retry the select query, if it
-          // returns a row, ignore the error and continue with the update
-          // query below.
-          if (!$select->execute()->fetchField()) {
-            throw $e;
-          }
-        }
-      }
-      if ($this->needsUpdate) {
-        $update = $this->connection->update($this->table)
-          ->fields($this->updateFields)
-          ->condition($this->condition);
-        if ($this->expressionFields) {
-          foreach ($this->expressionFields as $field => $data) {
-            $update->expression($field, $data['expression'], $data['arguments']);
-          }
-        }
-        $update->execute();
-        return self::STATUS_UPDATE;
       }
     }
-    catch (\Exception $e) {
-      // @todo 'throw_exception' option is deprecated. Remove in D10.
-      // @see https://www.drupal.org/project/drupal/issues/3210310
-      if (array_key_exists('throw_exception', $this->queryOptions)) {
-        @trigger_error('Passing a \'throw_exception\' option to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187', E_USER_DEPRECATED);
-        if (!($this->queryOptions['throw_exception'])) {
-          return NULL;
+
+    if ($this->needsUpdate) {
+      $update = $this->connection->update($this->table)
+        ->fields($this->updateFields)
+        ->condition($this->condition);
+      if ($this->expressionFields) {
+        foreach ($this->expressionFields as $field => $data) {
+          $update->expression($field, $data['expression'], $data['arguments']);
         }
       }
-      throw $e;
+      $update->execute();
+      return self::STATUS_UPDATE;
     }
   }
 

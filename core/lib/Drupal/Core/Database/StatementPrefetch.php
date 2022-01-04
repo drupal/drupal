@@ -149,36 +149,6 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   }
 
   /**
-   * Implements the magic __get() method.
-   *
-   * @todo Remove the method before Drupal 10.
-   * @see https://www.drupal.org/i/3210310
-   */
-  public function __get($name) {
-    if ($name === 'dbh') {
-      @trigger_error(__CLASS__ . '::$dbh should not be accessed in drupal:9.3.0 and will error in drupal:10.0.0. Use $this->connection instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
-      return $this->connection;
-    }
-    if ($name === 'allowRowCount') {
-      @trigger_error(__CLASS__ . '::$allowRowCount should not be accessed in drupal:9.3.0 and will error in drupal:10.0.0. Use $this->rowCountEnabled instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
-      return $this->rowCountEnabled;
-    }
-  }
-
-  /**
-   * Implements the magic __set() method.
-   *
-   * @todo Remove the method before Drupal 10.
-   * @see https://www.drupal.org/i/3210310
-   */
-  public function __set($name, $value) {
-    if ($name === 'allowRowCount') {
-      @trigger_error(__CLASS__ . '::$allowRowCount should not be written in drupal:9.3.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
-      $this->rowCountEnabled = $value;
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getConnectionTarget(): string {

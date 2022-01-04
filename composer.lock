@@ -452,7 +452,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "34bfd0597745e88afb64bf5294f6af4975930fdc"
+                "reference": "25a2835ba98c19a6fa4d60089d813a81de36e5e5"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -670,7 +670,6 @@
                     "lib/Drupal/Core/Cache/DatabaseCacheTagsChecksum.php",
                     "lib/Drupal/Core/Database/Connection.php",
                     "lib/Drupal/Core/Database/Database.php",
-                    "lib/Drupal/Core/Database/Statement.php",
                     "lib/Drupal/Core/Database/StatementInterface.php",
                     "lib/Drupal/Core/DependencyInjection/Container.php",
                     "lib/Drupal/Core/DrupalKernel.php",

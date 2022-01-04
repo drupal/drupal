@@ -19,11 +19,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected $statementClass = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
   protected $statementWrapperClass = NULL;
 
   /**
@@ -357,50 +352,8 @@ class Connection extends DatabaseConnection {
     return preg_match('/^' . $pattern . '$/', $subject);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function prepare($statement, array $driver_options = []) {
-    @trigger_error('Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Connection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
-    return new Statement($this->connection, $this, $statement, $driver_options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
-    // The database schema might be changed by another process in between the
-    // time that the statement was prepared and the time the statement was run
-    // (e.g. usually happens when running tests). In this case, we need to
-    // re-run the query.
-    // @see http://www.sqlite.org/faq.html#q15
-    // @see http://www.sqlite.org/rescode.html#schema
-    if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
-      @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
-      return $this->query($query, $args, $options);
-    }
-
-    parent::handleQueryException($e, $query, $args, $options);
-  }
-
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function queryTemporary($query, array $args = [], array $options = []) {
-    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
-    // Generate a new temporary table name and protect it from prefixing.
-    // SQLite requires that temporary tables to be non-qualified.
-    $tablename = $this->generateTemporaryTableName();
-    $prefixes = $this->prefixes;
-    $prefixes[$tablename] = '';
-    $this->setPrefix($prefixes);
-
-    $this->query('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
-    return $tablename;
   }
 
   public function driver() {
