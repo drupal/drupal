@@ -42,8 +42,14 @@ class DrupalTranslator implements TranslatorInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal\Core\Validation\DrupalTranslator::trans() instead.
+   *
+   * @see https://www.drupal.org/node/3255250
    */
   public function transChoice($id, $number, array $parameters = [], $domain = NULL, $locale = NULL) {
+    @trigger_error(__NAMESPACE__ . '\DrupalTranslator::transChoice() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use DrupalTranslator::trans() instead. See https://www.drupal.org/node/3255250', E_USER_DEPRECATED);
     // Violation messages can separated singular and plural versions by "|".
     $ids = explode('|', $id);
 
