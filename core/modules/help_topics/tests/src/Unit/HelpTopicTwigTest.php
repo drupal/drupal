@@ -5,6 +5,8 @@ namespace Drupal\Tests\help_topics\Unit;
 use Drupal\Core\Cache\Cache;
 use Drupal\help_topics\HelpTopicTwig;
 use Drupal\Tests\UnitTestCase;
+use Twig\Template;
+use Twig\TemplateWrapper;
 
 /**
  * Unit test for the HelpTopicTwig class.
@@ -94,48 +96,16 @@ class HelpTopicTwigTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $template = $this->getMockForAbstractClass(Template::class, [$twig], '', TRUE, TRUE, TRUE, ['render']);
+    $template
+      ->method('render')
+      ->willReturn(self::PLUGIN_INFORMATION['body']);
+
     $twig
       ->method('load')
-      ->willReturn(new FakeTemplateWrapper(self::PLUGIN_INFORMATION['body']));
+      ->willReturn(new TemplateWrapper($twig, $template));
 
     return $twig;
-  }
-
-}
-
-/**
- * Defines a fake template class to mock \Twig\TemplateWrapper.
- *
- * We cannot use getMockBuilder() for this, because the Twig TemplateWrapper
- * class is declared "final" and cannot be mocked.
- */
-class FakeTemplateWrapper {
-
-  /**
-   * Body text to return from the render() method.
-   *
-   * @var string
-   */
-  protected $body;
-
-  /**
-   * Constructor.
-   *
-   * @param string $body
-   *   Body text to return from the render() method.
-   */
-  public function __construct($body) {
-    $this->body = $body;
-  }
-
-  /**
-   * Mocks the \Twig\TemplateWrapper render() method.
-   *
-   * @param array $context
-   *   (optional) Render context.
-   */
-  public function render(array $context = []) {
-    return $this->body;
   }
 
 }

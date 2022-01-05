@@ -75,33 +75,33 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkSecurity($tags, $filters, $functions) {}
+  public function checkSecurity($tags, $filters, $functions): void {}
 
   /**
    * {@inheritdoc}
    */
-  public function checkPropertyAllowed($obj, $property) {}
+  public function checkPropertyAllowed($obj, $property): void {}
 
   /**
    * {@inheritdoc}
    */
-  public function checkMethodAllowed($obj, $method) {
+  public function checkMethodAllowed($obj, $method): void {
     foreach ($this->allowed_classes as $class => $key) {
       if ($obj instanceof $class) {
-        return TRUE;
+        return;
       }
     }
 
     // Return quickly for an exact match of the method name.
     if (isset($this->allowed_methods[$method])) {
-      return TRUE;
+      return;
     }
 
     // If the method name starts with an allowed prefix, allow it. Note:
     // strpos() is between 3x and 7x faster than preg_match() in this case.
     foreach ($this->allowed_prefixes as $prefix) {
       if (strpos($method, $prefix) === 0) {
-        return TRUE;
+        return;
       }
     }
 

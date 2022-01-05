@@ -8,6 +8,7 @@ use Drupal\Tests\Component\FrontMatter\FrontMatterTest as ComponentFrontMatterTe
 use Symfony\Component\DependencyInjection\Definition;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Tests Twig front matter support.
@@ -44,7 +45,7 @@ class FrontMatterTest extends KernelTestBase {
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
-    $definition = new Definition('Twig_Loader_Filesystem', [[sys_get_temp_dir()]]);
+    $definition = new Definition(FilesystemLoader::class, [[sys_get_temp_dir()]]);
     $definition->setPublic(TRUE);
     $container->setDefinition('twig_loader__file_system', $definition)
       ->addTag('twig.loader');

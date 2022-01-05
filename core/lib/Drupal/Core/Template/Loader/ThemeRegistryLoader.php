@@ -38,13 +38,13 @@ class ThemeRegistryLoader extends FilesystemLoader {
    * @param bool $throw
    *   Whether to throw an exception when an error occurs.
    *
-   * @return string|false
-   *   The path to the template, or false if the template is not found.
+   * @return string|null
+   *   The path to the template, or NULL if the template is not found.
    *
    * @throws \Twig\Error\LoaderError
    *   Thrown if a template matching $name cannot be found.
    */
-  protected function findTemplate($name, $throw = TRUE) {
+  protected function findTemplate(string $name, bool $throw = TRUE) {
     // Allow for loading based on the Drupal theme registry.
     $hook = str_replace('.html.twig', '', strtr($name, '-', '_'));
     $theme_registry = $this->themeRegistry->getRuntime();
@@ -66,13 +66,13 @@ class ThemeRegistryLoader extends FilesystemLoader {
       throw new LoaderError(sprintf('Unable to find template "%s" in the Drupal theme registry.', $name));
     }
 
-    return FALSE;
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheKey($name) {
+  public function getCacheKey(string $name): string {
     // The parent implementation does unnecessary work that triggers
     // deprecations in PHP 8.1.
     return $this->findTemplate($name) ?: '';

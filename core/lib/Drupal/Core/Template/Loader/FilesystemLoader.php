@@ -50,7 +50,7 @@ class FilesystemLoader extends TwigFilesystemLoader {
    * @param string $namespace
    *   (optional) A path name.
    */
-  public function addPath($path, $namespace = self::MAIN_NAMESPACE) {
+  public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE): void {
     // Invalidate the cache.
     $this->cache = [];
     $this->paths[$namespace][] = rtrim($path, '/\\');

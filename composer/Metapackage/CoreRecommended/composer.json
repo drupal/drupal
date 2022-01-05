@@ -59,7 +59,7 @@
         "symfony/validator": "v4.4.35",
         "symfony/var-dumper": "v5.4.0",
         "symfony/yaml": "v4.4.34",
-        "twig/twig": "v2.14.7",
+        "twig/twig": "v3.3.7",
         "typo3/phar-stream-wrapper": "v3.1.7"
     }
 }
