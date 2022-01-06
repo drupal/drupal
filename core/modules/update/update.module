@@ -193,7 +193,7 @@ function update_cron() {
   if ((REQUEST_TIME - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.
-    module_load_include('inc', 'update', 'update.fetch');
+    \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
     _update_cron_notify();
   }
 
@@ -276,7 +276,7 @@ function _update_no_data() {
  * @see \Drupal\update\UpdateManager::getProjects()
  */
 function update_get_available($refresh = FALSE) {
-  module_load_include('inc', 'update', 'update.compare');
+  \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.compare');
   $needs_refresh = FALSE;
 
   // Grab whatever data we currently have.

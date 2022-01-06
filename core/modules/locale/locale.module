@@ -231,7 +231,7 @@ function locale_configurable_language_delete(ConfigurableLanguageInterface $lang
   \Drupal::service('locale.storage')->deleteTranslations(['language' => $language->id()]);
 
   // Remove interface translation files.
-  module_load_include('inc', 'locale', 'locale.bulk');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.bulk');
   locale_translate_delete_translation_files([], [$language->id()]);
 
   // Remove translated configuration objects.
@@ -359,7 +359,7 @@ function locale_cron() {
   // and a translatable language was set.
   // Update tasks are added to the queue here but processed by Drupal's cron.
   if (\Drupal::config('locale.settings')->get('translation.update_interval_days') && locale_translatable_language_list()) {
-    module_load_include('translation.inc', 'locale');
+    \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
     locale_cron_fill_queue();
   }
 }
@@ -410,15 +410,16 @@ function locale_system_update(array $components) {
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
   if (!InstallerKernel::installationAttempted() && locale_translatable_language_list()) {
+    $module_handler = \Drupal::moduleHandler();
     if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
-      module_load_include('compare.inc', 'locale');
+      $module_handler->loadInclude('locale', 'inc', 'locale.compare');
 
       // Update the list of translatable projects and start the import batch.
       // Only when new projects are added the update batch will be triggered.
       // Not each enabled module will introduce a new project. E.g. sub modules.
       $projects = array_keys(locale_translation_build_projects());
       if ($list = array_intersect($list, $projects)) {
-        module_load_include('fetch.inc', 'locale');
+        $module_handler->loadInclude('locale', 'inc', 'locale.fetch');
         // Get translation status of the projects, download and update
         // translations.
         $options = _locale_translation_default_update_options();
@@ -431,7 +432,7 @@ function locale_system_update(array $components) {
     // this component may have installed configuration from any number of other
     // components. Do this even if import is not enabled because parsing new
     // configuration may expose new source strings.
-    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
     if ($batch = locale_config_batch_update_components([])) {
       batch_set($batch);
     }
@@ -453,8 +454,9 @@ function locale_system_remove($components) {
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
   if (locale_translatable_language_list()) {
-    module_load_include('compare.inc', 'locale');
-    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->loadInclude('locale', 'inc', 'locale.compare');
+    $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
 
     // Only when projects are removed, the translation files and records will be
     // deleted. Not each disabled module will remove a project, e.g., sub
@@ -863,7 +865,7 @@ function locale_translation_file_history_delete($projects = [], $langcodes = [])
 function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
   $result = [];
   $status = \Drupal::keyValue('locale.translation_status')->getAll();
-  module_load_include('translation.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
@@ -899,7 +901,7 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
  */
 function locale_translation_status_save($project, $langcode, $type, $data) {
   // Load the translation status or build it if not already available.
-  module_load_include('translation.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
   $status = locale_translation_get_status();
   if (empty($status)) {
     $projects = locale_translation_get_projects([$project]);

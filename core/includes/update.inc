@@ -287,7 +287,7 @@ function update_invoke_post_update($function, &$context) {
   }
 
   [$module, $name] = explode('_post_update_', $function, 2);
-  module_load_include('php', $module, $module . '.post_update');
+  \Drupal::moduleHandler()->loadInclude($module, 'php', $module . '.post_update');
   if (function_exists($function)) {
     try {
       $ret['results']['query'] = $function($context['sandbox']);
