@@ -640,13 +640,13 @@ function node_user_cancel($edit, UserInterface $account, $method) {
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
-      module_load_include('inc', 'node', 'node.admin');
+      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       node_mass_update($nids, ['status' => 0], NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
       // Anonymize all of the nodes for this old account.
-      module_load_include('inc', 'node', 'node.admin');
+      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
       node_mass_update($vids, [
         'uid' => 0,

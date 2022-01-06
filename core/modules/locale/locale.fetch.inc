@@ -29,7 +29,7 @@ require_once __DIR__ . '/locale.translation.inc';
  *   Batch definition array.
  */
 function locale_translation_batch_update_build($projects = [], $langcodes = [], $options = []) {
-  module_load_include('compare.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
   $status_options = $options;

@@ -54,7 +54,8 @@ function entity_test_schema() {
   return $schema;
 }
 
+$module_handler = \Drupal::moduleHandler();
 $index = \Drupal::state()->get('entity_test.db_updates.entity_definition_updates');
-module_load_include('inc', 'entity_test', 'update/entity_definition_updates_' . $index);
+$module_handler->loadInclude('entity_test', 'inc', 'update/entity_definition_updates_' . $index);
 $index = \Drupal::state()->get('entity_test.db_updates.status_report');
-module_load_include('inc', 'entity_test', 'update/status_report_' . $index);
+$module_handler->loadInclude('entity_test', 'inc', 'update/status_report_' . $index);

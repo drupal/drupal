@@ -623,7 +623,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * available).
    */
   protected function buildFilters(&$form, FormStateInterface $form_state) {
-    module_load_include('inc', 'views_ui', 'admin');
+    \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
 
     $bundles = $this->bundleInfoService->getBundleInfo($this->entityTypeId);
     // If the current base table support bundles and has more than one (like user).
@@ -928,7 +928,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.
-      module_load_include('inc', 'views_ui', 'admin');
+      \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
       $fields = Views::viewsDataHelper()->fetchFields($this->base_table, 'filter');
       $table = FALSE;
       if (isset($fields[$this->base_table . '.' . $bundle_key])) {

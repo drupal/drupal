@@ -36,7 +36,7 @@ function update_requirements($phase) {
   $requirements = [];
   if ($phase == 'runtime') {
     if ($available = update_get_available(FALSE)) {
-      module_load_include('inc', 'update', 'update.compare');
+      \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.compare');
       $data = update_calculate_project_data($available);
       // First, populate the requirements for core:
       $requirements['update_core'] = _update_requirement_check($data['drupal'], 'core');

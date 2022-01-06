@@ -20,7 +20,7 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    module_load_include('compare.inc', 'locale');
+    \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
     $admin_user = $this->drupalCreateUser([
       'administer modules',
       'administer languages',

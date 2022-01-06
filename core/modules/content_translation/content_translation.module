@@ -507,7 +507,7 @@ function content_translation_form_field_config_edit_form_alter(array &$form, For
   }
 
   if ($field->isTranslatable()) {
-    module_load_include('inc', 'content_translation', 'content_translation.admin');
+    \Drupal::moduleHandler()->loadInclude('content_translation', 'inc', 'content_translation.admin');
     $element = content_translation_field_sync_widget($field);
     if ($element) {
       $form['third_party_settings']['content_translation']['translation_sync'] = $element;
@@ -651,7 +651,7 @@ function content_translation_language_configuration_element_submit(array $form, 
  * Implements hook_form_FORM_ID_alter() for language_content_settings_form().
  */
 function content_translation_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state) {
-  module_load_include('inc', 'content_translation', 'content_translation.admin');
+  \Drupal::moduleHandler()->loadInclude('content_translation', 'inc', 'content_translation.admin');
   _content_translation_form_language_content_settings_form_alter($form, $form_state);
 }
 
@@ -659,7 +659,7 @@ function content_translation_form_language_content_settings_form_alter(array &$f
  * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
  */
 function content_translation_preprocess_language_content_settings_table(&$variables) {
-  module_load_include('inc', 'content_translation', 'content_translation.admin');
+  \Drupal::moduleHandler()->loadInclude('content_translation', 'inc', 'content_translation.admin');
   _content_translation_preprocess_language_content_settings_table($variables);
 }
 
