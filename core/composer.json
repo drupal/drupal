@@ -42,7 +42,7 @@
         "masterminds/html5": "^2.1",
         "symfony/psr-http-message-bridge": "^2.0",
         "composer/semver": "^3.0",
-        "asm89/stack-cors": "^1.1",
+        "asm89/stack-cors": "^2.0.2",
         "pear/archive_tar": "^1.4.14",
         "psr/log": "^1.0"
     },

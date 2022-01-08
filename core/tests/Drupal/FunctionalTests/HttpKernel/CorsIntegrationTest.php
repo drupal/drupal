@@ -48,21 +48,24 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
+    $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Fire the same exact request. This time it should be cached.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
+    $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Fire a request for a different origin. Verify the CORS header.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.org']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.org');
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
+    $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
-    // Configure the CORS stack to allow a specific set of origins.
+    // Configure the CORS stack to allow a specific origin.
     $cors_config['allowedOrigins'] = ['http://example.com'];
 
     $this->setContainerParameter('cors.config', $cors_config);
@@ -71,13 +74,40 @@ class CorsIntegrationTest extends BrowserTestBase {
     // Fire a request from an origin that isn't allowed.
     /** @var \Symfony\Component\HttpFoundation\Response $response */
     $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
-    $this->assertSession()->statusCodeEquals(403);
-    $this->assertSession()->pageTextContains('Not allowed.');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Specify a valid origin.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
+
+    // Configure the CORS stack to allow a specific set of origins.
+    $cors_config['allowedOrigins'] = ['http://example.com', 'https://drupal.org'];
+
+    $this->setContainerParameter('cors.config', $cors_config);
+    $this->rebuildContainer();
+
+    // Fire a request from an origin that isn't allowed.
+    /** @var \Symfony\Component\HttpFoundation\Response $response */
+    $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', NULL);
+    $this->assertSession()->responseHeaderContains('Vary', 'Origin');
+
+    // Specify a valid origin.
+    $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+    $this->assertSession()->responseHeaderContains('Vary', 'Origin');
+
+    // Specify a valid origin.
+    $this->drupalGet('/test-page', [], ['Origin' => 'https://drupal.org']);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'https://drupal.org');
+    $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Verify POST still functions with 'Origin' header set to site's domain.
     $origin = \Drupal::request()->getSchemeAndHttpHost();
