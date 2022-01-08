@@ -1209,8 +1209,8 @@ function install_database_errors($database, $settings_file) {
     // Run tasks associated with the database type. Any errors are caught in the
     // calling function.
     Database::addConnectionInfo('default', 'default', $database);
-
-    $errors = db_installer_object($driver, $database['namespace'] ?? NULL)->runTasks();
+    $installer_class = $database['namespace'] . "\\Install\\Tasks";
+    $errors = (new $installer_class())->runTasks();
   }
   return $errors;
 }

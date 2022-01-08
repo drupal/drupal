@@ -21,6 +21,7 @@ use Drupal\Tests\UnitTestCase;
  * @preserveGlobalState disabled
  *
  * @group Database
+ * @group legacy
  */
 class InstallerObjectTest extends UnitTestCase {
 
@@ -42,6 +43,7 @@ class InstallerObjectTest extends UnitTestCase {
    * @dataProvider providerDbInstallerObject
    */
   public function testDbInstallerObject($driver, $namespace, $expected_class_name) {
+    $this->expectDeprecation('db_installer_object() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3256641');
     $object = db_installer_object($driver, $namespace);
     $this->assertEquals(get_class($object), $expected_class_name);
   }
