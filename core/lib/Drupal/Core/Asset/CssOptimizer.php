@@ -71,7 +71,16 @@ class CssOptimizer implements AssetOptimizerInterface {
   }
 
   /**
-   * Build aggregate CSS file.
+   * Processes CSS file and adds base URLs to any relative resource paths.
+   *
+   * @param array $css_asset
+   *   A CSS asset. The array should contain the `data` key where the value
+   *   should be the path to the CSS file relative to the Drupal root. This is
+   *   an example of the `data` key's value,
+   *   "core/assets/vendor/normalize-css/normalize.css".
+   *
+   * @return string
+   *   The asset's cleaned/optimized contents.
    */
   protected function processFile($css_asset) {
     $contents = $this->loadFile($css_asset['data'], TRUE);
