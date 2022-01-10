@@ -433,7 +433,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
   public function getCacheContexts() {
     $contexts = [];
 
-    foreach ($this->options['info'] as $field_id => $info) {
+    foreach ($this->options['info'] as $info) {
       if (!empty($info['sortable'])) {
         // The rendered link needs to play well with any other query parameter
         // used on the page, like pager and exposed filter.

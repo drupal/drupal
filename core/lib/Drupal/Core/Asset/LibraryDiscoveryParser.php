@@ -544,7 +544,7 @@ class LibraryDiscoveryParser {
         return 2;
       }
       $categories[] = $category;
-      foreach ($files as $source => $options) {
+      foreach ($files as $options) {
         if (!is_array($options)) {
           return 1;
         }

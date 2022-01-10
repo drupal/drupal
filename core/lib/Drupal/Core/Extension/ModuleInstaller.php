@@ -561,7 +561,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
     $this->moduleHandler->invokeAll('cache_flush');
-    foreach (Cache::getBins() as $service_id => $cache_backend) {
+    foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
 

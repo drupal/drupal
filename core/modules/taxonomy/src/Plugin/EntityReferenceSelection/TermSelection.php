@@ -89,7 +89,7 @@ class TermSelection extends DefaultSelection {
 
     $total = 0;
     $referenceable_entities = $this->getReferenceableEntities($match, $match_operator, 0);
-    foreach ($referenceable_entities as $bundle => $entities) {
+    foreach ($referenceable_entities as $entities) {
       $total += count($entities);
     }
     return $total;

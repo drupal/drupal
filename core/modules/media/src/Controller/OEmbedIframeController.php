@@ -171,7 +171,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
         '#placeholder_token' => $placeholder_token,
       ];
       $context = new RenderContext();
-      $content = $this->renderer->executeInRenderContext($context, function () use ($resource, $element) {
+      $content = $this->renderer->executeInRenderContext($context, function () use ($element) {
         return $this->renderer->render($element);
       });
       $response

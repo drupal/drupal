@@ -229,7 +229,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   protected function setStaticCache(array $entities) {
     if ($this->entityType->isStaticallyCacheable()) {
-      foreach ($entities as $id => $entity) {
+      foreach ($entities as $entity) {
         $this->memoryCache->set($this->buildCacheId($entity->id()), $entity, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
       }
     }

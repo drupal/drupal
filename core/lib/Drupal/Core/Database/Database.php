@@ -398,7 +398,7 @@ abstract class Database {
       throw new ConnectionNotDefinedException('The specified database connection is not defined: ' . $key);
     }
 
-    if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
+    if (!self::$databaseInfo[$key][$target]['driver']) {
       throw new DriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
 

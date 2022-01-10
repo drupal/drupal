@@ -31,7 +31,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
       }
       elseif ($references = $this->getFileReferences($entity)) {
         foreach ($references as $field_name => $entity_map) {
-          foreach ($entity_map as $referencing_entity_type => $referencing_entities) {
+          foreach ($entity_map as $referencing_entities) {
             /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
             foreach ($referencing_entities as $referencing_entity) {
               $entity_and_field_access = $referencing_entity->access('view', $account, TRUE)->andIf($referencing_entity->$field_name->access('view', $account, TRUE));

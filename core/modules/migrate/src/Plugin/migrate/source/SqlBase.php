@@ -266,9 +266,6 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     if ($this->batch == 0) {
       $this->prepareQuery();
 
-      // Get the key values, for potential use in joining to the map table.
-      $keys = [];
-
       // The rules for determining what conditions to add to the query are as
       // follows (applying first applicable rule):
       // 1. If the map is joinable, join it. We will want to accept all rows

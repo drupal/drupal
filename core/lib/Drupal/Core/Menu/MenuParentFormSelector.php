@@ -88,7 +88,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       if (!isset($options[$menu_parent])) {
         // The requested menu parent cannot be found in the menu anymore. Try
         // setting it to the top level in the current menu.
-        [$menu_name, $parent] = explode(':', $menu_parent, 2);
+        [$menu_name] = explode(':', $menu_parent, 2);
         $menu_parent = $menu_name . ':';
       }
       if (isset($options[$menu_parent])) {

@@ -145,6 +145,24 @@
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
   <rule ref="DrupalPractice.General.ExceptionT"/>
   <rule ref="DrupalPractice.InfoFiles.NamespacedDependency"/>
+  <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis">
+    <!-- @todo exclude tests -->
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <!-- Do not run this sniff on API files or transliteration data. -->
+    <exclude-pattern>*.api.php</exclude-pattern>
+    <exclude-pattern>core/lib/Drupal/Component/Transliteration/data/*.php</exclude-pattern>
+    <properties>
+      <property name="allowUnusedFunctionParameters" value="true"/>
+    </properties>
+  </rule>
+  <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis.UndefinedVariable">
+    <!-- Setting severity to 0 to completely disable an error message in this sniff, without excluding the whole sniff -->
+    <!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Configuration-Options#changing-the-default-severity-levels -->
+    <severity>0</severity>
+  </rule>
+  <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis.UndefinedUnsetVariable">
+    <severity>0</severity>
+  </rule>
 
   <!-- Generic sniffs -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>

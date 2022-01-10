@@ -82,7 +82,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
   private function pluginsSupplyingTagsMessage(array $tags, array $plugin_definitions): string {
     $message_array = [];
     $message_string = '';
-    foreach ($plugin_definitions as $plugin_id => $definition) {
+    foreach ($plugin_definitions as $definition) {
       if ($definition->hasElements()) {
         $elements_array = HTMLRestrictionsUtilities::allowedElementsStringToHtmlFilterArray(implode('', $definition->getElements()));
         foreach ($elements_array as $tag_name => $tag_config) {

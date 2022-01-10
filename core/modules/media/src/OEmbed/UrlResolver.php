@@ -130,7 +130,7 @@ class UrlResolver implements UrlResolverInterface {
   public function getProviderByUrl($url) {
     // Check the URL against every scheme of every endpoint of every provider
     // until we find a match.
-    foreach ($this->providers->getAll() as $provider_name => $provider_info) {
+    foreach ($this->providers->getAll() as $provider_info) {
       foreach ($provider_info->getEndpoints() as $endpoint) {
         if ($endpoint->matchUrl($url)) {
           return $provider_info;

@@ -158,7 +158,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       // Make sure the original order of sorts is preserved
       // (e.g. a sticky sort is often first)
       $view->query->orderby = [];
-      foreach ($view->sort as $key => $sort) {
+      foreach ($view->sort as $sort) {
         if (!$sort->isExposed()) {
           $sort->query();
         }

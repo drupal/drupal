@@ -246,7 +246,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
 
     $all_views = $this->entityTypeManager->getStorage('view')->loadMultiple(NULL);
     /** @var \Drupal\views\Entity\View $view */
-    foreach ($all_views as $id => $view) {
+    foreach ($all_views as $view) {
 
       // First check just the base table.
       if (in_array($view->get('base_table'), $tables)) {

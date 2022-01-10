@@ -29,7 +29,7 @@ class TestHttpClientMiddleware {
           $request = $request->withHeader('User-Agent', drupal_generate_test_ua($test_prefix));
         }
         return $handler($request, $options)
-          ->then(function (ResponseInterface $response) use ($request) {
+          ->then(function (ResponseInterface $response) {
             if (!drupal_valid_test_ua()) {
               return $response;
             }

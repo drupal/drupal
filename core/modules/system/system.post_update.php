@@ -100,7 +100,7 @@ function system_post_update_entity_revision_metadata_bc_cleanup() {
   });
 
   // Remove the '$requiredRevisionMetadataKeys' property for these entity types.
-  foreach ($last_installed_definitions as $entity_type_id => $entity_type) {
+  foreach ($last_installed_definitions as $entity_type) {
     $closure = function (ContentEntityTypeInterface $entity_type) {
       return get_object_vars($entity_type);
     };

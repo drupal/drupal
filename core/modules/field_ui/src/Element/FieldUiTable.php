@@ -70,6 +70,7 @@ class FieldUiTable extends Table {
           $region_name = call_user_func_array($row['#region_callback'], [&$row]);
 
           // Add the element in the tree.
+          // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
           $target = &$trees[$region_name][''];
           foreach ($parents[$name] as $key) {
             $target = &$target['children'][$key];

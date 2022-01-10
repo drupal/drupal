@@ -1357,7 +1357,7 @@ class Sql extends QueryPluginBase {
         ];
       }
 
-      foreach ($entity_information as $entity_type_id => $info) {
+      foreach ($entity_information as $info) {
         $entity_type = \Drupal::entityTypeManager()->getDefinition($info['entity_type']);
         $base_field = !$info['revision'] ? $entity_type->getKey('id') : $entity_type->getKey('revision');
         $this->addField($info['alias'], $base_field, '', $params);

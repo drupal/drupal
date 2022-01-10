@@ -142,7 +142,7 @@ class ThemeExtensionList extends ExtensionList {
     // sub-themes.
     $this->fillInSubThemeData($themes, $sub_themes);
 
-    foreach ($themes as $key => $theme) {
+    foreach ($themes as $theme) {
       // After $theme is processed by buildModuleDependencies(), there can be a
       // `$theme->requires` array containing both module and base theme
       // dependencies. The module dependencies are copied to their own property

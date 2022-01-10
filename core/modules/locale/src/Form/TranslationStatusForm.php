@@ -195,7 +195,7 @@ class TranslationStatusForm extends FormBase {
     $this->moduleHandler->loadInclude('locale', 'compare.inc');
     $project_data = locale_translation_build_projects();
 
-    foreach ($status as $project_id => $project) {
+    foreach ($status as $project) {
       foreach ($project as $langcode => $project_info) {
         // No translation file found for this project-language combination.
         if (empty($project_info->type)) {
