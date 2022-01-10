@@ -118,6 +118,7 @@ trait ComputedItemListTrait {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function offsetExists($offset) {
     $this->ensureComputedValue();
     return parent::offsetExists($offset);

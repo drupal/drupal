@@ -436,7 +436,7 @@ class TestServiceMethodWithParameter {
 class TestServiceComplexMethod {
 
   public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
-
+    return [];
   }
 
 }
@@ -444,7 +444,7 @@ class TestServiceComplexMethod {
 class TestServiceNullableTypehintSelf {
 
   public function typehintSelf(?self $parameter): ?self {
-
+    return NULL;
   }
 
 }

@@ -17,11 +17,9 @@ class ErrorContainer extends Container {
       // Enforce a recoverable error.
       $callable = function (ErrorContainer $container) {
       };
-      $callable(1);
+      return $callable(1);
     }
-    else {
-      return parent::get($id, $invalidBehavior);
-    }
+    return parent::get($id, $invalidBehavior);
   }
 
 }
