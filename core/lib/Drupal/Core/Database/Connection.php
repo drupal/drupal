@@ -521,11 +521,13 @@ abstract class Connection {
 
     try {
       $query = $this->preprocessStatement($query, $options);
-      return new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $allow_row_count);
+      $statement = new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $allow_row_count);
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
+
+    return $statement;
   }
 
   /**

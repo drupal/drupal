@@ -18,6 +18,7 @@ class CacheableEmbeddedDataSource extends EmbeddedDataSource {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function count($refresh = FALSE) {
     return SourcePluginBase::count($refresh);
   }

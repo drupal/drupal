@@ -73,6 +73,8 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
         return $mime_type;
       }
     }
+
+    return NULL;
   }
 
   /**
