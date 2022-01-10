@@ -30,6 +30,7 @@ class CommentFieldItemList extends FieldItemList {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function offsetExists($offset) {
     // For consistency with what happens in get(), we force offsetExists() to
     // be TRUE for delta 0.

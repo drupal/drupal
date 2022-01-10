@@ -242,6 +242,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function count($refresh = FALSE) {
     // If no translations are included, then a simple query is possible.
     if (!$this->configuration['include_translations']) {
