@@ -135,7 +135,7 @@ class DatabaseBackend implements FloodInterface {
    */
   public function garbageCollection() {
     try {
-      $return = $this->connection->delete(static::TABLE_NAME)
+      $this->connection->delete(static::TABLE_NAME)
         ->condition('expiration', REQUEST_TIME, '<')
         ->execute();
     }

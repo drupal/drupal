@@ -32,7 +32,7 @@ class LayoutBuilderEntityViewDisplayStorage extends ConfigEntityStorage {
    * {@inheritdoc}
    */
   protected function mapFromStorageRecords(array $records) {
-    foreach ($records as $id => &$record) {
+    foreach ($records as &$record) {
       if (!empty($record['third_party_settings']['layout_builder']['sections'])) {
         $sections = &$record['third_party_settings']['layout_builder']['sections'];
         $sections = array_map([Section::class, 'fromArray'], $sections);

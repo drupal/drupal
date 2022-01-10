@@ -143,7 +143,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     if ($conjunction == 'AND' && !empty($permissions)) {
       $access = TRUE;
       foreach ($permissions as $permission) {
-        if (!$permission_access = $account->hasPermission($permission)) {
+        if (!$account->hasPermission($permission)) {
           $access = FALSE;
           break;
         }
@@ -151,7 +151,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     }
     else {
       foreach ($permissions as $permission) {
-        if ($permission_access = $account->hasPermission($permission)) {
+        if ($account->hasPermission($permission)) {
           $access = TRUE;
           break;
         }

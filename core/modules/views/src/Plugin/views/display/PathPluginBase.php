@@ -338,13 +338,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
-    foreach ($bits as $pos => $bit) {
-      if ($bit == '%') {
-        // If a view requires any arguments we cannot create a static menu link.
-        return [];
-      }
+    if (in_array('%', $bits, TRUE)) {
+      // If a view requires any arguments we cannot create a static menu link.
+      return [];
     }
-
     $path = implode('/', $bits);
     $view_id = $this->view->storage->id();
     $display_id = $this->display['id'];

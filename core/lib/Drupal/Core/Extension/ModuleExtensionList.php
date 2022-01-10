@@ -88,7 +88,7 @@ class ModuleExtensionList extends ExtensionList {
   protected function getExtensionDiscovery() {
     $discovery = parent::getExtensionDiscovery();
 
-    if ($active_profile = $this->getActiveProfile()) {
+    if ($this->getActiveProfile()) {
       $discovery->setProfileDirectories($this->getProfileDirectories($discovery));
     }
 

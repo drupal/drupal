@@ -712,7 +712,7 @@ function comment_entity_view_display_presave(EntityViewDisplayInterface $display
   }
 
   // Disable the comment field formatter when the used view display is disabled.
-  foreach ($storage->loadMultiple() as $id => $view_display) {
+  foreach ($storage->loadMultiple() as $view_display) {
     $changed = FALSE;
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
     foreach ($view_display->getComponents() as $field => $component) {

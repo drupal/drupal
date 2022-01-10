@@ -19,7 +19,7 @@ if (PHP_SAPI !== 'cli') {
 $autoloader = require __DIR__ . '/../../autoload.php';
 $request = Request::createFromGlobals();
 Settings::initialize(dirname(__DIR__, 2), DrupalKernel::findSitePath($request), $autoloader);
-$kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
+DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
 
 // Run the database dump command.
 $application = new DbToolsApplication();

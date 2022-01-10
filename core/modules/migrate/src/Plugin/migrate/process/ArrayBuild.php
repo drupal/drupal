@@ -82,7 +82,7 @@ class ArrayBuild extends ProcessPluginBase {
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $new_value = [];
 
-    foreach ((array) $value as $old_key => $old_value) {
+    foreach ((array) $value as $old_value) {
       // Checks that $old_value is an array.
       if (!is_array($old_value)) {
         throw new MigrateException("The input should be an array of arrays");

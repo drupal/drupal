@@ -516,7 +516,7 @@ function drupal_flush_all_caches($kernel = NULL) {
   $module_handler = \Drupal::moduleHandler();
   // Flush all persistent caches.
   $module_handler->invokeAll('cache_flush');
-  foreach (Cache::getBins() as $service_id => $cache_backend) {
+  foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->deleteAll();
   }
 

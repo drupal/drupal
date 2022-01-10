@@ -285,7 +285,7 @@ class FilterHtml extends FilterBase {
           // allowed attribute values with a wildcard. A wildcard by itself
           // would mean allowing all possible attribute values. But in that
           // case, one would not specify an attribute value at all.
-          $allowed_attribute_values = array_filter($allowed_attribute_values, function ($value) use ($star_protector) {
+          $allowed_attribute_values = array_filter($allowed_attribute_values, function ($value) {
             return $value !== '*';
           });
 

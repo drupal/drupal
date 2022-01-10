@@ -141,7 +141,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
     }
 
-    [$revision_permission_operation, $entity_operation] = static::REVISION_OPERATION_MAP[$operation] ?? [
+    [$revision_permission_operation] = static::REVISION_OPERATION_MAP[$operation] ?? [
       NULL,
       NULL,
     ];

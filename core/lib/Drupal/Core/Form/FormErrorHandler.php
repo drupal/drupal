@@ -18,7 +18,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
    */
   public function handleFormErrors(array &$form, FormStateInterface $form_state) {
     // After validation check if there are errors.
-    if ($errors = $form_state->getErrors()) {
+    if ($form_state->getErrors()) {
       // Display error messages for each element.
       $this->displayErrorMessages($form, $form_state);
 
@@ -110,6 +110,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
     // modify the original form. When processing grouped elements a reference to
     // the complete form is needed.
     if (empty($elements)) {
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.VariableRedeclaration
       $elements = &$form;
     }
 

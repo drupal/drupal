@@ -79,7 +79,7 @@ EOS;
     // In order to avoid that, check for each interface, whether one of its
     // parents is also in the list and exclude it.
     if ($interfaces = $reflection->getInterfaces()) {
-      foreach ($interfaces as $interface_name => $interface) {
+      foreach ($interfaces as $interface) {
         // Exclude all parents from the list of implemented interfaces of the
         // class.
         if ($parent_interfaces = $interface->getInterfaceNames()) {

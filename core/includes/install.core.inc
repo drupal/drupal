@@ -1173,7 +1173,7 @@ function install_verify_database_ready() {
   $table = key($system_schema);
 
   $existing_install = FALSE;
-  if ($database = Database::getConnectionInfo()) {
+  if (Database::getConnectionInfo()) {
     try {
       $existing_install = Database::getConnection()->schema()->tableExists($table);
     }
@@ -2424,7 +2424,6 @@ function install_config_revert_install_changes() {
       $config_importer->import();
     }
     catch (ConfigImporterException $e) {
-      global $install_state;
       $messenger = \Drupal::messenger();
       // There are validation errors.
       $messenger->addError(t('The configuration synchronization failed validation.'));

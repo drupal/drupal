@@ -77,7 +77,6 @@ function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
 
   $fields = $deleted_fields_repository->getFieldDefinitions($field_storage_unique_id);
 
-  $info = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($fields as $field) {
     $entity_type = $field->getTargetEntityTypeId();
 

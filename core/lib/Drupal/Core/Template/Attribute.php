@@ -320,7 +320,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   public function __toString() {
     $return = '';
     /** @var \Drupal\Core\Template\AttributeValueBase $value */
-    foreach ($this->storage as $name => $value) {
+    foreach ($this->storage as $value) {
       $rendered = $value->render();
       if ($rendered) {
         $return .= ' ' . $rendered;

@@ -360,9 +360,9 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function calculateDependencies() {
     parent::calculateDependencies();
 
-    foreach ($this->getSections() as $delta => $section) {
+    foreach ($this->getSections() as $section) {
       $this->calculatePluginDependencies($section->getLayout());
-      foreach ($section->getComponents() as $uuid => $component) {
+      foreach ($section->getComponents() as $component) {
         $this->calculatePluginDependencies($component->getPlugin());
       }
     }

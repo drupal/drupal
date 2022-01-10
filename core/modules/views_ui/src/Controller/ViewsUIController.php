@@ -121,7 +121,7 @@ class ViewsUIController extends ControllerBase {
     foreach ($rows as &$row) {
       $views = [];
       // Link each view name to the view itself.
-      foreach ($row['views'] as $row_name => $view) {
+      foreach ($row['views'] as $view) {
         $views[] = Link::fromTextAndUrl($view, new Url('entity.view.edit_form', ['view' => $view]))->toString();
       }
       unset($row['views']);

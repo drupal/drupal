@@ -279,7 +279,7 @@ class ExtensionDiscovery {
         return TRUE;
       }
 
-      foreach ($this->profileDirectories as $weight => $profile_path) {
+      foreach ($this->profileDirectories as $profile_path) {
         if (strpos($file->getPath(), $profile_path) === 0) {
           // Parent profile found.
           return TRUE;

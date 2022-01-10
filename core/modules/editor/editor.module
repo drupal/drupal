@@ -369,7 +369,7 @@ function editor_entity_insert(EntityInterface $entity) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
+  foreach ($referenced_files_by_field as $uuids) {
     _editor_record_file_usage($uuids, $entity);
   }
 }
@@ -387,7 +387,7 @@ function editor_entity_update(EntityInterface $entity) {
   // deletion of previous file usages are necessary.
   if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
     $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-    foreach ($referenced_files_by_field as $field => $uuids) {
+    foreach ($referenced_files_by_field as $uuids) {
       _editor_record_file_usage($uuids, $entity);
     }
   }
@@ -427,7 +427,7 @@ function editor_entity_delete(EntityInterface $entity) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
+  foreach ($referenced_files_by_field as $uuids) {
     _editor_delete_file_usage($uuids, $entity, 0);
   }
 }
@@ -441,7 +441,7 @@ function editor_entity_revision_delete(EntityInterface $entity) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
+  foreach ($referenced_files_by_field as $uuids) {
     _editor_delete_file_usage($uuids, $entity, 1);
   }
 }
