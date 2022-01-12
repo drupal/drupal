@@ -64,7 +64,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     }
 
     // Create the test field.
-    module_load_install('entity_test');
+    $this->container->get('module_handler')->loadInclude('entity_test', 'install');
     entity_test_install();
 
     // Install required default configuration for filter module.

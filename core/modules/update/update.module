@@ -92,7 +92,7 @@ function update_page_top() {
         break;
 
     }
-    module_load_install('update');
+    \Drupal::moduleHandler()->loadInclude('update', 'install');
     $status = update_requirements('runtime');
     foreach (['core', 'contrib'] as $report_type) {
       $type = 'update_' . $report_type;

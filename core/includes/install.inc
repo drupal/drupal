@@ -84,7 +84,7 @@ function drupal_load_updates() {
   foreach (\Drupal::service('update.update_hook_registry')->getAllInstalledVersions() as $module => $schema_version) {
     if ($extension_list_module->exists($module) && !$extension_list_module->checkIncompatibility($module)) {
       if ($schema_version > -1) {
-        module_load_install($module);
+        \Drupal::moduleHandler()->loadInclude($module, 'install');
       }
     }
   }
@@ -1033,7 +1033,12 @@ function drupal_requirements_severity(&$requirements) {
  *   TRUE or FALSE, depending on whether the requirements are met.
  */
 function drupal_check_module($module) {
-  module_load_install($module);
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+  $module_list = \Drupal::service('extension.list.module');
+  $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$module.install";
+  if (is_file($file)) {
+    require_once $file;
+  }
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
   if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {

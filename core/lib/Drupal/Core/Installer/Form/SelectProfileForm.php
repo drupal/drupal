@@ -93,7 +93,12 @@ class SelectProfileForm extends FormBase {
         // profile's which implement hook_INSTALL() are not supported.
         // @todo https://www.drupal.org/project/drupal/issues/2982052 Remove
         //   this restriction.
-        module_load_install($extensions['profile']);
+        $root = \Drupal::root();
+        include_once $root . '/core/includes/install.inc';
+        $file = $root . '/' . $install_state['profiles'][$extensions['profile']]->getPath() . "/{$extensions['profile']}.install";
+        if (is_file($file)) {
+          require_once $file;
+        }
         if (!function_exists($extensions['profile'] . '_install')) {
           $form['profile']['#options'][static::CONFIG_INSTALL_PROFILE_KEY] = $this->t('Use existing configuration');
           $form['profile'][static::CONFIG_INSTALL_PROFILE_KEY]['#description'] = [
