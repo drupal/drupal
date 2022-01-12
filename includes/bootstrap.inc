@@ -812,12 +812,12 @@ function drupal_settings_initialize() {
 
     // Drupal 7.83 included a security improvement whereby www. is no longer
     // stripped from the cookie domain. However, this can cause problems with
-    // existing session cookies whereby some users are left unable to login. In
-    // order to avoid that, use the cookie domain (including leading dot) as the
-    // session name when a www. subdomain is in use.
+    // existing session cookies where some users are left unable to login. In
+    // order to avoid that, prepend a leading dot to the session_name that was
+    // derived from the base_url when a www. subdomain is in use.
     // @see https://www.drupal.org/project/drupal/issues/2522002
     if (strpos($session_name, 'www.') === 0) {
-      $session_name = $cookie_domain;
+      $session_name = '.' . $session_name;
     }
   }
   // Per RFC 2109, cookie domains must contain at least one dot other than the
