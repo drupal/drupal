@@ -18,7 +18,7 @@ use Drupal\update\UpdateManagerInterface;
  */
 function _update_cron_notify() {
   $update_config = \Drupal::config('update.settings');
-  module_load_install('update');
+  \Drupal::moduleHandler()->loadInclude('update', 'install');
   $status = update_requirements('runtime');
   $params = [];
   $notify_all = ($update_config->get('notification.threshold') == 'all');
