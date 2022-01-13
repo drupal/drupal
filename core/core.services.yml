@@ -1453,67 +1453,88 @@ services:
   feed.reader.dublincoreentry:
     class: Laminas\Feed\Reader\Extension\DublinCore\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('DublinCore\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.dublincorefeed:
     class: Laminas\Feed\Reader\Extension\DublinCore\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('DublinCore\Feed') instead. See https://www.drupal.org/node/2979042
   feed.reader.contententry:
     class: Laminas\Feed\Reader\Extension\Content\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Content\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.atomentry:
     class: Laminas\Feed\Reader\Extension\Atom\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Atom\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.atomfeed:
     class: Laminas\Feed\Reader\Extension\Atom\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Atom\Feed') instead. See https://www.drupal.org/node/2979042
   feed.reader.slashentry:
     class: Laminas\Feed\Reader\Extension\Slash\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Slash\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.wellformedwebentry:
     class: Laminas\Feed\Reader\Extension\WellFormedWeb\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('WellFormedWeb\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.threadentry:
     class: Laminas\Feed\Reader\Extension\Thread\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Thread\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.podcastentry:
     class: Laminas\Feed\Reader\Extension\Podcast\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Podcast\Entry') instead. See https://www.drupal.org/node/2979042
   feed.reader.podcastfeed:
     class: Laminas\Feed\Reader\Extension\Podcast\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.reader')->get('Podcast\Feed') instead. See https://www.drupal.org/node/2979042
 # Laminas Feed writer plugins. Plugins should be set as prototype scope.
   feed.writer.atomrendererfeed:
     class: Laminas\Feed\Writer\Extension\Atom\Renderer\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('Atom\Renderer\Feed') instead. See https://www.drupal.org/node/2979042
   feed.writer.contentrendererentry:
     class: Laminas\Feed\Writer\Extension\Content\Renderer\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('Content\Renderer\Entry') instead. See https://www.drupal.org/node/2979042
   feed.writer.dublincorerendererentry:
     class: Laminas\Feed\Writer\Extension\DublinCore\Renderer\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('DublinCore\Renderer\Entry') instead. See https://www.drupal.org/node/2979042
   feed.writer.dublincorerendererfeed:
     class: Laminas\Feed\Writer\Extension\DublinCore\Renderer\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('DublinCore\Renderer\Feed') instead. See https://www.drupal.org/node/2979042
   feed.writer.itunesentry:
     class: Laminas\Feed\Writer\Extension\ITunes\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('ITunes\Entry') instead. See https://www.drupal.org/node/2979042
   feed.writer.itunesfeed:
     class: Laminas\Feed\Writer\Extension\ITunes\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('ITunes\Feed') instead. See https://www.drupal.org/node/2979042
   feed.writer.itunesrendererentry:
     class: Laminas\Feed\Writer\Extension\ITunes\Renderer\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('ITunes\Renderer\Entry') instead. See https://www.drupal.org/node/2979042
   feed.writer.itunesrendererfeed:
     class: Laminas\Feed\Writer\Extension\ITunes\Renderer\Feed
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('ITunes\Renderer\Feed') instead. See https://www.drupal.org/node/2979042
   feed.writer.slashrendererentry:
     class: Laminas\Feed\Writer\Extension\Slash\Renderer\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('Slash\Renderer\Entry') instead. See https://www.drupal.org/node/2979042
   feed.writer.threadingrendererentry:
     class: Laminas\Feed\Writer\Extension\Threading\Renderer\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('Threading\Renderer\Entry') instead. See https://www.drupal.org/node/2979042
   feed.writer.wellformedwebrendererentry:
     class: Laminas\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
     shared: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service('feed.bridge.writer')->get('WellFormedWeb\Renderer\Entry') instead. See https://www.drupal.org/node/2979042
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
     arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler']
