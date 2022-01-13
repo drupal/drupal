@@ -60,7 +60,7 @@
               const description = document.createElement('p');
 
               description.innerText = Drupal.t(
-                'Switching to CKEditor 5 requires, at minimum, the tags "<p> <br>". After switching to CKEditor 5, this field will be read only, and will be updated based on which CKEditor 5 plugins are enabled. When switching to CKEditor 5 from an existing text format with content, we recommend documenting what tags are in use and then enabling the CKEditor 5 tags that support them.',
+                'Switching to CKEditor 5 requires, at minimum, the tags "<p> <br>". After switching to CKEditor 5, this field will be read-only, and will be updated based on which CKEditor 5 plugins are enabled. When switching to CKEditor 5 from an existing text format with content, we recommend documenting what tags are in use and then enabling the CKEditor 5 plugins that support them.',
               );
 
               const updateButton = document.createElement('button');
@@ -99,7 +99,7 @@
                 true,
               );
               formSubmitHelp.textContent = Drupal.t(
-                'This form is not submittable when the editor is set to CKEditor 5 unless the "Limit allowed HTML tags and correct faulty HTML" filter\'s "Allowed HTML tags" field includes the tags required by CKEDitor 5',
+                'This form is not submittable when the editor is set to CKEditor 5 unless the "Limit allowed HTML tags and correct faulty HTML" filter\'s "Allowed HTML tags" field includes the tags required by CKEditor 5',
               );
               formSubmit.parentNode.append(formSubmitHelp);
             }
