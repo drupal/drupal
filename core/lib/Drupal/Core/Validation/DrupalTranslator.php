@@ -4,7 +4,6 @@ namespace Drupal\Core\Validation;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Translates strings using Drupal's translation system.
@@ -29,27 +28,13 @@ class DrupalTranslator implements TranslatorInterface {
     if ($id instanceof TranslatableMarkup) {
       return $id;
     }
-
-    // Symfony violation messages may separate singular and plural versions
-    // with "|".
-    $ids = explode('|', $id);
-    if ((count($ids) > 1) && isset($parameters['%count%'])) {
-      return \Drupal::translation()->formatPlural($parameters['%count%'], $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
-    }
-
     return new TranslatableMarkup($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Validation\DrupalTranslator::trans() instead.
-   *
-   * @see https://www.drupal.org/node/3255250
    */
   public function transChoice($id, $number, array $parameters = [], $domain = NULL, $locale = NULL) {
-    @trigger_error(__NAMESPACE__ . '\DrupalTranslator::transChoice() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use DrupalTranslator::trans() instead. See https://www.drupal.org/node/3255250', E_USER_DEPRECATED);
     // Violation messages can separated singular and plural versions by "|".
     $ids = explode('|', $id);
 
