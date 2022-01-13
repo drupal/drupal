@@ -4,7 +4,6 @@ namespace Drupal\Core\Validation;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Translates strings using Drupal's translation system.
@@ -29,14 +28,6 @@ class DrupalTranslator implements TranslatorInterface {
     if ($id instanceof TranslatableMarkup) {
       return $id;
     }
-
-    // Symfony violation messages may separate singular and plural versions
-    // with "|".
-    $ids = explode('|', $id);
-    if ((count($ids) > 1) && isset($parameters['%count%'])) {
-      return \Drupal::translation()->formatPlural($parameters['%count%'], $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
-    }
-
     return new TranslatableMarkup($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
   }
 
