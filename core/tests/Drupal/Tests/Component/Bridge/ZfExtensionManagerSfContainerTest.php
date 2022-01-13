@@ -30,9 +30,9 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
     $this->assertEquals($service, $bridge->get('foo'));
     $bridge->setStandalone(StandaloneExtensionManager::class);
     $this->assertInstanceOf(Entry::class, $bridge->get('Atom\Entry'));
-    // Ensure that the container is checked first.
+    // Ensure that the standalone service is checked before the container.
     $container->set('atomentry', $service);
-    $this->assertEquals($service, $bridge->get('Atom\Entry'));
+    $this->assertInstanceOf(Entry::class, $bridge->get('Atom\Entry'));
   }
 
   /**
