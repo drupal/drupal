@@ -186,8 +186,18 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
       return Url::fromUri(urldecode($options['path']), $options);
     }
     elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
-      // Attempt to return an external URL using the appropriate wrapper.
-      return Url::fromUri('base:' . $this->transformRelative(urldecode($wrapper->getExternalUrl()), FALSE));
+      $external_url = $wrapper->getExternalUrl();
+      $options = UrlHelper::parse($external_url);
+
+      // @todo Switch to dependency injected request_context service after
+      // https://www.drupal.org/project/drupal/issues/3256884 is fixed.
+      if (UrlHelper::externalIsLocal($external_url, \Drupal::service('router.request_context')->getCompleteBaseUrl())) {
+        // Attempt to return an external URL using the appropriate wrapper.
+        return Url::fromUri('base:' . $this->transformRelative(urldecode($options['path']), FALSE), $options);
+      }
+      else {
+        return Url::fromUri(urldecode($options['path']), $options);
+      }
     }
     throw new InvalidStreamWrapperException();
   }
