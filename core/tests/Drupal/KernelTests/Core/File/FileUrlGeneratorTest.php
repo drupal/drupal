@@ -188,7 +188,7 @@ class FileUrlGeneratorTest extends FileTestBase {
 
     // No schema file.
     $url = $this->fileUrlGenerator->generate($filepath);
-    $this->assertEquals($expected, $url->getUri());
+    $this->assertEquals($expected, $url->toUriString());
   }
 
   /**
@@ -250,6 +250,26 @@ class FileUrlGeneratorTest extends FileTestBase {
         [
           'https://www.example.com/core/assets/vendor/jquery/jquery.min.js',
           'https://www.example.com/core/assets/vendor/jquery/jquery.min.js',
+        ],
+      'external stream wrapper' =>
+        [
+          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js',
+          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js',
+        ],
+      'external stream wrapper with query string' =>
+        [
+          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js?foo=bar',
+          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js?foo=bar',
+        ],
+      'external stream wrapper with hashes' =>
+        [
+          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js#whizz',
+          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js#whizz',
+        ],
+      'external stream wrapper with query string and hashes' =>
+        [
+          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js?foo=bar#whizz',
+          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js?foo=bar#whizz',
         ],
     ];
   }
