@@ -58,14 +58,13 @@ export default class MediaImageTextAlternativeUi extends Plugin {
    */
   _createButton() {
     const editor = this.editor;
-    const t = editor.t;
 
     editor.ui.componentFactory.add('mediaImageTextAlternative', (locale) => {
       const command = editor.commands.get('mediaImageTextAlternative');
       const view = new ButtonView(locale);
 
       view.set({
-        label: t('Override media image text alternative'),
+        label: Drupal.t('Override media image text alternative'),
         icon: icons.lowVision,
         tooltip: true,
       });

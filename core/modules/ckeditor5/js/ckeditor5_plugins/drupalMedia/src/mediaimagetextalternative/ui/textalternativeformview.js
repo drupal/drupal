@@ -24,8 +24,6 @@ export default class TextAlternativeFormView extends View {
   constructor(locale) {
     super(locale);
 
-    const t = this.locale.t;
-
     /**
      * Tracks information about the DOM focus in the form.
      */
@@ -45,7 +43,7 @@ export default class TextAlternativeFormView extends View {
      * A button used to submit the form.
      */
     this.saveButtonView = this._createButton(
-      t('Save'),
+      Drupal.t('Save'),
       icons.check,
       'ck-button-save',
     );
@@ -55,7 +53,7 @@ export default class TextAlternativeFormView extends View {
      * A button used to cancel the form.
      */
     this.cancelButtonView = this._createButton(
-      t('Cancel'),
+      Drupal.t('Cancel'),
       icons.cancel,
       'ck-button-cancel',
       'cancel',
@@ -160,13 +158,12 @@ export default class TextAlternativeFormView extends View {
    *   Labeled field view instance.
    */
   _createLabeledInputView() {
-    const t = this.locale.t;
     const labeledInput = new LabeledFieldView(
       this.locale,
       createLabeledInputText,
     );
 
-    labeledInput.label = t('Override text alternative');
+    labeledInput.label = Drupal.t('Override text alternative');
 
     return labeledInput;
   }
