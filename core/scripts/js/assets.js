@@ -343,7 +343,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
 
   // Use Array.reduce for sequential processing to avoid corrupting the
   // contents of the concatenated CKEditor 5 translation files.
-  process.reduce(async (previous, { pack, files = [], folder = false, library = false }) => {
+  await process.reduce(async (previous, { pack, files = [], folder = false, library = false }) => {
     return previous.then(async () => {
       const sourceFolder = pack;
       const libraryName = library || folder || pack;
