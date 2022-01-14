@@ -18,11 +18,10 @@ export default class DrupalMediaToolbar extends Plugin {
 
   afterInit() {
     const editor = this.editor;
-    const { t } = editor;
     const widgetToolbarRepository = editor.plugins.get(WidgetToolbarRepository);
 
     widgetToolbarRepository.register('drupalMedia', {
-      ariaLabel: t('Drupal Media toolbar'),
+      ariaLabel: Drupal.t('Drupal Media toolbar'),
       items: editor.config.get('drupalMedia.toolbar') || [],
       // Get the selected image or an image containing the figcaption with the selection inside.
       getRelatedElement: (selection) => getSelectedDrupalMediaWidget(selection),
