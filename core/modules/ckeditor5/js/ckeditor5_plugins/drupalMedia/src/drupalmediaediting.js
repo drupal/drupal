@@ -29,11 +29,11 @@ export default class DrupalMediaEditing extends Plugin {
     }
     const { previewURL, themeError } = options;
     this.previewURL = previewURL;
-    this.labelError = this.editor.t('Preview failed');
+    this.labelError = Drupal.t('Preview failed');
     this.themeError =
       themeError ||
       `
-      <p>${this.editor.t(
+      <p>${Drupal.t(
         'An error occurred while trying to preview the media. Please save your work and reload this page.',
       )}<p>
     `;
