@@ -53,6 +53,10 @@ class ModulesListFormWebTest extends BrowserTestBase {
     // module is used because its machine name is different than its human
     // readable name.
     $this->assertSession()->pageTextContains('dblog');
+
+    // Check that the deprecated module link was rendered correctly.
+    $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Deprecated status of the module Deprecated module')]");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
   }
 
   /**

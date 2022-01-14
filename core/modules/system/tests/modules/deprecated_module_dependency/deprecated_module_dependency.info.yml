@@ -1,0 +1,7 @@
+name: Deprecated module dependency
+type: module
+description: 'Module that depends on a deprecated module'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:deprecated_module

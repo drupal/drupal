@@ -1,0 +1,5 @@
+name: Deprecated module test
+type: module
+description: 'Deprecated module test'
+package: Testing
+version: VERSION

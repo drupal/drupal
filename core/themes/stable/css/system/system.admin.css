@@ -199,6 +199,15 @@ small .admin-link:after {
 [dir="rtl"] .module-link-configure {
   background-position: top 50% right 0;
 }
+.module-link--non-stable {
+  padding-left: 18px;
+  background: url(../../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link--non-stable {
+  padding-right: 18px;
+  padding-left: 0;
+  background-position: top 50% right 0;
+}
 
 /* Status report. */
 .system-status-report__status-title {

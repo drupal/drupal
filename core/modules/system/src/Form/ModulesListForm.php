@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
@@ -249,7 +250,22 @@ class ModulesListForm extends FormBase {
     $row['#requires'] = [];
     $row['#required_by'] = [];
 
+    $lifecycle = $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
     $row['name']['#markup'] = $module->info['name'];
+    if ($lifecycle !== ExtensionLifecycle::STABLE && !empty($module->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER])) {
+      $row['name']['#markup'] .= ' ' . Link::fromTextAndUrl('(' . $this->t('@lifecycle', ['@lifecycle' => ucfirst($lifecycle)]) . ')',
+          Url::fromUri($module->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER], [
+            'attributes' =>
+              [
+                'class' => 'module-link--non-stable',
+                'aria-label' => $this->t('View information on the @lifecycle status of the module @module', [
+                  '@lifecycle' => ucfirst($lifecycle),
+                  '@module' => $module->info['name'],
+                ]),
+              ],
+          ])
+        )->toString();
+    }
     $row['description']['#markup'] = $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
@@ -390,7 +406,7 @@ class ModulesListForm extends FormBase {
     $modules = [
       'install' => [],
       'dependencies' => [],
-      'experimental' => [],
+      'non_stable' => [],
     ];
 
     $data = $this->moduleExtensionList->getList();
@@ -405,10 +421,12 @@ class ModulesListForm extends FormBase {
       }
       // Selected modules should be installed.
       elseif (($checkbox = $form_state->getValue(['modules', $name], FALSE)) && $checkbox['enable']) {
-        $modules['install'][$name] = $data[$name]->info['name'];
-        // Identify experimental modules.
-        if ($data[$name]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
-          $modules['experimental'][$name] = $data[$name]->info['name'];
+        $info = $data[$name]->info;
+        $modules['install'][$name] = $info['name'];
+        // Identify non-stable modules.
+        $lifecycle = $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
+        if ($lifecycle !== ExtensionLifecycle::STABLE) {
+          $modules['non_stable'][$name] = $info['name'];
         }
       }
     }
@@ -417,12 +435,14 @@ class ModulesListForm extends FormBase {
     foreach ($modules['install'] as $module => $value) {
       foreach (array_keys($data[$module]->requires) as $dependency) {
         if (!isset($modules['install'][$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
-          $modules['dependencies'][$module][$dependency] = $data[$dependency]->info['name'];
-          $modules['install'][$dependency] = $data[$dependency]->info['name'];
+          $dependency_info = $data[$dependency]->info;
+          $modules['dependencies'][$module][$dependency] = $dependency_info['name'];
+          $modules['install'][$dependency] = $dependency_info['name'];
 
-          // Identify experimental modules.
-          if ($data[$dependency]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
-            $modules['experimental'][$dependency] = $data[$dependency]->info['name'];
+          // Identify non-stable modules.
+          $lifecycle = $dependency_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
+          if ($lifecycle !== ExtensionLifecycle::STABLE) {
+            $modules['non_stable'][$dependency] = $dependency_info['name'];
           }
         }
       }
@@ -436,7 +456,7 @@ class ModulesListForm extends FormBase {
     foreach (array_keys($modules['install']) as $module) {
       if (!drupal_check_module($module)) {
         unset($modules['install'][$module]);
-        unset($modules['experimental'][$module]);
+        unset($modules['non_stable'][$module]);
         foreach (array_keys($data[$module]->required_by) as $dependent) {
           unset($modules['install'][$dependent]);
           unset($modules['dependencies'][$dependent]);
@@ -455,9 +475,9 @@ class ModulesListForm extends FormBase {
     $modules = $this->buildModuleList($form_state);
 
     // Redirect to a confirmation form if needed.
-    if (!empty($modules['experimental']) || !empty($modules['dependencies'])) {
+    if (!empty($modules['non_stable']) || !empty($modules['dependencies'])) {
 
-      $route_name = !empty($modules['experimental']) ? 'system.modules_list_experimental_confirm' : 'system.modules_list_confirm';
+      $route_name = !empty($modules['non_stable']) ? 'system.modules_list_non_stable_confirm' : 'system.modules_list_confirm';
       // Write the list of changed module states into a key value store.
       $account = $this->currentUser()->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
