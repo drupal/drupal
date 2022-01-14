@@ -1,0 +1,7 @@
+name: Deprecated module contrib
+type: module
+description: 'Deprecated module contrib'
+package: Testing
+version: VERSION
+lifecycle: deprecated
+lifecycle_link: 'http://example.com/deprecated'

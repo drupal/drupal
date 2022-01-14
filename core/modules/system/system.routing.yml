@@ -281,11 +281,11 @@ system.modules_list_confirm:
   requirements:
     _permission: 'administer modules'
 
-system.modules_list_experimental_confirm:
-  path: '/admin/modules/list/confirm-experimental'
+system.modules_list_non_stable_confirm:
+  path: '/admin/modules/list/confirm-non-stable'
   defaults:
-    _form: '\Drupal\system\Form\ModulesListExperimentalConfirmForm'
-    _title: 'Experimental modules'
+    _form: '\Drupal\system\Form\ModulesListNonStableConfirmForm'
+    _title: 'Non-stable modules'
   requirements:
     _permission: 'administer modules'
 

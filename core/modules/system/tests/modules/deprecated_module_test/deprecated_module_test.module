@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Deprecated module test module.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function deprecated_module_test_system_info_alter(array &$info, Extension $file, $type) {
+  // Make the 'deprecated_module_contrib' look like it isn't part of core.
+  if ($type === 'module' && $info['name'] === 'Deprecated module contrib') {
+    $file->origin = 'sites/all';
+  }
+}

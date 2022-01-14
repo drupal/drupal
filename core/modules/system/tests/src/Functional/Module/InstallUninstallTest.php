@@ -112,7 +112,7 @@ class InstallUninstallTest extends ModuleTestBase {
 
       // Handle experimental modules, which require a confirmation screen.
       if ($lifecycle === ExtensionLifecycle::EXPERIMENTAL) {
-        $this->assertSession()->pageTextContains('Are you sure you wish to enable experimental modules?');
+        $this->assertSession()->pageTextContains('Are you sure you wish to enable an experimental module?');
         if (count($modules_to_install) > 1) {
           // When there are experimental modules, needed dependencies do not
           // result in the same page title, but there will be expected text
