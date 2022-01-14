@@ -1449,6 +1449,7 @@ services:
       - [setContainer, ['@service_container']]
       - [setStandalone, ['\Laminas\Feed\Writer\StandaloneExtensionManager']]
     arguments: ['feed.writer.']
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Laminas\Feed\Writer\StandaloneExtensionManager or create your own service. See https://www.drupal.org/node/3258440
 # Laminas Feed reader plugins. Plugin instances should not be shared.
   feed.reader.dublincoreentry:
     class: Laminas\Feed\Reader\Extension\DublinCore\Entry

@@ -41,6 +41,14 @@ class LegacyServiceTest extends KernelTestBase {
     $this->assertIsObject($this->container->get($service));
   }
 
+  /**
+   * Tests the deprecated Laminas bridge service.
+   */
+  public function testLaminasBridgeService() {
+    $this->expectDeprecation("The \"feed.bridge.writer\" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Laminas\Feed\Writer\StandaloneExtensionManager or create your own service. See https://www.drupal.org/node/3258440");
+    $this->assertIsObject($this->container->get('feed.bridge.writer'));
+  }
+
   public function providerLaminasFeedServices() {
     return [
       ['reader', 'dublincoreentry', 'DublinCore\Entry'],
