@@ -24,28 +24,28 @@ class ModulesListNonStableConfirmForm extends ModulesListConfirmForm {
    *
    * @var \Drupal\Core\Extension\ModuleExtensionList
    */
-  protected ModuleExtensionList $moduleExtensionList;
+  protected $moduleExtensionList;
 
   /**
    * An array of module names to be enabled, keyed by lifecycle.
    *
    * @var array
    */
-  protected array $groupedModuleInfo;
+  protected $groupedModuleInfo;
 
   /**
    * Boolean indicating a core deprecated module is being enabled.
    *
    * @var bool
    */
-  protected bool $coreDeprecatedModules;
+  protected $coreDeprecatedModules;
 
   /**
    * Boolean indicating a contrib deprecated module is being enabled.
    *
    * @var bool
    */
-  protected bool $contribDeprecatedModules;
+  protected $contribDeprecatedModules;
 
   /**
    * Constructs a new ModulesListNonStableConfirmForm.
