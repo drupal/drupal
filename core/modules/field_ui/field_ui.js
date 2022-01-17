@@ -17,18 +17,26 @@
         const $existingStorageName = $form.find('select[name="existing_storage_name"]');
         const $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
         $newFieldType.on('change', function () {
-          if ($(this).val() !== '') {
-            $existingStorageName.val('').trigger('change');
+          if (this.value !== '') {
+            if ($existingStorageName.length) {
+              $existingStorageName[0].value = '';
+              $existingStorageName.trigger('change');
+            }
           }
         });
         $existingStorageName.on('change', function () {
-          const value = $(this).val();
+          const {
+            value
+          } = this;
 
           if (value !== '') {
-            $newFieldType.val('').trigger('change');
+            if ($newFieldType.length) {
+              $newFieldType[0].value = '';
+              $newFieldType.trigger('change');
+            }
 
             if (typeof drupalSettings.existingFieldLabels[value] !== 'undefined') {
-              $existingStorageLabel.val(drupalSettings.existingFieldLabels[value]);
+              $existingStorageLabel[0].value = drupalSettings.existingFieldLabels[value];
             }
           }
         });
@@ -70,7 +78,12 @@
       const region = rowHandler.getRegion();
 
       if (region !== rowHandler.region) {
-        $row.find('select.js-field-parent').val('');
+        const $fieldParent = $row.find('select.js-field-parent');
+
+        if ($fieldParent.length) {
+          $fieldParent[0].value = '';
+        }
+
         $.extend(refreshRows, rowHandler.regionChange(region));
         rowHandler.region = region;
       }
@@ -125,7 +138,12 @@
 
       if (rowNames.length) {
         $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
-        $('input[name=refresh_rows]').val(rowNames.join(' '));
+        const $refreshRows = $('input[name=refresh_rows]');
+
+        if ($refreshRows.length) {
+          $refreshRows[0].value = rowNames.join(' ');
+        }
+
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
         $(ajaxElements).prop('disabled', true);
       }
@@ -149,18 +167,25 @@
 
   Drupal.fieldUIDisplayOverview.field.prototype = {
     getRegion() {
-      return this.$regionSelect.val();
+      if (this.$regionSelect.length) {
+        return this.$regionSelect[0].value;
+      }
     },
 
     regionChange(region) {
       region = region.replace(/-/g, '_');
-      this.$regionSelect.val(region);
+
+      if (this.$regionSelect.length) {
+        this.$regionSelect[0].value = region;
+      }
 
       if (this.region === 'hidden') {
-        const value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option').val();
+        const value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option')[0].value;
 
         if (typeof value !== 'undefined') {
-          this.$pluginSelect.val(value);
+          if (this.$pluginSelect.length) {
+            this.$pluginSelect[0].value = value;
+          }
         }
       }
 

@@ -24,7 +24,7 @@
       function machineNameHandler(e) {
         const data = e.data;
         const options = data.options;
-        const baseValue = $(e.target).val();
+        const baseValue = e.target.value;
         const rx = new RegExp(options.replace_pattern, 'g');
         const expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
 
@@ -66,7 +66,7 @@
 
         options.maxlength = $target.attr('maxlength');
         $wrapper.addClass('visually-hidden');
-        const machine = $target.val();
+        const machine = $target[0].value;
         const $preview = $(`<span class="machine-name-value">${options.field_prefix}${Drupal.checkPlain(machine)}${options.field_suffix}</span>`);
         $suffix.empty();
 
@@ -89,8 +89,8 @@
           options
         };
 
-        if (machine === '' && $source.val() !== '') {
-          self.transliterate($source.val(), options).done(machineName => {
+        if (machine === '' && $source[0].value !== '') {
+          self.transliterate($source[0].value, options).done(machineName => {
             self.showMachineName(machineName.substr(0, options.maxlength), eventData);
           });
         }
@@ -98,7 +98,7 @@
         const $link = $(`<span class="admin-link"><button type="button" class="link">${Drupal.t('Edit')}</button></span>`).on('click', eventData, clickEditHandler);
         $suffix.append($link);
 
-        if ($target.val() === '') {
+        if ($target[0].value === '') {
           $source.on('formUpdated.machineName', eventData, machineNameHandler).trigger('formUpdated.machineName');
         }
 
@@ -111,14 +111,14 @@
 
       if (machine !== '') {
         if (machine !== settings.replace) {
-          data.$target.val(machine);
+          data.$target[0].value = machine;
           data.$preview.html(settings.field_prefix + Drupal.checkPlain(machine) + settings.field_suffix);
         }
 
         data.$suffix.show();
       } else {
         data.$suffix.hide();
-        data.$target.val(machine);
+        data.$target[0].value = machine;
         data.$preview.empty();
       }
     },

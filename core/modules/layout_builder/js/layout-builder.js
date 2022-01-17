@@ -20,7 +20,7 @@
       const $filterLinks = $categories.find('.js-layout-builder-block-link');
 
       const filterBlockList = e => {
-        const query = $(e.target).val().toLowerCase();
+        const query = e.target.value.toLowerCase();
 
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);

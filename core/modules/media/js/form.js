@@ -8,11 +8,11 @@
 (function ($, Drupal) {
   Drupal.behaviors.mediaFormSummaries = {
     attach(context) {
-      const $context = $(context);
-      $context.find('.media-form-author').drupalSetSummary(context => {
-        const $authorContext = $(context);
-        const name = $authorContext.find('.field--name-uid input').val();
-        const date = $authorContext.find('.field--name-created input').val();
+      $(context).find('.media-form-author').drupalSetSummary(context => {
+        const nameInput = context.querySelector('.field--name-uid input');
+        const name = nameInput && nameInput.value;
+        const dateInput = context.querySelector('.field--name-created input');
+        const date = dateInput && dateInput.value;
 
         if (name && date) {
           return Drupal.t('By @name on @date', {

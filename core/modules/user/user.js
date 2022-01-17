@@ -75,11 +75,11 @@
         }
 
         const addWidgetClasses = () => {
-          $passwordWidget.addClass($mainInput.val() ? cssClasses.passwordFilled : cssClasses.passwordEmpty).addClass($confirmInput.val() ? cssClasses.confirmFilled : cssClasses.confirmEmpty);
+          $passwordWidget.addClass($mainInput[0].value ? cssClasses.passwordFilled : cssClasses.passwordEmpty).addClass($confirmInput[0].value ? cssClasses.confirmFilled : cssClasses.confirmEmpty);
         };
 
         const passwordCheckMatch = confirmInputVal => {
-          const passwordsAreMatching = $mainInput.val() === confirmInputVal;
+          const passwordsAreMatching = $mainInput[0].value === confirmInputVal;
           const confirmClass = passwordsAreMatching ? cssClasses.passwordsMatch : cssClasses.passwordsNotMatch;
           const confirmMessage = passwordsAreMatching ? settings.password.confirmSuccess : settings.password.confirmFailure;
 
@@ -94,7 +94,7 @@
 
         const passwordCheck = () => {
           if (settings.password.showStrengthIndicator) {
-            const result = Drupal.evaluatePasswordStrength($mainInput.val(), settings.password);
+            const result = Drupal.evaluatePasswordStrength($mainInput[0].value, settings.password);
             const $currentPasswordSuggestions = $(Drupal.theme('passwordSuggestions', settings.password, result.messageTips));
 
             if (password.$suggestions.html() !== $currentPasswordSuggestions.html()) {
@@ -110,8 +110,8 @@
             password.$strengthTextWrapper.html(result.indicatorText);
           }
 
-          if ($confirmInput.val()) {
-            passwordCheckMatch($confirmInput.val());
+          if ($confirmInput[0].value) {
+            passwordCheckMatch($confirmInput[0].value);
             $passwordConfirmMessage.css({
               visibility: 'visible'
             });
@@ -150,7 +150,7 @@
     const hasNumbers = /[0-9]/.test(password);
     const hasPunctuation = /[^a-zA-Z0-9]/.test(password);
     const $usernameBox = $('input.username');
-    const username = $usernameBox.length > 0 ? $usernameBox.val() : passwordSettings.username;
+    const username = $usernameBox.length > 0 ? $usernameBox[0].value : passwordSettings.username;
 
     if (password.length < 12) {
       msg.push(passwordSettings.tooShort);

@@ -17,7 +17,7 @@
         $configurationForm.append(drupalSettings.ckeditor.toolbarAdmin);
         Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
           $textarea,
-          activeEditorConfig: JSON.parse($textarea.val()),
+          activeEditorConfig: JSON.parse($textarea[0].value),
           hiddenEditorConfig: drupalSettings.ckeditor.hiddenCKEditorConfig
         });
         const viewDefaults = {

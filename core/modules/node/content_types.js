@@ -11,7 +11,7 @@
       const $context = $(context);
       $context.find('#edit-submission').drupalSetSummary(context => {
         const vals = [];
-        vals.push(Drupal.checkPlain($(context).find('#edit-title-label').val()) || Drupal.t('Requires a title'));
+        vals.push(Drupal.checkPlain($(context).find('#edit-title-label')[0].value) || Drupal.t('Requires a title'));
         return vals.join(', ');
       });
       $context.find('#edit-workflow').drupalSetSummary(context => {

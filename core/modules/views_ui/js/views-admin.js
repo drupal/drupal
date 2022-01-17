@@ -82,7 +82,7 @@
     },
 
     getTransliterated() {
-      let from = this.source.val();
+      let from = this.source.length ? this.source[0].value : '';
 
       if (this.exclude) {
         from = from.toLowerCase().replace(this.exclude, this.replace);
@@ -96,7 +96,7 @@
       const suffix = this.suffix;
       this.target.each(function (i) {
         const maxlength = $(this).attr('maxlength') - suffix.length;
-        $(this).val(transliterated.substr(0, maxlength) + suffix);
+        this.value = transliterated.substr(0, maxlength) + suffix;
       });
     },
 
@@ -178,10 +178,10 @@
       const $displayButtons = $menu.nextAll('input.add-display').detach();
       $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>').parent().eq(0).addClass('first').end().eq(-1).addClass('last');
       $displayButtons.each(function () {
-        const label = $(this).val();
+        const label = this.value;
 
         if (label.substr(0, 4) === 'Add ') {
-          $(this).val(label.substr(4));
+          this.value = label.substr(4);
         }
       });
       $addDisplayDropdown.appendTo($menu);
@@ -264,9 +264,9 @@
     },
 
     handleFilter(event) {
-      const search = this.$searchBox.val().toLowerCase();
+      const search = this.$searchBox[0].value.toLowerCase();
       const words = search.split(' ');
-      const group = this.$controlGroup.val();
+      const group = this.$controlGroup[0].value;
       this.options.forEach(option => {
         function hasWord(word) {
           return option.searchText.indexOf(word) !== -1;
@@ -333,7 +333,7 @@
 
   $.extend(Drupal.viewsUi.RearrangeFilterHandler.prototype, {
     insertAddRemoveFilterGroupLinks() {
-      $(once('views-rearrange-filter-handler', $(`<ul class="action-links"><li><a id="views-add-group-link" href="#">${this.addGroupButton.val()}</a></li></ul>`).prependTo(this.table.parent()))).find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
+      $(once('views-rearrange-filter-handler', $(`<ul class="action-links"><li><a id="views-add-group-link" href="#">${this.addGroupButton[0].value}</a></li></ul>`).prependTo(this.table.parent()))).find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
       const length = this.removeGroupButtons.length;
       let i;
 
@@ -398,7 +398,9 @@
     operatorChangeHandler(event) {
       const $target = $(event.target);
       const operators = this.dropdowns.find('select').not($target);
-      operators.val($target.val());
+      operators.each(function (index, item) {
+        item.value = $target[0].value;
+      });
     },
 
     modifyTableDrag() {
@@ -442,7 +444,7 @@
         if (!groupField.is(`.views-group-select-${groupName}`)) {
           const oldGroupName = groupField.attr('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
           groupField.removeClass(`views-group-select-${oldGroupName}`).addClass(`views-group-select-${groupName}`);
-          groupField.val(groupName);
+          groupField[0].value = groupName;
         }
       };
     },
@@ -568,21 +570,23 @@
     attach(context) {
       once('views-ui-override-button-text', '[data-drupal-selector="edit-override-dropdown"]', context).forEach(dropdown => {
         const $context = $(context);
-        const $submit = $context.find('[id^=edit-submit]');
-        const oldValue = $submit.val();
-        $(once('views-ui-override-button-text', $submit)).on('mouseup', function () {
-          $(this).val(oldValue);
+        const submit = context.querySelector('[id^=edit-submit]');
+        const oldValue = submit ? submit.value : '';
+        $(once('views-ui-override-button-text', submit)).on('mouseup', function () {
+          this.value = oldValue;
           return true;
         });
         $(dropdown).on('change', function () {
-          const $this = $(this);
+          if (!submit) {
+            return;
+          }
 
-          if ($this.val() === 'default') {
-            $submit.val(Drupal.t('Apply (all displays)'));
-          } else if ($this.val() === 'default_revert') {
-            $submit.val(Drupal.t('Revert to default'));
+          if (this.value === 'default') {
+            submit.value = Drupal.t('Apply (all displays)');
+          } else if (this.value === 'default_revert') {
+            submit.value = Drupal.t('Revert to default');
           } else {
-            $submit.val(Drupal.t('Apply (this display)'));
+            submit.value = Drupal.t('Apply (this display)');
           }
 
           const $dialog = $context.closest('.ui-dialog-content');

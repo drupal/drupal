@@ -10,9 +10,10 @@
     attach(context) {
       const $context = $(context);
       $context.find('.node-form-author').drupalSetSummary(context => {
-        const $authorContext = $(context);
-        const name = $authorContext.find('.field--name-uid input').val();
-        const date = $authorContext.find('.field--name-created input').val();
+        const nameElement = context.querySelector('.field--name-uid input');
+        const name = nameElement && nameElement.value;
+        const dateElement = context.querySelector('.field--name-created input');
+        const date = dateElement && dateElement.value;
 
         if (name && date) {
           return Drupal.t('By @name on @date', {

@@ -27,15 +27,19 @@
     },
 
     valueTargetCopyHandler(e, value) {
-      const $target = $(e.target);
+      const {
+        target
+      } = e;
 
-      if ($target.val() === '') {
-        $target.val(value);
+      if (target.value === '') {
+        target.value = value;
       }
     },
 
     valueSourceBlurHandler(e) {
-      const value = $(e.target).val();
+      const {
+        value
+      } = e.target;
       const targetIds = drupalSettings.copyFieldValue[e.target.id];
       $(`#${targetIds.join(', #')}`).trigger('value:copy', value);
     }

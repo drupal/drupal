@@ -58,9 +58,9 @@
      *   Custom value from jQuery trigger.
      */
     valueTargetCopyHandler(e, value) {
-      const $target = $(e.target);
-      if ($target.val() === '') {
-        $target.val(value);
+      const { target } = e;
+      if (target.value === '') {
+        target.value = value;
       }
     },
 
@@ -74,7 +74,7 @@
      *   The event triggered.
      */
     valueSourceBlurHandler(e) {
-      const value = $(e.target).val();
+      const { value } = e.target;
       const targetIds = drupalSettings.copyFieldValue[e.target.id];
       $(`#${targetIds.join(', #')}`).trigger('value:copy', value);
     },

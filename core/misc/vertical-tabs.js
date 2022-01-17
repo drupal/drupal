@@ -24,7 +24,7 @@
       $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(verticalTab => {
         const $this = $(verticalTab).addClass('vertical-tabs__panes');
-        const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+        const focusID = $this.find(':hidden.vertical-tabs__active-tab')[0].value;
         let tabFocus;
         const $details = $this.find('> details');
 
@@ -94,7 +94,7 @@
         const tab = $(this).data('verticalTab');
         tab.details.hide();
         tab.item.removeClass('is-selected');
-      }).end().show().siblings(':hidden.vertical-tabs__active-tab').val(this.details.attr('id'));
+      }).end().show().siblings(':hidden.vertical-tabs__active-tab')[0].value = this.details.attr('id');
       this.item.addClass('is-selected');
       $('#active-vertical-tab').remove();
       this.link.append(`<span id="active-vertical-tab" class="visually-hidden">${Drupal.t('(active tab)')}</span>`);

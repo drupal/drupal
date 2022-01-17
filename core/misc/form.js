@@ -105,10 +105,18 @@
         userInfo.forEach(info => {
           const $element = $forms.find(`[name=${info}]`);
           const browserData = localStorage.getItem(`Drupal.visitor.${info}`);
-          const emptyOrDefault = $element.val() === '' || $element.attr('data-drupal-default-value') === $element.val();
 
-          if ($element.length && emptyOrDefault && browserData) {
-            $element.val(browserData);
+          if (!$element.length) {
+            return;
+          }
+
+          const emptyValue = $element[0].value === '';
+          const defaultValue = $element.attr('data-drupal-default-value') === $element[0].value;
+
+          if (browserData && (emptyValue || defaultValue)) {
+            $element.each(function (index, item) {
+              item.value = browserData;
+            });
           }
         });
       }
@@ -118,7 +126,7 @@
           const $element = $forms.find(`[name=${info}]`);
 
           if ($element.length) {
-            localStorage.setItem(`Drupal.visitor.${info}`, $element.val());
+            localStorage.setItem(`Drupal.visitor.${info}`, $element[0].value);
           }
         });
       });

@@ -198,6 +198,7 @@
           const $form = $(`#${backstageId}`).find('form');
           // Fill in the value in any <input> that isn't hidden or a submit
           // button.
+          // eslint-disable-next-line jquery/no-val
           $form
             .find(':input[type!="hidden"][type!="submit"]:not(select)')
             // Don't mess with the node summary.

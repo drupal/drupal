@@ -33,7 +33,7 @@
        *   The jQuery event for the keyup event that triggered the filter.
        */
       function filterBlockList(e) {
-        const query = $(e.target).val().toLowerCase();
+        const query = e.target.value.toLowerCase();
 
         /**
          * Shows or hides the block entry based on the query.

@@ -64,7 +64,7 @@
           .appendTo($summaryLabel);
 
         // If no summary is set, hide the summary field.
-        if ($widget.find('.js-text-summary').val() === '') {
+        if (summary.value === '') {
           $link.trigger('click');
         }
       });

@@ -342,18 +342,24 @@
           currentSelection.splice(position, 1);
         }
 
-        // Set the selection in the hidden form element.
-        $form
-          .find('#media-library-modal-selection')
-          .val(currentSelection.join())
-          .trigger('change');
+        const mediaLibraryModalSelection = document.querySelector(
+          '#media-library-modal-selection',
+        );
+
+        if (mediaLibraryModalSelection) {
+          // Set the selection in the hidden form element.
+          mediaLibraryModalSelection.value = currentSelection.join();
+          $(mediaLibraryModalSelection).trigger('change');
+        }
 
         // Set the selection in the media library add form. Since the form is
         // not necessarily loaded within the same context, we can't use the
         // context here.
-        $('.js-media-library-add-form-current-selection').val(
-          currentSelection.join(),
-        );
+        document
+          .querySelectorAll('.js-media-library-add-form-current-selection')
+          .forEach((item) => {
+            item.value = currentSelection.join();
+          });
       });
 
       // The hidden selection form field changes when the selection is updated.

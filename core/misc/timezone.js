@@ -11,11 +11,12 @@
       const timezone = once('timezone', '.timezone-detect', context);
 
       if (timezone.length) {
-        const $timezone = $(timezone);
         const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        if (tz && $timezone.find(`option[value="${tz}"]`).length) {
-          $timezone.val(tz);
+        if (tz && $(timezone).find(`option[value="${tz}"]`).length) {
+          timezone.forEach(item => {
+            item.value = tz;
+          });
           return;
         }
 
@@ -49,7 +50,9 @@
 
           success(data) {
             if (data) {
-              $timezone.val(data);
+              document.querySelectorAll('.timezone-detect').forEach(item => {
+                item.value = data;
+              });
             }
           }
 

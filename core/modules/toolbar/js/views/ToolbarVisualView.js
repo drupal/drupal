@@ -144,7 +144,9 @@
       const iconClass = `toolbar-icon-toggle-${orientation}`;
       const iconAntiClass = `toolbar-icon-toggle-${antiOrientation}`;
       const $orientationToggle = this.$el.find('.toolbar-toggle-orientation').toggle(this.model.get('isTrayToggleVisible'));
-      $orientationToggle.find('button').val(antiOrientation).attr('title', this.strings[antiOrientation]).text(this.strings[antiOrientation]).removeClass(iconClass).addClass(iconAntiClass);
+      const $orientationToggleButton = $orientationToggle.find('button');
+      $orientationToggleButton[0].value = antiOrientation;
+      $orientationToggleButton.attr('title', this.strings[antiOrientation]).text(this.strings[antiOrientation]).removeClass(iconClass).addClass(iconAntiClass);
       const dir = document.documentElement.dir;
       const edge = dir === 'rtl' ? 'right' : 'left';
       $trays.removeAttr('data-offset-left data-offset-right data-offset-top');

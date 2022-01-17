@@ -13,7 +13,7 @@
       let $filterRows;
 
       function filterBlockList(e) {
-        const query = $(e.target).val().toLowerCase();
+        const query = e.target.value.toLowerCase();
 
         function toggleBlockEntry(index, label) {
           const $label = $(label);

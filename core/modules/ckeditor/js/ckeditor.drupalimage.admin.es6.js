@@ -19,17 +19,23 @@
           const root =
             'input[name="editor[settings][plugins][drupalimage][image_upload]';
           const $status = $(`${root}[status]"]`);
-          const $maxFileSize = $(`${root}[max_size]"]`);
-          const $maxWidth = $(`${root}[max_dimensions][width]"]`);
-          const $maxHeight = $(`${root}[max_dimensions][height]"]`);
+          const maxFileSizeElement = document.querySelector(
+            `${root}[max_size]"]`,
+          );
+          const maxWidth = document.querySelector(
+            `${root}[max_dimensions][width]"]`,
+          );
+          const maxHeight = document.querySelector(
+            `${root}[max_dimensions][height]"]`,
+          );
           const $scheme = $(`${root}[scheme]"]:checked`);
 
-          const maxFileSize = $maxFileSize.val()
-            ? $maxFileSize.val()
-            : $maxFileSize.attr('placeholder');
+          const maxFileSize = maxFileSizeElement.value
+            ? maxFileSizeElement.value
+            : maxFileSizeElement.getAttribute('placeholder');
           const maxDimensions =
-            $maxWidth.val() && $maxHeight.val()
-              ? `(${$maxWidth.val()}x${$maxHeight.val()})`
+            maxWidth.value && maxHeight.value
+              ? `(${maxWidth.value}x${maxHeight.value})`
               : '';
 
           if (!$status.is(':checked')) {

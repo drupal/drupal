@@ -72,7 +72,11 @@
       $(once('views-ajax', '#views-tabset a')).on('click', function () {
         const href = $(this).attr('href');
         const displayId = href.substr(11);
-        $('#views-live-preview #preview-display-id').val(displayId);
+        const viewsPreviewId = document.querySelector('#views-live-preview #preview-display-id');
+
+        if (viewsPreviewId) {
+          viewsPreviewId.value = displayId;
+        }
       });
     }
 

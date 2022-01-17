@@ -19,7 +19,7 @@
           const $input = $toolgroup.find(`.quickedit-image-field-info input[name="${name}"]`);
 
           if ($input.length) {
-            return $input.val();
+            return $input[0].value;
           }
         }
       });

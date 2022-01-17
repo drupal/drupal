@@ -194,8 +194,13 @@
         const href = $(this).attr('href');
         // Cut of #views-tabset.
         const displayId = href.substr(11);
-        // Set the form element.
-        $('#views-live-preview #preview-display-id').val(displayId);
+        const viewsPreviewId = document.querySelector(
+          '#views-live-preview #preview-display-id',
+        );
+        if (viewsPreviewId) {
+          // Set the form element if it is present.
+          viewsPreviewId.value = displayId;
+        }
       });
     },
   };

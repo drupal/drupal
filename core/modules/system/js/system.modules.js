@@ -27,7 +27,7 @@
       }
 
       function filterModuleList(e) {
-        const query = $(e.target).val();
+        const query = e.target.value;
         const re = new RegExp(`\\b${query}`, 'i');
 
         function showModuleRow(index, row) {
