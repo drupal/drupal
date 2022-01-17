@@ -15,9 +15,7 @@
   padding-block: 0 var(--sp0-5);
   padding-inline-start: var(--container-padding);
   padding-inline-end: var(--container-padding);
-
-  /* @todo - #0d7ab8 isn't currently a variable. */
-  background-image: linear-gradient(160deg, var(--color--blue-50) 0%, #0d7ab8 78.66%);
+  background-image: linear-gradient(160deg, var(--color--blue-50) 0%, var(--color--blue-20) 78.66%);
 
   @media (--sm) {
     min-height: var(--sp4);
