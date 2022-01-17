@@ -27,6 +27,9 @@ class GenerateThemeTest extends QuickStartTestBase {
    * {@inheritdoc}
    */
   public function setUp(): void {
+    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+      $this->markTestSkipped();
+    }
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
@@ -39,10 +42,6 @@ class GenerateThemeTest extends QuickStartTestBase {
    * Tests the generate-theme command.
    */
   public function test() {
-    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
-      $this->markTestSkipped();
-    }
-
     $install_command = [
       $this->php,
       'core/scripts/drupal',
@@ -79,6 +78,66 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->assertStringContainsString($theme_path_relative, $process->getErrorOutput());
     $this->assertSame(1, $result);
     $this->assertFileDoesNotExist($theme_path_absolute . '/test_custom_theme.theme');
+  }
+
+  /**
+   * Tests themes that do not exist return an error.
+   */
+  public function testThemeDoesNotExist(): void {
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'generate-theme',
+      'test_custom_theme',
+      '--name="Test custom starterkit theme"',
+      '--description="Custom theme generated from a starterkit theme"',
+      '--starterkit',
+      'foobarbaz',
+    ];
+    $process = new Process($install_command, NULL);
+    $process->setTimeout(60);
+    $result = $process->run();
+    $this->assertStringContainsString('Theme source theme foobarbaz cannot be found.', trim($process->getErrorOutput()));
+    $this->assertSame(1, $result);
+  }
+
+  /**
+   * Tests that only themes with `starterkit` flag can be used.
+   */
+  public function testStarterKitFlag(): void {
+    // Explicitly not a starter theme.
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'generate-theme',
+      'test_custom_theme',
+      '--name="Test custom starterkit theme"',
+      '--description="Custom theme generated from a starterkit theme"',
+      '--starterkit',
+      'stark',
+    ];
+    $process = new Process($install_command, NULL);
+    $process->setTimeout(60);
+    $result = $process->run();
+    $this->assertStringContainsString('Theme source theme stark is not a valid starter kit.', trim($process->getErrorOutput()));
+    $this->assertSame(1, $result);
+
+    // Has not defined `starterkit`.
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'generate-theme',
+      'test_custom_theme',
+      '--name="Test custom starterkit theme"',
+      '--description="Custom theme generated from a starterkit theme"',
+      '--starterkit',
+      'bartik',
+    ];
+    $process = new Process($install_command, NULL);
+    $process->setTimeout(60);
+    $result = $process->run();
+    $this->assertStringContainsString('Theme source theme bartik is not a valid starter kit.', trim($process->getErrorOutput()));
+    $this->assertSame(1, $result);
   }
 
 }

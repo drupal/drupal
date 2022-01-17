@@ -5,6 +5,7 @@ namespace Drupal\Core\Command;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\File\FileSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -45,7 +46,9 @@ class GenerateTheme extends Command {
       ->addOption('name', NULL, InputOption::VALUE_OPTIONAL, 'A name for the theme.')
       ->addOption('description', NULL, InputOption::VALUE_OPTIONAL, 'A description of your theme.')
       ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, 'The path where your theme will be created. Defaults to: themes')
-      ->addUsage('custom_theme --name "Custom Theme" --description "Custom theme generated from a starterkit theme" --path themes');
+      ->addOption('starterkit', NULL, InputOption::VALUE_OPTIONAL, 'The theme to use as the starterkit', 'starterkit_theme')
+      ->addUsage('custom_theme --name "Custom Theme" --description "Custom theme generated from a starterkit theme" --path themes')
+      ->addUsage('custom_theme --name "Custom Theme" --starterkit mystarterkit');
   }
 
   /**
@@ -68,11 +71,17 @@ class GenerateTheme extends Command {
     }
 
     // Source directory for the theme.
-    $source_theme_name = 'starterkit_theme';
+    $source_theme_name = $input->getOption('starterkit');
     if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
-      $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found .");
+      $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found.");
       return 1;
     }
+
+    if (!$this->isStarterkitTheme($source_theme)) {
+      $io->getErrorStyle()->error("Theme source theme $source_theme_name is not a valid starter kit.");
+      return 1;
+    }
+
     $source = $source_theme->getPath();
 
     if (!is_dir($source)) {
@@ -272,6 +281,21 @@ class GenerateTheme extends Command {
     }
 
     return $themes[$theme];
+  }
+
+  /**
+   * Checks if the theme is a starterkit theme.
+   *
+   * @param \Drupal\Core\Extension\Extension $theme
+   *   The theme extension.
+   *
+   * @return bool
+   */
+  private function isStarterkitTheme(Extension $theme): bool {
+    $info_parser = new InfoParser($this->root);
+    $info = $info_parser->parse($theme->getPathname());
+
+    return $info['starterkit'] ?? FALSE === TRUE;
   }
 
   /**
