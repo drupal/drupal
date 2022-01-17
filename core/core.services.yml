@@ -1443,6 +1443,7 @@ services:
       - [setContainer, ['@service_container']]
       - [setStandalone, ['\Laminas\Feed\Reader\StandaloneExtensionManager']]
     arguments: ['feed.reader.']
+    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Laminas\Feed\Reader\StandaloneExtensionManager or create your own service. See https://www.drupal.org/node/3258656
   feed.bridge.writer:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:
