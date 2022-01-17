@@ -20,7 +20,7 @@
       var $preview = $target.find('em');
 
       function dateFormatHandler(e) {
-        var baseValue = $(e.target).val() || '';
+        var baseValue = e.target.value || '';
         var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
           return dateFormats[key] ? dateFormats[key] : value;
         });

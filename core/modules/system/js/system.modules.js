@@ -41,7 +41,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
 
       function filterModuleList(e) {
-        var query = $(e.target).val();
+        var query = e.target.value;
         var re = new RegExp("\\b".concat(query), 'i');
 
         function showModuleRow(index, row) {

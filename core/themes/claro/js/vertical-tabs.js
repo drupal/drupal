@@ -17,7 +17,7 @@
       $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (panes) {
         var $this = $(panes).addClass('vertical-tabs__items--processed');
-        var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+        var focusID = $this.find(':hidden.vertical-tabs__active-tab')[0].value;
         var tabFocus;
         var $details = $this.find('> details');
 

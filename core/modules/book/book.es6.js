@@ -18,7 +18,7 @@
         .find('.book-outline-form')
         .drupalSetSummary((context) => {
           const $select = $(context).find('.book-title-select');
-          const val = $select.val();
+          const val = $select[0].value;
 
           if (val === '0') {
             return Drupal.t('Not in book');

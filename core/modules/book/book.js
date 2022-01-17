@@ -10,7 +10,7 @@
     attach: function attach(context) {
       $(context).find('.book-outline-form').drupalSetSummary(function (context) {
         var $select = $(context).find('.book-title-select');
-        var val = $select.val();
+        var val = $select[0].value;
 
         if (val === '0') {
           return Drupal.t('Not in book');

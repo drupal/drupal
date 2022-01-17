@@ -19,7 +19,7 @@
       $context.find('#edit-submission').drupalSetSummary((context) => {
         const vals = [];
         vals.push(
-          Drupal.checkPlain($(context).find('#edit-title-label').val()) ||
+          Drupal.checkPlain($(context).find('#edit-title-label')[0].value) ||
             Drupal.t('Requires a title'),
         );
         return vals.join(', ');

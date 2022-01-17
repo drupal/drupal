@@ -25,14 +25,14 @@
       }
     },
     valueTargetCopyHandler: function valueTargetCopyHandler(e, value) {
-      var $target = $(e.target);
+      var target = e.target;
 
-      if ($target.val() === '') {
-        $target.val(value);
+      if (target.value === '') {
+        target.value = value;
       }
     },
     valueSourceBlurHandler: function valueSourceBlurHandler(e) {
-      var value = $(e.target).val();
+      var value = e.target.value;
       var targetIds = drupalSettings.copyFieldValue[e.target.id];
       $("#".concat(targetIds.join(', #'))).trigger('value:copy', value);
     }

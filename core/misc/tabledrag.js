@@ -688,7 +688,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 }
               });
             } else {
-              var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
+              var weight = 0;
+              var $siblingTarget = $(siblings[0]).find(targetClass);
+
+              if ($siblingTarget.length) {
+                weight = parseInt($siblingTarget[0].value, 10) || 0;
+              }
+
               $(siblings).find(targetClass).each(function () {
                 this.value = weight;
                 weight++;

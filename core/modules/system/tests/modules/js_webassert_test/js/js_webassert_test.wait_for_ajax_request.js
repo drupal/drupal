@@ -5,10 +5,14 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, drupalSettings) {
   Drupal.behaviors.js_webassert_test_wait_for_ajax_request = {
     attach: function attach(context) {
-      $('input[name="test_assert_wait_on_ajax_input"]').val('js_webassert_test');
+      var waitAjaxInput = document.querySelector('input[name="test_assert_wait_on_ajax_input"]');
+
+      if (waitAjaxInput) {
+        waitAjaxInput.value = 'js_webassert_test';
+      }
     }
   };
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);

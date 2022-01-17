@@ -55,7 +55,7 @@
       function machineNameHandler(e) {
         const data = e.data;
         const options = data.options;
-        const baseValue = $(e.target).val();
+        const baseValue = e.target.value;
 
         const rx = new RegExp(options.replace_pattern, 'g');
         const expected = baseValue
@@ -119,7 +119,7 @@
         // Hide the form item container of the machine name form element.
         $wrapper.addClass('visually-hidden');
         // Initial machine name from the target field default value.
-        const machine = $target.val();
+        const machine = $target[0].value;
         // Append the machine name preview to the source field.
         const $preview = $(
           `<span class="machine-name-value">${
@@ -150,8 +150,8 @@
 
         // If no initial value, determine machine name based on the
         // human-readable form element value.
-        if (machine === '' && $source.val() !== '') {
-          self.transliterate($source.val(), options).done((machineName) => {
+        if (machine === '' && $source[0].value !== '') {
+          self.transliterate($source[0].value, options).done((machineName) => {
             self.showMachineName(
               machineName.substr(0, options.maxlength),
               eventData,
@@ -170,7 +170,7 @@
         // Preview the machine name in realtime when the human-readable name
         // changes, but only if there is no machine name yet; i.e., only upon
         // initial creation, not when editing.
-        if ($target.val() === '') {
+        if ($target[0].value === '') {
           $source
             .on('formUpdated.machineName', eventData, machineNameHandler)
             // Initialize machine name preview.
@@ -188,7 +188,7 @@
       // Set the machine name to the transliterated value.
       if (machine !== '') {
         if (machine !== settings.replace) {
-          data.$target.val(machine);
+          data.$target[0].value = machine;
           data.$preview.html(
             settings.field_prefix +
               Drupal.checkPlain(machine) +
@@ -198,7 +198,7 @@
         data.$suffix.show();
       } else {
         data.$suffix.hide();
-        data.$target.val(machine);
+        data.$target[0].value = machine;
         data.$preview.empty();
       }
     },

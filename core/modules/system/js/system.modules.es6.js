@@ -35,7 +35,7 @@
       }
 
       function filterModuleList(e) {
-        const query = $(e.target).val();
+        const query = e.target.value;
         // Case insensitive expression to find query at the beginning of a word.
         const re = new RegExp(`\\b${query}`, 'i');
 

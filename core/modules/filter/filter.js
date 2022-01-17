@@ -10,7 +10,7 @@
     attach: function attach(context) {
       function updateFilterGuidelines(event) {
         var $this = $(event.target);
-        var value = $this.val();
+        var value = event.target.value;
         $this.closest('.js-filter-wrapper').find('[data-drupal-format-id]').hide().filter("[data-drupal-format-id=\"".concat(value, "\"]")).show();
       }
 

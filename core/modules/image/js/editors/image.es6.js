@@ -18,8 +18,7 @@
         Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
         // Set our original value to our current HTML (for reverting).
         this.model.set('originalValue', this.$el.html().trim());
-        // $.val() callback function for copying input from our custom form to
-        // the Quick Edit Field Form.
+        // Copy input from our custom form to the Quick Edit Field Form.
         this.model.set('currentValue', function (index, value) {
           const matches = $(this)
             .attr('name')
@@ -33,7 +32,7 @@
               `.quickedit-image-field-info input[name="${name}"]`,
             );
             if ($input.length) {
-              return $input.val();
+              return $input[0].value;
             }
           }
         });

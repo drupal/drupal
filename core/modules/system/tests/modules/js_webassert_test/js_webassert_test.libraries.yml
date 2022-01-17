@@ -3,7 +3,6 @@ wait_for_ajax_request:
   js:
     js/js_webassert_test.wait_for_ajax_request.js: {}
   dependencies:
-    - core/jquery
     - core/drupal
 wait_for_element:
   version: VERSION

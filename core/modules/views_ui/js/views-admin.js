@@ -79,7 +79,7 @@
       this.target.on('focus.viewsUi', this.unbind);
     },
     getTransliterated: function getTransliterated() {
-      var from = this.source.val();
+      var from = this.source.length ? this.source[0].value : '';
 
       if (this.exclude) {
         from = from.toLowerCase().replace(this.exclude, this.replace);
@@ -92,7 +92,7 @@
       var suffix = this.suffix;
       this.target.each(function (i) {
         var maxlength = $(this).attr('maxlength') - suffix.length;
-        $(this).val(transliterated.substr(0, maxlength) + suffix);
+        this.value = transliterated.substr(0, maxlength) + suffix;
       });
     },
     _unbind: function _unbind() {
@@ -170,10 +170,10 @@
       var $displayButtons = $menu.nextAll('input.add-display').detach();
       $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>').parent().eq(0).addClass('first').end().eq(-1).addClass('last');
       $displayButtons.each(function () {
-        var label = $(this).val();
+        var label = this.value;
 
         if (label.substr(0, 4) === 'Add ') {
-          $(this).val(label.substr(4));
+          this.value = label.substr(4);
         }
       });
       $addDisplayDropdown.appendTo($menu);
@@ -253,9 +253,9 @@
       return options;
     },
     handleFilter: function handleFilter(event) {
-      var search = this.$searchBox.val().toLowerCase();
+      var search = this.$searchBox[0].value.toLowerCase();
       var words = search.split(' ');
-      var group = this.$controlGroup.val();
+      var group = this.$controlGroup[0].value;
       this.options.forEach(function (option) {
         function hasWord(word) {
           return option.searchText.indexOf(word) !== -1;
@@ -320,7 +320,7 @@
 
   $.extend(Drupal.viewsUi.RearrangeFilterHandler.prototype, {
     insertAddRemoveFilterGroupLinks: function insertAddRemoveFilterGroupLinks() {
-      $(once('views-rearrange-filter-handler', $("<ul class=\"action-links\"><li><a id=\"views-add-group-link\" href=\"#\">".concat(this.addGroupButton.val(), "</a></li></ul>")).prependTo(this.table.parent()))).find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
+      $(once('views-rearrange-filter-handler', $("<ul class=\"action-links\"><li><a id=\"views-add-group-link\" href=\"#\">".concat(this.addGroupButton[0].value, "</a></li></ul>")).prependTo(this.table.parent()))).find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
       var length = this.removeGroupButtons.length;
       var i;
 
@@ -380,7 +380,9 @@
     operatorChangeHandler: function operatorChangeHandler(event) {
       var $target = $(event.target);
       var operators = this.dropdowns.find('select').not($target);
-      operators.val($target.val());
+      operators.each(function (index, item) {
+        item.value = $target[0].value;
+      });
     },
     modifyTableDrag: function modifyTableDrag() {
       var tableDrag = Drupal.tableDrag['views-rearrange-filters'];
@@ -423,7 +425,7 @@
         if (!groupField.is(".views-group-select-".concat(groupName))) {
           var oldGroupName = groupField.attr('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
           groupField.removeClass("views-group-select-".concat(oldGroupName)).addClass("views-group-select-".concat(groupName));
-          groupField.val(groupName);
+          groupField[0].value = groupName;
         }
       };
     },
@@ -544,21 +546,23 @@
     attach: function attach(context) {
       once('views-ui-override-button-text', '[data-drupal-selector="edit-override-dropdown"]', context).forEach(function (dropdown) {
         var $context = $(context);
-        var $submit = $context.find('[id^=edit-submit]');
-        var oldValue = $submit.val();
-        $(once('views-ui-override-button-text', $submit)).on('mouseup', function () {
-          $(this).val(oldValue);
+        var submit = context.querySelector('[id^=edit-submit]');
+        var oldValue = submit ? submit.value : '';
+        $(once('views-ui-override-button-text', submit)).on('mouseup', function () {
+          this.value = oldValue;
           return true;
         });
         $(dropdown).on('change', function () {
-          var $this = $(this);
+          if (!submit) {
+            return;
+          }
 
-          if ($this.val() === 'default') {
-            $submit.val(Drupal.t('Apply (all displays)'));
-          } else if ($this.val() === 'default_revert') {
-            $submit.val(Drupal.t('Revert to default'));
+          if (this.value === 'default') {
+            submit.value = Drupal.t('Apply (all displays)');
+          } else if (this.value === 'default_revert') {
+            submit.value = Drupal.t('Revert to default');
           } else {
-            $submit.val(Drupal.t('Apply (this display)'));
+            submit.value = Drupal.t('Apply (this display)');
           }
 
           var $dialog = $context.closest('.ui-dialog-content');

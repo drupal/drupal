@@ -36,7 +36,7 @@
       $context
         .find('[name="editor[settings][plugins][stylescombo][styles]"]')
         .on('blur.ckeditorStylesComboSettings', function () {
-          const styles = $(this).val().trim();
+          const styles = this.value.trim();
           const stylesSet = that._generateStylesSetSetting(styles);
           if (!_.isEqual(previousStylesSet, stylesSet)) {
             previousStylesSet = stylesSet;
@@ -116,11 +116,11 @@
     attach() {
       $('[data-ckeditor-plugin-id="stylescombo"]').drupalSetSummary(
         (context) => {
-          const styles = $(
+          const stylesElement = document.querySelector(
             '[data-drupal-selector="edit-editor-settings-plugins-stylescombo-styles"]',
-          )
-            .val()
-            .trim();
+          );
+          const styles = stylesElement ? stylesElement.value.trim() : '';
+
           if (styles.length === 0) {
             return Drupal.t('No styles configured');
           }

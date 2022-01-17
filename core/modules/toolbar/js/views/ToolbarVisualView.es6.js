@@ -287,9 +287,9 @@
         const $orientationToggle = this.$el
           .find('.toolbar-toggle-orientation')
           .toggle(this.model.get('isTrayToggleVisible'));
-        $orientationToggle
-          .find('button')
-          .val(antiOrientation)
+        const $orientationToggleButton = $orientationToggle.find('button');
+        $orientationToggleButton[0].value = antiOrientation;
+        $orientationToggleButton
           .attr('title', this.strings[antiOrientation])
           .text(this.strings[antiOrientation])
           .removeClass(iconClass)

@@ -169,12 +169,12 @@
         const addWidgetClasses = () => {
           $passwordWidget
             .addClass(
-              $mainInput.val()
+              $mainInput[0].value
                 ? cssClasses.passwordFilled
                 : cssClasses.passwordEmpty,
             )
             .addClass(
-              $confirmInput.val()
+              $confirmInput[0].value
                 ? cssClasses.confirmFilled
                 : cssClasses.confirmEmpty,
             );
@@ -187,7 +187,7 @@
          *   The value of the confirm input.
          */
         const passwordCheckMatch = (confirmInputVal) => {
-          const passwordsAreMatching = $mainInput.val() === confirmInputVal;
+          const passwordsAreMatching = $mainInput[0].value === confirmInputVal;
           const confirmClass = passwordsAreMatching
             ? cssClasses.passwordsMatch
             : cssClasses.passwordsNotMatch;
@@ -216,7 +216,7 @@
           if (settings.password.showStrengthIndicator) {
             // Evaluate the password strength.
             const result = Drupal.evaluatePasswordStrength(
-              $mainInput.val(),
+              $mainInput[0].value,
               settings.password,
             );
             const $currentPasswordSuggestions = $(
@@ -255,8 +255,8 @@
           }
 
           // Check the value in the confirm input and show results.
-          if ($confirmInput.val()) {
-            passwordCheckMatch($confirmInput.val());
+          if ($confirmInput[0].value) {
+            passwordCheckMatch($confirmInput[0].value);
             $passwordConfirmMessage.css({ visibility: 'visible' });
           } else {
             $passwordConfirmMessage.css({ visibility: 'hidden' });
@@ -310,7 +310,9 @@
     // otherwise use value from the database.
     const $usernameBox = $('input.username');
     const username =
-      $usernameBox.length > 0 ? $usernameBox.val() : passwordSettings.username;
+      $usernameBox.length > 0
+        ? $usernameBox[0].value
+        : passwordSettings.username;
 
     // Lose 5 points for every character less than 12, plus a 30 point penalty.
     if (password.length < 12) {

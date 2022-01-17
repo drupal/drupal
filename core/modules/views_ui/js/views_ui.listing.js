@@ -32,7 +32,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       var $rows;
 
       function filterViewList(e) {
-        var query = $(e.target).val().toLowerCase();
+        var query = e.target.value.toLowerCase();
 
         function showViewRow(index, row) {
           var $row = $(row);

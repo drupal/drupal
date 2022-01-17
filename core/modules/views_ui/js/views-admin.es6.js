@@ -207,7 +207,7 @@
        *   The source form field value.
        */
       getTransliterated() {
-        let from = this.source.val();
+        let from = this.source.length ? this.source[0].value : '';
         if (this.exclude) {
           from = from.toLowerCase().replace(this.exclude, this.replace);
         }
@@ -223,7 +223,7 @@
         this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
           const maxlength = $(this).attr('maxlength') - suffix.length;
-          $(this).val(transliterated.substr(0, maxlength) + suffix);
+          this.value = transliterated.substr(0, maxlength) + suffix;
         });
       },
 
@@ -390,9 +390,9 @@
       // placed in an 'Add' dropdown. @todo This assumes English, but so does
       // $addDisplayDropdown above. Add support for translation.
       $displayButtons.each(function () {
-        const label = $(this).val();
+        const label = this.value;
         if (label.substr(0, 4) === 'Add ') {
-          $(this).val(label.substr(4));
+          this.value = label.substr(4);
         }
       });
       $addDisplayDropdown.appendTo($menu);
@@ -559,10 +559,10 @@
       handleFilter(event) {
         // Determine the user's search query. The search text has been converted
         // to lowercase.
-        const search = this.$searchBox.val().toLowerCase();
+        const search = this.$searchBox[0].value.toLowerCase();
         const words = search.split(' ');
         // Get selected Group
-        const group = this.$controlGroup.val();
+        const group = this.$controlGroup[0].value;
 
         // Search through the search texts in the form for matching text.
         this.options.forEach((option) => {
@@ -753,7 +753,7 @@
             // When the link is clicked, dynamically click the hidden form
             // button for adding a new filter group.
             $(
-              `<ul class="action-links"><li><a id="views-add-group-link" href="#">${this.addGroupButton.val()}</a></li></ul>`,
+              `<ul class="action-links"><li><a id="views-add-group-link" href="#">${this.addGroupButton[0].value}</a></li></ul>`,
             ).prependTo(this.table.parent()),
           ),
         )
@@ -896,7 +896,9 @@
         const operators = this.dropdowns.find('select').not($target);
 
         // Change the other operators to match this new value.
-        operators.val($target.val());
+        operators.each(function (index, item) {
+          item.value = $target[0].value;
+        });
       },
 
       /**
@@ -984,7 +986,7 @@
             groupField
               .removeClass(`views-group-select-${oldGroupName}`)
               .addClass(`views-group-select-${groupName}`);
-            groupField.val(groupName);
+            groupField[0].value = groupName;
           }
         };
       },
@@ -1236,26 +1238,28 @@
       ).forEach((dropdown) => {
         // Closures! :(
         const $context = $(context);
-        const $submit = $context.find('[id^=edit-submit]');
-        const oldValue = $submit.val();
+        const submit = context.querySelector('[id^=edit-submit]');
+        const oldValue = submit ? submit.value : '';
 
-        $(once('views-ui-override-button-text', $submit)).on(
+        $(once('views-ui-override-button-text', submit)).on(
           'mouseup',
           function () {
-            $(this).val(oldValue);
+            this.value = oldValue;
             return true;
           },
         );
 
         $(dropdown)
           .on('change', function () {
-            const $this = $(this);
-            if ($this.val() === 'default') {
-              $submit.val(Drupal.t('Apply (all displays)'));
-            } else if ($this.val() === 'default_revert') {
-              $submit.val(Drupal.t('Revert to default'));
+            if (!submit) {
+              return;
+            }
+            if (this.value === 'default') {
+              submit.value = Drupal.t('Apply (all displays)');
+            } else if (this.value === 'default_revert') {
+              submit.value = Drupal.t('Revert to default');
             } else {
-              $submit.val(Drupal.t('Apply (this display)'));
+              submit.value = Drupal.t('Apply (this display)');
             }
             const $dialog = $context.closest('.ui-dialog-content');
             $dialog.trigger('dialogButtonsChange');

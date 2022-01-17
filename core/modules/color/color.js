@@ -79,8 +79,8 @@
           color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
         });
 
-        if ($(input).val() && $(input).val() !== color) {
-          $(input).val(color);
+        if (input.value && input.value !== color) {
+          input.value = color;
 
           if (propagate) {
             i = input.i;

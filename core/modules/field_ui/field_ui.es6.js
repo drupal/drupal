@@ -43,27 +43,32 @@
         // When the user selects a new field type, clear the "existing field"
         // selection.
         $newFieldType.on('change', function () {
-          if ($(this).val() !== '') {
+          if (this.value !== '') {
             // Reset the "existing storage name" selection.
-            $existingStorageName.val('').trigger('change');
+            if ($existingStorageName.length) {
+              $existingStorageName[0].value = '';
+              $existingStorageName.trigger('change');
+            }
           }
         });
 
         // When the user selects an existing storage name, clear the "new field
         // type" selection and populate the 'existing_storage_label' element.
         $existingStorageName.on('change', function () {
-          const value = $(this).val();
+          const { value } = this;
           if (value !== '') {
-            // Reset the "new field type" selection.
-            $newFieldType.val('').trigger('change');
+            if ($newFieldType.length) {
+              // Reset the "new field type" selection.
+              $newFieldType[0].value = '';
+              $newFieldType.trigger('change');
+            }
 
             // Pre-populate the "existing storage label" element.
             if (
               typeof drupalSettings.existingFieldLabels[value] !== 'undefined'
             ) {
-              $existingStorageLabel.val(
-                drupalSettings.existingFieldLabels[value],
-              );
+              $existingStorageLabel[0].value =
+                drupalSettings.existingFieldLabels[value];
             }
           }
         });
@@ -152,8 +157,11 @@
       // Handle region change.
       const region = rowHandler.getRegion();
       if (region !== rowHandler.region) {
-        // Remove parenting.
-        $row.find('select.js-field-parent').val('');
+        const $fieldParent = $row.find('select.js-field-parent');
+        if ($fieldParent.length) {
+          // Remove parenting.
+          $fieldParent[0].value = '';
+        }
         // Let the row handler deal with the region change.
         $.extend(refreshRows, rowHandler.regionChange(region));
         // Update the row region.
@@ -258,9 +266,11 @@
       if (rowNames.length) {
         // Add a throbber next each of the ajaxElements.
         $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
-
-        // Fire the Ajax update.
-        $('input[name=refresh_rows]').val(rowNames.join(' '));
+        const $refreshRows = $('input[name=refresh_rows]');
+        if ($refreshRows.length) {
+          // Fire the Ajax update.
+          $refreshRows[0].value = rowNames.join(' ');
+        }
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
 
         // Disabled elements do not appear in POST ajax data, so we mark the
@@ -318,7 +328,9 @@
      *   Either 'hidden' or 'content'.
      */
     getRegion() {
-      return this.$regionSelect.val();
+      if (this.$regionSelect.length) {
+        return this.$regionSelect[0].value;
+      }
     },
 
     /**
@@ -344,8 +356,10 @@
       // Replace dashes with underscores.
       region = region.replace(/-/g, '_');
 
-      // Set the region of the select list.
-      this.$regionSelect.val(region);
+      if (this.$regionSelect.length) {
+        // Set the region of the select list.
+        this.$regionSelect[0].value = region;
+      }
 
       // Restore the formatter back to the default formatter only if it was
       // disabled previously. Pseudo-fields do not have default formatters,
@@ -354,10 +368,12 @@
         const value =
           typeof this.defaultPlugin !== 'undefined'
             ? this.defaultPlugin
-            : this.$pluginSelect.find('option').val();
+            : this.$pluginSelect.find('option')[0].value;
 
         if (typeof value !== 'undefined') {
-          this.$pluginSelect.val(value);
+          if (this.$pluginSelect.length) {
+            this.$pluginSelect[0].value = value;
+          }
         }
       }
 

@@ -15,7 +15,7 @@
           handle: '.js-media-library-item-preview',
           onEnd: function onEnd() {
             $(widget).children().each(function (index, child) {
-              $(child).find('.js-media-library-item-weight').val(index);
+              $(child).find('.js-media-library-item-weight')[0].value = index;
             });
           }
         });

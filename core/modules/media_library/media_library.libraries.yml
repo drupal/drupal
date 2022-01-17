@@ -32,6 +32,7 @@ ui:
   dependencies:
     - core/drupal.ajax
     - core/drupal.announce
+    - core/drupal.nodelist.foreach
     - core/once
     - core/jquery.once.bc
     - core/jquery

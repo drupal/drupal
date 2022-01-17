@@ -42,7 +42,7 @@
        *   The jQuery event triggered.
        */
       function dateFormatHandler(e) {
-        const baseValue = $(e.target).val() || '';
+        const baseValue = e.target.value || '';
         const dateString = baseValue.replace(/\\?(.?)/gi, (key, value) =>
           dateFormats[key] ? dateFormats[key] : value,
         );

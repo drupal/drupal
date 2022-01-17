@@ -9,7 +9,7 @@
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules: function getRules() {
-        var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
+        var currentValue = document.querySelector('#edit-filters-filter-html-settings-allowed-html').value;
 
         var rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
 

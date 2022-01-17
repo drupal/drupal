@@ -17,9 +17,9 @@
        *   An array of filter rules.
        */
       getRules() {
-        const currentValue = $(
+        const currentValue = document.querySelector(
           '#edit-filters-filter-html-settings-allowed-html',
-        ).val();
+        ).value;
         const rules =
           Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
 

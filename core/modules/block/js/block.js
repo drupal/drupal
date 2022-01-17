@@ -32,7 +32,7 @@
       $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {
         var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
 
-        if (!$pages.val()) {
+        if (!$pages.length || !$pages[0].value) {
           return Drupal.t('Not restricted');
         }
 
@@ -76,8 +76,8 @@
 
       function updateBlockWeights(table, region) {
         var weight = -Math.round(table.find('.draggable').length / 2);
-        table.find(".region-".concat(region, "-message")).nextUntil('.region-title').find('select.block-weight').val(function () {
-          return ++weight;
+        table.find(".region-".concat(region, "-message")).nextUntil('.region-title').find('select.block-weight').each(function () {
+          this.value = ++weight;
         });
       }
 
@@ -106,7 +106,7 @@
           var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
           regionField.removeClass("block-region-".concat(oldRegionName)).addClass("block-region-".concat(regionName));
           weightField.removeClass("block-weight-".concat(oldRegionName)).addClass("block-weight-".concat(regionName));
-          regionField.val(regionName);
+          regionField[0].value = regionName;
         }
 
         updateBlockWeights(table, regionName);

@@ -52,10 +52,10 @@
   }
 
   function onTextFormatChange(event) {
-    var $select = $(event.target);
+    var select = event.target;
     var field = event.data.field;
     var activeFormatID = field.getAttribute('data-editor-active-text-format');
-    var newFormatID = $select.val();
+    var newFormatID = select.value;
 
     if (newFormatID === activeFormatID) {
       return;
@@ -66,7 +66,7 @@
 
     if (hasContent && supportContentFiltering) {
       var message = Drupal.t('Changing the text format to %text_format will permanently remove content that is not allowed in that text format.<br><br>Save your changes before switching the text format to avoid losing data.', {
-        '%text_format': $select.find('option:selected').text()
+        '%text_format': $(select).find('option:selected').text()
       });
       var confirmationDialog = Drupal.dialog("<div>".concat(message, "</div>"), {
         title: Drupal.t('Change text format?'),
@@ -83,7 +83,7 @@
           text: Drupal.t('Cancel'),
           class: 'button',
           click: function click() {
-            $select.val(activeFormatID);
+            select.value = activeFormatID;
             confirmationDialog.close();
           }
         }],
@@ -117,7 +117,7 @@
           return;
         }
 
-        var activeFormatID = $this.val();
+        var activeFormatID = editor.value;
         field.setAttribute('data-editor-active-text-format', activeFormatID);
 
         if (settings.editor.formats[activeFormatID]) {
@@ -157,7 +157,7 @@
 
       editors.forEach(function (editor) {
         var $this = $(editor);
-        var activeFormatID = $this.val();
+        var activeFormatID = editor.value;
         var field = findFieldForFormatSelector($this);
 
         if (field && activeFormatID in settings.editor.formats) {

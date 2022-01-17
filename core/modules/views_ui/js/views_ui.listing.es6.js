@@ -26,7 +26,7 @@
       let $rows;
 
       function filterViewList(e) {
-        const query = $(e.target).val().toLowerCase();
+        const query = e.target.value.toLowerCase();
 
         function showViewRow(index, row) {
           const $row = $(row);

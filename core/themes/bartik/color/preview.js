@@ -20,17 +20,17 @@
 
       var $colorPreview = $form.find('.color-preview');
       var $colorPalette = $form.find('.js-color-palette');
-      $colorPreview.css('backgroundColor', $colorPalette.find('input[name="palette[bg]"]').val());
-      $colorPreview.find('.color-preview-main h2, .color-preview .preview-content').css('color', $colorPalette.find('input[name="palette[text]"]').val());
-      $colorPreview.find('.color-preview-content a').css('color', $colorPalette.find('input[name="palette[link]"]').val());
+      $colorPreview.css('backgroundColor', $colorPalette.find('input[name="palette[bg]"]')[0].value);
+      $colorPreview.find('.color-preview-main h2, .color-preview .preview-content').css('color', $colorPalette.find('input[name="palette[text]"]')[0].value);
+      $colorPreview.find('.color-preview-content a').css('color', $colorPalette.find('input[name="palette[link]"]')[0].value);
       var $colorPreviewBlock = $colorPreview.find('.color-preview-sidebar .color-preview-block');
-      $colorPreviewBlock.css('background-color', $colorPalette.find('input[name="palette[sidebar]"]').val());
-      $colorPreviewBlock.css('border-color', $colorPalette.find('input[name="palette[sidebarborders]"]').val());
-      $colorPreview.find('.color-preview-footer-wrapper').css('background-color', $colorPalette.find('input[name="palette[footer]"]').val());
-      var gradientStart = $colorPalette.find('input[name="palette[top]"]').val();
-      var gradientEnd = $colorPalette.find('input[name="palette[bottom]"]').val();
+      $colorPreviewBlock.css('background-color', $colorPalette.find('input[name="palette[sidebar]"]')[0].value);
+      $colorPreviewBlock.css('border-color', $colorPalette.find('input[name="palette[sidebarborders]"]')[0].value);
+      $colorPreview.find('.color-preview-footer-wrapper').css('background-color', $colorPalette.find('input[name="palette[footer]"]')[0].value);
+      var gradientStart = $colorPalette.find('input[name="palette[top]"]')[0].value;
+      var gradientEnd = $colorPalette.find('input[name="palette[bottom]"]')[0].value;
       $colorPreview.find('.color-preview-header').attr('style', "background-color: ".concat(gradientStart, "; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(").concat(gradientStart, "), to(").concat(gradientEnd, ")); background-image: -moz-linear-gradient(-90deg, ").concat(gradientStart, ", ").concat(gradientEnd, ");"));
-      $colorPreview.find('.color-preview-site-name').css('color', $colorPalette.find('input[name="palette[titleslogan]"]').val());
+      $colorPreview.find('.color-preview-site-name').css('color', $colorPalette.find('input[name="palette[titleslogan]"]')[0].value);
     }
   };
 })(jQuery, Drupal, drupalSettings);

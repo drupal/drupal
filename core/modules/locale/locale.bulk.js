@@ -14,10 +14,10 @@
         var $form = $(form);
         var $langcode = $form.find('.langcode-input');
         $form.find('.file-import-input').on('change', function () {
-          var matches = $(this).val().match(/([^.][.]*)([\w-]+)\.po$/);
+          var matches = this.value.match(/([^.][.]*)([\w-]+)\.po$/);
 
           if (matches && $langcode.find("option[value=\"".concat(matches[2], "\"]")).length) {
-            $langcode.val(matches[2]);
+            $langcode[0].value = matches[2];
           }
         });
       }

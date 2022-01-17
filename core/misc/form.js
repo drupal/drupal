@@ -104,10 +104,18 @@
         userInfo.forEach(function (info) {
           var $element = $forms.find("[name=".concat(info, "]"));
           var browserData = localStorage.getItem("Drupal.visitor.".concat(info));
-          var emptyOrDefault = $element.val() === '' || $element.attr('data-drupal-default-value') === $element.val();
 
-          if ($element.length && emptyOrDefault && browserData) {
-            $element.val(browserData);
+          if (!$element.length) {
+            return;
+          }
+
+          var emptyValue = $element[0].value === '';
+          var defaultValue = $element.attr('data-drupal-default-value') === $element[0].value;
+
+          if (browserData && (emptyValue || defaultValue)) {
+            $element.each(function (index, item) {
+              item.value = browserData;
+            });
           }
         });
       }
@@ -117,7 +125,7 @@
           var $element = $forms.find("[name=".concat(info, "]"));
 
           if ($element.length) {
-            localStorage.setItem("Drupal.visitor.".concat(info), $element.val());
+            localStorage.setItem("Drupal.visitor.".concat(info), $element[0].value);
           }
         });
       });

@@ -71,7 +71,11 @@
       $(once('views-ajax', '#views-tabset a')).on('click', function () {
         var href = $(this).attr('href');
         var displayId = href.substr(11);
-        $('#views-live-preview #preview-display-id').val(displayId);
+        var viewsPreviewId = document.querySelector('#views-live-preview #preview-display-id');
+
+        if (viewsPreviewId) {
+          viewsPreviewId.value = displayId;
+        }
       });
     }
   };

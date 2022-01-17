@@ -11,11 +11,12 @@
       var timezone = once('timezone', '.timezone-detect', context);
 
       if (timezone.length) {
-        var $timezone = $(timezone);
         var tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        if (tz && $timezone.find("option[value=\"".concat(tz, "\"]")).length) {
-          $timezone.val(tz);
+        if (tz && $(timezone).find("option[value=\"".concat(tz, "\"]")).length) {
+          timezone.forEach(function (item) {
+            item.value = tz;
+          });
           return;
         }
 
@@ -48,7 +49,9 @@
           dataType: 'json',
           success: function success(data) {
             if (data) {
-              $timezone.val(data);
+              document.querySelectorAll('.timezone-detect').forEach(function (item) {
+                item.value = data;
+              });
             }
           }
         });
