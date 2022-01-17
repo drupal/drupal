@@ -67,7 +67,7 @@ if ($args['list']) {
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
   $test_discovery = new TestDiscovery(
-    \Drupal::service('app.root'),
+    \Drupal::root(),
     \Drupal::service('class_loader')
   );
   try {
@@ -100,7 +100,7 @@ if ($args['list']) {
 if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
   $test_discovery = new TestDiscovery(
-    \Drupal::service('app.root'),
+    \Drupal::root(),
     \Drupal::service('class_loader')
   );
   // TestDiscovery::findAllClassFiles() gives us a classmap similar to a
@@ -1024,7 +1024,7 @@ function simpletest_script_get_test_list() {
   global $args;
 
   $test_discovery = new TestDiscovery(
-    \Drupal::service('app.root'),
+    \Drupal::root(),
     \Drupal::service('class_loader')
   );
   $types_processed = empty($args['types']);
