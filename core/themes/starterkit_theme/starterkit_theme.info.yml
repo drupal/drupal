@@ -2,6 +2,7 @@ name: starterkit_theme
 type: theme
 'base theme': stable9
 hidden: true
+starterkit: true
 libraries:
   - starterkit_theme/base
   - starterkit_theme/messages

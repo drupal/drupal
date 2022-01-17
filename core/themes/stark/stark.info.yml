@@ -4,3 +4,4 @@ description: 'An intentionally plain theme with no styling to demonstrate defaul
 package: Core
 version: VERSION
 base theme: false
+starterkit: false
