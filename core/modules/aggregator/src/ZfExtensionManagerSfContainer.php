@@ -1,21 +1,14 @@
 <?php
 
-namespace Drupal\Component\Bridge;
+namespace Drupal\aggregator;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Laminas\Feed\Reader\ExtensionManagerInterface as ReaderManagerInterface;
 use Laminas\Feed\Writer\ExtensionManagerInterface as WriterManagerInterface;
 
-@trigger_error(__NAMESPACE__ . '\ZfExtensionManagerSfContainer is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. The class has moved to \Drupal\aggregator\ZfExtensionManagerSfContainer. See https://www.drupal.org/node/3258656', E_USER_DEPRECATED);
-
 /**
  * Defines a bridge between the Laminas service manager to Symfony container.
- *
- * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. The class has
- *   moved to \Drupal\aggregator\ZfExtensionManagerSfContainer.
- *
- * @see https://www.drupal.org/node/3258656
  */
 class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterManagerInterface, ContainerAwareInterface {
 

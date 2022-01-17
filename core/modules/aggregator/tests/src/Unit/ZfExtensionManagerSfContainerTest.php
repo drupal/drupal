@@ -1,20 +1,19 @@
 <?php
 
-namespace Drupal\Tests\Component\Bridge;
+namespace Drupal\Tests\aggregator\Unit;
 
-use Drupal\Component\Bridge\ZfExtensionManagerSfContainer;
-use PHPUnit\Framework\TestCase;
+use Drupal\aggregator\ZfExtensionManagerSfContainer;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Laminas\Feed\Reader\Extension\Atom\Entry;
 use Laminas\Feed\Reader\StandaloneExtensionManager;
 
 /**
- * @coversDefaultClass \Drupal\Component\Bridge\ZfExtensionManagerSfContainer
- * @group Bridge
- * @group legacy
+ * @coversDefaultClass \Drupal\aggregator\ZfExtensionManagerSfContainer
+ * @group aggregator
  */
-class ZfExtensionManagerSfContainerTest extends TestCase {
+class ZfExtensionManagerSfContainerTest extends UnitTestCase {
 
   /**
    * @covers ::setContainer
@@ -60,7 +59,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    */
   public function testSetStandaloneException() {
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Laminas\Feed\Reader\ExtensionManagerInterface or Laminas\Feed\Writer\ExtensionManagerInterface');
+    $this->expectExceptionMessage('Drupal\Tests\aggregator\Unit\ZfExtensionManagerSfContainerTest must implement Laminas\Feed\Reader\ExtensionManagerInterface or Laminas\Feed\Writer\ExtensionManagerInterface');
     $bridge = new ZfExtensionManagerSfContainer();
     $bridge->setStandalone(static::class);
   }
