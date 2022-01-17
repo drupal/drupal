@@ -7,6 +7,11 @@
 
 .site-header {
   position: relative;
+  /**
+   * Ensure mobile site header is always above other elements including
+   * contextual links, quick-edit, and Tour.
+   */
+  z-index: 101;
 
   @media (--nav) {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */

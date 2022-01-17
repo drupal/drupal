@@ -69,7 +69,7 @@
 }
 
 .shepherd-element {
-  z-index: 101;
+  z-index: 110;
   width: 300px;
   background: #fff;
 }
@@ -132,7 +132,7 @@
 
 .shepherd-modal-overlay-container {
   position: fixed;
-  z-index: 100;
+  z-index: 105;
   top: 0;
   left: 0;
   overflow: hidden;

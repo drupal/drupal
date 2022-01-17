@@ -36,7 +36,7 @@
 
 .header-nav {
   position: fixed;
-  z-index: 105; /* appear above overlay */
+  z-index: 501; /* Appear above overlay and contextual links in header. */
   top: 0;
   visibility: hidden;
   overflow: auto;
@@ -238,4 +238,27 @@ body.is-always-mobile-nav .header-nav {
 
 [dir="rtl"] .header-nav.is-active {
   transform: translateX(100%);
+}
+
+[dir="ltr"] .header-nav-overlay {
+  left: 0
+}
+
+[dir="rtl"] .header-nav-overlay {
+  right: 0
+}
+
+.header-nav-overlay {
+  position: fixed;
+  z-index: 101;
+  top: 0;
+  display: none;
+  width: 100%;
+  height: 100vh;
+  opacity: 0.2;
+  background: #0d77b5
+}
+
+.is-overlay-active .header-nav-overlay {
+    display: block
 }

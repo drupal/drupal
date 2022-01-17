@@ -91,7 +91,7 @@
         var olivero = Drupal.olivero;
         var navButton = context.querySelector('[data-drupal-selector="mobile-nav-button"]');
         var body = context.querySelector('body');
-        var overlay = context.querySelector('[data-drupal-selector="overlay"]');
+        var overlay = context.querySelector('[data-drupal-selector="header-nav-overlay"]');
         init({
           olivero: olivero,
           header: header,

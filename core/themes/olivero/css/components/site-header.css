@@ -11,7 +11,12 @@
  */
 
 .site-header {
-  position: relative
+  position: relative;
+  /**
+   * Ensure mobile site header is always above other elements including
+   * contextual links, quick-edit, and Tour.
+   */
+  z-index: 101
 }
 
 @media (min-width: 75rem) {

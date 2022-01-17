@@ -44,7 +44,7 @@
 
 .mobile-nav-button {
   position: relative;
-  z-index: 110; /* Appear above mobile nav. */
+  z-index: 505; /* Appear above mobile nav. */
   display: flex;
   align-items: center;
   -ms-grid-row-align: center;

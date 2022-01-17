@@ -20,6 +20,15 @@
   background: var(--color--white);
 }
 
+/**
+ * Creates stacking context ensuring that child elements can never appear in
+ * front of mobile navigation.
+ */
+.layout-main-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
 /* Contains the social sidebar, and the primary content area. */
 .layout-main {
   @media (--nav) {

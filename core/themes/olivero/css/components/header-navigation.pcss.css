@@ -7,7 +7,7 @@
 
 .header-nav {
   position: fixed;
-  z-index: 105; /* appear above overlay */
+  z-index: 501; /* Appear above overlay and contextual links in header. */
   inset-block-start: 0;
   inset-inline-start: 100%;
   visibility: hidden;
@@ -138,4 +138,20 @@ body.is-always-mobile-nav {
 
 [dir="rtl"] .header-nav.is-active {
   transform: translateX(100%);
+}
+
+.header-nav-overlay {
+  position: fixed;
+  z-index: 101;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: none;
+  width: 100%;
+  height: 100vh;
+  opacity: 0.2;
+  background: var(--color--blue-20);
+
+  @nest .is-overlay-active & {
+    display: block;
+  }
 }

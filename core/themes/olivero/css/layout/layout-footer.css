@@ -10,6 +10,16 @@
  * Grid system definition for the footer top and footer bottom layouts.
  */
 
+/**
+ * Creates stacking context ensuring that child elements can never appear in
+ * front of mobile navigation.
+ */
+
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
 .site-footer__inner {
   padding-top: 2.25rem;
   padding-bottom: 2.25rem
@@ -35,11 +45,11 @@
   }
 
       [dir="ltr"] .region--footer_top__inner > *:not(:last-child),[dir="ltr"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-right: 2.25rem
+        margin-right: 2.25rem;
   }
 
       [dir="rtl"] .region--footer_top__inner > *:not(:last-child),[dir="rtl"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-left: 2.25rem
+        margin-left: 2.25rem;
   }
     }
 
