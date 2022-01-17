@@ -18,50 +18,36 @@
 
 /* Width of the entire grid maxes out. */
 
-:root {
-  --tab-active-border-size: 0.375rem;
-}
+/* Breakpoint where tabs switch between vertical and horizontal layouts. */
 
 [dir="ltr"] .tabs {
-  margin-left: 0;
+  margin-left: 0
 }
 
 [dir="rtl"] .tabs {
-  margin-right: 0;
-}
-
-[dir="ltr"] .tabs {
-  margin-right: 0;
-}
-
-[dir="rtl"] .tabs {
-  margin-left: 0;
-}
-
-[dir="ltr"] .tabs {
-  padding-left: 0;
-}
-
-[dir="rtl"] .tabs {
-  padding-right: 0;
-}
-
-[dir="ltr"] .tabs {
-  padding-right: 0;
-}
-
-[dir="rtl"] .tabs {
-  padding-left: 0;
+  margin-right: 0
 }
 
 .tabs {
+  --tabs-height: var(--sp3);
+  --tabs-padding-inline: var(--sp1-5);
+  --tabs-active-border-size: 0.375rem;
+  --tabs-highlight-color: var(--color--blue-50); /* Minimum 3:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-text-color: var(--color--gray-20); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-text-color-active: var(--color--gray-0); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-letter-spacing: 1px;
+  --tabs-font-size: var(--font-size-s);
+  --tabs-background-color: var(--color--gray-95);
+  --tabs-background-color-hover: var(--color--gray-80);
+  --tabs-border-width: 1px;
+  --tabs-border-color: var(--color--gray-80);
+  --tabs-transition-duration: 0.2s;
+
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  margin: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
+  padding: 0;
   list-style: none
 }
 
@@ -76,7 +62,7 @@
 .tabs__tab {
   display: none;
   margin: 0;
-  margin-bottom: -1px
+  margin-bottom: calc(var(--tabs-border-width)*-1)
 }
 
 .tabs__tab.is-active {
@@ -85,171 +71,191 @@
 
 @media (min-width: 43.75rem) {
 
+[dir="ltr"] .tabs__tab {
+    margin-left: calc(var(--tabs-border-width)*-1)
+  }
+
+[dir="rtl"] .tabs__tab {
+    margin-right: calc(var(--tabs-border-width)*-1)
+  }
+
 .tabs__tab {
     display: flex;
-    margin: 0;
-    margin-bottom: -1px
+    margin-bottom: 0
 }
   }
 
-html:not(.js) .tabs__tab,
+.tabs__tab {
+
+  /* Show tabs when JavaScript disabled. */
+}
+
+html:not(.js) .tabs__tab {
+    display: flex
+}
+
+.tabs__tab {
+
+  /* Show tabs when tabs-expanded class is present. */
+}
+
 .tabs.is-expanded .tabs__tab {
-  display: flex;
+    display: flex
+}
+
+.tabs__tab {
+
+  /* Secondary tabs will always be expanded. */
 }
 
 .tabs--secondary .tabs__tab {
-  display: block
+    display: block
 }
 
 @media (min-width: 43.75rem) {
 
 .tabs--secondary .tabs__tab {
-    display: flex
+      display: flex
 }
-  }
-
-[dir="ltr"] .tabs__link {
-  padding-left: var(--sp1-5);
-}
-
-[dir="rtl"] .tabs__link {
-  padding-right: var(--sp1-5);
-}
-
-[dir="ltr"] .tabs__link {
-  padding-right: var(--sp1-5);
-}
-
-[dir="rtl"] .tabs__link {
-  padding-left: var(--sp1-5);
-}
+    }
 
 .tabs__link {
   display: flex;
   flex-grow: 1;
   align-items: center;
-  height: var(--sp3);
+  height: var(--tabs-height);
   padding-top: 0;
   padding-bottom: 0;
-  transition: background-color 0.2s;
+  padding-left: var(--tabs-padding-inline);
+  padding-right: var(--tabs-padding-inline);
+  transition: background-color var(--tabs-transition-duration);
   text-decoration: none;
-  letter-spacing: 1px;
-  color: var(--color--gray-20);
-  border: 1px solid var(--color--gray-80);
-  background-color: var(--color--gray-95);
-  font-size: var(--font-size-s);
-}
-
-.tabs--secondary .tabs__link {
-  text-transform: none
-}
-
-@media (min-width: 43.75rem) {
-
-.tabs--secondary .tabs__link {
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-left-color: transparent;
-    background-color: transparent
-}
-  }
-
-.tabs__link:focus {
-  position: relative;
-  outline: solid 3px var(--color--blue-50);
-  outline-offset: -3px;
+  letter-spacing: var(--tabs-letter-spacing);
+  color: var(--tabs-text-color);
+  border: var(--tabs-border-width) solid var(--tabs-border-color);
+  background-color: var(--tabs-background-color);
+  font-size: var(--tabs-font-size)
 }
 
 .tabs__link:hover {
-  background-color: var(--color--gray-80);
-}
+    color: var(--tabs-text-color-active);
+    background-color: var(--tabs-background-color-hover);
+  }
+
+.tabs__link:focus {
+    position: relative;
+    outline: solid 3px var(--tabs-highlight-color);
+    outline-offset: -3px;
+  }
 
 .tabs__link.is-active {
-  position: relative;
-  color: var(--color--gray-0);
-  font-weight: 600
-}
+    position: relative; /* Anchor :after pseudo-element. */
+    color: var(--tabs-text-color-active);
+    font-weight: 600
+
+    /*
+     * We use :after pseudo-element in place of border so edges do not appear
+     * diagonally cut off due to other edges with transparent borders.
+     */
+  }
 
 [dir="ltr"] .tabs__link.is-active:after {
-    left: -1px;
+      left: calc(var(--tabs-border-width)*-1)
 }
 
 [dir="rtl"] .tabs__link.is-active:after {
-    right: -1px;
+      right: calc(var(--tabs-border-width)*-1)
 }
 
 [dir="ltr"] .tabs__link.is-active:after {
-    border-left: var(--tab-active-border-size) solid var(--color--blue-50);
+      border-left: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
 }
 
 [dir="rtl"] .tabs__link.is-active:after {
-    border-right: var(--tab-active-border-size) solid var(--color--blue-50);
+      border-right: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
 }
 
 .tabs__link.is-active:after {
-    position: absolute;
-    bottom: -1px;
-    height: calc(100% + 2px);
-    content: "";
-  }
+      position: absolute;
+      top: calc(var(--tabs-border-width)*-1);
+      height: calc(100% + var(--tabs-border-width)*2);
+      content: ""
+    }
 
 @media (min-width: 43.75rem) {
-    [dir="ltr"] .tabs__link.is-active:after {
-      left: 0;
+
+[dir="ltr"] .tabs__link.is-active:after {
+        border-left: 0
   }
-    [dir="rtl"] .tabs__link.is-active:after {
-      right: 0;
+
+[dir="rtl"] .tabs__link.is-active:after {
+        border-right: 0
   }
-    [dir="ltr"] .tabs__link.is-active:after {
-      border-left: 0;
-  }
-    [dir="rtl"] .tabs__link.is-active:after {
-      border-right: 0;
-  }
-    .tabs__link.is-active:after {
-      width: 100%;
-      height: auto;
-      border-top: var(--tab-active-border-size) solid var(--color--blue-50);
+
+.tabs__link.is-active:after {
+        top: auto;
+        bottom: calc(var(--tabs-border-width)*-1);
+        width: calc(100% + var(--tabs-border-width)*2);
+        height: 0;
+        border-top: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
     }
-  }
+      }
+
+.tabs__link {
+
+  /* No regular borders or background color for secondary tab links. */
+}
+
+@media (min-width: 43.75rem) {
+
+.tabs--secondary .tabs__link {
+      border-color: transparent;
+      background-color: transparent
+}
+    }
+
+/* Button that opens and closes primary tabs at narrow viewports. */
 
 [dir="ltr"] .tabs__trigger {
-  margin-left: -1px;
+  margin-left: calc(var(--tabs-border-width)*-1);
+  margin-right: 0
 }
 
 [dir="rtl"] .tabs__trigger {
-  margin-right: -1px;
-}
-
-[dir="ltr"] .tabs__trigger {
-  margin-right: 0;
-}
-
-[dir="rtl"] .tabs__trigger {
-  margin-left: 0;
+  margin-right: calc(var(--tabs-border-width)*-1);
+  margin-left: 0
 }
 
 .tabs__trigger {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--sp3);
+  width: var(--tabs-height);
   margin-top: 0;
   margin-bottom: 0;
   cursor: pointer;
-  border: solid 1px var(--color--gray-80);
-  background-color: var(--color--gray-95)
+  border: solid var(--tabs-border-width) var(--tabs-border-color);
+  background-color: var(--tabs-background-color)
 }
 
 .tabs__trigger:hover {
-    background-color: var(--color--gray-80);
+    background-color: var(--tabs-background-color-hover);
   }
 
 .tabs__trigger:focus {
     position: relative;
-    border-color: var(--color--blue-50);
+    border-color: var(--tabs-highlight-color);
     outline: none;
   }
+
+.tabs__trigger {
+
+  /* Button will not work when JavaScript is disabled, so we hide it. */
+}
+
+html:not(.js) .tabs__trigger {
+    display: none
+}
 
 @media (min-width: 43.75rem) {
 
@@ -258,56 +264,52 @@ html:not(.js) .tabs__tab,
 }
   }
 
-html:not(.js) .tabs__trigger {
-  display: none;
-}
-
 .tabs__trigger-icon {
   position: relative;
   display: block;
   width: var(--sp);
   height: 0.625rem;
-  margin-top: -2px
+  margin-top: calc(var(--tabs-border-width)*-2)
 }
 
 [dir="ltr"] .tabs__trigger-icon > span {
-    left: 0;
+    left: 0
 }
 
 [dir="rtl"] .tabs__trigger-icon > span {
-    right: 0;
+    right: 0
 }
 
 .tabs__trigger-icon > span {
     position: absolute;
     display: block;
     width: 100%;
-    transition: transform 0.2s, opacity 0.2s, top 0.2s;
-    border-top: solid 2px var(--color--blue-50)
+    transition: transform var(--tabs-transition-duration), opacity var(--tabs-transition-duration), top var(--tabs-transition-duration);
+    border-top: solid 2px var(--tabs-highlight-color)
   }
 
 .tabs__trigger-icon > span:nth-child(1) {
-      top: 0;
-    }
-
-.tabs__trigger-icon > span:nth-child(2) {
-      top: calc(50% + 1px);
-    }
-
-.tabs__trigger-icon > span:nth-child(3) {
-      top: calc(100% + 2px);
+      top: 0
     }
 
 .tabs__trigger[aria-expanded="true"] .tabs__trigger-icon > span:nth-child(1) {
-      top: calc(50% + 1px);
-      transform: rotate(45deg);
+        top: calc(50% + 1px);
+        transform: rotate(45deg)
+    }
+
+.tabs__trigger-icon > span:nth-child(2) {
+      top: calc(50% + 1px)
     }
 
 .tabs__trigger[aria-expanded="true"] .tabs__trigger-icon > span:nth-child(2) {
-      opacity: 0;
+        opacity: 0
+    }
+
+.tabs__trigger-icon > span:nth-child(3) {
+      top: calc(100% + 2px)
     }
 
 .tabs__trigger[aria-expanded="true"] .tabs__trigger-icon > span:nth-child(3) {
-      top: calc(50% + 1px);
-      transform: rotate(-45deg);
+        top: calc(50% + 1px);
+        transform: rotate(-45deg)
     }
