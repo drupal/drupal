@@ -3,13 +3,12 @@
 namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface as LegacyMimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Makes possible to guess the MIME type of a file using its extension.
  */
-class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface, LegacyMimeTypeGuesserInterface {
+class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
 
   /**
    * Default MIME extension mapping.

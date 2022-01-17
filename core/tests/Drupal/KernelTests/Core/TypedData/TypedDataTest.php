@@ -590,7 +590,7 @@ class TypedDataTest extends KernelTestBase {
     // Test translating violation messages when pluralization is used.
     $definition = DataDefinition::create('string')
       ->setConstraints([
-        'Length' => ['min' => 10, 'allowEmptyString' => FALSE],
+        'Length' => ['min' => 10],
       ]);
     $violations = $this->typedDataManager->create($definition, "short")->validate();
     $this->assertEquals(1, $violations->count());

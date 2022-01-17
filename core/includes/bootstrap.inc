@@ -6,14 +6,11 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Http\InputBag;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\InputBag as SymfonyInputBag;
 
 /**
  * Minimum allowed version of PHP for Drupal to be bootstrapped.
@@ -125,30 +122,6 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
  * This strips two levels of directories off the current directory.
  */
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
-
-/**
- * Declare class aliases that will be added by the autoloader.
- */
-// @todo https://www.drupal.org/project/drupal/issues/3197482 Remove this class
-//   alias once Drupal is running Symfony 5.3 or higher.
-class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\KernelEvent', TRUE);
-
-/**
- * Set up the Symfony Request factory for forward compatibility with Symfony 5.
- *
- * @todo Remove this when Symfony 4 is no longer supported.
- */
-Request::setFactory(
-  function ($query, $request, $attributes, $cookies, $files, $server, $content) {
-    $request = new Request($query, $request, $attributes, $cookies, $files, $server, $content);
-    foreach (['request', 'query', 'cookies'] as $bag) {
-      if (!($bag instanceof SymfonyInputBag)) {
-        $request->$bag = new InputBag($request->$bag->all());
-      }
-    }
-    return $request;
-  }
-);
 
 /**
  * Returns and optionally sets the filename for a system resource.

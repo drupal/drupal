@@ -69,7 +69,6 @@ trait DeprecationListenerTrait {
       return TRUE;
     }
     $dynamic_skipped_deprecations = [
-      '%The "[^"]+" class extends "Symfony\\\\Component\\\\EventDispatcher\\\\Event" that is deprecated since Symfony 4\.3, use "Symfony\\\\Contracts\\\\EventDispatcher\\\\Event" instead\.$%',
       '%The "Symfony\\\\Component\\\\Validator\\\\Context\\\\ExecutionContextInterface::.*\(\)" method is considered internal Used by the validator engine\. Should not be called by user\W+code\. It may change without further notice\. You should not extend it from "[^"]+".%',
       '%The "PHPUnit\\\\Framework\\\\TestCase::addWarning\(\)" method is considered internal%',
       // The following deprecations were not added as part of the original
@@ -84,8 +83,6 @@ trait DeprecationListenerTrait {
       // Skip DebugClassLoader false positives.
       '%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%',
       '%The "Drupal\\\\[^"]+" method will require a new "[^"]+" argument in the next major version of its interface "Drupal\\\\[^"]+", not defining it is deprecated%',
-      // Symfony 5.4
-      '%Method "Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\NormalizerInterface::normalize\(\)" might add "array\|string\|int\|float\|bool\|\\\\ArrayObject\|null" as a native return type declaration in the future. Do the same in implementation "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
@@ -111,16 +108,6 @@ trait DeprecationListenerTrait {
       // The following deprecation messages are skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
       'Return type of PhpDeprecation::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice',
-      // The following Symfony deprecations are introduced in the Symfony 4
-      // development cycle. They will need to be resolved prior to Symfony 5
-      // compatibility.
-      'The "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\MimeTypes" instead.',
-      'The "Drupal\Core\File\MimeType\MimeTypeGuesser" class implements "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface" that is deprecated since Symfony 4.3, use {@link MimeTypesInterface} instead.',
-      'The "Symfony\Component\HttpFoundation\File\MimeType\FileBinaryMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileBinaryMimeTypeGuesser" instead.',
-      'The "Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileinfoMimeTypeGuesser" instead.',
-      'The "Drupal\Tests\Core\DependencyInjection\Compiler\LegacyMimeTypeGuesser" class implements "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface" that is deprecated since Symfony 4.3, use {@link MimeTypesInterface} instead.',
-      'The "Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher::dispatch()" method will require a new "string|null $eventName" argument in the next major version of its interface "Symfony\Contracts\EventDispatcher\EventDispatcherInterface", not defining it is deprecated.',
-      'The "Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher::dispatch()" method will require a new "string|null $eventName" argument in the next major version of its parent class "Symfony\Contracts\EventDispatcher\EventDispatcherInterface", not defining it is deprecated.',
       // The following deprecation is listed for Twig 2 compatibility when unit
       // testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
       'The "Twig\Environment::getTemplateClass()" method is considered internal. It may change without further notice. You should not extend it from "Drupal\Core\Template\TwigEnvironment".',

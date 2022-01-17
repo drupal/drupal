@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\EventDispatcher\Event as SymfonyEvent;
+use Symfony\Contracts\EventDispatcher\Event as SymfonyEvent;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Drupal\Component\EventDispatcher\Event;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -146,48 +146,12 @@ class ContainerAwareEventDispatcherTest extends TestCase {
   }
 
   /**
-   * Tests argument order deprecation.
-   *
-   * @group legacy
-   */
-  public function testDispatchArgumentOrderDeprecation() {
-    $this->expectDeprecation('Calling the Symfony\Component\EventDispatcher\EventDispatcherInterface::dispatch() method with a string event name as the first argument is deprecated in drupal:9.1.0, an Event object will be required instead in drupal:10.0.0. See https://www.drupal.org/node/3154407');
-    $container = new ContainerBuilder();
-    $dispatcher = new ContainerAwareEventDispatcher($container, []);
-    $dispatcher->dispatch('foo');
-  }
-
-  /**
-   * Tests deprecation notice for Symfony Event class.
-   *
-   * @group legacy
-   */
-  public function testSymfonyEventDeprecation() {
-    $this->expectDeprecation('Symfony\Component\EventDispatcher\Event is deprecated in drupal:9.1.0 and will be replaced by Symfony\Contracts\EventDispatcher\Event in drupal:10.0.0. A new Drupal\Component\EventDispatcher\Event class is available to bridge the two versions of the class. See https://www.drupal.org/node/3159012');
-    $container = new ContainerBuilder();
-    $dispatcher = new ContainerAwareEventDispatcher($container, []);
-    $dispatcher->dispatch(new SymfonyEvent());
-  }
-
-  /**
    * Tests dispatching Symfony events with core's event dispatcher.
    */
   public function testSymfonyEventDispatching() {
     $container = new ContainerBuilder();
     $dispatcher = new ContainerAwareEventDispatcher($container, []);
     $dispatcher->dispatch(new GenericEvent());
-  }
-
-  /**
-   * Tests deprecation notice for Symfony Event class inheritance.
-   *
-   * @group legacy
-   */
-  public function testSymfonyInheritedEventDeprecation() {
-    $this->expectDeprecation('Symfony\Component\EventDispatcher\Event is deprecated in drupal:9.1.0 and will be replaced by Symfony\Contracts\EventDispatcher\Event in drupal:10.0.0. A new Drupal\Component\EventDispatcher\Event class is available to bridge the two versions of the class. See https://www.drupal.org/node/3159012');
-    $container = new ContainerBuilder();
-    $dispatcher = new ContainerAwareEventDispatcher($container, []);
-    $dispatcher->dispatch(new SymfonyInheritedEvent());
   }
 
   public function testDispatchWithServices() {

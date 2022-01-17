@@ -93,20 +93,6 @@ class ContainerBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setDefinition
-   *
-   * @group legacy
-   */
-  public function testLegacySetDefinition() {
-    // Test a service with public set to default.
-    $container = new ContainerBuilder();
-    $definition = new Definition();
-    $this->expectDeprecation('Not marking service definitions as public is deprecated in drupal:9.2.0 and is required in drupal:10.0.0. Call $definition->setPublic(TRUE) before calling ::setDefinition(). See https://www.drupal.org/node/3194517');
-    $service = $container->setDefinition('foo', $definition);
-    $this->assertTrue($service->isPublic());
-  }
-
-  /**
    * @covers ::setAlias
    */
   public function testSetAlias() {

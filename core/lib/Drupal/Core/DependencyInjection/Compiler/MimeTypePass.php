@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface as LegacyMimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
@@ -29,7 +28,6 @@ class MimeTypePass implements CompilerPassInterface {
 
     $tag = 'mime_type_guesser';
     $interface = MimeTypeGuesserInterface::class;
-    $deprecated_interface = LegacyMimeTypeGuesserInterface::class;
 
     // Find all tagged handlers.
     $handlers = [];
@@ -37,10 +35,7 @@ class MimeTypePass implements CompilerPassInterface {
       // Validate the interface.
       $handler = $container->getDefinition($id);
       if (!is_subclass_of($handler->getClass(), $interface)) {
-        // Special handling for $deprecated_interface.
-        if (!is_subclass_of($handler->getClass(), $deprecated_interface)) {
-          throw new LogicException("Service '$id' does not implement $interface.");
-        }
+        throw new LogicException("Service '$id' does not implement $interface.");
       }
       $handlers[$id] = $attributes[0]['priority'] ?? 0;
       $interfaces[$id] = $handler->getClass();
@@ -56,12 +51,7 @@ class MimeTypePass implements CompilerPassInterface {
     // definition.
     foreach ($handlers as $id => $priority) {
       $arguments = [new Reference($id), $priority];
-      if (is_subclass_of($interfaces[$id], $interface)) {
-        $consumer->addMethodCall('addMimeTypeGuesser', $arguments);
-      }
-      else {
-        $consumer->addMethodCall('addGuesser', $arguments);
-      }
+      $consumer->addMethodCall('addMimeTypeGuesser', $arguments);
     }
   }
 

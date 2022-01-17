@@ -111,23 +111,6 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   /**
    * {@inheritdoc}
    */
-  public function setDefinition($id, Definition $definition): Definition {
-    $definition = parent::setDefinition($id, $definition);
-    // As of Symfony 3.4 all definitions are private by default.
-    // \Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPassOnly
-    // removes services marked as private from the container even if they are
-    // also marked as public. Drupal requires services that are public to
-    // remain in the container and not be removed.
-    if ($definition->isPublic() && $definition->isPrivate()) {
-      @trigger_error('Not marking service definitions as public is deprecated in drupal:9.2.0 and is required in drupal:10.0.0. Call $definition->setPublic(TRUE) before calling ::setDefinition(). See https://www.drupal.org/node/3194517', E_USER_DEPRECATED);
-      $definition->setPrivate(FALSE);
-    }
-    return $definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setParameter($name, $value) {
     if (strtolower($name) !== $name) {
       throw new \InvalidArgumentException("Parameter names must be lowercase: $name");

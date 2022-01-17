@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\EventDispatcher;
 
-use Symfony\Component\EventDispatcher\Event as SymfonyEvent;
+use Symfony\Contracts\EventDispatcher\Event as SymfonyEvent;
 
 /**
  * Provides a forward-compatibility layer for the Symfony 5 event class.

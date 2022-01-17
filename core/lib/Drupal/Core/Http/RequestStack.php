@@ -30,7 +30,7 @@ class RequestStack extends SymfonyRequestStack {
   /**
    * {@inheritdoc}
    */
-  public function getMasterRequest() {
+  public function getMasterRequest(): ?Request {
     @trigger_error('Drupal\Core\Http\RequestStack::getMasterRequest() is deprecated, use getMainRequest() instead.', E_USER_DEPRECATED);
     return $this->getMainRequest();
   }
