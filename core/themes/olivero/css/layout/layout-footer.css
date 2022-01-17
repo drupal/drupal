@@ -23,6 +23,16 @@
 
 /* Width of the entire grid maxes out. */
 
+/**
+ * Creates stacking context ensuring that child elements can never appear in
+ * front of mobile navigation.
+ */
+
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
 .site-footer__inner {
   padding-top: var(--sp2);
   padding-bottom: var(--sp2)
@@ -48,11 +58,11 @@
   }
 
       [dir="ltr"] .region--footer_top__inner > *:not(:last-child),[dir="ltr"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-right: var(--sp2)
+        margin-right: var(--sp2);
   }
 
       [dir="rtl"] .region--footer_top__inner > *:not(:last-child),[dir="rtl"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-left: var(--sp2)
+        margin-left: var(--sp2);
   }
     }
 
