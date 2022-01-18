@@ -82,7 +82,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  */
 abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
 
-  use AssertLegacyTrait;
   use AssertContentTrait;
   use RandomGeneratorTrait;
   use ConfigTestTrait;
