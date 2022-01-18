@@ -91,6 +91,14 @@ class StatusTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->elementExists('xpath', '//details[contains(@class, "system-status-report__entry")]//div[contains(text(), "Cron has not run recently")]');
     \Drupal::state()->set('system.cron_last', $cron_last_run);
+
+    // Check if JSON database support is enabled.
+    $this->assertSession()->pageTextContains('Database support for JSON');
+    $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+      ':text' => 'Is required in Drupal 10.0.',
+    ]);
+    $this->assertCount(1, $elements);
+    $this->assertStringStartsWith('Available', $elements[0]->getParent()->getText());
   }
 
 }
