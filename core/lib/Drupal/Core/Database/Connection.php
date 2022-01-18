@@ -1849,4 +1849,19 @@ abstract class Connection {
     return \Drupal::service('pager.manager');
   }
 
+  /**
+   * Runs a simple query to validate json datatype support.
+   *
+   * @return bool
+   *   Returns the query result.
+   */
+  public function hasJson(): bool {
+    try {
+      return (bool) $this->query('SELECT JSON_TYPE(\'1\')');
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+  }
+
 }

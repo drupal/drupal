@@ -353,6 +353,18 @@ class Connection extends DatabaseConnection {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function hasJson(): bool {
+    try {
+      return (bool) $this->query('SELECT JSON_TYPEOF(\'1\')');
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+  }
+
 }
 
 /**
