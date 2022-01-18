@@ -21,9 +21,12 @@
         "composer/composer": "^2.0.2",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
+        "mglaman/phpstan-drupal": "^1.1.9",
         "mikey179/vfsstream": "^1.6.8",
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.4.0",
         "symfony/css-selector": "^5.4",
         "symfony/phpunit-bridge": "^5.4",
         "symfony/var-dumper": "^5.4",
@@ -51,7 +54,8 @@
         "allow-plugins": {
             "composer/installers": true,
             "drupal/core-project-message": true,
-            "drupal/core-vendor-hardening": true
+            "drupal/core-vendor-hardening": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {

@@ -298,14 +298,14 @@ class ExecutionContext implements ExecutionContextInterface {
    * {@inheritdoc}
    */
   public function markObjectAsInitialized($cache_key) {
-    // Not supported, so nothing todo.
+    throw new \LogicException('\Symfony\Component\Validator\Context\ExecutionContextInterface::markObjectAsInitialized is unsupported.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function isObjectInitialized($cache_key): bool {
-    // Not supported, so nothing todo.
+    throw new \LogicException('\Symfony\Component\Validator\Context\ExecutionContextInterface::isObjectInitialized is unsupported.');
   }
 
   /**

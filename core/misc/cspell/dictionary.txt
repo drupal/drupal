@@ -788,6 +788,7 @@ metapackages
 metatag
 metatags
 meΦΩ
+mglaman
 miaus
 middlewares
 midgardmvc
@@ -994,6 +995,7 @@ phpdocumentor
 phpfile
 phpserialize
 phpspec
+phpstan
 phpunit
 phpunit's
 pianura

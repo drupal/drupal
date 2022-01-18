@@ -1,0 +1,38 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+
+  level: 0
+
+  paths:
+    - .
+    - ../composer
+
+  excludePaths:
+    # Skip settings.
+    - ../*/settings*.php
+    # Skip test fixtures.
+    - */tests/fixtures/*.php
+    # Below extends on purpose a non existing class for testing.
+    - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
+    # @todo files below need to be excluded as they prevent baseline generation.
+    # Fixing them is a priority.
+    - modules/link/tests/src/Kernel/LinkItemTest.php
+
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"
+
+    # Ignore common errors for now.
+    - "#^Access to an undefined property#"
+    - "#^Call to an undefined method#"
+    - "#^Cannot unset offset#"
+    - "#should return .* but return statement is missing#"
+    - "#Drupal calls should be avoided in classes, use dependency injection instead#"
+    - "#^Plugin definitions cannot be altered.#"
+    - "#^Missing cache backend declaration for performance.#"
+    - "#cache tag might be unclear and does not contain the cache key in it.#"
+    - "#^Class .* extends @internal class#"

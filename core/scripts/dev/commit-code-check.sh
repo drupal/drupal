@@ -11,6 +11,7 @@
 # - File modes.
 # - No changes to core/node_modules directory.
 # - PHPCS checks PHP and YAML files.
+# - PHPStan checks PHP files.
 # - ESLint checks JavaScript and YAML files.
 # - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
@@ -110,6 +111,10 @@ TOP_LEVEL=$(git rev-parse --show-toplevel)
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
+# This variable will be set to one when the files core/phpstan-baseline.neon or
+# core/phpstan.neon.dist are changed.
+PHPSTAN_DIST_FILE_CHANGED=0
+
 # This variable will be set to one when one of the eslint config file is
 # changed:
 #  - core/.eslintrc.passing.json
@@ -124,6 +129,10 @@ for FILE in $FILES; do
 
   if [[ $FILE == "core/phpcs.xml.dist" ]]; then
     PHPCS_XML_DIST_FILE_CHANGED=1;
+  fi;
+
+  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
+    PHPSTAN_DIST_FILE_CHANGED=1;
   fi;
 
   if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
@@ -175,6 +184,28 @@ else
   printf "\nCSpell: ${green}passed${reset}\n"
 fi
 cd "$TOP_LEVEL"
+
+# Add a separator line to make the output easier to read.
+printf "\n"
+printf -- '-%.0s' {1..100}
+printf "\n"
+
+# Run PHPStan on all files in one go for better performance. APCu is disabled to
+# ensure that the composer classmap is not corrupted.
+if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]]; then
+  printf "\nRunning PHPStan on *all* files.\n"
+  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
+else
+  printf "\nRunning PHPStan on changed files.\n"
+  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
+fi
+if [ "$?" -ne "0" ]; then
+  # If there are failures set the status to a number other than 0.
+  FINAL_STATUS=1
+  printf "\nPHPStan: ${red}failed${reset}\n"
+else
+  printf "\nPHPStan: ${green}passed${reset}\n"
+fi
 
 # Add a separator line to make the output easier to read.
 printf "\n"

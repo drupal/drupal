@@ -1,0 +1,10 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+includes:
+  - phpstan.neon.dist
+
+# Do not add additional configuration to this file. This configuration exists
+# only to allow core/scripts/dev/commit-code-check.sh to run against a subset of
+# the codebase.
+parameters:
+  reportUnmatchedIgnoredErrors: false
