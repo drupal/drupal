@@ -274,6 +274,16 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
     // Generate a BigPipe placeholder ID (to be used by BigPipe's JavaScript).
     // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
     if (isset($placeholder_render_array['#lazy_builder'])) {
+      // Be sure cache contexts and tags are sorted before serializing them and
+      // making hash. Issue #3225328 removes sort from contexts and tags arrays
+      // for performances reasons.
+      if (isset($placeholder_render_array['#cache']['contexts'])) {
+        sort($placeholder_render_array['#cache']['contexts']);
+      }
+      if (isset($placeholder_render_array['#cache']['tags'])) {
+        sort($placeholder_render_array['#cache']['tags']);
+      }
+
       $callback = $placeholder_render_array['#lazy_builder'][0];
       $arguments = $placeholder_render_array['#lazy_builder'][1];
       $token = Crypt::hashBase64(serialize($placeholder_render_array));

@@ -77,6 +77,16 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
       '#cache' => TRUE,
     ]);
 
+    // Be sure cache contexts and tags are sorted before serializing them and
+    // making hash. Issue #3225328 removes sort from contexts and tags arrays
+    // for performances reasons.
+    if (isset($placeholder_render_array['#cache']['contexts'])) {
+      sort($placeholder_render_array['#cache']['contexts']);
+    }
+    if (isset($placeholder_render_array['#cache']['tags'])) {
+      sort($placeholder_render_array['#cache']['tags']);
+    }
+
     // Generate placeholder markup. Note that the only requirement is that this
     // is unique markup that isn't easily guessable. The #lazy_builder callback
     // and its arguments are put in the placeholder markup solely to simplify<<<
