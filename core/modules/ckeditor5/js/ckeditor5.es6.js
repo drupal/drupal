@@ -534,6 +534,29 @@
     },
   };
 
+  // Redirect on hash change when the original hash has an associated CKEditor 5.
+  function redirectTextareaFragmentToCKEditor5Instance() {
+    const hash = window.location.hash.substr(1);
+    const element = document.getElementById(hash);
+    if (element) {
+      const editorID = getElementId(element);
+      const editor = Drupal.CKEditor5Instances.get(editorID);
+      if (editor) {
+        // Give the CKEditor 5 instance an ID.
+        editor.sourceElement.nextElementSibling.setAttribute(
+          'id',
+          `cke_${hash}`,
+        );
+        window.location.replace(`#cke_${hash}`);
+      }
+    }
+  }
+
+  $(window).on(
+    'hashchange.ckeditor',
+    redirectTextareaFragmentToCKEditor5Instance,
+  );
+
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
   $(window).on('dialog:beforecreate', () => {
     $('.ckeditor5-dialog-loading').animate(
