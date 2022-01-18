@@ -302,6 +302,23 @@
     }
 
   };
+
+  function redirectTextareaFragmentToCKEditor5Instance() {
+    const hash = window.location.hash.substr(1);
+    const element = document.getElementById(hash);
+
+    if (element) {
+      const editorID = getElementId(element);
+      const editor = Drupal.CKEditor5Instances.get(editorID);
+
+      if (editor) {
+        editor.sourceElement.nextElementSibling.setAttribute('id', `cke_${hash}`);
+        window.location.replace(`#cke_${hash}`);
+      }
+    }
+  }
+
+  $(window).on('hashchange.ckeditor', redirectTextareaFragmentToCKEditor5Instance);
   $(window).on('dialog:beforecreate', () => {
     $('.ckeditor5-dialog-loading').animate({
       top: '-40px'
