@@ -13,7 +13,6 @@ use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -54,7 +53,6 @@ abstract class BrowserTestBase extends TestCase {
   use BlockCreationTrait {
     placeBlock as drupalPlaceBlock;
   }
-  use AssertLegacyTrait;
   use RandomGeneratorTrait;
   use NodeCreationTrait {
     getNodeByTitle as drupalGetNodeByTitle;
