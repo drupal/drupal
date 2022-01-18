@@ -125,7 +125,9 @@ ESLINT_CONFIG_PASSING_FILE_CHANGED=0
 # Build up a list of absolute file names.
 ABS_FILES=
 for FILE in $FILES; do
-  ABS_FILES="$ABS_FILES $TOP_LEVEL/$FILE"
+  if [ -f "$TOP_LEVEL/$FILE" ]; then
+    ABS_FILES="$ABS_FILES $TOP_LEVEL/$FILE"
+  fi
 
   if [[ $FILE == "core/phpcs.xml.dist" ]]; then
     PHPCS_XML_DIST_FILE_CHANGED=1;
