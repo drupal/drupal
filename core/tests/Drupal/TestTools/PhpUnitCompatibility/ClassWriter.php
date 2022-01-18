@@ -98,7 +98,7 @@ final class ClassWriter {
    *   The full path of the file to be included.
    */
   private static function flushAlteredCodeToFile(string $file_name, string $altered_code): string {
-    $directory = __DIR__ . '/../../../../../../sites/simpletest';
+    $directory = __DIR__ . '/../../../../../sites/simpletest';
     $full_path = $directory . '/' . $file_name;
 
     // Only write when necessary.
