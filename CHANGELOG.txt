@@ -1,3 +1,9 @@
+Drupal 7.86, 2022-01-18
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2022-001
+   - SA-CORE-2022-002
+
 Drupal 7.85, 2022-01-12
 -----------------------
 - Fix session cookies for sites with different base_urls but a shared domain
