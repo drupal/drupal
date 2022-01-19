@@ -1397,6 +1397,7 @@ function system_library() {
     'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.position.min.js' => array(),
+      'misc/ui/jquery.ui.position-1.13.0-backport.js' => array(),
     ),
   );
   $libraries['ui.progressbar'] = array(
