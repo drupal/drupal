@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.87, 2022-01-19
 -----------------------
 - Fix regression caused by jQuery UI position() backport
