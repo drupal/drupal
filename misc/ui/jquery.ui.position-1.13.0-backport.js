@@ -16,6 +16,9 @@
   var fnOriginalPosition = $.fn.position;
   $.fn.extend({
     'position': function (options) {
+      if (typeof options === 'undefined') {
+        return fnOriginalPosition.call(this);
+      }
 
       // Make sure string options are treated as CSS selectors
       var target = typeof options.of === "string" ?
