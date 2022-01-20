@@ -919,7 +919,7 @@
       listType === 'divider'
     }">
         <span class="ckeditor5-toolbar-button ckeditor5-toolbar-button-${id}">
-          <span class="visually-hidden">${visuallyHiddenLabel})}</span>
+          <span class="visually-hidden">${visuallyHiddenLabel}</span>
         </span>
         <span class="ckeditor5-toolbar-tooltip" aria-hidden="true">${label}</span>
       </li>
