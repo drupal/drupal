@@ -493,7 +493,7 @@
     return `
       <li class="ckeditor5-toolbar-item ckeditor5-toolbar-item-${id}" role="option" tabindex="0" data-drupal-selector="ckeditor5-toolbar-button" data-id="${id}" data-label="${label}" data-divider="${listType === 'divider'}">
         <span class="ckeditor5-toolbar-button ckeditor5-toolbar-button-${id}">
-          <span class="visually-hidden">${visuallyHiddenLabel})}</span>
+          <span class="visually-hidden">${visuallyHiddenLabel}</span>
         </span>
         <span class="ckeditor5-toolbar-tooltip" aria-hidden="true">${label}</span>
       </li>
