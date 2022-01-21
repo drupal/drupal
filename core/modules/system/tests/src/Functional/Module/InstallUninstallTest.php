@@ -121,6 +121,17 @@ class InstallUninstallTest extends ModuleTestBase {
         }
         $this->submitForm([], 'Continue');
       }
+      // Handle deprecated modules, which require a confirmation screen.
+      elseif ($lifecycle === ExtensionLifecycle::DEPRECATED) {
+        $this->assertSession()->pageTextContains('Are you sure you wish to enable a deprecated module?');
+        if (count($modules_to_install) > 1) {
+          // When there are deprecated modules, needed dependencies do not
+          // result in the same page title, but there will be expected text
+          // indicating they need to be enabled.
+          $this->assertSession()->pageTextContains('You must enable');
+        }
+        $this->submitForm([], 'Continue');
+      }
       // Handle the case where modules were installed along with this one and
       // where we therefore hit a confirmation screen.
       elseif (count($modules_to_install) > 1) {

@@ -250,6 +250,45 @@ class NonStableModulesTest extends BrowserTestBase {
       'deprecated_module_dependency',
     ]);
 
+    // Check a deprecated module with a non-deprecated dependency.
+    $edit = [];
+    $edit["modules[deprecated_module_with_non_deprecated_dependency][enable]"] = TRUE;
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+
+    // The module should not be enabled and there should be a warning and a
+    // list of the deprecated modules with only this one.
+    $assert->pageTextNotContains('2 modules have been enabled: Deprecated module with non deprecated dependency, Drupal system listing compatible test');
+    $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of Drupal core. Use at your own risk.');
+    $assert->pageTextContains('The Deprecated module with non deprecated dependency module is deprecated');
+    $more_information_link = $assert->elementExists('named', [
+      'link',
+      'The Deprecated module with non deprecated dependency module is deprecated. (more information)',
+    ]);
+    $this->assertEquals('http://example.com/deprecated', $more_information_link->getAttribute('href'));
+
+    // There should be a warning about enabling deprecated modules, but no
+    // warnings about experimental modules.
+    $this->assertSession()->pageTextContains('Are you sure you wish to enable a deprecated module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to enable an experimental module?');
+    $this->assertSession()->pageTextNotContains('Are you sure you wish to enable experimental and deprecated modules?');
+
+    // Ensure the non-deprecated dependency module is not listed as deprecated.
+    $assert->pageTextNotContains('The Drupal system listing compatible test module is deprecated');
+
+    // There should be a message about enabling dependencies.
+    $assert->pageTextContains('You must enable the Drupal system listing compatible test module to install Deprecated module with non deprecated dependency.');
+
+    // Enable the module and confirm that it worked.
+    $this->submitForm([], 'Continue');
+    $assert->pageTextContains('2 modules have been enabled: Deprecated module with non deprecated dependency, Drupal system listing compatible test.');
+
+    // Uninstall the modules.
+    \Drupal::service('module_installer')->uninstall([
+      'deprecated_module_with_non_deprecated_dependency',
+      'drupal_system_listing_compatible_test',
+    ]);
+
     // Finally, check both the module and its deprecated dependency. There is
     // still a warning about deprecated modules, but no message about
     // dependencies, since the user specifically enabled the dependency.
