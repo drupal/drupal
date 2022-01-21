@@ -1,0 +1,9 @@
+name: Deprecated module with non deprecated dependency
+type: module
+description: 'Deprecated module with non deprecated dependency'
+package: Testing
+version: VERSION
+lifecycle: deprecated
+lifecycle_link: 'http://example.com/deprecated'
+dependencies:
+  - drupal:drupal_system_listing_compatible_test
