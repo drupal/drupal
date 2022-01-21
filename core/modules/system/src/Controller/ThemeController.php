@@ -187,7 +187,7 @@ class ThemeController extends ControllerBase {
     $themes_to_enable = array_merge([$theme], $dependencies);
 
     foreach ($themes_to_enable as $name) {
-      if (!empty($all_themes[$name]->info['experimental']) && $all_themes[$name]->status === 0) {
+      if (isset($all_themes[$name]) && $all_themes[$name]->isExperimental() && $all_themes[$name]->status === 0) {
         return TRUE;
       }
     }

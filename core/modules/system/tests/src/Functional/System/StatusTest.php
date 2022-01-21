@@ -99,6 +99,45 @@ class StatusTest extends BrowserTestBase {
     ]);
     $this->assertCount(1, $elements);
     $this->assertStringStartsWith('Available', $elements[0]->getParent()->getText());
+
+    // Test the page with deprecated extensions.
+    $module_installer = \Drupal::service('module_installer');
+    $session = $this->assertSession();
+
+    // Install a deprecated module.
+    $module_installer->install(['deprecated_module']);
+    $this->drupalGet('admin/reports/status');
+
+    // Confirm warning messages are displayed for the deprecated module.
+    $session->pageTextContains('Deprecated modules enabled');
+    $session->pageTextContains('Deprecated modules found: Deprecated module.');
+
+    // Check that the deprecated module link was rendered correctly.
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
+
+    // Uninstall a deprecated module and confirm the warning is not displayed.
+    $module_installer->uninstall(['deprecated_module']);
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextNotContains('Deprecated modules enabled');
+    $session->pageTextNotContains('Deprecated modules found: Deprecated module.');
+    $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
+
+    // Install deprecated theme and confirm warning message is displayed.
+    $theme_installer = \Drupal::service('theme_installer');
+    $theme_installer->install(['test_deprecated_theme']);
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextContains('Deprecated themes enabled');
+    $session->pageTextContains('Deprecated themes found: Test deprecated theme.');
+
+    // Check that the deprecated theme link was rendered correctly.
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
+
+    // Uninstall a deprecated theme and confirm the warning is not displayed.
+    $theme_installer->uninstall(['test_deprecated_theme']);
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextNotContains('Deprecated themes enabled');
+    $session->pageTextNotContains('Deprecated themes found: Test deprecated theme.');
+    $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
   }
 
 }

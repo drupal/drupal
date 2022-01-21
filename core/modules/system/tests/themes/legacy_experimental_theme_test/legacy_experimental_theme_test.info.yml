@@ -1,0 +1,6 @@
+name: 'Legacy experimental test'
+type: theme
+description: 'Legacy experimental test theme.'
+version: VERSION
+base theme: false
+experimental: true
