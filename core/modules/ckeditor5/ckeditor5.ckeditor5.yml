@@ -299,7 +299,7 @@ ckeditor5_horizontalLine:
       - <hr>
 
 ckeditor5_alignment:
-  ckeditor5:
+  ckeditor5: &alignment_ckeditor5_section
     plugins: [alignment.Alignment]
     config:
       # @see core/modules/system/css/components/align.module.css
@@ -313,23 +313,59 @@ ckeditor5_alignment:
             className: text-align-right
           - name: justify
             className: text-align-justify
-  drupal:
+  drupal: &alignment_drupal_section
     label: Alignment
     library: core/ckeditor5.alignment
     admin_library: ckeditor5/admin.alignment
     toolbar_items:
       alignment:
         label: Text alignment
-      "alignment:left":
-        label: Align left
-      "alignment:center":
-        label: Align center
-      "alignment:right":
-        label: Align right
-      "alignment:justify":
-        label: justify
     elements:
       - <$block class="text-align-left text-align-center text-align-right text-align-justify">
+
+ckeditor5_alignment.left:
+  ckeditor5: *alignment_ckeditor5_section
+  drupal:
+    label: Align left
+    toolbar_items:
+      "alignment:left":
+        label: Align left
+    elements:
+      - <$block class="text-align-left">
+    <<: *alignment_drupal_section
+
+ckeditor5_alignment.center:
+  ckeditor5: *alignment_ckeditor5_section
+  drupal:
+    label: Align center
+    toolbar_items:
+      "alignment:center":
+        label: Align center
+    elements:
+      - <$block class="text-align-center">
+    <<: *alignment_drupal_section
+
+ckeditor5_alignment.right:
+  ckeditor5: *alignment_ckeditor5_section
+  drupal:
+    label: Align right
+    toolbar_items:
+      "alignment:right":
+        label: Align right
+    elements:
+      - <$block class="text-align-right">
+    <<: *alignment_drupal_section
+
+ckeditor5_alignment.justify:
+  ckeditor5: *alignment_ckeditor5_section
+  drupal:
+    label: Justify
+    toolbar_items:
+      "alignment:justify":
+        label: Justify
+    elements:
+      - <$block class="text-align-justify">
+    <<: *alignment_drupal_section
 
 ckeditor5_removeFormat:
   ckeditor5:
