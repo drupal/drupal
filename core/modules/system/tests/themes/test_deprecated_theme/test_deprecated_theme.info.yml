@@ -1,0 +1,7 @@
+name: 'Test deprecated theme'
+type: theme
+description: 'Support module for testing deprecated themes.'
+version: VERSION
+base theme: false
+lifecycle: deprecated
+lifecycle_link: 'http://example.com/deprecated_theme'

@@ -192,4 +192,21 @@ class Extension {
     $this->root = $container && $container->hasParameter('app.root') ? $container->getParameter('app.root') : DRUPAL_ROOT;
   }
 
+  /**
+   * Checks if an extension is marked as experimental.
+   *
+   * @return bool
+   *   TRUE if an extension is marked as experimental, FALSE otherwise.
+   */
+  public function isExperimental(): bool {
+    // Currently, this function checks for both the key/value pairs
+    // 'experimental: true' and 'lifecycle: experimental' to determine if an
+    // extension is marked as experimental.
+    // @todo Remove the check for 'experimental: true' as part of
+    // https://www.drupal.org/node/3250342
+    return (isset($this->info['experimental']) && $this->info['experimental'])
+    || (isset($this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])
+        && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL);
+  }
+
 }

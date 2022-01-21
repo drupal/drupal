@@ -3,4 +3,4 @@ type: theme
 description: 'Experimental test theme.'
 version: VERSION
 base theme: false
-experimental: true
+lifecycle: experimental

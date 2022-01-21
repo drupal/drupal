@@ -225,7 +225,6 @@ class SystemController extends ControllerBase {
       }
       $theme->is_default = ($theme->getName() == $theme_default);
       $theme->is_admin = ($theme->getName() == $admin_theme || ($theme->is_default && empty($admin_theme)));
-      $theme->is_experimental = isset($theme->info['experimental']) && $theme->info['experimental'];
 
       // Identify theme screenshot.
       $theme->screenshot = NULL;
@@ -330,7 +329,7 @@ class SystemController extends ControllerBase {
               'attributes' => ['title' => $this->t('Set @theme as default theme', ['@theme' => $theme->info['name']])],
             ];
           }
-          $admin_theme_options[$theme->getName()] = $theme->info['name'] . ($theme->is_experimental ? ' (' . t('Experimental') . ')' : '');
+          $admin_theme_options[$theme->getName()] = $theme->info['name'] . ($theme->isExperimental() ? ' (' . t('Experimental') . ')' : '');
         }
         else {
           $theme->operations[] = [
@@ -357,7 +356,7 @@ class SystemController extends ControllerBase {
       if ($theme->is_admin) {
         $theme->notes[] = $this->t('administration theme');
       }
-      if ($theme->is_experimental) {
+      if ($theme->isExperimental()) {
         $theme->notes[] = $this->t('experimental theme');
       }
 

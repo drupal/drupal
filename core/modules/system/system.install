@@ -33,8 +33,12 @@ use Symfony\Component\HttpFoundation\Request;
 function system_requirements($phase) {
   global $install_state;
   // Reset the extension lists.
-  \Drupal::service('extension.list.module')->reset();
-  \Drupal::service('extension.list.theme')->reset();
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_extension_list */
+  $module_extension_list = \Drupal::service('extension.list.module');
+  $module_extension_list->reset();
+  /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list */
+  $theme_extension_list = \Drupal::service('extension.list.theme');
+  $theme_extension_list->reset();
   $requirements = [];
 
   // Report Drupal version
@@ -50,7 +54,7 @@ function system_requirements($phase) {
     // is not running the default installation profile.
     $profile = \Drupal::installProfile();
     if ($profile != 'standard') {
-      $info = \Drupal::service('extension.list.module')->getExtensionInfo($profile);
+      $info = $module_extension_list->getExtensionInfo($profile);
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
         'value' => t('%profile_name (%profile-%version)', [
@@ -63,15 +67,27 @@ function system_requirements($phase) {
       ];
     }
 
-    // Warn if any experimental modules are installed.
+    // Gather all obsolete and experimental modules being enabled.
+    $obsolete_extensions = [];
+    $deprecated_modules = [];
     $experimental_modules = [];
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
-      $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) && $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
-        $experimental_modules[$module] = $info['name'];
+      $info = $module_extension_list->getExtensionInfo($module);
+      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])) {
+        if ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
+          $experimental_modules[$module] = $info['name'];
+        }
+        elseif ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+          $deprecated_modules[] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
+        }
+        elseif ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
+          $obsolete_extensions[$module] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
+        }
       }
     }
+
+    // Warn if any experimental modules are installed.
     if (!empty($experimental_modules)) {
       $requirements['experimental_modules'] = [
         'title' => t('Experimental modules enabled'),
@@ -79,18 +95,81 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_WARNING,
       ];
     }
-    // Warn if any experimental themes are installed.
+    // Warn if any deprecated modules are installed.
+    if (!empty($deprecated_modules)) {
+      foreach ($deprecated_modules as $deprecated_module) {
+        $deprecated_modules_link_list[] = (string) Link::fromTextAndUrl($deprecated_module['name'], Url::fromUri($deprecated_module['lifecycle_link']))->toString();
+      }
+      $requirements['deprecated_modules'] = [
+        'title' => t('Deprecated modules enabled'),
+        'value' => t('Deprecated modules found: %module_list.', [
+          '%module_list' => t(implode(',', $deprecated_modules_link_list)),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+
+    // Gather all obsolete and experimental themes being enabled.
     $experimental_themes = [];
+    $deprecated_themes = [];
     $installed_themes = \Drupal::service('theme_handler')->listInfo();
     foreach ($installed_themes as $theme => $data) {
+      $info = $theme_extension_list->getExtensionInfo($theme);
+      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])) {
+        if ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
+          $experimental_themes[$theme] = $info['name'];
+        }
+        elseif ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+          $deprecated_themes[] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
+        }
+        elseif ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
+          $obsolete_extensions[$theme] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
+        }
+      }
+      // Currently, we check for both the key/value pairs 'experimental: true'
+      // and 'lifecycle: experimental' to determine if an extension is marked as
+      // experimental.
+      // @todo Remove the check for 'experimental: true' as part of
+      // https://www.drupal.org/node/3250342
       if (isset($data->info['experimental']) && $data->info['experimental']) {
         $experimental_themes[$theme] = $data->info['name'];
       }
     }
+
+    // Warn if any experimental themes are enabled.
     if (!empty($experimental_themes)) {
       $requirements['experimental_themes'] = [
         'title' => t('Experimental themes enabled'),
         'value' => t('Experimental themes found: %theme_list. Experimental themes are provided for testing purposes only. Use at your own risk.', ['%theme_list' => implode(', ', $experimental_themes)]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+
+    // Warn if any deprecated themes are enabled.
+    if (!empty($deprecated_themes)) {
+      foreach ($deprecated_themes as $deprecated_theme) {
+        $deprecated_themes_link_list[] = (string) Link::fromTextAndUrl($deprecated_theme['name'], Url::fromUri($deprecated_theme['lifecycle_link']))->toString();
+
+      }
+      $requirements['deprecated_themes'] = [
+        'title' => t('Deprecated themes enabled'),
+        'value' => t('Deprecated themes found: %theme_list.', [
+          '%theme_list' => t(implode(',', $deprecated_themes_link_list)),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+
+    // Warn if any obsolete extensions (themes or modules) are enabled.
+    if (!empty($obsolete_extensions)) {
+      foreach ($obsolete_extensions as $obsolete_extension) {
+        $obsolete_extensions_link_list[] = (string) Link::fromTextAndUrl($obsolete_extension['name'], Url::fromUri($obsolete_extension['lifecycle_link']))->toString();
+      }
+      $requirements['obsolete_extensions'] = [
+        'title' => t('Obsolete extensions enabled'),
+        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.', [
+          '%extension_list' => t(implode(', ', $obsolete_extensions_link_list)),
+        ]),
         'severity' => REQUIREMENT_WARNING,
       ];
     }
@@ -931,8 +1010,8 @@ function system_requirements($phase) {
       ];
     };
     $profile = \Drupal::installProfile();
-    $files = \Drupal::service('extension.list.module')->getList();
-    $files += \Drupal::service('extension.list.theme')->getList();
+    $files = $module_extension_list->getList();
+    $files += $theme_extension_list->getList();
     $core_incompatible_extensions = [];
     $php_incompatible_extensions = [];
     foreach ($files as $extension_name => $file) {
@@ -1048,10 +1127,8 @@ function system_requirements($phase) {
 
     // Look for invalid modules.
     $extension_config = \Drupal::configFactory()->get('core.extension');
-    /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
-    $extension_list = \Drupal::service('extension.list.module');
-    $is_missing_extension = function ($extension_name) use (&$extension_list) {
-      return !$extension_list->exists($extension_name);
+    $is_missing_extension = function ($extension_name) use (&$module_extension_list) {
+      return !$module_extension_list->exists($extension_name);
     };
 
     $invalid_modules = array_filter(array_keys($extension_config->get('module')), $is_missing_extension);
@@ -1073,8 +1150,10 @@ function system_requirements($phase) {
     }
 
     // Look for invalid themes.
-    $extension_list = \Drupal::service('extension.list.theme');
-    $invalid_themes = array_filter(array_keys($extension_config->get('theme')), $is_missing_extension);
+    $is_missing_theme = function ($extension_name) use (&$theme_extension_list) {
+      return !$theme_extension_list->exists($extension_name);
+    };
+    $invalid_themes = array_filter(array_keys($extension_config->get('theme')), $is_missing_theme);
     if (!empty($invalid_themes)) {
       $requirements['invalid_theme'] = $create_extension_incompatibility_list(
         $invalid_themes,
@@ -1283,7 +1362,7 @@ function system_requirements($phase) {
       if ($last_removed && $last_removed > $update_registry->getInstalledVersion($module)) {
 
         /** @var \Drupal\Core\Extension\Extension $module_info */
-        $module_info = \Drupal::service('extension.list.module')->get($module);
+        $module_info = $module_extension_list->get($module);
         $module_list[$module] = [
           'name' => $module_info->info['name'],
           'last_removed' => $last_removed,
@@ -1327,7 +1406,6 @@ function system_requirements($phase) {
       $existing_updates = \Drupal::service('keyvalue')->get('post_update')->get('existing_updates', []);
       $post_update_registry = \Drupal::service('update.post_update_registry');
       $modules = \Drupal::moduleHandler()->getModuleList();
-      $module_extension_list = \Drupal::service('extension.list.module');
       foreach ($modules as $module => $extension) {
         $module_info = $module_extension_list->get($module);
         $removed_post_updates = $post_update_registry->getRemovedPostUpdates($module);
