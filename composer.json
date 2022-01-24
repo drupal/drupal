@@ -37,7 +37,7 @@
         "symfony/lock": "^5.4",
         "symfony/browser-kit": "^5.4",
         "symfony/dom-crawler": "^5.4",
-        "easyrdf/easyrdf": "^0.9 || ^1.0"
+        "easyrdf/easyrdf": "^1.0"
     },
     "replace": {
         "symfony/polyfill-php72": "*",

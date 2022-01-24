@@ -11,7 +11,7 @@
         "behat/mink-selenium2-driver": "^1.4",
         "composer/composer": "^2.0.2",
         "drupal/coder": "^8.3.10",
-        "easyrdf/easyrdf": "^0.9 || ^1.0",
+        "easyrdf/easyrdf": "^1.0",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
