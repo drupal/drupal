@@ -3,9 +3,9 @@
 namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\contact\Entity\ContactForm;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class ContactFormResourceTestBase extends EntityResourceTestBase {
+abstract class ContactFormResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

@@ -3,12 +3,12 @@
 namespace Drupal\Tests\node\Functional\Rest;
 
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
  * ResourceTestBase for NodeType entity.
  */
-abstract class NodeTypeResourceTestBase extends EntityResourceTestBase {
+abstract class NodeTypeResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

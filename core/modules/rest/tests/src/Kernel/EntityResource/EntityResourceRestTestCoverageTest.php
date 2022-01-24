@@ -1,10 +1,12 @@
 <?php
 
-namespace Drupal\Tests\rest\Functional\EntityResource;
+namespace Drupal\Tests\rest\Kernel\EntityResource;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ExtensionLifecycle;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
  * Checks that all core content/config entity types have REST test coverage.
@@ -13,9 +15,16 @@ use Drupal\Tests\BrowserTestBase;
  * - every format in core (json + xml + hal_json)
  * - every authentication provider in core (anon, cookie, basic_auth)
  *
+ * Additionally, every entity type must have the correct parent test class.
+ *
  * @group rest
  */
-class EntityResourceRestTestCoverageTest extends BrowserTestBase {
+class EntityResourceRestTestCoverageTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['system', 'user'];
 
   /**
    * Entity definitions array.
@@ -23,11 +32,6 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
    * @var array
    */
   protected $definitions;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -47,7 +51,6 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));
-    $this->rebuildContainer();
 
     $this->definitions = $this->container->get('entity_type.manager')->getDefinitions();
 
@@ -112,41 +115,17 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
           $problems[] = "$entity_type_id: $class_name ($class_name_full), $which_normalization normalization (expected tests: $missing_tests_list)";
         }
       }
-    }
-    $all = count($this->definitions);
-    $good = $all - count($problems);
-    $this->assertSame([], $problems, $this->getLlamaMessage($good, $all));
-  }
 
-  /**
-   * Message from Llama.
-   *
-   * @param int $g
-   *   A count of entities with test coverage.
-   * @param int $a
-   *   A count of all entities.
-   *
-   * @return string
-   *   An information about progress of REST test coverage.
-   */
-  protected function getLlamaMessage($g, $a) {
-    return "
-☼
-      ________________________
-     /           Hi!          \\
-    |  It's llame to not have  |
-    |   complete REST tests!   |
-    |                          |
-    |     Progress: $g/$a.     |
-    | ________________________/
-    |/
-//  o
-l'>
-ll
-llama
-|| ||
-'' ''
-";
+      $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
+      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class) || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class);
+      if ($config_entity && !$config_test) {
+        $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
+      }
+      elseif (!$config_entity && $config_test) {
+        $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
+      }
+    }
+    $this->assertSame([], $problems);
   }
 
 }

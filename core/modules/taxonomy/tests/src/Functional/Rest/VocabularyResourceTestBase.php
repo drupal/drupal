@@ -3,9 +3,9 @@
 namespace Drupal\Tests\taxonomy\Functional\Rest;
 
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class VocabularyResourceTestBase extends EntityResourceTestBase {
+abstract class VocabularyResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

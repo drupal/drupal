@@ -4,9 +4,9 @@ namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class ContentLanguageSettingsResourceTestBase extends EntityResourceTestBase {
+abstract class ContentLanguageSettingsResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

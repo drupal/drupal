@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\user\Entity\User;
 
-abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
+abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
 
   use EntityDefinitionTestTrait;
 

@@ -4,10 +4,10 @@ namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
-abstract class ConfigurableLanguageResourceTestBase extends EntityResourceTestBase {
+abstract class ConfigurableLanguageResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

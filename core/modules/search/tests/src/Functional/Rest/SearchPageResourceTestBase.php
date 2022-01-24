@@ -3,9 +3,9 @@
 namespace Drupal\Tests\search\Functional\Rest;
 
 use Drupal\search\Entity\SearchPage;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class SearchPageResourceTestBase extends EntityResourceTestBase {
+abstract class SearchPageResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

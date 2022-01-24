@@ -3,9 +3,9 @@
 namespace Drupal\Tests\media\Functional\Rest;
 
 use Drupal\media\Entity\MediaType;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class MediaTypeResourceTestBase extends EntityResourceTestBase {
+abstract class MediaTypeResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

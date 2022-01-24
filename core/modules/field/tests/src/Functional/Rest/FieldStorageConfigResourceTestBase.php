@@ -3,9 +3,9 @@
 namespace Drupal\Tests\field\Functional\Rest;
 
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class FieldStorageConfigResourceTestBase extends EntityResourceTestBase {
+abstract class FieldStorageConfigResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
