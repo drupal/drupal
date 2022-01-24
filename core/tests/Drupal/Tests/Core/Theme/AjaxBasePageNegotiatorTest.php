@@ -3,11 +3,11 @@
 namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
-use Drupal\Core\Http\InputBag;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\AjaxBasePageNegotiator;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 

@@ -7,7 +7,7 @@ use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
@@ -101,7 +101,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     $request = new Request();
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'baby_llama');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $mock_route);
-    $request->attributes->set('_raw_variables', new ParameterBag([]));
+    $request->attributes->set('_raw_variables', new InputBag([]));
 
     $link_1 = MenuLinkMock::create(['id' => 'baby_llama_link_1', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'mama_llama_link']);
     $link_2 = MenuLinkMock::create(['id' => 'baby_llama_link_2', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'papa_llama_link']);

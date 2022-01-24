@@ -3,7 +3,6 @@
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Http\InputBag;
 use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\JsonApiResource\Data;
@@ -14,6 +13,7 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

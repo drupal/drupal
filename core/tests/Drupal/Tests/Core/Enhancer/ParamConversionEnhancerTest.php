@@ -5,7 +5,7 @@ namespace Drupal\Tests\Core\Enhancer;
 use Drupal\Core\Routing\Enhancer\ParamConversionEnhancer;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -52,7 +52,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
 
     $expected = $defaults;
     $expected['id'] = 'something_better!';
-    $expected['_raw_variables'] = new ParameterBag($raw_variables);
+    $expected['_raw_variables'] = new InputBag($raw_variables);
 
     $this->paramConverterManager->expects($this->once())
       ->method('convert')
@@ -90,7 +90,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
 
         return $defaults;
       });
-    $expected = new ParameterBag(['id' => 1]);
+    $expected = new InputBag(['id' => 1]);
     $result = $this->paramConversionEnhancer->enhance($defaults, new Request());
     $this->assertEquals($result['_raw_variables'], $expected);
   }

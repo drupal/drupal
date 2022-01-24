@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\AccessibleInterface;
@@ -50,7 +51,7 @@ class EntityAccessCheckTest extends UnitTestCase {
 
     /** @var \Drupal\Core\Routing\RouteMatchInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
     $route_match = $this->prophesize(RouteMatchInterface::class);
-    $route_match->getRawParameters()->willReturn(new ParameterBag(['var_name' => 1]));
+    $route_match->getRawParameters()->willReturn(new InputBag(['var_name' => 1]));
     $route_match->getParameters()->willReturn(new ParameterBag(['var_name' => $node]));
     $route_match = $route_match->reveal();
 
@@ -118,7 +119,7 @@ class EntityAccessCheckTest extends UnitTestCase {
    */
   private function createRouteMatchForObject(\stdClass $object) {
     $route_match = $this->prophesize(RouteMatchInterface::class);
-    $route_match->getRawParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => 1]));
+    $route_match->getRawParameters()->willReturn(new InputBag(['entity_type' => 'node', 'var_name' => 1]));
     $route_match->getParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => $object]));
     return $route_match->reveal();
   }

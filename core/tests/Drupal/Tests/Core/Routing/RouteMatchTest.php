@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -52,7 +52,7 @@ class RouteMatchTest extends RouteMatchTestBase {
     $foo = new \stdClass();
     $foo->value = 1;
     $request->attributes->set('foo', $foo);
-    $request->attributes->set('_raw_variables', new ParameterBag(['foo' => '1']));
+    $request->attributes->set('_raw_variables', new InputBag(['foo' => '1']));
     $route_match = RouteMatch::createFromRequest($request);
     $this->assertSame(['foo' => $foo], $route_match->getParameters()->all());
     $this->assertSame(['foo' => '1'], $route_match->getRawParameters()->all());

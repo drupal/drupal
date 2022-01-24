@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\AccessResult;
@@ -87,7 +88,7 @@ class EntityBundleAccessCheckTest extends UnitTestCase {
 
     /** @var \Drupal\Core\Routing\RouteMatchInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
     $route_match = $this->prophesize(RouteMatchInterface::class);
-    $route_match->getRawParameters()->willReturn(new ParameterBag(['node' => 1]));
+    $route_match->getRawParameters()->willReturn(new InputBag(['node' => 1]));
     $route_match->getParameters()->willReturn(new ParameterBag(['node' => $node]));
     $route_match = $route_match->reveal();
 

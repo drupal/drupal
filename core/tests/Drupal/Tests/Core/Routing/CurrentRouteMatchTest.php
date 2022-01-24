@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,7 +28,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
     $request->attributes = new ParameterBag($parameters);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $name);
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
-    $request->attributes->set('_raw_variables', new ParameterBag($raw_parameters));
+    $request->attributes->set('_raw_variables', new InputBag($raw_parameters));
     return new CurrentRouteMatch($request_stack);
   }
 

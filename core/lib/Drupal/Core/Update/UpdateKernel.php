@@ -7,7 +7,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -160,7 +160,7 @@ class UpdateKernel extends DrupalKernel {
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $this->getContainer()->get('router.route_provider')->getRouteByName('system.db_update'));
     $op = $args[0] ?: 'info';
     $request->attributes->set('op', $op);
-    $request->attributes->set('_raw_variables', new ParameterBag(['op' => $op]));
+    $request->attributes->set('_raw_variables', new InputBag(['op' => $op]));
   }
 
   /**

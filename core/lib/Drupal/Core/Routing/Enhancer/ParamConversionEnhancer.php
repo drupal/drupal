@@ -7,7 +7,7 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\EnhancerInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,7 +53,8 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
    * @param array $defaults
    *   The route defaults array.
    *
-   * @return \Symfony\Component\HttpFoundation\ParameterBag
+   * @return \Symfony\Component\HttpFoundation\InputBag
+   *   The input bag container with the raw variables.
    */
   protected function copyRawVariables(array $defaults) {
     /** @var \Symfony\Component\Routing\Route $route */
@@ -66,7 +67,7 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
     foreach (array_intersect_key($defaults, $variables) as $key => $value) {
       $raw_variables[$key] = $value;
     }
-    return new ParameterBag($raw_variables);
+    return new InputBag($raw_variables);
   }
 
   /**

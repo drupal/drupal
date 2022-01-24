@@ -272,31 +272,6 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
   }
 
   /**
-   * Returns the parameters.
-   *
-   * @param string|null $key
-   *   The name of the parameter to return or null to get them all.
-   *
-   * @return array
-   *   An array of parameters.
-   *
-   * @todo Remove this when Symfony 4 is no longer supported.
-   *   See https://www.drupal.org/node/3162981
-   */
-  public function all(string $key = NULL): array {
-    if ($key === NULL) {
-      return $this->parameters;
-    }
-
-    $value = $this->parameters[$key] ?? [];
-    if (!is_array($value)) {
-      throw new \UnexpectedValueException(sprintf('Unexpected value for parameter "%s": expecting "array", got "%s".', $key, get_debug_type($value)));
-    }
-
-    return $value;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getCacheContexts() {

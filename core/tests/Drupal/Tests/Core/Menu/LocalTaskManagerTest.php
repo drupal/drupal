@@ -13,7 +13,7 @@ use Drupal\Core\Menu\LocalTaskInterface;
 use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -428,7 +428,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->willReturn('menu_local_task_test_tasks_view');
     $this->routeMatch->expects($this->any())
       ->method('getRawParameters')
-      ->willReturn(new ParameterBag());
+      ->willReturn(new InputBag());
 
     $cacheability = new CacheableMetadata();
     $this->manager->getTasksBuild('menu_local_task_test_tasks_view', $cacheability);

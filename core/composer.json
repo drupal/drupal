@@ -193,7 +193,6 @@
             "lib/Drupal/Core/DependencyInjection/Container.php",
             "lib/Drupal/Core/DrupalKernel.php",
             "lib/Drupal/Core/DrupalKernelInterface.php",
-            "lib/Drupal/Core/Http/InputBag.php",
             "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
             "lib/Drupal/Core/Site/Settings.php"
         ],

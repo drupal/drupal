@@ -7,7 +7,7 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityCreateAccessCheck;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
@@ -104,7 +104,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       ->with('_entity_create_access')
       ->will($this->returnValue($requirement));
 
-    $raw_variables = new ParameterBag();
+    $raw_variables = new InputBag();
     if ($entity_bundle) {
       $raw_variables->set('bundle_argument', $entity_bundle);
     }

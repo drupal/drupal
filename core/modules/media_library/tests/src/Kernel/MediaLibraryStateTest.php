@@ -4,7 +4,6 @@ namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Http\InputBag;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -288,12 +287,7 @@ class MediaLibraryStateTest extends KernelTestBase {
       $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
 
-    // @todo Remove this when Symfony 4 is no longer supported.
-    //   See https://www.drupal.org/node/3162981
-    $request = new Request();
-    $request->query = new InputBag($query);
-
-    $state = MediaLibraryState::fromRequest($request);
+    $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }
 
