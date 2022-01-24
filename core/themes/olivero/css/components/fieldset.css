@@ -62,7 +62,7 @@
   padding-top: 0;
   padding-bottom: 0;
   color: inherit;
-  border: solid 2px var(--color--gray-25);
+  border: solid 2px var(--color--gray-45);
   border-radius: var(--border-radius);
   background-color: var(--color--white);
 }
@@ -91,7 +91,7 @@ _:-ms-fullscreen,
   color: inherit;
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
-  background-color: var(--color--gray-25);
+  background-color: var(--color--gray-45);
   font-size: var(--font-size-l);
   font-weight: 700;
   line-height: var(--line-height-base)
@@ -143,7 +143,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: var(--color--gray-25);
+  color: var(--color--gray-45);
 }
 
 .fieldset__description {
@@ -198,7 +198,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
-  border: solid 2px var(--color--gray-25);
+  border: solid 2px var(--color--gray-45);
   border-bottom-right-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
 }

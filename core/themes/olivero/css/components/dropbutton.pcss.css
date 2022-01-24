@@ -7,8 +7,8 @@
 
 :root {
   --dropbutton--height: var(--sp1-5);
-  --dropbutton--bg-color: var(--color--gray-75);
-  --dropbutton--border-color: var(--color--blue-20);
+  --dropbutton--bg-color: var(--color--gray-90);
+  --dropbutton--border-color: var(--color--primary-40);
 }
 
 .dropbutton-wrapper.open {
@@ -91,7 +91,7 @@
     margin-bottom: -2px; /* Account for borders. */
     padding: 0 9px;
     text-decoration: none;
-    color: var(--color--gray-10);
+    color: var(--color--gray-20);
     font-weight: 600;
 
     &:focus {

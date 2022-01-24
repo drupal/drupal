@@ -66,7 +66,7 @@
   width: var(--sp2-5);
   height: var(--sp2-5);
   cursor: default;
-  color: var(--color--gray-20);
+  color: var(--color--gray-45);
   background-color: var(--color--white)
 }
 
@@ -84,7 +84,7 @@
 
 .pager__item--active {
   color: var(--color--white);
-  background-color: var(--color--blue-20);
+  background-color: var(--color--primary-40);
 }
 
 .pager__link {
@@ -94,16 +94,16 @@
   width: 100%;
   height: 100%;
   text-decoration: none;
-  color: var(--color--gray-20);
+  color: var(--color--gray-45);
 }
 
 .pager__link:hover {
-  background-color: var(--color--gray-80);
+  background-color: var(--color--gray-95);
 }
 
 .pager__link:focus {
-  color: var(--color--blue-20);
-  outline: solid 2px var(--color--blue-20);
+  color: var(--color--primary-40);
+  outline: solid 2px var(--color--primary-40);
   outline-offset: -2px;
 }
 

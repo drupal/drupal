@@ -33,7 +33,7 @@
 .primary-nav__menu-link {
   flex-grow: 1;
   text-decoration: none;
-  color: var(--color--gray-0);
+  color: var(--color--gray-5);
   font-size: 28px;
   font-weight: bold;
   line-height: var(--sp2);
@@ -43,7 +43,7 @@
   }
 
   &:focus {
-    outline: auto 2px var(--color--blue-50);
+    outline: auto 2px var(--color--primary-50);
     outline-offset: 2px;
   }
 }
@@ -52,7 +52,7 @@
   padding-block: var(--sp0-5);
   padding-inline-start: 0;
   padding-inline-end: 0;
-  color: var(--color--gray-20);
+  color: var(--color--gray-45);
   font-weight: normal;
 }
 
@@ -79,7 +79,7 @@
       height: 0;
       content: "";
       /* Intentionally not using CSS logical properties. */
-      border-top: solid 3px var(--color--blue-50);
+      border-top: solid 3px var(--color--primary-50);
     }
 
     &:after {
@@ -112,7 +112,7 @@
     transform: scaleX(0);
     transform-origin: left;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 5px var(--color--blue-50);
+    border-top: solid 5px var(--color--primary-50);
   }
 
   &:after {
@@ -153,7 +153,7 @@
   padding-inline-start: var(--sp2-5);
   transition: opacity 0.2s, visibility 0.2s, max-height 0.2s;
   opacity: 0;
-  border-inline-start: solid var(--sp) var(--color--blue-50);
+  border-inline-start: solid var(--sp) var(--color--primary-50);
 
   &.is-active-menu-parent {
     visibility: visible;

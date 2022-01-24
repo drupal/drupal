@@ -27,11 +27,11 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: var(--color--gray-25)
+  color: var(--color--gray-45)
 }
 
 .feed-icon:hover {
-    color: var(--color--blue-50);
+    color: var(--color--primary-50);
   }
 
 .feed-icon__label {
@@ -57,7 +57,7 @@
   width: var(--sp1-5);
   height: var(--sp1-5);
   color: var(--color--white);
-  background-color: var(--color--blue-50)
+  background-color: var(--color--primary-50)
 }
 
 .feed-icon__icon svg {

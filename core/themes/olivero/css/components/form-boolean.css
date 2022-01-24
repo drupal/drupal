@@ -30,7 +30,7 @@ input[type="radio"] {
   height: var(--sp1-5);
   margin: 0;
   vertical-align: middle;
-  border: 1px solid var(--color--gray-30);
+  border: 1px solid var(--color--gray-60);
   border-radius: 0.1875rem;
   background-color: var(--color--white);
   background-repeat: no-repeat;
@@ -42,8 +42,8 @@ input[type="radio"] {
 }
 
 input[type="checkbox"]:focus, input[type="radio"]:focus {
-    border: solid 2px var(--color--blue-50);
-    outline: solid 2px var(--color--blue-50)
+    border: solid 2px var(--color--primary-50);
+    outline: solid 2px var(--color--primary-50)
   }
 
 @supports (outline-style: double) {
@@ -57,15 +57,15 @@ input[type="checkbox"]:focus, input[type="radio"]:focus {
     }
 
 input[type="checkbox"]:hover, input[type="radio"]:hover {
-    border-color: var(--color--blue-70);
+    border-color: var(--color--primary-60);
   }
 
 input[type="checkbox"][disabled], input[type="radio"][disabled] {
-    background-color: var(--color--gray-90)
+    background-color: var(--color--gray-100)
   }
 
 input[type="checkbox"][disabled]:hover, input[type="radio"][disabled]:hover {
-      border-color: var(--color--gray-30);
+      border-color: var(--color--gray-60);
     }
 
 input[type="checkbox"][disabled]:checked, input[type="radio"][disabled]:checked {
@@ -122,9 +122,9 @@ input[type="radio"]:checked {
 
 input[type="radio"]:focus {
     border-width: 2px;
-    border-color: var(--color--blue-50);
+    border-color: var(--color--primary-50);
     outline-color: transparent;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color--blue-50);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color--primary-50);
   }
 
 input[type="radio"].error:focus {

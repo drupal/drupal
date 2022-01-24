@@ -7,7 +7,7 @@
 
 .text-content,
 .cke_editable {
-  color: var(--color--gray-10);
+  color: var(--color--gray-20);
   font-family: var(--font-serif);
   line-height: var(--sp1-5);
 
@@ -21,15 +21,15 @@
   */
 
   & a {
-    color: var(--color--blue-20);
-    text-decoration-color: var(--color--blue-20);
+    color: var(--color--primary-40);
+    text-decoration-color: var(--color--primary-40);
     text-decoration-thickness: 2px;
     overflow-wrap: break-word;
 
     @supports (box-shadow: none) {
       transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
       text-decoration: none;
-      box-shadow: inset 0 -2px 0 0 var(--color--blue-50);
+      box-shadow: inset 0 -2px 0 0 var(--color--primary-50);
 
       &:hover {
         text-decoration: underline;
@@ -61,7 +61,7 @@
   }
 
   & code {
-    background-color: var(--color--gray-95);
+    background-color: var(--color--gray-100);
   }
 
   & pre code {
@@ -70,7 +70,7 @@
     padding-block: var(--sp);
     padding-inline-start: var(--sp);
     padding-inline-end: var(--sp);
-    color: var(--color--gray-20);
+    color: var(--color--gray-45);
   }
 
   & blockquote {
@@ -89,7 +89,7 @@
       inset-block-start: 0;
       inset-inline-start: 0;
       content: "“";
-      color: var(--color--blue-70);
+      color: var(--color--primary-60);
       font-size: 54px;
     }
 
@@ -101,7 +101,7 @@
       height: calc(100% - 30px);
       margin-inline-start: 4px;
       content: "";
-      background: var(--color--gray-95);
+      background: var(--color--gray-100);
     }
 
     @media (--grid-md) {

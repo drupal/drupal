@@ -21,7 +21,7 @@ html.js .form-autocomplete {
   background-position: right var(--autocomplete-icon-right-offset) center;  /* LTR */
 
   &:disabled {
-    background-color: var(--color--gray-90);
+    background-color: var(--color--gray-100);
   }
 
   &.ui-autocomplete-loading {
@@ -36,7 +36,7 @@ html.js[dir="rtl"] .form-autocomplete {
   background-position: left var(--autocomplete-icon-right-offset) center;
 
   &:disabled {
-    background-color: var(--color--gray-90);
+    background-color: var(--color--gray-100);
   }
 
   &.ui-autocomplete-loading {

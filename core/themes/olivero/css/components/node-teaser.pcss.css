@@ -16,14 +16,14 @@
     height: 0;
     content: "";
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 2px var(--color--gray-80);
+    border-top: solid 2px var(--color--gray-95);
   }
 
   & .node__meta {
     margin-block-end: var(--sp);
 
     & a {
-      color: var(--color--blue-20);
+      color: var(--color--primary-40);
       font-weight: bold;
     }
   }
@@ -81,7 +81,7 @@
   & .node__title {
     margin: 0;
     margin-block-end: var(--sp1);
-    color: var(--color--gray-0);
+    color: var(--color--gray-5);
     font-size: 24px;
     line-height: var(--line-height-base);
 

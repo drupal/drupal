@@ -76,17 +76,17 @@
       width: var(--sp4);
       height: 0;
       content: "";
-      border-top: solid 2px var(--color--gray-80);
+      border-top: solid 2px var(--color--gray-95);
     }
 
 .menu--sidebar .menu__link--link {
     text-decoration: none;
-    color: var(--color--gray-0);
+    color: var(--color--gray-5);
     font-weight: 600
   }
 
 .menu--sidebar .menu__link--link:hover {
-      color: var(--color--blue-50);
+      color: var(--color--primary-50);
     }
 
 .menu--sidebar {

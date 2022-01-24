@@ -96,8 +96,8 @@ html:not(.js) {
       padding-top: var(--sp2);
       padding-bottom: 0;
       transform: none;
-      border: solid 1px var(--color--gray-80) !important;
-      box-shadow: 0 0 36px var(--color--gray-70);
+      border: solid 1px var(--color--gray-95) !important;
+      box-shadow: 0 0 36px var(--color--gray-90);
     }
 
     html[dir="ltr"]:not(.js) .primary-nav__menu--level-2 {
@@ -185,8 +185,8 @@ html:not(.js) {
         padding-top: var(--sp2);
         padding-bottom: 0;
         transform: none;
-        border: solid 1px var(--color--gray-80) !important;
-        box-shadow: 0 0 36px var(--color--gray-70);
+        border: solid 1px var(--color--gray-95) !important;
+        box-shadow: 0 0 36px var(--color--gray-90);
       }
 
       html[dir="ltr"]:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-2 {

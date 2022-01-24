@@ -43,7 +43,7 @@
     opacity: 0;
     border: 0;
     outline: 0;
-    background-color: var(--color--blue-50)
+    background-color: var(--color--primary-50)
 }
 
     .sticky-header-toggle:focus {

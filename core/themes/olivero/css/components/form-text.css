@@ -42,8 +42,8 @@ textarea {
   max-width: 100%;
   min-height: var(--sp3);
   padding: 0 var(--sp);
-  color: var(--color--gray-0);
-  border: 1px solid var(--color--gray-30);
+  color: var(--color--gray-5);
+  border: 1px solid var(--color--gray-60);
   border-radius: var(--border-radius);
   background-color: var(--color--white);
   font-family: inherit;
@@ -54,8 +54,8 @@ textarea {
 }
 
 [type="color"]:focus, [type="date"]:focus, [type="datetime-local"]:focus, [type="email"]:focus, [type="file"]:focus, [type="month"]:focus, [type="number"]:focus, [type="password"]:focus, [type="search"]:focus, [type="tel"]:focus, [type="text"]:focus, [type="time"]:focus, [type="url"]:focus, [type="week"]:focus, textarea:focus {
-    border: solid 2px var(--color--blue-50);
-    outline: solid 2px var(--color--blue-50)
+    border: solid 2px var(--color--primary-50);
+    outline: solid 2px var(--color--primary-50)
   }
 
 @supports (outline-style: double) {
@@ -73,8 +73,8 @@ textarea {
   }
 
 [type="color"][disabled], [type="date"][disabled], [type="datetime-local"][disabled], [type="email"][disabled], [type="file"][disabled], [type="month"][disabled], [type="number"][disabled], [type="password"][disabled], [type="search"][disabled], [type="tel"][disabled], [type="text"][disabled], [type="time"][disabled], [type="url"][disabled], [type="week"][disabled], textarea[disabled] {
-    color: var(--color--gray-30);
-    background-color: var(--color--gray-90);
+    color: var(--color--gray-60);
+    background-color: var(--color--gray-100);
   }
 
 [type="color"].error, [type="date"].error, [type="datetime-local"].error, [type="email"].error, [type="file"].error, [type="month"].error, [type="number"].error, [type="password"].error, [type="search"].error, [type="tel"].error, [type="text"].error, [type="time"].error, [type="url"].error, [type="week"].error, textarea.error {

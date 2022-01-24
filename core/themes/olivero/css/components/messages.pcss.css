@@ -24,7 +24,7 @@
   padding-inline-end: var(--sp1-5);
   color: var(--color--white);
   outline: solid 1px transparent;
-  background-color: var(--color--gray-0);
+  background-color: var(--color--gray-5);
 
   & * {
     color: inherit;
@@ -101,7 +101,7 @@
     width: 33px;
     height: 0;
     content: "";
-    border-top: solid 2px var(--color--gray-30);
+    border-top: solid 2px var(--color--gray-60);
   }
 
   &:before {
@@ -120,7 +120,7 @@
   }
 
   &:focus {
-    outline: 2px solid var(--color--blue-70);
+    outline: 2px solid var(--color--primary-60);
     outline-offset: 2px;
   }
 }
@@ -142,7 +142,7 @@
 }
 
 .messages--info .messages__icon svg {
-  fill: var(--color--blue-70);
+  fill: var(--color--primary-60);
 }
 
 .messages a {

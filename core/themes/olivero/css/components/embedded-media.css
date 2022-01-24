@@ -24,7 +24,7 @@
 /* Width of the entire grid maxes out. */
 
 figure {
-  background: var(--color--gray-95);
+  background: var(--color--gray-100);
 }
 
 [dir="ltr"] figcaption {
@@ -46,8 +46,8 @@ figure {
 figcaption {
   padding-top: var(--sp0-5);
   padding-bottom: var(--sp0-5);
-  color: var(--color--gray-10);
-  background: var(--color--gray-95);
+  color: var(--color--gray-20);
+  background: var(--color--gray-100);
   font-family: var(--font-serif);
   font-size: 0.875rem;
   font-style: italic;

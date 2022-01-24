@@ -55,7 +55,7 @@
 }
 
 .primary-nav__button-toggle:focus {
-    outline: auto 2px var(--color--blue-50);
+    outline: auto 2px var(--color--primary-50);
     outline-offset: 2px;
   }
 
@@ -84,7 +84,7 @@
       content: "";
       transform: translate(-50%, -50%);
       /* Intentionally not using CSS logical properties. */
-      border-top: solid 3px var(--color--blue-50);
+      border-top: solid 3px var(--color--primary-50);
     }
 
 .primary-nav__button-toggle .icon--menu-toggle:after {
@@ -128,7 +128,7 @@
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus .icon--menu-toggle {
-          border: solid 2px var(--color--blue-20);
+          border: solid 2px var(--color--primary-40);
         }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle:active {

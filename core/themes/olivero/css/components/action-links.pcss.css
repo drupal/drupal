@@ -17,7 +17,7 @@
     display: inline-block;
 
     & a {
-      color: var(--color--blue-20);
+      color: var(--color--primary-40);
     }
   }
 }

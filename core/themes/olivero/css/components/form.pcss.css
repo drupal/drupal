@@ -6,12 +6,12 @@
 @import "../base/media-queries.pcss.css";
 
 ::placeholder {
-  color: var(--color--gray-30);
+  color: var(--color--gray-60);
 }
 
 /* IE 10 and 11 needs this set as important. */
 :-ms-input-placeholder {
-  color: var(--color--gray-30) !important;
+  color: var(--color--gray-60) !important;
 }
 
 /**
@@ -69,7 +69,7 @@ tr .form-item,
 /* Label states. */
 .form-item__label.is-disabled {
   cursor: default;
-  color: var(--color--gray-45);
+  color: var(--color--gray-70);
 }
 
 /* Form required star icon */

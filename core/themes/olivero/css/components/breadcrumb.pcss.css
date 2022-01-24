@@ -83,8 +83,8 @@
     margin-inline: 16px 20px;
     content: "";
     transform: rotate(45deg); /* LTR */
-    border-block-start: 2px solid var(--color--gray-25);
-    border-inline-end: 2px solid var(--color--gray-25);
+    border-block-start: 2px solid var(--color--gray-45);
+    border-inline-end: 2px solid var(--color--gray-45);
   }
 
   &:last-child {
@@ -102,7 +102,7 @@
 
 .breadcrumb__link {
   text-decoration: none;
-  color: var(--color--blue-20);
+  color: var(--color--primary-40);
 
   &:hover,
   &:focus {

@@ -6,19 +6,19 @@
 @import "../base/media-queries.pcss.css";
 
 .draggable:hover {
-  background-color: var(--color--gray-95);
+  background-color: var(--color--gray-100);
 }
 
 .draggable.drag {
-  background-color: var(--color--gray-90);
+  background-color: var(--color--gray-100);
 }
 
 .draggable.drag-previous {
-  background-color: var(--color--gray-80);
+  background-color: var(--color--gray-95);
 }
 
 .drag-previous a {
-  color: var(--color--gray-10); /* Ensure proper contrast. */
+  color: var(--color--gray-20); /* Ensure proper contrast. */
 }
 
 a.tabledrag-handle,

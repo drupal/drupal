@@ -51,7 +51,7 @@
     display: inline-block
   }
 .action-links li a {
-      color: var(--color--blue-20);
+      color: var(--color--primary-40);
     }
 .action-links-item {
   display: inline-block;

@@ -29,7 +29,7 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
   transition: all 0.2s;
-  border-inline-start: solid var(--content-left) var(--color--gray-10);
+  border-inline-start: solid var(--content-left) var(--color--gray-20);
   background: var(--color--black);
 
   &.is-active {
@@ -128,7 +128,7 @@
         transition: transform 0.2s;
         transform: scaleX(0);
         transform-origin: left;
-        border-block-start: solid var(--sp0-5) var(--color--blue-50);
+        border-block-start: solid var(--sp0-5) var(--color--primary-50);
       }
     }
 
@@ -197,7 +197,7 @@
   width: var(--sp3);
   height: var(--sp6);
   cursor: pointer;
-  color: var(--color--gray-0); /* Affects SVG search icon. */
+  color: var(--color--gray-5); /* Affects SVG search icon. */
   border: 0;
   background: transparent;
   -webkit-appearance: none;
@@ -214,7 +214,7 @@
       height: var(--sp3);
       content: "";
       transform: translate(-50%, -50%);
-      border: solid 2px var(--color--blue-50);
+      border: solid 2px var(--color--primary-50);
       border-radius: 4px;
     }
   }
@@ -275,7 +275,7 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 /* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
-  background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
+  background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 10px;

@@ -59,7 +59,7 @@
           height: var(--sp3);
           content: "";
           transform: translate(-50%, -50%);
-          border: solid 2px var(--color--blue-50);
+          border: solid 2px var(--color--primary-50);
           border-radius: 0.25rem;
         }
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
@@ -224,7 +224,7 @@
       transform: translate(-50%, -1.25rem);
       opacity: 0;
       /* Intentionally not using CSS logical properties. */
-      border-top: solid var(--color--blue-50) var(--sp0-5);
+      border-top: solid var(--color--primary-50) var(--sp0-5);
       border-right: solid 1px transparent; /* Transparent borders useful for Windows High Contrast mode. */
       border-bottom: solid 1px transparent;
       border-left: solid 1px transparent;
@@ -296,7 +296,7 @@ body:not(.is-always-mobile-nav) {
       opacity: 0;
       /* Intentionally not using CSS logical properties. */
       border-right: solid 10px transparent;
-      border-bottom: solid 10px var(--color--blue-50);
+      border-bottom: solid 10px var(--color--primary-50);
       border-left: solid 10px transparent
     }
 

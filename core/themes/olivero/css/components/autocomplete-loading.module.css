@@ -47,7 +47,7 @@ html.js .form-autocomplete {
 }
 
 html.js .form-autocomplete:disabled {
-    background-color: var(--color--gray-90);
+    background-color: var(--color--gray-100);
   }
 
 html.js .form-autocomplete.ui-autocomplete-loading {
@@ -62,7 +62,7 @@ html.js[dir="rtl"] .form-autocomplete {
 }
 
 html.js[dir="rtl"] .form-autocomplete:disabled {
-    background-color: var(--color--gray-90);
+    background-color: var(--color--gray-100);
   }
 
 html.js[dir="rtl"] .form-autocomplete.ui-autocomplete-loading {

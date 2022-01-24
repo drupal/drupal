@@ -10,7 +10,7 @@
   @media (--nav) {
     flex-shrink: 0;
     width: var(--content-left);
-    background-color: var(--color--gray-95);
+    background-color: var(--color--gray-100);
   }
 }
 

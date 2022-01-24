@@ -62,7 +62,7 @@
   padding-top: 0;
   padding-bottom: var(--sp);
   list-style: none;
-  border-bottom: solid 1px var(--color--blue-20);
+  border-bottom: solid 1px var(--color--primary-40);
 }
 
 .book-pager__item {
@@ -106,7 +106,7 @@
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: var(--color--blue-20);
+  color: var(--color--primary-40);
   font-family: var(--font-serif);
   font-size: 1.125rem;
   font-weight: 600;

@@ -12,7 +12,7 @@
   margin-block-start: var(--sp2);
   margin-block-end: var(--sp2);
   border-spacing: 0;
-  color: var(--color--gray-10);
+  color: var(--color--gray-20);
   border: 0;
   border-collapse: collapse;
   font-family: var(--font-sans);
@@ -22,7 +22,7 @@
   & caption {
     margin-block-end: var(--sp1);
     text-align: start;
-    color: var(--color--gray-10);
+    color: var(--color--gray-20);
     font-family: var(--font-serif);
     font-size: 14px;
     font-style: italic;
@@ -51,8 +51,8 @@
     margin-inline-end: 0;
     text-align: start;
     letter-spacing: 0.02em;
-    color: var(--color--gray-0);
-    border-block-end: 2px solid var(--color--blue-50);
+    color: var(--color--gray-5);
+    border-block-end: 2px solid var(--color--primary-50);
     font-family: var(--font-sans);
     font-size: 14px;
     line-height: var(--sp);
@@ -79,7 +79,7 @@
 
   & td {
     white-space: normal;
-    border-block-end: 2px solid var(--color--gray-40);
+    border-block-end: 2px solid var(--color--gray-65);
   }
 
   & th.checkbox,
@@ -103,7 +103,7 @@
 .sticky-header {
   z-index: 0;
   margin: 0;
-  border-block-end: 4px solid var(--color--blue-50);
+  border-block-end: 4px solid var(--color--primary-50);
 }
 
 /* Properly align VBO checkboxes. */

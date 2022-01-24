@@ -29,7 +29,7 @@
 }
 
 .comment--level-1 {
-  border-top: 2px solid var(--color--gray-80)
+  border-top: 2px solid var(--color--gray-95)
 }
 
 .comment--level-1 ~ .comment--level-1 {
@@ -85,7 +85,7 @@
   text-align: center;
   color: var(--color--white);
   border-radius: 2px;
-  background-color: var(--color--blue-20);
+  background-color: var(--color--primary-40);
   font-size: 0.6875rem;
   line-height: 1.3125rem
 }
@@ -112,7 +112,7 @@
     width: 0;
     height: 0;
     content: "";
-    border-top: 7px solid var(--color--blue-20);
+    border-top: 7px solid var(--color--primary-40);
   }
 
 .comment-form {
@@ -206,7 +206,7 @@
   width: var(--sp2);
   height: var(--sp2);
   border-radius: 50%;
-  background-color: var(--color--gray-80)
+  background-color: var(--color--gray-95)
 }
 
 .add-comment__picture *:not(img), .comment__picture *:not(img) {
@@ -297,7 +297,7 @@
 
 .comment__time {
   margin: 0;
-  color: var(--color--gray-20);
+  color: var(--color--gray-45);
   font-family: var(--font-sans);
   font-size: 0.875rem;
   line-height: var(--sp);
@@ -320,11 +320,11 @@
 }
 
 [dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
-    border-left: solid 1px var(--color--gray-80);
+    border-left: solid 1px var(--color--gray-95);
 }
 
 [dir="rtl"] .indented > .comment:not(:last-of-type):not(.has-children):before {
-    border-right: solid 1px var(--color--gray-80);
+    border-right: solid 1px var(--color--gray-95);
 }
 
 .indented > .comment:not(:last-of-type):not(.has-children):before {
@@ -395,7 +395,7 @@
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
-  color: var(--color--gray-10);
+  color: var(--color--gray-20);
   border: 0;
   background: none;
   font-size: 0.875rem;

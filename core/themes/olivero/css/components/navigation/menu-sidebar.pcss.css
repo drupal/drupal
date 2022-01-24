@@ -33,17 +33,17 @@
       width: var(--sp4);
       height: 0;
       content: "";
-      border-block-start: solid 2px var(--color--gray-80);
+      border-block-start: solid 2px var(--color--gray-95);
     }
   }
 
   & .menu__link--link {
     text-decoration: none;
-    color: var(--color--gray-0);
+    color: var(--color--gray-5);
     font-weight: 600;
 
     &:hover {
-      color: var(--color--blue-50);
+      color: var(--color--primary-50);
     }
   }
 

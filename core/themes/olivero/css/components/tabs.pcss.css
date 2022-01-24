@@ -7,15 +7,15 @@
   --tabs-height: var(--sp3);
   --tabs-padding-inline: var(--sp1-5);
   --tabs-active-border-size: 6px;
-  --tabs-highlight-color: var(--color--blue-50); /* Minimum 3:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
-  --tabs-text-color: var(--color--gray-20); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
-  --tabs-text-color-active: var(--color--gray-0); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-highlight-color: var(--color--primary-50); /* Minimum 3:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-text-color: var(--color--gray-45); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-text-color-active: var(--color--gray-5); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
   --tabs-letter-spacing: 1px;
   --tabs-font-size: var(--font-size-s);
-  --tabs-background-color: var(--color--gray-95);
-  --tabs-background-color-hover: var(--color--gray-80);
+  --tabs-background-color: var(--color--gray-100);
+  --tabs-background-color-hover: var(--color--gray-95);
   --tabs-border-width: 1px;
-  --tabs-border-color: var(--color--gray-80);
+  --tabs-border-color: var(--color--gray-95);
   --tabs-transition-duration: 0.2s;
 
   display: flex;

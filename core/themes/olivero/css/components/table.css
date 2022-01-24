@@ -30,7 +30,7 @@
   margin-top: var(--sp2);
   margin-bottom: var(--sp2);
   border-spacing: 0;
-  color: var(--color--gray-10);
+  color: var(--color--gray-20);
   border: 0;
   border-collapse: collapse;
   font-family: var(--font-sans);
@@ -48,7 +48,7 @@
 
 .forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
     margin-bottom: var(--sp1);
-    color: var(--color--gray-10);
+    color: var(--color--gray-20);
     font-family: var(--font-serif);
     font-size: 0.875rem;
     font-style: italic;
@@ -144,8 +144,8 @@
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 0.02em;
-    color: var(--color--gray-0);
-    border-bottom: 2px solid var(--color--blue-50);
+    color: var(--color--gray-5);
+    border-bottom: 2px solid var(--color--primary-50);
     font-family: var(--font-sans);
     font-size: 0.875rem;
     line-height: var(--sp)
@@ -181,7 +181,7 @@
 
 .forum table td, .text-content table td, .views-table td, .draggable-table td {
     white-space: normal;
-    border-bottom: 2px solid var(--color--gray-40);
+    border-bottom: 2px solid var(--color--gray-65);
   }
 
 .forum table th.checkbox,
@@ -210,7 +210,7 @@
 .sticky-header {
   z-index: 0;
   margin: 0;
-  border-bottom: 4px solid var(--color--blue-50);
+  border-bottom: 4px solid var(--color--primary-50);
 }
 
 /* Properly align VBO checkboxes. */

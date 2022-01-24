@@ -41,7 +41,7 @@
     pointer-events: auto;
     color: var(--color--white);
     border: 0;
-    background-color: var(--color--blue-50)
+    background-color: var(--color--primary-50)
 }
 
     .wide-nav-expand:focus {

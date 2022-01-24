@@ -39,7 +39,7 @@
 .field--tags__label {
   margin: 0;
   letter-spacing: 0.02em;
-  color: var(--color--gray-20);
+  color: var(--color--gray-45);
   font-size: var(--font-size-s);
   font-weight: 600;
   line-height: 1.6
@@ -153,7 +153,7 @@
   align-items: center;
   text-decoration: none;
   letter-spacing: 0.02em;
-  color: var(--color--blue-20);
+  color: var(--color--primary-40);
   font-size: var(--font-size-base);
   font-weight: 700;
   line-height: 1.5;
@@ -180,5 +180,5 @@
     margin-bottom: var(--sp4);
     padding-top: var(--sp1-5);
     padding-bottom: var(--sp1-5);
-    background-color: var(--color--gray-95);
+    background-color: var(--color--gray-100);
   }

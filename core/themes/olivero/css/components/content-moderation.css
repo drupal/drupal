@@ -41,8 +41,8 @@
 
 .entity-moderation-form {
   flex-direction: column;
-  border: 1px solid var(--color--gray-80);
-  background-color: var(--color--gray-95)
+  border: 1px solid var(--color--gray-95);
+  background-color: var(--color--gray-100)
 }
 
 .entity-moderation-form select,

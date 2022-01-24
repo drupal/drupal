@@ -74,7 +74,7 @@
 }
 
 .mobile-nav-button:focus {
-    outline: solid 2px var(--color--blue-20);
+    outline: solid 2px var(--color--primary-40);
   }
 
 .mobile-nav-button:active {
@@ -136,7 +136,7 @@
   display: block;
   width: var(--sp2);
   height: 0.1875rem;
-  background-color: var(--color--blue-50)
+  background-color: var(--color--primary-50)
 }
 
 [dir="ltr"] .mobile-nav-button__icon:before {
@@ -154,7 +154,7 @@
     height: 0.1875rem;
     content: "";
     transition: all 0.2s;
-    background-color: var(--color--blue-50);
+    background-color: var(--color--primary-50);
   }
 
 [dir="ltr"] .mobile-nav-button__icon:after {
@@ -173,7 +173,7 @@
     height: 0.1875rem;
     content: "";
     transition: all 0.2s;
-    background-color: var(--color--blue-50);
+    background-color: var(--color--primary-50);
   }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {

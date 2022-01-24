@@ -24,7 +24,7 @@
   appearance: none;
 
   &:focus {
-    outline: solid 2px var(--color--blue-20);
+    outline: solid 2px var(--color--primary-40);
   }
 
   &:active {
@@ -66,7 +66,7 @@
   display: block;
   width: var(--sp2);
   height: 3px;
-  background-color: var(--color--blue-50);
+  background-color: var(--color--primary-50);
 
   &:before {
     position: absolute;
@@ -76,7 +76,7 @@
     height: 3px;
     content: "";
     transition: all 0.2s;
-    background-color: var(--color--blue-50);
+    background-color: var(--color--primary-50);
   }
 
   &:after {
@@ -87,7 +87,7 @@
     height: 3px;
     content: "";
     transition: all 0.2s;
-    background-color: var(--color--blue-50);
+    background-color: var(--color--primary-50);
   }
 }
 

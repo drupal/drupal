@@ -84,7 +84,7 @@ body:not(.is-always-mobile-nav) {
         height: var(--sp2);
         content: "";
         transform: translateY(-50%);
-        background-color: var(--color--gray-70);
+        background-color: var(--color--gray-90);
       }
     }
 
@@ -105,7 +105,7 @@ body:not(.is-always-mobile-nav) {
           height: var(--sp3);
           content: "";
           transform: translate(-50%, -50%);
-          border: solid 2px var(--color--blue-50);
+          border: solid 2px var(--color--primary-50);
           border-radius: 4px;
         }
       }

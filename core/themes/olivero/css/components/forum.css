@@ -30,6 +30,6 @@
 .forum__name--link,
 .forum__last-reply a,
 .forum__title a {
-  color: var(--color--blue-20);
+  color: var(--color--primary-40);
   font-weight: bold;
 }

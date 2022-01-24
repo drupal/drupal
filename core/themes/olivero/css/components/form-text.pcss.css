@@ -24,8 +24,8 @@ textarea {
   max-width: 100%;
   min-height: var(--sp3);
   padding: 0 var(--sp);
-  color: var(--color--gray-0);
-  border: 1px solid var(--color--gray-30);
+  color: var(--color--gray-5);
+  border: 1px solid var(--color--gray-60);
   border-radius: var(--border-radius);
   background-color: var(--color--white);
   font-family: inherit;
@@ -33,8 +33,8 @@ textarea {
   appearance: none;
 
   &:focus {
-    border: solid 2px var(--color--blue-50);
-    outline: solid 2px var(--color--blue-50);
+    border: solid 2px var(--color--primary-50);
+    outline: solid 2px var(--color--primary-50);
 
     @supports (outline-style: double) {
       border-width: 1px;
@@ -49,8 +49,8 @@ textarea {
   }
 
   &[disabled] {
-    color: var(--color--gray-30);
-    background-color: var(--color--gray-90);
+    color: var(--color--gray-60);
+    background-color: var(--color--gray-100);
   }
 
   &.error {

@@ -45,8 +45,8 @@ html:not(.js) {
       padding-inline-start: var(--sp2);
       padding-inline-end: var(--sp2);
       transform: none;
-      border: solid 1px var(--color--gray-80) !important;
-      box-shadow: 0 0 36px var(--color--gray-70);
+      border: solid 1px var(--color--gray-95) !important;
+      box-shadow: 0 0 36px var(--color--gray-90);
     }
 
     & .primary-nav__menu--level-2 {
@@ -100,8 +100,8 @@ html:not(.js) {
         padding-inline-start: var(--sp2);
         padding-inline-end: var(--sp2);
         transform: none;
-        border: solid 1px var(--color--gray-80) !important;
-        box-shadow: 0 0 36px var(--color--gray-70);
+        border: solid 1px var(--color--gray-95) !important;
+        box-shadow: 0 0 36px var(--color--gray-90);
       }
 
       & .primary-nav__menu--level-2 {

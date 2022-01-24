@@ -35,7 +35,7 @@
     height: 0;
     content: "";
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 2px var(--color--gray-80);
+    border-top: solid 2px var(--color--gray-95);
   }
 
 .node--view-mode-teaser .node__meta {
@@ -43,7 +43,7 @@
   }
 
 .node--view-mode-teaser .node__meta a {
-      color: var(--color--blue-20);
+      color: var(--color--primary-40);
       font-weight: bold;
     }
 
@@ -127,7 +127,7 @@
 .node--view-mode-teaser .node__title {
     margin: 0;
     margin-bottom: var(--sp1);
-    color: var(--color--gray-0);
+    color: var(--color--gray-5);
     font-size: 1.5rem;
     line-height: var(--line-height-base)
   }

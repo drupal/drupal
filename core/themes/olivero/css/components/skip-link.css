@@ -50,7 +50,7 @@
   text-decoration: none;
   color: var(--color--white);
   outline: 0;
-  background-color: var(--color--gray-0)
+  background-color: var(--color--gray-5)
 }
 
 .skip-link:hover {
