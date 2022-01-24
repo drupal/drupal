@@ -16,6 +16,7 @@ ajaxcallback
 ajaxify
 ajaxing
 akiko
+alignable
 allwords
 alphadecimal
 alterjs

@@ -97,6 +97,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
 
+    $new_value = str_replace('<p>', '<p class="text-align-center text-align-justify">', $current_value);
+    $basic_html_format_with_alignable_p = $basic_html_format;
+    $basic_html_format_with_alignable_p['name'] .= ' (with alignable paragraph support)';
+    $basic_html_format_with_alignable_p['format'] = 'basic_html_with_alignable_p';
+    NestedArray::setValue($basic_html_format_with_alignable_p, $allowed_html_parents, $new_value);
+    FilterFormat::create($basic_html_format_with_alignable_p)->save();
+    Editor::create(
+      ['format' => 'basic_html_with_alignable_p']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    )->save();
+
     $filter_plugin_manager = $this->container->get('plugin.manager.filter');
     FilterFormat::create([
       'format' => 'filter_only__filter_html',
@@ -454,6 +466,55 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         $basic_html_test_case['expected_messages'],
         ['This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h5 id&gt;.'],
       ),
+    ];
+
+    yield "basic_html_with_alignable_p can be switched to CKEditor 5 without problems, align buttons added automatically" => [
+      'format_id' => 'basic_html_with_alignable_p',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => array_merge(
+            $basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'],
+            // @todo Improve in https://www.drupal.org/project/drupal/issues/3259593
+            [
+              'alignment',
+              'alignment:center',
+              'alignment:justify',
+            ]
+          ),
+        ],
+        'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+      ],
+      'expected_superset' => implode(' ', [
+        // Note that aligning left and right is being added, on top of what the
+        // original format allowed: center and justify.
+        // @todo Improve in https://www.drupal.org/project/drupal/issues/3231328
+        '<p class="text-align-left text-align-right">',
+        // Note that aligning left/center/right/justify is possible on *all*
+        // allowed block-level HTML5 tags.
+        // @todo When https://www.drupal.org/project/ckeditor5/issues/3231328
+        //   lands, only the center/justify classes will be added.
+        // @todo When https://www.drupal.org/project/drupal/issues/3259367
+        //   lands, none of the tags below should appear.
+        '<h2 class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<h3 class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<h4 class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<h5 class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<h6 class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<dl class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<dd class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<blockquote class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<ul class="text-align-left text-align-center text-align-right text-align-justify">',
+        '<ol class="text-align-left text-align-center text-align-right text-align-justify">',
+        $basic_html_test_case['expected_superset'],
+      ]),
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge($basic_html_test_case['expected_messages'],
+
+        [
+          'The following plugins were enabled to support specific attributes that are allowed by this text format: <em class="placeholder">Alignment ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center, text-align-justify), Align center ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center), Justify ( for tag: &lt;p&gt; to support: class with value(s):  text-align-justify)</em>.',
+          'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.',
+        ]),
     ];
 
     yield "restricted_html can be switched to CKEditor 5 after dropping the two markup-creating filters (3 upgrade messages)" => [
