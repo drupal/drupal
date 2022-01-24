@@ -559,7 +559,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @covers ::dumpValue
      */
     public function testGetServiceDefinitionForExpression() {
-      $expression = new Expression();
+      $expression = new Expression('');
 
       $bar_definition = new Definition('\stdClass');
       $bar_definition->setPublic(TRUE);
@@ -712,6 +712,9 @@ namespace Symfony\Component\ExpressionLanguage {
      * Dummy class to ensure non-existent Symfony component can be tested.
      */
     class Expression {
+
+      public function __construct($expression) {
+      }
 
       /**
        * Gets the string representation of the expression.
