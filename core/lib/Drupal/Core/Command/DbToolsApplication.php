@@ -19,7 +19,7 @@ class DbToolsApplication extends Application {
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultCommands() {
+  protected function getDefaultCommands(): array {
     $default_commands = parent::getDefaultCommands();
     $default_commands[] = new DbDumpCommand();
     $default_commands[] = new DbImportCommand();

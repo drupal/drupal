@@ -21,7 +21,7 @@ class TestSiteApplication extends Application {
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultCommands() {
+  protected function getDefaultCommands(): array {
     $default_commands = parent::getDefaultCommands();
     $default_commands[] = new TestSiteInstallCommand();
     $default_commands[] = new TestSiteTearDownCommand();
