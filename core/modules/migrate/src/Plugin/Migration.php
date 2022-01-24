@@ -15,9 +15,85 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the Migration plugin.
  *
- * The migration plugin represents one single migration and acts like a
- * container for the information about a single migration such as the source,
- * process and destination plugins.
+ * A migration plugin instance that represents one single migration and acts
+ * like a container for the information about a single migration such as the
+ * source, process and destination plugins.
+ *
+ * The configuration of a migration is defined using YAML format and placed in
+ * the directory MODULENAME/migrations.
+ *
+ * Available definition keys:
+ * - id: The migration ID.
+ * - label: The human-readable label for the migration.
+ * - source: The definition for a migrate source plugin.
+ * - process: The definition for the migrate process pipelines for the
+ *   destination properties.
+ * - destination: The definition a migrate destination plugin.
+ * - audit: (optional) Audit the migration for conflicts with existing content.
+ * - deriver: (optional) The fully qualified path to a deriver class.
+ * - idMap: (optional) The definition for a migrate idMap plugin.
+ * - migration_dependencies: (optional) An array with two keys 'required' and
+ *   'optional' listing the migrations that this migration depends on. The
+ *   required migrations must be run first and completed successfully. The
+ *   optional migrations will be executed if they are present.
+ * - migration_tags: (optional) An array of tags for this migration.
+ * - provider: (optional) The name of the module that provides the plugin.
+ *
+ * Example with all keys:
+ *
+ * @code
+ * id: d7_taxonomy_term_example
+ * label: Taxonomy terms
+ * audit: true
+ * migration_tags:
+ *   - Drupal 7
+ *   - Content
+ *   - Term example
+ * deriver: Drupal\taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
+ * provider: custom_module
+ * source:
+ *   plugin: d7_taxonomy_term
+ * process:
+ *   tid: tid
+ *   vid:
+ *     plugin: migration_lookup
+ *     migration: d7_taxonomy_vocabulary
+ *     source: vid
+ *   name: name
+ *   'description/value': description
+ *   'description/format': format
+ *   weight: weight
+ *   parent_id:
+ *   -
+ *     plugin: skip_on_empty
+ *     method: process
+ *     source: parent
+ *   -
+ *     plugin: migration_lookup
+ *     migration: d7_taxonomy_term
+ *   parent:
+ *    plugin: default_value
+ *    default_value: 0
+ *    source: '@parent_id'
+ * destination:
+ *   plugin: entity:taxonomy_term
+ * migration_dependencies:
+ *   required:
+ *     - d7_taxonomy_vocabulary
+ *   optional:
+ *     - d7_field_instance
+ * @endcode
+ *
+ * For additional configuration keys, refer to these Migrate classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\destination\Config
+ * @see \Drupal\migrate\Plugin\migrate\destination\EntityConfigBase
+ * @see \Drupal\migrate\Plugin\migrate\destination\EntityContentBase
+ * @see \Drupal\Core\Plugin\PluginBase
+ *
+ * @link https://www.drupal.org/docs/8/api/migrate-api Migrate API handbook. @endlink
  */
 class Migration extends PluginBase implements MigrationInterface, RequirementsInterface, ContainerFactoryPluginInterface {
 
