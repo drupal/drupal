@@ -4,9 +4,9 @@ namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase {
+abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

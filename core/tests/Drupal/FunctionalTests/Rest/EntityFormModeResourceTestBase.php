@@ -2,10 +2,10 @@
 
 namespace Drupal\FunctionalTests\Rest;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 
-abstract class EntityFormModeResourceTestBase extends EntityResourceTestBase {
+abstract class EntityFormModeResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

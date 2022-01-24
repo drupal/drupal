@@ -3,9 +3,9 @@
 namespace Drupal\Tests\config_test\Functional\Rest;
 
 use Drupal\config_test\Entity\ConfigTest;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-abstract class ConfigTestResourceTestBase extends EntityResourceTestBase {
+abstract class ConfigTestResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

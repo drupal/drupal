@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\user\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\user\Entity\Role;
 
-abstract class RoleResourceTestBase extends EntityResourceTestBase {
+abstract class RoleResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

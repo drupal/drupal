@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\tour\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\tour\Entity\Tour;
 
-abstract class TourResourceTestBase extends EntityResourceTestBase {
+abstract class TourResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

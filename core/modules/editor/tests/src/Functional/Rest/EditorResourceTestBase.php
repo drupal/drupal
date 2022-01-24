@@ -4,12 +4,12 @@ namespace Drupal\Tests\editor\Functional\Rest;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
  * ResourceTestBase for Editor entity.
  */
-abstract class EditorResourceTestBase extends EntityResourceTestBase {
+abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

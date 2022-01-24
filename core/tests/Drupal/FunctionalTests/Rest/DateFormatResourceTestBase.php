@@ -3,12 +3,12 @@
 namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
  * ResourceTestBase for DateFormat entity.
  */
-abstract class DateFormatResourceTestBase extends EntityResourceTestBase {
+abstract class DateFormatResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
