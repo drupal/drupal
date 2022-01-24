@@ -1168,11 +1168,11 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'label' => 'View Mode 1',
     ])->save();
     EntityViewMode::create([
-      'id' => 'media.view_mode_2',
+      'id' => 'media.22222',
       'targetEntityType' => 'media',
       'status' => TRUE,
       'enabled' => TRUE,
-      'label' => 'View Mode 2',
+      'label' => 'View Mode 2 has Numeric ID',
     ])->save();
     EntityViewMode::create([
       'id' => 'media.view_mode_3',
@@ -1191,11 +1191,11 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'mode' => 'view_mode_1',
     ])->save();
     EntityViewDisplay::create([
-      'id' => 'media.image.view_mode_2',
+      'id' => 'media.image.22222',
       'targetEntityType' => 'media',
       'status' => TRUE,
       'bundle' => 'image',
-      'mode' => 'view_mode_2',
+      'mode' => '22222',
     ])->save();
 
     $filter_format = FilterFormat::load('test_format');
@@ -1206,7 +1206,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         'allowed_media_types' => [],
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
-          'view_mode_2' => 'view_mode_2',
+          '22222' => '22222',
           'view_mode_3' => 'view_mode_3',
         ],
       ],
@@ -1216,12 +1216,12 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // filter's ::getDependencies() method.
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
-      'core.entity_view_mode.media.view_mode_2',
+      'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_3',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
-    $this->assertSame($expected_config_dependencies, $dependencies['config']);
+    $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
 
     // Test MediaEmbed's allowed_view_modes option setting enables a view mode
     // selection field.
@@ -1236,17 +1236,17 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $page->pressButton('Edit media');
     $this->waitForMetadataDialog();
     $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_1');
-    $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_2');
+    $assert_session->optionExists('attributes[data-view-mode]', '22222');
     $assert_session->optionNotExists('attributes[data-view-mode]', 'view_mode_3');
-    $assert_session->selectExists('attributes[data-view-mode]')->selectOption('view_mode_2');
+    $assert_session->selectExists('attributes[data-view-mode]')->selectOption('22222');
     $this->submitDialog();
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-2'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-_2222'));
     // Test that the downcast drupal-media element contains the
     // `data-view-mode` attribute set in the dialog.
     $this->pressEditorButton('source');
     $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
-    $this->assertSame('view_mode_2', $drupal_media->getAttribute('data-view-mode'));
+    $this->assertSame('22222', $drupal_media->getAttribute('data-view-mode'));
 
     // Press the source button again to leave source mode.
     $this->pressEditorButton('source');
@@ -1289,7 +1289,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         'allowed_media_types' => [],
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
-          'view_mode_2' => 'view_mode_2',
+          '22222' => '22222',
         ],
       ],
     ])->save();
@@ -1297,11 +1297,11 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // Test that the dependencies change when the allowed_view_modes change.
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
-      'core.entity_view_mode.media.view_mode_2',
+      'core.entity_view_mode.media.22222',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
-    $this->assertSame($expected_config_dependencies, $dependencies['config']);
+    $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
 
     // Test that setting the view mode back to the default removes the
     // `data-view-mode` attribute.
@@ -1309,7 +1309,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $page->pressButton('Edit media');
     $this->waitForMetadataDialog();
     $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_1');
-    $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_2');
+    $assert_session->optionExists('attributes[data-view-mode]', '22222');
     $assert_session->selectExists('attributes[data-view-mode]')->selectOption('view_mode_1');
     $this->submitDialog();
     $this->getSession()->switchToIFrame('ckeditor');
