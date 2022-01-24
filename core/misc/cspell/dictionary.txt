@@ -21,6 +21,7 @@ ajaxify
 ajaxing
 akiko
 aliasable
+alignable
 aliquet
 allowtransparency
 allwords
