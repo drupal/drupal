@@ -18,6 +18,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -103,7 +104,7 @@ function system_requirements($phase) {
       $requirements['deprecated_modules'] = [
         'title' => t('Deprecated modules enabled'),
         'value' => t('Deprecated modules found: %module_list.', [
-          '%module_list' => t(implode(',', $deprecated_modules_link_list)),
+          '%module_list' => Markup::create(implode(', ', $deprecated_modules_link_list)),
         ]),
         'severity' => REQUIREMENT_WARNING,
       ];
@@ -154,7 +155,7 @@ function system_requirements($phase) {
       $requirements['deprecated_themes'] = [
         'title' => t('Deprecated themes enabled'),
         'value' => t('Deprecated themes found: %theme_list.', [
-          '%theme_list' => t(implode(',', $deprecated_themes_link_list)),
+          '%theme_list' => Markup::create(implode(', ', $deprecated_themes_link_list)),
         ]),
         'severity' => REQUIREMENT_WARNING,
       ];
@@ -168,7 +169,7 @@ function system_requirements($phase) {
       $requirements['obsolete_extensions'] = [
         'title' => t('Obsolete extensions enabled'),
         'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.', [
-          '%extension_list' => t(implode(', ', $obsolete_extensions_link_list)),
+          '%extension_list' => Markup::create(implode(', ', $obsolete_extensions_link_list)),
         ]),
         'severity' => REQUIREMENT_WARNING,
       ];
