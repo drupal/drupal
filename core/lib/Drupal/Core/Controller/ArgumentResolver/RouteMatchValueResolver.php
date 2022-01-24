@@ -16,14 +16,14 @@ final class RouteMatchValueResolver implements ArgumentValueResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function supports(Request $request, ArgumentMetadata $argument) {
+  public function supports(Request $request, ArgumentMetadata $argument): bool {
     return $argument->getType() == RouteMatchInterface::class || is_subclass_of($argument->getType(), RouteMatchInterface::class);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function resolve(Request $request, ArgumentMetadata $argument) {
+  public function resolve(Request $request, ArgumentMetadata $argument): iterable {
     yield RouteMatch::createFromRequest($request);
   }
 
