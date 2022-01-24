@@ -21,7 +21,7 @@ class DrupalKernelLegacyTest extends UnitTestCase {
   public function testKernelEventDeprecation() {
     $kernel = $this->createMock(DrupalKernel::class);
     $request = $this->createMock(Request::class);
-    $event = new KernelEvent($kernel, $request, $kernel::MASTER_REQUEST);
+    $event = new KernelEvent($kernel, $request, $kernel::MAIN_REQUEST);
 
     $this->expectDeprecation('Since symfony/http-kernel 5.3: "Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.');
     $this->assertTrue($event->isMasterRequest());

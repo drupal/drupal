@@ -76,9 +76,9 @@ class PageCache implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     // Only allow page caching on master request.
-    if ($type === static::MASTER_REQUEST && $this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) {
+    if ($type === static::MAIN_REQUEST && $this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) {
       $response = $this->lookup($request, $type, $catch);
     }
     else {
@@ -94,7 +94,7 @@ class PageCache implements HttpKernelInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object.
    * @param int $type
-   *   The type of the request (one of HttpKernelInterface::MASTER_REQUEST or
+   *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    * @param bool $catch
    *   Whether to catch exceptions or not
@@ -102,7 +102,7 @@ class PageCache implements HttpKernelInterface {
    * @returns \Symfony\Component\HttpFoundation\Response $response
    *   A response object.
    */
-  protected function pass(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  protected function pass(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
     return $this->httpKernel->handle($request, $type, $catch);
   }
 
@@ -112,7 +112,7 @@ class PageCache implements HttpKernelInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object.
    * @param int $type
-   *   The type of the request (one of HttpKernelInterface::MASTER_REQUEST or
+   *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    * @param bool $catch
    *   Whether to catch exceptions or not
@@ -120,7 +120,7 @@ class PageCache implements HttpKernelInterface {
    * @returns \Symfony\Component\HttpFoundation\Response $response
    *   A response object.
    */
-  protected function lookup(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  protected function lookup(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
     if ($response = $this->get($request)) {
       $response->headers->set('X-Drupal-Cache', 'HIT');
     }
@@ -178,7 +178,7 @@ class PageCache implements HttpKernelInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object.
    * @param int $type
-   *   The type of the request (one of HttpKernelInterface::MASTER_REQUEST or
+   *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    * @param bool $catch
    *   Whether to catch exceptions or not
@@ -186,7 +186,7 @@ class PageCache implements HttpKernelInterface {
    * @returns \Symfony\Component\HttpFoundation\Response $response
    *   A response object.
    */
-  protected function fetch(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  protected function fetch(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
     /** @var \Symfony\Component\HttpFoundation\Response $response */
     $response = $this->httpKernel->handle($request, $type, $catch);
 

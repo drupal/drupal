@@ -83,7 +83,7 @@ class AjaxResponseTest extends UnitTestCase {
     $event = new ResponseEvent(
       $this->createMock('\Symfony\Component\HttpKernel\HttpKernelInterface'),
       $request,
-      HttpKernelInterface::MASTER_REQUEST,
+      HttpKernelInterface::MAIN_REQUEST,
       $response
     );
     $subscriber->onResponse($event);

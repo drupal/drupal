@@ -28,7 +28,7 @@ class StackKernelIntegrationTest extends KernelTestBase {
     $request = Request::create((new Url('httpkernel_test.empty'))->toString());
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel */
     $http_kernel = \Drupal::service('http_kernel');
-    $http_kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, FALSE);
+    $http_kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, FALSE);
 
     $this->assertEquals('world', $request->attributes->get('_hello'));
     $this->assertEquals('test_argument', $request->attributes->get('_previous_optional_argument'));

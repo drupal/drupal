@@ -55,7 +55,7 @@ class UpdateKernel extends DrupalKernel {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     try {
       static::bootEnvironment();
 

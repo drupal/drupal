@@ -43,7 +43,7 @@ class CommandsTest extends KernelTestBase {
       $event = new ResponseEvent(
         \Drupal::service('http_kernel'),
         new Request(),
-        HttpKernelInterface::MASTER_REQUEST,
+        HttpKernelInterface::MAIN_REQUEST,
         $response
       );
       $subscriber->onResponse($event);

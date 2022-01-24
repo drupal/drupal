@@ -637,7 +637,7 @@ EOF;
    *   The request for which a response is being sent.
    * @param int $request_type
    *   The request type. Can either be
-   *   \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST or
+   *   \Symfony\Component\HttpKernel\HttpKernelInterface::MAIN_REQUEST or
    *   \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST.
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response to filter.
@@ -646,7 +646,7 @@ EOF;
    *   The filtered response.
    */
   protected function filterResponse(Request $request, $request_type, Response $response) {
-    assert($request_type === HttpKernelInterface::MASTER_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
+    assert($request_type === HttpKernelInterface::MAIN_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
     $this->requestStack->push($request);
     $event = new ResponseEvent($this->httpKernel, $request, $request_type, $response);
     $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);

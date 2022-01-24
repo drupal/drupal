@@ -235,7 +235,7 @@ class EditorIntegrationTest extends QuickEditTestBase {
     $event = new ResponseEvent(
       \Drupal::service('http_kernel'),
       $request,
-      HttpKernelInterface::MASTER_REQUEST,
+      HttpKernelInterface::MAIN_REQUEST,
       $response
     );
     $subscriber->onResponse($event);

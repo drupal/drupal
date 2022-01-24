@@ -38,7 +38,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     // Register available mime types.
     foreach ($this->formats as $format => $mime_type) {
       $request->setFormat($format, $mime_type);

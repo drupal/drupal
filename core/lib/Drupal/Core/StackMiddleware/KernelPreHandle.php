@@ -42,7 +42,7 @@ class KernelPreHandle implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     $this->drupalKernel->preHandle($request);
 
     return $this->httpKernel->handle($request, $type, $catch);

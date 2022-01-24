@@ -35,7 +35,7 @@ class BlockInterestCohortTest extends KernelTestBase {
     $kernel = \Drupal::service('http_kernel');
     $request = Request::create('/');
     $response = new Response('', 200, $headers);
-    $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+    $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
     \Drupal::service('finish_response_subscriber')->onRespond($event);
 
     $this->assertSame($headers['Permissions-Policy'], $response->headers->get('Permissions-Policy'));
@@ -50,7 +50,7 @@ class BlockInterestCohortTest extends KernelTestBase {
     $kernel = \Drupal::service('http_kernel');
     $request = Request::create('/');
     $response = new Response('', 200, $headers);
-    $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+    $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
     \Drupal::service('finish_response_subscriber')->onRespond($event);
 
     $this->assertSame($headers['Permissions-Policy'], $response->headers->get('Permissions-Policy'));

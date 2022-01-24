@@ -32,7 +32,7 @@ class ReplicaKillSwitchTest extends KernelTestBase {
     $service->trigger();
     $class_loader = require $this->root . '/autoload.php';
     $kernel = new DrupalKernel('testing', $class_loader, FALSE);
-    $event = new RequestEvent($kernel, Request::create('http://example.com'), HttpKernelInterface::MASTER_REQUEST);
+    $event = new RequestEvent($kernel, Request::create('http://example.com'), HttpKernelInterface::MAIN_REQUEST);
     $service->checkReplicaServer($event);
 
     $db1 = Database::getConnection('default', 'default');

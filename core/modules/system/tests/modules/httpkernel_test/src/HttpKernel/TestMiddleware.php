@@ -41,7 +41,7 @@ class TestMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     $request->attributes->set('_hello', 'world');
     if ($request->attributes->has('_optional_argument')) {
       $request->attributes->set('_previous_optional_argument', $request->attributes->get('_optional_argument'));

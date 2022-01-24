@@ -42,7 +42,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $event = new ResponseEvent(
       $this->prophesize(HttpKernelInterface::class)->reveal(),
       $request,
-      HttpKernelInterface::MASTER_REQUEST,
+      HttpKernelInterface::MAIN_REQUEST,
       $handler_response
     );
     $resource_response_subscriber->onResponse($event);
@@ -146,7 +146,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       $event = new ResponseEvent(
         $this->prophesize(HttpKernelInterface::class)->reveal(),
         $request,
-        HttpKernelInterface::MASTER_REQUEST,
+        HttpKernelInterface::MAIN_REQUEST,
         $handler_response
       );
       $resource_response_subscriber->onResponse($event);
@@ -196,7 +196,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       $event = new ResponseEvent(
         $this->prophesize(HttpKernelInterface::class)->reveal(),
         $request,
-        HttpKernelInterface::MASTER_REQUEST,
+        HttpKernelInterface::MAIN_REQUEST,
         $handler_response
       );
       $resource_response_subscriber->onResponse($event);

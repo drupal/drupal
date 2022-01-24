@@ -116,7 +116,7 @@ RSS;
     $event = new ResponseEvent(
       $this->prophesize(HttpKernelInterface::class)->reveal(),
       Request::create('/'),
-      HttpKernelInterface::MASTER_REQUEST,
+      HttpKernelInterface::MAIN_REQUEST,
       new Response($content, 200, [
         'Content-Type' => 'application/rss+xml',
       ])
