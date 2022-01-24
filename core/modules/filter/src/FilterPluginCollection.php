@@ -70,7 +70,7 @@ class FilterPluginCollection extends DefaultLazyPluginCollection {
     $configuration = $this->manager->getDefinition($instance_id);
     // Merge the actual configuration into the default configuration.
     if (isset($this->configurations[$instance_id])) {
-      $configuration = NestedArray::mergeDeep($configuration, $this->configurations[$instance_id]);
+      $configuration = NestedArray::mergeDeepArray([$configuration, $this->configurations[$instance_id]], TRUE);
     }
     $this->configurations[$instance_id] = $configuration;
     parent::initializePlugin($instance_id);
