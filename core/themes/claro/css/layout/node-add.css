@@ -37,7 +37,7 @@
 
   .layout-region--node-main .layout-region__content,
   .layout-region--node-footer .layout-region__content {
-    max-width: 48rem;
+    max-width: 52rem;
     margin-right: auto;
     margin-left: auto;
   }
@@ -57,5 +57,20 @@
   /* Push sidebar down to horizontal align with form section */
   .layout-region--node-secondary {
     margin-top: 1.5rem;
+  }
+}
+
+/**
+ * Extra Wide screens
+ */
+
+@media screen and (min-width: 112rem) {
+  .layout-region--node-main,
+  .layout-region--node-footer {
+    width: calc(100% - 25vw);
+  }
+
+  .layout-region--node-secondary {
+    width: 25vw;
   }
 }
