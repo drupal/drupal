@@ -6,6 +6,9 @@
 @import "../base/variables.pcss.css";
 
 .ui-dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 0;
   border: 0;
   border-radius: var(--jui-dialog-border-radius);
