@@ -320,13 +320,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
-    $parts = explode('\\', $extender_name);
-    $class = end($parts);
-    $driver_class = $this->connection->getDriverClass($class);
-    if ($driver_class !== $class) {
-      return new $driver_class($this, $this->connection);
-    }
-    return new $extender_name($this, $this->connection);
+    return \Drupal::service('select_extender_factory.' . $extender_name)->get($this, $this->connection);
   }
 
   /**
