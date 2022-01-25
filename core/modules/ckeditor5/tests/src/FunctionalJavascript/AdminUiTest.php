@@ -170,4 +170,32 @@ class AdminUiTest extends CKEditor5TestBase {
     $this->assertCount(1, $find_validation_error_messages());
   }
 
+  /**
+   * Tests the language config form.
+   */
+  public function testLanguageConfigForm() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createNewTextFormat($page, $assert_session);
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The language plugin config form should not be present.
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
+
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The language plugin config form should now be present.
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
+
+    // It must also be possible to remove the language plugin again.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowUp');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The language plugin config form should not be present anymore.
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
+  }
+
 }

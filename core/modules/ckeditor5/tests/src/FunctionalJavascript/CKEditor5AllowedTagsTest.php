@@ -184,27 +184,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   }
 
   /**
-   * Tests the language config form.
-   */
-  public function testLanguageConfigForm() {
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-
-    $this->createNewTextFormat($page, $assert_session);
-    $assert_session->assertWaitOnAjaxRequest();
-
-    // The language plugin config form should not be present.
-    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
-
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowDown');
-    $assert_session->assertWaitOnAjaxRequest();
-
-    // The language plugin config form should now be present.
-    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
-  }
-
-  /**
    * Tests that the img tag is added after enabling image uploads.
    */
   public function testImgAddedViaUploadPlugin() {
