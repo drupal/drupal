@@ -326,7 +326,7 @@
 }
 
 .js .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
-  display: none;
+  visibility: hidden;
 }
 
 /**
@@ -351,6 +351,10 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
+
+.dropbutton__item:first-of-type ~ .dropbutton__item {
+  max-width: 12.5rem;
+}
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
