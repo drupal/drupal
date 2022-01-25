@@ -24,7 +24,7 @@
 /* Width of the entire grid maxes out. */
 
 @font-face {
-  font-family: "metropolis";
+  font-family: metropolis;
   src:
     url("../../fonts/metropolis/Metropolis-Regular.woff2") format("woff2"),
     url("../../fonts/metropolis/Metropolis-Regular.woff") format("woff");
@@ -34,7 +34,7 @@
 }
 
 @font-face {
-  font-family: "metropolis";
+  font-family: metropolis;
   src:
     url("../../fonts/metropolis/Metropolis-Bold.woff2") format("woff2"),
     url("../../fonts/metropolis/Metropolis-Bold.woff") format("woff");
@@ -44,7 +44,7 @@
 }
 
 @font-face {
-  font-family: "metropolis";
+  font-family: metropolis;
   src:
     url("../../fonts/metropolis/Metropolis-SemiBold.woff2") format("woff2"),
     url("../../fonts/metropolis/Metropolis-SemiBold.woff") format("woff");
@@ -56,7 +56,7 @@
 /* lora-regular - latin */
 
 @font-face {
-  font-family: "Lora";
+  font-family: Lora;
   src:
     local("Lora Regular"),
     local("Lora-Regular"),
@@ -70,7 +70,7 @@
 /* lora-italic - latin */
 
 @font-face {
-  font-family: "Lora";
+  font-family: Lora;
   src:
     local("Lora Italic"),
     local("Lora-Italic"),
@@ -84,7 +84,7 @@
 /* lora-700 - latin */
 
 @font-face {
-  font-family: "Lora";
+  font-family: Lora;
   src:
     local("Lora Bold"),
     local("Lora-Bold"),
