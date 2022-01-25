@@ -117,6 +117,12 @@ PHPCS_XML_DIST_FILE_CHANGED=0
 #  - core/.eslintrc.jquery.json
 ESLINT_CONFIG_PASSING_FILE_CHANGED=0
 
+# This variable will be set to one when the stylelint config file is changed.
+# changed:
+#  - core/.stylelintignore
+#  - core/.stylelintrc.json
+STYLELINT_CONFIG_FILE_CHANGED=0
+
 # Build up a list of absolute file names.
 ABS_FILES=
 for FILE in $FILES; do
@@ -128,6 +134,16 @@ for FILE in $FILES; do
 
   if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
     ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
+  fi;
+
+  if [[ $FILE == "core/.stylelintignore" || $FILE == "core/.stylelintrc.json" ]]; then
+    STYLELINT_CONFIG_FILE_CHANGED=1;
+  fi;
+
+  # If JavaScript packages change, then rerun all JavaScript style checks.
+  if [[ $FILE == "core/package.json" || $FILE == "core/yarn.lock" ]]; then
+    ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
+    STYLELINT_CONFIG_FILE_CHANGED=1;
   fi;
 done
 
@@ -210,6 +226,24 @@ if [[ $ESLINT_CONFIG_PASSING_FILE_CHANGED == "1" ]]; then
     printf "\neslint: ${red}failed${reset}\n"
   else
     printf "\neslint: ${green}passed${reset}\n"
+  fi
+  cd $TOP_LEVEL
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
+
+# When the stylelint config has been changed, then stylelint must check all files.
+if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
+  cd "$TOP_LEVEL/core"
+  yarn run -s lint:css
+  if [ "$?" -ne "0" ]; then
+    # If there are failures set the status to a number other than 0.
+    FINAL_STATUS=1
+    printf "\nstylelint: ${red}failed${reset}\n"
+  else
+    printf "\nstylelint: ${green}passed${reset}\n"
   fi
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
@@ -424,7 +458,7 @@ for FILE in $FILES; do
     # has a corresponding .pcss don't do stylelint.
     if [[ $FILE =~ \.pcss\.css$ ]] || [[ ! -f "$TOP_LEVEL/$BASENAME.pcss.css" ]]; then
       cd "$TOP_LEVEL/core"
-      node_modules/.bin/stylelint "$TOP_LEVEL/$FILE"
+      node_modules/.bin/stylelint --allow-empty-input "$TOP_LEVEL/$FILE"
       if [ "$?" -ne "0" ]; then
         STATUS=1
       else
