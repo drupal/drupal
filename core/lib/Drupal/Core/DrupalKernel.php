@@ -479,7 +479,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->classLoader->setApcuPrefix($prefix);
     }
 
-    if (in_array('phar', stream_get_wrappers(), TRUE)) {
+    // @todo clean-up for PHP 8.0+ https://www.drupal.org/node/3210486
+    if (PHP_VERSION_ID < 80000 && in_array('phar', stream_get_wrappers(), TRUE)) {
       // Set up a stream wrapper to handle insecurities due to PHP's builtin
       // phar stream wrapper. This is not registered as a regular stream wrapper
       // to prevent \Drupal\Core\File\FileSystem::validScheme() treating "phar"
