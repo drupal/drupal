@@ -191,6 +191,35 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
       }
     }
 
+    if ($definition['drupal']['conditions'] !== FALSE) {
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::isPluginDisabled()
+      // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConditionsMetConstraintValidator::validate()
+      $supported_condition_types = [
+        'toolbarItem' => function ($value): ?string {
+          return is_string($value) ? NULL : 'A string corresponding to a CKEditor 5 toolbar item must be specified.';
+        },
+        'imageUploadStatus' => function ($value): ?string {
+          return is_bool($value) ? NULL : 'A boolean indicating whether image uploads must be enabled (true) or not (false) must be specified.';
+        },
+        'filter' => function ($value): ?string {
+          return is_string($value) ? NULL : 'A string corresponding to a filter plugin ID must be specified.';
+        },
+        'plugins' => function ($value): ?string {
+          return is_array($value) && Inspector::assertAllStrings($value) ? NULL : 'A list of strings, each corresponding to a CKEditor 5 plugin ID must be specified.';
+        },
+      ];
+      $unsupported_condition_types = array_keys(array_diff_key($definition['drupal']['conditions'], $supported_condition_types));
+      if (!empty($unsupported_condition_types)) {
+        throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a "drupal.conditions" value that contains some unsupported condition types: "%s". Only the following conditions types are supported: "%s".', $id, implode(', ', $unsupported_condition_types), implode('", "', array_keys($supported_condition_types))));
+      }
+      foreach ($definition['drupal']['conditions'] as $condition_type => $value) {
+        $assessment = $supported_condition_types[$condition_type]($value);
+        if (is_string($assessment)) {
+          throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has an invalid "drupal.conditions" item. "%s" is set to an invalid value. %s', $id, $condition_type, $assessment));
+        }
+      }
+    }
+
     if ($definition['drupal']['admin_library'] !== FALSE) {
       [$extension, $library] = explode('/', $definition['drupal']['admin_library'], 2);
       if (\Drupal::service('library.discovery')->getLibraryByName($extension, $library) === FALSE) {
