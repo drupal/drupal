@@ -25,6 +25,7 @@
   --dropbutton-border-size: 1px;
   --dropbutton-toggle-size-spacing: var(--dropbutton-border-size);
   --dropbutton-border-radius-size: 2px;
+  --dropbutton-item-max-width: 12.5rem;
   /* Variant variables: small. */
   --dropbutton-small-spacing-size: 0.625rem;
   --dropbutton-small-font-size: var(--font-size-xs);
@@ -341,7 +342,7 @@
 }
 
 .js .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
-  display: none;
+  visibility: hidden;
 }
 
 /**
@@ -366,6 +367,10 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
+
+.dropbutton__item:first-of-type ~ .dropbutton__item {
+  max-width: var(--dropbutton-item-max-width);
+}
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
