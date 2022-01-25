@@ -150,7 +150,7 @@ trait ContextAwarePluginTrait {
   /**
    * {@inheritdoc}
    */
-  abstract protected function getPluginDefinition();
+  abstract public function getPluginDefinition();
 
   /**
    * {@inheritdoc}
