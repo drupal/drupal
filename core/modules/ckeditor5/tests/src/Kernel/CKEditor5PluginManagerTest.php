@@ -337,6 +337,194 @@ YAML,
       NULL,
     ];
 
+    // Add conditions.
+    yield 'unsupported condition type' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      foo: bar
+YAML,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has a "drupal.conditions" value that contains some unsupported condition types: "foo". Only the following conditions types are supported: "toolbarItem", "imageUploadStatus", "filter", "plugins".',
+    ];
+    yield 'invalid condition: toolbarItem' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: [bold, italic]
+YAML,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has an invalid "drupal.conditions" item. "toolbarItem" is set to an invalid value. A string corresponding to a CKEditor 5 toolbar item must be specified.',
+    ];
+    yield 'valid condition: toolbarItem' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+YAML,
+      NULL,
+    ];
+    yield 'invalid condition: filter' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+      filter: true
+YAML,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has an invalid "drupal.conditions" item. "filter" is set to an invalid value. A string corresponding to a filter plugin ID must be specified.',
+    ];
+    yield 'valid condition: filter' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+      filter: filter_caption
+YAML,
+      NULL,
+    ];
+    yield 'invalid condition: imageUploadStatus' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+      filter: filter_caption
+      imageUploadStatus: 'true'
+YAML,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has an invalid "drupal.conditions" item. "imageUploadStatus" is set to an invalid value. A boolean indicating whether image uploads must be enabled (true) or not (false) must be specified.',
+    ];
+    yield 'valid condition: imageUploadStatus' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+      filter: filter_caption
+      imageUploadStatus: true
+YAML,
+      NULL,
+    ];
+    yield 'invalid condition: plugins' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+      filter: filter_caption
+      imageUploadStatus: true
+      plugins: ckeditor5_imageCaption
+YAML,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has an invalid "drupal.conditions" item. "plugins" is set to an invalid value. A list of strings, each corresponding to a CKEditor 5 plugin ID must be specified.',
+    ];
+    yield 'valid condition: plugins' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions:
+      toolbarItem: bold
+      filter: filter_caption
+      imageUploadStatus: true
+      plugins: [ckeditor5_imageCaption]
+YAML,
+      NULL,
+    ];
+    yield 'unconditional: for plugins that should always loaded' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions: []
+YAML,
+      NULL,
+    ];
+    yield 'explicitly unconditional' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+    admin_library: ckeditor5/admin.basic
+    conditions: false
+YAML,
+      NULL,
+    ];
+
     // Add a plugin class; observe what additional requirements need to be met.
     yield 'added plugin class' => [
       <<<YAML
