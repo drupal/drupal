@@ -320,7 +320,18 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
+    // @todo remove the BC layer in Drupal 10.
+    // @see https://www.drupal.org/project/drupal/issues/3260284
     $parts = explode('\\', $extender_name);
+
+    if (count($parts) === 1) {
+      return \Drupal::service('select_extender_factory.' . $extender_name)->get($this, $this->connection);
+    }
+
+    // BC layer.
+    // @todo remove in Drupal 10.
+    // @see https://www.drupal.org/project/drupal/issues/3260284
+    @trigger_error("Passing '$extender_name' as a fully qualified class name to " . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Pass the appropriate suffix for a \'select_extender_factory\' service instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
     $class = end($parts);
     $driver_class = $this->connection->getDriverClass($class);
     if ($driver_class !== $class) {

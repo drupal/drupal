@@ -2,6 +2,8 @@
 
 namespace Drupal\search;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 
@@ -72,6 +74,20 @@ class SearchQuery extends SelectExtender {
    * @see SearchQuery::getStatus()
    */
   const NO_KEYWORD_MATCHES = 8;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The search text processor service.
+   *
+   * @var \Drupal\search\SearchTextProcessorInterface
+   */
+  protected $searchTextProcessor;
 
   /**
    * The keywords and advanced search options that are entered by the user.
@@ -187,6 +203,32 @@ class SearchQuery extends SelectExtender {
   protected $multiply = [];
 
   /**
+   * Constructs a TableSortExtender object.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   Select query object.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection object.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\search\SearchTextProcessorInterface $search_text_processor
+   *   The search text processor service.
+   */
+  public function __construct(SelectInterface $query, Connection $connection, ConfigFactoryInterface $config_factory = NULL, SearchTextProcessorInterface $search_text_processor = NULL) {
+    if (is_null($config_factory)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $config_factory argument is deprecated in drupal:9.4.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+      $config_factory = \Drupal::service('config.factory');
+    }
+    if (is_null($search_text_processor)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $search_text_processor argument is deprecated in drupal:9.4.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+      $search_text_processor = \Drupal::service('search.text_processor');
+    }
+    parent::__construct($query, $connection);
+    $this->configFactory = $config_factory;
+    $this->searchTextProcessor = $search_text_processor;
+  }
+
+  /**
    * Sets the search query expression.
    *
    * @param string $expression
@@ -231,9 +273,7 @@ class SearchQuery extends SelectExtender {
 
     // Classify tokens.
     $in_or = FALSE;
-    $limit_combinations = \Drupal::config('search.settings')->get('and_or_limit');
-    /** @var \Drupal\search\SearchTextProcessorInterface $text_processor */
-    $text_processor = \Drupal::service('search.text_processor');
+    $limit_combinations = $this->configFactory->get('search.settings')->get('and_or_limit');
     // The first search expression does not count as AND.
     $and_count = -1;
     $or_count = 0;
@@ -256,7 +296,7 @@ class SearchQuery extends SelectExtender {
       // Simplify keyword according to indexing rules and external
       // preprocessors. Use same process as during search indexing, so it
       // will match search index.
-      $words = $text_processor->analyze($match[2]);
+      $words = $this->searchTextProcessor->analyze($match[2]);
       // Re-explode in case simplification added more words, except when
       // matching a phrase.
       $words = $phrase ? [$words] : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
@@ -364,7 +404,7 @@ class SearchQuery extends SelectExtender {
     $split = explode(' ', $word);
     foreach ($split as $s) {
       $num = is_numeric($s);
-      if ($num || mb_strlen($s) >= \Drupal::config('search.settings')->get('index.minimum_word_size')) {
+      if ($num || mb_strlen($s) >= $this->configFactory->get('search.settings')->get('index.minimum_word_size')) {
         if (!isset($this->words[$s])) {
           $this->words[$s] = $s;
           $num_new_scores++;

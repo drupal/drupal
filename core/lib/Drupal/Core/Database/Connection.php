@@ -2180,8 +2180,14 @@ abstract class Connection {
    *
    * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    *   If the container has not been initialized yet.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
+   *   dependency injection instead.
+   *
+   * @see https://www.drupal.org/node/3218001
    */
   public function getPagerManager(): PagerManagerInterface {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.4.0 and will be required in drupal:10.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
     return \Drupal::service('pager.manager');
   }
 

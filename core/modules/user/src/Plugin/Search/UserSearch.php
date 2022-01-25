@@ -4,7 +4,6 @@ namespace Drupal\user\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -120,7 +119,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
     // Run the query to find matching users.
     $query = $this->database
       ->select('users_field_data', 'users')
-      ->extend(PagerSelectExtender::class);
+      ->extend('pager');
     $query->fields('users', ['uid']);
     $query->condition('default_langcode', 1);
     if ($this->currentUser->hasPermission('administer users')) {
