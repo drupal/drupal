@@ -82,6 +82,7 @@ function update_page_top() {
       case 'update.settings':
       case 'system.status':
       case 'update.confirmation_page':
+      case 'system.batch_page.html':
         return;
 
       // If we are on the appearance or modules list, display a detailed report
