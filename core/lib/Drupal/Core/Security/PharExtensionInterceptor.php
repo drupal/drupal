@@ -9,6 +9,12 @@ use TYPO3\PharStreamWrapper\Exception;
 /**
  * An alternate PharExtensionInterceptor to support phar-based CLI tools.
  *
+ * @internal
+ *
+ * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. No replacement
+ *   is provided.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3252439
  * @see \TYPO3\PharStreamWrapper\Interceptor\PharExtensionInterceptor
  */
 class PharExtensionInterceptor implements Assertable {
