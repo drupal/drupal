@@ -671,10 +671,18 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     $pair = static::createEphemeralPairedEditor($submitted_editor, $submitted_filter_format);
 
+    // When CKEditor 5 plugins are disabled in the form-based admin UI, the
+    // associated settings (if any) should be omitted too.
+    $original_settings = $pair->getSettings();
+    $enabled_plugins = $this->ckeditor5PluginManager->getEnabledDefinitions($pair);
+    $updated_settings = [
+      'plugins' => array_intersect_key($original_settings['plugins'], $enabled_plugins),
+    ] + $original_settings;
+    $pair->setSettings($updated_settings);
+
     if ($pair->getFilterFormat()->filters('filter_html')->status) {
       // Compute elements provided by the current CKEditor 5 settings.
-      $enabled_plugins = array_keys($this->ckeditor5PluginManager->getEnabledDefinitions($pair));
-      $elements = $this->ckeditor5PluginManager->getProvidedElements($enabled_plugins, $pair);
+      $elements = $this->ckeditor5PluginManager->getProvidedElements(array_keys($enabled_plugins), $pair);
 
       // Compute eventual filter_html setting. Eventual as in: this is the list
       // of eventually allowed HTML tags.
