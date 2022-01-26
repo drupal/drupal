@@ -60,7 +60,6 @@ class Config {
     'sebastian/recursion-context' => ['tests'],
     'seld/jsonlint' => ['tests'],
     'squizlabs/php_codesniffer' => ['tests'],
-    'stack/builder' => ['tests'],
     'symfony/browser-kit' => ['Tests'],
     'symfony/console' => ['Tests'],
     'symfony/css-selector' => ['Tests'],

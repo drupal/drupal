@@ -35,7 +35,6 @@
         "doctrine/annotations": "^1.12",
         "guzzlehttp/guzzle": "^7.3.0",
         "laminas/laminas-feed": "^2.12",
-        "stack/builder": "^1.0",
         "egulias/email-validator": "^2.1.22|^3.0",
         "masterminds/html5": "^2.1",
         "symfony/psr-http-message-bridge": "^2.0",

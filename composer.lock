@@ -448,7 +448,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "f6e86b91c8d470e57aa22b05e003a389d43a0813"
+                "reference": "74774df5d4617d3526ff010605474301d9fa376f"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -474,7 +474,6 @@
                 "pear/archive_tar": "^1.4.14",
                 "php": ">=8.0.2",
                 "psr/log": "^1.0",
-                "stack/builder": "^1.0",
                 "symfony/console": "^5.4",
                 "symfony/dependency-injection": "^5.4",
                 "symfony/event-dispatcher": "^5.4",
@@ -2052,60 +2051,6 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "stack/builder",
-            "version": "v1.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stackphp/builder.git",
-                "reference": "a4faaa6f532c6086bc66c29e1bc6c29593e1ca7c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stackphp/builder/zipball/a4faaa6f532c6086bc66c29e1bc6c29593e1ca7c",
-                "reference": "a4faaa6f532c6086bc66c29e1bc6c29593e1ca7c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.0",
-                "symfony/http-foundation": "~2.1|~3.0|~4.0|~5.0",
-                "symfony/http-kernel": "~2.1|~3.0|~4.0|~5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~8.0",
-                "symfony/routing": "^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Stack": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Igor Wiedler",
-                    "email": "igor@wiedler.ch"
-                }
-            ],
-            "description": "Builder for stack middleware based on HttpKernelInterface.",
-            "keywords": [
-                "stack"
-            ],
-            "support": {
-                "issues": "https://github.com/stackphp/builder/issues",
-                "source": "https://github.com/stackphp/builder/tree/v1.0.6"
-            },
-            "time": "2020-01-30T12:17:27+00:00"
         },
         {
             "name": "symfony/console",

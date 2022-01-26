@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection\Compiler;
 
+use Drupal\Core\StackMiddleware\StackedHttpKernel;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -10,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Provides a compiler pass for stacked HTTP kernels.
  *
  * Builds the HTTP kernel by collecting all services tagged 'http_middleware'
- * and assembling them into a StackedKernel. The middleware with the highest
+ * and assembling them into a StackedHttpKernel. The middleware with the highest
  * priority ends up as the outermost while the lowest priority middleware wraps
  * the actual HTTP kernel defined by the http_kernel.basic service.
  *
@@ -43,7 +44,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *     - { name: http_middleware, priority: 200, responder: true }
  * @endcode
  *
- * @see \Stack\Builder
+ * @see \Drupal\Core\StackMiddleware\StackedHttpKernel
  */
 class StackedKernelPass implements CompilerPassInterface {
 
@@ -59,7 +60,7 @@ class StackedKernelPass implements CompilerPassInterface {
     $stacked_kernel = $container->getDefinition('http_kernel');
 
     // Return now if this is not a stacked kernel.
-    if ($stacked_kernel->getClass() !== 'Stack\StackedHttpKernel') {
+    if ($stacked_kernel->getClass() !== StackedHttpKernel::class) {
       return;
     }
 
