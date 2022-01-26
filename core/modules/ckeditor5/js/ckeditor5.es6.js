@@ -505,29 +505,17 @@
         window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
 
-      const $content = $(
-        `<div class="ckeditor5-dialog-loading"><span style="top: -40px;" class="ckeditor5-dialog-loading-link">${Drupal.t(
-          'Loading...',
-        )}</span></div>`,
-      );
-      $content.appendTo($('body'));
-
       const ckeditorAjaxDialog = Drupal.ajax({
         dialog: dialogSettings,
         dialogType: 'modal',
         selector: '.ckeditor5-dialog-loading-link',
         url,
-        progress: { type: 'throbber' },
+        progress: { type: 'fullscreen' },
         submit: {
           editor_object: {},
         },
       });
       ckeditorAjaxDialog.execute();
-
-      // After a short delay, show "Loading…" message.
-      window.setTimeout(() => {
-        $content.find('span').animate({ top: '0px' });
-      }, 1000);
 
       // Store the save callback to be executed when this dialog is closed.
       Drupal.ckeditor5.saveCallback = saveCallback;

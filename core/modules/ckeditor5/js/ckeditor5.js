@@ -278,26 +278,19 @@
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
-      const $content = $(`<div class="ckeditor5-dialog-loading"><span style="top: -40px;" class="ckeditor5-dialog-loading-link">${Drupal.t('Loading...')}</span></div>`);
-      $content.appendTo($('body'));
       const ckeditorAjaxDialog = Drupal.ajax({
         dialog: dialogSettings,
         dialogType: 'modal',
         selector: '.ckeditor5-dialog-loading-link',
         url,
         progress: {
-          type: 'throbber'
+          type: 'fullscreen'
         },
         submit: {
           editor_object: {}
         }
       });
       ckeditorAjaxDialog.execute();
-      window.setTimeout(() => {
-        $content.find('span').animate({
-          top: '0px'
-        });
-      }, 1000);
       Drupal.ckeditor5.saveCallback = saveCallback;
     }
 
