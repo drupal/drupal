@@ -448,7 +448,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "eefc18dedeaf145e81deed18c914b87cc2c62bd8"
+                "reference": "f6e86b91c8d470e57aa22b05e003a389d43a0813"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -489,8 +489,7 @@
                 "symfony/serializer": "^5.4",
                 "symfony/validator": "^5.4",
                 "symfony/yaml": "^5.4",
-                "twig/twig": "^3.0",
-                "typo3/phar-stream-wrapper": "^3.1.3"
+                "twig/twig": "^3.0"
             },
             "conflict": {
                 "drush/drush": "<8.1.10"
@@ -4468,61 +4467,6 @@
                 }
             ],
             "time": "2022-01-03T21:15:37+00:00"
-        },
-        {
-            "name": "typo3/phar-stream-wrapper",
-            "version": "v3.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TYPO3/phar-stream-wrapper.git",
-                "reference": "5cc2f04a4e2f5c7e9cc02a3bdf80fae0f3e11a8c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TYPO3/phar-stream-wrapper/zipball/5cc2f04a4e2f5c7e9cc02a3bdf80fae0f3e11a8c",
-                "reference": "5cc2f04a4e2f5c7e9cc02a3bdf80fae0f3e11a8c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.0 || ^8.0"
-            },
-            "require-dev": {
-                "ext-xdebug": "*",
-                "phpspec/prophecy": "^1.10",
-                "symfony/phpunit-bridge": "^5.1"
-            },
-            "suggest": {
-                "ext-fileinfo": "For PHP builtin file type guessing, otherwise uses internal processing"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "v3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "TYPO3\\PharStreamWrapper\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Interceptors for PHP's native phar:// stream handling",
-            "homepage": "https://typo3.org/",
-            "keywords": [
-                "phar",
-                "php",
-                "security",
-                "stream-wrapper"
-            ],
-            "support": {
-                "issues": "https://github.com/TYPO3/phar-stream-wrapper/issues",
-                "source": "https://github.com/TYPO3/phar-stream-wrapper/tree/v3.1.7"
-            },
-            "time": "2021-09-20T19:19:13+00:00"
         }
     ],
     "packages-dev": [

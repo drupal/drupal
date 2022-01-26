@@ -152,31 +152,4 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertFalse($stream_wrapper_manager->isValidScheme($stream_wrapper_manager::getScheme('foo://asdf')), 'Did not get a valid stream scheme from foo://asdf');
   }
 
-  /**
-   * Tests that phar stream wrapper is registered as expected.
-   *
-   * @see \Drupal\Core\StreamWrapper\StreamWrapperManager::register()
-   */
-  public function testPharStreamWrapperRegistration() {
-    if (!in_array('phar', stream_get_wrappers(), TRUE)) {
-      $this->markTestSkipped('There is no phar stream wrapper registered. PHP is probably compiled without phar support.');
-    }
-    // Ensure that phar is not treated as a valid scheme.
-    $stream_wrapper_manager = $this->container->get('stream_wrapper_manager');
-    $this->assertFalse($stream_wrapper_manager->getViaScheme('phar'));
-
-    // Ensure that calling register again and unregister do not create errors
-    // due to the PharStreamWrapperManager singleton.
-    $stream_wrapper_manager->register();
-    $this->assertContains('public', stream_get_wrappers());
-    $this->assertContains('phar', stream_get_wrappers());
-    $stream_wrapper_manager->unregister();
-    $this->assertNotContains('public', stream_get_wrappers());
-    // This will have reverted to the builtin phar stream wrapper.
-    $this->assertContains('phar', stream_get_wrappers());
-    $stream_wrapper_manager->register();
-    $this->assertContains('public', stream_get_wrappers());
-    $this->assertContains('phar', stream_get_wrappers());
-  }
-
 }

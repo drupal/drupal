@@ -21,7 +21,6 @@ use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Security\PharExtensionInterceptor;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
@@ -33,9 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use TYPO3\PharStreamWrapper\Manager as PharStreamWrapperManager;
-use TYPO3\PharStreamWrapper\Behavior as PharStreamWrapperBehavior;
-use TYPO3\PharStreamWrapper\PharStreamWrapper;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
@@ -477,27 +473,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $id = 'class_loader:' . crc32(implode(':', array_keys($this->container->getParameter('container.modules'))));
       $prefix = Settings::getApcuPrefix($id, $this->root);
       $this->classLoader->setApcuPrefix($prefix);
-    }
-
-    // @todo clean-up for PHP 8.0+ https://www.drupal.org/node/3210486
-    if (PHP_VERSION_ID < 80000 && in_array('phar', stream_get_wrappers(), TRUE)) {
-      // Set up a stream wrapper to handle insecurities due to PHP's builtin
-      // phar stream wrapper. This is not registered as a regular stream wrapper
-      // to prevent \Drupal\Core\File\FileSystem::validScheme() treating "phar"
-      // as a valid scheme.
-      try {
-        $behavior = new PharStreamWrapperBehavior();
-        PharStreamWrapperManager::initialize(
-          $behavior->withAssertion(new PharExtensionInterceptor())
-        );
-      }
-      catch (\LogicException $e) {
-        // Continue if the PharStreamWrapperManager is already initialized. For
-        // example, this occurs during a module install.
-        // @see \Drupal\Core\Extension\ModuleInstaller::install()
-      }
-      stream_wrapper_unregister('phar');
-      stream_wrapper_register('phar', PharStreamWrapper::class);
     }
 
     $this->booted = TRUE;
