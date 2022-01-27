@@ -1280,7 +1280,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Identify all services whose instances should be persisted when rebuilding
     // the container during the lifetime of the kernel (e.g., during a kernel
     // reboot). Include synthetic services, because by definition, they cannot
-    // be automatically reinstantiated. Also include services tagged to persist.
+    // be automatically re-instantiated. Also include services tagged to
+    // persist.
     $persist_ids = [];
     foreach ($container->getDefinitions() as $id => $definition) {
       // It does not make sense to persist the container itself, exclude it.

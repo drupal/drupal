@@ -80,7 +80,7 @@ class Constraint {
    *   Normally this is set to \Drupal::CORE_COMPATIBILITY by the caller.
    */
   private function parseConstraint($constraint_string, $core_compatibility) {
-    // We use named subpatterns and support every op that version_compare
+    // We use named sub-patterns and support every op that version_compare
     // supports. Also, op is optional and defaults to equals.
     $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';
     // Core version is always optional: 8.x-2.x and 2.x is treated the same.

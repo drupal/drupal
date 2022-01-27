@@ -122,7 +122,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     EntityTest::create([
       'bundle' => 'entity_test',
       'name' => 'name',
-      $this->fieldName => 'sometext',
+      $this->fieldName => 'some_text',
     ])->save();
   }
 

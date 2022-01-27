@@ -533,7 +533,7 @@ class PathPluginBaseTest extends UnitTestCase {
     ];
     $this->pathPlugin->initDisplay($view, $display);
     $route_name = $this->pathPlugin->getRouteName();
-    // Ensure that the expected routename is returned.
+    // Ensure that the expected route name is returned.
     $this->assertEquals('view.test_id.page_1', $route_name);
   }
 

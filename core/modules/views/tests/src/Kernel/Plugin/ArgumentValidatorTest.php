@@ -24,7 +24,7 @@ class ArgumentValidatorTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view_argument_validate_numeric');
     $view->initHandlers();
     $this->assertFalse($view->argument['null']->validateArgument($this->randomString()));
-    // Reset safed argument validation.
+    // Reset saved argument validation.
     $view->argument['null']->argument_validated = NULL;
     $this->assertTrue($view->argument['null']->validateArgument(12));
   }

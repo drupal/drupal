@@ -69,6 +69,7 @@ class SessionCacheContextTest extends UnitTestCase {
     $this->request->setSession($this->session);
     $cache_context = new SessionCacheContext($this->requestStack);
 
+    // cspell:disable-next-line
     $session1_id = 'pjH_8aSoofyCDQiuVYXJcbfyr-CPtkUY';
     $session2_id = 'aSebeZ52bbM6SvADurQP89SFnEpxY6j8';
     $this->session->expects($this->exactly(2))

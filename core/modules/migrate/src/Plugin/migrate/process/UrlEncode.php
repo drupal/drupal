@@ -43,7 +43,7 @@ class UrlEncode extends ProcessPluginBase {
       if ($parsed_url === FALSE) {
         throw new MigrateException("Value '$value' is not a valid URL");
       }
-      // Iterate over specific pieces of the URL rawurlencoding each one.
+      // Iterate over specific pieces of the URL raw URL encoding each one.
       $url_parts_to_encode = ['path', 'query', 'fragment'];
       foreach ($parsed_url as $parsed_url_key => $parsed_url_value) {
         if (in_array($parsed_url_key, $url_parts_to_encode)) {
