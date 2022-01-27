@@ -42,7 +42,6 @@ class RouterTest extends BrowserTestBase {
     $session = $this->getSession();
 
     // Check expected headers from FinishResponseSubscriber.
-    $this->assertSession()->responseHeaderEquals('X-UA-Compatible', 'IE=edge');
     $this->assertSession()->responseHeaderEquals('Content-language', 'en');
     $this->assertSession()->responseHeaderEquals('X-Content-Type-Options', 'nosniff');
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'SAMEORIGIN');
