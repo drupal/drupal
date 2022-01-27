@@ -73,7 +73,7 @@ class FieldTest extends WebDriverTestBase {
    * Tests that quickeditor works correctly for field with CKEditor.
    */
   public function testFieldWithCkeditor() {
-    $body_value = '<p>Sapere aude</p>';
+    $body_value = '<p>Dare to be wise</p>';
     $node = Node::create([
       'type' => 'page',
       'title' => 'Page node',

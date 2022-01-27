@@ -42,7 +42,7 @@ class StyleTest extends ViewsKernelTestBase {
     $view->initStyle();
     // Reinitialize the style as it supports row plugins now.
     $view->style_plugin->init($view, $view->display_handler);
-    $this->assertInstanceOf(Rowtest::class, $view->rowPlugin);
+    $this->assertInstanceOf(RowTest::class, $view->rowPlugin);
 
     $random_text = $this->randomMachineName();
     $view->rowPlugin->setOutput($random_text);

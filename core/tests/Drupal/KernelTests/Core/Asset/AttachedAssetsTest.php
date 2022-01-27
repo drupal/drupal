@@ -467,7 +467,7 @@ class AttachedAssetsTest extends KernelTestBase {
   }
 
   /**
-   * Tests JavaScript files that have querystrings attached get added right.
+   * Tests JavaScript files that have query strings attached get added right.
    */
   public function testAddJsFileWithQueryString() {
     $build['#attached']['library'][] = 'common_test/querystring';

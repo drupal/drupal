@@ -188,7 +188,8 @@ trait FieldableEntityNormalizerTrait {
    *
    * Most normalizers that extend this class can simply use this method to
    * construct the denormalized value without having to override denormalize()
-   * and reimplementing its validation logic or its call to set the field value.
+   * and re-implementing its validation logic or its call to set the field
+   * value.
    *
    * It's recommended to not override this and instead provide a (de)normalizer
    * at the DataType level.

@@ -140,8 +140,8 @@ interface FormBuilderInterface {
    * @code
    * // register a new user
    * $form_state = new FormState();
-   * $values['name'] = 'robo-user';
-   * $values['mail'] = 'robouser@example.com';
+   * $values['name'] = 'some-user';
+   * $values['mail'] = 'someuser@example.com';
    * $values['pass']['pass1'] = 'password';
    * $values['pass']['pass2'] = 'password';
    * $values['op'] = t('Create new account');

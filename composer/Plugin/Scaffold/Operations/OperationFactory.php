@@ -44,7 +44,7 @@ class OperationFactory {
    *   The scaffolding operation object (skip, replace, etc.)
    *
    * @throws \RuntimeException
-   *   Exception thrown when parameter data does not identify a known scaffol
+   *   Exception thrown when parameter data does not identify a known scaffold
    *   operation.
    */
   public function create(PackageInterface $package, OperationData $operation_data) {

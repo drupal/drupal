@@ -309,7 +309,7 @@ class FileUploadTest extends ResourceTestBase {
 
     $this->setUpAuthorization('GET');
 
-    // Reuploading the same file will result in the file being uploaded twice
+    // Re-uploading the same file will result in the file being uploaded twice
     // and referenced twice.
     $response = $this->fileRequest($uri, $this->testFileData);
     $this->assertSame(200, $response->getStatusCode());

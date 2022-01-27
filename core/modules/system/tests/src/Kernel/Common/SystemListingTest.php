@@ -59,7 +59,7 @@ class SystemListingTest extends KernelTestBase {
     $files = $listing->scan('module');
     $this->assertArrayHasKey('drupal_system_listing_compatible_test', $files);
 
-    // Reset the static to force a rescan of the directories.
+    // Reset the static to force a re-scan of the directories.
     $reflected_class = new \ReflectionClass(ExtensionDiscovery::class);
     $reflected_property = $reflected_class->getProperty('files');
     $reflected_property->setAccessible(TRUE);

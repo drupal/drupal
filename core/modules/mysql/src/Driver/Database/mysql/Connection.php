@@ -332,7 +332,7 @@ class Connection extends DatabaseConnection {
     // much storage and memory, we must keep the highest value in the table
     // because InnoDB uses an in-memory auto-increment counter as long as the
     // server runs. When the server is stopped and restarted, InnoDB
-    // reinitializes the counter for each table for the first INSERT to the
+    // re-initializes the counter for each table for the first INSERT to the
     // table based solely on values from the table so deleting all values would
     // be a problem in this case. Also, TRUNCATE resets the auto increment
     // counter.

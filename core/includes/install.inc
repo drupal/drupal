@@ -1064,7 +1064,7 @@ function drupal_check_module($module) {
  * in a normal Drupal module .info.yml file. For example:
  * - name: The real name of the installation profile for display purposes.
  * - description: A brief description of the profile.
- * - dependencies: An array of shortnames of other modules that this install
+ * - dependencies: An array of short names of other modules that this install
  *   profile requires.
  * - install: An array of shortname of other modules to install that are not
  *   required by this install profile.
