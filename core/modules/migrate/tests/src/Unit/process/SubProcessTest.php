@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\migrate\process\Get;
 use Drupal\migrate\Plugin\migrate\process\SubProcess;
 use Drupal\migrate\Row;
-use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 // cspell:ignore baaa
@@ -17,7 +17,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *
  * @group migrate
  */
-class SubProcessTest extends MigrateTestCase {
+class SubProcessTest extends MigrateProcessTestCase {
 
   /**
    * The sub_process plugin being tested.
@@ -189,6 +189,54 @@ class SubProcessTest extends MigrateTestCase {
           ],
           'key' => '@id',
         ],
+      ],
+    ];
+  }
+
+  /**
+   * Tests behavior when source children are not arrays.
+   *
+   * @dataProvider providerTestSourceNotArray
+   */
+  public function testSourceNotArray($source_values, $type) {
+    $process = new SubProcess(['process' => ['foo' => 'source_foo']], 'sub_process', []);
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage("Input array should hold elements of type array, instead element was of type '$type'");
+    $process->transform($source_values, $this->migrateExecutable, $this->row, 'destination_property');
+  }
+
+  /**
+   * Data provider for testSourceNotArray().
+   */
+  public function providerTestSourceNotArray() {
+    return [
+      'strings cannot be subprocess items' => [
+        ['strings', 'cannot', 'be', 'children'],
+        'string',
+      ],
+      'xml elements cannot be subprocess items' => [
+        [new \SimpleXMLElement("<element>Content</element>")],
+        'object',
+      ],
+      'integers cannot be subprocess items' => [
+        [1, 2, 3, 4],
+        'integer',
+      ],
+      'booleans cannot be subprocess items' => [
+        [TRUE, FALSE],
+        'boolean',
+      ],
+      'null cannot be subprocess items' => [
+        [NULL],
+        'NULL',
+      ],
+      'iterator cannot be subprocess items' => [
+        [new \ArrayIterator(['some', 'array'])],
+        'object',
+      ],
+      'all subprocess items must be arrays' => [
+        [['array'], 'not array'],
+        'string',
       ],
     ];
   }
