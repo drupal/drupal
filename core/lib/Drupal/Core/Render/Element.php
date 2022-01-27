@@ -24,7 +24,7 @@ class Element {
    *   TRUE of the key is a property, FALSE otherwise.
    */
   public static function property($key) {
-    return $key[0] == '#';
+    return is_string($key) && $key[0] == '#';
   }
 
   /**
