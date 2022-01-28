@@ -58,4 +58,31 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $this->assertTrue($tray->hasClass('toolbar-tray-horizontal'), 'After toggling the orientation a second time the toolbar tray is displayed horizontally again.');
   }
 
+  /**
+   * Tests that the orientation toggle is not shown for empty toolbar items.
+   */
+  public function testEmptyTray() {
+    // Granting access to the toolbar but not any administrative menu links will
+    // result in an empty toolbar tray for the "Manage" toolbar item.
+    $admin_user = $this->drupalCreateUser([
+      'access toolbar',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    // Set size for horizontal toolbar.
+    $this->getSession()->resizeWindow(1200, 600);
+    $this->drupalGet('<front>');
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'body.toolbar-horizontal'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.toolbar-tray'));
+
+    // Test that the orientation toggle does not appear.
+    $page = $this->getSession()->getPage();
+    $tray = $page->findById('toolbar-item-administration-tray');
+    $this->assertTrue($tray->hasClass('toolbar-tray-horizontal'), 'Toolbar tray is horizontally oriented by default.');
+    $this->assertSession()->elementNotExists('css', '#toolbar-item-administration-tray .toolbar-menu');
+    $this->assertSession()->elementNotExists('css', '#toolbar-item-administration-tray .toolbar-toggle-orientation');
+    $button = $page->findButton('Vertical orientation');
+    $this->assertFalse($button->isVisible(), 'Orientation toggle from other tray is not visible');
+  }
+
 }
