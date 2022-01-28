@@ -42,7 +42,7 @@ trait BlockCreationTrait {
     $config = \Drupal::configFactory();
     $settings += [
       'plugin' => $plugin_id,
-      'region' => 'sidebar_first',
+      'region' => 'content',
       'id' => strtolower($this->randomMachineName(8)),
       'theme' => $config->get('system.theme')->get('default'),
       'label' => $this->randomMachineName(8),

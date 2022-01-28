@@ -232,7 +232,11 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
   public function testEditModeEnableDisable() {
     foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
-      $block = $this->placeBlock('system_powered_by_block');
+      $block = $this->placeBlock('system_powered_by_block', [
+        // @todo Remove this when
+        //   https://www.drupal.org/project/drupal/issues/3257504 is fixed.
+        'region' => 'sidebar_first',
+      ]);
       foreach (['contextual_link', 'toolbar_link'] as $enable_option) {
         $this->drupalGet('user');
         $this->assertEditModeDisabled();

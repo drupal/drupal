@@ -101,7 +101,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     $this->clickLink('Translate');
 
     // Edit English translation.
-    $this->clickLink('Edit');
+    $this->clickLink('Edit', 1);
     // Upload and image after changing the node language.
     $images = $this->drupalGetTestFiles('image')[1];
     $edit = [

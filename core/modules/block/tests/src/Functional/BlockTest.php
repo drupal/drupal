@@ -252,7 +252,9 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->pageTextContains('The block ' . $block['settings[label]'] . ' has been removed from the Footer region.');
 
     // Test deleting a block via "Configure block" link.
-    $block = $this->drupalPlaceBlock('system_powered_by_block');
+    $block = $this->drupalPlaceBlock('system_powered_by_block', [
+      'region' => 'left_sidebar',
+    ]);
     $this->drupalGet('admin/structure/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
     $this->clickLink('Remove block');
     $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block->label() . ' from the Left sidebar region?');
