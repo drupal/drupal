@@ -67,8 +67,6 @@ abstract class FileTestBase extends KernelTestBase {
     $public_file_directory = $this->siteDirectory . '/files';
     $private_file_directory = $this->siteDirectory . '/private';
 
-    require_once 'core/includes/file.inc';
-
     mkdir($this->siteDirectory, 0775);
     mkdir($this->siteDirectory . '/files', 0775);
     mkdir($this->siteDirectory . '/private', 0775);

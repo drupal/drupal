@@ -1171,7 +1171,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $name = array_shift($element['#parents']);
       $element['#name'] = $name;
       if ($element['#type'] == 'file') {
-        // To make it easier to handle files in file.inc, we place all
+        // To make it easier to handle files, we place all
         // file fields in the 'files' array. Also, we do not support
         // nested file names.
         // @todo Remove this files prefix now?
