@@ -162,6 +162,9 @@
           element.removeAttribute('required');
         }
 
+        $(document).on(`drupalViewportOffsetChange.ckeditor5.${id}`, (event, offsets) => {
+          editor.ui.viewportOffset = offsets;
+        });
         editor.model.document.on('change:data', () => {
           const callback = callbacks.get(id);
 
@@ -193,6 +196,8 @@
       if (!editor) {
         return;
       }
+
+      $(document).off(`drupalViewportOffsetChange.ckeditor5.${id}`);
 
       if (trigger === 'serialize') {
         editor.updateSourceElement();

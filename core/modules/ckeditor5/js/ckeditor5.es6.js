@@ -322,6 +322,16 @@
             element.removeAttribute('required');
           }
 
+          // Integrate CKEditor 5 viewport offset with Drupal displace.
+          // @see \Drupal\Tests\ckeditor5\FunctionalJavascript\CKEditor5ToolbarTest
+          // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_core_editor_editorui-EditorUI.html#member-viewportOffset
+          $(document).on(
+            `drupalViewportOffsetChange.ckeditor5.${id}`,
+            (event, offsets) => {
+              editor.ui.viewportOffset = offsets;
+            },
+          );
+
           editor.model.document.on('change:data', () => {
             const callback = callbacks.get(id);
             if (callback) {
@@ -372,6 +382,9 @@
       if (!editor) {
         return;
       }
+
+      $(document).off(`drupalViewportOffsetChange.ckeditor5.${id}`);
+
       if (trigger === 'serialize') {
         editor.updateSourceElement();
       } else {
