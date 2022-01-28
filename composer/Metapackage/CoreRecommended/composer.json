@@ -7,7 +7,7 @@
         "webflo/drupal-core-strict": "*"
     },
     "require": {
-        "drupal/core": "10.0.x-dev",
+        "drupal/core": "10.0.0-alpha1",
         "asm89/stack-cors": "v2.0.5",
         "composer/semver": "3.2.7",
         "doctrine/annotations": "1.13.2",
