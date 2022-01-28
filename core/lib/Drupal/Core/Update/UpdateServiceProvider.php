@@ -6,7 +6,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -18,11 +17,6 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
-    $definition = new Definition('Drupal\Core\Cache\NullBackend', ['null']);
-    $definition->setDeprecated('drupal/core', '8.8.0', 'The "%service_id%\" service is deprecated. While updating Drupal all caches use \Drupal\Core\Update\UpdateBackend. See https://www.drupal.org/node/3066407');
-    $definition->setPublic(TRUE);
-    $container->setDefinition('cache.null', $definition);
-
     // Decorate the cache factory in order to use
     // \Drupal\Core\Update\UpdateBackend while running updates.
     $container
