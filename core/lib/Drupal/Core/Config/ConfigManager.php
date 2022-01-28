@@ -302,22 +302,6 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function findConfigEntityDependents($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
-    @trigger_error('ConfigManagerInterface::findConfigEntityDependents() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead you should use ConfigManagerInterface::findConfigEntityDependencies(). See https://www.drupal.org/node/3225357', E_USER_DEPRECATED);
-    return $this->findConfigEntityDependencies($type, $names, $dependency_manager);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function findConfigEntityDependentsAsEntities($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
-    @trigger_error('ConfigManagerInterface::findConfigEntityDependentsAsEntities() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead you should use ConfigManagerInterface::findConfigEntityDependenciesAsEntities(). See https://www.drupal.org/node/3225357', E_USER_DEPRECATED);
-    return $this->findConfigEntityDependenciesAsEntities($type, $names, $dependency_manager);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConfigEntitiesToChangeOnDependencyRemoval($type, array $names, $dry_run = TRUE) {
     $dependency_manager = $this->getConfigDependencyManager();
 

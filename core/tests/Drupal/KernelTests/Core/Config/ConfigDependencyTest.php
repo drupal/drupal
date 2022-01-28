@@ -639,26 +639,6 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   }
 
   /**
-   * @group legacy
-   */
-  public function testFindConfigEntityDependentsDeprecation() {
-    $this->expectDeprecation('ConfigManagerInterface::findConfigEntityDependents() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead you should use ConfigManagerInterface::findConfigEntityDependencies(). See https://www.drupal.org/node/3225357');
-    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
-    $config_manager = \Drupal::service('config.manager');
-    $config_manager->findConfigEntityDependents('module', ['system']);
-  }
-
-  /**
-   * @group legacy
-   */
-  public function testFindConfigEntityDependentsAsEntitiesDeprecation() {
-    $this->expectDeprecation('ConfigManagerInterface::findConfigEntityDependentsAsEntities() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead you should use ConfigManagerInterface::findConfigEntityDependenciesAsEntities(). See https://www.drupal.org/node/3225357');
-    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
-    $config_manager = \Drupal::service('config.manager');
-    $config_manager->findConfigEntityDependentsAsEntities('module', ['system']);
-  }
-
-  /**
    * Gets a list of identifiers from an array of configuration entities.
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface[] $dependents

@@ -717,30 +717,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
   }
 
   /**
-   * Wrapper for drupal_get_path().
-   *
-   * @param $type
-   *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
-   *   'theme_engine'.
-   * @param $name
-   *   The name of the item for which the path is requested. Ignored for
-   *   $type 'core'.
-   *
-   * @return string
-   *   The path to the requested item or an empty string if the item is not
-   *   found.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
-   *
-   * @see https://www.drupal.org/node/2940438
-   */
-  protected function drupalGetPath($type, $name) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionPathResolver::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-    return $this->extensionPathResolver->getPath($type, $name);
-  }
-
-  /**
    * Gets the install profile from settings.
    *
    * @return string|null

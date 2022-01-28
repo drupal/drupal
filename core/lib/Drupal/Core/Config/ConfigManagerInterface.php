@@ -133,48 +133,6 @@ interface ConfigManagerInterface {
   public function findConfigEntityDependenciesAsEntities($type, array $names);
 
   /**
-   * Deprecated method to find config entity dependencies.
-   *
-   * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'config'
-   *   or 'content'.
-   * @param array $names
-   *   The specific names to check. If $type equals 'module' or 'theme' then it
-   *   should be a list of module names or theme names. In the case of 'config'
-   *   or 'content' it should be a list of configuration dependency names.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityDependency[]
-   *   An array of configuration entity dependency objects.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
-   *   Instead you should use
-   *   ConfigManagerInterface::findConfigEntityDependencies().
-   * @see https://www.drupal.org/node/3225357
-   */
-  public function findConfigEntityDependents($type, array $names);
-
-  /**
-   * Deprecated method to find config entity dependencies as entities.
-   *
-   * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'config'
-   *   or 'content'.
-   * @param array $names
-   *   The specific names to check. If $type equals 'module' or 'theme' then it
-   *   should be a list of module names or theme names. In the case of 'config'
-   *   or 'content' it should be a list of configuration dependency names.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
-   *   An array of dependencies as configuration entities.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
-   *   Instead you should use
-   *   ConfigManagerInterface::findConfigEntityDependenciesAsEntities().
-   * @see https://www.drupal.org/node/3225357
-   */
-  public function findConfigEntityDependentsAsEntities($type, array $names);
-
-  /**
    * Lists which config entities to update and delete on removal of a dependency.
    *
    * @param string $type
