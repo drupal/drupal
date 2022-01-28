@@ -2,12 +2,12 @@
 
 namespace Drupal\Core\Field;
 
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Defines a base class for all field storage definition events.
  */
-class FieldStorageDefinitionEvent extends GenericEvent {
+class FieldStorageDefinitionEvent extends Event {
 
   /**
    * The field storage definition.
