@@ -56,9 +56,10 @@
           this.updateToolbarHeight,
         );
 
-        // Add the tray orientation toggles.
+        // Add the tray orientation toggles, but only if there is a menu.
         this.$el
           .find('.toolbar-tray .toolbar-lining')
+          .has('.toolbar-menu')
           .append(Drupal.theme('toolbarOrientationToggle'));
 
         // Trigger an activeTab change so that listening scripts can respond on
