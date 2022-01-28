@@ -31,7 +31,12 @@ class ContextualLinksTest extends WebDriverTestBase {
     parent::setUp();
 
     $this->drupalLogin($this->createUser(['access contextual links']));
-    $this->placeBlock('system_branding_block', ['id' => 'branding']);
+    $this->placeBlock('system_branding_block', [
+      'id' => 'branding',
+      // @todo Remove this when
+      //   https://www.drupal.org/project/drupal/issues/3257504 is fixed.
+      'region' => 'sidebar_first',
+    ]);
   }
 
   /**

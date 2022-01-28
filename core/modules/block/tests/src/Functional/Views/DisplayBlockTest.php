@@ -264,7 +264,11 @@ class DisplayBlockTest extends ViewTestBase {
    */
   public function testBlockRendering() {
     // Create a block and set a custom title.
-    $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', ['label' => 'test_view_block-block_1:1', 'views_label' => 'Custom title']);
+    $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', [
+      'label' => 'test_view_block-block_1:1',
+      'views_label' => 'Custom title',
+      'region' => 'sidebar_first',
+    ]);
     $this->drupalGet('');
 
     $this->assertSession()->elementTextEquals('xpath', '//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2', 'Custom title');
