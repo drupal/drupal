@@ -13,42 +13,6 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Utility\Error;
 
 /**
- * Tests the compatibility of a module or theme.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
- *   replacement is provided.
- *
- * @see https://www.drupal.org/node/3150727
- * @see \Drupal\Core\Extension\ExtensionList::checkIncompatibility()
- */
-function update_check_incompatibility($name, $type = 'module') {
-  @trigger_error('update_check_incompatibility() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3150727', E_USER_DEPRECATED);
-  static $themes, $modules;
-
-  // Store values of expensive functions for future use.
-  if (empty($themes) || empty($modules)) {
-    // We need to do a full rebuild here to make sure the database reflects any
-    // code changes that were made in the filesystem before the update script
-    // was initiated.
-    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
-    $modules = \Drupal::service('extension.list.module')->reset()->getList();
-  }
-
-  if ($type == 'module' && isset($modules[$name])) {
-    $file = $modules[$name];
-  }
-  elseif ($type == 'theme' && isset($themes[$name])) {
-    $file = $themes[$name];
-  }
-  if (!isset($file)
-      || $file->info['core_incompatible']
-      || version_compare(phpversion(), $file->info['php']) < 0) {
-    return TRUE;
-  }
-  return FALSE;
-}
-
-/**
  * Returns whether the minimum schema requirement has been satisfied.
  *
  * @return array
@@ -144,30 +108,6 @@ function _update_fix_missing_schema() {
       \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
     }
   }
-}
-
-/**
- * Forces a module to a given schema version.
- *
- * This function is rarely necessary.
- *
- * @param string $module
- *   Name of the module.
- * @param string $schema_version
- *   The schema version the module should be set to.
- *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
- *   replacement is provided.
- *
- * @see https://www.drupal.org/node/3210925
- */
-function update_set_schema($module, $schema_version) {
-  @trigger_error('update_set_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3210925', E_USER_DEPRECATED);
-  \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $schema_version);
-  \Drupal::service('extension.list.profile')->reset();
-  \Drupal::service('extension.list.module')->reset();
-  \Drupal::service('extension.list.theme_engine')->reset();
-  \Drupal::service('extension.list.theme')->reset();
 }
 
 /**
