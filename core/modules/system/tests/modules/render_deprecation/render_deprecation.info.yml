@@ -1,5 +1,0 @@
-name: 'Use render() and check its deprecation'
-type: module
-description: 'Use render() and check its deprecation.'
-package: Testing
-version: VERSION

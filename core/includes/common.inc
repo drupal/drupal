@@ -9,7 +9,6 @@
  */
 
 use Drupal\Component\Utility\Bytes;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
@@ -347,47 +346,6 @@ function drupal_attach_tabledrag(&$element, array $options) {
 }
 
 /**
- * Renders an element.
- *
- * This function renders an element. The top level element is shown with show()
- * before rendering, so it will always be rendered even if hide() had been
- * previously used on it.
- *
- * @param $element
- *   The element to be rendered.
- *
- * @return
- *   The rendered element.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\Core\Render\RendererInterface::render() instead.
- *
- * @see https://www.drupal.org/node/2939099
- * @see \Drupal\Core\Render\RendererInterface
- * @see show()
- * @see hide()
- */
-function render(&$element) {
-  @trigger_error('The render() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\RendererInterface::render() instead. See https://www.drupal.org/node/2939099', E_USER_DEPRECATED);
-  if (!$element && $element !== 0) {
-    return NULL;
-  }
-  if (is_array($element)) {
-    // Early return if this element was pre-rendered (no need to re-render).
-    if (isset($element['#printed']) && $element['#printed'] == TRUE && isset($element['#markup']) && strlen($element['#markup']) > 0) {
-      return $element['#markup'];
-    }
-    show($element);
-    return \Drupal::service('renderer')->render($element);
-  }
-  else {
-    // Safe-guard for inappropriate use of render() on flat variables: return
-    // the variable as-is.
-    return $element;
-  }
-}
-
-/**
  * Hides an element from later rendering.
  *
  * The first time render() or RenderInterface::render() is called on an element
@@ -575,37 +533,6 @@ function drupal_flush_all_caches($kernel = NULL) {
 function _drupal_flush_css_js() {
   // The timestamp is converted to base 36 in order to make it more compact.
   Drupal::state()->set('system.css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
-}
-
-/**
- * Outputs debug information.
- *
- * The debug information is passed on to trigger_error() after being converted
- * to a string using print_r() or var_export().
- *
- * @param $data
- *   Data to be output.
- * @param $label
- *   Label to prefix the data.
- * @param $print_r
- *   Flag to switch between print_r() and var_export() for data conversion to
- *   string. Set $print_r to FALSE to use var_export() instead of print_r().
- *   Passing recursive data structures to var_export() will generate an error.
- *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump()
- *   instead.
- *
- * @see https://www.drupal.org/node/3192283
- */
-function debug($data, $label = NULL, $print_r = TRUE) {
-  @trigger_error('debug() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3192283', E_USER_DEPRECATED);
-  // Print $data contents to string.
-  $string = Html::escape($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
-
-  // Display values with pre-formatting to increase readability.
-  $string = '<pre>' . $string . '</pre>';
-
-  trigger_error(trim($label ? "$label: $string" : $string));
 }
 
 /**
