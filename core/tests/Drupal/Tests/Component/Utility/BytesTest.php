@@ -18,26 +18,6 @@ class BytesTest extends TestCase {
   use ExpectDeprecationTrait;
 
   /**
-   * Tests \Drupal\Component\Utility\Bytes::toInt().
-   *
-   * @param int $size
-   *   The value for the size argument for
-   *   \Drupal\Component\Utility\Bytes::toInt().
-   * @param int $expected_int
-   *   The expected return value from
-   *   \Drupal\Component\Utility\Bytes::toInt().
-   *
-   * @dataProvider providerTestToNumber
-   * @covers ::toInt
-   *
-   * @group legacy
-   */
-  public function testToInt($size, $expected_int) {
-    $this->expectDeprecation('\Drupal\Component\Utility\Bytes::toInt() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Utility\Bytes::toNumber() instead. See https://www.drupal.org/node/3162663');
-    $this->assertEquals($expected_int, Bytes::toInt($size));
-  }
-
-  /**
    * Tests \Drupal\Component\Utility\Bytes::toNumber().
    *
    * @param string $size
