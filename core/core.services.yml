@@ -725,28 +725,6 @@ services:
   event_dispatcher:
     class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
-  app.root:
-    class: \SplString
-    factory: ['@app.root.factory', 'get']
-    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the app.root parameter instead. See https://www.drupal.org/node/3080612
-    tags:
-      - { name: parameter_service }
-  app.root.factory:
-    class: Drupal\Core\AppRootFactory
-    arguments: ['@kernel']
-    public: false
-    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the app.root parameter instead. See https://www.drupal.org/node/3080612
-  site.path:
-    class: \SplString
-    factory: ['@site.path.factory', 'get']
-    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the site.path parameter instead. See https://www.drupal.org/node/3080612
-    tags:
-      - { name: parameter_service }
-  site.path.factory:
-    class: Drupal\Core\SitePathFactory
-    arguments: ['@kernel']
-    public: false
-    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the site.path parameter instead. See https://www.drupal.org/node/3080612
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@psr7.http_message_factory', '@class_resolver']
