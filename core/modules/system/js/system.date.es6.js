@@ -32,9 +32,6 @@
         return;
       }
 
-      const $target = $(target);
-      const $preview = $target.find('em');
-
       /**
        * Event handler that replaces date characters with value.
        *
@@ -47,8 +44,14 @@
           dateFormats[key] ? dateFormats[key] : value,
         );
 
-        $preview.text(dateString);
-        $target.toggleClass('js-hide', !dateString.length);
+        // Set date preview.
+        target.forEach((item) => {
+          item.querySelectorAll('em').forEach((em) => {
+            em.textContent = dateString;
+          });
+        });
+
+        $(target).toggleClass('js-hide', !dateString.length);
       }
 
       /**

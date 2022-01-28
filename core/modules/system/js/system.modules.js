@@ -31,10 +31,13 @@
         const re = new RegExp(`\\b${query}`, 'i');
 
         function showModuleRow(index, row) {
-          const $row = $(row);
-          const $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
-          const textMatch = $sources.text().search(re) !== -1;
-          $row.closest('tr').toggle(textMatch);
+          const sources = row.querySelectorAll('.table-filter-text-source, .module-name, .module-description');
+          let sourcesConcat = '';
+          sources.forEach(item => {
+            sourcesConcat += item.textContent;
+          });
+          const textMatch = sourcesConcat.search(re) !== -1;
+          $(row).closest('tr').toggle(textMatch);
         }
 
         $rowsAndDetails.show();

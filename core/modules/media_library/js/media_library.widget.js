@@ -29,10 +29,16 @@
         show: Drupal.t('Show media item weights'),
         hide: Drupal.t('Hide media item weights')
       };
-      $(once('media-library-toggle', '.js-media-library-widget-toggle-weight', context)).on('click', e => {
+      const mediaLibraryToggle = once('media-library-toggle', '.js-media-library-widget-toggle-weight', context);
+      $(mediaLibraryToggle).on('click', e => {
         e.preventDefault();
-        $(e.currentTarget).toggleClass('active').text($(e.currentTarget).hasClass('active') ? strings.hide : strings.show).closest('.js-media-library-widget').find('.js-media-library-item-weight').parent().toggle();
-      }).text(strings.show);
+        const $target = $(e.currentTarget);
+        e.currentTarget.textContent = $target.hasClass('active') ? strings.show : strings.hide;
+        $target.toggleClass('active').closest('.js-media-library-widget').find('.js-media-library-item-weight').parent().toggle();
+      });
+      mediaLibraryToggle.forEach(item => {
+        item.textContent = strings.show;
+      });
       $(once('media-library-toggle', '.js-media-library-item-weight', context)).parent().hide();
     }
 

@@ -127,18 +127,18 @@
           case 'opened':
             // The saving throbber is not managed by AJAX system. The
             // EntityToolbarView manages this visual element.
+            $button[0].textContent = Drupal.t('Save');
             $button
               .removeClass('action-saving icon-throbber icon-end')
-              .text(Drupal.t('Save'))
               .removeAttr('disabled')
               .attr('aria-hidden', !isDirty);
             break;
 
           // The changes to the fields of the entity are being committed.
           case 'committing':
+            $button[0].textContent = Drupal.t('Saving');
             $button
               .addClass('action-saving icon-throbber icon-end')
-              .text(Drupal.t('Saving'))
               .attr('disabled', 'disabled');
             break;
 

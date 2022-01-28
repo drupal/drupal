@@ -34,11 +34,13 @@
       const hiddenLength = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden').length;
 
       if (hiddenLength > 0) {
-        this.$link.show().text(this.showText);
+        this.$link.show();
+        this.$link[0].textContent = this.showText;
       }
 
       if (!pegged && hiddenLength === 0) {
-        this.$link.hide().text(this.hideText);
+        this.$link.hide();
+        this.$link[0].textContent = this.hideText;
       }
     },
 
@@ -60,7 +62,8 @@
           $header.show();
           self.$revealedCells = $().add(self.$revealedCells).add($header);
         });
-        this.$link.text(this.hideText).data('pegged', 1);
+        this.$link[0].textContent = this.hideText;
+        this.$link.data('pegged', 1);
       } else {
         this.$revealedCells.hide();
         this.$revealedCells.each(function (index, element) {
@@ -83,7 +86,8 @@
 
           $cell.attr('style', newProps.join(';'));
         });
-        this.$link.text(this.showText).data('pegged', 0);
+        this.$link[0].textContent = this.showText;
+        this.$link.data('pegged', 0);
         $(window).trigger('resize.tableresponsive');
       }
     }

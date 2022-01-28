@@ -21,10 +21,13 @@
         const query = e.target.value.toLowerCase();
 
         function showViewRow(index, row) {
-          const $row = $(row);
-          const $sources = $row.find('[data-drupal-selector="views-table-filter-text-source"]');
-          const textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
-          $row.closest('tr').toggle(textMatch);
+          const sources = row.querySelectorAll('[data-drupal-selector="views-table-filter-text-source"]');
+          let sourcesConcat = '';
+          sources.forEach(item => {
+            sourcesConcat += item.textContent;
+          });
+          const textMatch = sourcesConcat.toLowerCase().indexOf(query) !== -1;
+          $(row).closest('tr').toggle(textMatch);
         }
 
         if (query.length >= 2) {

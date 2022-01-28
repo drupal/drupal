@@ -23,9 +23,8 @@
         const query = e.target.value.toLowerCase();
 
         const toggleBlockEntry = (index, link) => {
-          const $link = $(link);
-          const textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+          const textMatch = link.textContent.toLowerCase().indexOf(query) !== -1;
+          $(link).toggle(textMatch);
         };
 
         if (query.length >= 2) {

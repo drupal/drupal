@@ -35,16 +35,19 @@
         this.$el.find('.contextual-links').prop('hidden', !isOpen);
 
         // Update the view of the trigger.
-        this.$el
-          .find('.trigger')
-          .text(
-            Drupal.t('@action @title configuration options', {
-              '@action': !isOpen
-                ? this.options.strings.open
-                : this.options.strings.close,
-              '@title': this.model.get('title'),
-            }),
-          )
+        const $trigger = this.$el.find('.trigger');
+        $trigger
+          .each((index, element) => {
+            element.textContent = Drupal.t(
+              '@action @title configuration options',
+              {
+                '@action': !isOpen
+                  ? this.options.strings.open
+                  : this.options.strings.close,
+                '@title': this.model.get('title'),
+              },
+            );
+          })
           .attr('aria-pressed', isOpen);
       },
     },

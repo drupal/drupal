@@ -60,8 +60,15 @@
       const glue = url.indexOf('?') === -1 ? '?' : '&';
       this.setAttribute('href', url + glue + destination);
     });
+    let title = '';
+    const $regionHeading = $region.find('h2');
+
+    if ($regionHeading.length) {
+      title = $regionHeading[0].textContent.trim();
+    }
+
     const model = new contextual.StateModel({
-      title: $region.find('h2').eq(0).text().trim()
+      title
     });
     const viewOptions = $.extend({
       el: $contextual,

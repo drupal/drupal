@@ -285,7 +285,9 @@
           $group
             .attr('data-drupal-ckeditor-toolbar-group-name', name)
             .children('.ckeditor-toolbar-group-name')
-            .text(name);
+            .each(function () {
+              this.textContent = name;
+            });
         }
 
         // Invoke a user-provided callback and indicate failure.

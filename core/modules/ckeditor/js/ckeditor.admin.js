@@ -119,7 +119,9 @@
             $group.removeAttr('aria-label').attr('data-drupal-ckeditor-type', 'group').attr('tabindex', 0).children('.ckeditor-toolbar-group-name').attr('id', groupID).end().children('.ckeditor-toolbar-group-buttons').attr('aria-labelledby', groupID);
           }
 
-          $group.attr('data-drupal-ckeditor-toolbar-group-name', name).children('.ckeditor-toolbar-group-name').text(name);
+          $group.attr('data-drupal-ckeditor-toolbar-group-name', name).children('.ckeditor-toolbar-group-name').each(function () {
+            this.textContent = name;
+          });
         }
 
         if (action === 'cancel') {

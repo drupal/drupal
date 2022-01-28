@@ -54,7 +54,7 @@
           const selectContents = document.createElement('option');
           selectContents.selected = machineName === selected;
           selectContents.value = machineName;
-          selectContents.innerText = options[machineName];
+          selectContents.textContent = options[machineName];
           $select.append(selectContents);
           totalOptions++;
         });

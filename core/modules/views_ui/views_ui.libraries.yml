@@ -14,6 +14,7 @@ views_ui.admin:
     - core/drupal.form
     - core/drupal.ajax
     - core/drupal.dropbutton
+    - core/drupal.nodelist.foreach
     - views/views.ajax
     - views_ui/admin.styling
 
@@ -24,6 +25,7 @@ views_ui.listing:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.string.includes
     - core/once
     - core/jquery.once.bc
     - views_ui/admin.styling

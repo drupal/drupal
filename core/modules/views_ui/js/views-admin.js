@@ -255,7 +255,8 @@
         $title = $option.find('.title');
         $description = $option.find('.description');
         options[i] = {
-          searchText: `${$title.text().toLowerCase()} ${$description.text().toLowerCase()}`,
+          searchText: `${$title[0].textContent.toLowerCase()} ${$description[0].textContent.toLowerCase()}
+              .toLowerCase()}`,
           $div: $option
         };
       }

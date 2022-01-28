@@ -108,13 +108,15 @@
         // If the table has hidden columns, associate an action link with the
         // table to show the columns.
         if (hiddenLength > 0) {
-          this.$link.show().text(this.showText);
+          this.$link.show();
+          this.$link[0].textContent = this.showText;
         }
         // When the toggle is pegged, its presence is maintained because the user
         // has interacted with it. This is necessary to keep the link visible if
         // the user adjusts screen size and changes the visibility of columns.
         if (!pegged && hiddenLength === 0) {
-          this.$link.hide().text(this.hideText);
+          this.$link.hide();
+          this.$link[0].textContent = this.hideText;
         }
       },
 
@@ -148,7 +150,8 @@
             // Keep track of the revealed headers, so they can be hidden later.
             self.$revealedCells = $().add(self.$revealedCells).add($header);
           });
-          this.$link.text(this.hideText).data('pegged', 1);
+          this.$link[0].textContent = this.hideText;
+          this.$link.data('pegged', 1);
         }
         // Hide revealed columns.
         else {
@@ -177,7 +180,8 @@
             // Return the rest of the style attribute values to the element.
             $cell.attr('style', newProps.join(';'));
           });
-          this.$link.text(this.showText).data('pegged', 0);
+          this.$link[0].textContent = this.showText;
+          this.$link.data('pegged', 0);
           // Refresh the toggle link.
           $(window).trigger('resize.tableresponsive');
         }

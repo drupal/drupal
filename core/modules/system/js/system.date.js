@@ -16,14 +16,15 @@
         return;
       }
 
-      const $target = $(target);
-      const $preview = $target.find('em');
-
       function dateFormatHandler(e) {
         const baseValue = e.target.value || '';
         const dateString = baseValue.replace(/\\?(.?)/gi, (key, value) => dateFormats[key] ? dateFormats[key] : value);
-        $preview.text(dateString);
-        $target.toggleClass('js-hide', !dateString.length);
+        target.forEach(item => {
+          item.querySelectorAll('em').forEach(em => {
+            em.textContent = dateString;
+          });
+        });
+        $(target).toggleClass('js-hide', !dateString.length);
       }
 
       $(source).on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');

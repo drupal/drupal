@@ -43,9 +43,9 @@
          *   The link to add the block.
          */
         const toggleBlockEntry = (index, link) => {
-          const $link = $(link);
-          const textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+          const textMatch =
+            link.textContent.toLowerCase().indexOf(query) !== -1;
+          $(link).toggle(textMatch);
         };
 
         // Filter if the length of the query is at least 2 characters.

@@ -62,6 +62,7 @@ drupal.system.modules:
     - core/jquery
     - core/drupal
     - core/drupal.debounce
+    - core/drupal.nodelist.foreach
     - core/once
     - core/jquery.once.bc
     - core/drupal.announce
@@ -79,6 +80,7 @@ drupal.system.date:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.nodelist.foreach
     - core/drupalSettings
     - core/once
     - core/jquery.once.bc

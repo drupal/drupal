@@ -16,9 +16,8 @@
         const query = e.target.value.toLowerCase();
 
         function toggleBlockEntry(index, label) {
-          const $label = $(label);
-          const $row = $label.parent().parent();
-          const textMatch = $label.text().toLowerCase().includes(query);
+          const $row = $(label).parent().parent();
+          const textMatch = label.textContent.toLowerCase().includes(query);
           $row.toggle(textMatch);
         }
 

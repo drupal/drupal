@@ -56,13 +56,11 @@
           e.preventDefault();
           const $tr = $(this).closest('tr');
           $tr.toggleClass('expanded');
-          $tr.find('.locale-translation-update__prefix').text(() => {
-            if ($tr.hasClass('expanded')) {
-              return Drupal.t('Hide description');
-            }
+          const $localePrefix = $tr.find('.locale-translation-update__prefix');
 
-            return Drupal.t('Show description');
-          });
+          if ($localePrefix.length) {
+            $localePrefix[0].textContent = $tr.hasClass('expanded') ? Drupal.t('Hide description') : Drupal.t('Show description');
+          }
         });
         $table.find('.requirements, .links').hide();
       }

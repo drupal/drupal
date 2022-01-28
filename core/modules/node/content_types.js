@@ -17,7 +17,7 @@
       $context.find('#edit-workflow').drupalSetSummary(context => {
         const vals = [];
         $(context).find('input[name^="options"]:checked').next('label').each(function () {
-          vals.push(Drupal.checkPlain($(this).text()));
+          vals.push(Drupal.checkPlain(this.textContent));
         });
 
         if (!$(context).find('#edit-options-status').is(':checked')) {
@@ -28,9 +28,9 @@
       });
       $('#edit-language', context).drupalSetSummary(context => {
         const vals = [];
-        vals.push($('.js-form-item-language-configuration-langcode select option:selected', context).text());
+        vals.push($('.js-form-item-language-configuration-langcode select option:selected', context)[0].textContent);
         $('input:checked', context).next('label').each(function () {
-          vals.push(Drupal.checkPlain($(this).text()));
+          vals.push(Drupal.checkPlain(this.textContent));
         });
         return vals.join(', ');
       });
@@ -38,7 +38,7 @@
         const vals = [];
         const $editContext = $(context);
         $editContext.find('input:checked').next('label').each(function () {
-          vals.push(Drupal.checkPlain($(this).text()));
+          vals.push(Drupal.checkPlain(this.textContent));
         });
 
         if (!$editContext.find('#edit-display-submitted').is(':checked')) {

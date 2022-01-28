@@ -34,7 +34,10 @@
       }
 
       this.$el.find('[data-toolbar="active"]').toggleClass('ckeditor-group-names-are-visible', groupNamesVisible);
-      this.$el.find('.ckeditor-groupnames-toggle').text(groupNamesVisible ? Drupal.t('Hide group names') : Drupal.t('Show group names')).attr('aria-pressed', groupNamesVisible);
+      const $toggle = this.$el.find('.ckeditor-groupnames-toggle');
+      $toggle.each((index, element) => {
+        element.textContent = groupNamesVisible ? Drupal.t('Hide group names') : Drupal.t('Show group names');
+      }).attr('aria-pressed', groupNamesVisible);
       return this;
     },
 
