@@ -66,7 +66,7 @@
 
     if (hasContent && supportContentFiltering) {
       var message = Drupal.t('Changing the text format to %text_format will permanently remove content that is not allowed in that text format.<br><br>Save your changes before switching the text format to avoid losing data.', {
-        '%text_format': $(select).find('option:selected').text()
+        '%text_format': $(select).find('option:selected')[0].textContent
       });
       var confirmationDialog = Drupal.dialog("<div>".concat(message, "</div>"), {
         title: Drupal.t('Change text format?'),

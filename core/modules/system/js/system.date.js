@@ -16,16 +16,17 @@
         return;
       }
 
-      var $target = $(target);
-      var $preview = $target.find('em');
-
       function dateFormatHandler(e) {
         var baseValue = e.target.value || '';
         var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
           return dateFormats[key] ? dateFormats[key] : value;
         });
-        $preview.text(dateString);
-        $target.toggleClass('js-hide', !dateString.length);
+        target.forEach(function (item) {
+          item.querySelectorAll('em').forEach(function (em) {
+            em.textContent = dateString;
+          });
+        });
+        $(target).toggleClass('js-hide', !dateString.length);
       }
 
       $(source).on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');

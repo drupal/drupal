@@ -21,9 +21,8 @@
         var query = e.target.value.toLowerCase();
 
         var toggleBlockEntry = function toggleBlockEntry(index, link) {
-          var $link = $(link);
-          var textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+          var textMatch = link.textContent.toLowerCase().indexOf(query) !== -1;
+          $(link).toggle(textMatch);
         };
 
         if (query.length >= 2) {

@@ -40,7 +40,7 @@
 
         if ($optionsContext.find('input').is(':checked')) {
           $optionsContext.find('input:checked').next('label').each(function () {
-            vals.push(Drupal.checkPlain($(this).text().trim()));
+            vals.push(Drupal.checkPlain(this.textContent.trim()));
           });
           return vals.join(', ');
         }

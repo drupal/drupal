@@ -292,9 +292,9 @@
         $orientationToggleButton[0].value = antiOrientation;
         $orientationToggleButton
           .attr('title', this.strings[antiOrientation])
-          .text(this.strings[antiOrientation])
           .removeClass(iconClass)
           .addClass(iconAntiClass);
+        $orientationToggleButton[0].textContent = this.strings[antiOrientation];
 
         // Update data offset attributes for the trays.
         const dir = document.documentElement.dir;

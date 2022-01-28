@@ -18,14 +18,15 @@
       var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
-        var $comment = $(placeholder).removeClass('hidden').text(newCommentString).closest('.js-comment').addClass('new');
+        placeholder.textContent = newCommentString;
+        $placeholder.removeClass('hidden').closest('.js-comment').addClass('new');
 
         if (isFirstNewComment) {
           isFirstNewComment = false;
-          $comment.prev().before('<a id="new"></a>');
+          $placeholder.prev().before('<a id="new"></a>');
 
           if (window.location.hash === '#new') {
-            window.scrollTo(0, $comment.offset().top - Drupal.displace.offsets.top);
+            window.scrollTo(0, $placeholder.offset().top - Drupal.displace.offsets.top);
           }
         }
       }

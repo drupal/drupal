@@ -42,11 +42,14 @@
     }
 
     editMode = !!editMode;
-    var $editButton = $(toggleEditSelector);
     var $editables;
+    var editButton = document.querySelector(toggleEditSelector);
 
     if (editMode) {
-      $editButton.text(Drupal.t('Editing'));
+      if (editButton) {
+        editButton.textContent = Drupal.t('Editing');
+      }
+
       closeToolbarTrays();
       $editables = $(once('settingstray', '[data-drupal-settingstray="editable"]'));
 
@@ -81,7 +84,10 @@
         $(quickEditItemSelector).off('.settingstray');
       }
 
-      $editButton.text(Drupal.t('Edit'));
+      if (editButton) {
+        editButton.textContent = Drupal.t('Edit');
+      }
+
       closeOffCanvas();
       disableQuickEdit();
     }

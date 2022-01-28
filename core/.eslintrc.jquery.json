@@ -45,7 +45,7 @@
     "jquery/no-sizzle": 0,
     "jquery/no-slide": 0,
     "jquery/no-submit": 2,
-    "jquery/no-text": 0,
+    "jquery/no-text": 2,
     "jquery/no-toggle": 0,
     "jquery/no-trigger": 0,
     "jquery/no-trim": 2,

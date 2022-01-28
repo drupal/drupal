@@ -22,7 +22,9 @@
       };
     },
     initialize: function initialize(options) {
-      this.$el.find('a').text(options.strings.quickEdit);
+      this.$el.find('a').each(function (index, element) {
+        element.textContent = options.strings.quickEdit;
+      });
       this.render();
       this.listenTo(this.model, 'change:isActive', this.render);
     },

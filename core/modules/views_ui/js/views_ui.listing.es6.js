@@ -29,12 +29,15 @@
         const query = e.target.value.toLowerCase();
 
         function showViewRow(index, row) {
-          const $row = $(row);
-          const $sources = $row.find(
+          const sources = row.querySelectorAll(
             '[data-drupal-selector="views-table-filter-text-source"]',
           );
-          const textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
-          $row.closest('tr').toggle(textMatch);
+          let sourcesConcat = '';
+          sources.forEach((item) => {
+            sourcesConcat += item.textContent;
+          });
+          const textMatch = sourcesConcat.toLowerCase().indexOf(query) !== -1;
+          $(row).closest('tr').toggle(textMatch);
         }
 
         // Filter if the length of the query is at least 2 characters.

@@ -45,10 +45,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         var re = new RegExp("\\b".concat(query), 'i');
 
         function showModuleRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
-          var textMatch = $sources.text().search(re) !== -1;
-          $row.closest('tr').toggle(textMatch);
+          var sources = row.querySelectorAll('.table-filter-text-source, .module-name, .module-description');
+          var sourcesConcat = '';
+          sources.forEach(function (item) {
+            sourcesConcat += item.textContent;
+          });
+          var textMatch = sourcesConcat.search(re) !== -1;
+          $(row).closest('tr').toggle(textMatch);
         }
 
         $rowsAndDetails.show();

@@ -19,12 +19,10 @@
       var toolbarEscape = once('escapeAdmin', '[data-toolbar-escape-admin]');
 
       if (toolbarEscape.length && pathInfo.currentPathIsAdmin) {
-        var $toolbarEscape = $(toolbarEscape);
-
         if (escapeAdminPath !== null) {
-          $toolbarEscape.attr('href', escapeAdminPath);
+          $(toolbarEscape).attr('href', escapeAdminPath);
         } else {
-          $toolbarEscape.text(Drupal.t('Home'));
+          toolbarEscape[0].textContent = Drupal.t('Home');
         }
       }
     }

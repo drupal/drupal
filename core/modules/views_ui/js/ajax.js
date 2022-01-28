@@ -50,7 +50,9 @@
     var escapedSiteName = response.siteName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     var re = new RegExp(".+ (.) ".concat(escapedSiteName));
     doc.title = oldTitle.replace(re, "".concat(response.title, " $1 ").concat(response.siteName));
-    $('h1.page-title').text(response.title);
+    document.querySelectorAll('h1.page-title').forEach(function (item) {
+      item.textContent = response.title;
+    });
   };
 
   Drupal.theme.tableDragChangedWarning = function () {

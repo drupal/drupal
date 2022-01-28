@@ -20,7 +20,7 @@
           return Drupal.t('New book');
         }
 
-        return Drupal.checkPlain($select.find(':selected').text());
+        return Drupal.checkPlain($select.find(':selected')[0].textContent);
       });
     }
   };
