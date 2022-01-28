@@ -731,53 +731,6 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertCount(7, $candidates);
   }
 
-  /**
-   * Tests getRoutesPaged().
-   *
-   * @group legacy
-   */
-  public function testGetRoutesPaged() {
-    $this->expectDeprecation('Drupal\Core\Routing\RouteProvider::getRoutesPaged() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009');
-    $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
-
-    $this->fixtures->createTables($connection);
-    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
-    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
-    $dumper->dump();
-
-    $fixture_routes = $this->fixtures->staticSampleRouteCollection();
-
-    // Query all the routes.
-    $routes = $provider->getRoutesPaged(0);
-    $this->assertEquals(array_keys($fixture_routes), array_keys($routes));
-
-    // Query non routes.
-    $routes = $provider->getRoutesPaged(0, 0);
-    $this->assertEquals([], array_keys($routes));
-
-    // Query a limited sets of routes.
-    $routes = $provider->getRoutesPaged(1, 2);
-    $this->assertEquals(array_slice(array_keys($fixture_routes), 1, 2), array_keys($routes));
-  }
-
-  /**
-   * Tests getRoutesCount().
-   *
-   * @group legacy
-   */
-  public function testGetRoutesCount() {
-    $this->expectDeprecation('Drupal\Core\Routing\RouteProvider::getRoutesCount() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009');
-    $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
-
-    $this->fixtures->createTables($connection);
-    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
-    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
-    $dumper->dump();
-    $this->assertEquals(5, $provider->getRoutesCount());
-  }
-
 }
 
 class TestRouteProvider extends RouteProvider {

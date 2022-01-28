@@ -430,59 +430,6 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
-   * Returns a chunk of routes.
-   *
-   * Should only be used in conjunction with an iterator.
-   *
-   * @param int $offset
-   *   The query offset.
-   * @param int $length
-   *   The number of records.
-   *
-   * @return \Symfony\Component\Routing\Route[]
-   *   Routes keyed by the route name.
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
-   *   replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3151009
-   */
-  public function getRoutesPaged($offset, $length = NULL) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
-    $select = $this->connection->select($this->tableName, 'router')
-      ->fields('router', ['name', 'route']);
-
-    if (isset($length)) {
-      $select->range($offset, $length);
-    }
-
-    $routes = $select->execute()->fetchAllKeyed();
-
-    $result = [];
-    foreach ($routes as $name => $route) {
-      $result[$name] = unserialize($route);
-    }
-
-    return $result;
-  }
-
-  /**
-   * Gets the total count of routes provided by the router.
-   *
-   * @return int
-   *   Number of routes.
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
-   *   replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3151009
-   */
-  public function getRoutesCount() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
-    return $this->connection->query("SELECT COUNT(*) FROM {" . $this->connection->escapeTable($this->tableName) . "}")->fetchField();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function addExtraCacheKeyPart($cache_key_provider, $cache_key_part) {
