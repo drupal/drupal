@@ -114,32 +114,24 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
     $collection = $this->applyRouteFilters($collection, $request);
     $collection = $this->applyFitOrder($collection);
 
-    if ($ret = $this->matchCollection(rawurldecode($this->currentPath->getPath($request)), $collection)) {
-      return $this->applyRouteEnhancers($ret, $request);
-    }
-
-    throw 0 < count($this->allow)
-      ? new MethodNotAllowedException(array_unique($this->allow))
-      : new ResourceNotFoundException(sprintf('No routes found for "%s".', $this->currentPath->getPath()));
+    $ret = $this->matchCollection(rawurldecode($this->currentPath->getPath($request)), $collection);
+    return $this->applyRouteEnhancers($ret, $request);
   }
 
   /**
-   * Tries to match a URL with a set of routes.
-   *
-   * @param string $pathinfo
-   *   The path info to be parsed
-   * @param \Symfony\Component\Routing\RouteCollection $routes
-   *   The set of routes.
-   *
-   * @return array|null
-   *   An array of parameters. NULL when there is no match.
+   * {@inheritdoc}
    */
-  protected function matchCollection($pathinfo, RouteCollection $routes) {
+  protected function matchCollection($pathinfo, RouteCollection $routes): array {
     // Try a case-sensitive match.
     $match = $this->doMatchCollection($pathinfo, $routes, TRUE);
     // Try a case-insensitive match.
     if ($match === NULL && $routes->count() > 0) {
       $match = $this->doMatchCollection($pathinfo, $routes, FALSE);
+    }
+    if ($match === NULL) {
+      throw 0 < count($this->allow)
+        ? new MethodNotAllowedException(array_unique($this->allow))
+        : new ResourceNotFoundException(sprintf('No routes found for "%s".', $this->currentPath->getPath()));
     }
     return $match;
   }
