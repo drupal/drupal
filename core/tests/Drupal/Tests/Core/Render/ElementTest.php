@@ -19,7 +19,6 @@ class ElementTest extends UnitTestCase {
     $this->assertTrue(Element::property('#property'));
     $this->assertFalse(Element::property('property'));
     $this->assertFalse(Element::property('property#'));
-    $this->assertFalse(Element::property(0));
   }
 
   /**
@@ -30,16 +29,13 @@ class ElementTest extends UnitTestCase {
       '#property1' => 'property1',
       '#property2' => 'property2',
       'property3' => 'property3',
-      0 => [],
     ];
 
     $properties = Element::properties($element);
 
-    $this->assertCount(2, $properties);
     $this->assertContains('#property1', $properties);
     $this->assertContains('#property2', $properties);
     $this->assertNotContains('property3', $properties);
-    $this->assertNotContains(0, $properties);
   }
 
   /**
