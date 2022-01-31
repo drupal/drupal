@@ -16,6 +16,7 @@ parameters:
     - ../*/settings*.php
     # Skip test fixtures.
     - */tests/fixtures/*.php
+    - */tests/fixtures/*.php.gz
     # Below extends on purpose a non existing class for testing.
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     # @todo files below need to be excluded as they prevent baseline generation.
