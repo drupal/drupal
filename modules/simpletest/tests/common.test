@@ -480,6 +480,11 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
    * Check that invalid multi-byte sequences are rejected.
    */
   function testInvalidMultiByte() {
+     // Ignore PHP 8.0+ null deprecatations.
+     $text = check_plain(NULL);
+     $this->assertEqual($text, '', 'check_plain() casts null to string');
+     $text = check_plain(FALSE);
+     $this->assertEqual($text, '', 'check_plain() casts boolean to string');
      // Ignore PHP 5.3+ invalid multibyte sequence warning.
      $text = @check_plain("Foo\xC0barbaz");
      $this->assertEqual($text, '', 'check_plain() rejects invalid sequence "Foo\xC0barbaz"');
