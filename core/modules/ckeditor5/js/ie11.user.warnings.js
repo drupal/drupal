@@ -15,7 +15,9 @@
         var editorMessageContainer = document.createElement('div');
         element.parentNode.insertBefore(editorMessageContainer, element);
         var editorMessages = new Drupal.Message(editorMessageContainer);
-        editorMessages.add(Drupal.t('Internet Explorer 11 user: a rich text editor is available for this field when used with any other supported browser.'), {
+        editorMessages.add(Drupal.t('A rich text editor is available for this field when used with <a href="@supported-browsers">supported browsers</a> other than Internet Explorer.', {
+          '@supported-browsers': 'https://www.drupal.org/docs/system-requirements/browser-requirements'
+        }), {
           type: 'warning'
         });
       },
