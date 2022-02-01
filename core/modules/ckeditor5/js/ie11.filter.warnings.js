@@ -19,12 +19,12 @@
         var editorSettings = document.querySelector('#editor-settings-wrapper');
 
         var ck5Warning = function ck5Warning() {
-          selectMessages.add(Drupal.t('CKEditor 5 is not compatible with Internet Explorer 11. Text fields using CKEditor 5 will still be editable but without the benefits of CKEditor.'), {
+          selectMessages.add(Drupal.t('CKEditor 5 is not compatible with Internet Explorer. Text fields using CKEditor 5 will fall back to plain HTML editing without CKEditor for users of Internet Explorer.'), {
             type: 'warning'
           });
 
           if (isIE11) {
-            selectMessages.add(Drupal.t('Text editor toolbar settings are not available. They will be available in any <a href="@supported-browsers">supported browser</a> other than Internet Explorer', {
+            selectMessages.add(Drupal.t('Text editor toolbar settings are not available in Internet Explorer. They will be available in other <a href="@supported-browsers">supported browsers</a>.', {
               '@supported-browsers': 'https://www.drupal.org/docs/system-requirements/browser-requirements'
             }), {
               type: 'error'

@@ -410,7 +410,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   public function testInternetExplorerWarning() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $warning_text = 'CKEditor 5 is not compatible with Internet Explorer 11. Fields using CKEditor 5 will still be editable but without the benefits of CKEditor.';
+    $warning_text = 'CKEditor 5 is not compatible with Internet Explorer. Text fields using CKEditor 5 will fall back to plain HTML editing without CKEditor for users of Internet Explorer.';
     $this->createNewTextFormat($page, $assert_session);
     $assert_session->waitForText($warning_text);
     $page->selectFieldOption('editor[editor]', 'None');
