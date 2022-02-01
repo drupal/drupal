@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\FunctionalJavascriptTests\SortableTestTrait;
 
 /**
  * Tests the Media library entity reference widget.
@@ -10,6 +11,8 @@ use Drupal\field\Entity\FieldConfig;
  * @group media_library
  */
 class EntityReferenceWidgetTest extends MediaLibraryTestBase {
+
+  use SortableTestTrait;
 
   /**
    * {@inheritdoc}
@@ -256,6 +259,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->openMediaLibraryForField('field_twin_media');
     $page->checkField('Select Dog');
     $this->pressInsertSelected('Added one media item.');
+    $this->waitForElementsCount('css', '.field--name-field-twin-media [data-media-library-item-delta]', 2);
     // Assert that we can toggle the visibility of the weight inputs when the
     // field contains more than one item.
     $wrapper = $assert_session->elementExists('css', '.field--name-field-twin-media');
@@ -483,6 +487,88 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
     // Confirm that the node was created.
     $this->assertSession()->pageTextContains('Basic page My page has been created.');
+  }
+
+  /**
+   * Tests that changed order is maintained after removing a selection.
+   */
+  public function testRemoveAfterReordering(): void {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalGet('node/add/basic_page');
+    $page->fillField('Title', 'My page');
+
+    $this->openMediaLibraryForField('field_unlimited_media');
+    $page->checkField('Select Dog');
+    $page->checkField('Select Cat');
+    $page->checkField('Select Bear');
+    // Order: Dog - Cat - Bear.
+    $this->pressInsertSelected('Added 3 media items.');
+
+    // Move first item (Dog) to the end.
+    // Order: Cat - Bear - Dog.
+    $this->sortableAfter('[data-media-library-item-delta="0"]', '[data-media-library-item-delta="2"]', '.js-media-library-selection');
+
+    $wrapper = $assert_session->elementExists('css', '.field--name-field-unlimited-media');
+    // Remove second item (Bear).
+    // Order: Cat - Dog.
+    $wrapper->find('css', "[aria-label='Remove Bear']")->press();
+    $this->waitForText('Bear has been removed.');
+    $page->pressButton('Save');
+
+    $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:last-child', 'Dog');
+  }
+
+  /**
+   * Tests that order is correct after re-order and adding another item.
+   */
+  public function testAddAfterReordering(): void {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalGet('node/add/basic_page');
+    $page->fillField('Title', 'My page');
+
+    $this->openMediaLibraryForField('field_unlimited_media');
+    $page->checkField('Select Dog');
+    $page->checkField('Select Cat');
+    // Order: Dog - Cat.
+    $this->pressInsertSelected('Added 2 media items.');
+
+    // Change positions.
+    // Order: Cat - Dog.
+    $this->sortableAfter('[data-media-library-item-delta="0"]', '[data-media-library-item-delta="1"]', '.js-media-library-selection');
+
+    $this->openMediaLibraryForField('field_unlimited_media');
+    $this->selectMediaItem(2);
+    // Order: Cat - Dog - Bear.
+    $this->pressInsertSelected('Added one media item.');
+
+    $page->pressButton('Save');
+
+    $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:first-child', 'Cat');
+    $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:last-child', 'Bear');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function sortableUpdate($item, $from, $to = NULL) {
+    // See core/modules/media_library/js/media_library.widget.es6.js.
+    $script = <<<JS
+(function ($) {
+    var selection = document.querySelectorAll('.js-media-library-selection');
+    selection.forEach(function (widget) {
+        $(widget).children().each(function (index, child) {
+            $(child).find('.js-media-library-item-weight').val(index);
+        });
+    });
+})(jQuery)
+
+JS;
+
+    $this->getSession()->executeScript($script);
   }
 
 }
