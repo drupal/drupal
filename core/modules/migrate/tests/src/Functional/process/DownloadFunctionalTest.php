@@ -77,7 +77,7 @@ class DownloadFunctionalTest extends BrowserTestBase {
     $message = reset($messages);
 
     $id = $migration->getPluginId();
-    $this->assertEquals("$id:uri: Client error: `GET $invalid_url` resulted in a `404 Not Found` response ($invalid_url)", $message->message);
+    $this->assertEquals("$id:uri:download: Client error: `GET $invalid_url` resulted in a `404 Not Found` response ($invalid_url)", $message->message);
     $this->assertEquals(MigrationInterface::MESSAGE_ERROR, $message->level);
 
     // Check that the second row was migrated successfully.
