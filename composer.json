@@ -104,8 +104,7 @@
         "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
         "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
         "drupal-phpunit-upgrade": [
-            "@composer update phpunit/phpunit --with-dependencies --no-progress",
-            "@composer require phpspec/prophecy-phpunit:^2 --no-progress"
+            "@composer update phpunit/phpunit --with-dependencies --no-progress"
         ],
         "post-update-cmd": [
             "Drupal\\Composer\\Composer::generateMetapackages"
