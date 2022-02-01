@@ -53,6 +53,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     'editor',
     'filter',
     'user',
+    // For being able to test media_embed + Media button in CKE4/CKE5.
+    'media',
+    'media_library',
+    'views',
   ];
 
   /**
@@ -108,6 +112,26 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       +
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
+
+    $basic_html_format_with_media_embed = $basic_html_format;
+    $basic_html_format_with_media_embed['name'] .= ' (with Media Embed support)';
+    $basic_html_format_with_media_embed['format'] = 'basic_html_with_media_embed';
+    // Add media_embed filter, update filter_html filter settings.
+    $basic_html_format_with_media_embed['filters']['media_embed'] = ['status' => TRUE];
+    $new_value = $current_value . ' <drupal-media data-entity-type data-entity-uuid data-align data-caption alt>';
+    NestedArray::setValue($basic_html_format_with_media_embed, $allowed_html_parents, $new_value);
+    FilterFormat::create($basic_html_format_with_media_embed)->save();
+    $basic_html_editor_with_media_embed = Editor::create(
+      ['format' => 'basic_html_with_media_embed']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    );
+    $settings = $basic_html_editor_with_media_embed->getSettings();
+    // Add "insert media from library" button to CKEditor 4 configuration, the
+    // pre-existing toolbar item group labeled "Media".
+    $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
+    $basic_html_editor_with_media_embed->setSettings($settings);
+    $basic_html_editor_with_media_embed->save();
 
     $filter_plugin_manager = $this->container->get('plugin.manager.filter');
     FilterFormat::create([
@@ -515,6 +539,33 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'The following plugins were enabled to support specific attributes that are allowed by this text format: <em class="placeholder">Alignment ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center, text-align-justify), Align center ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center), Justify ( for tag: &lt;p&gt; to support: class with value(s):  text-align-justify)</em>.',
           'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.',
         ]),
+    ];
+
+    yield "basic_html with media_embed added => <drupal-media> needed => supported through sourceEditing (3 upgrade messages)" => [
+      'format_id' => 'basic_html_with_media_embed',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => array_merge(
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, 10),
+            ['drupalMedia'],
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 10),
+          ),
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => array_merge(
+              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+              ['<drupal-media data-align data-caption>'],
+            ),
+          ],
+        ] + $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+      ],
+      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge($basic_html_test_case['expected_messages'], [
+        "This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt; &lt;drupal-media data-align data-caption&gt;.",
+      ]),
     ];
 
     yield "restricted_html can be switched to CKEditor 5 after dropping the two markup-creating filters (3 upgrade messages)" => [
