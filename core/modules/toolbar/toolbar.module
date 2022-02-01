@@ -280,10 +280,10 @@ function toolbar_get_rendered_subtrees() {
 }
 
 /**
- * Returns the hash of the per-user rendered toolbar subtrees.
+ * Returns the hash of the user-rendered toolbar subtrees and cacheability.
  *
- * @return string
- *   The hash of the admin_menu subtrees.
+ * @return array
+ *   An array with the hash of the toolbar subtrees and cacheability.
  */
 function _toolbar_get_subtrees_hash() {
   [$subtrees, $cacheability] = toolbar_get_rendered_subtrees();
