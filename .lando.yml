@@ -1,0 +1,4 @@
+name: lando-d9
+recipe: drupal9
+config:
+  webroot: web
