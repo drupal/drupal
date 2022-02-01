@@ -393,6 +393,9 @@ class TrackerTest extends BrowserTestBase {
       'status' => 0,
     ]);
 
+    $this->drupalGet('activity');
+    $this->assertSession()->responseNotContains($unpublished->label());
+
     // Start indexing backwards from node 4.
     \Drupal::state()->set('tracker.index_nid', 4);
 
