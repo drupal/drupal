@@ -132,6 +132,7 @@ function color_get_info($theme) {
   $path = \Drupal::service('extension.list.theme')->getPath($theme);
   $file = \Drupal::root() . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
+    $info = [];
     include $file;
     // Add in default values.
     $info += [

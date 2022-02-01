@@ -283,11 +283,9 @@ class PhpTransliteration implements TransliterationInterface {
 
     // Read in this file, which should set up a variable called $overrides,
     // which will be local to this function.
+    $overrides[$langcode] = [];
     if (is_file($file)) {
       include $file;
-    }
-    if (!isset($overrides) || !is_array($overrides)) {
-      $overrides = [$langcode => []];
     }
     $this->languageOverrides[$langcode] = $overrides[$langcode];
   }
@@ -311,14 +309,10 @@ class PhpTransliteration implements TransliterationInterface {
 
     // Read in this file, which should set up a variable called $base, which
     // will be local to this function.
+    $base = [];
     if (is_file($file)) {
       include $file;
     }
-    if (!isset($base) || !is_array($base)) {
-      $base = [];
-    }
-
-    // Save this data.
     $this->genericMap[$bank] = $base;
   }
 

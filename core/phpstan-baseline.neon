@@ -21,16 +21,6 @@ parameters:
 			path: includes/update.inc
 
 		-
-			message: "#^Undefined variable\\: \\$base$#"
-			count: 1
-			path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-
-		-
-			message: "#^Undefined variable\\: \\$overrides$#"
-			count: 1
-			path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-
-		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 3
 			path: lib/Drupal/Core/Action/ActionManager.php
@@ -299,11 +289,6 @@ parameters:
 			message: "#^Call to sprintf contains 1 placeholder, 0 values given\\.$#"
 			count: 1
 			path: modules/ckeditor5/src/Controller/CKEditor5ImageController.php
-
-		-
-			message: "#^Undefined variable\\: \\$info$#"
-			count: 1
-			path: modules/color/color.module
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
