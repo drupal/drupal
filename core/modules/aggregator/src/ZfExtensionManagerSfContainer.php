@@ -23,7 +23,7 @@ class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterMan
    *
    * @var array
    *
-   * @see \Drupal\Component\Bridge\ZfExtensionManagerSfContainer::canonicalizeName().
+   * @see \Drupal\aggregator\ZfExtensionManagerSfContainer::canonicalizeName().
    * @see https://github.com/laminas/laminas-servicemanager/blob/2.7.11/src/ServiceManager.php#L114
    */
   protected $canonicalNamesReplacements = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => ''];
