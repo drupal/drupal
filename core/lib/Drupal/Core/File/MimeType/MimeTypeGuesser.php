@@ -75,14 +75,6 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function guess($path) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::guessMimeType() instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-    return $this->guessMimeType($path);
-  }
-
-  /**
    * Appends a MIME type guesser to the guessers chain.
    *
    * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $guesser

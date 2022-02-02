@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -193,13 +192,7 @@ class TemporaryJsonapiFileFieldUploader {
     $file = File::create([]);
     $file->setOwnerId($owner->id());
     $file->setFilename($prepared_filename);
-    if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
-      $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
-    }
-    else {
-      @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-      $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
-    }
+    $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
     $file->setFileUri($temp_file_path);
     // Set the size. This is done in File::preSave() but we validate the file
     // before it is saved.

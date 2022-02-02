@@ -15,7 +15,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 // cspell:ignore apng
 
@@ -500,13 +499,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
-      if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
-        $values['favicon_mimetype'] = $this->mimeTypeGuesser->guessMimeType($values['favicon_path']);
-      }
-      else {
-        $values['favicon_mimetype'] = $this->mimeTypeGuesser->guess($values['favicon_path']);
-        @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-      }
+      $values['favicon_mimetype'] = $this->mimeTypeGuesser->guessMimeType($values['favicon_path']);
     }
 
     theme_settings_convert_to_config($values, $config)->save();

@@ -78,14 +78,6 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
         /**
          * {@inheritdoc}
          */
-        public function guess($path)
-        {
-            return $this->lazyLoadItself()->guess($path);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
         public function addMimeTypeGuesser(\Symfony\Component\Mime\MimeTypeGuesserInterface $guesser, $priority = 0)
         {
             return $this->lazyLoadItself()->addMimeTypeGuesser($guesser, $priority);

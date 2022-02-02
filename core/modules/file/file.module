@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
 use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
 use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 // cspell:ignore abiword
 
@@ -1050,13 +1049,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   }
 
   $guesser = \Drupal::service('file.mime_type.guesser');
-  if ($guesser instanceof MimeTypeGuesserInterface) {
-    $file->setMimeType($guesser->guessMimeType($values['filename']));
-  }
-  else {
-    $file->setMimeType($guesser->guess($values['filename']));
-    @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-  }
+  $file->setMimeType($guesser->guessMimeType($values['filename']));
   $file->source = $form_field_name;
 
   // If the destination is FALSE then $replace === FILE_EXISTS_ERROR and
