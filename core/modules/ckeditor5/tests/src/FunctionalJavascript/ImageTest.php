@@ -310,4 +310,64 @@ class ImageTest extends WebDriverTestBase {
     ];
   }
 
+  /**
+   * Checks that width attribute is correct after upcasting, then downcasting.
+   *
+   * @param string $width
+   *   The width input for source editing.
+   *
+   * @dataProvider providerWidth
+   */
+  public function testWidth(string $width): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('node/add');
+    $page->fillField('title[0][value]', 'My test content');
+    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $image = $this->getTestFiles('image')[0];
+    $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('css', '.figure.image');
+
+    // Edit the source of the image through the UI.
+    $page->pressButton('Source');
+    // Get editor data.
+    $editor_data = $this->getEditorDataAsDom();
+    // Get the image element data from the editor then set the new width.
+    $image = $editor_data->getElementsByTagName('img')->item(0);
+    $image->setAttribute('width', $width);
+    $new_html = $image->C14N();
+    $text_area = $page->find('css', '.ck-source-editing-area > textarea');
+    // Set the value of the source code to the updated HTML that has the width
+    // attribute.
+    $text_area->setValue($new_html);
+    // Toggle source editing to force upcasting.
+    $page->pressButton('Source');
+    $assert_session->waitForElementVisible('css', 'img');
+    // Toggle source editing to force downcasting.
+    $page->pressButton('Source');
+    // Get editor data.
+    $editor_data = $this->getEditorDataAsDom();
+    $width_from_editor = $editor_data->getElementsByTagName('img')->item(0)->getAttribute('width');
+    // Check the contents of the source editing area.
+    $this->assertSame($width, $width_from_editor);
+  }
+
+  /**
+   * Data provider for ::testWidth().
+   *
+   * @return \string[][]
+   */
+  public function providerWidth(): array {
+    return [
+      'Image resize with percent unit (only allowed in HTML 4)' => [
+        'width' => '33%',
+      ],
+      'Image resize with (implied) px unit' => [
+        'width' => '100',
+      ],
+    ];
+  }
+
 }

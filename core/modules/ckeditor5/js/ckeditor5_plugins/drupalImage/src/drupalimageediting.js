@@ -7,6 +7,13 @@ function createImageViewElement(writer) {
   return writer.createEmptyElement('img');
 }
 
+// A simple helper method to detect number strings.
+function isNumberString(value) {
+  const parsedValue = parseFloat(value);
+
+  return !Number.isNaN(parsedValue) && value === String(parsedValue);
+}
+
 function modelEntityUuidToDataAttribute() {
   function converter(evt, data, conversionApi) {
     const { item } = data;
@@ -476,7 +483,10 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'width',
           value: (viewElement) => {
-            return `${viewElement.getAttribute('width')}px`;
+            if (isNumberString(viewElement.getAttribute('width'))) {
+              return `${viewElement.getAttribute('width')}px`;
+            }
+            return `${viewElement.getAttribute('width')}`;
           },
         },
       })
@@ -488,7 +498,10 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'height',
           value: (viewElement) => {
-            return `${viewElement.getAttribute('height')}px`;
+            if (isNumberString(viewElement.getAttribute('height'))) {
+              return `${viewElement.getAttribute('height')}px`;
+            }
+            return `${viewElement.getAttribute('height')}`;
           },
         },
       });
