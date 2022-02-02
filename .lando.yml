@@ -6,3 +6,7 @@ config:
 services:
   appserver:
     ssl: false
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - database
