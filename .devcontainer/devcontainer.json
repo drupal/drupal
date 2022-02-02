@@ -31,5 +31,5 @@
     "reynoldsalec/lando-dev-container-feature/landodevcontainer": "latest",
 	},
 
-	"postCreateCommand": "mkdir -p ~/.lando/cache && cp -f /workspaces/drupal-launcher/.devcontainer/config.yml ~/.lando/config.yml && lando start && lando composer install"
+	"postCreateCommand": "mkdir -p ~/.lando/cache && cp -f /workspaces/drupal-launcher/.devcontainer/config.yml ~/.lando/config.yml && lando start && lando composer install && lando composer require drush/drush"
 }
