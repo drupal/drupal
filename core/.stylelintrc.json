@@ -4,29 +4,19 @@
     "stylelint-order"
   ],
   "rules": {
-    "alpha-value-notation": "number",
-    "at-rule-no-vendor-prefix": null,
-    "color-function-notation": "legacy",
     "comment-empty-line-before": null,
-    "custom-property-pattern": "^[a-z][-_a-z0-9IE]*$",
-    "declaration-block-no-redundant-longhand-properties": null,
     "function-linear-gradient-no-nonstandard-direction": null,
-    "function-url-quotes": null,
     "function-whitespace-after": null,
-    "hue-degree-notation": "number",
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
-    "max-line-length": null,
     "media-feature-name-no-unknown": [true, {
       "ignoreMediaFeatureNames": [
         "prefers-reduced-motion",
         "min--moz-device-pixel-ratio"
       ]
     }],
-    "media-feature-name-no-vendor-prefix": null,
     "number-leading-zero": "always",
-    "number-max-precision": 5,
     "order/order": [
       "custom-properties",
       "dollar-variables",
@@ -455,12 +445,7 @@
       "line-height"
     ],
     "property-no-unknown": null,
-    "property-no-vendor-prefix": null,
     "rule-empty-line-before": null,
-    "selector-attribute-quotes": null,
-    "selector-class-pattern": null,
-    "selector-id-pattern": "^[a-z][-_a-z0-9]*$",
-    "selector-no-vendor-prefix": null,
     "selector-pseudo-element-colon-notation": null,
     "shorthand-property-no-redundant-values": null,
     "string-quotes": "double",
@@ -470,8 +455,7 @@
         "--font-family",
         "font-family"
       ]
-    }],
-    "value-no-vendor-prefix": null
+    }]
   },
   "ignoreFiles": [
     "assets/vendor/**/*.css",
