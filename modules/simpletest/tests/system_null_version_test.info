@@ -1,0 +1,5 @@
+name = "System null version test"
+description = "Support module for testing with a null version."
+package = Testing
+core = 7.x
+hidden = FALSE

@@ -111,6 +111,18 @@ class ModuleUnitTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test system_modules() with a module with a dependency with a null version.
+   */
+  function testSystemModulesNullVersion() {
+    module_enable(array('system_requires_null_version_test'), FALSE);
+    $this->resetAll();
+    $admin = $this->drupalCreateUser(array('administer modules'));
+    $this->drupalLogin($admin);
+    $this->drupalGet('admin/modules');
+    $this->assertText('System null version test', 'Module admin UI listed dependency with null version successfully.');
+  }
+
+  /**
    * Test that module_invoke() can load a hook defined in hook_hook_info().
    */
   function testModuleInvoke() {
