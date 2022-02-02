@@ -118,30 +118,6 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   }
 
   /**
-   * Act on an exception when cache might be stale.
-   *
-   * If the {cachetags} table does not yet exist, that's fine but if the table
-   * exists and yet the query failed, then the cache is stale and the
-   * exception needs to propagate.
-   *
-   * @param \Exception $e
-   *   The exception.
-   *
-   * @throws \Exception
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3243014
-   */
-  protected function catchException(\Exception $e) {
-    @trigger_error('\Drupal\Core\Cache\DatabaseCacheTagsChecksum::catchException is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3243014', E_USER_DEPRECATED);
-    if ($this->connection->schema()->tableExists('cachetags')) {
-      throw $e;
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getDatabaseConnection() {
