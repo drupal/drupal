@@ -30,7 +30,8 @@
     "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\"",
     "vendor-update": "node ./scripts/js/assets.js",
     "watch:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js --watch",
-    "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js"
+    "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js",
+    "build:ckeditor5-types": "node ./scripts/js/ckeditor5-types-documentation.js"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
