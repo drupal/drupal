@@ -65,7 +65,7 @@ class TestSessionBag implements SessionBagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return self::BAG_NAME;
   }
 
@@ -79,14 +79,14 @@ class TestSessionBag implements SessionBagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getStorageKey() {
+  public function getStorageKey(): string {
     return $this->storageKey;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function clear() {
+  public function clear(): mixed {
     $return = $this->attributes;
     $this->attributes = [];
 

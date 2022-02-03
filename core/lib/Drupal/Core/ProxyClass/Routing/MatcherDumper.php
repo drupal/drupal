@@ -79,7 +79,7 @@ namespace Drupal\Core\ProxyClass\Routing {
          * {@inheritdoc}
          */
         public function dump(array $options = array (
-        ))
+        )): string
         {
             return $this->lazyLoadItself()->dump($options);
         }
@@ -87,7 +87,7 @@ namespace Drupal\Core\ProxyClass\Routing {
         /**
          * {@inheritdoc}
          */
-        public function getRoutes()
+        public function getRoutes(): \Symfony\Component\Routing\RouteCollection
         {
             return $this->lazyLoadItself()->getRoutes();
         }

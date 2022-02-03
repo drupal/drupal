@@ -16,7 +16,7 @@ class SerializationTestEncoder implements EncoderInterface {
   /**
    * {@inheritdoc}
    */
-  public function encode($data, $format, array $context = []) {
+  public function encode($data, $format, array $context = []): string {
     // @see \Drupal\serialization_test\SerializationTestNormalizer::normalize().
     return 'Normalized by ' . $data['normalized_by'] . ', Encoded by SerializationTestEncoder';
   }
@@ -24,7 +24,7 @@ class SerializationTestEncoder implements EncoderInterface {
   /**
    * {@inheritdoc}
    */
-  public function supportsEncoding($format) {
+  public function supportsEncoding($format): bool {
     return static::$format === $format;
   }
 

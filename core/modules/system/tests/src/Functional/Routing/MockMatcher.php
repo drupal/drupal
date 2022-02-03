@@ -28,7 +28,7 @@ class MockMatcher implements RequestMatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function matchRequest(Request $request) {
+  public function matchRequest(Request $request): array {
     $matcher = $this->matcher;
     return $matcher($request);
   }

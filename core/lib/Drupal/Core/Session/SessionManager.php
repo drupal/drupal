@@ -94,7 +94,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function start() {
+  public function start(): bool {
     if (($this->started || $this->startedLazy) && !$this->closed) {
       return $this->started;
     }
@@ -129,7 +129,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function getId() {
+  public function getId(): string {
     $id = parent::getId();
 
     if (empty($id)) {
@@ -202,10 +202,10 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function regenerate($destroy = FALSE, $lifetime = NULL) {
+  public function regenerate($destroy = FALSE, $lifetime = NULL): bool {
     // Nothing to do if we are not allowed to change the session.
     if ($this->isCli()) {
-      return;
+      return FALSE;
     }
 
     // Drupal will always destroy the existing session when regenerating a

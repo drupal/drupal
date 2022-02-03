@@ -27,7 +27,7 @@ class SupernovaGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
     throw new \Exception();
   }
 

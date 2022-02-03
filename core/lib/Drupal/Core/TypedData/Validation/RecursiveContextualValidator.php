@@ -83,7 +83,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function validate($data, $constraints = NULL, $groups = NULL, $is_root_call = TRUE) {
+  public function validate($data, $constraints = NULL, $groups = NULL, $is_root_call = TRUE): static {
     if (isset($groups)) {
       throw new \LogicException('Passing custom groups is not supported.');
     }

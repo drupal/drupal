@@ -104,7 +104,7 @@ final class Serializer extends SymfonySerializer {
   /**
    * {@inheritdoc}
    */
-  public function supportsDenormalization($data, $type, $format = NULL, array $context = []) {
+  public function supportsDenormalization($data, $type, $format = NULL, array $context = []): bool {
     return $this->selfSupportsDenormalization($data, $type, $format, $context) || $this->fallbackNormalizer->supportsDenormalization($data, $type, $format, $context);
   }
 

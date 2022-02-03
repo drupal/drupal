@@ -70,7 +70,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder = $this->prophesize('\Symfony\Component\DependencyInjection\ContainerBuilder');
       $this->containerBuilder->getAliases()->willReturn([]);
       $this->containerBuilder->getParameterBag()->willReturn(new ParameterBag());
-      $this->containerBuilder->getDefinitions()->willReturn(NULL);
+      $this->containerBuilder->getDefinitions()->willReturn([]);
       $this->containerBuilder->isCompiled()->willReturn(TRUE);
 
       $definition = [];
