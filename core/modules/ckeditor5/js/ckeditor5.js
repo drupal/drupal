@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-((Drupal, debounce, CKEditor5, $) => {
+((Drupal, debounce, CKEditor5, $, once) => {
   Drupal.CKEditor5Instances = new Map();
   const callbacks = new Map();
   const required = new Set();
@@ -98,39 +98,60 @@
     });
   }
 
-  const offCanvasCss = element => {
-    element.parentNode.setAttribute('data-drupal-ck-style-fence', true);
+  function processRules(rulesGroup) {
+    try {
+      [...rulesGroup.cssRules].forEach(ckeditor5SelectorProcessing);
+    } catch (e) {
+      console.warn(`Stylesheet ${rulesGroup.href} not included in CKEditor reset due to the browser's CORS policy.`);
+    }
+  }
 
-    if (!document.querySelector('#ckeditor5-off-canvas-reset')) {
-      const prefix = `#drupal-off-canvas [data-drupal-ck-style-fence]`;
-      let existingCss = '';
-      [...document.styleSheets].forEach(sheet => {
-        if (!sheet.href || sheet.href && sheet.href.indexOf('off-canvas') === -1) {
-          try {
-            const rules = sheet.cssRules;
-            [...rules].forEach(rule => {
-              let {
-                cssText
-              } = rule;
-              const selector = rule.cssText.split('{')[0];
-              cssText = cssText.replace(selector, selector.replace(/,/g, `, ${prefix}`));
-              existingCss += `${prefix} ${cssText}`;
-            });
-          } catch (e) {
-            console.warn(`Stylesheet ${sheet.href} not included in CKEditor reset due to the browser's CORS policy.`);
-          }
+  function ckeditor5SelectorProcessing(rule) {
+    if (rule.cssRules) {
+      processRules(rule);
+    }
+
+    if (!rule.selectorText) {
+      return;
+    }
+
+    const offCanvasId = '#drupal-off-canvas';
+    const CKEditorClass = '.ck';
+    const styleFence = '[data-drupal-ck-style-fence]';
+
+    if (rule.selectorText.includes(offCanvasId) || rule.selectorText.includes(CKEditorClass)) {
+      rule.selectorText = rule.selectorText.split(/,/g).map(selector => {
+        if (selector.includes(offCanvasId)) {
+          return `${selector.trim()}:not(${styleFence} *)`;
         }
-      });
+
+        if (selector.includes(CKEditorClass)) {
+          return [selector.trim(), selector.trim().replace(CKEditorClass, `${offCanvasId} ${styleFence} ${CKEditorClass}`)];
+        }
+
+        return selector;
+      }).flat().join(', ');
+    }
+  }
+
+  function offCanvasCss(element) {
+    const fenceName = 'data-drupal-ck-style-fence';
+    const editor = Drupal.CKEditor5Instances.get(element.getAttribute('data-ckeditor5-id'));
+    editor.ui.view.element.setAttribute(fenceName, '');
+
+    if (once('ckeditor5-off-canvas-reset', 'body').length) {
+      [...document.styleSheets].forEach(processRules);
+      const prefix = `#drupal-off-canvas [${fenceName}]`;
       const addedCss = [`${prefix} .ck.ck-content {display:block;min-height:5rem;}`, `${prefix} .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}`, `${prefix} .ck.ck-content li {display:list-item}`, `${prefix} .ck.ck-content ol li {list-style-type: decimal}`, `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`];
       const blockSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ol', 'ul', 'address', 'article', 'aside', 'blockquote', 'body', 'dd', 'div', 'dl', 'dt', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'header', 'hgroup', 'hr', 'html', 'legend', 'main', 'menu', 'pre', 'section', 'xmp'].map(blockElement => `${prefix} .ck.ck-content ${blockElement}`).join(', \n');
       const blockCss = `${blockSelectors} { display: block; }`;
-      const prefixedCss = [...addedCss, existingCss, blockCss].join('\n');
-      const offCanvasCss = document.createElement('style');
-      offCanvasCss.innerHTML = prefixedCss;
-      offCanvasCss.setAttribute('id', 'ckeditor5-off-canvas-reset');
-      document.body.appendChild(offCanvasCss);
+      const prefixedCss = [...addedCss, blockCss].join('\n');
+      const offCanvasCssStyle = document.createElement('style');
+      offCanvasCssStyle.textContent = prefixedCss;
+      offCanvasCssStyle.setAttribute('id', 'ckeditor5-off-canvas-reset');
+      document.body.appendChild(offCanvasCssStyle);
     }
-  };
+  }
 
   Drupal.editors.ckeditor5 = {
     attach(element, format) {
@@ -334,4 +355,4 @@
       Drupal.ckeditor5.saveCallback = null;
     }
   });
-})(Drupal, Drupal.debounce, CKEditor5, jQuery);
+})(Drupal, Drupal.debounce, CKEditor5, jQuery, once);
