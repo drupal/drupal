@@ -21,6 +21,7 @@ drupal.ckeditor5:
       css/quickedit.css: { }
   dependencies:
     - core/jquery
+    - core/once
     - core/drupal
     - core/drupal.debounce
     - core/ckeditor5.editorClassic

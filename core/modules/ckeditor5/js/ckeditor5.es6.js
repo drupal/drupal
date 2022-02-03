@@ -3,7 +3,7 @@
  * CKEditor 5 implementation of {@link Drupal.editors} API.
  */
 /* global CKEditor5 */
-((Drupal, debounce, CKEditor5, $) => {
+((Drupal, debounce, CKEditor5, $, once) => {
   /**
    * The CKEDITOR instances.
    *
@@ -166,54 +166,130 @@
   }
 
   /**
+   * Process a group of CSS rules.
+   *
+   * @param {CSSGroupingRule} rulesGroup
+   *  A complete stylesheet or a group of nested rules like @media.
+   */
+  function processRules(rulesGroup) {
+    try {
+      // eslint-disable-next-line no-use-before-define
+      [...rulesGroup.cssRules].forEach(ckeditor5SelectorProcessing);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Stylesheet ${rulesGroup.href} not included in CKEditor reset due to the browser's CORS policy.`,
+      );
+    }
+  }
+
+  /**
+   * Processes CSS rules dynamically to account for CKEditor 5 in off canvas.
+   *
+   * This is achieved by doing the following steps:
+   * - Adding a donut scope to off canvas rules, so they don't apply within the
+   *   editor element.
+   * - Editor specific rules (i.e. those with .ck* selectors) are duplicated and
+   *   prefixed with the off canvas selector to ensure they have higher
+   *   specificity over the off canvas reset.
+   *
+   * The donut scope prevents off canvas rules from applying to the CKEditor 5
+   * editor element. Transforms a:
+   *  - #drupal-off-canvas strong
+   * rule into:
+   *  - #drupal-off-canvas strong:not([data-drupal-ck-style-fence] *)
+   *
+   * This means that the rule applies to all <strong> elements inside
+   * #drupal-off-canvas, except for <strong> elements who have a with a parent
+   * with the "data-drupal-ck-style-fence" attribute.
+   *
+   * For example:
+   * <div id="drupal-off-canvas">
+   *   <p>
+   *     <strong>Off canvas reset</strong>
+   *   </p>
+   *   <p data-drupal-ck-style-fence>
+   *     <!--
+   *       this strong elements matches the `[data-drupal-ck-style-fence] *`
+   *       selector and is excluded from the off canvas reset rule.
+   *     -->
+   *     <strong>Off canvas reset NOT applied.</strong>
+   *   </p>
+   * </div>
+   *
+   * The donut scope does not prevent CSS inheritance. There is CSS that resets
+   * following properties to prevent inheritance: background, border,
+   * box-sizing, margin, padding, position, text-decoration, transition,
+   * vertical-align and word-wrap.
+   *
+   * All .ck* CSS rules are duplicated and prefixed with the off canvas selector
+   * To ensure they have higher specificity and are not reset too aggressively.
+   *
+   * @param {CSSRule} rule
+   *  A single CSS rule to be analysed and changed if necessary.
+   */
+  function ckeditor5SelectorProcessing(rule) {
+    // Handle nested rules in @media, @support, etc.
+    if (rule.cssRules) {
+      processRules(rule);
+    }
+    if (!rule.selectorText) {
+      return;
+    }
+    const offCanvasId = '#drupal-off-canvas';
+    const CKEditorClass = '.ck';
+    const styleFence = '[data-drupal-ck-style-fence]';
+    if (
+      rule.selectorText.includes(offCanvasId) ||
+      rule.selectorText.includes(CKEditorClass)
+    ) {
+      rule.selectorText = rule.selectorText
+        .split(/,/g)
+        .map((selector) => {
+          // Only change rules that include #drupal-off-canvas in the selector.
+          if (selector.includes(offCanvasId)) {
+            return `${selector.trim()}:not(${styleFence} *)`;
+          }
+          // Duplicate CKEditor 5 styles with higher specificity for proper
+          // display in off canvas elements.
+          if (selector.includes(CKEditorClass)) {
+            // Return both rules to avoid replacing the existing rules.
+            return [
+              selector.trim(),
+              selector
+                .trim()
+                .replace(
+                  CKEditorClass,
+                  `${offCanvasId} ${styleFence} ${CKEditorClass}`,
+                ),
+            ];
+          }
+          return selector;
+        })
+        .flat()
+        .join(', ');
+    }
+  }
+
+  /**
    * Adds CSS to ensure proper styling of CKEditor 5 inside off-canvas dialogs.
    *
    * @param {HTMLElement} element
    *   The element the editor is attached to.
    */
-  const offCanvasCss = (element) => {
-    element.parentNode.setAttribute('data-drupal-ck-style-fence', true);
-
+  function offCanvasCss(element) {
+    const fenceName = 'data-drupal-ck-style-fence';
+    const editor = Drupal.CKEditor5Instances.get(
+      element.getAttribute('data-ckeditor5-id'),
+    );
+    editor.ui.view.element.setAttribute(fenceName, '');
     // Only proceed if the styles haven't been added yet.
-    if (!document.querySelector('#ckeditor5-off-canvas-reset')) {
-      const prefix = `#drupal-off-canvas [data-drupal-ck-style-fence]`;
-      let existingCss = '';
+    if (once('ckeditor5-off-canvas-reset', 'body').length) {
+      // For all rules on the page, add the donut scope for
+      // rules containing the #drupal-off-canvas selector.
+      [...document.styleSheets].forEach(processRules);
 
-      // Find every existing style that doesn't come from off-canvas resets and
-      // copy them to new styles with a prefix targeting CKEditor inside an
-      // off-canvas dialog.
-      [...document.styleSheets].forEach((sheet) => {
-        if (
-          !sheet.href ||
-          (sheet.href && sheet.href.indexOf('off-canvas') === -1)
-        ) {
-          // This is wrapped in a try/catch as Chromium browsers will fail if
-          // the stylesheet was provided via a CORS request.
-          // @see https://bugs.chromium.org/p/chromium/issues/detail?id=775525
-          try {
-            const rules = sheet.cssRules;
-            [...rules].forEach((rule) => {
-              let { cssText } = rule;
-              const selector = rule.cssText.split('{')[0];
-
-              // Prefix all selectors added after a comma.
-              cssText = cssText.replace(
-                selector,
-                selector.replace(/,/g, `, ${prefix}`),
-              );
-
-              // When adding to existingCss, prefix the first selector as well.
-              existingCss += `${prefix} ${cssText}`;
-            });
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.warn(
-              `Stylesheet ${sheet.href} not included in CKEditor reset due to the browser's CORS policy.`,
-            );
-          }
-        }
-      });
-
+      const prefix = `#drupal-off-canvas [${fenceName}]`;
       // Additional styles that need to be explicity added in addition to the
       // prefixed versions of existing css in `existingCss`.
       const addedCss = [
@@ -223,7 +299,6 @@
         `${prefix} .ck.ck-content ol li {list-style-type: decimal}`,
         `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`,
       ];
-
       // Styles to ensure block elements are displayed as such inside
       // off-canvas dialogs. These are all element types that are styled with
       // ` all: initial;` in the off-canvas reset that should default to being
@@ -268,15 +343,15 @@
         .join(', \n');
       const blockCss = `${blockSelectors} { display: block; }`;
 
-      const prefixedCss = [...addedCss, existingCss, blockCss].join('\n');
+      const prefixedCss = [...addedCss, blockCss].join('\n');
 
       // Create a new style tag with the prefixed styles added above.
-      const offCanvasCss = document.createElement('style');
-      offCanvasCss.innerHTML = prefixedCss;
-      offCanvasCss.setAttribute('id', 'ckeditor5-off-canvas-reset');
-      document.body.appendChild(offCanvasCss);
+      const offCanvasCssStyle = document.createElement('style');
+      offCanvasCssStyle.textContent = prefixedCss;
+      offCanvasCssStyle.setAttribute('id', 'ckeditor5-off-canvas-reset');
+      document.body.appendChild(offCanvasCssStyle);
     }
-  };
+  }
 
   /**
    * @namespace
@@ -593,4 +668,4 @@
       Drupal.ckeditor5.saveCallback = null;
     }
   });
-})(Drupal, Drupal.debounce, CKEditor5, jQuery);
+})(Drupal, Drupal.debounce, CKEditor5, jQuery, once);

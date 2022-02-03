@@ -33,7 +33,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function (Drupal, debounce, CKEditor5, $) {
+(function (Drupal, debounce, CKEditor5, $, once) {
   Drupal.CKEditor5Instances = new Map();
   var callbacks = new Map();
   var required = new Set();
@@ -131,46 +131,63 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   }
 
-  var offCanvasCss = function offCanvasCss(element) {
-    element.parentNode.setAttribute('data-drupal-ck-style-fence', true);
+  function processRules(rulesGroup) {
+    try {
+      _toConsumableArray(rulesGroup.cssRules).forEach(ckeditor5SelectorProcessing);
+    } catch (e) {
+      console.warn("Stylesheet ".concat(rulesGroup.href, " not included in CKEditor reset due to the browser's CORS policy."));
+    }
+  }
 
-    if (!document.querySelector('#ckeditor5-off-canvas-reset')) {
-      var prefix = "#drupal-off-canvas [data-drupal-ck-style-fence]";
-      var existingCss = '';
+  function ckeditor5SelectorProcessing(rule) {
+    if (rule.cssRules) {
+      processRules(rule);
+    }
 
-      _toConsumableArray(document.styleSheets).forEach(function (sheet) {
-        if (!sheet.href || sheet.href && sheet.href.indexOf('off-canvas') === -1) {
-          try {
-            var rules = sheet.cssRules;
+    if (!rule.selectorText) {
+      return;
+    }
 
-            _toConsumableArray(rules).forEach(function (rule) {
-              var cssText = rule.cssText;
-              var selector = rule.cssText.split('{')[0];
-              cssText = cssText.replace(selector, selector.replace(/,/g, ", ".concat(prefix)));
-              existingCss += "".concat(prefix, " ").concat(cssText);
-            });
-          } catch (e) {
-            console.warn("Stylesheet ".concat(sheet.href, " not included in CKEditor reset due to the browser's CORS policy."));
-          }
+    var offCanvasId = '#drupal-off-canvas';
+    var CKEditorClass = '.ck';
+    var styleFence = '[data-drupal-ck-style-fence]';
+
+    if (rule.selectorText.includes(offCanvasId) || rule.selectorText.includes(CKEditorClass)) {
+      rule.selectorText = rule.selectorText.split(/,/g).map(function (selector) {
+        if (selector.includes(offCanvasId)) {
+          return "".concat(selector.trim(), ":not(").concat(styleFence, " *)");
         }
-      });
 
+        if (selector.includes(CKEditorClass)) {
+          return [selector.trim(), selector.trim().replace(CKEditorClass, "".concat(offCanvasId, " ").concat(styleFence, " ").concat(CKEditorClass))];
+        }
+
+        return selector;
+      }).flat().join(', ');
+    }
+  }
+
+  function offCanvasCss(element) {
+    var fenceName = 'data-drupal-ck-style-fence';
+    var editor = Drupal.CKEditor5Instances.get(element.getAttribute('data-ckeditor5-id'));
+    editor.ui.view.element.setAttribute(fenceName, '');
+
+    if (once('ckeditor5-off-canvas-reset', 'body').length) {
+      _toConsumableArray(document.styleSheets).forEach(processRules);
+
+      var prefix = "#drupal-off-canvas [".concat(fenceName, "]");
       var addedCss = ["".concat(prefix, " .ck.ck-content {display:block;min-height:5rem;}"), "".concat(prefix, " .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}"), "".concat(prefix, " .ck.ck-content li {display:list-item}"), "".concat(prefix, " .ck.ck-content ol li {list-style-type: decimal}"), "".concat(prefix, " .ck[contenteditable], ").concat(prefix, " .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}")];
       var blockSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ol', 'ul', 'address', 'article', 'aside', 'blockquote', 'body', 'dd', 'div', 'dl', 'dt', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'header', 'hgroup', 'hr', 'html', 'legend', 'main', 'menu', 'pre', 'section', 'xmp'].map(function (blockElement) {
         return "".concat(prefix, " .ck.ck-content ").concat(blockElement);
       }).join(', \n');
       var blockCss = "".concat(blockSelectors, " { display: block; }");
-      var prefixedCss = [].concat(addedCss, [existingCss, blockCss]).join('\n');
-
-      var _offCanvasCss = document.createElement('style');
-
-      _offCanvasCss.innerHTML = prefixedCss;
-
-      _offCanvasCss.setAttribute('id', 'ckeditor5-off-canvas-reset');
-
-      document.body.appendChild(_offCanvasCss);
+      var prefixedCss = [].concat(addedCss, [blockCss]).join('\n');
+      var offCanvasCssStyle = document.createElement('style');
+      offCanvasCssStyle.textContent = prefixedCss;
+      offCanvasCssStyle.setAttribute('id', 'ckeditor5-off-canvas-reset');
+      document.body.appendChild(offCanvasCssStyle);
     }
-  };
+  }
 
   Drupal.editors.ckeditor5 = {
     attach: function attach(element, format) {
@@ -367,4 +384,4 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       Drupal.ckeditor5.saveCallback = null;
     }
   });
-})(Drupal, Drupal.debounce, CKEditor5, jQuery);
+})(Drupal, Drupal.debounce, CKEditor5, jQuery, once);
