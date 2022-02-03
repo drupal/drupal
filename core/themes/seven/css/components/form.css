@@ -126,6 +126,9 @@ label[for] {
   border-width: 1px;
   border-color: #e62600;
 }
+.form-item textarea.error + .ck-editor > .ck-editor__main {
+  border: 1px solid #e62600;
+}
 .form-item input.error:focus,
 .form-item textarea.error:focus,
 .form-item select.error:focus {

@@ -73,6 +73,10 @@ textarea {
       outline-offset: -2px;
     }
 
+[type="color"].error + .ck-editor > .ck-editor__main, [type="date"].error + .ck-editor > .ck-editor__main, [type="datetime-local"].error + .ck-editor > .ck-editor__main, [type="email"].error + .ck-editor > .ck-editor__main, [type="file"].error + .ck-editor > .ck-editor__main, [type="month"].error + .ck-editor > .ck-editor__main, [type="number"].error + .ck-editor > .ck-editor__main, [type="password"].error + .ck-editor > .ck-editor__main, [type="search"].error + .ck-editor > .ck-editor__main, [type="tel"].error + .ck-editor > .ck-editor__main, [type="text"].error + .ck-editor > .ck-editor__main, [type="time"].error + .ck-editor > .ck-editor__main, [type="url"].error + .ck-editor > .ck-editor__main, [type="week"].error + .ck-editor > .ck-editor__main, textarea.error + .ck-editor > .ck-editor__main {
+      border: solid 2px #e33f1e;
+    }
+
 [type="color"].form-element--small, [type="date"].form-element--small, [type="datetime-local"].form-element--small, [type="email"].form-element--small, [type="file"].form-element--small, [type="month"].form-element--small, [type="number"].form-element--small, [type="password"].form-element--small, [type="search"].form-element--small, [type="tel"].form-element--small, [type="text"].form-element--small, [type="time"].form-element--small, [type="url"].form-element--small, [type="week"].form-element--small, textarea.form-element--small {
     min-height: 2.8125rem;
   }

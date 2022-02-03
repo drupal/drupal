@@ -319,6 +319,10 @@ input.form-submit:focus {
   border: 2px solid red;
 }
 
+.form-item textarea.error + .ck-editor > .ck-editor__main {
+  border: 2px solid red;
+}
+
 /* Form error message styles. */
 .form-item--error-message {
   color: #e32700;

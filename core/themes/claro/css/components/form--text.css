@@ -165,3 +165,7 @@ _:-ms-fullscreen,
     margin-top: 0;
   }
 }
+
+.form-element--type-textarea.error + .ck-editor > .ck-editor__main {
+  border: 2px solid #d72222;
+}
