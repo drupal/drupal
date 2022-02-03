@@ -60,6 +60,9 @@ textarea {
       outline-color: var(--color--red);
       outline-offset: -2px;
     }
+    & + .ck-editor > .ck-editor__main {
+      border: solid 2px var(--color--red);
+    }
   }
 
   &.form-element--small {
