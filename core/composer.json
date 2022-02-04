@@ -31,7 +31,7 @@
         "symfony/polyfill-iconv": "^1.0",
         "symfony/polyfill-php80": "^1.16",
         "symfony/yaml": "^5.4",
-        "twig/twig": "^3.0",
+        "twig/twig": "^3.3.8",
         "doctrine/annotations": "^1.12",
         "guzzlehttp/guzzle": "^7.3.0",
         "laminas/laminas-feed": "^2.12",
