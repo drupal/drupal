@@ -19,8 +19,6 @@ class FollowUpMigrationsTest extends MigrateNodeTestBase {
     'content_translation',
     'language',
     'menu_ui',
-    // A requirement for d6_node_translation.
-    'migrate_drupal_multilingual',
   ];
 
   /**

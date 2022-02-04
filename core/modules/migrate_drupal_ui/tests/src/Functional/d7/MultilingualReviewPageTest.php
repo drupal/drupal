@@ -9,7 +9,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 /**
  * Tests migrate upgrade review page for Drupal 7.
  *
- * Tests with translation modules and migrate_drupal_multilingual enabled.
+ * Tests with translation modules enabled.
  *
  * @group migrate_drupal_7
  * @group migrate_drupal_ui

@@ -4,8 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 /**
  * Tests the upgrade review form without translations.
- *
- * When using this test class, do not enable migrate_drupal_multilingual.
  */
 abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTestBase {
 
