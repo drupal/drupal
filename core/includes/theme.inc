@@ -2082,7 +2082,6 @@ function drupal_common_theme() {
     'pager' => [
       'render element' => 'pager',
     ],
-    // From menu.inc.
     'menu' => [
       'variables' => ['menu_name' => NULL, 'items' => [], 'attributes' => []],
     ],

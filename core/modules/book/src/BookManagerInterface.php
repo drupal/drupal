@@ -133,9 +133,6 @@ interface BookManagerInterface {
   /**
    * Provides book loading, access control and translation.
    *
-   * Note: copied from _menu_link_translate() in menu.inc, but reduced to the
-   * minimal code that's used.
-   *
    * @param array $link
    *   A book link.
    */

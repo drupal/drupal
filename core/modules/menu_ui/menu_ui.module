@@ -424,36 +424,6 @@ function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $ty
 }
 
 /**
- * Return an associative array of the custom menus names.
- *
- * @param bool $all
- *   (optional) If FALSE return only user-added menus, or if TRUE also include
- *   the menus defined by the system. Defaults to TRUE.
- *
- * @return array
- *   An array with the machine-readable names as the keys, and human-readable
- *   titles as the values.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\system\Entity\Menu::loadMultiple() instead.
- *
- * @see https://www.drupal.org/node/3027453
- */
-function menu_ui_get_menus($all = TRUE) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\system\Entity\Menu::loadMultiple() instead. See https://www.drupal.org/node/3027453', E_USER_DEPRECATED);
-  if ($custom_menus = Menu::loadMultiple()) {
-    if (!$all) {
-      $custom_menus = array_diff_key($custom_menus, menu_list_system_menus());
-    }
-    foreach ($custom_menus as $menu_name => $menu) {
-      $custom_menus[$menu_name] = $menu->label();
-    }
-    asort($custom_menus);
-  }
-  return $custom_menus;
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function menu_ui_preprocess_block(&$variables) {
