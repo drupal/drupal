@@ -339,7 +339,6 @@ function install_begin_request($class_loader, &$install_state) {
   require_once __DIR__ . '/../modules/system/system.install';
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/install.inc';
-  require_once __DIR__ . '/schema.inc';
   require_once __DIR__ . '/form.inc';
   require_once __DIR__ . '/batch.inc';
 
