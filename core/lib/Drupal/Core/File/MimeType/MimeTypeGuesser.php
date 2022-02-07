@@ -141,13 +141,8 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
    *   A sorted array of MIME type guesser objects.
    */
   protected function sortGuessers() {
-    $sorted = [];
     krsort($this->guessers);
-
-    foreach ($this->guessers as $guesser) {
-      $sorted = array_merge($sorted, $guesser);
-    }
-    return $sorted;
+    return array_merge([], ...$this->guessers);
   }
 
   /**

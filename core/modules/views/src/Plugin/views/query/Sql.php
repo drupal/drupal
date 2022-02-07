@@ -1422,14 +1422,7 @@ class Sql extends QueryPluginBase {
    * Get the arguments attached to the WHERE and HAVING clauses of this query.
    */
   public function getWhereArgs() {
-    $args = [];
-    foreach ($this->where as $where) {
-      $args = array_merge($args, $where['args']);
-    }
-    foreach ($this->having as $having) {
-      $args = array_merge($args, $having['args']);
-    }
-    return $args;
+    return array_merge([], ...array_column($this->where, 'args'), ...array_column($this->having, 'args'));
   }
 
   /**

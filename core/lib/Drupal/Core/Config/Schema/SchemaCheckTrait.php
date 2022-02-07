@@ -58,8 +58,9 @@ trait SchemaCheckTrait {
     $this->schema = $typed_config->createFromNameAndData($config_name, $config_data);
     $errors = [];
     foreach ($config_data as $key => $value) {
-      $errors = array_merge($errors, $this->checkValue($key, $value));
+      $errors[] = $this->checkValue($key, $value);
     }
+    $errors = array_merge([], ...$errors);
     if (empty($errors)) {
       return TRUE;
     }
@@ -130,11 +131,12 @@ trait SchemaCheckTrait {
       if (!is_array($value)) {
         $value = (array) $value;
       }
+      $nested_errors = [];
       // Recurse into any nested keys.
       foreach ($value as $nested_value_key => $nested_value) {
-        $errors = array_merge($errors, $this->checkValue($key . '.' . $nested_value_key, $nested_value));
+        $nested_errors[] = $this->checkValue($key . '.' . $nested_value_key, $nested_value);
       }
-      return $errors;
+      return array_merge($errors, ...$nested_errors);
     }
     // No errors found.
     return [];

@@ -305,8 +305,9 @@ function locale_translate_batch_refresh(&$context) {
       // Get list of unique string identifiers and language codes updated.
       $langcodes = array_unique(array_values($context['results']['languages']));
       foreach ($context['results']['stats'] as $report) {
-        $strings = array_merge($strings, $report['strings']);
+        $strings[] = $report['strings'];
       }
+      $strings = array_merge([], ...$strings);
     }
     if ($strings) {
       // Initialize multi-step string refresh.
