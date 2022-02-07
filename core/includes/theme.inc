@@ -126,6 +126,9 @@ function drupal_theme_rebuild() {
 /**
  * Allows themes and/or theme engines to discover overridden theme functions.
  *
+ * @internal only exists to support discovery of deprecated theme functions,
+ *   will be removed in Drupal 10.0.0.
+ *
  * @param array $cache
  *   The existing cache of theme hooks to test against.
  * @param array $prefixes
