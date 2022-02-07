@@ -8,38 +8,6 @@
 use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
- * Loads a module's installation hooks.
- *
- * @param $module
- *   The name of the module (without the .module extension).
- *
- * @return
- *   The name of the module's install file, if successful; FALSE otherwise.
- *
- * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::moduleHandler()->loadInclude($module, 'install') instead. Note,
- *   the replacement no longer allows including code from uninstalled modules.
- *
- * @see https://www.drupal.org/node/3220952
- */
-function module_load_install($module) {
-  @trigger_error('module_load_install() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude($module, \'install\'). Note, the replacement no longer allows including code from uninstalled modules. See https://www.drupal.org/project/drupal/issues/2010380', E_USER_DEPRECATED);
-  // Make sure the installation API is available
-  include_once __DIR__ . '/install.inc';
-
-  if (\Drupal::hasService('extension.list.module')) {
-    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-    $module_list = \Drupal::service('extension.list.module');
-    $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$module.install";
-    if (is_file($file)) {
-      require_once $file;
-      return $file;
-    }
-  }
-  return FALSE;
-}
-
-/**
  * Loads a module include file.
  *
  * Examples:
