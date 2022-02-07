@@ -47,9 +47,10 @@ class ReadOnlyModeMethodFilter implements FilterInterface {
   public function filter(RouteCollection $collection, Request $request) {
     $all_supported_methods = [];
     foreach ($collection->all() as $name => $route) {
-      $all_supported_methods = array_merge($all_supported_methods, $route->getMethods());
+      $all_supported_methods[] = $route->getMethods();
     }
 
+    $all_supported_methods = array_merge([], ...$all_supported_methods);
     $collection = $this->inner->filter($collection, $request);
 
     if (!$this->readOnlyModeIsEnabled) {

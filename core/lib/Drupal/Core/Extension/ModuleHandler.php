@@ -492,8 +492,9 @@ class ModuleHandler implements ModuleHandlerInterface {
         // implements at least one of them.
         $extra_modules = [];
         foreach ($extra_types as $extra_type) {
-          $extra_modules = array_merge($extra_modules, $this->getImplementations($extra_type . '_alter'));
+          $extra_modules[] = $this->getImplementations($extra_type . '_alter');
         }
+        $extra_modules = array_merge([], ...$extra_modules);
         // If any modules implement one of the extra hooks that do not implement
         // the primary hook, we need to add them to the $modules array in their
         // appropriate order. $this->getImplementations() can only return

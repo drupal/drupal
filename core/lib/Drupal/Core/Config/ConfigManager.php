@@ -264,9 +264,9 @@ class ConfigManager implements ConfigManagerInterface {
     }
     $dependencies = [];
     foreach ($names as $name) {
-      $dependencies = array_merge($dependencies, $dependency_manager->getDependentEntities($type, $name));
+      $dependencies[] = $dependency_manager->getDependentEntities($type, $name);
     }
-    return $dependencies;
+    return array_merge([], ...$dependencies);
   }
 
   /**

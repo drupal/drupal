@@ -43,10 +43,7 @@ class AuthenticationCollectorTest extends UnitTestCase {
     krsort($providers);
 
     // Merge nested providers from $providers into $sorted_providers.
-    $sorted_providers = [];
-    foreach ($providers as $providers_priority) {
-      $sorted_providers = array_merge($sorted_providers, $providers_priority);
-    }
+    $sorted_providers = array_merge([], ...$providers);
     $this->assertEquals($sorted_providers, $authentication_collector->getSortedProviders());
 
     // Test AuthenticationCollector::getProvider() and
