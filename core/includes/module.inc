@@ -61,8 +61,14 @@ function module_load_include($type, $module, $name = NULL) {
 
 /**
  * Returns an array of modules required by core.
+ *
+ * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There's no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3262811
  */
 function drupal_required_modules() {
+  @trigger_error(__FUNCTION__ . "() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There's no replacement. See https://www.drupal.org/node/3262811", E_USER_DEPRECATED);
   $listing = new ExtensionDiscovery(\Drupal::root());
   $files = $listing->scan('module');
   $required = [];
