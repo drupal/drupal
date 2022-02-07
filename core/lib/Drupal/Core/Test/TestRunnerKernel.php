@@ -4,12 +4,13 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Kernel for run-tests.sh.
+ *
+ * @internal
  */
 class TestRunnerKernel extends DrupalKernel {
 
@@ -40,13 +41,6 @@ class TestRunnerKernel extends DrupalKernel {
     $this->moduleData = [
       'system' => new Extension($this->root, 'module', 'core/modules/system/system.info.yml', 'system.module'),
     ];
-    // In order to support Simpletest in Drupal 9 conditionally include the
-    // module.
-    $extensions = (new ExtensionDiscovery($this->root, FALSE, [], 'ignore_site_path_does_not_exist'))->scan('module', FALSE);
-    if (isset($extensions['simpletest'])) {
-      $this->moduleList['simpletest'] = 0;
-      $this->moduleData['simpletest'] = $extensions['simpletest'];
-    }
   }
 
   /**

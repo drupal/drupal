@@ -8,10 +8,11 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
-use PHPUnit\Util\Test;
 
 /**
  * Discovers available tests.
+ *
+ * @internal
  */
 class TestDiscovery {
 
@@ -98,8 +99,6 @@ class TestDiscovery {
       if (!isset($existing["Drupal\\$name\\"])) {
         $this->classLoader->addPsr4("Drupal\\$name\\", "$base_path/src");
       }
-      // Add Simpletest test namespace.
-      $this->testNamespaces["Drupal\\$name\\Tests\\"][] = "$base_path/src/Tests";
 
       // Add PHPUnit test namespaces.
       $this->testNamespaces["Drupal\\Tests\\$name\\Unit\\"][] = "$base_path/tests/src/Unit";
@@ -182,20 +181,6 @@ class TestDiscovery {
         // abstract class, trait or test fixture.
         continue;
       }
-      // Skip this test class if it is a Simpletest-based test and requires
-      // unavailable modules. TestDiscovery should not filter out module
-      // requirements for PHPUnit-based test classes.
-      // @todo Move this behavior to \Drupal\simpletest\TestBase so tests can be
-      //   marked as skipped, instead.
-      // @see https://www.drupal.org/node/1273478
-      if ($info['type'] == 'Simpletest') {
-        if (!empty($info['requires']['module'])) {
-          if (array_diff($info['requires']['module'], $this->availableExtensions['module'])) {
-            continue;
-          }
-        }
-      }
-
       foreach ($info['groups'] as $group) {
         $list[$group][$classname] = $info;
       }
@@ -322,11 +307,8 @@ class TestDiscovery {
    *   - group: The test's first @group (parsed from PHPDoc annotations).
    *   - groups: All of the test's @group annotations, as an array (parsed from
    *     PHPDoc annotations).
-   *   - requires: An associative array containing test requirements parsed from
-   *     PHPDoc annotations:
-   *     - module: List of Drupal module extension names the test depends on.
    *
-   * @throws \Drupal\simpletest\Exception\MissingGroupException
+   * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
@@ -363,23 +345,13 @@ class TestDiscovery {
     }
     $info['group'] = $annotations['group'];
     $info['groups'] = $annotations['groups'];
-
-    // Sort out PHPUnit-runnable tests by type.
-    if ($testsuite = static::getPhpunitTestSuite($classname)) {
-      $info['type'] = 'PHPUnit-' . $testsuite;
-    }
-    else {
-      $info['type'] = 'Simpletest';
-    }
+    $info['type'] = 'PHPUnit-' . static::getPhpunitTestSuite($classname);
 
     if (!empty($annotations['coversDefaultClass'])) {
       $info['description'] = 'Tests ' . $annotations['coversDefaultClass'] . '.';
     }
     else {
       $info['description'] = static::parseTestClassSummary($doc_comment);
-    }
-    if (isset($annotations['dependencies'])) {
-      $info['requires']['module'] = array_map('trim', explode(',', $annotations['dependencies']));
     }
 
     return $info;
@@ -412,42 +384,6 @@ class TestDiscovery {
       $summary[] = trim($line, ' *');
     }
     return implode(' ', $summary);
-  }
-
-  /**
-   * Parses annotations in the phpDoc of a test class.
-   *
-   * @param \ReflectionClass $class
-   *   The reflected test class.
-   *
-   * @return array
-   *   An associative array that contains all annotations on the test class;
-   *   typically including:
-   *   - group: A list of @group values.
-   *   - requires: An associative array of @requires values; e.g.:
-   *     - module: A list of Drupal module dependencies that are required to
-   *       exist.
-   *
-   * @see \PHPUnit\Util\Test::parseTestMethodAnnotations()
-   * @see http://phpunit.de/manual/current/en/incomplete-and-skipped-tests.html#incomplete-and-skipped-tests.skipping-tests-using-requires
-   */
-  public static function parseTestClassAnnotations(\ReflectionClass $class) {
-    $annotations = Test::parseTestMethodAnnotations($class->getName())['class'];
-
-    // @todo Enhance PHPUnit upstream to allow for custom @requires identifiers.
-    // @see \PHPUnit\Util\Test::getRequirements()
-    // @todo Add support for 'PHP', 'OS', 'function', 'extension'.
-    // @see https://www.drupal.org/node/1273478
-    if (isset($annotations['requires'])) {
-      foreach ($annotations['requires'] as $i => $value) {
-        [$type, $value] = explode(' ', $value, 2);
-        if ($type === 'module') {
-          $annotations['requires']['module'][$value] = $value;
-          unset($annotations['requires'][$i]);
-        }
-      }
-    }
-    return $annotations;
   }
 
   /**

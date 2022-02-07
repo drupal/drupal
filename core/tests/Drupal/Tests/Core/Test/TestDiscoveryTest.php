@@ -84,46 +84,23 @@ class TestDiscoveryTest extends UnitTestCase {
       '\Drupal\Tests\file\Kernel\FileItemValidationTest',
     ];
 
-    // Simpletest classes can not be autoloaded in a PHPUnit test, therefore
-    // provide a docblock.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'group' => 'simpletest',
-        'groups' => ['simpletest'],
-        'description' => 'Tests the Simpletest UI internal browser.',
-        'type' => 'Simpletest',
-      ],
-      // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
-      // Doc block.
-      "/**
- * Tests the Simpletest UI internal browser.
- *
- * @group simpletest
- */
- ",
-    ];
-
     // Test with a different amount of leading spaces.
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'group' => 'simpletest',
-        'groups' => ['simpletest'],
-        'description' => 'Tests the Simpletest UI internal browser.',
-        'type' => 'Simpletest',
+        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'group' => 'test',
+        'groups' => ['test'],
+        'description' => 'Example test.',
+        'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleSimpleTest',
       // Doc block.
       "/**
-   * Tests the Simpletest UI internal browser.
+   * Example test.
    *
-   * @group simpletest
-   */
+   * @group test
    */
  ",
     ];
@@ -133,19 +110,19 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'group' => 'simpletest',
-        'groups' => ['simpletest'],
-        'description' => 'Tests the Simpletest UI internal browser. * @',
-        'type' => 'Simpletest',
+        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'group' => 'test',
+        'groups' => ['test'],
+        'description' => 'Example test. * @',
+        'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleSimpleTest',
       // Doc block.
       "/**
-   * Tests the Simpletest UI internal browser. * @
+   * Example test. * @
    *
-   * @group simpletest
+   * @group test
    */
  ",
     ];
@@ -154,20 +131,20 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'group' => 'Test',
-        'groups' => ['Test', 'simpletest'],
-        'description' => 'Tests the Simpletest UI internal browser.',
-        'type' => 'Simpletest',
+        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'group' => 'test1',
+        'groups' => ['test1', 'test2'],
+        'description' => 'Example test.',
+        'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleSimpleTest',
       // Doc block.
       "/**
- * Tests the Simpletest UI internal browser.
+ * Example test.
  *
- * @group Test
- * @group simpletest
+ * @group test1
+ * @group test2
  */
  ",
     ];
@@ -176,20 +153,20 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests['many-group-annotations'] = [
       // Expected result.
       [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'group' => 'Test',
-        'groups' => ['Test', 'simpletest', 'another', 'more', 'many', 'enough', 'whoa'],
-        'description' => 'Tests the Simpletest UI internal browser.',
-        'type' => 'Simpletest',
+        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'group' => 'test1',
+        'groups' => ['test1', 'test2', 'another', 'more', 'many', 'enough', 'whoa'],
+        'description' => 'Example test.',
+        'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleSimpleTest',
       // Doc block.
       "/**
- * Tests the Simpletest UI internal browser.
+ * Example test.
  *
- * @group Test
- * @group simpletest
+ * @group test1
+ * @group test2
  * @group another
  * @group more
  * @group many
@@ -199,70 +176,24 @@ class TestDiscoveryTest extends UnitTestCase {
  ",
     ];
 
-    // @dependencies annotation.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'description' => 'Tests the Simpletest UI internal browser.',
-        'type' => 'Simpletest',
-        'requires' => ['module' => ['test']],
-        'group' => 'simpletest',
-        'groups' => ['simpletest'],
-      ],
-      // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
-      // Doc block.
-      "/**
- * Tests the Simpletest UI internal browser.
- *
- * @dependencies test
- * @group simpletest
- */
- ",
-    ];
-
-    // Multiple @dependencies annotation.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'description' => 'Tests the Simpletest UI internal browser.',
-        'type' => 'Simpletest',
-        'requires' => ['module' => ['test', 'test1', 'test2']],
-        'group' => 'simpletest',
-        'groups' => ['simpletest'],
-      ],
-      // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
-      // Doc block.
-      "/**
- * Tests the Simpletest UI internal browser.
- *
- * @dependencies test, test1, test2
- * @group simpletest
- */
- ",
-    ];
-
     // Multi-line summary line.
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\simpletest\Tests\ExampleSimpleTest',
-        'description' => 'Tests the Simpletest UI internal browser. And the summary line continues an there is no gap to the annotation.',
-        'type' => 'Simpletest',
-        'group' => 'simpletest',
-        'groups' => ['simpletest'],
+        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'description' => 'Example test. And the summary line continues and there is no gap to the annotation.',
+        'type' => 'PHPUnit-Unit',
+        'group' => 'test',
+        'groups' => ['test'],
       ],
       // Classname.
-      'Drupal\simpletest\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleSimpleTest',
       // Doc block.
       "/**
- * Tests the Simpletest UI internal browser. And the summary line continues an
- * there is no gap to the annotation.
+ * Example test. And the summary line continues and there is no gap to the
+ * annotation.
  *
- * @group simpletest
+ * @group test
  */
  ",
     ];

@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Composer\Composer;
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Test\EnvironmentCleaner;
 use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\RunTests\TestFileParser;
@@ -22,7 +21,6 @@ use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 // Define some colors for display.
@@ -242,7 +240,7 @@ All arguments are long options.
 
   --sqlite    A pathname to use for the SQLite database of the test runner.
               Required unless this script is executed with a working Drupal
-              installation that has Simpletest module installed.
+              installation.
               A relative pathname is interpreted relative to the Drupal root
               directory.
               Note that ':memory:' cannot be used, because this script spawns
@@ -288,7 +286,7 @@ All arguments are long options.
 
               Runs just tests from the specified test type, for example
               run-tests.sh
-              (i.e. --types "Simpletest,PHPUnit-Functional")
+              (i.e. --types "PHPUnit-Unit,PHPUnit-Kernel")
 
   --directory Run all tests found within the specified file directory.
 
@@ -345,9 +343,8 @@ sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --class "Drupal\block\Tests\BlockTest"
 
-Without a preinstalled Drupal site and enabled Simpletest module, specify a
-SQLite database pathname to create and the default database connection info to
-use in tests:
+Without a preinstalled Drupal site, specify a SQLite database pathname to create
+and the default database connection info to use in tests:
 
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --sqlite /tmpfs/drupal/test.sqlite
@@ -626,9 +623,8 @@ function simpletest_script_setup_database($new = FALSE) {
   }
   Database::addConnectionInfo('default', 'default', $databases['default']['default']);
 
-  // If no --sqlite parameter has been passed, then Simpletest module is assumed
-  // to be installed, so the test runner database connection is the default
-  // database connection.
+  // If no --sqlite parameter has been passed, then the test runner database
+  // connection is the default database connection.
   if (empty($args['sqlite'])) {
     $sqlite = FALSE;
     $databases['test-runner']['default'] = $databases['default']['default'];
@@ -684,10 +680,10 @@ function simpletest_script_setup_database($new = FALSE) {
       }
     }
   }
-  // Verify that the Simpletest database schema exists by checking one table.
+  // Verify that the test result database schema exists by checking one table.
   try {
     if (!$schema->tableExists('simpletest')) {
-      simpletest_script_print_error('Missing Simpletest database schema. Either install Simpletest module or use the --sqlite parameter.');
+      simpletest_script_print_error('Missing test result database schema. Use the --sqlite parameter.');
       exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
     }
   }
@@ -780,10 +776,6 @@ function simpletest_script_execute_batch($test_classes) {
             $args['repeat'] = -1;
           }
         }
-        // Free-up space by removing any potentially created resources.
-        if (!$args['keep-results']) {
-          simpletest_script_cleanup($child['test_id'], $child['class'], $status['exitcode']);
-        }
 
         // Remove this child.
         unset($children[$cid]);
@@ -820,47 +812,10 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   global $args;
 
   try {
-    // Default to status = success. This could mean that we didn't discover any
-    // tests and that none ran.
-    $status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
-    if (strpos($test_class, '::') > 0) {
-      [$class_name, $method] = explode('::', $test_class, 2);
-      $methods = [$method];
-    }
-    else {
-      $class_name = $test_class;
-      // Use empty array to run all the test methods.
-      $methods = [];
-    }
-    $test = new $class_name($test_id);
     if ($args['suppress-deprecations']) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
     }
-    if (is_subclass_of($test_class, TestCase::class)) {
-      $status = simpletest_script_run_phpunit($test_id, $test_class);
-    }
-    // If we aren't running a PHPUnit-based test, then we might have a
-    // Simpletest-based one. Ensure that: 1) The simpletest framework exists,
-    // and 2) that our test belongs to that framework.
-    elseif (class_exists('Drupal\simpletest\TestBase') && is_subclass_of($test_class, 'Drupal\simpletest\TestBase')) {
-      $test->dieOnFail = (bool) $args['die-on-fail'];
-      $test->verbose = (bool) $args['verbose'];
-      $test->run($methods);
-      simpletest_script_reporter_display_summary($test_class, $test->results);
-
-      $status = SIMPLETEST_SCRIPT_EXIT_SUCCESS;
-      // Finished, kill this runner.
-      if ($test->results['#fail'] || $test->results['#exception']) {
-        $status = SIMPLETEST_SCRIPT_EXIT_FAILURE;
-      }
-    }
-    // If the test is not a PHPUnit test, and either we don't have the
-    // Simpletest module or the \Drupal\simpletest\TestBase class available.
-    else {
-      simpletest_script_print_error(sprintf('Can not run %s. If this is a WebTestBase test the simpletest module must be installed. See https://www.drupal.org/node/3030340', $test_class));
-      $status = SIMPLETEST_SCRIPT_EXIT_FAILURE;
-    }
-
+    $status = simpletest_script_run_phpunit($test_id, $test_class);
     exit($status);
   }
   // DrupalTestCase::run() catches exceptions already, so this is only reached
@@ -903,112 +858,6 @@ function simpletest_script_command($test_id, $test_class) {
   // --execute-test and class name needs to come last.
   $command .= ' --execute-test ' . escapeshellarg($test_class);
   return $command;
-}
-
-/**
- * Removes all remnants of a test runner.
- *
- * In case a fatal error occurs after the test site has been fully setup and
- * the error happens in many tests, the environment that executes the tests can
- * easily run out of memory or disk space. This function ensures that all
- * created resources are properly cleaned up after every executed test.
- *
- * This clean-up only exists in this script, since SimpleTest module itself does
- * not use isolated sub-processes for each test being run, so a fatal error
- * halts not only the test, but also the test runner (i.e., the parent site).
- *
- * @param int $test_id
- *   The test ID of the test run.
- * @param string $test_class
- *   The class name of the test run.
- * @param int $exitcode
- *   The exit code of the test runner.
- *
- * @see simpletest_script_run_one_test()
- */
-function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
-  if (is_subclass_of($test_class, TestCase::class)) {
-    // PHPUnit test, move on.
-    return;
-  }
-  // Retrieve the last database prefix used for testing.
-  try {
-    $last_test = TestDatabase::lastTestGet($test_id);
-    $db_prefix = $last_test['last_prefix'];
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
-
-  // If no database prefix was found, then the test was not set up correctly.
-  if (empty($db_prefix)) {
-    echo "\nFATAL $test_class: Found no database prefix for test ID $test_id. (Check whether setUp() is invoked correctly.)";
-    return;
-  }
-
-  // Do not output verbose cleanup messages in case of a positive exitcode.
-  $output = !empty($exitcode);
-  $messages = [];
-
-  $messages[] = "- Found database prefix '$db_prefix' for test ID $test_id.";
-
-  // Read the log file in case any fatal errors caused the test to crash.
-  try {
-    (new TestDatabase($db_prefix))->logRead($test_id, $last_test['test_class']);
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
-
-  // Check whether a test site directory was setup already.
-  // @see \Drupal\simpletest\TestBase::prepareEnvironment()
-  $test_db = new TestDatabase($db_prefix);
-  $test_directory = DRUPAL_ROOT . '/' . $test_db->getTestSitePath();
-  if (is_dir($test_directory)) {
-    // Output the error_log.
-    if (is_file($test_directory . '/error.log')) {
-      if ($errors = file_get_contents($test_directory . '/error.log')) {
-        $output = TRUE;
-        $messages[] = $errors;
-      }
-    }
-    // Delete the test site directory.
-    // simpletest_clean_temporary_directories() cannot be used here, since it
-    // would also delete file directories of other tests that are potentially
-    // running concurrently.
-    try {
-      \Drupal::service('file_system')->deleteRecursive($test_directory, ['\Drupal\Tests\BrowserTestBase', 'filePreDeleteCallback']);
-      $messages[] = "- Removed test site directory.";
-    }
-    catch (FileException $e) {
-      // Ignore failed deletes.
-    }
-  }
-
-  // Clear out all database tables from the test.
-  try {
-    $schema = Database::getConnection('default', 'default')->schema();
-    $count = 0;
-    foreach ($schema->findTables($db_prefix . '%') as $table) {
-      $schema->dropTable($table);
-      $count++;
-    }
-  }
-  catch (Exception $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
-
-  if ($count) {
-    $messages[] = "- Removed $count leftover tables.";
-  }
-
-  if ($output) {
-    echo implode("\n", $messages);
-    echo "\n";
-  }
 }
 
 /**

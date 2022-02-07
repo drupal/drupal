@@ -42,7 +42,6 @@ trait TestSetupTrait {
   /**
    * The public file directory for the test environment.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    *
    * @var string
@@ -59,7 +58,6 @@ trait TestSetupTrait {
   /**
    * The private file directory for the test environment.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    *
    * @var string
@@ -88,7 +86,6 @@ trait TestSetupTrait {
    * This value has to match the temporary directory created in
    * install_base_system() for test installs.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    * @see install_base_system()
    *
@@ -104,7 +101,7 @@ trait TestSetupTrait {
   protected $testId;
 
   /**
-   * Returns the database connection to the site running Simpletest.
+   * Returns the database connection to the site under test.
    *
    * @return \Drupal\Core\Database\Connection
    *   The database connection to use for inserting assertions.
