@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
@@ -129,13 +128,8 @@ class ConnectionTest extends DatabaseTestBase {
       'test_table' => $connection_info['default']['prefix'] . '_bar',
     ];
     Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $this->expectError();
     $foo_connection = Database::getConnection('foo', 'default');
-    $this->assertInstanceOf(Connection::class, $foo_connection);
-    $this->assertIsString($foo_connection->getConnectionOptions()['prefix']);
-    $this->assertSame($connection_info['default']['prefix'], $foo_connection->getConnectionOptions()['prefix']);
-    $this->assertSame([
-      'test_table' => $connection_info['default']['prefix'] . '_bar',
-    ], $foo_connection->getConnectionOptions()['extra_prefix']);
   }
 
   /**
@@ -148,11 +142,8 @@ class ConnectionTest extends DatabaseTestBase {
       'default' => $connection_info['default']['prefix'],
     ];
     Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $this->expectError();
     $foo_connection = Database::getConnection('foo', 'default');
-    $this->assertInstanceOf(Connection::class, $foo_connection);
-    $this->assertIsString($foo_connection->getConnectionOptions()['prefix']);
-    $this->assertSame($connection_info['default']['prefix'], $foo_connection->getConnectionOptions()['prefix']);
-    $this->assertArrayNotHasKey('extra_prefix', $foo_connection->getConnectionOptions());
   }
 
   /**
@@ -197,6 +188,16 @@ class ConnectionTest extends DatabaseTestBase {
     }
     $condition = $connection->condition('AND');
     $this->assertSame($namespace, get_class($condition));
+  }
+
+  /**
+   * Tests deprecation of ::getUnprefixedTablesMap().
+   *
+   * @group legacy
+   */
+  public function testDeprecatedGetUnprefixedTablesMap() {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::getUnprefixedTablesMap() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3257198');
+    $this->assertIsArray($this->connection->getUnprefixedTablesMap());
   }
 
   /**

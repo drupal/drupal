@@ -109,9 +109,31 @@ abstract class Connection {
   protected $schema = NULL;
 
   /**
+   * The prefix used by this database connection.
+   *
+   * @var string
+   */
+  private string $prefix;
+
+  /**
+   * Replacements to fully qualify {table} placeholders in SQL strings.
+   *
+   * An array of two strings, the first being the replacement for opening curly
+   * brace '{', the second for closing curly brace '}'.
+   *
+   * @var string[]
+   */
+  private array $tablePlaceholderReplacements;
+
+  /**
    * The prefixes used by this database connection.
    *
    * @var array
+   *
+   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3257198
    */
   protected $prefixes = [];
 
@@ -119,6 +141,11 @@ abstract class Connection {
    * List of search values for use in prefixTables().
    *
    * @var array
+   *
+   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3257198
    */
   protected $prefixSearch = [];
 
@@ -126,6 +153,11 @@ abstract class Connection {
    * List of replacement values for use in prefixTables().
    *
    * @var array
+   *
+   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3257198
    */
   protected $prefixReplace = [];
 
@@ -133,6 +165,11 @@ abstract class Connection {
    * List of un-prefixed table names, keyed by prefixed table names.
    *
    * @var array
+   *
+   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3257198
    */
   protected $unprefixedTablesMap = [];
 
@@ -188,45 +225,13 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
-   *   An 'extra_prefix' option may be present to allow BC for attaching
-   *   per-table prefixes, but it is meant for internal use only.
    */
   public function __construct(\PDO $connection, array $connection_options) {
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
 
     // Manage the table prefix.
-    if (isset($connection_options['prefix']) && is_array($connection_options['prefix'])) {
-      if (count($connection_options['prefix']) > 1) {
-        // If there are keys left besides the 'default' one, we are in a
-        // multi-prefix scenario (for per-table prefixing, or migrations).
-        // In that case, we put the non-default keys in a 'extra_prefix' key
-        // to avoid mixing up with the normal 'prefix', which is a string since
-        // Drupal 9.1.0.
-        $prefix = $connection_options['prefix']['default'] ?? '';
-        unset($connection_options['prefix']['default']);
-        if (isset($connection_options['extra_prefix'])) {
-          $connection_options['extra_prefix'] = array_merge($connection_options['extra_prefix'], $connection_options['prefix']);
-        }
-        else {
-          $connection_options['extra_prefix'] = $connection_options['prefix'];
-        }
-      }
-      else {
-        $prefix = $connection_options['prefix']['default'] ?? '';
-      }
-      $connection_options['prefix'] = $prefix;
-    }
-
-    // Initialize and prepare the connection prefix.
-    if (!isset($connection_options['extra_prefix'])) {
-      $prefix = $connection_options['prefix'] ?? '';
-    }
-    else {
-      $default_prefix = $connection_options['prefix'] ?? '';
-      $prefix = $connection_options['extra_prefix'];
-      $prefix['default'] = $default_prefix;
-    }
-    $this->setPrefix($prefix);
+    $connection_options['prefix'] = $connection_options['prefix'] ?? '';
+    $this->setPrefix($connection_options['prefix']);
 
     // Work out the database driver namespace if none is provided. This normally
     // written to setting.php by installer or set by
@@ -358,48 +363,18 @@ abstract class Connection {
   }
 
   /**
-   * Set the list of prefixes used by this database connection.
+   * Set the prefix used by this database connection.
    *
-   * @param array|string $prefix
-   *   Either a single prefix, or an array of prefixes.
+   * @param string $prefix
+   *   A single prefix.
    */
   protected function setPrefix($prefix) {
-    if (is_array($prefix)) {
-      $this->prefixes = $prefix + ['default' => ''];
-    }
-    else {
-      $this->prefixes = ['default' => $prefix];
-    }
-
-    [$start_quote, $end_quote] = $this->identifierQuotes;
-    // Set up variables for use in prefixTables(). Replace table-specific
-    // prefixes first.
-    $this->prefixSearch = [];
-    $this->prefixReplace = [];
-    foreach ($this->prefixes as $key => $val) {
-      if ($key != 'default') {
-        $this->prefixSearch[] = '{' . $key . '}';
-        // $val can point to another database like 'database.users'. In this
-        // instance we need to quote the identifiers correctly.
-        $val = str_replace('.', $end_quote . '.' . $start_quote, $val);
-        $this->prefixReplace[] = $start_quote . $val . $key . $end_quote;
-      }
-    }
-    // Then replace remaining tables with the default prefix.
-    $this->prefixSearch[] = '{';
-    // $this->prefixes['default'] can point to another database like
-    // 'other_db.'. In this instance we need to quote the identifiers correctly.
-    // For example, "other_db"."PREFIX_table_name".
-    $this->prefixReplace[] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $this->prefixes['default']);
-    $this->prefixSearch[] = '}';
-    $this->prefixReplace[] = $end_quote;
-
-    // Set up a map of prefixed => un-prefixed tables.
-    foreach ($this->prefixes as $table_name => $prefix) {
-      if ($table_name !== 'default') {
-        $this->unprefixedTablesMap[$prefix . $table_name] = $table_name;
-      }
-    }
+    assert(is_string($prefix), 'The \'$prefix\' argument to ' . __METHOD__ . '() must be a string');
+    $this->prefix = $prefix;
+    $this->tablePlaceholderReplacements = [
+      $this->identifierQuotes[0] . str_replace('.', $this->identifierQuotes[1] . '.' . $this->identifierQuotes[0], $prefix),
+      $this->identifierQuotes[1],
+    ];
   }
 
   /**
@@ -417,7 +392,7 @@ abstract class Connection {
    *   The properly-prefixed string.
    */
   public function prefixTables($sql) {
-    return str_replace($this->prefixSearch, $this->prefixReplace, $sql);
+    return str_replace(['{', '}'], $this->tablePlaceholderReplacements, $sql);
   }
 
   /**
@@ -454,12 +429,7 @@ abstract class Connection {
    *   (optional) The table to find the prefix for.
    */
   public function tablePrefix($table = 'default') {
-    if (isset($this->prefixes[$table])) {
-      return $this->prefixes[$table];
-    }
-    else {
-      return $this->prefixes['default'];
-    }
+    return $this->prefix;
   }
 
   /**
@@ -468,8 +438,14 @@ abstract class Connection {
    * @return array
    *   An array of un-prefixed table names, keyed by their fully qualified table
    *   names (i.e. prefix + table_name).
+   *
+   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3257198
    */
   public function getUnprefixedTablesMap() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3257198', E_USER_DEPRECATED);
     return $this->unprefixedTablesMap;
   }
 

@@ -470,18 +470,6 @@ function system_requirements($phase) {
     }
   }
 
-  // Verify there are no database entries in settings.php with table prefix in
-  // array format.
-  if ($phase === 'runtime' || $phase === 'update') {
-    if (_system_check_array_table_prefixes() === TRUE) {
-      $requirements['database_table_prefixes'] = [
-        'title' => t('Database table prefixes'),
-        'value' => t("There is at least one database entry in the \$database array in settings.php that has a 'prefix' value in the format of an array. Per-table prefixes are no longer supported. Change your settings.php file to ensure the value of every 'prefix' entry is a single string."),
-        'severity' => REQUIREMENT_WARNING,
-      ];
-    }
-  }
-
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = [
@@ -1636,18 +1624,4 @@ function _system_advisories_requirements(array &$requirements): void {
       )->toRenderable();
     }
   }
-}
-
-/**
- * Checks if there are 'prefix' entries in array format for tables.
- */
-function _system_check_array_table_prefixes() {
-  foreach (Database::getAllConnectionInfo() as $targets) {
-    foreach ($targets as $target) {
-      if (isset($target['extra_prefix']) && is_array($target['extra_prefix'])) {
-        return TRUE;
-      }
-    }
-  }
-  return FALSE;
 }

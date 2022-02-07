@@ -511,26 +511,18 @@ EOD;
    * {@inheritdoc}
    */
   public function findTables($table_expression) {
-    $individually_prefixed_tables = $this->connection->getUnprefixedTablesMap();
-    $default_prefix = $this->connection->tablePrefix();
-    $default_prefix_length = strlen($default_prefix);
+    $prefix = $this->connection->tablePrefix();
+    $prefix_length = strlen($prefix);
     $tables = [];
 
     // Load all the tables up front in order to take into account per-table
     // prefixes. The actual matching is done at the bottom of the method.
     $results = $this->connection->query("SELECT tablename FROM pg_tables WHERE schemaname = :schema", [':schema' => $this->defaultSchema]);
     foreach ($results as $table) {
-      // Take into account tables that have an individual prefix.
-      if (isset($individually_prefixed_tables[$table->tablename])) {
-        $prefix_length = strlen($this->connection->tablePrefix($individually_prefixed_tables[$table->tablename]));
-      }
-      elseif ($default_prefix && substr($table->tablename, 0, $default_prefix_length) !== $default_prefix) {
+      if ($prefix && substr($table->tablename, 0, $prefix_length) !== $prefix) {
         // This table name does not start the default prefix, which means that
         // it is not managed by Drupal so it should be excluded from the result.
         continue;
-      }
-      else {
-        $prefix_length = $default_prefix_length;
       }
 
       // Remove the prefix from the returned tables.

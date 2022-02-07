@@ -26,18 +26,17 @@ class ConnectionTest extends UnitTestCase {
   public function providerPrefixRoundTrip() {
     return [
       [
-        ['' => 'test_'],
+        [
+          '' => 'test_',
+        ],
         'test_',
       ],
       [
         [
           'fooTable' => 'foo_',
-          'barTable' => 'bar_',
+          'barTable' => 'foo_',
         ],
-        [
-          'fooTable' => 'foo_',
-          'barTable' => 'bar_',
-        ],
+        'foo_',
       ],
     ];
   }

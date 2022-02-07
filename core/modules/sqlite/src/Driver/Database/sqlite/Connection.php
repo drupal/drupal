@@ -79,21 +79,17 @@ class Connection extends DatabaseConnection {
   public function __construct(\PDO $connection, array $connection_options) {
     parent::__construct($connection, $connection_options);
 
-    // Attach one database for each registered prefix.
-    $prefixes = $this->prefixes;
-    foreach ($prefixes as &$prefix) {
-      // Empty prefix means query the main database -- no need to attach
-      // anything.
-      if ($prefix !== '') {
-        $this->attachDatabase($prefix);
-        // Add a ., so queries become prefix.table, which is proper syntax for
-        // querying an attached database.
-        $prefix .= '.';
-      }
+    // Empty prefix means query the main database -- no need to attach anything.
+    $prefix = $this->connectionOptions['prefix'] ?? '';
+    if ($prefix !== '') {
+      $this->attachDatabase($prefix);
+      // Add a ., so queries become prefix.table, which is proper syntax for
+      // querying an attached database.
+      $prefix .= '.';
     }
 
-    // Regenerate the prefixes replacement table.
-    $this->setPrefix($prefixes);
+    // Regenerate the prefix.
+    $this->setPrefix($prefix);
   }
 
   /**

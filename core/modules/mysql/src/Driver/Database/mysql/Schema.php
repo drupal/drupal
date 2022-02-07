@@ -642,7 +642,7 @@ class Schema extends DatabaseSchema {
   public function prepareComment($comment, $length = NULL) {
     // Truncate comment to maximum comment length.
     if (isset($length)) {
-      // Add table prefixes before truncating.
+      // Add table prefix before truncating.
       $comment = Unicode::truncate($this->connection->prefixTables($comment), $length, TRUE, TRUE);
     }
     // Remove semicolons to avoid triggering multi-statement check.

@@ -235,26 +235,8 @@ abstract class Database {
       $info = $info[mt_rand(0, count($info) - 1)];
     }
 
-    // Parse the prefix information.
-    // @todo in Drupal 10, fail hard if $info['prefix'] is an array.
-    // @see https://www.drupal.org/project/drupal/issues/3124382
-    if (!isset($info['prefix'])) {
-      // Default to an empty prefix.
-      $info['prefix'] = '';
-    }
-    elseif (is_array($info['prefix'])) {
-      $prefix = $info['prefix']['default'] ?? '';
-      unset($info['prefix']['default']);
-      // If there are keys left besides the 'default' one, we are in a
-      // multi-prefix scenario (for per-table prefixing, or migrations).
-      // In that case, we put the non-default keys in a 'extra_prefix' key
-      // to avoid mixing up with the normal 'prefix', which is a string since
-      // Drupal 9.1.0.
-      if (count($info['prefix'])) {
-        $info['extra_prefix'] = $info['prefix'];
-      }
-      $info['prefix'] = $prefix;
-    }
+    // Prefix information, default to an empty prefix.
+    $info['prefix'] = $info['prefix'] ?? '';
 
     // Fallback for Drupal 7 settings.php if namespace is not provided.
     if (empty($info['namespace'])) {

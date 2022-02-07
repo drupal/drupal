@@ -1203,19 +1203,7 @@ class SchemaTest extends KernelTestBase {
    * Tests the findTables() method.
    */
   public function testFindTables() {
-    // We will be testing with three tables, two of them using the default
-    // prefix and the third one with an individually specified prefix.
-    // Set up a new connection with different connection info.
-    $connection_info = Database::getConnectionInfo();
-
-    // Add per-table prefix to the second table.
-    $new_connection_info = $connection_info['default'];
-    $new_connection_info['prefix'] = [
-      'default' => $connection_info['default']['prefix'],
-      'test_2_table' => $connection_info['default']['prefix'] . '_shared_',
-    ];
-    Database::addConnectionInfo('test', 'default', $new_connection_info);
-    Database::setActiveConnection('test');
+    // We will be testing with three tables.
     $test_schema = Database::getConnection()->schema();
 
     // Create the tables.
@@ -1254,9 +1242,6 @@ class SchemaTest extends KernelTestBase {
       'test_2_table',
     ];
     $this->assertEquals($expected, $tables, 'Two tables were found.');
-
-    // Go back to the initial connection.
-    Database::setActiveConnection('default');
   }
 
   /**
