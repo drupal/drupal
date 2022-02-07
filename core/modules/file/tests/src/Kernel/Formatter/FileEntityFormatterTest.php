@@ -16,7 +16,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file', 'user'];
+  protected static $modules = ['file', 'user', 'file_test'];
 
   /**
    * The files.
@@ -169,6 +169,24 @@ class FileEntityFormatterTest extends KernelTestBase {
       $build = $entity_display->build($file);
       $this->assertEquals($expected[$i], $build['filesize'][0]['#markup']);
     }
+  }
+
+  /**
+   * Tests the file_link field formatter using a query string.
+   */
+  public function testFormatterFileLinkWithQueryString() {
+    $file = File::create([
+      'uri' => 'dummy-external-readonly://file-query-string?foo=bar',
+      'filename' => 'file-query-string',
+    ]);
+    $file->save();
+    $file_link = [
+      '#theme' => 'file_link',
+      '#file' => $file,
+    ];
+
+    $output = \Drupal::service('renderer')->renderRoot($file_link);
+    $this->assertStringContainsString($this->fileUrlGenerator->generate('dummy-external-readonly://file-query-string?foo=bar')->toUriString(), $output);
   }
 
 }
