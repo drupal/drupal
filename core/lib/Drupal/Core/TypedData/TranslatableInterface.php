@@ -78,10 +78,9 @@ interface TranslatableInterface {
   public function getTranslation($langcode);
 
   /**
-   * Returns the translatable object referring to the original language.
+   * Returns the translatable object in the language it was created.
    *
    * @return $this
-   *   The translation object referring to the original language.
    */
   public function getUntranslated();
 
