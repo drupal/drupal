@@ -3,7 +3,6 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -256,8 +255,7 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // Include a file if the theme function or variable preprocessor is held
-    // elsewhere.
+    // Include a file if the variable preprocessor is held elsewhere.
     if (!empty($info['includes'])) {
       foreach ($info['includes'] as $include_file) {
         include_once $this->root . '/' . $include_file;
@@ -307,83 +305,71 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // Generate the output using either a function or a template.
-    $output = '';
-    if (isset($info['function'])) {
-      if (function_exists($info['function'])) {
-        // Theme functions do not render via the theme engine, so the output is
-        // not autoescaped. However, we can only presume that the theme function
-        // has been written correctly and that the markup is safe.
-        $output = Markup::create($info['function']($variables));
-      }
-    }
-    else {
-      $render_function = 'twig_render_template';
-      $extension = '.html.twig';
+    // Generate the output using a template.
+    $render_function = 'twig_render_template';
+    $extension = '.html.twig';
 
-      // The theme engine may use a different extension and a different
-      // renderer.
-      $theme_engine = $active_theme->getEngine();
-      if (isset($theme_engine)) {
-        if ($info['type'] != 'module') {
-          if (function_exists($theme_engine . '_render_template')) {
-            $render_function = $theme_engine . '_render_template';
-          }
-          $extension_function = $theme_engine . '_extension';
-          if (function_exists($extension_function)) {
-            $extension = $extension_function();
-          }
+    // The theme engine may use a different extension and a different
+    // renderer.
+    $theme_engine = $active_theme->getEngine();
+    if (isset($theme_engine)) {
+      if ($info['type'] != 'module') {
+        if (function_exists($theme_engine . '_render_template')) {
+          $render_function = $theme_engine . '_render_template';
+        }
+        $extension_function = $theme_engine . '_extension';
+        if (function_exists($extension_function)) {
+          $extension = $extension_function();
         }
       }
-
-      // In some cases, a template implementation may not have had
-      // template_preprocess() run (for example, if the default implementation
-      // is a function, but a template overrides that default implementation).
-      // In these cases, a template should still be able to expect to have
-      // access to the variables provided by template_preprocess(), so we add
-      // them here if they don't already exist. We don't want the overhead of
-      // running template_preprocess() twice, so we use the 'directory' variable
-      // to determine if it has already run, which while not completely
-      // intuitive, is reasonably safe, and allows us to save on the overhead of
-      // adding some new variable to track that.
-      if (!isset($variables['directory'])) {
-        $default_template_variables = [];
-        template_preprocess($default_template_variables, $hook, $info);
-        $variables += $default_template_variables;
-      }
-      if (!isset($default_attributes)) {
-        $default_attributes = new Attribute();
-      }
-      foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
-        if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
-          if ($variables[$key]) {
-            $variables[$key] = new Attribute($variables[$key]);
-          }
-          else {
-            // Create empty attributes.
-            $variables[$key] = clone $default_attributes;
-          }
-        }
-      }
-
-      // Render the output using the template file.
-      $template_file = $info['template'] . $extension;
-      if (isset($info['path'])) {
-        $template_file = $info['path'] . '/' . $template_file;
-      }
-      // Add the theme suggestions to the variables array just before rendering
-      // the template for backwards compatibility with template engines.
-      $variables['theme_hook_suggestions'] = $suggestions;
-      // For backwards compatibility, pass 'theme_hook_suggestion' on to the
-      // template engine. This is only set when calling a direct suggestion like
-      // '#theme' => 'menu__shortcut_default' when the template exists in the
-      // current theme.
-      if (isset($theme_hook_suggestion)) {
-        $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
-      }
-      $output = $render_function($template_file, $variables);
     }
 
+    // In some cases, a template implementation may not have had
+    // template_preprocess() run (for example, if the default implementation
+    // is a function, but a template overrides that default implementation).
+    // In these cases, a template should still be able to expect to have
+    // access to the variables provided by template_preprocess(), so we add
+    // them here if they don't already exist. We don't want the overhead of
+    // running template_preprocess() twice, so we use the 'directory' variable
+    // to determine if it has already run, which while not completely
+    // intuitive, is reasonably safe, and allows us to save on the overhead of
+    // adding some new variable to track that.
+    if (!isset($variables['directory'])) {
+      $default_template_variables = [];
+      template_preprocess($default_template_variables, $hook, $info);
+      $variables += $default_template_variables;
+    }
+    if (!isset($default_attributes)) {
+      $default_attributes = new Attribute();
+    }
+    foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
+      if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
+        if ($variables[$key]) {
+          $variables[$key] = new Attribute($variables[$key]);
+        }
+        else {
+          // Create empty attributes.
+          $variables[$key] = clone $default_attributes;
+        }
+      }
+    }
+
+    // Render the output using the template file.
+    $template_file = $info['template'] . $extension;
+    if (isset($info['path'])) {
+      $template_file = $info['path'] . '/' . $template_file;
+    }
+    // Add the theme suggestions to the variables array just before rendering
+    // the template for backwards compatibility with template engines.
+    $variables['theme_hook_suggestions'] = $suggestions;
+    // For backwards compatibility, pass 'theme_hook_suggestion' on to the
+    // template engine. This is only set when calling a direct suggestion like
+    // '#theme' => 'menu__shortcut_default' when the template exists in the
+    // current theme.
+    if (isset($theme_hook_suggestion)) {
+      $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
+    }
+    $output = $render_function($template_file, $variables);
     return ($output instanceof MarkupInterface) ? $output : (string) $output;
   }
 

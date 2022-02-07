@@ -198,18 +198,12 @@ function views_theme($existing, $type, $theme, $path) {
         }
       }
 
-      // If there is no theme function for the given theme definition, it must
-      // be a template file. By default this file is located in the /templates
+      // By default any templates for a module are located in the /templates
       // directory of the module's folder. If a module wants to define its own
       // location it has to set register_theme of the plugin to FALSE and
       // implement hook_theme() by itself.
-      if (!function_exists('theme_' . $def['theme'])) {
-        $hooks[$def['theme']]['path'] .= '/templates';
-        $hooks[$def['theme']]['template'] = Html::cleanCssIdentifier($def['theme']);
-      }
-      else {
-        $hooks[$def['theme']]['function'] = 'theme_' . $def['theme'];
-      }
+      $hooks[$def['theme']]['path'] .= '/templates';
+      $hooks[$def['theme']]['template'] = Html::cleanCssIdentifier($def['theme']);
     }
   }
 

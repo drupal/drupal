@@ -45,7 +45,7 @@
  * implementing hook_theme(), which specifies the name of the hook, the input
  * "variables" used to provide data and options, and other information. Modules
  * implementing hook_theme() also need to provide a default implementation for
- * each of their theme hooks, normally in a Twig file, and they may also provide
+ * each of their theme hooks in a Twig file, and they may also provide
  * preprocessing functions. For example, the core Search module defines a theme
  * hook for a search result item in search_theme():
  * @code
@@ -68,14 +68,6 @@
  * rendered by the Twig template; the processed variables that the Twig template
  * receives are documented in the header of the default Twig template file.
  *
- * hook_theme() implementations can also specify that a theme hook
- * implementation is a theme function, but that is uncommon and not recommended.
- * Note that while Twig templates will auto-escape variables, theme functions
- * must explicitly escape any variables by using theme_render_and_autoescape().
- * Failure to do so is likely to result in security vulnerabilities. Theme
- * functions are deprecated in Drupal 8.0.x and will be removed before
- * Drupal 9.0.x. Use Twig templates instead.
- *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
  * it is more common for themes to override default implementations provided by
@@ -86,33 +78,16 @@
  * templates directory. A good starting point for doing this is normally to
  * copy the default implementation template, and then modifying it as desired.
  *
- * In the uncommon case that a theme hook uses a theme function instead of a
- * template file, a module would provide a default implementation function
- * called theme_HOOK, where HOOK is the name of the theme hook (for example,
- * theme_search_result() would be the name of the function for search result
- * theming). In this case, a theme can override the default implementation by
- * defining a function called THEME_HOOK() in its THEME.theme file, where THEME
- * is the machine name of the theme (for example, 'bartik' is the machine name
- * of the core Bartik theme, and it would define a function called
- * bartik_search_result() in the bartik.theme file, if the search_result hook
- * implementation was a function instead of a template). Normally, copying the
- * default function is again a good starting point for overriding its behavior.
- * Again, note that theme functions (unlike templates) must explicitly escape
- * variables using theme_render_and_autoescape() or risk security
- * vulnerabilities. Theme functions are deprecated in Drupal 8.0.x and will be
- * removed before Drupal 9.0.x. Use Twig templates instead.
- *
  * @section sec_preprocess_templates Preprocessing for Template Files
- * If the theme implementation is a template file, several functions are called
- * before the template file is invoked to modify the variables that are passed
- * to the template. These make up the "preprocessing" phase, and are executed
- * (if they exist), in the following order (note that in the following list,
- * HOOK indicates the hook being called or a less specific hook. For example, if
- * '#theme' => 'node__article' is called, hook is node__article and node. MODULE
- * indicates a module name, THEME indicates a theme name, and ENGINE indicates a
- * theme engine name). Modules, themes, and theme engines can provide these
- * functions to modify how the data is preprocessed, before it is passed to the
- * theme template:
+ * Several functions are called before the template file is invoked to modify
+ * the variables that are passed to the template. These make up the
+ * "preprocessing" phase, and are executed (if they exist), in the following
+ * order (note that in the following list, HOOK indicates the hook being called
+ * or a less specific hook. For example, if '#theme' => 'node__article' is
+ * called, hook is node__article and node. MODULE indicates a module name,
+ * THEME indicates a theme name, and ENGINE indicates a theme engine name).
+ * Modules, themes, and theme engines can provide these functions to modify how
+ * the data is preprocessed, before it is passed to the theme template:
  * - template_preprocess(&$variables, $hook): Creates a default set of variables
  *   for all theme hooks with template implementations. Provided by Drupal Core.
  * - template_preprocess_HOOK(&$variables): Should be implemented by the module
@@ -130,13 +105,6 @@
  *   variables for all theme hooks with template implementations.
  * - THEME_preprocess_HOOK(&$variables): Allows the theme to set necessary
  *   variables specific to the particular theme hook.
- *
- * @section sec_preprocess_functions Preprocessing for Theme Functions
- * If the theming implementation is a function, only the theme-hook-specific
- * preprocess functions (the ones ending in _HOOK) are called from the list
- * above. This is because theme hooks with function implementations need to be
- * fast, and calling the non-theme-hook-specific preprocess functions for them
- * would incur a noticeable performance penalty.
  *
  * @section sec_suggestions Theme hook suggestions
  * In some cases, instead of calling the base theme hook implementation (either
@@ -551,10 +519,8 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * Preprocess theme variables for templates.
  *
  * This hook allows modules to preprocess theme variables for theme templates.
- * It is called for all theme hooks implemented as templates, but not for theme
- * hooks implemented as functions. hook_preprocess_HOOK() can be used to
- * preprocess variables for a specific theme hook, whether implemented as a
- * template or function.
+ * hook_preprocess_HOOK() can be used to preprocess variables for a specific
+ * theme hook.
  *
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
@@ -620,8 +586,8 @@ function hook_preprocess_HOOK(&$variables) {
 /**
  * Provides alternate named suggestions for a specific theme hook.
  *
- * This hook allows modules to provide alternative theme function or template
- * name suggestions.
+ * This hook allows modules to provide alternative theme template name
+ * suggestions.
  *
  * HOOK is the least-specific version of the hook being called. For example, if
  * '#theme' => 'node__article' is called, then hook_theme_suggestions_node()
@@ -680,8 +646,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * @endcode
  *
  * @param array $suggestions
- *   An array of alternate, more specific names for template files or theme
- *   functions.
+ *   An array of alternate, more specific names for template files.
  * @param array $variables
  *   An array of variables passed to the theme hook. Note that this hook is
  *   invoked before any variable preprocessing.
@@ -704,8 +669,8 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
 /**
  * Alters named suggestions for a specific theme hook.
  *
- * This hook allows any module or theme to provide alternative theme function or
- * template name suggestions and reorder or remove suggestions provided by
+ * This hook allows any module or theme to provide alternative template name
+ * suggestions and reorder or remove suggestions provided by
  * hook_theme_suggestions_HOOK() or by earlier invocations of this hook.
  *
  * HOOK is the least-specific version of the hook being called. For example, if
@@ -1152,33 +1117,26 @@ function hook_page_bottom(array &$page_bottom) {
  *     where the array keys are the names of the variables, and the array
  *     values are the default values if they are not given in the render array.
  *     Template implementations receive each array key as a variable in the
- *     template file (so they must be legal PHP/Twig variable names). Function
- *     implementations are passed the variables in a single $variables function
- *     argument. If you are using these variables in a render array, prefix the
- *     variable names defined here with a #.
+ *     template file (so they must be legal PHP/Twig variable names). If you
+ *     are using these variables in a render array, prefix the variable names
+ *     defined here with a #.
  *   - render element: Used for render element items only: the name of the
- *     renderable element or element tree to pass to the theme function. This
- *     name is used as the name of the variable that holds the renderable
- *     element or tree in preprocess and process functions.
- *   - file: The file the implementation resides in. This file will be included
- *     prior to the theme being rendered, to make sure that the function or
- *     preprocess function (as needed) is actually loaded.
+ *     renderable element or element tree to pass to the template. This name is
+ *     used as the name of the variable that holds the renderable element or
+ *     tree in preprocess and process functions.
+ *   - file: The file that any preprocess implementations reside in. This file
+ *     will be included prior to the template being rendered, to make sure that
+ *     the preprocess function (as needed) is actually loaded.
  *   - path: Override the path of the file to be used. Ordinarily the module or
  *     theme path will be used, but if the file will not be in the default
  *     path, include it here. This path should be relative to the Drupal root
  *     directory.
- *   - template: If specified, the theme implementation is a template file, and
- *     this is the template name. Do not add 'html.twig' on the end of the
- *     template name. The extension will be added automatically by the default
- *     rendering engine (which is Twig.) If 'path' is specified, 'template'
- *     should also be specified. If neither 'template' nor 'function' are
- *     specified, a default template name will be assumed. For example, if a
- *     module registers the 'search_result' theme hook, 'search-result' will be
- *     assigned as its template name.
- *   - function: (deprecated in Drupal 8.0.x, will be removed in Drupal 9.0.x)
- *     If specified, this will be the function name to invoke for this
- *     implementation. If neither 'template' nor 'function' are specified, a
- *     default template name will be assumed. See above for more details.
+ *   - template: The template name, without 'html.twig' on the end. The
+ *     extension will be added automatically by the default rendering engine
+ *     (which is Twig.) If 'path' is specified, 'template' should also be
+ *     specified. If not specified, a default template name will be assumed.
+ *     For example, if a module registers the 'search_result' theme hook,
+ *     'search-result' will be assigned as its template name.
  *   - base hook: Used for theme suggestions only: the base theme hook name.
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.
@@ -1188,8 +1146,8 @@ function hook_page_bottom(array &$page_bottom) {
  *     HOOK is the base hook) changes the suggestion order, a different
  *     suggestion may be used in place of this suggestion. If after
  *     hook_theme_suggestions_HOOK() this suggestion remains the first
- *     suggestion, then this suggestion's function or template will be used to
- *     generate the rendered output.
+ *     suggestion, then this suggestion's template will be used to generate the
+ *     rendered output.
  *   - pattern: A regular expression pattern to be used to allow this theme
  *     implementation to have a dynamic name. The convention is to use __ to
  *     differentiate the dynamic portion of the theme. For example, to allow
@@ -1244,7 +1202,7 @@ function hook_theme($existing, $type, $theme, $path) {
  * Alter the theme registry information returned from hook_theme().
  *
  * The theme registry stores information about all available theme hooks,
- * including which callback functions those hooks will call when triggered,
+ * including which preprocess functions those hooks will call when triggered,
  * what template files are exposed by these hooks, and so on.
  *
  * Note that this hook is only executed as the theme cache is re-built.

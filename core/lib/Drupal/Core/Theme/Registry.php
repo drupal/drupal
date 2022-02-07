@@ -53,9 +53,7 @@ class Registry implements DestructableInterface {
    *     from; e.g., 'node' for theme hook 'node' of Node module.
    *   - theme path: The effective \Drupal\Core\Theme\ActiveTheme::getPath()
    *      during \Drupal\Core\Theme\ThemeManagerInterface::render(), available
-   *      as 'directory' variable in templates. For functions, it should point
-   *      to the respective theme. For templates, it should point to the
-   *      directory that contains the template.
+   *      as 'directory' variable in templates.
    *   - includes: (optional) An array of include files to load when the theme
    *     hook is executed by \Drupal\Core\Theme\ThemeManagerInterface::render().
    *   - file: (optional) A filename to add to 'includes', either prefixed with
@@ -76,13 +74,11 @@ class Registry implements DestructableInterface {
    *   - template_file: A full path and file name to a template file to use.
    *     Allows any extension to override the effective template file.
    *   - engine: The theme engine to use for the template file.
-   *   In case of a theme function:
-   *   - function: The function name to call to generate the output.
    *   For any registered theme hook, including theme hook suggestions:
    *   - preprocess: An array of theme variable preprocess callbacks to invoke
    *     before invoking final theme variable processors.
    *   - process: An array of theme variable process callbacks to invoke
-   *     before invoking the actual theme function or template.
+   *     before invoking the actual template.
    */
   protected $registry = [];
 
@@ -299,7 +295,7 @@ class Registry implements DestructableInterface {
     // Iteratively strip everything after the last '__' delimiter, until a
     // base hook definition is found. Recursive base hooks of base hooks are
     // not supported, so the base hook must be an original implementation that
-    // points to a theme function or template.
+    // points to a template.
     while ($pos = strrpos($base_hook, '__')) {
       $base_hook = substr($base_hook, 0, $pos);
       if (isset($this->registry[$base_hook]['exists'])) {
@@ -409,12 +405,6 @@ class Registry implements DestructableInterface {
    *   describing the hook:
    *   - 'type': The passed-in $type.
    *   - 'theme path': The passed-in $path.
-   *   - 'function': The name of the function generating output for this theme
-   *     hook. Either defined explicitly in hook_theme() or, if neither
-   *     'function' nor 'template' is defined, then the default theme function
-   *     name is used. The default theme function name is the theme hook
-   *     prefixed by either 'theme_' for modules or '$name_' for everything
-   *     else. If 'function' is defined, 'template' is not used.
    *   - 'template': The filename of the template generating output for this
    *     theme hook. The template is in the directory defined by the 'path' key
    *     of hook_theme() or defaults to "$path/templates".
@@ -506,24 +496,11 @@ class Registry implements DestructableInterface {
           $result[$hook]['includes'][] = $include_file;
         }
 
-        // A template file is the default implementation for a theme hook, but
-        // if the theme hook specifies a function callback instead, check to
-        // ensure the function actually exists.
-        if (isset($info['function'])) {
-          trigger_error(sprintf('Theme functions are deprecated in drupal:8.0.0 and are removed from drupal:10.0.0. Use Twig templates instead of %s(). See https://www.drupal.org/node/1831138', $info['function']), E_USER_DEPRECATED);
-          if (!function_exists($info['function'])) {
-            throw new \BadFunctionCallException(sprintf(
-              'Theme hook "%s" refers to a theme function callback that does not exist: "%s"',
-              $hook,
-              $info['function']
-            ));
-          }
-        }
         // Provide a default naming convention for 'template' based on the
         // hook used. If the template does not exist, the theme engine used
         // should throw an exception at runtime when attempting to include
         // the template file.
-        elseif (!isset($info['template'])) {
+        if (!isset($info['template'])) {
           $info['template'] = strtr($hook, '_', '-');
           $result[$hook]['template'] = $info['template'];
         }
@@ -540,8 +517,7 @@ class Registry implements DestructableInterface {
           $result[$hook] += array_intersect_key($cache[$hook], $hook_defaults);
         }
 
-        // Preprocess variables for all theming hooks, whether the hook is
-        // implemented as a template or as a function. Ensure they are arrays.
+        // Preprocess variables for all theming hooks. Ensure they are arrays.
         if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
           $info['preprocess functions'] = [];
           $prefixes = [];
@@ -590,13 +566,6 @@ class Registry implements DestructableInterface {
         }
         $result[$hook]['preprocess functions'] = $info['preprocess functions'];
 
-        // If a theme implementation definition provides both 'template' and
-        // 'function', the 'function' will be used. In this case, if the new
-        // result provides a 'template' value, any existing 'function' value
-        // must be removed for the override to be called.
-        if (isset($result[$hook]['template'])) {
-          unset($cache[$hook]['function']);
-        }
       }
 
       // Merge the newly created theme hooks into the existing cache.
