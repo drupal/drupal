@@ -1527,7 +1527,7 @@ function template_preprocess_file_link(&$variables) {
   $variables['attributes']->addClass($classes);
   $variables['file_size'] = format_size($file->getSize() ?? 0);
 
-  $variables['link'] = Link::fromTextAndUrl($link_text, $url->setOptions($options))->toRenderable();
+  $variables['link'] = Link::fromTextAndUrl($link_text, $url->mergeOptions($options))->toRenderable();
 }
 
 /**
