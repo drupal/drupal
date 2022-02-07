@@ -14,7 +14,6 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\update\UpdateFetcherInterface;
@@ -223,23 +222,21 @@ function update_themes_uninstalled($themes) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for system_modules().
+ * Implements hook_modules_installed().
  *
- * Adds a form submission handler to the system modules form, so that if a site
- * admin saves the form, we invalidate the information of available updates.
- *
- * @see _update_cache_clear()
+ * If modules are installed, we invalidate the information of available updates.
  */
-function update_form_system_modules_alter(&$form, FormStateInterface $form_state) {
-  $form['#submit'][] = 'update_storage_clear_submit';
+function update_modules_installed($modules) {
+  // Clear all update module data.
+  update_storage_clear();
 }
 
 /**
- * Form submission handler for system_modules().
+ * Implements hook_modules_uninstalled().
  *
- * @see update_form_system_modules_alter()
+ * If modules are uninstalled, we invalidate the information of available updates.
  */
-function update_storage_clear_submit($form, FormStateInterface $form_state) {
+function update_modules_uninstalled($modules) {
   // Clear all update module data.
   update_storage_clear();
 }
