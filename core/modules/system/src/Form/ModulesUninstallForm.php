@@ -80,15 +80,11 @@ class ModulesUninstallForm extends FormBase {
    * @param \Drupal\Core\Update\UpdateHookRegistry|null $versioning_update_registry
    *   Versioning update registry service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, UpdateHookRegistry $versioning_update_registry = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, UpdateHookRegistry $versioning_update_registry) {
     $this->moduleExtensionList = $extension_list_module;
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
-    if ($versioning_update_registry === NULL) {
-      @trigger_error('The update.update_hook_registry service must be passed to ' . __NAMESPACE__ . '\ModulesUninstallForm::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $versioning_update_registry = \Drupal::service('update.update_hook_registry');
-    }
     $this->updateRegistry = $versioning_update_registry;
   }
 
