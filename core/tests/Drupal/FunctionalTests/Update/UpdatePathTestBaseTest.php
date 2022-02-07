@@ -91,6 +91,12 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     \Drupal::state()->set('update_test_schema_version', 8001);
     $this->runUpdates();
 
+    // Ensure that after running the updates the update functions have been
+    // loaded. If they have not then the tests carried out in
+    // \Drupal\Tests\UpdatePathTestTrait::runUpdates() can result in false
+    // positives.
+    $this->assertTrue(function_exists('update_test_semver_update_n_update_8001'), 'The update_test_semver_update_n_update_8001() has been loaded');
+
     $select = $connection->select('watchdog');
     $select->orderBy('wid', 'DESC');
     $select->range(0, 5);
