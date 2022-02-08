@@ -181,11 +181,6 @@ parameters:
 			path: lib/Drupal/Core/Template/TwigPhpStorageCache.php
 
 		-
-			message: "#^Class Drupal\\\\simpletest\\\\TestBase not found\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Test/RunTests/TestFileParser.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/aggregator/aggregator.module
