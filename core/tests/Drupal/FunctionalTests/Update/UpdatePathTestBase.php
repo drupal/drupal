@@ -54,11 +54,11 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
    *
-   * The file system/tests/fixtures/update/drupal-8.8.0.bare.standard.php.gz is
+   * The file system/tests/fixtures/update/drupal-9.3.0.bare.standard.php.gz is
    * normally included first -- this sets up the base database from a bare
    * standard Drupal installation.
    *
-   * The file system/tests/fixtures/update/drupal-8.8.0.filled.standard.php.gz
+   * The file system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz
    * can also be used in case we want to test with a database filled with
    * content, and with all core modules enabled.
    *

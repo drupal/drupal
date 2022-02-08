@@ -16,12 +16,6 @@ function taxonomy_removed_post_updates() {
     'taxonomy_post_update_remove_hierarchy_from_vocabularies' => '9.0.0',
     'taxonomy_post_update_make_taxonomy_term_revisionable' => '9.0.0',
     'taxonomy_post_update_configure_status_field_widget' => '9.0.0',
+    'taxonomy_post_update_clear_views_argument_validator_plugins_cache' => '10.0.0',
   ];
-}
-
-/**
- * Clear the cache after deprecating Term views argument validator.
- */
-function taxonomy_post_update_clear_views_argument_validator_plugins_cache(): void {
-  // An empty update will flush all caches.
 }

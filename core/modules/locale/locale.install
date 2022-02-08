@@ -308,19 +308,8 @@ function locale_requirements($phase) {
 }
 
 /**
- * Delete an unnecessary index on the locales_location table.
- */
-function locale_update_9101() {
-  $schema = \Drupal::database()->schema();
-  $table = 'locales_location';
-  if ($schema->indexExists($table, 'string_id')) {
-    $schema->dropIndex($table, 'string_id');
-  }
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function locale_update_last_removed() {
-  return 8800;
+  return 9101;
 }

@@ -5,10 +5,6 @@
  * Post update functions for Views.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\views\ViewEntityInterface;
-use Drupal\views\ViewsConfigUpdater;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -31,61 +27,13 @@ function views_removed_post_updates() {
     'views_post_update_make_placeholders_translatable' => '9.0.0',
     'views_post_update_limit_operator_defaults' => '9.0.0',
     'views_post_update_remove_core_key' => '9.0.0',
+    'views_post_update_field_names_for_multivalue_fields' => '10.0.0',
+    'views_post_update_configuration_entity_relationships' => '10.0.0',
+    'views_post_update_rename_default_display_setting' => '10.0.0',
+    'views_post_update_remove_sorting_global_text_field' => '10.0.0',
+    'views_post_update_title_translations' => '10.0.0',
+    'views_post_update_sort_identifier' => '10.0.0',
   ];
-}
-
-/**
- * Update field names for multi-value base fields.
- */
-function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  $view_config_updater->setDeprecationsEnabled(FALSE);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
-    return $view_config_updater->needsMultivalueBaseFieldUpdate($view);
-  });
-}
-
-/**
- * Clear errors caused by relationships to configuration entities.
- */
-function views_post_update_configuration_entity_relationships() {
-  // Empty update to clear Views data.
-}
-
-/**
- * Rename the setting for showing the default display to 'default_display'.
- */
-function views_post_update_rename_default_display_setting() {
-  $config = \Drupal::configFactory()->getEditable('views.settings');
-  $config->set('ui.show.default_display', $config->get('ui.show.master_display'));
-  $config->clear('ui.show.master_display');
-  $config->save();
-}
-
-/**
- * Clear caches due to removal of sorting for global custom text field.
- */
-function views_post_update_remove_sorting_global_text_field() {
-  // Empty post-update hook.
-}
-
-/**
- * Rebuild routes to fix view title translations.
- */
-function views_post_update_title_translations() {
-  \Drupal::service('router.builder')->setRebuildNeeded();
-}
-
-/**
- * Add the identifier option to all sort handler configurations.
- */
-function views_post_update_sort_identifier(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsSortFieldIdentifierUpdate($view);
-  });
 }
 
 /**

@@ -5,66 +5,9 @@
  * Contains install and update functions for Migrate Drupal.
  */
 
-use Drupal\Core\Database\Database;
-
-// cspell:ignore sourceid
-
 /**
  * Implements hook_update_last_removed().
  */
 function migrate_drupal_update_last_removed() {
-  return 8601;
-}
-
-/**
- * Add revision ID to entity reference translation migrate_map tables..
- */
-function migrate_drupal_update_8901(&$sandbox) {
-  $schema = Database::getConnection()->schema();
-  $table_expression = 'migrate_map%entity_reference_translation%node%';
-  $tables = $schema->findTables($table_expression);
-  foreach ($tables as $table) {
-    // Move language code to sourceid3.
-    $spec = [
-      'type' => 'varchar',
-      'length' => 12,
-      'not null' => TRUE,
-    ];
-    $schema->changeField($table, 'sourceid2', 'sourceid3', $spec);
-
-    // Add revision ID.
-    $spec = [
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0,
-    ];
-    $schema->addField($table, 'sourceid2', $spec);
-
-    // Add sourceid2 to index.
-    $spec = [
-      'fields' => [
-        'sourceid1' => [
-          'type' => 'int',
-          'not_null' => TRUE,
-        ],
-        'sourceid2' => [
-          'type' => 'int',
-          'not_null' => TRUE,
-        ],
-        'sourceid3' => [
-          'type' => 'varchar',
-          'length' => 12,
-          'not null' => TRUE,
-        ],
-      ],
-    ];
-    $fields = [
-      'sourceid1',
-      'sourceid2',
-      'sourceid3',
-    ];
-    $schema->dropIndex($table, 'source');
-    $schema->addIndex($table, 'source', $fields, $spec);
-  }
+  return 8901;
 }

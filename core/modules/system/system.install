@@ -13,8 +13,6 @@ use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
@@ -1516,63 +1514,7 @@ function system_schema() {
  * Implements hook_update_last_removed().
  */
 function system_update_last_removed() {
-  return 8805;
-}
-
-/**
- * Update the stored schema data for entity identifier fields.
- */
-function system_update_8901() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $installed_storage_schema = \Drupal::keyValue('entity.storage_schema.sql');
-
-  foreach ($definition_update_manager->getEntityTypes() as $entity_type_id => $entity_type) {
-    // Ensure that we are dealing with a non-deleted entity type that uses the
-    // default SQL storage.
-    if (!$entity_type_manager->hasDefinition($entity_type_id)) {
-      continue;
-    }
-
-    $storage = $entity_type_manager->getStorage($entity_type_id);
-    if (!$storage instanceof SqlContentEntityStorage) {
-      continue;
-    }
-
-    foreach (['id', 'revision'] as $key) {
-      if (!$entity_type->hasKey($key)) {
-        continue;
-      }
-
-      $field_name = $entity_type->getKey($key);
-      $field_storage_definition = $definition_update_manager->getFieldStorageDefinition($field_name, $entity_type_id);
-      if (!$field_storage_definition) {
-        continue;
-      }
-      if ($field_storage_definition->getType() !== 'integer') {
-        continue;
-      }
-
-      // Retrieve the storage schema in order to use its own method for updating
-      // the identifier schema - ::processIdentifierSchema(). This is needed
-      // because some storage schemas might not use serial identifiers.
-      // @see \Drupal\user\UserStorageSchema::processIdentifierSchema()
-      $ref_get_storage_schema = new \ReflectionMethod($storage, 'getStorageSchema');
-      $ref_get_storage_schema->setAccessible(TRUE);
-      $storage_schema = $ref_get_storage_schema->invoke($storage);
-
-      if ($storage_schema instanceof SqlContentEntityStorageSchema) {
-        $field_schema_data = $installed_storage_schema->get($entity_type_id . '.field_schema_data.' . $field_storage_definition->getName(), []);
-        $table = $key === 'id' ? $entity_type->getBaseTable() : $entity_type->getRevisionTable();
-
-        $ref_process_identifier_schema = new \ReflectionMethod($storage_schema, 'processIdentifierSchema');
-        $ref_process_identifier_schema->setAccessible(TRUE);
-        $ref_process_identifier_schema->invokeArgs($storage_schema, [&$field_schema_data[$table], $field_name]);
-
-        $installed_storage_schema->set($entity_type_id . '.field_schema_data.' . $field_storage_definition->getName(), $field_schema_data);
-      }
-    }
-  }
+  return 8901;
 }
 
 /**

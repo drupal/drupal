@@ -6,8 +6,10 @@
  */
 
 /**
- * Clear the source count cache.
+ * Implements hook_removed_post_updates().
  */
-function migrate_post_update_clear_migrate_source_count_cache() {
-  // Empty post_update hook.
+function migrate_removed_post_updates() {
+  return [
+    'migrate_post_update_clear_migrate_source_count_cache' => '10.0.0',
+  ];
 }
