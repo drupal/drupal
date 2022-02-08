@@ -22,4 +22,11 @@ export default class DrupalMedia extends Plugin {
       MediaImageTextAlternative,
     ];
   }
+
+  /**
+   * @inheritdoc
+   */
+  static get pluginName() {
+    return 'DrupalMedia';
+  }
 }

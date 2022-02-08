@@ -518,6 +518,49 @@ media_media:
     conditions:
       filter: media_embed
 
+media_mediaAlign:
+  provider: media
+  ckeditor5:
+    plugins:
+      - drupalMedia.DrupalElementStyle
+    config:
+      drupalElementStyles:
+        options:
+          - name: 'alignRight'
+            title: 'Right aligned media'
+            icon: 'objectRight'
+            attributeName: 'data-align'
+            attributeValue: 'right'
+            modelElements: [ 'drupalMedia' ]
+          - name: 'alignLeft'
+            title: 'Left aligned media'
+            icon: 'objectLeft'
+            attributeName: 'data-align'
+            attributeValue: 'left'
+            modelElements: [ 'drupalMedia' ]
+          - name: 'alignCenter'
+            title: 'Centered media'
+            icon: 'objectCenter'
+            attributeName: 'data-align'
+            attributeValue: 'center'
+            modelElements: ['drupalMedia']
+      drupalMedia:
+        toolbar:
+          - name: 'drupalMedia:align'
+            items:
+              - 'drupalElementStyle:alignLeft'
+              - 'drupalElementStyle:alignCenter'
+              - 'drupalElementStyle:alignRight'
+            defaultItem: 'drupalElementStyle:alignCenter'
+  drupal:
+    label: Media align
+    library: ckeditor5/drupal.ckeditor5.mediaAlign
+    elements:
+      - <drupal-media data-align>
+    conditions:
+      filter: filter_align
+      plugins: [media_media]
+
 media_library_mediaLibrary:
   provider: media_library
   ckeditor5:

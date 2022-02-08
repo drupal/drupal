@@ -57,6 +57,13 @@ drupal.ckeditor5.media:
     - core/ckeditor5
     - core/drupal
 
+drupal.ckeditor5.mediaAlign:
+  css:
+    theme:
+      css/media-alignment.css: { }
+  dependencies:
+    - ckeditor5/drupal.ckeditor5.media
+
 ie11.user.warnings:
   js:
     js/ie11.user.warnings.js: { }

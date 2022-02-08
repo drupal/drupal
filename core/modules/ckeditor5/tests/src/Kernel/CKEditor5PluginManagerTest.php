@@ -937,11 +937,13 @@ PHP,
     $expected_plugins = array_merge($default_plugins, [
       'ckeditor5_test_layercake',
       'media_media',
+      'media_mediaAlign',
     ]);
     sort($expected_plugins);
     $this->assertSame($expected_plugins, $plugin_ids);
     $expected_libraries = array_merge($default_libraries, [
       'ckeditor5/drupal.ckeditor5.media',
+      'ckeditor5/drupal.ckeditor5.mediaAlign',
       'ckeditor5_test/layercake',
     ]);
     sort($expected_libraries);
@@ -970,6 +972,7 @@ PHP,
     $this->assertSame(array_values($expected_plugins), $plugin_ids);
     $expected_libraries = array_merge($default_libraries, [
       'ckeditor5/drupal.ckeditor5.media',
+      'ckeditor5/drupal.ckeditor5.mediaAlign',
       'ckeditor5_test/layercake',
       'core/ckeditor5.table',
     ]);
