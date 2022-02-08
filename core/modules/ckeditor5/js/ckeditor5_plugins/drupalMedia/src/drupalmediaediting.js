@@ -1,10 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words insertdrupalmedia */
+/* cspell:words insertdrupalmedia drupalmediaediting */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
+
+/**
+ * @module drupalMedia/drupalmediaediting
+ */
 
 /**
  * @internal
@@ -17,7 +21,6 @@ export default class DrupalMediaEditing extends Plugin {
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
-      drupalMediaAlign: 'data-align',
       drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
@@ -122,6 +125,47 @@ export default class DrupalMediaEditing extends Plugin {
         viewWriter.setCustomProperty('drupalMedia', true, container);
         return toWidget(container, viewWriter, { label: 'media widget' });
       },
+    });
+
+    conversion.for('editingDowncast').add((dispatcher) => {
+      dispatcher.on(
+        'attribute:drupalElementStyle:drupalMedia',
+        (evt, data, conversionApi) => {
+          const alignMapping = {
+            alignLeft: 'drupal-media-style-align-left',
+            alignRight: 'drupal-media-style-align-right',
+            alignCenter: 'drupal-media-style-align-center',
+          };
+          const viewElement = conversionApi.mapper.toViewElement(data.item);
+          const viewWriter = conversionApi.writer;
+
+          // If the prior value is alignment related, it should be removed
+          // whether or not the module property is consumed.
+          if (alignMapping[data.attributeOldValue]) {
+            viewWriter.removeClass(
+              alignMapping[data.attributeOldValue],
+              viewElement,
+            );
+          }
+
+          // If the new value is not alignment related, do not proceed.
+          if (!alignMapping[data.attributeNewValue]) {
+            return;
+          }
+
+          // The model property is already consumed, do not proceed.
+          if (!conversionApi.consumable.consume(data.item, evt.name)) {
+            return;
+          }
+
+          // Add the alignment class in the view that corresponds to the value
+          // of the model's drupalElementStyle property.
+          viewWriter.addClass(
+            alignMapping[data.attributeNewValue],
+            viewElement,
+          );
+        },
+      );
     });
 
     // Set attributeToAttribute conversion for all supported attributes.

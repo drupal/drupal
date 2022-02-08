@@ -3,7 +3,6 @@
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
@@ -147,6 +146,7 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Tests using drupalMedia button to embed media into CKEditor 5.
    */
   public function testButton() {
+    $media_preview_selector = '.ck-content .ck-widget.drupal-media .media';
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
     $this->pressEditorButton('Insert Drupal Media');
@@ -168,11 +168,35 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->pageTextContains('1 of 1 item selected');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media .media', 1000));
-    $this->pressEditorButton('Source');
-    $value = $assert_session->elementExists('css', '.ck-source-editing-area textarea')->getValue();
-    $dom = Html::load($value);
-    $xpath = new \DOMXPath($dom);
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $drupal_media = $xpath->query('//drupal-media')[0];
+    $expected_attributes = [
+      'data-entity-type' => 'media',
+      'data-entity-uuid' => $this->media->uuid(),
+    ];
+    foreach ($expected_attributes as $name => $expected) {
+      $this->assertSame($expected, $drupal_media->getAttribute($name));
+    }
+    $this->assertEditorButtonEnabled('Undo');
+    $this->pressEditorButton('Undo');
+    $this->assertEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
+    $this->assertEditorButtonDisabled('Undo');
+    $this->pressEditorButton('Redo');
+    $this->assertEditorButtonEnabled('Undo');
+
+    // Ensure that data-align attribute is set by default when media is inserted
+    // while filter_align is enabled.
+    FilterFormat::load('test_format')
+      ->setFilterConfig('filter_align', ['status' => TRUE])
+      ->save();
+    $this->drupalGet('/node/add/blog');
+    $this->waitForEditor();
+    $this->pressEditorButton('Insert Drupal Media');
+    $assert_session->waitForElement('css', '.js-media-library-item')->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $drupal_media = $xpath->query('//drupal-media')[0];
     $expected_attributes = [
       'data-entity-type' => 'media',
@@ -182,14 +206,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     foreach ($expected_attributes as $name => $expected) {
       $this->assertSame($expected, $drupal_media->getAttribute($name));
     }
-    $this->pressEditorButton('Source');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media .media', 1000));
-    $this->assertEditorButtonEnabled('Undo');
-    $this->pressEditorButton('Undo');
-    $this->assertEmpty($assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media .media', 1000));
-    $this->assertEditorButtonDisabled('Undo');
-    $this->pressEditorButton('Redo');
-    $this->assertEditorButtonEnabled('Undo');
   }
 
   /**

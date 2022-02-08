@@ -6,6 +6,9 @@ import DrupalMedia from './drupalmedia';
 // cspell:ignore drupallinkmedia
 import DrupalLinkMedia from './drupallinkmedia/drupallinkmedia';
 
+// cspell:ignore drupalelementstyle
+import DrupalElementStyle from './drupalelementstyle';
+
 // cspell:ignore mediaimagetextalternative
 import MediaImageTextAlternative from './mediaimagetextalternative';
 import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediaimagetextalternativeediting';
@@ -20,4 +23,5 @@ export default {
   MediaImageTextAlternativeEditing,
   MediaImageTextAlternativeUi,
   DrupalLinkMedia,
+  DrupalElementStyle,
 };

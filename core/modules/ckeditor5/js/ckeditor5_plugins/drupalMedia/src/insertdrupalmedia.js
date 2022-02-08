@@ -55,6 +55,25 @@ export default class InsertDrupalMediaCommand extends Command {
       {},
     );
 
+    // Check if there's Drupal Element Style matching the default attributes on
+    // the media.
+    // @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting~DrupalElementStyleEditing
+    if (this.editor.plugins.has('DrupalElementStyleEditing')) {
+      const elementStyleEditing = this.editor.plugins.get(
+        'DrupalElementStyleEditing',
+      );
+      // eslint-disable-next-line no-restricted-syntax
+      for (const style of elementStyleEditing.normalizedStyles) {
+        if (
+          attributes[style.attributeName] &&
+          style.attributeValue === attributes[style.attributeName]
+        ) {
+          modelAttributes.drupalElementStyle = style.name;
+          break;
+        }
+      }
+    }
+
     this.editor.model.change((writer) => {
       this.editor.model.insertContent(
         createDrupalMedia(writer, modelAttributes),
