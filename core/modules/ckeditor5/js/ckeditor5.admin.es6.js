@@ -3,7 +3,7 @@
  * Provides admin UI for the CKEditor 5.
  */
 
-((Drupal, drupalSettings, $, JSON, once, Sortable, { tabbable }) => {
+((Drupal, drupalSettings, $, JSON, once, Sortable) => {
   const toolbarHelp = [
     {
       message: Drupal.t(
@@ -584,7 +584,10 @@
       // that can catch blur-causing events before the blur happens. If the
       // tooltip is hidden before the blur event, the outline will disappear
       // correctly.
-      once('safari-focus-fix', '.ckeditor5-toolbar-item').forEach((item) => {
+      once(
+        'safari-focus-fix',
+        document.querySelectorAll('.ckeditor5-toolbar-item'),
+      ).forEach((item) => {
         item.addEventListener('keydown', (e) => {
           const keyCodeDirections = {
             9: 'tab',
@@ -676,7 +679,9 @@
       // information can be retrieved after AJAX rebuilds.
       once(
         'ui-state-storage',
-        '#filter-format-edit-form, #filter-format-add-form',
+        document.querySelector(
+          '#filter-format-edit-form, #filter-format-add-form',
+        ),
       ).forEach((form) => {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
@@ -694,32 +699,7 @@
         const activeTab = getUiStateStorage(`${id}-active-tab`);
         if (activeTab) {
           setTimeout(() => {
-            const activeTabLink = document.querySelector(activeTab);
-            activeTabLink.click();
-
-            // Only change focus on the plugin-settings-wrapper element.
-            if (id !== 'plugin-settings-wrapper') {
-              return;
-            }
-            // If the current focused element is not the body, then the user
-            // navigated away from the vertical tab area and is somewhere else
-            // within the form. Do not change the current focus.
-            if (document.activeElement !== document.body) {
-              return;
-            }
-            // If the active element is the body then we can assume that the
-            // focus was on an element that was replaced by an ajax command.
-            // If that is the case restore the focus to the active tab that
-            // was just rebuilt.
-            const targetTabPane = document.querySelector(
-              activeTabLink.getAttribute('href'),
-            );
-            if (targetTabPane) {
-              const tabbableElements = tabbable(targetTabPane);
-              if (tabbableElements.length) {
-                tabbableElements[0].focus();
-              }
-            }
+            document.querySelector(activeTab).click();
           });
         }
 
@@ -738,8 +718,12 @@
       };
 
       once(
-        'maintainActiveVerticalTab',
-        '#plugin-settings-wrapper, #filter-settings-wrapper',
+        'plugin-settings',
+        document.querySelector('#plugin-settings-wrapper'),
+      ).forEach(maintainActiveVerticalTab);
+      once(
+        'filter-settings',
+        document.querySelector('#filter-settings-wrapper'),
       ).forEach(maintainActiveVerticalTab);
 
       // Add listeners to maintain focus after AJAX rebuilds.
@@ -1038,4 +1022,4 @@
       });
     },
   };
-})(Drupal, drupalSettings, jQuery, JSON, once, Sortable, tabbable);
+})(Drupal, drupalSettings, jQuery, JSON, once, Sortable);
