@@ -5,7 +5,9 @@
 * @preserve
 **/
 
-((Drupal, drupalSettings, $, JSON, once, Sortable) => {
+((Drupal, drupalSettings, $, JSON, once, Sortable, {
+  tabbable
+}) => {
   const toolbarHelp = [{
     message: Drupal.t("The toolbar buttons that don't fit the user's browser window width will be grouped in a dropdown. If multiple toolbar rows are preferred, those can be configured by adding an explicit wrapping breakpoint wherever you want to start a new row.", null, {
       context: 'CKEditor 5 toolbar help text, default, no explicit wrapping breakpoint'
@@ -303,7 +305,7 @@
         });
         render(container, selected, available, dividers);
       });
-      once('safari-focus-fix', document.querySelectorAll('.ckeditor5-toolbar-item')).forEach(item => {
+      once('safari-focus-fix', '.ckeditor5-toolbar-item').forEach(item => {
         item.addEventListener('keydown', e => {
           const keyCodeDirections = {
             9: 'tab',
@@ -350,7 +352,7 @@
         return form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state'))[property] : null;
       };
 
-      once('ui-state-storage', document.querySelector('#filter-format-edit-form, #filter-format-add-form')).forEach(form => {
+      once('ui-state-storage', '#filter-format-edit-form, #filter-format-add-form').forEach(form => {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
 
@@ -360,7 +362,26 @@
 
         if (activeTab) {
           setTimeout(() => {
-            document.querySelector(activeTab).click();
+            const activeTabLink = document.querySelector(activeTab);
+            activeTabLink.click();
+
+            if (id !== 'plugin-settings-wrapper') {
+              return;
+            }
+
+            if (document.activeElement !== document.body) {
+              return;
+            }
+
+            const targetTabPane = document.querySelector(activeTabLink.getAttribute('href'));
+
+            if (targetTabPane) {
+              const tabbableElements = tabbable(targetTabPane);
+
+              if (tabbableElements.length) {
+                tabbableElements[0].focus();
+              }
+            }
           });
         }
 
@@ -374,8 +395,7 @@
         });
       };
 
-      once('plugin-settings', document.querySelector('#plugin-settings-wrapper')).forEach(maintainActiveVerticalTab);
-      once('filter-settings', document.querySelector('#filter-settings-wrapper')).forEach(maintainActiveVerticalTab);
+      once('maintainActiveVerticalTab', '#plugin-settings-wrapper, #filter-settings-wrapper').forEach(maintainActiveVerticalTab);
       const selectedButtons = document.querySelector('#ckeditor5-toolbar-buttons-selected');
       once('textarea-listener', selectedButtons).forEach(textarea => {
         textarea.addEventListener('change', e => {
@@ -552,4 +572,4 @@
     }
 
   };
-})(Drupal, drupalSettings, jQuery, JSON, once, Sortable);
+})(Drupal, drupalSettings, jQuery, JSON, once, Sortable, tabbable);
