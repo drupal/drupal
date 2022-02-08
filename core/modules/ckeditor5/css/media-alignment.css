@@ -1,0 +1,18 @@
+.ck-content .drupal-media-style-align-right {
+  float: right;
+  margin-left: 1.5rem;
+}
+.ck-content .drupal-media-style-align-left {
+  float: left;
+  margin-right: 1.5rem;
+}
+.ck-content .drupal-media-style-align-left,
+.ck-content .drupal-media-style-align-right {
+  clear: both;
+  max-width: 50%;
+}
+.ck-content .drupal-media-style-align-center {
+  max-width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+}

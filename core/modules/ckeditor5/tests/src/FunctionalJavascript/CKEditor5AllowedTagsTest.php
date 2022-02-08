@@ -35,13 +35,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   protected $allowedElements = '<br> <p> <h2> <h3> <h4> <h5> <h6> <strong> <em>';
 
   /**
-   * The element that must be allowed when media embed is enabled.
-   *
-   * @var string
-   */
-  protected $mediaElement = '<drupal-media data-entity-type data-entity-uuid alt>';
-
-  /**
    * The default allowed elements when updating a non-CKEditor 5 editor.
    *
    * @var string
@@ -379,7 +372,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->responseContains('Media types selectable in the Media Library');
 
-    $allowed_with_media = $this->allowedElements . ' ' . $this->mediaElement;
+    $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt>';
     $assert_session->responseContains('Media types selectable in the Media Library');
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media);
     $this->saveNewTextFormat($page, $assert_session);
@@ -394,6 +387,12 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // Confirm that <drupal-media> is now included in the "Allowed tags" form
     // field.
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media);
+
+    // Ensure that data-align attribute is added to <drupal-media> when
+    // filter_align is enabled.
+    $page->checkField('filters[filter_align][status]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertEquals($this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-align>', $allowed_html_field->getValue());
 
     // Disable media embed.
     $this->assertTrue($page->hasCheckedField('filters[media_embed][status]'));

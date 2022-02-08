@@ -2,6 +2,18 @@
 ckeditor5_test_layercake:
   ckeditor5:
     plugins: []
+    config:
+      drupalElementStyles:
+        options:
+          - name: 'layerCakeSide'
+            title: 'Media aligned to side'
+            icon: '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path opacity=".5" d="M2 3h16v1.5H2zm0 12h16v1.5H2z"/><path d="M18.003 7v5.5a1 1 0 0 1-1 1H8.996a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8.007a1 1 0 0 1 1 1zm-1.506.5H9.5V12h6.997V7.5z"/></svg>'
+            attributeName: 'class'
+            attributeValue: 'layercake-side'
+            modelElements: ['drupalMedia']
+      drupalMediaStyles:
+        toolbar:
+          - drupalElementStyle:layerCakeSide
   drupal:
     label: TEST — Layercake
     library: ckeditor5_test/layercake
@@ -14,3 +26,4 @@ ckeditor5_test_layercake:
       - <h1 class>
       - <div class>
       - <section class>
+      - <drupal-media class="layercake-side">
