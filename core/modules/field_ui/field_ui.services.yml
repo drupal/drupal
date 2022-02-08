@@ -4,13 +4,6 @@ services:
     arguments: ['@entity_type.manager']
     tags:
      - { name: event_subscriber }
-  field_ui.route_enhancer:
-    alias: route_enhancer.entity_bundle
-    deprecated: The "%alias_id%" service is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the "route_enhancer.entity_bundle" service instead. See https://www.drupal.org/node/3245017
-    class: Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: route_enhancer }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     arguments: ['@entity_type.manager']
