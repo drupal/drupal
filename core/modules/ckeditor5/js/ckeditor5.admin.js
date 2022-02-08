@@ -37,7 +37,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-(function (Drupal, drupalSettings, $, JSON, once, Sortable) {
+(function (Drupal, drupalSettings, $, JSON, once, Sortable, _ref) {
+  var tabbable = _ref.tabbable;
   var toolbarHelp = [{
     message: Drupal.t("The toolbar buttons that don't fit the user's browser window width will be grouped in a dropdown. If multiple toolbar rows are preferred, those can be configured by adding an explicit wrapping breakpoint wherever you want to start a new row.", null, {
       context: 'CKEditor 5 toolbar help text, default, no explicit wrapping breakpoint'
@@ -325,10 +326,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     attach: function attach(context) {
       once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(function (container) {
         var selectedTextarea = context.querySelector('#ckeditor5-toolbar-buttons-selected');
-        var available = Object.entries(JSON.parse(context.querySelector('#ckeditor5-toolbar-buttons-available').innerHTML)).map(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              name = _ref2[0],
-              attrs = _ref2[1];
+        var available = Object.entries(JSON.parse(context.querySelector('#ckeditor5-toolbar-buttons-available').innerHTML)).map(function (_ref2) {
+          var _ref3 = _slicedToArray(_ref2, 2),
+              name = _ref3[0],
+              attrs = _ref3[1];
 
           return _objectSpread({
             name: name,
@@ -369,7 +370,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         });
         render(container, selected, available, dividers);
       });
-      once('safari-focus-fix', document.querySelectorAll('.ckeditor5-toolbar-item')).forEach(function (item) {
+      once('safari-focus-fix', '.ckeditor5-toolbar-item').forEach(function (item) {
         item.addEventListener('keydown', function (e) {
           var keyCodeDirections = {
             9: 'tab',
@@ -414,7 +415,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         return form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state'))[property] : null;
       };
 
-      once('ui-state-storage', document.querySelector('#filter-format-edit-form, #filter-format-add-form')).forEach(function (form) {
+      once('ui-state-storage', '#filter-format-edit-form, #filter-format-add-form').forEach(function (form) {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
 
@@ -424,7 +425,26 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         if (activeTab) {
           setTimeout(function () {
-            document.querySelector(activeTab).click();
+            var activeTabLink = document.querySelector(activeTab);
+            activeTabLink.click();
+
+            if (id !== 'plugin-settings-wrapper') {
+              return;
+            }
+
+            if (document.activeElement !== document.body) {
+              return;
+            }
+
+            var targetTabPane = document.querySelector(activeTabLink.getAttribute('href'));
+
+            if (targetTabPane) {
+              var tabbableElements = tabbable(targetTabPane);
+
+              if (tabbableElements.length) {
+                tabbableElements[0].focus();
+              }
+            }
           });
         }
 
@@ -438,8 +458,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         });
       };
 
-      once('plugin-settings', document.querySelector('#plugin-settings-wrapper')).forEach(maintainActiveVerticalTab);
-      once('filter-settings', document.querySelector('#filter-settings-wrapper')).forEach(maintainActiveVerticalTab);
+      once('maintainActiveVerticalTab', '#plugin-settings-wrapper, #filter-settings-wrapper').forEach(maintainActiveVerticalTab);
       var selectedButtons = document.querySelector('#ckeditor5-toolbar-buttons-selected');
       once('textarea-listener', selectedButtons).forEach(function (textarea) {
         textarea.addEventListener('change', function (e) {
@@ -507,8 +526,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }
   };
 
-  Drupal.theme.ckeditor5SelectedButtons = function (_ref3) {
-    var buttons = _ref3.buttons;
+  Drupal.theme.ckeditor5SelectedButtons = function (_ref4) {
+    var buttons = _ref4.buttons;
     return "\n      <ul class=\"ckeditor5-toolbar-tray ckeditor5-toolbar-active__buttons\" data-button-list=\"ckeditor5-toolbar-active-buttons\" role=\"listbox\" aria-orientation=\"horizontal\" aria-labelledby=\"ckeditor5-toolbar-active-buttons-label\">\n        ".concat(buttons.map(function (button) {
       return Drupal.theme.ckeditor5Button({
         button: button,
@@ -517,8 +536,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }).join(''), "\n      </ul>\n    ");
   };
 
-  Drupal.theme.ckeditor5DividerButtons = function (_ref4) {
-    var buttons = _ref4.buttons;
+  Drupal.theme.ckeditor5DividerButtons = function (_ref5) {
+    var buttons = _ref5.buttons;
     return "\n      <ul class=\"ckeditor5-toolbar-tray ckeditor5-toolbar-divider__buttons\" data-button-list=\"ckeditor5-toolbar-divider-buttons\" role=\"listbox\" aria-orientation=\"horizontal\" aria-labelledby=\"ckeditor5-toolbar-divider-buttons-label\">\n        ".concat(buttons.map(function (button) {
       return Drupal.theme.ckeditor5Button({
         button: button,
@@ -527,8 +546,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }).join(''), "\n      </ul>\n    ");
   };
 
-  Drupal.theme.ckeditor5AvailableButtons = function (_ref5) {
-    var buttons = _ref5.buttons;
+  Drupal.theme.ckeditor5AvailableButtons = function (_ref6) {
+    var buttons = _ref6.buttons;
     return "\n      <ul class=\"ckeditor5-toolbar-tray ckeditor5-toolbar-available__buttons\" data-button-list=\"ckeditor5-toolbar-available-buttons\" role=\"listbox\" aria-orientation=\"horizontal\" aria-labelledby=\"ckeditor5-toolbar-available-buttons-label\">\n        ".concat(buttons.map(function (button) {
       return Drupal.theme.ckeditor5Button({
         button: button,
@@ -537,11 +556,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }).join(''), "\n      </ul>\n    ");
   };
 
-  Drupal.theme.ckeditor5Button = function (_ref6) {
-    var _ref6$button = _ref6.button,
-        label = _ref6$button.label,
-        id = _ref6$button.id,
-        listType = _ref6.listType;
+  Drupal.theme.ckeditor5Button = function (_ref7) {
+    var _ref7$button = _ref7.button,
+        label = _ref7$button.label,
+        id = _ref7$button.id,
+        listType = _ref7.listType;
     var visuallyHiddenLabel = Drupal.t("@listType button @label", {
       '@listType': listType !== 'divider' ? listType : 'available',
       '@label': label
@@ -549,11 +568,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     return "\n      <li class=\"ckeditor5-toolbar-item ckeditor5-toolbar-item-".concat(id, "\" role=\"option\" tabindex=\"0\" data-drupal-selector=\"ckeditor5-toolbar-button\" data-id=\"").concat(id, "\" data-label=\"").concat(label, "\" data-divider=\"").concat(listType === 'divider', "\">\n        <span class=\"ckeditor5-toolbar-button ckeditor5-toolbar-button-").concat(id, "\">\n          <span class=\"visually-hidden\">").concat(visuallyHiddenLabel, "</span>\n        </span>\n        <span class=\"ckeditor5-toolbar-tooltip\" aria-hidden=\"true\">").concat(label, "</span>\n      </li>\n    ");
   };
 
-  Drupal.theme.ckeditor5Admin = function (_ref7) {
-    var availableButtons = _ref7.availableButtons,
-        dividerButtons = _ref7.dividerButtons,
-        activeToolbar = _ref7.activeToolbar,
-        helpMessage = _ref7.helpMessage;
+  Drupal.theme.ckeditor5Admin = function (_ref8) {
+    var availableButtons = _ref8.availableButtons,
+        dividerButtons = _ref8.dividerButtons,
+        activeToolbar = _ref8.activeToolbar,
+        helpMessage = _ref8.helpMessage;
     return "\n    <div aria-live=\"polite\" data-drupal-selector=\"ckeditor5-admin-help-message\">\n      <p>".concat(helpMessage.join('</p><p>'), "</p>\n    </div>\n    <div class=\"ckeditor5-toolbar-disabled\">\n      <div class=\"ckeditor5-toolbar-available\">\n        <label id=\"ckeditor5-toolbar-available-buttons-label\">").concat(Drupal.t('Available buttons'), "</label>\n        ").concat(availableButtons, "\n      </div>\n      <div class=\"ckeditor5-toolbar-divider\">\n        <label id=\"ckeditor5-toolbar-divider-buttons-label\">").concat(Drupal.t('Button divider'), "</label>\n        ").concat(dividerButtons, "\n      </div>\n    </div>\n    <div class=\"ckeditor5-toolbar-active\">\n      <label id=\"ckeditor5-toolbar-active-buttons-label\">").concat(Drupal.t('Active toolbar'), "</label>\n      ").concat(activeToolbar, "\n    </div>\n    ");
   };
 
@@ -581,4 +600,4 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }
   };
-})(Drupal, drupalSettings, jQuery, JSON, once, Sortable);
+})(Drupal, drupalSettings, jQuery, JSON, once, Sortable, tabbable);
