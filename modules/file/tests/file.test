@@ -1933,3 +1933,26 @@ class FileScanDirectory extends FileFieldTestCase {
   }
 
 }
+
+/**
+ * Test theme implementations declared in file_theme().
+ */
+class FileThemeImplementationsTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme implementations declared in file_theme()',
+      'description' => 'Unit tests theme functions in the file module.',
+      'group' => 'File',
+    );
+  }
+
+  function testThemeFileUploadHelp() {
+    $variables = array(
+      'description' => NULL,
+      'upload_validators' => NULL,
+    );
+    $this->assertEqual('', theme_file_upload_help($variables), 'Empty string returned by theme_file_upload_help() with NULL inputs.');
+  }
+
+}
