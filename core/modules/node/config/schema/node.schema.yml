@@ -89,12 +89,3 @@ block.settings.node_syndicate_block:
     block_count:
       type: integer
       label: 'Block count'
-
-condition.plugin.node_type:
-  deprecated: "The 'condition.plugin.node_type' config schema is deprecated in drupal:9.3.0 and is removed from drupal 10.0.0. Use the 'entity_bundle:node_type' key instead to define a node type condition. See https://www.drupal.org/node/2983299."
-  type: condition.plugin
-  mapping:
-    bundles:
-      type: sequence
-      sequence:
-        type: string

@@ -531,11 +531,6 @@ parameters:
 			path: modules/node/tests/src/Functional/NodeAdminTest.php
 
 		-
-			message: "#^The \"access_check\\.node\\.revision\" service is deprecated\\. You should use the 'access_check\\.entity' service instead\\. See https\\://www\\.drupal\\.org/node/3161210$#"
-			count: 2
-			path: modules/node/tests/src/Functional/NodeRevisionPermissionsTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeRevisionsAllTest.php

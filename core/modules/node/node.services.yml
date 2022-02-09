@@ -8,18 +8,6 @@ services:
     arguments: ['@database', '@module_handler', '@language_manager']
     tags:
       - { name: backend_overridable }
-  access_check.node.revision:
-    class: Drupal\node\Access\NodeRevisionAccessCheck
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: access_check, applies_to: _access_node_revision }
-    deprecated: The "%service_id%" service is deprecated. You should use the 'access_check.entity' service instead. See https://www.drupal.org/node/3161210
-  access_check.node.add:
-    class: Drupal\node\Access\NodeAddAccessCheck
-    arguments: ['@entity_type.manager']
-    deprecated: The "%service_id%" service is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use _entity_create_access or _entity_create_any_access access checks instead. See https://www.drupal.org/node/2836069
-    tags:
-      - { name: access_check, applies_to: _node_add_access }
   access_check.node.preview:
     class: Drupal\node\Access\NodePreviewAccessCheck
     arguments: ['@entity_type.manager']
