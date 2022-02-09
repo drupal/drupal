@@ -30,7 +30,7 @@ class InsertQuery_pgsql extends InsertQuery {
       foreach ($this->insertFields as $idx => $field) {
         if (isset($table_information->blob_fields[$field])) {
           $blobs[$blob_count] = fopen('php://memory', 'a');
-          fwrite($blobs[$blob_count], $insert_values[$idx]);
+          fwrite($blobs[$blob_count], (string) $insert_values[$idx]);
           rewind($blobs[$blob_count]);
 
           $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_count], PDO::PARAM_LOB);
@@ -182,7 +182,7 @@ class UpdateQuery_pgsql extends UpdateQuery {
 
       if (isset($table_information->blob_fields[$field])) {
         $blobs[$blob_count] = fopen('php://memory', 'a');
-        fwrite($blobs[$blob_count], $value);
+        fwrite($blobs[$blob_count], (string) $value);
         rewind($blobs[$blob_count]);
         $stmt->bindParam($placeholder, $blobs[$blob_count], PDO::PARAM_LOB);
         ++$blob_count;
