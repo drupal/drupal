@@ -4,7 +4,6 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Utility\TableSort;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Query extender class for tablesort queries.
@@ -12,20 +11,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class TableSortExtender extends SelectExtender {
 
   /**
-   * Constructs a TableSortExtender object.
-   *
-   * @param \Drupal\Core\Database\Query\SelectInterface $query
-   *   Select query object.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   Database connection object.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
+   * {@inheritdoc}
    */
-  public function __construct(
-    SelectInterface $query,
-    Connection $connection,
-    protected RequestStack $requestStack
-  ) {
+  public function __construct(SelectInterface $query, Connection $connection) {
     parent::__construct($query, $connection);
 
     // Add convenience tag to mark that this is an extended query. We have to
@@ -46,7 +34,7 @@ class TableSortExtender extends SelectExtender {
    * @see table.html.twig
    */
   public function orderByHeader(array $header) {
-    $context = TableSort::getContextFromRequest($header, $this->requestStack->getCurrentRequest());
+    $context = TableSort::getContextFromRequest($header, \Drupal::request());
     if (!empty($context['sql'])) {
       // Based on code from \Drupal\Core\Database\Connection::escapeTable(),
       // but this can also contain a dot.

@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
  * Query extender for pager queries.
@@ -45,14 +44,8 @@ class PagerSelectExtender extends SelectExtender {
    *   Select query object.
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection object.
-   * @param \Drupal\Core\Pager\PagerManagerInterface $pagerManager
-   *   The pager manager service.
    */
-  public function __construct(
-    SelectInterface $query,
-    Connection $connection,
-    protected PagerManagerInterface $pagerManager
-  ) {
+  public function __construct(SelectInterface $query, Connection $connection) {
     parent::__construct($query, $connection);
 
     // Add pager tag. Do this here to ensure that it is always added before
@@ -81,7 +74,7 @@ class PagerSelectExtender extends SelectExtender {
     $this->ensureElement();
 
     $total_items = $this->getCountQuery()->execute()->fetchField();
-    $pager = $this->pagerManager->createPager($total_items, $this->limit, $this->element);
+    $pager = $this->connection->getPagerManager()->createPager($total_items, $this->limit, $this->element);
     $this->range($pager->getCurrentPage() * $this->limit, $this->limit);
 
     // Now that we've added our pager-based range instructions, run the query normally.
@@ -96,7 +89,7 @@ class PagerSelectExtender extends SelectExtender {
    */
   protected function ensureElement() {
     if (!isset($this->element)) {
-      $this->element($this->pagerManager->getMaxPagerElementId() + 1);
+      $this->element($this->connection->getPagerManager()->getMaxPagerElementId() + 1);
     }
   }
 
@@ -164,7 +157,7 @@ class PagerSelectExtender extends SelectExtender {
    */
   public function element($element) {
     $this->element = $element;
-    $this->pagerManager->reservePagerElementId($this->element);
+    $this->connection->getPagerManager()->reservePagerElementId($this->element);
     return $this;
   }
 

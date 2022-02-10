@@ -5,6 +5,7 @@ namespace Drupal\comment;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -287,7 +288,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->addMetaData('field_name', $field_name);
 
     if ($comments_per_page) {
-      $query = $query->extend('pager')
+      $query = $query->extend(PagerSelectExtender::class)
         ->limit($comments_per_page);
       if ($pager_id) {
         $query->element($pager_id);

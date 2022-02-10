@@ -4,6 +4,8 @@ namespace Drupal\forum;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -160,8 +162,8 @@ class ForumManager implements ForumManagerInterface {
     }
 
     $query = $this->connection->select('forum_index', 'f')
-      ->extend('pager')
-      ->extend('table_sort');
+      ->extend(PagerSelectExtender::class)
+      ->extend(TableSortExtender::class);
     $query->fields('f');
     $query
       ->condition('f.tid', $tid)
@@ -187,7 +189,7 @@ class ForumManager implements ForumManagerInterface {
       $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
       $query = $this->connection->select('node_field_data', 'n')
-        ->extend('table_sort');
+        ->extend(TableSortExtender::class);
       $query->fields('n', ['nid']);
 
       $query->join('comment_entity_statistics', 'ces', "[n].[nid] = [ces].[entity_id] AND [ces].[field_name] = 'comment_forum' AND [ces].[entity_type] = 'node'");

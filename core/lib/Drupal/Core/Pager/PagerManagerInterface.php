@@ -29,11 +29,11 @@ interface PagerManagerInterface {
    * If the items being displayed result from a database query performed using
    * Drupal's database API, and if you have control over the construction of the
    * database query, you do not need to call this function directly; instead,
-   * you can extend the query object with the 'pager' select query extender
+   * you can extend the query object with the 'PagerSelectExtender' extender
    * before executing it. For example:
    * @code
    *   $query = $connection->select('some_table')
-   *     ->extend('pager');
+   *     ->extend(PagerSelectExtender::class);
    * @endcode
    *
    * However, if you are using a different method for generating the items to be

@@ -4,6 +4,7 @@ namespace Drupal\pager_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,7 +55,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
       ['data' => 'type'],
       ['data' => 'timestamp'],
     ];
-    $query = Database::getConnection()->select('watchdog', 'd')->extend('pager')->element($element);
+    $query = Database::getConnection()->select('watchdog', 'd')->extend(PagerSelectExtender::class)->element($element);
     $result = $query
       ->fields('d', ['wid', 'type', 'timestamp'])
       ->limit($limit)
