@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -130,13 +131,13 @@ class TrackerController extends ControllerBase {
   public function buildContent(UserInterface $user = NULL) {
     if ($user) {
       $query = $this->database->select('tracker_user', 't')
-        ->extend('pager')
+        ->extend(PagerSelectExtender::class)
         ->addMetaData('base_table', 'tracker_user')
         ->condition('t.uid', $user->id());
     }
     else {
       $query = $this->databaseReplica->select('tracker_node', 't')
-        ->extend('pager')
+        ->extend(PagerSelectExtender::class)
         ->addMetaData('base_table', 'tracker_node');
     }
 

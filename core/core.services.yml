@@ -1790,13 +1790,3 @@ services:
   pager.parameters:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
-  select_extender_factory.pager:
-    class: Drupal\Core\Database\Query\PagerSelectExtenderFactory
-    arguments: ['@pager.manager']
-    tags:
-      - { name: backend_overridable }
-  select_extender_factory.table_sort:
-    class: Drupal\Core\Database\Query\TableSortExtenderFactory
-    arguments: ['@request_stack']
-    tags:
-      - { name: backend_overridable }

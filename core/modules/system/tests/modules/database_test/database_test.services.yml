@@ -1,5 +1,0 @@
-services:
-  select_extender_factory.test_extender:
-    class: Drupal\database_test\TestExtenderFactory
-    tags:
-      - { name: backend_overridable }

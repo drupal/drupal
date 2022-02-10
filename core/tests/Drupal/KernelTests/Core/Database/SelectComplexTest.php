@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\RowCountException;
 use Drupal\user\Entity\User;
 
@@ -210,7 +211,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testHavingCountQuery() {
     $query = $this->connection->select('test')
-      ->extend('pager')
+      ->extend(PagerSelectExtender::class)
       ->groupBy('age')
       ->having('[age] + 1 > 0');
     $query->addField('test', 'age');
