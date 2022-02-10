@@ -40,10 +40,11 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   // that an empty /translations directory exists in the
   // /core/assets/vendor/ckeditor5 directory.
   const ckeditor5Path = `${assetsFolder}/ckeditor5`;
-  await rmdir(`${ckeditor5Path}/translations`, { recursive: true })
-    .catch(() => {
-      // Nothing to do if the directory doesn't exist.
-    });
+  try {
+    await rmdir(`${ckeditor5Path}/translations`, { recursive: true })
+  } catch (e) {
+    // Nothing to do if the directory doesn't exist.
+  }
   await mkdir(`${ckeditor5Path}/translations`);
 
   /**
@@ -341,89 +342,84 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     }
   ];
 
-  // Use Array.reduce for sequential processing to avoid corrupting the
-  // contents of the concatenated CKEditor 5 translation files.
-  await process.reduce(async (previous, { pack, files = [], folder = false, library = false }) => {
-    return previous.then(async () => {
-      const sourceFolder = pack;
-      const libraryName = library || folder || pack;
-      const destFolder = folder || pack;
+  // Use sequential processing to avoid corrupting the contents of the
+  // concatenated CKEditor 5 translation files.
+  for (const { pack, files = [], folder = false, library = false } of process) {
+    const sourceFolder = pack;
+    const libraryName = library || folder || pack;
+    const destFolder = folder || pack;
 
-      let packageInfo;
-      // Take the version info from the package.json file.
-      if (!['joyride', 'farbtastic'].includes(pack)) {
-        packageInfo = JSON.parse(
-          await readFile(`${packageFolder}/${sourceFolder}/package.json`),
-        );
-      }
-      if (packageInfo) {
-        updateLibraryVersion(libraryName, packageInfo);
-      }
+    let packageInfo;
+    // Take the version info from the package.json file.
+    if (!['joyride', 'farbtastic'].includes(pack)) {
+      packageInfo = JSON.parse(
+        await readFile(`${packageFolder}/${sourceFolder}/package.json`),
+      );
+    }
+    if (packageInfo) {
+      updateLibraryVersion(libraryName, packageInfo);
+    }
 
-      // CKEditor 5 packages ship with translation files.
-      if (pack.startsWith('@ckeditor') || pack === 'ckeditor5') {
-        const packageTranslationPath = `${packageFolder}/${sourceFolder}/build/translations`;
-        await readdir(packageTranslationPath, { withFileTypes: true }).then(async (translationFiles) => {
-          return translationFiles.map(async (translationFile) => {
-            if (!translationFile.isDirectory()) {
-              // Translation files are concatenated to a single translation
-              // file to avoid having to make multiple network requests to
-              // various translation files. As a trade off, this leads into
-              // some redundant translations depending on configuration.
-              await readFile(`${packageTranslationPath}/${translationFile.name}`).then(async (contents) => {
-                return appendFile(`${assetsFolder}/${destFolder}/translations/${translationFile.name}`, contents);
-              });
-            }
-          }, Promise.resolve());
-        }).catch(() => {
-          // Do nothing as it's expected that not all packages ship translations.
-        });
-      }
-
-      return files.forEach(async (file) => {
-        let source = file;
-        let dest = file;
-        if (typeof file === 'object') {
-          source = file.from;
-          dest = file.to;
-        }
-        // For map files, make sure the sources files don't leak outside the
-        // library folder. In the `sources` member, remove all "../" values at
-        // the start of the files names to avoid having the virtual files outside
-        // of the library vendor folder in dev tools.
-        if (path.extname(source) === '.map') {
-          console.log('Process map file', source);
-          const map = await readFile(
-            `${packageFolder}/${sourceFolder}/${source}`,
-          );
-          const json = JSON.parse(map);
-          json.sources = json.sources.map((source) =>
-            source.replace(/^(\.\.\/)+/, ''),
-          );
-          await writeFile(
-            `${assetsFolder}/${destFolder}/${dest}`,
-            JSON.stringify(json),
-          );
-        } else {
-          console.log(
-            'Copy',
-            `${sourceFolder}/${source}`,
-            'to',
-            `${destFolder}/${dest}`,
-          );
-          await copyFile(
-            `${packageFolder}/${sourceFolder}/${source}`,
-            `${assetsFolder}/${destFolder}/${dest}`,
-          );
-          // These 2 files come from a zip file that hasn't been updated in years
-          // hardcode the permission fix to pass the commit checks.
-          if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
-            await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+    // CKEditor 5 packages ship with translation files.
+    if (pack.startsWith('@ckeditor') || pack === 'ckeditor5') {
+      const packageTranslationPath = `${packageFolder}/${sourceFolder}/build/translations`;
+      try {
+        const translationFiles = await readdir(packageTranslationPath, { withFileTypes: true });
+        for (const translationFile of translationFiles) {
+          if (!translationFile.isDirectory()) {
+            // Translation files are concatenated to a single translation
+            // file to avoid having to make multiple network requests to
+            // various translation files. As a trade off, this leads into
+            // some redundant translations depending on configuration.
+            const contents = await readFile(`${packageTranslationPath}/${translationFile.name}`)
+            await appendFile(`${assetsFolder}/${destFolder}/translations/${translationFile.name}`, contents);
           }
         }
-      });
-    });
-  }, Promise.resolve());
+      } catch (e) {
+        // No translations folder, do nothing.
+      }
+    }
+
+    for (const file of files) {
+      let source = file;
+      let dest = file;
+      if (typeof file === 'object') {
+        source = file.from;
+        dest = file.to;
+      }
+      // For map files, make sure the sources files don't leak outside the
+      // library folder. In the `sources` member, remove all "../" values at
+      // the start of the files names to avoid having the virtual files outside
+      // of the library vendor folder in dev tools.
+      if (path.extname(source) === '.map') {
+        console.log('Process map file', source);
+        const map = await readFile(
+          `${packageFolder}/${sourceFolder}/${source}`,
+        );
+        const json = JSON.parse(map);
+        json.sources = json.sources.map((source) =>
+          source.replace(/^(\.\.\/)+/, ''),
+        );
+        await writeFile(
+          `${assetsFolder}/${destFolder}/${dest}`,
+          JSON.stringify(json),
+        );
+      } else {
+        console.log(
+          `Copy ${sourceFolder}/${source} to ${destFolder}/${dest}`,
+        );
+        await copyFile(
+          `${packageFolder}/${sourceFolder}/${source}`,
+          `${assetsFolder}/${destFolder}/${dest}`,
+        );
+        // These 2 files come from a zip file that hasn't been updated in years
+        // hardcode the permission fix to pass the commit checks.
+        if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
+          await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+        }
+      }
+    }
+  }
 
   await writeFile(librariesPath, libraries.join('\n\n'));
 })();
