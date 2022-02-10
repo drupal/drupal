@@ -195,19 +195,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _format$editorSetting = format.editorSettings,
           toolbar = _format$editorSetting.toolbar,
           plugins = _format$editorSetting.plugins,
-          pluginConfig = _format$editorSetting.config,
+          config = _format$editorSetting.config,
           language = _format$editorSetting.language;
       var extraPlugins = selectPlugins(plugins);
+      var pluginConfig = processConfig(config);
 
-      var config = _objectSpread({
+      var editorConfig = _objectSpread(_objectSpread({
         extraPlugins: extraPlugins,
-        toolbar: toolbar,
-        language: language
-      }, processConfig(pluginConfig));
+        toolbar: toolbar
+      }, pluginConfig), {}, {
+        language: _objectSpread(_objectSpread({}, pluginConfig.language), language)
+      });
 
       var id = setElementId(element);
       var ClassicEditor = editorClassic.ClassicEditor;
-      ClassicEditor.create(element, config).then(function (editor) {
+      ClassicEditor.create(element, editorConfig).then(function (editor) {
         Drupal.CKEditor5Instances.set(id, editor);
 
         if (element.hasAttribute('required')) {

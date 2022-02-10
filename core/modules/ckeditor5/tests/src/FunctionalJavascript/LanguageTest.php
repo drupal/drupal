@@ -29,18 +29,20 @@ class LanguageTest extends CKEditor5TestBase {
    *
    * @param string $langcode
    *   The language code.
-   * @param string $blockquote_translation
-   *   The expected translation for blockquote toolbar button.
+   * @param string $toolbar_item_name
+   *   The CKEditor 5 plugin to enable.
+   * @param string $toolbar_item_translation
+   *   The expected translation for CKEditor 5 plugin toolbar button.
    *
    * @dataProvider provider
    */
-  public function test(string $langcode, string $blockquote_translation): void {
+  public function test(string $langcode, string $toolbar_item_name, string $toolbar_item_translation): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-blockQuote'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-blockQuote', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', ".ckeditor5-toolbar-item-$toolbar_item_name"));
+    $this->triggerKeyUp(".ckeditor5-toolbar-item-$toolbar_item_name", 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
     $this->saveNewTextFormat($page, $assert_session);
 
@@ -50,7 +52,7 @@ class LanguageTest extends CKEditor5TestBase {
     $this->drupalGet('node/add');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     // Ensure that blockquote button is translated.
-    $assert_session->elementExists('xpath', "//span[text()='$blockquote_translation']");
+    $assert_session->elementExists('xpath', "//span[text()='$toolbar_item_translation']");
   }
 
   /**
@@ -62,11 +64,19 @@ class LanguageTest extends CKEditor5TestBase {
     return [
       'Language code both in Drupal and CKEditor' => [
         'langcode' => 'th',
-        'blockquote_translation' => 'คำพูดบล็อก',
+        'toolbar_item_name' => 'blockQuote',
+        'toolbar_item_translation' => 'คำพูดบล็อก',
       ],
       'Language code transformed from browser mappings' => [
         'langcode' => 'zh-hans',
-        'blockquote_translation' => '块引用',
+        'toolbar_item_name' => 'blockQuote',
+        'toolbar_item_translation' => '块引用',
+      ],
+      'Language configuration conflict' => [
+        'langcode' => 'fr',
+        'toolbar_item_name' => 'textPartLanguage',
+        // cSpell:disable-next-line
+        'toolbar_item_translation' => 'Choisir la langue',
       ],
     ];
   }
