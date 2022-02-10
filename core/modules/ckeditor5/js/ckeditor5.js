@@ -161,21 +161,24 @@
       const {
         toolbar,
         plugins,
-        config: pluginConfig,
+        config,
         language
       } = format.editorSettings;
       const extraPlugins = selectPlugins(plugins);
-      const config = {
+      const pluginConfig = processConfig(config);
+      const editorConfig = {
         extraPlugins,
         toolbar,
-        language,
-        ...processConfig(pluginConfig)
+        ...pluginConfig,
+        language: { ...pluginConfig.language,
+          ...language
+        }
       };
       const id = setElementId(element);
       const {
         ClassicEditor
       } = editorClassic;
-      ClassicEditor.create(element, config).then(editor => {
+      ClassicEditor.create(element, editorConfig).then(editor => {
         Drupal.CKEditor5Instances.set(id, editor);
 
         if (element.hasAttribute('required')) {
