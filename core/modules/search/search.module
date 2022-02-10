@@ -13,47 +13,6 @@ use Drupal\Core\Url;
 use Drupal\search\SearchTextProcessorInterface;
 
 /**
- * Matches all 'N' Unicode character classes (numbers)
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\search\SearchTextProcessorInterface::PREG_CLASS_NUMBERS instead.
- *
- * @see https://www.drupal.org/node/3078162
- */
-define('PREG_CLASS_NUMBERS', SearchTextProcessorInterface::PREG_CLASS_NUMBERS);
-
-/**
- * Matches all 'P' Unicode character classes (punctuation)
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\search\SearchTextProcessorInterface::PREG_CLASS_PUNCTUATION
- *   instead.
- *
- * @see https://www.drupal.org/node/3078162
- */
-define('PREG_CLASS_PUNCTUATION', SearchTextProcessorInterface::PREG_CLASS_PUNCTUATION);
-
-/**
- * Matches CJK (Chinese, Japanese, Korean) letter-like characters.
- *
- * This list is derived from the "East Asian Scripts" section of
- * http://www.unicode.org/charts/index.html, as well as a comment on
- * http://unicode.org/reports/tr11/tr11-11.html listing some character
- * ranges that are reserved for additional CJK ideographs.
- *
- * The character ranges do not include numbers, punctuation, or symbols, since
- * these are handled separately in search. Note that radicals and strokes are
- * considered symbols. (See
- * http://www.unicode.org/Public/UNIDATA/extracted/DerivedGeneralCategory.txt)
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\search\SearchTextProcessorInterface::PREG_CLASS_CJK instead.
- *
- * @see https://www.drupal.org/node/3078162
- */
-define('PREG_CLASS_CJK', SearchTextProcessorInterface::PREG_CLASS_CJK);
-
-/**
  * Implements hook_help().
  */
 function search_help($route_name, RouteMatchInterface $route_match) {
@@ -123,132 +82,6 @@ function search_cron() {
 }
 
 /**
- * Simplifies and preprocesses text for searching.
- *
- * Processing steps:
- * - Entities are decoded.
- * - Text is lower-cased and diacritics (accents) are removed.
- * - hook_search_preprocess() is invoked.
- * - CJK (Chinese, Japanese, Korean) characters are processed, depending on
- *   the search settings.
- * - Punctuation is processed (removed or replaced with spaces, depending on
- *   where it is; see code for details).
- * - Words are truncated to 50 characters maximum.
- *
- * @param string $text
- *   Text to simplify.
- * @param string|null $langcode
- *   Language code for the language of $text, if known.
- *
- * @return string
- *   Simplified and processed text.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\search\SearchTextProcessorInterface::analyze() instead.
- *
- * @see https://www.drupal.org/node/3078162
- * @see hook_search_preprocess()
- */
-function search_simplify($text, $langcode = NULL) {
-  @trigger_error('search_simplify() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\search\SearchTextProcessorInterface::analyze() instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
-  return \Drupal::service('search.text_processor')->analyze($text, $langcode);
-}
-
-/**
- * Splits CJK (Chinese, Japanese, Korean) text into tokens.
- *
- * The Search module matches exact words, where a word is defined to be a
- * sequence of characters delimited by spaces or punctuation. CJK languages are
- * written in long strings of characters, though, not split up into words. So
- * in order to allow search matching, we split up CJK text into tokens
- * consisting of consecutive, overlapping sequences of characters whose length
- * is equal to the 'minimum_word_size' variable. This tokenizing is only done
- * if the 'overlap_cjk' variable is TRUE.
- *
- * @param array $matches
- *   This function is a callback for preg_replace_callback(), which is called
- *   from search_simplify(). So, $matches is an array of regular expression
- *   matches, which means that $matches[0] contains the matched text -- a
- *   string of CJK characters to tokenize.
- *
- * @return string
- *   Tokenized text, starting and ending with a space character.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a
- *   custom implementation of SearchTextProcessorInterface instead.
- *
- * @see https://www.drupal.org/node/3078162
- */
-function search_expand_cjk($matches) {
-  @trigger_error('search_expand_cjk() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a custom implementation of SearchTextProcessorInterface instead. instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
-  $min = \Drupal::config('search.settings')->get('index.minimum_word_size');
-  $str = $matches[0];
-  $length = mb_strlen($str);
-  // If the text is shorter than the minimum word size, don't tokenize it.
-  if ($length <= $min) {
-    return ' ' . $str . ' ';
-  }
-  $tokens = ' ';
-  // Build a FIFO queue of characters.
-  $chars = [];
-  for ($i = 0; $i < $length; $i++) {
-    // Add the next character off the beginning of the string to the queue.
-    $current = mb_substr($str, 0, 1);
-    $str = substr($str, strlen($current));
-    $chars[] = $current;
-    if ($i >= $min - 1) {
-      // Make a token of $min characters, and add it to the token string.
-      $tokens .= implode('', $chars) . ' ';
-      // Shift out the first character in the queue.
-      array_shift($chars);
-    }
-  }
-  return $tokens;
-}
-
-/**
- * Simplifies and splits a string into words for indexing.
- *
- * @param string $text
- *   Text to process.
- * @param string|null $langcode
- *   Language code for the language of $text, if known.
- *
- * @return array
- *   Array of words in the simplified, preprocessed text.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a
- *   \Drupal\search\SearchTextProcessorInterface::process() instead.
- *
- * @see https://www.drupal.org/node/3078162
- * @see search_simplify()
- */
-function search_index_split($text, $langcode = NULL) {
-  @trigger_error('search_index_split() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\search\SearchTextProcessorInterface::process() instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
-  return \Drupal::service('search.text_processor')->process($text, $langcode);
-}
-
-/**
- * Invokes hook_search_preprocess() to simplify text.
- *
- * @param string $text
- *   Text to preprocess, passed by reference and altered in place.
- * @param string|null $langcode
- *   Language code for the language of $text, if known.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a
- *   custom implementation of SearchTextProcessor instead.
- *
- * @see https://www.drupal.org/node/3078162
- */
-function search_invoke_preprocess(&$text, $langcode = NULL) {
-  @trigger_error('search_invoke_preprocess() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a custom implementation of SearchTextProcessorInterface instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
-  foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
-    $text = \Drupal::moduleHandler()->invoke($module, 'search_preprocess', [$text, $langcode]);
-  }
-}
-
-/**
  * @defgroup search Search interface
  * @{
  * The Drupal search interface manages a global search mechanism.
@@ -300,7 +133,7 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  */
 function search_excerpt($keys, $text, $langcode = NULL) {
   // We highlight around non-indexable or CJK characters.
-  $boundary_character = '[' . Unicode::PREG_CLASS_WORD_BOUNDARY . PREG_CLASS_CJK . ']';
+  $boundary_character = '[' . Unicode::PREG_CLASS_WORD_BOUNDARY . SearchTextProcessorInterface::PREG_CLASS_CJK . ']';
   $preceded_by_boundary = '(?<=' . $boundary_character . ')';
   $followed_by_boundary = '(?=' . $boundary_character . ')';
 
