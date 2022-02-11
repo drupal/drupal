@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
@@ -275,7 +276,14 @@ function toolbar_get_rendered_subtrees() {
     ],
     '#cache_properties' => ['#subtrees'],
   ];
-  \Drupal::service('renderer')->renderPlain($data);
+  /** @var \Drupal\Core\Render\Renderer $renderer */
+  $renderer = \Drupal::service('renderer');
+  // The pre_render process populates $data during the render pipeline.
+  // We need to pass by reference so that populated data can be returned and
+  // used to resolve cacheability.
+  $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, &$data) {
+    $renderer->render($data);
+  });
   return [$data['#subtrees'], CacheableMetadata::createFromRenderArray($data)];
 }
 
