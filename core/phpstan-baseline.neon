@@ -846,16 +846,6 @@ parameters:
 			path: rebuild.php
 
 		-
-			message: "#^The \"%%alias_id%%\" alias is deprecated in drupal\\:9\\.0\\.0 and is removed from drupal\\:20\\.0\\.0\\. This is a test\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Core/Container/ServiceDeprecationTest.php
-
-		-
-			message: "#^The \"deprecation_test\\.service\" service is deprecated in drupal\\:9\\.0\\.0 and is removed from drupal\\:20\\.0\\.0\\. This is a test\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Core/Container/ServiceDeprecationTest.php
-
-		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php
@@ -869,11 +859,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 12
 			path: tests/Drupal/KernelTests/Core/Cache/GenericCacheBackendUnitTestBase.php
-
-		-
-			message: "#^The \"%%alias_id%%\" service is deprecated in drupal\\:8\\.0\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use the \"config\\.storage\\.sync\" service instead\\. See https\\://www\\.drupal\\.org/node/2574957$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigStorageStagingTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"

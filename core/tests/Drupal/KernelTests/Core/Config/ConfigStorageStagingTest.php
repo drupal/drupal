@@ -18,6 +18,7 @@ class ConfigStorageStagingTest extends KernelTestBase {
    */
   public function testConfigStorageStagingDeprecation() {
     $this->expectDeprecation('The "config.storage.staging" service is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use the "config.storage.sync" service instead. See https://www.drupal.org/node/2574957');
+    // @phpstan-ignore-next-line
     $storage_staging = \Drupal::service('config.storage.staging');
     // Ensure at least one assertion.
     $this->assertInstanceOf(FileStorage::class, $storage_staging);
