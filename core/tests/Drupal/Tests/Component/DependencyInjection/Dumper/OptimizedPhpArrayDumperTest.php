@@ -152,12 +152,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder->getParameterBag()->willReturn($parameter_bag);
       $this->containerBuilder->isCompiled()->willReturn($is_frozen);
 
-      if (isset($parameters['reference'])) {
-        $definition = new Definition('\stdClass');
-        $definition->setPublic(TRUE);
-        $this->containerBuilder->getDefinition('referenced_service')->willReturn($definition);
-      }
-
       $this->assertEquals($this->containerDefinition, $this->dumper->getArray(), 'Expected definition matches dump.');
     }
 
@@ -192,11 +186,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
           ['foo' => '%llama%', 'llama' => 'yes'],
           ['foo' => '%llama%', 'llama' => 'yes'],
           FALSE,
-        ],
-        [
-          ['reference' => new Reference('referenced_service')],
-          ['reference' => $this->getServiceCall('referenced_service')],
-          TRUE,
         ],
       ];
     }

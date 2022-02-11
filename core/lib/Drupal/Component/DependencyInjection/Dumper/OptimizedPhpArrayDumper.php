@@ -156,9 +156,6 @@ class OptimizedPhpArrayDumper extends Dumper {
       if (is_array($value)) {
         $value = $this->prepareParameters($value, $escape);
       }
-      elseif ($value instanceof Reference) {
-        $value = $this->dumpValue($value);
-      }
 
       $filtered[$key] = $value;
     }
