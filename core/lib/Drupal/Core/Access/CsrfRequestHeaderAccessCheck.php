@@ -57,7 +57,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
       '_access_rest_csrf',
     ];
     if ($route->hasRequirement('_access_rest_csrf')) {
-      @trigger_error('Route requirement _access_rest_csrf is deprecated in drupal:8.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399', E_USER_DEPRECATED);
+      @trigger_error('Route requirement _access_rest_csrf is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399', E_USER_DEPRECATED);
     }
     $requirement_keys = array_keys($requirements);
 
