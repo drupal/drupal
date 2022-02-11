@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\toolbar\Ajax\SetSubtreesCommand;
 
@@ -91,6 +92,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    */
   public static function preRenderGetRenderedSubtrees(array $data) {
     $menu_tree = \Drupal::service('toolbar.menu_tree');
+    $renderer = \Drupal::service('renderer');
     // Load the administration menu. The first level is the "Administration"
     // link. In order to load the children of that link and the subsequent two
     // levels, start at the second level and end at the fourth.
@@ -112,7 +114,9 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
       $link = $element->link;
       if ($element->subtree) {
         $subtree = $menu_tree->build($element->subtree);
-        $output = \Drupal::service('renderer')->renderPlain($subtree);
+        $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, $subtree) {
+          return $renderer->render($subtree);
+        });
         $cacheability = $cacheability->merge(CacheableMetadata::createFromRenderArray($subtree));
       }
       else {

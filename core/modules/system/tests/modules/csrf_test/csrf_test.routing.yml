@@ -25,3 +25,10 @@ csrf_test.deprecated.csrftoken:
     _controller: '\Drupal\csrf_test\Controller\DeprecatedCsrfTokenController::csrfToken'
   requirements:
     _access: 'TRUE'
+csrf_test.route_with_csrf_token:
+  path: csrf/protected/route
+  defaults:
+    _controller: '\Drupal\csrf_test\Controller\TestController::testMethod'
+  requirements:
+    _permission: 'administer site configuration'
+    _csrf_token: 'TRUE'

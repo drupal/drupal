@@ -1,0 +1,13 @@
+csrf_test.help:
+  title: 'Tools'
+  route_name: <front>
+  menu_name: admin
+  parent: system.admin
+  weight: -100
+
+csrf_test.protected:
+  title: 'Route with csrf protection'
+  route_name: csrf_test.route_with_csrf_token
+  menu_name: admin
+  parent: system.admin
+  weight: -100

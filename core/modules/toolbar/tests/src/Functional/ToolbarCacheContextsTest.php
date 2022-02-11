@@ -65,14 +65,19 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
 
   /**
    * Tests toolbar cache integration.
+   *
+   * @group legacy
    */
   public function testCacheIntegration() {
-    $this->installExtraModules(['dynamic_page_cache']);
+    $this->expectDeprecation('Route requirement _access_rest_csrf is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399');
+    $this->installExtraModules(['csrf_test', 'dynamic_page_cache']);
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test-page');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
+    $this->assertCacheContexts(['session', 'user', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT], 'Expected cache contexts found with CSRF token link.');
     $this->drupalGet('test-page');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
+    $this->assertCacheContexts(['session', 'user', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT], 'Expected cache contexts found with CSRF token link.');
   }
 
   /**
