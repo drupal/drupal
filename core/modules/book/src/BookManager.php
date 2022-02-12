@@ -113,40 +113,24 @@ class BookManager implements BookManagerInterface {
    *   The book outline storage.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Language\LanguageManagerInterface|null $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface|null $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $backend_chained_cache
    *   The book chained backend cache service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $memory_cache
    *   The book memory cache service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer, LanguageManagerInterface $language_manager = NULL, EntityRepositoryInterface $entity_repository = NULL, CacheBackendInterface $backend_chained_cache = NULL, CacheBackendInterface $memory_cache = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, BookOutlineStorageInterface $book_outline_storage, RendererInterface $renderer, LanguageManagerInterface $language_manager, EntityRepositoryInterface $entity_repository, CacheBackendInterface $backend_chained_cache, CacheBackendInterface $memory_cache) {
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;
     $this->bookOutlineStorage = $book_outline_storage;
     $this->renderer = $renderer;
-    if (!$language_manager) {
-      @trigger_error('The language_manager service must be passed to ' . __NAMESPACE__ . '\BookManager::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $language_manager = \Drupal::service('language_manager');
-    }
     $this->languageManager = $language_manager;
-    if (!$entity_repository) {
-      @trigger_error('The entity.repository service must be passed to ' . __NAMESPACE__ . '\BookManager::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
-    if (!$backend_chained_cache) {
-      @trigger_error('Calling BookManager::__construct() without the $backend_chained_cache argument is deprecated in drupal:9.3.0 and the $backend_chained_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
-      $backend_chained_cache = \Drupal::service('book.backend_chained_cache');
-    }
     $this->backendChainedCache = $backend_chained_cache;
-    if (!$memory_cache) {
-      @trigger_error('Calling BookManager::__construct() without the $memory_cache argument is deprecated in drupal:9.3.0 and the $memory_cache argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3039439', E_USER_DEPRECATED);
-      $memory_cache = \Drupal::service('book.memory_cache');
-    }
     $this->memoryCache = $memory_cache;
   }
 

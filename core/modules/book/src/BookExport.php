@@ -48,17 +48,13 @@ class BookExport {
    *   The entity type manager.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface|null $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository) {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
     $this->viewBuilder = $entity_type_manager->getViewBuilder('node');
     $this->bookManager = $book_manager;
-    if (!$entity_repository) {
-      @trigger_error('The entity.repository service must be passed to ' . __NAMESPACE__ . '\BookExport::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
   }
 

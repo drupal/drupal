@@ -2,7 +2,6 @@
 
 namespace Drupal\book\Cache;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -25,7 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 class BookNavigationCacheContext implements CacheContextInterface, ContainerAwareInterface {
 
   use ContainerAwareTrait;
-  use DeprecatedServicePropertyTrait;
 
   /**
    * The current route match.
@@ -35,21 +33,12 @@ class BookNavigationCacheContext implements CacheContextInterface, ContainerAwar
   protected $routeMatch;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['request_stack' => 'request_stack'];
-
-  /**
    * Constructs a new BookNavigationCacheContext service.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    */
-  public function __construct($route_match) {
-    if (!$route_match instanceof RouteMatchInterface) {
-      @trigger_error('Passing the request_stack service to ' . __METHOD__ . '() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. The parameter should be an instance of \Drupal\Core\Routing\RouteMatchInterface instead.', E_USER_DEPRECATED);
-      $route_match = \Drupal::routeMatch();
-    }
+  public function __construct(RouteMatchInterface $route_match) {
     $this->routeMatch = $route_match;
   }
 

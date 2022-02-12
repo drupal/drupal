@@ -5,7 +5,6 @@ namespace Drupal\Tests\book\Functional;
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
-use Drupal\book\Cache\BookNavigationCacheContext;
 
 /**
  * Create a book, add pages, and test book interface.
@@ -95,18 +94,6 @@ class BookTest extends BrowserTestBase {
       'administer site configuration',
       'view any unpublished content',
     ]);
-  }
-
-  /**
-   * Test the book navigation cache context argument deprecation.
-   *
-   * @group legacy
-   */
-  public function testBookNavigationCacheContextDeprecatedParameter() {
-    $this->expectDeprecation('Passing the request_stack service to Drupal\book\Cache\BookNavigationCacheContext::__construct() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. The parameter should be an instance of \Drupal\Core\Routing\RouteMatchInterface instead.');
-    $request_stack = $this->container->get('request_stack');
-    $book_navigation_cache_context = new BookNavigationCacheContext($request_stack);
-    $this->assertNotNull($book_navigation_cache_context);
   }
 
   /**
