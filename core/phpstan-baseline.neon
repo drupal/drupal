@@ -281,11 +281,6 @@ parameters:
 			path: modules/ckeditor5/ckeditor5.module
 
 		-
-			message: "#^Call to sprintf contains 1 placeholder, 0 values given\\.$#"
-			count: 1
-			path: modules/ckeditor5/src/Controller/CKEditor5ImageController.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/comment.module
