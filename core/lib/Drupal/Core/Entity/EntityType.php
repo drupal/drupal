@@ -434,14 +434,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function isSubclassOf($class) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use Drupal\Core\Entity\EntityTypeInterface::entityClassImplements() instead. See https://www.drupal.org/node/2842808', E_USER_DEPRECATED);
-    return $this->entityClassImplements($class);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getHandlerClasses() {
     return $this->handlers;
   }

@@ -116,40 +116,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   }
 
   /**
-   * Warns subclasses not to directly access the deprecated entityClass property.
-   *
-   * @param string $name
-   *   The name of the property to get.
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
-   */
-  public function __get($name) {
-    if ($name === 'entityClass') {
-      @trigger_error('Accessing the entityClass property directly is deprecated in drupal:9.3.0. Use ::getEntityClass() instead. See https://www.drupal.org/node/3191609', E_USER_DEPRECATED);
-      return $this->getEntityClass();
-    }
-  }
-
-  /**
-   * Warns subclasses not to directly set the deprecated entityClass property.
-   *
-   * @param string $name
-   *   The name of the property to set.
-   * @param mixed $value
-   *   The value to use.
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
-   */
-  public function __set(string $name, $value): void {
-    if ($name === 'entityClass') {
-      @trigger_error('Setting the entityClass property directly is deprecated in drupal:9.3.0 and has no effect in drupal:10.0.0. See https://www.drupal.org/node/3191609', E_USER_DEPRECATED);
-      $this->baseEntityClass = $value;
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getEntityTypeId() {

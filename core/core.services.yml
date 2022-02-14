@@ -1163,13 +1163,6 @@ services:
     class: Drupal\Core\Entity\EntityAccessCheck
     tags:
       - { name: access_check, applies_to: _entity_access }
-  access_check.entity_bundles:
-    # Deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Specify the
-    # list of bundles in the entity parameter, under "bundle" key as a sequence,
-    # instead. See https://www.drupal.org/node/3155569.
-    class: Drupal\Core\Entity\EntityBundleAccessCheck
-    tags:
-      - { name: access_check, applies_to: _entity_bundles }
   access_check.entity_create:
     class: Drupal\Core\Entity\EntityCreateAccessCheck
     arguments: ['@entity_type.manager']

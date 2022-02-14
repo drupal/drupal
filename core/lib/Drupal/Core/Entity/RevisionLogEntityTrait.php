@@ -124,24 +124,6 @@ trait RevisionLogEntityTrait {
   }
 
   /**
-   * Gets the name of a revision metadata field.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   A content entity type definition.
-   * @param string $key
-   *   The revision metadata key to get, must be one of 'revision_created',
-   *   'revision_user' or 'revision_log_message'.
-   *
-   * @return string
-   *   The name of the field for the specified $key.
-   */
-  protected static function getRevisionMetadataKey(EntityTypeInterface $entity_type, $key) {
-    @trigger_error(static::class . 'getRevisionMetadataKey() is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use $entity_type->getRevisionMetadataKey() instead. See: https://www.drupal.org/node/2831499', E_USER_DEPRECATED);
-    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
-    return $entity_type->getRevisionMetadataKey($key);
-  }
-
-  /**
    * Gets the entity type definition.
    *
    * @return \Drupal\Core\Entity\ContentEntityTypeInterface
