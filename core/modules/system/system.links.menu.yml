@@ -153,3 +153,4 @@ system.status:
   parent: system.admin_reports
   description: 'Get a status report about your site''s operation.'
   route_name: system.status
+  weight: -60
