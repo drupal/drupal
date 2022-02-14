@@ -143,6 +143,16 @@ class StatusTest extends BrowserTestBase {
     $session->pageTextNotContains('Deprecated themes enabled');
     $session->pageTextNotContains('Deprecated themes found: Test deprecated theme.');
     $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
+
+    // Check if pg_trgm extension is enabled on postgres.
+    if ($this->getDatabaseConnection()->databaseType() == 'pgsql') {
+      $this->assertSession()->pageTextContains('PostgreSQL pg_trgm extension');
+      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+        ':text' => 'The pg_trgm PostgreSQL extension is present.',
+      ]);
+      $this->assertCount(1, $elements);
+      $this->assertStringStartsWith('Available', $elements[0]->getParent()->getText());
+    }
   }
 
 }
