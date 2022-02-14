@@ -200,7 +200,7 @@ class TemporaryJsonapiFileFieldUploader {
 
     // Validate the file against field-level validators first while the file is
     // still a temporary file. Validation is split up in 2 steps to be the same
-    // as in _file_save_upload_single().
+    // as in \Drupal\file\Upload\FileUploadHandler::handleFileUpload().
     // For backwards compatibility this part is copied from ::validate() to
     // leave that method behavior unchanged.
     // @todo Improve this with a file uploader service in
