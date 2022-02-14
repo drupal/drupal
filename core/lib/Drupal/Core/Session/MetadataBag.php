@@ -60,12 +60,4 @@ class MetadataBag extends SymfonyMetadataBag {
     $this->setCsrfTokenSeed(Crypt::randomBytesBase64());
   }
 
-  /**
-   * Clear the CSRF token seed.
-   */
-  public function clearCsrfTokenSeed() {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:9.2.0 and will be removed in drupal:10.0.0. Use \Drupal\Core\Session\MetadataBag::stampNew() instead. See https://www.drupal.org/node/3187914', E_USER_DEPRECATED);
-    unset($this->meta[static::CSRF_TOKEN_SEED]);
-  }
-
 }
