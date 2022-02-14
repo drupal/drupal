@@ -88,6 +88,10 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       'label' => Html::escape($entity_3->name->value),
     ];
     $this->assertSame($target, reset($data), 'Autocomplete returns an entity label containing a comma and a slash.');
+
+    $input = '"l!J>&Tw';
+    $data = $this->getAutocompleteResult($input);
+    $this->assertSame([], $data, 'Autocomplete of invalid string returns empty result');
   }
 
   /**
