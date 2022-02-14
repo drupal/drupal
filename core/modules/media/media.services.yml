@@ -2,12 +2,6 @@ services:
   plugin.manager.media.source:
     class: Drupal\media\MediaSourceManager
     parent: default_plugin_manager
-  access_check.media.revision:
-    class: Drupal\media\Access\MediaRevisionAccessCheck
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: access_check, applies_to: _access_media_revision }
-    deprecated: The "%service_id%" service is deprecated. You should use the 'access_check.entity' service instead. See https://www.drupal.org/node/3161210
   media.oembed.url_resolver:
     class: Drupal\media\OEmbed\UrlResolver
     arguments: ['@media.oembed.provider_repository', '@media.oembed.resource_fetcher', '@http_client', '@module_handler', '@cache.default']

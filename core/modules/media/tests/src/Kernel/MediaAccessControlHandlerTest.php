@@ -4,9 +4,7 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\media\Entity\Media;
-use Drupal\media\MediaAccessControlHandler;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
@@ -551,18 +549,6 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
     ];
 
     return $test_data;
-  }
-
-  /**
-   * Tests MediaAccessControlHandler deprecation.
-   *
-   * @group legacy
-   */
-  public function testMediaAccessControlHandlerDeprecation() {
-    $this->expectDeprecation('Calling Drupal\media\MediaAccessControlHandler::__construct() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3214171');
-    $entity_type = $this->prophesize(EntityTypeInterface::class);
-    $entity_type->id()->willReturn('media');
-    new MediaAccessControlHandler($entity_type->reveal());
   }
 
 }

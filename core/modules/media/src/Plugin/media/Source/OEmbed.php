@@ -26,7 +26,6 @@ use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -169,7 +168,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    * @param \Drupal\Core\Utility\Token $token
    *   The token replacement service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
     $this->logger = $logger;
     $this->messenger = $messenger;
@@ -178,10 +177,6 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $this->urlResolver = $url_resolver;
     $this->iFrameUrlHelper = $iframe_url_helper;
     $this->fileSystem = $file_system;
-    if (empty($token)) {
-      @trigger_error('The token service should be passed to ' . __METHOD__ . '() and is required in drupal:10.0.0. See https://www.drupal.org/node/3240036', E_USER_DEPRECATED);
-      $token = \Drupal::token();
-    }
     $this->token = $token;
   }
 
@@ -468,14 +463,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    * @return string|null
    *   The file extension, or NULL if it could not be determined.
    */
-  protected function getThumbnailFileExtensionFromUrl(string $thumbnail_url, ResponseInterface $response = NULL): ?string {
-    if (empty($response)) {
-      @trigger_error('Not passing the $response parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will cause an error in drupal:10.0.0. See https://www.drupal.org/node/3239948', E_USER_DEPRECATED);
-      // Create an empty response with no Content-Type header, which will allow
-      // the rest of this method to run normally and return NULL.
-      $response = new Response();
-    }
-
+  protected function getThumbnailFileExtensionFromUrl(string $thumbnail_url, ResponseInterface $response): ?string {
     // First, try to glean the extension from the URL path.
     $path = parse_url($thumbnail_url, PHP_URL_PATH);
     if ($path) {

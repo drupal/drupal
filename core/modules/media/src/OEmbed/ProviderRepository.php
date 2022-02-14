@@ -5,7 +5,6 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\ClientInterface;
@@ -15,17 +14,6 @@ use GuzzleHttp\Exception\TransferException;
  * Retrieves and caches information about oEmbed providers.
  */
 class ProviderRepository implements ProviderRepositoryInterface {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * The service properties that should raise a deprecation error.
-   *
-   * @var string[]
-   */
-  private $deprecatedProperties = [
-    'cacheBackend' => 'cache.default',
-  ];
 
   /**
    * How long the provider data should be cached, in seconds.
@@ -85,23 +73,10 @@ class ProviderRepository implements ProviderRepositoryInterface {
    * @param int $max_age
    *   (optional) How long the cache data should be kept. Defaults to a week.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, $key_value_factory = NULL, $logger_factory = NULL, int $max_age = 604800) {
+  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, KeyValueFactoryInterface $key_value_factory, LoggerChannelFactoryInterface $logger_factory, int $max_age = 604800) {
     $this->httpClient = $http_client;
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
-    if (!($key_value_factory instanceof KeyValueFactoryInterface)) {
-      @trigger_error('The keyvalue service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
-      $key_value_factory = \Drupal::service('keyvalue');
-    }
-    if (!($logger_factory instanceof LoggerChannelFactoryInterface)) {
-      // If $max_age was passed in $logger_factory's position, ensure that we
-      // use the correct value.
-      if (is_numeric($logger_factory)) {
-        $max_age = $logger_factory;
-      }
-      @trigger_error('The logger.factory service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
-      $logger_factory = \Drupal::service('logger.factory');
-    }
     $this->maxAge = $max_age;
     $this->keyValue = $key_value_factory->get('media');
     $this->logger = $logger_factory->get('media');
