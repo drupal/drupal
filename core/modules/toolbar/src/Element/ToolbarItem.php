@@ -25,7 +25,7 @@ class ToolbarItem extends RenderElement {
       ],
       'tab' => [
         '#type' => 'link',
-        '#title' => NULL,
+        '#title' => '',
         '#url' => Url::fromRoute('<front>'),
       ],
     ];
