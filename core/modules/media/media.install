@@ -75,20 +75,6 @@ function media_requirements($phase) {
         $requirements['media']['severity'] = REQUIREMENT_ERROR;
       }
     }
-
-    // Prevent installation if the 1.x branch of the contrib module is enabled.
-    if (\Drupal::moduleHandler()->moduleExists('media_entity')) {
-      $info = \Drupal::service('extension.list.module')->getExtensionInfo('media_entity');
-      if (version_compare($info['version'], '8.x-2') < 0) {
-        $requirements['media_module_incompatibility'] = [
-          'title' => t('Media'),
-          'description' => t('The Media module is not compatible with contrib <a href=":url">Media Entity</a> 1.x branch. Please check the 2.x branch of that module for an upgrade path.', [
-            ':url' => 'https://drupal.org/project/media_entity',
-          ]),
-          'severity' => REQUIREMENT_ERROR,
-        ];
-      }
-    }
   }
   elseif ($phase === 'runtime') {
     // Check that oEmbed content is served in an iframe on a different domain,
