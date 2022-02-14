@@ -57,15 +57,6 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
    */
   public function createInstance($plugin_id, array $configuration = []) {
     $plugin = $this->getFactory()->createInstance($plugin_id, $configuration);
-
-    // If we receive any context values via config set it into the plugin.
-    if (!empty($configuration['context'])) {
-      @trigger_error('Passing context values to plugins via configuration is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, call ::setContextValue() on the plugin itself. See https://www.drupal.org/node/3120980', E_USER_DEPRECATED);
-      foreach ($configuration['context'] as $name => $context) {
-        $plugin->setContextValue($name, $context);
-      }
-    }
-
     return $plugin->setExecutableManager($this);
   }
 
