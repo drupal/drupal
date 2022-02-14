@@ -10,7 +10,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group jsonapi
  */
-class VocabularyTest extends ResourceTestBase {
+class VocabularyTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

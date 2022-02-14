@@ -14,7 +14,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group jsonapi
  */
-class FieldConfigTest extends ResourceTestBase {
+class FieldConfigTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

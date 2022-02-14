@@ -10,7 +10,7 @@ use Drupal\system\Entity\Menu;
  *
  * @group jsonapi
  */
-class MenuTest extends ResourceTestBase {
+class MenuTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

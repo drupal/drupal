@@ -10,7 +10,7 @@ use Drupal\rest\Entity\RestResourceConfig;
  *
  * @group jsonapi
  */
-class RestResourceConfigTest extends ResourceTestBase {
+class RestResourceConfigTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

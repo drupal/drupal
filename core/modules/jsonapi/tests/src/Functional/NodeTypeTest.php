@@ -10,7 +10,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group jsonapi
  */
-class NodeTypeTest extends ResourceTestBase {
+class NodeTypeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

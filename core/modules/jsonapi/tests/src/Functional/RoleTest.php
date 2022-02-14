@@ -10,8 +10,7 @@ use Drupal\user\Entity\Role;
  *
  * @group jsonapi
  */
-class RoleTest extends ResourceTestBase {
-
+class RoleTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

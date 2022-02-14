@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class EntityViewModeTest extends ResourceTestBase {
+class EntityViewModeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

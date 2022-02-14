@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class BlockContentTypeTest extends ResourceTestBase {
+class BlockContentTypeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

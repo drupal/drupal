@@ -13,7 +13,7 @@ use Drupal\filter\Entity\FilterFormat;
  *
  * @group jsonapi
  */
-class EditorTest extends ResourceTestBase {
+class EditorTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group jsonapi
  */
-class EntityFormDisplayTest extends ResourceTestBase {
+class EntityFormDisplayTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

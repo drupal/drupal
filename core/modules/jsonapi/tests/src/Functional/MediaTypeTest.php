@@ -10,7 +10,7 @@ use Drupal\media\Entity\MediaType;
  *
  * @group jsonapi
  */
-class MediaTypeTest extends ResourceTestBase {
+class MediaTypeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

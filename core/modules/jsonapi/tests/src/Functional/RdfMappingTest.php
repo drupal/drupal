@@ -11,7 +11,7 @@ use Drupal\rdf\Entity\RdfMapping;
  *
  * @group jsonapi
  */
-class RdfMappingTest extends ResourceTestBase {
+class RdfMappingTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

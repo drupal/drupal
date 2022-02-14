@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class DateFormatTest extends ResourceTestBase {
+class DateFormatTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

@@ -1963,8 +1963,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public function testPostIndividual() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'POSTing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('POSTing config entities is not yet supported.');
     }
 
     // Try with all of the following request bodies.
@@ -2179,8 +2178,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public function testPatchIndividual() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'PATCHing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('PATCHing config entities is not yet supported.');
     }
 
     $prior_revision_id = (int) $this->entityLoadUnchanged($this->entity->id())->getRevisionId();
@@ -2497,8 +2495,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public function testDeleteIndividual() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'DELETEing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('DELETEing config entities is not yet supported.');
     }
 
     // The URL and Guzzle request options that will be used in this test. The

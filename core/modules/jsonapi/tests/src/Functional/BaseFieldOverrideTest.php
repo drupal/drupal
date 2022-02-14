@@ -11,7 +11,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group jsonapi
  */
-class BaseFieldOverrideTest extends ResourceTestBase {
+class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
