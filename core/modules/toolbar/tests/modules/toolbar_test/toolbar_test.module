@@ -45,6 +45,9 @@ function toolbar_test_toolbar() {
     ],
     '#weight' => 50,
   ];
+  $items['empty'] = [
+    '#type' => 'toolbar_item',
+  ];
 
   return $items;
 }
