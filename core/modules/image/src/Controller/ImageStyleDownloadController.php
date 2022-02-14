@@ -63,16 +63,11 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The system service.
    */
-  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system = NULL) {
+  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system) {
     parent::__construct($stream_wrapper_manager);
     $this->lock = $lock;
     $this->imageFactory = $image_factory;
     $this->logger = $this->getLogger('image');
-
-    if (!isset($file_system)) {
-      @trigger_error('Not defining the $file_system argument to ' . __METHOD__ . ' is deprecated in drupal:9.1.0 and will throw an error in drupal:10.0.0.', E_USER_DEPRECATED);
-      $file_system = \Drupal::service('file_system');
-    }
     $this->fileSystem = $file_system;
   }
 
