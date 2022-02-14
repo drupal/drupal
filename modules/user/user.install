@@ -935,6 +935,15 @@ function user_update_7019() {
  * Add changed field to users table.
  */
 function user_update_7020() {
+  // The "changed" column was renamed to "access" in system_update_136(), and
+  // the "changed" index on "access" column may persist on old MySQL databases.
+  if (db_index_exists('users', 'changed')) {
+    if (!db_index_exists('users', 'access')) {
+      db_add_index('users', 'access', array('access'));
+    }
+    db_drop_index('users', 'changed');
+  }
+
   $spec = array(
     'type' => 'int',
     'not null' => TRUE,
@@ -946,12 +955,19 @@ function user_update_7020() {
       'changed' => array('changed'),
     ),
   );
-  db_add_field('users', 'changed', $spec, $keys);
+  // In some cases sites have added the changed field themselves e.g. via a
+  // contrib or custom module. Ensure the field uses core's new schema.
+  if (db_field_exists('users', 'changed')) {
+    db_change_field('users', 'changed', 'changed', $spec, $keys);
+  }
+  else {
+    db_add_field('users', 'changed', $spec, $keys);
+    // Set the initial value for existing users.
+    db_update('users')
+      ->expression('changed', 'created')
+      ->execute();
+  }
 
-  // Set the initial value for existing users
-  db_update('users')
-    ->expression('changed', 'created')
-    ->execute();
 }
 /**
  * @} End of "addtogroup updates-7.x-extra".
