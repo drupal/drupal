@@ -4,6 +4,7 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Module\ModuleTestBase;
 
@@ -47,9 +48,13 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Get a list of modules to enable.
     $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
-      // Filter contrib, hidden, already enabled modules and modules in the
-      // Testing package.
-      if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
+      // Filter out contrib, hidden, testing, experimental, and deprecated
+      // modules. We also don't need to enable modules that are already enabled.
+      if ($module->origin !== 'core'
+        || !empty($module->info['hidden'])
+        || $module->status == TRUE
+        || $module->info['package'] == 'Testing'
+        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         return FALSE;
       }
       return TRUE;

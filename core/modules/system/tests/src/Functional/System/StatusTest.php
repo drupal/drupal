@@ -44,6 +44,8 @@ class StatusTest extends BrowserTestBase {
 
   /**
    * Tests that the status page returns.
+   *
+   * @group legacy
    */
   public function testStatusPage() {
     // Verify if the 'Status report' is the first item link.

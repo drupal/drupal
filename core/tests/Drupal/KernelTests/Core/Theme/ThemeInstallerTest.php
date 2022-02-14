@@ -154,6 +154,19 @@ class ThemeInstallerTest extends KernelTestBase {
   }
 
   /**
+   * Tests trying to install a deprecated theme.
+   *
+   * @covers ::install
+   *
+   * @group legacy
+   */
+  public function testInstallDeprecated() {
+    $this->expectDeprecation("The theme 'deprecated_theme_test' is deprecated. See https://example.com/deprecated");
+    $this->themeInstaller()->install(['deprecated_theme_test']);
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('deprecated_theme_test'));
+  }
+
+  /**
    * Data provider for testInstallThemeWithUnmetModuleDependencies().
    */
   public function providerTestInstallThemeWithUnmetModuleDependencies() {

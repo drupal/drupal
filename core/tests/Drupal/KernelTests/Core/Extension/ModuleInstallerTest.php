@@ -146,4 +146,17 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->container->get('module_installer')->install(['system_status_obsolete_test']);
   }
 
+  /**
+   * Tests trying to install a deprecated module.
+   *
+   * @covers ::install
+   *
+   * @group legacy
+   */
+  public function testDeprecatedInstall() {
+    $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
+    \Drupal::service('module_installer')->install(['deprecated_module']);
+    $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));
+  }
+
 }
