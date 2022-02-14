@@ -724,4 +724,16 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     return strtr($hash, array('+' => '_', '/' => '_', '=' => ''));
   }
 
+  /**
+   * Build a condition to match a table name against a standard information_schema.
+   *
+   * In PostgreSQL "unquoted names are always folded to lower case." The pgsql
+   * driver does not quote table names, so they are therefore always lowercase.
+   *
+   * @see https://www.postgresql.org/docs/14/sql-syntax-lexical.html
+   */
+  protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
+    return parent::buildTableNameCondition(strtolower($table_name), $operator, $add_prefix);
+  }
+
 }
