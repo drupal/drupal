@@ -4,7 +4,6 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Tests\Listeners\SimpletestUiPrinter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -145,8 +144,6 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $phpunit_bin,
       '--log-junit',
       escapeshellarg($phpunit_file),
-      '--printer',
-      escapeshellarg(SimpletestUiPrinter::class),
     ];
 
     // Optimized for running a single test.

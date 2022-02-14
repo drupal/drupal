@@ -32,4 +32,25 @@ class PhpUnitCliTest extends UnitTestCase {
     );
   }
 
+  /**
+   * Ensures that functional tests produce debug HTML output when required.
+   */
+  public function testFunctionalTestDebugHtmlOutput() {
+    if (getenv('BROWSERTEST_OUTPUT_DIRECTORY') === FALSE) {
+      $this->markTestSkipped('This test requires the environment variable BROWSERTEST_OUTPUT_DIRECTORY to be set.');
+    }
+    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/modules/image/tests/src/Functional/ImageDimensionsTest.php');
+    $process->setWorkingDirectory($this->root)
+      ->setTimeout(300)
+      ->setIdleTimeout(300);
+    $process->run();
+
+    $this->assertEquals(0, $process->getExitCode(),
+      'COMMAND: ' . $process->getCommandLine() . "\n" .
+      'OUTPUT: ' . $process->getOutput() . "\n" .
+      'ERROR: ' . $process->getErrorOutput() . "\n");
+    $this->assertStringContainsString('HTML output was generated', $process->getOutput());
+    $this->assertStringContainsString('Drupal_Tests_image_Functional_ImageDimensionsTest-1', $process->getOutput());
+  }
+
 }
