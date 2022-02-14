@@ -156,6 +156,10 @@ class ThemeInstaller implements ThemeInstallerInterface {
         // machine names keys that are not in $installed_modules keys.
         $unmet_module_dependencies = array_diff_key($module_dependencies, $installed_modules);
 
+        if ($theme_data[$theme]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+          @trigger_error("The theme '$theme' is deprecated. See " . $theme_data[$theme]->info['lifecycle_link'], E_USER_DEPRECATED);
+        }
+
         // Prevent themes with unmet module dependencies from being installed.
         if (!empty($unmet_module_dependencies)) {
           $unmet_module_dependencies_list = implode(', ', array_keys($unmet_module_dependencies));

@@ -60,9 +60,14 @@ class InstallUninstallTest extends ModuleTestBase {
 
     $required_modules['help'] = $all_modules['help'];
 
-    // Test uninstalling without hidden, required, and already enabled modules.
+    // Filter out contrib, hidden, testing, experimental, and deprecated
+    // modules. We also don't need to enable modules that are already enabled.
     $all_modules = array_filter($all_modules, function ($module) {
-      if (!empty($module->info['hidden']) || !empty($module->info['required']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
+      if (!empty($module->info['hidden'])
+        || !empty($module->info['required'])
+        || $module->status == TRUE
+        || $module->info['package'] === 'Testing'
+        || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         return FALSE;
       }
       return TRUE;

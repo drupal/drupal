@@ -1,0 +1,7 @@
+name: 'Deprecated theme test'
+type: theme
+description: 'Deprecated test theme.'
+version: VERSION
+lifecycle: deprecated
+lifecycle_link: 'https://example.com/deprecated'
+base theme: false

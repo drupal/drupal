@@ -22,13 +22,6 @@ class NonStableModulesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'deprecated_module_test',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected $defaultTheme = 'stark';
 
   /**
@@ -177,6 +170,8 @@ class NonStableModulesTest extends BrowserTestBase {
 
   /**
    * Tests installing deprecated modules and dependencies in the UI.
+   *
+   * @group legacy
    */
   public function testDeprecatedConfirmForm(): void {
     // Test installing a deprecated module with no dependencies. There should be
@@ -289,9 +284,9 @@ class NonStableModulesTest extends BrowserTestBase {
       'drupal_system_listing_compatible_test',
     ]);
 
-    // Finally, check both the module and its deprecated dependency. There is
-    // still a warning about deprecated modules, but no message about
-    // dependencies, since the user specifically enabled the dependency.
+    // Check both the module and its deprecated dependency. There is still a
+    // warning about deprecated modules, but no message about dependencies,
+    // since the user specifically enabled the dependency.
     $edit = [];
     $edit["modules[deprecated_module_dependency][enable]"] = TRUE;
     $edit["modules[deprecated_module][enable]"] = TRUE;
@@ -316,18 +311,33 @@ class NonStableModulesTest extends BrowserTestBase {
     // There should be no message about enabling dependencies.
     $assert->pageTextNotContains('You must enable');
 
-    // Enable the module and confirm that it worked.
+    // Enable the modules and confirm that it worked.
     $this->submitForm([], 'Continue');
     $assert->pageTextContains('2 modules have been enabled: Deprecated module, Deprecated module dependency');
-
-    $this->drupalGet('admin/modules');
-    $this->submitForm(["modules[deprecated_module_contrib][enable]" => TRUE], 'Install');
-    $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of this project. Use at your own risk.');
 
     \Drupal::service('module_installer')->uninstall([
       'deprecated_module',
       'deprecated_module_dependency',
     ]);
+
+    // Now, test when installing a non-core deprecated module alone and then
+    // with a core deprecated module. First, install 'deprecated_module_test'
+    // because it uses hook_system_info_alter() to set the origin of
+    // 'deprecated_module_contrib' to something other than 'core'.
+    $this->drupalGet('admin/modules');
+    $this->submitForm(["modules[deprecated_module_test][enable]" => TRUE], 'Install');
+    $assert->pageTextContains('Module Deprecated module test has been enabled.');
+
+    // Test installing a non-core deprecated module. There should be a
+    // confirmation form with a deprecated warning for a 'project' and not for
+    // Drupal core.
+    $this->drupalGet('admin/modules');
+    $this->submitForm(["modules[deprecated_module_contrib][enable]" => TRUE], 'Install');
+    $assert->pageTextContains('Deprecated modules are modules that may be removed from the next major release of this project. Use at your own risk.');
+
+    // Test installing a non-core deprecated module and a core deprecated
+    // module. There should be a confirmation form with a deprecated warning for
+    // both a 'project' and Drupal core.
     $this->drupalGet('admin/modules');
     $this->submitForm([
       "modules[deprecated_module_contrib][enable]" => TRUE,
@@ -338,6 +348,8 @@ class NonStableModulesTest extends BrowserTestBase {
 
   /**
    * Tests installing deprecated and experimental modules at the same time.
+   *
+   * @group legacy
    */
   public function testDeprecatedAndExperimentalConfirmForm(): void {
     $edit = [];
