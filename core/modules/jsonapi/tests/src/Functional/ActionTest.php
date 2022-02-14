@@ -11,7 +11,7 @@ use Drupal\user\RoleInterface;
  *
  * @group jsonapi
  */
-class ActionTest extends ResourceTestBase {
+class ActionTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

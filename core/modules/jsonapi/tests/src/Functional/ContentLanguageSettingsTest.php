@@ -13,7 +13,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @group jsonapi
  */
-class ContentLanguageSettingsTest extends ResourceTestBase {
+class ContentLanguageSettingsTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

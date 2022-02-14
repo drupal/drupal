@@ -11,7 +11,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class BlockTest extends ResourceTestBase {
+class BlockTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

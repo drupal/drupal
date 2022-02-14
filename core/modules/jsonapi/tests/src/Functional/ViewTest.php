@@ -10,7 +10,7 @@ use Drupal\views\Entity\View;
  *
  * @group jsonapi
  */
-class ViewTest extends ResourceTestBase {
+class ViewTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,7 @@ use Drupal\responsive_image\Entity\ResponsiveImageStyle;
  *
  * @group jsonapi
  */
-class ResponsiveImageStyleTest extends ResourceTestBase {
+class ResponsiveImageStyleTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

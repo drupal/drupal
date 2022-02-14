@@ -10,7 +10,7 @@ use Drupal\tour\Entity\Tour;
  *
  * @group jsonapi
  */
-class TourTest extends ResourceTestBase {
+class TourTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

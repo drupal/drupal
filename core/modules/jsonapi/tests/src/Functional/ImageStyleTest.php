@@ -10,7 +10,7 @@ use Drupal\image\Entity\ImageStyle;
  *
  * @group jsonapi
  */
-class ImageStyleTest extends ResourceTestBase {
+class ImageStyleTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

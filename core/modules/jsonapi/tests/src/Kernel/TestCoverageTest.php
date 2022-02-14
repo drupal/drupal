@@ -1,17 +1,19 @@
 <?php
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\jsonapi\Kernel;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ExtensionLifecycle;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 
 /**
  * Checks that all core content/config entity types have JSON:API test coverage.
  *
  * @group jsonapi
  */
-class TestCoverageTest extends BrowserTestBase {
+class TestCoverageTest extends KernelTestBase {
 
   /**
    * Entity definitions array.
@@ -23,7 +25,7 @@ class TestCoverageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['system', 'user'];
 
   /**
    * {@inheritdoc}
@@ -43,7 +45,6 @@ class TestCoverageTest extends BrowserTestBase {
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));
-    $this->rebuildContainer();
 
     $this->definitions = $this->container->get('entity_type.manager')->getDefinitions();
 
@@ -73,7 +74,7 @@ class TestCoverageTest extends BrowserTestBase {
         $missing_tests = [];
         $class = str_replace('CLASS', $class_name, $path);
         if (class_exists($class)) {
-          continue 2;
+          break;
         }
         $missing_tests[] = $class;
       }
@@ -81,42 +82,19 @@ class TestCoverageTest extends BrowserTestBase {
         $missing_tests_list = implode(', ', $missing_tests);
         $problems[] = "$entity_type_id: $class_name ($class_name_full) (expected tests: $missing_tests_list)";
       }
+      else {
+        $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
+        $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class);
+        if ($config_entity && !$config_test) {
+          $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
+        }
+        elseif (!$config_entity && $config_test) {
+          $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
+        }
+      }
     }
 
-    $all = count($this->definitions);
-    $good = $all - count($problems);
-    $this->assertSame([], $problems, $this->getLlamaMessage($good, $all));
-  }
-
-  /**
-   * Message from Llama.
-   *
-   * @param int $g
-   *   A count of entities with test coverage.
-   * @param int $a
-   *   A count of all entities.
-   *
-   * @return string
-   *   An information about progress of REST test coverage.
-   */
-  protected function getLlamaMessage($g, $a) {
-    return "
-☼
-      _________________________
-     /           Hi!           \\
-    |  It's llame to not have   |
-    |  complete JSON:API tests! |
-    |                           |
-    |     Progress: $g/$a.      |
-    | _________________________/
-    |/
-//  o
-l'>
-ll
-llama
-|| ||
-'' ''
-";
+    $this->assertSame([], $problems);
   }
 
 }

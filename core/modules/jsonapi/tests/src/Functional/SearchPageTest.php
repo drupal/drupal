@@ -10,7 +10,7 @@ use Drupal\search\Entity\SearchPage;
  *
  * @group jsonapi
  */
-class SearchPageTest extends ResourceTestBase {
+class SearchPageTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

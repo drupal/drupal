@@ -14,7 +14,7 @@ use GuzzleHttp\RequestOptions;
  *
  * @group jsonapi
  */
-class ConfigurableLanguageTest extends ResourceTestBase {
+class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group jsonapi
  */
-class FieldStorageConfigTest extends ResourceTestBase {
+class FieldStorageConfigTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
