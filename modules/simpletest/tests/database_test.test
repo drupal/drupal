@@ -4341,6 +4341,13 @@ class DatabaseReservedKeywordTestCase extends DatabaseTestCase {
     }
     else {
       $database = $connection['database'];
+
+      if ($connection['driver'] === 'pgsql') {
+        // database.scheme.table for PostgreSQL
+        // @see https://www.postgresql.org/docs/14/ddl-schemas.html
+        $database .= '.public';
+      }
+
       // Test db_query with schema.{table} pattern
       db_query('SELECT * FROM ' . $database . '.{system} LIMIT 1')->fetchObject();
       $this->assertTrue(isset($record->filename), 'Successfully queried the schema.{system} table.');
@@ -4464,6 +4471,13 @@ class DatabaseTablePrefixTestCase extends DatabaseTestCase {
     }
 
     $db_name = $connection_options['database'];
+
+    if ($connection_options['driver'] === 'pgsql') {
+      // database.scheme.table for PostgreSQL
+      // @see https://www.postgresql.org/docs/14/ddl-schemas.html
+      $db_name .= '.public';
+    }
+
     // This prefix is usually something like simpletest12345
     $test_prefix = $connection_options['prefix']['default'];
 
