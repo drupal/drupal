@@ -216,7 +216,7 @@ class PollCreateTestCase extends PollTestCase {
 
     $vote_count = '2000';
     $node->choice[] = array(
-      'chid' => '',
+      'chid' => NULL,
       'chtext' => $new_option,
       'chvotes' => (int) $vote_count,
       'weight' => 1000,
