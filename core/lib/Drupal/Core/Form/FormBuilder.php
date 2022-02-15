@@ -1217,7 +1217,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // #access=FALSE on an element usually allow access for some users, so forms
     // submitted with self::submitForm() may bypass access restriction and be
     // treated as high-privilege users instead.
-    $process_input = empty($element['#disabled']) && (($form_state->isProgrammed() && $form_state->isBypassingProgrammedAccessChecks()) || ($form_state->isProcessingInput() && (!isset($element['#access']) || $element['#access'])));
+    $process_input = empty($element['#disabled']) && ($element['#type'] !== 'value') && (($form_state->isProgrammed() && $form_state->isBypassingProgrammedAccessChecks()) || ($form_state->isProcessingInput() && (!isset($element['#access']) || $element['#access'])));
 
     // Set the element's #value property.
     if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
