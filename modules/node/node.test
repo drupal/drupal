@@ -666,8 +666,17 @@ class NodeCreationTestCase extends DrupalWebTestCase {
     }
 
     // Check that the rollback error was logged.
-    $records = db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
-    $this->assertTrue(count($records) > 0, 'Rollback explanatory error logged to watchdog.');
+    // PostgreSQL doesn't support bytea LIKE queries, so we need to unserialize
+    // first to check for the rollback exception message.
+    $matches = array();
+    $records = db_query("SELECT wid, variables FROM {watchdog}")->fetchAll();
+    foreach ($records as $record) {
+      $variables = (array) unserialize($record->variables);
+      if (isset($variables['!message']) && $variables['!message'] === 'Test exception for rollback.') {
+        $matches[] = $record->wid;
+      }
+    }
+    $this->assertTrue(count($matches) > 0, 'Rollback explanatory error logged to watchdog.');
   }
 
   /**
