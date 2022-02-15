@@ -125,7 +125,6 @@
         "drupal/menu_ui": "self.version",
         "drupal/migrate": "self.version",
         "drupal/migrate_drupal": "self.version",
-        "drupal/migrate_drupal_multilingual": "self.version",
         "drupal/migrate_drupal_ui": "self.version",
         "drupal/mysql": "self.version",
         "drupal/node": "self.version",

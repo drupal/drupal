@@ -448,7 +448,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "ad7cf5d58aebd90607acf1dcce5873b072d5676b"
+                "reference": "350f2472b9ca31ba8c124c757bc4cfd7f8bebcd2"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -571,7 +571,6 @@
                 "drupal/menu_ui": "self.version",
                 "drupal/migrate": "self.version",
                 "drupal/migrate_drupal": "self.version",
-                "drupal/migrate_drupal_multilingual": "self.version",
                 "drupal/migrate_drupal_ui": "self.version",
                 "drupal/minimal": "self.version",
                 "drupal/mysql": "self.version",
