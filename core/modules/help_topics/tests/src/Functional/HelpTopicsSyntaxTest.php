@@ -281,8 +281,8 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // excluding test ones.
     $lister = \Drupal::service('extension.list.' . $type);
     foreach ($lister->getAllAvailableInfo() as $name => $info) {
-      // Skip obsolete modules.
-      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) && $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
+      // Skip obsolete and deprecated modules.
+      if ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         continue;
       }
       $path = $lister->getPath($name);
