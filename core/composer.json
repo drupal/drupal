@@ -100,7 +100,6 @@
         "drupal/dblog": "self.version",
         "drupal/dynamic_page_cache": "self.version",
         "drupal/editor": "self.version",
-        "drupal/entity_reference": "self.version",
         "drupal/field": "self.version",
         "drupal/field_layout": "self.version",
         "drupal/field_ui": "self.version",

@@ -29,7 +29,6 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     'field',
     'user',
     'text',
-    'entity_reference',
     'entity_test',
     'system',
   ];

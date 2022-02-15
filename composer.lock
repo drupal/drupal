@@ -448,7 +448,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "231d26e39bada8a65354596fd06da9d68e402440"
+                "reference": "ad7cf5d58aebd90607acf1dcce5873b072d5676b"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -547,7 +547,6 @@
                 "drupal/dblog": "self.version",
                 "drupal/dynamic_page_cache": "self.version",
                 "drupal/editor": "self.version",
-                "drupal/entity_reference": "self.version",
                 "drupal/field": "self.version",
                 "drupal/field_layout": "self.version",
                 "drupal/field_ui": "self.version",

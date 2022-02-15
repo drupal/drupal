@@ -42,7 +42,6 @@ class TwigWhiteListTest extends KernelTestBase {
     'system',
     'text',
     'field',
-    'entity_reference',
   ];
 
   /**
