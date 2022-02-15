@@ -1,3 +1,8 @@
+Drupal 7.88, 2022-02-15
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2022-003
+
 Drupal 7.87, 2022-01-19
 -----------------------
 - Fix regression caused by jQuery UI position() backport
