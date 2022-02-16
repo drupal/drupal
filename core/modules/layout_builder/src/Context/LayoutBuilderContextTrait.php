@@ -31,26 +31,6 @@ trait LayoutBuilderContextTrait {
   }
 
   /**
-   * Provides all available contexts, both global and section_storage-specific.
-   *
-   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
-   *   The section storage.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
-   *   The array of context objects.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\layout_builder\Context\LayoutBuilderContextTrait::getPopulatedContexts()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3195121
-   */
-  protected function getAvailableContexts(SectionStorageInterface $section_storage) {
-    @trigger_error('\Drupal\layout_builder\Context\LayoutBuilderContextTrait::getAvailableContexts() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\layout_builder\Context\LayoutBuilderContextTrait::getPopulatedContexts() instead. See https://www.drupal.org/node/3195121', E_USER_DEPRECATED);
-    return self::getPopulatedContexts($section_storage);
-  }
-
-  /**
    * Returns all populated contexts, both global and section-storage-specific.
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
