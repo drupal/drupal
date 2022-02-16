@@ -58,8 +58,8 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     return [
       'label' => $entity->access('view label') ? $entity->label() : new TranslatableMarkup('@label @id', [
         '@label' => $entity->getEntityType()->getSingularLabel(),
-        '@id' => $entity->id()
-      ])
+        '@id' => $entity->id(),
+      ]),
     ];
   }
 
