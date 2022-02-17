@@ -5,6 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
+import { getPreviewContainer } from './utils';
 
 /**
  * @module drupalMedia/drupalmediaediting
@@ -31,7 +32,7 @@ export default class DrupalMediaEditing extends Plugin {
       return;
     }
     const { previewURL, themeError } = options;
-    this.previewURL = previewURL;
+    this.previewUrl = previewURL;
     this.labelError = Drupal.t('Preview failed');
     this.themeError =
       themeError ||
@@ -50,13 +51,31 @@ export default class DrupalMediaEditing extends Plugin {
     );
   }
 
-  async _fetchPreview(url, query) {
-    const response = await fetch(`${url}?${new URLSearchParams(query)}`, {
-      headers: {
-        'X-Drupal-MediaPreview-CSRF-Token':
-          this.editor.config.get('drupalMedia').previewCsrfToken,
+  /**
+   * Fetches preview from the server.
+   *
+   * @param {module:engine/model/element~Element} modelElement
+   *   The model element which preview should be loaded.
+   * @return {Promise<{preview: string, label: string}>}
+   *   A promise that returns an object.
+   *
+   * @private
+   */
+  async _fetchPreview(modelElement) {
+    const query = {
+      text: this._renderElement(modelElement),
+      uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
+    };
+
+    const response = await fetch(
+      `${this.previewUrl}?${new URLSearchParams(query)}`,
+      {
+        headers: {
+          'X-Drupal-MediaPreview-CSRF-Token':
+            this.editor.config.get('drupalMedia').previewCsrfToken,
+        },
       },
-    });
+    );
     if (response.ok) {
       const label = response.headers.get('drupal-media-label');
       const preview = await response.text();
@@ -78,6 +97,7 @@ export default class DrupalMediaEditing extends Plugin {
 
   _defineConverters() {
     const conversion = this.editor.conversion;
+
     conversion.for('upcast').elementToElement({
       view: {
         name: 'drupal-media',
@@ -91,41 +111,99 @@ export default class DrupalMediaEditing extends Plugin {
         name: 'drupal-media',
       },
     });
+    conversion
+      .for('editingDowncast')
+      .elementToElement({
+        model: 'drupalMedia',
+        view: (modelElement, { writer }) => {
+          const container = writer.createContainerElement('div', {
+            class: 'drupal-media',
+          });
+          if (!this.previewUrl) {
+            // If preview URL isn't available, insert empty preview element
+            // which indicates that preview couldn't be loaded.
+            const mediaPreview = writer.createRawElement('div', {
+              'data-drupal-media-preview': 'unavailable',
+            });
+            writer.insert(writer.createPositionAt(container, 0), mediaPreview);
+          }
+          writer.setCustomProperty('drupalMedia', true, container);
 
-    conversion.for('editingDowncast').elementToElement({
-      model: 'drupalMedia',
-      view: (modelElement, { writer: viewWriter }) => {
-        const container = viewWriter.createContainerElement('div', {
-          class: 'drupal-media',
-        });
-        const media = viewWriter.createRawElement(
-          'div',
-          { 'data-drupal-media-preview': 'loading' },
-          (domElement) => {
-            if (this.previewURL) {
-              this._fetchPreview(this.previewURL, {
-                text: this._renderElement(modelElement),
-                uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
-              }).then(({ label, preview }) => {
-                domElement.innerHTML = preview;
-                domElement.setAttribute('aria-label', label);
-                domElement.setAttribute('data-drupal-media-preview', 'ready');
-              });
-            } else {
-              domElement.innerHTML = this.themeError;
-              domElement.setAttribute('aria-label', 'drupal-media');
-              domElement.setAttribute(
-                'data-drupal-media-preview',
-                'unavailable',
-              );
+          return toWidget(container, writer, {
+            label: Drupal.t('Media widget'),
+          });
+        },
+      })
+      .add((dispatcher) => {
+        const converter = (event, data, conversionApi) => {
+          const viewWriter = conversionApi.writer;
+          const modelElement = data.item;
+          const container = conversionApi.mapper.toViewElement(data.item);
+
+          // Search for preview container recursively from its children because
+          // the preview container could be wrapped with an element such as
+          // `<a>`.
+          let media = getPreviewContainer(container.getChildren());
+
+          // Use pre-existing media preview container if one exists. If the
+          // preview element doesn't exist, create a new element.
+          if (media) {
+            // Stop processing if media preview is unavailable or a preview is
+            // already loading.
+            if (media.getAttribute('data-drupal-media-preview') !== 'ready') {
+              return;
             }
-          },
-        );
-        viewWriter.insert(viewWriter.createPositionAt(container, 0), media);
-        viewWriter.setCustomProperty('drupalMedia', true, container);
-        return toWidget(container, viewWriter, { label: 'media widget' });
-      },
-    });
+
+            // Preview was ready meaning that a new preview can be loaded.
+            // "Change the attribute to loading to prepare for the loading of
+            // the updated preview. Preview is kept intact so that it remains
+            // interactable in the UI until the new preview has been rendered.
+            viewWriter.setAttribute(
+              'data-drupal-media-preview',
+              'loading',
+              media,
+            );
+          } else {
+            media = viewWriter.createRawElement('div', {
+              'data-drupal-media-preview': 'loading',
+            });
+            viewWriter.insert(viewWriter.createPositionAt(container, 0), media);
+          }
+
+          this._fetchPreview(modelElement).then(({ label, preview }) => {
+            if (!media) {
+              // Nothing to do if associated preview wrapped no longer exist.
+              return;
+            }
+            // CKEditor 5 doesn't support async view conversion. Therefore, once
+            // the promise is fulfilled, the editing view needs to be modified
+            // manually.
+            this.editor.editing.view.change((writer) => {
+              const mediaPreview = writer.createRawElement(
+                'div',
+                { 'data-drupal-media-preview': 'ready', 'aria-label': label },
+                (domElement) => {
+                  domElement.innerHTML = preview;
+                },
+              );
+              // Insert the new preview before the previous preview element to
+              // ensure that the location remains same even if it is wrapped
+              // with another element.
+              writer.insert(writer.createPositionBefore(media), mediaPreview);
+              writer.remove(media);
+            });
+          });
+        };
+
+        // List all attributes that should trigger re-rendering of the
+        // preview.
+        dispatcher.on('attribute:drupalMediaEntityUuid:drupalMedia', converter);
+        dispatcher.on('attribute:drupalMediaViewMode:drupalMedia', converter);
+        dispatcher.on('attribute:drupalMediaEntityType:drupalMedia', converter);
+        dispatcher.on('attribute:drupalMediaAlt:drupalMedia', converter);
+
+        return dispatcher;
+      });
 
     conversion.for('editingDowncast').add((dispatcher) => {
       dispatcher.on(
