@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\NestedArray;
@@ -263,13 +263,12 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
   /**
    * {@inheritdoc}
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $retain_wildcard = FALSE): array {
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL): array {
     $plugins = $this->getDefinitions();
     if (!empty($plugin_ids)) {
       $plugins = array_intersect_key($plugins, array_flip($plugin_ids));
     }
-    $elements = [];
-    $processed_elements = [];
+    $elements = HTMLRestrictions::emptySet();
 
     foreach ($plugins as $id => $definition) {
       // Some CKEditor 5 plugins only provide functionality, not additional
@@ -308,35 +307,12 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       }
       assert(Inspector::assertAllStrings($defined_elements));
       foreach ($defined_elements as $element) {
-        if (in_array($element, $processed_elements)) {
-          continue;
-        }
-        $processed_elements[] = $element;
-        $additional_elements = HTMLRestrictionsUtilities::allowedElementsStringToHtmlFilterArray($element);
-        $elements = array_merge_recursive($elements, $additional_elements);
+        $additional_elements = HTMLRestrictions::fromString($element);
+        $elements = $elements->merge($additional_elements);
       }
     }
 
-    foreach ($elements as $tag_name => $tag_config) {
-      if (substr($tag_name, 0, 1) === '$') {
-        $wildcard_tags = HTMLRestrictionsUtilities::getWildcardTags($tag_name);
-        foreach ($wildcard_tags as $wildcard_tag) {
-          if (isset($elements[$wildcard_tag])) {
-            foreach ($tag_config as $attribute_name => $attribute_value) {
-              if (is_array($attribute_value)) {
-                $attribute_value = array_keys($attribute_value);
-              }
-              HTMLRestrictionsUtilities::addAllowedAttributeToElements($elements, $wildcard_tag, $attribute_name, $attribute_value);
-            }
-          }
-        }
-        if (!$retain_wildcard) {
-          unset($elements[$tag_name]);
-        }
-      }
-    }
-
-    return HTMLRestrictionsUtilities::cleanAllowedHtmlArray($elements);
+    return $elements->getAllowedElements();
   }
 
   /**

@@ -104,9 +104,6 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *   An array of plugin IDs.
    * @param \Drupal\editor\EditorInterface $editor
    *   A configured text editor object.
-   * @param bool $retain_wildcard
-   *   If TRUE, the returned array will include config for wildcard elements
-   *   such as `<$block>`.
    *
    * @return array
    *   A nested array with a structure as described in
@@ -117,6 +114,6 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $retain_wildcard = FALSE): array;
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL): array;
 
 }

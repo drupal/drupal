@@ -3,7 +3,7 @@
 namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -1020,7 +1020,6 @@ PHP,
    *   in the filter_html "Allowed tags" field.
    *
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements
-   * @covers \Drupal\ckeditor5\HTMLRestrictionsUtilities::toReadableElements
    * @dataProvider providerTestProvidedElements
    */
   public function testProvidedElements(array $plugins, array $text_editor_settings, array $expected_elements, string $expected_readable_string) {
@@ -1040,8 +1039,7 @@ PHP,
 
     $provided_elements = $this->manager->getProvidedElements($plugins, $text_editor);
     $this->assertSame($expected_elements, $provided_elements);
-    $readable_string = implode(' ', HTMLRestrictionsUtilities::toReadableElements($provided_elements));
-    $this->assertSame($expected_readable_string, $readable_string);
+    $this->assertSame($expected_readable_string, (new HTMLRestrictions($provided_elements))->toFilterHtmlAllowedTagsString());
   }
 
   /**
