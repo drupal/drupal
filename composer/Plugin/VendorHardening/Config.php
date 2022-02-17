@@ -20,7 +20,6 @@ class Config {
    * @var array
    */
   protected static $defaultConfig = [
-    'behat/mink' => ['tests', 'driver-testsuite'],
     'behat/mink-selenium2-driver' => ['tests'],
     'composer/composer' => ['bin'],
     'drupal/coder' => [
@@ -30,6 +29,7 @@ class Config {
     'doctrine/instantiator' => ['tests'],
     'easyrdf/easyrdf' => ['scripts'],
     'egulias/email-validator' => ['documentation', 'tests'],
+    'friends-of-behat/mink' => ['tests'],
     'friends-of-behat/mink-browserkit-driver' => ['tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
