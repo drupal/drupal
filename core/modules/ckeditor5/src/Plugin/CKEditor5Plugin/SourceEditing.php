@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
@@ -43,7 +43,7 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_heading.
     $form_value = $form_state->getValue('allowed_tags');
     if (!is_array($form_value)) {
-      $config_value = HTMLRestrictionsUtilities::allowedElementsStringToPluginElementsArray($form_value);
+      $config_value = HTMLRestrictions::fromString($form_value)->toCKEditor5ElementsArray();
       $form_state->setValue('allowed_tags', $config_value);
     }
   }
@@ -75,11 +75,10 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $allowed = HTMLRestrictionsUtilities::allowedElementsStringToHtmlSupportConfig(implode('', $this->configuration['allowed_tags']));
-
+    $restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
     return [
       'htmlSupport' => [
-        'allow' => $allowed,
+        'allow' => $restrictions->toGeneralHtmlSupportConfig(),
       ],
     ];
   }

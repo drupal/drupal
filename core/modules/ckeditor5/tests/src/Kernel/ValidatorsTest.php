@@ -712,6 +712,8 @@ class ValidatorsTest extends KernelTestBase {
               'roy',
               '<#donk>',
               '<junior>cruft',
+              '',
+              '   ',
             ],
           ],
         ],
@@ -724,6 +726,8 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.2' => 'The following tag is not valid HTML: <em class="placeholder">roy</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.3' => 'The following tag is not valid HTML: <em class="placeholder">&lt;#donk&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.4' => 'The following tag is not valid HTML: <em class="placeholder">&lt;junior&gt;cruft</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following tag is not valid HTML: <em class="placeholder"></em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following tag is not valid HTML: <em class="placeholder">   </em>.',
       ],
     ];
 

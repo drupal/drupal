@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Editor;
 
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
@@ -691,15 +691,14 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     if ($pair->getFilterFormat()->filters('filter_html')->status) {
       // Compute elements provided by the current CKEditor 5 settings.
-      $elements = $this->ckeditor5PluginManager->getProvidedElements(array_keys($enabled_plugins), $pair);
+      $restrictions = new HTMLRestrictions($this->ckeditor5PluginManager->getProvidedElements(array_keys($enabled_plugins), $pair));
 
       // Compute eventual filter_html setting. Eventual as in: this is the list
       // of eventually allowed HTML tags.
       // @see \Drupal\filter\FilterFormatFormBase::submitForm()
       // @see ckeditor5_form_filter_format_form_alter()
-      $allowed_html = implode(' ', HTMLRestrictionsUtilities::toReadableElements($elements));
       $filter_html_config = $pair->getFilterFormat()->filters('filter_html')->getConfiguration();
-      $filter_html_config['settings']['allowed_html'] = $allowed_html;
+      $filter_html_config['settings']['allowed_html'] = $restrictions->toFilterHtmlAllowedTagsString();
       $pair->getFilterFormat()->setFilterConfig('filter_html', $filter_html_config);
     }
 

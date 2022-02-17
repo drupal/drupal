@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -40,24 +40,36 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     unset($enabled_plugins['ckeditor5_sourceEditing']);
 
     // An array of tags enabled by every plugin other than Source Editing.
-    $enabled_plugin_tags = $this->pluginManager->getProvidedElements(array_keys($enabled_plugins));
-    $disabled_plugin_tags = $this->pluginManager->getProvidedElements(array_keys($disabled_plugins));
+    $enabled_plugin_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enabled_plugins)));
+    $disabled_plugin_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($disabled_plugins)));
 
-    // An array of just the tags enabled by Source Editing.
-    $source_enabled_tags = HTMLRestrictionsUtilities::allowedElementsStringToHtmlFilterArray($value);
-    $enabled_plugin_overlap = array_intersect_key($enabled_plugin_tags, $source_enabled_tags);
-    $disabled_plugin_overlap = array_intersect_key($disabled_plugin_tags, $source_enabled_tags);
+    // The single tag for which source editing is enabled, which we are checking
+    // now.
+    $source_enabled_tags = HTMLRestrictions::fromString($value);
+    // @todo Remove this early return in
+    //   https://www.drupal.org/project/drupal/issues/2820364. It is only
+    //   necessary because CKEditor5ElementConstraintValidator does not run
+    //   before this, which means that this validator cannot assume it receives
+    //   valid values.
+    if ($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) > 1) {
+      return;
+    }
+    // This validation constraint currently only validates tags, not attributes;
+    // so if all attributes are allowed (TRUE) or some attributes are allowed
+    // (an array), return early. Only proceed when no attributes are allowed
+    // (FALSE).
+    // @todo Support attributes and attribute values in
+    //   https://www.drupal.org/project/drupal/issues/3260857
+    $tags = array_keys($source_enabled_tags->getAllowedElements());
+    if ($source_enabled_tags->getAllowedElements()[reset($tags)] !== FALSE) {
+      return;
+    }
 
-    foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as &$overlap) {
+    $enabled_plugin_overlap = $enabled_plugin_tags->intersect($source_enabled_tags);
+    $disabled_plugin_overlap = $disabled_plugin_tags->intersect($source_enabled_tags);
+    foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as $overlap) {
       $checking_enabled = $overlap === $enabled_plugin_overlap;
-      if (!empty($overlap)) {
-        foreach ($overlap as $overlapping_tag => $overlapping_config) {
-          if (is_array($source_enabled_tags[$overlapping_tag])) {
-            unset($overlap[$overlapping_tag]);
-          }
-        }
-      }
-      if (!empty($overlap)) {
+      if (!$overlap->isEmpty()) {
         $plugins_to_check_against = $checking_enabled ? $enabled_plugins : $disabled_plugins;
         $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against);
         $message = $checking_enabled ? $constraint->enabledPluginsMessage : $constraint->availablePluginsMessage;
@@ -71,7 +83,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
   /**
    * Creates a message listing plugins and the overlapping tags they provide.
    *
-   * @param array $tags
+   * @param \Drupal\ckeditor5\HTMLRestrictions $overlap
    *   An array of overlapping tags.
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition[] $plugin_definitions
    *   An array of plugin definitions where overlap was found.
@@ -79,16 +91,14 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
    * @return string
    *   A list of plugins that provide the overlapping tags.
    */
-  private function pluginsSupplyingTagsMessage(array $tags, array $plugin_definitions): string {
+  private function pluginsSupplyingTagsMessage(HTMLRestrictions $overlap, array $plugin_definitions): string {
     $message_array = [];
     $message_string = '';
     foreach ($plugin_definitions as $plugin_id => $definition) {
       if ($definition->hasElements()) {
-        $elements_array = HTMLRestrictionsUtilities::allowedElementsStringToHtmlFilterArray(implode('', $definition->getElements()));
-        foreach ($elements_array as $tag_name => $tag_config) {
-          if (isset($tags[$tag_name])) {
-            $message_array[(string) $definition->label()][] = "<$tag_name>";
-          }
+        $plugin_capabilities = HTMLRestrictions::fromString(implode(' ', $definition->getElements()));
+        foreach ($plugin_capabilities->intersect($overlap)->toCKEditor5ElementsArray() as $element) {
+          $message_array[(string) $definition->label()][] = $element;
         }
       }
     }
