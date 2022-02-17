@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin;
 
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
@@ -140,11 +140,11 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
         if ($definition['id'] === 'ckeditor5_sourceEditing') {
           continue;
         }
-        $parsed_elements = HTMLRestrictionsUtilities::allowedElementsStringToPluginElementsArray($element);
-        if (count($parsed_elements) === 0) {
+        $parsed = HTMLRestrictions::fromString($element);
+        if ($parsed->isEmpty()) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a value at "drupal.elements.%d" that is not an HTML tag with optional attributes: "%s". Expected structure: "<tag allowedAttribute="allowedValue1 allowedValue2">".', $id, $index, $element));
         }
-        elseif (count($parsed_elements) > 1) {
+        if (count($parsed->getAllowedElements()) > 1) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a value at "drupal.elements.%d": multiple tags listed, should be one: "%s".', $id, $index, $element));
         }
       }
