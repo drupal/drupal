@@ -48,7 +48,7 @@
     "config": {
         "preferred-install": "dist",
         "platform": {
-            "php": "8.0.2"
+            "php": "8.1.0"
         },
         "allow-plugins": {
             "composer/installers": true,
