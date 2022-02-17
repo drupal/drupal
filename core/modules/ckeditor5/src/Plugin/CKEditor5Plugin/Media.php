@@ -29,8 +29,8 @@ class Media extends CKEditor5PluginDefault {
       ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
-    $dynamic_plugin_config['drupalMedia']['isMediaUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
-      Url::fromRoute('ckeditor5.media_image')
+    $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
+      Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())
     );
     $dynamic_plugin_config['drupalMedia']['previewCsrfToken'] = \Drupal::csrfToken()->get('X-Drupal-MediaPreview-CSRF-Token');

@@ -12,10 +12,10 @@ ckeditor5.upload_image:
       editor:
         type: entity:editor
 
-ckeditor5.media_image:
-  path: '/ckeditor5/{editor}/is-media-image'
+ckeditor5.media_entity_metadata:
+  path: '/ckeditor5/{editor}/media-entity-metadata'
   defaults:
-    _controller: '\Drupal\ckeditor5\Controller\CKEditor5MediaController::isMediaImage'
+    _controller: '\Drupal\ckeditor5\Controller\CKEditor5MediaController::mediaEntityMetadata'
   methods: [GET]
   requirements:
     _entity_access: 'editor.use'
