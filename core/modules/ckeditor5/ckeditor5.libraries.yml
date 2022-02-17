@@ -53,6 +53,9 @@ drupal.ckeditor5.media:
   js:
     js/media_embed_ckeditor5.theme.js: {}
     js/build/drupalMedia.js: { preprocess: false, minified: true }
+  css:
+    theme:
+      css/drupalmedia.css: { }
   dependencies:
     - core/ckeditor5
     - core/drupal

@@ -266,4 +266,40 @@ class MediaLibraryTest extends WebDriverTestBase {
     }
   }
 
+  /**
+   * Ensures that alt text can be changed on Media Library inserted Media.
+   */
+  public function testAlt() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('/node/add/blog');
+    $this->waitForEditor();
+    $this->pressEditorButton('Insert Drupal Media');
+    $this->assertNotEmpty($assert_session->waitForId('drupal-modal'));
+    $assert_session->elementExists('css', '.js-media-library-item')->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+
+    // Test that clicking the media widget triggers a CKEditor balloon panel
+    // with a single button to override the alt text.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Click the "Override media image text alternative" button.
+    $this->getBalloonButton('Override media image text alternative')->click();
+    $this->assertVisibleBalloon('.ck-text-alternative-form');
+    // Assert that the value is currently empty.
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $this->assertSame('', $alt_override_input->getValue());
+
+    $test_alt = 'Alt text override';
+    $alt_override_input->setValue($test_alt);
+    $this->getBalloonButton('Save')->click();
+
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $test_alt . '"]'));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $drupal_media = $xpath->query('//drupal-media')[0];
+    $this->assertEquals($test_alt, $drupal_media->getAttribute('alt'));
+  }
+
 }

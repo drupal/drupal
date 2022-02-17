@@ -1,5 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
+// cSpell:words insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
+
+/**
+ * @module drupalMedia/insertdrupalmediacommand
+ */
 
 function createDrupalMedia(writer, attributes) {
   const drupalMedia = writer.createElement('drupalMedia', attributes);

@@ -1,0 +1,32 @@
+.ck .drupal-media {
+  position: relative;
+}
+.ck .drupal-media__metadata-error {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e29700;
+  border-radius: 50%;
+  background: #fdf8ed;
+}
+.ck .drupal-media__metadata-error-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: url("../../../misc/icons/e29700/warning.svg") no-repeat center 4px;
+  background-size: 18px;
+}
+.ck .drupal-media__metadata-error .ck-tooltip {
+  display: block;
+  overflow: visible;
+}
+.ck .drupal-media__metadata-error:hover .ck-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.ck .drupal-media__metadata-error:hover .ck-tooltip__text {
+  display: block;
+  width: 240px;
+}

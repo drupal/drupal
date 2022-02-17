@@ -15,12 +15,12 @@ use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * Tests that image media types are determined correctly.
+ * Tests the media entity metadata API.
  *
  * @group ckeditor5
  * @internal
  */
-class MediaImageTest extends BrowserTestBase {
+class MediaEntityMetadataApiTest extends BrowserTestBase {
 
   use TestFileCreationTrait;
   use MediaTypeCreationTrait;
@@ -65,10 +65,17 @@ class MediaImageTest extends BrowserTestBase {
   protected $editor;
 
   /**
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->uuidService = $this->container->get('uuid');
 
     $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
@@ -147,10 +154,10 @@ class MediaImageTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that media entity with image field is recognized.
+   * Tests the media entity metadata API.
    */
-  public function testIsMediaImage() {
-    $path = '/ckeditor5/filtered_html/is-media-image';
+  public function testApi() {
+    $path = '/ckeditor5/filtered_html/media-entity-metadata';
     $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
     $uuid = $this->mediaImage->uuid();
 
@@ -159,16 +166,33 @@ class MediaImageTest extends BrowserTestBase {
 
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(TRUE), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
+
+    $this->mediaImage->set('field_media_image', [
+      'target_id' => 1,
+      'alt' => '',
+      'title' => 'default title',
+    ])->save();
+    $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
 
     $this->drupalGet($path, ['query' => ['uuid' => $this->mediaFile->uuid(), 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(FALSE), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode([]), $this->getSession()->getPage()->getContent());
 
     // Ensure that unpublished media returns 403.
     $this->mediaImage->setUnpublished()->save();
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(403);
+
+    // Ensure that valid, but non-existing UUID returns 404.
+    $this->drupalGet($path, ['query' => ['uuid' => $this->uuidService->generate(), 'token' => $token]]);
+    $this->assertSession()->statusCodeEquals(404);
+
+    // Ensure that invalid UUID returns 400.
+    $this->drupalGet($path, ['query' => ['uuid' => '🦙', 'token' => $token]]);
+    $this->assertSession()->statusCodeEquals(400);
 
     // Ensure that users that don't have access to the filter format receive
     // either 404 or 403.

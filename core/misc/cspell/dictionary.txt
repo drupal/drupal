@@ -635,6 +635,7 @@ inspectable
 instaclick
 installable
 instantiator
+interactable
 introspectable
 invalidators
 invalididentifier
