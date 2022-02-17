@@ -380,6 +380,10 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
           }
           break;
 
+        case 'requiresConfiguration':
+          $intersection = array_intersect($plugin->getConfiguration(), $required_value);
+          return $intersection !== $required_value;
+
         case 'plugins':
           // Tricky: this cannot yet be evaluated here. It will evaluated later.
           // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getEnabledDefinitions()

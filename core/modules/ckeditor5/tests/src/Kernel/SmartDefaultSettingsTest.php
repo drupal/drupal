@@ -399,6 +399,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               'heading6',
             ],
           ],
+          'ckeditor5_imageResize' => [
+            'allow_resize' => TRUE,
+          ],
           'ckeditor5_language' => [
             'language_list' => 'un',
           ],
@@ -480,6 +483,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               'heading5',
             ],
           ],
+          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
         ],
       ],
@@ -676,6 +680,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               'heading5',
               'heading6',
             ],
+          ],
+          'ckeditor5_imageResize' => [
+            'allow_resize' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
