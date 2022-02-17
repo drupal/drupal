@@ -5,6 +5,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Ensure that login works as expected.
@@ -120,10 +121,10 @@ class UserLoginTest extends BrowserTestBase {
    * Tests user password is re-hashed upon login after changing $count_log2.
    */
   public function testPasswordRehashOnLogin() {
-    // Determine default log2 for phpass hashing algorithm
+    // Determine default log2 for phpass hashing algorithm.
     $default_count_log2 = 16;
 
-    // Retrieve instance of password hashing algorithm
+    // Retrieve instance of password hashing algorithm.
     $password_hasher = $this->container->get('password');
 
     // Create a new user and authenticate.
@@ -150,6 +151,67 @@ class UserLoginTest extends BrowserTestBase {
     $account = $user_storage->load($account->id());
     $this->assertSame($overridden_count_log2, $password_hasher->getCountLog2($account->getPassword()));
     $this->assertTrue($password_hasher->check($password, $account->getPassword()));
+  }
+
+  /**
+   * Tests log in with a maximum length and a too long password.
+   */
+  public function testPasswordLengthLogin() {
+    // Create a new user and authenticate.
+    $account = $this->drupalCreateUser([]);
+    $current_password = $account->passRaw;
+    $this->drupalLogin($account);
+
+    // Use the length specified in
+    // \Drupal\Core\Render\Element\Password::getInfo().
+    $length = 128;
+
+    $current_password = $this->doPasswordLengthLogin($account, $current_password, $length);
+    $this->assertSession()->pageTextNotContains('Password cannot be longer than');
+    $this->assertSession()->pageTextContains('Member for');
+
+    $this->doPasswordLengthLogin($account, $current_password, $length + 1);
+    $this->assertSession()->pageTextContains('Password cannot be longer than ' . $length . ' characters but is currently ' . ($length + 1) . ' characters long.');
+    $this->assertSession()->pageTextNotContains('Member for');
+  }
+
+  /**
+   * Helper to test log in with a maximum length password.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   An object containing the user account.
+   * @param string $current_password
+   *   The current password associated with the user.
+   * @param int $length
+   *   The length of the password.
+   *
+   * @return string
+   *   The new password associated with the user.
+   */
+  public function doPasswordLengthLogin(UserInterface $account, string $current_password, int $length) {
+    $new_password = \Drupal::service('password_generator')->generate($length);
+    $uid = $account->id();
+    $edit = [
+      'current_pass' => $current_password,
+      'mail' => $account->getEmail(),
+      'pass[pass1]' => $new_password,
+      'pass[pass2]' => $new_password,
+    ];
+
+    // Change the password.
+    $this->drupalGet("user/$uid/edit");
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
+    $this->drupalLogout();
+
+    // Login with new password.
+    $this->drupalGet('user/login');
+    $edit = [
+      'name' => $account->getAccountName(),
+      'pass' => $new_password,
+    ];
+    $this->submitForm($edit, 'Log in');
+    return $new_password;
   }
 
   /**
