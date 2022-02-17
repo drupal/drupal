@@ -755,7 +755,11 @@ class ValidatorsTest extends KernelTestBase {
             'uploadImage',
           ],
         ],
-        'plugins' => [],
+        'plugins' => [
+          'ckeditor5_imageResize' => [
+            'allow_resize' => FALSE,
+          ],
+        ],
       ],
       'image_upload' => [
         'status' => TRUE,

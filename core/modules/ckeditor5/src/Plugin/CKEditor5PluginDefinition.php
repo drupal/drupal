@@ -10,6 +10,7 @@ use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -160,33 +161,14 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
       $default_configuration = (new \ReflectionClass($definition['drupal']['class']))
         ->newInstanceWithoutConstructor()
         ->defaultConfiguration();
-      $typed_config = \Drupal::service('config.typed');
       if (!empty($default_configuration)) {
         $configuration_name = sprintf("ckeditor5.plugin.%s", $definition['id']);
-        if (!$typed_config->hasConfigSchema($configuration_name)) {
+        if (!$this->getTypedConfig()->hasConfigSchema($configuration_name)) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition is configurable, has non-empty default configuration but has no config schema. Config schema is required for validation.', $id));
         }
-        // TRICKY: SchemaCheckTrait::checkConfigSchema() dynamically adds a
-        // 'langcode' key-value pair that is irrelevant here. Also,
-        // ::checkValue() may (counter to its docs) trigger an exception.
-        $this->configName = 'STRIP';
-        $this->schema = $typed_config->createFromNameAndData($configuration_name, $default_configuration);
-        $schema_errors = [];
-        foreach ($default_configuration as $key => $value) {
-          try {
-            $schema_error = $this->checkValue($key, $value);
-          }
-          catch (\InvalidArgumentException $e) {
-            $schema_error = [$key => $e->getMessage()];
-          }
-          $schema_errors = array_merge($schema_errors, $schema_error);
-        }
-        $formatted_schema_errors = [];
-        foreach ($schema_errors as $key => $value) {
-          $formatted_schema_errors[] = sprintf("[%s] %s", str_replace('STRIP:', '', $key), trim($value, '.'));
-        }
-        if (!empty($schema_errors)) {
-          throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition is configurable, but its default configuration does not match its config schema. The following errors were found: %s.', $id, implode(', ', $formatted_schema_errors)));
+        $error_message = $this->validateConfiguration($default_configuration);
+        if ($error_message) {
+          throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition is configurable, but its default configuration does not match its config schema. %s', $id, $error_message));
         }
       }
     }
@@ -204,6 +186,16 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
         'filter' => function ($value): ?string {
           return is_string($value) ? NULL : 'A string corresponding to a filter plugin ID must be specified.';
         },
+        'requiresConfiguration' => function ($required_configuration, array $definition): ?string {
+          if (!is_array($required_configuration)) {
+            return 'An array structure matching the required configuration for this plugin must be specified.';
+          }
+          if (!in_array(CKEditor5PluginConfigurableInterface::class, class_implements($definition['drupal']['class'], TRUE))) {
+            return 'This condition type is only available for CKEditor 5 plugins implementing CKEditor5PluginConfigurableInterface.';
+          }
+          $error_message = $this->validateConfiguration($required_configuration);
+          return is_string($error_message) ? sprintf('The required configuration does not match its config schema. %s', $error_message) : NULL;
+        },
         'plugins' => function ($value): ?string {
           return is_array($value) && Inspector::assertAllStrings($value) ? NULL : 'A list of strings, each corresponding to a CKEditor 5 plugin ID must be specified.';
         },
@@ -213,7 +205,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
         throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a "drupal.conditions" value that contains some unsupported condition types: "%s". Only the following conditions types are supported: "%s".', $id, implode(', ', $unsupported_condition_types), implode('", "', array_keys($supported_condition_types))));
       }
       foreach ($definition['drupal']['conditions'] as $condition_type => $value) {
-        $assessment = $supported_condition_types[$condition_type]($value);
+        $assessment = $supported_condition_types[$condition_type]($value, $definition);
         if (is_string($assessment)) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has an invalid "drupal.conditions" item. "%s" is set to an invalid value. %s', $id, $condition_type, $assessment));
         }
@@ -226,6 +218,56 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
         throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a "drupal.admin_library" key whose asset library "%s" does not exist.', $id, $definition['drupal']['admin_library']));
       }
     }
+  }
+
+  /**
+   * Returns the typed configuration service.
+   *
+   * @return \Drupal\Core\Config\TypedConfigManagerInterface
+   *   The typed configuration service.
+   */
+  private function getTypedConfig(): TypedConfigManagerInterface {
+    return \Drupal::service('config.typed');
+  }
+
+  /**
+   * Validates the given configuration array.
+   *
+   * @param array $configuration
+   *   The configuration to validate.
+   *
+   * @return string|null
+   *   NULL if there are no validation errors, a string containing the schema
+   *   violation error messages otherwise.
+   */
+  private function validateConfiguration(array $configuration): ?string {
+    if (!isset($this->schema)) {
+      $configuration_name = sprintf("ckeditor5.plugin.%s", $this->id);
+      // TRICKY: SchemaCheckTrait::checkConfigSchema() dynamically adds a
+      // 'langcode' key-value pair that is irrelevant here. Also,
+      // ::checkValue() may (counter to its docs) trigger an exception.
+      $this->configName = 'STRIP';
+      $this->schema = $this->getTypedConfig()->createFromNameAndData($configuration_name, $configuration);
+    }
+
+    $schema_errors = [];
+    foreach ($configuration as $key => $value) {
+      try {
+        $schema_error = $this->checkValue($key, $value);
+      }
+      catch (\InvalidArgumentException $e) {
+        $schema_error = [$key => $e->getMessage()];
+      }
+      $schema_errors = array_merge($schema_errors, $schema_error);
+    }
+    $formatted_schema_errors = [];
+    foreach ($schema_errors as $key => $value) {
+      $formatted_schema_errors[] = sprintf("[%s] %s", str_replace('STRIP:', '', $key), trim($value, '.'));
+    }
+    if (!empty($formatted_schema_errors)) {
+      return sprintf('The following errors were found: %s.', implode(', ', $formatted_schema_errors));
+    }
+    return NULL;
   }
 
   /**

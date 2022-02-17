@@ -134,6 +134,8 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *   - 'filter': a filter that must be enabled
  *   - 'imageUploadStatus': TRUE if image upload must be enabled, FALSE if it
  *      must not be enabled
+ *   - 'requiresConfiguration': a subset of the configuration for this plugin
+ *      that must match (exactly)
  *   - 'plugins': a list of CKEditor 5 Drupal plugin IDs that must be enabled
  *
  * All of these can be defined in YAML or annotations. A given plugin should

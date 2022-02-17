@@ -60,6 +60,10 @@
 
     return Object.entries(config).reduce((processed, [key, value]) => {
       if (typeof value === 'object') {
+        if (!value) {
+          return processed;
+        }
+
         if (value.hasOwnProperty('func')) {
           processed[key] = buildFunc(value);
         } else if (value.hasOwnProperty('regexp')) {

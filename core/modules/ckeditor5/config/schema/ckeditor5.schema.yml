@@ -62,6 +62,17 @@ ckeditor5.plugin.ckeditor5_heading:
           Choice:
             callback: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading::validChoices
 
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageResize
+ckeditor5.plugin.ckeditor5_imageResize:
+  type: mapping
+  label: Image Resize
+  mapping:
+    allow_resize:
+      type: boolean
+      label: 'Allow resize'
+      constraints:
+        NotNull: []
+
 ckeditor5.plugin.ckeditor5_sourceEditing:
   type: mapping
   label: Source Editing
