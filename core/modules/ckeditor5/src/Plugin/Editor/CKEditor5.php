@@ -384,12 +384,19 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // due to isEnabled() returning false, that should still have its config
     // form provided:
     // 1 - A conditionally enabled plugin that does not depend on a toolbar item
-    // to be active.
+    // to be active AND the plugins it depends on are enabled.
     // 2 - A conditionally enabled plugin that does depend on a toolbar item,
     // and that toolbar item is active.
     if ($definition->hasConditions()) {
       $conditions = $definition->getConditions();
       if (!array_key_exists('toolbarItem', $conditions)) {
+        // The CKEditor 5 plugins this plugin depends on must be enabled.
+        if (array_key_exists('plugins', $conditions)) {
+          $all_plugins = $this->ckeditor5PluginManager->getDefinitions();
+          $dependencies = array_intersect_key($all_plugins, array_flip($conditions['plugins']));
+          $unmet_dependencies = array_diff_key($dependencies, $enabled_plugins);
+          return empty($unmet_dependencies);
+        }
         return TRUE;
       }
       elseif (in_array($conditions['toolbarItem'], $editor->getSettings()['toolbar']['items'], TRUE)) {
@@ -681,11 +688,19 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $pair = static::createEphemeralPairedEditor($submitted_editor, $submitted_filter_format);
 
     // When CKEditor 5 plugins are disabled in the form-based admin UI, the
-    // associated settings (if any) should be omitted too.
+    // associated settings (if any) should be omitted too, except for plugins
+    // that are enabled using `requiresConfiguration` (because whether they are
+    // enabled or not depends on the associated settings).
     $original_settings = $pair->getSettings();
     $enabled_plugins = $this->ckeditor5PluginManager->getEnabledDefinitions($pair);
+    $config_enabled_plugins = [];
+    foreach ($this->ckeditor5PluginManager->getDefinitions() as $id => $definition) {
+      if ($definition->hasConditions() && isset($definition->getConditions()['requiresConfiguration'])) {
+        $config_enabled_plugins[$id] = TRUE;
+      }
+    }
     $updated_settings = [
-      'plugins' => array_intersect_key($original_settings['plugins'], $enabled_plugins),
+      'plugins' => array_intersect_key($original_settings['plugins'], $enabled_plugins + $config_enabled_plugins),
     ] + $original_settings;
     $pair->setSettings($updated_settings);
 

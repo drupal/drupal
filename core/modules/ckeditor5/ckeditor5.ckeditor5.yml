@@ -430,6 +430,27 @@ ckeditor5_image:
       toolbarItem: uploadImage
       imageUploadStatus: true
 
+ckeditor5_imageResize:
+  ckeditor5:
+    plugins:
+      - image.ImageResize
+    config:
+      image:
+        resizeUnit: '%'
+        resizeOptions:
+          -
+            name: 'resizeImage:original'
+            value: null
+        toolbar: [resizeImage]
+  drupal:
+    label: Image resize
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageResize
+    elements: false
+    conditions:
+      requiresConfiguration:
+        allow_resize: true
+      plugins: [ckeditor5_image]
+
 ckeditor5_imageCaption:
   ckeditor5:
     plugins:

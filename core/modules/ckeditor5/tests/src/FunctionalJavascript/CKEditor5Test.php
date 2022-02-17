@@ -85,7 +85,7 @@ class CKEditor5Test extends CKEditor5TestBase {
         'toolbar' => [
           'items' => ['uploadImage'],
         ],
-        'plugins' => [],
+        'plugins' => ['ckeditor5_imageResize' => ['allow_resize' => FALSE]],
       ],
       'image_upload' => [
         'status' => TRUE,
@@ -109,7 +109,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('css', '.ck-widget.image');
 
     $this->click('.ck-widget.image');
     $balloon_panel = $page->find('css', '.ck-balloon-panel');

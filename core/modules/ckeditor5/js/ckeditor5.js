@@ -88,6 +88,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           value = _ref2[1];
 
       if (_typeof(value) === 'object') {
+        if (!value) {
+          return processed;
+        }
+
         if (value.hasOwnProperty('func')) {
           processed[key] = buildFunc(value);
         } else if (value.hasOwnProperty('regexp')) {
