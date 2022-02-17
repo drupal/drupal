@@ -328,7 +328,7 @@ class ImageTest extends WebDriverTestBase {
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->waitForElementVisible('css', '.figure.image');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'figure.image'));
 
     // Edit the source of the image through the UI.
     $page->pressButton('Source');
