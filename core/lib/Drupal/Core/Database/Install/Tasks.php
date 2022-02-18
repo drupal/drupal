@@ -68,6 +68,10 @@ abstract class Tasks {
         'Failed to <strong>DROP</strong> a test table from your database server. We tried dropping a table with the command %query and the server reported the following error %error.',
       ],
     ],
+    [
+      'function'    => 'checkJsonSupport',
+      'arguments'   => [],
+    ],
   ];
 
   /**
@@ -384,6 +388,18 @@ abstract class Tasks {
    */
   protected function getConnection() {
     return Database::getConnection();
+  }
+
+  /**
+   * Checks the database json support.
+   */
+  protected function checkJsonSupport() {
+    if ($this->getConnection()->hasJson()) {
+      $this->pass(t('Database connection supports the JSON type.'));
+    }
+    else {
+      $this->fail(t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
+    }
   }
 
 }

@@ -566,9 +566,8 @@ function system_requirements($phase) {
     }
   }
 
-  if ($phase == 'runtime') {
-    // Test JSON support. To be required from Drupal 10.0.
-    // @todo remove in https://www.drupal.org/project/drupal/issues/3203193
+  if ($phase === 'runtime' || $phase === 'update') {
+    // Test database JSON support.
     $requirements['database_support_json'] = [
       'title' => t('Database support for JSON'),
       'severity' => REQUIREMENT_OK,
@@ -578,7 +577,7 @@ function system_requirements($phase) {
 
     if (!Database::getConnection()->hasJson()) {
       $requirements['database_support_json']['value'] = t('Not available');
-      $requirements['database_support_json']['severity'] = REQUIREMENT_WARNING;
+      $requirements['database_support_json']['severity'] = REQUIREMENT_ERROR;
     }
   }
 
