@@ -9,7 +9,7 @@
     "require": {
         "drupal/core": "10.0.x-dev",
         "asm89/stack-cors": "v2.1.1",
-        "composer/semver": "3.2.7",
+        "composer/semver": "3.2.9",
         "doctrine/annotations": "1.13.2",
         "doctrine/lexer": "1.2.2",
         "egulias/email-validator": "3.1.2",
