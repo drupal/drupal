@@ -36,6 +36,7 @@ class AggregatorUpdatePathTestCase extends UpdatePathTestCase {
     $query
       ->fields('af', array('url', 'link'))
       ->fields('ai', array('link', 'guid'));
+    $query->orderBy('ai.iid');
 
     $pre_update_data = $query->execute()->fetchAll();
     $this->assertTrue($this->performUpgrade(), 'The update was completed successfully.');
