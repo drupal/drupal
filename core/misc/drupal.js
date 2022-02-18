@@ -172,29 +172,37 @@ window.Drupal = {
     return window.encodeURIComponent(item).replace(/%2F/g, '/');
   };
 
-  Drupal.deprecationError = ({
-    message
-  }) => {
+  Drupal.deprecationError = _ref => {
+    let {
+      message
+    } = _ref;
+
     if (drupalSettings.suppressDeprecationErrors === false && typeof console !== 'undefined' && console.warn) {
       console.warn(`[Deprecation] ${message}`);
     }
   };
 
-  Drupal.deprecatedProperty = ({
-    target,
-    deprecatedProperty,
-    message
-  }) => {
+  Drupal.deprecatedProperty = _ref2 => {
+    let {
+      target,
+      deprecatedProperty,
+      message
+    } = _ref2;
+
     if (!Proxy || !Reflect) {
       return target;
     }
 
     return new Proxy(target, {
-      get: (target, key, ...rest) => {
+      get: function (target, key) {
         if (key === deprecatedProperty) {
           Drupal.deprecationError({
             message
           });
+        }
+
+        for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+          rest[_key - 2] = arguments[_key];
         }
 
         return Reflect.get(target, key, ...rest);
@@ -202,8 +210,12 @@ window.Drupal = {
     });
   };
 
-  Drupal.theme = function (func, ...args) {
+  Drupal.theme = function (func) {
     if (func in Drupal.theme) {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
       return Drupal.theme[func](...args);
     }
   };

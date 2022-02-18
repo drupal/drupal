@@ -31,7 +31,9 @@
     return value;
   };
 
-  $.cookie = (key, value = undefined, options = undefined) => {
+  $.cookie = function (key) {
+    let value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
     Drupal.deprecationError({
       message: `jQuery.cookie() ${deprecatedMessageSuffix}`
     });

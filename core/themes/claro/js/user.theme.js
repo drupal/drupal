@@ -15,16 +15,18 @@
     confirmFilled: 'is-confirm-filled'
   });
 
-  Drupal.theme.passwordConfirmMessage = ({
-    confirmTitle
-  }) => {
+  Drupal.theme.passwordConfirmMessage = _ref => {
+    let {
+      confirmTitle
+    } = _ref;
     const confirmTextWrapper = '<span class="password-match-message__text" data-drupal-selector="password-match-status-text"></span>';
     return `<div aria-live="polite" aria-atomic="true" class="password-match-message" data-drupal-selector="password-confirm-message">${confirmTitle} ${confirmTextWrapper}</div>`;
   };
 
-  Drupal.theme.passwordStrength = ({
-    strengthTitle
-  }) => {
+  Drupal.theme.passwordStrength = _ref2 => {
+    let {
+      strengthTitle
+    } = _ref2;
     const strengthBar = '<div class="password-strength__bar" data-drupal-selector="password-strength-indicator"></div>';
     const strengthText = '<span class="password-strength__text" data-drupal-selector="password-strength-text"></span>';
     return `
@@ -35,7 +37,10 @@
     `;
   };
 
-  Drupal.theme.passwordSuggestions = ({
-    hasWeaknesses
-  }, tips) => `<div class="password-suggestions">${tips.length ? `${hasWeaknesses}<ul class="password-suggestions__tips"><li class="password-suggestions__tip">${tips.join('</li><li class="password-suggestions__tip">')}</li></ul>` : ''}</div>`;
+  Drupal.theme.passwordSuggestions = (_ref3, tips) => {
+    let {
+      hasWeaknesses
+    } = _ref3;
+    return `<div class="password-suggestions">${tips.length ? `${hasWeaknesses}<ul class="password-suggestions__tips"><li class="password-suggestions__tip">${tips.join('</li><li class="password-suggestions__tip">')}</li></ul>` : ''}</div>`;
+  };
 })(Drupal);

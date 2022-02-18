@@ -5,10 +5,11 @@
 * @preserve
 **/
 
-(function ($, {
-  tabbable,
-  isTabbable
-}) {
+(function ($, _ref) {
+  let {
+    tabbable,
+    isTabbable
+  } = _ref;
   $.widget('ui.dialog', $.ui.dialog, {
     options: {
       buttonClass: 'button',

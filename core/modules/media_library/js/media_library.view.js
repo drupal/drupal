@@ -11,9 +11,10 @@
       const $view = $(once('media-library-select-all', '.js-media-library-view[data-view-display-id="page"]', context));
 
       if ($view.length && $view.find('.js-media-library-item').length) {
-        const $checkbox = $(Drupal.theme('checkbox')).on('click', ({
-          currentTarget
-        }) => {
+        const $checkbox = $(Drupal.theme('checkbox')).on('click', _ref => {
+          let {
+            currentTarget
+          } = _ref;
           const $checkboxes = $(currentTarget).closest('.js-media-library-view').find('.js-media-library-item input[type="checkbox"]');
           $checkboxes.prop('checked', $(currentTarget).prop('checked')).trigger('change');
           const announcement = $(currentTarget).prop('checked') ? Drupal.t('All @count items selected', {

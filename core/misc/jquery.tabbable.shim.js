@@ -5,9 +5,10 @@
 * @preserve
 **/
 
-(($, Drupal, {
-  isTabbable
-}) => {
+(($, Drupal, _ref) => {
+  let {
+    isTabbable
+  } = _ref;
   $.extend($.expr[':'], {
     tabbable(element) {
       Drupal.deprecationError({

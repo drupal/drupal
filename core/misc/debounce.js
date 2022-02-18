@@ -8,7 +8,11 @@
 Drupal.debounce = function (func, wait, immediate) {
   let timeout;
   let result;
-  return function (...args) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
     const context = this;
 
     const later = function () {

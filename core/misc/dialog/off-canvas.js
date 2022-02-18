@@ -22,10 +22,11 @@
       $(window).off('.off-canvas');
     },
 
-    beforeCreate({
-      settings,
-      $element
-    }) {
+    beforeCreate(_ref) {
+      let {
+        settings,
+        $element
+      } = _ref;
       Drupal.offCanvas.removeOffCanvasEvents($element);
       $('body').addClass('js-off-canvas-dialog-open');
       settings.position = {
@@ -40,18 +41,20 @@
       settings.width = width;
     },
 
-    beforeClose({
-      $element
-    }) {
+    beforeClose(_ref2) {
+      let {
+        $element
+      } = _ref2;
       $('body').removeClass('js-off-canvas-dialog-open');
       Drupal.offCanvas.removeOffCanvasEvents($element);
       Drupal.offCanvas.resetPadding();
     },
 
-    afterCreate({
-      $element,
-      settings
-    }) {
+    afterCreate(_ref3) {
+      let {
+        $element,
+        settings
+      } = _ref3;
       const eventData = {
         settings,
         $element,
@@ -62,9 +65,10 @@
       $(window).on('resize.off-canvas', eventData, debounce(Drupal.offCanvas.resetSize, 100)).trigger('resize.off-canvas');
     },
 
-    render({
-      settings
-    }) {
+    render(_ref4) {
+      let {
+        settings
+      } = _ref4;
       $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
     },
 

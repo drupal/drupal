@@ -160,9 +160,10 @@
         check++;
       } while (!of);
 
-      function refinePopper({
-        state
-      }) {
+      function refinePopper(_ref) {
+        let {
+          state
+        } = _ref;
         const isBelow = state.placement.split('-')[0] === 'bottom';
         const classListMethod = isBelow ? 'add' : 'remove';
         state.elements.popper.classList[classListMethod]('quickedit-toolbar-pointer-top');

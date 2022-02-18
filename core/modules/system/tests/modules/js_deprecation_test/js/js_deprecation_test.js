@@ -5,11 +5,13 @@
 * @preserve
 **/
 
-(function ({
-  deprecationError,
-  deprecatedProperty,
-  behaviors
-}) {
+(function (_ref) {
+  let {
+    deprecationError,
+    deprecatedProperty,
+    behaviors
+  } = _ref;
+
   const deprecatedFunction = () => {
     deprecationError({
       message: 'This function is deprecated for testing purposes.'

@@ -102,7 +102,8 @@
   };
 
   Drupal.verticalTab.prototype = {
-    focus(triggerFocus = true) {
+    focus() {
+      let triggerFocus = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       this.details.siblings('.js-vertical-tabs-pane').each(function closeOtherTabs() {
         const tab = $(this).data('verticalTab');
 

@@ -5,10 +5,11 @@
 * @preserve
 **/
 
-(function ({
-  throwError,
-  behaviors
-}) {
+(function (_ref) {
+  let {
+    throwError,
+    behaviors
+  } = _ref;
   behaviors.testErrors = {
     attach: () => {
       throwError(new Error('A manually thrown error.'));

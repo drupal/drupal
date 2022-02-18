@@ -59,6 +59,7 @@
     "@ckeditor/ckeditor5-table": "~31.1.0",
     "@drupal/once": "^1.0.1",
     "@popperjs/core": "^2.9.2",
+    "acorn": "^8.7.0",
     "babel-plugin-add-header-comment": "^1.0.3",
     "backbone": "^1.4.0",
     "chalk": "^4.1.0",

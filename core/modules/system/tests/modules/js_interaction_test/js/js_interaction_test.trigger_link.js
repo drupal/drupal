@@ -5,9 +5,10 @@
 * @preserve
 **/
 
-(({
-  behaviors
-}) => {
+(_ref => {
+  let {
+    behaviors
+  } = _ref;
   behaviors.js_interaction_test_trigger_link = {
     attach() {
       const removeBlockerTrigger = once('remove-blocker-trigger', '.remove-blocker-trigger').shift();

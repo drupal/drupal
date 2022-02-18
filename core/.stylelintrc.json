@@ -466,6 +466,7 @@
     "string-quotes": "double",
     "unit-allowed-list": ["ch", "deg", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "vh"],
     "value-keyword-case": ["lower", {
+      "camelCaseSvgKeywords": true,
       "ignoreProperties": [
         "--font-family",
         "font-family"

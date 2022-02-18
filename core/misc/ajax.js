@@ -5,10 +5,11 @@
 * @preserve
 **/
 
-(function ($, window, Drupal, drupalSettings, {
-  isFocusable,
-  tabbable
-}) {
+(function ($, window, Drupal, drupalSettings, _ref) {
+  let {
+    isFocusable,
+    tabbable
+  } = _ref;
   Drupal.behaviors.AJAX = {
     attach(context, settings) {
       function loadAjaxBehavior(base) {

@@ -13,20 +13,23 @@
         const $input = $(event.currentTarget).closest('.js-click-to-select').find('.js-click-to-select-checkbox input');
         $input.prop('checked', !$input.prop('checked')).trigger('change');
       });
-      $(once('media-library-click-to-select', '.js-click-to-select-checkbox input', context)).on('change', ({
-        currentTarget
-      }) => {
+      $(once('media-library-click-to-select', '.js-click-to-select-checkbox input', context)).on('change', _ref => {
+        let {
+          currentTarget
+        } = _ref;
         $(currentTarget).closest('.js-click-to-select').toggleClass('checked', $(currentTarget).prop('checked'));
-      }).on('focus blur', ({
-        currentTarget,
-        type
-      }) => {
+      }).on('focus blur', _ref2 => {
+        let {
+          currentTarget,
+          type
+        } = _ref2;
         $(currentTarget).closest('.js-click-to-select').toggleClass('is-focus', type === 'focus');
       });
-      $(once('media-library-click-to-select-hover', '.js-click-to-select-trigger, .js-click-to-select-checkbox', context)).on('mouseover mouseout', ({
-        currentTarget,
-        type
-      }) => {
+      $(once('media-library-click-to-select-hover', '.js-click-to-select-trigger, .js-click-to-select-checkbox', context)).on('mouseover mouseout', _ref3 => {
+        let {
+          currentTarget,
+          type
+        } = _ref3;
         $(currentTarget).closest('.js-click-to-select').toggleClass('is-hover', type === 'mouseover');
       });
     }

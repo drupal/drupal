@@ -6,9 +6,10 @@
 **/
 
 (Drupal => {
-  Drupal.theme.passwordStrength = ({
-    strengthTitle
-  }) => {
+  Drupal.theme.passwordStrength = _ref => {
+    let {
+      strengthTitle
+    } = _ref;
     const strengthIndicator = '<span>Overridden passwordStrength:</span><div class="password-strength__indicator js-password-strength__indicator the-prior-class-is-deprecated" data-drupal-selector="a-distinct-absence-of-password-strength-indicator"></div>';
     const strengthText = '<span class="password-strength__text js-password-strength__text the-prior-class-is-deprecated" data-drupal-selector="a-distinct-absence-of-password-strength-text"></span>';
     return `
@@ -19,13 +20,17 @@
     `;
   };
 
-  Drupal.theme.passwordSuggestions = ({
-    hasWeaknesses
-  }, tips) => `<div class="password-suggestions">Overridden passwordSuggestions: ${tips.length ? `${hasWeaknesses}<ul><li>${tips.join('</li><li>')}</li></ul>` : ''}</div>`;
+  Drupal.theme.passwordSuggestions = (_ref2, tips) => {
+    let {
+      hasWeaknesses
+    } = _ref2;
+    return `<div class="password-suggestions">Overridden passwordSuggestions: ${tips.length ? `${hasWeaknesses}<ul><li>${tips.join('</li><li>')}</li></ul>` : ''}</div>`;
+  };
 
-  Drupal.theme.passwordConfirmMessage = ({
-    confirmTitle
-  }) => {
+  Drupal.theme.passwordConfirmMessage = _ref3 => {
+    let {
+      confirmTitle
+    } = _ref3;
     const confirmTextWrapper = '<span>Overridden passwordConfirmMessage:</span><span data-drupal-selector="a-distinct-absence-of-password-match-status-text"></span>';
     return `<div aria-live="polite" aria-atomic="true" class="password-confirm-message" data-drupal-selector="password-confirm-message">${confirmTitle} ${confirmTextWrapper}</div>`;
   };

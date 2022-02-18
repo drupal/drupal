@@ -5,11 +5,13 @@
 * @preserve
 **/
 
-(($, {
-  behaviors
-}, {
-  testMessages
-}) => {
+(($, _ref, _ref2) => {
+  let {
+    behaviors
+  } = _ref;
+  let {
+    testMessages
+  } = _ref2;
   const indexes = {};
   testMessages.types.forEach(type => {
     indexes[type] = [];

@@ -200,12 +200,20 @@
 
     },
     flipfit: {
-      left(...args) {
+      left() {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
         collisions.flip.left.apply(this, args);
         collisions.fit.left.apply(this, args);
       },
 
-      top(...args) {
+      top() {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
         collisions.flip.top.apply(this, args);
         collisions.fit.top.apply(this, args);
       }

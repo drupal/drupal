@@ -58,7 +58,9 @@
       });
     }
 
-    return Object.entries(config).reduce((processed, [key, value]) => {
+    return Object.entries(config).reduce((processed, _ref) => {
+      let [key, value] = _ref;
+
       if (typeof value === 'object') {
         if (!value) {
           return processed;

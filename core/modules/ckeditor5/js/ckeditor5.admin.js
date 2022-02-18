@@ -5,9 +5,10 @@
 * @preserve
 **/
 
-((Drupal, drupalSettings, $, JSON, once, Sortable, {
-  tabbable
-}) => {
+((Drupal, drupalSettings, $, JSON, once, Sortable, _ref) => {
+  let {
+    tabbable
+  } = _ref;
   const toolbarHelp = [{
     message: Drupal.t("The toolbar buttons that don't fit the user's browser window width will be grouped in a dropdown. If multiple toolbar rows are preferred, those can be configured by adding an explicit wrapping breakpoint wherever you want to start a new row.", null, {
       context: 'CKEditor 5 toolbar help text, default, no explicit wrapping breakpoint'
@@ -268,11 +269,14 @@
     attach(context) {
       once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(container => {
         const selectedTextarea = context.querySelector('#ckeditor5-toolbar-buttons-selected');
-        const available = Object.entries(JSON.parse(context.querySelector('#ckeditor5-toolbar-buttons-available').innerHTML)).map(([name, attrs]) => ({
-          name,
-          id: name,
-          ...attrs
-        }));
+        const available = Object.entries(JSON.parse(context.querySelector('#ckeditor5-toolbar-buttons-available').innerHTML)).map(_ref2 => {
+          let [name, attrs] = _ref2;
+          return {
+            name,
+            id: name,
+            ...attrs
+          };
+        });
         const dividers = [{
           id: 'divider',
           name: '|',
@@ -460,9 +464,10 @@
 
   };
 
-  Drupal.theme.ckeditor5SelectedButtons = ({
-    buttons
-  }) => {
+  Drupal.theme.ckeditor5SelectedButtons = _ref3 => {
+    let {
+      buttons
+    } = _ref3;
     return `
       <ul class="ckeditor5-toolbar-tray ckeditor5-toolbar-active__buttons" data-button-list="ckeditor5-toolbar-active-buttons" role="listbox" aria-orientation="horizontal" aria-labelledby="ckeditor5-toolbar-active-buttons-label">
         ${buttons.map(button => Drupal.theme.ckeditor5Button({
@@ -473,9 +478,10 @@
     `;
   };
 
-  Drupal.theme.ckeditor5DividerButtons = ({
-    buttons
-  }) => {
+  Drupal.theme.ckeditor5DividerButtons = _ref4 => {
+    let {
+      buttons
+    } = _ref4;
     return `
       <ul class="ckeditor5-toolbar-tray ckeditor5-toolbar-divider__buttons" data-button-list="ckeditor5-toolbar-divider-buttons" role="listbox" aria-orientation="horizontal" aria-labelledby="ckeditor5-toolbar-divider-buttons-label">
         ${buttons.map(button => Drupal.theme.ckeditor5Button({
@@ -486,9 +492,10 @@
     `;
   };
 
-  Drupal.theme.ckeditor5AvailableButtons = ({
-    buttons
-  }) => {
+  Drupal.theme.ckeditor5AvailableButtons = _ref5 => {
+    let {
+      buttons
+    } = _ref5;
     return `
       <ul class="ckeditor5-toolbar-tray ckeditor5-toolbar-available__buttons" data-button-list="ckeditor5-toolbar-available-buttons" role="listbox" aria-orientation="horizontal" aria-labelledby="ckeditor5-toolbar-available-buttons-label">
         ${buttons.map(button => Drupal.theme.ckeditor5Button({
@@ -499,13 +506,14 @@
     `;
   };
 
-  Drupal.theme.ckeditor5Button = ({
-    button: {
-      label,
-      id
-    },
-    listType
-  }) => {
+  Drupal.theme.ckeditor5Button = _ref6 => {
+    let {
+      button: {
+        label,
+        id
+      },
+      listType
+    } = _ref6;
     const visuallyHiddenLabel = Drupal.t(`@listType button @label`, {
       '@listType': listType !== 'divider' ? listType : 'available',
       '@label': label
@@ -520,12 +528,13 @@
     `;
   };
 
-  Drupal.theme.ckeditor5Admin = ({
-    availableButtons,
-    dividerButtons,
-    activeToolbar,
-    helpMessage
-  }) => {
+  Drupal.theme.ckeditor5Admin = _ref7 => {
+    let {
+      availableButtons,
+      dividerButtons,
+      activeToolbar,
+      helpMessage
+    } = _ref7;
     return `
     <div aria-live="polite" data-drupal-selector="ckeditor5-admin-help-message">
       <p>${helpMessage.join('</p><p>')}</p>

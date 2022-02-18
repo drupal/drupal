@@ -5,10 +5,12 @@
 * @preserve
 **/
 
-(function ($, Drupal, {
-  tabbable,
-  isTabbable
-}) {
+(function ($, Drupal, _ref) {
+  let {
+    tabbable,
+    isTabbable
+  } = _ref;
+
   function TabbingManager() {
     this.stack = [];
   }
@@ -25,9 +27,10 @@
   }
 
   $.extend(TabbingManager.prototype, {
-    constrain(elements, {
-      trapFocus = false
-    } = {}) {
+    constrain(elements) {
+      let {
+        trapFocus = false
+      } = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       const il = this.stack.length;
 
       for (let i = 0; i < il; i++) {

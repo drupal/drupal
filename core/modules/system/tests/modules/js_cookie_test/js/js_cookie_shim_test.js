@@ -5,9 +5,10 @@
 * @preserve
 **/
 
-(({
-  behaviors
-}, $) => {
+((_ref, $) => {
+  let {
+    behaviors
+  } = _ref;
   behaviors.jqueryCookie = {
     attach: () => {
       if (once('js_cookie_test-init', 'body').length) {

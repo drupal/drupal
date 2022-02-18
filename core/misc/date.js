@@ -64,16 +64,22 @@
 
   };
 
-  Drupal.theme.dateHelp = ({
-    dateDesc
-  }) => `<div class="no-native-datepicker-help">${dateDesc}</div>`;
+  Drupal.theme.dateHelp = _ref => {
+    let {
+      dateDesc
+    } = _ref;
+    return `<div class="no-native-datepicker-help">${dateDesc}</div>`;
+  };
 
-  Drupal.theme.dateTimeHelp = ({
-    dateId,
-    timeId,
-    dateDesc,
-    timeDesc
-  }) => `<div class="no-native-datepicker-help">
+  Drupal.theme.dateTimeHelp = _ref2 => {
+    let {
+      dateId,
+      timeId,
+      dateDesc,
+      timeDesc
+    } = _ref2;
+    return `<div class="no-native-datepicker-help">
        <span id="${dateId}">${dateDesc}</span> <span id="${timeId}">${timeDesc}</span>
      </div>`;
+  };
 })(Modernizr, Drupal, once);

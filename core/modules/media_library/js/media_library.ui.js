@@ -5,9 +5,10 @@
 * @preserve
 **/
 
-(($, Drupal, window, {
-  tabbable
-}) => {
+(($, Drupal, window, _ref) => {
+  let {
+    tabbable
+  } = _ref;
   Drupal.MediaLibrary = {
     currentSelection: []
   };

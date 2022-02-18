@@ -7,7 +7,9 @@
 
 (Drupal => {
   Drupal.Message = class {
-    constructor(messageWrapper = null) {
+    constructor() {
+      let messageWrapper = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
       if (!messageWrapper) {
         this.messageWrapper = Drupal.Message.defaultWrapper();
       } else {
@@ -36,7 +38,9 @@
       };
     }
 
-    add(message, options = {}) {
+    add(message) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       if (!options.hasOwnProperty('type')) {
         options.type = 'status';
       }
@@ -94,12 +98,14 @@
 
   };
 
-  Drupal.theme.message = ({
-    text
-  }, {
-    type,
-    id
-  }) => {
+  Drupal.theme.message = (_ref, _ref2) => {
+    let {
+      text
+    } = _ref;
+    let {
+      type,
+      id
+    } = _ref2;
     const messagesTypes = Drupal.Message.getMessageTypeLabels();
     const messageWrapper = document.createElement('div');
     messageWrapper.setAttribute('class', `messages messages--${type}`);

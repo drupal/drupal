@@ -6,12 +6,14 @@
 **/
 
 (Drupal => {
-  Drupal.theme.message = ({
-    text
-  }, {
-    type,
-    id
-  }) => {
+  Drupal.theme.message = (_ref, _ref2) => {
+    let {
+      text
+    } = _ref;
+    let {
+      type,
+      id
+    } = _ref2;
     const messagesTypes = Drupal.Message.getMessageTypeLabels();
     const messageWrapper = document.createElement('div');
     messageWrapper.setAttribute('class', `messages messages--${type}`);

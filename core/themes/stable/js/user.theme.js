@@ -8,9 +8,10 @@
 (Drupal => {
   Drupal.theme.passwordConfirmMessage = translate => `<div aria-live="polite" aria-atomic="true" class="password-confirm js-password-confirm js-password-confirm-message" data-drupal-selector="password-confirm-message">${translate.confirmTitle} <span data-drupal-selector="password-match-status-text"></span></div>`;
 
-  Drupal.theme.passwordStrength = ({
-    strengthTitle
-  }) => {
+  Drupal.theme.passwordStrength = _ref => {
+    let {
+      strengthTitle
+    } = _ref;
     const strengthIndicator = '<div class="password-strength__indicator js-password-strength__indicator" data-drupal-selector="password-strength-indicator"></div>';
     const strengthText = '<span class="password-strength__text js-password-strength__text" data-drupal-selector="password-strength-text"></span>';
     return `

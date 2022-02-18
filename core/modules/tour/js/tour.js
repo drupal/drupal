@@ -71,9 +71,10 @@
             enabled: true,
             phase: 'write',
 
-            fn({
-              state
-            }) {
+            fn(_ref) {
+              let {
+                state
+              } = _ref;
               const {
                 arrow
               } = state.elements;
