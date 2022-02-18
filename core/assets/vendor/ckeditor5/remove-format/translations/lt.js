@@ -1,0 +1,1 @@
+!function(i){const t=i.lt=i.lt||{};t.dictionary=Object.assign(t.dictionary||{},{"Remove Format":"Naikinti formatavimą"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

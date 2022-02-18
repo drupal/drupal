@@ -1,0 +1,1 @@
+!function(a){const i=a.tr=a.tr||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"Ortala","Align left":"Sola hizala","Align right":"Sağa hizala",Justify:"İki yana yasla","Text alignment":"Yazı hizalama","Text alignment toolbar":"Yazı Hizlama Araç Çubuğu"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

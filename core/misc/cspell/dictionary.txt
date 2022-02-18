@@ -899,6 +899,7 @@ nocdata
 nocookie
 nocssjs
 nodereference
+nodir
 nodo
 noemptytag
 noevent

@@ -1,0 +1,1 @@
+!function(i){const n=i.zh=i.zh||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"水平線"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

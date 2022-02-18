@@ -1,0 +1,1 @@
+!function(n){const i=n.af=n.af||{};i.dictionary=Object.assign(i.dictionary||{},{"Block quote":"Blok-aanhaling"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

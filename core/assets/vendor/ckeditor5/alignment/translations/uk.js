@@ -1,0 +1,1 @@
+!function(n){const i=n.uk=n.uk||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"По центру","Align left":"По лівому краю","Align right":"По правому краю",Justify:"По ширині","Text alignment":"Вирівнювання тексту","Text alignment toolbar":"Панель інструментів вирівнювання тексту"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

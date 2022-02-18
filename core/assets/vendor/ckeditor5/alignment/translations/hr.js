@@ -1,0 +1,1 @@
+!function(n){const a=n.hr=n.hr||{};a.dictionary=Object.assign(a.dictionary||{},{"Align center":"Poravnaj po sredini","Align left":"Poravnaj ulijevo","Align right":"Poravnaj udesno",Justify:"Razvuci","Text alignment":"Poravnanje teksta","Text alignment toolbar":"Traka za poravnanje"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

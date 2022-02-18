@@ -1,0 +1,1 @@
+!function(e){const r=e.af=e.af||{};r.dictionary=Object.assign(r.dictionary||{},{Bold:"Vetgedruk",Code:"Kode",Italic:"Skuinsgedruk",Strikethrough:"Deurgetrek",Subscript:"Onderskrif",Superscript:"Boskrif",Underline:"Onderstreep"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

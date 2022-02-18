@@ -1,0 +1,1 @@
+!function(n){const i=n.km=n.km||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"តម្រឹម​កណ្ដាល","Align left":"តម្រឹម​ឆ្វេង","Align right":"តម្រឹម​ស្ដាំ",Justify:"តម្រឹម​សងខាង","Text alignment":"ការ​តម្រឹម​អក្សរ","Text alignment toolbar":"របារ​ឧបករណ៍​តម្រឹម​អក្សរ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

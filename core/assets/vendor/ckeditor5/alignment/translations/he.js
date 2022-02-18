@@ -1,0 +1,1 @@
+!function(n){const i=n.he=n.he||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"יישור באמצע","Align left":"יישור לשמאל","Align right":"יישור לימין",Justify:"מרכוז גבולות","Text alignment":"יישור טקסט","Text alignment toolbar":"סרגל כלים יישור טקסט"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

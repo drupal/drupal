@@ -1,0 +1,1 @@
+!function(n){const i=n.si=n.si||{};i.dictionary=Object.assign(i.dictionary||{},{Redo:"නැවත කරන්න",Undo:"අහෝසි කරන්න"}),i.getPluralForm=function(n){return 1!=n}}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

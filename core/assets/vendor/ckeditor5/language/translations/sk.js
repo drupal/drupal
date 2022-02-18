@@ -1,0 +1,1 @@
+!function(a){const n=a.sk=a.sk||{};n.dictionary=Object.assign(n.dictionary||{},{"Choose language":"Vybrať jazyk",Language:"Jazyk","Remove language":"Odstrániť jazyk"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

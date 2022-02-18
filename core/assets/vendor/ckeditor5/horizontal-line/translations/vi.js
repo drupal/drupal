@@ -1,0 +1,1 @@
+!function(n){const i=n.vi=n.vi||{};i.dictionary=Object.assign(i.dictionary||{},{"Horizontal line":"Đường ngang"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(a){const e=a.ro=a.ro||{};e.dictionary=Object.assign(e.dictionary||{},{"Choose language":"Alege limba",Language:"Limbă","Remove language":"Șterge limba"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

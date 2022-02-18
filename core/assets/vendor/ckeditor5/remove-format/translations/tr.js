@@ -1,0 +1,1 @@
+!function(i){const n=i.tr=i.tr||{};n.dictionary=Object.assign(n.dictionary||{},{"Remove Format":"Biçimlendirmeyi Kaldır"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

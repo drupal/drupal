@@ -1,0 +1,1 @@
+!function(i){const t=i.pt=i.pt||{};t.dictionary=Object.assign(t.dictionary||{},{Bold:"Negrito",Code:"Código",Italic:"Itálico",Strikethrough:"",Subscript:"",Superscript:"",Underline:""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(n){const e=n.th=n.th||{};e.dictionary=Object.assign(e.dictionary||{},{"Choose heading":"เลือกขนาดหัวข้อ",Heading:"หัวข้อ","Heading 1":"หัวข้อขนาด 1","Heading 2":"","Heading 3":"","Heading 4":"","Heading 5":"","Heading 6":"",Paragraph:"ย่อหน้า","Type or paste your content here.":"","Type your title":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

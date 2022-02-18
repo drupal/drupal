@@ -1,0 +1,1 @@
+!function(e){const t=e.fr=e.fr||{};t.dictionary=Object.assign(t.dictionary||{},{"Align center":"Centrer","Align left":"Aligner à gauche","Align right":"Aligner à droite",Justify:"Justifier","Text alignment":"Alignement du texte","Text alignment toolbar":"Barre d'outils d'alignement du texte"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

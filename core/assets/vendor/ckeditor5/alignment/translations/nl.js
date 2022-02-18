@@ -1,0 +1,1 @@
+!function(i){const n=i.nl=i.nl||{};n.dictionary=Object.assign(n.dictionary||{},{"Align center":"Midden uitlijnen","Align left":"Links uitlijnen","Align right":"Rechts uitlijnen",Justify:"Volledig uitlijnen","Text alignment":"Tekst uitlijning","Text alignment toolbar":"Tekst uitlijning werkbalk"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
