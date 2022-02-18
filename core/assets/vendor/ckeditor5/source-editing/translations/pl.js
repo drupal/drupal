@@ -1,0 +1,1 @@
+!function(i){const n=i.pl=i.pl||{};n.dictionary=Object.assign(n.dictionary||{},{Source:"Źródło"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

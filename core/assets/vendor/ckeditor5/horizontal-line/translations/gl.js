@@ -1,0 +1,1 @@
+!function(i){const n=i.gl=i.gl||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"Liña horizontal"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

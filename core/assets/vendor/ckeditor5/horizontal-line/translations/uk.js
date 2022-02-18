@@ -1,0 +1,1 @@
+!function(i){const n=i.uk=i.uk||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"Горизонтальна лінія"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

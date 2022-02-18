@@ -1,0 +1,1 @@
+!function(n){const i=n["sr-latn"]=n["sr-latn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Horizontal line":"Horizontalna razdelna linija"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

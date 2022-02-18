@@ -1,0 +1,1 @@
+!function(n){const i=n.az=n.az||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"Mərkəzə düzləndir","Align left":"Soldan düzləndir","Align right":"Sağdan düzləndir",Justify:"Eninə görə","Text alignment":"Mətn düzləndirməsi","Text alignment toolbar":"Mətnin düzləndirmə paneli"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

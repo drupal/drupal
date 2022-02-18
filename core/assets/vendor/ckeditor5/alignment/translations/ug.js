@@ -1,0 +1,1 @@
+!function(n){const i=n.ug=n.ug||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"ئوتتۇرىغا توغرىلاش","Align left":"سولغا توغرىلاش","Align right":"ئوڭغا توغرىلاش",Justify:"تەكشىلەش","Text alignment":"تېكىست توغرىلاش","Text alignment toolbar":"تېكىست توغرىلاش قورالبالدىقى"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

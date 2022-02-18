@@ -1,0 +1,1 @@
+!function(a){const t=a.id=a.id||{};t.dictionary=Object.assign(t.dictionary||{},{"Align center":"Rata tengah","Align left":"Rata kiri","Align right":"Rata kanan",Justify:"Rata kanan-kiri","Text alignment":"Perataan teks","Text alignment toolbar":"Alat perataan teks"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

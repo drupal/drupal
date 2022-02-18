@@ -1,0 +1,1 @@
+!function(a){const e=a.hu=a.hu||{};e.dictionary=Object.assign(e.dictionary||{},{"Choose language":"Nyelv választása",Language:"Nyelv","Remove language":"Nyelv eltávolítása"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

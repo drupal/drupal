@@ -1,0 +1,1 @@
+!function(i){const t=i.hu=i.hu||{};t.dictionary=Object.assign(t.dictionary||{},{"Align center":"Középre igazítás","Align left":"Balra igazítás","Align right":"Jobbra igazítás",Justify:"Sorkizárt","Text alignment":"Szöveg igazítása","Text alignment toolbar":"Szöveg igazítás eszköztár"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

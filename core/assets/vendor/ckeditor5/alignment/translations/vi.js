@@ -1,0 +1,1 @@
+!function(n){const i=n.vi=n.vi||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"Canh giữa","Align left":"Canh trái","Align right":"Canh phải",Justify:"Canh đều","Text alignment":"Căn chỉnh văn bản","Text alignment toolbar":"Thanh công cụ canh chữ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -843,13 +843,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     ] + $plugin_config;
 
     if ($this->moduleHandler->moduleExists('locale')) {
-      $ui_langcode = 'en';
-      $ckeditor_langcodes = $this->getLangcodes();
       $language_interface = $this->languageManager->getCurrentLanguage();
-      if (isset($ckeditor_langcodes[$language_interface->getId()])) {
-        $ui_langcode = $ckeditor_langcodes[$language_interface->getId()];
-      }
-      $settings['language']['ui'] = $ui_langcode;
+      $settings['language']['ui'] = _ckeditor5_get_langcode_mapping($language_interface->getId());
     }
 
     return $settings;
@@ -862,65 +857,11 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $plugin_libraries = $this->ckeditor5PluginManager->getEnabledLibraries($editor);
 
     if ($this->moduleHandler->moduleExists('locale')) {
-      $ui_langcode = 'en';
-      $ckeditor_langcodes = $this->getLangcodes();
       $language_interface = $this->languageManager->getCurrentLanguage();
-      if (isset($ckeditor_langcodes[$language_interface->getId()])) {
-        $ui_langcode = $ckeditor_langcodes[$language_interface->getId()];
-      }
-      $plugin_libraries[] = 'core/ckeditor5.translations.' . $ui_langcode;
+      $plugin_libraries[] = 'core/ckeditor5.translations.' . _ckeditor5_get_langcode_mapping($language_interface->getId());
     }
 
     return $plugin_libraries;
-  }
-
-  /**
-   * Returns a list of language codes supported by CKEditor 5.
-   *
-   * @return array
-   *   An associative array keyed by language codes.
-   */
-  protected function getLangcodes(): array {
-    // Cache the file system based language list calculation because this would
-    // be expensive to calculate all the time. The cache is cleared on core
-    // upgrades which is the only situation the CKEditor file listing should
-    // change.
-    $langcode_cache = $this->cache->get('ckeditor5.langcodes');
-    if (!empty($langcode_cache)) {
-      $langcodes = $langcode_cache->data;
-    }
-    if (empty($langcodes)) {
-      $langcodes = [];
-      // Collect languages included with CKEditor 5 based on file listing.
-      $files = scandir('core/assets/vendor/ckeditor5/translations');
-      foreach ($files as $file) {
-        if ($file[0] !== '.' && preg_match('/\.js$/', $file)) {
-          $langcode = basename($file, '.js');
-          $langcodes[$langcode] = $langcode;
-        }
-      }
-      $this->cache->set('ckeditor5.langcodes', $langcodes);
-    }
-
-    // Get language mapping if available to map to Drupal language codes.
-    // This is configurable in the user interface and not expensive to get, so
-    // we don't include it in the cached language list.
-    $language_mappings = $this->moduleHandler->moduleExists('language') ? language_get_browser_drupal_langcode_mappings() : [];
-    foreach ($langcodes as $langcode) {
-      // If this language code is available in a Drupal mapping, use that to
-      // compute a possibility for matching from the Drupal langcode to the
-      // CKEditor langcode.
-      // For instance, CKEditor uses the langcode 'no' for Norwegian, Drupal
-      // uses 'nb'. This would then remove the 'no' => 'no' mapping and replace
-      // it with 'nb' => 'no'. Now Drupal knows which CKEditor translation to
-      // load.
-      if (isset($language_mappings[$langcode]) && !isset($langcodes[$language_mappings[$langcode]])) {
-        $langcodes[$language_mappings[$langcode]] = $langcode;
-        unset($langcodes[$langcode]);
-      }
-    }
-
-    return $langcodes;
   }
 
 }

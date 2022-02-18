@@ -1,0 +1,1 @@
+!function(i){const n=i.sv=i.sv||{};n.dictionary=Object.assign(n.dictionary||{},{"Remove Format":"Radera formatering"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

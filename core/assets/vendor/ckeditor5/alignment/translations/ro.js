@@ -1,0 +1,1 @@
+!function(i){const n=i.ro=i.ro||{};n.dictionary=Object.assign(n.dictionary||{},{"Align center":"Aliniază la centru","Align left":"Aliniază la stânga","Align right":"Aliniază la dreapta",Justify:"Aliniază stânga-dreapta","Text alignment":"Aliniere text","Text alignment toolbar":"Bara aliniere text"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

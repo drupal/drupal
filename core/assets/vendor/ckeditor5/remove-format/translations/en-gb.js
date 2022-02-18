@@ -1,0 +1,1 @@
+!function(n){const o=n["en-gb"]=n["en-gb"]||{};o.dictionary=Object.assign(o.dictionary||{},{"Remove Format":"Remove Format"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

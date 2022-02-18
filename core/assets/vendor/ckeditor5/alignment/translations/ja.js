@@ -1,0 +1,1 @@
+!function(n){const i=n.ja=n.ja||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"中央揃え","Align left":"左揃え","Align right":"右揃え",Justify:"両端揃え","Text alignment":"文字揃え","Text alignment toolbar":"テキストの整列"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

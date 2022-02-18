@@ -1,0 +1,1 @@
+!function(t){const n=t.da=t.da||{};n.dictionary=Object.assign(n.dictionary||{},{"Align center":"Justér center","Align left":"Justér venstre","Align right":"Justér højre",Justify:"Justér","Text alignment":"Tekstjustering","Text alignment toolbar":"Tekstjustering værktøjslinje"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

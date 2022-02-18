@@ -1,0 +1,1 @@
+!function(n){const i=n.zh=n.zh||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"置中對齊","Align left":"靠左對齊","Align right":"靠右對齊",Justify:"左右對齊","Text alignment":"文字對齊","Text alignment toolbar":"文字對齊"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
