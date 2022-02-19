@@ -1084,10 +1084,10 @@ picturefill:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
 
 popperjs:
-  version: "2.10.2"
+  version: "2.11.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.10.2/LICENSE.md
+    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.11.2/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
@@ -1129,10 +1129,10 @@ tabbable.jquery.shim:
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: "1.13.1"
+  version: "1.13.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.1/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
