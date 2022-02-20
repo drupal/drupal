@@ -9,8 +9,6 @@ related:
 <p>{% trans %}A web service allows your site to provide its content and data to other web sites and applications. Typically, the data is transported via <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> in a serialized machine-readable format.{% endtrans %}</p>
 <h2>{% trans %}What is serialization?{% endtrans %}</h2>
 <p>{% trans %}Serialization is the process of converting complex data structures into text strings, so that they can be exchanged and stored. The reverse process is called <em>deserialization</em>. JSON and XML are the two most-commonly-used data serialization formats for web services.{% endtrans %}</p>
-<h2>{% trans %}What is Hypertext Application Language (HAL)?{% endtrans %}</h2>
-<p>{% trans %}<a href="http://stateless.co/hal_specification.html">Hypertext Application Language (HAL)</a> is a serialization format that supports linking, which enables web applications to follow links and explore relationships between the data and content items that are provided by the web service. Serialized HAL data can be provided in either JSON or XML format.{% endtrans %}</p>
 <h2>{% trans %}What is HTTP Basic authentication?{% endtrans %}</h2>
 <p>{% trans %}<a href="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic authentication</a> is a method for authenticating requests by sending a user name and password along with the request.{% endtrans %}</p>
 <h2>{% trans %}What modules provide web services?{% endtrans %}</h2>
@@ -22,8 +20,6 @@ related:
   <dd>{% trans %}Exposes entities and other resources to other applications using a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> implementation. Data is exchanged using a serialization format such as HAL, and transferred using an authentication method such as HTTP Basic Authentication.{% endtrans %}</dd>
   <dt>{% trans %}Serialization module{% endtrans %}</dt>
   <dd>{% trans %}Provides a framework for adding specific serialization formats for other modules to use.{% endtrans %}</dd>
-  <dt>{% trans %}HAL module{% endtrans %}</dt>
-  <dd>{% trans %}Adds support for serializing content entities using the JSON version of HAL.{% endtrans %}</dd>
   <dt>{% trans %}HTTP Basic Authentication module{% endtrans %}</dt>
   <dd>{% trans %}Provides a way for web services to be authenticated using HTTP Basic authentication against Drupal user accounts.{% endtrans %}</dd>
   <dt>{% trans %}RDF module{% endtrans %}</dt>

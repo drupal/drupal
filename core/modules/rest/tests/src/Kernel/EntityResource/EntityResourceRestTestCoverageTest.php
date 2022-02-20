@@ -12,7 +12,7 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
  * Checks that all core content/config entity types have REST test coverage.
  *
  * Every entity type must have test coverage for:
- * - every format in core (json + xml + hal_json)
+ * - every format in core (json + xml)
  * - every authentication provider in core (anon, cookie, basic_auth)
  *
  * Additionally, every entity type must have the correct parent test class.
@@ -77,15 +77,6 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
           'XmlAnonTest',
           'XmlBasicAuthTest',
           'XmlCookieTest',
-        ],
-      ],
-      // Test coverage for formats provided by the 'hal' module.
-      'hal' => [
-        'path' => '\Drupal\Tests\PROVIDER\Functional\Hal\CLASS',
-        'class suffix' => [
-          'HalJsonAnonTest',
-          'HalJsonBasicAuthTest',
-          'HalJsonCookieTest',
         ],
       ],
     ];

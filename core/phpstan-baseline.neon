@@ -356,9 +356,9 @@ parameters:
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
 
 		-
-			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\)\\:\\:\\$entityTypeId\\.$#"
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\hal\\\\Functional\\\\dblog\\\\DbLogResourceTest\\)\\:\\:\\$entityTypeId\\.$#"
 			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
+			path: modules/hal/tests/src/Functional/dblog/DbLogResourceTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -406,14 +406,14 @@ parameters:
 			path: modules/file/tests/src/Functional/FileUploadJsonCookieTest.php
 
 		-
-			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\Hal\\\\FileUploadHalJsonCookieTest\\)\\:\\:\\$entityTypeId\\.$#"
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\hal\\\\Functional\\\\file\\\\FileUploadHalJsonCookieTest\\)\\:\\:\\$entityTypeId\\.$#"
 			count: 1
-			path: modules/file/tests/src/Functional/Hal/FileUploadHalJsonCookieTest.php
+			path: modules/hal/tests/src/Functional/file/FileUploadHalJsonCookieTest.php
 
 		-
-			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\Hal\\\\FileUploadHalJsonTestBase\\)\\:\\:\\$entityTypeId\\.$#"
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\hal\\\\Functional\\\\file\\\\FileUploadHalJsonTestBase\\)\\:\\:\\$entityTypeId\\.$#"
 			count: 1
-			path: modules/file/tests/src/Functional/Hal/FileUploadHalJsonTestBase.php
+			path: modules/hal/tests/src/Functional/file/FileUploadHalJsonTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -696,9 +696,9 @@ parameters:
 			path: modules/user/src/EventSubscriber/UserRequestSubscriber.php
 
 		-
-			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\user\\\\Functional\\\\RestRegisterUserTest\\)\\:\\:\\$entityTypeId\\.$#"
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\hal\\\\Functional\\\\user\\\\RestRegisterUserTest\\)\\:\\:\\$entityTypeId\\.$#"
 			count: 1
-			path: modules/user/tests/src/Functional/RestRegisterUserTest.php
+			path: modules/hal/tests/src/Functional/user/RestRegisterUserTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"

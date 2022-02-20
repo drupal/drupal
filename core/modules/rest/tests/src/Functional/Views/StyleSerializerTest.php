@@ -39,7 +39,6 @@ class StyleSerializerTest extends ViewTestBase {
   protected static $modules = [
     'views_ui',
     'entity_test',
-    'hal',
     'rest_test_views',
     'node',
     'text',
@@ -193,11 +192,6 @@ class StyleSerializerTest extends ViewTestBase {
     }
     $this->assertCacheTags($expected_cache_tags);
     $this->assertCacheContexts(['languages:language_interface', 'theme', 'entity_test_view_grants', 'request_format']);
-
-    $expected = $serializer->serialize($entities, 'hal_json');
-    $actual_json = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'hal_json']]);
-    $this->assertSame($expected, $actual_json, 'The expected HAL output was found.');
-    $this->assertCacheTags($expected_cache_tags);
 
     // Change the format to xml.
     $view->setDisplay('rest_export_1');
@@ -876,7 +870,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Get the names of the output.
     $json = $this->drupalGet('test/serialize/translated_entity', ['query' => ['_format' => 'json']]);
-    $decoded = $this->container->get('serializer')->decode($json, 'hal_json');
+    $decoded = $this->container->get('serializer')->decode($json, 'json');
     $names = [];
     foreach ($decoded as $item) {
       $names[] = $item['name'][0]['value'];

@@ -147,46 +147,6 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     // Verify that the correct JSON response was returned.
     $this->assertSession()->responseContains('{"content":"oh hai this is json"}');
-
-    // Enable REST support for nodes and hal+json.
-    \Drupal::service('module_installer')->install(['node', 'rest', 'hal', 'basic_auth']);
-    $this->drupalCreateContentType(['type' => 'article']);
-    $node = $this->drupalCreateNode(['type' => 'article']);
-    $node_uri = $node->toUrl();
-    $node_url_with_hal_json_format = $node->toUrl('canonical')->setRouteParameter('_format', 'hal_json');
-
-    $this->drupalGet($node_uri);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
-    $this->drupalGet($node_uri);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
-
-    // Now request a HAL page, we expect that the first request is a cache miss
-    // and it serves HTML.
-    $this->drupalGet($node_url_with_hal_json_format);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
-    $this->drupalGet($node_url_with_hal_json_format);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
-
-    // Clear the page cache. After that request a HAL request, followed by an
-    // ordinary HTML one.
-    \Drupal::cache('page')->deleteAll();
-    $this->drupalGet($node_url_with_hal_json_format);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
-    $this->drupalGet($node_url_with_hal_json_format);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
-
-    $this->drupalGet($node_uri);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
-    $this->drupalGet($node_uri);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
   }
 
   /**

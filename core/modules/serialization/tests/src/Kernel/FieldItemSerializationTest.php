@@ -231,20 +231,8 @@ class FieldItemSerializationTest extends NormalizerTestBase {
         ['test_datatype_boolean_emoji_normalizer'],
         'json',
       ],
-      'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the HAL+JSON normalization' => [
-        ['test_fieldtype_boolean_emoji_normalizer'],
-        'hal_json',
-      ],
-      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the HAL+JSON normalization' => [
-        ['test_datatype_boolean_emoji_normalizer', 'hal'],
-        'hal_json',
-      ],
       'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the XML normalization' => [
         ['test_fieldtype_boolean_emoji_normalizer'],
-        'xml',
-      ],
-      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the XML normalization' => [
-        ['test_datatype_boolean_emoji_normalizer', 'hal'],
         'xml',
       ],
     ];
