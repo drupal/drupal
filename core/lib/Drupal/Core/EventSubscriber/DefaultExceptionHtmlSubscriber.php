@@ -190,7 +190,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       // just log it. The DefaultExceptionSubscriber will catch the original
       // exception and handle it normally.
       $error = Error::decodeException($e);
-      $this->logger->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
+      $this->logger->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
     }
   }
 

@@ -21,6 +21,11 @@ class Error {
   const ERROR = 3;
 
   /**
+   * The the default message for logging errors.
+   */
+  const DEFAULT_ERROR_MESSAGE = '%type: @message in %function (line %line of %file).';
+
+  /**
    * An array of ignored functions.
    *
    * @var array
@@ -92,7 +97,7 @@ class Error {
     // no longer function correctly (as opposed to a user-triggered error), so
     // we assume that it is safe to include a verbose backtrace.
     $decode['@backtrace'] = Error::formatBacktrace($backtrace);
-    return new FormattableMarkup('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decode);
+    return new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE . ' <pre class="backtrace">@backtrace</pre>', $decode);
   }
 
   /**
