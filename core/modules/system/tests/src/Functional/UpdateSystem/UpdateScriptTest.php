@@ -661,6 +661,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($full_admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
+    $this->updateRequirementsProblem();
     $this->clickLink('maintenance mode');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementContains('css', 'main h1', 'Maintenance mode');
@@ -670,6 +671,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
+    $this->updateRequirementsProblem();
     $this->clickLink('maintenance mode');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementContains('css', 'main h1', 'Maintenance mode');
