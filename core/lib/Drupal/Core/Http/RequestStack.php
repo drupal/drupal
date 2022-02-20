@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack as SymfonyRequestStack;
 /**
  * Forward-compatibility shim for Symfony's RequestStack.
  *
- * @todo Remove when Symfony 5.3 or greater is required.
+ * @todo https://www.drupal.org/node/3265121 Remove in Drupal 10.0.x.
  */
 class RequestStack extends SymfonyRequestStack {
 
@@ -31,7 +31,7 @@ class RequestStack extends SymfonyRequestStack {
    * {@inheritdoc}
    */
   public function getMasterRequest() {
-    @trigger_error('Drupal\Core\Http\RequestStack::getMasterRequest() is deprecated, use getMainRequest() instead.', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use getMainRequest() instead. See https://www.drupal.org/node/3253744', E_USER_DEPRECATED);
     return $this->getMainRequest();
   }
 

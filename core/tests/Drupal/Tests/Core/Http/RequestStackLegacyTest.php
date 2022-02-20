@@ -19,7 +19,7 @@ class RequestStackLegacyTest extends UnitTestCase {
   public function testGetMasterRequestDeprecation() {
     $stack = new RequestStack();
 
-    $this->expectDeprecation('Drupal\Core\Http\RequestStack::getMasterRequest() is deprecated, use getMainRequest() instead.');
+    $this->expectDeprecation('Drupal\Core\Http\RequestStack::getMasterRequest() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use getMainRequest() instead. See https://www.drupal.org/node/3253744');
     $this->assertNull($stack->getMasterRequest());
   }
 
