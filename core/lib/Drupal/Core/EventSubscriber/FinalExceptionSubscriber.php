@@ -100,7 +100,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
         // We use \Drupal\Component\Render\FormattableMarkup directly here,
         // rather than use t() since we are in the middle of error handling, and
         // we don't want t() to cause further errors.
-        $message = new FormattableMarkup('%type: @message in %function (line %line of %file).', $error);
+        $message = new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE, $error);
       }
       else {
         // With verbose logging, we will also include a backtrace.
@@ -118,7 +118,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
 
         // Generate a backtrace containing only scalar argument values.
         $error['@backtrace'] = Error::formatBacktrace($backtrace);
-        $message = new FormattableMarkup('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $error);
+        $message = new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE . ' <pre class="backtrace">@backtrace</pre>', $error);
       }
     }
 

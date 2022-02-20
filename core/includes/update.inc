@@ -179,7 +179,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
       $variables = Error::decodeException($e);
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      $ret['#abort'] = ['success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables)];
+      $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
     }
   }
 
@@ -248,7 +248,7 @@ function update_invoke_post_update($function, &$context) {
       unset($variables['backtrace'], $variables['exception']);
       $ret['#abort'] = [
         'success' => FALSE,
-        'query' => t('%type: @message in %function (line %line of %file).', $variables),
+        'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables),
       ];
     }
   }

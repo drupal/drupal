@@ -129,7 +129,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
 
   // Use a default value if $message is not set.
   if (empty($message)) {
-    $message = '%type: @message in %function (line %line of %file).';
+    $message = Error::DEFAULT_ERROR_MESSAGE;
   }
 
   if ($link) {
