@@ -22,7 +22,6 @@ class RestResourceConfigTest extends KernelTestBase {
     'serialization',
     'basic_auth',
     'user',
-    'hal',
   ];
 
   /**
@@ -39,13 +38,13 @@ class RestResourceConfigTest extends KernelTestBase {
         ],
         'POST' => [
           'supported_auth' => ['basic_auth'],
-          'supported_formats' => ['hal_json'],
+          'supported_formats' => ['json'],
         ],
       ],
     ]);
 
     $rest_config->calculateDependencies();
-    $this->assertEquals(['module' => ['basic_auth', 'entity_test', 'hal', 'serialization', 'user']], $rest_config->getDependencies());
+    $this->assertEquals(['module' => ['basic_auth', 'entity_test', 'serialization', 'user']], $rest_config->getDependencies());
   }
 
 }

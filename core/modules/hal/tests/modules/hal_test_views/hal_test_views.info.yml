@@ -1,0 +1,8 @@
+name: 'HAL test views'
+type: module
+description: 'Provides default views for views HAL tests.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:rest
+  - drupal:views

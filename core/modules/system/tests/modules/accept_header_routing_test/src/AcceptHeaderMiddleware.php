@@ -27,7 +27,6 @@ class AcceptHeaderMiddleware implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     $mapping = [
       'application/json' => 'json',
-      'application/hal+json' => 'hal_json',
       'application/xml' => 'xml',
       'text/html' => 'html',
     ];

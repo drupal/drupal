@@ -46,16 +46,6 @@ class StyleSerializerKernelTest extends ViewsKernelTestBase {
 
     $view->calculateDependencies();
     $this->assertEquals(['module' => ['rest', 'serialization', 'user']], $view->getDependencies());
-
-    \Drupal::service('module_installer')->install(['hal']);
-
-    $view = View::load('test_serializer_display_entity');
-    $display = &$view->getDisplay('rest_export_1');
-    $display['display_options']['style']['options']['formats'] = ['json', 'xml', 'hal_json'];
-    $view->save();
-
-    $view->calculateDependencies();
-    $this->assertEquals(['module' => ['hal', 'rest', 'serialization', 'user']], $view->getDependencies());
   }
 
 }

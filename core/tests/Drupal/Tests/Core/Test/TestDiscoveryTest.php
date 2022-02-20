@@ -518,7 +518,6 @@ EOF;
   public function providerTestGetPhpunitTestSuite() {
     $data = [];
     $data['simpletest-webtest'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
-    $data['simpletest-kerneltest'] = ['\Drupal\hal\Tests\FileNormalizeTest', FALSE];
     $data['module-unittest'] = [static::class, 'Unit'];
     $data['module-kerneltest'] = ['\Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest', 'Kernel'];
     $data['module-functionaltest'] = ['\Drupal\FunctionalTests\BrowserTestBaseTest', 'Functional'];

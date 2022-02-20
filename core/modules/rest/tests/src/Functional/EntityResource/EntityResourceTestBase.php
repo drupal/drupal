@@ -41,11 +41,6 @@ use Psr\Http\Message\ResponseInterface;
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonAnonTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonBasicAuthTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonCookieTest
- * But the HAL module also adds a new format ('hal_json'), so that format also
- * needs test coverage (for its own peculiarities in normalization & encoding):
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonAnonTest
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonBasicAuthTest
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonCookieTest
  *
  * In other words: for every entity type there should be:
  * 1. an abstract subclass that includes the entity type-specific authorization
