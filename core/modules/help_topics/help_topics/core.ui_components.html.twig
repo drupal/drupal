@@ -5,7 +5,7 @@ related:
   - block.overview
 ---
 {% set accessibility_topic = render_var(help_topic_link('core.ui_accessibility')) %}
-{% set quick_edit_topic = render_var(help_topic_link('core.quick_edit')) %}
+{% set settings_tray_topic = render_var(help_topic_link('core.settings_tray')) %}
 {% set admin_link = render_var(help_route_link('/admin', 'system.admin')) %}
 <h2>{% trans %}What administrative interface components are available?{% endtrans %}</h2>
 <p>{% trans %}The following administrative interface components are provided by Drupal core and its modules (some contributed modules offer additional functionality):{% endtrans %}</p>
@@ -14,7 +14,7 @@ related:
   <li>{% trans %}A menu system, which you can navigate to find pages for administrative tasks. The core Toolbar module displays this menu on the top or left side of the page (right side in right-to-left languages). There are also contributed module replacements for the core Toolbar module, with additional features, such as the <a href="https://www.drupal.org/project/admin_toolbar">Admin Toolbar module</a>.{% endtrans %}</li>
   <li>{% trans %}The core Shortcuts module enhances the toolbar with a configurable list of links to commonly-used tasks.{% endtrans %}</li>
   <li>{% trans %}If you install the core Contextual Links module, non-administrative pages will contain links leading to related administrative tasks.{% endtrans %}</li>
-  <li>{% trans %}In-place or <em>quick</em> editing. In-place editing of content is provided by the core Quick Edit module, and in-place editing of configuration is provided by the core Settings Tray module. See {{ quick_edit_topic }} for more information.{% endtrans %}</li>
+  <li>{% trans %}In-place or <em>quick</em> editing. In-place editing of configuration is provided by the core Settings Tray module. See {{ settings_tray_topic }} for more information.{% endtrans %}</li>
   <li>{% trans %}The core Help module displays help topics, and provides a Help block that can be placed on administrative pages to provide an overview of their functionality.{% endtrans %}</li>
   <li>{% trans %}The core Tour module allows modules to provide interactive tours of administrative pages for more detailed help.{% endtrans %}</li>
 </ul>
