@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Core\TempStore;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TempStore\Lock;
@@ -13,6 +12,7 @@ use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\TempStoreException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**

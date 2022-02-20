@@ -716,7 +716,7 @@ services:
     class: Drupal\Core\Menu\StaticMenuLinkOverrides
     arguments: ['@config.factory']
   request_stack:
-    class: Drupal\Core\Http\RequestStack
+    class: Symfony\Component\HttpFoundation\RequestStack
     tags:
       - { name: persist }
   current_route_match:
