@@ -116,10 +116,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
     foreach ($urls as $langcode => $url) {
       $this->drupalGet($url);
       foreach ($urls as $langcode_alternate => $url_alternate) {
-        $args = [':href' => $url_alternate->toString(), ':hreflang' => $langcode_alternate];
-        $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]', $args);
-        $message = sprintf('The "%s" translation has the correct alternate hreflang link for "%s": %s.', $langcode, $langcode_alternate, $url->toString());
-        $this->assertTrue(isset($links[0]), $message);
+        $this->assertSession()->elementAttributeContains('xpath', "head/link[@rel='alternate' and @hreflang='$langcode_alternate']", 'href', $url_alternate->toString());
       }
     }
 
@@ -135,12 +132,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
           'absolute' => TRUE,
           'language' => $language,
         ])->toString();
-        $args = [
-          ':href' => $frontpage_path,
-          ':hreflang' => $language->getId(),
-        ];
-        $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]', $args);
-        $this->assertArrayHasKey(0, $links);
+        $this->assertSession()->elementAttributeContains('xpath', "head/link[@rel='alternate' and @hreflang='{$language->getId()}']", 'href', $frontpage_path);
       }
     }
   }

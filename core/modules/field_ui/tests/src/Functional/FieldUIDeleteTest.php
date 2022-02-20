@@ -124,9 +124,8 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The listed configuration will be updated.');
     $this->assertSession()->elementTextEquals('xpath', '//ul[@data-drupal-selector="edit-view"]', 'test_view_field_delete');
 
-    $xml = $this->cssSelect('#edit-entity-deletes');
     // Test that nothing is scheduled for deletion.
-    $this->assertFalse(isset($xml[0]), 'The field currently being deleted is not shown in the entity deletions.');
+    $this->assertSession()->elementNotExists('css', '#edit-entity-deletes');
 
     // Delete the second field.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2);

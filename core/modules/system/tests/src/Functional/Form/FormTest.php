@@ -859,12 +859,11 @@ class FormTest extends BrowserTestBase {
       }
       $path = strtr($path, ['!type' => $type]);
       // Verify that the element exists.
-      $element = $this->xpath($path, [
+      $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($path, [
         ':name' => Html::escape($name),
         ':div-class' => $class,
         ':value' => $item['#value'] ?? '',
-      ]);
-      $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
+      ]));
     }
 
     // Verify special element #type text-format.
