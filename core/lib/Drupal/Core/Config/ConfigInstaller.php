@@ -91,17 +91,13 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, $install_profile, ExtensionPathResolver $extension_path_resolver = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, $install_profile, ExtensionPathResolver $extension_path_resolver) {
     $this->configFactory = $config_factory;
     $this->activeStorages[$active_storage->getCollectionName()] = $active_storage;
     $this->typedConfig = $typed_config;
     $this->configManager = $config_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->installProfile = $install_profile;
-    if (!$extension_path_resolver) {
-      @trigger_error('Calling ConfigInstaller::__construct() without the $extension_path_resolver argument is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-      $extension_path_resolver = \Drupal::service('extension.path.resolver');
-    }
     $this->extensionPathResolver = $extension_path_resolver;
   }
 

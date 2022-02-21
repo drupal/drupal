@@ -105,7 +105,7 @@ class ConfigManager implements ConfigManagerInterface {
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationInterface $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher, EntityRepositoryInterface $entity_repository, ExtensionPathResolver $extension_path_resolver = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationInterface $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher, EntityRepositoryInterface $entity_repository, ExtensionPathResolver $extension_path_resolver) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->typedConfigManager = $typed_config_manager;
@@ -113,10 +113,6 @@ class ConfigManager implements ConfigManagerInterface {
     $this->activeStorage = $active_storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->entityRepository = $entity_repository;
-    if (!$extension_path_resolver) {
-      @trigger_error('Calling ConfigManager::__construct without the $extension_path_resolver argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-      $extension_path_resolver = \Drupal::service('extension.path.resolver');
-    }
     $this->extensionPathResolver = $extension_path_resolver;
   }
 
