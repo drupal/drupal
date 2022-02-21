@@ -140,10 +140,6 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->entityFieldManager = $entity_field_manager;
     $this->fieldTypeManager = $field_type_manager;
-    if ($account_switcher === NULL) {
-      @trigger_error('Calling ' . __NAMESPACE__ . '\EntityContentBase::__construct() without the $account_switcher argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3142975', E_USER_DEPRECATED);
-      $account_switcher = \Drupal::service('account_switcher');
-    }
     $this->accountSwitcher = $account_switcher;
   }
 

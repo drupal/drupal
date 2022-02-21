@@ -80,10 +80,6 @@ class ReviewForm extends MigrateUpgradeFormBase {
   public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler = NULL) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
-    if (!$module_handler) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $module_handler argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3136769', E_USER_DEPRECATED);
-      $module_handler = \Drupal::service('module_handler');
-    }
     $this->moduleHandler = $module_handler;
   }
 

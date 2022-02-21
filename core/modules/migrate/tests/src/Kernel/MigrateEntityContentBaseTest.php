@@ -304,24 +304,4 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     }
   }
 
-  /**
-   * Test BC injection of account switcher service.
-   *
-   * @group legacy
-   */
-  public function testAccountSwitcherBackwardsCompatibility() {
-    $this->expectDeprecation('Calling Drupal\migrate\Plugin\migrate\destination\EntityContentBase::__construct() without the $account_switcher argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3142975');
-    $destination = new EntityContentBase(
-      [],
-      'fake_plugin_id',
-      [],
-      $this->createMock(MigrationInterface::class),
-      $this->storage,
-      [],
-      $this->container->get('entity_field.manager'),
-      $this->container->get('plugin.manager.field.field_type')
-    );
-    $this->assertInstanceOf(EntityContentBase::class, $destination);
-  }
-
 }
