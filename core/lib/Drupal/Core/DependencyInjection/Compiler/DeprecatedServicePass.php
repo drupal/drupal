@@ -19,26 +19,12 @@ class DeprecatedServicePass implements CompilerPassInterface {
     $deprecated_services = [];
     foreach ($container->getDefinitions() as $service_id => $definition) {
       if ($definition->isDeprecated()) {
-        // @todo: remove when Drupal requires Symfony 5. See
-        // https://www.drupal.org/project/drupal/issues/3197729
-        if (method_exists($definition, 'getDeprecation')) {
-          $deprecated_services[$service_id] = $definition->getDeprecation($service_id)['message'];
-        }
-        else {
-          $deprecated_services[$service_id] = $definition->getDeprecationMessage($service_id);
-        }
+        $deprecated_services[$service_id] = $definition->getDeprecation($service_id)['message'];
       }
     }
     foreach ($container->getAliases() as $service_id => $definition) {
       if ($definition->isDeprecated()) {
-        // @todo: remove when Drupal requires Symfony 5. See
-        // https://www.drupal.org/project/drupal/issues/3197729
-        if (method_exists($definition, 'getDeprecation')) {
-          $deprecated_services[$service_id] = $definition->getDeprecation($service_id)['message'];
-        }
-        else {
-          $deprecated_services[$service_id] = $definition->getDeprecationMessage($service_id);
-        }
+        $deprecated_services[$service_id] = $definition->getDeprecation($service_id)['message'];
       }
     }
     $container->setParameter('_deprecated_service_list', $deprecated_services);
