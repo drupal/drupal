@@ -253,6 +253,14 @@ function system_theme() {
       'file' => 'system.theme.inc',
       'variables' => ['error_message' => []],
     ],
+    'entity_page_title' => [
+      'variables' => [
+        'attributes' => [],
+        'title' => NULL,
+        'entity' => NULL,
+        'view_mode' => NULL,
+      ],
+    ],
   ]);
 }
 

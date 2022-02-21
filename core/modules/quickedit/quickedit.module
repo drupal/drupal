@@ -129,6 +129,23 @@ function quickedit_preprocess_page_title(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_entity_page_title().
+ */
+function quickedit_preprocess_entity_page_title(&$variables) {
+  $variables['#cache']['contexts'][] = 'user.permissions';
+  $entity = $variables['entity'];
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
+    return;
+  }
+  if (($entity instanceof RevisionableInterface) && !$entity->isLatestRevision()) {
+    return;
+  }
+
+  $label_field = $entity->getEntityType()->getKey('label');
+  $variables['attributes']['data-quickedit-field-id'] = $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $label_field . '/' . $entity->language()->getId() . '/' . $variables['view_mode'];
+}
+
+/**
  * Implements hook_preprocess_HOOK() for field templates.
  */
 function quickedit_preprocess_field(&$variables) {
