@@ -72,7 +72,11 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     $user = $this->drupalCreateUser(['administer software updates']);
     $this->drupalLogin($user);
     $update_url = $GLOBALS['base_url'] . '/update.php';
+
+    // Collect strings from the PHP warning page, if applicable, as well as the
+    // main update page.
     $this->drupalGet($update_url, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
 
     /** @var \Drupal\locale\StringDatabaseStorage $stringStorage */
     $stringStorage = \Drupal::service('locale.storage');
@@ -90,8 +94,6 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     // Ensure that there are no updates just due to translations. Check for
     // markup and a link instead of specific text because text may be
     // translated.
-    $this->drupalGet($update_url . '/selection', ['external' => TRUE]);
-    $this->updateRequirementsProblem();
     $this->drupalGet($update_url . '/selection', ['external' => TRUE]);
     $this->assertSession()->responseContains('messages--status');
     $this->assertSession()->linkByHrefNotExists('fr/update.php/run', 'No link to run updates.');
