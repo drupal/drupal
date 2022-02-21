@@ -69,7 +69,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
 
     // Check the node with Drupal default non-configurable display.
     $this->drupalGet($node->toUrl());
-    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes);
+    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes);
 
     // Enable module to make base fields' displays configurable.
     \Drupal::service('module_installer')->install(['node_display_configurable_test']);
@@ -82,12 +82,13 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
         'label' => 'above',
         'settings' => ['link' => FALSE],
       ])
+      ->removeComponent('title')
       ->save();
 
     // Recheck the node with configurable display.
     $this->drupalGet($node->toUrl());
 
-    $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes);
+    $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes, FALSE);
 
     $assert->elementExists('css', 'div[rel="schema:author"]');
 
@@ -113,15 +114,17 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    * @param string $metadata_region
    *   The region of the node html content where meta data is expected.
    * @param bool $field_classes
-   *   If TRUE, check for field--name-XXX classes.
+   *   If TRUE, check for field--name-XXX classes on created/uid fields.
+   * @param bool $title_classes
+   *   If TRUE, check for field--name-XXX classes on title field.
    *
    * @internal
    */
-  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes): void {
+  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes, bool $title_classes): void {
     $assert = $this->assertSession();
 
     $html_element = $is_inline ? 'span' : 'div';
-    $title_selector = 'h1 span' . ($field_classes ? '.field--name-title' : '');
+    $title_selector = 'h1 span' . ($title_classes ? '.field--name-title' : '');
     $assert->elementTextContains('css', $title_selector, $node->getTitle());
 
     // With field classes, the selector can be very specific.

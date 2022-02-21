@@ -25,4 +25,5 @@ function node_display_configurable_test_entity_base_field_info_alter(&$base_fiel
 function node_display_configurable_test_entity_type_build(array &$entity_types) {
   // Allow skipping of extra preprocessing for configurable display.
   $entity_types['node']->set('enable_base_field_custom_preprocess_skipping', TRUE);
+  $entity_types['node']->set('enable_page_title_template', TRUE);
 }
