@@ -27,6 +27,9 @@ class CommentUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testCommentUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
   }
 }

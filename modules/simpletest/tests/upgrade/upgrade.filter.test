@@ -28,6 +28,9 @@ class FilterFormatUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   function testFilterFormatUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     $format = filter_format_load('1');

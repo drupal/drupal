@@ -32,6 +32,9 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testPollUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check modules page for poll

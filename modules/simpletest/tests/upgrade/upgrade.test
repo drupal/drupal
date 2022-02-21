@@ -38,6 +38,11 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   var $pendingUpdates = TRUE;
 
   /**
+   * Flag to indicate whether to skip upgrade tests.
+   */
+  var $skipUpgradeTest = FALSE;
+
+  /**
    * Constructs an UpgradePathTestCase object.
    *
    * @param $test_id
@@ -46,6 +51,8 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    */
   function __construct($test_id = NULL) {
     parent::__construct($test_id);
+    $connection_info = Database::getConnectionInfo();
+    $this->skipUpgradeTest = (bool) ($connection_info['default']['driver'] == 'pgsql');
     $this->zlibInstalled = function_exists('gzopen');
   }
 

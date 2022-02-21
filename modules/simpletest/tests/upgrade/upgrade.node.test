@@ -26,6 +26,9 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testNodeBodyUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     $instance = field_info_instance('node', 'body', 'story');
@@ -77,6 +80,9 @@ class DisabledNodeTypeTestCase extends UpgradePathTestCase {
    * Tests a successful upgrade.
    */
   public function testDisabledNodeTypeUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
     $this->assertTrue(field_info_instance('comment', 'comment_body', 'comment_node_broken'), 'Comment body field instance was created for comments attached to the disabled broken node type');
   }
@@ -114,6 +120,9 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testPollUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check modules page for poll

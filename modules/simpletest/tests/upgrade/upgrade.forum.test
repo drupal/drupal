@@ -27,6 +27,9 @@ class ForumUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade (no negotiation).
    */
   public function testForumUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Work around http://drupal.org/node/931512

@@ -28,6 +28,9 @@ class TranslatableUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade (no negotiation).
    */
   public function testTranslatableUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // The D6 database contains the english node "First translatable page" with

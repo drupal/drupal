@@ -24,6 +24,9 @@ class UserUpgradePathPasswordTokenTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testUserUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
     $this->assertEqual(variable_get('user_mail_register_no_approval_required_body'), ', [user:name], [site:name], [site:url], [site:url-brief], [user:mail], [date:medium], [site:login-url], [user:edit-url], [user:one-time-login-url].', 'Existing email templates have been modified (password token involved).');
     // Check that a non-md5 hash was untouched.
@@ -57,6 +60,9 @@ class UserUpgradePathNoPasswordTokenTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testUserUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
     $this->assertEqual(variable_get('user_mail_register_no_approval_required_body'), '[user:name], [site:name], [site:url], [site:url-brief], [user:mail], [date:medium], [site:login-url], [user:edit-url], [user:one-time-login-url].', 'Existing email templates have been modified (password token not involved).');
   }
@@ -87,6 +93,9 @@ class UserUpgradePathDuplicatedPermissionTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testUserUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
   }
 }

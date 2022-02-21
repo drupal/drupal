@@ -29,6 +29,9 @@ class UpgradePathTriggerTestCase extends UpgradePathTestCase {
    * Basic tests for the trigger upgrade.
    */
   public function testTaxonomyUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
     $this->drupalGet('admin/structure/trigger/node');
     $this->assertRaw('<td>'. t('Make post sticky') .'</td>');
