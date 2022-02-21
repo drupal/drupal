@@ -49,19 +49,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
    */
   public function applies(Route $route) {
     $requirements = $route->getRequirements();
-    // Check for current requirement _csrf_request_header_token and deprecated
-    // REST requirement.
-    $applicable_requirements = [
-      '_csrf_request_header_token',
-      // @todo Remove _access_rest_csrf in Drupal 10.0.0 https://www.drupal.org/node/3115308
-      '_access_rest_csrf',
-    ];
-    if ($route->hasRequirement('_access_rest_csrf')) {
-      @trigger_error('Route requirement _access_rest_csrf is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399', E_USER_DEPRECATED);
-    }
-    $requirement_keys = array_keys($requirements);
-
-    if (array_intersect($applicable_requirements, $requirement_keys)) {
+    if (array_key_exists('_csrf_request_header_token', $requirements)) {
       if (isset($requirements['_method'])) {
         // There could be more than one method requirement separated with '|'.
         $methods = explode('|', $requirements['_method']);

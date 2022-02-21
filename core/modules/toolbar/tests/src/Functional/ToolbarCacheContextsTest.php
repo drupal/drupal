@@ -65,11 +65,8 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
 
   /**
    * Tests toolbar cache integration.
-   *
-   * @group legacy
    */
   public function testCacheIntegration() {
-    $this->expectDeprecation('Route requirement _access_rest_csrf is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399');
     $this->installExtraModules(['csrf_test', 'dynamic_page_cache']);
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test-page');
