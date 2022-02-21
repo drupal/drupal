@@ -14,6 +14,7 @@ use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RemoveCommand;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -324,6 +325,61 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
 }
 
 /**
+ * Returns a list of language codes supported by CKEditor 5.
+ *
+ * @param $lang
+ *   The Drupal langcode to match.
+ *
+ * @return array|mixed|string
+ *   The associated CKEditor 5 langcode.
+ */
+function _ckeditor5_get_langcode_mapping($lang = FALSE) {
+  // Cache the file system based language list calculation because this would
+  // be expensive to calculate all the time. The cache is cleared on core
+  // upgrades which is the only situation the CKEditor file listing should
+  // change.
+  $langcode_cache = \Drupal::cache()->get('ckeditor5.langcodes');
+  if (!empty($langcode_cache)) {
+    $langcodes = $langcode_cache->data;
+  }
+  if (empty($langcodes)) {
+    $langcodes = [];
+    // Collect languages included with CKEditor 5 based on file listing.
+    $files = scandir('core/assets/vendor/ckeditor5/ckeditor5-dll/translations');
+    foreach ($files as $file) {
+      if (str_ends_with($file, '.js')) {
+        $langcode = basename($file, '.js');
+        $langcodes[$langcode] = $langcode;
+      }
+    }
+    \Drupal::cache()->set('ckeditor5.langcodes', $langcodes);
+  }
+
+  // Get language mapping if available to map to Drupal language codes.
+  // This is configurable in the user interface and not expensive to get, so
+  // we don't include it in the cached language list.
+  $language_mappings = \Drupal::moduleHandler()->moduleExists('language') ? language_get_browser_drupal_langcode_mappings() : [];
+  foreach ($langcodes as $langcode) {
+    // If this language code is available in a Drupal mapping, use that to
+    // compute a possibility for matching from the Drupal langcode to the
+    // CKEditor langcode.
+    // For instance, CKEditor uses the langcode 'no' for Norwegian, Drupal
+    // uses 'nb'. This would then remove the 'no' => 'no' mapping and
+    // replace it with 'nb' => 'no'. Now Drupal knows which CKEditor
+    // translation to load.
+    if (isset($language_mappings[$langcode]) && !isset($langcodes[$language_mappings[$langcode]])) {
+      $langcodes[$language_mappings[$langcode]] = $langcode;
+      unset($langcodes[$langcode]);
+    }
+  }
+
+  if ($lang) {
+    return $langcodes[$lang] ?? 'en';
+  }
+  return $langcodes;
+}
+
+/**
  * Implements hook_library_info_alter().
  */
 function ckeditor5_library_info_alter(&$libraries, $extension) {
@@ -343,22 +399,136 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
     $libraries['base']['dependencies'][] = 'ckeditor5/ie11.user.warnings';
   }
 
+  $moduleHandler = \Drupal::moduleHandler();
+  // Only add translation processing if the locale module is enabled.
+  if (!$moduleHandler->moduleExists('locale')) {
+    return;
+  }
+  // All possibles CKEditor 5 languages that can be used by Drupal.
+  $ckeditor_langcodes = array_values(_ckeditor5_get_langcode_mapping());
+
   if ($extension === 'core') {
     // Generate libraries for each of the CKEditor 5 translation files so that
     // the correct translation file can be attached depending on the current
+    // language. This makes sure that caching caches the appropriate language.
+    // Only create libraries for languages that have a mapping to Drupal.
+    foreach ($ckeditor_langcodes as $langcode) {
+      $libraries['ckeditor5.translations.' . $langcode] = [
+        'remote' => $libraries['ckeditor5']['remote'],
+        'version' => $libraries['ckeditor5']['version'],
+        'license' => $libraries['ckeditor5']['license'],
+        'dependencies' => [
+          'core/ckeditor5',
+          'core/ckeditor5.translations',
+        ],
+      ];
+    }
+  }
+
+  // Copied from \Drupal\Core\Asset\LibraryDiscoveryParser::buildByExtension().
+  if ($extension === 'core') {
+    $path = 'core';
+  }
+  else {
+    if ($moduleHandler->moduleExists($extension)) {
+      $extension_type = 'module';
+    }
+    else {
+      $extension_type = 'theme';
+    }
+    $path = \Drupal::getContainer()->get('extension.path.resolver')->getPath($extension_type, $extension);
+  }
+
+  foreach ($libraries as &$library) {
+    // The way to know if a library has a translation is to depend on the
+    // special "core/ckeditor5.translations" library.
+    if (empty($library['js']) || empty($library['dependencies']) || !in_array('core/ckeditor5.translations', $library['dependencies'])) {
+      continue;
+    }
+
+    foreach ($library['js'] as $file => $options) {
+      // Only look for translations on libraries defined with a relative path.
+      if (!empty($options['type']) && $options['type'] === 'external') {
+        continue;
+      }
+      // Path relative to the current extension folder.
+      $dirname = dirname($file);
+      // Path of the folder in the filesystem relative to the Drupal root.
+      $dir = $path . '/' . $dirname;
+      // Exclude protocol-free URI.
+      if (str_starts_with($dirname, '//')) {
+        continue;
+      }
+      // CKEditor 5 plugins are most likely added through composer and
+      // installed in the module exposing it. Suppose the file path is
+      // relative to the module and not in the /libraries/ folder.
+      // Collect translations based on filename, and add all existing
+      // translations files to the plugin library. Unnecessary translations
+      // will be filtered in ckeditor5_js_alter() hook.
+      $files = scandir("$dir/translations");
+      foreach ($files as $file) {
+        if (str_ends_with($file, '.js')) {
+          $langcode = basename($file, '.js');
+          // Only add languages that Drupal can understands.
+          if (in_array($langcode, $ckeditor_langcodes)) {
+            $library['js']["$dirname/translations/$langcode.js"] = [
+              // Used in ckeditor5_js_alter() to filter unwanted translations.
+              'ckeditor5_langcode' => $langcode,
+              'minified' => TRUE,
+              'preprocess' => TRUE,
+            ];
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function ckeditor5_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  // This file means CKEditor 5 translations are in use on the page.
+  // @see locale_js_alter()
+  $placeholder_file = 'core/assets/vendor/ckeditor5/translation.js';
+  // This file is used to get a weight that will make it possible to aggregate
+  // all translation files in a single aggregate.
+  $ckeditor_dll_file = 'core/assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js';
+  if (isset($javascript[$placeholder_file])) {
+    // Use the placeholder file weight to set all the translations files weights
+    // so they can be aggregated together as expected.
+    $default_weight = $javascript[$placeholder_file]['weight'];
+    if (isset($javascript[$ckeditor_dll_file])) {
+      $default_weight = $javascript[$ckeditor_dll_file]['weight'];
+    }
+    // The placeholder file is not a real file, remove it from the list.
+    unset($javascript[$placeholder_file]);
+
+    // When the locale module isn't installed there are no translations.
+    if (!\Drupal::moduleHandler()->moduleExists('locale')) {
+      return;
+    }
+
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $ckeditor5_language = _ckeditor5_get_langcode_mapping($language_interface);
+
+    // Remove all CKEditor 5 translations files that are not in the current
     // language.
-    $files = scandir('core/assets/vendor/ckeditor5/translations');
-    foreach ($files as $file) {
-      if ($file[0] !== '.' && preg_match('/\.js$/', $file)) {
-        $langcode = basename($file, '.js');
-        $libraries['ckeditor5.translations.' . $langcode] = [
-          'remote' => $libraries['ckeditor5']['remote'],
-          'version' => $libraries['ckeditor5']['version'],
-          'license' => $libraries['ckeditor5']['license'],
-          'js' => [
-            'assets/vendor/ckeditor5/translations/' . $file => ['preprocess' => FALSE, 'minified' => TRUE],
-          ],
-        ];
+    foreach ($javascript as $index => &$item) {
+      // This is not a CKEditor 5 translation file, skip it.
+      if (empty($item['ckeditor5_langcode'])) {
+        continue;
+      }
+      // This file is the correct translation for this page.
+      if ($item['ckeditor5_langcode'] === $ckeditor5_language) {
+        // Set the weight for the translation file to be able to have the
+        // translation files aggregated.
+        $item['weight'] = $default_weight;
+      }
+      // When the file doesn't match the langcode remove it from the page.
+      else {
+        // Remove files that don't match the language requested.
+        unset($javascript[$index]);
       }
     }
   }

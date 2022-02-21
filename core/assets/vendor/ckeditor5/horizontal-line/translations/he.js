@@ -1,0 +1,1 @@
+!function(i){const n=i.he=i.he||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"קו אופקי"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(n){const i=n.el=n.el||{};i.dictionary=Object.assign(i.dictionary||{},{Downloadable:"","Edit link":"",Link:"Σύνδεσμος","Link image":"","Link URL":"Διεύθυνση συνδέσμου","Open in a new tab":"","Open link in new tab":"","This link has no URL":"",Unlink:"Αφαίρεση συνδέσμου"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

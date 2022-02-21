@@ -1,0 +1,1 @@
+!function(n){const i=n.sr=n.sr||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"Централно равнанје","Align left":"Лево равнање","Align right":"Десно равнање",Justify:"Обострано равнање","Text alignment":"Равнање текста","Text alignment toolbar":"Алатке за равнање текста"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

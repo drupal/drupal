@@ -1,0 +1,1 @@
+!function(i){const n=i.ko=i.ko||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"수평선"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

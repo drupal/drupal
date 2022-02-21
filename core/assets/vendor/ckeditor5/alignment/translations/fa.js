@@ -1,0 +1,1 @@
+!function(n){const i=n.fa=n.fa||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"تراز وسط","Align left":"تراز چپ","Align right":"تراز راست",Justify:"هم تراز کردن","Text alignment":"تراز متن","Text alignment toolbar":"نوار ابزار ترازبندی متن"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

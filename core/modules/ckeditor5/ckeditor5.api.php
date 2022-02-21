@@ -50,26 +50,30 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * To be discovered, YAML definition files must be named
  * {module_name}.ckeditor5.yml.
  *
- * @see ckeditor5.ckeditor5.yml for many examples of CKEditor 5 plugin
- * configuration as YAML.
+ * @see ckeditor5.ckeditor5.yml for many examples of CKEditor 5 plugin configuration as YAML.
  *
  * The minimally required metadata: the CKEditor 5 plugins to load, the label
  * and the HTML elements it can generate — here's an example for a module
- * providing a Marquee plugin, both in yml and Annotation form:
+ * providing a Marquee plugin, both in yml or Annotation form:
  *
+ * Declared in the yml file:
  * @code
+ * # In the MODULE_NAME.ckeditor5.yml file.
+ *
  * MODULE_NAME_marquee:
  *   ckeditor5:
  *     plugins: [PACKAGE.CLASS]
  *   drupal:
  *     label: Marquee
+ *     library: MODULE_NAME/ckeditor5.marquee
  *     elements:
- *     - <marquee>
+ *       - <marquee>
  * @endcode
  *
- * and
- *
+ * Declared as an Annotation:
  * @code
+ * # In a scr/Plugin/CKEditor5Plugin/Marquee.php file.
+ * /**
  *  * @CKEditor5Plugin(
  *  *   id = "MODULE_NAME_marquee",
  *  *   ckeditor5 = @CKEditor5AspectsOfCKEditor5Plugin(
@@ -77,9 +81,11 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *  *   ),
  *  *   drupal = @DrupalAspectsOfCKEditor5Plugin(
  *  *     label = @Translation("Marquee"),
+ *  *     library = "MODULE_NAME/ckeditor5.marquee"
  *  *     elements = { "<marquee>" },
  *  *   )
  *  * )
+ *  * /
  * @endcode
  *
  * The metadata relating strictly to the CKEditor 5 plugin's JS code is stored
@@ -138,6 +144,26 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *
  * All of these can be defined in YAML or annotations. A given plugin should
  * choose one or the other, as a definition can't parse both at once.
+ *
+ * If the CKEditor 5 plugin contains translation they can be automatically
+ * loaded by Drupal by adding the dependency to the core/ckeditor5.translations
+ * library to the CKEditor 5 plugin library definition:
+ *
+ * @code
+ * # In the MODULE_NAME.libraries.yml file.
+ *
+ * marquee:
+ *  js:
+ *    assets/ckeditor5/marquee/marquee.js: { minified: true }
+ *  dependencies:
+ *    - core/ckeditor5
+ *    - core/ckeditor5.translations
+ * @endcode
+ *
+ * The translations for CKEditor 5 are located in a translations/ subdirectory,
+ * Drupal will load the corresponding translation when necessary, located in
+ * assets/ckeditor5/marquee/translations/* in this example.
+ *
  *
  * @see \Drupal\ckeditor5\Annotation\CKEditor5Plugin
  * @see \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin

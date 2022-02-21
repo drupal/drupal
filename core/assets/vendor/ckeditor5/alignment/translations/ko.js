@@ -1,0 +1,1 @@
+!function(n){const i=n.ko=n.ko||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"가운데 정렬","Align left":"왼쪽 정렬","Align right":"오른쪽 정렬",Justify:"양쪽 정렬","Text alignment":"텍스트 정렬","Text alignment toolbar":"텍스트 정렬 툴바"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

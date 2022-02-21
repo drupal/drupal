@@ -1,0 +1,1 @@
+!function(n){const a=n.ru=n.ru||{};a.dictionary=Object.assign(a.dictionary||{},{"Choose language":"Выбрать язык",Language:"Язык","Remove language":"Убрать язык"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

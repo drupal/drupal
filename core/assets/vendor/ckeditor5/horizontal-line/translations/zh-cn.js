@@ -1,0 +1,1 @@
+!function(n){const i=n["zh-cn"]=n["zh-cn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Horizontal line":"水平线"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

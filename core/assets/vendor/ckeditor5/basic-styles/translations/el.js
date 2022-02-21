@@ -1,0 +1,1 @@
+!function(i){const n=i.el=i.el||{};n.dictionary=Object.assign(n.dictionary||{},{Bold:"Έντονη",Code:"",Italic:"Πλάγια",Strikethrough:"",Subscript:"",Superscript:"",Underline:""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

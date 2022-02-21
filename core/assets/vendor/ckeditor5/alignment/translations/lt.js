@@ -1,0 +1,1 @@
+!function(i){const t=i.lt=i.lt||{};t.dictionary=Object.assign(t.dictionary||{},{"Align center":"Centruoti","Align left":"Lygiuoti į kairę","Align right":"Lygiuoti į dešinę",Justify:"Lygiuoti per visą plotį","Text alignment":"Teksto lygiavimas","Text alignment toolbar":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

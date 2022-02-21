@@ -74,6 +74,8 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   protected $librariesToSkip = [
     // Locale has a "dummy" library that does not actually exist.
     'locale/translations',
+    // Core has a "dummy" library that does not actually exist.
+    'core/ckeditor5.translations',
   ];
 
   /**

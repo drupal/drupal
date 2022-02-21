@@ -1,0 +1,1 @@
+!function(o){const e=o.bg=o.bg||{};e.dictionary=Object.assign(e.dictionary||{},{"%0 of %1":"",Cancel:"Отказ",Redo:"Повтори","Remove color":"","Restore default":"",Save:"Запазване","Show more items":"",Undo:"Отмени","Upload in progress":"Качването е в процес"}),e.getPluralForm=function(o){return 1!=o}}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

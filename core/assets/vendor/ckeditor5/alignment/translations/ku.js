@@ -1,0 +1,1 @@
+!function(n){const i=n.ku=n.ku||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"بەهێڵکردنی ناورەڕاست","Align left":"بەهێڵکردنی چەپ","Align right":"بەهێڵکردنی ڕاست",Justify:"هاوستوونی","Text alignment":"ڕیززکردنی تێکست","Text alignment toolbar":"تووڵامرازی ڕیززکردنی تێکست"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

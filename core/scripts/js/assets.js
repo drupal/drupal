@@ -8,7 +8,8 @@
  */
 
 const path = require('path');
-const { copyFile, writeFile, readFile, chmod, rmdir, mkdir, readdir, appendFile } = require('fs').promises;
+const { copyFile, writeFile, readFile, chmod, mkdir } = require('fs').promises;
+const glob = require('glob');
 
 const coreFolder = path.resolve(__dirname, '../../');
 const packageFolder = `${coreFolder}/node_modules`;
@@ -36,19 +37,10 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     }
   }
 
-  // CKEditor 5 translation files need some special handling. Start by ensuring
-  // that an empty /translations directory exists in the
-  // /core/assets/vendor/ckeditor5 directory.
-  const ckeditor5Path = `${assetsFolder}/ckeditor5`;
-  try {
-    await rmdir(`${ckeditor5Path}/translations`, { recursive: true })
-  } catch (e) {
-    // Nothing to do if the directory doesn't exist.
-  }
-  await mkdir(`${ckeditor5Path}/translations`);
-
   /**
-   * Declare the array that defines what needs to be copied over.
+   * Structure of the object defining a library to copy to the assets/ folder.
+   *
+   * @typedef DrupalLibraryAsset
    *
    * @prop {string} pack
    *   The name of the npm package (used to get the name of the folder where
@@ -66,6 +58,12 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
    *   the source and target folder.
    *     - An object with a `from` and `to` property if the source and target
    *   have a different name or if the folder nesting is different.
+   */
+
+  /**
+   * Declare the array that defines what needs to be copied over.
+   *
+   * @type {DrupalLibraryAsset[]}
    */
   const process = [
     {
@@ -182,165 +180,50 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       pack: 'loadjs',
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
-    {
-      pack: '@ckeditor/ckeditor5-alignment',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/alignment.js', to: 'alignment.js' }
-      ],
-      library: 'ckeditor5.alignment',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-basic-styles',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/basic-styles.js', to: 'basic-styles.js' }
-      ],
-      library: 'ckeditor5.basic',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-block-quote',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/block-quote.js', to: 'block-quote.js' }
-      ],
-      library: 'ckeditor5.blockquote',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-editor-classic',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/editor-classic.js', to: 'editor-classic.js' }
-      ],
-      library: 'ckeditor5.editorClassic',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-editor-decoupled',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/editor-decoupled.js', to: 'editor-decoupled.js' }
-      ],
-      library: 'ckeditor5.editorDecoupled',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-essentials',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/essentials.js', to: 'essentials.js' }
-      ],
-      library: 'ckeditor5.internal',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-heading',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/heading.js', to: 'heading.js' }
-      ],
-      library: 'ckeditor5.internal',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-horizontal-line',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/horizontal-line.js', to: 'horizontal-line.js' }
-      ],
-      library: 'ckeditor5.horizontalLine',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-image',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/image.js', to: 'image.js' }
-      ],
-      library: 'ckeditor5.image',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-indent',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/indent.js', to: 'indent.js' }
-      ],
-      library: 'ckeditor5.indent',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-language',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/language.js', to: 'language.js' },
-      ],
-      library: 'ckeditor5.language',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-link',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/link.js', to: 'link.js' }
-      ],
-      library: 'ckeditor5.link',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-list',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/list.js', to: 'list.js' }
-      ],
-      library: 'ckeditor5.list',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-paste-from-office',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/paste-from-office.js', to: 'paste-from-office.js' }
-      ],
-      library: 'ckeditor5.pasteFromOffice',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-remove-format',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/remove-format.js', to: 'remove-format.js' }
-      ],
-      library: 'ckeditor5.removeFormat',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-source-editing',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/source-editing.js', to: 'source-editing.js' }
-      ],
-      library: 'ckeditor5.sourceEditing',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-table',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/table.js', to: 'table.js' }
-      ],
-      library: 'ckeditor5.table',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-html-support',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/html-support.js', to: 'html-support.js' }
-      ],
-      library: 'ckeditor5.htmlSupport',
-    },
-    {
-      pack: '@ckeditor/ckeditor5-special-characters',
-      folder: 'ckeditor5',
-      files: [
-        { from: 'build/special-characters.js', to: 'special-characters.js' }
-      ],
-      library: 'ckeditor5.specialCharacters',
-    },
-    {
-      pack: 'ckeditor5',
-      files: [
-        { from: 'build/ckeditor5-dll.js', to: 'ckeditor5-dll.js' }
-      ],
-    }
   ];
+
+  // There are a lot of CKEditor 5 packages, generate the list dynamically.
+  // Drupal-specific mapping between CKEditor 5 name and Drupal library name.
+  const ckeditor5PluginMapping = {
+    'block-quote': 'blockquote',
+    'essentials': 'internal',
+    'basic-styles': 'basic',
+  };
+  // Get all the CKEditor 5 packages.
+  const ckeditor5Dirs = glob.sync(`{${packageFolder}/@ckeditor/ckeditor5*,${packageFolder}/ckeditor5}`);
+  for (const ckeditor5package of ckeditor5Dirs) {
+    // Add all the files in the build/ directory to the process array for copying.
+    const buildFiles = glob.sync(`${ckeditor5package}/build/**/*.js`, { nodir: true });
+    if (buildFiles.length) {
+      // Clean up the path to get the original package name.
+      const pack = ckeditor5package.replace(`${packageFolder}/`, '');
+      // Use the package name to generate the plugin name. There are some
+      // exceptions that needs to be handled. Ideally remove the special cases.
+      let pluginName = pack.replace('@ckeditor/ckeditor5-', '');
+      // Target folder in the vendor/assets folder.
+      let folder = `ckeditor5/${pluginName.replace('@ckeditor/ckeditor5-', '')}`;
+      // Transform kebab-case to CamelCase.
+      let library = pluginName.replace(/-./g, match => match[1].toUpperCase());
+      // Special case for Drupal implementation.
+      if (ckeditor5PluginMapping.hasOwnProperty(pluginName)) {
+        library = ckeditor5PluginMapping[pluginName];
+      }
+      if (library === 'ckeditor5') {
+        folder = 'ckeditor5/ckeditor5-dll';
+      } else {
+        library = `ckeditor5.${library}`;
+      }
+      process.push({
+        pack,
+        library,
+        folder,
+        files: buildFiles.map((absolutePath) => ({
+          from: absolutePath.replace(`${ckeditor5package}/`, ''),
+          to: absolutePath.replace(`${ckeditor5package}/build/`, ''),
+        })),
+      });
+    }
+  }
 
   // Use sequential processing to avoid corrupting the contents of the
   // concatenated CKEditor 5 translation files.
@@ -360,26 +243,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       updateLibraryVersion(libraryName, packageInfo);
     }
 
-    // CKEditor 5 packages ship with translation files.
-    if (pack.startsWith('@ckeditor') || pack === 'ckeditor5') {
-      const packageTranslationPath = `${packageFolder}/${sourceFolder}/build/translations`;
-      try {
-        const translationFiles = await readdir(packageTranslationPath, { withFileTypes: true });
-        for (const translationFile of translationFiles) {
-          if (!translationFile.isDirectory()) {
-            // Translation files are concatenated to a single translation
-            // file to avoid having to make multiple network requests to
-            // various translation files. As a trade off, this leads into
-            // some redundant translations depending on configuration.
-            const contents = await readFile(`${packageTranslationPath}/${translationFile.name}`)
-            await appendFile(`${assetsFolder}/${destFolder}/translations/${translationFile.name}`, contents);
-          }
-        }
-      } catch (e) {
-        // No translations folder, do nothing.
-      }
-    }
-
     for (const file of files) {
       let source = file;
       let dest = file;
@@ -387,35 +250,34 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         source = file.from;
         dest = file.to;
       }
+      const sourceFile = `${packageFolder}/${sourceFolder}/${source}`;
+      const destFile = `${assetsFolder}/${destFolder}/${dest}`;
+
       // For map files, make sure the sources files don't leak outside the
       // library folder. In the `sources` member, remove all "../" values at
       // the start of the files names to avoid having the virtual files outside
       // of the library vendor folder in dev tools.
       if (path.extname(source) === '.map') {
         console.log('Process map file', source);
-        const map = await readFile(
-          `${packageFolder}/${sourceFolder}/${source}`,
-        );
-        const json = JSON.parse(map);
+        const json = JSON.parse(await readFile(sourceFile));
         json.sources = json.sources.map((source) =>
           source.replace(/^(\.\.\/)+/, ''),
         );
-        await writeFile(
-          `${assetsFolder}/${destFolder}/${dest}`,
-          JSON.stringify(json),
-        );
+        await writeFile(destFile, JSON.stringify(json));
       } else {
         console.log(
           `Copy ${sourceFolder}/${source} to ${destFolder}/${dest}`,
         );
-        await copyFile(
-          `${packageFolder}/${sourceFolder}/${source}`,
-          `${assetsFolder}/${destFolder}/${dest}`,
-        );
+        try {
+          await mkdir(path.dirname(destFile), { recursive: true });
+        } catch (e) {
+          // Nothing to do if the folder already exists.
+        }
+        await copyFile(sourceFile, destFile);
         // These 2 files come from a zip file that hasn't been updated in years
         // hardcode the permission fix to pass the commit checks.
         if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
-          await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+          await chmod(destFile, 0o644);
         }
       }
     }

@@ -1,0 +1,1 @@
+!function(i){const n=i.ar=i.ar||{};n.dictionary=Object.assign(n.dictionary||{},{Bold:"عريض",Code:"شفرة برمجية",Italic:"مائل",Strikethrough:"يتوسطه خط",Subscript:"",Superscript:"",Underline:"تحته خط"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
