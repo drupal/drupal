@@ -24,7 +24,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_filter_taxonomy_index_tid', 'test_taxonomy_term_name'];
+  public static $testViews = [
+    'test_filter_taxonomy_index_tid',
+    'test_taxonomy_term_name',
+    'test_taxonomy_exposed_grouped_filter',
+  ];
 
   /**
    * {@inheritdoc}
@@ -228,6 +232,50 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->submitForm([], 'Save');
     $this->submitForm([], 'Update preview');
     $this->assertSession()->elementNotExists('xpath', "//div[@class='view-content']");
+  }
+
+  /**
+   * Tests exposed grouped taxonomy filters.
+   */
+  public function testExposedGroupedFilter() {
+    // Create a content type with a taxonomy field.
+    $this->drupalCreateContentType(['type' => 'article']);
+    $field_name = 'field_views_testing_tags';
+    $this->createEntityReferenceField('node', 'article', $field_name, NULL, 'taxonomy_term');
+
+    $nodes = [];
+    for ($i = 0; $i < 3; $i++) {
+      $node = [];
+      $node['type'] = 'article';
+      $node['field_views_testing_tags'][0]['target_id'] = $this->terms[$i][0]->id();
+      $nodes[] = $this->drupalCreateNode($node);
+    }
+
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_taxonomy_exposed_grouped_filter/page_1/filter/field_views_testing_tags_target_id');
+    $edit = [
+      'options[group_info][group_items][1][value][]' => [$this->terms[0][0]->id(), $this->terms[1][0]->id()],
+      'options[group_info][group_items][2][value][]' => [$this->terms[1][0]->id(), $this->terms[2][0]->id()],
+      'options[group_info][group_items][3][value][]' => [$this->terms[2][0]->id(), $this->terms[0][0]->id()],
+    ];
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
+
+    // Visit the view's page url and validate the results.
+    $this->drupalGet('/test-taxonomy-exposed-grouped-filter');
+    $this->submitForm(['field_views_testing_tags_target_id' => 1], 'Apply');
+    $this->assertSession()->pageTextContains($nodes[0]->getTitle());
+    $this->assertSession()->pageTextContains($nodes[1]->getTitle());
+    $this->assertSession()->pageTextNotContains($nodes[2]->getTitle());
+
+    $this->submitForm(['field_views_testing_tags_target_id' => 2], 'Apply');
+    $this->assertSession()->pageTextContains($nodes[1]->getTitle());
+    $this->assertSession()->pageTextContains($nodes[2]->getTitle());
+    $this->assertSession()->pageTextNotContains($nodes[0]->getTitle());
+
+    $this->submitForm(['field_views_testing_tags_target_id' => 3], 'Apply');
+    $this->assertSession()->pageTextContains($nodes[0]->getTitle());
+    $this->assertSession()->pageTextContains($nodes[2]->getTitle());
+    $this->assertSession()->pageTextNotContains($nodes[1]->getTitle());
   }
 
   /**
