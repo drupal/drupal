@@ -108,14 +108,12 @@ class QuickStartTest extends TestCase {
     $process->start();
     $guzzle = new Client();
     $port = FALSE;
-    while ($process->isRunning()) {
-      if (preg_match('/127.0.0.1:(\d+)/', $process->getOutput(), $match)) {
+    $process->waitUntil(function ($type, $output) use (&$port) {
+      if (preg_match('/127.0.0.1:(\d+)/', $output, $match)) {
         $port = $match[1];
-        break;
+        return TRUE;
       }
-      // Wait for more output.
-      sleep(1);
-    }
+    });
     // The progress bar uses STDERR to write messages.
     $this->assertStringContainsString('Congratulations, you installed Drupal!', $process->getErrorOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
@@ -157,12 +155,7 @@ class QuickStartTest extends TestCase {
     ];
     $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $process->setTimeout(500);
-    $process->start();
-    while ($process->isRunning()) {
-      // Wait for more output.
-      sleep(1);
-    }
-
+    $process->run();
     $error_output = $process->getErrorOutput();
     $this->assertStringContainsString('Your PHP installation is too old.', $error_output);
     $this->assertStringContainsString('Drupal requires at least PHP', $error_output);
@@ -209,14 +202,12 @@ class QuickStartTest extends TestCase {
     $server_process->start();
     $guzzle = new Client();
     $port = FALSE;
-    while ($server_process->isRunning()) {
-      if (preg_match('/127.0.0.1:(\d+)/', $server_process->getOutput(), $match)) {
+    $server_process->waitUntil(function ($type, $output) use (&$port) {
+      if (preg_match('/127.0.0.1:(\d+)\/user\/reset\/1\//', $output, $match)) {
         $port = $match[1];
-        break;
+        return TRUE;
       }
-      // Wait for more output.
-      sleep(1);
-    }
+    });
     $this->assertEquals('', $server_process->getErrorOutput());
     $this->assertStringContainsString("127.0.0.1:$port/user/reset/1/", $server_process->getOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
