@@ -29,25 +29,6 @@ class TaxonomyController extends ControllerBase {
   /**
    * Route title callback.
    *
-   * @param \Drupal\taxonomy\VocabularyInterface $taxonomy_vocabulary
-   *   The vocabulary.
-   *
-   * @return string
-   *   The vocabulary label as a render array.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
-   *   replacement; route title callbacks are internal.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3037157
-   */
-  public function vocabularyTitle(VocabularyInterface $taxonomy_vocabulary) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement; route title callbacks are internal. See https://www.drupal.org/project/drupal/issues/3037157.', E_USER_DEPRECATED);
-    return ['#markup' => $taxonomy_vocabulary->label(), '#allowed_tags' => Xss::getHtmlTagList()];
-  }
-
-  /**
-   * Route title callback.
-   *
    * @param \Drupal\taxonomy\TermInterface $taxonomy_term
    *   The taxonomy term.
    *

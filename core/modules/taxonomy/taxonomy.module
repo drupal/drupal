@@ -5,7 +5,6 @@
  * Enables the organization of content into categories.
  */
 
-use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Render\Element;
@@ -45,19 +44,6 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
       return $output;
   }
-}
-
-/**
- * Entity URI callback.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   $term->toUrl() instead.
- *
- * @see https://www.drupal.org/node/3039041
- */
-function taxonomy_term_uri($term) {
-  @trigger_error('taxonomy_term_uri() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use $term->toUrl() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
-  return $term->toUrl();
 }
 
 /**
@@ -149,127 +135,6 @@ function taxonomy_term_is_page(Term $term) {
     return $page_term_id == $term->id();
   }
   return FALSE;
-}
-
-/**
- * Clear all static cache variables for terms.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache()
- *   instead.
- *
- * @see https://www.drupal.org/node/3039041
- */
-function taxonomy_terms_static_reset() {
-  @trigger_error("taxonomy_terms_static_reset() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache() instead. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
-  \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
-}
-
-/**
- * Clear all static cache variables for vocabularies.
- *
- * @param $ids
- *   An array of ids to reset in the entity cache.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->resetCache($ids)
- *   instead.
- *
- * @see https://www.drupal.org/node/3039041
- */
-function taxonomy_vocabulary_static_reset(array $ids = NULL) {
-  @trigger_error('taxonomy_vocabulary_static_reset() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->resetCache($ids) instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
-  \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->resetCache($ids);
-}
-
-/**
- * Get names for all taxonomy vocabularies.
- *
- * @return array
- *   A list of existing vocabulary IDs.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::entityQuery('taxonomy_vocabulary')->execute() instead.
- *
- * @see https://www.drupal.org/node/3039041
- */
-function taxonomy_vocabulary_get_names() {
-  @trigger_error("taxonomy_vocabulary_get_names() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityQuery('taxonomy_vocabulary')->execute() instead. See https://www.drupal.org/node/3039041", E_USER_DEPRECATED);
-  return \Drupal::entityQuery('taxonomy_vocabulary')->execute();
-}
-
-/**
- * Try to map a string to an existing term, as for glossary use.
- *
- * Provides a case-insensitive and trimmed mapping, to maximize the
- * likelihood of a successful match.
- *
- * @param $name
- *   Name of the term to search for.
- * @param $vocabulary
- *   (optional) Vocabulary machine name to limit the search. Defaults to NULL.
- *
- * @return
- *   An array of matching term objects.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->loadByProperties(['name' => $name, 'vid' => $vid])
- *   instead, to get a list of taxonomy term entities having the same name and
- *   keyed by their term ID.
- *
- * @see https://www.drupal.org/node/3039041
- */
-function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
-  @trigger_error('taxonomy_term_load_multiple_by_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->loadByProperties(["name" => $name, "vid" => $vid]) instead, to get a list of taxonomy term entities having the same name and keyed by their term ID. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
-  $values = ['name' => trim($name)];
-  if (isset($vocabulary)) {
-    $values['vid'] = $vocabulary;
-  }
-  return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties($values);
-}
-
-/**
- * Implodes a list of tags of a certain vocabulary into a string.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead.
- *
- * @see https://www.drupal.org/node/3039041
- * @see \Drupal\Component\Utility\Tags::explode()
- */
-function taxonomy_implode_tags($tags, $vid = NULL) {
-  @trigger_error('taxonomy_implode_tags() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Entity\Element\EntityAutocomplete::getEntityLabels() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
-  $typed_tags = [];
-  foreach ($tags as $tag) {
-    // Extract terms belonging to the vocabulary in question.
-    if (!isset($vid) || $tag->bundle() == $vid) {
-      // Make sure we have a completed loaded taxonomy term.
-      if ($tag instanceof EntityInterface && $label = $tag->label()) {
-        // Commas and quotes in tag names are special cases, so encode 'em.
-        $typed_tags[] = Tags::encode($label);
-      }
-    }
-  }
-  return implode(', ', $typed_tags);
-}
-
-/**
- * Title callback for term pages.
- *
- * @param \Drupal\taxonomy\Entity\Term $term
- *   A taxonomy term entity.
- *
- * @return
- *   The term name to be used as the page title.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   $term->label() instead.
- *
- * @see https://www.drupal.org/node/3039041
- */
-function taxonomy_term_title(Term $term) {
-  @trigger_error('taxonomy_term_title() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use $term->label() instead. See https://www.drupal.org/node/3039041', E_USER_DEPRECATED);
-  return $term->label();
 }
 
 /**
