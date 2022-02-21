@@ -749,6 +749,23 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       foreach (array($field_name2, $field_name) as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
           $edit = array('files[' . $each_field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']' => drupal_realpath($test_file->uri));
+          // drupalPost() takes a $submit parameter that is the value of the
+          // button whose click we want to emulate. Since we have multiple
+          // buttons with the value "Upload", and want to control which one we
+          // use, we change the value of the other ones to something else.
+          // Since non-clicked buttons aren't included in the submitted POST
+          // data, and since drupalPost() will result in $this being updated
+          // with a newly rebuilt form, this doesn't cause problems. Note that
+          // $buttons is an array of SimpleXMLElement objects passed by
+          // reference so modifications to each button will affect
+          // \DrupalWebTestCase::handleForm().
+          $buttons = $this->xpath('//input[@type="submit" and @value="Upload"]');
+          $button_name = $each_field_name . '_' . LANGUAGE_NONE . '_' . $delta . '_upload_button';
+          foreach ($buttons as $button) {
+            if ($button['name'] != $button_name) {
+              $button['value'] = 'DUMMY';
+            }
+          }
           // If the Upload button doesn't exist, drupalPost() will automatically
           // fail with an assertion message.
           $this->drupalPost(NULL, $edit, t('Upload'));
@@ -786,13 +803,8 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
           $button_name = $current_field_name . '_' . LANGUAGE_NONE . '_' . $delta . '_remove_button';
           switch ($type) {
             case 'nojs':
-              // drupalPost() takes a $submit parameter that is the value of the
-              // button whose click we want to emulate. Since we have multiple
-              // buttons with the value "Remove", and want to control which one we
-              // use, we change the value of the other ones to something else.
-              // Since non-clicked buttons aren't included in the submitted POST
-              // data, and since drupalPost() will result in $this being updated
-              // with a newly rebuilt form, this doesn't cause problems.
+              // Same workaround for multiple buttons with the value "Remove" as
+              // we did for the "Upload" buttons above.
               foreach ($buttons as $button) {
                 if ($button['name'] != $button_name) {
                   $button['value'] = 'DUMMY';

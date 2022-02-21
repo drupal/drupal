@@ -733,6 +733,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
   }
 
   $instances = array();
+  $query->orderBy('fci.id');
   $results = $query->execute();
 
   foreach ($results as $record) {
