@@ -1592,7 +1592,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
 
   /**
    * Test that we can UNION multiple Select queries together. This is
-   * semantically equal to UNION DISTINCT, so we don't explicity test that.
+   * semantically equal to UNION DISTINCT, so we don't explicitly test that.
    */
   function testUnion() {
     $query_1 = db_select('test', 't')
@@ -1601,7 +1601,8 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
 
     $query_2 = db_select('test', 't')
       ->fields('t', array('name'))
-      ->condition('age', 28);
+      ->condition('age', 28)
+      ->orderBy('name');
 
     $query_1->union($query_2);
 
