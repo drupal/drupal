@@ -586,7 +586,24 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
     $this->assertText(t('Custom date format added.'));
 
     // Verify that the unique key on {date_formats}.format still exists.
-    $this->assertTrue(db_index_exists('date_formats', 'formats'), 'Unique key on {date_formats} exists');
+    try {
+      // The PostgreSQL driver appends suffixes to keys/indexes according to
+      // their types. A unique key is a key (not an index), so it has a _key
+      // suffix. It is not possible to call db_index_exists() as this function
+      // will check the index name with _idx suffix, so it will never succeed on
+      // PostgreSQL. An attempt to create a new unique key when it exists should
+      // fail and the thrown exception will confirm that the unique key exists.
+      // MySQL and SQLite are not affected by this change, as they do not append
+      // suffixes to keys/indexes names.
+      db_add_unique_key('date_formats', 'formats', array('formats'));
+      // This is executed if no exception has been thrown and the unique key
+      // did not already exist.
+      $this->fail('Unique key on {date_formats} does not exist');
+    }
+    catch (DatabaseSchemaObjectExistsException $e) {
+      // Exception confirms that the unique key already existed.
+      $this->pass('Unique key on {date_formats} exists');
+    }
   }
 }
 
