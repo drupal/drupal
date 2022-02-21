@@ -138,7 +138,7 @@ class FieldInfo {
 
     $map = array();
 
-    $query = db_query('SELECT fc.type, fci.field_name, fci.entity_type, fci.bundle FROM {field_config_instance} fci INNER JOIN {field_config} fc ON fc.id = fci.field_id WHERE fc.active = 1 AND fc.storage_active = 1 AND fc.deleted = 0 AND fci.deleted = 0');
+    $query = db_query('SELECT fc.type, fci.field_name, fci.entity_type, fci.bundle FROM {field_config_instance} fci INNER JOIN {field_config} fc ON fc.id = fci.field_id WHERE fc.active = 1 AND fc.storage_active = 1 AND fc.deleted = 0 AND fci.deleted = 0 ORDER BY bundle, entity_type');
     foreach ($query as $row) {
       $map[$row->field_name]['bundles'][$row->entity_type][] = $row->bundle;
       $map[$row->field_name]['type'] = $row->type;
