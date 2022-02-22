@@ -75,7 +75,7 @@
 }
 
 .shepherd-text a {
-  color: #fff;
+  color: var(--color-sunglow);
 }
 
 .shepherd-cancel-icon {
