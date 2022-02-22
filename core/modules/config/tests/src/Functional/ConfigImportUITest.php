@@ -55,7 +55,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync = $this->container->get('config.storage.sync');
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertSession()->pageTextContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextContains('The staged configuration is identical to the active configuration.');
     $this->assertSession()->buttonNotExists('Import all');
 
     // Create updated configuration object.
@@ -137,7 +137,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->buttonNotExists('Import all');
 
     // Verify that there are no further changes to import.
-    $this->assertSession()->pageTextContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextContains('The staged configuration is identical to the active configuration.');
 
     $this->rebuildContainer();
     // Verify site name has changed.
@@ -239,7 +239,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('The staged configuration is identical to the active configuration.');
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
@@ -363,7 +363,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->prepareSiteNameUpdate($new_site_name);
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('The staged configuration is identical to the active configuration.');
     $this->submitForm([], 'Import all');
 
     // Verify that the validation messages appear.
@@ -440,14 +440,14 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync->write($name_secondary, $values_secondary);
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('The staged configuration is identical to the active configuration.');
 
     // Attempt to import configuration and verify that an error message appears.
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('Deleted and replaced configuration entity "' . $name_secondary . '"');
     $this->assertSession()->pageTextContains('The configuration was imported with errors.');
     $this->assertSession()->pageTextNotContains('The configuration was imported successfully.');
-    $this->assertSession()->pageTextContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextContains('The staged configuration is identical to the active configuration.');
   }
 
   /**
@@ -486,7 +486,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $node->delete();
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextNotContains($validation_message);
-    $this->assertSession()->pageTextContains('There are no configuration changes to import.');
+    $this->assertSession()->pageTextContains('The staged configuration is identical to the active configuration.');
     $this->assertSession()->pageTextNotContains('node.type.' . $node_type->id());
     $this->assertSession()->pageTextNotContains('field.field.node.' . $node_type->id() . '.body');
     $this->assertSession()->pageTextNotContains('core.entity_view_display.node.' . $node_type->id() . '.teaser');
