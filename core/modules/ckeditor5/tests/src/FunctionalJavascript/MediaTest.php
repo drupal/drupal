@@ -347,6 +347,9 @@ class MediaTest extends WebDriverTestBase {
     // Assert that the img within the media embed within the CKEditor contains
     // the overridden alt text set in the dialog.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $who_is_zartan . '"]'));
+    // Ensure that the Drupal Media widget doesn't have alt attribute.
+    // @see https://www.drupal.org/project/drupal/issues/3248440
+    $assert_session->elementNotExists('css', '.ck-widget.drupal-media[alt]');
     // Test `aria-label` attribute appears on the widget wrapper.
     $assert_session->elementExists('css', '.ck-widget.drupal-media [aria-label="Screaming hairy armadillo"]');
 

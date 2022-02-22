@@ -248,7 +248,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      conversion.attributeToAttribute({
+      const attributeMapping = {
         model: {
           key: modelKey,
           name: 'drupalMedia',
@@ -257,7 +257,11 @@ export default class DrupalMediaEditing extends Plugin {
           name: 'drupal-media',
           key: this.attrs[modelKey],
         },
-      });
+      };
+      // Attributes should be rendered only in dataDowncast to avoid having
+      // unfiltered data-attributes on the Drupal Media widget.
+      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+      conversion.for('upcast').attributeToAttribute(attributeMapping);
     });
   }
 
