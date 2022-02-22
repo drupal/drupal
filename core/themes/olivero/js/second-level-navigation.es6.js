@@ -180,7 +180,7 @@
 
   // Ensure that desktop submenus close when escape key is pressed.
   document.addEventListener('keyup', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
+    if (e.key === 'Escape') {
       if (isDesktopNav()) closeAllSubNav();
     }
   });

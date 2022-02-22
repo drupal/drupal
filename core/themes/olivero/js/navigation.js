@@ -32,7 +32,7 @@
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
     document.addEventListener('keyup', e => {
-      if (e.key === 'Escape' || e.key === 'Esc') {
+      if (e.key === 'Escape') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
         } else {

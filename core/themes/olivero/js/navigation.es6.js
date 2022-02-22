@@ -56,7 +56,7 @@
 
     // Close any open sub-navigation first, then close the header navigation.
     document.addEventListener('keyup', (e) => {
-      if (e.key === 'Escape' || e.key === 'Esc') {
+      if (e.key === 'Escape') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
         } else {

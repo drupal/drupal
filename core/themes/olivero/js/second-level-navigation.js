@@ -107,7 +107,7 @@
 
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
   document.addEventListener('keyup', e => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
+    if (e.key === 'Escape') {
       if (isDesktopNav()) closeAllSubNav();
     }
   });
