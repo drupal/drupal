@@ -109,6 +109,10 @@ function user_update_9301(&$sandbox) {
   }
 
   $connection = \Drupal::database();
+  if ($connection->databaseType() === 'sqlsrv') {
+    return t('The Microsoft SQL Server does not support user_update_9301() because it causes data loss.');
+  }
+
   $connection->schema()->dropPrimaryKey('users');
   if ($connection->databaseType() === 'mysql') {
     $sql_mode = $connection->query("SELECT @@sql_mode;")->fetchField();
