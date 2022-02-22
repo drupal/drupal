@@ -444,6 +444,9 @@
   min-height: 40px;
   resize: vertical;
 }
+#drupal-off-canvas select[multiple] {
+  overflow: auto;
+}
 #drupal-off-canvas optgroup {
   color: black;
   font-weight: normal;
