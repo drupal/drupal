@@ -213,7 +213,7 @@ class ConfigSync extends FormBase {
         '#type' => 'table',
         '#header' => [$this->t('Name'), $this->t('Operations')],
         '#rows' => [],
-        '#empty' => $this->t('There are no configuration changes to import.'),
+        '#empty' => empty($source_list) ? $this->t('There is no staged configuration.') : $this->t('The staged configuration is identical to the active configuration.'),
       ];
       $form['actions']['#access'] = FALSE;
       return $form;
