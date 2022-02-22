@@ -66,7 +66,7 @@
   line-height: 1.385em;
 }
 .shepherd-text a {
-  color: #fff;
+  color: var(--color-sunglow);
 }
 
 .shepherd-cancel-icon {
