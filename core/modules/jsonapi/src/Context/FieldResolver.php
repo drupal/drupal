@@ -128,15 +128,10 @@ class FieldResolver {
    *   The resource type repository.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Session\AccountInterface|null $current_user
+   * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user account.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user = NULL) {
-    if (is_null($current_user)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
-      $current_user = \Drupal::currentUser();
-    }
-
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;

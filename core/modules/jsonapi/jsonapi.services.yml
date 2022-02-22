@@ -250,13 +250,3 @@ services:
     class: Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
     public: false
     arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory']
-
-  # Deprecated services.
-  access_check.jsonapi.relationship_field_access:
-    # Deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
-    # replacement. JSON:API's access checkers are not part of its public API.
-    # See https://www.drupal.org/node/3194641.
-    class: Drupal\jsonapi\Access\RelationshipFieldAccess
-    arguments: ['@jsonapi.entity_access_checker']
-    tags:
-      - { name: access_check, applies_to: _jsonapi_relationship_field_access, needs_incoming_request: TRUE }
