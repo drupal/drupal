@@ -255,6 +255,10 @@ small .admin-link:after {
 .theme-info__description {
   margin-top: 0;
 }
+.theme-link--non-stable {
+  padding-left: 18px;
+  background: url(../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
+}
 .system-themes-list {
   margin-bottom: 20px;
 }
