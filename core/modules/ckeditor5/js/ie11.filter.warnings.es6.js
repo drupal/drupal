@@ -15,10 +15,8 @@
         '(-ms-high-contrast: active), (-ms-high-contrast: none)',
       );
       const editorSelect = once(
-        'editor-select',
-        document.querySelector(
-          '#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor',
-        ),
+        'editor-ie11-warning',
+        '[data-drupal-selector="filter-format-edit-form"] [data-drupal-selector="edit-editor-editor"], [data-drupal-selector="filter-format-add-form"] [data-drupal-selector="edit-editor-editor"]',
       );
 
       if (typeof editorSelect[0] !== 'undefined') {
@@ -33,15 +31,16 @@
         );
 
         /**
-         * Adds an IE11 compatibility warning to the message container.
+         * Adds IE11 compatibility warnings to the message container.
          */
-        const ck5Warning = () => {
+        const addIE11Warning = () => {
           selectMessages.add(
             Drupal.t(
               'CKEditor 5 is not compatible with Internet Explorer. Text fields using CKEditor 5 will fall back to plain HTML editing without CKEditor for users of Internet Explorer.',
             ),
             {
               type: 'warning',
+              id: 'ie_11_warning',
             },
           );
           if (isIE11) {
@@ -56,6 +55,7 @@
               ),
               {
                 type: 'error',
+                id: 'ie_11_error',
               },
             );
             editorSettings.hidden = true;
@@ -63,68 +63,60 @@
         };
 
         /**
-         * Adds a warning if the selected editor is ckeditor5, otherwise clears
-         * the message container.
+         * Adds a warning if the selected editor is CKEditor 5, otherwise clears
+         * any existing IE11 warnings.
          */
         const updateWarningStatus = () => {
           if (
             select.value === 'ckeditor5' &&
-            !select.classList.contains('error')
+            !select.hasAttribute('data-error-switching-to-ckeditor5')
           ) {
-            ck5Warning();
+            addIE11Warning();
           } else {
-            editorSettings.hidden = false;
-            selectMessages.clear();
-          }
-        };
-
-        const selectChangeHandler = () => {
-          // Declare the observer first so the observer callback can access it.
-          let editorSelectObserver = null;
-
-          /**
-           * MutationObserver callback for the editor select.
-           *
-           * This listens for the removal 'disabled' attribute on the <select>,
-           * which means the AJAX callback has completed and the form is in a
-           * state suitable for seeing if the IE11 warning is needed.
-           *
-           * @param {Array} mutations
-           *   The element's mutations.
-           */
-          function whenSelectAttributeChanges(mutations) {
-            for (let i = 0; i < mutations.length; i++) {
-              // When the select input is no longer disabled, the AJAX request
-              // is complete and the UI is in a state where it can be determined
-              // if the IE11 warning is needed.
-              if (
-                mutations[i].type === 'attributes' &&
-                mutations[i].attributeName === 'disabled' &&
-                !select.disabled
-              ) {
-                updateWarningStatus();
-                editorSelectObserver.disconnect();
-              }
+            if (selectMessages.select('ie_11_warning')) {
+              selectMessages.remove('ie_11_warning');
+            }
+            if (selectMessages.select('ie_11_error')) {
+              selectMessages.remove('ie_11_error');
             }
           }
-
-          // An observer is used because during the select change event, it is
-          // not yet known if validation prevented the switch to CKEditor 5.
-          // The IE11 warning should only appear if the switch wasn't prevented
-          // by validation.
-          editorSelectObserver = new MutationObserver(
-            whenSelectAttributeChanges,
-          );
-          editorSelectObserver.observe(select, {
-            attributes: true,
-            attributeOldValue: true,
-          });
         };
 
         updateWarningStatus();
 
-        // Listen to text format selection changes.
-        select.addEventListener('change', selectChangeHandler);
+        // This observer listens for two different attribute changes that, when
+        // they occur, may require adding or removing the IE11 warnings.
+        // - If the disabled attribute was removed, which is potentially due to
+        //   an AJAX update having completed.
+        // - If the data-error-switching-to-ckeditor5 attribute was removed,
+        //   which means a switch to CKEditor 5 that was previously blocked due
+        //   to validation errors has resumed and completed.
+        const editorSelectObserver = new MutationObserver((mutations) => {
+          for (let i = 0; i < mutations.length; i++) {
+            // When the select input is no longer disabled, the AJAX request
+            // is complete and the UI is in a state where it can be determined
+            // if the ckeditor_stylesheets warning is needed.
+            const switchToCKEditor5Complete =
+              mutations[i].type === 'attributes' &&
+              mutations[i].attributeName === 'disabled' &&
+              !select.disabled;
+            const fixedErrorsPreventingSwitchToCKEditor5 =
+              mutations[i].type === 'attributes' &&
+              mutations[i].attributeName ===
+                'data-error-switching-to-ckeditor5' &&
+              !select.hasAttribute('data-error-switching-to-ckeditor5');
+            if (
+              switchToCKEditor5Complete ||
+              fixedErrorsPreventingSwitchToCKEditor5
+            ) {
+              updateWarningStatus();
+            }
+          }
+        });
+
+        editorSelectObserver.observe(select, {
+          attributes: true,
+        });
       }
     },
   };
