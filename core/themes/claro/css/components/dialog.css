@@ -166,3 +166,8 @@
 #drupal-off-canvas .form-type--boolean {
     margin-left: 0;
   }
+
+#drupal-off-canvas .form-item .form-item__description {
+    color: var(--color-whitesmoke);
+    font-size: 0.75rem;
+  }
