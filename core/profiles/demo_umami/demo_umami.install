@@ -35,8 +35,9 @@ function demo_umami_requirements($phase) {
  */
 function demo_umami_install() {
   // Assign user 1 the "administrator" role.
+  /** @var \Drupal\user\Entity\User $user */
   $user = User::load(1);
-  $user->roles[] = 'administrator';
+  $user->addRole('administrator');
   $user->save();
 
   // We install some menu links, so we have to rebuild the router, to ensure the
