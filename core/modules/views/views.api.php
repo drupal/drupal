@@ -501,9 +501,11 @@ function hook_views_data_alter(array &$data) {
 /**
  * Override the default Views data for a Field API field.
  *
- * The field module's implementation of hook_views_data() invokes this for each
- * field storage, in the module that defines the field type. It is not invoked
- * in other modules.
+ * When collecting the views data, views_views_data() invokes this hook for each
+ * field storage definition, on the module that provides the field storage
+ * definition. If the return value is empty, the result of
+ * views_field_default_views_data() is used instead. Then the result is altered
+ * by invoking hook_field_views_data_alter() on all modules.
  *
  * If no hook implementation exists, hook_views_data() falls back to
  * views_field_default_views_data().
@@ -585,7 +587,7 @@ function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageCon
 /**
  * Alter the Views data on a per field basis.
  *
- * The field module's implementation of hook_views_data_alter() invokes this for
+ * The Views module's implementation of hook_views_data_alter() invokes this for
  * each field storage, in the module that defines the field type. It is not
  * invoked in other modules.
  *
