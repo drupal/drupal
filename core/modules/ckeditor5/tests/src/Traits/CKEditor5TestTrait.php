@@ -19,10 +19,20 @@ trait CKEditor5TestTrait {
    *
    * @return \DOMDocument
    *   The result of parsing CKEditor 5's data into a PHP DOMDocument.
+   */
+  protected function getEditorDataAsDom(): \DOMDocument {
+    return Html::load($this->getEditorDataAsHtmlString());
+  }
+
+  /**
+   * Gets CKEditor 5 instance data as a HTML string.
+   *
+   * @return string
+   *   The result of retrieving CKEditor 5's data.
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/api/module_editor-classic_classiceditor-ClassicEditor.html#function-getData
    */
-  protected function getEditorDataAsDom(): \DOMDocument {
+  protected function getEditorDataAsHtmlString(): string {
     // We cannot trust on CKEditor updating the textarea every time model
     // changes. Therefore, the most reliable way to get downcasted data is to
     // use the CKEditor API.
@@ -31,7 +41,7 @@ trait CKEditor5TestTrait {
   return Drupal.CKEditor5Instances.get(Drupal.CKEditor5Instances.keys().next().value).getData();
 })();
 JS;
-    return Html::load($this->getSession()->evaluateScript($javascript));
+    return $this->getSession()->evaluateScript($javascript);
   }
 
   /**
