@@ -55,6 +55,7 @@
    * Typography.
    */
   --font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --font-family-serif: "Times New Roman", times, serif;
   --line-height: 1.5;
   --line-height-heading: 1.3;
   --line-height-form-label: 1.125rem; /* 18px */
