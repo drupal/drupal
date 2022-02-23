@@ -22,7 +22,6 @@ export default class DrupalMediaEditing extends Plugin {
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
-      drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalMediaViewMode: 'data-view-mode',
@@ -116,7 +115,7 @@ export default class DrupalMediaEditing extends Plugin {
       .elementToElement({
         model: 'drupalMedia',
         view: (modelElement, { writer }) => {
-          const container = writer.createContainerElement('div', {
+          const container = writer.createContainerElement('figure', {
             class: 'drupal-media',
           });
           if (!this.previewUrl) {

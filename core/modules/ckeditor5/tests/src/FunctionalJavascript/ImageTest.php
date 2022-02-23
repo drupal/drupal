@@ -5,6 +5,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
@@ -70,7 +71,7 @@ class ImageTest extends CKEditor5TestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href> <img src alt data-entity-uuid data-entity-type height width data-caption data-align>',
+            'allowed_html' => '<p> <br> <em> <a href> <img src alt data-entity-uuid data-entity-type height width data-caption data-align>',
           ],
         ],
         'filter_align' => ['status' => TRUE],
@@ -86,6 +87,7 @@ class ImageTest extends CKEditor5TestBase {
             'uploadImage',
             'sourceEditing',
             'link',
+            'italic',
           ],
         ],
         'plugins' => [
@@ -355,6 +357,37 @@ class ImageTest extends CKEditor5TestBase {
     $width_from_editor = $editor_data->getElementsByTagName('img')->item(0)->getAttribute('width');
     // Check the contents of the source editing area.
     $this->assertSame($width, $width_from_editor);
+  }
+
+  /**
+   * Ensures that images can have caption set.
+   */
+  public function testImageCaption() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // The foo attribute is added to be removed later by CKEditor 5 to make sure
+    // CKEditor 5 was able to downcast data.
+    $img_tag = '<img alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute" foo="bar" data-entity-type="file" data-entity-uuid="' . $this->file->uuid() . '" src="' . $this->file->createFileUrl() . '">';
+    $this->host->body->value = $img_tag;
+    $this->host->save();
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.image figcaption'));
+    $this->assertSame('Alpacas <em>are</em> cute', $figcaption->getHtml());
+    $page->pressButton('Source');
+    $editor_dom = $this->getEditorDataAsDom();
+    $data_caption = $editor_dom->getElementsByTagName('img')->item(0)->getAttribute('data-caption');
+    $this->assertSame('Alpacas <em>are</em> cute', $data_caption);
+
+    $page->pressButton('Save');
+
+    $this->assertEquals('<img src="' . $this->file->createFileUrl() . '" data-entity-uuid="' . $this->file->uuid() . '" data-entity-type="file" alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute">', Node::load(1)->get('body')->value);
+    $assert_session->elementExists('xpath', '//figure/img[@src="' . $this->file->createFileUrl() . '" and not(@data-caption)]');
+    $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute</figcaption>');
   }
 
   /**
