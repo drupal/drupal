@@ -109,7 +109,28 @@ dl dl {
   margin-right: 20px;
 }
 blockquote {
-  margin: 1em 40px;
+  position: relative;
+  margin: var(--space-l);
+  margin-left: 2.5rem; /* LTR */
+  font-size: var(--font-size-h6);
+}
+[dir="rtl"] blockquote {
+  margin-right: 2.5rem;
+}
+blockquote::before {
+  position: absolute;
+  left: -2.5rem; /* LTR */
+  content: open-quote;
+  color: var(--color-absolutezero);
+  font-family: var(--font-family-serif);
+  font-size: var(--space-xl);
+  line-height: 1em;
+}
+[dir="rtl"] blockquote::before {
+  right: -2.5rem;
+}
+blockquote::after {
+  content: no-close-quote;
 }
 address {
   font-style: italic;

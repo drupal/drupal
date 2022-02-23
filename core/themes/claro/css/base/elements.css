@@ -130,7 +130,32 @@ dl dl {
 }
 
 blockquote {
-  margin: 1em 2.5rem;
+  position: relative;
+  margin: 1.5rem;
+  margin-left: 2.5rem; /* LTR */
+  font-size: 1.125rem;
+}
+
+[dir="rtl"] blockquote {
+  margin-right: 2.5rem;
+}
+
+blockquote::before {
+  position: absolute;
+  left: -2.5rem; /* LTR */
+  content: open-quote;
+  color: #003cc5;
+  font-family: "Times New Roman", times, serif;
+  font-size: 3rem;
+  line-height: 1em;
+}
+
+[dir="rtl"] blockquote::before {
+  right: -2.5rem;
+}
+
+blockquote::after {
+  content: no-close-quote;
 }
 
 address {
