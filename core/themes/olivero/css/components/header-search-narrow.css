@@ -60,7 +60,7 @@
     background-position: bottom left; /* LTR */
     background-size: 0% 0.3125rem;
     box-shadow: none;
-    font-family: serif;
+    font-family: "Lora", "georgia", serif;
     font-size: 1rem;
     -webkit-appearance: none
   }

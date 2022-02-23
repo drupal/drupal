@@ -52,7 +52,7 @@
     color: var(--color--white);
     border: solid 1px transparent;
     box-shadow: none;
-    font-family: serif;
+    font-family: var(--font-serif);
     font-size: 32px;
     -webkit-appearance: none;
 

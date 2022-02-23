@@ -38,7 +38,7 @@
     background-position: bottom left; /* LTR */
     background-size: 0% 5px;
     box-shadow: none;
-    font-family: serif;
+    font-family: var(--font-serif);
     font-size: 16px;
     -webkit-appearance: none;
 
