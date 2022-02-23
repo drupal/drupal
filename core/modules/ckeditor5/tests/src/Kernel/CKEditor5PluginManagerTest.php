@@ -1068,6 +1068,7 @@ PHP,
     // should be available now that the media_embed is enabled.
     $plugin_ids = array_keys($this->manager->getEnabledDefinitions($editor));
     $expected_plugins = array_merge($default_plugins, [
+      'ckeditor5_drupalMediaCaption',
       'ckeditor5_test_layercake',
       'media_media',
       'media_mediaAlign',

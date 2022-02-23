@@ -78,7 +78,7 @@ class MediaTest extends WebDriverTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href> <drupal-media data-entity-type data-entity-uuid data-align alt>',
+            'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt>',
           ],
         ],
         'filter_align' => ['status' => TRUE],
@@ -94,6 +94,8 @@ class MediaTest extends WebDriverTestBase {
           'items' => [
             'sourceEditing',
             'link',
+            'bold',
+            'italic',
           ],
         ],
         'plugins' => [
@@ -298,8 +300,99 @@ class MediaTest extends WebDriverTestBase {
    * Tests caption editing in the CKEditor widget.
    */
   public function testEditableCaption() {
-    // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3246385
-    $this->markTestSkipped('Blocked on https://www.drupal.org/project/ckeditor5/issues/3246385.');
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    // Test that setting caption to blank string doesn't break 'Edit media'
+    // button.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('data-caption="baz"', 'data-caption=""', $original_value);
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    $assert_session->elementExists('css', '[data-drupal-media-preview][aria-label="Screaming hairy armadillo"]');
+    $assert_session->elementContains('css', 'figcaption', '');
+    $assert_session->elementAttributeContains('css', 'figcaption', 'data-placeholder', 'Enter media caption');
+
+    // Test if you leave the caption blank, but change another attribute,
+    // such as the alt text, the editable caption is still there and the edit
+    // button still exists.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Click the "Override media image text alternative" button.
+    $this->getBalloonButton('Override media image text alternative')->click();
+    $this->assertVisibleBalloon('.ck-text-alternative-form');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+
+    // Fill in the alt field and submit.
+    $alt_override_input->setValue('Gold star for robot boy.');
+    $this->getBalloonButton('Save')->click();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media img[alt*="Gold star for robot boy."]'));
+    $this->assertEquals('', $assert_session->waitForElement('css', '.drupal-media figcaption')->getText());
+    $assert_session->elementAttributeContains('css', '.drupal-media figcaption', 'data-placeholder', 'Enter media caption');
+
+    // Restore caption in saved body value.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('data-caption=""', 'data-caption="baz"', $original_value);
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $this->assertSame('baz', $figcaption->getHtml());
+
+    // Ensure that caption can be toggled off from the toolbar.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Toggle caption off')->click();
+    $assert_session->assertNoElementAfterWait('css', 'figcaption');
+
+    // Ensure that caption can be toggled on from the toolbar.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Toggle caption on')->click();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+
+    // Type into the widget's caption element.
+    $figcaption->setValue('Llamas are the most awesome ever');
+    $editor_dom = $this->getEditorDataAsDom();
+    $this->assertEquals('Llamas are the most awesome ever', $editor_dom->getElementsByTagName('drupal-media')->item(0)->getAttribute('data-caption'));
+
+    // Ensure that the caption can be changed to bold.
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $this->selectTextInsideElement('.drupal-media figcaption');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
+    $this->pressEditorButton('Bold');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption > strong'));
+    $this->assertEquals('<strong>Llamas are the most awesome ever</strong>', $figcaption->getHtml());
+    $editor_dom = $this->getEditorDataAsDom();
+    $this->assertEquals('<strong>Llamas are the most awesome ever</strong>', $editor_dom->getElementsByTagName('drupal-media')->item(0)->getAttribute('data-caption'));
+
+    // Ensure that bold can be removed from the caption.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption > strong'));
+    $this->selectTextInsideElement('.drupal-media figcaption > strong');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
+    $this->pressEditorButton('Bold');
+    $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media figcaption > strong'));
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $this->assertEquals('Llamas are the most awesome ever', $figcaption->getHtml());
+    $editor_dom = $this->getEditorDataAsDom();
+    $this->assertEquals('Llamas are the most awesome ever', $editor_dom->getElementsByTagName('drupal-media')->item(0)->getAttribute('data-caption'));
+
+    // Ensure that caption can be linked.
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $this->selectTextInsideElement('.drupal-media figcaption');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
+    $this->pressEditorButton('Link');
+    $this->assertVisibleBalloon('.ck-link-form');
+    $link_input = $page->find('css', '.ck-balloon-panel .ck-link-form input[type=text]');
+    $link_input->setValue('https://drupal.org');
+    $page->find('css', '.ck-balloon-panel .ck-link-form button[type=submit]')->click();
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption > a'));
+    $this->assertEquals('<a class="ck-link_selected" href="https://drupal.org">Llamas are the most awesome ever</a>', $figcaption->getHtml());
+    $editor_dom = $this->getEditorDataAsDom();
+    $this->assertEquals('<a href="https://drupal.org">Llamas are the most awesome ever</a>', $editor_dom->getElementsByTagName('drupal-media')->item(0)->getAttribute('data-caption'));
   }
 
   /**
@@ -673,7 +766,7 @@ class MediaTest extends WebDriverTestBase {
     // Check that the 'content has been updated' message status appears to confirm we left the editor.
     $assert_session->waitForElementVisible('css', 'messages messages--status');
     // Check that the class is correct in the front end.
-    $assert_session->elementExists('css', 'article.align-center');
+    $assert_session->elementExists('css', 'figure.align-center');
     // Go back to the editor to check that the alignment class still exists.
     $edit_url = $this->getSession()->getCurrentURL() . '/edit';
     $this->drupalGet($edit_url);
@@ -703,7 +796,7 @@ class MediaTest extends WebDriverTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align alt class="layercake-side">',
+        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt class="layercake-side">',
       ],
     ]);
     $filter_format->save();
@@ -746,8 +839,8 @@ class MediaTest extends WebDriverTestBase {
     $assert_session->waitForElementVisible('css', 'messages messages--status');
 
     // Ensure that the class is correct in the front end.
-    $assert_session->elementExists('css', 'article.layercake-side');
-    $assert_session->elementNotExists('css', 'article.arbitrary-class');
+    $assert_session->elementExists('css', 'figure.layercake-side');
+    $assert_session->elementNotExists('css', 'figure.arbitrary-class');
   }
 
   /**
@@ -802,6 +895,26 @@ class MediaTest extends WebDriverTestBase {
 })()
 JS;
     return $this->getSession()->evaluateScript($javascript);
+  }
+
+  /**
+   * Selects text inside an element.
+   *
+   * @param string $selector
+   *   A CSS selector for the element which contents should be selected.
+   */
+  protected function selectTextInsideElement(string $selector): void {
+    $javascript = <<<JS
+(function() {
+  const el = document.querySelector("$selector");
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+})();
+JS;
+    $this->getSession()->evaluateScript($javascript);
   }
 
 }

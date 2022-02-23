@@ -1,6 +1,51 @@
+/**
+ * @file
+ * Styles for the Drupal Media in CKEditor 5.
+ *
+ * Most of these styles are written to match those in the CKEditor 5 image
+ * plugin to provide a consistent editing experience.
+ */
+
 .ck .drupal-media {
   position: relative;
+  display: table;
+  clear: both;
+  min-width: 50px;
+  margin: 0.9em auto;
+  text-align: center;
 }
+
+.ck-content .drupal-media img {
+  display: block;
+  min-width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.ck-content .drupal-media > figcaption {
+  display: table-caption;
+  padding: 0.6em;
+  caption-side: bottom;
+  word-break: break-word;
+  color: hsl(0, 0%, 20%);
+  outline-offset: -1px;
+  background-color: hsl(0, 0%, 97%);
+  font-size: 0.75em;
+}
+.ck.ck-editor__editable .drupal-media__caption_highlighted {
+  animation: drupal-media-caption-highlight 0.6s ease-out;
+}
+
+@keyframes drupal-media-caption-highlight {
+  0% {
+    background-color: hsl(52, 100%, 50%);
+  }
+
+  100% {
+    background-color: hsl(0, 0%, 97%);
+  }
+}
+
 .ck .drupal-media__metadata-error {
   position: absolute;
   top: 8px;
