@@ -807,8 +807,26 @@ final class HTMLRestrictions {
           if (is_array($value)) {
             $value = array_keys($value);
           }
+          // Drupal never allows style attributes due to security concerns.
+          // @see \Drupal\Component\Utility\Xss
+          if ($name === 'style') {
+            continue;
+          }
           assert($value === TRUE || Inspector::assertAllStrings($value));
-          $to_allow['attributes'][$name] = $value;
+          if ($name === 'class') {
+            $to_allow['classes'] = $value;
+            continue;
+          }
+          // If a single attribute value is allowed, it must be TRUE (see the
+          // assertion above). Otherwise, it must be an array of strings (see
+          // the assertion above), which lists all allowed attribute values. To
+          // be able to configure GHS to a range of values, we need to use a
+          // regular expression.
+          // @todo Expand to support partial wildcards in
+          //   https://www.drupal.org/project/drupal/issues/3260853.
+          $to_allow['attributes'][$name] = is_array($value)
+            ? ['regexp' => ['pattern' => '/^(' . implode('|', $value) . ')$/']]
+            : $value;
         }
       }
       $allowed[] = $to_allow;
