@@ -51,7 +51,12 @@ function viewCaptionToCaptionAttribute(editor) {
       'insert:caption',
       (evt, data, conversionApi) => {
         const { consumable, writer, mapper } = conversionApi;
-        if (!consumable.consume(data.item, 'insert')) {
+        const imageUtils = editor.plugins.get('ImageUtils');
+
+        if (
+          !imageUtils.isImage(data.item.parent) ||
+          !consumable.consume(data.item, 'insert')
+        ) {
           return;
         }
 
@@ -434,6 +439,10 @@ function downcastBlockImageLink() {
  * @internal
  */
 export default class DrupalImageEditing extends Plugin {
+  static get requires() {
+    return ['ImageUtils'];
+  }
+
   /**
    * @inheritdoc
    */

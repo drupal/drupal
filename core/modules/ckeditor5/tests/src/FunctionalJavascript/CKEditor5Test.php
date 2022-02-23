@@ -432,44 +432,4 @@ class CKEditor5Test extends CKEditor5TestBase {
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
 
-  /**
-   * Ensures that images can have caption set.
-   */
-  public function testImageCaption() {
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-
-    // Add a node with text rendered via the Plain Text format.
-    $this->drupalGet('node/add');
-    $page->fillField('title[0][value]', 'My test content');
-    // Add image with data-caption. The foo attribute is added to be removed
-    // later by CKEditor to make sure CKEditor was able to downcast data.
-    $page->fillField('body[0][value]', '<img src="/sites/default/files/alpaca.jpg" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute" foo="bar">');
-    $page->pressButton('Save');
-
-    $this->createNewTextFormat($page, $assert_session);
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-uploadImage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
-    $assert_session->assertWaitOnAjaxRequest();
-    $page->clickLink('Image Upload');
-    $assert_session->waitForText('Enable image uploads');
-    $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
-    $assert_session->assertWaitOnAjaxRequest();
-    $page->checkField('filters[filter_caption][status]');
-    $assert_session->assertWaitOnAjaxRequest();
-    $this->saveNewTextFormat($page, $assert_session);
-
-    $this->drupalGet('node/1/edit');
-    $page->selectFieldOption('body[0][format]', 'ckeditor5');
-    $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
-    $page->pressButton('Continue');
-
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
-    $page->pressButton('Save');
-
-    $this->assertEquals('<img src="/sites/default/files/alpaca.jpg" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute">', Node::load(1)->get('body')->value);
-    $assert_session->elementExists('xpath', '//figure/img[@src="/sites/default/files/alpaca.jpg" and not(@data-caption)]');
-    $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute</figcaption>');
-  }
-
 }

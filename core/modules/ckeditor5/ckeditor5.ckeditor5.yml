@@ -539,6 +539,22 @@ media_media:
     conditions:
       filter: media_embed
 
+ckeditor5_drupalMediaCaption:
+  ckeditor5:
+    plugins:
+      - drupalMedia.DrupalMediaCaption
+    config:
+      drupalMedia:
+        toolbar: [toggleDrupalMediaCaption]
+  drupal:
+    label: Media caption
+    elements:
+      - <drupal-media data-caption>
+    conditions:
+      filter: filter_caption
+      plugins:
+        - media_media
+
 media_mediaAlign:
   provider: media
   ckeditor5:
