@@ -17,8 +17,9 @@ use Drupal\shortcut\Entity\Shortcut;
  */
 function standard_install() {
   // Assign user 1 the "administrator" role.
+  /** @var \Drupal\user\Entity\User $user */
   $user = User::load(1);
-  $user->roles[] = 'administrator';
+  $user->addRole('administrator');
   $user->save();
 
   // Populate the default shortcut set.
