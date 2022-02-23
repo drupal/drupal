@@ -41,7 +41,7 @@
         "composer/semver": "^3.0",
         "asm89/stack-cors": "^2.0.2",
         "pear/archive_tar": "^1.4.14",
-        "psr/log": "^1.0"
+        "psr/log": "^2.0"
     },
     "conflict": {
         "drush/drush": "<8.1.10"
