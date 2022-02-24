@@ -7,7 +7,7 @@ use Drupal\Core\DrupalKernel;
 /**
  * Base test class for tests that test project upload functionality.
  */
-class UpdateUploaderTestBase extends UpdateTestBase {
+abstract class UpdateUploaderTestBase extends UpdateTestBase {
 
   /**
    * {@inheritdoc}
