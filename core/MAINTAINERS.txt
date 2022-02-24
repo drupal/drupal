@@ -236,9 +236,6 @@ Form API
 History
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
-Hypertext Application Language (HAL)
-- ?
-
 Help
 - ?
 

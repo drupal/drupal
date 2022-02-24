@@ -3,8 +3,8 @@ status: true
 dependencies:
   module:
     - basic_auth
-    - hal
     - node
+    - serialization
 id: entity.node
 plugin_id: 'entity:node'
 granularity: resource
@@ -15,6 +15,6 @@ configuration:
     - PATCH
     - DELETE
   formats:
-    - hal_json
+    - json
   authentication:
     - basic_auth

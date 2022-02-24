@@ -368,7 +368,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'field_ui',
       'file',
       'filter',
-      'hal',
       'help',
       'history',
       'image',

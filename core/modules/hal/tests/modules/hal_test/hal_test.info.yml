@@ -1,5 +1,0 @@
-name: HAL test module
-type: module
-description: "Support module for HAL tests."
-package: Testing
-version: VERSION

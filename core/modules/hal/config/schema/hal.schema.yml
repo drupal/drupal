@@ -1,8 +1,0 @@
-# Schema for the configuration files of the HAL module.
-hal.settings:
-  type: config_object
-  label: 'HAL settings'
-  mapping:
-    link_domain:
-      type: string
-      label: 'Domain of the relation'

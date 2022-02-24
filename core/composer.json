@@ -106,7 +106,6 @@
         "drupal/file": "self.version",
         "drupal/filter": "self.version",
         "drupal/forum": "self.version",
-        "drupal/hal": "self.version",
         "drupal/help": "self.version",
         "drupal/help_topics": "self.version",
         "drupal/history": "self.version",

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\rest\Entity\RestResourceConfig;
-use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -58,29 +57,11 @@ class ResponseGeneratorTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
 
-    // Create a cookie-based authentication for the entity:node REST resource.
-    // @todo Turn this back in to an optional config YAML file in D10 to have an
-    //   example config for REST endpoints and adjust
-    //   core/modules/help_topics/help_topics/core.web_services.html.twig and
-    //   core/core.api.php accordingly.
-    //   See https://www.drupal.org/project/drupal/issues/3049857
-    $resource_config_values = [
-      'id' => 'entity.node',
-      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
-      'configuration' => [
-        'methods' => [
-          'GET',
-        ],
-        'formats' => [
-          'json',
-        ],
-        'authentication' => [
-          'cookie',
-        ],
-      ],
-    ];
-
-    RestResourceConfig::create($resource_config_values)->save();
+    // Enable cookie-based authentication for the entity:node REST resource.
+    $resource_config = RestResourceConfig::load('entity.node');
+    $configuration = $resource_config->get('configuration');
+    $configuration['authentication'][] = 'cookie';
+    $resource_config->set('configuration', $configuration)->save();
     $this->rebuildAll();
 
     // Check to see if the header is also added for a non-HTML request.
