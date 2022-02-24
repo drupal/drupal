@@ -1,0 +1,7 @@
+deprecated_module.settings:
+  type: config_object
+  label: 'deprecated_module settings'
+  mapping:
+    foo:
+      type: string
+      label: 'Wait until you meet baz!'
