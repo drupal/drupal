@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
 use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
+use Drupal\Core\Entity\Exception\MissingBundleClassException;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -202,9 +203,12 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId);
     $bundle_class = $bundle_info[$bundle]['class'] ?? NULL;
 
-    // Bundle classes should extend the main entity class.
+    // Bundle classes should exist and extend the main entity class.
     if ($bundle_class) {
-      if (!is_subclass_of($bundle_class, $entity_class)) {
+      if (!class_exists($bundle_class)) {
+        throw new MissingBundleClassException($bundle_class);
+      }
+      elseif (!is_subclass_of($bundle_class, $entity_class)) {
         throw new BundleClassInheritanceException($bundle_class, $entity_class);
       }
       return $bundle_class;
