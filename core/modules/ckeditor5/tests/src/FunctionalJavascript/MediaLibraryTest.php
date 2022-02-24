@@ -286,10 +286,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     // Click the "Override media image text alternative" button.
-    $this->getBalloonButton('Override media image text alternative')->click();
-    $this->assertVisibleBalloon('.ck-text-alternative-form');
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
     // Assert that the value is currently empty.
-    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $this->assertSame('', $alt_override_input->getValue());
 
     $test_alt = 'Alt text override';

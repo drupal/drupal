@@ -6,11 +6,15 @@ use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore layercake
@@ -320,10 +324,10 @@ class MediaTest extends WebDriverTestBase {
     // button still exists.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    // Click the "Override media image text alternative" button.
-    $this->getBalloonButton('Override media image text alternative')->click();
-    $this->assertVisibleBalloon('.ck-text-alternative-form');
-    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    // Click the "Override media image alternative text" button.
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
 
     // Fill in the alt field and submit.
     $alt_override_input->setValue('Gold star for robot boy.');
@@ -423,12 +427,13 @@ class MediaTest extends WebDriverTestBase {
     // with a single button to override the alt text.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    // Click the "Override media image text alternative" button.
-    $this->getBalloonButton('Override media image text alternative')->click();
-    $this->assertVisibleBalloon('.ck-text-alternative-form');
+    // Click the "Override media image alternative text" button.
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    // Assert that the default alt text is visible in the UI.
+    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form__default-alt-text-value', 'default alt');
     // Assert that the value is currently empty.
-    // @todo Consider changing this in https://www.drupal.org/project/ckeditor5/issues/3246365.
-    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $this->assertSame('', $alt_override_input->getValue());
 
     // Fill in the alt field and submit.
@@ -451,10 +456,12 @@ class MediaTest extends WebDriverTestBase {
     $this->assertSourceAttributeSame('alt', $who_is_zartan);
 
     // The alt field should now display the override instead of the default.
-    $this->getBalloonButton('Override media image text alternative')->click();
-    $this->assertVisibleBalloon('.ck-text-alternative-form');
-    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $this->assertSame($who_is_zartan, $alt_override_input->getValue());
+    // Assert that the default alt text is still visible in the UI.
+    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form__default-alt-text-value', 'default alt');
 
     // Test the process again with a different alt text to make sure it works
     // the second time around.
@@ -472,9 +479,9 @@ class MediaTest extends WebDriverTestBase {
 
     // The default value of the alt field should now display the override
     // instead of the value on the media image field.
-    $this->getBalloonButton('Override media image text alternative')->click();
-    $this->assertVisibleBalloon('.ck-text-alternative-form');
-    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $this->assertSame($cobra_commander_bio, $alt_override_input->getValue());
 
     // Test that setting alt value to two double quotes will signal to the
@@ -497,9 +504,9 @@ class MediaTest extends WebDriverTestBase {
     // Test that setting alt to back to an empty string within the balloon will
     // restore the default alt value saved in to the media image field of the
     // media item.
-    $this->getBalloonButton('Override media image text alternative')->click();
-    $this->assertVisibleBalloon('.ck-text-alternative-form');
-    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $alt_override_input->setValue('');
     $this->getBalloonButton('Save')->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="default alt"]'));
@@ -513,8 +520,96 @@ class MediaTest extends WebDriverTestBase {
    * Tests the CKEditor 5 media plugin loads the translated alt attribute.
    */
   public function testTranslationAlt() {
-    // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3246365
-    $this->markTestSkipped('Blocked on https://www.drupal.org/project/ckeditor5/issues/3246365.');
+    \Drupal::service('module_installer')->install(['language', 'content_translation']);
+    $this->resetAll();
+    ConfigurableLanguage::create(['id' => 'fr'])->save();
+    ContentLanguageSettings::loadByEntityTypeBundle('media', 'image')
+      ->setDefaultLangcode('en')
+      ->setLanguageAlterable(TRUE)
+      ->save();
+    $media = Media::create([
+      'bundle' => 'image',
+      'name' => 'Screaming hairy armadillo',
+      'field_media_image' => [
+        [
+          'target_id' => 1,
+          'alt' => 'default alt',
+          'title' => 'default title',
+        ],
+      ],
+    ]);
+    $media->save();
+    $media_fr = $media->addTranslation('fr');
+    $media_fr->name = "Tatou poilu hurlant";
+    $media_fr->field_media_image->setValue([
+      [
+        'target_id' => '1',
+        'alt' => "texte alternatif par dÃ©faut",
+        'title' => "titre alternatif par dÃ©faut",
+      ],
+    ]);
+    $media_fr->save();
+
+    ContentLanguageSettings::loadByEntityTypeBundle('node', 'blog')
+      ->setDefaultLangcode('en')
+      ->setLanguageAlterable(TRUE)
+      ->save();
+
+    $host = $this->createNode([
+      'type' => 'blog',
+      'title' => 'Animals with strange names',
+      'body' => [
+        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $media->uuid() . '"></drupal-media>',
+        'format' => 'test_format',
+      ],
+    ]);
+    $host->save();
+
+    $translation = $host->addTranslation('fr');
+    // cSpell:disable-next-line
+    $translation->title = 'Animaux avec des noms Ã©tranges';
+    $translation->body->value = $host->body->value;
+    $translation->body->format = $host->body->format;
+    $translation->save();
+
+    Role::load(RoleInterface::AUTHENTICATED_ID)
+      ->grantPermission('translate any entity')
+      ->save();
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalGet('/fr/node/' . $host->id() . '/edit');
+    $this->waitForEditor();
+
+    // Test that the default alt attribute displays without an override.
+    // cSpell:disable-next-line
+    $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "texte alternatif par dÃ©faut")]'));
+    // Test `aria-label` attribute appears on the preview wrapper.
+    // cSpell:disable-next-line
+    $assert_session->elementExists('css', '[data-drupal-media-preview][aria-label="Tatou poilu hurlant"]');
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Click the "Override media image alternative text" button.
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    // Assert that the default alt on the UI is the default alt text from the
+    // media entity.
+    // cSpell:disable-next-line
+    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form__default-alt-text-value', 'texte alternatif par dÃ©faut');
+
+    // Fill in the alt field in the balloon form.
+    // cSpell:disable-next-line
+    $qui_est_zartan = 'Zartan est le chef des Dreadnoks.';
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
+    $alt_override_input->setValue($qui_est_zartan);
+    $this->getBalloonButton('Save')->click();
+
+    // Assert that the img within the media embed within CKEditor 5 contains
+    // the overridden alt text set in CKEditor 5.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]'));
+    $this->getSession()->switchToIFrame();
+    $page->pressButton('Save');
+    $assert_session->elementExists('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]');
   }
 
   /**
