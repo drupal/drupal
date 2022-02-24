@@ -1,0 +1,7 @@
+name: 'Obsolete theme test'
+type: theme
+description: 'Obsolete test theme.'
+version: VERSION
+lifecycle: obsolete
+lifecycle_link: 'https://example.com/obsolete'
+base theme: false

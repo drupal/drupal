@@ -320,6 +320,10 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
+    // Check that obsolete themes are not displayed.
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains('Obsolete test theme');
+
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->responseContains('core/themes/seven');

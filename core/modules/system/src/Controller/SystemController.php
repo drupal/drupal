@@ -195,7 +195,7 @@ class SystemController extends ControllerBase {
   }
 
   /**
-   * Returns a theme listing.
+   * Returns a theme listing which excludes obsolete themes.
    *
    * @return string
    *   An HTML string of the theme listing page.
@@ -206,6 +206,11 @@ class SystemController extends ControllerBase {
     $config = $this->config('system.theme');
     // Get all available themes.
     $themes = $this->themeHandler->rebuildThemeData();
+
+    // Remove obsolete themes.
+    $themes = array_filter($themes, function ($theme) {
+      return !$theme->isObsolete();
+    });
     uasort($themes, [ThemeExtensionList::class, 'sortByName']);
 
     $theme_default = $config->get('default');

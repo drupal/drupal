@@ -209,4 +209,17 @@ class Extension {
         && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL);
   }
 
+  /**
+   * Checks if an extension is marked as obsolete.
+   *
+   * @return bool
+   *   TRUE if an extension is marked as obsolete, FALSE otherwise.
+   */
+  public function isObsolete(): bool {
+    // This function checks for 'lifecycle: obsolete' to determine if an
+    // extension is marked as obsolete.
+    return (isset($this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])
+        && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE);
+  }
+
 }
