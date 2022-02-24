@@ -7,6 +7,7 @@ use Drupal\Tests\search\Functional\Rest\SearchPageResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class SearchPageHalJsonCookieTest extends SearchPageResourceTestBase {
 

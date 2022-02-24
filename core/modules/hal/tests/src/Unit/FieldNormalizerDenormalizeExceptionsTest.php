@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Exception\InvalidArgumentException;
  * Tests the exceptions thrown by FieldNormalizer and FieldItemNormalizer.
  *
  * @group hal
+ * @group legacy
  */
 class FieldNormalizerDenormalizeExceptionsTest extends UnitTestCase {
 

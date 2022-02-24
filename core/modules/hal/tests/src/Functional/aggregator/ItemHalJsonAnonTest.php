@@ -6,6 +6,7 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
+ * @group legacy
  */
 class ItemHalJsonAnonTest extends ItemHalJsonTestBase {
 

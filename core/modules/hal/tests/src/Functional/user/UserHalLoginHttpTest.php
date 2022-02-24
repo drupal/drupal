@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Serializer;
  * Tests login and password reset via direct HTTP in hal_json format.
  *
  * @group hal
+ * @group legacy
  */
 class UserHalLoginHttpTest extends UserLoginHttpTest {
 

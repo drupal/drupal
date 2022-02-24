@@ -7,6 +7,7 @@ use Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class VocabularyHalJsonBasicAuthTest extends VocabularyResourceTestBase {
 

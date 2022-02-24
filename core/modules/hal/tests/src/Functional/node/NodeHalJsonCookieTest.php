@@ -6,6 +6,7 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
+ * @group legacy
  */
 class NodeHalJsonCookieTest extends NodeHalJsonAnonTest {
 

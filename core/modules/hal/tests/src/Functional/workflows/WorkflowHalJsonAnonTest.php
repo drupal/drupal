@@ -7,6 +7,7 @@ use Drupal\Tests\workflows\Functional\Rest\WorkflowResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class WorkflowHalJsonAnonTest extends WorkflowResourceTestBase {
 

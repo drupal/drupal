@@ -7,6 +7,7 @@ use Drupal\Tests\user\Functional\Rest\RoleResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class RoleHalJsonCookieTest extends RoleResourceTestBase {
 

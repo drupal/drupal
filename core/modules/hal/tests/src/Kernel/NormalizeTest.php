@@ -11,6 +11,7 @@ use Drupal\filter\Entity\FilterFormat;
  * Tests HAL normalization edge cases for EntityResource.
  *
  * @group hal
+ * @group legacy
  */
 class NormalizeTest extends NormalizerTestBase {
 

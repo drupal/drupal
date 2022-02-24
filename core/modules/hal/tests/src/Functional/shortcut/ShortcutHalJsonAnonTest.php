@@ -9,6 +9,7 @@ use Drupal\Tests\shortcut\Functional\Rest\ShortcutResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class ShortcutHalJsonAnonTest extends ShortcutResourceTestBase {
 

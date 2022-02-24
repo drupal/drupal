@@ -11,6 +11,7 @@ use Drupal\rest\RestResourceConfigInterface;
  * @coversDefaultClass \Drupal\rest\Entity\ConfigDependencies
  *
  * @group hal
+ * @group legacy
  */
 class ConfigDependenciesTest extends KernelTestBase {
 

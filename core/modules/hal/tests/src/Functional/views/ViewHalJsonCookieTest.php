@@ -7,6 +7,7 @@ use Drupal\Tests\views\Functional\Rest\ViewResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class ViewHalJsonCookieTest extends ViewResourceTestBase {
 

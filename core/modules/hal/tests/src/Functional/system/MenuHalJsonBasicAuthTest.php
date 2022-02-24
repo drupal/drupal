@@ -7,6 +7,7 @@ use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class MenuHalJsonBasicAuthTest extends MenuResourceTestBase {
 

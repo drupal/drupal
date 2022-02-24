@@ -9,6 +9,7 @@ use Drupal\user\Entity\User;
 
 /**
  * @group hal
+ * @group legacy
  */
 class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBase {
 

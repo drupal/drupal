@@ -10,6 +10,7 @@ use Drupal\Tests\comment\Functional\Views\CommentTestBase;
  * Tests a comment rest export view.
  *
  * @group hal
+ * @group legacy
  */
 class CommentHalExportTest extends CommentTestBase {
 

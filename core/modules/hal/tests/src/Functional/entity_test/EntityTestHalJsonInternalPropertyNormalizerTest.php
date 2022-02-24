@@ -12,6 +12,7 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
  * Test that internal properties are not exposed in the 'hal_json' format.
  *
  * @group hal
+ * @group legacy
  */
 class EntityTestHalJsonInternalPropertyNormalizerTest extends EntityTestHalJsonAnonTest {
 

@@ -9,6 +9,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  * Enables the page cache and tests it with various HTTP requests.
  *
  * @group hal
+ * @group legacy
  */
 class PageCacheTest extends BrowserTestBase {
 

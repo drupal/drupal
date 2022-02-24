@@ -13,6 +13,7 @@ use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 /**
  * @coversDefaultClass \Drupal\hal\LinkManager\LinkManager
  * @group hal
+ * @group legacy
  */
 class HalLinkManagerTest extends KernelTestBase {
 

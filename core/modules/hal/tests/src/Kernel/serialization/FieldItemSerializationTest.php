@@ -11,6 +11,7 @@ use Drupal\Tests\serialization\Kernel\NormalizerTestBase;
  * Test field level normalization process.
  *
  * @group hal
+ * @group legacy
  */
 class FieldItemSerializationTest extends NormalizerTestBase {
 

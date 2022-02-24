@@ -7,6 +7,7 @@ use Drupal\Tests\tour\Functional\Rest\TourResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class TourHalJsonAnonTest extends TourResourceTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\serialization\Kernel\NormalizerTestBase;
  * Tests that entities references can be resolved.
  *
  * @group hal
+ * @group legacy
  */
 class EntityResolverTest extends NormalizerTestBase {
 

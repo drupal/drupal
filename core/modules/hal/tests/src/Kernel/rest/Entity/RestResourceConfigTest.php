@@ -10,6 +10,7 @@ use Drupal\rest\RestResourceConfigInterface;
  * @coversDefaultClass \Drupal\rest\Entity\RestResourceConfig
  *
  * @group hal
+ * @group legacy
  */
 class RestResourceConfigTest extends KernelTestBase {
 

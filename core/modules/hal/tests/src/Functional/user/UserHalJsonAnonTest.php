@@ -8,6 +8,7 @@ use Drupal\Tests\user\Functional\Rest\UserResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class UserHalJsonAnonTest extends UserResourceTestBase {
 

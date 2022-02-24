@@ -7,6 +7,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
+ * @group legacy
  */
 class BlockContentTypeHalJsonBasicAuthTest extends BlockContentTypeResourceTestBase {
 

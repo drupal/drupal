@@ -1,6 +1,8 @@
 name: 'HAL'
 type: module
 description: 'Serializes entities using Hypertext Application Language.'
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-hal
 package: Web services
 version: VERSION
 dependencies:

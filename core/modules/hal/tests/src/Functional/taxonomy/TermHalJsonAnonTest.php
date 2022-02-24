@@ -9,6 +9,7 @@ use Drupal\Tests\taxonomy\Functional\Rest\TermResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class TermHalJsonAnonTest extends TermResourceTestBase {
 

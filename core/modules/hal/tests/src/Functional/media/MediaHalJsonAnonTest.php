@@ -10,6 +10,7 @@ use Drupal\user\Entity\User;
 
 /**
  * @group hal
+ * @group legacy
  */
 class MediaHalJsonAnonTest extends MediaResourceTestBase {
 

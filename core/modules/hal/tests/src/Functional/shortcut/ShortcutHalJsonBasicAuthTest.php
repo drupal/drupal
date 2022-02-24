@@ -6,6 +6,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
+ * @group legacy
  */
 class ShortcutHalJsonBasicAuthTest extends ShortcutHalJsonAnonTest {
 

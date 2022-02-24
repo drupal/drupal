@@ -9,6 +9,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * @coversDefaultClass \Drupal\rest\Plugin\views\style\Serializer
  * @group hal
+ * @group legacy
  */
 class StyleSerializerKernelTest extends ViewsKernelTestBase {
 

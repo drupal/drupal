@@ -7,6 +7,7 @@ use Drupal\Tests\rest\Functional\Rest\RestResourceConfigResourceTestBase;
 
 /**
  * @group hal
+ * @group legacy
  */
 class RestResourceConfigHalJsonCookieTest extends RestResourceConfigResourceTestBase {
 

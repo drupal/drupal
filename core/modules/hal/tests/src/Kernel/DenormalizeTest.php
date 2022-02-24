@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  * Tests HAL denormalization edge cases for EntityResource.
  *
  * @group hal
+ * @group legacy
  */
 class DenormalizeTest extends NormalizerTestBase {
 
