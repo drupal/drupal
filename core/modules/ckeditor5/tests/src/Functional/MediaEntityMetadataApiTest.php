@@ -6,6 +6,8 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\ckeditor5\Traits\SynchronizeCsrfTokenSeedTrait;
@@ -207,6 +209,49 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->mediaImage->setPublished()->save();
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests the media entity metadata API with translations.
+   */
+  public function testApiTranslation(): void {
+    $this->container->get('module_installer')->install(['language', 'content_translation']);
+    $this->resetAll();
+    ConfigurableLanguage::create(['id' => 'fi'])->save();
+    $this->container->get('config.factory')->getEditable('language.negotiation')
+      ->set('url.source', 'path_prefix')
+      ->set('url.prefixes.fi', 'fi')
+      ->save();
+    $this->rebuildContainer();
+    ContentLanguageSettings::loadByEntityTypeBundle('media', 'image')
+      ->setDefaultLangcode('en')
+      ->setLanguageAlterable(TRUE)
+      ->save();
+    $media_fi = Media::load($this->mediaImage->id())->addTranslation('fi');
+    $media_fi->field_media_image->setValue([
+      [
+        'target_id' => '1',
+        // cSpell:disable-next-line
+        'alt' => 'oletus alt-teksti kuvalle',
+      ],
+    ]);
+    $media_fi->save();
+    $uuid = $this->mediaImage->uuid();
+
+    $path = '/ckeditor5/filtered_html/media-entity-metadata';
+    $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
+
+    // Ensure that translation is returned when language is specified.
+    $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token], 'language' => $media_fi->language()]);
+    $this->assertSession()->statusCodeEquals(200);
+    // cSpell:disable-next-line
+    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'oletus alt-teksti kuvalle']]), $this->getSession()->getPage()->getContent());
+
+    // Ensure that default translation is returned when no language is
+    // specified.
+    $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
   }
 
 }

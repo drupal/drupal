@@ -9,6 +9,10 @@ import { isDrupalMedia } from '../utils';
 import { METADATA_ERROR } from './utils';
 
 /**
+ * @module drupalMedia/mediaimagetextalternative/mediaimagetextalternativeediting
+ */
+
+/**
  * The media image text alternative editing plugin.
  */
 export default class MediaImageTextAlternativeEditing extends Plugin {
