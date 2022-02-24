@@ -310,13 +310,17 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   (optional) The entity to which the file is to be uploaded, if it exists.
    *   If the entity does not exist and it is not given, create access to the
-   *   file will be checked.
+   *   entity the file is attached to will be checked.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The file upload access result.
    */
   public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    assert(is_null($entity) || $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() && $field_definition->getTargetBundle() === $entity->bundle());
+    assert(is_null($entity) ||
+      $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() &&
+      // Base fields do not have target bundles.
+      (is_null($field_definition->getTargetBundle()) || $field_definition->getTargetBundle() === $entity->bundle())
+    );
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_access_control_handler = $entity_type_manager->getAccessControlHandler($field_definition->getTargetEntityTypeId());
     $bundle = $entity_type_manager->getDefinition($field_definition->getTargetEntityTypeId())->hasKey('bundle') ? $field_definition->getTargetBundle() : NULL;
