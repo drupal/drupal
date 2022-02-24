@@ -29,7 +29,7 @@ class PackageGenerator {
   }
 
   /**
-   * Generate Drupal's metapackages whenever composer.lock is updated
+   * Generate Drupal's metapackages whenever composer.lock is updated.
    *
    * @param \Composer\IO\IOInterface $io
    *   Composer IO object for interacting with the user.

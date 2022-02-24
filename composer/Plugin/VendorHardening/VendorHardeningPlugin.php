@@ -117,6 +117,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * PRE_PACKAGE_INSTALL event handler.
    *
    * @param \Composer\Installer\PackageEvent $event
+   *   The package event.
    */
   public function onPrePackageInstall(PackageEvent $event) {
     /** @var \Composer\Package\CompletePackage $package */
@@ -128,6 +129,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * PRE_PACKAGE_UPDATE event handler.
    *
    * @param \Composer\Installer\PackageEvent $event
+   *   The package event.
    */
   public function onPrePackageUpdate(PackageEvent $event) {
     /** @var \Composer\Package\CompletePackage $package */
@@ -139,6 +141,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * POST_PACKAGE_INSTALL event handler.
    *
    * @param \Composer\Installer\PackageEvent $event
+   *   The package event.
    */
   public function onPostPackageInstall(PackageEvent $event) {
     $this->cleanPackage($event->getOperation()->getPackage());
@@ -148,6 +151,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * POST_PACKAGE_UPDATE event handler.
    *
    * @param \Composer\Installer\PackageEvent $event
+   *   The package event.
    */
   public function onPostPackageUpdate(PackageEvent $event) {
     $this->cleanPackage($event->getOperation()->getTargetPackage());
@@ -211,6 +215,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
     $filesystem = [];
     foreach ($clean_paths as $clean_path) {
       $clean_pieces = explode("/", $clean_path);
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $current = &$filesystem;
       foreach ($clean_pieces as $clean_piece) {
         $current = &$current[$clean_piece];

@@ -6,7 +6,7 @@ use Composer\IO\IOInterface;
 use Composer\Util\ProcessExecutor;
 
 /**
- * Provide some Git utility operations
+ * Provide some Git utility operations.
  *
  * @internal
  */
@@ -21,6 +21,8 @@ class Git {
   /**
    * Determines whether the specified scaffold file is already ignored.
    *
+   * @param \Composer\IO\IOInterface $io
+   *   The Composer IO interface.
    * @param string $path
    *   Path to scaffold file to check.
    * @param string $dir
@@ -39,6 +41,8 @@ class Git {
   /**
    * Determines whether the specified scaffold file is tracked by git.
    *
+   * @param \Composer\IO\IOInterface $io
+   *   The Composer IO interface.
    * @param string $path
    *   Path to scaffold file to check.
    * @param string $dir
@@ -57,8 +61,11 @@ class Git {
   /**
    * Checks to see if the project root dir is in a git repository.
    *
+   * @param \Composer\IO\IOInterface $io
+   *   The Composer IO interface.
    * @param string $dir
    *   Base directory for git process.
+   *
    * @return bool
    *   True if this is a repository.
    */
