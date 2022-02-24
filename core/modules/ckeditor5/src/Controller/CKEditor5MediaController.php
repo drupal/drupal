@@ -104,7 +104,7 @@ class CKEditor5MediaController extends ControllerBase {
     $response = [];
     if ($image_field) {
       $response['imageSourceMetadata'] = [
-        'alt' => $media->{$image_field}->alt,
+        'alt' => $this->entityRepository->getTranslationFromContext($media)->{$image_field}->alt,
       ];
     }
 

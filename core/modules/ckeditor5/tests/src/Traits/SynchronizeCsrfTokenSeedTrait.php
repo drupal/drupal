@@ -34,6 +34,20 @@ trait SynchronizeCsrfTokenSeedTrait {
   /**
    * {@inheritdoc}
    */
+  protected function rebuildContainer() {
+    parent::rebuildContainer();
+
+    // Ensure that the CSRF token seed is reset on container rebuild.
+    if ($this->loggedInUser) {
+      $current_user = $this->loggedInUser;
+      $this->drupalLogout();
+      $this->drupalLogin($current_user);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function drupalLogout() {
     parent::drupalLogout();
     $this->container->get('session_manager.metadata_bag')->stampNew();
