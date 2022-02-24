@@ -73,11 +73,13 @@ class Message {
               $this->messageText[] = '  * Name: ' . $homepage;
             }
             break;
+
           case 'description':
             if ($homepage = $this->rootPackage->getDescription()) {
               $this->messageText[] = '  * Description: ' . $homepage;
             }
             break;
+
           case 'homepage':
             if ($homepage = $this->rootPackage->getHomepage()) {
               $this->messageText[] = '  * Homepage: ' . $homepage;

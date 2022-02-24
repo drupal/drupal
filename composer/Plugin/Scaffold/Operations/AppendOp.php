@@ -126,7 +126,6 @@ class AppendOp extends AbstractOperation {
       $io->write($interpolator->interpolate("  - Prepend to <info>[dest-rel-path]</info> from <info>[prepend-rel-path]</info>"));
     }
     // Notify that we are appending, if there is append data.
-    $append_contents = '';
     if (!empty($this->append)) {
       $this->append->addInterpolationData($interpolator, 'append');
       $io->write($interpolator->interpolate("  - Append to <info>[dest-rel-path]</info> from <info>[append-rel-path]</info>"));
@@ -187,10 +186,12 @@ class AppendOp extends AbstractOperation {
 
   /**
    * Check to see if the append/prepend data has already been applied.
+   *
    * @param string $contents
    *   The contents of the target file.
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $data_path
    *   The path to the data to append or prepend
+   *
    * @return bool
    *   'TRUE' if the append/prepend data already exists in contents.
    */
