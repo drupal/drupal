@@ -32,6 +32,10 @@ function entity_test_bundle_class_entity_bundle_info_alter(&$bundles) {
   if (\Drupal::state()->get('entity_test_bundle_class_enable_user_class', FALSE)) {
     $bundles['user']['user']['class'] = EntityTestUserClass::class;
   }
+
+  if (\Drupal::state()->get('entity_test_bundle_class_does_not_exist', FALSE)) {
+    $bundles['entity_test']['bundle_class']['class'] = '\Drupal\Core\NonExistentClass';
+  }
 }
 
 /**
