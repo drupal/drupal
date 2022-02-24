@@ -9,8 +9,9 @@ ckeditor5.language:
 
 drupal.ckeditor5.internal:
   js:
-    js/build/drupalHtmlEngine.js: { preprocess: false, minified: true }
+    js/build/drupalHtmlEngine.js: { minified: true }
   dependencies:
+    - core/ckeditor5
     - core/ckeditor5.internal
 
 drupal.ckeditor5:
@@ -38,21 +39,23 @@ drupal.ckeditor5.quickedit-temporary-work-around:
 
 drupal.ckeditor5.image:
   js:
-    js/build/drupalImage.js: { preprocess: false, minified: true }
+    js/build/drupalImage.js: { minified: true }
   dependencies:
+    - core/ckeditor5
     - core/ckeditor5.image
 
 drupal.ckeditor5.emphasis:
   version: VERSION
   js:
-    js/build/drupalEmphasis.js: { preprocess: false, minified: true }
+    js/build/drupalEmphasis.js: { minified: true }
   dependencies:
+    - core/ckeditor5
     - core/ckeditor5.basic
 
 drupal.ckeditor5.media:
   js:
     js/media_embed_ckeditor5.theme.js: {}
-    js/build/drupalMedia.js: { preprocess: false, minified: true }
+    js/build/drupalMedia.js: { minified: true }
   css:
     theme:
       css/drupalmedia.css: { }
