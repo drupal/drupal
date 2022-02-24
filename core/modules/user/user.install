@@ -113,12 +113,16 @@ function user_update_9301(&$sandbox) {
     return t('The Microsoft SQL Server does not support user_update_9301() because it causes data loss.');
   }
 
-  $connection->schema()->dropPrimaryKey('users');
   if ($connection->databaseType() === 'mysql') {
     $sql_mode = $connection->query("SELECT @@sql_mode;")->fetchField();
     $connection->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
+    $new_keys = [];
   }
-  $connection->schema()->changeField('users', 'uid', 'uid', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['uid']]);
+  else {
+    $new_keys = ['primary key' => ['uid']];
+    $connection->schema()->dropPrimaryKey('users');
+  }
+  $connection->schema()->changeField('users', 'uid', 'uid', ['type' => 'serial', 'not null' => TRUE], $new_keys);
   if (isset($sql_mode)) {
     $connection->query("SET sql_mode = '$sql_mode'");
   }

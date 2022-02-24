@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -922,6 +923,70 @@ class SchemaTest extends KernelTestBase {
     $this->expectException(SchemaException::class);
     $this->expectExceptionMessage("The 'test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->createTable($table_name, $table_spec);
+  }
+
+  /**
+   * Tests converting an int to a serial when the int column has data.
+   */
+  public function testChangePrimaryKeyToSerial() {
+    // Test making an invalid field the primary key of the table upon creation.
+    $table_name = 'test_table';
+    $table_spec = [
+      'fields' => [
+        'test_field' => ['type' => 'int', 'not null' => TRUE],
+        'test_field_string'  => ['type' => 'varchar', 'length' => 20],
+      ],
+      'primary key' => ['test_field'],
+    ];
+    $this->schema->createTable($table_name, $table_spec);
+
+    if ($this->connection->databaseType() !== 'sqlite') {
+      try {
+        $this->connection
+          ->insert($table_name)
+          ->fields(['test_field_string' => 'test'])
+          ->execute();
+        $this->fail('Expected IntegrityConstraintViolationException not thrown');
+      }
+      catch (IntegrityConstraintViolationException $e) {
+      }
+    }
+
+    // @todo https://www.drupal.org/project/drupal/issues/3222127 Change the
+    //   first item to 0 to test changing a field with 0 to a serial.
+    // Create 8 rows in the table. Note that the 5 value is deliberately
+    // omitted.
+    foreach ([1, 2, 3, 4, 6, 7, 8, 9] as $value) {
+      $this->connection
+        ->insert($table_name)
+        ->fields(['test_field' => $value])
+        ->execute();
+    }
+    $this->schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'serial', 'not null' => TRUE]);
+
+    $data = $this->connection
+      ->select($table_name)
+      ->fields($table_name, ['test_field'])
+      ->execute()
+      ->fetchCol();
+    $this->assertEquals([1, 2, 3, 4, 6, 7, 8, 9], array_values($data));
+
+    try {
+      $this->connection
+        ->insert($table_name)
+        ->fields(['test_field' => 1])
+        ->execute();
+      $this->fail('Expected IntegrityConstraintViolationException not thrown');
+    }
+    catch (IntegrityConstraintViolationException $e) {
+    }
+
+    // Ensure auto numbering now works.
+    $id = $this->connection
+      ->insert($table_name)
+      ->fields(['test_field_string' => 'test'])
+      ->execute();
+    $this->assertEquals(10, $id);
   }
 
   /**
