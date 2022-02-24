@@ -953,7 +953,7 @@ class SchemaTest extends KernelTestBase {
     }
 
     // @todo https://www.drupal.org/project/drupal/issues/3222127 Change the
-    // first item of the array to 0 to test changing a field with 0 to a serial.
+    //   first item to 0 to test changing a field with 0 to a serial.
     // Create 8 rows in the table. Note that the 5 value is deliberately
     // omitted.
     foreach ([1, 2, 3, 4, 6, 7, 8, 9] as $value) {
