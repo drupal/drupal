@@ -28,6 +28,8 @@ class ManageGitIgnore {
   /**
    * ManageGitIgnore constructor.
    *
+   * @param \Composer\IO\IOInterface $io
+   *   The Composer IO interface.
    * @param string $dir
    *   The directory where the project is located.
    */

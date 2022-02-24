@@ -2,6 +2,7 @@
 <ruleset name="drupal_core">
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
   <file>.</file>
+  <file>../composer</file>
   <file>scripts/drupal.sh</file>
   <file>scripts/password-hash.sh</file>
   <file>scripts/rebuild_token_calculator.sh</file>
