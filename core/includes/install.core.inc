@@ -2297,7 +2297,16 @@ function install_display_requirements($install_state, $requirements) {
         // proceed in a single request so there is no good opportunity (and no
         // good method) to warn the user anyway.
         if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-          $failures[] = $requirement['title'] . ': ' . $requirement['value'] . "\n\n" . $requirement['description'];
+          $render_array = [
+            '#type' => 'inline_template',
+            '#template' => '{{ title }}:{{ value }}<br /><br />{{ description }}',
+            '#context' => [
+              'title' => $requirement['title'],
+              'value' => $requirement['value'],
+              'description' => $requirement['description'],
+            ],
+          ];
+          $failures[] = \Drupal::service('renderer')->renderPlain($render_array);
         }
       }
       if (!empty($failures)) {
