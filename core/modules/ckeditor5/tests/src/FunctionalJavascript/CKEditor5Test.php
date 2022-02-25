@@ -127,7 +127,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $image_uuid = $uploaded_image->uuid();
     $image_url = $this->container->get('file_url_generator')->generateString($uploaded_image->getFileUri());
     $this->drupalGet('node/1');
-    $assert_session->elementExists('xpath', sprintf('//img[@alt="</em> Kittens & llamas are cute" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_uuid));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', sprintf('//img[@alt="</em> Kittens & llamas are cute" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_uuid)));
 
     // Drupal CKEditor 5 integrations overrides the CKEditor 5 HTML writer to
     // escape ampersand characters (&) and the angle brackets (< and >). This is
