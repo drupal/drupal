@@ -189,6 +189,34 @@ class MediaTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests that arbitrary attributes are allowed via GHS.
+   */
+  public function testMediaArbitraryHtml() {
+    $assert_session = $this->assertSession();
+
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+
+    // Allow the data-foo attribute in drupal-media via GHS.
+    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<drupal-media data-foo>'];
+    $editor->setSettings($settings);
+    $editor->save();
+
+    // Add data-foo use to an existing drupal-media tag.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('drupal-media', 'drupal-media data-foo="bar" ', $original_value);
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+
+    // Confirm data-foo is present in the upcasted drupal-media.
+    $upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media');
+    $this->assertEquals('bar', $upcasted_media->getAttribute('data-foo'));
+
+    // Confirm data-foo is not stripped from source.
+    $this->assertSourceAttributeSame('data-foo', 'bar');
+  }
+
+  /**
    * Tests that failed media embed preview requests inform the end user.
    */
   public function testErrorMessages() {

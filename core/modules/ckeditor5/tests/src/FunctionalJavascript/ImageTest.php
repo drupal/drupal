@@ -141,6 +141,47 @@ class ImageTest extends CKEditor5TestBase {
   }
 
   /**
+   * Tests that arbitrary attributes are allowed via GHS.
+   *
+   * @dataProvider providerLinkability
+   */
+  public function testImageArbitraryHtml(string $image_type, bool $unrestricted) {
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+
+    // Allow the data-foo attribute in img via GHS.
+    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<img data-foo>'];
+    $editor->setSettings($settings);
+    $editor->save();
+
+    // Disable filter_html.
+    if ($unrestricted) {
+      FilterFormat::load('test_format')
+        ->setFilterConfig('filter_html', ['status' => FALSE])
+        ->save();
+    }
+
+    // Make the test content have either a block image or an inline image.
+    $img_tag = '<img data-foo="bar" alt="drupalimage test image" data-entity-type="file" data-entity-uuid="' . $this->file->uuid() . '" src="' . $this->file->createFileUrl() . '" />';
+    $this->host->body->value .= $image_type === 'block'
+      ? $img_tag
+      : "<p>$img_tag</p>";
+    $this->host->save();
+
+    $expected_widget_selector = $image_type === 'block' ? 'image img' : 'image-inline';
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    $drupalimage = $this->assertSession()->waitForElementVisible('css', ".ck-content .ck-widget.$expected_widget_selector");
+    $this->assertNotEmpty($drupalimage);
+    $this->assertEquals('bar', $drupalimage->getAttribute('data-foo'));
+
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertNotEmpty($xpath->query('//img[@data-foo="bar"]'));
+  }
+
+  /**
    * Tests linkability of the image CKEditor widget.
    *
    * Due to the complex overrides that `drupalImage.DrupalImage` is making, this
