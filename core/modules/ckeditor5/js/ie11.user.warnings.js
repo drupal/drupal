@@ -9,6 +9,7 @@
   var isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
 
   if (isIE11) {
+    window.CKEditor5 = null;
     var quickEditLabelObserver = null;
     Drupal.editors.ckeditor5 = {
       attach: function attach(element) {
