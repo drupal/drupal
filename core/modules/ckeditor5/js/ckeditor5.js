@@ -6,6 +6,10 @@
 **/
 
 ((Drupal, debounce, CKEditor5, $, once) => {
+  if (!CKEditor5) {
+    return;
+  }
+
   Drupal.CKEditor5Instances = new Map();
   const callbacks = new Map();
   const required = new Set();
