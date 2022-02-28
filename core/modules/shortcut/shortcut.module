@@ -9,6 +9,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
@@ -382,4 +383,12 @@ function shortcut_themes_installed($theme_list) {
         ->save(TRUE);
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function shortcut_user_delete(EntityInterface $entity) {
+  // Clean up shortcut set mapping of removed user account.
+  \Drupal::entityTypeManager()->getStorage('shortcut_set')->unassignUser($entity);
 }

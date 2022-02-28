@@ -186,6 +186,20 @@ class ShortcutSetsTest extends ShortcutTestBase {
   }
 
   /**
+   * Tests assign clearing on user removal.
+   */
+  public function testShortcutSetUnassignOnUserRemoval() {
+    $new_set = $this->generateShortcutSet($this->randomMachineName());
+
+    $shortcut_set_storage = \Drupal::entityTypeManager()->getStorage('shortcut_set');
+    $shortcut_set_storage->assignUser($new_set, $this->shortcutUser);
+    $this->shortcutUser->delete();
+    $current_set = shortcut_current_displayed_set($this->shortcutUser);
+    $default_set = shortcut_default_set($this->shortcutUser);
+    $this->assertSame($default_set->id(), $current_set->id(), "Successfully cleared assigned shortcut set for removed user.");
+  }
+
+  /**
    * Tests deleting a shortcut set.
    */
   public function testShortcutSetDelete() {
