@@ -4,6 +4,13 @@
  */
 /* global CKEditor5 */
 ((Drupal, debounce, CKEditor5, $, once) => {
+  // CKEditor 5 is incompatible with IE11. When IE11 is detected, the CKEditor5
+  // variable is null. In those instances, exit early since CKEditor 5 is not
+  // loaded.
+  if (!CKEditor5) {
+    return;
+  }
+
   /**
    * The CKEDITOR instances.
    *
