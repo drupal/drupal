@@ -65,6 +65,9 @@ const FILE_STATUS_PERMANENT = 1;
  */
 function file_create_url($uri) {
   @trigger_error('file_create_url() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the appropriate method on \Drupal\Core\File\FileUrlGeneratorInterface instead. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+  if (is_null($uri)) {
+    return NULL;
+  }
   try {
     return \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
   }
