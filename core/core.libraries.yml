@@ -820,10 +820,10 @@ jquery.joyride:
 
 shepherd:
   remote: https://github.com/shipshapecode/shepherd
-  version: "8.3.1"
+  version: "9.0.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v8.3.1/LICENSE
+    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v9.0.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/shepherd/shepherd.min.js: { minified: true }
