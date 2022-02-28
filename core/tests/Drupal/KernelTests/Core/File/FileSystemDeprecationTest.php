@@ -21,6 +21,7 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_url_transform_relative(file_create_url($filepath));
     $this->assertNotEmpty($url);
+    $this->assertEquals(NULL, file_create_url(NULL));
   }
 
   /**
