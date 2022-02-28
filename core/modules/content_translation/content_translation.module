@@ -714,7 +714,6 @@ function content_translation_page_attachments(&$page) {
             'hreflang' => $language->getId(),
             'href' => $url,
           ],
-          TRUE,
         ];
       }
     }
