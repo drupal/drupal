@@ -281,9 +281,9 @@ class TwigExtension extends AbstractExtension {
    * @return string
    *   The file URL.
    */
-  public function getFileUrl(?string $uri) {
+  public function getFileUrl(?string $uri): string {
     if (is_null($uri)) {
-      return NULL;
+      return '';
     }
     return $this->fileUrlGenerator->generateString($uri);
   }
