@@ -312,6 +312,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $this->clickLink('Add section');
     $assert_session->waitForElementVisible('named', ['link', 'Layout plugin (with settings)']);
     $this->clickLink('Layout plugin (with settings)');
+    $this->markTestSkipped('Temporarily skipped due to random failures.');
     $this->assertOffCanvasFormAfterWait('layout_builder_configure_section');
     $page->fillField('layout_settings[setting_1]', 'Test Validation Error Message');
     $page->pressButton('Add section');
