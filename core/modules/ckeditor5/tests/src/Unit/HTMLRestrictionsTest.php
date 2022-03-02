@@ -73,6 +73,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['foo' => ['baz' => ''], 'bar' => [' qux' => '']],
       'The "bar" HTML tag has an attribute restriction " qux" which contains whitespace. Omit the whitespace.',
     ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to broad wildcard instead of prefix/infix/suffix wildcard attribute name' => [
+      ['foo' => ['*' => TRUE]],
+      'The "foo" HTML tag has an attribute restriction "*". This implies all attributes are allowed. Remove the attribute restriction instead, or use a prefix (`*-foo`), infix (`*-foo-*`) or suffix (`foo-*`) wildcard restriction instead.',
+    ];
 
     // Invalid HTML tag attribute value restrictions.
     yield 'INVALID: keys valid, values invalid attribute restrictions due to empty strings' => [
@@ -238,10 +242,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
       '<a target class>',
       ['a' => ['target' => TRUE, 'class' => TRUE]],
     ];
-    yield 'tag with two attributes, one with a partial wildcard' => [
-      '<a target class>',
-      ['a' => ['target' => TRUE, 'class' => TRUE]],
-    ];
 
     // Multiple tag cases.
     yield 'two tags' => [
@@ -253,7 +253,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['a' => FALSE, 'p' => FALSE],
     ];
 
-    // Wildcard tag.
+    // Wildcard tag, attribute and attribute value.
     yield '$block' => [
       '<$block class="text-align-left text-align-center text-align-right text-align-justify">',
       [],
@@ -391,8 +391,22 @@ class HTMLRestrictionsTest extends UnitTestCase {
         ],
       ],
     ];
-
-    // @todo Test `data-*` attribute: https://www.drupal.org/project/drupal/issues/3260853
+    yield '<drupal-media data-*>' => [
+      '<drupal-media data-*>',
+      ['drupal-media' => ['data-*' => TRUE]],
+    ];
+    yield '<drupal-media foo-*-bar>' => [
+      '<drupal-media foo-*-bar>',
+      ['drupal-media' => ['foo-*-bar' => TRUE]],
+    ];
+    yield '<drupal-media *-foo>' => [
+      '<drupal-media *-foo>',
+      ['drupal-media' => ['*-foo' => TRUE]],
+    ];
+    yield '<h2 id="jump-*">' => [
+      '<h2 id="jump-*">',
+      ['h2' => ['id' => ['jump-*' => TRUE]]],
+    ];
   }
 
   /**
@@ -434,8 +448,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'script',
           'attributes' => [
-            'src' => TRUE,
-            'defer' => TRUE,
+            ['key' => 'src', 'value' => TRUE],
+            ['key' => 'defer', 'value' => TRUE],
           ],
         ],
       ],
@@ -449,10 +463,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'a',
           'attributes' => [
-            'href' => TRUE,
-            'hreflang' => [
-              'regexp' => [
-                'pattern' => '/^(en|fr)$/',
+            ['key' => 'href', 'value' => TRUE],
+            [
+              'key' => 'hreflang',
+              'value' => [
+                'regexp' => [
+                  'pattern' => '/^(en|fr)$/',
+                ],
               ],
             ],
           ],
@@ -460,13 +477,124 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'p',
           'attributes' => [
-            'data-*' => TRUE,
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^data-.*$/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
           ],
           'classes' => [
-            'block',
+            'regexp' => [
+              'pattern' => '/^(block)$/',
+            ],
           ],
         ],
         ['name' => 'br'],
+      ],
+    ];
+
+    // Wildcard tag, attribute and attribute value.
+    yield '$block' => [
+      new HTMLRestrictions(['$block' => ['data-*' => TRUE]]),
+      ['<$block data-*>'],
+      '<$block data-*>',
+      [
+        [
+          'name' => '$block',
+          'attributes' => [
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^data-.*$/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ];
+    yield '<drupal-media data-*>' => [
+      new HTMLRestrictions(['drupal-media' => ['data-*' => TRUE]]),
+      ['<drupal-media data-*>'],
+      '<drupal-media data-*>',
+      [
+        [
+          'name' => 'drupal-media',
+          'attributes' => [
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^data-.*$/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ];
+    yield '<drupal-media foo-*-bar>' => [
+      new HTMLRestrictions(['drupal-media' => ['foo-*-bar' => TRUE]]),
+      ['<drupal-media foo-*-bar>'],
+      '<drupal-media foo-*-bar>',
+      [
+        [
+          'name' => 'drupal-media',
+          'attributes' => [
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^foo-.*-bar$/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ];
+    yield '<drupal-media *-bar>' => [
+      new HTMLRestrictions(['drupal-media' => ['*-bar' => TRUE]]),
+      ['<drupal-media *-bar>'],
+      '<drupal-media *-bar>',
+      [
+        [
+          'name' => 'drupal-media',
+          'attributes' => [
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^.*-bar$/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ];
+    yield '<h2 id="jump-*">' => [
+      new HTMLRestrictions(['h2' => ['id' => ['jump-*' => TRUE]]]),
+      ['<h2 id="jump-*">'],
+      '<h2 id="jump-*">',
+      [
+        [
+          'name' => 'h2',
+          'attributes' => [
+            [
+              'key' => 'id',
+              'value' => [
+                'regexp' => [
+                  'pattern' => '/^(jump-.*)$/',
+                ],
+              ],
+            ],
+          ],
+        ],
       ],
     ];
   }
@@ -738,7 +866,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => 'b',
     ];
 
-    // Wildcard + matching tag cases.
+    // Wildcard tag + matching tag cases.
     yield 'wildcard + matching tag: attribute intersection — without possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
@@ -810,7 +938,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => 'b',
     ];
 
-    // Wildcard + non-matching cases.
+    // Wildcard tag + non-matching tag cases.
     yield 'wildcard + non-matching tag: attribute diff — without possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
@@ -868,7 +996,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$block' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
 
-    // Wildcard + wildcard cases.
+    // Wildcard tag + wildcard tag cases.
     yield 'wildcard + wildcard tag: attributes' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
@@ -897,6 +1025,59 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'intersection' => 'a',
       'union' => 'b',
     ];
+
+    // Concrete attributes + wildcard attribute cases for all 3 possible
+    // wildcard locations. Parametrized to prevent excessive repetition and
+    // subtle differences.
+    $wildcard_locations = [
+      'prefix' => 'data-*',
+      'infix' => '*-entity-*',
+      'suffix' => '*-type',
+    ];
+    foreach ($wildcard_locations as $wildcard_location => $wildcard_attr_name) {
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a superset" => [
+        'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'diff' => HTMLRestrictions::emptySet(),
+        'intersection' => 'a',
+        'union' => 'b',
+      ];
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a superset — vice versa" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'diff' => 'a',
+        'intersection' => 'b',
+        'union' => 'a',
+      ];
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a subset" => [
+        'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+        'intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+      ];
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a subset — vice versa" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+        'diff' => 'a',
+        'intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+      ];
+      yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+        'intersection' => 'b',
+        'union' => 'a',
+      ];
+      yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr — vice versa" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+        'diff' => HTMLRestrictions::emptySet(),
+        'intersection' => 'a',
+        'union' => 'b',
+      ];
+    }
   }
 
 }

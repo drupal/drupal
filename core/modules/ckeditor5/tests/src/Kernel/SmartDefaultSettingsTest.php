@@ -133,6 +133,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $basic_html_editor_with_media_embed->setSettings($settings);
     $basic_html_editor_with_media_embed->save();
 
+    $new_value = str_replace('<img src alt height width data-entity-type data-entity-uuid data-align data-caption>', '<img src alt height width data-*>', $current_value);
+    $basic_html_format_with_any_data_attr = $basic_html_format;
+    $basic_html_format_with_any_data_attr['name'] .= ' (with any data-* attribute on images)';
+    $basic_html_format_with_any_data_attr['format'] = 'basic_html_with_any_data_attr';
+    NestedArray::setValue($basic_html_format_with_any_data_attr, $allowed_html_parents, $new_value);
+    FilterFormat::create($basic_html_format_with_any_data_attr)->save();
+    Editor::create(
+      ['format' => 'basic_html_with_any_data_attr']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    )->save();
+
     $filter_plugin_manager = $this->container->get('plugin.manager.filter');
     FilterFormat::create([
       'format' => 'filter_only__filter_html',
@@ -559,6 +571,28 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_messages' => array_merge($basic_html_test_case['expected_messages'], [
         "This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.",
       ]),
+    ];
+
+    yield "basic_html_with_any_data_attr can be switched to CKEditor 5 without problems (3 upgrade messages)" => [
+      'format_id' => 'basic_html_with_any_data_attr',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => array_merge(
+              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+              ['<img data-*>'],
+            ),
+          ],
+        ] + $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+      ],
+      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge($basic_html_test_case['expected_messages'],
+        [
+          'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt; &lt;img data-*&gt;.',
+        ]),
     ];
 
     yield "restricted_html can be switched to CKEditor 5 after dropping the two markup-creating filters (3 upgrade messages)" => [
