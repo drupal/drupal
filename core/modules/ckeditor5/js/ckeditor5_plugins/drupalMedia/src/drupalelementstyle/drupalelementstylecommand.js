@@ -84,6 +84,23 @@ export default class DrupalElementStyleCommand extends Command {
 
     if (this.isEnabled) {
       this.value = element.getAttribute('drupalElementStyle');
+
+      // If value is falsy, check if there is a default style to apply to the
+      // element.
+      if (!this.value) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [name, style] of this._styles.entries()) {
+          if (style.isDefault) {
+            const appliesToCurrentElement = style.modelElements.find(
+              (modelElement) => element.is('element', modelElement),
+            );
+            if (appliesToCurrentElement) {
+              this.value = name;
+              break;
+            }
+          }
+        }
+      }
     } else {
       this.value = false;
     }
