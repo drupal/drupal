@@ -9,6 +9,8 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
+// cspell:ignore gramma
+
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
  * @group ckeditor5
@@ -195,6 +197,41 @@ class SourceEditingTest extends CKEditor5TestBase {
       '<a class>' => [
         '<p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
         '<a class>',
+      ],
+
+      // Edge case: wildcard attribute names:
+      // - prefix, f.e. `data-*`
+      // - infix, f.e. `*gramma*`
+      // - suffix, f.e. `*-grammar`
+      '<a data-*>' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<a data-*>',
+      ],
+      '<a *gramma*>' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<a *gramma*>',
+      ],
+      '<a *-grammar>' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<a *-grammar>',
+      ],
+
+      // Edge case: concrete attribute with wildcard class value.
+      '<a class="use-*">' => [
+        '<p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
+        '<a class="use-*">',
+      ],
+
+      // Edge case: concrete attribute with wildcard attribute value.
+      '<a data-grammar="sub*">' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<a data-grammar="sub*">',
+      ],
+
+      // Edge case: `data-*` with wildcard attribute value.
+      '<a data-*="sub*">' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<a data-*="sub*">',
       ],
 
       // Edge case: `style`.
