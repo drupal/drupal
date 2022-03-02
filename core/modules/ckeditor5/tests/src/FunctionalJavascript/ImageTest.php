@@ -358,6 +358,75 @@ class ImageTest extends CKEditor5TestBase {
   }
 
   /**
+   * Tests alignment integration.
+   *
+   * @dataProvider providerAlignment
+   */
+  public function testAlignment(string $image_type): void {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    // Make the test content have either a block image or an inline image.
+    $img_tag = '<img alt="drupalimage test image" data-entity-type="file" data-entity-uuid="' . $this->file->uuid() . '" src="' . $this->file->createFileUrl() . '" />';
+    $this->host->body->value .= $image_type === 'block'
+      ? $img_tag
+      : "<p>$img_tag</p>";
+    $this->host->save();
+
+    $image_selector = $image_type === 'block' ? '.ck-widget.image' : '.ck-widget.image-inline';
+    $default_alignment = $image_type === 'block' ? 'Break text' : 'In line';
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $image_selector));
+
+    // Ensure that the default alignment option matches expectation.
+    $this->click($image_selector);
+    $this->assertVisibleBalloon('[aria-label="Image toolbar"]');
+    $this->assertTrue($this->getBalloonButton($default_alignment)->hasClass('ck-on'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('img')
+      ->item(0);
+    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
+    $this->getBalloonButton('Align center and break text')->click();
+
+    // Assert the alignment class exists after editing downcast.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.image.image-style-align-center'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('img')
+      ->item(0);
+    $this->assertEquals('center', $drupal_media_element->getAttribute('data-align'));
+
+    $page->pressButton('Save');
+    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
+    // Check that the class is correct in the front end.
+    $assert_session->elementExists('css', 'img.align-center');
+    // Go back to the editor to check that the alignment class still exists.
+    $edit_url = $this->getSession()->getCurrentURL() . '/edit';
+    $this->drupalGet($edit_url);
+    $this->waitForEditor();
+    $assert_session->elementExists('css', '.ck-widget.image.image-style-align-center');
+
+    // Ensure that "Centered image" alignment option is selected.
+    $this->click('.ck-widget.image');
+    $this->assertVisibleBalloon('[aria-label="Image toolbar"]');
+    $this->assertTrue($this->getBalloonButton('Align center and break text')->hasClass('ck-on'));
+    $this->getBalloonButton('Break text')->click();
+    $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-widget.image.image-style-align-center'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('img')
+      ->item(0);
+    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
+  }
+
+  public function providerAlignment() {
+    return [
+      'Block image' => ['block'],
+      'Inline image' => ['inline'],
+    ];
+  }
+
+  /**
    * Checks that width attribute is correct after upcasting, then downcasting.
    *
    * @param string $width

@@ -474,12 +474,25 @@ ckeditor5_imageAlign:
     config:
       image:
         toolbar:
-          - name: 'imageStyle:icons'
-            items:
-              - 'imageStyle:alignLeft'
-              - 'imageStyle:alignCenter'
-              - 'imageStyle:alignRight'
-            defaultItem: 'imageStyle:alignCenter'
+          - '|'
+          - 'imageStyle:block'
+          - 'imageStyle:alignLeft'
+          - 'imageStyle:alignCenter'
+          - 'imageStyle:alignRight'
+          - 'imageStyle:inline'
+          - '|'
+        styles:
+          options:
+            - inline
+            - name: 'block'
+              icon: 'left'
+              title: 'Break text'
+            - name: 'alignLeft'
+              title: 'Align left and wrap text'
+            - name: 'alignCenter'
+              title: 'Align center and break text'
+            - name: 'alignRight'
+              title: 'Align right and wrap text'
   drupal:
     label: Image align
     elements:
@@ -564,31 +577,36 @@ media_mediaAlign:
       drupalElementStyles:
         options:
           - name: 'alignRight'
-            title: 'Right aligned media'
+            title: 'Align right and wrap text'
             icon: 'objectRight'
             attributeName: 'data-align'
             attributeValue: 'right'
             modelElements: [ 'drupalMedia' ]
           - name: 'alignLeft'
-            title: 'Left aligned media'
+            title: 'Align left and wrap text'
             icon: 'objectLeft'
             attributeName: 'data-align'
             attributeValue: 'left'
             modelElements: [ 'drupalMedia' ]
           - name: 'alignCenter'
-            title: 'Centered media'
+            title: 'Align center and break text'
             icon: 'objectCenter'
             attributeName: 'data-align'
             attributeValue: 'center'
             modelElements: ['drupalMedia']
+          - name: 'breakText'
+            title: 'Break text'
+            icon: 'objectBlockLeft'
+            isDefault: true
+            modelElements: [ 'drupalMedia' ]
       drupalMedia:
         toolbar:
-          - name: 'drupalMedia:align'
-            items:
-              - 'drupalElementStyle:alignLeft'
-              - 'drupalElementStyle:alignCenter'
-              - 'drupalElementStyle:alignRight'
-            defaultItem: 'drupalElementStyle:alignCenter'
+          - '|'
+          - 'drupalElementStyle:breakText'
+          - 'drupalElementStyle:alignLeft'
+          - 'drupalElementStyle:alignCenter'
+          - 'drupalElementStyle:alignRight'
+          - '|'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign
