@@ -125,7 +125,6 @@
   background: #d3d4d9;
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
 
@@ -246,7 +245,6 @@
   font-weight: 700;
   line-height: 1rem;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   -webkit-font-smoothing: antialiased;
 }
