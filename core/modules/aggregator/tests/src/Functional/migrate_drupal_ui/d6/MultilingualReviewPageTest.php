@@ -1,37 +1,27 @@
 <?php
 
-namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
+namespace Drupal\Tests\aggregator\Functional\migrate_drupal_ui\d6;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 
 // cspell:ignore multigroup nodeaccess
 
 /**
- * Tests migrate upgrade review page for Drupal 6 without translations.
+ * Tests migrate upgrade review page for Drupal 6 for the aggregator module.
  *
- * Tests with the translation modules disabled.
+ * Tests with translation modules enabled.
  *
- * @group migrate_drupal_6
- * @group migrate_drupal_ui
+ * @group aggregator
  */
-class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
+class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
-    'datetime_range',
-    'language',
-    'telephone',
-    'book',
-    'forum',
-    'statistics',
-    'syslog',
-    'tracker',
-    'update',
-    // Test migrations states.
-    'migrate_state_finished_test',
-    'migrate_state_not_finished_test',
+    'aggregator',
+    'content_translation',
+    'config_translation',
   ];
 
   /**
@@ -54,9 +44,12 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    */
   protected function getAvailablePaths() {
     return [
+      'Aggregator',
+      'Block',
+      'Block translation',
       'Blog',
       'Blog API',
-      'Book',
+      'CCK translation',
       'Calendar Signup',
       'Color',
       'Comment',
@@ -66,6 +59,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Content Multigroup',
       'Content Permissions',
       'Content translation',
+      'Content type translation',
       'Database logging',
       'Date',
       'Date API',
@@ -83,7 +77,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'FileField',
       'FileField Meta',
       'Filter',
-      'Forum',
       'Help',
       'ImageAPI',
       'ImageAPI GD2',
@@ -91,30 +84,35 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'ImageCache',
       'ImageCache UI',
       'ImageField',
+      'Internationalization',
       'Link',
       'Locale',
       'Menu',
-      'Node',
-      'Nodeaccess',
+      'Menu',
+      'Menu translation',
       'Node Reference',
+      'Nodeaccess',
       'Number',
       'OpenID',
+      'Option Widgets',
       'PHP filter',
       'Path',
       'Phone - CCK',
       'Ping',
       'Poll',
+      'Poll aggregate',
       'Profile',
+      'Profile translation',
       'Search',
-      'Statistics',
-      'Syslog',
+      'String translation',
+      'Synchronize translations',
       'System',
       'Taxonomy',
+      'Taxonomy translation',
       'Text',
       'Throttle',
       'Tracker',
       'Trigger',
-      'Update status',
       'Upload',
       'User',
       'User Reference',
@@ -129,36 +127,19 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getIncompletePaths() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getMissingPaths() {
     return [
-      'Aggregator',
-      // Block is set not_finished in migrate_state_not_finished_test.
-      'Block',
-      'Block translation',
-      'CCK translation',
-      'Content type translation',
+      'Book',
       'Devel',
       'Devel generate',
       'Devel node access',
-      'Internationalization',
-      'Menu translation',
-      'migrate_status_active_test',
-      // Option Widgets is set not_finished in migrate_state_not_finished_test.
-      'Option Widgets',
-      'Poll aggregate',
-      'Profile translation',
-      'String translation',
-      'Synchronize translations',
-      'Taxonomy translation',
+      'Forum',
+      'Statistics',
+      'Syslog',
+      'Update status',
       'Views',
       'Views translation',
+      'migrate_status_active_test',
     ];
   }
 

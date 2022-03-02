@@ -25,7 +25,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'content_translation',
     'config_translation',
     'telephone',
-    'aggregator',
     'book',
     'forum',
     'statistics',
@@ -59,7 +58,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Aggregator',
       'Block translation',
       'Blog',
       'Blog API',
@@ -110,7 +108,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Nodeaccess',
       'Number',
       'OpenID',
-      'Option Widgets',
       'PHP filter',
       'Path',
       'Phone - CCK',
@@ -148,11 +145,14 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Aggregator',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Devel',
       'Devel generate',
       'Devel node access',
+      // Option Widgets is set not_finished in migrate_state_not_finished_test.
+      'Option Widgets',
       'Views',
       'Views translation',
       'migrate_status_active_test',

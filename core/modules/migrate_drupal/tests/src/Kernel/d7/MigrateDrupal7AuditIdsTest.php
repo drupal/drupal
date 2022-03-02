@@ -127,6 +127,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     );
 
     $expected = [
+      // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
       'd7_aggregator_feed',
       'd7_aggregator_item',
       'd7_comment',

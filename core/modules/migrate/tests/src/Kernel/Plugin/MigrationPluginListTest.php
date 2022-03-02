@@ -26,6 +26,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'migrate',
     // Test with all modules containing Drupal migrations.
     'action',
+    // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
     'aggregator',
     'ban',
     'block',

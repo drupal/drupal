@@ -1,18 +1,17 @@
 <?php
 
-namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
+namespace Drupal\Tests\aggregator\Functional\migrate_drupal_ui\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 
 // cspell:ignore Filefield Flexslider Multiupload Imagefield
 
 /**
- * Tests migrate upgrade review page for Drupal 7.
+ * Tests migrate upgrade review page for Drupal 7 for the aggregator module.
  *
  * Tests with translation modules enabled.
  *
- * @group migrate_drupal_7
- * @group migrate_drupal_ui
+ * @group aggregator
  */
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 
@@ -20,19 +19,8 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'datetime_range',
-    'language',
+    'aggregator',
     'content_translation',
-    'telephone',
-    'book',
-    'forum',
-    'statistics',
-    'syslog',
-    'tracker',
-    'update',
-    // Test migrations states.
-    'migrate_state_finished_test',
-    'migrate_state_not_finished_test',
   ];
 
   /**
@@ -55,9 +43,10 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    */
   protected function getAvailablePaths() {
     return [
+      'Aggregator',
+      'Block',
       'Block languages',
       'Blog',
-      'Book',
       'Bulk Export',
       'Chaos tools',
       'Chaos Tools (CTools) AJAX Example',
@@ -91,7 +80,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Field UI',
       'File',
       'Filter',
-      'Forum',
       'Help',
       'Image',
       'Internationalization',
@@ -106,26 +94,23 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Node Reference',
       'Number',
       'OpenID',
+      'Options',
       'Overlay',
       'PHP filter',
       'Page manager',
       'Path',
-      'Phone',
       'Poll',
       'Profile',
       'RDF',
       'Search',
       'Search embedded form',
       'Shortcut',
-      'Statistics',
       'String translation',
       'Stylizer',
       'Synchronize translations',
-      'Syslog',
       'System',
       'Taxonomy translation',
       'Taxonomy',
-      'Telephone',
       'Term Depth access',
       'Test search node tags',
       'Test search type',
@@ -133,9 +118,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Text',
       'Title',
       'Toolbar',
-      'Tracker',
       'Trigger',
-      'Update manager',
       'User',
       'User Reference',
       'Views content panes',
@@ -148,10 +131,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
-      // Action is set not_finished in migrate_state_not_finished_test.
-      'Aggregator',
-      // Block is set not_finished in migrate_state_not_finished_test.
-      'Block',
+      'Book',
       'Breakpoints',
       'Contact translation',
       'Entity Translation Menu',
@@ -160,17 +140,22 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Flexslider_picture is a sub module of Picture module. Only the
       // styles from picture are migrated.
       'FlexSlider Picture',
+      'Forum',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',
-      // Options is set not_finished in migrate_state_not_finished_test.
-      'Options',
       'Path translation',
+      'Phone',
       'Picture',
       'References',
       'References UUID',
+      'Statistics',
+      'Syslog',
+      'Telephone',
+      'Tracker',
       'Translation redirect',
       'Translation sets',
+      'Update manager',
       'User mail translation',
       'Variable',
       'Variable admin',

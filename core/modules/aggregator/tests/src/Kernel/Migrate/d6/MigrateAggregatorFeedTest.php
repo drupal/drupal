@@ -3,19 +3,13 @@
 namespace Drupal\Tests\aggregator\Kernel\Migrate\d6;
 
 use Drupal\aggregator\Entity\Feed;
-use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
  * Tests migration of aggregator feeds.
  *
- * @group migrate_drupal_6
+ * @group aggregator
  */
 class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

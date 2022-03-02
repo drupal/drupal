@@ -19,7 +19,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'config_translation',
     'content_translation',
@@ -52,7 +51,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Aggregator',
       'Block',
       'Block languages',
       'Book',
@@ -156,6 +154,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Aggregator',
       'Breakpoints',
       'Contact translation',
       'Entity Translation Menu',
