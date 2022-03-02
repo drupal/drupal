@@ -1,18 +1,17 @@
 <?php
 
-namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
+namespace Drupal\Tests\aggregator\Functional\migrate_drupal_ui\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
 // cspell:ignore multigroup nodeaccess
 
 /**
- * Tests migrate upgrade review page for Drupal 6 without translations.
+ * Tests migrate upgrade review page for Drupal 6  for the aggregator module.
  *
  * Tests with the translation modules disabled.
  *
- * @group migrate_drupal_6
- * @group migrate_drupal_ui
+ * @group aggregator
  */
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 
@@ -20,18 +19,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'datetime_range',
-    'language',
-    'telephone',
-    'book',
-    'forum',
-    'statistics',
-    'syslog',
-    'tracker',
-    'update',
-    // Test migrations states.
-    'migrate_state_finished_test',
-    'migrate_state_not_finished_test',
+    'aggregator',
   ];
 
   /**
@@ -54,9 +42,10 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    */
   protected function getAvailablePaths() {
     return [
+      'Aggregator',
+      'Block',
       'Blog',
       'Blog API',
-      'Book',
       'Calendar Signup',
       'Color',
       'Comment',
@@ -83,7 +72,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'FileField',
       'FileField Meta',
       'Filter',
-      'Forum',
       'Help',
       'ImageAPI',
       'ImageAPI GD2',
@@ -92,13 +80,13 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'ImageCache UI',
       'ImageField',
       'Link',
-      'Locale',
       'Menu',
       'Node',
       'Nodeaccess',
       'Node Reference',
       'Number',
       'OpenID',
+      'Option Widgets',
       'PHP filter',
       'Path',
       'Phone - CCK',
@@ -106,15 +94,12 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Poll',
       'Profile',
       'Search',
-      'Statistics',
-      'Syslog',
       'System',
       'Taxonomy',
       'Text',
       'Throttle',
       'Tracker',
       'Trigger',
-      'Update status',
       'Upload',
       'User',
       'User Reference',
@@ -138,25 +123,26 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'Aggregator',
-      // Block is set not_finished in migrate_state_not_finished_test.
-      'Block',
       'Block translation',
+      'Book',
       'CCK translation',
       'Content type translation',
       'Devel',
       'Devel generate',
       'Devel node access',
+      'Forum',
       'Internationalization',
+      'Locale',
       'Menu translation',
       'migrate_status_active_test',
-      // Option Widgets is set not_finished in migrate_state_not_finished_test.
-      'Option Widgets',
       'Poll aggregate',
       'Profile translation',
+      'Statistics',
       'String translation',
       'Synchronize translations',
+      'Syslog',
       'Taxonomy translation',
+      'Update status',
       'Views',
       'Views translation',
     ];

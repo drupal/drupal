@@ -1,9 +1,12 @@
+# cspell:ignore optionwidgets
 not_finished:
   6:
     block: migrate_state_not_finished_test
+    # Override any finished declarations for this field plugin.
+    optionwidgets: options
   7:
     # Override any finished declarations for this field plugin.
-    aggregator: field_left
+    options: options
     # Override any finished declarations for this migration.
     action: migrate_state_not_finished_test
     block: migrate_state_not_finished_test

@@ -1,38 +1,25 @@
 <?php
 
-namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
+namespace Drupal\Tests\aggregator\Functional\migrate_drupal_ui\d7;
 
-use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
-// cspell:ignore Filefield Flexslider Multiupload Imagefield
+// cspell:ignore Filefield Multiupload Imagefield
 
 /**
- * Tests migrate upgrade review page for Drupal 7.
+ * Tests Drupal 7 upgrade without translations for the aggregator module.
  *
- * Tests with translation modules enabled.
+ * The test method is provided by the MigrateUpgradeTestBase class.
  *
- * @group migrate_drupal_7
- * @group migrate_drupal_ui
+ * @group aggregator
  */
-class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
+class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
-    'datetime_range',
-    'language',
-    'content_translation',
-    'telephone',
-    'book',
-    'forum',
-    'statistics',
-    'syslog',
-    'tracker',
-    'update',
-    // Test migrations states.
-    'migrate_state_finished_test',
-    'migrate_state_not_finished_test',
+    'aggregator',
   ];
 
   /**
@@ -55,23 +42,19 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Block languages',
-      'Blog',
-      'Book',
+      'Aggregator',
+      'Block',
       'Bulk Export',
-      'Chaos tools',
       'Chaos Tools (CTools) AJAX Example',
+      'Chaos tools',
       'Color',
       'Comment',
       'Contact',
-      'Content translation',
-      'Contextual links',
       'Custom content panes',
       'Custom rulesets',
       'Dashboard',
       'Database logging',
       'Date',
-      'Date API',
       'Date All Day',
       'Date Context',
       'Date Migration',
@@ -81,66 +64,67 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Date Tools',
       'Date Views',
       'Email',
-      'Entity API',
       'Entity Reference',
-      'Entity Translation',
       'Entity feature module',
       'Entity tokens',
       'Field',
       'Field SQL storage',
-      'Field UI',
       'File',
       'Filter',
-      'Forum',
-      'Help',
       'Image',
-      'Internationalization',
       'Link',
       'List',
-      'Locale',
       'Menu',
-      'Menu translation',
       'Multiupload Filefield Widget',
       'Multiupload Imagefield Widget',
       'Node',
       'Node Reference',
       'Number',
       'OpenID',
+      'Options',
       'Overlay',
-      'PHP filter',
       'Page manager',
       'Path',
-      'Phone',
       'Poll',
       'Profile',
       'RDF',
       'Search',
       'Search embedded form',
       'Shortcut',
-      'Statistics',
-      'String translation',
       'Stylizer',
       'Synchronize translations',
-      'Syslog',
       'System',
-      'Taxonomy translation',
       'Taxonomy',
-      'Telephone',
       'Term Depth access',
       'Test search node tags',
       'Test search type',
-      'Testing',
       'Text',
       'Title',
-      'Toolbar',
-      'Tracker',
-      'Trigger',
-      'Update manager',
       'User',
       'User Reference',
-      'Views content panes',
       'Views UI',
+      'Views content panes',
+      // Include modules that do not have an upgrade path and are enabled in the
+      // source database.
+      'Blog',
+      'Content translation',
+      'Contextual links',
+      'Date API',
+      'Entity API',
+      'Field UI',
+      'Help',
+      'PHP filter',
+      'Testing',
+      'Toolbar',
+      'Trigger',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getIncompletePaths() {
+    return [];
   }
 
   /**
@@ -148,27 +132,31 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    */
   protected function getMissingPaths() {
     return [
-      // Action is set not_finished in migrate_state_not_finished_test.
-      'Aggregator',
-      // Block is set not_finished in migrate_state_not_finished_test.
-      'Block',
+      'Block languages',
+      'Book',
       'Breakpoints',
       'Contact translation',
+      'Entity Translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',
       'Field translation',
-      // Flexslider_picture is a sub module of Picture module. Only the
-      // styles from picture are migrated.
       'FlexSlider Picture',
+      'Forum',
+      'Internationalization',
+      'Locale',
+      'Menu translation',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',
-      // Options is set not_finished in migrate_state_not_finished_test.
-      'Options',
       'Path translation',
+      'Phone',
       'Picture',
       'References',
       'References UUID',
+      'Statistics',
+      'String translation',
+      'Taxonomy translation',
+      'Telephone',
       'Translation redirect',
       'Translation sets',
       'User mail translation',
@@ -180,6 +168,11 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Variable views',
       'Views',
       'migrate_status_active_test',
+      // These modules are in the missing path list because they are installed
+      // on the source site but they are not installed on the destination site.
+      'Syslog',
+      'Tracker',
+      'Update manager',
     ];
   }
 
