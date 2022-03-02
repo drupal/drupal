@@ -46,6 +46,7 @@ class BlockDemoTest extends BrowserTestBase {
     $available_themes = [
       'bartik',
       'classy',
+      'olivero',
       'seven',
       'stark',
     ];
