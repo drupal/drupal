@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Command } from 'ckeditor5/src/core';
-import { isDrupalMedia } from '../utils';
+import { getClosestSelectedDrupalMediaElement } from '../utils';
 import { METADATA_ERROR } from './utils';
 
 /**
@@ -18,14 +18,16 @@ export default class MediaImageTextAlternativeCommand extends Command {
    * @inheritDoc
    */
   refresh() {
-    const element = this.editor.model.document.selection.getSelectedElement();
+    const drupalMediaElement = getClosestSelectedDrupalMediaElement(
+      this.editor.model.document.selection,
+    );
     this.isEnabled =
-      isDrupalMedia(element) &&
-      element.getAttribute('drupalMediaIsImage') &&
-      element.getAttribute('drupalMediaIsImage') !== METADATA_ERROR;
+      !!drupalMediaElement &&
+      drupalMediaElement.getAttribute('drupalMediaIsImage') &&
+      drupalMediaElement.getAttribute('drupalMediaIsImage') !== METADATA_ERROR;
 
-    if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
-      this.value = element.getAttribute('drupalMediaAlt');
+    if (this.isEnabled) {
+      this.value = drupalMediaElement.getAttribute('drupalMediaAlt');
     } else {
       this.value = false;
     }
@@ -40,14 +42,20 @@ export default class MediaImageTextAlternativeCommand extends Command {
    */
   execute(options) {
     const { model } = this.editor;
-    const imageElement = model.document.selection.getSelectedElement();
+    const drupalMediaElement = getClosestSelectedDrupalMediaElement(
+      model.document.selection,
+    );
 
     options.newValue = options.newValue.trim();
     model.change((writer) => {
       if (options.newValue.length > 0) {
-        writer.setAttribute('drupalMediaAlt', options.newValue, imageElement);
+        writer.setAttribute(
+          'drupalMediaAlt',
+          options.newValue,
+          drupalMediaElement,
+        );
       } else {
-        writer.removeAttribute('drupalMediaAlt', imageElement);
+        writer.removeAttribute('drupalMediaAlt', drupalMediaElement);
       }
     });
   }

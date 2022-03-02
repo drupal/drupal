@@ -374,9 +374,21 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
     $this->assertSame('baz', $figcaption->getHtml());
 
-    // Ensure that caption can be toggled off from the toolbar.
-    $this->click('.ck-widget.drupal-media');
+    // Ensure that the media contextual toolbar is visible when figcaption is
+    // selected.
+    $this->selectTextInsideElement('.drupal-media figcaption');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $expected_buttons = [
+      'Toggle caption off',
+      'Link media',
+      'Override media image alternative text',
+      'Centered media',
+    ];
+    foreach ($expected_buttons as $expected_button) {
+      $this->assertNotEmpty($this->getBalloonButton($expected_button));
+    }
+
+    // Ensure that caption can be toggled off from the toolbar.
     $this->getBalloonButton('Toggle caption off')->click();
     $assert_session->assertNoElementAfterWait('css', 'figcaption');
 
@@ -384,7 +396,11 @@ class MediaTest extends WebDriverTestBase {
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('Toggle caption on')->click();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+
+    // Ensure that the media contextual toolbar is visible after toggling
+    // caption on.
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
 
     // Type into the widget's caption element.
     $figcaption->setValue('Llamas are the most awesome ever');
