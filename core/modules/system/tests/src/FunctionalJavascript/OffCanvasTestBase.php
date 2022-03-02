@@ -12,6 +12,14 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = [
+    // @todo Remove this in https://www.drupal.org/node/3219959
+    'block',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function drupalGet($path, array $options = [], array $headers = []) {
     $return = parent::drupalGet($path, $options, $headers);
     $this->assertPageLoadComplete();
@@ -102,7 +110,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    *   Theme names to test.
    */
   protected function getTestThemes() {
-    return ['bartik', 'stark', 'classy', 'stable', 'seven'];
+    return ['bartik', 'classy', 'olivero', 'seven', 'stable', 'stark'];
   }
 
   /**

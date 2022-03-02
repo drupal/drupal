@@ -190,7 +190,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           'theme' => $theme,
           'block_plugin' => 'search_form_block',
           'new_page_text' => NULL,
-          'element_selector' => '#edit-submit',
+          'element_selector' => '[data-drupal-selector="edit-submit"]',
           'label_selector' => 'h2',
           'button_text' => 'Save Search form',
           'toolbar_item' => NULL,
@@ -232,11 +232,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
   public function testEditModeEnableDisable() {
     foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
-      $block = $this->placeBlock('system_powered_by_block', [
-        // @todo Remove this when
-        //   https://www.drupal.org/project/drupal/issues/3257504 is fixed.
-        'region' => 'sidebar_first',
-      ]);
+      $block = $this->placeBlock('system_powered_by_block');
       foreach (['contextual_link', 'toolbar_link'] as $enable_option) {
         $this->drupalGet('user');
         $this->assertEditModeDisabled();
