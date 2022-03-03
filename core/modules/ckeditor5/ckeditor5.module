@@ -391,17 +391,6 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
     $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.filter.admin';
   }
 
-  // If the 'ckeditor5/ie11.user.warnings' library is added as a dependency of
-  // other Ckeditor 5 libraries, it won't reliably work as the CKEditor 5 assets
-  // are loaded via AJAX, and the IE11-incompatible syntax in CKEditor 5 can
-  // prevent the AJAX call from successfully loading the functionality in
-  // 'ckeditor5/ie11.user.warnings'. Adding this as a dependency of
-  // 'system/base', as excessive as it may seem, is the most reliable way to
-  // assure it is loaded as part of the page request.
-  if ($extension === 'system') {
-    $libraries['base']['dependencies'][] = 'ckeditor5/ie11.user.warnings';
-  }
-
   $moduleHandler = \Drupal::moduleHandler();
   // Only add translation processing if the locale module is enabled.
   if (!$moduleHandler->moduleExists('locale')) {

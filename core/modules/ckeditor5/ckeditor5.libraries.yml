@@ -30,6 +30,7 @@ drupal.ckeditor5:
     - core/ckeditor5
     - editor/drupal.editor
     - ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around
+    - ckeditor5/ie11.user.warnings
 
 drupal.ckeditor5.quickedit-temporary-work-around:
   deprecated: "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."
