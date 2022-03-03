@@ -5,7 +5,7 @@
   "private": true,
   "engines": {
     "yarn": ">= 1.6",
-    "node": ">= 12.0"
+    "node": ">= 16.0"
   },
   "scripts": {
     "build": "yarn build:css & yarn build:js & yarn build:jqueryui & yarn build:ckeditor5",
