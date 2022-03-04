@@ -5,3 +5,5 @@ version: VERSION
 base theme: false
 ckeditor_stylesheets:
   - //fonts.googleapis.com/css?family=Open+Sans
+ckeditor5-stylesheets:
+  - //fonts.googleapis.com/css?family=Open+Sans

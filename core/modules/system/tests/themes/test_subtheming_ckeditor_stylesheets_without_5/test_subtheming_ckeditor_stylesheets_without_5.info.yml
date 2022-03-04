@@ -1,0 +1,9 @@
+name: No setting for CKEditor 5 stylesheets here or subtheme
+type: theme
+description: 'A theme that uses ckeditor_stylesheets without ckeditor5-stylesheets, nor does its base theme.'
+package: Testing
+version: VERSION
+base theme: test_ckeditor_stylesheets_without_5
+
+ckeditor_stylesheets:
+  - /core/modules/system/tests/themes/test_ckeditor_stylesheets_without_5/css/another.css
