@@ -24,7 +24,7 @@
 
         // Add a container for messages above the text format select element.
         const selectMessageContainer = document.createElement('div');
-        select.parentNode.insertBefore(selectMessageContainer, select);
+        select.parentNode.after(selectMessageContainer, select);
         const selectMessages = new Drupal.Message(selectMessageContainer);
         const editorSettings = document.querySelector(
           '#editor-settings-wrapper',

@@ -14,7 +14,7 @@
       if (typeof editorSelect[0] !== 'undefined') {
         var select = editorSelect[0];
         var selectMessageContainer = document.createElement('div');
-        select.parentNode.insertBefore(selectMessageContainer, select);
+        select.parentNode.after(selectMessageContainer, select);
         var selectMessages = new Drupal.Message(selectMessageContainer);
         var editorSettings = document.querySelector('#editor-settings-wrapper');
 

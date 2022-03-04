@@ -7,3 +7,5 @@ base theme: false
 
 ckeditor_stylesheets:
   - /core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css
+ckeditor5-stylesheets:
+  - /core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css
