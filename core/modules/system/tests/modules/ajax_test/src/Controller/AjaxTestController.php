@@ -331,7 +331,7 @@ class AjaxTestController {
       'not-wrapped' => 'not-wrapped',
       'comment-string-not-wrapped' => '<!-- COMMENT -->comment-string-not-wrapped',
       'comment-not-wrapped' => '<!-- COMMENT --><div class="comment-not-wrapped">comment-not-wrapped</div>',
-      'svg' => '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect x="0" y="0" height="10" width="10" fill="green"/></svg>',
+      'svg' => '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect x="0" y="0" height="10" width="10" fill="green"></rect></svg>',
       'empty' => '',
     ];
     $render_multiple_root = [
