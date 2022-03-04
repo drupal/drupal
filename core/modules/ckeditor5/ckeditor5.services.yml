@@ -13,3 +13,13 @@ services:
       - '@plugin.manager.ckeditor5.plugin'
       - '@plugin.manager.ckeditor4to5upgrade.plugin'
       - '@?plugin.manager.ckeditor.plugin'
+  ckeditor5.stylesheets.message:
+    class: Drupal\ckeditor5\CKEditor5StylesheetsMessage
+    arguments:
+      - '@theme_handler'
+      - '@config.factory'
+  ckeditor5.ckeditor5_cache_tag:
+    class: Drupal\ckeditor5\EventSubscriber\CKEditor5CacheTag
+    arguments: ['@cache_tags.invalidator']
+    tags:
+      - { name: event_subscriber }

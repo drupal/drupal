@@ -8,6 +8,7 @@
 declare(strict_types = 1);
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\MessageCommand;
@@ -392,6 +393,22 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
   }
 
   $moduleHandler = \Drupal::moduleHandler();
+
+  if ($extension === 'ckeditor5') {
+    // Add paths to stylesheets specified by a theme's ckeditor5-stylesheets
+    // config property.
+    $css = _ckeditor5_theme_css();
+    $libraries['drupal.ckeditor5.stylesheets'] = [
+      'css' => [
+        'theme' => array_fill_keys(array_values($css), []),
+      ],
+    ];
+
+    if ($moduleHandler->moduleExists('quickedit')) {
+      $libraries['drupal.ckeditor5']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around';
+    }
+  }
+
   // Only add translation processing if the locale module is enabled.
   if (!$moduleHandler->moduleExists('locale')) {
     return;
@@ -557,4 +574,45 @@ function ckeditor5_config_schema_info_alter(&$definitions) {
   $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['filters'] = $definitions['filter.format.*']['mapping']['filters'];
   // @see @see editor.editor.*.image_upload
   $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['image_upload'] = $definitions['editor.editor.*']['mapping']['image_upload'];
+}
+
+/**
+ * Retrieves the default theme's CKEditor 5 stylesheets.
+ *
+ * Themes may specify CSS files for use within CKEditor 5 by including a
+ * "ckeditor5-stylesheets" key in their .info.yml file.
+ *
+ * @code
+ * ckeditor5-stylesheets:
+ *   - css/ckeditor.css
+ * @endcode
+ *
+ * @return string[]
+ *   A list of paths to CSS files.
+ */
+function _ckeditor5_theme_css($theme = NULL): array {
+  $css = [];
+  if (!isset($theme)) {
+    $theme = \Drupal::config('system.theme')->get('default');
+  }
+  if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
+    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    if (isset($info['ckeditor5-stylesheets'])) {
+      $css = $info['ckeditor5-stylesheets'];
+      foreach ($css as $key => $url) {
+        // CSS url is external or relative to Drupal root.
+        if (UrlHelper::isExternal($url) || $url[0] === '/') {
+          $css[$key] = $url;
+        }
+        // CSS url is relative to theme.
+        else {
+          $css[$key] = '/' . $theme_path . '/' . $url;
+        }
+      }
+    }
+    if (isset($info['base theme'])) {
+      $css = array_merge(_ckeditor5_theme_css($info['base theme']), $css);
+    }
+  }
+  return $css;
 }

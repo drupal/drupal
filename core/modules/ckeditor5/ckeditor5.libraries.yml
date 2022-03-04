@@ -29,8 +29,17 @@ drupal.ckeditor5:
     - core/ckeditor5.editorDecoupled
     - core/ckeditor5
     - editor/drupal.editor
-    - ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around
     - ckeditor5/ie11.user.warnings
+    - ckeditor5/drupal.ckeditor5.stylesheets
+    - core/drupalSettings
+    - core/drupal.message
+
+# Library used for dynamically loading CKEditor 5 stylesheets from the default
+# front end theme.
+# @see ckeditor5_library_info_alter()
+drupal.ckeditor5.stylesheets:
+  version: VERSION
+  css: []
 
 drupal.ckeditor5.quickedit-temporary-work-around:
   deprecated: "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."
@@ -103,6 +112,8 @@ drupal.ckeditor5.filter.admin:
     - core/drupal.message
     - core/once
     - core/drupal.ajax
+    - core/drupalSettings
+    - core/drupal.message
 
 admin:
   js:
