@@ -61,7 +61,6 @@ arrowstop
 arrowthick
 arrowthickstop
 arrr
-asdf
 asdrsad
 assertable
 asterix
@@ -187,7 +186,6 @@ bubbleable
 buildable
 buildinfo
 buildtest
-bundable
 bundleable
 bundleless
 buttonpane
@@ -296,7 +294,6 @@ contextual's
 contextuals
 contrained
 controlgroup
-coord
 corefake
 coretest
 corge
@@ -311,7 +308,6 @@ crossout
 crudui
 crypted
 cscript
-csrf
 csrftoken
 cssidentifier
 csslintrc
@@ -357,7 +353,6 @@ ddblock
 ddev
 deckard
 deconstructor
-dedupe
 deduplicated
 deduplicates
 defalt
@@ -395,7 +390,6 @@ desaturates
 desaturating
 descripcion
 deserialization
-deserializes
 destid
 destructable
 deutsch
@@ -427,7 +421,6 @@ doubleclick
 downcasting
 doxygen
 drag'n'drop
-draggable
 dragtable
 dramallama
 dramallamas
@@ -471,7 +464,6 @@ easyrdf
 ecmascript
 editables
 editdrupalimage
-editorconfig
 editunblock
 eerste
 egroe
@@ -535,8 +527,6 @@ fapi
 farb
 farbtastic
 fatals
-favicon
-favicons
 favourite
 favstar
 fcgi
@@ -572,7 +562,6 @@ filtertypes
 findwith
 firstcolumn
 fixnull
-flexbox
 flexslider
 flickr
 flipfit
@@ -633,8 +622,6 @@ getview
 gids
 gifs
 giggabyte
-gitattributes
-gitignored
 gloop
 gnumeric
 goldfinger
@@ -658,7 +645,6 @@ guzzle's
 guzzlehttp
 gzipped
 hande
-hant
 hardcode
 hardcodes
 hardcoding
@@ -746,7 +732,6 @@ isdst
 isid
 isinstallable
 items's
-iteratable
 itoa
 itok
 itunesentry
@@ -808,7 +793,6 @@ langcodes
 langname
 languageswitcher
 larowlan
-latn
 layouted
 lazybuilder
 lazyload
@@ -1045,7 +1029,6 @@ nothere
 notnull
 notsimpletest
 nourriture
-nowdoc
 nplurals
 nresponse
 ntfs
@@ -1054,7 +1037,6 @@ nyancat
 nyans
 nzdt
 nœud
-objectid
 objectindex
 oembed
 officedocument
@@ -1113,17 +1095,14 @@ pathnames
 pcre
 pcss
 pdo's
-pecl
 peole
 percona
-performant
 perma
 permissionless
 persistable
 phpass
 phpcbf
 phpcs
-phpdoc
 phpdocumentor
 phpfile
 phpserialize
@@ -1158,7 +1137,6 @@ postcondition
 postcss
 postfields
 postfoo
-postgres
 postgresql
 postorder
 postprocess
@@ -1288,9 +1266,6 @@ reparenting
 reparsed
 replyto
 require'd
-rerender
-rerendered
-rerendering
 resampling
 resave
 resaved
@@ -1418,7 +1393,6 @@ sourceid
 spacebar
 spagna
 spamspan
-spdx
 specialchar
 specialchars
 spiffiness
@@ -1435,7 +1409,6 @@ ssess
 ssid
 stardivision
 starrrrr
-starterkit
 startpunt
 starzzzz
 statuscode
@@ -1889,7 +1862,6 @@ yourmodule
 youtube
 yowser
 yygroup
-yyyymm
 zartan
 zendframework
 zettabyte

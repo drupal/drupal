@@ -32,8 +32,8 @@
       if (timestamp > lastViewTimestamp) {
         $placeholdersToUpdate[nodeID] = $placeholder;
       } else {
-          remove($placeholder);
-        }
+        remove($placeholder);
+      }
     });
     var nodeIDs = Object.keys($placeholdersToUpdate);
 

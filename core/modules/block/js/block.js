@@ -59,8 +59,8 @@
           if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
             $this.removeClass('region-populated').addClass('region-empty');
           } else if ($this.is('.region-empty')) {
-              $this.removeClass('region-empty').addClass('region-populated');
-            }
+            $this.removeClass('region-empty').addClass('region-populated');
+          }
         });
       }
 
@@ -122,8 +122,8 @@
         if (regionItems.length) {
           regionItems.last().after(row);
         } else {
-            regionMessage.after(row);
-          }
+          regionMessage.after(row);
+        }
 
         updateBlockWeights(table, select[0].value);
         checkEmptyRegions(table, tableDrag.rowObject);

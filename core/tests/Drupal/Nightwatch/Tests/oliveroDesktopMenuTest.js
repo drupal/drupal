@@ -53,14 +53,16 @@ module.exports = {
       .drupalRelativeURL('/node')
       .waitForElementVisible(headerNavSelector)
       .assert.visible(headerNavSelector)
-      .moveToElement('link text', 'home')
+      .assert.not.visible(`#${linkSubMenuId}`)
+      .moveToElement(`[aria-controls="${linkSubMenuId}"]`, 0, 0)
       .assert.visible(`#${linkSubMenuId}`)
       .assert.attributeEquals(
         `[aria-controls="${linkSubMenuId}"]`,
         'aria-expanded',
         'true',
       )
-      .moveToElement('link text', 'button')
+      .assert.not.visible(`#${buttonSubMenuId}`)
+      .moveToElement(`[aria-controls="${buttonSubMenuId}"]`, 0, 0)
       .assert.visible(`#${buttonSubMenuId}`)
       .assert.attributeEquals(
         `[aria-controls="${buttonSubMenuId}"]`,

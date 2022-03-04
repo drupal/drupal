@@ -158,16 +158,16 @@
           }
         }
       } else if ($.isPlainObject(constraints)) {
-          for (var n in constraints) {
-            if (constraints.hasOwnProperty(n)) {
-              result = ternary(result, this.checkConstraints(constraints[n], selector, n));
+        for (var n in constraints) {
+          if (constraints.hasOwnProperty(n)) {
+            result = ternary(result, this.checkConstraints(constraints[n], selector, n));
 
-              if (result === false) {
-                return false;
-              }
+            if (result === false) {
+              return false;
             }
           }
         }
+      }
 
       return result;
     },

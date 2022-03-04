@@ -111,8 +111,8 @@
           if (linkElement && linkElement.$) {
             existingValues = parseAttributes(editor, linkElement);
           } else if (focusedLinkableWidget && focusedLinkableWidget.data.link) {
-              existingValues = CKEDITOR.tools.clone(focusedLinkableWidget.data.link);
-            }
+            existingValues = CKEDITOR.tools.clone(focusedLinkableWidget.data.link);
+          }
 
           var saveCallback = function saveCallback(returnValues) {
             if (focusedLinkableWidget) {
@@ -142,16 +142,16 @@
               range.select();
               linkElement = getSelectedLink(editor);
             } else if (linkElement) {
-                Object.keys(returnValues.attributes || {}).forEach(function (attrName) {
-                  if (returnValues.attributes[attrName].length > 0) {
-                    var value = returnValues.attributes[attrName];
-                    linkElement.data("cke-saved-".concat(attrName), value);
-                    linkElement.setAttribute(attrName, value);
-                  } else {
-                      linkElement.removeAttribute(attrName);
-                    }
-                });
-              }
+              Object.keys(returnValues.attributes || {}).forEach(function (attrName) {
+                if (returnValues.attributes[attrName].length > 0) {
+                  var value = returnValues.attributes[attrName];
+                  linkElement.data("cke-saved-".concat(attrName), value);
+                  linkElement.setAttribute(attrName, value);
+                } else {
+                  linkElement.removeAttribute(attrName);
+                }
+              });
+            }
 
             editor.fire('saveSnapshot');
           };

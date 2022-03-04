@@ -164,13 +164,13 @@
         if (isVertical && subtreesHash === cachedSubtreesHash && cachedSubtrees) {
           Drupal.toolbar.setSubtrees.resolve(cachedSubtrees);
         } else if (isVertical) {
-            localStorage.removeItem("Drupal.toolbar.subtreesHash.".concat(theme));
-            localStorage.removeItem("Drupal.toolbar.subtrees.".concat(theme));
-            Drupal.ajax({
-              url: endpoint
-            }).execute();
-            localStorage.setItem("Drupal.toolbar.subtreesHash.".concat(theme), subtreesHash);
-          }
+          localStorage.removeItem("Drupal.toolbar.subtreesHash.".concat(theme));
+          localStorage.removeItem("Drupal.toolbar.subtrees.".concat(theme));
+          Drupal.ajax({
+            url: endpoint
+          }).execute();
+          localStorage.setItem("Drupal.toolbar.subtreesHash.".concat(theme), subtreesHash);
+        }
       }
     }
   });

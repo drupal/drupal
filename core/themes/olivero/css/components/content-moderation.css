@@ -87,10 +87,9 @@
     width: 100%
   }
 
-@supports ((width: -webkit-max-content) or (width: max-content)) {
+@supports (width: max-content) {
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: -webkit-max-content;
       width: max-content
   }
     }

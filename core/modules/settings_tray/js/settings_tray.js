@@ -73,18 +73,18 @@
         });
       }
     } else {
-        $editables = $('[data-drupal-settingstray="editable"]').removeOnce('settingstray');
+      $editables = $('[data-drupal-settingstray="editable"]').removeOnce('settingstray');
 
-        if ($editables.length) {
-          document.querySelector('[data-off-canvas-main-canvas]').removeEventListener('click', preventClick, true);
-          $editables.off('.settingstray');
-          $(quickEditItemSelector).off('.settingstray');
-        }
-
-        $editButton.text(Drupal.t('Edit'));
-        closeOffCanvas();
-        disableQuickEdit();
+      if ($editables.length) {
+        document.querySelector('[data-off-canvas-main-canvas]').removeEventListener('click', preventClick, true);
+        $editables.off('.settingstray');
+        $(quickEditItemSelector).off('.settingstray');
       }
+
+      $editButton.text(Drupal.t('Edit'));
+      closeOffCanvas();
+      disableQuickEdit();
+    }
 
     getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);

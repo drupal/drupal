@@ -32,10 +32,10 @@
         if (offsetJan === offsetJul) {
           isDaylightSavingTime = '';
         } else if (Math.max(offsetJan, offsetJul) === offsetNow) {
-            isDaylightSavingTime = 1;
-          } else {
-              isDaylightSavingTime = 0;
-            }
+          isDaylightSavingTime = 1;
+        } else {
+          isDaylightSavingTime = 0;
+        }
 
         var path = "system/timezone/".concat(abbreviation, "/").concat(offsetNow, "/").concat(isDaylightSavingTime);
         $.ajax({

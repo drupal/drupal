@@ -130,8 +130,8 @@
         if ($button.length === 0) {
           $row.children('.ckeditor-toolbar-groups').append(Drupal.theme('ckeditorNewButtonGroup'));
         } else if (!$groups.eq(-1).hasClass('ckeditor-add-new-group')) {
-            $button.appendTo($row.children('.ckeditor-toolbar-groups'));
-          }
+          $button.appendTo($row.children('.ckeditor-toolbar-groups'));
+        }
       });
     }
   });

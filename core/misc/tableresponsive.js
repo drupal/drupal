@@ -66,30 +66,30 @@
         });
         this.$link.text(this.hideText).data('pegged', 1);
       } else {
-          this.$revealedCells.hide();
-          this.$revealedCells.each(function (index, element) {
-            var $cell = $(this);
-            var properties = $cell.attr('style').split(';');
-            var newProps = [];
-            var match = /^display\s*:\s*none$/;
+        this.$revealedCells.hide();
+        this.$revealedCells.each(function (index, element) {
+          var $cell = $(this);
+          var properties = $cell.attr('style').split(';');
+          var newProps = [];
+          var match = /^display\s*:\s*none$/;
 
-            for (var i = 0; i < properties.length; i++) {
-              var prop = properties[i];
-              prop.trim();
-              var isDisplayNone = match.exec(prop);
+          for (var i = 0; i < properties.length; i++) {
+            var prop = properties[i];
+            prop.trim();
+            var isDisplayNone = match.exec(prop);
 
-              if (isDisplayNone) {
-                continue;
-              }
-
-              newProps.push(prop);
+            if (isDisplayNone) {
+              continue;
             }
 
-            $cell.attr('style', newProps.join(';'));
-          });
-          this.$link.text(this.showText).data('pegged', 0);
-          $(window).trigger('resize.tableresponsive');
-        }
+            newProps.push(prop);
+          }
+
+          $cell.attr('style', newProps.join(';'));
+        });
+        this.$link.text(this.showText).data('pegged', 0);
+        $(window).trigger('resize.tableresponsive');
+      }
     }
   });
   Drupal.TableResponsive = TableResponsive;

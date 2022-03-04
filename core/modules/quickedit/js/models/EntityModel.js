@@ -123,8 +123,8 @@
         fieldsInTempStore = _.uniq(fieldsInTempStore);
         entityModel.set('fieldsInTempStore', fieldsInTempStore);
       } else if (current === 'candidate' && previous === 'inactive') {
-          fieldModel.set('inTempStore', _.intersection([fieldModel.get('fieldID')], fieldsInTempStore).length > 0);
-        }
+        fieldModel.set('inTempStore', _.intersection([fieldModel.get('fieldID')], fieldsInTempStore).length > 0);
+      }
     },
     fieldStateChange: function fieldStateChange(fieldModel, state) {
       var entityModel = this;
@@ -278,12 +278,12 @@
         if (from === 'closing' && to === 'closed') {
           accept = true;
         } else if (from === 'committing' && to === 'opened' && context.reason && (context.reason === 'invalid' || context.reason === 'networkerror')) {
-            accept = true;
-          } else if (from === 'deactivating' && to === 'opened' && context.confirming) {
-              accept = true;
-            } else if (from === 'opened' && to === 'deactivating' && context.confirmed) {
-                accept = true;
-              }
+          accept = true;
+        } else if (from === 'deactivating' && to === 'opened' && context.confirming) {
+          accept = true;
+        } else if (from === 'opened' && to === 'deactivating' && context.confirmed) {
+          accept = true;
+        }
       }
 
       return accept;

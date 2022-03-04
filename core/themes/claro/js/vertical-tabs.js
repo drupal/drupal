@@ -153,8 +153,8 @@
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus(false);
       } else {
-          this.item.closest('.js-form-type-vertical-tabs').hide();
-        }
+        this.item.closest('.js-form-type-vertical-tabs').hide();
+      }
 
       return this;
     }

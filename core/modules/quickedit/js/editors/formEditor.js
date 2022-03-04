@@ -95,8 +95,8 @@
           if (state === 'invalid') {
             fieldModel.set('state', 'activating');
           } else {
-              fieldModel.set('state', 'changed');
-            }
+            fieldModel.set('state', 'changed');
+          }
         }).on('keypress.quickedit', 'input', function (event) {
           if (event.keyCode === 13) {
             return false;

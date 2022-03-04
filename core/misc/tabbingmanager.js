@@ -119,8 +119,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         if (data.tabindex) {
           $el[0].setAttribute('tabindex', data.tabindex);
         } else {
-            $el[0].removeAttribute('tabindex');
-          }
+          $el[0].removeAttribute('tabindex');
+        }
 
         if (data.autofocus) {
           $el[0].setAttribute('autofocus', 'autofocus');
