@@ -383,7 +383,7 @@ Sample composer.json for a project that relies on packages that use composer-sca
   "name": "my/project",
   "require": {
     "drupal/core-composer-scaffold": "*",
-    "composer/installers": "^1.9",
+    "composer/installers": "^2.0",
     "cweagans/composer-patches": "^1.6.5",
     "drupal/core": "^8.8.x-dev",
     "service-provider/d8-scaffold-files": "^1"

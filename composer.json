@@ -9,7 +9,7 @@
         "chat": "https://www.drupal.org/node/314178"
     },
     "require": {
-        "composer/installers": "^1.9",
+        "composer/installers": "^2.0",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version"
