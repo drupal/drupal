@@ -25,7 +25,7 @@ class BlockContentListTest extends BlockContentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the custom block listing page.
@@ -65,11 +65,10 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextContains('xpath', '//td', $label);
 
     // Check the number of table row cells.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td', 2);
-    // Check the contents of each row cell. The first cell contains the label,
-    // the second contains the machine name, and the third contains the
-    // operations list.
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', $label);
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td', 2);
+    // Check the contents of the row. The first cell contains the label,
+    // and the second contains the operations list.
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td[1]', $label);
 
     // Edit the entity using the operations link.
     $blocks = $this->container
