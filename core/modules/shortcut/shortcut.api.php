@@ -24,14 +24,14 @@
  * modules implement this hook, the last (i.e., highest weighted) module which
  * returns a valid shortcut set name will prevail.
  *
- * @param $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account whose default shortcut set is being requested.
  *
  * @return string
  *   The name of the shortcut set that this module recommends for that user, if
  *   there is one.
  */
-function hook_shortcut_default_set($account) {
+function hook_shortcut_default_set(\Drupal\Core\Session\AccountInterface $account) {
   // Use a special set of default shortcuts for administrators only.
   $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
   $user_admin_roles = array_intersect(array_keys($roles), $account->getRoles());
