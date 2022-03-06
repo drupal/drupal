@@ -23,7 +23,7 @@ class UnpublishedBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests unpublishing of block_content entities.
@@ -35,18 +35,18 @@ class UnpublishedBlockTest extends BrowserTestBase {
     ]);
     $block_content->save();
 
-    $this->placeBlock('block_content:' . $block_content->uuid());
+    $block = $this->placeBlock('block_content:' . $block_content->uuid());
 
     $this->drupalGet('<front>');
     $page = $this->getSession()->getPage();
-    $this->assertTrue($page->has('css', '.block-block-content' . $block_content->uuid()));
+    $this->assertTrue($page->has('css', '#block-' . $block->id()));
 
     $block_content->setUnpublished();
     $block_content->save();
 
     $this->drupalGet('<front>');
     $page = $this->getSession()->getPage();
-    $this->assertFalse($page->has('css', '.block-block-content' . $block_content->uuid()));
+    $this->assertFalse($page->has('css', '#block-' . $block->id()));
   }
 
 }
