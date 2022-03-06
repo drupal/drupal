@@ -116,6 +116,8 @@ class QuickStartTest extends TestCase {
     });
     // The progress bar uses STDERR to write messages.
     $this->assertStringContainsString('Congratulations, you installed Drupal!', $process->getErrorOutput());
+    // Ensure the command does not trigger any PHP deprecations.
+    $this->assertStringNotContainsString('Deprecated', $process->getErrorOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
 
     // Give the server a couple of seconds to be ready.
