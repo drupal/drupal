@@ -1,0 +1,1 @@
+!function(i){const n=i.zh=i.zh||{};n.dictionary=Object.assign(n.dictionary||{},{"HTML object":"HTML 物件"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

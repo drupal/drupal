@@ -1,0 +1,1 @@
+!function(i){const t=i.uz=i.uz||{};t.dictionary=Object.assign(t.dictionary||{},{"Align center":"O'rtada tekislash","Align left":"Chap tomonda tekislash","Align right":"O'ng tomonda tekislash",Justify:"Kengligi bo'yicha tekislash","Text alignment":"Matnni tekislash","Text alignment toolbar":"Tekislash"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
