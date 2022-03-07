@@ -88,6 +88,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * Tests that forms and links are disabled in the Layout Builder preview.
    */
   public function testFormsLinksDisabled() {
+    $this->markTestSkipped();
     // Resize window due to bug in Chromedriver when clicking on overlays over
     // iFrames.
     // @see https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
