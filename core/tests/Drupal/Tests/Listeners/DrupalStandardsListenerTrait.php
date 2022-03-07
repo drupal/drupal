@@ -5,7 +5,6 @@ namespace Drupal\Tests\Listeners;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
-use PHPUnit\Util\ErrorHandler;
 use PHPUnit\Util\Test;
 
 /**
@@ -155,78 +154,27 @@ trait DrupalStandardsListenerTrait {
   }
 
   /**
-   * Handles errors to ensure deprecation messages are not triggered.
-   *
-   * @param int $type
-   *   The severity level of the error.
-   * @param string $msg
-   *   The error message.
-   * @param $file
-   *   The file that caused the error.
-   * @param $line
-   *   The line number that caused the error.
-   * @param array $context
-   *   The error context.
-   */
-  public static function errorHandler($type, $msg, $file, $line, $context = []) {
-    if ($type === E_USER_DEPRECATED) {
-      return;
-    }
-    return ErrorHandler::handleError($type, $msg, $file, $line, $context);
-  }
-
-  /**
    * Reacts to the end of a test.
-   *
-   * We must mark this method as belonging to the special legacy group because
-   * it might trigger an E_USER_DEPRECATED error during coverage annotation
-   * validation. The legacy group allows symfony/phpunit-bridge to keep the
-   * deprecation notice as a warning instead of an error, which would fail the
-   * test.
-   *
-   * @group legacy
    *
    * @param \PHPUnit\Framework\Test $test
    *   The test object that has ended its test run.
    * @param float $time
    *   The time the test took.
-   *
-   * @see http://symfony.com/doc/current/components/phpunit_bridge.html#mark-tests-as-legacy
    */
   private function doEndTest($test, $time) {
     // \PHPUnit\Framework\Test does not have any useful methods of its own for
     // our purpose, so we have to distinguish between the different known
     // subclasses.
     if ($test instanceof TestCase) {
-      // Change the error handler to ensure deprecation messages are not
-      // triggered.
-      set_error_handler([$this, 'errorHandler']);
       $this->checkValidCoversForTest($test);
-      restore_error_handler();
     }
-    elseif ($this->isTestSuite($test)) {
+    elseif ($test instanceof TestSuite) {
       foreach ($test->getGroupDetails() as $tests) {
         foreach ($tests as $test) {
           $this->doEndTest($test, $time);
         }
       }
     }
-  }
-
-  /**
-   * Determine if a test object is a test suite regardless of PHPUnit version.
-   *
-   * @param \PHPUnit\Framework\Test $test
-   *   The test object to test if it is a test suite.
-   *
-   * @return bool
-   *   TRUE if it is a test suite, FALSE if not.
-   */
-  private function isTestSuite($test) {
-    if (class_exists('PHPUnit\Framework\TestSuite') && $test instanceof TestSuite) {
-      return TRUE;
-    }
-    return FALSE;
   }
 
   /**

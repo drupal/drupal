@@ -980,8 +980,3 @@ parameters:
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererTest.php
 
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\ErrorHandler\\:\\:handleError\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Listeners/DrupalListener.php
-
