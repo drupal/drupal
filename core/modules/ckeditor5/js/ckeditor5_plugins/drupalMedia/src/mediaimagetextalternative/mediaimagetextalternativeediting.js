@@ -55,9 +55,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           // promise was resolved.
           return;
         }
-        // Enqueue a model change in `transparent` batch to make it
-        // invisible to the undo/redo functionality.
-        model.enqueueChange('transparent', (writer) => {
+        // Enqueue a model change that is not visible to the undo/redo feature.
+        model.enqueueChange({ isUndoable: false }, (writer) => {
           writer.setAttribute(
             'drupalMediaIsImage',
             !!metadata.imageSourceMetadata,
@@ -72,7 +71,7 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           return;
         }
         console.warn(e.toString());
-        model.enqueueChange('transparent', (writer) => {
+        model.enqueueChange({ isUndoable: false }, (writer) => {
           writer.setAttribute(
             'drupalMediaIsImage',
             METADATA_ERROR,
