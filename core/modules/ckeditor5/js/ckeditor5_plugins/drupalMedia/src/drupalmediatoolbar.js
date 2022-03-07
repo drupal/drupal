@@ -3,7 +3,7 @@
 import { Plugin } from 'ckeditor5/src/core';
 import { WidgetToolbarRepository } from 'ckeditor5/src/widget';
 
-import { getSelectedDrupalMediaWidget, isObject } from './utils';
+import { getClosestSelectedDrupalMediaWidget, isObject } from './utils';
 
 /**
  * @module drupalMedia/drupalmediatoolbar
@@ -47,7 +47,8 @@ export default class DrupalMediaToolbar extends Plugin {
         normalizeDeclarativeConfig(editor.config.get('drupalMedia.toolbar')) ||
         [],
       // Get the selected image or an image containing the figcaption with the selection inside.
-      getRelatedElement: (selection) => getSelectedDrupalMediaWidget(selection),
+      getRelatedElement: (selection) =>
+        getClosestSelectedDrupalMediaWidget(selection),
     });
   }
 }
