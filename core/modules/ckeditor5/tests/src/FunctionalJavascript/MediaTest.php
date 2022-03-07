@@ -382,7 +382,9 @@ class MediaTest extends WebDriverTestBase {
       'Toggle caption off',
       'Link media',
       'Override media image alternative text',
-      'Centered media',
+      // Check only one of the element style buttons since that is sufficient
+      // for confirming that element style buttons are visible in the toolbar.
+      'Break text',
     ];
     foreach ($expected_buttons as $expected_button) {
       $this->assertNotEmpty($this->getBalloonButton($expected_button));
@@ -886,24 +888,27 @@ class MediaTest extends WebDriverTestBase {
     $this->waitForEditor();
     // Wait for the media preview to load.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
-    // Edit the source of the image through the UI.
-    $page->pressButton('Source');
 
+    // Ensure that by default the "Break text" alignment option is selected.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
-    $drupal_media_element->setAttribute('data-align', 'center');
-    $textarea = $page->find('css', '.ck-source-editing-area > textarea');
-    // Set the value of the source code to the updated HTML that has the
-    // `data-align` attribute.
-    $textarea->setValue($editor_dom->C14N());
-    $page->pressButton('Source');
+    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
+    $this->getBalloonButton('Align center and break text')->click();
 
     // Assert the alignment class exists after editing downcast.
-    $assert_session->elementExists('css', '.ck-widget.drupal-media.drupal-media-style-align-center');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media.drupal-media-style-align-center'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertEquals('center', $drupal_media_element->getAttribute('data-align'));
+
     $page->pressButton('Save');
     // Check that the 'content has been updated' message status appears to confirm we left the editor.
-    $assert_session->waitForElementVisible('css', 'messages messages--status');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'figure.align-center');
     // Go back to the editor to check that the alignment class still exists.
@@ -911,6 +916,17 @@ class MediaTest extends WebDriverTestBase {
     $this->drupalGet($edit_url);
     $this->waitForEditor();
     $assert_session->elementExists('css', '.ck-widget.drupal-media.drupal-media-style-align-center');
+
+    // Ensure that "Centered media" alignment option is selected.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->assertTrue($this->getBalloonButton('Align center and break text')->hasClass('ck-on'));
+    $this->getBalloonButton('Break text')->click();
+    $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-widget.drupal-media.drupal-media-style-align-center'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
   }
 
   /**
