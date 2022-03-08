@@ -4,7 +4,7 @@
  * Default theme implementation for comments.
  *
  * Available variables:
- * - author: Comment author. Can be a link or plain text.
+ * - author: (optional) Comment author. Can be a link or plain text.
  * - content: The content-related items for the comment display. Use
  *   {{ content }} to print them all, or print a subset such as
  *   {{ content.field_example }}. Use the following code to temporarily suppress
@@ -12,19 +12,21 @@
  *   @code
  *   {{ content|without('field_example') }}
  *   @endcode
- * - created: Formatted date and time for when the comment was created.
- *   Preprocess functions can reformat it by calling DateFormatter::format()
- *   with the desired parameters on the 'comment.created' variable.
- * - changed: Formatted date and time for when the comment was last changed.
- *   Preprocess functions can reformat it by calling DateFormatter::format()
- *   with the desired parameters on the 'comment.changed' variable.
+ * - created: (optional) Formatted date and time for when the comment was
+ *   created. Preprocess functions can reformat it by calling
+ *   DateFormatter::format() with the desired parameters on the
+ *   'comment.created' variable.
+ * - changed: (optional) Formatted date and time for when the comment was last
+ *   changed. Preprocess functions can reformat it by calling
+ *   DateFormatter::format() with the desired parameters on the
+ *   'comment.changed' variable.
  * - permalink: Comment permalink.
- * - submitted: Submission information created from author and created
- *   during template_preprocess_comment().
- * - user_picture: The comment author's profile picture.
+ * - submitted: (optional) Submission information created from author and
+ *   created during template_preprocess_comment().
+ * - user_picture: (optional) The comment author's profile picture.
  * - status: Comment status. Possible values are:
  *   unpublished, published, or preview.
- * - title: Comment title, linked to the comment.
+ * - title: (optional) Comment title, linked to the comment.
  * - attributes: HTML attributes for the containing element.
  *   The attributes.class may contain one or more of the following classes:
  *   - comment: The current template type; for instance, 'theming hook'.
@@ -44,7 +46,7 @@
  * - threaded: A flag indicating whether the comments are threaded or not.
  *
  * These variables are provided to give context about the parent comment (if
- * any):
+ * any, optional):
  * - parent_comment: Full parent comment entity (if any).
  * - parent_author: Equivalent to author for the parent comment.
  * - parent_created: Equivalent to created for the parent comment.
@@ -75,21 +77,23 @@
   #}
   <mark class="hidden" data-comment-timestamp="{{ new_indicator_timestamp }}"></mark>
 
-  <footer>
-    {{ user_picture }}
-    <p>{{ submitted }}</p>
+  {% if submitted %}
+    <footer>
+      {{ user_picture }}
+      <p>{{ submitted }}</p>
 
-    {#
-      Indicate the semantic relationship between parent and child comments for
-      accessibility. The list is difficult to navigate in a screen reader
-      without this information.
-    #}
-    {% if parent %}
-      <p class="visually-hidden">{{ parent }}</p>
-    {% endif %}
+      {#
+        Indicate the semantic relationship between parent and child comments for
+        accessibility. The list is difficult to navigate in a screen reader
+        without this information.
+      #}
+      {% if parent %}
+        <p class="visually-hidden">{{ parent }}</p>
+      {% endif %}
 
-    {{ permalink }}
-  </footer>
+      {{ permalink }}
+    </footer>
+  {% endif %}
 
   <div{{ content_attributes }}>
     {% if title %}

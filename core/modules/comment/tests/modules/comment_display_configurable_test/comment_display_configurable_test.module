@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * A module for testing making comment base fields' displays configurable.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function comment_display_configurable_test_entity_base_field_info_alter(&$base_field_definitions, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'comment') {
+    foreach (['created', 'uid', 'pid', 'subject'] as $field) {
+      /** @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+      $base_field_definitions[$field]->setDisplayConfigurable('view', TRUE);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function comment_display_configurable_test_entity_type_build(array &$entity_types) {
+  // Allow skipping of extra preprocessing for configurable display.
+  $entity_types['comment']->set('enable_base_field_custom_preprocess_skipping', TRUE);
+}
