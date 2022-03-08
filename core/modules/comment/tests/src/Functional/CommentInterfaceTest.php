@@ -21,7 +21,7 @@ class CommentInterfaceTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Set up comments to have subject and preview disabled.
@@ -90,7 +90,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $arguments = [
       ':link' => base_path() . 'comment/' . $comment->id() . '#comment-' . $comment->id(),
     ];
-    $pattern_permalink = '//footer[contains(@class,"comment__meta")]/a[contains(@href,:link) and text()="Permalink"]';
+    $pattern_permalink = '//footer/a[contains(@href,:link) and text()="Permalink"]';
     $permalink = $this->xpath($pattern_permalink, $arguments);
     $this->assertNotEmpty($permalink, 'Permalink link found.');
 
@@ -316,7 +316,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->postComment($this->node, $comment_text);
 
     // Comment displayed in 'default' display mode found and has body text.
-    $comment_element = $this->cssSelect('.comment-wrapper');
+    $comment_element = $this->cssSelect('#comment-1');
     $this->assertNotEmpty($comment_element);
     $this->assertSession()->responseContains('<p>' . $comment_text . '</p>');
 
@@ -349,7 +349,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet($this->node->toUrl());
     // The comment should exist but without the body text because we used $mode
     // mode this time.
-    $comment_element = $this->cssSelect('.comment-wrapper');
+    $comment_element = $this->cssSelect('#comment-1');
     $this->assertNotEmpty($comment_element);
     $this->assertSession()->responseNotContains('<p>' . $comment_text . '</p>');
   }

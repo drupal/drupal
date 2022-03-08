@@ -19,7 +19,7 @@ class CommentOperationsTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the operations field plugin.
@@ -29,10 +29,10 @@ class CommentOperationsTest extends CommentTestBase {
     $this->drupalLogin($admin_account);
     $this->drupalGet('test-comment-operations');
     $this->assertSession()->statusCodeEquals(200);
-    $operation = $this->cssSelect('.views-field-operations li.edit a');
-    $this->assertCount(1, $operation, 'Found edit operation for comment.');
-    $operation = $this->cssSelect('.views-field-operations li.delete a');
-    $this->assertCount(1, $operation, 'Found delete operation for comment.');
+    // Assert Edit operation is present.
+    $this->assertSession()->elementsCount('xpath', '//td[contains(@class, "views-field-operations")]//li/a[text() = "Edit"]', 1);
+    // Assert Delete operation is present.
+    $this->assertSession()->elementsCount('xpath', '//td[contains(@class, "views-field-operations")]//li/a[text() = "Delete"]', 1);
   }
 
 }
