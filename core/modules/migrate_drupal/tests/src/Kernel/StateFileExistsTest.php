@@ -16,7 +16,7 @@ use Drupal\migrate_drupal\MigrationConfigurationTrait;
  *
  * @group migrate_drupal
  */
-class StateFileExists extends MigrateDrupalTestBase {
+class StateFileExistsTest extends MigrateDrupalTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;
   use MigrationConfigurationTrait;
