@@ -3,13 +3,15 @@
  * Copy files for JS vendor dependencies from node_modules to the assets/vendor
  * folder.
  *
- * This script handles all dependencies except CKEditor, Modernizr,
- * and jQuery.ui which require a custom build step.
+ * This script handles all dependencies except CKEditor and Modernizr, which
+ * require a custom build step.
  */
 
 const path = require('path');
 const { copyFile, writeFile, readFile, chmod, mkdir } = require('fs').promises;
-const glob = require('glob');
+const ckeditor5Files = require('./assets/ckeditor5Files');
+const jQueryUIProcess = require('./assets/process/jqueryui');
+const mapProcess = require('./assets/process/map');
 
 const coreFolder = path.resolve(__dirname, '../../');
 const packageFolder = `${coreFolder}/node_modules`;
@@ -19,7 +21,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   const librariesPath = `${coreFolder}/core.libraries.yml`;
   // Open the core.libraries.yml file to update version information
   // automatically.
-  const libraries = (await readFile(librariesPath, 'utf-8')).split('\n\n');
+  const libraries = (await readFile(librariesPath)).toString().split('\n\n');
 
   function updateLibraryVersion(libraryName, { version }) {
     const libraryIndex = libraries.findIndex((lib) =>
@@ -27,8 +29,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     );
     if (libraryIndex > 0) {
       const libraryDeclaration = libraries[libraryIndex];
-      // Get the previous package version.
-      const currentVersion = libraryDeclaration.match(/version: "(.*)"\n/)[1];
+      // Get the previous package version from the yaml file, versions can be
+      // declared with a yaml anchor such as `version: &yaml_anchor "xxx"`
+      const currentVersion = libraryDeclaration.match(/version:(?: [&\w_]+)? "(.*)"\n/)[1];
       // Replace the version value and the version in the license URL.
       libraries[libraryIndex] = libraryDeclaration.replace(
         new RegExp(currentVersion, 'g'),
@@ -58,6 +61,11 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
    *   the source and target folder.
    *     - An object with a `from` and `to` property if the source and target
    *   have a different name or if the folder nesting is different.
+   * @prop {object} [process]
+   *   An object containing a file extension as a key and a callback as the
+   *   value. The callback will be called for each file matching the file
+   *   extension. It can be used to minify the file content before saving to
+   *   the target directory.
    */
 
   /**
@@ -65,7 +73,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
    *
    * @type {DrupalLibraryAsset[]}
    */
-  const process = [
+  const ASSET_LIST = [
     {
       pack: 'backbone',
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
@@ -180,105 +188,139 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       pack: 'loadjs',
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
+    {
+      pack: 'jquery-ui',
+      folder: 'jquery.ui',
+      process: {
+        // This will automatically minify the files and update the destination
+        // filename before saving.
+        '.js': jQueryUIProcess,
+      },
+      files: [
+        'themes/base/autocomplete.css',
+        'themes/base/button.css',
+        'themes/base/checkboxradio.css',
+        'themes/base/controlgroup.css',
+        'themes/base/core.css',
+        'themes/base/dialog.css',
+        'themes/base/draggable.css',
+        'themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png',
+        'themes/base/images/ui-icons_444444_256x240.png',
+        'themes/base/images/ui-icons_555555_256x240.png',
+        'themes/base/images/ui-icons_777620_256x240.png',
+        'themes/base/images/ui-icons_777777_256x240.png',
+        'themes/base/images/ui-icons_cc0000_256x240.png',
+        'themes/base/images/ui-icons_ffffff_256x240.png',
+        'themes/base/menu.css',
+        'themes/base/resizable.css',
+        'themes/base/theme.css',
+        'ui/data.js',
+        'ui/disable-selection.js',
+        'ui/focusable.js',
+        'ui/form-reset-mixin.js',
+        'ui/form.js',
+        'ui/ie.js',
+        'ui/jquery-patch.js',
+        'ui/keycode.js',
+        'ui/labels.js',
+        'ui/plugin.js',
+        'ui/position.js',
+        'ui/safe-active-element.js',
+        'ui/safe-blur.js',
+        'ui/scroll-parent.js',
+        'ui/tabbable.js',
+        'ui/unique-id.js',
+        'ui/version.js',
+        'ui/widget.js',
+        'ui/widgets/autocomplete.js',
+        'ui/widgets/button.js',
+        'ui/widgets/checkboxradio.js',
+        'ui/widgets/controlgroup.js',
+        'ui/widgets/dialog.js',
+        'ui/widgets/draggable.js',
+        'ui/widgets/menu.js',
+        'ui/widgets/mouse.js',
+        'ui/widgets/resizable.js',
+      ],
+    },
+    // CKEditor 5 builds the list of files dynamically based on what exists
+    // in the filesystem.
+    ...ckeditor5Files(packageFolder),
   ];
 
-  // There are a lot of CKEditor 5 packages, generate the list dynamically.
-  // Drupal-specific mapping between CKEditor 5 name and Drupal library name.
-  const ckeditor5PluginMapping = {
-    'block-quote': 'blockquote',
-    'essentials': 'internal',
-    'basic-styles': 'basic',
+  /**
+   * Default callback for processing map files.
+   */
+  const defaultProcessCallbacks = {
+    '.map': mapProcess,
   };
-  // Get all the CKEditor 5 packages.
-  const ckeditor5Dirs = glob.sync(`{${packageFolder}/@ckeditor/ckeditor5*,${packageFolder}/ckeditor5}`);
-  for (const ckeditor5package of ckeditor5Dirs) {
-    // Add all the files in the build/ directory to the process array for copying.
-    const buildFiles = glob.sync(`${ckeditor5package}/build/**/*.js`, { nodir: true });
-    if (buildFiles.length) {
-      // Clean up the path to get the original package name.
-      const pack = ckeditor5package.replace(`${packageFolder}/`, '');
-      // Use the package name to generate the plugin name. There are some
-      // exceptions that needs to be handled. Ideally remove the special cases.
-      let pluginName = pack.replace('@ckeditor/ckeditor5-', '');
-      // Target folder in the vendor/assets folder.
-      let folder = `ckeditor5/${pluginName.replace('@ckeditor/ckeditor5-', '')}`;
-      // Transform kebab-case to CamelCase.
-      let library = pluginName.replace(/-./g, match => match[1].toUpperCase());
-      // Special case for Drupal implementation.
-      if (ckeditor5PluginMapping.hasOwnProperty(pluginName)) {
-        library = ckeditor5PluginMapping[pluginName];
-      }
-      if (library === 'ckeditor5') {
-        folder = 'ckeditor5/ckeditor5-dll';
-      } else {
-        library = `ckeditor5.${library}`;
-      }
-      process.push({
-        pack,
-        library,
-        folder,
-        files: buildFiles.map((absolutePath) => ({
-          from: absolutePath.replace(`${ckeditor5package}/`, ''),
-          to: absolutePath.replace(`${ckeditor5package}/build/`, ''),
-        })),
-      });
+
+  /**
+   * Return an object with a 'from' and 'to' member.
+   *
+   * @param {string|object} file
+   *
+   * @return {{from: string, to: string}}
+   */
+  function normalizeFile(file) {
+    let normalized = file;
+    if (typeof file === 'string') {
+      normalized = {
+        from: file,
+        to: file,
+      };
     }
+    return normalized;
   }
 
-  // Use sequential processing to avoid corrupting the contents of the
-  // concatenated CKEditor 5 translation files.
-  for (const { pack, files = [], folder = false, library = false } of process) {
+  for (const { pack, files = [], folder = false, library = false, process = {} } of ASSET_LIST) {
     const sourceFolder = pack;
     const libraryName = library || folder || pack;
     const destFolder = folder || pack;
+    // Add a callback for map files by default.
+    const processCallbacks = { ...defaultProcessCallbacks, ...process };
 
-    let packageInfo;
-    // Take the version info from the package.json file.
-    if (!['joyride', 'farbtastic'].includes(pack)) {
-      packageInfo = JSON.parse(
-        await readFile(`${packageFolder}/${sourceFolder}/package.json`),
-      );
-    }
-    if (packageInfo) {
+    // Update the library version in core.libraries.yml with the version
+    // from the npm package.
+    try {
+      const packageInfo = JSON.parse((await readFile(`${packageFolder}/${sourceFolder}/package.json`)).toString());
       updateLibraryVersion(libraryName, packageInfo);
+    } catch (e) {
+      // The package.json file doesn't exist, so nothing to do.
     }
 
-    for (const file of files) {
-      let source = file;
-      let dest = file;
-      if (typeof file === 'object') {
-        source = file.from;
-        dest = file.to;
-      }
-      const sourceFile = `${packageFolder}/${sourceFolder}/${source}`;
-      const destFile = `${assetsFolder}/${destFolder}/${dest}`;
+    for (const file of files.map(normalizeFile)) {
+      const sourceFile = `${packageFolder}/${sourceFolder}/${file.from}`;
+      const destFile = `${assetsFolder}/${destFolder}/${file.to}`;
+      const extension = path.extname(file.from);
 
-      // For map files, make sure the sources files don't leak outside the
-      // library folder. In the `sources` member, remove all "../" values at
-      // the start of the files names to avoid having the virtual files outside
-      // of the library vendor folder in dev tools.
-      if (path.extname(source) === '.map') {
-        console.log('Process map file', source);
-        const json = JSON.parse(await readFile(sourceFile));
-        json.sources = json.sources.map((source) =>
-          source.replace(/^(\.\.\/)+/, ''),
-        );
-        await writeFile(destFile, JSON.stringify(json));
+      try {
+        await mkdir(path.dirname(destFile), { recursive: true });
+      } catch (e) {
+        // Nothing to do if the folder already exists.
+      }
+
+      // There is a callback that transforms the file contents, we are not
+      // simply copying a file from A to B.
+      if (processCallbacks[extension]) {
+        const contents = (await readFile(sourceFile)).toString();
+        const results = await processCallbacks[extension]({ file, contents });
+
+        console.log(`Process ${sourceFolder}/${file.from} and save ${results.length} files:\n  ${results.map(({ filename = file.to }) => filename).join(', ')}`);
+        for (const { filename = file.to, contents } of results) {
+          // The filename key can be used to change the name of the saved file.
+          await writeFile(`${assetsFolder}/${destFolder}/${filename}`, contents);
+        }
       } else {
-        console.log(
-          `Copy ${sourceFolder}/${source} to ${destFolder}/${dest}`,
-        );
-        try {
-          await mkdir(path.dirname(destFile), { recursive: true });
-        } catch (e) {
-          // Nothing to do if the folder already exists.
-        }
+        // There is no callback simply copy the file.
+        console.log(`Copy ${sourceFolder}/${file.from} to ${destFolder}/${file.to}`);
         await copyFile(sourceFile, destFile);
-        // These 2 files come from a zip file that hasn't been updated in years
-        // hardcode the permission fix to pass the commit checks.
-        if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
-          await chmod(destFile, 0o644);
-        }
+      }
+
+      // These 2 files come from a zip file that hasn't been updated in years
+      // hardcode the permission fix to pass the commit checks.
+      if (['jquery.joyride-2.1.js', 'marker.png'].includes(file.to)) {
+        await chmod(destFile, 0o644);
       }
     }
   }

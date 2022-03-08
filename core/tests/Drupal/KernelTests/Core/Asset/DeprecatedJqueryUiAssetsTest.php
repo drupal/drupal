@@ -20,16 +20,16 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = $this->container->get('library.discovery');
     $deprecated_jquery_ui_libraries = [
-      'jquery.ui' => '291c28f873a71cd6b3116218d1f5da22',
-      'jquery.ui.autocomplete' => '153f2836f8f2da39767208b6e09cb5b4',
-      'jquery.ui.button' => 'ad23e5de0fa1de1f511d10ba2e10d2dd',
-      'jquery.ui.dialog' => '6521b8917536afe00f35055da4ec466c',
-      'jquery.ui.draggable' => 'af0f2bdc8aa4ade1e3de8042f31a9312',
-      'jquery.ui.menu' => '7d0c4d57f43d2f881d2cd5e5b79effbb',
-      'jquery.ui.mouse' => '626bb203807fa2cdc62510412685df4a',
-      'jquery.ui.position' => 'fec1ca376f2b1cb9b0ca3db36be848c2',
-      'jquery.ui.resizable' => 'a2448fa87071a17a9756f39c9becb70d',
-      'jquery.ui.widget' => 'eacd675de09572383b58e52309ba2245',
+      'jquery.ui' => '85b66ea404a9aa3ca71ee243f849efea',
+      'jquery.ui.autocomplete' => '76ef835c38b36f0fb4f3609681870223',
+      'jquery.ui.button' => 'e3a8fd396547c14bd508ccd302e23c2c',
+      'jquery.ui.dialog' => '5774b51ff4a57dae7137b65d8025fb13',
+      'jquery.ui.draggable' => 'bcb81f27f5f90036b5fe91eb92950872',
+      'jquery.ui.menu' => '9acdd7d55c7c03600c161385353eeff7',
+      'jquery.ui.mouse' => '4c755c0bfc5860b59b9a3a9dd2dcd016',
+      'jquery.ui.position' => 'd51b206fb9272838e23ff9f4f24608aa',
+      'jquery.ui.resizable' => '9e128d4abf2efe50c688475390808b54',
+      'jquery.ui.widget' => '6a2eff802beb4439333502dd2516239d',
     ];
     // DrupalCI uses a precision of 100 in certain environments which breaks
     // this test.

@@ -391,11 +391,10 @@ drupal.autocomplete:
     assets/vendor/jquery.ui/ui/widgets/menu-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
@@ -510,10 +509,9 @@ drupal.dialog:
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
@@ -856,20 +854,19 @@ jquery.once.bc:
     - core/drupal.object.assign
 
 jquery.ui:
-  version: &jquery_ui_version 1.12.1
+  version: &jquery_ui_version "1.13.1"
   license: &jquery_ui_license
     name: Public Domain
-    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.12.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.13.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
@@ -935,11 +932,10 @@ jquery.ui.dialog:
     assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
