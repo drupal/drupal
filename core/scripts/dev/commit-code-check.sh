@@ -184,7 +184,7 @@ cd "$TOP_LEVEL/core"
 # Ensure JavaScript development dependencies are installed.
 yarn check -s 2>/dev/null
 if [ "$?" -ne "0" ]; then
-  printf "Drupal's JavaScript development dependencies are not installed. Run 'yarn install' inside the core directory.\n"
+  printf "Drupal's JavaScript development dependencies are not installed or cannot be resolved. Run 'yarn install' inside the core directory, or 'yarn check -s' to list other errors.\n"
   DEPENDENCIES_NEED_INSTALLING=1;
 fi
 
