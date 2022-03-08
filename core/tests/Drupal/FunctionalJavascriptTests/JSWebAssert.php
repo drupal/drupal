@@ -246,7 +246,7 @@ JS;
    * use a viewport of 1024x768px.
    *
    * @param string $selector_type
-   *   The element selector type (CSS, XPath).
+   *   The element selector type (css, xpath).
    * @param string|array $selector
    *   The element selector. Note: the first found element is used.
    * @param bool|string $corner
@@ -289,7 +289,7 @@ JS;
    * Note: the node should exist in the page, otherwise this assertion fails.
    *
    * @param string $selector_type
-   *   The element selector type (CSS, XPath).
+   *   The element selector type (css, xpath).
    * @param string|array $selector
    *   The element selector. Note: the first found element is used.
    * @param bool|string $corner
