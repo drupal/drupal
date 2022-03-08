@@ -25,10 +25,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides module installation interface.
  *
- * The list of modules gets populated by module.info.yml files, which contain
- * each module's name, description, and information about which modules it
- * requires. See \Drupal\Core\Extension\InfoParser for info on module.info.yml
- * descriptors.
+ * The list of modules includes all modules, except obsolete modules. The list
+ * is generated from the data in the info.yml file for each module, which
+ * includes the module name, description, dependencies and other information.
+ *
+ * @see \Drupal\Core\Extension\InfoParser
  *
  * @internal
  */
@@ -172,6 +173,11 @@ class ModulesListForm extends FormBase {
       // The module list needs to be reset so that it can re-scan and include
       // any new modules that may have been added directly into the filesystem.
       $modules = $this->moduleExtensionList->reset()->getList();
+
+      // Remove obsolete modules.
+      $modules = array_filter($modules, function ($module) {
+        return !$module->isObsolete();
+      });
       uasort($modules, [ModuleExtensionList::class, 'sortByName']);
     }
     catch (InfoParserException $e) {

@@ -57,6 +57,9 @@ class ModulesListFormWebTest extends BrowserTestBase {
     // Check that the deprecated module link was rendered correctly.
     $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Deprecated status of the module Deprecated module')]");
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
+
+    // Check that obsolete modules are not displayed.
+    $this->assertSession()->pageTextNotContains('(Obsolete)');
   }
 
   /**
