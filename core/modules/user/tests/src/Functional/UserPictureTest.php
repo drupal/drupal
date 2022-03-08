@@ -34,7 +34,7 @@ class UserPictureTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A regular user.
@@ -121,7 +121,7 @@ class UserPictureTest extends BrowserTestBase {
 
     // Verify that the image is displayed on the node page.
     $this->drupalGet('node/' . $node->id());
-    $elements = $this->cssSelect('.node__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
+    $elements = $this->cssSelect('article[role="article"] > footer img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
     $this->assertCount(1, $elements, 'User picture with alt text found on node page.');
 
     // Enable user pictures on comments, instead of nodes.
@@ -135,7 +135,7 @@ class UserPictureTest extends BrowserTestBase {
     ];
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
     $this->submitForm($edit, 'Save');
-    $elements = $this->cssSelect('.comment__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
+    $elements = $this->cssSelect('#comment-1 img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
     $this->assertCount(1, $elements, 'User picture with alt text found on the comment.');
 
     // Disable user pictures on comments and nodes.

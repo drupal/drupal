@@ -23,7 +23,7 @@ class UserBlocksTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with the 'administer blocks' permission.
@@ -37,7 +37,7 @@ class UserBlocksTest extends BrowserTestBase {
 
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
-    $this->drupalPlaceBlock('user_login_block');
+    $this->drupalPlaceBlock('user_login_block', ['id' => 'user_blocks_test_user_login_block']);
     $this->drupalLogout($this->adminUser);
   }
 
@@ -56,10 +56,10 @@ class UserBlocksTest extends BrowserTestBase {
     foreach ($paths as $path => $expected_visibility) {
       $this->drupalGet($path);
       if ($expected_visibility) {
-        $this->assertSession()->elementExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
+        $this->assertSession()->elementExists('xpath', '//div[@id="block-user-blocks-test-user-login-block" and @role="form"]');
       }
       else {
-        $this->assertSession()->elementNotExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
+        $this->assertSession()->elementNotExists('xpath', '//div[@id="block-user-blocks-test-user-login-block" and @role="form"]');
       }
     }
   }

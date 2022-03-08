@@ -16,7 +16,7 @@ class UserAdminListingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the listing.
@@ -73,7 +73,7 @@ class UserAdminListingTest extends BrowserTestBase {
       $account_columns = $account->findAll('css', 'td');
       $name = $account_columns[0]->find('css', 'a')->getText();
       $roles = [];
-      $account_roles = $account_columns[2]->findAll('css', 'td div ul li');
+      $account_roles = $account_columns[2]->findAll('css', 'td ul li');
       if (!empty($account_roles)) {
         foreach ($account_roles as $element) {
           $roles[] = $element->getText();
