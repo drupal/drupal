@@ -123,12 +123,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
-      pack: 'joyride',
-      folder: 'jquery-joyride',
-      library: 'jquery.joyride',
-      files: ['jquery.joyride-2.1.js'],
-    },
-    {
       pack: 'jquery-once',
       library: 'jquery.once',
       files: ['jquery.once.js', 'jquery.once.min.js', 'jquery.once.min.js.map'],
@@ -317,9 +311,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         await copyFile(sourceFile, destFile);
       }
 
-      // These 2 files come from a zip file that hasn't been updated in years
+      // This file comes from a zip file that hasn't been updated in years
       // hardcode the permission fix to pass the commit checks.
-      if (['jquery.joyride-2.1.js', 'marker.png'].includes(file.to)) {
+      if (['marker.png'].includes(file.to)) {
         await chmod(destFile, 0o644);
       }
     }

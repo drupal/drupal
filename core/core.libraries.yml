@@ -798,24 +798,6 @@ jquery.form:
   dependencies:
     - core/jquery
 
-jquery.joyride:
-  remote: https://github.com/zurb/joyride
-  # We rely on a fix (commit c2b3866) that occurred after 2.1.0 was released.
-  # @see https://www.drupal.org/node/2898808.
-  # @todo Update to 2.1.1 or later when that's released.
-  # Version is set at 2.1.0.1 allowing version_compare to consider this lower
-  # than 2.1.1 however greater than 2.1.0
-  version: "2.1.0.1"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/zurb/joyride/v2.1.0/README.markdown
-    gpl-compatible: true
-  js:
-    assets/vendor/jquery-joyride/jquery.joyride-2.1.js: { }
-  deprecated: The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the core/shepherd library instead. See https://www.drupal.org/node/3195234
-  dependencies:
-    - core/jquery
-
 shepherd:
   remote: https://github.com/shipshapecode/shepherd
   version: "9.0.0"
