@@ -15,7 +15,7 @@ class CommentAnonymousTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   protected function setUp(): void {
     parent::setUp();
@@ -50,7 +50,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet($this->node->toUrl());
     $this->submitForm($edit, 'Preview');
     // Cannot use assertRaw here since both title and body are in the form.
-    $preview = (string) $this->cssSelect('.preview')[0]->getHtml();
+    $preview = (string) $this->cssSelect('[data-drupal-selector="edit-comment-preview"]')[0]->getHtml();
     $this->assertStringContainsString($title, $preview, 'Anonymous user can preview comment title.');
     $this->assertStringContainsString($body, $preview, 'Anonymous user can preview comment body.');
 
@@ -64,7 +64,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet($this->node->toUrl());
     $this->submitForm($edit, 'Preview');
     // Cannot use assertRaw here since both title and body are in the form.
-    $preview = (string) $this->cssSelect('.preview')[0]->getHtml();
+    $preview = (string) $this->cssSelect('[data-drupal-selector="edit-comment-preview"]')[0]->getHtml();
     $this->assertStringContainsString($title, $preview, 'Anonymous user can preview comment title.');
     $this->assertStringContainsString($body, $preview, 'Anonymous user can preview comment body.');
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['skip comment approval']);

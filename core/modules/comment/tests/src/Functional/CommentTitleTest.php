@@ -13,7 +13,7 @@ class CommentTitleTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests markup for comments with empty titles.
