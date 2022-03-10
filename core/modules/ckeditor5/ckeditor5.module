@@ -212,7 +212,7 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
       }
 
       foreach ($plugins_config_form as $key => &$value) {
-        if (is_array($value) && strpos($key, '#') === FALSE) {
+        if (is_array($value) && strpos((string) $key, '#') === FALSE) {
           _add_ajax_listeners_to_plugin_inputs($value);
         }
       }
