@@ -25,6 +25,7 @@
     "Sortable": true,
     "once": true,
     "CKEDITOR": true,
+    "CKEditor5": true,
     "tabbable": true
   },
   "settings": {
