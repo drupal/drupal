@@ -2,10 +2,12 @@
 
 namespace Drupal\image;
 
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
+
 /**
  * Interface for storage controller for "image style" configuration entities.
  */
-interface ImageStyleStorageInterface {
+interface ImageStyleStorageInterface extends ConfigEntityStorageInterface {
 
   /**
    * Stores a replacement ID for an image style being deleted.
