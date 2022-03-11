@@ -42,7 +42,7 @@ class ContactSitewideTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -377,7 +377,7 @@ class ContactSitewideTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Send message');
     // Verify that messages are not found.
-    $this->assertSession()->elementNotExists('xpath', '//div[@role="contentinfo"]');
+    $this->assertSession()->elementNotExists('xpath', '//div[@data-drupal-messages]');
     $this->assertSession()->addressEquals('user/' . $admin_user->id());
 
     // Test preview and visibility of the message field and label. Submit the
@@ -392,10 +392,15 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // Message is now by default displayed twice, once for the form element and
     // once for the viewed message.
-    $page_text = $this->getSession()->getPage()->getText();
-    $this->assertGreaterThan(1, substr_count($page_text, 'Message'));
-    $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-above');
-    $this->assertSession()->pageTextContains($edit['message[0][value]']);
+    $message = $edit['message[0][value]'];
+    $this->assertSession()->pageTextMatchesCount(2, '/Message/');
+    $this->assertSession()->pageTextMatchesCount(2, '/' . $message . '/');
+    // Check for label and message in form element.
+    $this->assertSession()->elementTextEquals('css', 'label[for="edit-message-0-value"]', 'Message');
+    $this->assertSession()->fieldValueEquals('edit-message-0-value', $message);
+    // Check for label and message in preview.
+    $this->assertSession()->elementTextContains('css', '#edit-preview', 'Message');
+    $this->assertSession()->elementTextContains('css', '#edit-preview', $message);
 
     // Hide the message field label.
     $display_edit = [
@@ -406,11 +411,16 @@ class ContactSitewideTest extends BrowserTestBase {
 
     $this->drupalGet($form->toUrl('canonical'));
     $this->submitForm($edit, 'Preview');
-    // Message should only be displayed once now.
-    $page_text = $this->getSession()->getPage()->getText();
-    $this->assertEquals(1, substr_count($page_text, 'Message'));
-    $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-hidden field__item">');
-    $this->assertSession()->pageTextContains($edit['message[0][value]']);
+    // 'Message' should only be displayed once now with the actual message
+    // displayed twice.
+    $this->assertSession()->pageTextContainsOnce('Message');
+    $this->assertSession()->pageTextMatchesCount(2, '/' . $message . '/');
+    // Check for label and message in form element.
+    $this->assertSession()->elementTextEquals('css', 'label[for="edit-message-0-value"]', 'Message');
+    $this->assertSession()->fieldValueEquals('edit-message-0-value', $message);
+    // Check for message in preview but no label.
+    $this->assertSession()->elementTextNotContains('css', '#edit-preview', 'Message');
+    $this->assertSession()->elementTextContains('css', '#edit-preview', $message);
 
     // Set the preview field to 'hidden' in the view mode and check that the
     // field is hidden.
