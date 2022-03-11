@@ -1121,6 +1121,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/script.js
+ *
+ * @typedef {module:html-support/integrations/script} module:html-support/integrations/script~ScriptElementSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/style.js
+ *
+ * @typedef {module:html-support/integrations/style} module:html-support/integrations/style~StyleElementSupport
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/table.js
  *
  * @typedef {module:html-support/integrations/table} module:html-support/integrations/table~TableElementSupport
@@ -1196,6 +1208,12 @@
  * Declared in file @ckeditor/ckeditor5-image/src/imagecaption/imagecaptionui.js
  *
  * @typedef {module:image/imagecaption/imagecaptionui} module:image/imagecaption/imagecaptionui~ImageCaptionUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imagecaption/imagecaptionutils.js
+ *
+ * @typedef {module:image/imagecaptionutils/utils} module:image/imagecaptionutils/utils~ImageCaptionUtils
  */
 
 /**
@@ -1511,33 +1529,81 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/checktodolistcommand.js
- *
- * @typedef {module:list/checktodolistcommand} module:list/checktodolistcommand~CheckTodoListCommand
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/indentcommand.js
- *
- * @typedef {module:list/indentcommand} module:list/indentcommand~IndentCommand
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-list/src/list.js
  *
  * @typedef {module:list/list} module:list/list~List
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/listcommand.js
+ * Declared in file @ckeditor/ckeditor5-list/src/list/indentcommand.js
  *
- * @typedef {module:list/listcommand} module:list/listcommand~ListCommand
+ * @typedef {module:list/list/indentcommand} module:list/list/indentcommand~IndentCommand
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/listediting.js
+ * Declared in file @ckeditor/ckeditor5-list/src/list/listcommand.js
  *
- * @typedef {module:list/listediting} module:list/listediting~ListEditing
+ * @typedef {module:list/list/listcommand} module:list/list/listcommand~ListCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/list/listediting.js
+ *
+ * @typedef {module:list/list/listediting} module:list/list/listediting~ListEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/list/listui.js
+ *
+ * @typedef {module:list/list/listui} module:list/list/listui~ListUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties.js
+ *
+ * @typedef {module:list/listproperties} module:list/listproperties~ListProperties
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/listpropertiesediting.js
+ *
+ * @typedef {module:list/listproperties/listpropertiesediting} module:list/listproperties/listpropertiesediting~ListPropertiesEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/listpropertiesui.js
+ *
+ * @typedef {module:list/listproperties/listpropertiesui} module:list/listproperties/listpropertiesui~ListPropertiesUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/listreversedcommand.js
+ *
+ * @typedef {module:list/listproperties/listreversedcommand} module:list/listproperties/listreversedcommand~ListReversedCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/liststartcommand.js
+ *
+ * @typedef {module:list/listproperties/liststartcommand} module:list/listproperties/liststartcommand~ListStartCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/liststylecommand.js
+ *
+ * @typedef {module:list/listproperties/liststylecommand} module:list/listproperties/liststylecommand~ListStyleCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/ui/collapsibleview.js
+ *
+ * @typedef {module:list/ui/collapsibleview} module:list/ui/collapsibleview~CollapsibleView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/ui/listpropertiesview.js
+ *
+ * @typedef {module:list/ui/listpropertiesview} module:list/ui/listpropertiesview~ListPropertiesView
  */
 
 /**
@@ -1547,45 +1613,27 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/liststylecommand.js
- *
- * @typedef {module:list/liststylecommand} module:list/liststylecommand~ListStyleCommand
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/liststyleediting.js
- *
- * @typedef {module:list/liststyleediting} module:list/liststyleediting~ListStyleEditing
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/liststyleui.js
- *
- * @typedef {module:list/liststyleui} module:list/liststyleui~ListStyleUI
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/listui.js
- *
- * @typedef {module:list/listui} module:list/listui~ListUI
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-list/src/todolist.js
  *
  * @typedef {module:list/todolist} module:list/todolist~TodoList
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/todolistediting.js
+ * Declared in file @ckeditor/ckeditor5-list/src/todolist/checktodolistcommand.js
  *
- * @typedef {module:list/todolistediting} module:list/todolistediting~TodoListEditing
+ * @typedef {module:list/todolist/checktodolistcommand} module:list/todolist/checktodolistcommand~CheckTodoListCommand
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/todolistui.js
+ * Declared in file @ckeditor/ckeditor5-list/src/todolist/todolistediting.js
  *
- * @typedef {module:list/todolistui} module:list/todolistui~TodoListUI
+ * @typedef {module:list/todolist/todolistediting} module:list/todolist/todolistediting~TodoListEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/todolist/todolistui.js
+ *
+ * @typedef {module:list/todolist/todolistui} module:list/todolist/todolistui~TodoListUI
  */
 
 /**
@@ -1841,15 +1889,15 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-table/src/converters/table-cell-refresh-post-fixer.js
+ * Declared in file @ckeditor/ckeditor5-table/src/converters/table-cell-refresh-handler.js
  *
- * @typedef {module:table/converters/table-cell-refresh-post-fixer} module:table/converters/table-cell-refresh-post-fixer~injectTableCellRefreshPostFixer
+ * @typedef {module:table/converters/table-cell-refresh-post-fixer} module:table/converters/table-cell-refresh-post-fixer~tableCellRefreshHandler
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-table/src/converters/table-heading-rows-refresh-post-fixer.js
+ * Declared in file @ckeditor/ckeditor5-table/src/converters/table-headings-refresh-handler.js
  *
- * @typedef {module:table/converters/table-heading-rows-refresh-post-fixer} module:table/converters/table-heading-rows-refresh-post-fixer~injectTableHeadingRowsRefreshPostFixer
+ * @typedef {module:table/converters/table-heading-rows-refresh-post-fixer} module:table/converters/table-heading-rows-refresh-post-fixer~tableHeadingsRefreshHandler
  */
 
 /**
@@ -1862,6 +1910,12 @@
  * Declared in file @ckeditor/ckeditor5-table/src/converters/upcasttable.js
  *
  * @typedef {module:table/converters/upcasttable} module:table/converters/upcasttable~upcastTable
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/plaintableoutput.js
+ *
+ * @typedef {module:table/plaintableoutput} module:table/plaintableoutput~PlainTableOutput
  */
 
 /**
@@ -2375,6 +2429,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/input/inputview.js
+ *
+ * @typedef {module:ui/input/inputview} module:ui/input/inputview~InputView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/inputnumber/inputnumberview.js
+ *
+ * @typedef {module:ui/inputnumber/inputnumberview} module:ui/inputnumber/inputnumberview~InputNumberView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/inputtext/inputtextview.js
  *
  * @typedef {module:ui/inputtext/inputtextview} module:ui/inputtext/inputtextview~InputTextView
@@ -2687,6 +2753,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/iscomment.js
+ *
+ * @typedef {module:utils/dom/iscomment} module:utils/dom/iscomment~isComment
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/isnode.js
  *
  * @typedef {module:utils/dom/isnode} module:utils/dom/isnode~isNode
@@ -2702,6 +2774,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/istext.js
  *
  * @typedef {module:utils/dom/istext} module:utils/dom/istext~isText
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/isvisible.js
+ *
+ * @typedef {module:utils/dom/isvisible} module:utils/dom/isvisible~isVisible
  */
 
 /**
