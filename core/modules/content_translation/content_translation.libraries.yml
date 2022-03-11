@@ -9,4 +9,3 @@ drupal.content_translation.admin:
     - core/jquery
     - core/drupal
     - core/once
-    - core/jquery.once.bc

@@ -45,8 +45,6 @@ JavaScript
   jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer,
     Paul McLanahan
 
-  jQuery Once - Copyright (c) 2009 Konstantin Käfer
-
   jQuery UI - Copyright (c) 2015 by the authors and other contributors
     (http://jqueryui.com/about)
 

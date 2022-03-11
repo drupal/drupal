@@ -29,7 +29,6 @@ quickedit:
   dependencies:
     - core/jquery
     - core/once
-    - core/jquery.once.bc
     - core/underscore
     - core/backbone
     - core/jquery.form

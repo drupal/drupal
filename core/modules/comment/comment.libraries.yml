@@ -23,7 +23,6 @@ drupal.comment-new-indicator:
   dependencies:
     - core/jquery
     - core/once
-    - core/jquery.once.bc
     - core/drupal
     - history/api
     - core/drupal.displace
@@ -35,6 +34,5 @@ drupal.node-new-comments-link:
   dependencies:
     - core/jquery
     - core/once
-    - core/jquery.once.bc
     - core/drupal
     - history/api

@@ -5,10 +5,3 @@ js_once_test:
     _title: 'OnceTest'
   requirements:
     _access: 'TRUE'
-js_once_test.with_bc:
-  path: '/js_once_with_bc_test'
-  defaults:
-    _controller: '\Drupal\js_once_test\Controller\JsOnceTestController::onceBcTest'
-    _title: 'OnceBcTest'
-  requirements:
-    _access: 'TRUE'

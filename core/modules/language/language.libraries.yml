@@ -9,4 +9,3 @@ drupal.language.admin:
     - core/jquery
     - core/drupal
     - core/once
-    - core/jquery.once.bc

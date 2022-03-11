@@ -83,7 +83,6 @@
     "glob": "^7.1.2",
     "jquery": "^3.6.0",
     "jquery-form": "^4.3.0",
-    "jquery-once": "^2.2.3",
     "jquery-ui": "~1.13.1",
     "js-cookie": "^3.0.1",
     "jsdom": "^18.0.1",

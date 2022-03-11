@@ -123,11 +123,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
-      pack: 'jquery-once',
-      library: 'jquery.once',
-      files: ['jquery.once.js', 'jquery.once.min.js', 'jquery.once.min.js.map'],
-    },
-    {
       pack: 'js-cookie',
       files: [{ from: 'dist/js.cookie.min.js', to: 'js.cookie.min.js' }],
     },

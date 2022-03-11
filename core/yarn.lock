@@ -5034,13 +5034,6 @@ jquery-form@^4.3.0:
   dependencies:
     jquery ">=1.7.2"
 
-jquery-once@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/jquery-once/-/jquery-once-2.2.3.tgz#d5b266a1a7b47e5f86a5f25e83ee9467e13707a3"
-  integrity sha512-5gbkmxjbqA15KbrNxcDhdBN3EvakY5w/JdxdGgPGsO/kp6TdiqOr6nbnEZGeyF1/yLXVvA8i9lisgXguSiNV+g==
-  dependencies:
-    jquery "*"
-
 jquery-ui@~1.13.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.13.1.tgz#d0b7a42e73a04c31bb5706adf86f6f8942f64eaa"
@@ -5048,7 +5041,7 @@ jquery-ui@~1.13.1:
   dependencies:
     jquery ">=1.8.0 <4.0.0"
 
-jquery@*, jquery@>=1.7.2, "jquery@>=1.8.0 <4.0.0", jquery@^3.6.0:
+jquery@>=1.7.2, "jquery@>=1.8.0 <4.0.0", jquery@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==

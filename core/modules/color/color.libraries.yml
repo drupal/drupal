@@ -6,7 +6,6 @@ drupal.color:
     - core/jquery
     - core/drupal
     - core/once
-    - core/jquery.once.bc
     - core/jquery.farbtastic
     - color/drupal.color.preview
 
@@ -19,7 +18,6 @@ drupal.color.preview:
     - core/drupal
     - core/drupalSettings
     - core/once
-    - core/jquery.once.bc
 
 admin:
   version: VERSION

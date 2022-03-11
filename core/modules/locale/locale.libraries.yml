@@ -10,7 +10,6 @@ drupal.locale.admin:
     - core/drupal
     - core/drupal.form
     - core/once
-    - core/jquery.once.bc
 
 translations:
   # No sensible version can be specified, since the translations may change at

@@ -32,27 +32,4 @@ class JsOnceTestController extends ControllerBase {
     return $output;
   }
 
-  /**
-   * Provides elements for testing jQuery Once BC support.
-   *
-   * @return array
-   *   The render array.
-   */
-  public function onceBcTest() {
-    $output = [
-      '#attached' => ['library' => ['core/jquery.once']],
-    ];
-    foreach (range(1, 5) as $item) {
-      $output['item' . $item] = [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => 'Item ' . $item,
-        '#attributes' => [
-          'data-drupal-item' => $item,
-        ],
-      ];
-    }
-    return $output;
-  }
-
 }

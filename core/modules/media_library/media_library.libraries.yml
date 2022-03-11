@@ -34,7 +34,6 @@ ui:
     - core/drupal.announce
     - core/drupal.nodelist.foreach
     - core/once
-    - core/jquery.once.bc
     - core/jquery
     - media_library/view
     - core/tabbable
