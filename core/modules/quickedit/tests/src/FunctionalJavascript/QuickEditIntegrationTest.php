@@ -119,6 +119,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * Tests if an article node can be in-place edited with Quick Edit.
    */
   public function testArticleNode() {
+    $this->markTestSkipped();
     $term = Term::create([
       'name' => 'foo',
       'vid' => 'tags',
