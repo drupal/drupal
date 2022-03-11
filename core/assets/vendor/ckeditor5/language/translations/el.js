@@ -1,0 +1,1 @@
+!function(n){const a=n.el=n.el||{};a.dictionary=Object.assign(a.dictionary||{},{"Choose language":"Επιλογή γλώσσας",Language:"Γλώσσα","Remove language":"Απομάκρυνση γλώσσας"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
