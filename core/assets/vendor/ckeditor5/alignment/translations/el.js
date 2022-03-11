@@ -1,0 +1,1 @@
+!function(n){const i=n.el=n.el||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"Στοίχιση στο κέντρο","Align left":"Στοίχιση αριστερά","Align right":"Στοίχιση δεξιά",Justify:"Πλήρης στοίχηση","Text alignment":"Στοίχιση κειμένου","Text alignment toolbar":"Γραμμή εργαλείων στοίχισης κειμένου"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
