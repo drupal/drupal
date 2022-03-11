@@ -1,9 +1,0 @@
-with_shim_test:
-  version: VERSION
-  js:
-    js/js_cookie_shim_test.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/jquery.cookie
-    - core/once

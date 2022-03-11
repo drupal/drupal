@@ -747,16 +747,6 @@ jquery:
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
 
-jquery.cookie:
-  version: VERSION
-  js:
-    misc/jquery.cookie.shim.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/js-cookie
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.0.0 and will be removed in Drupal 10.0.0. Use the core/js-cookie library instead. See https://www.drupal.org/node/3104677
-
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
   # @todo Ping @robloach or @mattfarina to retroactively create this release.
