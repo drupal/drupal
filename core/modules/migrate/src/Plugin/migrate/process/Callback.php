@@ -41,6 +41,17 @@ use Drupal\migrate\Row;
  *     source: source_field
  * @endcode
  *
+ * An example where the callback accepts no arguments:
+ *
+ * @code
+ * process:
+ *   time:
+ *     plugin: callback
+ *     callable: time
+ *     unpack_source: true
+ *     source: [  ]
+ * @endcode
+ *
  * An example where the callback accepts more than one argument:
  *
  * @code
