@@ -66,6 +66,11 @@ class CallbackTest extends MigrateProcessTestCase {
         [['One', 'two'], ['1', '2'], 'One, two, three!'],
         '1, 2, three!',
       ],
+      'pi' => [
+        'pi',
+        [],
+        pi(),
+      ],
     ];
   }
 
