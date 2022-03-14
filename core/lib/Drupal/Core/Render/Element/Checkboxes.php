@@ -73,12 +73,19 @@ class Checkboxes extends FormElement {
         // sub-elements.
         $weight += 0.001;
 
+        // Only enabled checkboxes receive their values from the form
+        // submission, the disabled checkboxes use their default value.
+        $default_value = NULL;
+        if (isset($value[$key]) || (!empty($element[$key]['#disabled']) && in_array($key, $element['#default_value'], TRUE))) {
+          $default_value = $key;
+        }
+
         $element += [$key => []];
         $element[$key] += [
           '#type' => 'checkbox',
           '#title' => $choice,
           '#return_value' => $key,
-          '#default_value' => isset($value[$key]) ? $key : NULL,
+          '#default_value' => $default_value,
           '#attributes' => $element['#attributes'],
           '#ajax' => $element['#ajax'] ?? NULL,
           // Errors should only be shown on the parent checkboxes element.
@@ -115,6 +122,17 @@ class Checkboxes extends FormElement {
           unset($input[$key]);
         }
       }
+
+      // Because the disabled checkboxes don't receive their input from the
+      // form submission, we use their default value.
+      if (!empty($element['#default_value'])) {
+        foreach ($element['#default_value'] as $key) {
+          if (!empty($element[$key]['#disabled'])) {
+            $input[$key] = $key;
+          }
+        }
+      }
+
       return array_combine($input, $input);
     }
     else {
