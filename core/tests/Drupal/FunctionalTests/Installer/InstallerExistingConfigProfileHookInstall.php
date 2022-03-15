@@ -35,6 +35,15 @@ EOF;
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUpRequirementsProblem() {
+    // The parent method asserts that there are no requirements errors, but
+    // this test expects a requirements error in the test method below.
+    // Therefore, we override this method to suppress the parent's assertions.
+  }
+
+  /**
    * Final installer step: Configure site.
    */
   protected function setUpSite() {

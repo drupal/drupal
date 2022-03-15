@@ -24,10 +24,6 @@ trait RequirementsPageTrait {
   /**
    * Continues installation when the expected warnings are found.
    *
-   * This function is no longer called by any core test, but it is retained for
-   * use by contrib/custom tests. It is not deprecated, because it remains the
-   * recommended function to call for its purpose.
-   *
    * @param string[] $expected_warnings
    *   A list of warning summaries to expect on the requirements screen (e.g.
    *   'PHP', 'PHP OPcode caching', etc.). If only the expected warnings
@@ -43,38 +39,70 @@ trait RequirementsPageTrait {
   }
 
   /**
-   * Assert the given warning summaries are present on the page.
+   * Asserts the given warning summaries are present on the page.
    *
    * If an expected warning is not found, or if a warning not in the list is
    * present, a fail is raised.
    *
-   * @param string[] $warning_summaries
+   * @param string[] $summaries
    *   A list of warning summaries to expect on the requirements screen (e.g.
    *   'PHP', 'PHP OPcode caching', etc.).
    */
-  protected function assertWarningSummaries(array $warning_summaries) {
-    // Allow only details elements that are directly after the warning header
-    // or each other. There is no guaranteed wrapper we can rely on across
-    // distributions. When there are multiple warnings, the selectors will be:
+  protected function assertWarningSummaries(array $summaries) {
+    $this->assertRequirementSummaries($summaries, 'warning');
+  }
+
+  /**
+   * Asserts the given error summaries are present on the page.
+   *
+   * If an expected error is not found, or if an error not in the list is
+   * present, a fail is raised.
+   *
+   * @param string[] $summaries
+   *   A list of error summaries to expect on the requirements screen (e.g.
+   *   'PHP', 'PHP OPcode caching', etc.).
+   */
+  protected function assertErrorSummaries(array $summaries) {
+    $this->assertRequirementSummaries($summaries, 'error');
+  }
+
+  /**
+   * Asserts the given requirements section summaries are present on the page.
+   *
+   * If an expected requirements message  is not found, or if a message not in
+   * the list is present, a fail is raised.
+   *
+   * @param string[] $summaries
+   *   A list of warning summaries to expect on the requirements screen (e.g.
+   *   'PHP', 'PHP OPcode caching', etc.).
+   * @param string $type
+   *   The type of requirement, either 'warning' or 'error'.
+   */
+  protected function assertRequirementSummaries(array $summaries, string $type) {
+    // Allow only details elements that are directly after the warning/error
+    // header or each other. There is no guaranteed wrapper we can rely on
+    // across distributions. When there are multiple warnings, the selectors
+    // will be:
     // - h3#warning+details summary
     // - h3#warning+details+details summary
     // - etc.
-    // We add one more selector than expected warnings to confirm that there
-    // isn't any other warning before clicking the link.
+    // For errors, the selectors are the same except that they are h3#error.
+    // We add one more selector than expected requirements to confirm that
+    // there isn't any other requirement message before clicking the link.
     // @todo Make this more reliable in
     //   https://www.drupal.org/project/drupal/issues/2927345.
     $selectors = [];
-    for ($i = 0; $i <= count($warning_summaries); $i++) {
-      $selectors[] = 'h3#warning' . implode('', array_fill(0, $i + 1, '+details')) . ' summary';
+    for ($i = 0; $i <= count($summaries); $i++) {
+      $selectors[] = 'h3#' . $type . implode('', array_fill(0, $i + 1, '+details')) . ' summary';
     }
-    $warning_elements = $this->cssSelect(implode(', ', $selectors));
+    $elements = $this->cssSelect(implode(', ', $selectors));
 
-    // Confirm that there are only the expected warnings.
-    $warnings = [];
-    foreach ($warning_elements as $warning) {
-      $warnings[] = trim($warning->getText());
+    // Confirm that there are only the expected requirements.
+    $requirements = [];
+    foreach ($elements as $requirement) {
+      $requirements[] = trim($requirement->getText());
     }
-    $this->assertEquals($warning_summaries, $warnings);
+    $this->assertEquals($summaries, $requirements);
   }
 
 }
