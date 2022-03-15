@@ -75,20 +75,12 @@ class UserPasswordForm extends FormBase {
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator service.
    */
-  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory, FloodInterface $flood, TypedDataManagerInterface $typed_data_manager = NULL, EmailValidatorInterface $email_validator = NULL) {
+  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory, FloodInterface $flood, TypedDataManagerInterface $typed_data_manager, EmailValidatorInterface $email_validator) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
     $this->flood = $flood;
-    if (is_null($typed_data_manager)) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $typed_data_manager argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3189310', E_USER_DEPRECATED);
-      $typed_data_manager = \Drupal::typedDataManager();
-    }
     $this->typedDataManager = $typed_data_manager;
-    if (is_null($email_validator)) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $email_validator argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3189310', E_USER_DEPRECATED);
-      $email_validator = \Drupal::service('email.validator');
-    }
     $this->emailValidator = $email_validator;
   }
 

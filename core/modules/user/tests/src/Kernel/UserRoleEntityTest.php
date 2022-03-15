@@ -28,19 +28,18 @@ class UserRoleEntityTest extends KernelTestBase {
     $this->assertEquals(['a', 'b', 'c'], $role->getPermissions());
   }
 
-  /**
-   * @group legacy
-   */
   public function testGrantingNonExistentPermission() {
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
 
     // A single permission that does not exist.
-    $this->expectDeprecation('Adding non-existent permissions to a role is deprecated in drupal:9.3.0 and triggers a runtime exception before drupal:10.0.0. The incorrect permissions are "does not exist". Permissions should be defined in a permissions.yml file or a permission callback. See https://www.drupal.org/node/3193348');
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Adding non-existent permissions to a role is not allowed. The incorrect permissions are "does not exist".');
     $role->grantPermission('does not exist')
       ->save();
 
     // A multiple permissions that do not exist.
-    $this->expectDeprecation('Adding non-existent permissions to a role is deprecated in drupal:9.3.0 and triggers a runtime exception before drupal:10.0.0. The incorrect permissions are "does not exist", "also does not exist". Permissions should be defined in a permissions.yml file or a permission callback. See https://www.drupal.org/node/3193348');
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Adding non-existent permissions to a role is not allowed. The incorrect permissions are "does not exist, also does not exist".');
     $role->grantPermission('does not exist')
       ->grantPermission('also does not exist')
       ->save();

@@ -69,11 +69,7 @@ class UserLoginForm extends FormBase {
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
    */
-  public function __construct($user_flood_control, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
-    if (!$user_flood_control instanceof UserFloodControlInterface) {
-      @trigger_error('Passing the flood service to ' . __METHOD__ . ' is deprecated in drupal:9.1.0 and is replaced by user.flood_control in drupal:10.0.0. See https://www.drupal.org/node/3067148', E_USER_DEPRECATED);
-      $user_flood_control = \Drupal::service('user.flood_control');
-    }
+  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;

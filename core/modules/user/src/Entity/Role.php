@@ -203,7 +203,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
     $valid_permissions = array_intersect($this->permissions, array_keys($permission_definitions));
     $invalid_permissions = array_diff($this->permissions, $valid_permissions);
     if (!empty($invalid_permissions) && !$this->get('skip_missing_permission_deprecation')) {
-      @trigger_error('Adding non-existent permissions to a role is deprecated in drupal:9.3.0 and triggers a runtime exception before drupal:10.0.0. The incorrect permissions are "' . implode('", "', $invalid_permissions) . '". Permissions should be defined in a permissions.yml file or a permission callback. See https://www.drupal.org/node/3193348', E_USER_DEPRECATED);
+      throw new \RuntimeException('Adding non-existent permissions to a role is not allowed. The incorrect permissions are "' . implode('", "', $invalid_permissions) . '".');
     }
     foreach ($valid_permissions as $permission) {
       // Depend on the module that is providing this permissions.

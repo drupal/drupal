@@ -33,15 +33,7 @@
         const $passwordWidget = $mainInput.closest('.js-form-type-password-confirm');
         const $confirmInput = $passwordWidget.find('input.js-password-confirm');
         const $passwordConfirmMessage = $(Drupal.theme('passwordConfirmMessage', settings.password));
-        let $passwordMatchStatus = $passwordConfirmMessage.find('[data-drupal-selector="password-match-status-text"]').first();
-
-        if ($passwordMatchStatus.length === 0) {
-          $passwordMatchStatus = $passwordConfirmMessage.find('span').first();
-          Drupal.deprecationError({
-            message: 'Returning <span> without data-drupal-selector="password-match-status-text" attribute is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3152101'
-          });
-        }
-
+        const $passwordMatchStatus = $passwordConfirmMessage.find('[data-drupal-selector="password-match-status-text"]').first();
         const $confirmInputParent = $confirmInput.parent().addClass('confirm-parent').append($passwordConfirmMessage);
         const passwordStrengthBarClassesToRemove = [cssClasses.passwordWeak || '', cssClasses.passwordFair || '', cssClasses.passwordGood || '', cssClasses.passwordStrong || ''].join(' ').trim();
         const confirmTextWrapperClassesToRemove = [cssClasses.passwordsMatch || '', cssClasses.passwordsNotMatch || ''].join(' ').trim();
@@ -51,23 +43,7 @@
         if (settings.password.showStrengthIndicator) {
           const $passwordStrength = $(Drupal.theme('passwordStrength', settings.password));
           password.$strengthBar = $passwordStrength.find('[data-drupal-selector="password-strength-indicator"]').first();
-
-          if (password.$strengthBar.length === 0) {
-            password.$strengthBar = $passwordStrength.find('.js-password-strength__indicator').first();
-            Drupal.deprecationError({
-              message: 'The js-password-strength__indicator class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__indicator with a data-drupal-selector="password-strength-indicator" attribute. See https://www.drupal.org/node/3152101'
-            });
-          }
-
           password.$strengthTextWrapper = $passwordStrength.find('[data-drupal-selector="password-strength-text"]').first();
-
-          if (password.$strengthTextWrapper.length === 0) {
-            password.$strengthTextWrapper = $passwordStrength.find('.js-password-strength__text').first();
-            Drupal.deprecationError({
-              message: 'The js-password-strength__text class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__text with a data-drupal-selector="password-strength-text" attribute. See https://www.drupal.org/node/3152101'
-            });
-          }
-
           password.$suggestions = $(Drupal.theme('passwordSuggestions', settings.password, []));
           password.$suggestions.hide();
           $mainInputParent.append($passwordStrength);
@@ -215,16 +191,11 @@
 
     const messageTips = msg;
     msg = `${passwordSettings.hasWeaknesses}<ul><li>${msg.join('</li><li>')}</li></ul>`;
-    return Drupal.deprecatedProperty({
-      target: {
-        strength,
-        message: msg,
-        indicatorText,
-        indicatorClass,
-        messageTips
-      },
-      deprecatedProperty: 'message',
-      message: 'The message property is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The markup should be constructed using messageTips property and Drupal.theme.passwordSuggestions. See https://www.drupal.org/node/3130352'
-    });
+    return {
+      strength,
+      indicatorText,
+      indicatorClass,
+      messageTips
+    };
   };
 })(jQuery, Drupal);

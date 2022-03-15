@@ -219,25 +219,6 @@ function user_validate_name($name) {
 }
 
 /**
- * Generate a random alphanumeric password.
- *
- * @param int $length
- *   The desired password length, in characters.
- *
- * @return string
- *   The generated random password.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\Core\Password\PasswordGeneratorInterface::generate() instead.
- *
- * @see https://www.drupal.org/node/3153113
- */
-function user_password($length = 10) {
-  @trigger_error('user_password() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Password\PasswordGeneratorInterface::generate() instead. See https://www.drupal.org/node/3153113', E_USER_DEPRECATED);
-  return \Drupal::service('password_generator')->generate($length);
-}
-
-/**
  * Determine the permissions for one or more roles.
  *
  * @param array $roles
@@ -1036,11 +1017,6 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object of the account being notified. Must contain at
  *   least the fields 'uid', 'name', and 'mail'.
- * @param string $langcode
- *   (deprecated) (optional) Language code to use for the notification,
- *   overriding account language. Specifying the notification language using
- *   the $langcode parameter is deprecated in drupal:9.2.0 and is removed from
- *   drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082
  *
  * @return array
  *   An array containing various information about the message.
@@ -1048,14 +1024,10 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *
  * @see user_mail_tokens()
  */
-function _user_mail_notify($op, AccountInterface $account, $langcode = NULL) {
-  if ($langcode) {
-    @trigger_error('Specifying the notification language using the $langcode parameter is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082', E_USER_DEPRECATED);
-  }
+function _user_mail_notify($op, AccountInterface $account) {
 
   if (\Drupal::config('user.settings')->get('notify.' . $op)) {
     $params['account'] = $account;
-    $langcode = $langcode ? $langcode : $account->getPreferredLangcode();
     // Get the custom site notification email to use as the from email address
     // if it has been set.
     $site_mail = \Drupal::config('system.site')->get('mail_notification');
@@ -1067,7 +1039,7 @@ function _user_mail_notify($op, AccountInterface $account, $langcode = NULL) {
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
     }
-    $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $langcode, $params, $site_mail);
+    $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $account->getPreferredLangcode(), $params, $site_mail);
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.

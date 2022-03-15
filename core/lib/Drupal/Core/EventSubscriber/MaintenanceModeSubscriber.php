@@ -94,7 +94,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger, EventDispatcherInterface $event_dispatcher) {
     $this->maintenanceMode = $maintenance_mode;
     $this->config = $config_factory;
     $this->stringTranslation = $translation;
@@ -102,10 +102,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->messenger = $messenger;
-    if (!$event_dispatcher) {
-      @trigger_error('Calling MaintenanceModeSubscriber::__construct() without the $event_dispatcher argument is deprecated in drupal:9.4.0 and the $event_dispatcher argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3255799', E_USER_DEPRECATED);
-      $event_dispatcher = \Drupal::service('event_dispatcher');
-    }
     $this->eventDispatcher = $event_dispatcher;
   }
 
