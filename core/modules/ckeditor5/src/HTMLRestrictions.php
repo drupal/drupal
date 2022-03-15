@@ -54,6 +54,17 @@ final class HTMLRestrictions {
   private $elements;
 
   /**
+   * Whether unrestricted, in other words: arbitrary HTML allowed.
+   *
+   * Used for when FilterFormatInterface::getHTMLRestrictions() returns `FALSE`,
+   * e.g. in case of the default "Full HTML" text format.
+   *
+   * @var bool
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+   */
+  private $unrestricted = FALSE;
+
+  /**
    * Wildcard types, and the methods that return tags the wildcard represents.
    *
    * @var string[]
@@ -215,6 +226,15 @@ final class HTMLRestrictions {
   }
 
   /**
+   * Whether this set of HTML restrictions is unrestricted.
+   *
+   * @return bool
+   */
+  public function isUnrestricted(): bool {
+    return $this->unrestricted;
+  }
+
+  /**
    * Whether this is the empty set of HTML restrictions.
    *
    * @return bool
@@ -250,6 +270,18 @@ final class HTMLRestrictions {
   }
 
   /**
+   * Constructs an unrestricted set of HTML restrictions.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   */
+  private static function unrestricted(): self {
+    // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336, including adding support for all operations.
+    $restrictions = HTMLRestrictions::emptySet();
+    $restrictions->unrestricted = TRUE;
+    return $restrictions;
+  }
+
+  /**
    * Constructs a set of HTML restrictions matching the given object.
    *
    * Note: there is no interface for the ::getHTMLRestrictions() method that
@@ -270,6 +302,11 @@ final class HTMLRestrictions {
   private static function fromObjectWithHtmlRestrictions(object $object): HTMLRestrictions {
     if (!method_exists($object, 'getHTMLRestrictions')) {
       throw new \InvalidArgumentException();
+    }
+
+    if ($object->getHtmlRestrictions() === FALSE) {
+      // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336
+      return self::unrestricted();
     }
 
     $restrictions = $object->getHTMLRestrictions();

@@ -101,6 +101,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
 
+    $new_value = str_replace(['<h2 id> ', '<h3 id> ', '<h4 id> ', '<h5 id> ', '<h6 id> '], '', $current_value);
+    $basic_html_format_without_headings = $basic_html_format;
+    $basic_html_format_without_headings['name'] .= ' (without H*)';
+    $basic_html_format_without_headings['format'] = 'basic_html_without_headings';
+    NestedArray::setValue($basic_html_format_without_headings, $allowed_html_parents, $new_value);
+    FilterFormat::create($basic_html_format_without_headings)->save();
+    Editor::create(
+      ['format' => 'basic_html_without_headings']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    )->save();
+
     $new_value = str_replace('<p>', '<p class="text-align-center text-align-justify">', $current_value);
     $basic_html_format_with_alignable_p = $basic_html_format;
     $basic_html_format_with_alignable_p['name'] .= ' (with alignable paragraph support)';
@@ -504,6 +516,35 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_messages' => array_merge(
         $basic_html_test_case['expected_messages'],
         ['This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h5 id&gt;.'],
+      ),
+    ];
+
+    yield "basic_html_without_headings can be switched to CKEditor 5 without problems, heading configuration computed automatically" => [
+      'format_id' => 'basic_html_without_headings',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => array_merge(
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, 10),
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 12),
+          ),
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => array_values(array_diff(
+              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+              ['<h2 id>', '<h3 id>', '<h4 id>', '<h5 id>', '<h6 id>'],
+            )),
+          ],
+          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
+          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
+        ],
+      ],
+      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge(
+        $basic_html_test_case['expected_messages'],
+        ['This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt;.'],
       ),
     ];
 

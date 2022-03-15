@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\Annotation\CKEditor4To5Upgrade;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -116,9 +117,12 @@ class CKEditor4To5UpgradePluginManager extends DefaultPluginManager {
    *
    * @param string $cke4_button
    *   A valid CKEditor 4 button name.
+   * @param \Drupal\ckeditor5\HTMLRestrictions $text_format_html_restrictions
+   *   The restrictions of the text format, to allow an upgrade plugin to
+   *   inspect the text format's HTML restrictions to make a decision.
    *
-   * @return string|null
-   *   The equivalent CKEditor 5 toolbar item, or NULL if no equivalent exists.
+   * @return string[]|null
+   *   The equivalent CKEditor 5 toolbar items, or NULL if no equivalent exists.
    *
    * @throws \OutOfBoundsException
    *   Thrown when no upgrade path exists.
@@ -127,7 +131,7 @@ class CKEditor4To5UpgradePluginManager extends DefaultPluginManager {
    *
    * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
    */
-  public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button): ?string {
+  public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button, HTMLRestrictions $text_format_html_restrictions): ?array {
     $this->validateAndBuildMaps();
 
     if (!isset($this->cke4ButtonsMap[$cke4_button])) {
@@ -136,7 +140,7 @@ class CKEditor4To5UpgradePluginManager extends DefaultPluginManager {
 
     $plugin_id = $this->cke4ButtonsMap[$cke4_button];
     try {
-      return $this->createInstance($plugin_id)->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button);
+      return $this->createInstance($plugin_id)->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button, $text_format_html_restrictions);
     }
     catch (\OutOfBoundsException $e) {
       throw new \LogicException(sprintf('The "%s" CKEditor4To5Upgrade plugin claims to provide an upgrade path for the "%s" CKEditor 4 button but does not.', $plugin_id, $cke4_button));
