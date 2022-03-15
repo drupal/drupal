@@ -128,6 +128,10 @@ ESLINT_CONFIG_PASSING_FILE_CHANGED=0
 #  - core/.stylelintrc.json
 STYLELINT_CONFIG_FILE_CHANGED=0
 
+# This variable will be set when a Drupal-specific CKEditor 5 plugin has changed
+# it is used to make sure the compiled JS is valid.
+CKEDITOR5_PLUGINS_CHANGED=0
+
 # Build up a list of absolute file names.
 ABS_FILES=
 for FILE in $FILES; do
@@ -155,6 +159,10 @@ for FILE in $FILES; do
   if [[ $FILE == "core/package.json" || $FILE == "core/yarn.lock" ]]; then
     ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
     STYLELINT_CONFIG_FILE_CHANGED=1;
+  fi;
+
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build || $FILE =~ ^core/modules/ckeditor5/js/ckeditor5_plugins ]]; then
+    CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 done
 
@@ -277,6 +285,27 @@ if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
     printf "\nstylelint: ${red}failed${reset}\n"
   else
     printf "\nstylelint: ${green}passed${reset}\n"
+  fi
+  cd $TOP_LEVEL
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
+
+# When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
+# properly. Only check on DrupalCI, since we're concerned about the build being
+# run with the expected package versions and making sure the result of the build
+# is in sync and conform to expectations.
+if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
+  cd "$TOP_LEVEL/core"
+  yarn run -s check:ckeditor5
+  if [ "$?" -ne "0" ]; then
+    # If there are failures set the status to a number other than 0.
+    FINAL_STATUS=1
+    printf "\nDrupal-specific CKEditor 5 plugins: ${red}failed${reset}\n"
+  else
+    printf "\nDrupal-specific CKEditor 5 plugins: ${green}passed${reset}\n"
   fi
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
