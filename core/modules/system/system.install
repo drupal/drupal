@@ -294,27 +294,17 @@ function system_requirements($phase) {
         ':php_requirements' => 'https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement',
       ]
     );
-    $requirements['php']['severity'] = REQUIREMENT_ERROR;
 
     // If the PHP version is also below the absolute minimum allowed, it's not
-    // safe to continue with the requirements check.
+    // safe to continue with the requirements check, and should always be an
+    // error.
     if (version_compare($phpversion, \Drupal::MINIMUM_PHP) < 0) {
+      $requirements['php']['severity'] = REQUIREMENT_ERROR;
       return $requirements;
     }
-    // Otherwise downgrade the error to a warning during updates. Even if there
-    // are some problems with the site's PHP version, it's still better for the
-    // site to keep its Drupal codebase up to date.
-    elseif ($phase === 'update') {
-      $requirements['php']['severity'] = REQUIREMENT_WARNING;
-    }
-    // Since we allow sites with unsupported PHP versions to still run Drupal
-    // updates, we also need to be able to run tests with those PHP versions,
-    // which requires the ability to install test sites. Not all tests are
-    // required to pass on these PHP versions, but we want to monitor which
-    // ones do and don't.
-    elseif ($phase === 'install' && drupal_valid_test_ua()) {
-      $requirements['php']['severity'] = REQUIREMENT_INFO;
-    }
+    // Otherwise, the message should be an error at runtime, and a warning
+    // during installation or update.
+    $requirements['php']['severity'] = ($phase === 'runtime') ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
   }
   // For PHP versions that are still supported but no longer recommended,
   // inform users of what's recommended, allowing them to take action before it
