@@ -1,1 +1,0 @@
-!function(i){const n=i.el=i.el||{};n.dictionary=Object.assign(n.dictionary||{},{"Remove Format":"Απομάκρυνση μορφοποίησης"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
