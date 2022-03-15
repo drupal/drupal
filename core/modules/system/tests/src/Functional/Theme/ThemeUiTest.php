@@ -342,6 +342,7 @@ class ThemeUiTest extends BrowserTestBase {
     ];
 
     $compatible_info = $info + ['core_version_requirement' => '*'];
+    $incompatible_info = $info + ['core_version_requirement' => '^1'];
 
     file_put_contents($file_path, Yaml::encode($compatible_info));
     $this->drupalGet('admin/appearance');
@@ -350,33 +351,21 @@ class ThemeUiTest extends BrowserTestBase {
     $assert_session->addressEquals('admin/appearance');
     $assert_session->pageTextContains("The $theme_name theme has been installed");
 
-    $incompatible_updates = [
-      [
-        'core_version_requirement' => '^1',
-      ],
-      [
-        'core' => '8.x',
-      ],
-    ];
-    foreach ($incompatible_updates as $incompatible_update) {
-      $incompatible_info = $info + $incompatible_update;
-      file_put_contents($file_path, Yaml::encode($incompatible_info));
-      $this->drupalGet('admin/appearance');
-      $this->assertSession()->pageTextContains($incompatible_themes_message);
+    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextContains($incompatible_themes_message);
 
-      file_put_contents($file_path, Yaml::encode($compatible_info));
-      $this->drupalGet('admin/appearance');
-      $this->assertSession()->pageTextNotContains($incompatible_themes_message);
-    }
+    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains($incompatible_themes_message);
+
     // Uninstall the theme and ensure that incompatible themes message is not
     // displayed for themes that are not installed.
     $this->uninstallTheme($theme_name);
-    foreach ($incompatible_updates as $incompatible_update) {
-      $incompatible_info = $info + $incompatible_update;
-      file_put_contents($file_path, Yaml::encode($incompatible_info));
-      $this->drupalGet('admin/appearance');
-      $this->assertSession()->pageTextNotContains($incompatible_themes_message);
-    }
+
+    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains($incompatible_themes_message);
   }
 
 }
