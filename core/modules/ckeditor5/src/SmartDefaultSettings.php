@@ -124,7 +124,7 @@ final class SmartDefaultSettings {
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       $enabled_cke4_plugins = $this->getEnabledCkeditor4Plugins($old_editor);
-      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins);
+      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
     }
@@ -200,6 +200,9 @@ final class SmartDefaultSettings {
    * @param string[] $enabled_ckeditor4_plugins
    *   The list of enabled CKEditor 4 plugins: their settings will be mapped to
    *   the CKEditor 5 equivalents, if they have any.
+   * @param \Drupal\ckeditor5\HTMLRestrictions $text_format_html_restrictions
+   *   The restrictions of the text format, to allow an upgrade plugin to
+   *   inspect the text format's HTML restrictions to make a decision.
    *
    * @return array
    *   An array with two values:
@@ -210,7 +213,7 @@ final class SmartDefaultSettings {
    *   Thrown when an upgrade plugin is attempting to generate plugin settings
    *   for a CKEditor 4 plugin upgrade path that have already been generated.
    */
-  private function createSettingsFromCKEditor4(array $ckeditor4_settings, array $enabled_ckeditor4_plugins): array {
+  private function createSettingsFromCKEditor4(array $ckeditor4_settings, array $enabled_ckeditor4_plugins, HTMLRestrictions $text_format_html_restrictions): array {
     $settings = [
       'toolbar' => [
         'items' => [],
@@ -226,7 +229,7 @@ final class SmartDefaultSettings {
         $some_added = FALSE;
         foreach ($group['items'] as $cke4_button) {
           try {
-            $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button);
+            $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button, $text_format_html_restrictions);
           }
           catch (\OutOfBoundsException $e) {
             $messages[] = $this->t('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
@@ -235,7 +238,7 @@ final class SmartDefaultSettings {
             continue;
           }
           if ($equivalent) {
-            $settings['toolbar']['items'][] = $equivalent;
+            $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], $equivalent);
             $some_added = TRUE;
           }
         }
