@@ -3,8 +3,6 @@
 namespace Drupal\Tests\aggregator\Kernel\Migrate\d6;
 
 use Drupal\block\Entity\Block;
-// @todo Remove in https://www.drupal.org/node/3267274
-use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
  * Tests migration of aggregator block.
@@ -17,10 +15,12 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'block',
     'block_content',
+    'filter',
+    'node',
     'path_alias',
+    'text',
   ];
 
   /**
