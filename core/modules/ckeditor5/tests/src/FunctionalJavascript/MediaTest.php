@@ -220,15 +220,35 @@ class MediaTest extends WebDriverTestBase {
     $editor->setSettings($settings);
     $editor->save();
 
+    $filter_format = $editor->getFilterFormat();
+    $filter_format->setFilterConfig('filter_html', [
+      'status' => TRUE,
+      'settings' => [
+        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo>',
+      ],
+    ]);
+    $filter_format->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
     // Add data-foo use to an existing drupal-media tag.
     $original_value = $this->host->body->value;
     $this->host->body->value = str_replace('drupal-media', 'drupal-media data-foo="bar" ', $original_value);
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
-    // Confirm data-foo is present in the upcasted drupal-media.
-    $upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media');
-    $this->assertEquals('bar', $upcasted_media->getAttribute('data-foo'));
+    // Confirm data-foo is present in the drupal-media preview.
+    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media'));
+    $this->assertFalse($upcasted_media->hasAttribute('data-foo'));
+    $this->assertNotEmpty($preview = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media > [data-drupal-media-preview="ready"] > .media', 30000));
+    $this->assertEquals('bar', $preview->getAttribute('data-foo'));
 
     // Confirm data-foo is not stripped from source.
     $this->assertSourceAttributeSame('data-foo', 'bar');

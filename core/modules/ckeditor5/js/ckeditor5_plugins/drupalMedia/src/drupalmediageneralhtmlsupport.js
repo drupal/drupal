@@ -127,15 +127,6 @@ function modelToEditingViewAttributeConverter() {
       },
       { priority: 'low' },
     );
-
-    // Render arbitrary attributes on the CKEditor 5 widget wrapper until
-    // arbitrary attributes are included as part of the server rendered preview.
-    // @see https://www.drupal.org/project/drupal/issues/3231337
-    dispatcher.on(
-      'attribute:htmlAttributes:drupalMedia',
-      modelToDataAttributeConverter,
-      { priority: 'low' },
-    );
   };
 }
 
