@@ -90,6 +90,7 @@ export default class DrupalMediaEditing extends Plugin {
       allowWhere: '$block',
       isObject: true,
       isContent: true,
+      isBlock: true,
       allowAttributes: Object.keys(this.attrs),
     });
   }

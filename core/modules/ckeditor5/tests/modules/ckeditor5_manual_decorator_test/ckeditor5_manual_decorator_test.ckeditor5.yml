@@ -1,0 +1,25 @@
+ckeditor5_manual_decorator_test_openInNewTab:
+  ckeditor5:
+    plugins: []
+    config:
+      link:
+        decorators:
+          openInNewTab:
+            mode: 'manual'
+            label: 'Open in a new tab'
+            attributes:
+              target: '_blank'
+              rel: 'noopener noreferrer'
+            classes: ['link-new-tab']
+          pinkColor:
+            mode: 'manual'
+            label: 'Pink color'
+            styles:
+              color: 'pink'
+  drupal:
+    label: Open in new tab
+    elements:
+      - <a target="_blank" rel="noopener noreferrer" class>
+    conditions:
+      plugins:
+        - ckeditor5_link
