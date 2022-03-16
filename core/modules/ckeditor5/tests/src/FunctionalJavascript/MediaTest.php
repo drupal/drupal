@@ -152,13 +152,31 @@ class MediaTest extends WebDriverTestBase {
       'type' => 'blog',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>',
+        'value' => '<drupal-media data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '" data-caption="baz"></drupal-media>',
         'format' => 'test_format',
       ],
     ]);
     $this->host->save();
 
     $this->drupalLogin($this->adminUser);
+  }
+
+  /**
+   * Tests that `<drupal-media>` is converted into a block element.
+   */
+  public function testConversion() {
+    // Wrap the `<drupal-media>` markup in a `<p>`.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = '<p>foo' . $original_value . '</p>';
+    $this->host->save();
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $assert_session = $this->assertSession();
+    $assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000);
+    $editor_html = $this->getEditorDataAsHtmlString();
+    // Observe that `<drupal-media>` was moved into its own block element.
+    $this->assertEquals('<p>foo</p>' . $original_value, str_replace('&nbsp;', '', $editor_html));
   }
 
   /**
@@ -732,6 +750,19 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($xpath->query('//drupal-media'));
     $this->assertNotEmpty($xpath->query('//a[@href="http://linking-embedded-media.com"]'));
     $this->assertNotEmpty($xpath->query('//a[@href="http://linking-embedded-media.com"]/drupal-media'));
+    // Ensure that the media caption is retained and not linked as a result of
+    // linking media.
+    $this->assertNotEmpty($xpath->query('//a[@href="http://linking-embedded-media.com"]/drupal-media[@data-caption="baz"]'));
+
+    // Remove caption from media for now to avoid incompatibility issues in GHS
+    // linked media integration.
+    // @todo remove this step after
+    //   https://www.drupal.org/project/drupal/issues/3268318 has been resolved.
+    $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
+    $drupalmedia->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Toggle caption off')->click();
+    $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-content .ck-widget.drupal-media figcaption'));
 
     // Add `class="trusted"` to the link.
     $this->assertEmpty($xpath->query('//a[@href="http://linking-embedded-media.com" and @class="trusted"]'));
@@ -751,7 +782,6 @@ class MediaTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     // Assert the HTML the end user sees.
-
     $assert_session->elementExists('css', $unrestricted
       ? 'a[href="http://linking-embedded-media.com"].trusted img[src*="image-test.png"]'
       : 'a[href="http://linking-embedded-media.com"] img[src*="image-test.png"]');
@@ -801,6 +831,76 @@ class MediaTest extends WebDriverTestBase {
       'restricted' => [FALSE],
       'unrestricted' => [TRUE],
     ];
+  }
+
+  /**
+   * Ensure that manual link decorators work with linkable media.
+   *
+   * @dataProvider providerLinkability
+   */
+  public function testLinkManualDecoratorRestricted(bool $unrestricted) {
+    \Drupal::service('module_installer')->install(['ckeditor5_manual_decorator_test']);
+    $this->resetAll();
+
+    $decorator = 'Open in a new tab';
+    $decorator_attributes = '[@target="_blank"][@rel="noopener noreferrer"][@class="link-new-tab"]';
+
+    // Disable filter_html.
+    if ($unrestricted) {
+      FilterFormat::load('test_format')
+        ->setFilterConfig('filter_html', ['status' => FALSE])
+        ->save();
+      $decorator = 'Pink color';
+      $decorator_attributes = '[@style="color:pink;"]';
+    }
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
+    $drupalmedia->click();
+
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Link media')->click();
+
+    $balloon = $this->assertVisibleBalloon('.ck-link-form');
+    $url_input = $balloon->find('css', '.ck-labeled-field-view__input-wrapper .ck-input-text');
+    $url_input->setValue('http://linking-embedded-media.com');
+    $this->getBalloonButton($decorator)->click();
+    $balloon->pressButton('Save');
+
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media a'));
+    $this->assertVisibleBalloon('.ck-link-actions');
+
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes"));
+    $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes/drupal-media"));
+
+    // Ensure that manual decorators upcast correctly.
+    $page->pressButton('Save');
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes"));
+    $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes/drupal-media"));
+
+    // @todo enable for unrestricted test case after
+    //   https://www.drupal.org/project/drupal/issues/3268318 has been resolved.
+    if (!$unrestricted) {
+      // Finally, ensure that media can be unlinked.
+      $drupalmedia->click();
+      $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+      $this->getBalloonButton('Link media')->click();
+      $this->assertVisibleBalloon('.ck-link-actions');
+      $this->getBalloonButton('Unlink')->click();
+
+      $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media a'));
+      $xpath = new \DOMXPath($this->getEditorDataAsDom());
+      $this->assertEmpty($xpath->query('//a'));
+      $this->assertNotEmpty($xpath->query('//drupal-media'));
+    }
   }
 
   /**
