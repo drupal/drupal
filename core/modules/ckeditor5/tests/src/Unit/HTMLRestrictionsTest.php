@@ -455,6 +455,39 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ],
     ];
 
+    yield '$block wildcard' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'data-llama' => TRUE], 'div' => FALSE, 'span' => FALSE, 'blockquote' => ['cite' => TRUE]]),
+      ['<$block class data-llama>', '<div>', '<span>', '<blockquote cite>'],
+      '<div class data-llama> <span> <blockquote cite class data-llama>',
+      [
+        [
+          'name' => 'div',
+          'classes' => TRUE,
+          'attributes' => [
+            [
+              'key' => 'data-llama',
+              'value' => TRUE,
+            ],
+          ],
+        ],
+        ['name' => 'span'],
+        [
+          'name' => 'blockquote',
+          'attributes' => [
+            [
+              'key' => 'cite',
+              'value' => TRUE,
+            ],
+            [
+              'key' => 'data-llama',
+              'value' => TRUE,
+            ],
+          ],
+          'classes' => TRUE,
+        ],
+      ],
+    ];
+
     yield 'realistic' => [
       new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => ['en' => TRUE, 'fr' => TRUE]], 'p' => ['data-*' => TRUE, 'class' => ['block' => TRUE]], 'br' => FALSE]),
       ['<a href hreflang="en fr">', '<p data-* class="block">', '<br>'],
@@ -498,12 +531,12 @@ class HTMLRestrictionsTest extends UnitTestCase {
 
     // Wildcard tag, attribute and attribute value.
     yield '$block' => [
-      new HTMLRestrictions(['$block' => ['data-*' => TRUE]]),
-      ['<$block data-*>'],
-      '<$block data-*>',
+      new HTMLRestrictions(['p' => FALSE, '$block' => ['data-*' => TRUE]]),
+      ['<p>', '<$block data-*>'],
+      '<p data-*>',
       [
         [
-          'name' => '$block',
+          'name' => 'p',
           'attributes' => [
             [
               'key' => [
@@ -1078,6 +1111,42 @@ class HTMLRestrictionsTest extends UnitTestCase {
         'union' => 'b',
       ];
     }
+  }
+
+  /**
+   * @covers ::getWildcardSubset
+   * @covers ::getConcreteSubset
+   * @dataProvider providerSubsets
+   */
+  public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset): void {
+    $this->assertEquals($expected_wildcard_subset, $input->getWildcardSubset());
+    $this->assertEquals($expected_concrete_subset, $input->getConcreteSubset());
+  }
+
+  public function providerSubsets(): \Generator {
+    yield 'empty set' => [
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
+    ];
+
+    yield 'without wildcards' => [
+      new HTMLRestrictions(['div' => FALSE]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions(['div' => FALSE]),
+    ];
+
+    yield 'with wildcards' => [
+      new HTMLRestrictions(['div' => FALSE, '$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['div' => FALSE]),
+    ];
+
+    yield 'only wildcards' => [
+      new HTMLRestrictions(['$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions([]),
+    ];
   }
 
 }

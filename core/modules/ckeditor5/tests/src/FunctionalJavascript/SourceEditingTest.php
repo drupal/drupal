@@ -13,6 +13,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+ * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
  * @group ckeditor5
  * @internal
  */
@@ -61,7 +62,7 @@ class SourceEditingTest extends CKEditor5TestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href>',
+            'allowed_html' => '<div class> <p> <br> <a href>',
           ],
         ],
         'filter_align' => ['status' => TRUE],
@@ -80,7 +81,7 @@ class SourceEditingTest extends CKEditor5TestBase {
         ],
         'plugins' => [
           'ckeditor5_sourceEditing' => [
-            'allowed_tags' => [],
+            'allowed_tags' => ['<div class>'],
           ],
         ],
       ],
@@ -107,7 +108,7 @@ class SourceEditingTest extends CKEditor5TestBase {
       'type' => 'page',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<p>The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p>',
+        'value' => '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p></div>',
         'format' => 'test_format',
       ],
     ]);
@@ -168,35 +169,46 @@ class SourceEditingTest extends CKEditor5TestBase {
   public function providerAllowingExtraAttributes(): array {
     return [
       'no extra attributes allowed' => [
-        '<p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
       ],
 
       // Common case: any attribute that is not `style` or `class`.
       '<a data-grammar="subject">' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a data-grammar="subject">',
       ],
       '<a data-grammar="adjective">' => [
-        '<p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a data-grammar="adjective">',
       ],
       '<a data-grammar>' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a data-grammar>',
       ],
 
       // Edge case: `class`.
       '<a class="button">' => [
-        '<p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a class="button">',
       ],
       '<a class="use-ajax">' => [
-        '<p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p></div>',
         '<a class="use-ajax">',
       ],
       '<a class>' => [
-        '<p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p></div>',
         '<a class>',
+      ],
+
+      // Edge case: $block wildcard with additional attribute.
+      '<$block data-llama>' => [
+        '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
+        '<$block data-llama>',
+      ],
+      // Edge case: $block wildcard with stricter attribute constrain.
+      '<$block class="not-llama">' => [
+        '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
+        '<$block class="not-llama">',
       ],
 
       // Edge case: wildcard attribute names:
@@ -204,33 +216,33 @@ class SourceEditingTest extends CKEditor5TestBase {
       // - infix, f.e. `*gramma*`
       // - suffix, f.e. `*-grammar`
       '<a data-*>' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a data-*>',
       ],
       '<a *gramma*>' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a *gramma*>',
       ],
       '<a *-grammar>' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a *-grammar>',
       ],
 
       // Edge case: concrete attribute with wildcard class value.
       '<a class="use-*">' => [
-        '<p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p></div>',
         '<a class="use-*">',
       ],
 
       // Edge case: concrete attribute with wildcard attribute value.
       '<a data-grammar="sub*">' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a data-grammar="sub*">',
       ],
 
       // Edge case: `data-*` with wildcard attribute value.
       '<a data-*="sub*">' => [
-        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a data-*="sub*">',
       ],
 
