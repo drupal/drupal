@@ -20,21 +20,31 @@ trait StorageCopyTrait {
    *   The configuration storage to copy to.
    */
   protected static function replaceStorageContents(StorageInterface $source, StorageInterface &$target) {
-    // Make sure there is no stale configuration in the target storage.
-    foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $target->getAllCollectionNames()) as $collection) {
+    // Remove all collections from the target which are not in the source.
+    foreach (array_diff($target->getAllCollectionNames(), $source->getAllCollectionNames()) as $collection) {
+      // We do this first so we don't have to loop over the added collections.
       $target->createCollection($collection)->deleteAll();
     }
-
     // Copy all the configuration from all the collections.
     foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $source->getAllCollectionNames()) as $collection) {
       $source_collection = $source->createCollection($collection);
       $target_collection = $target->createCollection($collection);
-      foreach ($source_collection->listAll() as $name) {
+      $names = $source_collection->listAll();
+      // First we delete all the config which shouldn't be in the target.
+      foreach (array_diff($target_collection->listAll(), $names) as $name) {
+        $target_collection->delete($name);
+      }
+      // Then we loop over the config which needs to be there.
+      foreach ($names as $name) {
         $data = $source_collection->read($name);
         if ($data !== FALSE) {
-          $target_collection->write($name, $data);
+          if ($target_collection->read($name) !== $data) {
+            // Update the target collection if the data is different.
+            $target_collection->write($name, $data);
+          }
         }
         else {
+          $target_collection->delete($name);
           \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
             '%config' => $name,
           ]);
