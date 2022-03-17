@@ -1113,16 +1113,34 @@ PHP,
     sort($expected_libraries);
     $this->assertSame($expected_libraries, $this->manager->getEnabledLibraries($editor));
 
-    // Case 7: GHS is only enabled for Full HTML (or any other text format that
-    // has no TYPE_HTML_RESTRICTOR filters).
+    // Case 7: GHS is enabled for other text editors if they are using a
+    // CKEditor 5 plugin that uses wildcard tags.
+    $settings['toolbar']['items'][] = 'alignment:center';
+    $editor->setSettings($settings);
+    $plugin_ids = array_keys($this->manager->getEnabledDefinitions($editor));
+    $expected_plugins = array_merge($expected_plugins, [
+      'ckeditor5_alignment.center',
+      'ckeditor5_wildcardHtmlSupport',
+    ]);
+    sort($expected_plugins);
+    $this->assertSame(array_values($expected_plugins), $plugin_ids);
+    $expected_libraries = array_merge($expected_libraries, [
+      'core/ckeditor5.alignment',
+      'core/ckeditor5.htmlSupport',
+    ]);
+    sort($expected_libraries);
+    $this->assertSame($expected_libraries, $this->manager->getEnabledLibraries($editor));
+
+    // Case 8: GHS is enabled for Full HTML (or any other text format that has
+    // no TYPE_HTML_RESTRICTOR filters).
     $editor = Editor::load('full_html');
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [
+      'ckeditor5_arbitraryHtmlSupport',
       'ckeditor5_bold',
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
       'ckeditor5_heading',
-      'ckeditor5_htmlSupport',
       'ckeditor5_paragraph',
       'ckeditor5_pasteFromOffice',
     ];
@@ -1165,6 +1183,10 @@ PHP,
       'settings' => $text_editor_settings,
       'image_upload' => [],
     ]);
+    FilterFormat::create([
+      'format' => 'dummy',
+      'name' => 'dummy',
+    ])->save();
     $this->assertConfigSchema(
       $this->typedConfig,
       $text_editor->getConfigDependencyName(),

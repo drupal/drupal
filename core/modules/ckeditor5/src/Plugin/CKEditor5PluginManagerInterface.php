@@ -98,22 +98,29 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
   public function getCKEditor5PluginConfig(EditorInterface $editor): array;
 
   /**
-   * Create a list of elements with attributes declared for the CKEditor5 build.
+   * Gets all supported elements for the given plugins and text editor.
    *
    * @param string[] $plugin_ids
-   *   An array of plugin IDs.
-   * @param \Drupal\editor\EditorInterface $editor
-   *   A configured text editor object.
+   *   (optional) An array of CKEditor 5 plugin IDs. When not set, gets elements
+   *   for all plugins.
+   * @param \Drupal\editor\EditorInterface|null $editor
+   *   (optional) A configured text editor object using CKEditor 5. When not
+   *   set, plugins depending on the text editor cannot provide elements.
+   * @param bool $resolve_wildcards
+   *   (optional) Whether to resolve wildcards. Defaults to TRUE. When set to
+   *   FALSE, the raw allowed elements will be returned (with no processing
+   *   applied hence no resolved wildcards).
    *
    * @return array
    *   A nested array with a structure as described in
    *   \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions().
    *
    * @throws \LogicException
-   *   Thrown when an invalid CKEditor5PluginElementsSubsetInterface implementation is encountered.
+   *   Thrown when an invalid CKEditor5PluginElementsSubsetInterface
+   *   implementation is encountered.
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL): array;
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE): array;
 
 }

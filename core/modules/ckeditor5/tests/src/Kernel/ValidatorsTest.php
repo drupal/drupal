@@ -813,6 +813,38 @@ class ValidatorsTest extends KernelTestBase {
         'settings.toolbar.items.0' => 'The <em class="placeholder">Drupal media</em> toolbar item requires the <em class="placeholder">Embed media</em> filter to be enabled.',
       ],
     ];
+    $data['VALID: HTML format: very minimal toolbar + wildcard in source editing HTML'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'bold',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => ['<$block data-llama>'],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p data-llama> <br> <strong>',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
 
     return $data;
   }
