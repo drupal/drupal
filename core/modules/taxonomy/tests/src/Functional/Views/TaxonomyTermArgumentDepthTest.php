@@ -42,8 +42,8 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create a term with markup in the label.
     $first = $this->createTerm(['name' => '<em>First</em>']);

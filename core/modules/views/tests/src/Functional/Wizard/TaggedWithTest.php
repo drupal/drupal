@@ -71,8 +71,8 @@ class TaggedWithTest extends WizardTestBase {
    */
   protected $tagField;
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create two content types. One will have an autocomplete tagging field,
     // and one won't.

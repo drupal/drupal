@@ -5,6 +5,9 @@
  * Used to aggregate syndicated content (RSS, RDF, and Atom).
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -204,4 +207,14 @@ function aggregator_preprocess_block(&$variables) {
   if ($variables['configuration']['provider'] == 'aggregator') {
     $variables['attributes']['role'] = 'complementary';
   }
+}
+
+/**
+ * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'aggregator_feed'.
+ */
+function aggregator_jsonapi_aggregator_feed_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {
+  // @see \Drupal\aggregator\FeedAccessControlHandler::checkAccess()
+  return ([
+    JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'access news feeds'),
+  ]);
 }

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
-use Drupal\views\Tests\ViewTestData;
 use Drupal\Tests\views_ui\Functional\UITestBase;
 
 /**
@@ -35,10 +34,8 @@ class TaxonomyParentUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
+  protected function setUp($import_test_views = TRUE, $modules = ['taxonomy_test_views']): void {
+    parent::setUp($import_test_views, $modules);
   }
 
   /**

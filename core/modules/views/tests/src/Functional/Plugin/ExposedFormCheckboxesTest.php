@@ -51,8 +51,8 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp(FALSE);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp(FALSE, $modules);
 
     // Create a vocabulary and entity reference field so we can test the "is all
     // of" filter operator. Must be done ahead of the view import so the

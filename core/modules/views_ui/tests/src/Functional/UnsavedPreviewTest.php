@@ -36,8 +36,8 @@ class UnsavedPreviewTest extends UITestBase {
   /**
    * Sets up a Drupal site for running functional and integration tests.
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp(FALSE);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp(FALSE, $modules);
 
     $this->adminUser = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($this->adminUser);

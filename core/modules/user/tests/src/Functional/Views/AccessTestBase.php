@@ -45,8 +45,8 @@ abstract class AccessTestBase extends UserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
     $this->enableViewsTestModule();

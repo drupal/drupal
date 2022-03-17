@@ -19,18 +19,11 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
   use DependencySerializationTrait;
 
   /**
-   * A queue instance.
-   *
-   * @var \Drupal\Core\Queue\DatabaseQueue
-   */
-  protected $queue;
-
-  /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'aggregator'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * {@inheritdoc}
@@ -79,7 +72,9 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
     parent::setUp();
     $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
-    $this->queue = \Drupal::service('queue.database')->get('aggregator_refresh');
+    // We only need a valid \Drupal\Core\Queue\DatabaseQueue object here, not
+    // an actual valid queue.
+    $this->queue = \Drupal::service('queue.database')->get('fake_a_queue');
     $test_user = User::create([
       'name' => 'foobar',
       'mail' => 'foobar@example.com',
