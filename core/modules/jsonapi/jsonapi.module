@@ -176,16 +176,6 @@ function jsonapi_jsonapi_entity_filter_access(EntityTypeInterface $entity_type, 
 }
 
 /**
- * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'aggregator_feed'.
- */
-function jsonapi_jsonapi_aggregator_feed_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {
-  // @see \Drupal\aggregator\FeedAccessControlHandler::checkAccess()
-  return ([
-    JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'access news feeds'),
-  ]);
-}
-
-/**
  * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'block_content'.
  */
 function jsonapi_jsonapi_block_content_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {

@@ -38,8 +38,8 @@ class NodeFieldFilterTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create Page content type.
     if ($this->profile != 'standard') {

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\views_ui\Functional\UITestBase;
-use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests views role access plugin UI.
@@ -35,10 +34,8 @@ class AccessRoleUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    ViewTestData::createTestViews(static::class, ['user_test_views']);
+  protected function setUp($import_test_views = TRUE, $modules = ['user_test_views']): void {
+    parent::setUp($import_test_views, $modules);
   }
 
   /**

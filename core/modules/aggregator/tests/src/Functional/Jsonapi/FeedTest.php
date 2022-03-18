@@ -1,15 +1,16 @@
 <?php
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\aggregator\Functional\Jsonapi;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Url;
+use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 
 /**
  * JSON:API integration test for the "Feed" content entity type.
  *
- * @group jsonapi
+ * @group aggregator
  */
 class FeedTest extends ResourceTestBase {
 

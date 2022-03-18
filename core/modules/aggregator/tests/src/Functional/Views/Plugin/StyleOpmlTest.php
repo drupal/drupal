@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Plugin;
+namespace Drupal\Tests\aggregator\Functional\Views\Plugin;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Tests the OPML feed style plugin.
  *
- * @group views
+ * @group aggregator
  * @see \Drupal\views\Plugin\views\style\Opml
  */
 class StyleOpmlTest extends ViewTestBase {
@@ -17,14 +17,14 @@ class StyleOpmlTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_style_opml'];
+  public static $testViews = ['test_aggregator_style_opml'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['aggregator'];
+  protected static $modules = ['aggregator', 'aggregator_test_views'];
 
   /**
    * {@inheritdoc}
@@ -34,10 +34,8 @@ class StyleOpmlTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    $this->enableViewsTestModule();
+  protected function setUp($import_test_views = TRUE, $modules = ['aggregator_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     $admin_user = $this->drupalCreateUser(['administer news feeds']);
     $this->drupalLogin($admin_user);
@@ -66,7 +64,7 @@ class StyleOpmlTest extends ViewTestBase {
 
     $view = $this->container->get('entity_type.manager')
       ->getStorage('view')
-      ->load('test_style_opml');
+      ->load('test_aggregator_style_opml');
     $display = &$view->getDisplay('feed_1');
     $display['display_options']['row']['options']['type_field'] = 'link';
     $display['display_options']['row']['options']['url_field'] = 'url';

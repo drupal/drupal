@@ -15,7 +15,6 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestData;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -71,10 +70,8 @@ class StyleSerializerTest extends ViewTestBase {
    */
   protected $renderer;
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    ViewTestData::createTestViews(static::class, ['rest_test_views']);
+  protected function setUp($import_test_views = TRUE, $modules = ['rest_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->adminUser = $this->drupalCreateUser([
       'administer views',

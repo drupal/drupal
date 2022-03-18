@@ -25,8 +25,8 @@ class RestExportAuthTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  public function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
   }

@@ -20,7 +20,6 @@ class BlockConfigSchemaTest extends KernelTestBase {
    */
   protected static $modules = [
     'block',
-    'aggregator',
     'book',
     'block_content',
     'comment',

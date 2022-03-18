@@ -1,14 +1,15 @@
 <?php
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\aggregator\Functional\Jsonapi;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Entity\Item;
+use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 
 /**
  * JSON:API integration test for the "Item" content entity type.
  *
- * @group jsonapi
+ * @group aggregator
  */
 class ItemTest extends ResourceTestBase {
 

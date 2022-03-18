@@ -7,7 +7,6 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the serializer style plugin.
@@ -59,10 +58,8 @@ class StyleSerializerTest extends ViewTestBase {
    */
   protected $renderer;
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    ViewTestData::createTestViews(static::class, ['hal_test_views']);
+  protected function setUp($import_test_views = TRUE, $modules = ['hal_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->adminUser = $this->drupalCreateUser([
       'administer entity_test content',

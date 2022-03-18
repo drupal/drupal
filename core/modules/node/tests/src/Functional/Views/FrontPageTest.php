@@ -48,8 +48,8 @@ class FrontPageTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->nodeStorage = $this->container->get('entity_type.manager')
       ->getStorage('node');

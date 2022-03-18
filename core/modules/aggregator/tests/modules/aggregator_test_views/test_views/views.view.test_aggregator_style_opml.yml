@@ -3,8 +3,8 @@ status: true
 dependencies:
   module:
     - aggregator
-id: test_style_opml
-label: test_style_opml
+id: test_aggregator_style_opml
+label: test_aggregator_style_opml
 module: views
 description: ''
 tag: default

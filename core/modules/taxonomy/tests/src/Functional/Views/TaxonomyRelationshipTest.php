@@ -35,8 +35,8 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     // Make term2 parent of term1.
     $this->term1->set('parent', $this->term2->id());

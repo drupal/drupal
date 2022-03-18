@@ -58,8 +58,8 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->adminUser = $this->drupalCreateUser([
       'administer taxonomy',

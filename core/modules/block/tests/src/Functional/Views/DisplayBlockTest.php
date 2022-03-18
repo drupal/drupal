@@ -11,7 +11,6 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestData;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -53,10 +52,9 @@ class DisplayBlockTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['block_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
-    ViewTestData::createTestViews(static::class, ['block_test_views']);
     $this->enableViewsTestModule();
   }
 
