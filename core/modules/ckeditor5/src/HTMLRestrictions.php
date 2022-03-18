@@ -357,6 +357,9 @@ final class HTMLRestrictions {
     // Omit the broad wildcard addition that FilterHtml::getHTMLRestrictions()
     // always sets; it is specific to how FilterHTML works and irrelevant here.
     unset($allowed_elements['*']);
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    // @todo remove this in https://www.drupal.org/project/drupal/issues/3226368
+    unset($allowed_elements['__zqh6vxfbk3cg__']);
 
     // Postprocess tag wildcards: convert `<__preprocessed-wildcard-block__>` to
     // `<$block>`.

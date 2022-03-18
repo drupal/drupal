@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\Tests\ckeditor5\Traits\PrivateMethodUnitTestTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -13,6 +14,8 @@ use Drupal\Tests\UnitTestCase;
  * @internal
  */
 class CKEditor5Test extends UnitTestCase {
+
+  use PrivateMethodUnitTestTrait;
 
   /**
    * Simulated CKEditor5::buildConfigurationForm() form structure.
@@ -37,27 +40,11 @@ class CKEditor5Test extends UnitTestCase {
   ];
 
   /**
-   * Gets a protected/private method to test.
-   *
-   * @param string $name
-   *   The method name.
-   *
-   * @return \ReflectionMethod
-   *   The accessible method.
-   */
-  protected static function getMethod(string $name): \ReflectionMethod {
-    $class = new \ReflectionClass(CKEditor5::class);
-    $method = $class->getMethod($name);
-    $method->setAccessible(TRUE);
-    return $method;
-  }
-
-  /**
    * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::mapViolationPropertyPathsToFormNames
    * @dataProvider providerPathsToFormNames
    */
   public function testPathsToFormNames(string $property_path, string $expected_form_item_name, bool $expect_exception = FALSE): void {
-    $mapMethod = self::getMethod('mapViolationPropertyPathsToFormNames');
+    $mapMethod = self::getMethod(CKEditor5::class, 'mapViolationPropertyPathsToFormNames');
     if ($expect_exception) {
       $this->expectExceptionMessage('assert($shifted === \'settings\')');
     }
