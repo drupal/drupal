@@ -251,6 +251,23 @@
           helpItem.condition,
       )
       .map((helpItem) => helpItem.message);
+
+    // Get the existing toolbar help message.
+    const existingToolbarHelpText = document.querySelector(
+      '[data-drupal-selector="ckeditor5-admin-help-message"]',
+    );
+
+    // If the existing toolbar help message does not match the message that is
+    // about to be rendered, it is new information that should be conveyed to
+    // assistive tech via announce().
+    if (
+      existingToolbarHelpText &&
+      toolbarHelpText.join('').trim() !==
+        existingToolbarHelpText.textContent.trim()
+    ) {
+      Drupal.announce(toolbarHelpText.join(' '));
+    }
+
     root.innerHTML = Drupal.theme.ckeditor5Admin({
       availableButtons: Drupal.theme.ckeditor5AvailableButtons({
         buttons: availableButtons.filter(
@@ -967,7 +984,7 @@
     helpMessage,
   }) => {
     return `
-    <div aria-live="polite" data-drupal-selector="ckeditor5-admin-help-message">
+    <div data-drupal-selector="ckeditor5-admin-help-message">
       <p>${helpMessage.join('</p><p>')}</p>
     </div>
     <div class="ckeditor5-toolbar-disabled">

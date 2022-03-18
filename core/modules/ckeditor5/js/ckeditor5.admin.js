@@ -172,6 +172,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }).map(function (helpItem) {
       return helpItem.message;
     });
+    var existingToolbarHelpText = document.querySelector('[data-drupal-selector="ckeditor5-admin-help-message"]');
+
+    if (existingToolbarHelpText && toolbarHelpText.join('').trim() !== existingToolbarHelpText.textContent.trim()) {
+      Drupal.announce(toolbarHelpText.join(' '));
+    }
+
     root.innerHTML = Drupal.theme.ckeditor5Admin({
       availableButtons: Drupal.theme.ckeditor5AvailableButtons({
         buttons: availableButtons.filter(function (button) {
@@ -573,7 +579,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         dividerButtons = _ref8.dividerButtons,
         activeToolbar = _ref8.activeToolbar,
         helpMessage = _ref8.helpMessage;
-    return "\n    <div aria-live=\"polite\" data-drupal-selector=\"ckeditor5-admin-help-message\">\n      <p>".concat(helpMessage.join('</p><p>'), "</p>\n    </div>\n    <div class=\"ckeditor5-toolbar-disabled\">\n      <div class=\"ckeditor5-toolbar-available\">\n        <label id=\"ckeditor5-toolbar-available-buttons-label\">").concat(Drupal.t('Available buttons'), "</label>\n        ").concat(availableButtons, "\n      </div>\n      <div class=\"ckeditor5-toolbar-divider\">\n        <label id=\"ckeditor5-toolbar-divider-buttons-label\">").concat(Drupal.t('Button divider'), "</label>\n        ").concat(dividerButtons, "\n      </div>\n    </div>\n    <div class=\"ckeditor5-toolbar-active\">\n      <label id=\"ckeditor5-toolbar-active-buttons-label\">").concat(Drupal.t('Active toolbar'), "</label>\n      ").concat(activeToolbar, "\n    </div>\n    ");
+    return "\n    <div data-drupal-selector=\"ckeditor5-admin-help-message\">\n      <p>".concat(helpMessage.join('</p><p>'), "</p>\n    </div>\n    <div class=\"ckeditor5-toolbar-disabled\">\n      <div class=\"ckeditor5-toolbar-available\">\n        <label id=\"ckeditor5-toolbar-available-buttons-label\">").concat(Drupal.t('Available buttons'), "</label>\n        ").concat(availableButtons, "\n      </div>\n      <div class=\"ckeditor5-toolbar-divider\">\n        <label id=\"ckeditor5-toolbar-divider-buttons-label\">").concat(Drupal.t('Button divider'), "</label>\n        ").concat(dividerButtons, "\n      </div>\n    </div>\n    <div class=\"ckeditor5-toolbar-active\">\n      <label id=\"ckeditor5-toolbar-active-buttons-label\">").concat(Drupal.t('Active toolbar'), "</label>\n      ").concat(activeToolbar, "\n    </div>\n    ");
   };
 
   var originalFilterStatusAttach = Drupal.behaviors.filterStatus.attach;
