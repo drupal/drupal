@@ -119,6 +119,12 @@
 
   const render = (root, selectedButtons, availableButtons, dividerButtons) => {
     const toolbarHelpText = toolbarHelp.filter(helpItem => selectedButtons.value.includes(helpItem.button) === helpItem.condition).map(helpItem => helpItem.message);
+    const existingToolbarHelpText = document.querySelector('[data-drupal-selector="ckeditor5-admin-help-message"]');
+
+    if (existingToolbarHelpText && toolbarHelpText.join('').trim() !== existingToolbarHelpText.textContent.trim()) {
+      Drupal.announce(toolbarHelpText.join(' '));
+    }
+
     root.innerHTML = Drupal.theme.ckeditor5Admin({
       availableButtons: Drupal.theme.ckeditor5AvailableButtons({
         buttons: availableButtons.filter(button => !selectedButtons.value.includes(button.id))
@@ -536,7 +542,7 @@
       helpMessage
     } = _ref7;
     return `
-    <div aria-live="polite" data-drupal-selector="ckeditor5-admin-help-message">
+    <div data-drupal-selector="ckeditor5-admin-help-message">
       <p>${helpMessage.join('</p><p>')}</p>
     </div>
     <div class="ckeditor5-toolbar-disabled">
