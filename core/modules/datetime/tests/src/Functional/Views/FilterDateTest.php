@@ -7,7 +7,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group datetime
  */
-class FilterDateTest extends ViewTestBase {
+class FilterDateTest extends BrowserTestBase {
 
   /**
    * Name of the field.
@@ -39,19 +39,13 @@ class FilterDateTest extends ViewTestBase {
   protected $nodes = [];
 
   /**
-   * Dates of test nodes in date storage format.
-   *
-   * @var string[]
-   */
-  protected $dates;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'datetime',
     'datetime_test',
     'node',
+    'views',
     'views_ui',
   ];
 
@@ -65,8 +59,8 @@ class FilterDateTest extends ViewTestBase {
    *
    * Create nodes with relative dates of yesterday, today, and tomorrow.
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp(): void {
+    parent::setUp();
 
     $now = \Drupal::time()->getRequestTime();
 
@@ -91,17 +85,17 @@ class FilterDateTest extends ViewTestBase {
     $field->save();
 
     // Create some nodes.
-    $this->dates = [
+    $dates = [
       // Tomorrow.
-      DrupalDateTime::createFromTimestamp($now + 86400, DateTimeItemInterface::STORAGE_TIMEZONE)->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+      DrupalDateTime::createFromTimestamp($now + 86400, DateTimeItemInterface::STORAGE_TIMEZONE)->format(DateTimeItemInterface::DATE_STORAGE_FORMAT),
       // Today.
-      DrupalDateTime::createFromTimestamp($now, DateTimeItemInterface::STORAGE_TIMEZONE)->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+      DrupalDateTime::createFromTimestamp($now, DateTimeItemInterface::STORAGE_TIMEZONE)->format(DateTimeItemInterface::DATE_STORAGE_FORMAT),
       // Yesterday.
-      DrupalDateTime::createFromTimestamp($now - 86400, DateTimeItemInterface::STORAGE_TIMEZONE)->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+      DrupalDateTime::createFromTimestamp($now - 86400, DateTimeItemInterface::STORAGE_TIMEZONE)->format(DateTimeItemInterface::DATE_STORAGE_FORMAT),
     ];
 
     $this->nodes = [];
-    foreach ($this->dates as $date) {
+    foreach ($dates as $date) {
       $this->nodes[] = $this->drupalCreateNode([
         $this->fieldName => [
           'value' => $date,
@@ -127,26 +121,12 @@ class FilterDateTest extends ViewTestBase {
     $this->submitForm([], 'Expose filter');
     $this->submitForm([], 'Grouped filters');
 
-    // Test operators with different amount of expected values.
     $edit = [];
-    // No values are required.
     $edit['options[group_info][group_items][1][title]'] = 'empty';
     $edit['options[group_info][group_items][1][operator]'] = 'empty';
     $edit['options[group_info][group_items][2][title]'] = 'not empty';
     $edit['options[group_info][group_items][2][operator]'] = 'not empty';
 
-    // One value is required.
-    $edit['options[group_info][group_items][3][title]'] = 'less than';
-    $edit['options[group_info][group_items][3][operator]'] = '<';
-    $edit['options[group_info][group_items][3][value][value]'] = $this->dates[0];
-
-    // Two values are required (min and max).
-    $this->submitForm($edit, 'Add another item');
-    $edit['options[group_info][group_items][4][title]'] = 'between';
-    $edit['options[group_info][group_items][4][operator]'] = 'between';
-    $edit['options[group_info][group_items][4][value][type]'] = 'offset';
-    $edit['options[group_info][group_items][4][value][min]'] = '-2 hours';
-    $edit['options[group_info][group_items][4][value][max]'] = '+2 hours';
     $this->submitForm($edit, 'Apply');
 
     // Test that the exposed filter works as expected.
@@ -162,40 +142,14 @@ class FilterDateTest extends ViewTestBase {
     // Filter the Preview by 'empty'.
     $this->getSession()->getPage()->findField($this->fieldName . '_value')->selectOption(1);
     $this->getSession()->getPage()->pressButton('Apply');
-    $this->assertIds([4]);
+    $results = $this->cssSelect('.view-content .field-content');
+    $this->assertCount(1, $results);
 
     // Filter the Preview by 'not empty'.
     $this->getSession()->getPage()->findField($this->fieldName . '_value')->selectOption(2);
     $this->getSession()->getPage()->pressButton('Apply');
-    $this->assertIds([1, 2, 3]);
-
-    // Filter the Preview by 'less than'.
-    $this->getSession()->getPage()->findField($this->fieldName . '_value')->selectOption(3);
-    $this->getSession()->getPage()->pressButton('Apply');
-    $this->assertIds([2, 3]);
-
-    // Filter the Preview by 'between'.
-    $this->getSession()->getPage()->findField($this->fieldName . '_value')->selectOption(4);
-    $this->getSession()->getPage()->pressButton('Apply');
-    $this->assertIds([2]);
-  }
-
-  /**
-   * Ensures that a given list of items appear on the view result.
-   *
-   * @param array $expected_ids
-   *   An array of IDs.
-   */
-  protected function assertIds(array $expected_ids = []): void {
-    // First verify the count.
-    $elements = $this->cssSelect('.view-content span.field-content');
-    $this->assertCount(count($expected_ids), $elements);
-
-    $actual_ids = [];
-    foreach ($elements as $element) {
-      $actual_ids[] = (int) $element->getText();
-    }
-    $this->assertEquals($expected_ids, $actual_ids);
+    $results = $this->cssSelect('.view-content .field-content');
+    $this->assertCount(3, $results);
   }
 
 }
