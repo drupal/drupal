@@ -567,11 +567,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         label = _ref7$button.label,
         id = _ref7$button.id,
         listType = _ref7.listType;
+    var buttonInstructions = {
+      divider: Drupal.t('Press the down arrow key to use this divider in the active button list'),
+      available: Drupal.t('Press the down arrow key to activate'),
+      active: Drupal.t('Press the up arrow key to deactivate. Use the right and left arrow keys to move position')
+    };
     var visuallyHiddenLabel = Drupal.t("@listType button @label", {
       '@listType': listType !== 'divider' ? listType : 'available',
       '@label': label
     });
-    return "\n      <li class=\"ckeditor5-toolbar-item ckeditor5-toolbar-item-".concat(id, "\" role=\"option\" tabindex=\"0\" data-drupal-selector=\"ckeditor5-toolbar-button\" data-id=\"").concat(id, "\" data-label=\"").concat(label, "\" data-divider=\"").concat(listType === 'divider', "\">\n        <span class=\"ckeditor5-toolbar-button ckeditor5-toolbar-button-").concat(id, "\">\n          <span class=\"visually-hidden\">").concat(visuallyHiddenLabel, "</span>\n        </span>\n        <span class=\"ckeditor5-toolbar-tooltip\" aria-hidden=\"true\">").concat(label, "</span>\n      </li>\n    ");
+    return "\n      <li class=\"ckeditor5-toolbar-item ckeditor5-toolbar-item-".concat(id, "\" role=\"option\" tabindex=\"0\" data-drupal-selector=\"ckeditor5-toolbar-button\" data-id=\"").concat(id, "\" data-label=\"").concat(label, "\" data-divider=\"").concat(listType === 'divider', "\">\n        <span class=\"ckeditor5-toolbar-button ckeditor5-toolbar-button-").concat(id, "\">\n          <span class=\"visually-hidden\">").concat(visuallyHiddenLabel, ". ").concat(buttonInstructions[listType], "</span>\n        </span>\n        <span class=\"ckeditor5-toolbar-tooltip\" aria-hidden=\"true\">").concat(label, " </span>\n      </li>\n    ");
   };
 
   Drupal.theme.ckeditor5Admin = function (_ref8) {
