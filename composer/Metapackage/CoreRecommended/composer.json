@@ -16,7 +16,7 @@
         "egulias/email-validator": "2.1.25",
         "guzzlehttp/guzzle": "6.5.5",
         "guzzlehttp/promises": "1.4.1",
-        "guzzlehttp/psr7": "1.8.2",
+        "guzzlehttp/psr7": "1.8.5",
         "laminas/laminas-diactoros": "2.6.0",
         "laminas/laminas-escaper": "2.7.0",
         "laminas/laminas-feed": "2.14.1",
