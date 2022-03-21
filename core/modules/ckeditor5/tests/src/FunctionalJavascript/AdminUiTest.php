@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+// cspell:ignore sourceediting
+
 /**
  * Tests for CKEditor 5 in the admin UI.
  *
@@ -168,6 +170,40 @@ class AdminUiTest extends CKEditor5TestBase {
     $page->checkField('Convert URLs into links');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertCount(1, $find_validation_error_messages());
+  }
+
+  /**
+   * Tests the plugin settings form section.
+   */
+  public function testPluginSettingsFormSection() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createNewTextFormat($page, $assert_session);
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The default toolbar only enables the configurable heading plugin and the
+    // non-configurable bold and italic plugins.
+    $assert_session->fieldValueEquals('editor[settings][toolbar][items]', '["heading","bold","italic"]');
+    // The heading plugin config form should be present.
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-heading"]');
+
+    // Remove the heading plugin from the toolbar.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-heading', 'ArrowUp');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The heading plugin config form should no longer be present.
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-heading"]');
+    // The plugin settings wrapper should still be present, but empty.
+    $assert_session->elementExists('css', '#plugin-settings-wrapper');
+    $assert_session->elementNotContains('css', '#plugin-settings-wrapper', '<div');
+
+    // Enable the source plugin.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The source plugin config form should be present.
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting"]');
   }
 
   /**
