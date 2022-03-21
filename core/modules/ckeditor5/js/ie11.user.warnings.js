@@ -5,8 +5,8 @@
 * @preserve
 **/
 
-(function (Drupal, Modernizr) {
-  var isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
+(function (Drupal) {
+  var isIE11 = !!document.documentMode;
 
   if (isIE11) {
     window.CKEditor5 = null;
@@ -64,4 +64,4 @@
       }
     };
   }
-})(Drupal, Modernizr);
+})(Drupal);

@@ -3,10 +3,8 @@
  * Provide warnings when attempting to load CKEditor 5 on IE11.
  */
 
-((Drupal, Modernizr) => {
-  const isIE11 = Modernizr.mq(
-    '(-ms-high-contrast: active), (-ms-high-contrast: none)',
-  );
+((Drupal) => {
+  const isIE11 = !!document.documentMode;
 
   // If the browser is IE11, create an alternate version of
   // Drupal.editors.ckeditor5 that provides warnings. In IE11, the incompatible
@@ -143,4 +141,4 @@
       },
     };
   }
-})(Drupal, Modernizr);
+})(Drupal);

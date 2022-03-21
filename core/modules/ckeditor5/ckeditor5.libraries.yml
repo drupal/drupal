@@ -90,7 +90,6 @@ ie11.user.warnings:
     - core/drupal
     - core/drupal.message
     - editor/drupal.editor
-    - core/modernizr
 
 ie11.filter.warnings:
   js:
@@ -99,7 +98,6 @@ ie11.filter.warnings:
     - core/drupal
     - core/drupal.message
     - core/once
-    - core/modernizr
 
 drupal.ckeditor5.filter.admin:
   js:
