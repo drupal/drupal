@@ -51,9 +51,6 @@ class CKEditor5Test extends CKEditor5TestBase {
     // Change the node to use the new text format.
     $this->drupalGet('node/1/edit');
 
-    // Confirm that the JavaScript that generates IE11 warnings loads.
-    $assert_session->elementExists('css', 'script[src*="ckeditor5/js/ie11.user.warnings.js"]');
-
     $page->selectFieldOption('body[0][format]', 'ckeditor5');
     $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
     $page->pressButton('Continue');

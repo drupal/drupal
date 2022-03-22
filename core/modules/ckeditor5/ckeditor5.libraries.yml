@@ -29,7 +29,6 @@ drupal.ckeditor5:
     - core/ckeditor5.editorDecoupled
     - core/ckeditor5
     - editor/drupal.editor
-    - ckeditor5/ie11.user.warnings
     - ckeditor5/drupal.ckeditor5.stylesheets
     - core/drupalSettings
     - core/drupal.message
@@ -84,25 +83,6 @@ drupal.ckeditor5.mediaAlign:
       css/media-alignment.css: { }
   dependencies:
     - ckeditor5/drupal.ckeditor5.media
-
-ie11.user.warnings:
-  js:
-    js/ie11.user.warnings.js: { }
-  css:
-    theme:
-      css/ie-warnings.css: { }
-  dependencies:
-    - core/drupal
-    - core/drupal.message
-    - editor/drupal.editor
-
-ie11.filter.warnings:
-  js:
-    js/ie11.filter.warnings.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupal.message
-    - core/once
 
 drupal.ckeditor5.filter.admin:
   js:

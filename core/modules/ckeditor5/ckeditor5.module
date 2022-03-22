@@ -397,7 +397,6 @@ function _ckeditor5_get_langcode_mapping($lang = FALSE) {
  */
 function ckeditor5_library_info_alter(&$libraries, $extension) {
   if ($extension === 'filter') {
-    $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/ie11.filter.warnings';
     $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.filter.admin';
   }
 
