@@ -191,6 +191,7 @@ function editor_form_filter_admin_format_editor_configure($form, FormStateInterf
   if ($editor_value !== NULL) {
     if ($editor_value === '') {
       $form_state->set('editor', FALSE);
+      $form_state->set('editor_plugin', NULL);
     }
     elseif (empty($editor) || $editor_value !== $editor->getEditor()) {
       $format = $form_state->getFormObject()->getEntity();
