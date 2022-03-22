@@ -21,6 +21,7 @@ class EditorAdminTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'ckeditor',
+    'ckeditor5',
   ];
 
   /**
@@ -62,6 +63,29 @@ class EditorAdminTest extends WebDriverTestBase {
     // Deselect and reselect an editor.
     $page->selectFieldOption('editor[editor]', '');
     $this->assertNotEmpty($this->assertSession()->waitForElementRemoved('css', 'ul.ckeditor-toolbar-group-buttons'));
+    $page->selectFieldOption('editor[editor]', 'ckeditor');
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
+  }
+
+  /**
+   * Tests that editor creation works fine while switching text editor field.
+   *
+   * The order in which the different editors are selected is significant,
+   * because the form state must change accordingly.
+   * @see https://www.drupal.org/project/drupal/issues/3230829
+   */
+  public function testEditorCreation() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('/admin/config/content/formats/add');
+    $page->fillField('name', $this->randomString());
+    $page->selectFieldOption('editor[editor]', 'ckeditor5');
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor5-toolbar-available__buttons'));
+
+    $page->selectFieldOption('editor[editor]', '');
+    $assert_session->elementNotExists('css', 'ul.ckeditor-toolbar-group-buttons');
+
     $page->selectFieldOption('editor[editor]', 'ckeditor');
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
   }
