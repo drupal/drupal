@@ -34,6 +34,7 @@
         "twig/twig": "^3.3.8",
         "doctrine/annotations": "^1.12",
         "guzzlehttp/guzzle": "^7.3.0",
+        "guzzlehttp/psr7": "^2.2.0",
         "laminas/laminas-feed": "^2.12",
         "egulias/email-validator": "^2.1.22|^3.0",
         "masterminds/html5": "^2.1",

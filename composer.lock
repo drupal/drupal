@@ -440,7 +440,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "343695dbe33c07aac9c5ce04ccb28017354276b5"
+                "reference": "ac2e42b6e2a05971e9324054cd4ec367fd15153f"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -461,6 +461,7 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^7.3.0",
+                "guzzlehttp/psr7": "^2.2.0",
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
                 "pear/archive_tar": "^1.4.14",
