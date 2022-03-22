@@ -568,15 +568,15 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'toolbar' => [
           'items' => array_merge(
             $basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'],
-            ['codeBlockPlaceholder'],
+            ['codeBlock'],
           ),
         ],
         'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
-      'expected_superset' => '<code class="lang-*"> ' . $basic_html_test_case['expected_superset'],
+      'expected_superset' => '<code class="language-*"> ' . $basic_html_test_case['expected_superset'],
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => [
-        'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Code (for tags: &lt;code&gt;) Language (for tags: &lt;span&gt;) TEST until (for tags: &lt;pre&gt;)</em>.',
+        'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Code (for tags: &lt;code&gt;) Language (for tags: &lt;span&gt;) Code Block (for tags: &lt;pre&gt;)</em>.',
         $basic_html_test_case['expected_messages'][1],
         'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.',
       ],
@@ -767,6 +767,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'horizontalLine',
             '|',
             'heading',
+            'codeBlock',
             '|',
             'sourceEditing',
           ],
