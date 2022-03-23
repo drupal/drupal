@@ -108,17 +108,16 @@ class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
     $page->attachFileToField("files[field_file_0]", $this->fileSystem->realpath($invalid_file));
 
     // An error message should appear informing the user that the file exceeded
-    // the maximum file size.
-    $this->assertSession()->waitForElement('css', '.messages--error');
-    // The error message includes the actual file size limit which depends on
-    // the current environment, so we check for a part of the message.
-    $this->assertSession()->pageTextContains('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size');
+    // the maximum file size. The error message includes the actual file size
+    // limit which depends on the current environment, so we check for a part
+    // of the message.
+    $this->assertSession()->statusMessageContainsAfterWait('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size', 'error');
 
     // Now upload a valid file and check that the error message disappears.
     $valid_file = $this->generateFile('not_exceeding_post_max_size', 8, 8);
     $page->attachFileToField("files[field_file_0]", $this->fileSystem->realpath($valid_file));
     $this->assertSession()->waitForElement('named', ['id_or_name', 'field_file_0_remove_button']);
-    $this->assertSession()->elementNotExists('css', '.messages--error');
+    $this->assertSession()->statusMessageNotExistsAfterWait('error');
   }
 
 }
