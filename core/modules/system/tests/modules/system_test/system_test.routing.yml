@@ -21,6 +21,14 @@ system_test.messenger_service:
   requirements:
     _access: 'TRUE'
 
+system_test.status_messages_for_assertions:
+  path: '/system-test/status-messages-for-assertions'
+  defaults:
+    _title: 'Set various message to test status message assertion methods'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::statusMessagesForAssertions'
+  requirements:
+    _access: 'TRUE'
+
 system_test.main_content_fallback:
   path: '/system-test/main-content-fallback'
   defaults:

@@ -8,6 +8,9 @@ use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Constraint\IsNull;
+use PHPUnit\Framework\Constraint\LogicalNot;
 use WebDriver\Exception;
 use WebDriver\Exception\CurlExec;
 
@@ -521,6 +524,147 @@ JS;
    */
   public static function isExceptionNotClickable(Exception $exception): bool {
     return (bool) preg_match('/not (clickable|interactable|visible)/', $exception->getMessage());
+  }
+
+  /**
+   * Asserts that a status message exists after wait.
+   *
+   * @param string|null $type
+   *   The optional message type: status, error, or warning.
+   * @param int $timeout
+   *   Optional timeout in milliseconds, defaults to 10000.
+   */
+  public function statusMessageExistsAfterWait(string $type = NULL, int $timeout = 10000): void {
+    $selector = $this->buildJavascriptStatusMessageSelector(NULL, $type);
+    $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
+    if ($type) {
+      $failure_message = sprintf('A status message of type "%s" does not appear on this page, but it should.', $type);
+    }
+    else {
+      $failure_message = 'A status message does not appear on this page, but it should.';
+    }
+    // There is no Assert::isNotNull() method, so we make our own constraint.
+    $constraint = new LogicalNot(new IsNull());
+    Assert::assertThat($status_message_element, $constraint, $failure_message);
+  }
+
+  /**
+   * Asserts that a status message does not exist after wait.
+   *
+   * @param string|null $type
+   *   The optional message type: status, error, or warning.
+   * @param int $timeout
+   *   Optional timeout in milliseconds, defaults to 10000.
+   */
+  public function statusMessageNotExistsAfterWait(string $type = NULL, int $timeout = 10000): void {
+    $selector = $this->buildJavascriptStatusMessageSelector(NULL, $type);
+    $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
+    if ($type) {
+      $failure_message = sprintf('A status message of type "%s" appears on this page, but it should not.', $type);
+    }
+    else {
+      $failure_message = 'A status message appears on this page, but it should not.';
+    }
+    Assert::assertThat($status_message_element, Assert::isNull(), $failure_message);
+  }
+
+  /**
+   * Asserts that a status message containing given string exists after wait.
+   *
+   * @param string $message
+   *   The partial message to assert.
+   * @param string|null $type
+   *   The optional message type: status, error, or warning.
+   * @param int $timeout
+   *   Optional timeout in milliseconds, defaults to 10000.
+   */
+  public function statusMessageContainsAfterWait(string $message, string $type = NULL, int $timeout = 10000): void {
+    $selector = $this->buildJavascriptStatusMessageSelector($message, $type);
+    $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
+    if ($type) {
+      $failure_message = sprintf('A status message of type "%s" containing "%s" does not appear on this page, but it should.', $type, $message);
+    }
+    else {
+      $failure_message = sprintf('A status message containing "%s" does not appear on this page, but it should.', $type);
+    }
+    // There is no Assert::isNotNull() method, so we make our own constraint.
+    $constraint = new LogicalNot(new IsNull());
+    Assert::assertThat($status_message_element, $constraint, $failure_message);
+  }
+
+  /**
+   * Asserts that no status message containing given string exists after wait.
+   *
+   * @param string $message
+   *   The partial message to assert.
+   * @param string|null $type
+   *   The optional message type: status, error, or warning.
+   * @param int $timeout
+   *   Optional timeout in milliseconds, defaults to 10000.
+   */
+  public function statusMessageNotContainsAfterWait(string $message, string $type = NULL, int $timeout = 10000): void {
+    $selector = $this->buildJavascriptStatusMessageSelector($message, $type);
+    $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
+    if ($type) {
+      $failure_message = sprintf('A status message of type "%s" containing "%s" appears on this page, but it should not.', $type, $message);
+    }
+    else {
+      $failure_message = sprintf('A status message containing "%s" appears on this page, but it should not.', $message);
+    }
+    Assert::assertThat($status_message_element, Assert::isNull(), $failure_message);
+  }
+
+  /**
+   * Builds a xpath selector for a message with given type and text.
+   *
+   * The selector is designed to work with the Drupal.theme.message
+   * template defined in message.js in addition to status-messages.html.twig
+   * in the system module.
+   *
+   * @param string|null $message
+   *   The optional message or partial message to assert.
+   * @param string|null $type
+   *   The optional message type: status, error, or warning.
+   *
+   * @return string
+   *   The xpath selector for the message.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when $type is not an allowed type.
+   */
+  private function buildJavascriptStatusMessageSelector(string $message = NULL, string $type = NULL): string {
+    $allowed_types = [
+      'status',
+      'error',
+      'warning',
+      NULL,
+    ];
+    if (!in_array($type, $allowed_types, TRUE)) {
+      throw new \InvalidArgumentException(sprintf("If a status message type is specified, the allowed values are 'status', 'error', 'warning'. The value provided was '%s'.", $type));
+    }
+
+    if ($type) {
+      $class = 'messages--' . $type;
+    }
+    else {
+      $class = 'messages__wrapper';
+    }
+
+    if ($message) {
+      $js_selector = $this->buildXPathQuery('//div[contains(@class, :class) and contains(., :message)]', [
+        ':class' => $class,
+        ':message' => $message,
+      ]);
+    }
+    else {
+      $js_selector = $this->buildXPathQuery('//div[contains(@class, :class)]', [
+        ':class' => $class,
+      ]);
+    }
+
+    // We select based on WebAssert::buildStatusMessageSelector() or the
+    // js_selector we have just built.
+    return $this->buildStatusMessageSelector($message, $type) . ' | ' . $js_selector;
   }
 
 }

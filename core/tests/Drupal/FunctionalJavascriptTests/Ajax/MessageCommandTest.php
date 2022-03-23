@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Tests adding messages via AJAX command.
@@ -74,6 +75,96 @@ class MessageCommandTest extends WebDriverTestBase {
       $this->assertTrue($expected_count);
       $this->assertAnnounceContains('I am a message in an alternate location.');
     }
+  }
+
+  /**
+   * Tests methods in JsWebAssert related to status messages.
+   */
+  public function testJsStatusMessageAssertions(): void {
+    $page = $this->getSession()->getPage();
+
+    $this->drupalGet('ajax-test/message');
+
+    $page->pressButton('Make Message In Default Location');
+    $this->assertSession()->statusMessageContainsAfterWait('I am a message in the default location.');
+
+    $page->pressButton('Make Message In Alternate Location');
+    $this->assertSession()->statusMessageContainsAfterWait('I am a message in an alternate location.', 'status');
+
+    $page->pressButton('Make Warning Message');
+    $this->assertSession()->statusMessageContainsAfterWait('I am a warning message in the default location.', 'warning');
+
+    // Reload and test some negative assertions.
+    $this->drupalGet('ajax-test/message');
+
+    $page->pressButton('Make Message In Default Location');
+    // Use message that is not on page.
+    $this->assertSession()->statusMessageNotContainsAfterWait('This is not a real message');
+
+    $page->pressButton('Make Message In Alternate Location');
+    // Use message that exists but has the wrong type.
+    $this->assertSession()->statusMessageNotContainsAfterWait('I am a message in an alternate location.', 'warning');
+
+    // Test partial match.
+    $page->pressButton('Make Warning Message');
+    $this->assertSession()->statusMessageContainsAfterWait('I am a warning');
+
+    // One more reload to try with different arg combinations.
+    $this->drupalGet('ajax-test/message');
+
+    $page->pressButton('Make Message In Default Location');
+    $this->assertSession()->statusMessageExistsAfterWait();
+
+    $page->pressButton('Make Message In Alternate Location');
+    $this->assertSession()->statusMessageNotExistsAfterWait('error');
+
+    $page->pressButton('Make Warning Message');
+    $this->assertSession()->statusMessageExistsAfterWait('warning');
+
+    // Perform a few assertions that should fail. We can only call
+    // TestCase::expectException() once per test, so we make a few
+    // try/catch blocks. We pass a relatively short timeout because
+    // it is a waste of time to wait 10 seconds in these assertions
+    // that we fully expect to fail.
+    $expected_failure_occurred = FALSE;
+    try {
+      $this->assertSession()->statusMessageContainsAfterWait('Not a real message', NULL, 1000);
+    }
+    catch (ExpectationFailedException $e) {
+      $expected_failure_occurred = TRUE;
+    }
+    $this->assertTrue($expected_failure_occurred, 'JsWebAssert::statusMessageContainsAfterWait() did not fail when it should have failed.');
+
+    $expected_failure_occurred = FALSE;
+    try {
+      $this->assertSession()->statusMessageNotContainsAfterWait('I am a warning', NULL, 1000);
+    }
+    catch (ExpectationFailedException $e) {
+      $expected_failure_occurred = TRUE;
+    }
+    $this->assertTrue($expected_failure_occurred, 'JsWebAssert::statusMessageNotContainsAfterWait() did not fail when it should have failed.');
+
+    $expected_failure_occurred = FALSE;
+    try {
+      $this->assertSession()->statusMessageExistsAfterWait('error', 1000);
+    }
+    catch (ExpectationFailedException $e) {
+      $expected_failure_occurred = TRUE;
+    }
+    $this->assertTrue($expected_failure_occurred, 'JsWebAssert::statusMessageExistsAfterWait() did not fail when it should have failed.');
+
+    $expected_failure_occurred = FALSE;
+    try {
+      $this->assertSession()->statusMessageNotExistsAfterWait('warning', 1000);
+    }
+    catch (ExpectationFailedException $e) {
+      $expected_failure_occurred = TRUE;
+    }
+    $this->assertTrue($expected_failure_occurred, 'JsWebAssert::statusMessageNotExistsAfterWait() did not fail when it should have failed.');
+
+    // Tests passing a bad status type.
+    $this->expectException(\InvalidArgumentException::class);
+    $this->assertSession()->statusMessageExistsAfterWait('not a valid type');
   }
 
   /**
