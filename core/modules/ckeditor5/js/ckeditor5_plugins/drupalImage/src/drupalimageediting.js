@@ -40,6 +40,21 @@ function modelEntityUuidToDataAttribute() {
   };
 }
 
+const alignmentMapping = [
+  {
+    modelValue: 'alignCenter',
+    dataValue: 'center',
+  },
+  {
+    modelValue: 'alignRight',
+    dataValue: 'right',
+  },
+  {
+    modelValue: 'alignLeft',
+    dataValue: 'left',
+  },
+];
+
 // Downcast `caption` model to `data-caption` attribute with its content
 // downcasted to plain HTML. This is needed because CKEditor 5 uses <caption>
 // element internally in various places, which differs from Drupal which uses
@@ -158,19 +173,12 @@ function modelImageStyleToDataAttribute() {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    const mapping = {
-      alignLeft: 'left',
-      alignRight: 'right',
-      alignCenter: 'center',
-      alignBlockRight: 'right',
-      alignBlockLeft: 'left',
-    };
+    const mappedAlignment = alignmentMapping.find(
+      (value) => value.modelValue === data.attributeNewValue,
+    );
 
     // Consume only for the values that can be converted into data-align.
-    if (
-      !mapping[data.attributeNewValue] ||
-      !consumable.consume(item, evt.name)
-    ) {
+    if (!mappedAlignment || !consumable.consume(item, evt.name)) {
       return;
     }
 
@@ -181,7 +189,7 @@ function modelImageStyleToDataAttribute() {
 
     writer.setAttribute(
       'data-align',
-      mapping[data.attributeNewValue],
+      mappedAlignment.dataValue,
       imageInFigure || viewElement,
     );
   }
@@ -268,8 +276,17 @@ function viewImageToModelImage(editor) {
       return;
     }
 
-    // Create image that's allowed in the given context.
-    if (schema.checkChild(data.modelCursor, 'imageInline')) {
+    const hasDataCaption = consumable.test(viewItem, {
+      name: true,
+      attributes: 'data-caption',
+    });
+
+    // Create image that's allowed in the given context. If the image has a
+    // caption, the image must be created as a block image to ensure the caption
+    // is not lost on conversion. This is based on the assumption that
+    // preserving the image caption is more important to the content creator
+    // than preserving the wrapping element that doesn't allow block images.
+    if (schema.checkChild(data.modelCursor, 'imageInline') && !hasDataCaption) {
       image = writer.createElement('imageInline', {
         src: viewItem.getAttribute('src'),
       });
@@ -279,39 +296,30 @@ function viewImageToModelImage(editor) {
       });
     }
 
+    // The way that image styles are handled here is naive - it assumes that the
+    // image styles are configured exactly as expected by this plugin.
+    // @todo Add support for custom image style configurations
+    //   https://www.drupal.org/i/3270693.
     if (
       editor.plugins.has('ImageStyleEditing') &&
       consumable.test(viewItem, { name: true, attributes: 'data-align' })
     ) {
-      // https://ckeditor.com/docs/ckeditor5/latest/api/module_image_imagestyle_utils.html#constant-defaultStyles
-      const dataToPresentationMapBlock = {
-        left: 'alignBlockLeft',
-        center: 'alignCenter',
-        right: 'alignBlockRight',
-      };
-      const dataToPresentationMapInline = {
-        left: 'alignLeft',
-        right: 'alignRight',
-      };
-
       const dataAlign = viewItem.getAttribute('data-align');
-      const alignment = image.is('element', 'imageBlock')
-        ? dataToPresentationMapBlock[dataAlign]
-        : dataToPresentationMapInline[dataAlign];
+      const mappedAlignment = alignmentMapping.find(
+        (value) => value.dataValue === dataAlign,
+      );
 
-      writer.setAttribute('imageStyle', alignment, image);
+      if (mappedAlignment) {
+        writer.setAttribute('imageStyle', mappedAlignment.modelValue, image);
 
-      // Make sure the attribute can be consumed after successful `safeInsert`
-      // operation.
-      attributesToConsume.push('data-align');
+        // Make sure the attribute can be consumed after successful `safeInsert`
+        // operation.
+        attributesToConsume.push('data-align');
+      }
     }
 
     // Check if the view element has still unconsumed `data-caption` attribute.
-    // Also, we can add caption only to block image.
-    if (
-      image.is('element', 'imageBlock') &&
-      consumable.test(viewItem, { name: true, attributes: 'data-caption' })
-    ) {
+    if (hasDataCaption) {
       // Create `caption` model element. Thanks to that element the rest of the
       // `ckeditor5-plugin` converters can recognize this image as a block image
       // with a caption.
