@@ -44,6 +44,11 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $resourceTypeIsVersionable = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $patchProtectedFieldNames = [
     'changed' => NULL,
   ];
@@ -85,6 +90,14 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function setUpRevisionAuthorization($method) {
+    parent::setUpRevisionAuthorization($method);
+    $this->grantPermissionsToTestedRole(['administer taxonomy']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function createEntity() {
     $vocabulary = Vocabulary::load('camelids');
     if (!$vocabulary) {
@@ -111,7 +124,11 @@ class TermTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedDocument() {
-    $self_url = Url::fromUri('base:/jsonapi/taxonomy_term/camelids/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
+    $base_url = Url::fromUri('base:/jsonapi/taxonomy_term/camelids/' . $this->entity->uuid())->setAbsolute();
+    $self_url = clone $base_url;
+    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
+    $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
 
     // We test with multiple parent terms, and combinations thereof.
     // @see ::createEntity()
@@ -144,8 +161,8 @@ class TermTest extends ResourceTestBase {
             ],
           ],
           'links' => [
-            'related' => ['href' => $self_url . '/parent'],
-            'self' => ['href' => $self_url . '/relationships/parent'],
+            'related' => ['href' => $base_url->toString() . '/parent' . $version_query_string],
+            'self' => ['href' => $base_url->toString() . '/relationships/parent' . $version_query_string],
           ],
         ];
         break;
@@ -162,8 +179,8 @@ class TermTest extends ResourceTestBase {
             ],
           ],
           'links' => [
-            'related' => ['href' => $self_url . '/parent'],
-            'self' => ['href' => $self_url . '/relationships/parent'],
+            'related' => ['href' => $base_url->toString() . '/parent' . $version_query_string],
+            'self' => ['href' => $base_url->toString() . '/relationships/parent' . $version_query_string],
           ],
         ];
         break;
@@ -194,8 +211,8 @@ class TermTest extends ResourceTestBase {
             ],
           ],
           'links' => [
-            'related' => ['href' => $self_url . '/parent'],
-            'self' => ['href' => $self_url . '/relationships/parent'],
+            'related' => ['href' => $base_url->toString() . '/parent' . $version_query_string],
+            'self' => ['href' => $base_url->toString() . '/relationships/parent' . $version_query_string],
           ],
         ];
         break;
@@ -219,8 +236,8 @@ class TermTest extends ResourceTestBase {
             ],
           ],
           'links' => [
-            'related' => ['href' => $self_url . '/parent'],
-            'self' => ['href' => $self_url . '/relationships/parent'],
+            'related' => ['href' => $base_url->toString() . '/parent' . $version_query_string],
+            'self' => ['href' => $base_url->toString() . '/relationships/parent' . $version_query_string],
           ],
         ];
         break;
@@ -236,13 +253,13 @@ class TermTest extends ResourceTestBase {
         'version' => '1.0',
       ],
       'links' => [
-        'self' => ['href' => $self_url],
+        'self' => ['href' => $base_url->toString()],
       ],
       'data' => [
         'id' => $this->entity->uuid(),
         'type' => 'taxonomy_term--camelids',
         'links' => [
-          'self' => ['href' => $self_url],
+          'self' => ['href' => $self_url->toString()],
         ],
         'attributes' => [
           'changed' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
@@ -279,18 +296,18 @@ class TermTest extends ResourceTestBase {
               'type' => 'taxonomy_vocabulary--taxonomy_vocabulary',
             ],
             'links' => [
-              'related' => ['href' => $self_url . '/vid'],
-              'self' => ['href' => $self_url . '/relationships/vid'],
+              'related' => ['href' => $base_url->toString() . '/vid' . $version_query_string],
+              'self' => ['href' => $base_url->toString() . '/relationships/vid' . $version_query_string],
             ],
           ],
           'revision_user' => [
             'data' => NULL,
             'links' => [
               'related' => [
-                'href' => $self_url . '/revision_user',
+                'href' => $base_url->toString() . '/revision_user' . $version_query_string,
               ],
               'self' => [
-                'href' => $self_url . '/relationships/revision_user',
+                'href' => $base_url->toString() . '/relationships/revision_user' . $version_query_string,
               ],
             ],
           ],

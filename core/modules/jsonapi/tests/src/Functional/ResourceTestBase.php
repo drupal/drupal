@@ -2775,28 +2775,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     assert($this->entity instanceof RevisionableInterface);
 
-    // JSON:API will only support node and media revisions until Drupal core has
-    // a generic revision access API.
-    if (!static::$resourceTypeIsVersionable) {
-      $this->setUpRevisionAuthorization('GET');
-      $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()])->setAbsolute();
-      $url->setOption('query', ['resourceVersion' => 'id:' . $this->entity->getRevisionId()]);
-      $request_options = [];
-      $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-      $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-      $response = $this->request('GET', $url, $request_options);
-      $detail = 'JSON:API does not yet support resource versioning for this resource type.';
-      $detail .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
-      $detail .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
-      $expected_cache_contexts = [
-        'url.path',
-        'url.query_args:resourceVersion',
-        'url.site',
-      ];
-      $this->assertResourceErrorResponse(501, $detail, $url, $response, FALSE, ['http_response'], $expected_cache_contexts);
-      return;
-    }
-
     // Add a field to modify in order to test revisions.
     FieldStorageConfig::create([
       'entity_type' => static::$entityTypeId,
@@ -2956,6 +2934,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Install content_moderation module.
     $this->assertTrue($this->container->get('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
+
+    if (!\Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($this->entity->getEntityType())) {
+      return;
+    }
 
     // Set up an editorial workflow.
     $workflow = $this->createEditorialWorkflow();

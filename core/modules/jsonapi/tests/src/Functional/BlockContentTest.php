@@ -34,6 +34,16 @@ class BlockContentTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected static $resourceTypeIsVersionable = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $newRevisionsShouldBeAutomatic = TRUE;
+
+  /**
+   * {@inheritdoc}
    *
    * @var \Drupal\block_content\BlockContentInterface
    */
@@ -66,7 +76,7 @@ class BlockContentTest extends ResourceTestBase {
       $block_content_type = BlockContentType::create([
         'id' => 'basic',
         'label' => 'basic',
-        'revision' => FALSE,
+        'revision' => TRUE,
       ]);
       $block_content_type->save();
       block_content_add_body_field($block_content_type->id());
@@ -90,7 +100,11 @@ class BlockContentTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedDocument() {
-    $self_url = Url::fromUri('base:/jsonapi/block_content/basic/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
+    $base_url = Url::fromUri('base:/jsonapi/block_content/basic/' . $this->entity->uuid())->setAbsolute();
+    $self_url = clone $base_url;
+    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
+    $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
     return [
       'jsonapi' => [
         'meta' => [
@@ -101,13 +115,13 @@ class BlockContentTest extends ResourceTestBase {
         'version' => '1.0',
       ],
       'links' => [
-        'self' => ['href' => $self_url],
+        'self' => ['href' => $base_url->toString()],
       ],
       'data' => [
         'id' => $this->entity->uuid(),
         'type' => 'block_content--basic',
         'links' => [
-          'self' => ['href' => $self_url],
+          'self' => ['href' => $self_url->toString()],
         ],
         'attributes' => [
           'body' => [
@@ -138,15 +152,15 @@ class BlockContentTest extends ResourceTestBase {
               'type' => 'block_content_type--block_content_type',
             ],
             'links' => [
-              'related' => ['href' => $self_url . '/block_content_type'],
-              'self' => ['href' => $self_url . '/relationships/block_content_type'],
+              'related' => ['href' => $base_url->toString() . '/block_content_type' . $version_query_string],
+              'self' => ['href' => $base_url->toString() . '/relationships/block_content_type' . $version_query_string],
             ],
           ],
           'revision_user' => [
             'data' => NULL,
             'links' => [
-              'related' => ['href' => $self_url . '/revision_user'],
-              'self' => ['href' => $self_url . '/relationships/revision_user'],
+              'related' => ['href' => $base_url->toString() . '/revision_user' . $version_query_string],
+              'self' => ['href' => $base_url->toString() . '/relationships/revision_user' . $version_query_string],
             ],
           ],
         ],

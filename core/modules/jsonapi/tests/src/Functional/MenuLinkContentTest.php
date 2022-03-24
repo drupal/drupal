@@ -40,6 +40,11 @@ class MenuLinkContentTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected static $resourceTypeIsVersionable = TRUE;
+
+  /**
+   * {@inheritdoc}
    *
    * @var \Drupal\menu_link_content\MenuLinkContentInterface
    */
@@ -80,7 +85,11 @@ class MenuLinkContentTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedDocument() {
-    $self_url = Url::fromUri('base:/jsonapi/menu_link_content/menu_link_content/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
+    $base_url = Url::fromUri('base:/jsonapi/menu_link_content/menu_link_content/' . $this->entity->uuid())->setAbsolute();
+    $self_url = clone $base_url;
+    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
+    $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
     return [
       'jsonapi' => [
         'meta' => [
@@ -91,13 +100,13 @@ class MenuLinkContentTest extends ResourceTestBase {
         'version' => '1.0',
       ],
       'links' => [
-        'self' => ['href' => $self_url],
+        'self' => ['href' => $base_url->toString()],
       ],
       'data' => [
         'id' => $this->entity->uuid(),
         'type' => 'menu_link_content--menu_link_content',
         'links' => [
-          'self' => ['href' => $self_url],
+          'self' => ['href' => $self_url->toString()],
         ],
         'attributes' => [
           'bundle' => 'menu_link_content',
@@ -130,10 +139,10 @@ class MenuLinkContentTest extends ResourceTestBase {
             'data' => NULL,
             'links' => [
               'related' => [
-                'href' => $self_url . '/revision_user',
+                'href' => $base_url->toString() . '/revision_user' . $version_query_string,
               ],
               'self' => [
-                'href' => $self_url . '/relationships/revision_user',
+                'href' => $base_url->toString() . '/relationships/revision_user' . $version_query_string,
               ],
             ],
           ],
