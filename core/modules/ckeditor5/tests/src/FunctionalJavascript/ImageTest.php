@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
@@ -138,6 +139,66 @@ class ImageTest extends CKEditor5TestBase {
     $this->host->save();
 
     $this->drupalLogin($this->adminUser);
+  }
+
+  /**
+   * Ensures that attributes are retained on conversion.
+   */
+  public function testAttributeRetentionDuringUpcasting() {
+    // Run test cases in a single test to make the test run faster.
+    $attributes_to_retain = [
+      '-none-' => 'inline',
+      'data-caption="test caption 🦙"' => 'block',
+      'data-align="left"' => 'inline',
+    ];
+
+    foreach ($attributes_to_retain as $attribute_to_retain => $expected_upcast_behavior_when_wrapped_in_block_element) {
+      if ($attribute_to_retain === '-none-') {
+        $attribute_to_retain = '';
+      }
+      $img_tag = '<img ' . $attribute_to_retain . ' alt="drupalimage test image" data-entity-type="file" data-entity-uuid="' . $this->file->uuid() . '" src="' . $this->file->createFileUrl() . '" />';
+      $test_cases = [
+        // Plain image tag for a baseline.
+        [
+          $img_tag,
+          $img_tag,
+        ],
+        // Image tag wrapped with <p>.
+        [
+          "<p>$img_tag</p>",
+          $expected_upcast_behavior_when_wrapped_in_block_element === 'inline' ? "<p>$img_tag</p>" : $img_tag,
+        ],
+        // Image tag wrapped with an unallowed paragraph-like element (<div).
+        // When inline is the expected upcast behavior, it will wrap in <p>
+        // because it still must wrap in a paragraph-like element, and <p> is
+        // available to be that element.
+        [
+          "<div>$img_tag</div>",
+          $expected_upcast_behavior_when_wrapped_in_block_element === 'inline' ? "<p>$img_tag</p>" : $img_tag,
+        ],
+      ];
+
+      foreach ($test_cases as $test_case) {
+        [$markup, $expected] = $test_case;
+        $this->host->body->value = $markup;
+        $this->host->save();
+
+        $this->drupalGet($this->host->toUrl('edit-form'));
+        $this->waitForEditor();
+
+        // Ensure that the image is rendered in preview.
+        $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', ".ck-content .ck-widget img"));
+        $editor_dom = $this->getEditorDataAsDom();
+        $expected_dom = Html::load($expected);
+        $xpath = new \DOMXPath($this->getEditorDataAsDom());
+        $this->assertEquals($expected_dom->getElementsByTagName('body')->item(0)->C14N(), $editor_dom->getElementsByTagName('body')->item(0)->C14N());
+
+        // Ensure the test attribute is persisted on downcast.
+        if ($attribute_to_retain) {
+          $this->assertNotEmpty($xpath->query("//img[@$attribute_to_retain]"));
+        }
+      }
+    }
   }
 
   /**
