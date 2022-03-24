@@ -215,8 +215,10 @@ class MediaTest extends WebDriverTestBase {
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
 
-    // Allow the data-foo attribute in drupal-media via GHS.
-    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<drupal-media data-foo>'];
+    // Allow the data-foo attribute in drupal-media via GHS. Also, add support
+    // for div's with data-foo attribute to ensure that drupal-media elements
+    // can be wrapped with other block elements.
+    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<drupal-media data-foo>', '<div data-bar>'];
     $editor->setSettings($settings);
     $editor->save();
 
@@ -224,7 +226,7 @@ class MediaTest extends WebDriverTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo>',
+        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo> <div data-bar>',
       ],
     ]);
     $filter_format->save();
@@ -240,7 +242,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Add data-foo use to an existing drupal-media tag.
     $original_value = $this->host->body->value;
-    $this->host->body->value = str_replace('drupal-media', 'drupal-media data-foo="bar" ', $original_value);
+    $this->host->body->value = '<div data-bar="baz">' . str_replace('drupal-media', 'drupal-media data-foo="bar" ', $original_value) . '</div>';
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
@@ -250,8 +252,15 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($preview = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media > [data-drupal-media-preview="ready"] > .media', 30000));
     $this->assertEquals('bar', $preview->getAttribute('data-foo'));
 
+    // Confirm that the media is wrapped by the div on the editing view.
+    $assert_session->elementExists('css', 'div[data-bar="baz"] > .drupal-media');
+
     // Confirm data-foo is not stripped from source.
     $this->assertSourceAttributeSame('data-foo', 'bar');
+
+    // Confirm that drupal-media is wrapped by the div.
+    $editor_dom = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertNotEmpty($editor_dom->query('//div[@data-bar="baz"]/drupal-media'));
   }
 
   /**

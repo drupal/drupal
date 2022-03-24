@@ -93,6 +93,10 @@ export default class DrupalMediaEditing extends Plugin {
       isBlock: true,
       allowAttributes: Object.keys(this.attrs),
     });
+    // Register `<drupal-media>` as a block element in the DOM converter. This
+    // ensures that the DOM converter knows to handle the `<drupal-media>` as a
+    // block element.
+    this.editor.editing.view.domConverter.blockElements.push('drupal-media');
   }
 
   _defineConverters() {
