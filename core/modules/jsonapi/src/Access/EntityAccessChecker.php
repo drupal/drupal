@@ -194,18 +194,7 @@ class EntityAccessChecker {
     assert($entity instanceof RevisionableInterface);
     assert(!$entity->isDefaultRevision(), 'It is not necessary to check revision access when the entity is the default revision.');
     $entity_type = $entity->getEntityType();
-    switch ($entity_type->id()) {
-      case 'node':
-      case 'media':
-        $access = $entity->access('view all revisions', $account, TRUE);
-        break;
-
-      default:
-        $reason = 'Only node and media revisions are supported by JSON:API.';
-        $reason .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
-        $reason .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
-        $access = AccessResult::neutral($reason);
-    }
+    $access = $entity->access('view all revisions', $account, TRUE);
     // Apply content_moderation's additional access logic.
     // @see \Drupal\content_moderation\Access\LatestRevisionCheck::access()
     if ($entity_type->getLinkTemplate('latest-version') && $entity->isLatestRevision() && isset($this->latestRevisionCheck)) {

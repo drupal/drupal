@@ -383,9 +383,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   TRUE if the entity type is versionable, FALSE otherwise.
    */
   protected static function isVersionableResourceType(EntityTypeInterface $entity_type) {
-    // @todo: remove the following line and uncomment the next one when revisions have standardized access control. For now, it is unsafe to support all revisionable entity types.
-    return in_array($entity_type->id(), ['node', 'media']);
-    /* return $entity_type->isRevisionable(); */
+    return $entity_type->isRevisionable();
   }
 
   /**

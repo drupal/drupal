@@ -95,17 +95,8 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
       // If the query parameter was provided but the resource type is not
       // versionable, provide a helpful error.
       if ($has_version_param) {
-        // Until Drupal core has a generic revision access API, it is only safe
-        // to support the `node` and `media` entity types because they are the
-        // only // entity types that have revision access checks for forward
-        // revisions that are not the default and not the latest revision.
         $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path', static::CACHE_CONTEXT]);
-        /* Uncomment the next line and remove the following one when https://www.drupal.org/project/drupal/issues/3002352 lands in core. */
-        /* throw new CacheableHttpException($cacheability, 501, 'Resource versioning is not yet supported for this resource type.'); */
-        $message = 'JSON:API does not yet support resource versioning for this resource type.';
-        $message .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
-        $message .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
-        throw new CacheableHttpException($cacheability, 501, $message);
+        throw new CacheableHttpException($cacheability, 501, 'Resource versioning is not yet supported for this resource type.');
       }
       return $defaults;
     }
