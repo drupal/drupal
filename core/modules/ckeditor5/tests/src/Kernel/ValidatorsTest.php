@@ -647,6 +647,7 @@ class ValidatorsTest extends KernelTestBase {
             'heading',
             'bold',
             'italic',
+            'link',
             'sourceEditing',
             'textPartLanguage',
           ],
@@ -666,8 +667,25 @@ class ValidatorsTest extends KernelTestBase {
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
+              // Tag-only; supported by enabled plugin.
               '<strong>',
+              // Tag-only; supported by disabled plugin.
               '<table>',
+              // Tag-only; supported by no plugin.
+              '<exotic>',
+              // Tag + attributes; all supported by enabled plugin.
+              '<span lang>',
+              // Tag + attributes; all supported by an ineligible disabled
+              // plugin (has no toolbar item, has conditions).
+              '<img src>',
+              // Tag + attributes; all supported by disabled plugin.
+              '<code class="language-*">',
+              // Tag + attributes; tag already supported by enabled plugin,
+              // attributes supported by disabled plugin
+              '<h2 class="text-align-center">',
+              // Tag + attributes; tag already supported by enabled plugin,
+              // attribute not supported by no plugin.
+              '<a hreflang>',
             ],
           ],
         ],
@@ -679,6 +697,9 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Bold (&lt;strong&gt;)</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these tags: <em class="placeholder">Table (&lt;table&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.3' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Language (&lt;span lang&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following tag(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these tags: <em class="placeholder">Code Block (&lt;code class=&quot;language-*&quot;&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Alignment (&lt;h2 class=&quot;text-align-center&quot;&gt;), Align center (&lt;h2 class=&quot;text-align-center&quot;&gt;)</em>.',
       ],
     ];
     $data['INVALID some invalid Source Editable tags provided by plugin and another available in a not enabled plugin'] = [
