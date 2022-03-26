@@ -40,7 +40,12 @@
       <span class="block-search-wide__button-close"></span>
     </button>
 
-    <div{{ content_attributes.addClass('block-search-wide__wrapper').setAttribute('data-drupal-selector', 'block-search-wide-wrapper') }}>
+    {#
+      Add tabindex=“-1” to prevent Safari from closing search bar when the submit button is clicked with a mouse.
+      @see https://www.drupal.org/project/drupal/issues/3269716
+      @see https://bugs.webkit.org/show_bug.cgi?id=229895
+    #}
+    <div{{ content_attributes.addClass('block-search-wide__wrapper').setAttribute('data-drupal-selector', 'block-search-wide-wrapper').setAttribute('tabindex', '-1') }}>
       <div class="block-search-wide__container">
         <div class="block-search-wide__grid">
           {{ content }}
