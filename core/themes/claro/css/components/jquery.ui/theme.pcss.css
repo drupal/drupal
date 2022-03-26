@@ -379,6 +379,7 @@
  * Autocomplete
  */
 .ui-autocomplete {
+  overflow: hidden;
   color: var(--jui-dropdown-fg-color);
   border: var(--input-border-size) solid var(--jui-dropdown-border-color);
   border-top: 0;
