@@ -23,6 +23,12 @@ use Drupal\Core\Form\FormStateInterface;
  * );
  * @endcode
  *
+ * Element properties may be set on single option items as follows.
+ *
+ * @code
+ * $form['high_school']['tests_taken']['SAT']['#description'] = $this->t('Description for the SAT option.');
+ * @endcode
+ *
  * @see \Drupal\Core\Render\Element\Radios
  * @see \Drupal\Core\Render\Element\Checkbox
  *

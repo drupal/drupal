@@ -22,6 +22,12 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * );
  * @endcode
  *
+ * Element properties may be set on single option items as follows.
+ *
+ * @code
+ * $form['settings']['active'][0]['#description'] = $this->t('Description for the Closed option.');
+ * @endcode
+ *
  * @see \Drupal\Core\Render\Element\Checkboxes
  * @see \Drupal\Core\Render\Element\Radio
  * @see \Drupal\Core\Render\Element\Select
