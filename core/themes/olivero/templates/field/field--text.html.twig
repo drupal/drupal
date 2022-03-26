@@ -1,0 +1,20 @@
+{% extends "field.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for a text field.
+ *
+ * A 'clearfix' class is added, because 'text' fields have a 'format' property
+ * that allows a Text Format to be associated with the entered text, which then
+ * applies filtering on output. A common use case is to align images to the left
+ * or right, and without this 'clearfix' class, such aligned images may be
+ * rendered outside of the 'text' field formatter's boundaries, and hence
+ * overlap with other fields. By setting the 'clearfix' class on all 'text'
+ * fields, we prevent that.
+ *
+ * @see https://www.drupal.org/node/2358529
+ *
+ * @ingroup themeable
+ */
+#}
+{% set attributes = attributes.addClass('clearfix') %}
