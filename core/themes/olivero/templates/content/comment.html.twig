@@ -67,6 +67,7 @@
 {%
   set classes = [
     'comment',
+    'js-comment',
     not parent_comment ? 'comment--level-1',
     status != 'published' ? 'comment--' ~ status,
     comment.owner.anonymous ? 'by-anonymous',
@@ -75,6 +76,13 @@
 %}
 {{ attach_library('olivero/comments') }}
 <article {{ attributes.addClass(classes).setAttribute('role', 'article').setAttribute('data-drupal-selector', 'comment') }}>
+  {#
+    Hide the "new" indicator by default, let a piece of JavaScript ask the
+    server which comments are new for the user. Rendering the final "new"
+    indicator here would break the render cache.
+  #}
+  <span class="hidden" data-comment-timestamp="{{ new_indicator_timestamp }}"></span>
+
   <div class="comment__picture-wrapper">
     <div class="comment__picture">
       {{ user_picture }}
