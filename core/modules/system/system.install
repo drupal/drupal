@@ -285,11 +285,11 @@ function system_requirements($phase) {
 
   // Check if the PHP version is below what Drupal supports.
   if (version_compare($phpversion, \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version. It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Environment requirements of Drupal 9</a> page for more information.',
+    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version. It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.',
       [
         '%version' => \Drupal::MINIMUM_SUPPORTED_PHP,
         '%recommended' => \Drupal::RECOMMENDED_PHP,
-        ':php_requirements' => 'https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement',
+        ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
       ]
     );
 
@@ -308,7 +308,7 @@ function system_requirements($phase) {
   // inform users of what's recommended, allowing them to take action before it
   // becomes urgent.
   elseif ($phase === 'runtime' && version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
-    $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal 8 PHP requirements handbook page</a> for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/8/system-requirements/php']);
+    $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
     $requirements['php']['severity'] = REQUIREMENT_INFO;
   }
 
@@ -444,7 +444,7 @@ function system_requirements($phase) {
         }
       }
       $args = [
-        ':drupal-php' => 'https://www.drupal.org/docs/8/system-requirements/php-requirements',
+        ':drupal-php' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
         '%exception_message' => $e->getMessage(),
       ];
       if ($open_basedir_blocks_urandom) {
@@ -1306,7 +1306,7 @@ function system_requirements($phase) {
     $requirements['limited_date_range'] = [
       'title' => t('Limited date range'),
       'value' => t('Your PHP installation has a limited date range.'),
-      'description' => t('You are running on a system where PHP is compiled or limited to using 32-bit integers. This will limit the range of dates and timestamps to the years 1901-2038. Read about the <a href=":url">limitations of 32-bit PHP</a>.', [':url' => 'https://www.drupal.org/docs/8/system-requirements/limitations-of-32-bit-php']),
+      'description' => t('You are running on a system where PHP is compiled or limited to using 32-bit integers. This will limit the range of dates and timestamps to the years 1901-2038. Read about the <a href=":url">limitations of 32-bit PHP</a>.', [':url' => 'https://www.drupal.org/docs/system-requirements/limitations-of-32-bit-php']),
       'severity' => REQUIREMENT_WARNING,
     ];
   }
