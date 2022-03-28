@@ -51,3 +51,43 @@
 .form-element--type-select[disabled] {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%238e929c'/%3e%3c/svg%3e");
 }
+
+/* Necessary to show chevron in forced colors mode in modern browsers. */
+
+@media (forced-colors: active) {
+  .form-element--type-select,
+  .form-element--type-select:focus,
+  .form-element--type-select[disabled] {
+    padding-right: calc(1rem - 1px);
+    background-image: none;
+    -webkit-appearance: listbox;
+    -moz-appearance: listbox;
+    appearance: listbox /* Default <select> appearance value for modern browsers. */
+
+    /* Lets browser set <select> appearance to whatever the browser's default is. */
+  }
+    @supports ((-webkit-appearance: revert) or (-moz-appearance: revert) or (appearance: revert)) {
+  .form-element--type-select,
+  .form-element--type-select:focus,
+  .form-element--type-select[disabled] {
+      -webkit-appearance: revert;
+      -moz-appearance: revert;
+      appearance: revert
+  }
+    }
+}
+
+/* Necessary for Internet Explorer to show chevron. */
+
+@media screen and (-ms-high-contrast: active) {
+  .form-element--type-select,
+  .form-element--type-select:focus,
+  .form-element--type-select[disabled] {
+    padding-right: calc(1rem - 1px)
+
+    /* Re-enable default chevron for Internet Explorer. */
+  }
+    .form-element--type-select::-ms-expand, .form-element--type-select:focus::-ms-expand, .form-element--type-select[disabled]::-ms-expand {
+      display: block;
+    }
+}
