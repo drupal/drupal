@@ -30,7 +30,7 @@ define('MAINTENANCE_MODE', 'install');
 // in the printed message to the user) whenever \Drupal::MINIMUM_PHP is
 // updated.
 if (version_compare(PHP_VERSION, '7.3.0') < 0) {
-  print 'Your PHP installation is too old. Drupal requires at least PHP 7.3.0. See the <a href="https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement">Environment requirements of Drupal 9</a> page for more information.';
+  print 'Your PHP installation is too old. Drupal requires at least PHP 7.3.0. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href="https://www.drupal.org/docs/system-requirements/php-requirements">Drupal PHP requirements</a> page for more information.';
   exit;
 }
 
