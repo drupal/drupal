@@ -203,6 +203,7 @@ camelize
 camelized
 canonicalized
 canonicalizing
+canvastext
 castable
 catalana
 catbro
@@ -758,6 +759,7 @@ linkback
 linkgenerator
 linkification
 linksby
+linktext
 lisu
 litererally
 llamaids
