@@ -1,9 +1,0 @@
-name: Aggregator
-type: module
-description: 'Gathers and displays syndicated content (RSS, RDF, and Atom feeds) from external sources.'
-package: Core
-version: VERSION
-configure: aggregator.admin_settings
-dependencies:
-  - drupal:file
-  - drupal:options

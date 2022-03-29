@@ -58,9 +58,6 @@ maintainer. Current subsystem maintainers:
 Actions
 - ?
 
-Aggregator
-- ?
-
 Ajax
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett

@@ -128,9 +128,6 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     );
 
     $expected = [
-      // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
-      'd6_aggregator_feed',
-      'd6_aggregator_item',
       'd6_comment',
       'd6_custom_block',
       'd6_file',

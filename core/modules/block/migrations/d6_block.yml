@@ -14,7 +14,7 @@ process:
     method: row
     source: status
   id:
-    # We need something unique, so aggregator, aggregator_1 etc will do.
+    # We need something unique, so book, book_1 etc will do.
     plugin: make_unique_entity_field
 
     entity_type: block

@@ -162,9 +162,7 @@
  *     implements \GuzzleHttp\ClientInterface. See the
  *     @link container Services topic @endlink for more information on
  *     services. If you cannot use dependency injection to retrieve this
- *     service, the \Drupal::httpClient() method is available. A good example
- *     of how to use this service can be found in
- *     \Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher
+ *     service, the \Drupal::httpClient() method is available.
  *   - \Drupal\Component\Serialization\Json (JSON encoding and decoding).
  *   - PHP has functions and classes for parsing XML; see
  *     http://php.net/manual/refs.xml.php
@@ -1833,14 +1831,13 @@
  * where a strict FIFO ordering will likely not be preserved. Another example
  * would be an in-memory queue backend which might lose items if it crashes.
  * However, such a backend would be able to deal with significantly more writes
- * than a reliable queue and for many tasks this is more important. See
- * aggregator_cron() for an example of how to effectively use a non-reliable
- * queue. Another example is doing Twitter statistics -- the small possibility
- * of losing a few items is insignificant next to power of the queue being able
- * to keep up with writes. As described in the processing section, regardless
- * of the queue being reliable or not, the processing code should be aware that
- * an item might be handed over for processing more than once (because the
- * processing code might time out before it finishes).
+ * than a reliable queue and for many tasks this is more important. Another
+ * example is doing Twitter statistics -- the small possibility of losing a
+ * few items is insignificant next to power of the queue being able to keep
+ * up with writes. As described in the processing section, regardless of the
+ * queue being reliable or not, the processing code should be aware that an
+ * might be handed over for processing more than once (because the processing
+ * code might time out before it finishes).
  * @}
  */
 
@@ -1929,8 +1926,8 @@ function hook_cron() {
 
   // Long-running operation example, leveraging a queue:
   // Queue news feeds for updates once their refresh interval has elapsed.
-  $queue = \Drupal::queue('aggregator_feeds');
-  $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+  $queue = \Drupal::queue('mymodule.feeds');
+  $ids = \Drupal::entityTypeManager()->getStorage('mymodule_feed')->getFeedIdsToRefresh();
   foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
@@ -1938,7 +1935,7 @@ function hook_cron() {
       $feed->save();
     }
   }
-  $ids = \Drupal::entityQuery('aggregator_feed')
+  $ids = \Drupal::entityQuery('mymodule_feed')
     ->accessCheck(FALSE)
     ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
     ->execute();
@@ -1979,7 +1976,7 @@ function hook_data_type_info_alter(&$data_types) {
 function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
-  $queues['aggregator_feeds']['cron']['time'] = 90;
+  $queues['mymodule_feeds']['cron']['time'] = 90;
 }
 
 /**

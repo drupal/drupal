@@ -13,8 +13,6 @@
       "**/LICENSE.txt",
       "../**/LICENSE.txt",
       "modules/**/Migrate*Test.php",
-      "modules/aggregator/tests/fixtures/drupal6.php",
-      "modules/aggregator/tests/fixtures/drupal7.php",
       "modules/ckeditor5/js/build/*",
       "modules/color/preview.html",
       "modules/color/tests/modules/color_test/themes/color_test_theme/color/preview.html",

@@ -193,12 +193,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/config/content/formats/manage/test_text_format');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Make sure our feed still exists.
-    $this->drupalGet('admin/config/services/aggregator');
-    $this->assertSession()->pageTextContains('Test feed');
-    $this->drupalGet('admin/config/services/aggregator/fields');
-    $this->assertSession()->pageTextContains('field_test');
-
     // Make sure our view appears in the overview.
     $this->drupalGet('admin/structure/views');
     $this->assertSession()->pageTextContains('test_view');
@@ -346,7 +340,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     // Make sure our modules are still enabled.
     $expected_enabled_modules = [
       'action',
-      'aggregator',
       'ban',
       'basic_auth',
       'block',

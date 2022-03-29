@@ -35,7 +35,6 @@
         "doctrine/annotations": "^1.12",
         "guzzlehttp/guzzle": "^7.3.0",
         "guzzlehttp/psr7": "^2.2.0",
-        "laminas/laminas-feed": "^2.12",
         "egulias/email-validator": "^2.1.22|^3.0",
         "masterminds/html5": "^2.1",
         "symfony/psr-http-message-bridge": "^2.0",
@@ -49,7 +48,6 @@
     },
     "replace": {
         "drupal/action": "self.version",
-        "drupal/aggregator": "self.version",
         "drupal/automated_cron": "self.version",
         "drupal/bartik": "self.version",
         "drupal/ban": "self.version",

@@ -307,11 +307,10 @@ INSTALLATION
 7. Set up independent "cron" maintenance jobs.
 
    Many Drupal modules have tasks that must be run periodically, including the
-   Search module (building and updating the index used for keyword searching),
-   the Aggregator module (retrieving feeds from other sites), and the System
-   module (performing routine maintenance and pruning of database tables). These
-   tasks are known as "cron maintenance tasks", named after the Unix/Linux
-   "cron" utility.
+   Search module (building and updating the index used for keyword searching)
+   and the System module (performing routine maintenance and pruning of
+   database tables). These tasks are known as "cron maintenance tasks", named
+   after the Unix/Linux "cron" utility.
 
    When you install Drupal, its built-in cron feature is enabled, which
    automatically runs the cron tasks periodically, triggered by people visiting

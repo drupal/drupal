@@ -1,5 +1,0 @@
-name: 'Aggregator module tests'
-type: module
-description: 'Support module for aggregator related testing.'
-package: Testing
-version: VERSION
