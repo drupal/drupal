@@ -29,7 +29,7 @@ class BooleanFieldTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A field to use in this test class.
@@ -122,7 +122,7 @@ class BooleanFieldTest extends BrowserTestBase {
     // Verify that boolean value is displayed.
     $entity = EntityTest::load($id);
     $this->drupalGet($entity->toUrl());
-    $this->assertSession()->responseContains('<div class="field__item">' . $on . '</div>');
+    $this->assertSession()->pageTextContains($on);
 
     // Test with "On" label option.
     $display_repository->getFormDisplay('entity_test', 'entity_test')
