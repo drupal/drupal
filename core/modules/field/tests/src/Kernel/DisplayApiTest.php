@@ -126,8 +126,8 @@ class DisplayApiTest extends FieldKernelTestBase {
   public function testFieldItemListView() {
     $items = $this->entity->get($this->fieldName);
 
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_installer')->install(['stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
 
     // No display settings: check that default display settings are used.
     $build = $items->view();

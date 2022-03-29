@@ -64,9 +64,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Use Classy theme for testing markup output.
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    // Use Stark theme for testing markup output.
+    \Drupal::service('theme_installer')->install(['stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
     $this->installEntitySchema('entity_test');
     // Grant the 'view test entity' permission.
     $this->installConfig(['user']);
@@ -201,12 +201,12 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     // Test the first field item.
     $expected_rendered_name_field_1 = '
-            <div class="field field--name-name field--type-string field--label-hidden field__item">' . $this->referencedEntity->label() . '</div>
+            <div>' . $this->referencedEntity->label() . '</div>
       ';
     $expected_rendered_body_field_1 = '
-  <div class="clearfix text-formatted field field--name-body field--type-text field--label-above">
-    <div class="field__label">Body</div>
-              <div class="field__item"><p>Hello, world!</p></div>
+  <div>
+    <div>Body</div>
+              <div><p>Hello, world!</p></div>
           </div>
 ';
     $renderer->renderRoot($build[0]);
@@ -217,12 +217,12 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     // Test the second field item.
     $expected_rendered_name_field_2 = '
-            <div class="field field--name-name field--type-string field--label-hidden field__item">' . $this->unsavedReferencedEntity->label() . '</div>
+            <div>' . $this->unsavedReferencedEntity->label() . '</div>
       ';
     $expected_rendered_body_field_2 = '
-  <div class="clearfix text-formatted field field--name-body field--type-text field--label-above">
-    <div class="field__label">Body</div>
-              <div class="field__item"><p>Hello, unsaved world!</p></div>
+  <div>
+    <div>Body</div>
+              <div><p>Hello, unsaved world!</p></div>
           </div>
 ';
 
