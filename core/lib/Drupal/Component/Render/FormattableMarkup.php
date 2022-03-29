@@ -20,7 +20,7 @@ use Drupal\Component\Utility\UrlHelper;
  * non-English-only sites) in addition to formatting it. Variables concatenated
  * without the insertion of language-specific words or punctuation are some
  * examples where translation is not applicable and using this class directly
- * directly is appropriate.
+ * is appropriate.
  *
  * This class is designed for formatting messages that are mostly text, not as
  * an HTML template language. As such:
