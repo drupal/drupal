@@ -8,6 +8,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
  * ResourceTestBase for Item entity.
+ * @group legacy
  */
 abstract class ItemResourceTestBase extends EntityResourceTestBase {
 

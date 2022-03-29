@@ -8,6 +8,7 @@ use Drupal\aggregator\Entity\Feed;
  * Tests OPML import.
  *
  * @group aggregator
+ * @group legacy
  */
 class ImportOpmlTest extends AggregatorTestBase {
 

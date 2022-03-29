@@ -6,6 +6,7 @@ namespace Drupal\Tests\aggregator\Functional;
  * Tests the fetcher plugins functionality and discoverability.
  *
  * @group aggregator
+ * @group legacy
  *
  * @see \Drupal\aggregator_test\Plugin\aggregator\fetcher\TestFetcher.
  */

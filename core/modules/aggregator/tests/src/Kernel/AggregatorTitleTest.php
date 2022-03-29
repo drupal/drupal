@@ -9,7 +9,8 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests the aggregator_title formatter.
  *
- * @group field
+ * @group aggregator
+ * @group legacy
  */
 class AggregatorTitleTest extends KernelTestBase {
 

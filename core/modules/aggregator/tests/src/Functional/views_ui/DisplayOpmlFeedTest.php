@@ -8,6 +8,7 @@ use Drupal\Tests\views_ui\Functional\UITestBase;
  * Tests the views UI for feed display plugin.
  *
  * @group aggregator
+ * @group legacy
  * @see \Drupal\views\Plugin\views\display\Feed
  */
 class DisplayOpmlFeedTest extends UITestBase {

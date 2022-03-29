@@ -13,6 +13,7 @@ use Drupal\views\Entity\View;
  * Tests instances of the aggregator related view handlers.
  *
  * @group aggregator
+ * @group legacy
  */
 class HandlerAggregatorTest extends ViewTestBase {
 

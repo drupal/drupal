@@ -13,6 +13,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group aggregator
+ * @group legacy
  */
 class UpgradeTest extends MigrateUpgradeExecuteTestBase {
 

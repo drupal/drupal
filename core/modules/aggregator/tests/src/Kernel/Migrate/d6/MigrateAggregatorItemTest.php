@@ -8,6 +8,7 @@ use Drupal\aggregator\Entity\Item;
  * Tests migration of aggregator items.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
 

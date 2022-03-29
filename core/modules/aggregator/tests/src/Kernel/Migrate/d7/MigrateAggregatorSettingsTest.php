@@ -6,6 +6,7 @@ namespace Drupal\Tests\aggregator\Kernel\Migrate\d7;
  * Tests migration of Aggregator's variables to configuration.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateAggregatorSettingsTest extends MigrateDrupal7TestBase {
 

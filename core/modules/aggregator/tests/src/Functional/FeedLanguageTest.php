@@ -9,6 +9,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  * Tests aggregator feeds in multiple languages.
  *
  * @group aggregator
+ * @group legacy
  */
 class FeedLanguageTest extends AggregatorTestBase {
 

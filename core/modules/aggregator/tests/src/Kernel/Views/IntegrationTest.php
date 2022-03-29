@@ -14,6 +14,7 @@ use Drupal\views\Tests\ViewTestData;
  * Tests basic integration of views data from the aggregator module.
  *
  * @group aggregator
+ * @group legacy
  */
 class IntegrationTest extends ViewsKernelTestBase {
 

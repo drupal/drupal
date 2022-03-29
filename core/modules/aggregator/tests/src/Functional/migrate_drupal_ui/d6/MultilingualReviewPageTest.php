@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
  * Tests with translation modules enabled.
  *
  * @group aggregator
+ * @group legacy
  */
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 

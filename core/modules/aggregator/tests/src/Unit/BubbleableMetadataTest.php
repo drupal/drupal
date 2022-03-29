@@ -8,6 +8,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\Render\BubbleableMetadata
  * @group aggregator
+ * @group legacy
  */
 class BubbleableMetadataTest extends UnitTestCase {
 

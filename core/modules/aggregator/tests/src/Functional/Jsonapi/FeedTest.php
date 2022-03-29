@@ -11,6 +11,7 @@ use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
  * JSON:API integration test for the "Feed" content entity type.
  *
  * @group aggregator
+ * @group legacy
  */
 class FeedTest extends ResourceTestBase {
 

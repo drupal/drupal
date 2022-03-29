@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  * Tests with the translation modules disabled.
  *
  * @group aggregator
+ * @group legacy
  */
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 

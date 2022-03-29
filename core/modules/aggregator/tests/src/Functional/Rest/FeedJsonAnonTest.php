@@ -6,6 +6,7 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group rest
+ * @group legacy
  */
 class FeedJsonAnonTest extends FeedResourceTestBase {
 

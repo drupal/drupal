@@ -8,6 +8,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
  * Tests the OPML feed style plugin.
  *
  * @group aggregator
+ * @group legacy
  * @see \Drupal\views\Plugin\views\style\Opml
  */
 class StyleOpmlTest extends ViewTestBase {

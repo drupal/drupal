@@ -9,6 +9,7 @@ use Drupal\migrate\Audit\IdAuditor;
  * Tests that aggregator Id conflicts are discovered.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
 

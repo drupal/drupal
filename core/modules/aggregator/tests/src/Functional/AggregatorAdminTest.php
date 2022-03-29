@@ -6,6 +6,7 @@ namespace Drupal\Tests\aggregator\Functional;
  * Tests aggregator admin pages.
  *
  * @group aggregator
+ * @group legacy
  */
 class AggregatorAdminTest extends AggregatorTestBase {
 

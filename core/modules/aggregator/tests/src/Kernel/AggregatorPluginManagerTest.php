@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the aggregator plugin manager.
  *
  * @group aggregator
+ * @group legacy
  */
 class AggregatorPluginManagerTest extends KernelTestBase {
 

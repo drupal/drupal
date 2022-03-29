@@ -8,6 +8,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
  * Tests existence of aggregator local tasks.
  *
  * @group aggregator
+ * @group legacy
  */
 class AggregatorLocalTasksTest extends LocalTaskIntegrationTestBase {
 

@@ -6,6 +6,7 @@ namespace Drupal\Tests\aggregator\Functional;
  * Tests the display of a feed on the Aggregator list page.
  *
  * @group aggregator
+ * @group legacy
  */
 class FeedAdminDisplayTest extends AggregatorTestBase {
 

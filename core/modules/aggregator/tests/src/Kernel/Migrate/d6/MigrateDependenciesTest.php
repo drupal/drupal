@@ -9,6 +9,7 @@ use Drupal\migrate\MigrateExecutable;
  * Ensure the consistency among the dependencies for migrate.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateDependenciesTest extends MigrateDrupal6TestBase {
 

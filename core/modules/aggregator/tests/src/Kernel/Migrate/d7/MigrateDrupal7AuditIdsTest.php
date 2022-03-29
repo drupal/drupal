@@ -9,6 +9,7 @@ use Drupal\migrate\Audit\IdAuditor;
  * Tests the migration auditor for ID conflicts.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
 

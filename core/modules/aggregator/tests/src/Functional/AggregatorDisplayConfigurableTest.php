@@ -10,6 +10,7 @@ use Drupal\node\Entity\Node;
  * configurable.
  *
  * @group aggregator
+ * @group legacy
  */
 class AggregatorDisplayConfigurableTest extends AggregatorTestBase {
 

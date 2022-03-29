@@ -9,6 +9,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
  * Tests feed validation constraints.
  *
  * @group aggregator
+ * @group legacy
  */
 class FeedValidationTest extends EntityKernelTestBase {
 

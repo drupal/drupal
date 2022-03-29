@@ -8,6 +8,7 @@ use Drupal\block\Entity\Block;
  * Tests migration of aggregator block.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateBlockTest extends MigrateDrupal6TestBase {
 

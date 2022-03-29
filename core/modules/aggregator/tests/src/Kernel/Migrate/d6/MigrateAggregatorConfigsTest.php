@@ -8,6 +8,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
  * Upgrade variables to aggregator.settings.yml.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateAggregatorConfigsTest extends MigrateDrupal6TestBase {
 

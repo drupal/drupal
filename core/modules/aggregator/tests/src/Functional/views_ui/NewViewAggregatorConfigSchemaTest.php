@@ -8,6 +8,7 @@ use Drupal\Tests\views_ui\Functional\UITestBase;
  * Tests aggregator configuration schema against new views.
  *
  * @group aggregator
+ * @group legacy
  */
 class NewViewAggregatorConfigSchemaTest extends UITestBase {
 

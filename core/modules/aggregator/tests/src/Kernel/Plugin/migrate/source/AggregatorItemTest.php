@@ -11,6 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  *
  * @covers \Drupal\aggregator\Plugin\migrate\source\AggregatorItem
  * @group aggregator
+ * @group legacy
  */
 class AggregatorItemTest extends MigrateSqlSourceTestBase {
 

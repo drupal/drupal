@@ -10,6 +10,7 @@ use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
  * JSON:API integration test for the "Item" content entity type.
  *
  * @group aggregator
+ * @group legacy
  */
 class ItemTest extends ResourceTestBase {
 

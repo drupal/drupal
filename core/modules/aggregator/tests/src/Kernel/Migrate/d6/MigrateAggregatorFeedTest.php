@@ -8,6 +8,7 @@ use Drupal\aggregator\Entity\Feed;
  * Tests migration of aggregator feeds.
  *
  * @group aggregator
+ * @group legacy
  */
 class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
 
