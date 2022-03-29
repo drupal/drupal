@@ -342,10 +342,12 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     // Invoke hook and collect grants/denies for field access from other
     // modules.
     $grants = [];
-    $hook_implementations = $this->moduleHandler()->getImplementations('entity_field_access');
-    foreach ($hook_implementations as $module) {
-      $grants[] = [$module => $this->moduleHandler()->invoke($module, 'entity_field_access', [$operation, $field_definition, $account, $items])];
-    }
+    $this->moduleHandler()->invokeAllWith(
+      'entity_field_access',
+      function (callable $hook, string $module) use ($operation, $field_definition, $account, $items, &$grants) {
+        $grants[] = [$module => $hook($operation, $field_definition, $account, $items)];
+      }
+    );
     // Our default access flag is masked under the ':default' key.
     $grants = array_merge([':default' => $default], ...$grants);
 

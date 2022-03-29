@@ -29,8 +29,9 @@ function views_test_data_views_data() {
 /**
  * Implements hook_views_data_alter().
  */
-function views_test_data_views_data_alter() {
+function views_test_data_views_data_alter(array &$data) {
   \Drupal::state()->set('views_hook_test_views_data_alter', TRUE);
+  \Drupal::state()->set('views_hook_test_views_data_alter_data', $data);
 }
 
 /**

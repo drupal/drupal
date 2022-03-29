@@ -393,16 +393,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
         $entity_class::postLoad($this, $items);
       }
     }
-    // Call hook_entity_load().
-    foreach ($this->moduleHandler()->getImplementations('entity_load') as $module) {
-      $function = $module . '_entity_load';
-      $function($entities, $this->entityTypeId);
-    }
-    // Call hook_TYPE_load().
-    foreach ($this->moduleHandler()->getImplementations($this->entityTypeId . '_load') as $module) {
-      $function = $module . '_' . $this->entityTypeId . '_load';
-      $function($entities);
-    }
+    $this->moduleHandler()->invokeAllWith('entity_load', function (callable $hook, string $module) use (&$entities) {
+      $hook($entities, $this->entityTypeId);
+    });
+    $this->moduleHandler()->invokeAllWith($this->entityTypeId . '_load', function (callable $hook, string $module) use (&$entities) {
+      $hook($entities);
+    });
   }
 
   /**

@@ -59,10 +59,13 @@ class HookHelpSection extends HelpSectionPluginBase implements ContainerFactoryP
    */
   public function listTopics() {
     $topics = [];
-    foreach ($this->moduleHandler->getImplementations('help') as $module) {
-      $title = $this->moduleHandler->getName($module);
-      $topics[$title] = Link::createFromRoute($title, 'help.page', ['name' => $module]);
-    }
+    $this->moduleHandler->invokeAllWith(
+      'help',
+      function (callable $hook, string $module) use (&$topics) {
+        $title = $this->moduleHandler->getName($module);
+        $topics[$title] = Link::createFromRoute($title, 'help.page', ['name' => $module]);
+      }
+    );
 
     // Sort topics by title, which is the array key above.
     ksort($topics);

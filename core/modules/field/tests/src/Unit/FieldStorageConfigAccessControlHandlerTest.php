@@ -109,10 +109,6 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
     $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
     $this->moduleHandler
       ->expects($this->any())
-      ->method('getImplementations')
-      ->will($this->returnValue([]));
-    $this->moduleHandler
-      ->expects($this->any())
       ->method('invokeAll')
       ->will($this->returnValue([]));
 

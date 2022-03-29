@@ -312,10 +312,9 @@ class AssetResolver implements AssetResolverInterface {
       if ($settings_required && $settings_have_changed) {
         $settings = $this->getJsSettingsAssets($assets);
         // Allow modules to add cached JavaScript settings.
-        foreach ($this->moduleHandler->getImplementations('js_settings_build') as $module) {
-          $function = $module . '_js_settings_build';
-          $function($settings, $assets);
-        }
+        $this->moduleHandler->invokeAllWith('js_settings_build', function (callable $hook, string $module) use (&$settings, $assets) {
+          $hook($settings, $assets);
+        });
       }
       $settings_in_header = in_array('core/drupalSettings', $header_js_libraries);
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);

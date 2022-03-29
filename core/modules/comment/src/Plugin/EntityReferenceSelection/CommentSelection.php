@@ -86,7 +86,7 @@ class CommentSelection extends DefaultSelection {
     // Passing the query to node_query_node_access_alter() is sadly
     // insufficient for nodes.
     // @see \Drupal\node\Plugin\EntityReferenceSelection\NodeSelection::buildEntityQuery()
-    if (!$this->currentUser->hasPermission('bypass node access') && !count($this->moduleHandler->getImplementations('node_grants'))) {
+    if (!$this->currentUser->hasPermission('bypass node access') && !$this->moduleHandler->hasImplementations('node_grants')) {
       $query->condition($node_alias . '.status', 1);
     }
   }
