@@ -112,7 +112,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
         // hook_help().
         if (isset($modules[$provider])) {
           $display = \Drupal::moduleHandler()->getName($provider);
-          if (\Drupal::moduleHandler()->implementsHook($provider, 'help')) {
+          if (\Drupal::moduleHandler()->hasImplementations('help', $provider)) {
             $items[] = Link::fromTextAndUrl($display, Url::fromRoute('help.page', ['name' => $provider]))->toRenderable();
           }
           else {

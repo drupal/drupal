@@ -268,12 +268,8 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     $message['headers'] = $headers;
 
     // Build the email (get subject and body, allow additional headers) by
-    // invoking hook_mail() on this module. We cannot use
-    // moduleHandler()->invoke() as we need to have $message by reference in
-    // hook_mail().
-    if (function_exists($function = $module . '_mail')) {
-      $function($key, $message, $params);
-    }
+    // invoking hook_mail() on this module.
+    $this->moduleHandler->invoke($module, 'mail', [$key, &$message, $params]);
 
     // Invoke hook_mail_alter() to allow all modules to alter the resulting
     // email.

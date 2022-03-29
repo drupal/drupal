@@ -5,6 +5,20 @@
  * Helper module for the plugin tests.
  */
 
+use Drupal\plugin_test\Plugin\plugin_test\fruit\Apple;
+
+/**
+ * Implements hook_test_plugin_info().
+ */
+function plugin_test_test_plugin_info() {
+  return [
+    'apple' => [
+      'id' => 'apple',
+      'class' => Apple::class,
+    ],
+  ];
+}
+
 /**
  * Implements hook_plugin_test_alter().
  */

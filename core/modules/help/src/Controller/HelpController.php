@@ -128,7 +128,7 @@ class HelpController extends ControllerBase {
    */
   public function helpPage($name) {
     $build = [];
-    if ($this->moduleHandler()->implementsHook($name, 'help')) {
+    if ($this->moduleHandler()->hasImplementations('help', $name)) {
       $module_name = $this->moduleHandler()->getName($name);
       $build['#title'] = $module_name;
 

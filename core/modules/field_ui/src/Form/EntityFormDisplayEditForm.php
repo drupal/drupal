@@ -120,15 +120,18 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
     $settings_form = [];
     // Invoke hook_field_widget_third_party_settings_form(), keying resulting
     // subforms by module name.
-    foreach ($this->moduleHandler->getImplementations('field_widget_third_party_settings_form') as $module) {
-      $settings_form[$module] = $this->moduleHandler->invoke($module, 'field_widget_third_party_settings_form', [
-        $plugin,
-        $field_definition,
-        $this->entity->getMode(),
-        $form,
-        $form_state,
-      ]);
-    }
+    $this->moduleHandler->invokeAllWith(
+      'field_widget_third_party_settings_form',
+      function (callable $hook, string $module) use (&$settings_form, $plugin, $field_definition, &$form, $form_state) {
+        $settings_form[$module] = $hook(
+          $plugin,
+          $field_definition,
+          $this->entity->getMode(),
+          $form,
+          $form_state
+        );
+      }
+    );
     return $settings_form;
   }
 

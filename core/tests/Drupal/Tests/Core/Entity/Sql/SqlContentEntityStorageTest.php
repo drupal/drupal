@@ -1444,7 +1444,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    */
   protected function setUpModuleHandlerNoImplementations() {
     $this->moduleHandler->expects($this->any())
-      ->method('getImplementations')
+      ->method('invokeAllWith')
       ->willReturnMap([
         ['entity_load', []],
         [$this->entityTypeId . '_load', []],

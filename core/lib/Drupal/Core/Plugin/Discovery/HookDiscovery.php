@@ -46,13 +46,13 @@ class HookDiscovery implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = [];
-    foreach ($this->moduleHandler->getImplementations($this->hook) as $module) {
-      $result = $this->moduleHandler->invoke($module, $this->hook);
-      foreach ($result as $plugin_id => $definition) {
+    $this->moduleHandler->invokeAllWith($this->hook, function (callable $hook, string $module) use (&$definitions) {
+      $module_definitions = $hook();
+      foreach ($module_definitions as $plugin_id => $definition) {
         $definition['provider'] = $module;
         $definitions[$plugin_id] = $definition;
       }
-    }
+    });
     return $definitions;
   }
 

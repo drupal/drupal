@@ -125,10 +125,6 @@ EOF
 EOF
     );
     $modules = ['module_a', 'module_b', 'module_c'];
-    $this->moduleHandler->expects($this->any())
-      ->method('getImplementations')
-      ->with('permission')
-      ->willReturn([]);
 
     $this->moduleHandler->expects($this->any())
       ->method('getModuleList')
@@ -249,11 +245,6 @@ EOF
     $modules = ['module_a', 'module_b', 'module_c'];
 
     $this->moduleHandler->expects($this->any())
-      ->method('getImplementations')
-      ->with('permission')
-      ->willReturn([]);
-
-    $this->moduleHandler->expects($this->any())
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
@@ -299,11 +290,6 @@ EOF
     );
 
     $modules = ['module_a'];
-
-    $this->moduleHandler->expects($this->any())
-      ->method('getImplementations')
-      ->with('permission')
-      ->willReturn([]);
 
     $this->moduleHandler->expects($this->any())
       ->method('getModuleList')

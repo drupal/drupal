@@ -231,10 +231,9 @@ class ViewsData {
       return $data->data;
     }
     else {
-      $modules = $this->moduleHandler->getImplementations('views_data');
       $data = [];
-      foreach ($modules as $module) {
-        $views_data = $this->moduleHandler->invoke($module, 'views_data');
+      $this->moduleHandler->invokeAllWith('views_data', function (callable $hook, string $module) use (&$data) {
+        $views_data = $hook();
         // Set the provider key for each base table.
         foreach ($views_data as &$table) {
           if (isset($table['table']) && !isset($table['table']['provider'])) {
@@ -242,7 +241,7 @@ class ViewsData {
           }
         }
         $data = NestedArray::mergeDeep($data, $views_data);
-      }
+      });
       $this->moduleHandler->alter('views_data', $data);
 
       $this->processEntityTypes($data);

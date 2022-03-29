@@ -84,7 +84,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
   public function getCacheableMetadata($operation = NULL) {
     $cacheable_metadata = new CacheableMetadata();
 
-    if (!\Drupal::moduleHandler()->getImplementations('node_grants')) {
+    if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
       return $cacheable_metadata;
     }
 

@@ -272,9 +272,17 @@ class EntityFieldManagerTest extends UnitTestCase {
       'field_storage' => $field_storage_definition->reveal(),
     ];
 
-    $this->moduleHandler->getImplementations('entity_base_field_info')->willReturn([]);
-    $this->moduleHandler->getImplementations('entity_field_storage_info')->willReturn(['example_module']);
-    $this->moduleHandler->invoke('example_module', 'entity_field_storage_info', [$this->entityType])->willReturn($definitions);
+    $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any());
+    $this->moduleHandler->invokeAllWith('entity_field_storage_info', Argument::any())
+      ->will(function ($arguments) use ($definitions) {
+        [$hook, $callback] = $arguments;
+        $callback(
+          function () use ($definitions) {
+            return $definitions;
+          },
+          'example_module',
+        );
+      });
     $this->moduleHandler->alter('entity_field_storage_info', $definitions, $this->entityType)->willReturn(NULL);
 
     $expected = [
@@ -436,8 +444,16 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $definitions = ['field_storage' => $field_storage_definition->reveal()];
 
-    $this->moduleHandler->getImplementations('entity_field_storage_info')->willReturn(['example_module']);
-    $this->moduleHandler->invoke('example_module', 'entity_field_storage_info', [$this->entityType])->willReturn($definitions);
+    $this->moduleHandler->invokeAllWith('entity_field_storage_info', Argument::any())
+      ->will(function ($arguments) use ($definitions) {
+        [$hook, $callback] = $arguments;
+        $callback(
+          function () use ($definitions) {
+            return $definitions;
+          },
+          'example_module',
+        );
+      });
     $this->moduleHandler->alter('entity_field_storage_info', $definitions, $this->entityType)->willReturn(NULL);
 
     $expected = [
@@ -503,9 +519,16 @@ class EntityFieldManagerTest extends UnitTestCase {
     $field_definition->setTargetBundle(NULL)->shouldBeCalled();
     $field_definition->setTargetBundle('test_bundle')->shouldBeCalled();
 
-    $this->moduleHandler->getImplementations(Argument::type('string'))->willReturn([$module]);
-    $this->moduleHandler->invoke($module, 'entity_base_field_info', [$this->entityType])->willReturn([$field_definition->reveal()]);
-    $this->moduleHandler->invoke($module, 'entity_bundle_field_info', Argument::type('array'))->willReturn([$field_definition->reveal()]);
+    $this->moduleHandler->invokeAllWith(Argument::type('string'), Argument::any())
+      ->will(function ($arguments) use ($field_definition, $module) {
+        [$hook, $callback] = $arguments;
+        $callback(
+          function () use ($field_definition) {
+            return [$field_definition->reveal()];
+          },
+          $module,
+        );
+      });
 
     $this->entityFieldManager->getFieldDefinitions('test_entity_type', 'test_bundle');
   }
@@ -543,7 +566,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $entity_class::$bundleFieldDefinitions = [];
 
     if (!$custom_invoke_all) {
-      $this->moduleHandler->getImplementations(Argument::cetera())->willReturn([]);
+      $this->moduleHandler->invokeAllWith(Argument::cetera(), Argument::cetera());
     }
 
     // Mock the base field definition override.
@@ -683,7 +706,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       'first_bundle' => 'first_bundle',
       'second_bundle' => 'second_bundle',
     ])->shouldBeCalled();
-    $this->moduleHandler->getImplementations('entity_base_field_info')->willReturn([]);
+    $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any());
 
     $expected = [
       'test_entity_type' => [
@@ -738,7 +761,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       'first_bundle' => 'first_bundle',
       'second_bundle' => 'second_bundle',
     ])->shouldBeCalled();
-    $this->moduleHandler->getImplementations('entity_base_field_info')->willReturn([])->shouldBeCalled();
+    $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any())->shouldBeCalled();
 
     // Define an ID field definition as a base field.
     $id_definition = $this->prophesize(FieldDefinitionInterface::class);
