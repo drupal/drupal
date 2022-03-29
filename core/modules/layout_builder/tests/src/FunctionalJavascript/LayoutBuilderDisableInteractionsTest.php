@@ -9,6 +9,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
 /**
  * Tests the Layout Builder disables interactions of rendered blocks.
@@ -18,6 +19,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
+  use OffCanvasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,6 +33,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     'node',
     'search',
     'contextual',
+    'off_canvas_test',
   ];
 
   /**
@@ -88,7 +91,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * Tests that forms and links are disabled in the Layout Builder preview.
    */
   public function testFormsLinksDisabled() {
-    $this->markTestSkipped();
     // Resize window due to bug in Chromedriver when clicking on overlays over
     // iFrames.
     // @see https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
@@ -219,6 +221,11 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ui-dialog-titlebar [title="Close"]'));
+    // We explicitly wait for the off-canvas area to be fully resized before
+    // trying to press the Close button, instead of waiting for the Close button
+    // itself to become visible. This is to prevent a regularly occurring random
+    // test failure.
+    $this->waitForOffCanvasArea();
     $page->pressButton('Close');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
