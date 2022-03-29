@@ -133,6 +133,15 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
+   * Controller for testing callable preprocess functions.
+   */
+  public function preprocessCallback() {
+    return [
+      '#theme' => 'theme_test_preprocess_callback',
+    ];
+  }
+
+  /**
    * Controller for testing a namespaced class in a theme.
    */
   public function testThemeClass() {
