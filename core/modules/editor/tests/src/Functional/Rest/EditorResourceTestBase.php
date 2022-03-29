@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\editor\Functional\Rest;
 
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
@@ -14,7 +15,7 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['ckeditor', 'editor'];
+  protected static $modules = ['ckeditor5', 'editor'];
 
   /**
    * {@inheritdoc}
@@ -59,7 +60,7 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
     // Create a "Camelids" editor.
     $camelids = Editor::create([
       'format' => 'llama',
-      'editor' => 'ckeditor',
+      'editor' => 'ckeditor5',
     ]);
     $camelids
       ->setImageUploadSettings([
@@ -87,10 +88,10 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
           'filter.format.llama',
         ],
         'module' => [
-          'ckeditor',
+          'ckeditor5',
         ],
       ],
-      'editor' => 'ckeditor',
+      'editor' => 'ckeditor5',
       'format' => 'llama',
       'image_upload' => [
         'status' => FALSE,
@@ -105,49 +106,10 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
       'langcode' => 'en',
       'settings' => [
         'toolbar' => [
-          'rows' => [
-            [
-              [
-                'name' => 'Formatting',
-                'items' => [
-                  'Bold',
-                  'Italic',
-                ],
-              ],
-              [
-                'name' => 'Links',
-                'items' => [
-                  'DrupalLink',
-                  'DrupalUnlink',
-                ],
-              ],
-              [
-                'name' => 'Lists',
-                'items' => [
-                  'BulletedList',
-                  'NumberedList',
-                ],
-              ],
-              [
-                'name' => 'Media',
-                'items' => [
-                  'Blockquote',
-                  'DrupalImage',
-                ],
-              ],
-              [
-                'name' => 'Tools',
-                'items' => [
-                  'Source',
-                ],
-              ],
-            ],
-          ],
+          'items' => ['heading', 'bold', 'italic'],
         ],
         'plugins' => [
-          'language' => [
-            'language_list' => 'un',
-          ],
+          'ckeditor5_heading' => Heading::DEFAULT_CONFIGURATION,
         ],
       ],
       'status' => TRUE,
